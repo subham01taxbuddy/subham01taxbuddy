@@ -1,0 +1,15 @@
+<div class="input" [class.input_disabled]="disabled">
+    <label class="input__label" *ngIf="label">
+  		{{label}}
+  		<span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+  	</label>
+    <div style="display: flex; width: 100%;">
+        <input *ngIf="label=='Discount' || is_percent_currency_view" (keyup)="sendData()" type="{{type}}" class="input__text" placeholder="{{placeholder}}" style="width: 70%;" disabled="{{disabled}}" name="{{name}}" [(ngModel)]="value" />
+        <input *ngIf="!(label=='Discount') && !is_percent_currency_view" (keyup)="sendData()" (focusout)="onFocusOut()" type="{{type}}" class="input__text" placeholder="{{placeholder}}" disabled="{{disabled}}" name="{{name}}" step="{{step}}" [(ngModel)]="value" />
+        <span *ngIf="label=='Discount' || is_percent_currency_view" class="input-group-btn" style="width: 30%;" [class.percents]="isPercentsDiscount" (click)="isPercentsDiscount = ((!_disable_discount_type_change) ? !isPercentsDiscount:isPercentsDiscount) ;sendData();">
+		  	<button *ngIf="isPercentsDiscount" class="button_css" type="button">%</button>
+		  	<button *ngIf="!isPercentsDiscount" class="button_css" type="button">{{(currency)? currency:'INR'}}</button>
+	  	</span>
+    </div>
+
+</div>

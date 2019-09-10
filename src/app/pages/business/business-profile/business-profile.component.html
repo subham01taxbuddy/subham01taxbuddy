@@ -1,0 +1,144 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="content content_full">
+
+  <div class="content__container">
+    <div class="card">
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <app-input-select-object [label]="'Select merchant'" [type]="'text'" [value]="selected_merchant" [type]="'text'" [name]="'selected_merchant'" [filter_items]="available_merchant_list" (sendValue)="selected_merchant = $event;onSelectMerchant($event)">
+          </app-input-select-object>
+        </div>        
+      </div><!-- card__row -->   
+    </div>
+
+    <ng-template [ngIf]="merchantData && merchantData.merchant_id">
+
+      <div class="card">
+          <div class="card__title">Basic information</div>
+
+          <div class="card__row">        
+            <div class="card__col-xs-12 card__col-sm-4">
+                <app-input [label]="'Merchant Name'" [type]="'text'" [name]="merchantData.name" [placeholder]="'Merchant Name'" [value]="merchantData.name" (sendValue)="merchantData.name = $event"></app-input>
+            </div>
+          </div>
+          <div class="card__row">        
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'GSTN Number'" [type]="'text'" [name]="merchantData.gstn_number" [placeholder]="'GSTN Number'" [value]="merchantData.gstn_number" (sendValue)="merchantData.gstn_number = $event"></app-input>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'Trade Name'" [type]="'text'" [name]="merchantData.trade_name" [placeholder]="'Trade Name'" [value]="merchantData.trade_name" (sendValue)="merchantData.trade_name = $event"></app-input>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'Legal Name'" [type]="'text'" [name]="merchantData.legal_name" [placeholder]="'Legal Name'" [value]="merchantData.legal_name" (sendValue)="merchantData.legal_name = $event"></app-input>
+            </div>
+          </div>
+
+          <div class="card__row">                  
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'Contact Number'" [type]="'text'" [name]="merchantData.contact_no" [placeholder]="'Contact Number'" [value]="merchantData.contact_no" (sendValue)="merchantData.contact_no = $event"></app-input>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'GSTN Registered Mobile Number'" [type]="'text'" [name]="merchantData.gstn_mobile_no" [placeholder]="'GSTN Registered Mobile Number'" [value]="merchantData.gstn_mobile_no" (sendValue)="merchantData.gstn_mobile_no = $event"></app-input>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'Email ID'" [type]="'text'" [name]="merchantData.email_address" [placeholder]="'Email ID'" [value]="merchantData.email_address" (sendValue)="merchantData.email_address = $event"></app-input>
+            </div>
+          </div>       
+          
+
+          <div class="card__row">     
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'Sales Invoice Prefix'" [type]="'text'" [name]="merchantData.sip" [placeholder]="'E.g. SSBA /2018-2019/'" [value]="merchantData.sip" (sendValue)="merchantData.sip = $event"></app-input>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-4">            
+              <app-input-select [label]="'GSTR1'" [value]="merchantData.gstr1" [type]="'text'" [name]="'GSTR1'" [filter_items]="['MONTHLY','QUARTERLY']" (sendValue)="merchantData.gstr1 = $event">
+              </app-input-select>
+            </div>          
+          </div>
+      </div>
+
+      <div class="card">
+        <div class="card__title">Bank information</div>
+        <div class="card__row">     
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'Bank Name'" [type]="'text'" [name]="merchantData.b_name" [placeholder]="'Bank Name'" [value]="merchantData.b_name" (sendValue)="merchantData.b_name = $event"></app-input>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'Account Number'" [type]="'text'" [name]="merchantData.account_number" [placeholder]="'Account Number'" [value]="merchantData.account_number" (sendValue)="merchantData.account_number = $event"></app-input>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'IFSC Code'" [type]="'text'" [name]="merchantData.ifsc_code" [placeholder]="'IFSC Code'" [value]="merchantData.ifsc_code" (sendValue)="merchantData.ifsc_code = $event"></app-input>
+            </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__title">Address information</div>
+        <div class="card__row">     
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'Business Address'" [type]="'text'" [name]="merchantData.b_address" [placeholder]="'Business Address'" [value]="merchantData.b_address" (sendValue)="merchantData.b_address = $event"></app-input>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'Pincode'" [type]="'text'" [name]="merchantData.pincode" [placeholder]="'Pincode'" [value]="merchantData.pincode" (sendValue)="merchantData.pincode = $event"></app-input>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'State'" [type]="'text'" [name]="merchantData.state" [placeholder]="'State'" [value]="merchantData.state" (sendValue)="merchantData.state = $event"></app-input>
+            </div>
+        </div>
+      </div>
+
+      <!-- Business Logo Container -->
+      <div class="ogp_images card card_main">
+          <div class="card__title">Business Logo</div>
+          <div class="card__row">
+              <div class="wrapper" style="padding-top: 0;">
+                  <div class="container">
+                      <div class="card__col-xs-6 card__col-sm-3">
+                          <div class="image" *ngIf="merchantBusinessLogo">
+                              <img src="{{merchantBusinessLogo}}" alt="" class="image__item">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- /drag-wrapper -->
+              <div class="card__col-xs-12 card__col-sm-4">
+                  <app-input-upload [upload]="upload" [input_id]="merchantData.blogo" (filesDropped)="setBusinessLogo($event)" (filesHovered)="$event" (filesUpload)="upload = $event"></app-input-upload>
+              </div>
+          </div>
+      </div>
+      <!-- Business Logo Container -->
+
+      <!-- GST Certificate Container -->
+      <div class="ogp_images card card_main">
+          <div class="card__title">GST Certificate</div>
+          <div class="card__row">
+              <div class="wrapper" style="padding-top: 0;">
+                  <div class="container">
+                      <div class="card__col-xs-6 card__col-sm-3">
+                          <div class="image" *ngIf="merchantGSTCertificate">
+                              <img src="{{merchantGSTCertificate}}" alt="" class="image__item">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- /drag-wrapper -->
+              <div class="card__col-xs-12 card__col-sm-4">
+                  <app-input-upload [upload]="upload" [input_id]="merchantData.gstcertificate" (filesDropped)="setGSTCertificate($event)" (filesHovered)="$event" (filesUpload)="upload = $event"></app-input-upload>
+              </div>
+          </div>
+      </div>
+      <!-- GST Certificate Container -->
+
+    </ng-template>
+  </div><!-- .content__container -->
+</div><!-- .content -->

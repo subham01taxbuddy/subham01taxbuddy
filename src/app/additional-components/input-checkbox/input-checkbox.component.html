@@ -1,0 +1,6 @@
+<div class="input" [class.input-group__checkbox]="group">
+  <input type="checkbox" readonly="{{disabled}}" class="input__checkbox" [checked]="value">
+  <label class="input__checkbox-control"  *ngIf="!disabled"  (click)="value = !value; sendData();"></label>
+  <label class="input__checkbox-control"  *ngIf="disabled"></label>
+  <label class="input__label input__checkbox_label">{{label}}</label>
+</div>

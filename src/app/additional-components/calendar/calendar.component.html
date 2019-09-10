@@ -1,0 +1,330 @@
+<div class="calendar-container">
+	
+	<div class="input" [class.input_disabled]="disabled">
+	  <label class="input__label">{{(label == 'All' ? 'From To Date' : label)}}
+      	<span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+	  </label>
+	  <div class="input__select">
+	    <input type="{{type}}" name="{{name}}" class="select__box ogp_select" placeholder="{{placeholder}}" 
+	      [(ngModel)]="value"
+	      name="value"
+	      [disabled]="disabled"
+	      (click)="showCalendar = !showCalendar"/>
+	  </div>
+	</div>
+
+<div *ngIf="showCalendar && !disabled" class="calendar" 
+	[class.calendar-center]="position == 'center'"
+	[class.calendar-right]="position == 'right'"
+	[class.single-calendar]="format == 'from' || format == 'to'"
+>
+	
+	<div *ngIf="format == 'All'" class="calendar__tab-row clearfix">  		
+		<div class="calendar__tab-box">    
+			<a class="calendar__tab-item" 
+				(click)="compare_dates = false"
+				[class.calendar__tab-item_active]="!compare_dates">Date range</a>  
+		</div>
+		<div class="calendar__tab-box" *ngIf="isCompareDateShow">    
+			<a class="calendar__tab-item" 
+				(click)="compare_dates = true"
+				[class.calendar__tab-item_active]="compare_dates">Compare dates</a>  
+		</div>  
+	</div><!-- .calendar__tab-row -->
+
+	<div class="calendar__tab-container">
+
+		<div class="calendar__tab-content" 
+			*ngIf="compare_dates && format == 'All'" [class.calendar__tab_active]="compare_dates">
+			<div class="calendar__period-selector">
+				<a class="calendar__period calendar__period_year" 
+					*ngFor="let tab of compare_tabs; let i=index "
+					[class.calendar__period_active]="compare_tabs_active[i]"
+					(click)="compare_tabs_active = []; compare_tabs_active[i] = true; title = tab + 's'; compareRangeType(); "
+					>{{tab}}</a>
+			</div>
+			<div class="calendar__comapre-container">
+				<div class="input calendar__compare-radio">
+					<div class="input__radio-item">  
+						<input type="radio" class="input__radio" [checked]="!from">  
+						<label (click)="from = false" class="input__radio-control"></label>  
+						<div class="input__label input__radio_label">Last&nbsp;&nbsp;
+							<div class="input calendar__input-number">
+								<div class="input__number-container clearfix">
+									<input type="text" class="input__text input__number"
+										name="compare_info.value" [(ngModel)]="compare_info.value" [disabled]="from">
+										<div class="input__number-spin-container">  
+											<div class="input__number-spin input__number-spin_plus"
+												(click)="compare_info.value = changeLastVal(+1)">+</div>  
+											<div class="input__number-spin input__number-spin_minus"
+												(click)="compare_info.value = changeLastVal(-1)">-</div>
+										</div>
+									</div>
+								</div>&nbsp;&nbsp;<span class="compare_title">{{title}}</span>
+							</div>
+						</div>
+						<div class="input__radio-item">  
+							<input type="radio" class="input__radio"[checked]="from">  
+							<label class="input__radio-control" (click)="from = true"></label>  
+							<div class="input__label input__radio_label">Last&nbsp;&nbsp;
+								<div class="input calendar__input-number">
+									<div class="input__number-container clearfix">
+										<input type="text" class="input__text input__number" 
+											name="compare_info.value" [(ngModel)]="compare_info.value" [disabled]="!from">
+										<div class="input__number-spin-container">  
+											<div class="input__number-spin input__number-spin_plus"
+												(click)="compare_info.value = changeLastVal(+1)">+</div>  
+											<div class="input__number-spin input__number-spin_minus"
+												(click)="compare_info.value = changeLastVal(-1)">-</div>
+										</div>
+									</div>
+								</div>&nbsp;&nbsp;<span class="compare_title">{{title}}</span>
+								<div class="calendar__radio-from-container">&nbsp;from&nbsp;
+									<span>
+										<div *ngIf="compare_tabs_active[3] || compare_tabs_active[4] || compare_tabs_active[5]" 
+											class="input calendar__input-select" style="margin-right: -4px;">
+											<select class="select__box calendar__from" [disabled]="!from">
+												<option *ngFor="let day of days" value="{{day}}">{{day}}</option>
+											</select>
+										</div>
+										<div *ngIf="compare_tabs_active[2] || compare_tabs_active[3] || compare_tabs_active[4] || compare_tabs_active[5]" 
+											class="input calendar__input-select" style="margin-right: -4px;">
+											<select class="select__box calendar__from" [disabled]="!from">
+												<option *ngFor="let month of months; let m=index " value="{{m}}">{{month}}</option>
+											</select>
+										</div>
+										<div *ngIf="compare_tabs_active[1]" 
+											class="input calendar__input-select" style="margin-right: -4px;">
+											<select class="select__box calendar__from" [disabled]="!from">
+												<option value="01">Q1</option>
+												<option value="11">Q2</option>
+												<option value="21" selected>Q3</option>
+												<option value="31">Q4</option>
+											</select>
+										</div>
+										<div class="input calendar__input-select" style="margin-right: -4px;">
+											<select class="select__box calendar__from calendar__from_last" 
+												[disabled]="!from">
+												<option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+											</select>
+										</div>
+										<div *ngIf="compare_tabs_active[5]" class="input calendar__input-select">
+											<select class="select__box calendar__from" [disabled]="!from" 
+												style="border-right: 1px solid #989898;">
+												<option *ngFor="let hour of hours" value="{{hour}}">{{hour}}</option>
+											</select>
+										</div>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div><!-- .calendar__compare-radio -->
+					<div class="input calendar__compare-checkbox">
+						<div class="input calendar__compare-checkbox">  
+							<input type="checkbox" class="input__checkbox" [checked]="include_hour">  
+							<label class="input__checkbox-control" (click)="include_hour = !include_hour"></label>  
+							<label class="input__label input__checkbox_label" style="margin-left: 35px; padding-left: 0;">Include hour range from 
+								<div class="list-box calendar__hour-select">
+									<p (click)="openSelect('hour', 0)" class="list-box__data">{{from_hour}}</p>
+									<div *ngIf="showHourSelect[0]" class="scroll-wrapper list-box__container" style="position: absolute;">
+										<ul class="list-box__container scroll-content">
+											<li *ngFor="let hour of hours" class="list-box__item"
+												(click)="from_hour = hour">{{hour}}</li>
+										</ul>
+									</div>
+								</div> to 
+								<div class="list-box calendar__hour-select">
+									<p (click)="openSelect('hour', 1)" class="list-box__data">{{to_hour}}</p>
+									<div *ngIf="showHourSelect[1]" class="scroll-wrapper list-box__container" style="position: absolute;">
+										<ul class="list-box__container scroll-content">
+											<li *ngFor="let hour of hours" class="list-box__item"
+												(click)="to_hour = hour">{{hour}}</li>
+										</ul>
+									</div>
+								</div>
+							</label>
+						</div>
+					</div><!-- .calendar__compare-checkbox -->
+				</div>
+			</div><!-- .calendar__comapre-container -->
+
+			<div class="calendar__tab-content" 
+				*ngIf="!compare_dates" [class.calendar__tab_active]="!compare_dates">
+				<div class="calendar__period-selector">
+					<a class="calendar__period calendar__period_year"
+						(click)="yearCalendar();">Year</a>
+					<a class="calendar__period calendar__period_quarter"
+						(click)="quarterCalendar();">Quarter</a>
+					<a class="calendar__period calendar__period_month"
+						(click)="monthCalendar();">Month</a>
+					<a class="calendar__period calendar__period_week"
+						(click)="weekCalendar()">Week</a>
+					<a class="calendar__period calendar__period_today"
+						(click)="dayCalendar()">Today</a>
+				</div>
+
+				<div class="calendar__container clearfix">
+					
+					<div *ngIf="format == 'from' || format == 'All'" class="calendar__box"
+						[class.calendar-single-box]="format == 'from'">
+						<div class="calendar__start">
+							<div class="calendar__input-container">  
+								<label class="calendar__label">{{(label == 'All')? 'From' : label}}</label>  
+								<input type="date" class="calendar__input input__text" 
+									name="from_data.date" (keyup)="equalDates(from_data.date, 'start')" 
+									[(ngModel)]="from_data.date">
+							</div>
+							<div class="calendar__spinner">
+								<div class="calendar__arrow calendar__arrow_left"
+									(click)="changeMonthUseArrow(-1, from_data)">  
+									<span class="calendar__arrow-ico"></span>
+								</div>
+								<div class="calendar__arrow calendar__arrow_right"
+									(click)="changeMonthUseArrow(+1, from_data)">  
+									<span class="calendar__arrow-ico calendar__arrow-ico_right"></span>
+								</div>
+								<div class="calendar__month-container">
+									<div class="list-box calendar__select-month">
+										<p (click)="openSelect('from', 0)" class="list-box__data">{{from_data.month_name}}</p>
+										<ul *ngIf="showYearMonth[0]" class="list-box__container">
+											<li class="list-box__item"
+												*ngFor="let month of months; let m=index "
+												(click)="from_data.month = month; from_data.month_name = months_name[m]; createDateObject(from_data.year, from_data.month, from_data)"
+												[class.list-box__item_selected]="from_data.month == month"
+											>{{months_name[m]}}</li>
+										</ul>
+									</div>
+									<div class="list-box calendar__select-year">
+										<p (click)="openSelect('from', 1)" class="list-box__data">{{from_data.year}}</p>
+										<ul *ngIf="showYearMonth[1]" class="list-box__container">
+											<li class="list-box__item"
+												*ngFor="let year of years"
+												(click)="from_data.year = year; createDateObject(from_data.year, from_data.month, from_data)"
+												[class.list-box__item_selected]="from_data.year == year">{{year}}</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="calendar__table-container">
+								<table class="calendar__table">
+									<thead>  
+										<tr class="calendar__week">    
+											<th class="calendar__day-name">MON</th>    
+											<th class="calendar__day-name">TUE</th>    
+											<th class="calendar__day-name">WEN</th>    
+											<th class="calendar__day-name">THU</th>    
+											<th class="calendar__day-name">FRI</th>    
+											<th class="calendar__day-name">SAT</th>    
+											<th class="calendar__day-name">SUN</th>  
+										</tr>
+									</thead>
+									<tbody>
+										<tr *ngFor="let week of from_data.dateObject" class="calendar__week">
+											<td *ngFor="let day of week" 
+												class="calendar__day" 
+												[class.calendar__day_disabled]="day.month == 'prev' || day.month == 'next'"
+												[class.calendar__day_start]="day.calendar_start"
+												[class.calendar__day_between]="day.calendar_selected"
+												[class.calendar__day_end]="day.calendar_end"
+												(click)="beginCalendar = day;
+												calendarStartEnd(from_data, beginCalendar, 'start'); 
+												calendarStartEnd(to_data, beginCalendar, 'start');
+												disabledChangeMonth(day, from_data);
+												equalClickDate(from_data, day)"
+											>
+												<div class="calendar__day-wrapper">    
+													<div class="calendar__day-item">{{day.day}}</div>  
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div *ngIf="format == 'to' || format == 'All'" class="calendar__box"
+						[class.calendar-single-box]="format == 'to'">
+						<div class="calendar__end">
+							<div class="calendar__input-container">
+								<label class="calendar__label">{{(label == 'All')? 'To' : label}}</label>  
+								<input type="date" class="calendar__input input__text"
+									name="date_to" (keyup)="equalDates(to_data.date, 'end')" 
+									[(ngModel)]="to_data.date">
+							</div>
+							<div class="calendar__spinner">
+								<div class="calendar__arrow calendar__arrow_left"
+									(click)="changeMonthUseArrow(-1, to_data)">  
+									<span class="calendar__arrow-ico"></span>
+								</div>
+								<div class="calendar__arrow calendar__arrow_right"
+									(click)="changeMonthUseArrow(+1, to_data)">  
+									<span class="calendar__arrow-ico calendar__arrow-ico_right"></span>
+								</div>
+								<div class="calendar__month-container">
+									<div class="list-box calendar__select-month">
+										<p (click)="openSelect('from', 2)" class="list-box__data">{{to_data.month_name}}</p>
+										<ul *ngIf="showYearMonth[2]" class="list-box__container">
+											<li class="list-box__item"
+												*ngFor="let month of months; let m=index "
+												(click)="to_data.month = month; to_data.month_name = months_name[m]; createDateObject(to_data.year, to_data.month, to_data)"
+												[class.list-box__item_selected]="to_data.month == month"
+											>{{months_name[m]}}</li>
+										</ul>
+									</div>
+									<div class="list-box calendar__select-year">
+										<p (click)="openSelect('from', 3)" class="list-box__data">{{to_data.year}}</p>
+										<ul *ngIf="showYearMonth[3]" class="list-box__container">
+											<li class="list-box__item"
+												*ngFor="let year of years"
+												(click)="to_data.year = year; 
+												createDateObject(to_data.year, to_data.month, to_data)"
+												[class.list-box__item_selected]="to_data.year == year">{{year}}</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="calendar__table-container">
+								<table class="calendar__table">
+									<thead>  
+										<tr class="calendar__week">    
+											<th class="calendar__day-name">MON</th>    
+											<th class="calendar__day-name">TUE</th>    
+											<th class="calendar__day-name">WEN</th>    
+											<th class="calendar__day-name">THU</th>    
+											<th class="calendar__day-name">FRI</th>    
+											<th class="calendar__day-name">SAT</th>    
+											<th class="calendar__day-name">SUN</th>  
+										</tr>
+									</thead>
+									<tbody>
+										<tr *ngFor="let week of to_data.dateObject" class="calendar__week">
+											<td *ngFor="let day of week" 
+												class="calendar__day" 
+												[class.calendar__day_disabled]="day.month == 'prev' || day.month == 'next'"
+												[class.calendar__day_start]="day.calendar_start"
+												[class.calendar__day_between]="day.calendar_selected"
+												[class.calendar__day_end]="day.calendar_end"
+												(click)="endCalendar = day; 
+												calendarStartEnd(from_data, endCalendar, 'end'); 
+												calendarStartEnd(to_data, endCalendar, 'end');
+												disabledChangeMonth(day, to_data);
+												equalClickDate(to_data, day)"
+											>
+												<div class="calendar__day-wrapper">    
+													<div class="calendar__day-item">{{day.day}}</div>  
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="calendar__footer"><a class="calendar__apply btn"
+			(click)="showCalendar = false; sendData()">Apply</a></div>
+	</div>
+</div>

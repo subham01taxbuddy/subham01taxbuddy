@@ -1,0 +1,14 @@
+<div class="input" [class.input_disabled]="disabled">
+  	<label class="input__label">
+  		{{label}}
+  		<span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+  	</label>
+  	<div style="display: flex; width: 100%;">
+	  	<input (keyup)="sendData()" type="{{type}}" class="input__text" placeholder="{{placeholder}}" style="width: 70%;" disabled="{{disabled}}" name="{{name}}" [(ngModel)]="value"/>	  	
+		<span   class="input-group-btn" style="width: 30%;" [class.percents]="isPercents" (click)="isPercents = !isPercents;sendData();">
+		  	<button *ngIf="isPercents" class="button_css" type="button">%</button>
+		  	<button *ngIf="!isPercents" class="button_css" type="button">{{(currency)? currency:'INR'}}</button>
+	  	</span>
+	</div>
+
+</div>

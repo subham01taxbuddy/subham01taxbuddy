@@ -1,0 +1,11 @@
+<div class="input ">
+    <label class="input__label">{{label | capitalizeFirst}}</label>
+    <div class="input__text tag tab-view-wrapper">
+        <div class="tags-container">
+            <span class="tag__label" *ngFor="let tag of value">
+  			<span class="tag__text">{{tag.name}}</span>
+            <span class="tag__remove" (click)="deleteTag(tag)" *ngIf="!disabled">x</span>
+            </span>
+        </div>       
+    </div>
+</div>

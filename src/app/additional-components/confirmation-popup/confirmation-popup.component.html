@@ -1,0 +1,26 @@
+<div class="overlay" style="z-index: 1000;"></div>
+
+<div class="modal modal_show">
+  <div class="modal-wrapper modal-wrapper_show">
+    <!-- <div class="modal-header clearfix">
+        <div class="modal-header__title">Affected Item</div><div class="pull-right">
+          <div class="modal__close" (click)="onClosePopup(false)"></div>
+        </div>
+    </div> -->
+    <div class="modal-content ">
+      <div class="modal-content__container">
+        <div class="card__row">
+          <div class="card__col-xs-12">            
+          	<div class="confirmation_text">{{confirmation_text}}</div>            
+          </div>
+        </div>        
+      </div>
+    </div>
+    <div class="modal-footer clearfix">
+      <div class="pull-right">
+        <a class="btn btn-cancel" (click)="onClosePopup(false)">Cancel</a>
+        <a class="btn modifier__save" (click)="onClosePopup(true)">Proceed</a>
+      </div>
+    </div>
+  </div>
+</div>

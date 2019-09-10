@@ -1,0 +1,7 @@
+.card > .card__row:first-child {
+	margin-top: 0px;
+}
+
+.hidder__divider {
+	border: none !important;
+}

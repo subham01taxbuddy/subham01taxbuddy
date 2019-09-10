@@ -1,0 +1,195 @@
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading> -->
+<div class="main clearfix">
+    <div class="card">            
+        <!-- Search for data -->
+        <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-12">
+                <app-attributes-filter  [selectItems]="filters_list" (sendValue)="onChangeAttrFilter($event)"></app-attributes-filter>
+            </div>
+        </div>
+
+        <div class="card__row">
+            <!-- <div class="report-table-wrapper" style="overflow: unset;">
+                <table class="report-table" style="min-width: unset;">
+                    <thead class="report-table__head">
+                      <tr class="report-table__row report-table__row_head">
+                        <th class="report-table__cell report-table__cell_name text-pull-left"></th>
+                        <th class="report-table__cell report-table__cell_name text-pull-left">Name</th>
+                        <th class="report-table__cell report-table__cell_name text-pull-right">Mobile Number</th>
+                        <th class="report-table__cell report-table__cell_name text-pull-right">Email ID</th>            
+                        <th class="report-table__cell report-table__cell_name text-pull-right">GST Number</th>            
+                        <th class="report-table__cell report-table__cell_name text-pull-right">GST Type</th>            
+                        <th class="report-table__cell report-table__cell_name text-pull-right">GST Return's Type</th>            
+                        <th class="report-table__cell report-table__cell_name text-pull-right">Previous Return filed Status</th>            
+                        <th class="report-table__cell report-table__cell_name text-pull-right">GST Filing Status</th>            
+                        <th class="report-table__cell report-table__cell_name text-pull-right">Status of Invoice</th>            
+                        <th class="report-table__cell report-table__cell_name text-pull-right">Owner</th>            
+                      </tr>
+                    </thead>
+                    <tbody *ngFor="let tab of (filterData); let i=index; " class="report-table__body">
+                      <tr class="report-table__row">
+                        <td class="report-table__cell report-table__cell_day text-pull-left">
+                            <div class="table__cell table__cell_checkbox">
+                                <div class="input">
+                                    <input type="checkbox" class="input__checkbox" [checked]="prods_check[p]">
+                                    <label class="input__checkbox-control" for="select_item4" (click)="prods_check[p] = !prods_check[p]"></label>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-left"><b>{{tab.name | capitalizeFirst}}</b></td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.mobile_number}}</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.email_address}}</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.gst_number}}</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.gst_return_type}}</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="tab.previous_return_field_status" [type]="'text'" [name]="'previous_return_field_status'" [filter_items]="['FILED','NOT FILED']" (sendValue)="tab.previous_return_field_status = $event">
+                            </app-input-select>
+                            <div *ngIf="!prods_check[p]">
+                                {{tab.previous_return_field_status}}
+                            </div>           
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="tab.gst_filing_status" [type]="'text'" [name]="'gst_filing_status'" [filter_items]="['FILED','NOT FILED']" (sendValue)="tab.gst_filing_status = $event">
+                            </app-input-select>
+                            <div *ngIf="!prods_check[p]">
+                                {{tab.gst_filing_status}}
+                            </div>           
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="tab.gst_filing_status" [type]="'text'" [name]="'gst_filing_status'" [filter_items]="['FILED','NOT FILED']" (sendValue)="tab.gst_filing_status = $event">
+                            </app-input-select>
+                            <div *ngIf="!prods_check[p]">
+                                {{tab.gst_filing_status}}
+                            </div>           
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="tab.status_of_invoice" [type]="'text'" [name]="'status_of_invoice'" [filter_items]="['INVOICES UPLOADED','INVOICES PROCESSED','WEEKLY REMINDER']" (sendValue)="tab.status_of_invoice = $event">
+                            </app-input-select>
+                            <div *ngIf="!prods_check[p]">
+                                {{tab.status_of_invoice}}
+                            </div>           
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="tab.owner" [type]="'text'" [name]="'owner'" [filter_items]="['FILED','NOT FILED']" (sendValue)="tab.owner = $event">
+                            </app-input-select>
+                            <div *ngIf="!prods_check[p]">
+                                {{tab.owner}}
+                            </div>           
+                        </td>
+                        
+                      </tr>
+                    </tbody>
+                </table>
+            </div> -->
+            <div class="tab-panel items-tab card__col-xs-12">
+                <div class="tab-panel__content tab-panel__content_visible">
+                    <div class="table product__table">
+                        <div class="table__row  table__row_header">
+                            <div class="table__cell table__cell_checkbox">                                    
+                            </div>
+                            <div class="table__cell product-row__cell-unit">
+                                <a class="table__sort-link">Name</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit">
+                                <a class="table__sort-link">Mobile Number</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit">
+                                <a class="table__sort-link">Email ID</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit">
+                                <a class="table__sort-link">GST Number</a>
+                            </div>                                
+                            <div class="table__cell product-row__cell-unit">
+                                <a class="table__sort-link">GST Type</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit">
+                                <a class="table__sort-link">GST Return's Type</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit">
+                                <a class="table__sort-link">Previous Return filed Status</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit">
+                                <a class="table__sort-link">GST Filing Status</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit">
+                                <a class="table__sort-link">Status of Invoice</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit">
+                                <a class="table__sort-link">Owner</a>
+                            </div>                            
+                        </div>
+
+
+                        <div *ngFor="let item of (filterData); let p=index ">
+                            <div class="table__row-item product-row" [class.table__row-disabled]="false">
+                                <div class="table__row product-row__main-variant">
+                                    <div class="table__cell table__cell_checkbox">
+                                        <div class="input">
+                                            <input type="checkbox" class="input__checkbox" [checked]="prods_check[p]">
+                                            <label class="input__checkbox-control" for="select_item4" (click)="prods_check[p] = !prods_check[p]"></label>
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="table__cell product-row__cell-stock">                                                
+                                        <a class="a-phone-link" (click)="showMerchantDetail(item)">{{item.name}}</a>                                    
+                                    </div>
+
+                                    <div class="table__cell product-row__cell-stock">
+                                        {{item.mobile_number}}                                            
+                                    </div>
+
+                                    <div class="table__cell product-row__cell-stock">
+                                        {{item.email_address}}                                            
+                                    </div>
+
+                                    <div class="table__cell product-row__cell-stock">
+                                        {{item.gst_number}}                                            
+                                    </div>
+
+                                    <div class="table__cell product-row__cell-stock">
+                                        {{item.gst_type}}                                            
+                                    </div>
+
+                                    <div class="table__cell product-row__cell-stock">
+                                        {{item.gst_return_type}}                                            
+                                    </div>
+
+                                    <div class="table__cell product-row__cell-stock">
+                                        <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="item.previous_return_field_status" [type]="'text'" [name]="'previous_return_field_status'" [filter_items]="['FILED','NOT FILED']" (sendValue)="item.previous_return_field_status = $event">
+                                        </app-input-select>
+                                        <div *ngIf="!prods_check[p]">
+                                            {{item.previous_return_field_status}}
+                                        </div>                                            
+                                    </div>
+                                    <div class="table__cell product-row__cell-stock">
+                                        <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="item.gst_filing_status" [type]="'text'" [name]="'gst_filing_status'" [filter_items]="['FILED','NOT FILED']" (sendValue)="item.gst_filing_status = $event">
+                                        </app-input-select>
+                                        <div *ngIf="!prods_check[p]">
+                                            {{item.gst_filing_status}}
+                                        </div>                                            
+                                    </div>
+                                    <div class="table__cell product-row__cell-stock">
+                                        <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="item.status_of_invoice" [type]="'text'" [name]="'status_of_invoice'" [filter_items]="['INVOICES UPLOADED','INVOICES PROCESSED','WEEKLY REMINDER']" (sendValue)="item.status_of_invoice = $event">
+                                        </app-input-select>
+                                        <div *ngIf="!prods_check[p]">
+                                            {{item.status_of_invoice}}
+                                        </div>                                            
+                                    </div>
+                                    <div class="table__cell product-row__cell-stock">
+                                        <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="item.owner" [type]="'text'" [name]="'owner'" [filter_items]="['OWNER1','OWNER2']" (sendValue)="item.owner = $event">
+                                        </app-input-select>
+                                        <div *ngIf="!prods_check[p]">
+                                            {{item.owner ? item.owner : "N/A"}}
+                                        </div>                                            
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

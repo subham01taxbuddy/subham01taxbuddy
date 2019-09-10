@@ -1,0 +1,55 @@
+<div class="card__row filter hidder hidder_line-on" [class.hidder_expand]="show_filters">
+  <div class="hidder__line clearfix">
+    <div class="card__col-xs-6 card__col-sm-8">
+      <div>Filter</div>
+    </div>
+    <div class="card__col-xs-6 card__col-sm-4 filter__reset-link-container">
+      <a class="green-link filter__reset-link" (click)="resetFilters()">Reset all filters</a>
+    </div>
+  </div>
+  <div class="hidder__content" *ngIf="show_filters">
+    <div class="card__col-md-3 card__col-xs-12 pull-right">
+      <a class="btn btn_stroke btn-add filter__add-link" (click)="addFilter()">Add another filter</a>
+    </div>
+    <div class="filter__content">
+      <div class="filter__row" *ngFor="let filter of filter_content; let i=index ">
+        <div class="filter__col card__col-sm-4 card__col-xs-12">
+          <div class="input">
+		        <label class="input__label" for="attr">Select attribute</label>
+		        <div class="input__select">
+		          <input type="text" class="select__box ogp_select"
+		            [(ngModel)]="filter.attr" 
+		            name="filter.attr"
+		            (keyup)="filterBy = filter.attr; sendData()"
+		            (click)="showAttributes('attr', i)"/>
+		        	<div *ngIf="showAttr[i]" class="un-select-list">
+		      			<ul>
+		      				<li 
+		      					*ngFor="let item of selectItems;" 
+		      					(click)="filter.attr = item.in_prod_name; sendData()"
+		      					[class.un-item-selected]="filter.attr == item.in_prod_name"
+		      				>{{item.in_prod_name}}</li>
+		      			</ul>
+		      		</div>
+		        </div>
+		      </div><!-- select input -->
+        </div>
+        <div class="filter__col card__col-sm-4 card__col-xs-10">
+          <div class="input">
+		        <label class="input__label" for="attr">Select value</label>
+		        <div class="input__select">
+		          <input type="text" class="select__box ogp_select"
+		            [(ngModel)]="filter.value" 
+		            name="filter.value"
+		            (keyup)="sendData()"
+		            (click)="showAttributes('val', i)"/>		        	
+		        </div>
+		      </div><!-- select input -->
+        </div>
+        <div class="filter__col card__col-sm-1 card__col-xs-2" *ngIf="i > 0">
+          <div class="btn-clear" (click)="deleteFilter(i)"></div>
+        </div>
+      </div>
+    </div><!-- filter content -->
+  </div>
+</div>

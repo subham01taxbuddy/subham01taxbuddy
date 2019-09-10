@@ -1,0 +1,11 @@
+.select__label-wrapper {
+	padding: 0;
+}
+
+.select__checkbox_label {
+	padding-top: 0;
+}
+
+.input__checkbox-control {
+	margin-top: -3px;
+}

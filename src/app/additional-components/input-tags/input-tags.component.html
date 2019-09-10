@@ -1,0 +1,14 @@
+<div class="input">
+    <label class="input__label">{{(label ? label : 'Tags') | capitalizeFirst}}</label>
+    <div class="input__text tag">
+        <div class="tags-container">
+            <span class="tag__label" *ngFor="let tag of value">
+  			<span class="tag__text">{{tag}}</span>
+            <span class="tag__remove" *ngIf="!read_only" (click)="deleteTag(tag)">x</span>
+            </span>
+        </div>
+        <ng-template [ngIf]="!restrict_add">
+            <input type="text" class="tag__input" disabled="{{disabled}}" placeholder="Selected Tags" size="17" name="in_tag" [(ngModel)]="in_tag" (keyup.enter)="  addTag(in_tag)" />
+        </ng-template>
+    </div>
+</div>

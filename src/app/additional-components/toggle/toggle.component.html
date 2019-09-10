@@ -1,0 +1,10 @@
+<div class="input card__toggle card__toggle-inverse pull-right">
+    <label *ngIf="label" class="input__label input-toggle_label">{{label}}</label>
+    <input type="checkbox" class="input__checkbox" [checked]="value" />
+    <label class="toggle">
+    <span *ngIf="!value" class="toggle__text">{{offMessage ? offMessage : 'Off'}}</span>
+    <span *ngIf="value" class="toggle__text">{{onMessage ? onMessage : 'On'}}</span>
+    <span class="toggle__controller"></span>
+  </label>
+</div>
+<!-- .ogp_shop-assign__toggle -->

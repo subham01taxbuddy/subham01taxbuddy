@@ -1,0 +1,15 @@
+<div class="input input_quantity">
+  <label class="input__label">{{label}}
+      <span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+  </label>
+  <div class="input__number-container clearfix">
+    <input type="number" class="input__text input__number" name="value"
+    	[(ngModel)]="value" (keyup)="writeValue(value)" [disabled]="disabled">
+    <div class="input__number-spin-container" *ngIf="!disabled">
+      <div class="input__number-spin input__number-spin_plus"
+      	(click)="changeValue(+1)">+</div>
+      <div class="input__number-spin input__number-spin_minus"
+      	(click)="changeValue(-1)">-</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="input">
+
+  <div style="width: 100%;display: flex;position: relative;" *ngIf="label=='Select Customer'">
+    <label class="input__label">{{label}}
+      <span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+    </label>
+    <div style="position: absolute;right: 0;">
+      <app-input-checkbox [value]="is_exclude" [label]="'Exclude'" 
+        (sendValue)="is_exclude = $event;sendData();">
+      </app-input-checkbox>
+    </div>
+  </div>
+
+  <div style="width: 100%;display: flex;position: relative;" *ngIf="label=='Category'">
+    <label class="input__label">{{label}}
+      <span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+    </label>
+    <div style="position: absolute;right: 0;">
+      <app-input-checkbox [value]="is_exclude_category" [label]="'Exclude'" 
+        (sendValue)="is_exclude_category = $event;sendData();">
+      </app-input-checkbox>
+    </div>
+  </div>
+
+  <div style="width: 100%;display: flex;position: relative;" *ngIf="label=='Items'">
+    <label class="input__label">{{label}}
+      <span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+    </label>
+    <div style="position: absolute;right: 0;">
+      <app-input-checkbox [value]="is_exclude_item" [label]="'Exclude'" 
+        (sendValue)="is_exclude_item = $event;sendData();">
+      </app-input-checkbox>
+    </div>
+  </div>
+  
+  <label *ngIf="(label!='Select Customer' && label!= 'Category' && label != 'Items')" class="input__label">{{label}}
+      <span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+  </label>
+  <div class="input__select">
+    <input type="text" class="select__box modifier__store-assign" 
+      [(ngModel)]="value" 
+      name="{{name}}"
+      (keyup)="filterBy = value"
+      (click)="showStAssign = !showStAssign"/>
+    <div *ngIf="showStAssign" class="un-select-list">
+      <ul>
+        <!--  | selectFilter:filterBy -->
+        <li class="select__item" *ngFor="let item of (filter_items); let p=index " (click)="changeStores(item, p); sendData();"><!-- checkStores(p);  -->
+          <label class="input select__label-wrapper select__item_selected">
+            <input *ngIf="item != filter_label && item != remove_all_label" class="input__checkbox"
+               type="checkbox" [checked]="validate(item)">
+            <label (click)="changeStores(item, p); sendData();$event.stopPropagation(); $event.preventDefault();"  *ngIf="item != filter_label && item != remove_all_label" class="input__checkbox-control"></label>
+            <label (click)="changeStores(item, p); sendData();$event.stopPropagation(); $event.preventDefault();" class="input__label input__checkbox_label select__checkbox_label"
+            >{{item | capitalizeFirst}}</label>
+          </label>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div><!-- select input -->

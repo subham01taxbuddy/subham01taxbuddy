@@ -1,0 +1,44 @@
+.calendar__hour-select
+	.scroll-wrapper
+		top: 23px
+	.list-box__container
+		display: block
+		max-height: 200px
+		width: 100%
+		&::-webkit-scrollbar 
+			background-color: transparent
+			border-radius: 3px
+			width: 6px
+		&::-webkit-scrollbar-thumb 
+			background-color: #c9c9c9
+			border-radius: 4px
+	.scroll-content
+		overflow: hidden
+		&:hover
+			overflow-y: auto
+
+.calendar__hour-select.list-box
+	padding: 3px 8px
+	width: 75px
+	height: 25px
+	line-height: 1.3
+	display: inline-block
+	.list-box__data
+		line-height: 1.3
+
+.compare_title
+	text-transform: lowercase
+
+.list-box__container
+	display: block
+
+.single-calendar
+	min-width: 293px
+
+.calendar-single-box
+	float: none
+	width: 100%
+
+@media only screen and (max-width: 390px)
+	.single-calendar
+		min-width: 265px

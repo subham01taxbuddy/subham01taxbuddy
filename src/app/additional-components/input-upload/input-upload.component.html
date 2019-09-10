@@ -1,0 +1,41 @@
+<form class="ogp_images__uploader" [class.is-error]="upload" enctype="multipart/form-data" action="" method="post">
+    <input type="file" id="{{input_id}}" class="ogp_images__input" />
+    <!-- id="image_uploader" id="ogp_images" -->
+    <label for="{{input_id}}">
+
+  <!-- COMMENTED CHANGE BEGINS -->
+<!-- <form class="ogp_images__uploader" [class.is-error]="upload" enctype="multipart/form-data" action="upload.php" method="post">  -->
+<!-- <div class="ogp_images__uploader" [class.is-error]="upload">
+  <input id="image_uploader" id="ogp_images" type="file" class="ogp_images__input"/>
+  <label for="ogp_images"> -->
+ <!-- COMMENTED CHANGE ENDS -->
+
+    <div class="ogp_images__upload">
+      <div class="ogp_images__table">
+        <div class="ogp_images__row">
+          <div class="ogp_images__cell">
+            <div class="ogp_images__ico"></div>
+            <div *ngIf="!upload" class="ogp_images__text">Click or drop files here to upload</div>
+            <!-- <div *ngIf="upload" class="ogp_images__text">Something went wrong. Please <a class="green-link">check the log</a> and correct your CSV file.</div>  -->
+            <div *ngIf="upload" class="ogp_images__text">Upload Successful!</div> 
+
+          <!-- COMMENTED CHANGE BEGINS -->
+            <!-- <div class="ogp_images__text">Click or drop files here to upload</div> --> 
+            <!-- <div *ngIf="upload" class="ogp_images__text">Something went wrong. Please <a class="green-link">check the log</a> and correct your file.</div>  -->
+          <!-- COMMENTED CHANGE BEGINS -->
+
+          </div>
+        </div>
+      </div>
+      <div class="ogp_images__upload-progress"></div>
+    </div>
+    <img src="assets/img/gray-wrapper.png" alt="" class="ogp_images__uploader-image">
+  </label>
+    <!-- COMMENTED CHANGE BEGINS -->
+    <!-- </div> -->
+    <!-- COMMENTED CHANGE BEGINS -->
+</form>
+
+<!-- COMMENTED CHANGE BEGINS -->
+<!-- </form> -->
+<!-- COMMENTED CHANGE ENDS -->

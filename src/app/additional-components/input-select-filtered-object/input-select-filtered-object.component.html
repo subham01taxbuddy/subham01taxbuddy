@@ -1,0 +1,14 @@
+<div class="input" [class.input_disabled]="disabled">
+    <label class="input__label" [style.opacity]="label == '.' ? '0' : '1'">{{label}}
+      <span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+  </label>
+    <div class="input__select">
+        <input type="{{type}}" class="select__box ogp_select" placeholder="{{placeholder}}" disabled="{{disabled}}" [(ngModel)]="value_list" name="value" (click)="filterBy = ''; showSelect()" (keyup)="filterBy = value_list; checkValue()" />
+        <!-- (keyup)="filterBy = value_list; sendData()" -->
+        <div *ngIf="showItems" class="un-select-list">
+            <ul>
+                <li *ngFor="let item of (filter_items | selectObjFilter:filterBy:key)" (click)="value = item; sendData()" [class.un-item-selected]="value == item">{{item[key] + (item.shop_code ? ' ('+ item.shop_code + ')' : '') | capitalizeFirst}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
