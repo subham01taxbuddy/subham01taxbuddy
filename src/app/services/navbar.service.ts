@@ -37,6 +37,7 @@ export class NavbarService {
 	showBtns: any ="";
 
 	saveBusinessProfile:boolean = false;
+	saveGSTBillInvoice:boolean = false;
 	
 	private auth_token: string;
 	private user_email: string;

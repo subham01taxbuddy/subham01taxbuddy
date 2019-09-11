@@ -37,6 +37,8 @@ export class GSTCloudComponent implements OnInit {
   selected_bill_type: any = "";
   invoices_list: any = [];
 
+  isGSTBillViewShown: boolean = false;
+
   filterData:any = [];      
   filters_list: any = [ 
     {'in_prod_name':'Processed By'},
@@ -129,6 +131,10 @@ export class GSTCloudComponent implements OnInit {
   }
 
   uploadNewBill() {
-    alert('upload new bill')
+    this.isGSTBillViewShown = true;
+  }
+
+  onUpdateInvoice(event) {
+    this.isGSTBillViewShown = false;
   }
 }

@@ -63,6 +63,7 @@ import { ListComponent } from './list/list.component';
 import { BusinessComponent } from './business/business.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
 import { GSTCloudComponent } from './business/gst-cloud/gst-cloud.component';
+import { AddUpdateGSTBillInvoiceComponent } from './business/gst-cloud/add-update-gst-bill-invoice/add-update-gst-bill-invoice.component';
 import { BusinessDocumentsComponent } from './business/business-documents/business-documents.component';
 
 //Login component
@@ -81,6 +82,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     BusinessComponent,
     BusinessProfileComponent,
     GSTCloudComponent,
+    AddUpdateGSTBillInvoiceComponent,
     BusinessDocumentsComponent,
     HomeComponent,
     LoginComponent,

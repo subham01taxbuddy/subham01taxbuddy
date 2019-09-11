@@ -1,0 +1,34 @@
+.btn-clear {
+	margin-top: 0px;
+}
+
+.add-item-btn {
+	margin-top: 0px;
+}
+
+.invoice_images {
+	padding: 0px !important;
+}
+
+.invoice_images .card__row {
+	margin: 0px !important;
+	padding: 0px !important;
+}
+
+.invoice_images .card__row .card__col-xs-12 {
+	margin: 0px !important;
+	padding: 0px !important;
+}
+
+.invoice_images .card__row {
+	margin: 0px;
+	padding: 0px;
+}
+
+.invoice_images .image {
+	margin: 0px;
+}
+
+.invoice_images .image__item {
+	max-height: unset !important;
+}

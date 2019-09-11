@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
-<div class="content content_full">
+<div class="content content_full" *ngIf="!isGSTBillViewShown">
 
   <div class="content__container">
     <div class="card" >
@@ -120,3 +120,8 @@
     </ng-template>
   </div><!-- .content__container -->
 </div><!-- .content -->
+
+
+<app-add-update-gst-bill-invoice *ngIf="isGSTBillViewShown" (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)">
+  
+</app-add-update-gst-bill-invoice>
