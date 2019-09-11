@@ -86,6 +86,10 @@ export class NavbarComponent implements OnInit {
     return NavbarService.getInstance(null);
   }
 
+  saveBusinessProfile() {
+    NavbarService.getInstance(null).saveBusinessProfile = true;
+  }
+
   logout(){
     localStorage.clear();
     this.router.navigate(['']);

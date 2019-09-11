@@ -1,0 +1,70 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="content content_full">
+
+  <div class="content__container">
+    <div class="card" >
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <app-input-select-object [label]="'Select merchant'" [type]="'text'" [value]="selected_merchant" [type]="'text'" [name]="'selected_merchant'" [filter_items]="available_merchant_list" (sendValue)="selected_merchant = $event;onSelectMerchant($event)">
+          </app-input-select-object>
+        </div>        
+        <div class="card__col-xs-12 card__col-sm-4">
+          <app-calendar [format]="'All'" [isCompareDateShow]="false" [label]="'All'" [type]="'text'" [name]="'from_to_date'" [value]="(from_date | backTipsDate) +' to '+ (to_date | backTipsDate)" (sendBeginDate)="from_date = $event" (sendEndDate)="to_date = $event"></app-calendar>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4 text-pull-right">
+          <a class="btn long-btn" (click)="getDocumentListByMerchant();">Apply</a>          
+        </div>
+      </div><!-- card__row -->   
+
+      <!-- <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-12 text-pull-right">
+          <a class="btn long-btn" (click)="getDocumentListByMerchant();">Apply</a>          
+        </div>
+      </div> -->
+    </div>
+
+    <div class="card" *ngIf="is_applied_clicked && documents_list && documents_list.length > 0">
+        <div class="card__row">        
+          <div class="report-table-wrapper">
+              <table class="report-table" style="min-width: unset;">
+                  <thead class="report-table__head">
+                    <tr class="report-table__row report-table__row_head">
+                      <th class="report-table__cell report-table__cell_name text-pull-left">#</th>
+                      <th class="report-table__cell report-table__cell_name text-pull-left">Document Type</th>
+                      <th class="report-table__cell report-table__cell_name text-pull-right">Upload Date</th>
+                      <th class="report-table__cell report-table__cell_name text-pull-right">Uploaded By</th>
+                      <th class="report-table__cell report-table__cell_name" ></th>                        
+                    </tr>
+                  </thead>
+                  <tbody class="report-table__body" *ngFor="let tab of (filterData); let i=index; ">
+                    <tr class="report-table__row">                        
+                      <td class="report-table__cell report-table__cell_day text-pull-left">{{i+1}}</td>
+                      <td class="report-table__cell report-table__cell_day text-pull-left"><b>{{tab.document_type | capitalizeFirst}}</b></td>
+                      <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.upload_date | backTipsDate}}</td>
+                      <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.uploaded_by | capitalizeFirst}}</td>
+                      <td class="report-table__cell report-table__cell_day text-pull-right">
+                          <div class="fa-icon-wrapper"><i class="fa fa-cloud-upload" tooltip="Upload Document"></i></div>                          
+                          <div class="fa-icon-wrapper"><i class="fa fa-cloud-download" tooltip="Download Document"></i></div>                          
+                          <div class="combobox__clear"></div>                            
+
+                      </td>
+                      
+                    </tr>
+                   
+                  </tbody>
+              </table>
+          </div>
+        </div>
+    </div>
+    
+    <div class="card" *ngIf="is_applied_clicked && (!documents_list || documents_list.length == 0)">
+      <div class="card__row">
+          <div class="card__col-xs-12" style="font-size: 20px;text-align: center;">
+            No Data Available.
+          </div>
+      </div>
+    </div>
+    
+  </div><!-- .content__container -->
+</div><!-- .content -->

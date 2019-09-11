@@ -22,6 +22,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({name: 'backTipsDate'})
 export class BacktipsDatePipe implements PipeTransform {
 	transform(item: any, filter: string): any {
+		if(!item) { return ""; }
 		let day, month, month_names, year,hours,minutes,seconds;
 		month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 		if(filter != 'string') {
@@ -36,6 +37,9 @@ export class BacktipsDatePipe implements PipeTransform {
 			seconds = item.getSeconds()
 			seconds = (seconds<10) ? "0"+seconds : seconds;
 		}
+
+		if(!(item instanceof Date) || isNaN(day)) { return "" }
+
 		if(filter == 'short') {
 			return day + ' ' + month_names[month] + ' ' + '`' + year.slice(year.length - 2, year.length);
 		} else if(filter == 'no-year') {

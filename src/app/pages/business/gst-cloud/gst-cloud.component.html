@@ -1,0 +1,122 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="content content_full">
+
+  <div class="content__container">
+    <div class="card" >
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <app-input-select-object [label]="'Select merchant'" [type]="'text'" [value]="selected_merchant" [type]="'text'" [name]="'selected_merchant'" [filter_items]="available_merchant_list" (sendValue)="selected_merchant = $event;onSelectMerchant($event)">
+          </app-input-select-object>
+        </div>        
+      </div><!-- card__row -->   
+    </div>
+
+    <ng-template [ngIf]="merchantData && merchantData.merchant_id">
+
+      <div class="card" *ngIf="!selected_bill_type">
+          <div class="card__row">        
+            <div class="report-table-wrapper">
+                <table class="report-table" style="min-width: unset;">
+                    <thead class="report-table__head">
+                      <tr class="report-table__row report-table__row_head">
+                        <th class="report-table__cell report-table__cell_name text-pull-left">Bill Type</th>
+                        <th class="report-table__cell report-table__cell_name text-pull-right">No. Of Bills Uploaded</th>
+                        <th class="report-table__cell report-table__cell_name text-pull-right">No. Of Bills Processed</th>
+                        <th class="report-table__cell report-table__cell_name text-pull-right">Pending Bills for Processing</th>
+                      </tr>
+                    </thead>
+                    <tbody class="report-table__body">
+                      <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_day text-pull-left"><a (click)="showBillTypeInvoices('sales')"><b>Sales Bills</b></a></td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">1</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">12</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">0</td>
+                      </tr>
+                      <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_day text-pull-left"><a (click)="showBillTypeInvoices('purchase_or_expense')"><b>Purchase / Expense Bills</b></a></td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">3</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">112</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">10</td>
+                      </tr>
+                      <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_day text-pull-left"><a (click)="showBillTypeInvoices('credit')"><b>Credit Note Bill</b></a></td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">3</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">5</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">7</td>
+                      </tr>
+                      <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_day text-pull-left"><a (click)="showBillTypeInvoices('debit')"><b>Debit Note Bill</b></a></td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">11</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">1</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">10</td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+          </div>
+      </div>
+
+      <div class="card" *ngIf="selected_bill_type">        
+        <div class="card__row">
+          <div class="card__col-xs-6">
+            <div class="back-btn-container" (click)="cancelInvoiceList()"></div>
+          </div>
+          <div class="card__col-xs-6" style="text-align: right;">
+            <div class="upload-btn-container" (click)="uploadNewBill()"></div>
+          </div>
+        </div>
+
+        <div class="card__title">{{getInvoiceCardTitle()}}</div>
+        <ng-template [ngIf]="invoices_list && invoices_list.length>0">
+          <div class="card__row">
+              <div class="card__col-xs-12 card__col-sm-12">
+                  <app-attributes-filter  [selectItems]="filters_list" (sendValue)="onChangeAttrFilter($event)"></app-attributes-filter>
+              </div>
+          </div>
+
+          <div class="card__row">        
+              <div class="report-table-wrapper">
+                  <table class="report-table" style="min-width: unset;">
+                      <thead class="report-table__head">
+                        <tr class="report-table__row report-table__row_head">
+                          <th class="report-table__cell report-table__cell_name text-pull-left">#</th>
+                          <th class="report-table__cell report-table__cell_name text-pull-right">Invoice #</th>
+                          <th class="report-table__cell report-table__cell_name text-pull-right">Upload Date</th>
+                          <th class="report-table__cell report-table__cell_name text-pull-right">Processed Date</th>
+                          <th class="report-table__cell report-table__cell_name text-pull-right">Processed By</th>
+                          <th class="report-table__cell report-table__cell_name text-pull-right"></th>
+                          <th class="report-table__cell report-table__cell_name text-pull-right"></th>
+                        </tr>
+                      </thead>
+                      <tbody class="report-table__body" *ngFor="let tab of (filterData); let i=index; ">
+                        <tr class="report-table__row">                        
+                          <td class="report-table__cell report-table__cell_day text-pull-left">{{i+1}}</td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.invoice_id}}</td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.upload_date | backTipsDate}}</td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.processed_date | backTipsDate}}</td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.processed_by | capitalizeFirst}}</td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <div class="fa-icon-wrapper"><i class="fa fa-edit" tooltip="Edit"></i></div>
+                          </td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <div class="combobox__clear"></div>
+                          </td>
+                        </tr>                     
+                      </tbody>
+                  </table>
+              </div>            
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="!invoices_list || invoices_list.length==0">
+          <div class="card__row">
+            <div class="card__col-xs-12" style="font-size: 20px;text-align: center;">
+              No Data Available.
+            </div>
+          </div>
+        </ng-template>
+      </div>
+ 
+    </ng-template>
+  </div><!-- .content__container -->
+</div><!-- .content -->

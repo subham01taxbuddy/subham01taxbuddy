@@ -180,6 +180,10 @@
     margin: 30px -10px 0;
 }
 
+.card .card__row:first-child {
+    margin-top:  0px;
+}
+
 .card__row_sub {
     margin-top: 9px;
 }
@@ -193,6 +197,7 @@
 .card__row:after {
     clear: both;
 }
+
 
 .card__col-lg-1,
 .card__col-lg-2,

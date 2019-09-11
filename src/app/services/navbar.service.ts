@@ -35,6 +35,9 @@ export class NavbarService {
 	headers: any
 
 	showBtns: any ="";
+
+	saveBusinessProfile:boolean = false;
+	
 	private auth_token: string;
 	private user_email: string;
 

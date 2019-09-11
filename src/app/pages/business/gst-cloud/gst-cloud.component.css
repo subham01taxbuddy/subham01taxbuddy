@@ -1,0 +1,47 @@
+.report-table__cell > a:hover{    
+    color: #22384e;
+    text-decoration: underline;
+}
+
+.report-table__cell .fa-icon-wrapper {
+	font-size: 20px;
+	cursor: pointer;
+}
+
+.report-table__cell > .combobox__clear {
+	margin:0px; 
+	float:none; 
+	background-size: 17px 21px;
+}
+
+.upload-btn-container {
+    position: relative;
+    height: 37px;
+    display: inline-block;
+    width: 170px;
+    border: 2px solid #6a6a67;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
+.upload-btn-container:before {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 35px;
+    height: 30px;
+    width: 30px;
+    background-image: url('../../../../assets/img/upload.png');
+    background-repeat: no-repeat;
+    background-size: 26px auto;
+}
+
+.upload-btn-container:after {
+    content: 'Upload';
+    position: absolute;
+    top: 10px;
+    left: 72px;
+}

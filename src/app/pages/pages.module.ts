@@ -62,6 +62,8 @@ import { PagesComponent } from './pages.component';
 import { ListComponent } from './list/list.component';
 import { BusinessComponent } from './business/business.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
+import { GSTCloudComponent } from './business/gst-cloud/gst-cloud.component';
+import { BusinessDocumentsComponent } from './business/business-documents/business-documents.component';
 
 //Login component
 import { LoginComponent } from './login/login.component';
@@ -78,6 +80,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     ListComponent,
     BusinessComponent,
     BusinessProfileComponent,
+    GSTCloudComponent,
+    BusinessDocumentsComponent,
     HomeComponent,
     LoginComponent,
     NavbarComponent,

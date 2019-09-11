@@ -1,0 +1,22 @@
+.report-table__cell > a:hover{    
+    color: #22384e;
+    text-decoration: underline;
+}
+
+.report-table__cell .fa-icon-wrapper {
+	font-size: 20px;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 11px;
+    margin-right: 20px;
+}
+
+.report-table__cell > .combobox__clear {
+	margin:0px; 
+	float:none; 
+	background-size: 17px 21px;
+    display: inline-block;
+    
+}
+

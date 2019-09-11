@@ -75,4 +75,8 @@ export class ListComponent implements OnInit {
   showMerchantDetail(merchant) {
     
   }
+
+  updateListItem(list) {
+    alert("update list call for "+list.name)
+  }
 }
