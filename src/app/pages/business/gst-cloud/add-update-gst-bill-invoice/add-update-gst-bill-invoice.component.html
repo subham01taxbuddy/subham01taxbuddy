@@ -39,8 +39,9 @@
               </app-input-select>
             </div>      
             
-            <div class="card__col-xs-12 card__col-sm-6">
-              <app-input [label]="'Invoice Date'" [type]="'date'" [is_mandatory]="'true'" [name]="'Invoice Date'" [placeholder]="'Invoice Date'" [value]="invoiceData.invoice_date" (sendValue)="invoiceData.invoice_date = $event"></app-input>
+            <div class="card__col-xs-12 card__col-sm-6">              
+              <app-calendar [format]="'from'" [label]="'Invoice Date'" [type]="'text'" [init_from_date]="invoiceData.invoice_date" [name]="'invoiceData.invoice_date'"
+                [value]="invoiceData.invoice_date | backTipsDate" (sendBeginDate)="invoiceData.invoice_date = $event"></app-calendar>
             </div>
           </div>
 
@@ -164,7 +165,8 @@
       <!-- .ogp_composite-product -->
 
       <div class="footer__buttons clearfix" style="margin-top: 40px;">
-          <a class="btn long-btn" (click)="saveGSTBillInvoice();">Save Invoice</a>
+        <a class="btn btn_stroke long-btn" (click)="onCancelBtnClicked();">Cancel</a>
+        <a class="btn long-btn" (click)="saveGSTBillInvoice();">Save Invoice</a>
       </div>
       <!-- .footer__buttons -->    
   </div><!-- .content__container -->

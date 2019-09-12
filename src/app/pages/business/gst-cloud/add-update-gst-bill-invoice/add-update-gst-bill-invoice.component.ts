@@ -34,6 +34,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   @Input('invoiceToUpdate') invoiceToUpdate: any;
   @Output() onUpdateInvoice: EventEmitter<any> = new EventEmitter();  
   @Output() onAddInvoice: EventEmitter<any> = new EventEmitter();
+  @Output() onCancelInvoice: EventEmitter<any> = new EventEmitter();
 
   loading: boolean = false;  
   invoiceData: any = {invoice_image:"../../../../../assets/img/invoice.png"};
@@ -76,6 +77,10 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
   deleteItem(index) {
     this.invoiceData.items.splice(index,1);
+  }
+
+  onCancelBtnClicked() {
+    this.onCancelInvoice.emit(true);
   }
 
 }

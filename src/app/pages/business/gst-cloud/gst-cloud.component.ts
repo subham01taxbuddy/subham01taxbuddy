@@ -137,4 +137,8 @@ export class GSTCloudComponent implements OnInit {
   onUpdateInvoice(event) {
     this.isGSTBillViewShown = false;
   }
+
+  onCancelInvoice(event) {
+    this.isGSTBillViewShown = false;
+  }
 }
