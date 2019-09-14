@@ -8,11 +8,17 @@
         <div class="card__col-xs-12 card__col-sm-4">
           <app-input-select-object [label]="'Select merchant'" [type]="'text'" [value]="selected_merchant" [type]="'text'" [name]="'selected_merchant'" [filter_items]="available_merchant_list" (sendValue)="selected_merchant = $event;onSelectMerchant($event)">
           </app-input-select-object>
-        </div>        
+        </div>    
+        <div class="card__col-xs-12 card__col-sm-4">
+          <app-calendar [format]="'All'" [isCompareDateShow]="false" [label]="'All'" [type]="'text'" [name]="'from_to_date'" [value]="(from_date | backTipsDate) +' to '+ (to_date | backTipsDate)" (sendBeginDate)="from_date = $event" (sendEndDate)="to_date = $event"></app-calendar>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4 text-pull-right">
+          <a class="btn long-btn" (click)="getAllBillInfoByMerchant();">Apply</a>          
+        </div>    
       </div><!-- card__row -->   
     </div>
 
-    <ng-template [ngIf]="merchantData && merchantData.merchant_id">
+    <ng-template [ngIf]="is_applied_clicked">
 
       <div class="card" *ngIf="!selected_bill_type">
           <div class="card__row">        
@@ -63,7 +69,7 @@
             <div class="back-btn-container" (click)="cancelInvoiceList()"></div>
           </div>
           <div class="card__col-xs-6" style="text-align: right;">
-            <div class="upload-btn-container" (click)="uploadNewBill()"></div>
+            <div class="add-invoice-btn-container" (click)="uploadNewBill()"></div>
           </div>
         </div>
 
@@ -122,6 +128,30 @@
 </div><!-- .content -->
 
 
-<app-add-update-gst-bill-invoice *ngIf="isGSTBillViewShown" (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)" (onCancelInvoice)="onCancelInvoice($event)">
-  
-</app-add-update-gst-bill-invoice>
+<!-- Edit Invoice Overlay Start -->
+<div class="overlay" *ngIf="isGSTBillViewShown"></div>
+<div class="modal modal_show popup-bill-invoice-modal" *ngIf="isGSTBillViewShown">
+    <div class="modal-wrapper modal-fullscreen modal-wrapper_show">
+        <!-- <div class="modal-header clearfix">
+            <div class="modal-header__title">Invoice</div>
+            <div class="pull-right" data-target="close">
+                <div class="modal__close" (click)="cancelProduct()"></div>
+            </div>
+        </div> -->
+        <div class="modal-content modal-content_scrollbar">
+            <div class="modal-content__container bill-invoice-popup__content">
+
+                <app-add-update-gst-bill-invoice (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)">                  
+                </app-add-update-gst-bill-invoice>
+
+            </div>
+        </div>
+        <div class="modal-footer clearfix">
+            <div class="pull-right">
+                <a class="btn btn-cancel" (click)="onCancelInvoiceBtnClicked()">Cancel</a>
+                <a class="btn product__save" (click)="onSaveGSTBillInvoice()">Save Invoice</a>                
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit Invoice Overlay Close -->

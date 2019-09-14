@@ -38,12 +38,19 @@ export class GSTCloudComponent implements OnInit {
   invoices_list: any = [];
 
   isGSTBillViewShown: boolean = false;
+  is_applied_clicked: boolean = false;
+
+  from_date: any = new Date();
+  to_date: any = new Date();
 
   filterData:any = [];      
   filters_list: any = [ 
     {'in_prod_name':'Processed By'},
     {'in_prod_name':'Invoice #'},    
   ];
+
+  bodyTag = document.getElementsByTagName("body")[0];
+
   constructor(
   	private navbarService: NavbarService,
     public router: Router,
@@ -76,6 +83,14 @@ export class GSTCloudComponent implements OnInit {
     console.log( this.merchantData)
   }
 
+  getAllBillInfoByMerchant() {
+    if(!this.merchantData || !this.merchantData.merchant_id) {
+      this._toastMessageService.alert("error","Please select merchant");
+      return;
+    }
+    this.is_applied_clicked = true;
+  }
+  
   showBillTypeInvoices(type) {
     this.selected_bill_type = type;
     this.getInvoicesByBillType(type);
@@ -132,13 +147,21 @@ export class GSTCloudComponent implements OnInit {
 
   uploadNewBill() {
     this.isGSTBillViewShown = true;
+    this.bodyTag.setAttribute("class", "overflow-hidden");    
   }
 
   onUpdateInvoice(event) {
     this.isGSTBillViewShown = false;
+    this.bodyTag.setAttribute("class", "");
   }
 
-  onCancelInvoice(event) {
+  onCancelInvoiceBtnClicked(event) {
     this.isGSTBillViewShown = false;
+    this.bodyTag.setAttribute("class", "");
+  }
+
+  onSaveGSTBillInvoice() {
+    this.isGSTBillViewShown = false;
+    this.bodyTag.setAttribute("class", ""); 
   }
 }

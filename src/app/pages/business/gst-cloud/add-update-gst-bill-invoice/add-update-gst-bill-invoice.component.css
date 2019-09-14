@@ -26,9 +26,18 @@
 }
 
 .invoice_images .image {
-	margin: 0px;
+	margin: 0px;	
+	min-height: 100vh;
 }
 
 .invoice_images .image__item {
-	max-height: unset !important;
+	max-height: unset !important;	
+	opacity: 0;
+	-webkit-transition: opacity 1s ease-in-out;
+  	-moz-transition: opacity 1s ease-in-out;
+  	transition: opacity 1s ease-in-out;
+}
+
+.hidder__line {
+	padding: 0px !important;
 }

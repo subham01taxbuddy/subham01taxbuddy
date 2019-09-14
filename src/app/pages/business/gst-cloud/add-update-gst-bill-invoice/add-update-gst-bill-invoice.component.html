@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
-<div class="content content_half">
+<div class="content" style="margin-top: 30px;width: 40%">
   <div class="content__container">    
       <div class="invoice_images card card_main">
           <div class="card__row">
@@ -8,7 +8,7 @@
                   <div class="container">
                       <div class="card__col-xs-12 card__col-sm-12">
                           <div class="image" *ngIf="invoiceData.invoice_image">
-                              <img src="{{invoiceData.invoice_image}}" alt="" class="image__item">
+                              <img src="{{invoiceData.invoice_image}}" alt="" class="image__item" [style.opacity]="(invoiceData.invoice_image) ? '1' : '0'">
                           </div>
                       </div>
                   </div>
@@ -22,152 +22,142 @@
   </div><!-- .content__container -->
 </div><!-- .content -->
 
-<div class="content content_half">
+<div class="content" style="margin-top: 30px;width: 60%">
   <div class="content__container">    
-      <div class="card">
-          <!-- <div class="card__row">
+      <div class="card card_main">
+          <div class="card__row hidder" [class.hidder_line-on]="true" [class.hidder_expand]="showSubOpt['inv_info']">
+            <div class="hidder__line clearfix">
                 <div class="card__col-xs-12">
-                    <div class="back-btn-container" (click)="getSingletonNavbarObj().component_link_3 = 'none'"></div>
+                    <div class="hidder__name card__title" style="color: #6a6a67;" (click)="showSubOpt['inv_info'] = !showSubOpt['inv_info']">Invoice information</div>
+                </div>              
+            </div>
+            <div *ngIf="showSubOpt['inv_info']" class="hidder__content card__col-xs-12">
+              <div class="card__row">     
+                <div class="card__col-xs-12 card__col-sm-4">            
+                  <app-input-select [label]="'Invoice Type'" [is_mandatory]="'true'" [value]="invoiceData.invoice_type" [type]="'text'" [name]="'Invoice Type'" [filter_items]="['B2B','B2C']" (sendValue)="invoiceData.invoice_type = $event">
+                  </app-input-select>
+                </div>      
+                
+                <div class="card__col-xs-12 card__col-sm-4">              
+                  <app-calendar [format]="'from'" [label]="'Invoice Date'" [type]="'text'" [init_from_date]="invoiceData.invoice_date" [name]="'invoiceData.invoice_date'"
+                    [value]="invoiceData.invoice_date | backTipsDate" (sendBeginDate)="invoiceData.invoice_date = $event"></app-calendar>
                 </div>
-          </div> -->
 
-          <div class="card__title">Invoice information</div>      
+                <div class="card__col-xs-12 card__col-sm-4">
+                  <app-input [label]="'Invoice Number'" [type]="'text'" [is_mandatory]="'true'" [name]="'Invoice Number'" [placeholder]="'Invoice Number'" [value]="invoiceData.invoice_number" (sendValue)="invoiceData.invoice_number = $event"></app-input>
+                </div>            
+              </div>
 
-          <div class="card__row">     
-            <div class="card__col-xs-12 card__col-sm-6">            
-              <app-input-select [label]="'Invoice Type'" [is_mandatory]="'true'" [value]="invoiceData.invoice_type" [type]="'text'" [name]="'Invoice Type'" [filter_items]="['B2B','B2C']" (sendValue)="invoiceData.invoice_type = $event">
-              </app-input-select>
-            </div>      
-            
-            <div class="card__col-xs-12 card__col-sm-6">              
-              <app-calendar [format]="'from'" [label]="'Invoice Date'" [type]="'text'" [init_from_date]="invoiceData.invoice_date" [name]="'invoiceData.invoice_date'"
-                [value]="invoiceData.invoice_date | backTipsDate" (sendBeginDate)="invoiceData.invoice_date = $event"></app-calendar>
-            </div>
-          </div>
+              <div class="card__row">                 
 
-          <div class="card__row">     
-            <div class="card__col-xs-12 card__col-sm-6">
-              <app-input [label]="'Invoice Number'" [type]="'text'" [is_mandatory]="'true'" [name]="'Invoice Number'" [placeholder]="'Invoice Number'" [value]="invoiceData.invoice_number" (sendValue)="invoiceData.invoice_number = $event"></app-input>
-            </div>            
+                <div class="card__col-xs-12 card__col-sm-4">
+                  <app-input [label]="'GSTIN of Customer'" [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [placeholder]="'GSTIN of Customer'" [value]="invoiceData.customer_gstin" (sendValue)="invoiceData.customer_gstin = $event"></app-input>
+                </div>
 
-            <div class="card__col-xs-12 card__col-sm-6">
-              <app-input [label]="'GSTIN of Customer'" [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [placeholder]="'GSTIN of Customer'" [value]="invoiceData.customer_gstin" (sendValue)="invoiceData.customer_gstin = $event"></app-input>
-            </div>
-          </div>
+                <div class="card__col-xs-12 card__col-sm-4">
+                  <app-input [label]="'Customer Name'" [type]="'text'"  [name]="'Customer Name'" [placeholder]="'Customer Name'" [value]="invoiceData.customer_name" (sendValue)="invoiceData.customer_name = $event"></app-input>
+                </div>            
 
-          <div class="card__row">                 
-            <div class="card__col-xs-12 card__col-sm-6">
-              <app-input [label]="'Customer Name'" [type]="'text'"  [name]="'Customer Name'" [placeholder]="'Customer Name'" [value]="invoiceData.customer_name" (sendValue)="invoiceData.customer_name = $event"></app-input>
-            </div>            
-            <div class="card__col-xs-12 card__col-sm-6">
-              <app-input [label]="'Customer Contact No.'" [type]="'text'"  [name]="'Customer Contact No.'" [placeholder]="'Customer Contact No.'" [value]="invoiceData.customer_contact_no" (sendValue)="invoiceData.customer_contact_no = $event"></app-input>
-            </div>            
-          </div>
+                <div class="card__col-xs-12 card__col-sm-4">
+                  <app-input [label]="'Customer Contact No.'" [type]="'text'"  [name]="'Customer Contact No.'" [placeholder]="'Customer Contact No.'" [value]="invoiceData.customer_contact_no" (sendValue)="invoiceData.customer_contact_no = $event"></app-input>
+                </div>            
+              </div>
 
-          <div class="card__row">                
-            <div class="card__col-xs-12 card__col-sm-6">
-              <app-input [label]="'Customer Email'" [type]="'text'"  [name]="'Customer Email'" [placeholder]="'Customer Email'" [value]="invoiceData.customer_email_address" (sendValue)="invoiceData.customer_email_address = $event"></app-input>
-            </div>               
-            <div class="card__col-xs-12 card__col-sm-6">
-              <app-input-select [label]="'Place of Supply'" [value]="invoiceData.place_of_supply" [type]="'text'" [name]="'Place of Supply'" [filter_items]="gstStateCodes" (sendValue)="invoiceData.place_of_supply = $event">
-              </app-input-select>
+              <div class="card__row">                
+                <div class="card__col-xs-12 card__col-sm-4">
+                  <app-input [label]="'Customer Email'" [type]="'text'"  [name]="'Customer Email'" [placeholder]="'Customer Email'" [value]="invoiceData.customer_email_address" (sendValue)="invoiceData.customer_email_address = $event"></app-input>
+                </div>               
+                <div class="card__col-xs-12 card__col-sm-4">
+                  <app-input-select [label]="'Place of Supply'" [value]="invoiceData.place_of_supply" [type]="'text'" [name]="'Place of Supply'" [filter_items]="gstStateCodes" (sendValue)="invoiceData.place_of_supply = $event">
+                  </app-input-select>
+                </div>
+              </div>
             </div>
           </div>
       </div>
-  </div><!-- .content__container -->
-</div><!-- .content -->
-
-<div class="content content_full" style="float: left;">
-  <div class="content__container">    
 
       <div class="ogp_composite-product card">
           <div class="card__content">
-              
-              <div class="card__row">
-                <div class="card__col-xs-6 card__col-sm-6">
-                    <div class="card__title">Item Details</div>
-                </div>                  
-                <div class="card__col-xs-6 card__col-sm-6 text-pull-right">
-                    <a class="btn btn_stroke add-item-btn" (click)="addItem()">Add Item</a>
+              <div class="card__row hidder" [class.hidder_line-on]="true" [class.hidder_expand]="showSubOpt['inv_item_detail_block']">
+                <div class="hidder__line clearfix">
+                    <div class="card__col-xs-6">
+                        <div class="hidder__name card__title" style="color: #6a6a67;" (click)="showSubOpt['inv_item_detail_block'] = !showSubOpt['inv_item_detail_block']">Item Details</div>
+                    </div>  
+                    <div class="card__col-xs-6 card__col-sm-6 text-pull-right" *ngIf="showSubOpt['inv_item_detail_block']">
+                        <a class="btn btn_stroke add-item-btn" (click)="addItem()">Add Item</a>
+                    </div>            
                 </div>
-              </div>
-              <div class="composite-product">
-                  <div class="composite-product__container">                        
-                      <div class="card__row" *ngIf="invoiceData.items && invoiceData.items.length > 0" style="margin-top: 30px;">
-                          <div class="card__col-xs-12">
-                              <div class="report-table-container">
-                                  <div class="report-table-wrapper">
-                                      <table class="report-table">
-                                          <thead class="report-table__head">
-                                              <tr class="report-table__row report-table__row_head">
-                                                  <th class="report-table__cell report-table__cell_name">#</th>
-                                                  <th class="report-table__cell report-table__cell_name">Product</th>                     
-                                                  <th class="report-table__cell report-table__cell_name">HSN/SAC</th>
-                                                  <th class="report-table__cell report-table__cell_name">Taxable<br/>Value</th>
-                                                  <th class="report-table__cell report-table__cell_name">Rate</th>
-                                                  <th class="report-table__cell report-table__cell_name">IGST</th>
-                                                  <th class="report-table__cell report-table__cell_name">CGST</th>
-                                                  <th class="report-table__cell report-table__cell_name">SGST/UGST</th>
-                                                  <th class="report-table__cell report-table__cell_name">Celss</th>
-                                                  <th class="report-table__cell report-table__cell_name" [style.color]="'#282827'">Gross Value</th>
-                                                  <th class="report-table__cell report-table__cell_name"></th>                                                    
-                                              </tr>
-                                          </thead>
-                                          <tbody class="report-table__body">
-                                              <ng-template ngFor let-tab [ngForOf]="invoiceData.items"  let-i="index">
-                                                  <tr *ngIf="!tab.is_deleted" class="report-table__row">
-                                                      <td class="report-table__cell report-table__cell_day">{{i+1}}</td>
-                                                      <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                          <input class="table__row-input" type="text" name="'name'" [(ngModel)]="tab.name">
-                                                      </td>
-                                                      <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                          <input class="table__row-input" type="text" name="'taxcode'" [(ngModel)]="tab.tax_code">
-                                                      </td>
-                                                      <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                          <input class="table__row-input" type="number" name="'taxvalue'" [(ngModel)]="tab.tax_value">
-                                                      </td>
-                                                      <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                          <input class="table__row-input" type="number" name="'rate'" [(ngModel)]="tab.rate">
-                                                      </td>
-                                                      <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                          <input class="table__row-input" type="number" name="'igst'" [(ngModel)]="tab.igst">
-                                                      </td>
-                                                      <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                          <input class="table__row-input" type="number" name="'csgt'" [(ngModel)]="tab.csgt">
-                                                      </td>
-                                                      <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                          <input class="table__row-input" type="number" name="'sgst_ugst'" [(ngModel)]="tab.sgst_ugst">
-                                                      </td>
-                                                      <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                          <input class="table__row-input" type="number" name="'cess'" [(ngModel)]="tab.cess">
-                                                      </td>
-                                                      <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                          <input class="table__row-input" type="number" name="'gross_value'" [(ngModel)]="tab.gross_value">
-                                                      </td>
-                                                      <td  class="report-table__cell report-table__cell_day">
-                                                          <div class="btn-clear" (click)="deleteItem(i)"></div>
-                                                      </td>
+                <div *ngIf="showSubOpt['inv_item_detail_block']" class="hidder__content card__col-xs-12">
+                  <div class="composite-product">
+                      <div class="composite-product__container">                        
+                          <div class="card__row" *ngIf="invoiceData.items && invoiceData.items.length > 0">
+                              <div class="card__col-xs-12">
+                                  <div class="report-table-container">
+                                      <div class="report-table-wrapper">
+                                          <table class="report-table">
+                                              <thead class="report-table__head">
+                                                  <tr class="report-table__row report-table__row_head">
+                                                      <th class="report-table__cell report-table__cell_name">#</th>
+                                                      <th class="report-table__cell report-table__cell_name">HSN/SAC</th>
+                                                      <th class="report-table__cell report-table__cell_name">Taxable<br/>Value</th>
+                                                      <th class="report-table__cell report-table__cell_name">Rate</th>
+                                                      <th class="report-table__cell report-table__cell_name">IGST</th>
+                                                      <th class="report-table__cell report-table__cell_name">CGST</th>
+                                                      <th class="report-table__cell report-table__cell_name">SGST/UGST</th>
+                                                      <th class="report-table__cell report-table__cell_name">Celss</th>
+                                                      <th class="report-table__cell report-table__cell_name" [style.color]="'#282827'">Gross Value</th>
+                                                      <th class="report-table__cell report-table__cell_name"></th>                                                    
                                                   </tr>
-                                              </ng-template>
-                                              <!-- New Look -->
-                                          </tbody>
-                                      </table>
+                                              </thead>
+                                              <tbody class="report-table__body">
+                                                  <ng-template ngFor let-tab [ngForOf]="invoiceData.items"  let-i="index">
+                                                      <tr *ngIf="!tab.is_deleted" class="report-table__row">
+                                                          <td class="report-table__cell report-table__cell_day">{{i+1}}</td>
+                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                                              <input class="table__row-input" type="text" name="'taxcode'" [(ngModel)]="tab.tax_code">
+                                                          </td>
+                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                                              <input class="table__row-input" type="number" name="'taxvalue'" [(ngModel)]="tab.tax_value">
+                                                          </td>
+                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                                              <input class="table__row-input" type="number" name="'rate'" [(ngModel)]="tab.rate">
+                                                          </td>
+                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                                              <input class="table__row-input" type="number" name="'igst'" [(ngModel)]="tab.igst">
+                                                          </td>
+                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                                              <input class="table__row-input" type="number" name="'csgt'" [(ngModel)]="tab.csgt">
+                                                          </td>
+                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                                              <input class="table__row-input" type="number" name="'sgst_ugst'" [(ngModel)]="tab.sgst_ugst">
+                                                          </td>
+                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                                              <input class="table__row-input" type="number" name="'cess'" [(ngModel)]="tab.cess">
+                                                          </td>
+                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                                              <input class="table__row-input" type="number" name="'gross_value'" [(ngModel)]="tab.gross_value">
+                                                          </td>
+                                                          <td  class="report-table__cell report-table__cell_day">
+                                                              <div class="btn-clear" (click)="deleteItem(i)"></div>
+                                                          </td>
+                                                      </tr>
+                                                  </ng-template>
+                                                  <!-- New Look -->
+                                              </tbody>
+                                          </table>
+                                      </div>
                                   </div>
                               </div>
-                          </div>
-                          <!-- /table-info -->
-                      </div>                       
+                              <!-- /table-info -->
+                          </div>                       
+                      </div>
                   </div>
+                </div>
               </div>
           </div>
           <!-- .card__content -->
       </div>
       <!-- .ogp_composite-product -->
 
-      <div class="footer__buttons clearfix" style="margin-top: 40px;">
-        <a class="btn btn_stroke long-btn" (click)="onCancelBtnClicked();">Cancel</a>
-        <a class="btn long-btn" (click)="saveGSTBillInvoice();">Save Invoice</a>
-      </div>
-      <!-- .footer__buttons -->    
   </div><!-- .content__container -->
 </div><!-- .content -->

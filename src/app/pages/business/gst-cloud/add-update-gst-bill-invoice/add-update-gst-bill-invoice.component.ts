@@ -39,6 +39,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   loading: boolean = false;  
   invoiceData: any = {invoice_image:"../../../../../assets/img/invoice.png"};
   gstStateCodes:any = GST_STATE_CODES;
+  showSubOpt: any = {'inv_info':true,'inv_item_detail_block':true};
   constructor(
   	private navbarService: NavbarService,
     public router: Router,
@@ -53,6 +54,8 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       this.router.navigate(['']);
       return;
     }
+    this.addItem();
+    this.addItem();
   }  
 
   ngDoCheck() {

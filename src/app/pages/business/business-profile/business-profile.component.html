@@ -21,6 +21,12 @@
             <div class="card__col-xs-12 card__col-sm-4">
                 <app-input [label]="'Merchant Name'" [type]="'text'" [name]="merchantData.name" [placeholder]="'Merchant Name'" [value]="merchantData.name" (sendValue)="merchantData.name = $event"></app-input>
             </div>
+            <div class="card__col-xs-12 card__col-sm-4">
+                <app-input [label]="'GST Portal User Name'" [type]="'text'" [name]="'letn'" [placeholder]="'User Name'" [value]="merchantData.user_name" (sendValue)="merchantData.user_name = $event"></app-input>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-4">
+                <app-input [label]="'GST Portal Password'" [type]="'password'" [name]="'lap'" [placeholder]="'Password'" [value]="merchantData.password" (sendValue)="merchantData.password = $event"></app-input>
+            </div>
           </div>
           <div class="card__row">        
             <div class="card__col-xs-12 card__col-sm-4">

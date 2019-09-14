@@ -837,24 +837,43 @@ a {
 }
 
 
-/* POPUP PRODUCT EDIT */
+/* POPUP BILL INVOICE EDIT */
 
-.popup-product-edit {
+.popup-bill-invoice-edit {
     width: auto;
     max-width: 100%;
     top: 30px;
     border-radius: 0;
 }
 
-.popup-product-edit .modal-content {
-    max-height: calc(100vh - 192px);
+.popup-bill-invoice-modal .modal-content {
+    max-height: calc(100vh - 69px);/*140px*/
 }
 
-.product-popup__content {
-    max-width: 760px;
+.bill-invoice-popup__content {
     margin: auto;
+    width: 99%;
 }
 
+.popup-bill-invoice-modal .modal-header,
+.popup-bill-invoice-modal .modal-footer {
+    min-height: unset;
+    padding: 0px 25px 0px 30px;
+    line-height: 20px;
+    min-height: 20px;
+}
+
+.popup-bill-invoice-modal .modal-header {
+    padding: 20px 25px 20px 30px;
+}
+
+.popup-bill-invoice-modal .modal-wrapper {
+    top: 0px;
+}
+
+.popup-bill-invoice-modal .modal-content_scrollbar {
+    overflow-y: auto;
+}
 
 /* {PAGE: BULK UPLOAD} */
 
