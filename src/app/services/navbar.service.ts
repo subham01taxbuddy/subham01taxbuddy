@@ -39,7 +39,7 @@ export class NavbarService {
 	saveBusinessProfile:boolean = false;
 	saveGSTBillInvoice:boolean = false;
 	
-	private auth_token: string;
+	private id_token: string;
 	private user_email: string;
 
 	//API header parameters
@@ -55,46 +55,65 @@ export class NavbarService {
 		if (NavbarService._instance === null) {
 			NavbarService._instance = new NavbarService(http);
 
-			NavbarService._instance.auth_token = localStorage.getItem('auth_token');			
+			NavbarService._instance.id_token = localStorage.getItem('id_token');			
 		}
 		NavbarService._instance.http = http;
 		return NavbarService._instance;
-	}
-
-	setHeaders() {
-		this.headers = new HttpHeaders();
-		this.headers.append('Content-Type', 'application/json');
-		this.headers.append('auth_token', this.auth_token);		
 	}	
-
-	// set auth token
-	setAuthToken(authKey: string) {
-		this.auth_token = authKey;
-		localStorage.setItem('auth_token', this.auth_token);
-	}
 	
-	// set user email
-	setUserEmail(userEmail: string) {
-		this.user_email = userEmail;
-		localStorage.setItem('user_email', this.user_email);
-	}
+	setUserData(userData: any) {
+		this.id_token = userData.id_token;		
+		let userInfo =  {
+			USER_F_NAME: userData.firstName,
+			USER_L_NAME: userData.lastName,
+			USER_MOBILE: userData.mobile,
+			USER_NAME: userData.user,
+			USER_ROLE: userData.role,
+			USER_UNIQUE_ID: userData.userId,
+			id_token: this.id_token
+		}
+		localStorage.setItem('UMD',JSON.stringify(userInfo));		
+		this.setSession();
+	}	
 	
 	// set session related data
 	setSession() {
 		localStorage.setItem('session_time', (new Date()).toString());
 	}
 
+	clearAllSessionData() {
+		this.id_token = null;
+		localStorage.clear();        
+	}
+
+
+	public static API_LOGIN = { 'url': '/account/token', 'method': 'POST' };
+	login(params: any) {
+		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_LOGIN, params);
+	}
+
+	public static API_LOGOUT = { 'url': '/account/logout', 'method': 'DELETE' };
+	logout() {
+		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_LOGOUT, null);
+	}
+
 	apiCall(apiKey: any, params: any): Observable<any> {
-		this.setHeaders()
-		let options: any = { headers: this.headers }
+		if(!this.id_token) {
+			let userData = JSON.parse(localStorage.getItem('id_token'));
+			if(userData && userData.id_token) { this.id_token = userData.id_token; }
+		}
+		let theaders = new HttpHeaders({'Content-Type': "application/json","Authorization": "Bearer "+this.id_token});
+		let options: any = { headers: theaders }
 		if (apiKey['method'] === 'POST') {
-			return this.http.post(apiConfig.url + apiKey['url'], JSON.stringify(params), options).pipe(map((resData: any) => resData.json()));
-		} else if (apiKey['method'] === 'PUT') {
-			NavbarService._instance.auth_token = localStorage.getItem('auth_token');
-			return this.http.put(apiConfig.url + apiKey['url'], JSON.stringify(params), options).pipe(map((resData: any) => resData.json()));
+			return this.http.post(apiConfig.url + apiKey['url'], JSON.stringify(params), options)
+		} else if (apiKey['method'] === 'PUT') {			
+			return this.http.put(apiConfig.url + apiKey['url'], JSON.stringify(params), options)
+		} else if (apiKey['method'] === 'DELETE') {			
+			if(params) { options['body'] =JSON.stringify(params); }
+			return this.http.delete(apiConfig.url + apiKey['url'], options)
 		} else {
 			options.params = params;
-			return this.http.get(apiConfig.url + apiKey['url'], options).pipe(map((resData: any) => resData.json()));
+			return this.http.get(apiConfig.url + apiKey['url'], options)
 		}
 	}
 

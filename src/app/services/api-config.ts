@@ -18,5 +18,5 @@
  */
  
 export const apiConfig = {
-    url: 'http://localhost:1337'
+    url: 'https://api.taxbuddy.com'
 };

@@ -91,7 +91,14 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(){
-    localStorage.clear();
-    this.router.navigate(['']);
+    this.loading = true;
+    NavbarService.getInstance(this.http).logout().subscribe(res => {            
+      NavbarService.getInstance(null).clearAllSessionData();        
+      this.router.navigate(['']);
+
+      this.loading = false;
+    }, err => {      
+      this.loading = false;      
+    });    
   }
 }

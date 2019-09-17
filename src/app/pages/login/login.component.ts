@@ -34,7 +34,6 @@ export class LoginComponent implements OnInit {
 
   component_link: string = 'login';
   public form: FormGroup;
-  public email: string;
   public user: AbstractControl;
   public passphrase: AbstractControl;
   public loading: boolean = false;
@@ -51,30 +50,35 @@ export class LoginComponent implements OnInit {
 
     this.user = this.form.controls['user'];
     this.passphrase = this.form.controls['passphrase'];
-    this.email = '';
-    NavbarService.getInstance(null).setAuthToken(NavbarService.DEFAULT_TOKEN);    
-    NavbarService.getInstance(null).setUserEmail(this.email);
   }  
   
 
-  public onSubmit(values: Object): void {
-    NavbarService.getInstance(null).setSession();
-    this.router.navigate(['pages/home']);       
-    /*this.loading = true;
-    NavbarService.getInstance(this.http).login(values).subscribe(res => {
-      var login = res;
-      if (login.status === 0) {
-        NavbarService.getInstance(null).setAuthToken(login.result.auth_token);                
-        NavbarService.getInstance(null).setUserEmail(this.email);
-        NavbarService.getInstance(null).setSession();
+  public onSubmit(values: any): void {
+    let loginData:any = {
+      username:  values.user,
+      password: values.passphrase,
+      accessToken:"",
+      outhProvider:""
+    }
+
+    this.loading = true;
+    NavbarService.getInstance(this.http).login(loginData).subscribe(res => {
+      /*if(res && res.role.indexOf("ROLE_ADMIN") == -1) {
+        this._toastMessageService.alert("error", "Access Denied.");        
+      } else*/ if (res && res.id_token) {                
+        NavbarService.getInstance(null).setUserData(res);        
         this.router.navigate(['pages/home']);       
       } else {
-        this._toastMessageService.alert("error", login.message);        
+        this._toastMessageService.alert("error", "The Mobile/Email address or Password entered, is not correct. Please check and try again");        
       }
       this.loading = false;
     }, err => {
-      this._toastMessageService.alert("error", (err && err.message) ? err.message : 'Internal server error.');
+      let errorMessage = "Internal server error."
+      if([400,401].indexOf(err.status) != -1) {
+        errorMessage = "User name or Password is wrong."
+      }
+      this._toastMessageService.alert("error", errorMessage );
       this.loading = false;      
-    });*/
+    });
   }
 }
