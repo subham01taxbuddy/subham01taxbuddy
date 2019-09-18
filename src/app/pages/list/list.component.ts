@@ -30,8 +30,11 @@ import { ToastMessageService } from '../../services/toast-message.service';
 })
 
 export class ListComponent implements OnInit {  
-  mlist = [{"name":"Ashish","mobile_number":"1234123412","email_address":"abc@m.com","gst_number":'123',"gst_type":"gst type","gst_return_type":"gst return type","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"}]
+  mlist = [{"name":"Ashish","mobile_number":"1234123412","document_type":"sales","upload_date":"2019-01-01","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"},
+  {"name":"Ashish","mobile_number":"1234123412","document_type":"sales","upload_date":"2019-01-01","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"}]
   
+  record_select_for_update: boolean = false;
+  group_selected_assign_to: any = "";
   prods_check: boolean[] = [false];
   filterData:any = [];      
   filters_list: any = [ 
@@ -78,5 +81,20 @@ export class ListComponent implements OnInit {
 
   updateListItem(list) {
     alert("update list call for "+list.name)
+  }
+
+  onSelectRecord(index) {
+    this.prods_check[index] = !this.prods_check[index];
+
+    let isSelected = false;
+    for(var i=0,llen=this.prods_check.length;i<llen;i++) {
+      if(this.prods_check[i]) { isSelected=true; break; }
+    }
+
+    this.record_select_for_update = isSelected;
+  }
+
+  saveGroupSelectedData() {
+    
   }
 }

@@ -1,6 +1,22 @@
 
 <div class="main clearfix">
-    <div class="card__row" >          	
+    <div class="card__row" >
+    	<div class="card__col-xs-4">    		    		
+	        <div class="ibox">
+	            <div class="ibox-title">
+	                <div class="title">Unassigned Uploads</div>	           
+	            </div>	           
+	            <div class="ibox-content">	        
+	            	<span class="faicon pull-right" (click)="redirectToUnassignedUploads()"><i class="fa fa-indent" aria-hidden="true"></i></span>	            		            	
+	                <div class="ibox-body-element-wrapper" >
+                        <div class="value">
+                        	12                       	
+                        </div>
+					</div>					
+	            </div>
+	        </div>
+	    </div>	            	
+
     	<div class="card__col-xs-4">    		    		
 	        <div class="ibox">
 	            <div class="ibox-title">
@@ -16,21 +32,23 @@
 	            </div>
 	        </div>
 	    </div>	    
+
 	    <div class="card__col-xs-4">    		    		
 	        <div class="ibox">
 	            <div class="ibox-title">
-	                <div class="title">Unassigned Uploads</div>	           
+	                <div class="title">No. of Merchants confirmed all bills</div>	           
 	            </div>	           
-	            <div class="ibox-content">	        
-	            	<span class="faicon pull-right" (click)="redirectToUnassignedUploads()"><i class="fa fa-indent" aria-hidden="true"></i></span>	            		            	
+	            <div class="ibox-content">	 
+	            	<span class="faicon pull-right" (click)="redirectToMerchantConfirmedBills()"><i class="fa fa-indent" aria-hidden="true"></i></span>	            		                   
 	                <div class="ibox-body-element-wrapper" >
                         <div class="value">
-                        	12                       	
+                        	12123                        	
                         </div>
 					</div>					
 	            </div>
 	        </div>
 	    </div>	    
+	      
 	    <div class="card__col-xs-4">    		    		
 	        <div class="ibox">
 	            <div class="ibox-title">
@@ -61,20 +79,6 @@
 	            </div>
 	        </div>
 	    </div>	    
-	    <div class="card__col-xs-4">    		    		
-	        <div class="ibox">
-	            <div class="ibox-title">
-	                <div class="title">No. of Merchants confirmed all bills</div>	           
-	            </div>	           
-	            <div class="ibox-content">	 
-	            	<span class="faicon pull-right" (click)="redirectToMerchantConfirmedBills()"><i class="fa fa-indent" aria-hidden="true"></i></span>	            		                   
-	                <div class="ibox-body-element-wrapper" >
-                        <div class="value">
-                        	12123                        	
-                        </div>
-					</div>					
-	            </div>
-	        </div>
-	    </div>	    	   
+	   	   
     </div>   
 </div>

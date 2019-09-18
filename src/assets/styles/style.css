@@ -103,6 +103,10 @@ body {
     text-align: right !important;
 }
 
+.text-pull-center {
+    text-align: center !important;
+}
+
 
 /*
 em {
@@ -180,7 +184,7 @@ a {
 }
 
 .header__container {
-    max-width: 1200px;
+    max-width: 1300px;
     margin: auto;
 }
 
@@ -297,7 +301,7 @@ a {
 /* TABS */
 
 .main {
-    max-width: 1200px;
+    max-width: 1300px;
     padding-top: 30px;
     padding-left: 170px;
     padding-right: 30px;

@@ -8,7 +8,17 @@
             </div>
         </div>
 
-        <div class="card__row">
+        <div class="card__row" *ngIf="record_select_for_update">
+            <div class="card__col-xs-12 card__col-sm-4">        
+                <app-input-select [label]="'Assigned To'" [value]="group_selected_assign_to" [type]="'text'" [name]="'group_selected_assign_to'" [filter_items]="['OWNER1','OWNER2']" (sendValue)="group_selected_assign_to = $event">
+                </app-input-select>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-4">        
+                <a class="btn save-btn" (click)="saveGroupSelectedData()">Save</a>                
+            </div>
+        </div>                                    
+                                    
+        <div class="card__row" style="margin-top: 0px;">
             <!-- <div class="report-table-wrapper" style="overflow: unset;">
                 <table class="report-table" style="min-width: unset;">
                     <thead class="report-table__head">
@@ -84,37 +94,35 @@
             <div class="tab-panel items-tab card__col-xs-12">
                 <div class="tab-panel__content tab-panel__content_visible">
                     <div class="table product__table">
-                        <div class="table__row  table__row_header">
+                        <div class="table__row  table__row_header ">
                             <div class="table__cell table__cell_checkbox">                                    
+                                <div class="input" style="opacity: 0">
+                                    <input type="checkbox" class="input__checkbox">
+                                    <label class="input__checkbox-control" for="select_item4" ></label>
+                                </div>
                             </div>
-                            <div class="table__cell product-row__cell-unit">
+                            <div class="table__cell product-row__cell-unit flex-20">
                                 <a class="table__sort-link">Name</a>
                             </div>
-                            <div class="table__cell product-row__cell-unit">
+                            <div class="table__cell product-row__cell-unit flex-15">
                                 <a class="table__sort-link">Mobile Number</a>
                             </div>
-                            <div class="table__cell product-row__cell-unit">
-                                <a class="table__sort-link">Email ID</a>
+                            <div class="table__cell product-row__cell-unit flex-20">
+                                <a class="table__sort-link">Document Type</a>
                             </div>
-                            <div class="table__cell product-row__cell-unit">
-                                <a class="table__sort-link">GST Number</a>
-                            </div>                                
-                            <div class="table__cell product-row__cell-unit">
-                                <a class="table__sort-link">GST Type</a>
-                            </div>
-                            <div class="table__cell product-row__cell-unit">
-                                <a class="table__sort-link">GST Return's Type</a>
-                            </div>
-                            <div class="table__cell product-row__cell-unit">
+                            <div class="table__cell product-row__cell-unit flex-20">
+                                <a class="table__sort-link">Upload Date</a>
+                            </div>                                                            
+                            <div class="table__cell product-row__cell-unit flex-30">
                                 <a class="table__sort-link">Previous Return filed Status</a>
                             </div>
-                            <div class="table__cell product-row__cell-unit">
+                            <div class="table__cell product-row__cell-unit flex-30">
                                 <a class="table__sort-link">GST Filing Status</a>
                             </div>
-                            <div class="table__cell product-row__cell-unit">
+                            <div class="table__cell product-row__cell-unit flex-30">
                                 <a class="table__sort-link">Status of Invoice</a>
                             </div>
-                            <div class="table__cell product-row__cell-unit">
+                            <div class="table__cell product-row__cell-unit flex-30">
                                 <a class="table__sort-link">Owner</a>
                             </div>                            
                             <div class="table__cell product-row__cell-unit">
@@ -128,56 +136,48 @@
                                     <div class="table__cell table__cell_checkbox">
                                         <div class="input">
                                             <input type="checkbox" class="input__checkbox" [checked]="prods_check[p]">
-                                            <label class="input__checkbox-control" for="select_item4" (click)="prods_check[p] = !prods_check[p]"></label>
+                                            <label class="input__checkbox-control" for="select_item4" (click)="onSelectRecord(p)"></label>
                                         </div>
                                     </div>
                                    
-                                    <div class="table__cell product-row__cell-stock">                                                
+                                    <div class="table__cell product-row__cell-stock flex-20">                                                
                                         <a class="a-phone-link" (click)="showMerchantDetail(item)">{{item.name}}</a>                                    
                                     </div>
 
-                                    <div class="table__cell product-row__cell-stock">
+                                    <div class="table__cell product-row__cell-stock flex-15">
                                         {{item.mobile_number}}                                            
                                     </div>
 
-                                    <div class="table__cell product-row__cell-stock">
-                                        {{item.email_address}}                                            
+                                    <div class="table__cell product-row__cell-stock flex-20">
+                                        {{item.document_type}}                                            
                                     </div>
 
-                                    <div class="table__cell product-row__cell-stock">
-                                        {{item.gst_number}}                                            
-                                    </div>
+                                    <div class="table__cell product-row__cell-stock flex-20">
+                                        {{item.upload_date}}                                            
+                                    </div>                              
 
-                                    <div class="table__cell product-row__cell-stock">
-                                        {{item.gst_type}}                                            
-                                    </div>
-
-                                    <div class="table__cell product-row__cell-stock">
-                                        {{item.gst_return_type}}                                            
-                                    </div>
-
-                                    <div class="table__cell product-row__cell-stock">
+                                    <div class="table__cell product-row__cell-stock flex-30">
                                         <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="item.previous_return_field_status" [type]="'text'" [name]="'previous_return_field_status'" [filter_items]="['FILED','NOT FILED']" (sendValue)="item.previous_return_field_status = $event">
                                         </app-input-select>
                                         <div *ngIf="!prods_check[p]">
                                             {{item.previous_return_field_status}}
                                         </div>                                            
                                     </div>
-                                    <div class="table__cell product-row__cell-stock">
+                                    <div class="table__cell product-row__cell-stock flex-30">
                                         <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="item.gst_filing_status" [type]="'text'" [name]="'gst_filing_status'" [filter_items]="['FILED','NOT FILED']" (sendValue)="item.gst_filing_status = $event">
                                         </app-input-select>
                                         <div *ngIf="!prods_check[p]">
                                             {{item.gst_filing_status}}
                                         </div>                                            
                                     </div>
-                                    <div class="table__cell product-row__cell-stock">
+                                    <div class="table__cell product-row__cell-stock flex-30">
                                         <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="item.status_of_invoice" [type]="'text'" [name]="'status_of_invoice'" [filter_items]="['INVOICES UPLOADED','INVOICES PROCESSED','WEEKLY REMINDER']" (sendValue)="item.status_of_invoice = $event">
                                         </app-input-select>
                                         <div *ngIf="!prods_check[p]">
                                             {{item.status_of_invoice}}
                                         </div>                                            
                                     </div>
-                                    <div class="table__cell product-row__cell-stock">
+                                    <div class="table__cell product-row__cell-stock flex-30">
                                         <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="item.owner" [type]="'text'" [name]="'owner'" [filter_items]="['OWNER1','OWNER2']" (sendValue)="item.owner = $event">
                                         </app-input-select>
                                         <div *ngIf="!prods_check[p]">
