@@ -54,6 +54,12 @@ import 'core-js/es7/reflect';
  */
 import 'zone.js/dist/zone';  // Included with Angular CLI.
 
+import * as process from 'process';
+window['process'] = process;
+
+// aws-sdk requires global to exist
+(window as any).global = window;
+
 
 
 /***************************************************************************************************

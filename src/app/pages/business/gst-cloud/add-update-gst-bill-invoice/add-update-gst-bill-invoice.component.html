@@ -4,19 +4,25 @@
   <div class="content__container">    
       <div class="invoice_images card card_main">
           <div class="card__row">
-              <div class="wrapper" style="padding-top: 0;">
+              <div class="wrapper" style="padding-top: 0;position: relative;" *ngIf="invoiceData.invoice_image && !isEditInvoiceImage">
                   <div class="container">
                       <div class="card__col-xs-12 card__col-sm-12">
-                          <div class="image" *ngIf="invoiceData.invoice_image">
+                          <div class="image" >
                               <img src="{{invoiceData.invoice_image}}" alt="" class="image__item" [style.opacity]="(invoiceData.invoice_image) ? '1' : '0'">
+                          </div>
+                          <div class="edit-invoice-image">
+                            <div (click)="isEditInvoiceImage=true"><i class="fa fa-edit"></i></div>
                           </div>
                       </div>
                   </div>
               </div>
               <!-- /drag-wrapper -->
-              <!-- <div class="card__col-xs-12 card__col-sm-4">
-                  <app-input-upload [upload]="upload" [input_id]="invoiceData.blogo" (filesDropped)="uploadInvoiceImage($event)" (filesHovered)="$event" (filesUpload)="upload = $event"></app-input-upload>
-              </div> -->
+              <div class="card__col-xs-12 card__col-sm-12" *ngIf="!invoiceData.invoice_image || isEditInvoiceImage" style="padding: 10px 10px !important;">
+                <app-input-upload [upload]="upload" [input_id]="invoiceData.blogo" (filesDropped)="uploadInvoiceImage($event)"></app-input-upload>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-12" *ngIf="isEditInvoiceImage" style="text-align: center;">
+                <a class="btn btn-cancel" (click)="isEditInvoiceImage=false">Cancel</a>                
+              </div>
           </div>
       </div> 
   </div><!-- .content__container -->

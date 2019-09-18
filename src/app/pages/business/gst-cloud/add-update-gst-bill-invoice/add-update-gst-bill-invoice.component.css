@@ -41,3 +41,34 @@
 .hidder__line {
 	padding: 0px !important;
 }
+
+.wrapper {
+	position: relative;
+    min-height: 100vh;
+}
+
+.edit-invoice-image {
+	position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    text-align: right;
+    height: 100%;    
+    cursor: pointer;
+}
+
+.edit-invoice-image > div {
+	display: none;
+	font-size: 30px;
+    color: white;
+    padding: 15px 20px;
+    cursor: pointer;
+}
+
+.edit-invoice-image:hover {
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.edit-invoice-image:hover > div {
+	display: block;
+}

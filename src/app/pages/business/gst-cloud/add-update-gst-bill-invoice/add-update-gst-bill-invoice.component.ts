@@ -23,6 +23,7 @@ import { NavbarService } from '../../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../../services/toast-message.service';
 import { GST_STATE_CODES } from '../../../../sources/gst_state_code';
+import { Storage } from 'aws-amplify';
 
 @Component({
   selector: 'app-add-update-gst-bill-invoice',
@@ -38,6 +39,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
   loading: boolean = false;  
   invoiceData: any = {invoice_image:"../../../../../assets/img/invoice.png"};
+  isEditInvoiceImage: boolean = false;
   gstStateCodes:any = GST_STATE_CODES;
   showSubOpt: any = {'inv_info':true,'inv_item_detail_block':true};
   constructor(
@@ -86,4 +88,15 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     this.onCancelInvoice.emit(true);
   }
 
+  uploadInvoiceImage(files) {
+    if(files && files[0]) {
+      this.invoiceData.invoice_image = "../../../../../assets/img/invoice.png";
+      this.isEditInvoiceImage = false;
+      /*Storage.put('invoice.png', files[0], {
+          contentType: files[0].type
+      })
+      .then (result => console.log(result))
+      .catch(err => console.log(err));*/
+    }
+  }
 }
