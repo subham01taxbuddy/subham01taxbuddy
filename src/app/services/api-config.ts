@@ -18,5 +18,10 @@
  */
  
 export const apiConfig = {
-    url: 'https://api.taxbuddy.com'
+    url: 'https://api.taxbuddy.com',
+    uat_url: "https://uat-api.taxbuddy.com",
+    s3_cred: {
+		user_name:"ashish@ssbainnovations.com",
+		password:"testPwd8761$"
+	}
 };

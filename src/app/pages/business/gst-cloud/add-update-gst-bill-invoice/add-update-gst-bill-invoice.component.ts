@@ -23,7 +23,8 @@ import { NavbarService } from '../../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../../services/toast-message.service';
 import { GST_STATE_CODES } from '../../../../sources/gst_state_code';
-import { Storage } from 'aws-amplify';
+import Storage from '@aws-amplify/storage';
+
 
 @Component({
   selector: 'app-add-update-gst-bill-invoice',
@@ -38,7 +39,8 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   @Output() onCancelInvoice: EventEmitter<any> = new EventEmitter();
 
   loading: boolean = false;  
-  invoiceData: any = {invoice_image:"../../../../../assets/img/invoice.png"};
+  imageLoader: boolean = false;
+  invoiceData: any = {invoice_image:"invoice.png"};
   isEditInvoiceImage: boolean = false;
   gstStateCodes:any = GST_STATE_CODES;
   showSubOpt: any = {'inv_info':true,'inv_item_detail_block':true};
@@ -58,7 +60,22 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }
     this.addItem();
     this.addItem();
+    this.getS3Image();
   }  
+
+  getS3Image() {
+    if(this.invoiceData.invoice_image) {
+      this.imageLoader = true;
+      Storage.get(this.invoiceData.invoice_image)
+        .then (result => {
+          this.invoiceData.invoice_image = result;
+          this.imageLoader = false;
+        })
+        .catch(err => {
+          this._toastMessageService.alert("error","Error While fetching invoice image");
+        });
+    }
+  }
 
   ngDoCheck() {
     if (NavbarService.getInstance(null).saveGSTBillInvoice) {
@@ -92,11 +109,29 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     if(files && files[0]) {
       this.invoiceData.invoice_image = "../../../../../assets/img/invoice.png";
       this.isEditInvoiceImage = false;
-      /*Storage.put('invoice.png', files[0], {
+      this.imageLoader = true;      
+      Storage.put('purchase-invoice/invoice.png', files[0], {
           contentType: files[0].type
       })
-      .then (result => console.log(result))
-      .catch(err => console.log(err));*/
+      .then ((result:any) => {
+        if(result && result.key) {
+          this.invoiceData.invoice_image = result.key;
+          this.getS3Image();
+        } else {
+          this.imageLoader = false;
+          this._toastMessageService.alert("error","Error While uploading invoice image");
+        }
+      })
+      .catch(err => {
+        this.imageLoader = false;
+        this._toastMessageService.alert("error","Error While uploading invoice image"+JSON.stringify(err));
+      });
     }
   }
 }
+
+/*sales-invoice
+purchase-invoice
+debit-note
+credit-note
+backoffice*/

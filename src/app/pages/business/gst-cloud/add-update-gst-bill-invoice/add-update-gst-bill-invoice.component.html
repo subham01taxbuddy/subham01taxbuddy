@@ -2,7 +2,8 @@
 
 <div class="content" style="margin-top: 30px;width: 40%">
   <div class="content__container">    
-      <div class="invoice_images card card_main">
+      <div class="invoice_images card card_main" style="position: relative;">
+          <ngx-loading [show]="imageLoader"></ngx-loading>
           <div class="card__row">
               <div class="wrapper" style="padding-top: 0;position: relative;" *ngIf="invoiceData.invoice_image && !isEditInvoiceImage">
                   <div class="container">

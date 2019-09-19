@@ -55,7 +55,8 @@ export class NavbarService {
 		if (NavbarService._instance === null) {
 			NavbarService._instance = new NavbarService(http);
 
-			NavbarService._instance.id_token = localStorage.getItem('id_token');			
+			let userData = JSON.parse(localStorage.getItem('UMD'));
+			NavbarService._instance.id_token = (userData) ? userData.id_token : null;
 		}
 		NavbarService._instance.http = http;
 		return NavbarService._instance;
@@ -92,28 +93,36 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_LOGIN, params);
 	}
 
-	public static API_LOGOUT = { 'url': '/account/logout', 'method': 'DELETE' };
+	public static API_LOGOUT = { 'url': '/account/logout', 'method': 'DELETE'  };
 	logout() {
 		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_LOGOUT, null);
 	}
 
-	apiCall(apiKey: any, params: any): Observable<any> {
+	public static API_ADMIN_LIST = { 'url': '/txbdy_ms_user/getAdminList', 'method': 'GET', "url_key":"uat_url"  };
+	getAdminMerchantList() {
+		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_ADMIN_LIST,{});
+	}
+
+	
+
+	apiCall(apiKey: any, params: any,): Observable<any> {
 		if(!this.id_token) {
-			let userData = JSON.parse(localStorage.getItem('id_token'));
+			let userData = JSON.parse(localStorage.getItem('UMD'));
 			if(userData && userData.id_token) { this.id_token = userData.id_token; }
 		}
 		let theaders = new HttpHeaders({'Content-Type': "application/json","Authorization": "Bearer "+this.id_token});
 		let options: any = { headers: theaders }
+		let pUrl = apiConfig[(apiKey["url_key"] ? apiKey["url_key"] : "url")];
 		if (apiKey['method'] === 'POST') {
-			return this.http.post(apiConfig.url + apiKey['url'], JSON.stringify(params), options)
+			return this.http.post(pUrl + apiKey['url'], JSON.stringify(params), options)
 		} else if (apiKey['method'] === 'PUT') {			
-			return this.http.put(apiConfig.url + apiKey['url'], JSON.stringify(params), options)
+			return this.http.put(pUrl + apiKey['url'], JSON.stringify(params), options)
 		} else if (apiKey['method'] === 'DELETE') {			
 			if(params) { options['body'] =JSON.stringify(params); }
-			return this.http.delete(apiConfig.url + apiKey['url'], options)
+			return this.http.delete(pUrl + apiKey['url'], options)
 		} else {
 			options.params = params;
-			return this.http.get(apiConfig.url + apiKey['url'], options)
+			return this.http.get(pUrl + apiKey['url'], options)
 		}
 	}
 

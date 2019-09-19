@@ -54,6 +54,7 @@ export class ListComponent implements OnInit {
       return;
     }
 
+    //this.getAdminMerchantList();
     this.filterData = this.mlist;
   }
 
@@ -75,6 +76,14 @@ export class ListComponent implements OnInit {
     this.filterData = JSON.parse(JSON.stringify(tempReportD));    
   }
 
+  getAdminMerchantList() {    
+    NavbarService.getInstance(this.http).getAdminMerchantList().subscribe(res => {
+     console.log(res)
+    }, err => {
+      let errorMessage = "Internal server error."     
+      this._toastMessageService.alert("error", errorMessage );
+    });
+  }
   showMerchantDetail(merchant) {
     
   }

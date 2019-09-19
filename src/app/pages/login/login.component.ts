@@ -22,6 +22,9 @@ import { NavbarService } from '../../services/navbar.service';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient} from '@angular/common/http';
+import { apiConfig } from '../../services/api-config';
+
+import Auth from '@aws-amplify/auth';
 
 import { ToastMessageService } from '../../services/toast-message.service';
 
@@ -67,6 +70,7 @@ export class LoginComponent implements OnInit {
         this._toastMessageService.alert("error", "Access Denied.");        
       } else*/ if (res && res.id_token) {                
         NavbarService.getInstance(null).setUserData(res);        
+        this.authToAWS();
         this.router.navigate(['pages/home']);       
       } else {
         this._toastMessageService.alert("error", "The Mobile/Email address or Password entered, is not correct. Please check and try again");        
@@ -80,5 +84,9 @@ export class LoginComponent implements OnInit {
       this._toastMessageService.alert("error", errorMessage );
       this.loading = false;      
     });
+  }
+
+  public authToAWS() {
+    Auth.signIn(apiConfig.s3_cred.user_name, apiConfig.s3_cred.password);
   }
 }
