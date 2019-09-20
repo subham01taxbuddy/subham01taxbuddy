@@ -22,7 +22,7 @@ import { NavbarService } from '../../services/navbar.service';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient} from '@angular/common/http';
-import { apiConfig } from '../../services/api-config';
+import { environment } from '../../../environments/environment';
 
 import Auth from '@aws-amplify/auth';
 
@@ -87,6 +87,6 @@ export class LoginComponent implements OnInit {
   }
 
   public authToAWS() {
-    Auth.signIn(apiConfig.s3_cred.user_name, apiConfig.s3_cred.password);
+    Auth.signIn(environment.s3_cred.user_name, environment.s3_cred.password);
   }
 }

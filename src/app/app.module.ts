@@ -27,7 +27,6 @@ import { ToastMessageComponent } from './additional-components/toast-message/toa
 import { AppComponent } from './app.component';
 import { PagesModule } from './pages/pages.module';
 
-
 // Services
 import { NavbarService } from './services/navbar.service';
 import { UploadService } from './services/upload.service';

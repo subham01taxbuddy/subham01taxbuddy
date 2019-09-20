@@ -16,12 +16,21 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
-export const apiConfig = {
-    url: 'https://api.taxbuddy.com',
-    uat_url: "https://uat-api.taxbuddy.com",
+
+export const environment = {
+  	production: true,
+   	url: 'https://sapi.taxbuddy.com',
+    uat_url: "https://suat-api.taxbuddy.com",
     s3_cred: {
 		user_name:"ashish@ssbainnovations.com",
-		password:"testPwd8761$"
+		password:"testPwd8761$",
+		bucket: 'tb-gst-docs-dev',
+        region: 'ap-south-1'
+	},
+	aws_cred: {    
+	    identityPoolId: 'ap-south-1:441cb3f2-c1a9-4ca1-8964-ea56f5184aea',
+	    region: 'ap-south-1',
+	    userPoolId: 'ap-south-1_s42HgYzaY',
+	    userPoolWebClientId: '289f0frh4oj9rp5rh6q9opo4qn',
 	}
 };

@@ -18,7 +18,7 @@
  */
  
 import { Injectable } from '@angular/core';
-import { apiConfig } from './api-config';
+import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
@@ -99,10 +99,14 @@ export class NavbarService {
 	}
 
 	public static API_ADMIN_LIST = { 'url': '/txbdy_ms_user/getAdminList', 'method': 'GET', "url_key":"uat_url"  };
-	getAdminMerchantList() {
+	getAdminList() {
 		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_ADMIN_LIST,{});
 	}
 
+	public static API_GST_DETAIL_LIST = { 'url': '/txbdyitr/getGSTDetail', 'method': 'GET', "url_key":"uat_url"  };
+	getGSTDetailList() {
+		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_GST_DETAIL_LIST,{});
+	}
 	
 
 	apiCall(apiKey: any, params: any,): Observable<any> {
@@ -112,7 +116,7 @@ export class NavbarService {
 		}
 		let theaders = new HttpHeaders({'Content-Type': "application/json","Authorization": "Bearer "+this.id_token});
 		let options: any = { headers: theaders }
-		let pUrl = apiConfig[(apiKey["url_key"] ? apiKey["url_key"] : "url")];
+		let pUrl = environment[(apiKey["url_key"] ? apiKey["url_key"] : "url")];
 		if (apiKey['method'] === 'POST') {
 			return this.http.post(pUrl + apiKey['url'], JSON.stringify(params), options)
 		} else if (apiKey['method'] === 'PUT') {			

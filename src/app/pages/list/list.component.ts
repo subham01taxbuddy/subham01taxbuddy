@@ -30,8 +30,9 @@ import { ToastMessageService } from '../../services/toast-message.service';
 })
 
 export class ListComponent implements OnInit {  
-  mlist = [{"name":"Ashish","mobile_number":"1234123412","document_type":"sales","upload_date":"2019-01-01","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"},
-  {"name":"Ashish","mobile_number":"1234123412","document_type":"sales","upload_date":"2019-01-01","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"}]
+  mlist = []
+  /*{"name":"Ashish","mobile_number":"1234123412","document_type":"sales","upload_date":"2019-01-01","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"},
+  {"name":"Ashish","mobile_number":"1234123412","document_type":"sales","upload_date":"2019-01-01","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"}*/
   
   record_select_for_update: boolean = false;
   group_selected_assign_to: any = "";
@@ -54,8 +55,8 @@ export class ListComponent implements OnInit {
       return;
     }
 
-    //this.getAdminMerchantList();
-    this.filterData = this.mlist;
+    this.getAdminList();
+    this.getMerchantList();
   }
 
   onChangeAttrFilter(event) {
@@ -76,13 +77,24 @@ export class ListComponent implements OnInit {
     this.filterData = JSON.parse(JSON.stringify(tempReportD));    
   }
 
-  getAdminMerchantList() {    
-    NavbarService.getInstance(this.http).getAdminMerchantList().subscribe(res => {
-     console.log(res)
+  getAdminList() {    
+    NavbarService.getInstance(this.http).getAdminList().subscribe(res => {
+      console.log(res)
     }, err => {
-      let errorMessage = "Internal server error."     
+      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
       this._toastMessageService.alert("error", errorMessage );
     });
+  }
+
+  getMerchantList() {
+    this.mlist = [];
+    NavbarService.getInstance(this.http).getGSTDetailList().subscribe(res => {
+      this.mlist = res;      
+      this.filterData = this.mlist;
+    }, err => {
+      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      this._toastMessageService.alert("error", errorMessage );
+    });    
   }
   showMerchantDetail(merchant) {
     

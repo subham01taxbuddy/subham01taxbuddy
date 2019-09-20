@@ -74,20 +74,17 @@ import { routes } from './pages.routing';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
+import { environment } from '../../environments/environment';
+
 import Auth from '@aws-amplify/auth';
 import Storage from '@aws-amplify/storage';
 
-Auth.configure({    
-    identityPoolId: 'ap-south-1:441cb3f2-c1a9-4ca1-8964-ea56f5184aea',
-    region: 'ap-south-1',
-    userPoolId: 'ap-south-1_s42HgYzaY',
-    userPoolWebClientId: '289f0frh4oj9rp5rh6q9opo4qn',
-});
+Auth.configure(environment.aws_cred);
 
 Storage.configure({
     AWSS3: {
-        bucket: 'tb-gst-docs-dev',
-        region: 'ap-south-1'
+        bucket: environment.s3_cred.bucket,
+        region: environment.s3_cred.region
     }
 });
 
