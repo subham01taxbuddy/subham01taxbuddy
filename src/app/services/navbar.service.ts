@@ -98,12 +98,12 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_LOGOUT, null);
 	}
 
-	public static API_ADMIN_LIST = { 'url': '/txbdy_ms_user/getAdminList', 'method': 'GET', "url_key":"uat_url"  };
+	public static API_ADMIN_LIST = { 'url': '/txbdy_ms_user/getAdminList', 'method': 'GET'  };
 	getAdminList() {
 		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_ADMIN_LIST,{});
 	}
 
-	public static API_GST_DETAIL_LIST = { 'url': '/txbdyitr/getGSTDetail', 'method': 'GET', "url_key":"uat_url"  };
+	public static API_GST_DETAIL_LIST = { 'url': '/txbdyitr/getGSTDetail', 'method': 'GET'  };
 	getGSTDetailList() {
 		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_GST_DETAIL_LIST,{});
 	}
