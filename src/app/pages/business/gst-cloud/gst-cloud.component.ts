@@ -22,6 +22,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavbarService } from '../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../services/toast-message.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-gst-cloud',
@@ -30,12 +31,17 @@ import { ToastMessageService } from '../../../services/toast-message.service';
 })
 export class GSTCloudComponent implements OnInit {
 	selected_merchant: any;
-  available_merchant_list:any = [{merchant_id:1,name:"mechant 1"},{merchant_id:2,name:"mechant 2"}];
+  available_merchant_list:any = [];
   loading: boolean = false;  
   merchantData: any;
 
   selected_bill_type: any = "";
   invoices_list: any = [];
+
+  state_list:any = [];
+  all_invoice_types:any = [];
+  selected_invoice_types:any = [];
+  invoice_main_type: any = "";
 
   isGSTBillViewShown: boolean = false;
   is_applied_clicked: boolean = false;
@@ -53,7 +59,7 @@ export class GSTCloudComponent implements OnInit {
 
   constructor(
   	private navbarService: NavbarService,
-    public router: Router,
+    public router: Router, public http: HttpClient,
     public _toastMessageService:ToastMessageService) { 
     NavbarService.getInstance(null).component_link_2 = 'gst-cloud';
     NavbarService.getInstance(null).component_link_3 = '';
@@ -65,26 +71,91 @@ export class GSTCloudComponent implements OnInit {
       this.router.navigate(['']);
       return;
     }
+
+    this.loading = true;
+    this.getGSTStateList().then(sR => {
+      this.getGSTInvoiceTypes().then(iR => {
+        this.getMerchantList();
+      })
+    })    
   }  
 
-  onSelectMerchant(event) {
-    console.log(event)
-    if(event && event.merchant_id) {
+  getGSTStateList() {
+    return new Promise((resolve,reject) => {
+      this.state_list = [];
+      NavbarService.getInstance(this.http).getGSTStateDetails().subscribe(res => {
+        if(Array.isArray(res)) {
+          res.forEach(sData => { sData.name = sData.stateMasterName });
+          this.state_list = res;
+        }       
+        resolve(true);
+      }, err => {
+        let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+        this._toastMessageService.alert("error", "state list - " + errorMessage );
+        resolve(false);
+      });
+    })
+  }
+
+  getGSTInvoiceTypes() {
+    return new Promise((resolve,reject) => {
+      this.all_invoice_types = [];
+      NavbarService.getInstance(this.http).getGSTInvoiceTypes().subscribe(res => {
+        if(Array.isArray(res)) {          
+          this.all_invoice_types = res;
+        }       
+        resolve(true);
+      }, err => {
+        let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice type list - " + errorMessage );
+        resolve(false);
+      });
+    })
+  }
+
+  getMerchantList() {
+    this.available_merchant_list = [];
+    this.loading = true;
+    NavbarService.getInstance(this.http).getGSTDetailList().subscribe(res => {
+      if(Array.isArray(res)) {
+        res.forEach(bData => {
+          let tName = bData.fName+" "+bData.lName;
+          if(bData.mobileNumber) {
+            tName += " ("+bData.mobileNumber +")"
+          } else if(bData.emailAddress) {
+            tName += " ("+bData.emailAddress +")"
+          }
+          this.available_merchant_list.push({userId:bData.userId,name:tName})
+        });
+      }
+      this.loading = false;
+    }, err => {
+      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      this._toastMessageService.alert("error", "business list - " + errorMessage );
+      this.loading = false;
+    });    
+  }
+
+  onSelectMerchant(event) {    
+    if(event && event.userId) {
+      this.selected_merchant = event;
       this.getMerchantDetails(event);
     }    
   }
 
-  getMerchantDetails(merchant) {
-    if(merchant && merchant.merchant_id == 1) {
-      this.merchantData = {merchant_id:merchant.merchant_id,name:"mechant 1"}
-    } else if(merchant && merchant.merchant_id == 2) {
-      this.merchantData = {merchant_id:merchant.merchant_id,name:"mechant 2"}
-    }
-    console.log( this.merchantData)
+  getMerchantDetails(merchant) {        
+    this.merchantData = null;
+    NavbarService.getInstance(this.http).getGetGSTMerchantDetail(merchant.userId).subscribe(res => {
+      this.merchantData = res;
+    }, err => {
+      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      this._toastMessageService.alert("error", "merchant detail - " + errorMessage );
+    });  
+    
   }
 
   getAllBillInfoByMerchant() {
-    if(!this.merchantData || !this.merchantData.merchant_id) {
+    if(!this.merchantData || !this.merchantData.userId) {
       this._toastMessageService.alert("error","Please select merchant");
       return;
     }
@@ -97,20 +168,25 @@ export class GSTCloudComponent implements OnInit {
   }
 
   getInvoicesByBillType(bill_type) {
-    if(bill_type == 'sales') {
+    this.selected_invoice_types = [];
+    if(bill_type == 'sales-invoice') {
       this.invoices_list = [{invoice_id:1,upload_date:"",processed_date:"",processed_by:"Brij"}];
-    } else if(bill_type == 'purchase_or_expense'){
+      let tInvT = this.all_invoice_types.filter(ait => { return ait.invoiceTypesName == "Sales"})
+      this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesSubtype}});
+    } else if(bill_type == 'purchase-invoice'){
       this.invoices_list = [{invoice_id:2,upload_date:"",processed_date:new Date(),processed_by:"John"}];
     } else {
       this.invoices_list = [];
     }
+    this.invoice_main_type = bill_type;
+
     this.onChangeAttrFilter(this.invoices_list);
   }
 
   getInvoiceCardTitle() {
-    if(this.selected_bill_type == "sales") {
+    if(this.selected_bill_type == "sales-invoice") {
       return "Sales Bills Invoices";
-    } else if(this.selected_bill_type == "purchase_or_expense") {
+    } else if(this.selected_bill_type == "purchase-invoice") {
       return "Purchase / Expense Bills Invoices";
     } else if(this.selected_bill_type == "credit") {
       return "Credit Note Bills Invoices";
@@ -161,7 +237,8 @@ export class GSTCloudComponent implements OnInit {
   }
 
   onSaveGSTBillInvoice() {
-    this.isGSTBillViewShown = false;
-    this.bodyTag.setAttribute("class", ""); 
+    NavbarService.getInstance(null).saveGSTBillInvoice = true
+    /*this.isGSTBillViewShown = false;
+    this.bodyTag.setAttribute("class", ""); */
   }
 }

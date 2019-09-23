@@ -853,6 +853,7 @@ a {
 
 .popup-bill-invoice-modal .modal-content {
     max-height: calc(100vh - 69px);/*140px*/
+    min-height: calc(100vh - 69px);
 }
 
 .bill-invoice-popup__content {

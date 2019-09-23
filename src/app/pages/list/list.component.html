@@ -10,8 +10,8 @@
 
         <div class="card__row" *ngIf="record_select_for_update">
             <div class="card__col-xs-12 card__col-sm-4">        
-                <app-input-select [label]="'Assigned To'" [value]="group_selected_assign_to" [type]="'text'" [name]="'group_selected_assign_to'" [filter_items]="['OWNER1','OWNER2']" (sendValue)="group_selected_assign_to = $event">
-                </app-input-select>
+                <app-input-select-object [label]="'Assigned To'" [value]="group_selected_assign_to" [type]="'text'" [name]="'group_selected_assign_to'" [filter_items]="admin_list" (sendValue)="($event) ? group_selected_assign_to = $event : ''">
+                </app-input-select-object>              
             </div>
             <div class="card__col-xs-12 card__col-sm-4">        
                 <a class="btn save-btn" (click)="saveGroupSelectedData()">Save</a>                
@@ -177,9 +177,9 @@
                                             {{item.status_of_invoice}}
                                         </div>                                            
                                     </div>
-                                    <div class="table__cell product-row__cell-stock flex-30">
-                                        <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="item.owner" [type]="'text'" [name]="'owner'" [filter_items]="['OWNER1','OWNER2']" (sendValue)="item.owner = $event">
-                                        </app-input-select>
+                                    <div class="table__cell product-row__cell-stock flex-30">                                        
+                                        <app-input-select-object  *ngIf="prods_check[p]" [label]="''" [value]="item.owner" [type]="'text'" [name]="'owner'" [filter_items]="admin_list" (sendValue)="($event) ? item.owner = $event : ''">
+                                        </app-input-select-object>              
                                         <div *ngIf="!prods_check[p]">
                                             {{item.owner ? item.owner : "N/A"}}
                                         </div>                                            

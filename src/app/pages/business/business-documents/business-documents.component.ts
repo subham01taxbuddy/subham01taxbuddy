@@ -22,6 +22,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavbarService } from '../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../services/toast-message.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-business-documents',
@@ -30,7 +31,7 @@ import { ToastMessageService } from '../../../services/toast-message.service';
 })
 export class BusinessDocumentsComponent implements OnInit {
 	selected_merchant: any;
-  available_merchant_list:any = [{merchant_id:1,name:"mechant 1"},{merchant_id:2,name:"mechant 2"},{merchant_id:3,name:"mechant 3"}];
+  available_merchant_list:any = [];
   loading: boolean = false;  
   merchantData: any;
 
@@ -47,7 +48,7 @@ export class BusinessDocumentsComponent implements OnInit {
   ];
   constructor(
   	private navbarService: NavbarService,
-    public router: Router,
+    public router: Router, public http: HttpClient,
     public _toastMessageService:ToastMessageService) { 
     NavbarService.getInstance(null).component_link_2 = 'business-documents';
     NavbarService.getInstance(null).component_link_3 = '';
@@ -59,33 +60,55 @@ export class BusinessDocumentsComponent implements OnInit {
       this.router.navigate(['']);
       return;
     }
+
+    this.getMerchantList();
   }  
 
-  onSelectMerchant(event) {
-    console.log(event)
-    if(event && event.merchant_id) {
+  getMerchantList() {
+    this.available_merchant_list = [];
+    NavbarService.getInstance(this.http).getGSTDetailList().subscribe(res => {
+      if(Array.isArray(res)) {
+        res.forEach(bData => {
+          let tName = bData.fName+" "+bData.lName;
+          if(bData.mobileNumber) {
+            tName += " ("+bData.mobileNumber +")"
+          } else if(bData.emailAddress) {
+            tName += " ("+bData.emailAddress +")"
+          }
+          this.available_merchant_list.push({userId:bData.userId,name:tName})
+        });
+      }       
+    }, err => {
+      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      this._toastMessageService.alert("error", "business list - " + errorMessage );
+    });    
+  }
+
+  onSelectMerchant(event) {    
+    if(event && event.userId) {
+      this.selected_merchant = event;
       this.getMerchantDetails(event);
     }    
   }
 
-  getMerchantDetails(merchant) {
-    if(merchant && merchant.merchant_id == 1) {
-      this.merchantData = {merchant_id:merchant.merchant_id,name:"mechant 1"}
-    } else if(merchant && merchant.merchant_id == 2) {
-      this.merchantData = {merchant_id:merchant.merchant_id,name:"mechant 2"}
-    } else if(merchant && merchant.merchant_id == 3) {
-      this.merchantData = {merchant_id:merchant.merchant_id,name:"mechant 3"}
-    }
-    console.log( this.merchantData)
+  getMerchantDetails(merchant) {        
+    this.merchantData = null;
+    NavbarService.getInstance(this.http).getGetGSTMerchantDetail(merchant.userId).subscribe(res => {
+      this.merchantData = res;
+    }, err => {
+      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      this._toastMessageService.alert("error", "merchant detail - " + errorMessage );
+    });  
+    
   }
 
   getDocumentListByMerchant() {
-    if(!this.merchantData || !this.merchantData.merchant_id) {
+    if(!this.merchantData || !this.merchantData.userId) {
       this._toastMessageService.alert("error","Please select merchant");
       return;
     }
 
-    if(this.merchantData.merchant_id == 1) {
+    if(this.merchantData.userId == 1) {
       this.documents_list = [
         {document_type:"GST Compuation Summary-PDF",upload_date:new Date(),uploaded_by:"Brij"},
         {document_type:"GST Challan -PDF",upload_date:new Date(),uploaded_by:"Brij"},
@@ -93,13 +116,11 @@ export class BusinessDocumentsComponent implements OnInit {
         {document_type:"GSTR 3B Form-PDF",upload_date:new Date(),uploaded_by:"Brij"},
         {document_type:"GSTR 1 Form-PDF",upload_date:new Date(),uploaded_by:"Brij"}
       ]
-    } else if(this.merchantData.merchant_id == 2) {
+    } else {
       this.documents_list = [
         {document_type:"GST Challan -PDF",upload_date:new Date("2019-01-01"),uploaded_by:"Test User"},
         {document_type:"GSTR 3B Form-PDF",upload_date:new Date("2018-01-01"),uploaded_by:"Test User"}
       ] 
-    } else {
-      this.documents_list = [];
     }
     this.onChangeAttrFilter(this.documents_list);
     this.is_applied_clicked = true;

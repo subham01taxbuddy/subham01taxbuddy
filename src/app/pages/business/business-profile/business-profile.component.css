@@ -1,0 +1,6 @@
+.ogp_images {
+	position: relative;
+    width: calc(50% - 5px);
+    display: inline-block;
+    margin-right: 5px;
+}

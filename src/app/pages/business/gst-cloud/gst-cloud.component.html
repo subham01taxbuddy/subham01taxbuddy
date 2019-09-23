@@ -6,7 +6,7 @@
     <div class="card" >
       <div class="card__row">
         <div class="card__col-xs-12 card__col-sm-4">
-          <app-input-select-object [label]="'Select merchant'" [type]="'text'" [value]="selected_merchant" [type]="'text'" [name]="'selected_merchant'" [filter_items]="available_merchant_list" (sendValue)="selected_merchant = $event;onSelectMerchant($event)">
+          <app-input-select-object [label]="'Select merchant'" [type]="'text'" [value]="selected_merchant" [type]="'text'" [name]="'selected_merchant'" [filter_items]="available_merchant_list" (sendValue)="onSelectMerchant($event)">
           </app-input-select-object>
         </div>    
         <div class="card__col-xs-12 card__col-sm-4">
@@ -34,25 +34,25 @@
                     </thead>
                     <tbody class="report-table__body">
                       <tr class="report-table__row">                        
-                        <td class="report-table__cell report-table__cell_day text-pull-left"><a (click)="showBillTypeInvoices('sales')"><b>Sales Bills</b></a></td>
+                        <td class="report-table__cell report-table__cell_day text-pull-left"><a (click)="showBillTypeInvoices('sales-invoice')"><b>Sales Bills</b></a></td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">1</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">12</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">0</td>
                       </tr>
                       <tr class="report-table__row">                        
-                        <td class="report-table__cell report-table__cell_day text-pull-left"><a (click)="showBillTypeInvoices('purchase_or_expense')"><b>Purchase / Expense Bills</b></a></td>
+                        <td class="report-table__cell report-table__cell_day text-pull-left"><a (click)="showBillTypeInvoices('purchase-invoice')"><b>Purchase / Expense Bills</b></a></td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">3</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">112</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">10</td>
                       </tr>
                       <tr class="report-table__row">                        
-                        <td class="report-table__cell report-table__cell_day text-pull-left"><a (click)="showBillTypeInvoices('credit')"><b>Credit Note Bill</b></a></td>
+                        <td class="report-table__cell report-table__cell_day text-pull-left"><a (click)="showBillTypeInvoices('credit-note')"><b>Credit Note Bill</b></a></td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">3</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">5</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">7</td>
                       </tr>
                       <tr class="report-table__row">                        
-                        <td class="report-table__cell report-table__cell_day text-pull-left"><a (click)="showBillTypeInvoices('debit')"><b>Debit Note Bill</b></a></td>
+                        <td class="report-table__cell report-table__cell_day text-pull-left"><a (click)="showBillTypeInvoices('debit-note')"><b>Debit Note Bill</b></a></td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">11</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">1</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">10</td>
@@ -141,7 +141,7 @@
         <div class="modal-content modal-content_scrollbar">
             <div class="modal-content__container bill-invoice-popup__content">
 
-                <app-add-update-gst-bill-invoice (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)">                  
+                <app-add-update-gst-bill-invoice [state_list]="state_list" [invoice_types]="selected_invoice_types" [merchantData]="merchantData" [invoice_main_type]="invoice_main_type" (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)">                  
                 </app-add-update-gst-bill-invoice>
 
             </div>

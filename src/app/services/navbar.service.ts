@@ -86,36 +86,54 @@ export class NavbarService {
 		this.id_token = null;
 		localStorage.clear();        
 	}
-
-
-	public static API_LOGIN = { 'url': '/account/token', 'method': 'POST' };
+	
 	login(params: any) {
-		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_LOGIN, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/account/token', 'method': 'POST' }, params);
 	}
 
-	public static API_LOGOUT = { 'url': '/account/logout', 'method': 'DELETE'  };
 	logout() {
-		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_LOGOUT, null);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/account/logout', 'method': 'DELETE'  }, null);
 	}
 
-	public static API_ADMIN_LIST = { 'url': '/txbdy_ms_user/getAdminList', 'method': 'GET'  };
 	getAdminList() {
-		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_ADMIN_LIST,{});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdy_ms_user/getAdminList', 'method': 'GET'  },{});
 	}
 
-	public static API_GST_DETAIL_LIST = { 'url': '/txbdyitr/getGSTDetail', 'method': 'GET'  };
 	getGSTDetailList() {
-		return NavbarService.getInstance(this.http).apiCall(NavbarService.API_GST_DETAIL_LIST,{});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdyitr/getGSTDetail', 'method': 'GET'  },{});
 	}
 	
+	getGetGSTMerchantDetail(userId) {		
+		return NavbarService.getInstance(this.http).apiCall({'url': '/txbdy_ms_user/profile/'+userId, 'method': 'GET'},{});
+	}
+	
+	getSaveGSTMerchantDetail(params: any) {		
+		return NavbarService.getInstance(this.http).apiCall({'url': '/txbdy_ms_user/profile/'+params.userId, 'method': 'PUT'},params);
+	}
 
-	apiCall(apiKey: any, params: any,): Observable<any> {
+	getGSTStateDetails() {		
+		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/state-masters', 'method': 'GET'},{});
+	}
+
+	getGSTInvoiceTypes() {		
+		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoice-types', 'method': 'GET'},{});
+	}
+
+	createInvoice(params: any) {		
+		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoices', 'method': 'POST'},params);
+	}
+
+	getHeaders(): HttpHeaders {
 		if(!this.id_token) {
 			let userData = JSON.parse(localStorage.getItem('UMD'));
 			if(userData && userData.id_token) { this.id_token = userData.id_token; }
 		}
-		let theaders = new HttpHeaders({'Content-Type': "application/json","Authorization": "Bearer "+this.id_token});
-		let options: any = { headers: theaders }
+
+		return new HttpHeaders({'Content-Type': "application/json","Authorization": "Bearer "+this.id_token});
+	}
+
+	apiCall(apiKey: any, params: any,): Observable<any> {		
+		let options: any = { headers: this.getHeaders() }
 		let pUrl = environment[(apiKey["url_key"] ? apiKey["url_key"] : "url")];
 		if (apiKey['method'] === 'POST') {
 			return this.http.post(pUrl + apiKey['url'], JSON.stringify(params), options)

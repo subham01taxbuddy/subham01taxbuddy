@@ -23,6 +23,7 @@ import { NavbarService } from '../../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../../services/toast-message.service';
 import { GST_STATE_CODES } from '../../../../sources/gst_state_code';
+import { HttpClient } from '@angular/common/http';
 import Storage from '@aws-amplify/storage';
 
 
@@ -34,19 +35,35 @@ import Storage from '@aws-amplify/storage';
 export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   @Input('is_update_item') is_update_item;
   @Input('invoiceToUpdate') invoiceToUpdate: any;
+  @Input('state_list') state_list: any = [];
+  @Input('invoice_types') invoice_types: any = [];  
+  @Input('invoice_main_type') invoice_main_type: any;
+  @Input('merchantData') merchantData: any;
   @Output() onUpdateInvoice: EventEmitter<any> = new EventEmitter();  
   @Output() onAddInvoice: EventEmitter<any> = new EventEmitter();
   @Output() onCancelInvoice: EventEmitter<any> = new EventEmitter();
 
   loading: boolean = false;  
   imageLoader: boolean = false;
-  invoiceData: any = {invoice_image:"invoice.png"};
+  invoiceData: any = {
+    invoiceDate:new Date(),
+    invoiceNumber:"",
+    party:{
+      partyEmail:"",
+      partyGstin:"",
+      partyName:"",
+      partyPhone:""
+    },
+    invoiceItems: []
+  };
   isEditInvoiceImage: boolean = false;
   gstStateCodes:any = GST_STATE_CODES;
+  selected_invoice_state: any;
+  selected_invoice_type: any;
   showSubOpt: any = {'inv_info':true,'inv_item_detail_block':true};
   constructor(
   	private navbarService: NavbarService,
-    public router: Router,
+    public router: Router,public http: HttpClient,
     public _toastMessageService:ToastMessageService) { 
     NavbarService.getInstance(null).component_link_2 = 'add-update-gst-bill-invoice';
     NavbarService.getInstance(null).component_link_3 = '';
@@ -61,14 +78,19 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     this.addItem();
     this.addItem();
     this.getS3Image();
+    this.initData();
   }  
 
+  initData() {
+    this.invoiceData.businessId = this.merchantData.userId;
+  }
+
   getS3Image() {
-    if(this.invoiceData.invoice_image) {
+    if(this.invoiceData.invoiceImageUrl) {
       this.imageLoader = true;
-      Storage.get(this.invoiceData.invoice_image)
+      Storage.get(this.invoiceData.invoiceImageUrl)
         .then (result => {
-          this.invoiceData.invoice_image = result;
+          this.invoiceData.s3InvoiceImageUrl = result;
           this.imageLoader = false;
         })
         .catch(err => {
@@ -85,15 +107,31 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
  
   saveGSTBillInvoice() {
-    alert("for save gst bill invoice ");
+    let sendData = JSON.parse(JSON.stringify(this.invoiceData));
+    delete sendData.s3InvoiceImageUrl;
+    NavbarService.getInstance(this.http).createInvoice(sendData).subscribe(res => {
+      this._toastMessageService.alert("success", "Invoice created successfully.");
+    }, err => {
+      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      this._toastMessageService.alert("error", "save gst invoice list - " + errorMessage );
+    });
   }
 
   addItem() {
-    let defaultItemValue = {name:"",tax_code:"",tax_value:0,rate:0,igst:0,csgt:0,sgst_ugst:0,cess:0,gross_value:0};
-    if(this.invoiceData.items) {
-      this.invoiceData.items.push(defaultItemValue)
+    let defaultItemValue = {
+      tax_code:"",
+      invoiceItemsTaxableValue:0,
+      invoiceItemsTaxRate:0,
+      invoiceItemsIgst:0,
+      invoiceItemsCgst:0,
+      invoiceItemsSgst:0,
+      invoiceItemsCess:0,
+      invoiceItemsGross:0
+    };
+    if(this.invoiceData.invoiceItems) {
+      this.invoiceData.invoiceItems.push(defaultItemValue)
     } else {
-      this.invoiceData.items = [defaultItemValue];
+      this.invoiceData.invoiceItems = [defaultItemValue];
     }
   }
 
@@ -107,15 +145,14 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
   uploadInvoiceImage(files) {
     if(files && files[0]) {
-      this.invoiceData.invoice_image = "../../../../../assets/img/invoice.png";
       this.isEditInvoiceImage = false;
-      this.imageLoader = true;      
-      Storage.put('purchase-invoice/invoice.png', files[0], {
+      this.imageLoader = true;
+      Storage.put(this.getS3InvoicePath(), files[0], {
           contentType: files[0].type
       })
       .then ((result:any) => {
         if(result && result.key) {
-          this.invoiceData.invoice_image = result.key;
+          this.invoiceData.invoiceImageUrl = result.key;
           this.getS3Image();
         } else {
           this.imageLoader = false;
@@ -127,6 +164,35 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         this._toastMessageService.alert("error","Error While uploading invoice image"+JSON.stringify(err));
       });
     }
+  }
+
+  getS3InvoicePath() {
+    let invoiceSavePath = "inv_"+this.merchantData.userId+"_"+new Date().getTime()+".png";
+    if(this.invoice_main_type == "sales-invoice") {
+      invoiceSavePath = "sales-invoice/"+ invoiceSavePath;
+    } else if(this.invoice_main_type == "purchase-invoice") {
+      invoiceSavePath = "purchase-invoice/"+ invoiceSavePath;        
+    } else if(this.invoice_main_type == "debit-note") {
+      invoiceSavePath = "debit-note/"+ invoiceSavePath;        
+    } else if(this.invoice_main_type == "credit-note") {
+      invoiceSavePath = "credit-note/"+ invoiceSavePath;        
+    }
+
+    return invoiceSavePath;
+  }
+
+  onSelectGSTState(event) {
+    if(event && event.id) {
+      this.invoiceData.supplyStateId = event.id;
+      this.selected_invoice_state = event;
+    }
+  }
+
+  onSelectInvoiceType(event) {
+    if(event && event.id) {
+      this.invoiceData.invoiceTypesInvoiceTypesId = event.id;
+      this.selected_invoice_type = event;
+    } 
   }
 }
 

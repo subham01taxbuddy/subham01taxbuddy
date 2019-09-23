@@ -37,6 +37,7 @@ export class ListComponent implements OnInit {
   record_select_for_update: boolean = false;
   group_selected_assign_to: any = "";
   prods_check: boolean[] = [false];
+  admin_list: any = [];
   filterData:any = [];      
   filters_list: any = [ 
     {'in_prod_name':'Name'},
@@ -78,11 +79,16 @@ export class ListComponent implements OnInit {
   }
 
   getAdminList() {    
+    this.admin_list = [];
     NavbarService.getInstance(this.http).getAdminList().subscribe(res => {
-      console.log(res)
+      if(Array.isArray(res)) {
+        res.forEach(admin_data => {
+          this.admin_list.push({userId:admin_data.userId,name:admin_data.fName+" "+admin_data.lName})
+        });
+      }
     }, err => {
       let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
-      this._toastMessageService.alert("error", errorMessage );
+      this._toastMessageService.alert("error", "admin list - " + errorMessage );
     });
   }
 
