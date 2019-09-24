@@ -380,7 +380,7 @@ export class GSTCloudComponent implements OnInit {
         NavbarService.getInstance(this.http).deleteInvoiceByInvoiceId(tab.id).subscribe(res => {
           this.loading = false;
           this.invoices_list.splice(index,1);
-          this.onChangeAttrFilter(tis.invoices_list);
+          this.onChangeAttrFilter(this.invoices_list);
         }, err => {
           let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
           this._toastMessageService.alert("error", "invoice - " + errorMessage );
