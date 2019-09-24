@@ -37,6 +37,8 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   @Input('invoiceToUpdate') invoiceToUpdate: any;
   @Input('state_list') state_list: any = [];
   @Input('invoice_types') invoice_types: any = [];  
+  @Input('invoice_party_roles') invoice_party_roles: any = [];  
+  @Input('invoice_status_list') invoice_status_list: any = [];    
   @Input('invoice_main_type') invoice_main_type: any;
   @Input('merchantData') merchantData: any;
   @Output() onUpdateInvoice: EventEmitter<any> = new EventEmitter();  
@@ -45,10 +47,26 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
   loading: boolean = false;  
   imageLoader: boolean = false;
+  loggedInUserInfo = JSON.parse(localStorage.getItem("UMD")) || {};
   invoiceData: any = {
-    invoiceDate:new Date(),
-    invoiceNumber:"",
-    party:{
+    partyRoleID:"",
+    invoiceDTO: {
+      invoiceCreatedAt: new Date(),
+      invoiceGrossValue: 0,
+      businessId: "",
+      invoiceImageUrl:"",
+      invoiceThumbUrl:"",
+      invoiceImageUploadedBy:"",
+      invoiceImageUploadedOn:new Date(),
+      invoiceDate:new Date(),
+      invoiceNumber:"",
+      supplyStateId:"",
+      invoiceAssignedTo:"",
+      invoiceTypesInvoiceTypesId:"",
+      invoiceStatusMasterInvoiceStatusMasterId:"",
+      invoiceStatusMasterInvoiceStatusMaster:""
+    },
+    partyDTO:{
       partyEmail:"",
       partyGstin:"",
       partyName:"",
@@ -82,15 +100,15 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }  
 
   initData() {
-    this.invoiceData.businessId = this.merchantData.userId;
+    this.invoiceData.invoiceDTO.businessId = this.merchantData.userId;
   }
 
   getS3Image() {
-    if(this.invoiceData.invoiceImageUrl) {
+    if(this.invoiceData.invoiceDTO.invoiceImageUrl) {
       this.imageLoader = true;
-      Storage.get(this.invoiceData.invoiceImageUrl)
+      Storage.get(this.invoiceData.invoiceDTO.invoiceImageUrl)
         .then (result => {
-          this.invoiceData.s3InvoiceImageUrl = result;
+          this.invoiceData.invoiceDTO.s3InvoiceImageUrl = result;
           this.imageLoader = false;
         })
         .catch(err => {
@@ -108,8 +126,21 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
  
   saveGSTBillInvoice() {
     let sendData = JSON.parse(JSON.stringify(this.invoiceData));
-    delete sendData.s3InvoiceImageUrl;
-    NavbarService.getInstance(this.http).createInvoice(sendData).subscribe(res => {
+    sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
+    let cField = (this.invoice_main_type == "sales-invoice") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
+    if(cField) {
+      let fData = this.invoice_party_roles.filter(ipr => { return ipr.partyRoleName == cField});
+      if(fData && fData[0]) { sendData.partyRoleID = fData[0].id; }
+    }
+
+    let sfData = this.invoice_status_list.filter(isl => { return isl.invoiceStatusMasterName == "uploaded"})
+    if(sfData && sfData[0]) { 
+      sendData.invoiceStatusMasterInvoiceStatusMaster = sfData[0].invoiceStatusMasterName;
+      sendData.invoiceStatusMasterInvoiceStatusMasterId = sfData[0].id; 
+    }
+
+    delete sendData.invoiceDTO.s3InvoiceImageUrl;
+    NavbarService.getInstance(this.http).createInvoiceWithItems(sendData).subscribe(res => {
       this._toastMessageService.alert("success", "Invoice created successfully.");
     }, err => {
       let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
@@ -128,10 +159,10 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       invoiceItemsCess:0,
       invoiceItemsGross:0
     };
-    if(this.invoiceData.invoiceItems) {
-      this.invoiceData.invoiceItems.push(defaultItemValue)
+    if(this.invoiceData.listInvoices) {
+      this.invoiceData.listInvoices.push(defaultItemValue)
     } else {
-      this.invoiceData.invoiceItems = [defaultItemValue];
+      this.invoiceData.listInvoices = [defaultItemValue];
     }
   }
 
@@ -147,12 +178,15 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     if(files && files[0]) {
       this.isEditInvoiceImage = false;
       this.imageLoader = true;
-      Storage.put(this.getS3InvoicePath(), files[0], {
+      let invPath = this.getS3InvoicePath();
+      Storage.put(invPath, files[0], {
           contentType: files[0].type
       })
       .then ((result:any) => {
         if(result && result.key) {
-          this.invoiceData.invoiceImageUrl = result.key;
+          this.invoiceData.invoiceDTO.invoiceImageUrl = result.key;
+          this.invoiceData.invoiceDTO.invoiceImageUploadedOn = new Date();
+          this.invoiceData.invoiceDTO.invoiceImageUploadedBy = this.loggedInUserInfo.USER_UNIQUE_ID;
           this.getS3Image();
         } else {
           this.imageLoader = false;
@@ -183,14 +217,14 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
   onSelectGSTState(event) {
     if(event && event.id) {
-      this.invoiceData.supplyStateId = event.id;
+      this.invoiceData.invoiceDTO.supplyStateId = event.id;
       this.selected_invoice_state = event;
     }
   }
 
   onSelectInvoiceType(event) {
     if(event && event.id) {
-      this.invoiceData.invoiceTypesInvoiceTypesId = event.id;
+      this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId = event.id;
       this.selected_invoice_type = event;
     } 
   }

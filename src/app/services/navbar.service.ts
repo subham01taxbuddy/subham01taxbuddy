@@ -119,9 +119,25 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoice-types', 'method': 'GET'},{});
 	}
 
+	getInvoiceParyRoles() {		
+		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/party-roles', 'method': 'GET'},{});
+	}
+
+	getInvoiceStatusList() {		
+		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoice-status-masters', 'method': 'GET'},{});
+	}
+
 	createInvoice(params: any) {		
 		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoices', 'method': 'POST'},params);
 	}
+
+	createInvoiceWithItems(params: any) {		
+		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'POST'},params);
+	}
+
+	
+
+	
 
 	getHeaders(): HttpHeaders {
 		if(!this.id_token) {

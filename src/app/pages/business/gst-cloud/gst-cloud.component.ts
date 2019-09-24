@@ -41,6 +41,8 @@ export class GSTCloudComponent implements OnInit {
   state_list:any = [];
   all_invoice_types:any = [];
   selected_invoice_types:any = [];
+  invoice_party_roles:any = [];
+  invoice_status_list:any = [];
   invoice_main_type: any = "";
 
   isGSTBillViewShown: boolean = false;
@@ -75,7 +77,11 @@ export class GSTCloudComponent implements OnInit {
     this.loading = true;
     this.getGSTStateList().then(sR => {
       this.getGSTInvoiceTypes().then(iR => {
-        this.getMerchantList();
+        this.getInvoiceParyRoles().then(rR => {
+          this.getInvoiceStatusList().then(iSL => {
+            this.getMerchantList();
+          })
+        })
       })
     })    
   }  
@@ -113,6 +119,40 @@ export class GSTCloudComponent implements OnInit {
     })
   }
 
+  getInvoiceParyRoles() {
+    return new Promise((resolve,reject) => {
+      this.invoice_party_roles = [];
+      NavbarService.getInstance(this.http).getInvoiceParyRoles().subscribe(res => {
+        if(Array.isArray(res)) {          
+          this.invoice_party_roles = res;
+        }       
+        resolve(true);
+      }, err => {
+        let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice party role list - " + errorMessage );
+        resolve(false);
+      });
+    })
+  }
+
+  getInvoiceStatusList() {
+    return new Promise((resolve,reject) => {
+      this.invoice_status_list = [];
+      NavbarService.getInstance(this.http).getInvoiceStatusList().subscribe(res => {
+        if(Array.isArray(res)) {          
+          this.invoice_status_list = res;
+        }       
+        resolve(true);
+      }, err => {
+        let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice status list - " + errorMessage );
+        resolve(false);
+      });
+    })
+  }
+
+  
+
   getMerchantList() {
     this.available_merchant_list = [];
     this.loading = true;
@@ -145,11 +185,14 @@ export class GSTCloudComponent implements OnInit {
 
   getMerchantDetails(merchant) {        
     this.merchantData = null;
+    this.loading = true;
     NavbarService.getInstance(this.http).getGetGSTMerchantDetail(merchant.userId).subscribe(res => {
       this.merchantData = res;
+      this.loading = false;
     }, err => {
       let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
       this._toastMessageService.alert("error", "merchant detail - " + errorMessage );
+      this.loading = false;
     });  
     
   }

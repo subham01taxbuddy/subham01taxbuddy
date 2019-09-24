@@ -72,3 +72,13 @@
 .edit-invoice-image:hover > div {
 	display: block;
 }
+
+.invoice-item-summary-label {
+	text-align: right;
+    font-size: 17px;
+    margin-top: 10px;
+}
+
+.invoice-info-row > .card__col-sm-4 {
+	margin-bottom: 30px;
+}

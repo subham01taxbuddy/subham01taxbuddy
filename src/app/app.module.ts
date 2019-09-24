@@ -44,7 +44,6 @@ import { appRoutes } from './app-routing.module';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    // InMemoryWebApiModule.forRoot(InMemoryDataService),
     RouterModule.forRoot(appRoutes),
     PagesModule
   ],
