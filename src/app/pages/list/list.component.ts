@@ -87,7 +87,7 @@ export class ListComponent implements OnInit {
         });
       }
     }, err => {
-      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
       this._toastMessageService.alert("error", "admin list - " + errorMessage );
     });
   }
@@ -98,7 +98,7 @@ export class ListComponent implements OnInit {
       this.mlist = res;      
       this.filterData = this.mlist;
     }, err => {
-      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
       this._toastMessageService.alert("error", errorMessage );
     });    
   }

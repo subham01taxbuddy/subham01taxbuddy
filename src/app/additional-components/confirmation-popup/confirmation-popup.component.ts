@@ -16,31 +16,27 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-confirmation-popup',
   templateUrl: './confirmation-popup.component.html',
-  styleUrls: ['./confirmation-popup.component.sass']
+  styleUrls: ['./confirmation-popup.component.css']
 })
-export class ConfirmationPopupComponent implements OnInit {
+export class ConfirmationModalComponent implements OnInit {
+  isProceed: boolean;
+  confirmation_text = "NA";
+  confirmation_popup_type = "";
 
-  @Output() closePopup: EventEmitter<boolean> = new EventEmitter();
-  @Input('confirmation_text') confirmation_text: any = "";
-  @Input('confirmation_popup_type') confirmation_popup_type: any = "";
-
-  bodyTag = document.getElementsByTagName("body")[0];
-
-  constructor() {  
-  }
-
-  ngOnInit() {    
-    this.bodyTag.setAttribute("class", "overflow-hidden");    
-  }
-
-  onClosePopup(is_proceed) {
-    this.bodyTag.setAttribute("class", "");  
-    this.closePopup.emit(is_proceed);
+  constructor(public modalRef: BsModalRef) { }  
+  
+  ngOnInit() {}  
+  
+  onClosePopup(isProceed){
+    this.isProceed=isProceed;    
+    this.modalRef.hide();    
   }
 }
+

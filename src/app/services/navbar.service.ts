@@ -135,9 +135,17 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'POST'},params);
 	}
 
-	
+	getInvoiceList(params: any) {		
+		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoices', 'method': 'GET'},params);
+	}
 
-	
+	getInvoiceByInvoiceId(inv_id) {		
+		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoices/'+inv_id, 'method': 'GET'},{});
+	}
+
+	deleteInvoiceByInvoiceId(inv_id) {		
+		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoices/'+inv_id, 'method': 'DELETE'},{});
+	}
 
 	getHeaders(): HttpHeaders {
 		if(!this.id_token) {

@@ -79,7 +79,7 @@ export class BusinessDocumentsComponent implements OnInit {
         });
       }       
     }, err => {
-      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
       this._toastMessageService.alert("error", "business list - " + errorMessage );
     });    
   }
@@ -96,7 +96,7 @@ export class BusinessDocumentsComponent implements OnInit {
     NavbarService.getInstance(this.http).getGetGSTMerchantDetail(merchant.userId).subscribe(res => {
       this.merchantData = res;
     }, err => {
-      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
       this._toastMessageService.alert("error", "merchant detail - " + errorMessage );
     });  
     

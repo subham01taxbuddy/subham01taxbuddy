@@ -33,7 +33,7 @@ import { CapitalizeFirstPipe } from '../pipes/capitalize-first.pipe';
 import { SafePipe } from '../pipes/safe-html.pipe';
 
 // Additional Components
-import { ConfirmationPopupComponent } from '../additional-components/confirmation-popup/confirmation-popup.component';
+import { ConfirmationModalComponent } from '../additional-components/confirmation-popup/confirmation-popup.component';
 import { InputCheckboxSelectComponent } from '../additional-components/input-checkbox-select/input-checkbox-select.component';
 import { InputCheckboxSelectObjectComponent } from '../additional-components/input-checkbox-select-object/input-checkbox-select-object.component';
 import { InputComponent } from '../additional-components/input/input.component';
@@ -107,7 +107,7 @@ Storage.configure({
     BacktipsDatePipe,
     CapitalizeFirstPipe,
     SafePipe,
-    ConfirmationPopupComponent,
+    ConfirmationModalComponent,
     InputCheckboxSelectComponent,
     InputCheckboxSelectObjectComponent,
     InputComponent,
@@ -125,7 +125,8 @@ Storage.configure({
     AttributesFilterComponent
   ],
   entryComponents:[
-    HomeComponent
+    HomeComponent,
+    ConfirmationModalComponent
   ],
   imports: [
     BrowserModule,

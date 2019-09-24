@@ -23,6 +23,10 @@ import { NavbarService } from '../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../services/toast-message.service';
 import { HttpClient } from '@angular/common/http';
+import { ConfirmationModalComponent } from '../../../additional-components/confirmation-popup/confirmation-popup.component';
+import { Subscription } from 'rxjs';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+
 
 @Component({
   selector: 'app-gst-cloud',
@@ -45,6 +49,11 @@ export class GSTCloudComponent implements OnInit {
   invoice_status_list:any = [];
   invoice_main_type: any = "";
 
+  invoiceToUpdate:any;
+  is_update_invoice: boolean = false;
+
+  admin_list: any = [];
+
   isGSTBillViewShown: boolean = false;
   is_applied_clicked: boolean = false;
 
@@ -57,10 +66,12 @@ export class GSTCloudComponent implements OnInit {
     {'in_prod_name':'Invoice #'},    
   ];
 
+  modalRef: BsModalRef;
   bodyTag = document.getElementsByTagName("body")[0];
 
   constructor(
   	private navbarService: NavbarService,
+    private modalService: BsModalService,
     public router: Router, public http: HttpClient,
     public _toastMessageService:ToastMessageService) { 
     NavbarService.getInstance(null).component_link_2 = 'gst-cloud';
@@ -80,6 +91,7 @@ export class GSTCloudComponent implements OnInit {
         this.getInvoiceParyRoles().then(rR => {
           this.getInvoiceStatusList().then(iSL => {
             this.getMerchantList();
+            this.getAdminList();
           })
         })
       })
@@ -96,7 +108,7 @@ export class GSTCloudComponent implements OnInit {
         }       
         resolve(true);
       }, err => {
-        let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
         this._toastMessageService.alert("error", "state list - " + errorMessage );
         resolve(false);
       });
@@ -112,7 +124,7 @@ export class GSTCloudComponent implements OnInit {
         }       
         resolve(true);
       }, err => {
-        let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
         this._toastMessageService.alert("error", "invoice type list - " + errorMessage );
         resolve(false);
       });
@@ -128,7 +140,7 @@ export class GSTCloudComponent implements OnInit {
         }       
         resolve(true);
       }, err => {
-        let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
         this._toastMessageService.alert("error", "invoice party role list - " + errorMessage );
         resolve(false);
       });
@@ -144,13 +156,12 @@ export class GSTCloudComponent implements OnInit {
         }       
         resolve(true);
       }, err => {
-        let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
         this._toastMessageService.alert("error", "invoice status list - " + errorMessage );
         resolve(false);
       });
     })
   }
-
   
 
   getMerchantList() {
@@ -170,7 +181,7 @@ export class GSTCloudComponent implements OnInit {
       }
       this.loading = false;
     }, err => {
-      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
       this._toastMessageService.alert("error", "business list - " + errorMessage );
       this.loading = false;
     });    
@@ -179,7 +190,8 @@ export class GSTCloudComponent implements OnInit {
   onSelectMerchant(event) {    
     if(event && event.userId) {
       this.selected_merchant = event;
-      this.getMerchantDetails(event);
+      this.merchantData = event;      
+      /*this.getMerchantDetails(event);*/
     }    
   }
 
@@ -190,7 +202,7 @@ export class GSTCloudComponent implements OnInit {
       this.merchantData = res;
       this.loading = false;
     }, err => {
-      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
       this._toastMessageService.alert("error", "merchant detail - " + errorMessage );
       this.loading = false;
     });  
@@ -212,18 +224,82 @@ export class GSTCloudComponent implements OnInit {
 
   getInvoicesByBillType(bill_type) {
     this.selected_invoice_types = [];
-    if(bill_type == 'sales-invoice') {
-      this.invoices_list = [{invoice_id:1,upload_date:"",processed_date:"",processed_by:"Brij"}];
+    if(bill_type == 'sales-invoice') {      
       let tInvT = this.all_invoice_types.filter(ait => { return ait.invoiceTypesName == "Sales"})
       this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesSubtype}});
     } else if(bill_type == 'purchase-invoice'){
-      this.invoices_list = [{invoice_id:2,upload_date:"",processed_date:new Date(),processed_by:"John"}];
-    } else {
-      this.invoices_list = [];
+      let tInvT = this.all_invoice_types.filter(ait => { return ait.invoiceTypesName == "Purchase"})
+      this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesSubtype}});      
     }
-    this.invoice_main_type = bill_type;
 
+    this.invoices_list = [];
     this.onChangeAttrFilter(this.invoices_list);
+    this.invoice_main_type = bill_type;    
+    this.loading = true;
+    let params = { "businessId.equals":this.merchantData.userId};
+    NavbarService.getInstance(this.http).getInvoiceList(params).subscribe(res => {
+        if(Array.isArray(res)) {
+          res.forEach(inv => {
+            inv.processed_by = this.getAdminName(inv.invoiceAssignedTo);
+          })
+          this.invoices_list = res;
+        }       
+
+        this.onChangeAttrFilter(this.invoices_list);
+        this.loading = false;
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice list - " + errorMessage );
+        this.loading = false;
+      });
+  }
+
+  getAdminList() {    
+    this.admin_list = [];
+    NavbarService.getInstance(this.http).getAdminList().subscribe(res => {
+      if(Array.isArray(res)) {
+        res.forEach(admin_data => {
+          this.admin_list.push({userId:admin_data.userId,name:admin_data.fName+" "+admin_data.lName})
+        });
+      }
+    }, err => {
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+      this._toastMessageService.alert("error", "admin list - " + errorMessage );
+    });
+  }
+
+  getAdminName(id) {
+    if(!id) { 
+      return "N/A"; 
+    } else {
+      let fData = this.admin_list.filter(al => { return al.userId == id});
+      if(fData && fData[0]) {
+        return fData[0].name;
+      }
+    }
+  }
+
+  onClickEditInvoice(invoice) {
+    this.loading = true;    
+    this.getInvoiceByInvoiceId(invoice.id).then(invoiceData => {
+      if(invoiceData) {
+        this.invoiceToUpdate = invoiceData;
+        this.uploadBill(false);
+      }
+      this.loading = false;
+    })
+  }
+
+  getInvoiceByInvoiceId(inv_id) {
+    return new Promise((resolve,reject) => {
+      NavbarService.getInstance(this.http).getInvoiceByInvoiceId(inv_id).subscribe(res => {
+        return resolve(res);
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice - " + errorMessage );
+        return resolve(null);
+      });
+    })
   }
 
   getInvoiceCardTitle() {
@@ -252,7 +328,7 @@ export class GSTCloudComponent implements OnInit {
         for(var i=0;i<event.length;i++) {
           var it = event[i];      
           if(it.attr == 'Processed By' && it.value && rd.processed_by.toLowerCase().indexOf(it.value.toLowerCase()) == -1 ||
-            it.attr == 'Invoice #' && it.value && rd.invoice_id.toLowerCase().indexOf(it.value.toLowerCase()) == -1) {            
+            it.attr == 'Invoice #' && it.value && rd.invoiceNumber.toLowerCase().indexOf(it.value.toLowerCase()) == -1) {            
               is_match = false;
               break;
           }        
@@ -264,9 +340,17 @@ export class GSTCloudComponent implements OnInit {
     this.filterData = JSON.parse(JSON.stringify(tempFD));    
   }
 
-  uploadNewBill() {
+  uploadBill(isNew) {
     this.isGSTBillViewShown = true;
+    this.is_update_invoice = !isNew;
     this.bodyTag.setAttribute("class", "overflow-hidden");    
+  }
+
+  onAddInvoice(event) {
+    event.processed_by = "N/A";
+    this.invoices_list.push(event);
+    this.onChangeAttrFilter(this.invoices_list);
+    this.onCancelInvoiceBtnClicked();
   }
 
   onUpdateInvoice(event) {
@@ -274,7 +358,7 @@ export class GSTCloudComponent implements OnInit {
     this.bodyTag.setAttribute("class", "");
   }
 
-  onCancelInvoiceBtnClicked(event) {
+  onCancelInvoiceBtnClicked() {
     this.isGSTBillViewShown = false;
     this.bodyTag.setAttribute("class", "");
   }
@@ -283,5 +367,27 @@ export class GSTCloudComponent implements OnInit {
     NavbarService.getInstance(null).saveGSTBillInvoice = true
     /*this.isGSTBillViewShown = false;
     this.bodyTag.setAttribute("class", ""); */
+  }
+
+  onClickDeleteInvoice(tab,index) {
+    this.modalRef = this.modalService.show(ConfirmationModalComponent, {});
+    this.modalRef.content.isProceed = false;
+    this.modalRef.content.confirmation_text = "Are you sure to delete invoice";
+    this.modalRef.content.confirmation_popup_type = 'delete_invoice';
+    var tempSubObj: Subscription = this.modalService.onHide.subscribe(() => {
+      if (this.modalRef.content.isProceed) {
+        this.loading = true;
+        NavbarService.getInstance(this.http).deleteInvoiceByInvoiceId(tab.id).subscribe(res => {
+          this.loading = false;
+          this.invoices_list.splice(index,1);
+          this.onChangeAttrFilter(tis.invoices_list);
+        }, err => {
+          let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+          this._toastMessageService.alert("error", "invoice - " + errorMessage );
+          this.loading = false;
+        });
+      }
+      tempSubObj.unsubscribe();
+    });    
   }
 }

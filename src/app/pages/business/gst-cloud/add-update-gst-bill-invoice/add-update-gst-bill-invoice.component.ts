@@ -64,7 +64,6 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       invoiceAssignedTo:"",
       invoiceTypesInvoiceTypesId:"",
       invoiceStatusMasterInvoiceStatusMasterId:"",
-      invoiceStatusMasterInvoiceStatusMaster:""
     },
     partyDTO:{
       partyEmail:"",
@@ -72,7 +71,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       partyName:"",
       partyPhone:""
     },
-    invoiceItems: []
+    listInvoices: []
   };
   isEditInvoiceImage: boolean = false;
   gstStateCodes:any = GST_STATE_CODES;
@@ -101,6 +100,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
   initData() {
     this.invoiceData.invoiceDTO.businessId = this.merchantData.userId;
+    if(this.invoice_main_type == "purchase-invoice" && this.invoice_types && this.invoice_types[0]) {
+      this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId = this.invoice_types[0].id;
+    }
   }
 
   getS3Image() {
@@ -125,6 +127,30 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
  
   saveGSTBillInvoice() {
+    if(!this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId) {
+      this._toastMessageService.alert("error","Please Select Invoice Type");
+      return;
+    } else if(!this.invoiceData.invoiceDTO.invoiceDate) {
+      this._toastMessageService.alert("error","Please add invoice date");
+      return;
+    } else if(!this.invoiceData.invoiceDTO.invoiceNumber) {
+      this._toastMessageService.alert("error","Please add invoice number");
+      return;
+    } else if(!this.invoiceData.partyDTO.partyGstin) {
+      this._toastMessageService.alert("error","Please add customer gstin");
+      return;
+    } else if(!this.invoiceData.partyDTO.partyName) {
+      this._toastMessageService.alert("error","Please add customer name");
+      return;
+    } else if(!this.invoiceData.invoiceDTO.supplyStateId) {
+      this._toastMessageService.alert("error","Please select place of supply");
+      return;
+    } else if(this.invoiceData.partyDTO.partyPhone && this.invoiceData.partyDTO.partyPhone.length != 10) {
+      this._toastMessageService.alert("error","Please add valid 10 digit phone number");
+      return;
+    }
+
+    this.loading = true;
     let sendData = JSON.parse(JSON.stringify(this.invoiceData));
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
     let cField = (this.invoice_main_type == "sales-invoice") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
@@ -135,16 +161,18 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
     let sfData = this.invoice_status_list.filter(isl => { return isl.invoiceStatusMasterName == "uploaded"})
     if(sfData && sfData[0]) { 
-      sendData.invoiceStatusMasterInvoiceStatusMaster = sfData[0].invoiceStatusMasterName;
-      sendData.invoiceStatusMasterInvoiceStatusMasterId = sfData[0].id; 
+      sendData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId = sfData[0].id; 
     }
 
     delete sendData.invoiceDTO.s3InvoiceImageUrl;
     NavbarService.getInstance(this.http).createInvoiceWithItems(sendData).subscribe(res => {
+      this.loading = false;
       this._toastMessageService.alert("success", "Invoice created successfully.");
+      this.onAddInvoice.emit(res);
     }, err => {
-      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
       this._toastMessageService.alert("error", "save gst invoice list - " + errorMessage );
+      this.loading = false;
     });
   }
 
@@ -167,7 +195,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
 
   deleteItem(index) {
-    this.invoiceData.items.splice(index,1);
+    this.invoiceData.listInvoices.splice(index,1);
   }
 
   onCancelBtnClicked() {

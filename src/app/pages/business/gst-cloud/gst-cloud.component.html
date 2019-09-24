@@ -69,7 +69,7 @@
             <div class="back-btn-container" (click)="cancelInvoiceList()"></div>
           </div>
           <div class="card__col-xs-6" style="text-align: right;">
-            <div class="add-invoice-btn-container" (click)="uploadNewBill()"></div>
+            <div class="add-invoice-btn-container" (click)="uploadBill(true)"></div>
           </div>
         </div>
 
@@ -98,15 +98,15 @@
                       <tbody class="report-table__body" *ngFor="let tab of (filterData); let i=index; ">
                         <tr class="report-table__row">                        
                           <td class="report-table__cell report-table__cell_day text-pull-left">{{i+1}}</td>
-                          <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.invoice_id}}</td>
-                          <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.upload_date | backTipsDate}}</td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.invoiceNumber}}</td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.invoiceCreatedAt | backTipsDate}}</td>
                           <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.processed_date | backTipsDate}}</td>
                           <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.processed_by | capitalizeFirst}}</td>
                           <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <div class="fa-icon-wrapper"><i class="fa fa-edit" tooltip="Edit"></i></div>
+                            <div class="fa-icon-wrapper" (click)="onClickEditInvoice(tab)"><i class="fa fa-edit" tooltip="Edit"></i></div>
                           </td>
                           <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <div class="combobox__clear"></div>
+                            <div class="combobox__clear"  (click)="onClickDeleteInvoice(tab,i)"></div>
                           </td>
                         </tr>                     
                       </tbody>
@@ -141,7 +141,7 @@
         <div class="modal-content modal-content_scrollbar">
             <div class="modal-content__container bill-invoice-popup__content">
 
-                <app-add-update-gst-bill-invoice [state_list]="state_list" [invoice_types]="selected_invoice_types" [merchantData]="merchantData" [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list" (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)">                  
+                <app-add-update-gst-bill-invoice [state_list]="state_list" [invoice_types]="selected_invoice_types" [merchantData]="merchantData" [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list" [invoiceToUpdate]="invoiceToUpdate" [is_update_item]="is_update_invoice" (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)">                  
                 </app-add-update-gst-bill-invoice>
 
             </div>
