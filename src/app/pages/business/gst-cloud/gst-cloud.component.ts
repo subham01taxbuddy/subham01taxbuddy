@@ -39,8 +39,9 @@ export class GSTCloudComponent implements OnInit {
   loading: boolean = false;  
   merchantData: any;
 
-  selected_bill_type: any = "";
+  selected_bill_type: any = null;
   invoices_list: any = [];
+  selected_invoices_list: any = [];
 
   state_list:any = [];
   all_invoice_types:any = [];
@@ -66,6 +67,32 @@ export class GSTCloudComponent implements OnInit {
     {'in_prod_name':'Invoice #'},    
   ];
 
+  summarised_invoice:any = {
+    "sales": {
+      uploaded_count:0,
+      processed_count:0,
+      processing_count:0,
+      invoice_list:[]
+    },
+    "purchase": {
+      uploaded_count:0,
+      processed_count:0,
+      processing_count:0,
+      invoice_list:[]
+    },
+    "credit_note": {
+      uploaded_count:0,
+      processed_count:0,
+      processing_count:0,
+      invoice_list:[]
+    },
+    "debit_note": {
+      uploaded_count:0,
+      processed_count:0,
+      processing_count:0,
+      invoice_list:[]      
+    }
+  }
   modalRef: BsModalRef;
   bodyTag = document.getElementsByTagName("body")[0];
 
@@ -151,7 +178,8 @@ export class GSTCloudComponent implements OnInit {
     return new Promise((resolve,reject) => {
       this.invoice_status_list = [];
       NavbarService.getInstance(this.http).getInvoiceStatusList().subscribe(res => {
-        if(Array.isArray(res)) {          
+        if(Array.isArray(res)) {    
+          res.forEach(sData => { sData.name = sData.invoiceStatusMasterName });              
           this.invoice_status_list = res;
         }       
         resolve(true);
@@ -209,49 +237,159 @@ export class GSTCloudComponent implements OnInit {
     
   }
 
+  setDateStartTimings(date) {
+    let f_date = new Date(date);
+    f_date.setHours(0);
+    f_date.setMinutes(0);
+    f_date.setSeconds(0);
+
+    return f_date;
+  }
+
+  setDateEndTimings(date) {
+    let f_date = new Date(date);
+    f_date.setHours(23);
+    f_date.setMinutes(59);
+    f_date.setSeconds(59);
+
+    return f_date;
+  }
+
+  resetSummarisedInvoice() {
+    this.summarised_invoice = {
+      "sales": {
+        uploaded_count:0,
+        processed_count:0,
+        processing_count:0,
+        invoice_list:[]
+      },
+      "purchase": {
+        uploaded_count:0,
+        processed_count:0,
+        processing_count:0,
+        invoice_list:[]
+      },
+      "credit_note": {
+        uploaded_count:0,
+        processed_count:0,
+        processing_count:0,
+        invoice_list:[]
+      },
+      "debit_note": {
+        uploaded_count:0,
+        processed_count:0,
+        processing_count:0,
+        invoice_list:[]      
+      }
+    }
+  }
+
   getAllBillInfoByMerchant() {
     if(!this.merchantData || !this.merchantData.userId) {
       this._toastMessageService.alert("error","Please select merchant");
       return;
+    } else if(!this.from_date || !this.to_date) {
+      this._toastMessageService.alert("error","Please select from and to date");
+      return;
     }
+
+
     this.is_applied_clicked = true;
-  }
-  
-  showBillTypeInvoices(type) {
-    this.selected_bill_type = type;
-    this.getInvoicesByBillType(type);
-  }
-
-  getInvoicesByBillType(bill_type) {
-    this.selected_invoice_types = [];
-    if(bill_type == 'sales-invoice') {      
-      let tInvT = this.all_invoice_types.filter(ait => { return ait.invoiceTypesName == "Sales"})
-      this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesSubtype}});
-    } else if(bill_type == 'purchase-invoice'){
-      let tInvT = this.all_invoice_types.filter(ait => { return ait.invoiceTypesName == "Purchase"})
-      this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesSubtype}});      
-    }
-
-    this.invoices_list = [];
-    this.onChangeAttrFilter(this.invoices_list);
-    this.invoice_main_type = bill_type;    
+    this.resetSummarisedInvoice();
+    this.invoices_list = [];       
     this.loading = true;
-    let params = { "businessId.equals":this.merchantData.userId};
+
+    this.from_date = this.setDateStartTimings(this.from_date);
+    this.to_date = this.setDateStartTimings(this.to_date);
+
+    let params = { 
+      "businessId.equals":this.merchantData.userId,
+      "invoiceCreatedAt.greaterThanOrEqual":this.from_date.toISOString(),
+      "invoiceCreatedAt.lessThanOrEqual":this.to_date.toISOString()
+    };
+
     NavbarService.getInstance(this.http).getInvoiceList(params).subscribe(res => {
         if(Array.isArray(res)) {
           res.forEach(inv => {
             inv.processed_by = this.getAdminName(inv.invoiceAssignedTo);
           })
           this.invoices_list = res;
+          this.invoiceSummarised(this.invoices_list);
         }       
 
-        this.onChangeAttrFilter(this.invoices_list);
         this.loading = false;
       }, err => {
         let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
         this._toastMessageService.alert("error", "invoice list - " + errorMessage );
         this.loading = false;
       });
+  }
+  
+  showBillTypeInvoices(type) {
+    this.getInvoicesByBillType(type);
+  }
+
+  getInvoicesByBillType(bill_type) {
+    this.selected_invoice_types = [];
+    this.selected_invoices_list = [];
+    if(bill_type == 'sales-invoice') {      
+      let tInvT = this.all_invoice_types.filter(ait => { return ait.invoiceTypesName == "Sales"})
+      this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesSubtype}});
+      this.selected_invoices_list = this.summarised_invoice.sales.invoice_list;
+    } else if(bill_type == 'purchase-invoice'){
+      let tInvT = this.all_invoice_types.filter(ait => { return ait.invoiceTypesName == "Purchase"})
+      this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesSubtype}});      
+      this.selected_invoices_list = this.summarised_invoice.purchase.invoice_list;
+    } else {
+      this._toastMessageService.alert("error","Coming soon");
+      return;
+    }   
+
+    this.onChangeAttrFilter(this.selected_invoices_list);
+    this.invoice_main_type = bill_type; 
+    this.selected_bill_type = bill_type;
+
+  }
+
+  invoiceSummarised(invoiceList) {
+    invoiceList.forEach(inv => {
+      let uploadCount = 0;
+      let processedCount = 0;
+      let processingCount = 0;
+
+      // here 1 is id of uploaded invoice status
+      //      2 is id of processed invoice status
+      if(inv.invoiceStatusMasterInvoiceStatusMasterId == 1) {
+        uploadCount++;
+      } else if(inv.invoiceStatusMasterInvoiceStatusMasterId == 3) {
+        processedCount++;
+      } else {
+        processingCount++;
+      }
+
+      let invType = "";
+      //here 1 and 2 is id of sales b2b and b2c invoice
+      //     3  id of purchase Bills
+      //     6  id of expense Bills
+      //     4  id of credit note Bills
+      //     5  id of debit note Bills
+      if(inv.invoiceTypesInvoiceTypesId == 1 || inv.invoiceTypesInvoiceTypesId == 2) {
+        invType = "sales";
+      } else if(inv.invoiceTypesInvoiceTypesId == 3 || inv.invoiceTypesInvoiceTypesId == 6) {
+        invType = "purchase";
+      } else if(inv.invoiceTypesInvoiceTypesId == 4) {
+        invType = "credit_note";
+      } else if(inv.invoiceTypesInvoiceTypesId == 5) {
+        invType = "debit_note";
+      }
+
+      if(invType) {
+        this.summarised_invoice[invType].uploaded_count += uploadCount;
+        this.summarised_invoice[invType].processed_count += processedCount;
+        this.summarised_invoice[invType].processing_count += processingCount;
+        this.summarised_invoice[invType].invoice_list.push(inv);
+      }
+    })
   }
 
   getAdminList() {    
@@ -291,9 +429,9 @@ export class GSTCloudComponent implements OnInit {
   }
 
   getInvoiceByInvoiceId(inv_id) {
-    return new Promise((resolve,reject) => {
-      NavbarService.getInstance(this.http).getInvoiceByInvoiceId(inv_id).subscribe(res => {
-        return resolve(res);
+    return new Promise((resolve,reject) => {      
+      NavbarService.getInstance(this.http).getInvoiceWithItemsByInvoiceId(inv_id).subscribe(res => {
+        return resolve((Array.isArray(res)) ? res[0] : null);
       }, err => {
         let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
         this._toastMessageService.alert("error", "invoice - " + errorMessage );
@@ -323,7 +461,7 @@ export class GSTCloudComponent implements OnInit {
   }
 
   onChangeAttrFilter(event) {
-    var tempFD = this.invoices_list.filter(rd => {
+    var tempFD = this.selected_invoices_list.filter(rd => {
         var is_match = true;
         for(var i=0;i<event.length;i++) {
           var it = event[i];      
@@ -349,7 +487,7 @@ export class GSTCloudComponent implements OnInit {
   onAddInvoice(event) {
     event.processed_by = "N/A";
     this.invoices_list.push(event);
-    this.onChangeAttrFilter(this.invoices_list);
+    this.onChangeAttrFilter(this.selected_invoices_list);
     this.onCancelInvoiceBtnClicked();
   }
 
@@ -379,8 +517,11 @@ export class GSTCloudComponent implements OnInit {
         this.loading = true;
         NavbarService.getInstance(this.http).deleteInvoiceByInvoiceId(tab.id).subscribe(res => {
           this.loading = false;
+          this.selected_invoices_list.splice(index,1);
           this.invoices_list.splice(index,1);
-          this.onChangeAttrFilter(this.invoices_list);
+          this.invoiceSummarised(this.invoices_list);
+          this.onChangeAttrFilter(this.selected_invoices_list);
+          this._toastMessageService.alert("success", "invoice `" + tab.invoiceNumber + "` deleted successfully");          
         }, err => {
           let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
           this._toastMessageService.alert("error", "invoice - " + errorMessage );

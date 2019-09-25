@@ -30,7 +30,9 @@ import { ToastMessageService } from '../../services/toast-message.service';
 })
 
 export class ListComponent implements OnInit {  
-  mlist = []
+  loading: boolean = false;
+  mlist = [];
+  invoices_list = [];
   /*{"name":"Ashish","mobile_number":"1234123412","document_type":"sales","upload_date":"2019-01-01","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"},
   {"name":"Ashish","mobile_number":"1234123412","document_type":"sales","upload_date":"2019-01-01","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"}*/
   
@@ -56,8 +58,13 @@ export class ListComponent implements OnInit {
       return;
     }
 
-    this.getAdminList();
-    this.getMerchantList();
+    this.loading = true;
+    this.getAdminList().then(aR=>{
+      /*this.getInvoiceList().then(iR => {
+
+      })*/
+      this.getMerchantList();
+    })
   }
 
   onChangeAttrFilter(event) {
@@ -79,29 +86,67 @@ export class ListComponent implements OnInit {
   }
 
   getAdminList() {    
-    this.admin_list = [];
-    NavbarService.getInstance(this.http).getAdminList().subscribe(res => {
-      if(Array.isArray(res)) {
-        res.forEach(admin_data => {
-          this.admin_list.push({userId:admin_data.userId,name:admin_data.fName+" "+admin_data.lName})
-        });
-      }
-    }, err => {
-      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-      this._toastMessageService.alert("error", "admin list - " + errorMessage );
+    return new Promise((resolve,reject) => {
+      this.admin_list = [];
+      NavbarService.getInstance(this.http).getAdminList().subscribe(res => {
+        if(Array.isArray(res)) {
+          res.forEach(admin_data => {
+            this.admin_list.push({userId:admin_data.userId,name:admin_data.fName+" "+admin_data.lName})
+          });
+        }
+        return resolve(true)
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "admin list - " + errorMessage );
+        return resolve(false)
+      });
     });
   }
 
   getMerchantList() {
+    this.loading = true;    
     this.mlist = [];
     NavbarService.getInstance(this.http).getGSTDetailList().subscribe(res => {
       this.mlist = res;      
       this.filterData = this.mlist;
+      this.loading = false;
     }, err => {
       let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
       this._toastMessageService.alert("error", errorMessage );
+      this.loading = false;
     });    
   }
+
+  getInvoiceList() {
+    return new Promise((resolve,reject) => {
+      NavbarService.getInstance(this.http).getInvoiceList({}).subscribe(res => {
+        if(Array.isArray(res)) {
+          res.forEach(inv => {
+            inv.processed_by = this.getAdminName(inv.invoiceAssignedTo);
+          })
+          this.invoices_list = res;
+          this.filterData = this.invoices_list;
+        }
+        return resolve(true);
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice list - " + errorMessage );
+        return resolve(false);
+      });
+    });
+  }
+
+  getAdminName(id) {
+    if(!id) { 
+      return "N/A"; 
+    } else {
+      let fData = this.admin_list.filter(al => { return al.userId == id});
+      if(fData && fData[0]) {
+        return fData[0].name;
+      }
+    }
+  }
+
   showMerchantDetail(merchant) {
     
   }

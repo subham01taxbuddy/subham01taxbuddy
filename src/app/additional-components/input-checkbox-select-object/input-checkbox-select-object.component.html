@@ -1,38 +1,5 @@
 <div class="input">
-  <div style="width: 100%;display: flex;position: relative;" *ngIf="label=='Select Customer'">
-    <label class="input__label">{{label}}
-      <span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
-    </label>
-    <div style="position: absolute;right: 0;">
-      <app-input-checkbox [value]="is_exclude" [label]="'Exclude'" 
-        (sendValue)="is_exclude = $event;sendData();">
-      </app-input-checkbox>
-    </div>
-  </div>
-
-  <div style="width: 100%;display: flex;position: relative;" *ngIf="label=='Category'">
-    <label class="input__label">{{label}}
-      <span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
-    </label>
-    <div style="position: absolute;right: 0;" *ngIf="discount_type != 'Combo'">
-      <app-input-checkbox [value]="is_exclude_category" [disabled]="disabled" [label]="'Exclude'" 
-        (sendValue)="is_exclude_category = $event;sendData();">
-      </app-input-checkbox>
-    </div>
-  </div>
-
-  <div style="width: 100%;display: flex;position: relative;" *ngIf="label=='Items'">
-    <label class="input__label">{{label}}
-      <span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
-    </label>
-    <div style="position: absolute;right: 0;" *ngIf="discount_type != 'Combo'">
-      <app-input-checkbox [value]="is_exclude_item" [disabled]="disabled" [label]="'Exclude'" 
-        (sendValue)="is_exclude_item = $event;sendData();">
-      </app-input-checkbox>
-    </div>
-  </div>
-  
-  <label *ngIf="(label!='Select Customer' && label!= 'Category' && label != 'Items')" class="input__label">{{label}}
+  <label class="input__label">{{label}}
       <span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
   </label>
   <div class="input__select">

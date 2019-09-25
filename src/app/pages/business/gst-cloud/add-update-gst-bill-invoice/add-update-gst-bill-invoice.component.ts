@@ -22,7 +22,6 @@ import { Component, OnInit,Input,Output,EventEmitter } from '@angular/core';
 import { NavbarService } from '../../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../../services/toast-message.service';
-import { GST_STATE_CODES } from '../../../../sources/gst_state_code';
 import { HttpClient } from '@angular/common/http';
 import Storage from '@aws-amplify/storage';
 
@@ -46,6 +45,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   @Output() onCancelInvoice: EventEmitter<any> = new EventEmitter();
 
   loading: boolean = false;  
+  gstinBounceBackTimeObj:any;
   imageLoader: boolean = false;
   loggedInUserInfo = JSON.parse(localStorage.getItem("UMD")) || {};
   invoiceData: any = {
@@ -71,12 +71,12 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       partyName:"",
       partyPhone:""
     },
-    listInvoices: []
+    listInvoiceItems: []
   };
   isEditInvoiceImage: boolean = false;
-  gstStateCodes:any = GST_STATE_CODES;
   selected_invoice_state: any;
   selected_invoice_type: any;
+  selected_invoice_status: any;
   showSubOpt: any = {'inv_info':true,'inv_item_detail_block':true};
   constructor(
   	private navbarService: NavbarService,
@@ -92,16 +92,44 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       this.router.navigate(['']);
       return;
     }
-    this.addItem();
-    this.addItem();
-    this.getS3Image();
+    
     this.initData();
   }  
 
   initData() {
-    this.invoiceData.invoiceDTO.businessId = this.merchantData.userId;
-    if(this.invoice_main_type == "purchase-invoice" && this.invoice_types && this.invoice_types[0]) {
-      this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId = this.invoice_types[0].id;
+    if(!this.is_update_item) {
+      //for new invoice
+      this.invoiceData.invoiceDTO.businessId = this.merchantData.userId;
+      if(this.invoice_main_type == "purchase-invoice" && this.invoice_types && this.invoice_types[0]) {
+        this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId = this.invoice_types[0].id;
+      }
+
+      this.addItem();
+      this.addItem();
+    } else if(this.invoiceToUpdate) {
+      //for edit invoice
+
+      this.invoiceData = JSON.parse(JSON.stringify(this.invoiceToUpdate));
+
+      //init place of supply
+      if(this.invoiceData.invoiceDTO.supplyStateId && this.state_list) {
+        let slfData = this.state_list.filter(sl => { return sl.id == this.invoiceData.invoiceDTO.supplyStateId;});
+        if(slfData && slfData[0]) { this.selected_invoice_state = slfData[0]; }
+      }
+
+      //init invoice type
+      if(this.invoice_main_type == "sales-invoice" && this.invoice_types) {
+        let itfData = this.invoice_types.filter(it => { return it.id == this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId;});
+        if(itfData && itfData[0]) { this.selected_invoice_type = itfData[0]; } 
+      }
+
+      //init invoice status
+      if(this.invoice_status_list) {
+        let islfData = this.invoice_status_list.filter(isl => { return isl.id == this.invoiceData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId;});
+        if(islfData && islfData[0]) { this.selected_invoice_status = islfData[0]; } 
+      }
+      
+      this.getS3Image();
     }
   }
 
@@ -150,6 +178,15 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       return;
     }
 
+    if(this.is_update_item) {
+      this._toastMessageService.alert("error","update coming soon.");
+      return 
+    }
+    
+    this.addInvoice();
+  }
+
+  addInvoice() {
     this.loading = true;
     let sendData = JSON.parse(JSON.stringify(this.invoiceData));
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
@@ -170,7 +207,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       this._toastMessageService.alert("success", "Invoice created successfully.");
       this.onAddInvoice.emit(res);
     }, err => {
-      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : (err.error.title) ?  err.error.title : "Internal server error.";
       this._toastMessageService.alert("error", "save gst invoice list - " + errorMessage );
       this.loading = false;
     });
@@ -178,7 +215,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
   addItem() {
     let defaultItemValue = {
-      tax_code:"",
+      itemTaxCode:"",
       invoiceItemsTaxableValue:0,
       invoiceItemsTaxRate:0,
       invoiceItemsIgst:0,
@@ -187,15 +224,15 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       invoiceItemsCess:0,
       invoiceItemsGross:0
     };
-    if(this.invoiceData.listInvoices) {
-      this.invoiceData.listInvoices.push(defaultItemValue)
+    if(this.invoiceData.listInvoiceItems) {
+      this.invoiceData.listInvoiceItems.push(defaultItemValue)
     } else {
-      this.invoiceData.listInvoices = [defaultItemValue];
+      this.invoiceData.listInvoiceItems = [defaultItemValue];
     }
   }
 
   deleteItem(index) {
-    this.invoiceData.listInvoices.splice(index,1);
+    this.invoiceData.listInvoiceItems.splice(index,1);
   }
 
   onCancelBtnClicked() {
@@ -255,6 +292,49 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId = event.id;
       this.selected_invoice_type = event;
     } 
+  }
+
+  onSelectInvoiceStatus(event) {
+    if(event && event.id) {
+      this.invoiceData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId = event.id;
+      this.selected_invoice_status = event;
+    } 
+  }
+
+  onEnterGSTIN(event) {
+    this.invoiceData.partyDTO.partyGstin = event;
+    if(this.gstinBounceBackTimeObj) {
+      clearTimeout(this.gstinBounceBackTimeObj)
+    }
+    this.gstinBounceBackTimeObj = setTimeout(() => {
+      if(this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length > 3) {
+        this.getPartyInfoByGSTIN(event).then((partyInfo:any) => {
+          if(partyInfo) {
+            this.invoiceData.partyDTO.partyEmail = partyInfo.partyEmail;
+            this.invoiceData.partyDTO.partyPhone = partyInfo.partyPhone;
+            this.invoiceData.partyDTO.partyName = partyInfo.partyName;
+          } else {
+            this.invoiceData.partyDTO.partyEmail = "";
+            this.invoiceData.partyDTO.partyPhone = "";
+            this.invoiceData.partyDTO.partyName = "";
+          }
+        });
+      } else {
+        this.invoiceData.partyDTO.partyEmail = "";
+        this.invoiceData.partyDTO.partyPhone = "";
+        this.invoiceData.partyDTO.partyName = "";
+      }
+    },500)    
+  }
+
+  getPartyInfoByGSTIN(gstin) {
+    return new Promise((resolve,reject) => {
+      NavbarService.getInstance(this.http).getPartyInfoByGSTIN({gstin:gstin}).subscribe(res => {
+        return resolve(((Array.isArray(res)) ? res[0] : null));
+      }, err => {
+        return resolve(null);
+      });
+    })
   }
 }
 

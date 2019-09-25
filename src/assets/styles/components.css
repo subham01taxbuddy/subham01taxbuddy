@@ -155,6 +155,11 @@
     min-width: 180px;
 }
 
+.disabled-btn {
+    background-color: #dae2db !important;
+    pointer-events: none;
+}
+
 
 /* CARD */
 
