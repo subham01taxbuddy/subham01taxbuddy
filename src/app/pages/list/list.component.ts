@@ -31,8 +31,10 @@ import { ToastMessageService } from '../../services/toast-message.service';
 
 export class ListComponent implements OnInit {  
   loading: boolean = false;
-  mlist = [];
-  invoices_list = [];
+  merchantList:any = [];
+  invoices_list:any = [];
+  invoice_status_list:any = []; 
+  all_invoice_types: any = [];
   /*{"name":"Ashish","mobile_number":"1234123412","document_type":"sales","upload_date":"2019-01-01","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"},
   {"name":"Ashish","mobile_number":"1234123412","document_type":"sales","upload_date":"2019-01-01","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"}*/
   
@@ -40,7 +42,7 @@ export class ListComponent implements OnInit {
   group_selected_assign_to: any = "";
   prods_check: boolean[] = [false];
   admin_list: any = [];
-  filterData:any = [];      
+  filterData:any = [];
   filters_list: any = [ 
     {'in_prod_name':'Name'},
     {'in_prod_name':'Mobile Number'}
@@ -59,21 +61,26 @@ export class ListComponent implements OnInit {
     }
 
     this.loading = true;
-    this.getAdminList().then(aR=>{
-      /*this.getInvoiceList().then(iR => {
-
-      })*/
-      this.getMerchantList();
-    })
+    this.getGSTInvoiceTypes().then(itR => {
+      this.getInvoiceStatusList().then(isRl =>{
+        this.getAdminList().then(aR=>{
+          this.getMerchantList().then(mR => {
+            this.getInvoiceList().then(iR => {
+              this.loading = false
+            });
+          });
+        });
+      })
+    });
   }
 
   onChangeAttrFilter(event) {
-    var tempReportD = this.mlist.filter(rd => {
+    var tempReportD = this.invoices_list.filter(rd => {
         var is_match = true;
         for(var i=0;i<event.length;i++) {
           var it = event[i];      
-          if(it.attr == 'Mobile Number' && it.value && rd.mobile_number.toLowerCase().indexOf(it.value.toLowerCase()) == -1 || 
-            it.attr == 'Name' && it.value && rd.name.toLowerCase().indexOf(it.value.toLowerCase()) == -1) {
+          if(it.attr == 'Mobile Number' && it.value && rd.merchantMobileNumber.toLowerCase().indexOf(it.value.toLowerCase()) == -1 || 
+            it.attr == 'Name' && it.value && rd.merchantName.toLowerCase().indexOf(it.value.toLowerCase()) == -1) {
               is_match = false;
               break;
           }        
@@ -104,27 +111,46 @@ export class ListComponent implements OnInit {
   }
 
   getMerchantList() {
-    this.loading = true;    
-    this.mlist = [];
-    NavbarService.getInstance(this.http).getGSTDetailList().subscribe(res => {
-      this.mlist = res;      
-      this.filterData = this.mlist;
-      this.loading = false;
-    }, err => {
-      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-      this._toastMessageService.alert("error", errorMessage );
-      this.loading = false;
-    });    
+    return new Promise((resolve,reject) => {
+      this.merchantList = [];
+      NavbarService.getInstance(this.http).getGSTDetailList().subscribe(res => {
+        this.merchantList = res;      
+        return resolve(true);
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", errorMessage );
+        return resolve(false);
+      });
+    });
   }
 
   getInvoiceList() {
     return new Promise((resolve,reject) => {
       NavbarService.getInstance(this.http).getInvoiceList({}).subscribe(res => {
         if(Array.isArray(res)) {
+          let invoice_types_obj = {};
+          let invoice_status_obj = {};
+          this.all_invoice_types.forEach(invT => {
+            invoice_types_obj[invT.id] = invT["invoiceTypesName"];
+          });
+
+          this.invoice_status_list.forEach(invSL => {
+            invoice_status_obj[invSL.id] = invSL["invoiceStatusMasterName"]
+          })
           res.forEach(inv => {
+            inv.merchantName = "";
+            inv.merchantMobileNumber = "";
+            inv.invoiceStatus = invoice_status_obj[inv.invoiceStatusMasterInvoiceStatusMasterId] || "";
+            inv.invoiceDocumentType = invoice_types_obj[inv.invoiceTypesInvoiceTypesId] || "";
+            let mData = this.merchantList.filter(ml =>  {return ml.userId == inv.businessId });            
+            if(mData && mData[0]) {
+              inv.merchantName = mData[0].fName + " " + mData[0].lName;
+              inv.merchantMobileNumber = mData[0].mobileNumber;
+            }
             inv.processed_by = this.getAdminName(inv.invoiceAssignedTo);
           })
           this.invoices_list = res;
+          console.log(this.invoices_list)
           this.filterData = this.invoices_list;
         }
         return resolve(true);
@@ -134,6 +160,45 @@ export class ListComponent implements OnInit {
         return resolve(false);
       });
     });
+  }
+
+  getGSTInvoiceTypes() {
+    return new Promise((resolve,reject) => {
+      this.all_invoice_types = [];
+      NavbarService.getInstance(this.http).getGSTInvoiceTypes().subscribe(res => {
+        if(Array.isArray(res)) {          
+          this.all_invoice_types = res;
+        }       
+        resolve(true);
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice type list - " + errorMessage );
+        resolve(false);
+      });
+    })
+  }
+
+  getInvoiceStatusList() {
+    return new Promise((resolve,reject) => {
+      this.invoice_status_list = [];
+      NavbarService.getInstance(this.http).getInvoiceStatusList().subscribe(res => {
+        if(Array.isArray(res)) {    
+          res.forEach(sData => { sData.name = sData.invoiceStatusMasterName });              
+          this.invoice_status_list = res;
+        }       
+        resolve(true);
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice status list - " + errorMessage );
+        resolve(false);
+      });
+    })
+  }
+
+  onSelectInvoiceStatus(event,item) {
+    if(event && event.id) {
+      item.selected_invoice_status = event;
+    }
   }
 
   getAdminName(id) {

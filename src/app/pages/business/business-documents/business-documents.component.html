@@ -40,7 +40,7 @@
                   <tbody class="report-table__body" *ngFor="let tab of (filterData); let i=index; ">
                     <tr class="report-table__row">                        
                       <td class="report-table__cell report-table__cell_day text-pull-left">{{i+1}}</td>
-                      <td class="report-table__cell report-table__cell_day text-pull-left"><b>{{tab.document_type | capitalizeFirst}}</b></td>
+                      <td class="report-table__cell report-table__cell_day text-pull-left"><b>{{tab.gstDocumentTypeMasterName | capitalizeFirst}}</b></td>
                       <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.upload_date | backTipsDate}}</td>
                       <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.uploaded_by | capitalizeFirst}}</td>
                       <td class="report-table__cell report-table__cell_day text-pull-right">

@@ -123,6 +123,12 @@ export class BusinessProfileComponent implements OnInit {
     this.merchantData = null;
     NavbarService.getInstance(this.http).getGetGSTMerchantDetail(merchant.userId).subscribe(res => {
       if(res) {
+        if(!res.gstDetails.bankInformation) {
+          res.gstDetails.bankInformation = {bankName:"",accountNumber:"",ifscCode:""};
+        }
+        if(!res.gstDetails.businessAddress) {
+          res.gstDetails.businessAddress = {address:"",stateMasterCode:"",pincode:""};
+        }
         this.merchantData = res;
         this.merchantData.name = this.merchantData.fName +' '+ this.merchantData.lName;      
         if(this.merchantData.gstDetails.businessLogo) {

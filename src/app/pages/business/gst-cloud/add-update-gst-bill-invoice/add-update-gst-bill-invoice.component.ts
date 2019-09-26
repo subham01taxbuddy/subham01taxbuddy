@@ -77,6 +77,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   selected_invoice_state: any;
   selected_invoice_type: any;
   selected_invoice_status: any;
+  isIGSTEnabled: boolean = false;
   showSubOpt: any = {'inv_info':true,'inv_item_detail_block':true};
   constructor(
   	private navbarService: NavbarService,
@@ -99,10 +100,11 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   initData() {
     if(!this.is_update_item) {
       //for new invoice
-      this.invoiceData.invoiceDTO.businessId = this.merchantData.userId;
-      if(this.invoice_main_type == "purchase-invoice" && this.invoice_types && this.invoice_types[0]) {
+      this.invoiceData.invoiceDTO.businessId = this.merchantData.userId;      
+      /*if(this.invoice_main_type == "purchase-invoice" && this.invoice_types && this.invoice_types[0]) {
         this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId = this.invoice_types[0].id;
-      }
+      }*/
+
 
       this.addItem();
       this.addItem();
@@ -111,6 +113,23 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
       this.invoiceData = JSON.parse(JSON.stringify(this.invoiceToUpdate));
 
+      if(!this.invoiceData.partyDTO) {
+        this.invoiceData.partyDTO = {
+          partyEmail:"",
+          partyGstin:"",
+          partyName:"",
+          partyPhone:""
+        }
+      }
+
+      if(this.invoiceData.partyDTO.partyGstin) {
+        this.invoiceData.partyDTO.partyPreviousGstin = JSON.parse(JSON.stringify(this.invoiceData.partyDTO.partyGstin));
+      }
+
+      if(!this.invoiceData.listInvoiceItems) {
+        this.invoiceData.listInvoiceItems = []
+      }
+
       //init place of supply
       if(this.invoiceData.invoiceDTO.supplyStateId && this.state_list) {
         let slfData = this.state_list.filter(sl => { return sl.id == this.invoiceData.invoiceDTO.supplyStateId;});
@@ -118,7 +137,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       }
 
       //init invoice type
-      if(this.invoice_main_type == "sales-invoice" && this.invoice_types) {
+      if((this.invoice_main_type == "sales-invoice" || this.invoice_main_type == "purchase-invoice" ) && this.invoice_types) {
         let itfData = this.invoice_types.filter(it => { return it.id == this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId;});
         if(itfData && itfData[0]) { this.selected_invoice_type = itfData[0]; } 
       }
@@ -136,6 +155,8 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   getS3Image() {
     if(this.invoiceData.invoiceDTO.invoiceImageUrl) {
       this.imageLoader = true;
+      /*let imgUrl = JSON.parse(JSON.stringify(this.invoiceData.invoiceDTO.invoiceImageUrl));
+      imgUrl = imgUrl.replace("public/","");*/
       Storage.get(this.invoiceData.invoiceDTO.invoiceImageUrl)
         .then (result => {
           this.invoiceData.invoiceDTO.s3InvoiceImageUrl = result;
@@ -179,11 +200,10 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }
 
     if(this.is_update_item) {
-      this._toastMessageService.alert("error","update coming soon.");
-      return 
+      this.updatInvoice();
+    } else {
+      this.addInvoice();
     }
-    
-    this.addInvoice();
   }
 
   addInvoice() {
@@ -213,9 +233,33 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     });
   }
 
+  updatInvoice() {
+    this.loading = true;
+    let sendData = JSON.parse(JSON.stringify(this.invoiceData));
+    sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
+    if(sendData.partyDTO.partyGstin != sendData.partyDTO.partyPreviousGstin) {
+      delete sendData.partyDTO.id;
+    }
+
+    sendData.invoiceDTO.invoiceUpdatedAt = new Date();
+    delete sendData.partyDTO.partyPreviousGstin
+    delete sendData.invoiceDTO.s3InvoiceImageUrl;    
+    delete sendData.partyDTO.partyCreatedAt;
+    delete sendData.partyDTO.partyUpdatedAt;
+    NavbarService.getInstance(this.http).updateInvoiceWithItems(sendData).subscribe(res => {
+      this.loading = false;
+      this._toastMessageService.alert("success", "Invoice updated successfully.");
+      this.onUpdateInvoice.emit(res);
+    }, err => {
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : (err.error.title) ?  err.error.title : "Internal server error.";
+      this._toastMessageService.alert("error", "save gst invoice list - " + errorMessage );
+      this.loading = false;
+    });
+  }
+
   addItem() {
     let defaultItemValue = {
-      itemTaxCode:"",
+      invoiceItemsTaxCode:"",
       invoiceItemsTaxableValue:0,
       invoiceItemsTaxRate:0,
       invoiceItemsIgst:0,
@@ -283,6 +327,12 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   onSelectGSTState(event) {
     if(event && event.id) {
       this.invoiceData.invoiceDTO.supplyStateId = event.id;
+      if(this.merchantData && this.merchantData.gstDetails && this.merchantData.gstDetails.businessAddress &&
+          this.merchantData.gstDetails.businessAddress.state && this.merchantData.gstDetails.businessAddress.state != event.stateMasterCode) {        
+        this.isIGSTEnabled = true;
+      } else {
+        this.isIGSTEnabled = false;
+      }
       this.selected_invoice_state = event;
     }
   }

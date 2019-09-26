@@ -39,11 +39,16 @@
                 </div>              
             </div>
             <div *ngIf="showSubOpt['inv_info']" class="hidder__content card__col-xs-12">
-              <div class="card__row invoice-info-row">     
-                <div class="card__col-xs-12 card__col-sm-4" *ngIf="invoice_main_type == 'sales-invoice'">
+              <div class="card__row invoice-info-row">
+                <div class="card__col-xs-12 card__col-sm-4" *ngIf="invoice_main_type == 'sales-invoice' || invoice_main_type == 'purchase-invoice'">
                   <app-input-select-object [label]="'Invoice Type'" [is_mandatory]="'true'"  [type]="'text'" [value]="selected_invoice_type" [name]="'Invoice Type'" [filter_items]="invoice_types" (sendValue)="onSelectInvoiceType($event)">
                   </app-input-select-object>
-                </div>      
+                </div>
+
+                <!-- <div class="card__col-xs-12 card__col-sm-4" *ngIf="invoice_main_type == 'p-invoice'">
+                  <app-input-select-object [label]="'Invoice Type'" [is_mandatory]="'true'"  [type]="'text'" [value]="selected_invoice_type" [name]="'Invoice Type'" [filter_items]="invoice_types" (sendValue)="onSelectInvoiceType($event)">
+                  </app-input-select-object>
+                </div> -->
                 
                 <div class="card__col-xs-12 card__col-sm-4">              
                   <app-calendar [format]="'from'" [label]="'Invoice Date'" [type]="'text'" [is_mandatory]="'true'"  [init_from_date]="invoiceData.invoiceDTO.invoiceDate" [name]="'invoiceData.invoiceDTO.invoiceDate'"
@@ -55,19 +60,19 @@
                 </div>            
 
                 <div class="card__col-xs-12 card__col-sm-4">
-                  <app-input [label]="'GSTIN of Customer'" [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [placeholder]="'GSTIN of Customer'" [value]="invoiceData.partyDTO.partyGstin" (sendValue)="onEnterGSTIN($event)"></app-input>
+                  <app-input [label]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')" [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [placeholder]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')" [value]="invoiceData.partyDTO.partyGstin" (sendValue)="onEnterGSTIN($event)"></app-input>
                 </div>
 
                 <div class="card__col-xs-12 card__col-sm-4">
-                  <app-input [label]="'Customer Name'" [type]="'text'" [is_mandatory]="'true'" [name]="'Customer Name'" [placeholder]="'Customer Name'" [value]="invoiceData.partyDTO.partyName" (sendValue)="invoiceData.partyDTO.partyName = $event"></app-input>
+                  <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Name'" [type]="'text'" [is_mandatory]="'true'" [name]="'Customer Name'" [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Name'" [value]="invoiceData.partyDTO.partyName" (sendValue)="invoiceData.partyDTO.partyName = $event"></app-input>
                 </div>            
 
                 <div class="card__col-xs-12 card__col-sm-4">
-                  <app-input [label]="'Customer Contact No.'" [type]="'text'"  [name]="'Customer Contact No.'" [placeholder]="'Customer Contact No.'" [value]="invoiceData.partyDTO.partyPhone" (sendValue)="invoiceData.partyDTO.partyPhone = $event"></app-input>
+                  <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Contact No.'" [type]="'text'"  [name]="'Customer Contact No.'" [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Contact No.'" [value]="invoiceData.partyDTO.partyPhone" (sendValue)="invoiceData.partyDTO.partyPhone = $event"></app-input>
                 </div>            
 
                 <div class="card__col-xs-12 card__col-sm-4">
-                  <app-input [label]="'Customer Email'" [type]="'text'"  [name]="'Customer Email'" [placeholder]="'Customer Email'" [value]="invoiceData.partyDTO.partyEmail" (sendValue)="invoiceData.partyDTO.partyEmail = $event"></app-input>
+                  <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Email'" [type]="'text'"  [name]="'Customer Email'" [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Email'" [value]="invoiceData.partyDTO.partyEmail" (sendValue)="invoiceData.partyDTO.partyEmail = $event"></app-input>
                 </div>        
 
                 <div class="card__col-xs-12 card__col-sm-4">                
@@ -109,10 +114,10 @@
                                                       <th class="report-table__cell report-table__cell_name">HSN/SAC</th>
                                                       <th class="report-table__cell report-table__cell_name">Taxable<br/>Value</th>
                                                       <th class="report-table__cell report-table__cell_name">Rate</th>
-                                                      <th class="report-table__cell report-table__cell_name">IGST</th>
-                                                      <th class="report-table__cell report-table__cell_name">CGST</th>
-                                                      <th class="report-table__cell report-table__cell_name">SGST/UGST</th>
-                                                      <th class="report-table__cell report-table__cell_name">Celss</th>
+                                                      <th class="report-table__cell report-table__cell_name" *ngIf="isIGSTEnabled">IGST</th>
+                                                      <th class="report-table__cell report-table__cell_name" *ngIf="!isIGSTEnabled">CGST</th>
+                                                      <th class="report-table__cell report-table__cell_name" *ngIf="!isIGSTEnabled">SGST/UGST</th>
+                                                      <th class="report-table__cell report-table__cell_name">Cess</th>
                                                       <th class="report-table__cell report-table__cell_name" [style.color]="'#282827'">Gross Value</th>
                                                       <th class="report-table__cell report-table__cell_name"></th>                                                    
                                                   </tr>
@@ -122,7 +127,7 @@
                                                       <tr *ngIf="!tab.is_deleted" class="report-table__row">
                                                           <td class="report-table__cell report-table__cell_day">{{i+1}}</td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                              <input class="table__row-input" type="text" name="'taxcode'" [(ngModel)]="tab.itemTaxCode">
+                                                              <input class="table__row-input" type="text" name="'taxcode'" [(ngModel)]="tab.invoiceItemsTaxCode">
                                                           </td>                                                          
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
                                                               <input class="table__row-input" type="number" name="'taxvalue'" [(ngModel)]="tab.invoiceItemsTaxableValue">
@@ -130,13 +135,13 @@
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
                                                               <input class="table__row-input" type="number" name="'rate'" [(ngModel)]="tab.invoiceItemsTaxRate">
                                                           </td>
-                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;" *ngIf="isIGSTEnabled">
                                                               <input class="table__row-input" type="number" name="'igst'" [(ngModel)]="tab.invoiceItemsIgst">
                                                           </td>
-                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;" *ngIf="!isIGSTEnabled">
                                                               <input class="table__row-input" type="number" name="'csgt'" [(ngModel)]="tab.invoiceItemsCgst">
                                                           </td>
-                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;" *ngIf="!isIGSTEnabled">
                                                               <input class="table__row-input" type="number" name="'sgst_ugst'" [(ngModel)]="tab.invoiceItemsSgst">
                                                           </td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">

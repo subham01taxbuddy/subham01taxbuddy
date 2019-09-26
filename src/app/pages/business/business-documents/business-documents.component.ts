@@ -108,22 +108,23 @@ export class BusinessDocumentsComponent implements OnInit {
       return;
     }
 
-    if(this.merchantData.userId == 1) {
-      this.documents_list = [
-        {document_type:"GST Compuation Summary-PDF",upload_date:new Date(),uploaded_by:"Brij"},
-        {document_type:"GST Challan -PDF",upload_date:new Date(),uploaded_by:"Brij"},
-        {document_type:"JASON file-Jason file",upload_date:new Date(),uploaded_by:"Brij"},
-        {document_type:"GSTR 3B Form-PDF",upload_date:new Date(),uploaded_by:"Brij"},
-        {document_type:"GSTR 1 Form-PDF",upload_date:new Date(),uploaded_by:"Brij"}
-      ]
-    } else {
-      this.documents_list = [
-        {document_type:"GST Challan -PDF",upload_date:new Date("2019-01-01"),uploaded_by:"Test User"},
-        {document_type:"GSTR 3B Form-PDF",upload_date:new Date("2018-01-01"),uploaded_by:"Test User"}
-      ] 
-    }
-    this.onChangeAttrFilter(this.documents_list);
+    this.documents_list = [];
     this.is_applied_clicked = true;
+    NavbarService.getInstance(this.http).getGSTDocumentsList().subscribe(res => {
+      if(Array.isArray(res)) {
+        res.forEach(d => {
+          d.upload_date =  new Date();
+          d.uploaded_by = "Brij";
+        });
+
+        this.documents_list = res;
+      }
+      this.onChangeAttrFilter(this.documents_list);      
+    }, err => {
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+      this._toastMessageService.alert("error", "document list - " + errorMessage );
+    });
+    
   }
 
   onChangeAttrFilter(event) {
