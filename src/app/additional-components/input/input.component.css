@@ -8,3 +8,7 @@
     background: #63b12d;
     cursor: pointer;
 }
+
+input[type="date"] {
+	padding: 8px 14px;
+}

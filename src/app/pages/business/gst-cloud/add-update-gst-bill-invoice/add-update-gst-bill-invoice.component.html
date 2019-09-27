@@ -51,8 +51,9 @@
                 </div> -->
                 
                 <div class="card__col-xs-12 card__col-sm-4">              
-                  <app-calendar [format]="'from'" [label]="'Invoice Date'" [type]="'text'" [is_mandatory]="'true'"  [init_from_date]="invoiceData.invoiceDTO.invoiceDate" [name]="'invoiceData.invoiceDTO.invoiceDate'"
-                    [value]="invoiceData.invoiceDTO.invoiceDate | backTipsDate" (sendBeginDate)="invoiceData.invoiceDTO.invoiceDate = $event"></app-calendar>
+                  <!-- <app-calendar [format]="'from'" [label]="'Invoice Date'" [type]="'text'" [is_mandatory]="'true'"  [init_from_date]="invoiceData.invoiceDTO.invoiceDate" [name]="'invoiceData.invoiceDTO.invoiceDate'"
+                    [value]="invoiceData.invoiceDTO.invoiceDate | backTipsDate" (sendBeginDate)="invoiceData.invoiceDTO.invoiceDate = $event"></app-calendar> -->
+                  <app-input [label]="'Invoice Date'" [type]="'date'" [is_mandatory]="'true'" [name]="'Invoice Date'" [placeholder]="''" [value]="invoiceData.invoiceDTO.invoiceDate" (sendValue)="invoiceData.invoiceDTO.invoiceDate = $event"></app-input>
                 </div>
 
                 <div class="card__col-xs-12 card__col-sm-4">
@@ -116,7 +117,7 @@
                                                       <th class="report-table__cell report-table__cell_name">Rate</th>
                                                       <th class="report-table__cell report-table__cell_name" *ngIf="isIGSTEnabled">IGST</th>
                                                       <th class="report-table__cell report-table__cell_name" *ngIf="!isIGSTEnabled">CGST</th>
-                                                      <th class="report-table__cell report-table__cell_name" *ngIf="!isIGSTEnabled">SGST/UGST</th>
+                                                      <th class="report-table__cell report-table__cell_name" *ngIf="!isIGSTEnabled">SGST</th>
                                                       <th class="report-table__cell report-table__cell_name">Cess</th>
                                                       <th class="report-table__cell report-table__cell_name" [style.color]="'#282827'">Gross Value</th>
                                                       <th class="report-table__cell report-table__cell_name"></th>                                                    

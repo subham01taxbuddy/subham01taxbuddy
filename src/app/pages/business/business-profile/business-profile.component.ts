@@ -267,6 +267,9 @@ export class BusinessProfileComponent implements OnInit {
     if(this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length != 15) {
       this._toastMessageService.alert("error","Please add 15 character valid gstin number");
       return
+    } else if(this.merchantData.gstDetails.gstinRegisteredMobileNumber && !(/^\d{10}$/.test(this.merchantData.gstDetails.gstinRegisteredMobileNumber))) {
+      this._toastMessageService.alert("error","Please add valid 10 digit phone number for gstin registered mobile number");
+      return;
     }
     this.loading = true;
     let sendData = JSON.parse(JSON.stringify(this.merchantData));

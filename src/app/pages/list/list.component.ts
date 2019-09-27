@@ -243,12 +243,12 @@ export class ListComponent implements OnInit {
       if(item.selected_invoice_assigned_to_user && item.selected_invoice_assigned_to_user.userId) {
         item.processedBy = item.selected_invoice_assigned_to_user.name;
       }
-
-      if(item.selected_invoice_status && item.selected_invoice_status.id) {
-        item.invoiceDocumentType = item.selected_invoice_status.name;
-      }
       
-      this.prods_check[itemIndex] = false;
+      if(item.selected_invoice_status && item.selected_invoice_status.id) {
+        item.invoiceStatus = item.selected_invoice_status.name;
+      }
+            
+      this.onSelectRecord(item,itemIndex)
       this.loading = false;      
       this._toastMessageService.alert("success", "Invoice updated successfully." );      
     }, err => {

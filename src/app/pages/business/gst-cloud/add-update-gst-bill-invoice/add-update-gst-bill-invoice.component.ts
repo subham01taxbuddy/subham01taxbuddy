@@ -98,7 +98,15 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     this.initData();
   }  
 
+  ngDoCheck() {
+    if (NavbarService.getInstance(null).saveGSTBillInvoice) {
+        this.saveGSTBillInvoice();
+        NavbarService.getInstance(null).saveGSTBillInvoice = false;
+    }
+  }
+
   initData() {
+
     if(!this.is_update_item) {
       //for new invoice
       this.invoiceData.invoiceDTO.businessId = this.merchantData.userId;      
@@ -156,6 +164,10 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       })
       this.getS3Image();
     }
+
+    if(this.invoiceData.invoiceDTO.invoiceDate) {
+      this.invoiceData.invoiceDTO.invoiceDate = this.convertDateToHTMLInputDateFormat(this.invoiceData.invoiceDTO.invoiceDate);
+    }
   }
 
   getS3Image() {
@@ -174,11 +186,20 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }
   }
 
-  ngDoCheck() {
-    if (NavbarService.getInstance(null).saveGSTBillInvoice) {
-        this.saveGSTBillInvoice();
-        NavbarService.getInstance(null).saveGSTBillInvoice = false;
+  convertDateToHTMLInputDateFormat(i_Date) {
+    let d = new Date(i_Date);
+    let result:any = "";
+    if(d) {
+      let year:any = d.getFullYear();
+      let month:any = d.getMonth()+1;
+      if(month<10) { month = "0"+month; }
+      let date:any = d.getDate();
+      if(date<10) { date = "0"+date; }
+
+      result = year+"-"+month+"-"+date;
     }
+
+    return result;
   }
  
   saveGSTBillInvoice() {
@@ -188,7 +209,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     } else if(!this.invoiceData.invoiceDTO.invoiceDate) {
       this._toastMessageService.alert("error","Please add invoice date");
       return;
-    } else if(this.invoiceData.invoiceDTO.invoiceDate > new Date()) {
+    } else if(new Date(this.invoiceData.invoiceDTO.invoiceDate) > new Date()) {
       this._toastMessageService.alert("error","Invoice date can't be future date");
       return;
     } else if(!this.invoiceData.invoiceDTO.invoiceNumber) {
@@ -227,6 +248,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   addInvoice() {
     this.loading = true;
     let sendData = JSON.parse(JSON.stringify(this.invoiceData));
+    if(sendData.invoiceDTO.invoiceDate) {
+      sendData.invoiceDTO.invoiceDate = new Date(sendData.invoiceDTO.invoiceDate)
+    }
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
     let cField = (this.invoice_main_type == "sales-invoice") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
     if(cField) {
@@ -254,7 +278,12 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   updatInvoice() {
     this.loading = true;
     let sendData = JSON.parse(JSON.stringify(this.invoiceData));
+    if(sendData.invoiceDTO.invoiceDate) {
+      sendData.invoiceDTO.invoiceDate = new Date(sendData.invoiceDTO.invoiceDate)
+    }
+
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
+
     if(sendData.partyDTO.partyGstin != sendData.partyDTO.partyPreviousGstin) {
       delete sendData.partyDTO.id;
       delete sendData.partyDTO.partyUpdatedAt;
