@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="card__col-xs-12 card__col-sm-4">
-                  <app-input [label]="'Invoice Number'" [type]="'text'" [is_mandatory]="'true'" [name]="'Invoice Number'" [placeholder]="'Invoice Number'" [value]="invoiceData.invoiceDTO.invoiceNumber" (sendValue)="invoiceData.invoiceDTO.invoiceNumber = $event"></app-input>
+                  <app-input [label]="'Invoice Number'" [type]="'text'" [is_mandatory]="'true'" [name]="'Invoice Number'" [placeholder]="'SSBA/2018-19/001'" [value]="invoiceData.invoiceDTO.invoiceNumber" (sendValue)="invoiceData.invoiceDTO.invoiceNumber = $event"></app-input>
                 </div>            
 
                 <div class="card__col-xs-12 card__col-sm-4">
@@ -124,16 +124,20 @@
                                               </thead>
                                               <tbody class="report-table__body">
                                                   <ng-template ngFor let-tab [ngForOf]="invoiceData.listInvoiceItems"  let-i="index">
-                                                      <tr *ngIf="!tab.is_deleted" class="report-table__row">
+                                                      <tr *ngIf="tab.isMarkForFlag != 'T'" class="report-table__row">
                                                           <td class="report-table__cell report-table__cell_day">{{i+1}}</td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
                                                               <input class="table__row-input" type="text" name="'taxcode'" [(ngModel)]="tab.invoiceItemsTaxCode">
                                                           </td>                                                          
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                              <input class="table__row-input" type="number" name="'taxvalue'" [(ngModel)]="tab.invoiceItemsTaxableValue">
+                                                              <input class="table__row-input" type="number" name="'taxvalue'" [(ngModel)]="tab.invoiceItemsTaxableValue" (ngModelChange)="calculateTaxFields('taxable_value',tab)">
                                                           </td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                              <input class="table__row-input" type="number" name="'rate'" [(ngModel)]="tab.invoiceItemsTaxRate">
+                                                              <select [(ngModel)]="tab.tempInvoiceItemsTaxRate" (ngModelChange)="calculateTaxFields('tax_rate',tab)" style="height: 27px;">
+                                                                  <option *ngFor="let tr of taxRatesList;let i=index;" value="{{tr}}">
+                                                                      {{tr + (["Exempt Sales","Non GST Sales"].indexOf(tr) != -1 ? "" : "%")}}
+                                                                  </option>
+                                                              </select>
                                                           </td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;" *ngIf="isIGSTEnabled">
                                                               <input class="table__row-input" type="number" name="'igst'" [(ngModel)]="tab.invoiceItemsIgst">
@@ -145,7 +149,7 @@
                                                               <input class="table__row-input" type="number" name="'sgst_ugst'" [(ngModel)]="tab.invoiceItemsSgst">
                                                           </td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                              <input class="table__row-input" type="number" name="'cess'" [(ngModel)]="tab.invoiceItemsCess">
+                                                              <input class="table__row-input" type="number" name="'cess'" [(ngModel)]="tab.invoiceItemsCess" (ngModelChange)="calculateTaxFields('cess',tab)">
                                                           </td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
                                                               <input class="table__row-input" type="number" name="'invoiceItemsGross'" [(ngModel)]="tab.invoiceItemsGross">

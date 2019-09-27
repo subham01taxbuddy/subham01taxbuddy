@@ -21,6 +21,7 @@ import { Component, OnInit ,ViewChild} from '@angular/core';
 import { NavbarService } from '../../services/navbar.service';
 import { Router } from '@angular/router';
 import { HttpClient} from '@angular/common/http';
+import { ToastMessageService } from '../../services/toast-message.service';
 
 @Component({
   selector: 'app-home',
@@ -30,7 +31,17 @@ import { HttpClient} from '@angular/common/http';
 export class HomeComponent implements OnInit {
 
 	component_link: string = 'home';
-  constructor(private navbarService: NavbarService,public router: Router,public http: HttpClient) {
+  loading: boolean = false;
+  invoice_summary: any = {
+    "assignedPendingUploads": 0,
+    "lastInvoiceStatus": "",
+    "lastUploadedDate": "",
+    "purchaseTotal": 0,
+    "salesTotal": 0,
+    "unassignedUploads": 0
+  }
+  constructor(private navbarService: NavbarService,public router: Router,public http: HttpClient,
+    public _toastMessageService:ToastMessageService) {
     NavbarService.getInstance(null).component_link = this.component_link;
   	NavbarService.getInstance(null).showBtns = 'home';
   }
@@ -40,15 +51,27 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['']);
       return;
     }    
+    this.getBusinessInvoiceSummary();
   }
 
-  redirectToInvoicePendingProcessing() {
-    console.log("redirect to invoice pending processing")
+  getBusinessInvoiceSummary() {
+    /*this.loading = true;
+    NavbarService.getInstance(this.http).getInvoiceSummary().subscribe(res => {
+        this.invoice_summary = res;
+        this.loading = false;
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice summary - " + errorMessage );
+        this.loading = false;        
+      });*/
+  }
+
+  redirectToInvoicePendingProcessing() {    
     this.router.navigate(['/pages/list']);
   }
 
   redirectToUnassignedUploads() {
-
+    this.router.navigate(['/pages/list']);
   }
 
   redirectToPendingComputationApproval() {

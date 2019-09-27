@@ -95,6 +95,10 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/account/logout', 'method': 'DELETE'  }, null);
 	}
 
+	getInvoiceSummary(businessId) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-summary/'+businessId, 'method': 'GET'  },{});
+	}
+
 	getAdminList() {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdy_ms_user/getAdminList', 'method': 'GET'  },{});
 	}
@@ -112,7 +116,7 @@ export class NavbarService {
 	}
 
 	getGSTStateDetails() {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/state-masters', 'method': 'GET'},{});
+		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/state-masters', 'method': 'GET'},{page:0,size:50});
 	}
 
 	getGSTInvoiceTypes() {		
@@ -139,6 +143,10 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'POST'},params);
 	}
 
+	updateInvoice(params: any) {		
+		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoices', 'method': 'PUT'},params);
+	}
+
 	updateInvoiceWithItems(params: any) {		
 		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'PUT'},params);
 	}
@@ -157,6 +165,10 @@ export class NavbarService {
 
 	deleteInvoiceByInvoiceId(inv_id) {		
 		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoices/'+inv_id, 'method': 'DELETE'},{});
+	}
+
+	assignAdminUserToInvoice(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/assign-users', 'method': 'POST'},params);
 	}
 
 	getGSTDocumentsList() {

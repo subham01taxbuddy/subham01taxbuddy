@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
 <div class="main clearfix">
     <div class="card__row" >
@@ -10,7 +11,7 @@
 	            	<span class="faicon pull-right" (click)="redirectToUnassignedUploads()"><i class="fa fa-indent" aria-hidden="true"></i></span>	            		            	
 	                <div class="ibox-body-element-wrapper" >
                         <div class="value">
-                        	12                       	
+                        	{{invoice_summary.unassignedUploads}}
                         </div>
 					</div>					
 	            </div>
@@ -26,7 +27,7 @@
 	            	<span class="faicon pull-right" (click)="redirectToInvoicePendingProcessing()"><i class="fa fa-indent" aria-hidden="true"></i></span>	            		            	
 	                <div class="ibox-body-element-wrapper" >
                         <div class="value">
-                        	1                        	
+                        	{{invoice_summary.assignedPendingUploads}}                    	
                         </div>
 					</div>					
 	            </div>
@@ -42,7 +43,7 @@
 	            	<span class="faicon pull-right" (click)="redirectToMerchantConfirmedBills()"><i class="fa fa-indent" aria-hidden="true"></i></span>	            		                   
 	                <div class="ibox-body-element-wrapper" >
                         <div class="value">
-                        	12123                        	
+                        	0                        	
                         </div>
 					</div>					
 	            </div>
@@ -58,7 +59,7 @@
 	            	<span class="faicon pull-right" (click)="redirectToPendingComputationApproval()"><i class="fa fa-indent" aria-hidden="true"></i></span>	            		            	
 	                <div class="ibox-body-element-wrapper" >
                         <div class="value">
-                        	112                       	
+                        	0                       	
                         </div>
 					</div>					
 	            </div>
@@ -73,7 +74,7 @@
 	            	<span class="faicon pull-right" (click)="redirectToPendingGSTReturnsAfterApproval()"><i class="fa fa-indent" aria-hidden="true"></i></span>	            	
 	                <div class="ibox-body-element-wrapper" >
                         <div class="value">
-                        	1245                        	
+                        	0                        	
                         </div>
 					</div>					
 	            </div>

@@ -126,7 +126,7 @@ export class ListComponent implements OnInit {
 
   getInvoiceList() {
     return new Promise((resolve,reject) => {
-      NavbarService.getInstance(this.http).getInvoiceList({}).subscribe(res => {
+      NavbarService.getInstance(this.http).getInvoiceList({page:0,size:1000}).subscribe(res => {
         if(Array.isArray(res)) {
           let invoice_types_obj = {};
           let invoice_status_obj = {};
@@ -147,10 +147,9 @@ export class ListComponent implements OnInit {
               inv.merchantName = mData[0].fName + " " + mData[0].lName;
               inv.merchantMobileNumber = mData[0].mobileNumber;
             }
-            inv.processed_by = this.getAdminName(inv.invoiceAssignedTo);
+            inv.processedBy = this.getAdminName(inv.invoiceAssignedTo);
           })
           this.invoices_list = res;
-          console.log(this.invoices_list)
           this.filterData = this.invoices_list;
         }
         return resolve(true);
@@ -201,6 +200,12 @@ export class ListComponent implements OnInit {
     }
   }
 
+  onSelectInvoiceAssignedToUser(event,item) {
+    if(event && event.userId) {
+      item.selected_invoice_assigned_to_user = event;
+    } 
+  }
+
   getAdminName(id) {
     if(!id) { 
       return "N/A"; 
@@ -216,11 +221,44 @@ export class ListComponent implements OnInit {
     
   }
 
-  updateListItem(list) {
-    alert("update list call for "+list.name)
+  updateListItem(item,itemIndex) {
+    let params:any = JSON.parse(JSON.stringify(item));
+    params.invoiceUpdatedAt = new Date();
+    if(item.selected_invoice_status && item.selected_invoice_status.id) {
+      params.invoiceStatusMasterInvoiceStatusMasterId = item.selected_invoice_status.id;
+    }
+
+    if(item.selected_invoice_assigned_to_user && item.selected_invoice_assigned_to_user.userId) {
+      params.invoiceAssignedTo = item.selected_invoice_assigned_to_user.userId;
+    }
+
+    if((!params.invoiceAssignedTo || params.invoiceAssignedTo == item.invoiceAssignedTo) && 
+      (!params.invoiceStatusMasterInvoiceStatusMasterId || item.invoiceStatusMasterInvoiceStatusMasterId == params.invoiceStatusMasterInvoiceStatusMasterId))  {
+      this._toastMessageService.alert("error", "No data for update" );
+      return;
+    }
+
+    this.loading = true;
+    NavbarService.getInstance(this.http).updateInvoice(params).subscribe(res => {
+      if(item.selected_invoice_assigned_to_user && item.selected_invoice_assigned_to_user.userId) {
+        item.processedBy = item.selected_invoice_assigned_to_user.name;
+      }
+
+      if(item.selected_invoice_status && item.selected_invoice_status.id) {
+        item.invoiceDocumentType = item.selected_invoice_status.name;
+      }
+      
+      this.prods_check[itemIndex] = false;
+      this.loading = false;      
+      this._toastMessageService.alert("success", "Invoice updated successfully." );      
+    }, err => {
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+      this._toastMessageService.alert("error", "update invoice item - " + errorMessage );
+      this.loading = false;
+    });
   }
 
-  onSelectRecord(index) {
+  onSelectRecord(item,index) {
     this.prods_check[index] = !this.prods_check[index];
 
     let isSelected = false;
@@ -229,9 +267,60 @@ export class ListComponent implements OnInit {
     }
 
     this.record_select_for_update = isSelected;
+
+    if(isSelected) {
+      if(this.invoice_status_list.length>0) {
+        let fislData = this.invoice_status_list.filter(isl => { return isl.id == item.invoiceStatusMasterInvoiceStatusMasterId});
+        if(fislData && fislData[0]) {
+          item.selected_invoice_status = fislData[0];
+        }
+      }
+      
+      if(this.admin_list.length>0) {
+        let falData = this.admin_list.filter(isl => { return isl.userId == item.invoiceAssignedTo});
+        if(falData && falData[0]) {
+          item.selected_invoice_assigned_to_user = falData[0];
+        }
+      }
+    }
   }
 
   saveGroupSelectedData() {
-    
+    let selectedInvoiceIdList = [];
+    this.prods_check.forEach((pc,index) => {
+      if(pc && this.filterData[index]) { 
+        selectedInvoiceIdList.push(this.filterData[index].id)
+      }
+    });
+    let params:any = {
+        "invoiceAssignedTo": this.group_selected_assign_to.userId,
+        "invoiceIdList": selectedInvoiceIdList
+    }
+
+    if(!params.invoiceAssignedTo) {
+      this._toastMessageService.alert("error", "Select user first");
+      return;
+    } else if(params.invoiceIdList.length == 0) {
+      this._toastMessageService.alert("error", "Select invoices first");
+      return;
+    }
+
+    this.loading = true;
+    NavbarService.getInstance(this.http).assignAdminUserToInvoice(params).subscribe(res => {
+      this.loading = false;
+      this.resetInvoiceList();
+      this.getInvoiceList();
+      this._toastMessageService.alert("success", params.invoiceIdList.length +" invoices are updated successfully." );      
+    }, err => {
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+      this._toastMessageService.alert("error", "assign user to invoice list - " + errorMessage );
+      this.loading = false;
+    });    
+  }
+
+  resetInvoiceList() {
+    this.group_selected_assign_to = null;
+    this.prods_check = [];
+    this.record_select_for_update = false;
   }
 }

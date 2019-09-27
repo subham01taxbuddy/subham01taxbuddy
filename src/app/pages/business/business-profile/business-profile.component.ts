@@ -262,7 +262,12 @@ export class BusinessProfileComponent implements OnInit {
     }
   }
 
-  saveBusinessProfile() {    
+  saveBusinessProfile() {
+    console.log( this.merchantData.gstDetails.gstinNumber.length)
+    if(this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length != 15) {
+      this._toastMessageService.alert("error","Please add 15 character valid gstin number");
+      return
+    }
     this.loading = true;
     let sendData = JSON.parse(JSON.stringify(this.merchantData));
     delete sendData.gstDetails.s3BusinessLogo;

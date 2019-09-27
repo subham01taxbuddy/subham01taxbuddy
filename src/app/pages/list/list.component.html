@@ -14,7 +14,7 @@
                 </app-input-select-object>              
             </div>
             <div class="card__col-xs-12 card__col-sm-4">        
-                <a class="btn save-btn" (click)="saveGroupSelectedData()">Save</a>                
+                <a class="btn save-btn" (click)="saveGroupSelectedData()" [class.disabled-btn]="((group_selected_assign_to && group_selected_assign_to.userId) ? false : true)">Save</a>                
             </div>
         </div>                                    
                                     
@@ -47,10 +47,10 @@
                             <div class="table__cell product-row__cell-unit flex-30">
                                 <a class="table__sort-link">GST Filing Status</a>
                             </div> -->
-                            <div class="table__cell product-row__cell-unit flex-30">
+                            <div class="table__cell product-row__cell-unit flex-30" style="text-align: center;">
                                 <a class="table__sort-link">Status of Invoice</a>
                             </div>
-                            <div class="table__cell product-row__cell-unit flex-30">
+                            <div class="table__cell product-row__cell-unit flex-30" style="text-align: center;">
                                 <a class="table__sort-link">Owner</a>
                             </div>                            
                             <div class="table__cell product-row__cell-unit">
@@ -64,7 +64,7 @@
                                     <div class="table__cell table__cell_checkbox">
                                         <div class="input">
                                             <input type="checkbox" class="input__checkbox" [checked]="prods_check[p]">
-                                            <label class="input__checkbox-control" for="select_item4" (click)="onSelectRecord(p)"></label>
+                                            <label class="input__checkbox-control" for="select_item4" (click)="onSelectRecord(item,p)"></label>
                                         </div>
                                     </div>
                                    
@@ -98,22 +98,22 @@
                                             {{item.gst_filing_status}}
                                         </div>                                            
                                     </div> -->
-                                    <div class="table__cell product-row__cell-stock flex-30">                                      
+                                    <div class="table__cell product-row__cell-stock flex-30" style="text-align: center;">                                      
                                         <app-input-select-object *ngIf="prods_check[p]" [label]="''"  [type]="'text'" [value]="item.selected_invoice_status" [name]="'invoice status'" [filter_items]="invoice_status_list" (sendValue)="onSelectInvoiceStatus($event,item)">
                                         </app-input-select-object>
                                         <div *ngIf="!prods_check[p]">
                                             {{item.invoiceStatus}}
                                         </div>                                            
                                     </div>
-                                    <div class="table__cell product-row__cell-stock flex-30">                                        
-                                        <app-input-select-object  *ngIf="prods_check[p]" [label]="''" [value]="item.processed_by" [type]="'text'" [name]="'processed_by'" [filter_items]="admin_list" (sendValue)="($event) ? item.processed_by = $event : ''">
+                                    <div class="table__cell product-row__cell-stock flex-30" style="text-align: center;">                                        
+                                        <app-input-select-object  *ngIf="prods_check[p]" [label]="''" [value]="item.selected_invoice_assigned_to_user" [type]="'text'" [name]="'processedBy'" [filter_items]="admin_list" (sendValue)="onSelectInvoiceAssignedToUser($event,item)">
                                         </app-input-select-object>              
                                         <div *ngIf="!prods_check[p]">
-                                            {{item.processed_by ? item.processed_by : "N/A"}}
+                                            {{item.processedBy ? item.processedBy : "N/A"}}
                                         </div>                                            
                                     </div>   
                                     <div class="table__cell product-row__cell-stock" style="text-align:center">
-                                        <i class="fa fa-floppy-o" *ngIf="prods_check[p]" style="font-size:20px;cursor:pointer;" tooltip="Save" (click)="updateListItem(item)"></i>
+                                        <i class="fa fa-floppy-o" *ngIf="prods_check[p]" style="font-size:20px;cursor:pointer;" tooltip="Save" (click)="updateListItem(item,p)"></i>
                                         <i class="fa fa-floppy-o" *ngIf="!prods_check[p]" style="font-size:20px; color:lightgrey;" tooltip="Save" readonly></i>
                                     </div>                                 
                                 </div>

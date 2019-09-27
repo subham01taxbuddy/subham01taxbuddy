@@ -78,6 +78,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   selected_invoice_type: any;
   selected_invoice_status: any;
   isIGSTEnabled: boolean = false;
+  taxRatesList:any = ["0.00","0.10","0.25","1.00","1.50","3.00","5.00","7.50","12.00","18.00","28.00","Exempt Sales","Non GST Sales"];
   showSubOpt: any = {'inv_info':true,'inv_item_detail_block':true};
   constructor(
   	private navbarService: NavbarService,
@@ -148,6 +149,11 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         if(islfData && islfData[0]) { this.selected_invoice_status = islfData[0]; } 
       }
       
+      this.invoiceData.listInvoiceItems.forEach(item => {
+        if(item.invoiceItemsTaxRate || item.invoiceItemsTaxRate == 0) {
+          item.tempInvoiceItemsTaxRate = parseFloat(item.invoiceItemsTaxRate).toFixed(2);
+        }
+      })
       this.getS3Image();
     }
   }
@@ -182,11 +188,20 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     } else if(!this.invoiceData.invoiceDTO.invoiceDate) {
       this._toastMessageService.alert("error","Please add invoice date");
       return;
+    } else if(this.invoiceData.invoiceDTO.invoiceDate > new Date()) {
+      this._toastMessageService.alert("error","Invoice date can't be future date");
+      return;
     } else if(!this.invoiceData.invoiceDTO.invoiceNumber) {
       this._toastMessageService.alert("error","Please add invoice number");
       return;
+    } else if(this.invoiceData.invoiceDTO.invoiceNumber.length>16) {
+      this._toastMessageService.alert("error","invoice number max length can be 16 character");
+      return;
     } else if(!this.invoiceData.partyDTO.partyGstin) {
       this._toastMessageService.alert("error","Please add customer gstin");
+      return;
+    } else if(this.invoiceData.partyDTO.partyGstin.length != 15 ) {
+      this._toastMessageService.alert("error","Please add 15 character valid gstin number");
       return;
     } else if(!this.invoiceData.partyDTO.partyName) {
       this._toastMessageService.alert("error","Please add customer name");
@@ -194,8 +209,11 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     } else if(!this.invoiceData.invoiceDTO.supplyStateId) {
       this._toastMessageService.alert("error","Please select place of supply");
       return;
-    } else if(this.invoiceData.partyDTO.partyPhone && this.invoiceData.partyDTO.partyPhone.length != 10) {
+    } else if(this.invoiceData.partyDTO.partyPhone && !(/^\d{10}$/.test(this.invoiceData.partyDTO.partyPhone))) {
       this._toastMessageService.alert("error","Please add valid 10 digit phone number");
+      return;
+    } else if(this.invoiceData.partyDTO.partyEmail && !(/\S+@\S+\.\S+/.test(this.invoiceData.partyDTO.partyEmail))) {
+      this._toastMessageService.alert("error","Please add valid email address");
       return;
     }
 
@@ -239,13 +257,19 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
     if(sendData.partyDTO.partyGstin != sendData.partyDTO.partyPreviousGstin) {
       delete sendData.partyDTO.id;
+      delete sendData.partyDTO.partyUpdatedAt;
+      delete sendData.partyDTO.partyCreatedAt;
+      delete sendData.partyDTO.isMarkForFlag;
+    } else {
+        if(!sendData.partyDTO.isMarkForFlag) {
+          sendData.partyDTO.isMarkForFlag = "F";
+        }
     }
-
-    sendData.invoiceDTO.invoiceUpdatedAt = new Date();
+    sendData.partyDTO.partyUpdatedAt = new Date();
+    sendData.partyDTO.partyCreatedAt = new Date();
+    sendData.invoiceDTO.invoiceUpdatedAt = new Date();    
     delete sendData.partyDTO.partyPreviousGstin
-    delete sendData.invoiceDTO.s3InvoiceImageUrl;    
-    delete sendData.partyDTO.partyCreatedAt;
-    delete sendData.partyDTO.partyUpdatedAt;
+    delete sendData.invoiceDTO.s3InvoiceImageUrl;        
     NavbarService.getInstance(this.http).updateInvoiceWithItems(sendData).subscribe(res => {
       this.loading = false;
       this._toastMessageService.alert("success", "Invoice updated successfully.");
@@ -276,7 +300,13 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
 
   deleteItem(index) {
-    this.invoiceData.listInvoiceItems.splice(index,1);
+    if(this.invoiceData.listInvoiceItems[index].id) {
+      this.invoiceData.listInvoiceItems[index]["isMarkForFlag"] = "T";
+    } else {
+      this.invoiceData.listInvoiceItems.splice(index,1);
+    }
+
+    this.calculateTaxFields("all",this.invoiceData.listInvoiceItems);
   }
 
   onCancelBtnClicked() {
@@ -334,6 +364,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         this.isIGSTEnabled = false;
       }
       this.selected_invoice_state = event;
+      this.calculateTaxFields("all",this.invoiceData.listInvoiceItems);
     }
   }
 
@@ -357,7 +388,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       clearTimeout(this.gstinBounceBackTimeObj)
     }
     this.gstinBounceBackTimeObj = setTimeout(() => {
-      if(this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length > 3) {
+      if(this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length == 15) {
         this.getPartyInfoByGSTIN(event).then((partyInfo:any) => {
           if(partyInfo) {
             this.invoiceData.partyDTO.partyEmail = partyInfo.partyEmail;
@@ -386,7 +417,61 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       });
     })
   }
+
+  calculateTaxFields(field,items:any) {
+    if(!Array.isArray(items)) { items = [items] };
+    items.forEach(item => {
+      item.invoiceItemsTaxableValue = item.invoiceItemsTaxableValue ? item.invoiceItemsTaxableValue : 0;
+      item.invoiceItemsTaxRate = item.invoiceItemsTaxRate ? item.invoiceItemsTaxRate : 0;
+      item.invoiceItemsCess = item.invoiceItemsCess ? item.invoiceItemsCess : 0;
+      if(field == "tax_rate" || field == "all") {
+        if(item.tempInvoiceItemsTaxRate && parseFloat(item.tempInvoiceItemsTaxRate)) {
+          item.invoiceItemsTaxRate = parseFloat(item.tempInvoiceItemsTaxRate);
+        } else {
+          item.invoiceItemsTaxRate = 0;
+        }        
+      }
+
+      if(this.isIGSTEnabled) {
+        item.invoiceItemsIgst = parseFloat(this.fixedToDecimal(item.invoiceItemsTaxableValue * item.invoiceItemsTaxRate * 0.01));
+        item.invoiceItemsCgst = 0;
+        item.invoiceItemsSgst = 0;      
+      } else {      
+        let taxBreakup:any =  parseFloat(this.fixedToDecimal(item.invoiceItemsTaxableValue * (item.invoiceItemsTaxRate/2) * 0.01));
+        item.invoiceItemsCgst = taxBreakup;
+        item.invoiceItemsSgst = taxBreakup;
+        item.invoiceItemsIgst = 0;
+      }
+      
+      item.invoiceItemsGross = parseFloat(this.fixedToDecimal(item.invoiceItemsTaxableValue + ((item.invoiceItemsTaxRate) ? (item.invoiceItemsTaxableValue*item.invoiceItemsTaxRate*0.01) : 0)+(item.invoiceItemsCess ? item.invoiceItemsCess : 0)))
+      if(field == "cess" && item.invoiceItemsCess > item.invoiceItemsTaxableValue) {
+        item.invoiceItemsCess = 0;
+        this._toastMessageService.alert("error","cess can not greater then taxable value");
+        this.calculateTaxFields("cess_changed",item)
+      }
+
+
+    });
+    this.calculateTotalGrossValue();
+  }
+
+  calculateTotalGrossValue() {
+    this.invoiceData.invoiceDTO.invoiceGrossValue = 0;
+    if(this.invoiceData.listInvoiceItems) {
+      this.invoiceData.listInvoiceItems.forEach(item => {
+        if(item.isMarkForFlag != "T") {
+          this.invoiceData.invoiceDTO.invoiceGrossValue += (item.invoiceItemsGross) ? item.invoiceItemsGross : 0;
+        }
+      })
+    }
+    this.invoiceData.invoiceDTO.invoiceGrossValue = parseFloat(parseFloat(this.invoiceData.invoiceDTO.invoiceGrossValue).toFixed(2));
+  }
+
+  fixedToDecimal(value): any {
+    return parseFloat(value).toFixed(2);
+  }
 }
+
 
 /*sales-invoice
 purchase-invoice
