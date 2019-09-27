@@ -305,7 +305,9 @@ export class GSTCloudComponent implements OnInit {
     let params = { 
       "businessId.equals":this.merchantData.userId,
       "invoiceCreatedAt.greaterThanOrEqual":this.from_date.toISOString(),
-      "invoiceCreatedAt.lessThanOrEqual":this.to_date.toISOString()
+      "invoiceCreatedAt.lessThanOrEqual":this.to_date.toISOString(),
+      page:0,
+      size:1000
     };
 
     NavbarService.getInstance(this.http).getInvoiceList(params).subscribe(res => {
