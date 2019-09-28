@@ -131,7 +131,7 @@
                                                               <input class="table__row-input" type="text" name="'taxcode'" [(ngModel)]="tab.invoiceItemsTaxCode">
                                                           </td>                                                          
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                              <input class="table__row-input" type="number" name="'taxvalue'" [(ngModel)]="tab.invoiceItemsTaxableValue" (ngModelChange)="calculateTaxFields('taxable_value',tab)">
+                                                              <input class="table__row-input" type="number" name="'taxvalue'" [(ngModel)]="tab.invoiceItemsTaxableValue" (ngModelChange)="calculateTaxFields('taxable_value',tab)" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                                           </td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
                                                               <select [(ngModel)]="tab.tempInvoiceItemsTaxRate" (ngModelChange)="calculateTaxFields('tax_rate',tab)" style="height: 27px;">
@@ -141,19 +141,19 @@
                                                               </select>
                                                           </td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;" *ngIf="isIGSTEnabled">
-                                                              <input class="table__row-input" type="number" name="'igst'" [(ngModel)]="tab.invoiceItemsIgst">
+                                                              <input class="table__row-input" type="number" name="'igst'" [(ngModel)]="tab.invoiceItemsIgst" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                                           </td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;" *ngIf="!isIGSTEnabled">
-                                                              <input class="table__row-input" type="number" name="'csgt'" [(ngModel)]="tab.invoiceItemsCgst">
+                                                              <input class="table__row-input" type="number" name="'csgt'" [(ngModel)]="tab.invoiceItemsCgst" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                                           </td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;" *ngIf="!isIGSTEnabled">
-                                                              <input class="table__row-input" type="number" name="'sgst_ugst'" [(ngModel)]="tab.invoiceItemsSgst">
+                                                              <input class="table__row-input" type="number" name="'sgst_ugst'" [(ngModel)]="tab.invoiceItemsSgst" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                                           </td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                              <input class="table__row-input" type="number" name="'cess'" [(ngModel)]="tab.invoiceItemsCess" (ngModelChange)="calculateTaxFields('cess',tab)">
+                                                              <input class="table__row-input" type="number" name="'cess'" [(ngModel)]="tab.invoiceItemsCess" (ngModelChange)="calculateTaxFields('cess',tab)" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                                           </td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                              <input class="table__row-input" type="number" name="'invoiceItemsGross'" [(ngModel)]="tab.invoiceItemsGross">
+                                                              <input class="table__row-input" type="number" name="'invoiceItemsGross'" [(ngModel)]="tab.invoiceItemsGross" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                                           </td>
                                                           <td  class="report-table__cell report-table__cell_day">
                                                               <div class="btn-clear" (click)="deleteItem(i)"></div>
@@ -175,7 +175,8 @@
                       Gross Value
                     </div>
                     <div class="card__col-xs-3">
-                      <app-input [label]="''" [type]="'number'" [name]="'gross value'" [placeholder]="'Enter Gross Value'" [value]="invoiceData.invoiceDTO.invoiceGrossValue" (sendValue)="invoiceData.invoiceDTO.invoiceGrossValue = $event"></app-input>
+                      <!-- <app-input [label]="''" [type]="'number'" [name]="'gross value'" [placeholder]="'Enter Gross Value'" [value]="invoiceData.invoiceDTO.invoiceGrossValue" (sendValue)="invoiceData.invoiceDTO.invoiceGrossValue = $event"></app-input> -->
+                      <input class="select__box ogp_select ng-untouched ng-pristine ng-valid" type="number" name="'gross value'" [placeholder]="'Enter Gross Value'" [(ngModel)]="invoiceData.invoiceDTO.invoiceGrossValue" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                     </div>
                   </div>
                 </div>
