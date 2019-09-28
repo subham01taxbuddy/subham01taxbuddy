@@ -32,6 +32,7 @@ import { NavbarService } from './services/navbar.service';
 import { UploadService } from './services/upload.service';
 import { ExportTableService } from './services/export-table.service';
 import { ToastMessageService } from './services/toast-message.service';
+import { AuthGuard } from './services/auth.guard';
 
 import { appRoutes } from './app-routing.module';
 
@@ -51,7 +52,8 @@ import { appRoutes } from './app-routing.module';
       NavbarService,
       UploadService,
       ExportTableService,
-      ToastMessageService
+      ToastMessageService,
+      AuthGuard
   ],
   bootstrap: [AppComponent]
 })

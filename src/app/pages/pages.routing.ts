@@ -32,12 +32,13 @@ import { HomeComponent } from './home/home.component';
 
 // Login component
 import { LoginComponent } from './login/login.component';
+import { AuthGuard } from '../services/auth.guard';
 
 export const routes: Routes = [
-	{ 	path: 'login', component: LoginComponent },
+	{ 	path: 'login',canActivate: [AuthGuard], component: LoginComponent },
 
 	{ 	
-		path : 'pages' , component: PagesComponent,
+		path : 'pages' ,canActivate: [AuthGuard], component: PagesComponent,
 		children: [
 			{ path: 'home', component: HomeComponent },
 			{ path: 'list', component: ListComponent },

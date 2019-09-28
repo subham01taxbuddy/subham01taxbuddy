@@ -215,10 +215,13 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     } else if(!this.invoiceData.invoiceDTO.invoiceNumber) {
       this._toastMessageService.alert("error","Please add invoice number");
       return;
-    } else if(this.invoiceData.invoiceDTO.invoiceNumber.length>16) {
+    } else if(this.invoice_main_type == "sales-invoice" && this.invoiceData.invoiceDTO.invoiceNumber.length>16) {
       this._toastMessageService.alert("error","invoice number max length can be 16 character");
       return;
-    } else if(!this.invoiceData.partyDTO.partyGstin) {
+    } else if(this.invoice_main_type != "sales-invoice" && this.invoiceData.invoiceDTO.invoiceNumber.length>45) {
+      this._toastMessageService.alert("error","invoice number max length can be 45 character");
+      return;
+    }  else if(!this.invoiceData.partyDTO.partyGstin) {
       this._toastMessageService.alert("error","Please add customer gstin");
       return;
     } else if(this.invoiceData.partyDTO.partyGstin.length != 15 ) {

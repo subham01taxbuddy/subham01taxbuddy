@@ -66,6 +66,11 @@
               <app-input-select [label]="'GSTR1'" [value]="merchantData.gstDetails.gstr1Type" [type]="'text'" [name]="'GSTR1'" [filter_items]="['MONTHLY','QUARTERLY']" (sendValue)="merchantData.gstDetails.gstr1Type = $event">
               </app-input-select>
             </div>          
+
+            <div class="card__col-xs-12 card__col-sm-4">            
+              <app-input-select [label]="'GST Type'" [value]="merchantData.gstDetails.gstType" [type]="'text'" [name]="'GSTR1'" [filter_items]="['REGULAR', 'COMPOSITE', 'UNREGISTERED']" (sendValue)="merchantData.gstDetails.gstType = $event">
+              </app-input-select>
+            </div>          
           </div>
       </div>
 
@@ -159,9 +164,12 @@
 
               <div class="wrapper" style="padding-top: 0;">
                   <div class="container">
-                      <div class="card__col-xs-6 card__col-sm-6">
+                      <div class="card__col-xs-6 card__col-sm-6" style="text-align: center;">
                           <div class="image" *ngIf="merchantData.gstDetails.s3GstCertificate">
-                              <img src="{{merchantData.gstDetails.s3GstCertificate}}" alt="" class="image__item">
+                              <img src="{{merchantData.gstDetails.s3GstCertificate}}" alt="" class="image__item" *ngIf="merchantData.gstDetails.s3GstCertificate.indexOf('.pdf') == -1">
+                              <div *ngIf="merchantData.gstDetails.gstCertificate.indexOf('.pdf') != -1" class="pdf-view">
+                                   <a class="btn" (click)="viewUrl(merchantData.gstDetails.s3GstCertificate);">View</a>
+                              </div>
                           </div>
                       </div>
                   </div>

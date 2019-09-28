@@ -199,8 +199,13 @@ export class BusinessProfileComponent implements OnInit {
 
   setBusinessLogo(files) {
     if(files && files[0]) {      
-      this.bLogoLoader = true;      
-      Storage.put('business-logo/blogo_'+this.merchantData.userId+"_"+new Date().getTime()+'.png', files[0], {
+      this.bLogoLoader = true;
+      let extention = ".png";
+      if(files[0].name) {
+        let splitData = files[0].name.split(".");
+        extention = "."+splitData[splitData.length-1];
+      }  
+      Storage.put('business-logo/blogo_'+this.merchantData.userId+"_"+new Date().getTime()+extention, files[0], {
           contentType: files[0].type
       })
       .then ((result:any) => {
@@ -224,8 +229,13 @@ export class BusinessProfileComponent implements OnInit {
 
   setBusinessSignature(files) {
     if(files && files[0]) {      
-      this.bSignatureLoader = true;      
-      Storage.put('business-signature/bsignature_'+this.merchantData.userId+"_"+new Date().getTime()+'.png', files[0], {
+      this.bSignatureLoader = true;        
+      let extention = ".png";
+      if(files[0].name) {
+        let splitData = files[0].name.split(".");
+        extention = "."+splitData[splitData.length-1];
+      }      
+      Storage.put('business-signature/bsignature_'+this.merchantData.userId+"_"+new Date().getTime()+extention, files[0], {
           contentType: files[0].type
       })
       .then ((result:any) => {
@@ -250,7 +260,12 @@ export class BusinessProfileComponent implements OnInit {
   setGSTCertificate(files) {
     if(files && files[0]) {      
       this.gstCertLoader = true;      
-      Storage.put('gst-certificate/bcertificate_'+this.merchantData.userId+"_"+new Date().getTime()+'.png', files[0], {
+      let extention = ".png";
+      if(files[0].name) {
+        let splitData = files[0].name.split(".");
+        extention = "."+splitData[splitData.length-1];
+      } 
+      Storage.put('gst-certificate/bcertificate_'+this.merchantData.userId+"_"+new Date().getTime()+extention, files[0], {
           contentType: files[0].type
       })
       .then ((result:any) => {
@@ -273,15 +288,14 @@ export class BusinessProfileComponent implements OnInit {
   }
 
   saveBusinessProfile() {
-    console.log( this.merchantData.gstDetails.gstinNumber.length)
     if(this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length != 15) {
       this._toastMessageService.alert("error","Please add 15 character valid gstin number");
       return
     } else if(this.merchantData.gstDetails.gstinRegisteredMobileNumber && !(/^\d{10}$/.test(this.merchantData.gstDetails.gstinRegisteredMobileNumber))) {
       this._toastMessageService.alert("error","Please add valid 10 digit phone number for gstin registered mobile number");
       return;
-    } else if(this.merchantData.gstDetails.businessAddress && this.merchantData.gstDetails.businessAddress.pincode && this.merchantData.gstDetails.businessAddress.pincode.length > 6) {
-      this._toastMessageService.alert("error","Please add valid pincode of maximum 6  digit");
+    } else if(this.merchantData.gstDetails.businessAddress &&  !(/^\d{6}$/.test(this.merchantData.gstDetails.businessAddress.pincode))) {
+      this._toastMessageService.alert("error","Please add valid pincode 6 digit of pincode");
       return;
     }
     this.loading = true;
@@ -297,6 +311,10 @@ export class BusinessProfileComponent implements OnInit {
       this._toastMessageService.alert("error", "merchant detail - " + errorMessage );
       this.loading = false;
     });
+  }
+
+  viewUrl(url) {
+     window.open(url);
   }
 
 }

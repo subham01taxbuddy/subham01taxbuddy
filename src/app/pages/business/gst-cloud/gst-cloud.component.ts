@@ -316,7 +316,7 @@ export class GSTCloudComponent implements OnInit {
             inv.processed_by = this.getAdminName(inv.invoiceAssignedTo);
           })
           this.invoices_list = res;
-          this.invoiceSummarised(this.invoices_list);
+          this.invoiceSummarised();
         }       
 
         this.loading = false;
@@ -353,8 +353,8 @@ export class GSTCloudComponent implements OnInit {
 
   }
 
-  invoiceSummarised(invoiceList) {
-    invoiceList.forEach(inv => {
+  invoiceSummarised() {
+    this.invoices_list.forEach(inv => {
       let uploadCount = 0;
       let processedCount = 0;
       let processingCount = 0;
@@ -460,6 +460,8 @@ export class GSTCloudComponent implements OnInit {
     this.selected_bill_type = null;
     this.selected_invoices_list = [];
     this.filterData = [];
+    this.resetSummarisedInvoice();
+    this.invoiceSummarised();
   }
 
   onChangeAttrFilter(event) {
@@ -488,7 +490,7 @@ export class GSTCloudComponent implements OnInit {
   onAddInvoice(event) {
     event.processed_by = "N/A";
     this.invoices_list.push(event);
-    this.invoiceSummarised(this.invoices_list);
+    this.selected_invoices_list.push(event);    
     this.onChangeAttrFilter(this.selected_invoices_list);
     this.onCancelInvoiceBtnClicked();
   }
@@ -505,7 +507,7 @@ export class GSTCloudComponent implements OnInit {
       }
     }
     this.resetSummarisedInvoice();    
-    this.invoiceSummarised(this.invoices_list);
+    this.invoiceSummarised();
     this.getInvoicesByBillType(this.selected_bill_type);    
     this.onCancelInvoiceBtnClicked();
   }
@@ -531,10 +533,13 @@ export class GSTCloudComponent implements OnInit {
         this.loading = true;
         NavbarService.getInstance(this.http).deleteInvoiceByInvoiceId(tab.id).subscribe(res => {
           this.loading = false;
-          this.selected_invoices_list.splice(index,1);
-          this.invoices_list.splice(index,1);
-          this.invoiceSummarised(this.invoices_list);
-          this.onChangeAttrFilter(this.selected_invoices_list);
+          let fIndex = this.invoices_list.findIndex(il => { return il.id == tab.id});          
+          if(fIndex!=-1) {        
+            this.resetSummarisedInvoice();
+            this.invoices_list.splice(fIndex,1);            
+            this.invoiceSummarised();
+            this.getInvoicesByBillType(this.selected_bill_type);    
+          }
           this._toastMessageService.alert("success", "invoice `" + tab.invoiceNumber + "` deleted successfully");          
         }, err => {
           let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
