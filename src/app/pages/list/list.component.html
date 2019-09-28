@@ -98,14 +98,14 @@
                                             {{item.gst_filing_status}}
                                         </div>                                            
                                     </div> -->
-                                    <div class="table__cell product-row__cell-stock flex-30" style="text-align: center;">                                      
+                                    <div class="table__cell product-row__cell-stock flex-30" style="text-align: center;margin-top:-10px;">                                      
                                         <app-input-select-object *ngIf="prods_check[p]" [label]="''"  [type]="'text'" [value]="item.selected_invoice_status" [name]="'invoice status'" [filter_items]="invoice_status_list" (sendValue)="onSelectInvoiceStatus($event,item)">
                                         </app-input-select-object>
                                         <div *ngIf="!prods_check[p]">
                                             {{item.invoiceStatus}}
                                         </div>                                            
                                     </div>
-                                    <div class="table__cell product-row__cell-stock flex-30" style="text-align: center;">                                        
+                                    <div class="table__cell product-row__cell-stock flex-30" style="text-align: center;margin-top:-10px;">                                        
                                         <app-input-select-object  *ngIf="prods_check[p]" [label]="''" [value]="item.selected_invoice_assigned_to_user" [type]="'text'" [name]="'processedBy'" [filter_items]="admin_list" (sendValue)="onSelectInvoiceAssignedToUser($event,item)">
                                         </app-input-select-object>              
                                         <div *ngIf="!prods_check[p]">

@@ -30,7 +30,7 @@
           </div>
           <div class="card__row">        
             <div class="card__col-xs-12 card__col-sm-4">
-              <app-input [label]="'GSTIN Number'" [type]="'text'" [name]="merchantData.gstDetails.gstn_number" [placeholder]="'GSTIN Number'" [value]="merchantData.gstDetails.gstinNumber" (sendValue)="merchantData.gstDetails.gstinNumber = $event"></app-input>
+              <app-input [label]="'GSTIN Number'" [type]="'text'" [name]="merchantData.gstDetails.gstn_number" [placeholder]="'GSTIN Number'" [value]="merchantData.gstDetails.gstinNumber" (sendValue)="merchantData.gstDetails.gstinNumber = $event" (focusout)="onFoucusOutOfGSTINNumber()"></app-input>
             </div>
 
             <div class="card__col-xs-12 card__col-sm-4">

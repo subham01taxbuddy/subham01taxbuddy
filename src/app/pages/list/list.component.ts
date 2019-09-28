@@ -45,7 +45,10 @@ export class ListComponent implements OnInit {
   filterData:any = [];
   filters_list: any = [ 
     {'in_prod_name':'Name'},
-    {'in_prod_name':'Mobile Number'}
+    {'in_prod_name':'Mobile Number'},
+    {'in_prod_name':'Document Type'},
+    {'in_prod_name':'Status of Invoice'},
+    {'in_prod_name':'Owner'}
   ];
   constructor(navbarService: NavbarService,public router: Router, public http: HttpClient,
     public _toastMessageService:ToastMessageService) { 
@@ -80,12 +83,17 @@ export class ListComponent implements OnInit {
         for(var i=0;i<event.length;i++) {
           var it = event[i];      
           if(it.attr == 'Mobile Number' && it.value && rd.merchantMobileNumber.toLowerCase().indexOf(it.value.toLowerCase()) == -1 || 
-            it.attr == 'Name' && it.value && rd.merchantName.toLowerCase().indexOf(it.value.toLowerCase()) == -1) {
+            it.attr == 'Name' && it.value && rd.merchantName.toLowerCase().indexOf(it.value.toLowerCase()) == -1 || 
+            it.attr == 'Document Type' && it.value && rd.invoiceDocumentType && rd.invoiceDocumentType.toLowerCase().indexOf(it.value.toLowerCase()) == -1  ||
+            it.attr == 'Status of Invoice' && it.value && rd.invoiceStatus && rd.invoiceStatus.toLowerCase().indexOf(it.value.toLowerCase()) == -1 ||
+            it.attr == 'Owner' && it.value && rd.processedBy && rd.processedBy.toLowerCase().indexOf(it.value.toLowerCase()) == -1
+
+            ) {
               is_match = false;
               break;
           }        
       }
-
+      
       return is_match;
     })
 

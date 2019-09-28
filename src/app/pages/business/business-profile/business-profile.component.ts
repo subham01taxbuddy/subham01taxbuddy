@@ -123,6 +123,8 @@ export class BusinessProfileComponent implements OnInit {
     this.merchantData = null;
     NavbarService.getInstance(this.http).getGetGSTMerchantDetail(merchant.userId).subscribe(res => {
       if(res) {
+        if(!res.gstDetails) { res.gstDetails = {}; };
+
         if(!res.gstDetails.bankInformation) {
           res.gstDetails.bankInformation = {bankName:"",accountNumber:"",ifscCode:""};
         }
@@ -168,6 +170,14 @@ export class BusinessProfileComponent implements OnInit {
     if(event && event.stateMasterCode) {
       this.merchantData.gstDetails.businessAddress.state = event.stateMasterCode;
       this.selected_gst_state = event;
+    }
+  }
+
+  onFoucusOutOfGSTINNumber() {
+    if(this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length > 2) {
+      let stateCode = this.merchantData.gstDetails.gstinNumber.substr(0,2);
+      let fState = this.state_list.filter(sl => { return sl.stateMasterCode == stateCode});
+      if(fState && fState[0]) { this.onSelectGSTState(fState[0]); }
     }
   }
 
@@ -269,6 +279,9 @@ export class BusinessProfileComponent implements OnInit {
       return
     } else if(this.merchantData.gstDetails.gstinRegisteredMobileNumber && !(/^\d{10}$/.test(this.merchantData.gstDetails.gstinRegisteredMobileNumber))) {
       this._toastMessageService.alert("error","Please add valid 10 digit phone number for gstin registered mobile number");
+      return;
+    } else if(this.merchantData.gstDetails.businessAddress && this.merchantData.gstDetails.businessAddress.pincode && this.merchantData.gstDetails.businessAddress.pincode.length > 6) {
+      this._toastMessageService.alert("error","Please add valid pincode of maximum 6  digit");
       return;
     }
     this.loading = true;

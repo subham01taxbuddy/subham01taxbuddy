@@ -284,6 +284,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
 
+    if(!sendData.partyRoleID) { delete sendData.partyRoleID; }
     if(sendData.partyDTO.partyGstin != sendData.partyDTO.partyPreviousGstin) {
       delete sendData.partyDTO.id;
       delete sendData.partyDTO.partyUpdatedAt;
@@ -423,16 +424,27 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
             this.invoiceData.partyDTO.partyEmail = partyInfo.partyEmail;
             this.invoiceData.partyDTO.partyPhone = partyInfo.partyPhone;
             this.invoiceData.partyDTO.partyName = partyInfo.partyName;
+            if(partyInfo.id) { 
+              this.invoiceData.partyDTO.id = partyInfo.id; 
+              this.invoiceData.partyDTO.partyUpdatedAt = new Date(); 
+            }
+            let stateCode = this.invoiceData.partyDTO.partyGstin.substr(0,2);
+            let fState = this.state_list.filter(sl => { return sl.stateMasterCode == stateCode});
+            if(fState && fState[0]) { this.onSelectGSTState(fState[0]); }
           } else {
             this.invoiceData.partyDTO.partyEmail = "";
             this.invoiceData.partyDTO.partyPhone = "";
             this.invoiceData.partyDTO.partyName = "";
+            delete this.invoiceData.partyDTO.id;
+            delete this.invoiceData.partyDTO.partyUpdatedAt; 
           }
         });
       } else {
         this.invoiceData.partyDTO.partyEmail = "";
         this.invoiceData.partyDTO.partyPhone = "";
         this.invoiceData.partyDTO.partyName = "";
+        delete this.invoiceData.partyDTO.id;
+        delete this.invoiceData.partyDTO.partyUpdatedAt; 
       }
     },500)    
   }
@@ -440,8 +452,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   getPartyInfoByGSTIN(gstin) {
     return new Promise((resolve,reject) => {
       NavbarService.getInstance(this.http).getPartyInfoByGSTIN({gstin:gstin}).subscribe(res => {
-        return resolve(((Array.isArray(res)) ? res[0] : null));
-      }, err => {
+        return resolve(((res) ? res : null));
+      }, err => {        
+        if(err.error && err.error.title) { this._toastMessageService.alert("error",err.error.title); }
         return resolve(null);
       });
     })
@@ -449,7 +462,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
   calculateTaxFields(field,items:any) {
     if(!Array.isArray(items)) { items = [items] };
-    items.forEach(item => {
+    items.forEach((item,index) => {
       item.invoiceItemsTaxableValue = item.invoiceItemsTaxableValue ? item.invoiceItemsTaxableValue : 0;
       item.invoiceItemsTaxRate = item.invoiceItemsTaxRate ? item.invoiceItemsTaxRate : 0;
       item.invoiceItemsCess = item.invoiceItemsCess ? item.invoiceItemsCess : 0;
@@ -473,12 +486,17 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       }
       
       item.invoiceItemsGross = parseFloat(this.fixedToDecimal(item.invoiceItemsTaxableValue + ((item.invoiceItemsTaxRate) ? (item.invoiceItemsTaxableValue*item.invoiceItemsTaxRate*0.01) : 0)+(item.invoiceItemsCess ? item.invoiceItemsCess : 0)))
-      if(field == "cess" && item.invoiceItemsCess > item.invoiceItemsTaxableValue) {
-        item.invoiceItemsCess = 0;
-        this._toastMessageService.alert("error","cess can not greater then taxable value");
-        this.calculateTaxFields("cess_changed",item)
+      if(field == "cess" && (item.invoiceItemsCess > item.invoiceItemsTaxableValue ||  item.invoiceItemsCess < 0)) {
+        setTimeout(() => { 
+          item.invoiceItemsCess = 0; 
+          this.calculateTaxFields("cess_changed",item)
+        },200);
+        if(item.invoiceItemsCess > item.invoiceItemsTaxableValue) {
+          this._toastMessageService.alert("error","cess can not greater then taxable value");        
+        } else {
+          this._toastMessageService.alert("error","cess can not less then 0");        
+        }
       }
-
 
     });
     this.calculateTotalGrossValue();

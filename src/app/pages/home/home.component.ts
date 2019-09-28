@@ -55,15 +55,15 @@ export class HomeComponent implements OnInit {
   }
 
   getBusinessInvoiceSummary() {
-    /*this.loading = true;
-    NavbarService.getInstance(this.http).getInvoiceSummary().subscribe(res => {
+    this.loading = true;
+    NavbarService.getInstance(this.http).getInvoiceSummary(0).subscribe(res => {
         this.invoice_summary = res;
         this.loading = false;
       }, err => {
         let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
         this._toastMessageService.alert("error", "invoice summary - " + errorMessage );
         this.loading = false;        
-      });*/
+      });
   }
 
   redirectToInvoicePendingProcessing() {    
