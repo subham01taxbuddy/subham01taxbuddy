@@ -201,9 +201,8 @@ export class NavbarService {
 	}
 
 	// check session validity based on time(in minutes)
-	isSessionValid(validityMinutes: number = 30): boolean {
-		return true;
-		/*var sessionDate = new Date(localStorage.getItem('session_time')).getTime();
+	isSessionValid(validityMinutes: number = 1440): boolean {
+		var sessionDate = new Date(localStorage.getItem('session_time')).getTime();
 		var now = (new Date()).getTime();
 		var timeDiff = Math.abs(sessionDate - now);
 		timeDiff = Math.ceil(timeDiff / (1000 * 60));
@@ -212,7 +211,7 @@ export class NavbarService {
 			return false;
 		} else {
 			return true;
-		}*/
+		}
 	}
 
 }
