@@ -133,6 +133,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
       if(this.invoiceData.partyDTO.partyGstin) {
         this.invoiceData.partyDTO.partyPreviousGstin = JSON.parse(JSON.stringify(this.invoiceData.partyDTO.partyGstin));
+        this.invoiceData.partyDTO.partyPreviousId = JSON.parse(JSON.stringify(this.invoiceData.partyDTO.id));
       }
 
       if(!this.invoiceData.listInvoiceItems) {
@@ -289,6 +290,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
     if(!sendData.partyRoleID) { delete sendData.partyRoleID; }
     if(sendData.partyDTO.partyGstin != sendData.partyDTO.partyPreviousGstin) {
+      /*if(sendData.partyDTO.id == sendData.partyDTO.partyPreviousId) {
+        delete sendData.partyDTO.id;
+      }      */
       delete sendData.partyDTO.id;
       delete sendData.partyDTO.partyUpdatedAt;
       delete sendData.partyDTO.partyCreatedAt;
@@ -302,6 +306,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     sendData.partyDTO.partyCreatedAt = new Date();
     sendData.invoiceDTO.invoiceUpdatedAt = new Date();    
     delete sendData.partyDTO.partyPreviousGstin
+    delete sendData.partyDTO.partyPreviousId
     delete sendData.invoiceDTO.s3InvoiceImageUrl;        
     NavbarService.getInstance(this.http).updateInvoiceWithItems(sendData).subscribe(res => {
       this.loading = false;
@@ -316,7 +321,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
   addItem() {
     let defaultItemValue = {
-      invoiceItemsTaxCode:"",
+      itemTaxCode :"",
       invoiceItemsTaxableValue:0,
       invoiceItemsTaxRate:0,
       invoiceItemsIgst:0,

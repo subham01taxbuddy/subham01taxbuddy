@@ -208,6 +208,7 @@ export class NavbarService {
 		timeDiff = Math.ceil(timeDiff / (1000 * 60));
 
 		if (timeDiff > validityMinutes) {
+			localStorage.clear();
 			return false;
 		} else {
 			return true;
