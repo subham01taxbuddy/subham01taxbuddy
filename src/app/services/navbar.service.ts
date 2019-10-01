@@ -16,12 +16,12 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class NavbarService {
@@ -34,11 +34,11 @@ export class NavbarService {
 	closeSideBar: boolean;
 	headers: any
 
-	showBtns: any ="";
+	showBtns: any = "";
 
-	saveBusinessProfile:boolean = false;
-	saveGSTBillInvoice:boolean = false;
-	
+	saveBusinessProfile: boolean = false;
+	saveGSTBillInvoice: boolean = false;
+
 	private id_token: string;
 	private user_email: string;
 
@@ -60,11 +60,11 @@ export class NavbarService {
 		}
 		NavbarService._instance.http = http;
 		return NavbarService._instance;
-	}	
-	
+	}
+
 	setUserData(userData: any) {
-		this.id_token = userData.id_token;		
-		let userInfo =  {
+		this.id_token = userData.id_token;
+		let userInfo = {
 			USER_F_NAME: userData.firstName,
 			USER_L_NAME: userData.lastName,
 			USER_MOBILE: userData.mobile,
@@ -73,10 +73,10 @@ export class NavbarService {
 			USER_UNIQUE_ID: userData.userId,
 			id_token: this.id_token
 		}
-		localStorage.setItem('UMD',JSON.stringify(userInfo));		
+		localStorage.setItem('UMD', JSON.stringify(userInfo));
 		this.setSession();
-	}	
-	
+	}
+
 	// set session related data
 	setSession() {
 		localStorage.setItem('session_time', (new Date()).toString());
@@ -84,115 +84,135 @@ export class NavbarService {
 
 	clearAllSessionData() {
 		this.id_token = null;
-		localStorage.clear();        
+		localStorage.clear();
 	}
-	
+
 	login(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/account/token', 'method': 'POST' }, params);
 	}
 
 	logout() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/account/logout', 'method': 'DELETE'  }, null);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/account/logout', 'method': 'DELETE' }, null);
 	}
 
 	getInvoiceSummary(businessId) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-summary/'+businessId, 'method': 'GET'  },{});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-summary/' + businessId, 'method': 'GET' }, {});
 	}
 
 	getAdminList() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdy_ms_user/getAdminList', 'method': 'GET'  },{});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdy_ms_user/getAdminList', 'method': 'GET' }, {});
+	}
+
+	getUserSearchList(key, searchValue) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdy_ms_user/search/userprofile/query?' + key + "=" + searchValue, 'method': 'GET' }, {});
+	}
+
+	getUserSubscriptions(userId) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdyitr/api/usersubscription?userId=' + userId, 'method': 'GET' }, {});
+	}
+
+	createUserCart(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdyitr/cart', 'method': 'POST' }, params);
+	}
+
+	createUserOrder(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdyitr/order', 'method': 'POST' }, params);
+	}
+
+	getUserEligiblePlans(userId) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdyitr/eligiblePlan?userId=' + userId + '&itrId=0', 'method': 'GET' }, {});
 	}
 
 	getGSTDetailList() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdyitr/getGSTDetail', 'method': 'GET'  },{});
-	}
-	
-	getGetGSTMerchantDetail(userId) {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/txbdy_ms_user/profile/'+userId, 'method': 'GET'},{});
-	}
-	
-	getSaveGSTMerchantDetail(params: any) {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/txbdy_ms_user/profile/'+params.userId, 'method': 'PUT'},params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdyitr/getGSTDetail', 'method': 'GET' }, {});
 	}
 
-	getGSTStateDetails() {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/state-masters', 'method': 'GET'},{page:0,size:50});
+	getGetGSTMerchantDetail(userId) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdy_ms_user/profile/' + userId, 'method': 'GET' }, {});
 	}
 
-	getGSTInvoiceTypes() {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoice-types', 'method': 'GET'},{});
+	getSaveGSTMerchantDetail(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdy_ms_user/profile/' + params.userId, 'method': 'PUT' }, params);
 	}
 
-	getInvoiceParyRoles() {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/party-roles', 'method': 'GET'},{});
+	getGSTStateDetails() {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/state-masters', 'method': 'GET' }, { page: 0, size: 50 });
 	}
 
-	getInvoiceStatusList() {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoice-status-masters', 'method': 'GET'},{});
+	getGSTInvoiceTypes() {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-types', 'method': 'GET' }, {});
+	}
+
+	getInvoiceParyRoles() {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/party-roles', 'method': 'GET' }, {});
+	}
+
+	getInvoiceStatusList() {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-status-masters', 'method': 'GET' }, {});
 	}
 
 	getPartyInfoByGSTIN(params) {
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/partiesByGstin', 'method': 'GET'},params);	
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/partiesByGstin', 'method': 'GET' }, params);
 	}
 
-	createInvoice(params: any) {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoices', 'method': 'POST'},params);
+	createInvoice(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoices', 'method': 'POST' }, params);
 	}
 
-	createInvoiceWithItems(params: any) {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'POST'},params);
+	createInvoiceWithItems(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'POST' }, params);
 	}
 
-	updateInvoice(params: any) {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoices', 'method': 'PUT'},params);
+	updateInvoice(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoices', 'method': 'PUT' }, params);
 	}
 
-	updateInvoiceWithItems(params: any) {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'PUT'},params);
+	updateInvoiceWithItems(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'PUT' }, params);
 	}
 
-	getInvoiceList(params: any) {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoices', 'method': 'GET'},params);
+	getInvoiceList(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoices', 'method': 'GET' }, params);
 	}
 
-	getInvoiceByInvoiceId(inv_id) {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoices/'+inv_id, 'method': 'GET'},{});
+	getInvoiceByInvoiceId(inv_id) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoices/' + inv_id, 'method': 'GET' }, {});
 	}
 
-	getInvoiceWithItemsByInvoiceId(inv_id) {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'GET'},{'id.equals':inv_id});
+	getInvoiceWithItemsByInvoiceId(inv_id) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'GET' }, { 'id.equals': inv_id });
 	}
 
-	deleteInvoiceByInvoiceId(inv_id) {		
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/invoices/'+inv_id, 'method': 'DELETE'},{});
+	deleteInvoiceByInvoiceId(inv_id) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoices/' + inv_id, 'method': 'DELETE' }, {});
 	}
 
 	assignAdminUserToInvoice(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/assign-users', 'method': 'POST'},params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/assign-users', 'method': 'POST' }, params);
 	}
 
 	getGSTDocumentsList() {
-		return NavbarService.getInstance(this.http).apiCall({'url': '/taxbuddygst/api/gst-document-type-masters', 'method': 'GET'},{});		
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-document-type-masters', 'method': 'GET' }, {});
 	}
 
 	getHeaders(): HttpHeaders {
-		if(!this.id_token) {
+		if (!this.id_token) {
 			let userData = JSON.parse(localStorage.getItem('UMD'));
-			if(userData && userData.id_token) { this.id_token = userData.id_token; }
+			if (userData && userData.id_token) { this.id_token = userData.id_token; }
 		}
 
-		return new HttpHeaders({'Content-Type': "application/json","Authorization": "Bearer "+this.id_token});
+		return new HttpHeaders({ 'Content-Type': "application/json", "Authorization": "Bearer " + this.id_token });
 	}
 
-	apiCall(apiKey: any, params: any,): Observable<any> {		
+	apiCall(apiKey: any, params: any, ): Observable<any> {
 		let options: any = { headers: this.getHeaders() }
 		let pUrl = environment[(apiKey["url_key"] ? apiKey["url_key"] : "url")];
 		if (apiKey['method'] === 'POST') {
 			return this.http.post(pUrl + apiKey['url'], JSON.stringify(params), options)
-		} else if (apiKey['method'] === 'PUT') {			
+		} else if (apiKey['method'] === 'PUT') {
 			return this.http.put(pUrl + apiKey['url'], JSON.stringify(params), options)
-		} else if (apiKey['method'] === 'DELETE') {			
-			if(params) { options['body'] =JSON.stringify(params); }
+		} else if (apiKey['method'] === 'DELETE') {
+			if (params) { options['body'] = JSON.stringify(params); }
 			return this.http.delete(pUrl + apiKey['url'], options)
 		} else {
 			options.params = params;

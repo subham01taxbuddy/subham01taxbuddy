@@ -16,7 +16,7 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 import { RouterModule, Routes } from '@angular/router';
 
 //page component
@@ -33,12 +33,13 @@ import { HomeComponent } from './home/home.component';
 // Login component
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from '../services/auth.guard';
+import { ActivatePackageComponent } from './activate-package/activate-package.component';
 
 export const routes: Routes = [
-	{ 	path: 'login',canActivate: [AuthGuard], component: LoginComponent },
+	{ path: 'login', canActivate: [AuthGuard], component: LoginComponent },
 
-	{ 	
-		path : 'pages' ,canActivate: [AuthGuard], component: PagesComponent,
+	{
+		path: 'pages', canActivate: [AuthGuard], component: PagesComponent,
 		children: [
 			{ path: 'home', component: HomeComponent },
 			{ path: 'list', component: ListComponent },
@@ -51,10 +52,11 @@ export const routes: Routes = [
 					{ path: '', redirectTo: '/pages/business/business-profile', pathMatch: 'full' }
 				]
 			},
-			{ path: '**', redirectTo: '/pages/home' , pathMatch: 'full' }
+			{ path: 'activate-package', component: ActivatePackageComponent },
+			{ path: '**', redirectTo: '/pages/home', pathMatch: 'full' }
 		]
 	},
 
-	{ 	path: '', redirectTo: 'login', pathMatch: 'full' },
-	{ 	path: '**', redirectTo: '/pages/home' }
+	{ path: '', redirectTo: 'login', pathMatch: 'full' },
+	{ path: '**', redirectTo: '/pages/home' }
 ];

@@ -16,7 +16,7 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Component, OnInit, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -78,14 +78,15 @@ import { environment } from '../../environments/environment';
 
 import Auth from '@aws-amplify/auth';
 import Storage from '@aws-amplify/storage';
+import { ActivatePackageComponent } from './activate-package/activate-package.component';
 
 Auth.configure(environment.aws_cred);
 
 Storage.configure({
-    AWSS3: {
-        bucket: environment.s3_cred.bucket,
-        region: environment.s3_cred.region
-    }
+  AWSS3: {
+    bucket: environment.s3_cred.bucket,
+    region: environment.s3_cred.region
+  }
 });
 
 @NgModule({
@@ -122,9 +123,10 @@ Storage.configure({
     InputTagsComponent,
     InputTagsViewComponent,
     ToggleComponent,
-    AttributesFilterComponent
+    AttributesFilterComponent,
+    ActivatePackageComponent
   ],
-  entryComponents:[
+  entryComponents: [
     HomeComponent,
     ConfirmationModalComponent
   ],
