@@ -19,7 +19,7 @@
 
 export const environment = {
   	production: true,
-    url: "https://uat-api.taxbuddy.com",
+    url: "https://api.taxbuddy.com",
     s3_cred: {
 		user_name:"ashish@ssbainnovations.com",
 		password:"testPwd8761$",
