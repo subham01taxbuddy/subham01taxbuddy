@@ -16,7 +16,7 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -35,6 +35,7 @@ import { ToastMessageService } from './services/toast-message.service';
 import { AuthGuard } from './services/auth.guard';
 
 import { appRoutes } from './app-routing.module';
+import { UtilsService } from './services/utils.service';
 
 @NgModule({
   declarations: [
@@ -49,11 +50,12 @@ import { appRoutes } from './app-routing.module';
     PagesModule
   ],
   providers: [
-      NavbarService,
-      UploadService,
-      ExportTableService,
-      ToastMessageService,
-      AuthGuard
+    NavbarService,
+    UploadService,
+    ExportTableService,
+    ToastMessageService,
+    AuthGuard,
+    UtilsService
   ],
   bootstrap: [AppComponent]
 })
