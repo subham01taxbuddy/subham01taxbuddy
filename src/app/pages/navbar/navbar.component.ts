@@ -101,4 +101,8 @@ export class NavbarComponent implements OnInit {
       this.loading = false;      
     });    
   }
+
+  onClickSalesIQ() {
+    window.open("https://www.zoho.com/salesiq/");
+  }
 }
