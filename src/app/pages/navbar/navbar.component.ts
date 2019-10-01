@@ -103,6 +103,6 @@ export class NavbarComponent implements OnInit {
   }
 
   onClickSalesIQ() {
-    window.open("https://www.zoho.com/salesiq/");
+    window.open("https://salesiq.zoho.com/ssbainnovationspvtltd/");
   }
 }

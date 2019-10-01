@@ -243,7 +243,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }
 
     if(this.is_update_item) {
-      this.updatInvoice();
+      this.updateInvoice();
     } else {
       this.addInvoice();
     }
@@ -279,7 +279,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     });
   }
 
-  updatInvoice() {
+  updateInvoice() {
     this.loading = true;
     let sendData = JSON.parse(JSON.stringify(this.invoiceData));
     if(sendData.invoiceDTO.invoiceDate) {
@@ -301,6 +301,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       /*if(sendData.partyDTO.id == sendData.partyDTO.partyPreviousId) {
         delete sendData.partyDTO.id;
       }      */
+      sendData.invoiceDTO.partyHasRolePartyHasRoleId = -1;
       delete sendData.partyDTO.id;
       delete sendData.partyDTO.partyUpdatedAt;
       delete sendData.partyDTO.partyCreatedAt;
@@ -443,10 +444,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
             if(partyInfo.id) { 
               this.invoiceData.partyDTO.id = partyInfo.id; 
               this.invoiceData.partyDTO.partyUpdatedAt = new Date(); 
-            }
-            let stateCode = this.invoiceData.partyDTO.partyGstin.substr(0,2);
-            let fState = this.state_list.filter(sl => { return sl.stateMasterCode == stateCode});
-            if(fState && fState[0]) { this.onSelectGSTState(fState[0]); }
+            }            
           } else {
             this.invoiceData.partyDTO.partyEmail = "";
             this.invoiceData.partyDTO.partyPhone = "";
@@ -454,6 +452,8 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
             delete this.invoiceData.partyDTO.id;
             delete this.invoiceData.partyDTO.partyUpdatedAt; 
           }
+          
+          this.setPartyPlaceOfSupply();          
         });
       } else {
         this.invoiceData.partyDTO.partyEmail = "";
@@ -461,8 +461,17 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         this.invoiceData.partyDTO.partyName = "";
         delete this.invoiceData.partyDTO.id;
         delete this.invoiceData.partyDTO.partyUpdatedAt; 
+        this.setPartyPlaceOfSupply();
       }
     },500)    
+  }
+
+  setPartyPlaceOfSupply() {
+    if(this.invoiceData.partyDTO.partyGstin) {
+      let stateCode = this.invoiceData.partyDTO.partyGstin.substr(0,2);
+      let fState = this.state_list.filter(sl => { return sl.stateMasterCode == stateCode});
+      if(fState && fState[0]) { this.onSelectGSTState(fState[0]); }
+    }
   }
 
   getPartyInfoByGSTIN(gstin) {
