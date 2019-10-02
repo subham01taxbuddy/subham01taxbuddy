@@ -66,9 +66,9 @@ export class LoginComponent implements OnInit {
 
     this.loading = true;
     NavbarService.getInstance(this.http).login(loginData).subscribe(res => {
-      /*if(res && res.role.indexOf("ROLE_ADMIN") == -1) {
+      if(res && res.role.indexOf("ROLE_ADMIN") == -1) {
         this._toastMessageService.alert("error", "Access Denied.");        
-      } else*/ if (res && res.id_token) {                
+      } else if (res && res.id_token) {                
         NavbarService.getInstance(null).setUserData(res);        
         this.authToAWS();
         this.router.navigate(['pages/home']);       
