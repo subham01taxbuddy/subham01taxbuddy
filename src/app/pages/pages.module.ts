@@ -65,6 +65,7 @@ import { BusinessProfileComponent } from './business/business-profile/business-p
 import { GSTCloudComponent } from './business/gst-cloud/gst-cloud.component';
 import { AddUpdateGSTBillInvoiceComponent } from './business/gst-cloud/add-update-gst-bill-invoice/add-update-gst-bill-invoice.component';
 import { BusinessDocumentsComponent } from './business/business-documents/business-documents.component';
+import { PartyListComponent } from './business/party-list/party-list.component';
 
 //Login component
 import { LoginComponent } from './login/login.component';
@@ -98,6 +99,7 @@ Storage.configure({
     GSTCloudComponent,
     AddUpdateGSTBillInvoiceComponent,
     BusinessDocumentsComponent,
+    PartyListComponent,
     HomeComponent,
     LoginComponent,
     NavbarComponent,

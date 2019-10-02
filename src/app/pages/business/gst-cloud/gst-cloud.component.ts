@@ -115,7 +115,7 @@ export class GSTCloudComponent implements OnInit {
     this.loading = true;
     this.getGSTStateList().then(sR => {
       this.getGSTInvoiceTypes().then(iR => {
-        this.getInvoiceParyRoles().then(rR => {
+        this.getInvoicePartyRoles().then(rR => {
           this.getInvoiceStatusList().then(iSL => {
             this.getMerchantList();
             this.getAdminList();
@@ -158,10 +158,10 @@ export class GSTCloudComponent implements OnInit {
     })
   }
 
-  getInvoiceParyRoles() {
+  getInvoicePartyRoles() {
     return new Promise((resolve,reject) => {
       this.invoice_party_roles = [];
-      NavbarService.getInstance(this.http).getInvoiceParyRoles().subscribe(res => {
+      NavbarService.getInstance(this.http).getInvoicePartyRoles().subscribe(res => {
         if(Array.isArray(res)) {          
           this.invoice_party_roles = res;
         }       

@@ -143,7 +143,7 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-types', 'method': 'GET' }, {});
 	}
 
-	getInvoiceParyRoles() {
+	getInvoicePartyRoles() {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/party-roles', 'method': 'GET' }, {});
 	}
 
@@ -153,6 +153,10 @@ export class NavbarService {
 
 	getPartyInfoByGSTIN(params) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/partiesByGstin', 'method': 'GET' }, params);
+	}
+
+	getPartyInfoByPartyRole(businessId,params) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/party-list/'+businessId, 'method': 'GET' }, params);
 	}
 
 	createInvoice(params: any) {
