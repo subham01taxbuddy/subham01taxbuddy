@@ -42,6 +42,8 @@ export class BusinessProfileComponent implements OnInit {
   bSignatureLoader: boolean = false;
   bLogoLoader: boolean = false;
 
+  gstinBounceBackTimeObj:any;
+
   merchantData: any;
   constructor(
   	private navbarService: NavbarService,
@@ -173,12 +175,39 @@ export class BusinessProfileComponent implements OnInit {
     }
   }
 
-  onFoucusOutOfGSTINNumber() {
-    if(this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length > 2) {
-      let stateCode = this.merchantData.gstDetails.gstinNumber.substr(0,2);
-      let fState = this.state_list.filter(sl => { return sl.stateMasterCode == stateCode});
-      if(fState && fState[0]) { this.onSelectGSTState(fState[0]); }
+  onEnterGSTIN(event) {
+    this.merchantData.gstDetails.gstinNumber = event;
+    if(this.gstinBounceBackTimeObj) {
+      clearTimeout(this.gstinBounceBackTimeObj);
     }
+    this.gstinBounceBackTimeObj = setTimeout(() => {
+      if(this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length == 15) {
+        let stateCode = this.merchantData.gstDetails.gstinNumber.substr(0,2);
+        let fState = this.state_list.filter(sl => { return sl.stateMasterCode == stateCode});
+        if(fState && fState[0]) { this.onSelectGSTState(fState[0]); }
+
+        this.getPartyInfoByGSTIN(this.merchantData.gstDetails.gstinNumber).then((partyInfo:any) => {
+          if(partyInfo) {
+            this.merchantData.gstDetails.legalName = partyInfo.partyName;
+            this.merchantData.gstDetails.gstinRegisteredMobileNumber = partyInfo.partyPhone;
+          } else {
+            this.merchantData.gstDetails.legalName = "";
+            this.merchantData.gstDetails.gstinRegisteredMobileNumber = "";
+          }
+        });
+      }
+    },300);
+  }
+
+  getPartyInfoByGSTIN(gstin) {
+    return new Promise((resolve,reject) => {
+      NavbarService.getInstance(this.http).getPartyInfoByGSTIN({gstin:gstin}).subscribe(res => {
+        return resolve(((res) ? res : null));
+      }, err => {        
+        if(err.error && err.error.title) { this._toastMessageService.alert("error",err.error.title); }
+        return resolve(null);
+      });
+    })
   }
 
   getS3Image(imagePath) {
