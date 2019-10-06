@@ -297,34 +297,71 @@ export class GSTCloudComponent implements OnInit {
     this.is_applied_clicked = true;
     this.resetSummarisedInvoice();
     this.invoices_list = [];       
-    this.loading = true;
 
     this.from_date = this.setDateStartTimings(this.from_date);
     this.to_date = this.setDateStartTimings(this.to_date);
-
-    let params = { 
-      "businessId.equals":this.merchantData.userId,
-      "invoiceCreatedAt.greaterThanOrEqual":this.from_date.toISOString(),
-      "invoiceCreatedAt.lessThanOrEqual":this.to_date.toISOString(),
-      page:0,
-      size:1000
-    };
-
-    NavbarService.getInstance(this.http).getInvoiceList(params).subscribe(res => {
-        if(Array.isArray(res)) {
-          res.forEach(inv => {
-            inv.processed_by = this.getAdminName(inv.invoiceAssignedTo);
-          })
-          this.invoices_list = res;
-          this.invoiceSummarised();
-        }       
-
-        this.loading = false;
-      }, err => {
-        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-        this._toastMessageService.alert("error", "invoice list - " + errorMessage );
+    this.loading = true;
+    this.getSalesOrPurchaseInvoices().then((salesInvoice:any) => {
+      this.getCreditDebitNoteInvoices().then((creditInvoice:any) => {
+        this.invoices_list = salesInvoice.concat(creditInvoice);
+        this.invoiceSummarised();
         this.loading = false;
       });
+    });
+  }
+
+  getSalesOrPurchaseInvoices() {
+    return new Promise((resolve,reject) => {
+      let params = { 
+        "businessId.equals":this.merchantData.userId,
+        "invoiceCreatedAt.greaterThanOrEqual":this.from_date.toISOString(),
+        "invoiceCreatedAt.lessThanOrEqual":this.to_date.toISOString(),
+        page:0,
+        size:1000
+      };
+
+      NavbarService.getInstance(this.http).getInvoiceList(params).subscribe(res => {
+          if(Array.isArray(res)) {
+            res.forEach(inv => {
+              inv.processed_by = this.getAdminName(inv.invoiceAssignedTo);
+            });            
+            return resolve(res);
+          } else {
+            return resolve([]);
+          }
+        }, err => {
+          let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+          this._toastMessageService.alert("error", "invoice list - " + errorMessage );
+          return resolve([]);          
+        });
+    })
+  }
+
+  getCreditDebitNoteInvoices() {
+    return new Promise((resolve,reject) => {    
+      let params = { 
+        "businessId.equals":this.merchantData.userId,
+        "noteCreatedAt.greaterThanOrEqual":this.from_date.toISOString(),
+        "noteCreatedAt.lessThanOrEqual":this.to_date.toISOString(),
+        page:0,
+        size:1000
+      };
+
+      NavbarService.getInstance(this.http).getCreditDebitNoteInvoiceList(params).subscribe(res => {
+          if(Array.isArray(res)) {
+            res.forEach(inv => {
+              inv.processed_by = this.getAdminName(inv.creditDebitNoteAssignedTo);
+            })            
+            return resolve(res);
+          } else {
+            return resolve([]);
+          }          
+        }, err => {
+          let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+          this._toastMessageService.alert("error", "invoice list - " + errorMessage );
+          resolve([]);
+        });
+    });
   }
   
   showBillTypeInvoices(type) {
@@ -342,15 +379,19 @@ export class GSTCloudComponent implements OnInit {
       let tInvT = this.all_invoice_types.filter(ait => { return (ait.invoiceTypesName == "Purchase" || ait.invoiceTypesName == "Expense")})
       this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesName}});
       this.selected_invoices_list = this.summarised_invoice.purchase.invoice_list;
-    } else {
-      this._toastMessageService.alert("error","Coming soon");
-      return;
+    } else if(bill_type == 'credit-note'){
+      let tInvT = this.all_invoice_types.filter(ait => { return (ait.invoiceTypesName == "Credit Note")})
+      this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesName}});
+      this.selected_invoices_list = this.summarised_invoice.credit_note.invoice_list;
+    } else if(bill_type == 'debit-note'){
+      let tInvT = this.all_invoice_types.filter(ait => { return (ait.invoiceTypesName == "Debit Note")})
+      this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesName}});
+      this.selected_invoices_list = this.summarised_invoice.debit_note.invoice_list;      
     }   
 
     this.onChangeAttrFilter(this.selected_invoices_list);
     this.invoice_main_type = bill_type; 
     this.selected_bill_type = bill_type;
-
   }
 
   invoiceSummarised() {
@@ -428,11 +469,34 @@ export class GSTCloudComponent implements OnInit {
       }
       this.loading = false;
     })
-  }
+  }  
 
   getInvoiceByInvoiceId(inv_id) {
     return new Promise((resolve,reject) => {      
       NavbarService.getInstance(this.http).getInvoiceWithItemsByInvoiceId(inv_id).subscribe(res => {
+        return resolve((Array.isArray(res)) ? res[0] : null);
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice - " + errorMessage );
+        return resolve(null);
+      });
+    })
+  }
+
+  onClickEditCreditDebitNoteInvoice(invoice) {
+    this.loading = true;    
+    this.getCreditDebitNoteInvoiceByInvoiceId(invoice.id).then(invoiceData => {
+      if(invoiceData) {
+        this.invoiceToUpdate = invoiceData;
+        this.uploadBill(false);
+      }
+      this.loading = false;
+    }) 
+  }
+
+  getCreditDebitNoteInvoiceByInvoiceId(inv_id) {
+    return new Promise((resolve,reject) => {      
+      NavbarService.getInstance(this.http).getCreditDebitNoteInvoiceWithItemsByInvoiceId(inv_id).subscribe(res => {
         return resolve((Array.isArray(res)) ? res[0] : null);
       }, err => {
         let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
@@ -523,13 +587,9 @@ export class GSTCloudComponent implements OnInit {
     this.bodyTag.setAttribute("class", ""); */
   }
 
-  onClickDeleteInvoice(tab,index) {
-    this.modalRef = this.modalService.show(ConfirmationModalComponent, {});
-    this.modalRef.content.isProceed = false;
-    this.modalRef.content.confirmation_text = "Are you sure to delete invoice";
-    this.modalRef.content.confirmation_popup_type = 'delete_invoice';
-    var tempSubObj: Subscription = this.modalService.onHide.subscribe(() => {
-      if (this.modalRef.content.isProceed) {
+  onClickDeleteInvoice(tab,index) {    
+    this.getDeleteConfirmtion().then(isProceed => {
+      if (isProceed) {
         this.loading = true;
         NavbarService.getInstance(this.http).deleteInvoiceByInvoiceId(tab.id).subscribe(res => {
           this.loading = false;
@@ -547,7 +607,46 @@ export class GSTCloudComponent implements OnInit {
           this.loading = false;
         });
       }
-      tempSubObj.unsubscribe();
     });    
+  }
+
+  onClickDeleteCreditDebitInvoice (tab,index) {
+    this.getDeleteConfirmtion().then(isProceed => {
+      if (isProceed) {
+        this.loading = true;
+        NavbarService.getInstance(this.http).deleteCreditDebitNoteInvoiceByInvoiceId(tab.id).subscribe(res => {
+          this.loading = false;
+          let fIndex = this.invoices_list.findIndex(il => { return il.id == tab.id});          
+          if(fIndex!=-1) {        
+            this.resetSummarisedInvoice();
+            this.invoices_list.splice(fIndex,1);            
+            this.invoiceSummarised();
+            this.getInvoicesByBillType(this.selected_bill_type);    
+          }
+          this._toastMessageService.alert("success", "invoice `" + tab.noteNumber + "` deleted successfully");          
+        }, err => {
+          let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+          this._toastMessageService.alert("error", "invoice - " + errorMessage );
+          this.loading = false;
+        });
+      }
+    })
+  }
+
+  getDeleteConfirmtion() {
+    return new Promise((resolve,reject) => {
+      this.modalRef = this.modalService.show(ConfirmationModalComponent, {});
+      this.modalRef.content.isProceed = false;
+      this.modalRef.content.confirmation_text = "Are you sure to delete invoice";
+      this.modalRef.content.confirmation_popup_type = 'delete_invoice';
+      var tempSubObj: Subscription = this.modalService.onHide.subscribe(() => {
+        if (this.modalRef.content.isProceed) {
+          return resolve(true);
+        } else {
+          return resolve(false);
+        }
+        tempSubObj.unsubscribe();
+      });
+    });
   }
 }

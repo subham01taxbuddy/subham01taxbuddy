@@ -199,6 +199,30 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-document-type-masters', 'method': 'GET' }, {});
 	}
 
+	createCreditDebitNoteInvoiceWithItems(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/creditdebitnotesWithNoteItems', 'method': 'POST' }, params);
+	}
+
+	updateCreditDebitNoteInvoice(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/credit-debit-notes', 'method': 'PUT' }, params);
+	}
+
+	updateCreditDebitNoteInvoiceWithItems(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/creditdebitnotesWithNoteItems', 'method': 'PUT' }, params);
+	}
+
+	deleteCreditDebitNoteInvoiceByInvoiceId(inv_id) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/credit-debit-notes/' + inv_id, 'method': 'DELETE' }, {});
+	}
+
+	getCreditDebitNoteInvoiceWithItemsByInvoiceId(inv_id) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/creditdebitnotesWithNoteItems', 'method': 'GET' }, { 'id.equals': inv_id });
+	}
+
+	getCreditDebitNoteInvoiceList(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/credit-debit-notes', 'method': 'GET' }, params);
+	}
+
 	getHeaders(): HttpHeaders {
 		if (!this.id_token) {
 			let userData = JSON.parse(localStorage.getItem('UMD'));

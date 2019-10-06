@@ -64,6 +64,7 @@ import { BusinessComponent } from './business/business.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
 import { GSTCloudComponent } from './business/gst-cloud/gst-cloud.component';
 import { AddUpdateGSTBillInvoiceComponent } from './business/gst-cloud/add-update-gst-bill-invoice/add-update-gst-bill-invoice.component';
+import { AddUpdateCreditDebitNoteInvoiceComponent } from './business/gst-cloud/add-update-credit-debit-note-invoice/add-update-credit-debit-note-invoice.component';
 import { BusinessDocumentsComponent } from './business/business-documents/business-documents.component';
 import { PartyListComponent } from './business/party-list/party-list.component';
 
@@ -98,6 +99,7 @@ Storage.configure({
     BusinessProfileComponent,
     GSTCloudComponent,
     AddUpdateGSTBillInvoiceComponent,
+    AddUpdateCreditDebitNoteInvoiceComponent,
     BusinessDocumentsComponent,
     PartyListComponent,
     HomeComponent,

@@ -81,7 +81,7 @@
               </div>
           </div>
 
-          <div class="card__row">        
+          <div class="card__row" *ngIf="['sales-invoice','purchase-invoice'].indexOf(selected_bill_type) != -1">        
               <div class="report-table-wrapper">
                   <table class="report-table" style="min-width: unset;">
                       <thead class="report-table__head">
@@ -111,7 +111,40 @@
                         </tr>                     
                       </tbody>
                   </table>
-              </div>            
+              </div>
+          </div>
+
+          <div class="card__row" *ngIf="['credit-note','debit-note'].indexOf(selected_bill_type) != -1">        
+              <div class="report-table-wrapper">
+                  <table class="report-table" style="min-width: unset;">
+                      <thead class="report-table__head">
+                        <tr class="report-table__row report-table__row_head">
+                          <th class="report-table__cell report-table__cell_name text-pull-left">#</th>
+                          <th class="report-table__cell report-table__cell_name text-pull-right">Invoice #</th>
+                          <th class="report-table__cell report-table__cell_name text-pull-right">Upload Date</th>
+                          <th class="report-table__cell report-table__cell_name text-pull-right">Processed Date</th>
+                          <th class="report-table__cell report-table__cell_name text-pull-right">Processed By</th>
+                          <th class="report-table__cell report-table__cell_name text-pull-right"></th>
+                          <th class="report-table__cell report-table__cell_name text-pull-right"></th>
+                        </tr>
+                      </thead>
+                      <tbody class="report-table__body" *ngFor="let tab of (filterData); let i=index; ">
+                        <tr class="report-table__row">                        
+                          <td class="report-table__cell report-table__cell_day text-pull-left">{{i+1}}</td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.noteNumber}}</td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.noteCreatedAt | backTipsDate:'full datetime'}}</td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.noteUpdatedAt | backTipsDate:'full datetime'}}</td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.processed_by | capitalizeFirst}}</td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <div class="fa-icon-wrapper" (click)="onClickEditCreditDebitNoteInvoice(tab)"><i class="fa fa-edit" tooltip="Edit"></i></div>
+                          </td>
+                          <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <div class="combobox__clear"  (click)="onClickDeleteCreditDebitInvoice(tab,i)"></div>
+                          </td>
+                        </tr>                     
+                      </tbody>
+                  </table>
+              </div>
           </div>
         </ng-template>
         <ng-template [ngIf]="!selected_invoices_list || selected_invoices_list.length==0">
@@ -141,8 +174,11 @@
         <div class="modal-content modal-content_scrollbar">
             <div class="modal-content__container bill-invoice-popup__content">
 
-                <app-add-update-gst-bill-invoice [state_list]="state_list" [invoice_types]="selected_invoice_types" [merchantData]="merchantData" [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list" [invoiceToUpdate]="invoiceToUpdate" [is_update_item]="is_update_invoice" (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)">                  
+                <app-add-update-gst-bill-invoice *ngIf="['sales-invoice','purchase-invoice'].indexOf(invoice_main_type) != -1" [state_list]="state_list" [invoice_types]="selected_invoice_types" [merchantData]="merchantData" [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list" [invoiceToUpdate]="invoiceToUpdate" [is_update_item]="is_update_invoice" (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)">                  
                 </app-add-update-gst-bill-invoice>
+
+                <app-add-update-credit-debit-note-invoice *ngIf="['credit-note','debit-note'].indexOf(invoice_main_type) != -1" [state_list]="state_list" [invoice_types]="selected_invoice_types" [merchantData]="merchantData" [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list" [invoiceToUpdate]="invoiceToUpdate" [is_update_item]="is_update_invoice" (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)">                  
+                </app-add-update-credit-debit-note-invoice>                
 
             </div>
         </div>

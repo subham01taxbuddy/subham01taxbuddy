@@ -27,11 +27,11 @@ import Storage from '@aws-amplify/storage';
 
 
 @Component({
-  selector: 'app-add-update-gst-bill-invoice',
-  templateUrl: './add-update-gst-bill-invoice.component.html',
-  styleUrls: ['./add-update-gst-bill-invoice.component.css']
+  selector: 'app-add-update-credit-debit-note-invoice',
+  templateUrl: './add-update-credit-debit-note-invoice.component.html',
+  styleUrls: ['./add-update-credit-debit-note-invoice.component.css']
 })
-export class AddUpdateGSTBillInvoiceComponent implements OnInit {
+export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   @Input('is_update_item') is_update_item;
   @Input('invoiceToUpdate') invoiceToUpdate: any;
   @Input('state_list') state_list: any = [];
@@ -50,20 +50,24 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   loggedInUserInfo = JSON.parse(localStorage.getItem("UMD")) || {};
   invoiceData: any = {
     partyRoleID:"",
-    invoiceDTO: {
-      invoiceCreatedAt: new Date(),
-      invoiceGrossValue: 0,
+    creditDebitNoteDTO: {
+      noteCreatedAt: new Date(),
+      noteGrossValue: 0,
       businessId: "",
-      invoiceImageUrl:"",
-      invoiceThumbUrl:"",
-      invoiceImageUploadedBy:"",
-      invoiceImageUploadedOn:new Date(),
+      creditDebitNoteImageUrl:"",
+      creditDebitNoteThumbUrl:"",
+      creditDebitNoteImageUploadedBy:"",
+      creditDebitNoteImageUploadedOn:new Date(),
       invoiceDate:new Date(),
+      noteDate: new Date(),
+      noteNumber:"",
+      referenceInvoiceId:"",
+      invoiceInvoiceId:"",
       invoiceNumber:"",
-      supplyStateId:"",
-      invoiceAssignedTo:"",
+      stateMasterStateMasterId:"",
+      creditDebitNoteAssignedTo:"",
       invoiceTypesInvoiceTypesId:"",
-      invoiceStatusMasterInvoiceStatusMasterId:"",
+      invoiceStatusMasterInvoiceStatusMasterId:"",      
     },
     partyDTO:{
       partyEmail:"",
@@ -71,7 +75,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       partyName:"",
       partyPhone:""
     },
-    listInvoiceItems: []
+    noteItemDTO: []
   };
   isEditInvoiceImage: boolean = false;
   selected_invoice_state: any;
@@ -109,10 +113,10 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
     if(!this.is_update_item) {
       //for new invoice
-      this.invoiceData.invoiceDTO.businessId = this.merchantData.userId;      
-      /*if(this.invoice_main_type == "purchase-invoice" && this.invoice_types && this.invoice_types[0]) {
-        this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId = this.invoice_types[0].id;
-      }*/
+      this.invoiceData.creditDebitNoteDTO.businessId = this.merchantData.userId;      
+      if(this.invoice_types && this.invoice_types[0]) {
+        this.invoiceData.creditDebitNoteDTO.invoiceTypesInvoiceTypesId = this.invoice_types[0].id;
+      }
 
 
       this.addItem();
@@ -136,52 +140,56 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         this.invoiceData.partyDTO.partyPreviousId = JSON.parse(JSON.stringify(this.invoiceData.partyDTO.id));
       }
 
-      if(!this.invoiceData.listInvoiceItems) {
-        this.invoiceData.listInvoiceItems = []
-      }
+      if(!this.invoiceData.noteItemDTO) {
+        this.invoiceData.noteItemDTO = []
+      }      
 
       //init invoice type
-      if((this.invoice_main_type == "sales-invoice" || this.invoice_main_type == "purchase-invoice" ) && this.invoice_types) {
-        let itfData = this.invoice_types.filter(it => { return it.id == this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId;});
+      if(this.invoice_types) {
+        let itfData = this.invoice_types.filter(it => { return it.id == this.invoiceData.creditDebitNoteDTO.invoiceTypesInvoiceTypesId;});
         if(itfData && itfData[0]) { this.selected_invoice_type = itfData[0]; } 
       }
 
       //init invoice status
       if(this.invoice_status_list) {
-        let islfData = this.invoice_status_list.filter(isl => { return isl.id == this.invoiceData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId;});
-        if(islfData && islfData[0]) { this.selected_invoice_status = islfData[0]; } 
+        let islfData = this.invoice_status_list.filter(isl => { return isl.id == this.invoiceData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId;});
+        if(islfData && islfData[0]) { this.selected_invoice_status = islfData[0]; }         
       }
       
-      this.invoiceData.listInvoiceItems.forEach(item => {
-        if(item.invoiceItemsTaxRate || item.invoiceItemsTaxRate == 0) {
-          item.tempInvoiceItemsTaxRate = parseFloat(item.invoiceItemsTaxRate).toFixed(2);
+      this.invoiceData.noteItemDTO.forEach(item => {
+        if(item.noteItemsRate || item.noteItemsRate == 0) {
+          item.tempInvoiceItemsTaxRate = parseFloat(item.noteItemsRate).toFixed(2);
         }
       })
 
       //init place of supply
-      if(this.invoiceData.invoiceDTO.supplyStateId && this.state_list) {
-        let slfData = this.state_list.filter(sl => { return sl.id == this.invoiceData.invoiceDTO.supplyStateId;});
+      if(this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId && this.state_list) {
+        let slfData = this.state_list.filter(sl => { return sl.id == this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId;});
         if(slfData && slfData[0]) { 
           this.selected_invoice_state = slfData[0]; 
           this.onSelectGSTState(slfData[0]);
-        }
+        }        
       }
       this.getS3Image();
     }
 
-    if(this.invoiceData.invoiceDTO.invoiceDate) {
-      this.invoiceData.invoiceDTO.invoiceDate = this.convertDateToHTMLInputDateFormat(this.invoiceData.invoiceDTO.invoiceDate);
+    if(this.invoiceData.creditDebitNoteDTO.invoiceDate) {
+      this.invoiceData.creditDebitNoteDTO.invoiceDate = this.convertDateToHTMLInputDateFormat(this.invoiceData.creditDebitNoteDTO.invoiceDate);
+    }
+
+    if(this.invoiceData.creditDebitNoteDTO.noteDate) {
+      this.invoiceData.creditDebitNoteDTO.noteDate = this.convertDateToHTMLInputDateFormat(this.invoiceData.creditDebitNoteDTO.noteDate);
     }
   }
 
   getS3Image() {
-    if(this.invoiceData.invoiceDTO.invoiceImageUrl) {
+    if(this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl) {
       this.imageLoader = true;
-      /*let imgUrl = JSON.parse(JSON.stringify(this.invoiceData.invoiceDTO.invoiceImageUrl));
+      /*let imgUrl = JSON.parse(JSON.stringify(this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl));
       imgUrl = imgUrl.replace("public/","");*/
-      Storage.get(this.invoiceData.invoiceDTO.invoiceImageUrl)
+      Storage.get(this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl)
         .then (result => {
-          this.invoiceData.invoiceDTO.s3InvoiceImageUrl = result;
+          this.invoiceData.creditDebitNoteDTO.s3InvoiceImageUrl = result;
           this.imageLoader = false;
         })
         .catch(err => {
@@ -207,22 +215,31 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
  
   saveGSTBillInvoice() {
-    if(!this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId) {
+    if(!this.invoiceData.creditDebitNoteDTO.invoiceTypesInvoiceTypesId) {
       this._toastMessageService.alert("error","Please Select Invoice Type");
       return;
-    } else if(!this.invoiceData.invoiceDTO.invoiceDate) {
+    } else if(!this.invoiceData.creditDebitNoteDTO.noteNumber) {
+      this._toastMessageService.alert("error","Please add note number");
+      return;
+    } else if(!this.invoiceData.creditDebitNoteDTO.noteDate) {
+      this._toastMessageService.alert("error","Please add note date");
+      return;
+    } else if(new Date(this.invoiceData.creditDebitNoteDTO.noteDate) > new Date()) {
+      this._toastMessageService.alert("error","note date can't be future date");
+      return;
+    } else if(!this.invoiceData.creditDebitNoteDTO.invoiceDate) {
       this._toastMessageService.alert("error","Please add invoice date");
       return;
-    } else if(new Date(this.invoiceData.invoiceDTO.invoiceDate) > new Date()) {
+    } else if(new Date(this.invoiceData.creditDebitNoteDTO.invoiceDate) > new Date()) {
       this._toastMessageService.alert("error","Invoice date can't be future date");
       return;
-    } else if(!this.invoiceData.invoiceDTO.invoiceNumber) {
+    } else if(!this.invoiceData.creditDebitNoteDTO.invoiceNumber) {
       this._toastMessageService.alert("error","Please add invoice number");
       return;
-    } else if(this.invoice_main_type == "sales-invoice" && this.invoiceData.invoiceDTO.invoiceNumber.length>16) {
+    } else if(this.invoice_main_type == "credit-note" && this.invoiceData.creditDebitNoteDTO.invoiceNumber.length>16) {
       this._toastMessageService.alert("error","invoice number max length can be 16 character");
       return;
-    } else if(this.invoice_main_type != "sales-invoice" && this.invoiceData.invoiceDTO.invoiceNumber.length>45) {
+    } else if(this.invoice_main_type != "credit-note" && this.invoiceData.creditDebitNoteDTO.invoiceNumber.length>45) {
       this._toastMessageService.alert("error","invoice number max length can be 45 character");
       return;
     }  else if(!this.invoiceData.partyDTO.partyGstin) {
@@ -234,14 +251,8 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     } else if(!this.invoiceData.partyDTO.partyName) {
       this._toastMessageService.alert("error","Please add customer name");
       return;
-    } else if(!this.invoiceData.invoiceDTO.supplyStateId) {
+    } else if(!this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId) {
       this._toastMessageService.alert("error","Please select place of supply");
-      return;
-    } else if(this.invoiceData.partyDTO.partyPhone && !(/^\d{10}$/.test(this.invoiceData.partyDTO.partyPhone))) {
-      this._toastMessageService.alert("error","Please add valid 10 digit phone number");
-      return;
-    } else if(this.invoiceData.partyDTO.partyEmail && !(/\S+@\S+\.\S+/.test(this.invoiceData.partyDTO.partyEmail))) {
-      this._toastMessageService.alert("error","Please add valid email address");
       return;
     }
 
@@ -255,11 +266,12 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   addInvoice() {
     this.loading = true;
     let sendData = JSON.parse(JSON.stringify(this.invoiceData));
-    if(sendData.invoiceDTO.invoiceDate) {
-      sendData.invoiceDTO.invoiceDate = new Date(sendData.invoiceDTO.invoiceDate)
+    sendData.creditDebitNoteDTO.invoiceInvoiceId = 1;//dummy data
+    if(sendData.creditDebitNoteDTO.invoiceDate) {
+      sendData.creditDebitNoteDTO.invoiceDate = new Date(sendData.creditDebitNoteDTO.invoiceDate)
     }
-    sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
-    let cField = (this.invoice_main_type == "sales-invoice") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
+    sendData.creditDebitNoteDTO.noteGrossValue = parseFloat(sendData.creditDebitNoteDTO.noteGrossValue);
+    let cField = (this.invoice_main_type == "credit-note") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
     if(cField) {
       let fData = this.invoice_party_roles.filter(ipr => { return ipr.partyRoleName == cField});
       if(fData && fData[0]) { sendData.partyRoleID = fData[0].id; }
@@ -267,11 +279,11 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
     let sfData = this.invoice_status_list.filter(isl => { return isl.invoiceStatusMasterName == "uploaded"})
     if(sfData && sfData[0]) { 
-      sendData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId = sfData[0].id; 
+      sendData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId = sfData[0].id; 
     }
 
-    delete sendData.invoiceDTO.s3InvoiceImageUrl;
-    NavbarService.getInstance(this.http).createInvoiceWithItems(sendData).subscribe(res => {
+    delete sendData.creditDebitNoteDTO.s3InvoiceImageUrl;
+    NavbarService.getInstance(this.http).createCreditDebitNoteInvoiceWithItems(sendData).subscribe(res => {
       this.loading = false;
       this._toastMessageService.alert("success", "Invoice created successfully.");
       this.onAddInvoice.emit(res);
@@ -285,15 +297,15 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   updateInvoice() {
     this.loading = true;
     let sendData = JSON.parse(JSON.stringify(this.invoiceData));
-    if(sendData.invoiceDTO.invoiceDate) {
-      sendData.invoiceDTO.invoiceDate = new Date(sendData.invoiceDTO.invoiceDate)
+    if(sendData.creditDebitNoteDTO.invoiceDate) {
+      sendData.creditDebitNoteDTO.invoiceDate = new Date(sendData.creditDebitNoteDTO.invoiceDate)
     }
 
-    sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
+    sendData.creditDebitNoteDTO.noteGrossValue = parseFloat(sendData.creditDebitNoteDTO.noteGrossValue);
 
     if(!sendData.partyRoleID) { 
       delete sendData.partyRoleID; 
-      let cField = (this.invoice_main_type == "sales-invoice") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
+      let cField = (this.invoice_main_type == "credit-note") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
       if(cField) {
         let fData = this.invoice_party_roles.filter(ipr => { return ipr.partyRoleName == cField});
         if(fData && fData[0]) { sendData.partyRoleID = fData[0].id; }
@@ -304,18 +316,18 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       /*if(sendData.partyDTO.id == sendData.partyDTO.partyPreviousId) {
         delete sendData.partyDTO.id;
       }      */
-      sendData.invoiceDTO.partyHasRolePartyHasRoleId = -1;
+      sendData.creditDebitNoteDTO.partyHasRolePartyHasRoleId = -1;       
       delete sendData.partyDTO.id;
       delete sendData.partyDTO.partyUpdatedAt;
       delete sendData.partyDTO.partyCreatedAt;
-    } 
+    }
     sendData.partyDTO.partyUpdatedAt = new Date();
     sendData.partyDTO.partyCreatedAt = new Date();
-    sendData.invoiceDTO.invoiceUpdatedAt = new Date();    
-    delete sendData.partyDTO.partyPreviousGstin
-    delete sendData.partyDTO.partyPreviousId
-    delete sendData.invoiceDTO.s3InvoiceImageUrl;        
-    NavbarService.getInstance(this.http).updateInvoiceWithItems(sendData).subscribe(res => {
+    sendData.creditDebitNoteDTO.noteUpdatedAt = new Date();    
+    delete sendData.partyDTO.partyPreviousGstin;
+    delete sendData.partyDTO.partyPreviousId;
+    delete sendData.creditDebitNoteDTO.s3InvoiceImageUrl;        
+    NavbarService.getInstance(this.http).updateCreditDebitNoteInvoiceWithItems(sendData).subscribe(res => {
       this.loading = false;
       this._toastMessageService.alert("success", "Invoice updated successfully.");
       this.onUpdateInvoice.emit(res);
@@ -327,31 +339,31 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
 
   addItem() {
-    let defaultItemValue = {
+    let defaultItemValue = {     
       itemTaxCode :"",
-      invoiceItemsTaxableValue:0,
-      invoiceItemsTaxRate:0,
-      invoiceItemsIgst:0,
-      invoiceItemsCgst:0,
-      invoiceItemsSgst:0,
-      invoiceItemsCess:0,
-      invoiceItemsGross:0
+      noteItemsTaxableValue:0,
+      noteItemsRate:0,
+      noteItemsIgst:0,
+      noteItemsCgst:0,
+      noteItemsSgst:0,
+      noteItemsCess:0,
+      noteItemsGrossValue:0
     };
-    if(this.invoiceData.listInvoiceItems) {
-      this.invoiceData.listInvoiceItems.push(defaultItemValue)
+    if(this.invoiceData.noteItemDTO) {
+      this.invoiceData.noteItemDTO.push(defaultItemValue)
     } else {
-      this.invoiceData.listInvoiceItems = [defaultItemValue];
+      this.invoiceData.noteItemDTO = [defaultItemValue];
     }
   }
 
   deleteItem(index) {
-    if(this.invoiceData.listInvoiceItems[index].id) {
-      this.invoiceData.listInvoiceItems[index]["isMarkForFlag"] = "T";
+    if(this.invoiceData.noteItemDTO[index].id) {
+      this.invoiceData.noteItemDTO[index]["isMarkForDeletion"] = 1;
     } else {
-      this.invoiceData.listInvoiceItems.splice(index,1);
+      this.invoiceData.noteItemDTO.splice(index,1);
     }
 
-    this.calculateTaxFields("all",this.invoiceData.listInvoiceItems);
+    this.calculateTaxFields("all",this.invoiceData.noteItemDTO);
   }
 
   onCancelBtnClicked() {
@@ -368,9 +380,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       })
       .then ((result:any) => {
         if(result && result.key) {
-          this.invoiceData.invoiceDTO.invoiceImageUrl = result.key;
-          this.invoiceData.invoiceDTO.invoiceImageUploadedOn = new Date();
-          this.invoiceData.invoiceDTO.invoiceImageUploadedBy = this.loggedInUserInfo.USER_UNIQUE_ID;
+          this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl = result.key;
+          this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUploadedOn = new Date();
+          this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUploadedBy = this.loggedInUserInfo.USER_UNIQUE_ID;
           this.getS3Image();
         } else {
           this.imageLoader = false;
@@ -386,11 +398,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
   getS3InvoicePath() {
     let invoiceSavePath = "inv_"+this.merchantData.userId+"_"+new Date().getTime()+".png";
-    if(this.invoice_main_type == "sales-invoice") {
-      invoiceSavePath = "sales-invoice/"+ invoiceSavePath;
-    } else if(this.invoice_main_type == "purchase-invoice") {
-      invoiceSavePath = "purchase-invoice/"+ invoiceSavePath;        
-    } else if(this.invoice_main_type == "debit-note") {
+    if(this.invoice_main_type == "debit-note") {
       invoiceSavePath = "debit-note/"+ invoiceSavePath;        
     } else if(this.invoice_main_type == "credit-note") {
       invoiceSavePath = "credit-note/"+ invoiceSavePath;        
@@ -401,7 +409,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
   onSelectGSTState(event) {
     if(event && event.id) {
-      this.invoiceData.invoiceDTO.supplyStateId = event.id;
+      this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId = event.id;
       if(this.merchantData && this.merchantData.gstDetails && this.merchantData.gstDetails.businessAddress &&
           this.merchantData.gstDetails.businessAddress.state && this.merchantData.gstDetails.businessAddress.state != event.stateMasterCode) {        
         this.isIGSTEnabled = true;
@@ -409,20 +417,20 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         this.isIGSTEnabled = false;
       }
       this.selected_invoice_state = event;
-      this.calculateTaxFields("all",this.invoiceData.listInvoiceItems);
+      this.calculateTaxFields("all",this.invoiceData.noteItemDTO);
     }
   }
 
   onSelectInvoiceType(event) {
     if(event && event.id) {
-      this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId = event.id;
+      this.invoiceData.creditDebitNoteDTO.invoiceTypesInvoiceTypesId = event.id;
       this.selected_invoice_type = event;
     } 
   }
 
   onSelectInvoiceStatus(event) {
     if(event && event.id) {
-      this.invoiceData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId = event.id;
+      this.invoiceData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId = event.id;
       this.selected_invoice_status = event;
     } 
   }
@@ -485,56 +493,55 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
   calculateTaxFields(field,items:any) {
     if(!Array.isArray(items)) { items = [items] };
-    items.forEach((item,index) => {
-      item.invoiceItemsTaxableValue = item.invoiceItemsTaxableValue ? item.invoiceItemsTaxableValue : 0;
-      item.invoiceItemsTaxRate = item.invoiceItemsTaxRate ? item.invoiceItemsTaxRate : 0;
-      item.invoiceItemsCess = item.invoiceItemsCess ? item.invoiceItemsCess : 0;
+    items.forEach((item,index) => {   
+      item.noteItemsTaxableValue = item.noteItemsTaxableValue ? item.noteItemsTaxableValue : 0;
+      item.noteItemsRate = item.noteItemsRate ? item.noteItemsRate : 0;
+      item.noteItemsCess = item.noteItemsCess ? item.noteItemsCess : 0;
       if(field == "tax_rate" || field == "all") {
         if(item.tempInvoiceItemsTaxRate && parseFloat(item.tempInvoiceItemsTaxRate)) {
-          item.invoiceItemsTaxRate = parseFloat(item.tempInvoiceItemsTaxRate);
+          item.noteItemsRate = parseFloat(item.tempInvoiceItemsTaxRate);
         } else {
-          item.invoiceItemsTaxRate = 0;
+          item.noteItemsRate = 0;
         }        
       }
 
       if(this.isIGSTEnabled) {
-        item.invoiceItemsIgst = parseFloat(this.fixedToDecimal(item.invoiceItemsTaxableValue * item.invoiceItemsTaxRate * 0.01));
-        item.invoiceItemsCgst = 0;
-        item.invoiceItemsSgst = 0;      
+        item.noteItemsIgst = parseFloat(this.fixedToDecimal(item.noteItemsTaxableValue * item.noteItemsRate * 0.01));
+        item.noteItemsCgst = 0;
+        item.noteItemsSgst = 0;      
       } else {      
-        let taxBreakup:any =  parseFloat(this.fixedToDecimal(item.invoiceItemsTaxableValue * (item.invoiceItemsTaxRate/2) * 0.01));
-        item.invoiceItemsCgst = taxBreakup;
-        item.invoiceItemsSgst = taxBreakup;
-        item.invoiceItemsIgst = 0;
+        let taxBreakup:any =  parseFloat(this.fixedToDecimal(item.noteItemsTaxableValue * (item.noteItemsRate/2) * 0.01));
+        item.noteItemsCgst = taxBreakup;
+        item.noteItemsSgst = taxBreakup;
+        item.noteItemsIgst = 0;
       }
       
-      item.invoiceItemsGross = parseFloat(this.fixedToDecimal(item.invoiceItemsTaxableValue + ((item.invoiceItemsTaxRate) ? (item.invoiceItemsTaxableValue*item.invoiceItemsTaxRate*0.01) : 0)+(item.invoiceItemsCess ? item.invoiceItemsCess : 0)))
-      if(field == "cess" && (item.invoiceItemsCess > item.invoiceItemsTaxableValue ||  item.invoiceItemsCess < 0)) {
+      item.noteItemsGrossValue = parseFloat(this.fixedToDecimal(item.noteItemsTaxableValue + ((item.noteItemsRate) ? (item.noteItemsTaxableValue*item.noteItemsRate*0.01) : 0)+(item.noteItemsCess ? item.noteItemsCess : 0)))
+      if(field == "cess" && (item.noteItemsCess > item.noteItemsTaxableValue ||  item.noteItemsCess < 0)) {
         setTimeout(() => { 
-          item.invoiceItemsCess = 0; 
+          item.noteItemsCess = 0; 
           this.calculateTaxFields("cess_changed",item)
         },200);
-        if(item.invoiceItemsCess > item.invoiceItemsTaxableValue) {
+        if(item.noteItemsCess > item.noteItemsTaxableValue) {
           this._toastMessageService.alert("error","cess can not greater then taxable value");        
         } else {
           this._toastMessageService.alert("error","cess can not less then 0");        
         }
       }
-
     });
     this.calculateTotalGrossValue();
   }
 
   calculateTotalGrossValue() {
-    this.invoiceData.invoiceDTO.invoiceGrossValue = 0;
-    if(this.invoiceData.listInvoiceItems) {
-      this.invoiceData.listInvoiceItems.forEach(item => {
-        if(item.isMarkForFlag != "T") {
-          this.invoiceData.invoiceDTO.invoiceGrossValue += (item.invoiceItemsGross) ? item.invoiceItemsGross : 0;
+    this.invoiceData.creditDebitNoteDTO.noteGrossValue = 0;
+    if(this.invoiceData.noteItemDTO) {
+      this.invoiceData.noteItemDTO.forEach(item => {
+        if(item.isMarkForDeletion != 1) {
+          this.invoiceData.creditDebitNoteDTO.noteGrossValue += (item.noteItemsGrossValue) ? item.noteItemsGrossValue : 0;
         }
       })
     }
-    this.invoiceData.invoiceDTO.invoiceGrossValue = parseFloat(parseFloat(this.invoiceData.invoiceDTO.invoiceGrossValue).toFixed(2));
+    this.invoiceData.creditDebitNoteDTO.noteGrossValue = parseFloat(parseFloat(this.invoiceData.creditDebitNoteDTO.noteGrossValue).toFixed(2));
   }
 
   fixedToDecimal(value): any {
@@ -543,7 +550,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 }
 
 
-/*sales-invoice
+/*credit-note
 purchase-invoice
 debit-note
 credit-note

@@ -134,6 +134,18 @@ export class ListComponent implements OnInit {
 
   getInvoiceList() {
     return new Promise((resolve,reject) => {
+      this.getSalesPurchaseInvoiceList().then((spInv:any) => {
+        this.getCreditDebitNoteInvoiceList().then((cdnInv:any) => {          
+          this.invoices_list = spInv.concat(cdnInv);;
+          this.filterData = this.invoices_list;
+          return resolve(true);
+        });
+      });     
+    });
+  }
+
+  getSalesPurchaseInvoiceList() {
+    return new Promise((resolve,reject) => {
       NavbarService.getInstance(this.http).getInvoiceList({page:0,size:1000}).subscribe(res => {
         if(Array.isArray(res)) {
           let invoice_types_obj = {};
@@ -159,12 +171,54 @@ export class ListComponent implements OnInit {
           })
           this.invoices_list = res;
           this.filterData = this.invoices_list;
-        }
-        return resolve(true);
+          return resolve(res);
+        } else {
+          return resolve([]);
+        }        
       }, err => {
         let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
         this._toastMessageService.alert("error", "invoice list - " + errorMessage );
-        return resolve(false);
+        return resolve([]);        
+      });
+    });
+  }
+
+  getCreditDebitNoteInvoiceList() {
+    return new Promise((resolve,reject) => {
+      NavbarService.getInstance(this.http).getCreditDebitNoteInvoiceList({page:0,size:1000}).subscribe(res => {
+        if(Array.isArray(res)) {
+          let invoice_types_obj = {};
+          let invoice_status_obj = {};
+          this.all_invoice_types.forEach(invT => {
+            invoice_types_obj[invT.id] = invT["invoiceTypesName"];
+          });
+
+          this.invoice_status_list.forEach(invSL => {
+            invoice_status_obj[invSL.id] = invSL["invoiceStatusMasterName"]
+          })
+          res.forEach(inv => {
+            inv.merchantName = "";
+            inv.merchantMobileNumber = "";
+            inv.invoiceCreatedAt = inv.noteCreatedAt;
+            inv.invoiceStatus = invoice_status_obj[inv.invoiceStatusMasterInvoiceStatusMasterId] || "";
+            inv.invoiceDocumentType = invoice_types_obj[inv.invoiceTypesInvoiceTypesId] || "";
+            let mData = this.merchantList.filter(ml =>  {return ml.userId == inv.businessId });            
+            if(mData && mData[0]) {
+              inv.merchantName = mData[0].fName + " " + mData[0].lName;
+              inv.merchantMobileNumber = mData[0].mobileNumber;
+            }
+            inv.processedBy = this.getAdminName(inv.creditDebitNoteAssignedTo);
+          })
+
+          return resolve(res);          
+        } else {
+          return resolve([]);  
+        }
+        
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice list - " + errorMessage );
+        return resolve([]);          
       });
     });
   }
@@ -229,8 +283,47 @@ export class ListComponent implements OnInit {
     
   }
 
-  updateListItem(item,itemIndex) {
+  updateCreditDebitNoteInvoice(item,itemIndex) {
     let params:any = JSON.parse(JSON.stringify(item));
+
+    params.invoiceUpdatedAt = new Date();
+    if(item.selected_invoice_status && item.selected_invoice_status.id) {
+      params.invoiceStatusMasterInvoiceStatusMasterId = item.selected_invoice_status.id;
+    }
+
+    if(item.selected_invoice_assigned_to_user && item.selected_invoice_assigned_to_user.userId) {
+      params.creditDebitNoteAssignedTo = item.selected_invoice_assigned_to_user.userId;
+    }
+
+    if((!params.creditDebitNoteAssignedTo || params.creditDebitNoteAssignedTo == item.creditDebitNoteAssignedTo) && 
+      (!params.invoiceStatusMasterInvoiceStatusMasterId || item.invoiceStatusMasterInvoiceStatusMasterId == params.invoiceStatusMasterInvoiceStatusMasterId))  {
+      this._toastMessageService.alert("error", "No data for update" );
+      return;
+    }
+
+    this.loading = true;
+    NavbarService.getInstance(this.http).updateCreditDebitNoteInvoice(params).subscribe(res => {
+      if(item.selected_invoice_assigned_to_user && item.selected_invoice_assigned_to_user.userId) {
+        item.processedBy = item.selected_invoice_assigned_to_user.name;
+      }
+      
+      if(item.selected_invoice_status && item.selected_invoice_status.id) {
+        item.invoiceStatus = item.selected_invoice_status.name;
+      }
+            
+      this.onSelectRecord(item,itemIndex)
+      this.loading = false;      
+      this._toastMessageService.alert("success", "Invoice updated successfully." );      
+    }, err => {
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+      this._toastMessageService.alert("error", "update invoice item - " + errorMessage );
+      this.loading = false;
+    });
+  }
+
+  updateSalesPurchaseInvoice(item,itemIndex) {
+    let params:any = JSON.parse(JSON.stringify(item));
+
     params.invoiceUpdatedAt = new Date();
     if(item.selected_invoice_status && item.selected_invoice_status.id) {
       params.invoiceStatusMasterInvoiceStatusMasterId = item.selected_invoice_status.id;
@@ -265,6 +358,13 @@ export class ListComponent implements OnInit {
       this.loading = false;
     });
   }
+  updateListItem(item,itemIndex) {
+    if(item.invoiceTypesInvoiceTypesId == 1 || item.invoiceTypesInvoiceTypesId == 2 || item.invoiceTypesInvoiceTypesId == 6) {
+      this.updateSalesPurchaseInvoice(item,itemIndex);
+    } else if(item.invoiceTypesInvoiceTypesId == 4 || item.invoiceTypesInvoiceTypesId == 5) {
+      this.updateCreditDebitNoteInvoice(item,itemIndex);
+    }    
+  }
 
   onSelectRecord(item,index) {
     this.prods_check[index] = !this.prods_check[index];
@@ -285,7 +385,12 @@ export class ListComponent implements OnInit {
       }
       
       if(this.admin_list.length>0) {
-        let falData = this.admin_list.filter(isl => { return isl.userId == item.invoiceAssignedTo});
+        let assignId = item.invoiceAssignedTo;
+        if(item.invoiceTypesInvoiceTypesId == 4 || item.invoiceTypesInvoiceTypesId == 5) {
+          assignId = item.creditDebitNoteAssignedTo;
+        }
+
+        let falData = this.admin_list.filter(isl => { return isl.userId == assignId});
         if(falData && falData[0]) {
           item.selected_invoice_assigned_to_user = falData[0];
         }
