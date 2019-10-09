@@ -27,6 +27,7 @@ import { BusinessProfileComponent } from './business/business-profile/business-p
 import { GSTCloudComponent } from './business/gst-cloud/gst-cloud.component';
 import { BusinessDocumentsComponent } from './business/business-documents/business-documents.component';
 import { PartyListComponent } from './business/party-list/party-list.component';
+import { ImportPartyListComponent } from './business/import-party-list/import-party-list.component';
 
 //dashboard | home  component
 import { HomeComponent } from './home/home.component';
@@ -51,6 +52,7 @@ export const routes: Routes = [
 					{ path: 'gst-cloud', component: GSTCloudComponent },
 					{ path: 'business-documents', component: BusinessDocumentsComponent },
 					{ path: 'party-list', component: PartyListComponent },
+					{ path: 'import-party-list', component: ImportPartyListComponent },
 					{ path: '', redirectTo: '/pages/business/business-profile', pathMatch: 'full' }
 				]
 			},

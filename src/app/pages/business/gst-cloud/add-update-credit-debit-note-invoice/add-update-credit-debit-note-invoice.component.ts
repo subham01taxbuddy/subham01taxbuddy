@@ -63,7 +63,6 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       noteNumber:"",
       referenceInvoiceId:"",
       invoiceInvoiceId:"",
-      invoiceNumber:"",
       stateMasterStateMasterId:"",
       creditDebitNoteAssignedTo:"",
       invoiceTypesInvoiceTypesId:"",
@@ -116,6 +115,12 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       this.invoiceData.creditDebitNoteDTO.businessId = this.merchantData.userId;      
       if(this.invoice_types && this.invoice_types[0]) {
         this.invoiceData.creditDebitNoteDTO.invoiceTypesInvoiceTypesId = this.invoice_types[0].id;
+      }
+
+      //init invoice status
+      if(this.invoice_status_list) {
+        let islfData = this.invoice_status_list.filter(isl => { return isl.invoiceStatusMasterName == "uploaded" });
+        if(islfData && islfData[0]) { this.onSelectInvoiceStatus(islfData[0])} 
       }
 
 
@@ -233,13 +238,13 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     } else if(new Date(this.invoiceData.creditDebitNoteDTO.invoiceDate) > new Date()) {
       this._toastMessageService.alert("error","Invoice date can't be future date");
       return;
-    } else if(!this.invoiceData.creditDebitNoteDTO.invoiceNumber) {
+    } else if(!this.invoiceData.creditDebitNoteDTO.referenceInvoiceId) {
       this._toastMessageService.alert("error","Please add invoice number");
       return;
-    } else if(this.invoice_main_type == "credit-note" && this.invoiceData.creditDebitNoteDTO.invoiceNumber.length>16) {
+    } else if(this.invoice_main_type == "credit-note" && this.invoiceData.creditDebitNoteDTO.referenceInvoiceId.length>16) {
       this._toastMessageService.alert("error","invoice number max length can be 16 character");
       return;
-    } else if(this.invoice_main_type != "credit-note" && this.invoiceData.creditDebitNoteDTO.invoiceNumber.length>45) {
+    } else if(this.invoice_main_type != "credit-note" && this.invoiceData.creditDebitNoteDTO.referenceInvoiceId.length>45) {
       this._toastMessageService.alert("error","invoice number max length can be 45 character");
       return;
     }  else if(!this.invoiceData.partyDTO.partyGstin) {
@@ -358,7 +363,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
 
   deleteItem(index) {
     if(this.invoiceData.noteItemDTO[index].id) {
-      this.invoiceData.noteItemDTO[index]["isMarkForDeletion"] = 1;
+      this.invoiceData.noteItemDTO[index]["isMarkForDeletion"] = "T";
     } else {
       this.invoiceData.noteItemDTO.splice(index,1);
     }
@@ -536,7 +541,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     this.invoiceData.creditDebitNoteDTO.noteGrossValue = 0;
     if(this.invoiceData.noteItemDTO) {
       this.invoiceData.noteItemDTO.forEach(item => {
-        if(item.isMarkForDeletion != 1) {
+        if(item.isMarkForDeletion  != "T") {
           this.invoiceData.creditDebitNoteDTO.noteGrossValue += (item.noteItemsGrossValue) ? item.noteItemsGrossValue : 0;
         }
       })

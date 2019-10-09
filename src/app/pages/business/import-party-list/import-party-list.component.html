@@ -1,0 +1,56 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="content content_full">
+
+  	<div class="content__container">
+	    <div class="card" >
+	      <div class="card__row">
+	        <div class="card__col-xs-12 card__col-sm-6">
+	          <app-input-select-object [label]="'Select merchant'" [type]="'text'" [value]="selected_merchant" [type]="'text'" [name]="'selected_merchant'" [filter_items]="available_merchant_list" (sendValue)="onSelectMerchant($event)">
+	          </app-input-select-object>
+	        </div>        	        
+
+
+	        <div class="card__col-xs-6 card__col-sm-6" style="padding: 10px 10px !important;">
+	            <app-input-upload [upload]="upload" [input_id]="'importFile'" (filesDropped)="onUploadFile($event)"></app-input-upload>
+	        </div>
+	      </div><!-- card__row -->   
+	    </div>
+	</div>
+
+	<div class="content__container" *ngIf="uploadingData && uploadingData.length>0">
+	    <div class="card">
+          <div class="card__row">        
+            <div class="report-table-wrapper">
+                <table class="report-table" style="min-width: unset;">
+                    <thead class="report-table__head">
+                      <tr class="report-table__row report-table__row_head">
+                        <th class="report-table__cell report-table__cell_name text-pull-left">#</th>
+                        <th class="report-table__cell report-table__cell_name text-pull-left">PARTY TYPE</th>
+                        <th class="report-table__cell report-table__cell_name text-pull-right">TRADE NAME</th>
+                        <th class="report-table__cell report-table__cell_name text-pull-right">GSTIN</th>
+                        <th class="report-table__cell report-table__cell_name text-pull-right">EMAIL</th>
+                        <th class="report-table__cell report-table__cell_name text-pull-right">MOBILE</th>
+                      </tr>
+                    </thead>
+                    <tbody class="report-table__body">
+                      <tr class="report-table__row" *ngFor="let tab of uploadingData;let i=index;">                        
+                        <td class="report-table__cell report-table__cell_day text-pull-left">{{i+1}}</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-left">{{tab.partyType}}</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.partyName}}</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.partyGstin}}</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.partyEmail}}</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.partyPhone}}</td>
+                      </tr>                      
+                    </tbody>
+                </table>
+            </div>
+          </div>
+      </div>
+	</div>
+
+	<div class="footer__buttons clearfix" style="margin-top: 40px;">
+      <a class="btn long-btn" (click)="savePartyData();">Save</a>
+  	</div>
+  	<!-- .footer__buttons -->
+</div>

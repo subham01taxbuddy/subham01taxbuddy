@@ -151,6 +151,14 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-status-masters', 'method': 'GET' }, {});
 	}
 
+	updatePartyInfo(params) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/parties', 'method': 'PUT' }, params);
+	}
+
+	createParty(params) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/parties', 'method': 'POST' }, params);
+	}
+
 	getPartyInfoByGSTIN(params) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/partiesByGstin', 'method': 'GET' }, params);
 	}

@@ -37,11 +37,13 @@ export class PartyListComponent implements OnInit {
   merchantData: any;
 
   party_list: any = [];
+  prods_check: boolean[] = [false];  
   invoice_party_roles: any = [];
   is_applied_clicked: boolean = false;
 
   from_date: any = new Date();
   to_date: any = new Date();
+
 
   filterData:any = [];      
   filters_list: any = [ 
@@ -179,5 +181,46 @@ export class PartyListComponent implements OnInit {
     })
 
     this.filterData = JSON.parse(JSON.stringify(tempFD));    
+  }
+
+  onSelectRecord(item,index) {
+    if(!this.prods_check[index]) {
+      item.upartyName = item.partyName;
+      item.upartyPhone = item.partyPhone;
+      item.upartyEmail = item.partyEmail;
+    }
+    this.prods_check[index] = !this.prods_check[index];
+  }
+
+  updatePartyDetail(item,index) {
+    console.log(item,index);
+    if(item.upartyPhone && !(/^\d{10}$/.test(item.upartyPhone))) {
+      this._toastMessageService.alert("error","Please add valid 10 digit phone number");
+      return;
+    } else if(item.upartyEmail && !(/\S+@\S+\.\S+/.test(item.upartyEmail))) {
+      this._toastMessageService.alert("error","Please add valid email address");
+      return;
+    }
+    let params = {
+      "id":item.id,
+      "partyGstin": item.partyGstin,
+      "partyName": item.upartyName,
+      "partyPhone": item.upartyPhone,
+      "partyEmail": item.upartyEmail,
+      "partyUpdatedAt": new Date()
+    }
+    this.loading = true;
+    NavbarService.getInstance(this.http).updatePartyInfo(params).subscribe(res => {
+      this._toastMessageService.alert("success", "Party detail updated successfully.");
+      item.partyName = item.upartyName;
+      item.partyPhone = item.upartyPhone;
+      item.partyEmail = item.upartyEmail;
+      this.loading = false;
+      this.prods_check[index] = false;
+    }, err => {
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+      this._toastMessageService.alert("error", "update party - " + errorMessage );
+      this.loading = false;
+    });
   }
 }

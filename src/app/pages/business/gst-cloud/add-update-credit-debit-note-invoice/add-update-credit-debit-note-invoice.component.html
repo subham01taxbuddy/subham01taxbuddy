@@ -49,7 +49,7 @@
                 </div> 
                 
                 <div class="card__col-xs-12 card__col-sm-4">
-                  <app-input [label]="'Original Invoice Number'" [type]="'text'" [is_mandatory]="'true'" [name]="'Original Invoice Number'" [placeholder]="'SSBA/2018-19/001'" [value]="invoiceData.creditDebitNoteDTO.invoiceNumber" (sendValue)="invoiceData.creditDebitNoteDTO.invoiceNumber = $event"></app-input>
+                  <app-input [label]="'Original Invoice Number'" [type]="'text'" [is_mandatory]="'true'" [name]="'Original Invoice Number'" [placeholder]="'SSBA/2018-19/001'" [value]="invoiceData.creditDebitNoteDTO.referenceInvoiceId" (sendValue)="invoiceData.creditDebitNoteDTO.referenceInvoiceId = $event"></app-input>
                 </div>            
 
                 <div class="card__col-xs-12 card__col-sm-4">
@@ -69,7 +69,7 @@
                   </app-input-select-object>
                 </div>
 
-                <div class="card__col-xs-12 card__col-sm-4" *ngIf="is_update_item">                
+                <div class="card__col-xs-12 card__col-sm-4">                
                   <app-input-select-object [label]="'Invoice Status'"  [type]="'text'" [value]="selected_invoice_status" [name]="'invoice status'" [filter_items]="invoice_status_list" (sendValue)="onSelectInvoiceStatus($event)">
                   </app-input-select-object>
                 </div>
@@ -113,7 +113,7 @@
                                               </thead>
                                               <tbody class="report-table__body">
                                                   <ng-template ngFor let-tab [ngForOf]="invoiceData.noteItemDTO"  let-i="index">
-                                                      <tr *ngIf="tab.isMarkForDeletion != 1" class="report-table__row">
+                                                      <tr *ngIf="tab.isMarkForDeletion != 'T'" class="report-table__row">
                                                           <td class="report-table__cell report-table__cell_day">{{i+1}}</td>
                                                           <td class="report-table__cell report-table__cell_day" style="position: relative;">
                                                               <input class="table__row-input" type="text" name="'taxcode'" [(ngModel)]="tab.itemTaxCode">

@@ -67,11 +67,11 @@ export class HomeComponent implements OnInit {
   }
 
   redirectToInvoicePendingProcessing() {    
-    this.router.navigate(['/pages/list']);
+    this.router.navigate(['/pages/list'], { queryParams: { type: 'pending_processing' } });
   }
 
   redirectToUnassignedUploads() {
-    this.router.navigate(['/pages/list']);
+    this.router.navigate(['/pages/list'], { queryParams: { type: 'unassigned' } });    
   }
 
   redirectToPendingComputationApproval() {

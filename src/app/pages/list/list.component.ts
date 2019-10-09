@@ -19,7 +19,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { NavbarService } from '../../services/navbar.service';
-import { Router } from '@angular/router';
+import { Router,ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ToastMessageService } from '../../services/toast-message.service';
 
@@ -31,6 +31,7 @@ import { ToastMessageService } from '../../services/toast-message.service';
 
 export class ListComponent implements OnInit {  
   loading: boolean = false;
+  page_query_type: any = "";
   merchantList:any = [];
   invoices_list:any = [];
   invoice_status_list:any = []; 
@@ -51,7 +52,7 @@ export class ListComponent implements OnInit {
     {'in_prod_name':'Owner'}
   ];
   constructor(navbarService: NavbarService,public router: Router, public http: HttpClient,
-    public _toastMessageService:ToastMessageService) { 
+    public _toastMessageService:ToastMessageService,private route: ActivatedRoute) { 
     NavbarService.getInstance(null).component_link_2 = 'list';
     NavbarService.getInstance(null).component_link_3 = '';
   	NavbarService.getInstance(null).showBtns = 'list';
@@ -62,6 +63,12 @@ export class ListComponent implements OnInit {
       this.router.navigate(['']);
       return;
     }
+
+    this.route.queryParams.subscribe(params => {
+        if(params && params.type) {
+          this.page_query_type = params.type;
+        }
+    }); 
 
     this.loading = true;
     this.getGSTInvoiceTypes().then(itR => {
@@ -146,7 +153,13 @@ export class ListComponent implements OnInit {
 
   getSalesPurchaseInvoiceList() {
     return new Promise((resolve,reject) => {
-      NavbarService.getInstance(this.http).getInvoiceList({page:0,size:1000}).subscribe(res => {
+      let iParams = {page:0,size:1000};
+      if(this.page_query_type == "unassigned") {
+        iParams["invoiceAssignedTo.specified"]=false;
+      } else if(this.page_query_type == "pending_processing") {
+        iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];        
+      }
+      NavbarService.getInstance(this.http).getInvoiceList(iParams).subscribe(res => {
         if(Array.isArray(res)) {
           let invoice_types_obj = {};
           let invoice_status_obj = {};
@@ -185,7 +198,13 @@ export class ListComponent implements OnInit {
 
   getCreditDebitNoteInvoiceList() {
     return new Promise((resolve,reject) => {
-      NavbarService.getInstance(this.http).getCreditDebitNoteInvoiceList({page:0,size:1000}).subscribe(res => {
+      let iParams = {page:0,size:1000};
+      if(this.page_query_type == "unassigned") {
+        iParams["creditDebitNoteAssignedTo.specified"]=false;
+      } else if(this.page_query_type == "pending_processing") {
+        iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[1,2,4];        
+      }
+      NavbarService.getInstance(this.http).getCreditDebitNoteInvoiceList(iParams).subscribe(res => {
         if(Array.isArray(res)) {
           let invoice_types_obj = {};
           let invoice_status_obj = {};
@@ -400,14 +419,21 @@ export class ListComponent implements OnInit {
 
   saveGroupSelectedData() {
     let selectedInvoiceIdList = [];
+    let selectedCreditDebitNoteInvoiceIdList = [];
     this.prods_check.forEach((pc,index) => {
       if(pc && this.filterData[index]) { 
-        selectedInvoiceIdList.push(this.filterData[index].id)
+        if([1,2,3,6].indexOf(this.filterData[index].invoiceTypesInvoiceTypesId) != -1) {
+          selectedInvoiceIdList.push(this.filterData[index].id);
+        } else if([4,5].indexOf(this.filterData[index].invoiceTypesInvoiceTypesId) != -1){
+          selectedCreditDebitNoteInvoiceIdList.push(this.filterData[index].id);
+        }
       }
     });
+
     let params:any = {
-        "invoiceAssignedTo": this.group_selected_assign_to.userId,
-        "invoiceIdList": selectedInvoiceIdList
+      "invoiceAssignedTo": this.group_selected_assign_to.userId,
+      "invoiceIdList": selectedInvoiceIdList,
+      "creditDebitNoteIdList": selectedCreditDebitNoteInvoiceIdList
     }
 
     if(!params.invoiceAssignedTo) {

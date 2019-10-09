@@ -114,6 +114,12 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId = this.invoice_types[0].id;
       }*/
 
+      
+      //init invoice status
+      if(this.invoice_status_list) {
+        let islfData = this.invoice_status_list.filter(isl => { return isl.invoiceStatusMasterName == "uploaded" });
+        if(islfData && islfData[0]) { this.onSelectInvoiceStatus(islfData[0])} 
+      }
 
       this.addItem();
       this.addItem();
@@ -263,12 +269,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     if(cField) {
       let fData = this.invoice_party_roles.filter(ipr => { return ipr.partyRoleName == cField});
       if(fData && fData[0]) { sendData.partyRoleID = fData[0].id; }
-    }
-
-    let sfData = this.invoice_status_list.filter(isl => { return isl.invoiceStatusMasterName == "uploaded"})
-    if(sfData && sfData[0]) { 
-      sendData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId = sfData[0].id; 
-    }
+    }    
 
     delete sendData.invoiceDTO.s3InvoiceImageUrl;
     NavbarService.getInstance(this.http).createInvoiceWithItems(sendData).subscribe(res => {

@@ -67,6 +67,7 @@ import { AddUpdateGSTBillInvoiceComponent } from './business/gst-cloud/add-updat
 import { AddUpdateCreditDebitNoteInvoiceComponent } from './business/gst-cloud/add-update-credit-debit-note-invoice/add-update-credit-debit-note-invoice.component';
 import { BusinessDocumentsComponent } from './business/business-documents/business-documents.component';
 import { PartyListComponent } from './business/party-list/party-list.component';
+import { ImportPartyListComponent } from './business/import-party-list/import-party-list.component';
 
 //Login component
 import { LoginComponent } from './login/login.component';
@@ -102,6 +103,7 @@ Storage.configure({
     AddUpdateCreditDebitNoteInvoiceComponent,
     BusinessDocumentsComponent,
     PartyListComponent,
+    ImportPartyListComponent,
     HomeComponent,
     LoginComponent,
     NavbarComponent,
