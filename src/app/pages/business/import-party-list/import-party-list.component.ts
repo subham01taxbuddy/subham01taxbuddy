@@ -39,7 +39,8 @@ export class ImportPartyListComponent implements OnInit {
   uploadingData: any = [];
   uploadedData: any = [];
   failedData: any = [];
-
+  upload: boolean = false;
+  
   constructor(
   	private navbarService: NavbarService,
     public router: Router,public http: HttpClient,
