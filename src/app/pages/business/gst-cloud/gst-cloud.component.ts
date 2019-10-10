@@ -299,7 +299,7 @@ export class GSTCloudComponent implements OnInit {
     this.invoices_list = [];       
 
     this.from_date = this.setDateStartTimings(this.from_date);
-    this.to_date = this.setDateStartTimings(this.to_date);
+    this.to_date = this.setDateEndTimings(this.to_date);
     this.loading = true;
     this.getSalesOrPurchaseInvoices().then((salesInvoice:any) => {
       this.getCreditDebitNoteInvoices().then((creditInvoice:any) => {
