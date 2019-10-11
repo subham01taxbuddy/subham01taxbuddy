@@ -33,9 +33,19 @@ export class ListComponent implements OnInit {
   loading: boolean = false;
   page_query_type: any = "";
   merchantList:any = [];
+  merchantFullDetail:any = {};
+  selected_invoice_merchant_data:any;
   invoices_list:any = [];
+  state_list:any = [];    
   invoice_status_list:any = []; 
   all_invoice_types: any = [];
+  selected_invoice_types:any = [];
+  invoice_party_roles:any = [];
+  invoice_main_type: any = "";
+
+  invoiceToUpdate:any;
+  isGSTBillViewShown: boolean = false;
+
   /*{"name":"Ashish","mobile_number":"1234123412","document_type":"sales","upload_date":"2019-01-01","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"},
   {"name":"Ashish","mobile_number":"1234123412","document_type":"sales","upload_date":"2019-01-01","previous_return_field_status":"FILED","gst_filing_status":"FILED","status_of_invoice":"FILED","owner":"Test User"}*/
   
@@ -51,6 +61,9 @@ export class ListComponent implements OnInit {
     {'in_prod_name':'Status of Invoice'},
     {'in_prod_name':'Owner'}
   ];
+
+  bodyTag = document.getElementsByTagName("body")[0];
+
   constructor(navbarService: NavbarService,public router: Router, public http: HttpClient,
     public _toastMessageService:ToastMessageService,private route: ActivatedRoute) { 
     NavbarService.getInstance(null).component_link_2 = 'list';
@@ -68,19 +81,23 @@ export class ListComponent implements OnInit {
         if(params && params.type) {
           this.page_query_type = params.type;
         }
-    }); 
+    });      
 
     this.loading = true;
-    this.getGSTInvoiceTypes().then(itR => {
-      this.getInvoiceStatusList().then(isRl =>{
-        this.getAdminList().then(aR=>{
-          this.getMerchantList().then(mR => {
-            this.getInvoiceList().then(iR => {
-              this.loading = false
+    this.getGSTStateList().then(sR => {
+      this.getGSTInvoiceTypes().then(itR => {
+        this.getInvoicePartyRoles().then(rR => {
+          this.getInvoiceStatusList().then(isRl =>{
+            this.getAdminList().then(aR=>{
+              this.getMerchantList().then(mR => {
+                this.getInvoiceList().then(iR => {
+                  this.loading = false
+                });
+              });
             });
           });
         });
-      })
+      });
     });
   }
 
@@ -105,6 +122,39 @@ export class ListComponent implements OnInit {
     })
 
     this.filterData = JSON.parse(JSON.stringify(tempReportD));    
+  }
+
+  getGSTStateList() {
+    return new Promise((resolve,reject) => {
+      this.state_list = [];
+      NavbarService.getInstance(this.http).getGSTStateDetails().subscribe(res => {
+        if(Array.isArray(res)) {
+          res.forEach(sData => { sData.name = sData.stateMasterName });
+          this.state_list = res;
+        }       
+        resolve(true);
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "state list - " + errorMessage );
+        resolve(false);
+      });
+    })
+  }
+
+  getInvoicePartyRoles() {
+    return new Promise((resolve,reject) => {
+      this.invoice_party_roles = [];
+      NavbarService.getInstance(this.http).getInvoicePartyRoles().subscribe(res => {
+        if(Array.isArray(res)) {          
+          this.invoice_party_roles = res;
+        }       
+        resolve(true);
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice party role list - " + errorMessage );
+        resolve(false);
+      });
+    })
   }
 
   getAdminList() {    
@@ -287,6 +337,146 @@ export class ListComponent implements OnInit {
     } 
   }
 
+  getMerchantDetails(businessId) {           
+    return new Promise((resolve,reject) => {
+      if(this.merchantFullDetail[businessId]) {
+        return resolve(this.merchantFullDetail[businessId]); 
+      }
+      NavbarService.getInstance(this.http).getGetGSTMerchantDetail(businessId).subscribe(res => {
+        if(res) {
+          if(!res.gstDetails) { res.gstDetails = {}; };
+
+          if(!res.gstDetails.bankInformation) {
+            res.gstDetails.bankInformation = {bankName:"",accountNumber:"",ifscCode:""};
+          }
+          if(!res.gstDetails.businessAddress) {
+            res.gstDetails.businessAddress = {address:"",stateMasterCode:"",pincode:""};
+          }
+          this.merchantFullDetail[businessId] = res;
+          return resolve(res);
+        } else {
+          return resolve(null);
+        }
+        this.loading = false;
+      }, err => {
+        let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+        this._toastMessageService.alert("error", "merchant detail - " + errorMessage );
+        return resolve(null);
+      });      
+    })
+  }
+
+  onClickEditInvoice(invoice) {
+    this.loading = true;    
+    this.getMerchantDetails(invoice.businessId).then(merchantDetail => {    
+      if(!merchantDetail) {
+        this.loading = false;        
+        return;
+      }
+
+      this.selected_invoice_merchant_data = merchantDetail;
+      this.setInvoicesByBillType(invoice.invoiceTypesInvoiceTypesId);
+
+      this.getInvoiceByInvoiceId(invoice).then(invoiceData => {
+        if(invoiceData) {
+          this.invoiceToUpdate = invoiceData;
+          this.isGSTBillViewShown = true;
+          this.bodyTag.setAttribute("class", "overflow-hidden");    
+        }
+        this.loading = false;
+      });
+    });
+  }
+
+  getInvoiceByInvoiceId(invoice) {
+    return new Promise((resolve,reject) => {      
+        if([4,5].indexOf(invoice.invoiceTypesInvoiceTypesId) != -1) {
+          this.getCreditDebitNoteInvoiceByInvoiceId(invoice.id).then(result =>{
+            return resolve(result);
+          });
+        } else {
+          this.getSalesPurchaseInvoiceByInvoiceId(invoice.id).then(result =>{
+            return resolve(result);
+          });
+        }
+    })
+  }
+
+  getSalesPurchaseInvoiceByInvoiceId(inv_id) {
+    return new Promise((resolve,reject) => {
+      NavbarService.getInstance(this.http).getInvoiceWithItemsByInvoiceId(inv_id).subscribe(res => {
+        return resolve((Array.isArray(res)) ? res[0] : null);
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice - " + errorMessage );
+        return resolve(null);
+      });
+    });
+  }
+
+  getCreditDebitNoteInvoiceByInvoiceId(inv_id) {
+    return new Promise((resolve,reject) => {      
+      NavbarService.getInstance(this.http).getCreditDebitNoteInvoiceWithItemsByInvoiceId(inv_id).subscribe(res => {
+        return resolve((Array.isArray(res)) ? res[0] : null);
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "invoice - " + errorMessage );
+        return resolve(null);
+      });
+    })
+  }
+
+  setInvoicesByBillType(bill_type) {
+    this.selected_invoice_types = [];
+    this.invoice_main_type = "";
+    if(bill_type == 1 || bill_type == 2) {      
+      let tInvT = this.all_invoice_types.filter(ait => { return ait.invoiceTypesName == "Sales"})
+      this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesSubtype}});
+      this.invoice_main_type = "sales-invoice"; 
+    } else if(bill_type == 3 || bill_type == 6){
+      let tInvT = this.all_invoice_types.filter(ait => { return (ait.invoiceTypesName == "Purchase" || ait.invoiceTypesName == "Expense")})
+      this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesName}});
+      this.invoice_main_type = "purchase-invoice"; 
+    } else if(bill_type == 4){
+      let tInvT = this.all_invoice_types.filter(ait => { return (ait.invoiceTypesName == "Credit Note")})
+      this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesName}});
+      this.invoice_main_type = "credit-note"; 
+    } else if(bill_type == 5){
+      let tInvT = this.all_invoice_types.filter(ait => { return (ait.invoiceTypesName == "Debit Note")})
+      this.selected_invoice_types = tInvT.map(t => { return {id:t.id,name:t.invoiceTypesName}});
+      this.invoice_main_type = "debit-note"; 
+    }
+  }
+
+  onUpdateInvoice(event) {
+    if(event && event.id) {
+      let invlen = this.invoices_list.length;
+      for(var i=0;i<invlen;i++) {
+        if(this.invoices_list[i].id == event.id) {
+          Object.assign(this.invoices_list[i],JSON.parse(JSON.stringify(event)));
+          let fData = this.invoice_status_list.filter(invSL => {
+            return invSL.id == event.invoiceStatusMasterInvoiceStatusMasterId            
+          });
+          console.log("here")
+          this.invoices_list[i].invoiceStatus = (fData && fData[0]) ? fData[0].invoiceStatusMasterName : "";
+          break;
+        }
+      }
+    }
+
+    this.filterData = this.invoices_list;    
+    this.onCancelInvoiceBtnClicked();
+  }
+
+  onCancelInvoiceBtnClicked() {
+    this.isGSTBillViewShown = false;
+    this.bodyTag.setAttribute("class", "");
+  }
+
+  onSaveGSTBillInvoice() {
+    NavbarService.getInstance(null).saveGSTBillInvoice = true;    
+  }
+
   getAdminName(id) {
     if(!id) { 
       return "N/A"; 
@@ -296,11 +486,7 @@ export class ListComponent implements OnInit {
         return fData[0].name;
       }
     }
-  }
-
-  showMerchantDetail(merchant) {
-    
-  }
+  } 
 
   updateCreditDebitNoteInvoice(item,itemIndex) {
     let params:any = JSON.parse(JSON.stringify(item));
@@ -377,6 +563,7 @@ export class ListComponent implements OnInit {
       this.loading = false;
     });
   }
+
   updateListItem(item,itemIndex) {
     if(item.invoiceTypesInvoiceTypesId == 1 || item.invoiceTypesInvoiceTypesId == 2 || item.invoiceTypesInvoiceTypesId == 6) {
       this.updateSalesPurchaseInvoice(item,itemIndex);

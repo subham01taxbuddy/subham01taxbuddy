@@ -102,7 +102,7 @@ export class ImportPartyListComponent implements OnInit {
           if(Array.isArray(result)) {
             result.forEach(pt =>{ 
               if(
-                !pt["PARTY TYPE"] || !pt["TRADE NAME"] ||
+                !pt["PARTY TYPE"] || ['CUSTOMER','SUPPLIER'].indexOf(pt["PARTY TYPE"]) == -1 || !pt["TRADE NAME"] ||
                 !pt.GSTIN || pt.GSTIN.length != 15 ||
                 (pt.EMAIL && !(/\S+@\S+\.\S+/.test(pt.EMAIL))) || 
                 (pt.MOBILE && !(/^\d{10}$/.test(pt.MOBILE)))) {
@@ -131,69 +131,26 @@ export class ImportPartyListComponent implements OnInit {
       return;
     }
     this.loading = true;
-    this.uploadingData.forEach(item => {
-      this.getPartyInfoByGSTIN(item.partyGstin).then((sPartyInfo:any) => {
-        if(sPartyInfo && sPartyInfo.id) {
-          let params = {
-            "id":sPartyInfo.id,
-            "partyGstin": item.partyGstin,
-            "partyName": item.upartyName,
-            "partyPhone": item.upartyPhone,
-            "partyEmail": item.upartyEmail,
-            "partyUpdatedAt": new Date()
-          }
-          NavbarService.getInstance(this.http).updatePartyInfo(params).subscribe(res => {        
-            this.uploadedData.push(params);
-            upLen--;
-            if(upLen == 0) {
-              this._toastMessageService.alert("success","Uploaded Data : "+this.uploadedData.length+ " Failed :"+this.failedData.length);
-              this.loading = false;
-            }
-          }, err => {
-            this.failedData.push(params);
-            upLen--;
-            if(upLen == 0) {
-              this._toastMessageService.alert("success","Uploaded Data : "+this.uploadedData.length+ " Failed :"+this.failedData.length);
-              this.loading = false;
-            }
-          });
-        } else {
-          let params = {
-            "partyGstin": item.partyGstin,
-            "partyName": item.upartyName,
-            "partyPhone": item.upartyPhone,
-            "partyEmail": item.upartyEmail,
-            "partyUpdatedAt": new Date(),
-            "partyCreatedAt": new Date()
-          }
-          NavbarService.getInstance(this.http).createParty(params).subscribe(res => {        
-            this.uploadedData.push(params);
-            upLen--;
-            if(upLen == 0) {
-              this._toastMessageService.alert("success","Uploaded Data : "+this.uploadedData.length+ " Failed :"+this.failedData.length);
-              this.loading = false;
-            }
-          }, err => {
-            this.failedData.push(params);
-            upLen--;
-            if(upLen == 0) {
-              this._toastMessageService.alert("success","Uploaded Data : "+this.uploadedData.length+ " Failed :"+this.failedData.length);
-              this.loading = false;
-            }
-          });
-        }
-      });
-    })
-  }
-
-  getPartyInfoByGSTIN(gstin) {
-    return new Promise((resolve,reject) => {
-      NavbarService.getInstance(this.http).getPartyInfoByGSTIN({gstin:gstin}).subscribe(res => {
-        return resolve(((res) ? res : null));
-      }, err => {        
-        if(err.error && err.error.title) { this._toastMessageService.alert("error",err.error.title); }
-        return resolve(null);
-      });
-    })
+    let params = {
+     "businessId": this.merchantData.userId,
+     "partyList": this.uploadingData.map(ud => {
+        return {
+          "partyEmail": ud.partyEmail,
+          "partyGstin": ud.partyGstin,
+          "partyName": ud.partyName,
+          "partyPhone": ud.partyPhone,
+          "partyRolePartyRoleId": ud.partyType == 'SUPPLIER' ? 1 : 2
+        };
+     })
+    }
+   
+    NavbarService.getInstance(this.http).importParties(params).subscribe(res => {        
+      this._toastMessageService.alert("success","Uploaded Data : "+res.imported+ "   Failed : "+res.failed);
+      this.loading = false;
+    }, err => {
+      let errorMessage =  (err.error && err.error.title) ? err.error.title : "Internal server error.";
+      this._toastMessageService.alert("error", "import error - " + errorMessage );            
+      this.loading = false;
+    });
   }
 }

@@ -159,6 +159,10 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/parties', 'method': 'POST' }, params);
 	}
 
+	importParties(params) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/import-parties', 'method': 'POST' }, params);
+	}
+
 	getPartyInfoByGSTIN(params) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/partiesByGstin', 'method': 'GET' }, params);
 	}

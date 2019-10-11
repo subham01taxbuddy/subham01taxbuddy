@@ -19,3 +19,12 @@
     margin-top: 21px;
 }
 
+.a-phone-link {
+	color: #63b12d;	
+}
+
+.a-phone-link:hover {
+	text-decoration: underline;
+}
+
+
