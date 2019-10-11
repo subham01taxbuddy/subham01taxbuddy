@@ -231,6 +231,18 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/credit-debit-notes', 'method': 'GET' }, params);
 	}
 
+	getITCLedgerDetails(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxpayerapi/v0.3/ledgers', 'method': 'GET', 'url_key':'gst_gov_url' }, params);
+	}
+
+	getLiabilityLedgerDetails(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxpayerapi/v0.3/ledgers', 'method': 'GET', 'url_key':'gst_gov_url' }, params);
+	}
+
+	getCashITCBalance(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxpayerapi/v0.3/ledgers', 'method': 'GET', 'url_key':'gst_gov_url' }, params);
+	}
+
 	getHeaders(): HttpHeaders {
 		if (!this.id_token) {
 			let userData = JSON.parse(localStorage.getItem('UMD'));

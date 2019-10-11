@@ -60,27 +60,30 @@
                   <app-input [label]="'Invoice Number'" [type]="'text'" [is_mandatory]="'true'" [name]="'Invoice Number'" [placeholder]="'SSBA/2018-19/001'" [value]="invoiceData.invoiceDTO.invoiceNumber" (sendValue)="invoiceData.invoiceDTO.invoiceNumber = $event"></app-input>
                 </div>            
 
-                <div class="card__col-xs-12 card__col-sm-4">
-                  <app-input [label]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')" [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [placeholder]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')" [value]="invoiceData.partyDTO.partyGstin" (sendValue)="onEnterGSTIN($event)"></app-input>
-                </div>
+                <ng-template [ngIf]="invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2">
 
-                <div class="card__col-xs-12 card__col-sm-4">
-                  <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Name'" [type]="'text'" [is_mandatory]="'true'" [name]="'Customer Name'" [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Name'" [value]="invoiceData.partyDTO.partyName" (sendValue)="invoiceData.partyDTO.partyName = $event"></app-input>
-                </div>            
+                  <div class="card__col-xs-12 card__col-sm-4">
+                    <app-input [label]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')" [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [placeholder]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')" [value]="invoiceData.partyDTO.partyGstin" (sendValue)="onEnterGSTIN($event)"></app-input>
+                  </div>
 
-                <div class="card__col-xs-12 card__col-sm-4">
-                  <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Contact No.'" [type]="'text'"  [name]="'Customer Contact No.'" [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Contact No.'" [value]="invoiceData.partyDTO.partyPhone" (sendValue)="invoiceData.partyDTO.partyPhone = $event"></app-input>
-                </div>            
+                  <div class="card__col-xs-12 card__col-sm-4">
+                    <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Name'" [type]="'text'" [is_mandatory]="'true'" [name]="'Customer Name'" [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Name'" [value]="invoiceData.partyDTO.partyName" (sendValue)="invoiceData.partyDTO.partyName = $event"></app-input>
+                  </div>            
 
-                <div class="card__col-xs-12 card__col-sm-4">
-                  <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Email'" [type]="'text'"  [name]="'Customer Email'" [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Email'" [value]="invoiceData.partyDTO.partyEmail" (sendValue)="invoiceData.partyDTO.partyEmail = $event"></app-input>
-                </div>        
+                  <div class="card__col-xs-12 card__col-sm-4">
+                    <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Contact No.'" [type]="'text'"  [name]="'Customer Contact No.'" [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Contact No.'" [value]="invoiceData.partyDTO.partyPhone" (sendValue)="invoiceData.partyDTO.partyPhone = $event"></app-input>
+                  </div>            
+
+                  <div class="card__col-xs-12 card__col-sm-4">
+                    <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Email'" [type]="'text'"  [name]="'Customer Email'" [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Email'" [value]="invoiceData.partyDTO.partyEmail" (sendValue)="invoiceData.partyDTO.partyEmail = $event"></app-input>
+                  </div>        
+                </ng-template>
 
                 <div class="card__col-xs-12 card__col-sm-4">                
                   <app-input-select-object [label]="'Place of Supply'"  [is_mandatory]="'true'"  [type]="'text'" [value]="selected_invoice_state" [name]="'place of supply'" [filter_items]="state_list" (sendValue)="onSelectGSTState($event)">
                   </app-input-select-object>
                 </div>
-
+                
                 <div class="card__col-xs-12 card__col-sm-4">                
                   <app-input-select-object [label]="'Invoice Status'"  [type]="'text'" [value]="selected_invoice_status" [name]="'invoice status'" [filter_items]="invoice_status_list" (sendValue)="onSelectInvoiceStatus($event)">
                   </app-input-select-object>

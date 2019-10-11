@@ -231,13 +231,13 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     } else if(this.invoice_main_type != "sales-invoice" && this.invoiceData.invoiceDTO.invoiceNumber.length>45) {
       this._toastMessageService.alert("error","invoice number max length can be 45 character");
       return;
-    }  else if(!this.invoiceData.partyDTO.partyGstin) {
+    } else if(this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2 && !this.invoiceData.partyDTO.partyGstin) {
       this._toastMessageService.alert("error","Please add customer gstin");
       return;
-    } else if(this.invoiceData.partyDTO.partyGstin.length != 15 ) {
+    } else if(this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2 && this.invoiceData.partyDTO.partyGstin.length != 15 ) {
       this._toastMessageService.alert("error","Please add 15 character valid gstin number");
       return;
-    } else if(!this.invoiceData.partyDTO.partyName) {
+    } else if(this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2 && !this.invoiceData.partyDTO.partyName) {
       this._toastMessageService.alert("error","Please add customer name");
       return;
     } else if(!this.invoiceData.invoiceDTO.supplyStateId) {
@@ -262,8 +262,17 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     this.loading = true;
     let sendData = JSON.parse(JSON.stringify(this.invoiceData));
     if(sendData.invoiceDTO.invoiceDate) {
-      sendData.invoiceDTO.invoiceDate = new Date(sendData.invoiceDTO.invoiceDate)
+      sendData.invoiceDTO.invoiceDate = new Date(sendData.invoiceDTO.invoiceDate);
     }
+
+    if(sendData.invoiceDTO.invoiceTypesInvoiceTypesId == 2) {
+      sendData.partyDTO = {
+        partyGstin:null,
+        partyName:null,
+        partyEmail:null
+      }
+    }
+
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
     let cField = (this.invoice_main_type == "sales-invoice") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
     if(cField) {
@@ -289,7 +298,14 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     if(sendData.invoiceDTO.invoiceDate) {
       sendData.invoiceDTO.invoiceDate = new Date(sendData.invoiceDTO.invoiceDate)
     }
-
+    
+    if(sendData.invoiceDTO.invoiceTypesInvoiceTypesId == 2) {
+      sendData.partyDTO = {
+        partyGstin:null,
+        partyName:null,
+        partyEmail:null
+      }
+    }
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
 
     if(!sendData.partyRoleID) { 

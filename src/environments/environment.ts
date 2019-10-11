@@ -20,6 +20,7 @@
 export const environment = {
   	production: false,
     url: "https://uat-api.taxbuddy.com",
+    gst_gov_url: "https://devapi.gst.gov.in",
     s3_cred: {
 		user_name:"ashish@ssbainnovations.com",
 		password:"testPwd8761$",

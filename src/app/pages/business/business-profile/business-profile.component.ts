@@ -346,4 +346,99 @@ export class BusinessProfileComponent implements OnInit {
      window.open(url);
   }
 
+  getStartDateOfFY() {
+    let currentDate = new Date();
+    currentDate.setMonth(3);
+    currentDate.setDate(1);
+    currentDate.setHours(0);
+    currentDate.setMinutes(0);
+    currentDate.setSeconds(0);
+
+    return currentDate.toISOString();
+  }
+
+  getEndDateOfFY() {
+    let currentDate = new Date();
+    currentDate.setMonth(2);
+    currentDate.setDate(31);
+    currentDate.setFullYear(currentDate.getFullYear()+1);
+    currentDate.setHours(23);
+    currentDate.setMinutes(59);
+    currentDate.setSeconds(59);
+
+    return currentDate.toISOString();
+  }
+
+  getITCLedgerDetails() {
+    if(!this.merchantData || !this.merchantData.gstDetails || !this.merchantData.gstDetails.gstinNumber) {
+      this._toastMessageService.alert("error", "Please add gstin number");
+      return;
+    }
+
+    let params = {
+      action:"ITC",
+      gstin: this.merchantData.gstDetails.gstinNumber,
+      fr_dt: this.getStartDateOfFY(),
+      to_dt: this.getEndDateOfFY()
+    }
+    this.loading = true;
+
+    NavbarService.getInstance(this.http).getITCLedgerDetails(params).subscribe(res => {
+      console.log(res)
+      this.loading = false;
+    }, err => {
+      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      this._toastMessageService.alert("error", "itc ledger detail - " + errorMessage );
+      this.loading = false;
+    }); 
+  }
+
+  getLiabilityLedgerDetails() {
+    if(!this.merchantData || !this.merchantData.gstDetails || !this.merchantData.gstDetails.gstinNumber) {
+      this._toastMessageService.alert("error", "Please add gstin number");
+      return;
+    }
+
+    let params = {
+      action:"TAX",
+      gstin: this.merchantData.gstDetails.gstinNumber,
+      fr_dt: this.getStartDateOfFY(),
+      to_dt: this.getEndDateOfFY()
+    }
+    this.loading = true;
+
+    NavbarService.getInstance(this.http).getLiabilityLedgerDetails(params).subscribe(res => {
+      console.log(res)
+      this.loading = false;
+    }, err => {
+      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      this._toastMessageService.alert("error", "Liability Ledger detail - " + errorMessage );
+      this.loading = false;
+    }); 
+  }
+
+  getCashITCBalance() {
+    if(!this.merchantData || !this.merchantData.gstDetails || !this.merchantData.gstDetails.gstinNumber) {
+      this._toastMessageService.alert("error", "Please add gstin number");
+      return;
+    }
+
+    let params = {
+      action:"TAX",
+      gstin: this.merchantData.gstDetails.gstinNumber,
+      fr_dt: this.getStartDateOfFY(),
+      to_dt: this.getEndDateOfFY()
+    }
+    this.loading = true;
+
+    NavbarService.getInstance(this.http).getCashITCBalance(params).subscribe(res => {
+      console.log(res)
+      this.loading = false;
+    }, err => {
+      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+      this._toastMessageService.alert("error", "cash itc balance detail - " + errorMessage );
+      this.loading = false;
+    }); 
+  }
+
 }
