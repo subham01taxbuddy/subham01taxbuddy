@@ -209,7 +209,7 @@ export class ListComponent implements OnInit {
       } else if(this.page_query_type == "pending_processing") {
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];        
       } else if(this.page_query_type == "my_pending_processing") {
-        let loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+        let loggedInUserData:any = JSON.parse(localStorage.getItem("UMD")) || {};
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];  
         iParams["invoiceAssignedTo.equals"] = loggedInUserData.USER_UNIQUE_ID;
       }
@@ -258,7 +258,7 @@ export class ListComponent implements OnInit {
       } else if(this.page_query_type == "pending_processing") {
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[1,2,4];        
       } else if(this.page_query_type == "my_pending_processing") {
-        let loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+        let loggedInUserData:any = JSON.parse(localStorage.getItem("UMD")) || {};
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];  
         iParams["creditDebitNoteAssignedTo.equals"] = loggedInUserData.USER_UNIQUE_ID;
       }
