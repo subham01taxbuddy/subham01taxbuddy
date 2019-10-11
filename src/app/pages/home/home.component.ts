@@ -74,6 +74,10 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/pages/list'], { queryParams: { type: 'unassigned' } });    
   }
 
+  redirectToMyInvoicePendingProcessing() {
+    this.router.navigate(['/pages/list'], { queryParams: { type: 'my_pending_processing' } });     
+  }
+
   redirectToPendingComputationApproval() {
 
   }

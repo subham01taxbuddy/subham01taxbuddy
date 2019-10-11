@@ -208,6 +208,10 @@ export class ListComponent implements OnInit {
         iParams["invoiceAssignedTo.specified"]=false;
       } else if(this.page_query_type == "pending_processing") {
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];        
+      } else if(this.page_query_type == "my_pending_processing") {
+        let loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+        iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];  
+        iParams["invoiceAssignedTo.equals"] = loggedInUserData.USER_UNIQUE_ID;
       }
       NavbarService.getInstance(this.http).getInvoiceList(iParams).subscribe(res => {
         if(Array.isArray(res)) {
@@ -253,6 +257,10 @@ export class ListComponent implements OnInit {
         iParams["creditDebitNoteAssignedTo.specified"]=false;
       } else if(this.page_query_type == "pending_processing") {
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[1,2,4];        
+      } else if(this.page_query_type == "my_pending_processing") {
+        let loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+        iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];  
+        iParams["creditDebitNoteAssignedTo.equals"] = loggedInUserData.USER_UNIQUE_ID;
       }
       NavbarService.getInstance(this.http).getCreditDebitNoteInvoiceList(iParams).subscribe(res => {
         if(Array.isArray(res)) {
