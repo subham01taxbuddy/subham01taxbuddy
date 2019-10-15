@@ -78,16 +78,16 @@
         <div class="card__title">Bank information</div>
         <div class="card__row">     
             <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'IFSC Code'" [type]="'text'" [name]="merchantData.gstDetails.bankInformation.ifscCode" [placeholder]="'IFSC Code'" [value]="merchantData.gstDetails.bankInformation.ifscCode" (sendValue)="onEnterIFSCCode($event);"></app-input>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-4">
               <app-input [label]="'Bank Name'" [type]="'text'" [name]="merchantData.gstDetails.bankInformation.bankName" [placeholder]="'Bank Name'" [value]="merchantData.gstDetails.bankInformation.bankName" (sendValue)="merchantData.gstDetails.bankInformation.bankName = $event"></app-input>
             </div>
 
             <div class="card__col-xs-12 card__col-sm-4">
               <app-input [label]="'Account Number'" [type]="'text'" [name]="merchantData.gstDetails.bankInformation.accountNumber" [placeholder]="'Account Number'" [value]="merchantData.gstDetails.bankInformation.accountNumber" (sendValue)="merchantData.gstDetails.bankInformation.accountNumber = $event"></app-input>
-            </div>
-
-            <div class="card__col-xs-12 card__col-sm-4">
-              <app-input [label]="'IFSC Code'" [type]="'text'" [name]="merchantData.gstDetails.bankInformation.ifscCode" [placeholder]="'IFSC Code'" [value]="merchantData.gstDetails.bankInformation.ifscCode" (sendValue)="merchantData.gstDetails.bankInformation.ifscCode = $event"></app-input>
-            </div>
+            </div>            
         </div>
       </div>
 

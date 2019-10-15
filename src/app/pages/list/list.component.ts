@@ -192,8 +192,19 @@ export class ListComponent implements OnInit {
   getInvoiceList() {
     return new Promise((resolve,reject) => {
       this.getSalesPurchaseInvoiceList().then((spInv:any) => {
-        this.getCreditDebitNoteInvoiceList().then((cdnInv:any) => {          
-          this.invoices_list = spInv.concat(cdnInv);;
+        this.getCreditDebitNoteInvoiceList().then((cdnInv:any) => {
+          spInv = spInv.sort((a,b) => {
+            let aD = new Date(a.invoiceCreatedAt);
+            let bD = new Date(b.invoiceCreatedAt);
+            return bD-aD;// && a.invoiceTypesInvoiceTypesId-b.invoiceTypesInvoiceTypesId;
+          });
+
+          cdnInv = cdnInv.sort((a,b) => {
+            let aD = new Date(a.invoiceCreatedAt);
+            let bD = new Date(b.invoiceCreatedAt);
+            return bD-aD; //&& a.invoiceTypesInvoiceTypesId-b.invoiceTypesInvoiceTypesId;            
+          });
+          this.invoices_list = spInv.concat(cdnInv);
           this.filterData = this.invoices_list;
           return resolve(true);
         });
@@ -573,7 +584,7 @@ export class ListComponent implements OnInit {
   }
 
   updateListItem(item,itemIndex) {
-    if(item.invoiceTypesInvoiceTypesId == 1 || item.invoiceTypesInvoiceTypesId == 2 || item.invoiceTypesInvoiceTypesId == 6) {
+    if([1,2,3,6].indexOf(item.invoiceTypesInvoiceTypesId) != -1) {
       this.updateSalesPurchaseInvoice(item,itemIndex);
     } else if(item.invoiceTypesInvoiceTypesId == 4 || item.invoiceTypesInvoiceTypesId == 5) {
       this.updateCreditDebitNoteInvoice(item,itemIndex);

@@ -21,6 +21,7 @@ export const environment = {
   	production: false,
     url: "https://uat-api.taxbuddy.com",
     gst_gov_url: "https://devapi.gst.gov.in",
+    ifsc_url: "https://ifsc.razorpay.com",
     s3_cred: {
 		user_name:"ashish@ssbainnovations.com",
 		password:"testPwd8761$",

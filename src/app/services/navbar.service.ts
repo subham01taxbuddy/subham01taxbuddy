@@ -247,6 +247,10 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxpayerapi/v0.3/ledgers', 'method': 'GET', 'url_key':'gst_gov_url' }, params);
 	}
 
+	getBankDetailByIFSCCode(ifsccode: any) {		
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/'+ifsccode, 'method': 'GET', 'url_key':'ifsc_url' }, {});
+	}
+
 	getHeaders(): HttpHeaders {
 		if (!this.id_token) {
 			let userData = JSON.parse(localStorage.getItem('UMD'));
@@ -258,6 +262,10 @@ export class NavbarService {
 
 	apiCall(apiKey: any, params: any, ): Observable<any> {
 		let options: any = { headers: this.getHeaders() }
+		if(['gst_gov_url','ifsc_url'].indexOf(apiKey["url_key"]) != -1) {			
+			options = { headers: new HttpHeaders({}) };
+		}
+
 		let pUrl = environment[(apiKey["url_key"] ? apiKey["url_key"] : "url")];
 		if (apiKey['method'] === 'POST') {
 			return this.http.post(pUrl + apiKey['url'], JSON.stringify(params), options)
@@ -267,7 +275,7 @@ export class NavbarService {
 			if (params) { options['body'] = JSON.stringify(params); }
 			return this.http.delete(pUrl + apiKey['url'], options)
 		} else {
-			options.params = params;
+			options.params = params;			
 			return this.http.get(pUrl + apiKey['url'], options)
 		}
 	}

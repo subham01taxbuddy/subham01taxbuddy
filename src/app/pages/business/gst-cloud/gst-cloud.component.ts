@@ -291,6 +291,9 @@ export class GSTCloudComponent implements OnInit {
     } else if(!this.from_date || !this.to_date) {
       this._toastMessageService.alert("error","Please select from and to date");
       return;
+    } else if(this.from_date > new Date()) {
+      this._toastMessageService.alert("error","Please from date can't me future date.");
+      return;
     }
 
 

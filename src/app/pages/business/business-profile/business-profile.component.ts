@@ -43,6 +43,7 @@ export class BusinessProfileComponent implements OnInit {
   bLogoLoader: boolean = false;
 
   gstinBounceBackTimeObj:any;
+  ifscBounceBackTimeObj:any;
 
   merchantData: any;
   constructor(
@@ -441,4 +442,20 @@ export class BusinessProfileComponent implements OnInit {
     }); 
   }
 
+  onEnterIFSCCode(event) {
+    this.merchantData.gstDetails.bankInformation.ifscCode = event;
+    if(this.ifscBounceBackTimeObj) {
+      clearTimeout(this.ifscBounceBackTimeObj);
+    }
+    this.ifscBounceBackTimeObj = setTimeout(() => {
+      if(this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length > 4) {       
+        NavbarService.getInstance(this.http).getBankDetailByIFSCCode(this.merchantData.gstDetails.bankInformation.ifscCode).subscribe(res => {
+          this.merchantData.gstDetails.bankInformation.bankName  = res.BANK ? res.BANK : "";
+        }, err => {                  
+          this.merchantData.gstDetails.bankInformation.bankName  = "";
+        });      
+      }
+    },300);
+  }
+  
 }
