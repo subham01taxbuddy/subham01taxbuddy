@@ -222,6 +222,7 @@
 										<tr *ngFor="let week of from_data.dateObject" class="calendar__week">
 											<td *ngFor="let day of week" 
 												class="calendar__day" 
+												[class.calendar__day_click_disabled]="day.date>restrict_from_date"
 												[class.calendar__day_disabled]="day.month == 'prev' || day.month == 'next'"
 												[class.calendar__day_start]="day.calendar_start"
 												[class.calendar__day_between]="day.calendar_selected"
@@ -301,6 +302,7 @@
 										<tr *ngFor="let week of to_data.dateObject" class="calendar__week">
 											<td *ngFor="let day of week" 
 												class="calendar__day" 
+												[class.calendar__day_click_disabled]="format == 'All' && day.date<beginCalendar.date"
 												[class.calendar__day_disabled]="day.month == 'prev' || day.month == 'next'"
 												[class.calendar__day_start]="day.calendar_start"
 												[class.calendar__day_between]="day.calendar_selected"

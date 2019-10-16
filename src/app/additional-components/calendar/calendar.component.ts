@@ -38,6 +38,7 @@ export class CalendarComponent implements OnInit {
   @Input('init_from_date') init_from_date: any = new Date();
   @Input('init_to_date') init_to_date: any = new Date();
 
+  @Input('restrict_from_date') restrict_from_date: any = new Date();  
 
   @Input('isCompareDateShow') isCompareDateShow: boolean = false;
   @Input('format') format: string = 'All';
