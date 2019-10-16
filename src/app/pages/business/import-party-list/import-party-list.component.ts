@@ -101,6 +101,18 @@ export class ImportPartyListComponent implements OnInit {
         .then(function(result){
           if(Array.isArray(result)) {
             result.forEach(pt =>{ 
+              for(var x in pt) {
+                if(x) { 
+                  let nX = x.toUpperCase();
+                  pt[nX] = pt[x]; 
+                  if(nX == "PARTY TYPE" && pt[nX]) {
+                    pt[nX] = pt[nX].toUpperCase(); 
+                  }
+                } 
+              }
+
+              console.log(pt);
+
               if(
                 !pt["PARTY TYPE"] || ['CUSTOMER','SUPPLIER'].indexOf(pt["PARTY TYPE"]) == -1 || !pt["TRADE NAME"] ||
                 !pt.GSTIN || pt.GSTIN.length != 15 ||
@@ -125,6 +137,11 @@ export class ImportPartyListComponent implements OnInit {
   }
 
   savePartyData() {
+    if(!this.merchantData || !this.merchantData.userId) {
+      this._toastMessageService.alert("error","please select user.");
+      return;
+    }
+
     let upLen = this.uploadingData.length;
     if(upLen == 0) {
       this._toastMessageService.alert("error","There is no data for update.");

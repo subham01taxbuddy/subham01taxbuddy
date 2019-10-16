@@ -327,7 +327,13 @@ export class BusinessProfileComponent implements OnInit {
     } else if(this.merchantData.gstDetails.businessAddress &&  !(/^\d{6}$/.test(this.merchantData.gstDetails.businessAddress.pincode))) {
       this._toastMessageService.alert("error","Please add valid pincode 6 digit of pincode");
       return;
+    } else if(this.merchantData.gstDetails.bankInformation && this.merchantData.gstDetails.bankInformation.ifscCode && 
+      this.merchantData.gstDetails.bankInformation.ifscCode.length != 11) {
+      this._toastMessageService.alert("error","Please add valid 11 character ifsc code");
+      return;
     }
+
+
     this.loading = true;
     let sendData = JSON.parse(JSON.stringify(this.merchantData));
     delete sendData.gstDetails.s3BusinessLogo;
@@ -448,14 +454,23 @@ export class BusinessProfileComponent implements OnInit {
       clearTimeout(this.ifscBounceBackTimeObj);
     }
     this.ifscBounceBackTimeObj = setTimeout(() => {
-      if(this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length > 4) {       
+      if(this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length == 11) {       
         NavbarService.getInstance(this.http).getBankDetailByIFSCCode(this.merchantData.gstDetails.bankInformation.ifscCode).subscribe(res => {
           this.merchantData.gstDetails.bankInformation.bankName  = res.BANK ? res.BANK : "";
-        }, err => {                  
+        }, err => {         
+          this._toastMessageService.alert("error", "invalid ifsc code entered");
           this.merchantData.gstDetails.bankInformation.bankName  = "";
         });      
       }
     },300);
+  }
+
+  onFoucusOutOfIFSCCode(event)  {
+    if(this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length != 11) {      
+      this._toastMessageService.alert("error", "ifsc code must be 11 character code."); 
+    } else {
+      this.merchantData.gstDetails.bankInformation.ifscCode = this.merchantData.gstDetails.bankInformation.ifscCode.toUpperCase();
+    }
   }
   
 }

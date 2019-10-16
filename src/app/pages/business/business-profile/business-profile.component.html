@@ -30,7 +30,7 @@
           </div>
           <div class="card__row">        
             <div class="card__col-xs-12 card__col-sm-4">
-              <app-input [label]="'GSTIN Number'" [type]="'text'" [name]="merchantData.gstDetails.gstn_number" [placeholder]="'GSTIN Number'" [value]="merchantData.gstDetails.gstinNumber" (sendValue)="onEnterGSTIN($event)" ></app-input><!-- (focusout)="onFoucusOutOfGSTINNumber()" -->
+              <app-input [label]="'GSTIN Number'" [type]="'text'" [name]="merchantData.gstDetails.gstn_number" [placeholder]="'GSTIN Number'" [value]="merchantData.gstDetails.gstinNumber" (sendValue)="onEnterGSTIN($event)" ></app-input><!-- (inputFocusOut)="onFoucusOutOfGSTINNumber()" -->
             </div>
 
             <div class="card__col-xs-12 card__col-sm-4">
@@ -78,7 +78,7 @@
         <div class="card__title">Bank information</div>
         <div class="card__row">     
             <div class="card__col-xs-12 card__col-sm-4">
-              <app-input [label]="'IFSC Code'" [type]="'text'" [name]="merchantData.gstDetails.bankInformation.ifscCode" [placeholder]="'IFSC Code'" [value]="merchantData.gstDetails.bankInformation.ifscCode" (sendValue)="onEnterIFSCCode($event);"></app-input>
+              <app-input [label]="'IFSC Code'" [type]="'text'" [name]="merchantData.gstDetails.bankInformation.ifscCode" [placeholder]="'IFSC Code'" [value]="merchantData.gstDetails.bankInformation.ifscCode" (sendValue)="onEnterIFSCCode($event);" (inputFocusOut)="onFoucusOutOfIFSCCode($event)"></app-input>
             </div>
 
             <div class="card__col-xs-12 card__col-sm-4">

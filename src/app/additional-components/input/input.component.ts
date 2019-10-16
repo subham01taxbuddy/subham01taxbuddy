@@ -51,7 +51,7 @@ export class InputComponent implements OnInit {
   }
   isPercentsDiscount:boolean = false;
 	@Output() sendValue = new EventEmitter<string>();
-  @Output() focusout = new EventEmitter<string>();
+  @Output() inputFocusOut = new EventEmitter<string>();
 
   @HostListener('paste', ['$event']) blockPaste(e: KeyboardEvent) {
     if(this.paste_disable) { e.preventDefault(); }
@@ -66,9 +66,8 @@ export class InputComponent implements OnInit {
     }
   }
 
-
-  onFocusOut() {
-    this.focusout.emit(this.value);
+  onInputFocusOut() {
+    this.inputFocusOut.emit(this.value);
   }
 
   sendData() {

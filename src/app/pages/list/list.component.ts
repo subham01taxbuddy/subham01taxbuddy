@@ -192,19 +192,13 @@ export class ListComponent implements OnInit {
   getInvoiceList() {
     return new Promise((resolve,reject) => {
       this.getSalesPurchaseInvoiceList().then((spInv:any) => {
-        this.getCreditDebitNoteInvoiceList().then((cdnInv:any) => {
-          spInv = spInv.sort((a,b) => {
-            let aD:any = new Date(a.invoiceCreatedAt);
-            let bD:any = new Date(b.invoiceCreatedAt);
-            return bD-aD;// && a.invoiceTypesInvoiceTypesId-b.invoiceTypesInvoiceTypesId;
-          });
-
-          cdnInv = cdnInv.sort((a,b) => {
-            let aD:any = new Date(a.invoiceCreatedAt);
-            let bD:any = new Date(b.invoiceCreatedAt);
-            return bD-aD; //&& a.invoiceTypesInvoiceTypesId-b.invoiceTypesInvoiceTypesId;            
-          });
+        this.getCreditDebitNoteInvoiceList().then((cdnInv:any) => {          
           this.invoices_list = spInv.concat(cdnInv);
+          this.invoices_list = this.invoices_list.sort((a,b) => {
+            let aD:any = new Date(a.invoiceCreatedAt);
+            let bD:any = new Date(b.invoiceCreatedAt);
+            return bD-aD;         
+          });
           this.filterData = this.invoices_list;
           return resolve(true);
         });
