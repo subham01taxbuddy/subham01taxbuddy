@@ -38,7 +38,8 @@ export class HomeComponent implements OnInit {
     "lastUploadedDate": "",
     "purchaseTotal": 0,
     "salesTotal": 0,
-    "unassignedUploads": 0
+    "unassignedUploads": 0,
+    "userAssignedCount":0
   }
   constructor(private navbarService: NavbarService,public router: Router,public http: HttpClient,
     public _toastMessageService:ToastMessageService) {
@@ -56,7 +57,14 @@ export class HomeComponent implements OnInit {
 
   getBusinessInvoiceSummary() {
     this.loading = true;
-    NavbarService.getInstance(this.http).getInvoiceSummary(0).subscribe(res => {
+    let userData = JSON.parse(localStorage.getItem('UMD'));
+    let params:any = {};
+
+    if(userData && userData.USER_UNIQUE_ID) {
+      params["userId"] = userData.USER_UNIQUE_ID;
+    }
+
+    NavbarService.getInstance(this.http).getInvoiceSummary(0,params).subscribe(res => {
         this.invoice_summary = res;
         this.loading = false;
       }, err => {

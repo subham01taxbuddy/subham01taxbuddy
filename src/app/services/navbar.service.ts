@@ -95,8 +95,8 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/account/logout', 'method': 'DELETE' }, null);
 	}
 
-	getInvoiceSummary(businessId) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-summary/' + businessId, 'method': 'GET' }, {});
+	getInvoiceSummary(businessId,params:any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-summary/' + businessId, 'method': 'GET' }, params);
 	}
 
 	getAdminList() {
