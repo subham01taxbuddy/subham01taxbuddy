@@ -237,6 +237,7 @@ export class ListComponent implements OnInit {
             let mData = this.merchantList.filter(ml =>  {return ml.userId == inv.businessId });            
             if(mData && mData[0]) {
               inv.merchantName = mData[0].fName + " " + mData[0].lName;
+              inv.merchantManagedBy = mData[0].managedBy ? mData[0].managedBy.fName + " " + mData[0].managedBy.lName : "";
               inv.merchantMobileNumber = mData[0].mobileNumber;
             }
             inv.processedBy = this.getAdminName(inv.invoiceAssignedTo);

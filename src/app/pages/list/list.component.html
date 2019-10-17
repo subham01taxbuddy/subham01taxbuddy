@@ -53,6 +53,9 @@
                             <div class="table__cell product-row__cell-unit flex-30" style="text-align: center;">
                                 <a class="table__sort-link">Invoice Owner</a>
                             </div>                            
+                            <div class="table__cell product-row__cell-unit flex-20">
+                                <a class="table__sort-link">Merchant owner</a>
+                            </div>         
                             <div class="table__cell product-row__cell-unit">
                             </div>
                         </div>
@@ -112,6 +115,9 @@
                                             {{item.processedBy ? item.processedBy : "N/A"}}
                                         </div>                                            
                                     </div>   
+                                    <div class="table__cell product-row__cell-stock flex-20">
+                                        {{item.merchantManagedBy}}                                            
+                                    </div>
                                     <div class="table__cell product-row__cell-stock" style="text-align:center">
                                         <i class="fa fa-floppy-o" *ngIf="prods_check[p]" style="font-size:20px;cursor:pointer;" tooltip="Save" (click)="updateListItem(item,p)"></i>
                                         <i class="fa fa-floppy-o" *ngIf="!prods_check[p]" style="font-size:20px; color:lightgrey;" tooltip="Save" readonly></i>
