@@ -136,6 +136,14 @@ export class ImportPartyListComponent implements OnInit {
     }
   }
 
+  resetData() {
+      this.uploadingData = [];
+      let  iFileEle:any = document.getElementById("importFile");
+      if(iFileEle) {
+        iFileEle.value = "";
+      }
+  }
+
   savePartyData() {
     if(!this.merchantData || !this.merchantData.userId) {
       this._toastMessageService.alert("error","please select user.");
@@ -162,7 +170,8 @@ export class ImportPartyListComponent implements OnInit {
     }
    
     NavbarService.getInstance(this.http).importParties(params).subscribe(res => {        
-      this._toastMessageService.alert("success","Uploaded Data : "+res.imported+ "   Failed : "+res.failed);
+      this._toastMessageService.alert("success","Uploaded Data : "+res.imported+ "   Failed : "+res.failed);      
+      this.resetData();
       this.loading = false;
     }, err => {
       let errorMessage =  (err.error && err.error.title) ? err.error.title : "Internal server error.";
