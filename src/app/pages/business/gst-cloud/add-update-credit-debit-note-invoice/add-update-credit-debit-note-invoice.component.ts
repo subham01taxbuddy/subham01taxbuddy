@@ -276,7 +276,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       sendData.creditDebitNoteDTO.invoiceDate = new Date(sendData.creditDebitNoteDTO.invoiceDate)
     }
     sendData.creditDebitNoteDTO.noteGrossValue = parseFloat(sendData.creditDebitNoteDTO.noteGrossValue);
-    let cField = (this.invoice_main_type == "credit-note") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
+    let cField = (this.invoice_main_type == "credit-note") ? "customer" : (this.invoice_main_type == "debit-note") ? "supplier" : "";
     if(cField) {
       let fData = this.invoice_party_roles.filter(ipr => { return ipr.partyRoleName == cField});
       if(fData && fData[0]) { sendData.partyRoleID = fData[0].id; }
@@ -310,7 +310,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
 
     if(!sendData.partyRoleID) { 
       delete sendData.partyRoleID; 
-      let cField = (this.invoice_main_type == "credit-note") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
+      let cField = (this.invoice_main_type == "credit-note") ? "customer" : (this.invoice_main_type == "debit-note") ? "supplier" : "";
       if(cField) {
         let fData = this.invoice_party_roles.filter(ipr => { return ipr.partyRoleName == cField});
         if(fData && fData[0]) { sendData.partyRoleID = fData[0].id; }
