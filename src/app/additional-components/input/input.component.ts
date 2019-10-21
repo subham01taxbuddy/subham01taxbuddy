@@ -38,6 +38,7 @@ export class InputComponent implements OnInit {
   @Input('step') step: any = 1;
   @Input('paste_disable') paste_disable: boolean = false;
   @Input('is_percent_currency_view') is_percent_currency_view: boolean = false;
+  @Input('is_capital') is_capital: boolean = false;
 
   public _disable_discount_type_change: boolean = false;
   @Input()
@@ -78,6 +79,7 @@ export class InputComponent implements OnInit {
       }
       this.sendValue.emit(JSON.stringify(param));
     }else{
+      if(this.is_capital && this.value) { this.value = this.value.toUpperCase(); }
       this.sendValue.emit(this.value);
     }
   }
