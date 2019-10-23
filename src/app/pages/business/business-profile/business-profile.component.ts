@@ -32,7 +32,6 @@ import Storage from '@aws-amplify/storage';
 })
 export class BusinessProfileComponent implements OnInit {
 	selected_merchant: any;
-  available_merchant_list:any = [];
 
   state_list:any = [];
   selected_gst_state:any;
@@ -63,7 +62,8 @@ export class BusinessProfileComponent implements OnInit {
 
     this.loading = true;    
     this.getGSTStateList().then(sR => {
-      this.getMerchantList();
+      this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+      this.loading = false;
     })
   }  
 
@@ -71,6 +71,11 @@ export class BusinessProfileComponent implements OnInit {
     if (NavbarService.getInstance(null).saveBusinessProfile) {
         this.saveBusinessProfile();
         NavbarService.getInstance(null).saveBusinessProfile = false;
+    }
+
+    if (NavbarService.getInstance(null).isMerchantChanged && NavbarService.getInstance(null).merchantData) {
+        this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+        NavbarService.getInstance(null).isMerchantChanged = false;
     }
   }
 
@@ -89,29 +94,6 @@ export class BusinessProfileComponent implements OnInit {
         resolve(false);
       });
     })
-  }
-
-  getMerchantList() {
-    this.available_merchant_list = [];
-    this.loading = true;
-    NavbarService.getInstance(this.http).getGSTDetailList().subscribe(res => {
-      if(Array.isArray(res)) {
-        res.forEach(bData => {
-          let tName = bData.fName+" "+bData.lName;
-          if(bData.mobileNumber) {
-            tName += " ("+bData.mobileNumber +")"
-          } else if(bData.emailAddress) {
-            tName += " ("+bData.emailAddress +")"
-          }
-          this.available_merchant_list.push({userId:bData.userId,name:tName})
-        });
-      }       
-      this.loading = false;
-    }, err => {
-      let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
-      this._toastMessageService.alert("error", "business list - " + errorMessage );
-      this.loading = false;
-    });    
   }
 
   onSelectMerchant(event) {    

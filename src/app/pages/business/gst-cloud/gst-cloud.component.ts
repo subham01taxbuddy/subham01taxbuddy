@@ -35,7 +35,6 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 })
 export class GSTCloudComponent implements OnInit {
 	selected_merchant: any;
-  available_merchant_list:any = [];
   loading: boolean = false;  
   merchantData: any;
 
@@ -111,19 +110,40 @@ export class GSTCloudComponent implements OnInit {
       this.router.navigate(['']);
       return;
     }
-
+    
     this.loading = true;
     this.getGSTStateList().then(sR => {
       this.getGSTInvoiceTypes().then(iR => {
         this.getInvoicePartyRoles().then(rR => {
           this.getInvoiceStatusList().then(iSL => {
-            this.getMerchantList();
-            this.getAdminList();
+            this.getAdminList().then(aL => {
+              this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+              this.loading = false;
+            })
           })
         })
       })
     })    
   }  
+
+  ngDoCheck() {
+    if (NavbarService.getInstance(null).isMerchantChanged && NavbarService.getInstance(null).merchantData) {
+      this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+      NavbarService.getInstance(null).isMerchantChanged = false;
+    }
+
+    if (NavbarService.getInstance(null).isDateRangeChanged && NavbarService.getInstance(null).selected_dates) {
+      let selected_dates = NavbarService.getInstance(null).selected_dates;
+      this.from_date = selected_dates.from_date;
+      this.to_date = selected_dates.to_date;
+      NavbarService.getInstance(null).isDateRangeChanged = false;
+    }
+
+    if (NavbarService.getInstance(null).isApplyBtnClicked) {
+      NavbarService.getInstance(null).isApplyBtnClicked = false;
+      this.getAllBillInfoByMerchant();
+    }    
+  }
 
   getGSTStateList() {
     return new Promise((resolve,reject) => {
@@ -189,30 +209,6 @@ export class GSTCloudComponent implements OnInit {
         resolve(false);
       });
     })
-  }
-  
-
-  getMerchantList() {
-    this.available_merchant_list = [];
-    this.loading = true;
-    NavbarService.getInstance(this.http).getGSTDetailList().subscribe(res => {
-      if(Array.isArray(res)) {
-        res.forEach(bData => {
-          let tName = bData.fName+" "+bData.lName;
-          if(bData.mobileNumber) {
-            tName += " ("+bData.mobileNumber +")"
-          } else if(bData.emailAddress) {
-            tName += " ("+bData.emailAddress +")"
-          }
-          this.available_merchant_list.push({userId:bData.userId,name:tName})
-        });
-      }
-      this.loading = false;
-    }, err => {
-      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-      this._toastMessageService.alert("error", "business list - " + errorMessage );
-      this.loading = false;
-    });    
   }
 
   onSelectMerchant(event) {    
@@ -295,6 +291,8 @@ export class GSTCloudComponent implements OnInit {
       this._toastMessageService.alert("error","Please from date can't me future date.");
       return;
     }
+
+    if(this.selected_bill_type) { this.cancelInvoiceList(); }
 
 
     this.is_applied_clicked = true;
@@ -438,17 +436,22 @@ export class GSTCloudComponent implements OnInit {
     })
   }
 
-  getAdminList() {    
-    this.admin_list = [];
-    NavbarService.getInstance(this.http).getAdminList().subscribe(res => {
-      if(Array.isArray(res)) {
-        res.forEach(admin_data => {
-          this.admin_list.push({userId:admin_data.userId,name:admin_data.fName+" "+admin_data.lName})
-        });
-      }
-    }, err => {
-      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-      this._toastMessageService.alert("error", "admin list - " + errorMessage );
+  getAdminList() {
+    return new Promise((resolve,reject) => {      
+      this.admin_list = [];
+      NavbarService.getInstance(this.http).getAdminList().subscribe(res => {
+        if(Array.isArray(res)) {
+          res.forEach(admin_data => {
+            this.admin_list.push({userId:admin_data.userId,name:admin_data.fName+" "+admin_data.lName})
+          });
+        }
+
+        return resolve(true);
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "admin list - " + errorMessage );
+        return resolve(false);
+      });
     });
   }
 

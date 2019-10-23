@@ -32,7 +32,6 @@ import { HttpClient } from '@angular/common/http';
 export class PartyListComponent implements OnInit {
   selected_merchant: any;
 	selected_party_role: any;
-  available_merchant_list:any = [];
   loading: boolean = false;  
   merchantData: any;
 
@@ -67,29 +66,27 @@ export class PartyListComponent implements OnInit {
       return;
     }
 
-    this.getInvoicePartyRoles().then(pRole => {
-      this.getMerchantList();
-    });
-  }  
+    this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+    this.onSelectPartyRole(NavbarService.getInstance(null).selected_party_role);
 
-  getMerchantList() {
-    this.available_merchant_list = [];
-    NavbarService.getInstance(this.http).getGSTDetailList().subscribe(res => {
-      if(Array.isArray(res)) {
-        res.forEach(bData => {
-          let tName = bData.fName+" "+bData.lName;
-          if(bData.mobileNumber) {
-            tName += " ("+bData.mobileNumber +")"
-          } else if(bData.emailAddress) {
-            tName += " ("+bData.emailAddress +")"
-          }
-          this.available_merchant_list.push({userId:bData.userId,name:tName})
-        });
-      }       
-    }, err => {
-      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-      this._toastMessageService.alert("error", "business list - " + errorMessage );
-    });    
+  }
+
+  ngDoCheck() {
+    if (NavbarService.getInstance(null).isMerchantChanged && NavbarService.getInstance(null).merchantData) {
+      this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+      NavbarService.getInstance(null).isMerchantChanged = false;
+    }
+
+    if (NavbarService.getInstance(null).isPartyRoleChanged && NavbarService.getInstance(null).selected_party_role) {
+      this.onSelectPartyRole(NavbarService.getInstance(null).selected_party_role);
+      NavbarService.getInstance(null).isPartyRoleChanged = false;
+    }
+
+    if (NavbarService.getInstance(null).isApplyBtnClicked) {
+      NavbarService.getInstance(null).isApplyBtnClicked = false;
+      this.getPartyListByMerchant();
+    }
+    
   }
 
   onSelectMerchant(event) {    
@@ -103,23 +100,6 @@ export class PartyListComponent implements OnInit {
     if(event && event.id) {
       this.selected_party_role = event;
     }
-  }
-
-  getInvoicePartyRoles() {
-    return new Promise((resolve,reject) => {
-      this.invoice_party_roles = [];      
-      NavbarService.getInstance(this.http).getInvoicePartyRoles().subscribe(res => {
-        if(Array.isArray(res)) {
-          res.forEach(p => { p.name = p.partyRoleName });
-          this.invoice_party_roles = res;
-        }       
-        resolve(true);
-      }, err => {
-        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-        this._toastMessageService.alert("error", "invoice party role list - " + errorMessage );
-        resolve(false);
-      });
-    })
   }
 
   getMerchantDetails(merchant) {        

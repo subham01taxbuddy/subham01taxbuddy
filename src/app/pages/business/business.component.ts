@@ -20,6 +20,9 @@
  
 import { Component, OnInit } from '@angular/core';
 import { NavbarService } from '../../services/navbar.service';
+import { ToastMessageService } from '../../services/toast-message.service';
+import { HttpClient } from '@angular/common/http';
+import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'app-business',
@@ -29,13 +32,103 @@ import { NavbarService } from '../../services/navbar.service';
 export class BusinessComponent implements OnInit {
 
 	component_link: string = 'business';
+	available_merchant_list: any = [];
+  	selected_merchant: any;
+  	merchantData: any;
 
-  constructor(private navbarService: NavbarService) { 
-  	NavbarService.getInstance(null).component_link = this.component_link;
-  }
+  	invoice_party_roles: any = [];
+  	selected_party_role: any;
+	loading: boolean = true;
+	currentUrl: any = "";
+	selected_dates: any = {
+		from_date: new Date(),
+		to_date: new Date()
+	}
+  	constructor(private navbarService: NavbarService,private router: Router,
+  				private _toastMessageService:ToastMessageService,
+  				private http: HttpClient) { 
+  		NavbarService.getInstance(null).component_link = this.component_link;
+  	}
 
-  ngOnInit() {}
+  	ngOnInit() {
+  		this.currentUrl = this.router.url;
+  		this.router.events.subscribe(event => {
+	      if(event instanceof NavigationEnd) {
+	      	this.currentUrl = event.urlAfterRedirects;
+	      }     	      
+	    });
+  		this.loading = true;
+  		this.getInvoicePartyRoles().then(ipr => {
+  			this.getMerchantList().then(mr => {
+  				this.loading = false;
+  			})
+  		});
+  	}
 
- 
+	getMerchantList() {
+	    return new Promise((resolve,reject) => {
+		    this.available_merchant_list = [];
+		    NavbarService.getInstance(this.http).getGSTDetailList().subscribe(res => {
+		      	if(Array.isArray(res)) {
+			        res.forEach(bData => {
+			          let tName = bData.fName+" "+bData.lName;
+			          if(bData.mobileNumber) {
+			            tName += " ("+bData.mobileNumber +")"
+			          } else if(bData.emailAddress) {
+			            tName += " ("+bData.emailAddress +")"
+			          }
+			          this.available_merchant_list.push({userId:bData.userId,name:tName})
+			        });
+		      	}       
+		    	return resolve(true);
+		    }, err => {
+		      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+		      this._toastMessageService.alert("error", "business list - " + errorMessage );
+		      return resolve(false);
+		    });    
+		});
+	}
 
+	onSelectMerchant(event) {    
+	    if(event && event.userId) {
+	      	this.selected_merchant = event;
+	      	this.merchantData = event;
+	    	NavbarService.getInstance(null).merchantData = this.merchantData;
+	    	NavbarService.getInstance(null).isMerchantChanged = true;
+	    }    
+	}
+
+	getInvoicePartyRoles() {
+	    return new Promise((resolve,reject) => {
+	      this.invoice_party_roles = [];      
+	      NavbarService.getInstance(this.http).getInvoicePartyRoles().subscribe(res => {
+	        if(Array.isArray(res)) {
+	          res.forEach(p => { p.name = p.partyRoleName });
+	          this.invoice_party_roles = res;
+	        }       
+	        resolve(true);
+	      }, err => {
+	        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+	        this._toastMessageService.alert("error", "invoice party role list - " + errorMessage );
+	        resolve(false);
+	      });
+	    })
+	}
+
+	onSelectPartyRole(event) {
+	    if(event && event.id) {
+	    	this.selected_party_role = event;
+	      	NavbarService.getInstance(null).selected_party_role = this.selected_party_role;
+	      	NavbarService.getInstance(null).isPartyRoleChanged = true;
+	    }
+	}
+
+	onSeletedDateChange() {
+		NavbarService.getInstance(null).selected_dates = this.selected_dates;
+	    NavbarService.getInstance(null).isDateRangeChanged = true;
+	}
+
+	onApply() {
+	    NavbarService.getInstance(null).isApplyBtnClicked = true;
+	}
 }

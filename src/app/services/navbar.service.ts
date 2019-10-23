@@ -34,6 +34,17 @@ export class NavbarService {
 	closeSideBar: boolean;
 	headers: any
 
+	merchantData: any;
+	isMerchantChanged: boolean = false;
+
+	selected_party_role: any;
+	isPartyRoleChanged: boolean = false;
+
+	selected_dates: any = { from_date: new Date(), to_date: new Date() };
+	isDateRangeChanged: boolean = false;
+
+	isApplyBtnClicked: boolean = false;
+
 	showBtns: any = "";
 
 	saveBusinessProfile: boolean = false;

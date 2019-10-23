@@ -3,21 +3,6 @@
 <div class="content content_full" *ngIf="!isGSTBillViewShown">
 
   <div class="content__container">
-    <div class="card" >
-      <div class="card__row">
-        <div class="card__col-xs-12 card__col-sm-4">
-          <app-input-select-object [label]="'Select User'" [type]="'text'" [value]="selected_merchant" [type]="'text'" [name]="'selected_merchant'" [filter_items]="available_merchant_list" (sendValue)="onSelectMerchant($event)" [disabled]="(selected_bill_type ? true : false)">
-          </app-input-select-object>
-        </div>    
-        <div class="card__col-xs-12 card__col-sm-4">
-          <app-calendar [format]="'All'" [isCompareDateShow]="false" [label]="'All'" [type]="'text'" [name]="'from_to_date'" [value]="(from_date | backTipsDate) +' to '+ (to_date | backTipsDate)" (sendBeginDate)="from_date = $event" (sendEndDate)="to_date = $event" [disabled]="selected_bill_type"></app-calendar>
-        </div>
-        <div class="card__col-xs-12 card__col-sm-4 text-pull-right">
-          <a class="btn long-btn" (click)="getAllBillInfoByMerchant();" [class.disabled-btn]="(selected_bill_type ? true : false)">Apply</a>          
-        </div>    
-      </div><!-- card__row -->   
-    </div>
-
     <ng-template [ngIf]="is_applied_clicked">
 
       <div class="card" *ngIf="!selected_bill_type">

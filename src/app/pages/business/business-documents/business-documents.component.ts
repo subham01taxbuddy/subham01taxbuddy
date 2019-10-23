@@ -31,7 +31,6 @@ import { HttpClient } from '@angular/common/http';
 })
 export class BusinessDocumentsComponent implements OnInit {
 	selected_merchant: any;
-  available_merchant_list:any = [];
   loading: boolean = false;  
   merchantData: any;
 
@@ -60,28 +59,27 @@ export class BusinessDocumentsComponent implements OnInit {
       this.router.navigate(['']);
       return;
     }
-
-    this.getMerchantList();
+    
+    this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
   }  
 
-  getMerchantList() {
-    this.available_merchant_list = [];
-    NavbarService.getInstance(this.http).getGSTDetailList().subscribe(res => {
-      if(Array.isArray(res)) {
-        res.forEach(bData => {
-          let tName = bData.fName+" "+bData.lName;
-          if(bData.mobileNumber) {
-            tName += " ("+bData.mobileNumber +")"
-          } else if(bData.emailAddress) {
-            tName += " ("+bData.emailAddress +")"
-          }
-          this.available_merchant_list.push({userId:bData.userId,name:tName})
-        });
-      }       
-    }, err => {
-      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-      this._toastMessageService.alert("error", "business list - " + errorMessage );
-    });    
+  ngDoCheck() {
+    if (NavbarService.getInstance(null).isMerchantChanged && NavbarService.getInstance(null).merchantData) {
+      this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+      NavbarService.getInstance(null).isMerchantChanged = false;
+    }
+
+    if (NavbarService.getInstance(null).isDateRangeChanged && NavbarService.getInstance(null).selected_dates) {
+      let selected_dates = NavbarService.getInstance(null).selected_dates;
+      this.from_date = selected_dates.from_date;
+      this.to_date = selected_dates.to_date;
+      NavbarService.getInstance(null).isDateRangeChanged = false;
+    }
+
+    if (NavbarService.getInstance(null).isApplyBtnClicked) {
+      NavbarService.getInstance(null).isApplyBtnClicked = false;
+      this.getDocumentListByMerchant();
+    }    
   }
 
   onSelectMerchant(event) {    
@@ -98,8 +96,7 @@ export class BusinessDocumentsComponent implements OnInit {
     }, err => {
       let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
       this._toastMessageService.alert("error", "merchant detail - " + errorMessage );
-    });  
-    
+    });    
   }
 
   getDocumentListByMerchant() {

@@ -1,4 +1,23 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
 <div class="main clearfix">
+    
+    <div class="card__row" style="margin: 0px;">
+        <div class="card__col-xs-12 card__col-sm-4">
+            <app-input-select-object [label]="'Select User'" [type]="'text'" [value]="selected_merchant" [type]="'text'" [name]="'selected_merchant'" [filter_items]="available_merchant_list" (sendValue)="onSelectMerchant($event)">
+            </app-input-select-object>
+        </div>   
+        <div class="card__col-xs-12 card__col-sm-4" *ngIf="currentUrl == '/pages/business/party-list'">
+            <app-input-select-object [label]="'Select Party Type'" [type]="'text'" [value]="selected_party_role" [type]="'text'" [name]="'selected_party_role'" [filter_items]="invoice_party_roles" (sendValue)="onSelectPartyRole($event)">
+            </app-input-select-object>
+        </div> 
+        <div class="card__col-xs-12 card__col-sm-4" *ngIf="['/pages/business/business-documents','/pages/business/gst-cloud'].indexOf(currentUrl) != -1">
+          <app-calendar [format]="'All'" [isCompareDateShow]="false" [label]="'All'" [type]="'text'" [name]="'from_to_date'" [value]="(selected_dates.from_date | backTipsDate) +' to '+ (selected_dates.to_date | backTipsDate)" (sendBeginDate)="selected_dates.from_date = $event;onSeletedDateChange();" (sendEndDate)="selected_dates.to_date = $event;onSeletedDateChange();"></app-calendar>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4" *ngIf="['/pages/business/party-list','/pages/business/business-documents','/pages/business/gst-cloud'].indexOf(currentUrl) != -1">
+          <a class="btn long-btn" (click)="onApply();">Apply</a>          
+        </div>
+    </div>
 
     <div class="tab">
         <ul class="tab__container clearfix">            

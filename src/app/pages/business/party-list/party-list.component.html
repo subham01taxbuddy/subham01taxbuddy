@@ -3,70 +3,13 @@
 <div class="content content_full">
 
   <div class="content__container">
-    <div class="card" >
-      <div class="card__row">
-        <div class="card__col-xs-12 card__col-sm-4">
-          <app-input-select-object [label]="'Select User'" [type]="'text'" [value]="selected_merchant" [type]="'text'" [name]="'selected_merchant'" [filter_items]="available_merchant_list" (sendValue)="onSelectMerchant($event)">
-          </app-input-select-object>
-        </div>        
-        <div class="card__col-xs-12 card__col-sm-4">
-          <app-input-select-object [label]="'Select Party Type'" [type]="'text'" [value]="selected_party_role" [type]="'text'" [name]="'selected_party_role'" [filter_items]="invoice_party_roles" (sendValue)="onSelectPartyRole($event)">
-          </app-input-select-object>
-        </div>
-        <div class="card__col-xs-12 card__col-sm-4 text-pull-right">
-          <a class="btn long-btn" (click)="getPartyListByMerchant();">Apply</a>          
-        </div>
-      </div><!-- card__row -->   
-    </div>
-
-    <div class="card" *ngIf="is_applied_clicked && party_list && party_list.length > 0">
+    <div class="card" *ngIf="is_applied_clicked && party_list && party_list.length > 0" style="padding-top: 0px;">
         <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-12">
                 <app-attributes-filter  [selectItems]="filters_list" (sendValue)="onChangeAttrFilter($event)"></app-attributes-filter>
             </div>
         </div>
         
-       <!--  <div class="card__row">        
-          <div class="report-table-wrapper">
-              <table class="report-table" style="min-width: unset;">
-                  <thead class="report-table__head">
-                    <tr class="report-table__row report-table__row_head">
-                      <th>
-                        <div class="table__cell table__cell_checkbox">                                    
-                            <div class="input" style="opacity: 0">
-                                <input type="checkbox" class="input__checkbox">
-                                <label class="input__checkbox-control" for="select_item4" ></label>
-                            </div>
-                        </div>
-                      </th>
-                      <th class="report-table__cell report-table__cell_name text-pull-left">#</th>
-                      <th class="report-table__cell report-table__cell_name text-pull-left">Name</th>
-                      <th class="report-table__cell report-table__cell_name text-pull-left">GST Number</th>
-                      <th class="report-table__cell report-table__cell_name text-pull-left">Email</th>
-                      <th class="report-table__cell report-table__cell_name text-pull-left">Phone</th>
-                    </tr>
-                  </thead>
-                  <tbody class="report-table__body" *ngFor="let tab of (filterData); let i=index; ">
-                    <tr class="report-table__row">          
-                      <td>
-                        <div class="table__cell table__cell_checkbox">
-                            <div class="input">
-                                <input type="checkbox" class="input__checkbox" [checked]="prods_check[p]">
-                                <label class="input__checkbox-control" for="select_item4" (click)="onSelectRecord(tab,p)"></label>
-                            </div>
-                        </div>
-                      </td>              
-                      <td class="report-table__cell report-table__cell_day text-pull-left">{{i+1}}</td>
-                      <td class="report-table__cell report-table__cell_day text-pull-left"><b>{{tab.partyName | capitalizeFirst}}</b></td>
-                      <td class="report-table__cell report-table__cell_day text-pull-left">{{tab.partyGstin}}</td>
-                      <td class="report-table__cell report-table__cell_day text-pull-left">{{tab.partyEmail}}</td>
-                      <td class="report-table__cell report-table__cell_day text-pull-left">{{tab.partyPhone}}</td>
-                    </tr>                   
-                  </tbody>
-              </table>
-          </div>
-        </div> -->
-
         <div class="card__row" style="margin-top: 0px;">    
             <div class="tab-panel items-tab card__col-xs-12">
                 <div class="tab-panel__content tab-panel__content_visible">
