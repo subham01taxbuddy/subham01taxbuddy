@@ -193,7 +193,11 @@ export class ListComponent implements OnInit {
     return new Promise((resolve,reject) => {
       this.getSalesPurchaseInvoiceList().then((spInv:any) => {
         this.getCreditDebitNoteInvoiceList().then((cdnInv:any) => {          
-          this.invoices_list = spInv.concat(cdnInv);
+          if(this.page_query_type == "my_pending_processing") {
+            this.invoices_list = spInv.concat(cdnInv).filter(inv => { return inv.invoiceStatusMasterInvoiceStatusMasterId != 3});
+          } else {
+            this.invoices_list = spInv.concat(cdnInv)
+          }          
           this.invoices_list = this.invoices_list.sort((a,b) => {
             let aD:any = new Date(a.invoiceCreatedAt);
             let bD:any = new Date(b.invoiceCreatedAt);
@@ -215,7 +219,7 @@ export class ListComponent implements OnInit {
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];        
       } else if(this.page_query_type == "my_pending_processing") {
         let loggedInUserData:any = JSON.parse(localStorage.getItem("UMD")) || {};
-        iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];  
+        /*iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];  */
         iParams["invoiceAssignedTo.equals"] = loggedInUserData.USER_UNIQUE_ID;
       }
       NavbarService.getInstance(this.http).getInvoiceList(iParams).subscribe(res => {
@@ -242,8 +246,6 @@ export class ListComponent implements OnInit {
             }
             inv.processedBy = this.getAdminName(inv.invoiceAssignedTo);
           })
-          this.invoices_list = res;
-          this.filterData = this.invoices_list;
           return resolve(res);
         } else {
           return resolve([]);
@@ -265,9 +267,10 @@ export class ListComponent implements OnInit {
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[1,2,4];        
       } else if(this.page_query_type == "my_pending_processing") {
         let loggedInUserData:any = JSON.parse(localStorage.getItem("UMD")) || {};
-        iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];  
+        /*iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];  */
         iParams["creditDebitNoteAssignedTo.equals"] = loggedInUserData.USER_UNIQUE_ID;
       }
+      
       NavbarService.getInstance(this.http).getCreditDebitNoteInvoiceList(iParams).subscribe(res => {
         if(Array.isArray(res)) {
           let invoice_types_obj = {};
@@ -471,14 +474,17 @@ export class ListComponent implements OnInit {
           let fData = this.invoice_status_list.filter(invSL => {
             return invSL.id == event.invoiceStatusMasterInvoiceStatusMasterId            
           });
-          console.log("here")
           this.invoices_list[i].invoiceStatus = (fData && fData[0]) ? fData[0].invoiceStatusMasterName : "";
           break;
         }
       }
     }
 
-    this.filterData = this.invoices_list;    
+    if(this.page_query_type == "my_pending_processing") {
+      this.filterData = this.invoices_list.filter(inv => { return inv.invoiceStatusMasterInvoiceStatusMasterId != 3});
+    } else {
+      this.filterData = this.invoices_list;
+    }
     this.onCancelInvoiceBtnClicked();
   }
 
