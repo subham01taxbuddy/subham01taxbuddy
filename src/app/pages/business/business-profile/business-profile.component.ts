@@ -111,7 +111,7 @@ export class BusinessProfileComponent implements OnInit {
         if(!res.gstDetails) { res.gstDetails = {}; };
 
         if(!res.gstDetails.bankInformation) {
-          res.gstDetails.bankInformation = {bankName:"",accountNumber:"",ifscCode:""};
+          res.gstDetails.bankInformation = {bankName:"",accountNumber:"",ifscCode:"",accountBranch:""};
         }
         if(!res.gstDetails.businessAddress) {
           res.gstDetails.businessAddress = {address:"",stateMasterCode:"",pincode:""};
@@ -439,9 +439,11 @@ export class BusinessProfileComponent implements OnInit {
       if(this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length == 11) {       
         NavbarService.getInstance(this.http).getBankDetailByIFSCCode(this.merchantData.gstDetails.bankInformation.ifscCode).subscribe(res => {
           this.merchantData.gstDetails.bankInformation.bankName  = res.BANK ? res.BANK : "";
+          this.merchantData.gstDetails.bankInformation.accountBranch  = res.BRANCH ? res.BRANCH : "";
         }, err => {         
           this._toastMessageService.alert("error", "invalid ifsc code entered");
           this.merchantData.gstDetails.bankInformation.bankName  = "";
+          this.merchantData.gstDetails.bankInformation.accountBranch  = "";
         });      
       }
     },300);

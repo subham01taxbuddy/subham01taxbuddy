@@ -77,9 +77,14 @@
             </div>
 
             <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'Bank Branch'" [type]="'text'" [name]="merchantData.gstDetails.bankInformation.accountBranch" [placeholder]="'Bank Branch'" [value]="merchantData.gstDetails.bankInformation.accountBranch" (sendValue)="merchantData.gstDetails.bankInformation.accountBranch = $event"></app-input>
+            </div>
+        </div>
+         <div class="card__row">     
+            <div class="card__col-xs-12 card__col-sm-4">
               <app-input [label]="'Account Number'" [type]="'text'" [name]="merchantData.gstDetails.bankInformation.accountNumber" [placeholder]="'Account Number'" [value]="merchantData.gstDetails.bankInformation.accountNumber" (sendValue)="merchantData.gstDetails.bankInformation.accountNumber = $event"></app-input>
             </div>            
-        </div>
+         </div>
       </div>
 
       <div class="card">
