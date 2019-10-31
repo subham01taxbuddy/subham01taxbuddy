@@ -82,6 +82,9 @@ import { environment } from '../../environments/environment';
 import Auth from '@aws-amplify/auth';
 import Storage from '@aws-amplify/storage';
 import { ActivatePackageComponent } from './activate-package/activate-package.component';
+import { NgxImageZoomModule } from 'ngx-image-zoom';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
 Auth.configure(environment.aws_cred);
 
@@ -143,7 +146,10 @@ Storage.configure({
     HttpClientModule,
     RouterModule.forChild(routes),
     NgxLoadingModule.forRoot({}),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    NgxImageZoomModule.forRoot(),
+    PdfViewerModule,
+    // NgxExtendedPdfViewerModule
   ],
   providers: [
     SelectObjectFilterPipe,

@@ -37,6 +37,8 @@ import { AuthGuard } from './services/auth.guard';
 import { appRoutes } from './app-routing.module';
 import { UtilsService } from './services/utils.service';
 
+import { NgxImageZoomModule } from 'ngx-image-zoom';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +49,8 @@ import { UtilsService } from './services/utils.service';
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot(appRoutes),
-    PagesModule
+    PagesModule,
+    NgxImageZoomModule.forRoot()
   ],
   providers: [
     NavbarService,

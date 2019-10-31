@@ -1,32 +1,37 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="main clearfix">
-    <div class="card">            
+    <div class="card">
         <!-- Search for data -->
         <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-12">
-                <app-attributes-filter  [selectItems]="filters_list" (sendValue)="onChangeAttrFilter($event)"></app-attributes-filter>
+                <app-attributes-filter [selectItems]="filters_list" [totalCount]="filterData.length"
+                    (sendValue)="onChangeAttrFilter($event)">
+                </app-attributes-filter>
             </div>
         </div>
 
         <div class="card__row" *ngIf="record_select_for_update">
-            <div class="card__col-xs-12 card__col-sm-4">        
-                <app-input-select-object [label]="'Assigned To'" [value]="group_selected_assign_to" [type]="'text'" [name]="'group_selected_assign_to'" [filter_items]="admin_list" (sendValue)="($event) ? group_selected_assign_to = $event : ''">
-                </app-input-select-object>              
+            <div class="card__col-xs-12 card__col-sm-4">
+                <app-input-select-object [label]="'Assigned To'" [value]="group_selected_assign_to" [type]="'text'"
+                    [name]="'group_selected_assign_to'" [filter_items]="admin_list"
+                    (sendValue)="($event) ? group_selected_assign_to = $event : ''">
+                </app-input-select-object>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">        
-                <a class="btn save-btn" (click)="saveGroupSelectedData()" [class.disabled-btn]="((group_selected_assign_to && group_selected_assign_to.userId) ? false : true)">Save</a>                
+            <div class="card__col-xs-12 card__col-sm-4">
+                <a class="btn save-btn" (click)="saveGroupSelectedData()"
+                    [class.disabled-btn]="((group_selected_assign_to && group_selected_assign_to.userId) ? false : true)">Save</a>
             </div>
-        </div>                                    
-                                    
-        <div class="card__row" style="margin-top: 0px;">    
+        </div>
+
+        <div class="card__row" style="margin-top: 0px;">
             <div class="tab-panel items-tab card__col-xs-12">
                 <div class="tab-panel__content tab-panel__content_visible">
                     <div class="table product__table">
                         <div class="table__row  table__row_header ">
-                            <div class="table__cell table__cell_checkbox">                                    
+                            <div class="table__cell table__cell_checkbox">
                                 <div class="input" style="opacity: 0">
                                     <input type="checkbox" class="input__checkbox">
-                                    <label class="input__checkbox-control" for="select_item4" ></label>
+                                    <label class="input__checkbox-control" for="select_item4"></label>
                                 </div>
                             </div>
                             <div class="table__cell product-row__cell-unit flex-20">
@@ -40,7 +45,7 @@
                             </div>
                             <div class="table__cell product-row__cell-unit flex-20">
                                 <a class="table__sort-link">Upload Date</a>
-                            </div>                                                            
+                            </div>
                             <!-- <div class="table__cell product-row__cell-unit flex-30">
                                 <a class="table__sort-link">Previous Return filed Status</a>
                             </div>
@@ -52,10 +57,10 @@
                             </div>
                             <div class="table__cell product-row__cell-unit flex-30" style="text-align: center;">
                                 <a class="table__sort-link">Invoice Owner</a>
-                            </div>                            
+                            </div>
                             <div class="table__cell product-row__cell-unit flex-20">
                                 <a class="table__sort-link">Merchant owner</a>
-                            </div>         
+                            </div>
                             <div class="table__cell product-row__cell-unit">
                             </div>
                         </div>
@@ -67,25 +72,27 @@
                                     <div class="table__cell table__cell_checkbox">
                                         <div class="input">
                                             <input type="checkbox" class="input__checkbox" [checked]="prods_check[p]">
-                                            <label class="input__checkbox-control" for="select_item4" (click)="onSelectRecord(item,p)"></label>
+                                            <label class="input__checkbox-control" for="select_item4"
+                                                (click)="onSelectRecord(item,p)"></label>
                                         </div>
                                     </div>
-                                   
-                                    <div class="table__cell product-row__cell-stock flex-20">                                                
-                                        <a class="a-phone-link" (click)="onClickEditInvoice(item)">{{item.merchantName}}</a>                                    
+
+                                    <div class="table__cell product-row__cell-stock flex-20">
+                                        <a class="a-phone-link"
+                                            (click)="onClickEditInvoice(item)">{{item.merchantName}}</a>
                                     </div>
 
                                     <div class="table__cell product-row__cell-stock flex-15">
-                                        {{item.merchantMobileNumber}}                                            
+                                        {{item.merchantMobileNumber}}
                                     </div>
 
                                     <div class="table__cell product-row__cell-stock flex-20">
-                                        {{item.invoiceDocumentType}}                                            
+                                        {{item.invoiceDocumentType}}
                                     </div>
 
                                     <div class="table__cell product-row__cell-stock flex-20">
-                                        {{item.invoiceCreatedAt | backTipsDate:'full datetime'}}                                            
-                                    </div>                              
+                                        {{item.invoiceCreatedAt | backTipsDate:'full datetime'}}
+                                    </div>
 
                                     <!-- <div class="table__cell product-row__cell-stock flex-30">
                                         <app-input-select *ngIf="prods_check[p]" [label]="''" [value]="item.previous_return_field_status" [type]="'text'" [name]="'previous_return_field_status'" [filter_items]="['FILED','NOT FILED']" (sendValue)="item.previous_return_field_status = $event">
@@ -101,27 +108,38 @@
                                             {{item.gst_filing_status}}
                                         </div>                                            
                                     </div> -->
-                                    <div class="table__cell product-row__cell-stock flex-30" style="text-align: center;margin-top:-10px;">                                      
-                                        <app-input-select-object *ngIf="prods_check[p]" [label]="''"  [type]="'text'" [value]="item.selected_invoice_status" [name]="'invoice status'" [filter_items]="invoice_status_list" (sendValue)="onSelectInvoiceStatus($event,item)">
+                                    <div class="table__cell product-row__cell-stock flex-30"
+                                        style="text-align: center;margin-top:-10px;">
+                                        <app-input-select-object *ngIf="prods_check[p]" [label]="''" [type]="'text'"
+                                            [value]="item.selected_invoice_status" [name]="'invoice status'"
+                                            [filter_items]="invoice_status_list"
+                                            (sendValue)="onSelectInvoiceStatus($event,item)">
                                         </app-input-select-object>
                                         <div *ngIf="!prods_check[p]">
                                             {{item.invoiceStatus}}
-                                        </div>                                            
+                                        </div>
                                     </div>
-                                    <div class="table__cell product-row__cell-stock flex-30" style="text-align: center;margin-top:-10px;">                                        
-                                        <app-input-select-object  *ngIf="prods_check[p]" [label]="''" [value]="item.selected_invoice_assigned_to_user" [type]="'text'" [name]="'processedBy'" [filter_items]="admin_list" (sendValue)="onSelectInvoiceAssignedToUser($event,item)">
-                                        </app-input-select-object>              
+                                    <div class="table__cell product-row__cell-stock flex-30"
+                                        style="text-align: center;margin-top:-10px;">
+                                        <app-input-select-object *ngIf="prods_check[p]" [label]="''"
+                                            [value]="item.selected_invoice_assigned_to_user" [type]="'text'"
+                                            [name]="'processedBy'" [filter_items]="admin_list"
+                                            (sendValue)="onSelectInvoiceAssignedToUser($event,item)">
+                                        </app-input-select-object>
                                         <div *ngIf="!prods_check[p]">
                                             {{item.processedBy ? item.processedBy : "N/A"}}
-                                        </div>                                            
-                                    </div>   
+                                        </div>
+                                    </div>
                                     <div class="table__cell product-row__cell-stock flex-20">
-                                        {{item.merchantManagedBy}}                                            
+                                        {{item.merchantManagedBy ? item.merchantManagedBy : "N/A"}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock" style="text-align:center">
-                                        <i class="fa fa-floppy-o" *ngIf="prods_check[p]" style="font-size:20px;cursor:pointer;" tooltip="Save" (click)="updateListItem(item,p)"></i>
-                                        <i class="fa fa-floppy-o" *ngIf="!prods_check[p]" style="font-size:20px; color:lightgrey;" tooltip="Save" readonly></i>
-                                    </div>                                 
+                                        <i class="fa fa-floppy-o" *ngIf="prods_check[p]"
+                                            style="font-size:20px;cursor:pointer;" tooltip="Save"
+                                            (click)="updateListItem(item,p)"></i>
+                                        <i class="fa fa-floppy-o" *ngIf="!prods_check[p]"
+                                            style="font-size:20px; color:lightgrey;" tooltip="Save" readonly></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -137,22 +155,33 @@
 <!-- Edit Invoice Overlay Start -->
 <div class="overlay" *ngIf="isGSTBillViewShown"></div>
 <div class="modal modal_show popup-bill-invoice-modal" *ngIf="isGSTBillViewShown">
-    <div class="modal-wrapper modal-fullscreen modal-wrapper_show">        
+    <div class="modal-wrapper modal-fullscreen modal-wrapper_show">
         <div class="modal-content modal-content_scrollbar">
             <div class="modal-content__container bill-invoice-popup__content">
 
-                <app-add-update-gst-bill-invoice *ngIf="['sales-invoice','purchase-invoice'].indexOf(invoice_main_type) != -1" [state_list]="state_list" [invoice_types]="selected_invoice_types" [merchantData]="selected_invoice_merchant_data" [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list" [invoiceToUpdate]="invoiceToUpdate" [is_update_item]="true" (onUpdateInvoice)="onUpdateInvoice($event)">                  
+                <app-add-update-gst-bill-invoice
+                    *ngIf="['sales-invoice','purchase-invoice'].indexOf(invoice_main_type) != -1"
+                    [state_list]="state_list" [invoice_types]="selected_invoice_types"
+                    [merchantData]="selected_invoice_merchant_data" [invoice_main_type]="invoice_main_type"
+                    [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list"
+                    [invoiceToUpdate]="invoiceToUpdate" [is_update_item]="true"
+                    (onUpdateInvoice)="onUpdateInvoice($event)">
                 </app-add-update-gst-bill-invoice>
 
-                <app-add-update-credit-debit-note-invoice *ngIf="['credit-note','debit-note'].indexOf(invoice_main_type) != -1" [state_list]="state_list" [invoice_types]="selected_invoice_types" [merchantData]="selected_invoice_merchant_data" [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list" [invoiceToUpdate]="invoiceToUpdate" [is_update_item]="true" (onUpdateInvoice)="onUpdateInvoice($event)">                  
-                </app-add-update-credit-debit-note-invoice>                
+                <app-add-update-credit-debit-note-invoice
+                    *ngIf="['credit-note','debit-note'].indexOf(invoice_main_type) != -1" [state_list]="state_list"
+                    [invoice_types]="selected_invoice_types" [merchantData]="selected_invoice_merchant_data"
+                    [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles"
+                    [invoice_status_list]="invoice_status_list" [invoiceToUpdate]="invoiceToUpdate"
+                    [is_update_item]="true" (onUpdateInvoice)="onUpdateInvoice($event)">
+                </app-add-update-credit-debit-note-invoice>
 
             </div>
         </div>
         <div class="modal-footer clearfix">
             <div class="pull-right">
                 <a class="btn btn-cancel" (click)="onCancelInvoiceBtnClicked()">Cancel</a>
-                <a class="btn product__save" (click)="onSaveGSTBillInvoice()">Save Invoice</a>                
+                <a class="btn product__save" (click)="onSaveGSTBillInvoice()">Save Invoice</a>
             </div>
         </div>
     </div>

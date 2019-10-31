@@ -16,7 +16,7 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 import { Component, OnInit, HostListener, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
@@ -26,15 +26,16 @@ import { Component, OnInit, HostListener, Output, EventEmitter, Input } from '@a
 })
 export class AttributesFilterComponent implements OnInit {
 
-	@Input('selectItems') selectItems: any;
+  @Input('selectItems') selectItems: any;
+  @Input('totalCount') totalCount: any;
 
   @Output() sendValue = new EventEmitter<any>();
 
 
-	show_filters: boolean = true;
-	filter_content: any[] = [ { attr: '', value: '' } ];
-	showAttr: boolean[] = [];
-	showValues: boolean[] = [];
+  show_filters: boolean = true;
+  filter_content: any[] = [{ attr: '', value: '' }];
+  showAttr: boolean[] = [];
+  showValues: boolean[] = [];
 
   constructor() { }
 
@@ -43,37 +44,37 @@ export class AttributesFilterComponent implements OnInit {
   }
 
   @HostListener('window:click') onClick() {
-  	for(var i = 0; i < this.showAttr.length; i++ ) {
-  		this.showAttr[i] = false;
-  		this.showValues[i] = false;
-  	}
+    for (var i = 0; i < this.showAttr.length; i++) {
+      this.showAttr[i] = false;
+      this.showValues[i] = false;
+    }
   }
 
   showAttributes(value, count) {
-  	setTimeout(() => {
-  		if(value == 'attr') { this.showAttr[count] = true; } 
-  		else { this.showValues[count] = true; }
-  	}, 100);
+    setTimeout(() => {
+      if (value == 'attr') { this.showAttr[count] = true; }
+      else { this.showValues[count] = true; }
+    }, 100);
   }
 
   addFilter() {
-  	let filter = { attr: '', value: '' };
-  	this.filter_content.push(filter);
+    let filter = { attr: '', value: '' };
+    this.filter_content.push(filter);
     this.sendData();
   }
 
   deleteFilter(n) {
-  	if (this.filter_content.length > 1) {
-  		this.filter_content.splice(n, 1);
+    if (this.filter_content.length > 1) {
+      this.filter_content.splice(n, 1);
       this.sendData();
     }
   }
 
   resetFilters() {
-  	for(var i = 0; i < this.filter_content.length; i++) {
-  		this.filter_content[i].attr = '';
-  		this.filter_content[i].value = '';
-  	}
+    for (var i = 0; i < this.filter_content.length; i++) {
+      this.filter_content[i].attr = '';
+      this.filter_content[i].value = '';
+    }
     this.sendData();
   }
 

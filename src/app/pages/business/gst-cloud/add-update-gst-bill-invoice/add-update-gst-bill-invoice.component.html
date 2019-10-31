@@ -1,193 +1,258 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
 <div class="content" style="margin-top: 30px;width: 40%">
-  <div class="content__container">    
-      <div class="invoice_images card card_main" style="position: relative;">
-          <ngx-loading [show]="imageLoader"></ngx-loading>
-          <div class="card__row">
-              <div class="wrapper" style="padding-top: 0;position: relative;" *ngIf="invoiceData.invoiceDTO.s3InvoiceImageUrl && !isEditInvoiceImage">
-                  <div class="container">
-                      <div class="card__col-xs-12 card__col-sm-12">
-                          <div class="image" >
-                              <img src="{{invoiceData.invoiceDTO.s3InvoiceImageUrl}}" alt="" class="image__item" [style.opacity]="(invoiceData.invoiceDTO.s3InvoiceImageUrl) ? '1' : '0'">
-                          </div>
-                          <div class="edit-invoice-image">
+  <div class="content__container">
+    <div class="invoice_images card card_main" style="position: relative;">
+      <ngx-loading [show]="imageLoader"></ngx-loading>
+      <div class="card__row">
+        <div class="wrapper" style="padding-top: 0;position: relative;"
+          *ngIf="invoiceData.invoiceDTO.s3InvoiceImageUrl && !isEditInvoiceImage">
+          <div class="container">
+            <div class="card__col-xs-12 card__col-sm-12">
+              <div class="verifyPopupImg" *ngIf="fileType === 'png'">
+                <ngx-image-zoom [thumbImage]=s3FilePath [fullImage]=s3FilePath [magnification]="1"
+                  [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200"></ngx-image-zoom>
+                <!-- <ngx-extended-pdf-viewer [src]="pdfSrc" [useBrowserLocale]="true"></ngx-extended-pdf-viewer> -->
+
+                <!-- <img src="{{invoiceData.invoiceDTO.s3InvoiceImageUrl}}" alt="" class="image__item" 
+                                [style.opacity]="(invoiceData.invoiceDTO.s3InvoiceImageUrl) ? '1' : '0'"> -->
+              </div>
+              <!--  <div class="edit-invoice-image">
                             <div (click)="isEditInvoiceImage=true"><i class="fa fa-edit"></i></div>
-                          </div>
-                      </div>
-                  </div>
+                          </div> -->
+              <div style="max-height: 210px;">
+                <pdf-viewer *ngIf="fileType === 'pdf'" [src]="s3FilePath" [render-text]="true" style="display: block">
+                </pdf-viewer>
               </div>
-              <!-- /drag-wrapper -->
-              <div class="card__col-xs-12 card__col-sm-12" *ngIf="!invoiceData.invoiceDTO.s3InvoiceImageUrl || isEditInvoiceImage" style="padding: 10px 10px !important;">
-                <app-input-upload [upload]="upload" [input_id]="'invoiceData-s3InvoiceImageUrl'" (filesDropped)="uploadInvoiceImage($event)"></app-input-upload>
-              </div>
-              <div class="card__col-xs-12 card__col-sm-12" *ngIf="isEditInvoiceImage" style="text-align: center;">
-                <a class="btn btn-cancel" (click)="isEditInvoiceImage=false">Cancel</a>                
-              </div>
+              <div class="edit-invoice-image"><i class="fa fa-edit" (click)="isEditInvoiceImage=true"></i></div>
+            </div>
           </div>
-      </div> 
+        </div>
+        <!-- /drag-wrapper -->
+        <div class="card__col-xs-12 card__col-sm-12"
+          *ngIf="!invoiceData.invoiceDTO.s3InvoiceImageUrl || isEditInvoiceImage"
+          style="padding: 10px 10px !important;">
+          <app-input-upload [upload]="upload" [input_id]="'invoiceData-s3InvoiceImageUrl'"
+            (filesDropped)="uploadInvoiceImage($event)"></app-input-upload>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-12" *ngIf="isEditInvoiceImage" style="text-align: center;">
+          <a class="btn btn-cancel" (click)="isEditInvoiceImage=false">Cancel</a>
+        </div>
+      </div>
+    </div>
   </div><!-- .content__container -->
 </div><!-- .content -->
 
 <div class="content" style="margin-top: 30px;width: 60%">
-  <div class="content__container">    
-      <div class="card card_main">
-          <div class="card__row hidder" [class.hidder_line-on]="true" [class.hidder_expand]="showSubOpt['inv_info']">
-            <div class="hidder__line clearfix">
-                <div class="card__col-xs-12">
-                    <div class="hidder__name card__title" style="color: #6a6a67;" (click)="showSubOpt['inv_info'] = !showSubOpt['inv_info']">Invoice information</div>
-                </div>              
+  <div class="content__container">
+    <div class="card card_main">
+      <div class="card__row hidder" [class.hidder_line-on]="true" [class.hidder_expand]="showSubOpt['inv_info']">
+        <div class="hidder__line clearfix">
+          <div class="card__col-xs-12">
+            <div class="hidder__name card__title" style="color: #6a6a67;"
+              (click)="showSubOpt['inv_info'] = !showSubOpt['inv_info']">Invoice information</div>
+          </div>
+        </div>
+        <div *ngIf="showSubOpt['inv_info']" class="hidder__content card__col-xs-12">
+          <div class="card__row invoice-info-row">
+            <div class="card__col-xs-12 card__col-sm-4"
+              *ngIf="invoice_main_type == 'sales-invoice' || invoice_main_type == 'purchase-invoice'">
+              <app-input-select-object [label]="'Invoice Type'" [is_mandatory]="'true'" [type]="'text'"
+                [value]="selected_invoice_type" [name]="'Invoice Type'" [filter_items]="invoice_types"
+                (sendValue)="onSelectInvoiceType($event)">
+              </app-input-select-object>
             </div>
-            <div *ngIf="showSubOpt['inv_info']" class="hidder__content card__col-xs-12">
-              <div class="card__row invoice-info-row">
-                <div class="card__col-xs-12 card__col-sm-4" *ngIf="invoice_main_type == 'sales-invoice' || invoice_main_type == 'purchase-invoice'">
-                  <app-input-select-object [label]="'Invoice Type'" [is_mandatory]="'true'"  [type]="'text'" [value]="selected_invoice_type" [name]="'Invoice Type'" [filter_items]="invoice_types" (sendValue)="onSelectInvoiceType($event)">
-                  </app-input-select-object>
-                </div>
 
-                <!-- <div class="card__col-xs-12 card__col-sm-4" *ngIf="invoice_main_type == 'p-invoice'">
+            <!-- <div class="card__col-xs-12 card__col-sm-4" *ngIf="invoice_main_type == 'p-invoice'">
                   <app-input-select-object [label]="'Invoice Type'" [is_mandatory]="'true'"  [type]="'text'" [value]="selected_invoice_type" [name]="'Invoice Type'" [filter_items]="invoice_types" (sendValue)="onSelectInvoiceType($event)">
                   </app-input-select-object>
                 </div> -->
-                
-                <div class="card__col-xs-12 card__col-sm-4">              
-                  <!-- <app-calendar [format]="'from'" [label]="'Invoice Date'" [type]="'text'" [is_mandatory]="'true'"  [init_from_date]="invoiceData.invoiceDTO.invoiceDate" [name]="'invoiceData.invoiceDTO.invoiceDate'"
+
+            <div class="card__col-xs-12 card__col-sm-4">
+              <!-- <app-calendar [format]="'from'" [label]="'Invoice Date'" [type]="'text'" [is_mandatory]="'true'"  [init_from_date]="invoiceData.invoiceDTO.invoiceDate" [name]="'invoiceData.invoiceDTO.invoiceDate'"
                     [value]="invoiceData.invoiceDTO.invoiceDate | backTipsDate" (sendBeginDate)="invoiceData.invoiceDTO.invoiceDate = $event"></app-calendar> -->
-                  <app-input [label]="'Invoice Date'" [type]="'date'" [is_mandatory]="'true'" [name]="'Invoice Date'" [placeholder]="''" [value]="invoiceData.invoiceDTO.invoiceDate" (sendValue)="invoiceData.invoiceDTO.invoiceDate = $event"></app-input>
-                </div>
+              <app-input [label]="'Invoice Date'" [type]="'date'" [is_mandatory]="'true'" [name]="'Invoice Date'"
+                [placeholder]="''" [value]="invoiceData.invoiceDTO.invoiceDate"
+                (sendValue)="invoiceData.invoiceDTO.invoiceDate = $event"></app-input>
+            </div>
 
-                <div class="card__col-xs-12 card__col-sm-4">
-                  <app-input [label]="'Invoice Number'" [type]="'text'" [is_mandatory]="'true'" [name]="'Invoice Number'" [placeholder]="'SSBA/2018-19/001'" [value]="invoiceData.invoiceDTO.invoiceNumber" (sendValue)="invoiceData.invoiceDTO.invoiceNumber = $event"></app-input>
-                </div>            
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input [label]="'Invoice Number'" [type]="'text'" [is_mandatory]="'true'" [name]="'Invoice Number'"
+                [placeholder]="'SSBA/2018-19/001'" [value]="invoiceData.invoiceDTO.invoiceNumber"
+                (sendValue)="invoiceData.invoiceDTO.invoiceNumber = $event"></app-input>
+            </div>
 
-                <ng-template [ngIf]="invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2">
+            <ng-template [ngIf]="invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2">
 
-                  <div class="card__col-xs-12 card__col-sm-4">
-                    <app-input [label]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')" [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [is_capital]="true" [placeholder]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')" [value]="invoiceData.partyDTO.partyGstin" (sendValue)="onEnterGSTIN($event)"></app-input>
+              <div class="card__col-xs-12 card__col-sm-4">
+                <app-input [label]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')"
+                  [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [is_capital]="true"
+                  [placeholder]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')"
+                  [value]="invoiceData.partyDTO.partyGstin" (sendValue)="onEnterGSTIN($event)"></app-input>
+              </div>
+
+              <div class="card__col-xs-12 card__col-sm-4">
+                <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Name'"
+                  [type]="'text'" [is_mandatory]="'true'" [name]="'Customer Name'"
+                  [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Name'"
+                  [value]="invoiceData.partyDTO.partyName" (sendValue)="invoiceData.partyDTO.partyName = $event">
+                </app-input>
+              </div>
+
+              <div class="card__col-xs-12 card__col-sm-4">
+                <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Contact No.'"
+                  [type]="'text'" [name]="'Customer Contact No.'"
+                  [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Contact No.'"
+                  [value]="invoiceData.partyDTO.partyPhone" (sendValue)="invoiceData.partyDTO.partyPhone = $event">
+                </app-input>
+              </div>
+
+              <div class="card__col-xs-12 card__col-sm-4">
+                <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Email'"
+                  [type]="'text'" [name]="'Customer Email'"
+                  [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Email'"
+                  [value]="invoiceData.partyDTO.partyEmail" (sendValue)="invoiceData.partyDTO.partyEmail = $event">
+                </app-input>
+              </div>
+            </ng-template>
+
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input-select-object [label]="'Place of Supply'" [is_mandatory]="'true'" [type]="'text'"
+                [value]="selected_invoice_state" [name]="'place of supply'" [filter_items]="state_list"
+                (sendValue)="onSelectGSTState($event)">
+              </app-input-select-object>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-4">
+              <app-input-select-object [label]="'Invoice Status'" [type]="'text'" [value]="selected_invoice_status"
+                [name]="'invoice status'" [filter_items]="invoice_status_list"
+                (sendValue)="onSelectInvoiceStatus($event)">
+              </app-input-select-object>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ogp_composite-product card">
+      <div class="card__content">
+        <div class="card__row hidder" [class.hidder_line-on]="true"
+          [class.hidder_expand]="showSubOpt['inv_item_detail_block']">
+          <div class="hidder__line clearfix">
+            <div class="card__col-xs-6">
+              <div class="hidder__name card__title" style="color: #6a6a67;"
+                (click)="showSubOpt['inv_item_detail_block'] = !showSubOpt['inv_item_detail_block']">Item Details</div>
+            </div>
+            <div class="card__col-xs-6 card__col-sm-6 text-pull-right" *ngIf="showSubOpt['inv_item_detail_block']">
+              <a class="btn btn_stroke add-item-btn" (click)="addItem()">Add Item</a>
+            </div>
+          </div>
+          <div *ngIf="showSubOpt['inv_item_detail_block']" class="hidder__content card__col-xs-12">
+            <div class="composite-product">
+              <div class="composite-product__container">
+                <div class="card__row" *ngIf="invoiceData.listInvoiceItems && invoiceData.listInvoiceItems.length > 0">
+                  <div class="card__col-xs-12">
+                    <div class="report-table-container">
+                      <div class="report-table-wrapper">
+                        <table class="report-table">
+                          <thead class="report-table__head">
+                            <tr class="report-table__row report-table__row_head">
+                              <th class="report-table__cell report-table__cell_name">#</th>
+                              <th class="report-table__cell report-table__cell_name">HSN/SAC</th>
+                              <th class="report-table__cell report-table__cell_name">Taxable<br />Value</th>
+                              <th class="report-table__cell report-table__cell_name">Rate</th>
+                              <th class="report-table__cell report-table__cell_name" *ngIf="isIGSTEnabled">IGST</th>
+                              <th class="report-table__cell report-table__cell_name" *ngIf="!isIGSTEnabled">CGST</th>
+                              <th class="report-table__cell report-table__cell_name" *ngIf="!isIGSTEnabled">SGST</th>
+                              <th class="report-table__cell report-table__cell_name">Cess</th>
+                              <th class="report-table__cell report-table__cell_name" [style.color]="'#282827'">Gross
+                                Value</th>
+                              <th class="report-table__cell report-table__cell_name"></th>
+                            </tr>
+                          </thead>
+                          <tbody class="report-table__body">
+                            <ng-template ngFor let-tab [ngForOf]="invoiceData.listInvoiceItems" let-i="index">
+                              <tr *ngIf="tab.isMarkForFlag != 'T'" class="report-table__row">
+                                <td class="report-table__cell report-table__cell_day">{{i+1}}</td>
+                                <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                  <input class="table__row-input" type="text" name="'taxcode'"
+                                    [(ngModel)]="tab.itemTaxCode">
+                                </td>
+                                <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                  <input class="table__row-input" type="number" name="'taxvalue'"
+                                    [(ngModel)]="tab.invoiceItemsTaxableValue"
+                                    (ngModelChange)="calculateTaxFields('taxable_value',tab)"
+                                    onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                </td>
+                                <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                  <select [(ngModel)]="tab.tempInvoiceItemsTaxRate"
+                                    (ngModelChange)="calculateTaxFields('tax_rate',tab)" style="height: 27px;">
+                                    <option *ngFor="let tr of taxRatesList;let i=index;" value="{{tr}}">
+                                      {{tr + (["Exempt Sales","Non GST Sales"].indexOf(tr) != -1 ? "" : "%")}}
+                                    </option>
+                                  </select>
+                                </td>
+                                <td class="report-table__cell report-table__cell_day" style="position: relative;"
+                                  *ngIf="isIGSTEnabled">
+                                  <input class="table__row-input" type="number" name="'igst'"
+                                    [(ngModel)]="tab.invoiceItemsIgst"
+                                    onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                </td>
+                                <td class="report-table__cell report-table__cell_day" style="position: relative;"
+                                  *ngIf="!isIGSTEnabled">
+                                  <input class="table__row-input" type="number" name="'csgt'"
+                                    [(ngModel)]="tab.invoiceItemsCgst"
+                                    onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                </td>
+                                <td class="report-table__cell report-table__cell_day" style="position: relative;"
+                                  *ngIf="!isIGSTEnabled">
+                                  <input class="table__row-input" type="number" name="'sgst_ugst'"
+                                    [(ngModel)]="tab.invoiceItemsSgst"
+                                    onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                </td>
+                                <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                  <input class="table__row-input" type="number" name="'cess'"
+                                    [(ngModel)]="tab.invoiceItemsCess" (ngModelChange)="calculateTaxFields('cess',tab)"
+                                    onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                </td>
+                                <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                  <input class="table__row-input" type="number" name="'invoiceItemsGross'"
+                                    [(ngModel)]="tab.invoiceItemsGross"
+                                    onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                </td>
+                                <td class="report-table__cell report-table__cell_day">
+                                  <div class="btn-clear" (click)="deleteItem(i)"></div>
+                                </td>
+                              </tr>
+                            </ng-template>
+                            <!-- New Look -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   </div>
-
-                  <div class="card__col-xs-12 card__col-sm-4">
-                    <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Name'" [type]="'text'" [is_mandatory]="'true'" [name]="'Customer Name'" [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Name'" [value]="invoiceData.partyDTO.partyName" (sendValue)="invoiceData.partyDTO.partyName = $event"></app-input>
-                  </div>            
-
-                  <div class="card__col-xs-12 card__col-sm-4">
-                    <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Contact No.'" [type]="'text'"  [name]="'Customer Contact No.'" [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Contact No.'" [value]="invoiceData.partyDTO.partyPhone" (sendValue)="invoiceData.partyDTO.partyPhone = $event"></app-input>
-                  </div>            
-
-                  <div class="card__col-xs-12 card__col-sm-4">
-                    <app-input [label]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Email'" [type]="'text'"  [name]="'Customer Email'" [placeholder]="(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')+' Email'" [value]="invoiceData.partyDTO.partyEmail" (sendValue)="invoiceData.partyDTO.partyEmail = $event"></app-input>
-                  </div>        
-                </ng-template>
-
-                <div class="card__col-xs-12 card__col-sm-4">                
-                  <app-input-select-object [label]="'Place of Supply'"  [is_mandatory]="'true'"  [type]="'text'" [value]="selected_invoice_state" [name]="'place of supply'" [filter_items]="state_list" (sendValue)="onSelectGSTState($event)">
-                  </app-input-select-object>
-                </div>
-                
-                <div class="card__col-xs-12 card__col-sm-4">                
-                  <app-input-select-object [label]="'Invoice Status'"  [type]="'text'" [value]="selected_invoice_status" [name]="'invoice status'" [filter_items]="invoice_status_list" (sendValue)="onSelectInvoiceStatus($event)">
-                  </app-input-select-object>
+                  <!-- /table-info -->
                 </div>
               </div>
             </div>
-          </div>
-      </div>
-
-      <div class="ogp_composite-product card">
-          <div class="card__content">
-              <div class="card__row hidder" [class.hidder_line-on]="true" [class.hidder_expand]="showSubOpt['inv_item_detail_block']">
-                <div class="hidder__line clearfix">
-                    <div class="card__col-xs-6">
-                        <div class="hidder__name card__title" style="color: #6a6a67;" (click)="showSubOpt['inv_item_detail_block'] = !showSubOpt['inv_item_detail_block']">Item Details</div>
-                    </div>  
-                    <div class="card__col-xs-6 card__col-sm-6 text-pull-right" *ngIf="showSubOpt['inv_item_detail_block']">
-                        <a class="btn btn_stroke add-item-btn" (click)="addItem()">Add Item</a>
-                    </div>            
-                </div>
-                <div *ngIf="showSubOpt['inv_item_detail_block']" class="hidder__content card__col-xs-12">
-                  <div class="composite-product">
-                      <div class="composite-product__container">                        
-                          <div class="card__row" *ngIf="invoiceData.listInvoiceItems && invoiceData.listInvoiceItems.length > 0">
-                              <div class="card__col-xs-12">
-                                  <div class="report-table-container">
-                                      <div class="report-table-wrapper">
-                                          <table class="report-table">
-                                              <thead class="report-table__head">
-                                                  <tr class="report-table__row report-table__row_head">
-                                                      <th class="report-table__cell report-table__cell_name">#</th>
-                                                      <th class="report-table__cell report-table__cell_name">HSN/SAC</th>
-                                                      <th class="report-table__cell report-table__cell_name">Taxable<br/>Value</th>
-                                                      <th class="report-table__cell report-table__cell_name">Rate</th>
-                                                      <th class="report-table__cell report-table__cell_name" *ngIf="isIGSTEnabled">IGST</th>
-                                                      <th class="report-table__cell report-table__cell_name" *ngIf="!isIGSTEnabled">CGST</th>
-                                                      <th class="report-table__cell report-table__cell_name" *ngIf="!isIGSTEnabled">SGST</th>
-                                                      <th class="report-table__cell report-table__cell_name">Cess</th>
-                                                      <th class="report-table__cell report-table__cell_name" [style.color]="'#282827'">Gross Value</th>
-                                                      <th class="report-table__cell report-table__cell_name"></th>                                                    
-                                                  </tr>
-                                              </thead>
-                                              <tbody class="report-table__body">
-                                                  <ng-template ngFor let-tab [ngForOf]="invoiceData.listInvoiceItems"  let-i="index">
-                                                      <tr *ngIf="tab.isMarkForFlag != 'T'" class="report-table__row">
-                                                          <td class="report-table__cell report-table__cell_day">{{i+1}}</td>
-                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                              <input class="table__row-input" type="text" name="'taxcode'" [(ngModel)]="tab.itemTaxCode">
-                                                          </td>                                                          
-                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                              <input class="table__row-input" type="number" name="'taxvalue'" [(ngModel)]="tab.invoiceItemsTaxableValue" (ngModelChange)="calculateTaxFields('taxable_value',tab)" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
-                                                          </td>
-                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                              <select [(ngModel)]="tab.tempInvoiceItemsTaxRate" (ngModelChange)="calculateTaxFields('tax_rate',tab)" style="height: 27px;">
-                                                                  <option *ngFor="let tr of taxRatesList;let i=index;" value="{{tr}}">
-                                                                      {{tr + (["Exempt Sales","Non GST Sales"].indexOf(tr) != -1 ? "" : "%")}}
-                                                                  </option>
-                                                              </select>
-                                                          </td>
-                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;" *ngIf="isIGSTEnabled">
-                                                              <input class="table__row-input" type="number" name="'igst'" [(ngModel)]="tab.invoiceItemsIgst" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
-                                                          </td>
-                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;" *ngIf="!isIGSTEnabled">
-                                                              <input class="table__row-input" type="number" name="'csgt'" [(ngModel)]="tab.invoiceItemsCgst" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
-                                                          </td>
-                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;" *ngIf="!isIGSTEnabled">
-                                                              <input class="table__row-input" type="number" name="'sgst_ugst'" [(ngModel)]="tab.invoiceItemsSgst" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
-                                                          </td>
-                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                              <input class="table__row-input" type="number" name="'cess'" [(ngModel)]="tab.invoiceItemsCess" (ngModelChange)="calculateTaxFields('cess',tab)" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
-                                                          </td>
-                                                          <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                                              <input class="table__row-input" type="number" name="'invoiceItemsGross'" [(ngModel)]="tab.invoiceItemsGross" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
-                                                          </td>
-                                                          <td  class="report-table__cell report-table__cell_day">
-                                                              <div class="btn-clear" (click)="deleteItem(i)"></div>
-                                                          </td>
-                                                      </tr>
-                                                  </ng-template>
-                                                  <!-- New Look -->
-                                              </tbody>
-                                          </table>
-                                      </div>
-                                  </div>
-                              </div>
-                              <!-- /table-info -->
-                          </div>                       
-                      </div>
-                  </div>
-                  <div class="card__row">
-                    <div class="card__col-xs-9 invoice-item-summary-label">
-                      Gross Value
-                    </div>
-                    <div class="card__col-xs-3">
-                      <!-- <app-input [label]="''" [type]="'number'" [name]="'gross value'" [placeholder]="'Enter Gross Value'" [value]="invoiceData.invoiceDTO.invoiceGrossValue" (sendValue)="invoiceData.invoiceDTO.invoiceGrossValue = $event"></app-input> -->
-                      <input class="select__box ogp_select ng-untouched ng-pristine ng-valid" type="number" name="'gross value'" [placeholder]="'Enter Gross Value'" [(ngModel)]="invoiceData.invoiceDTO.invoiceGrossValue" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
-                    </div>
-                  </div>
-                </div>
+            <div class="card__row">
+              <div class="card__col-xs-9 invoice-item-summary-label">
+                Gross Value
               </div>
+              <div class="card__col-xs-3">
+                <!-- <app-input [label]="''" [type]="'number'" [name]="'gross value'" [placeholder]="'Enter Gross Value'" [value]="invoiceData.invoiceDTO.invoiceGrossValue" (sendValue)="invoiceData.invoiceDTO.invoiceGrossValue = $event"></app-input> -->
+                <input class="select__box ogp_select ng-untouched ng-pristine ng-valid" type="number"
+                  name="'gross value'" [placeholder]="'Enter Gross Value'"
+                  [(ngModel)]="invoiceData.invoiceDTO.invoiceGrossValue"
+                  onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+              </div>
+            </div>
           </div>
-          <!-- .card__content -->
+        </div>
       </div>
-      <!-- .ogp_composite-product -->
+      <!-- .card__content -->
+    </div>
+    <!-- .ogp_composite-product -->
 
   </div><!-- .content__container -->
 </div><!-- .content -->
