@@ -9,7 +9,7 @@
           *ngIf="invoiceData.invoiceDTO.s3InvoiceImageUrl && !isEditInvoiceImage">
           <div class="container">
             <div class="card__col-xs-12 card__col-sm-12">
-              <div class="verifyPopupImg" *ngIf="fileType === 'png'">
+              <div class="verifyPopupImg" *ngIf="fileType !== 'pdf'">
                 <ngx-image-zoom [thumbImage]=s3FilePath [fullImage]=s3FilePath [magnification]="1"
                   [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200"></ngx-image-zoom>
                 <!-- <ngx-extended-pdf-viewer [src]="pdfSrc" [useBrowserLocale]="true"></ngx-extended-pdf-viewer> -->
