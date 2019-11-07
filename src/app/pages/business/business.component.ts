@@ -38,6 +38,10 @@ export class BusinessComponent implements OnInit {
 
   	invoice_party_roles: any = [];
   	selected_party_role: any;
+
+  	gst_return_calendars_data: any = [];
+  	selected_gst_return_calendars_data: any;
+
 	loading: boolean = true;
 	currentUrl: any = "";
 	selected_dates: any = {
@@ -58,10 +62,12 @@ export class BusinessComponent implements OnInit {
 	      }     	      
 	    });
   		this.loading = true;
-  		this.getInvoicePartyRoles().then(ipr => {
-  			this.getMerchantList().then(mr => {
-  				this.loading = false;
-  			})
+  		this.gstGSTReturnCalendarsData().then(igr => {
+	  		this.getInvoicePartyRoles().then(ipr => {
+	  			this.getMerchantList().then(mr => {
+	  				this.loading = false;
+	  			})
+	  		});
   		});
   	}
 
@@ -96,6 +102,35 @@ export class BusinessComponent implements OnInit {
 	    	NavbarService.getInstance(null).merchantData = this.merchantData;
 	    	NavbarService.getInstance(null).isMerchantChanged = true;
 	    }    
+	}
+
+	gstGSTReturnCalendarsData() {
+		return new Promise((resolve,reject) => {
+	      this.gst_return_calendars_data = [];      
+	      NavbarService.getInstance(this.http).gstGSTReturnCalendarsData().subscribe(res => {
+	        if(Array.isArray(res)) {
+	          let month_names = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+	          res.forEach(p => { 
+	          	let monthName = month_names[p.gstReturnMonth-1] || p.gstReturnMonth;
+	          	p.name = monthName + " - " + p.gstReturnYear; 
+	          });
+	          this.gst_return_calendars_data = res;
+	        }       
+	        resolve(true);
+	      }, err => {
+	        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+	        this._toastMessageService.alert("error", " gst return calendar data - " + errorMessage );
+	        resolve(false);
+	      });
+	    })
+	}
+
+	onSelectGSTReturnCalendar(event) {
+		if(event && event.id) {
+	    	this.selected_gst_return_calendars_data = event;
+	      	NavbarService.getInstance(null).selected_gst_return_calendars_data = this.selected_gst_return_calendars_data;
+	      	NavbarService.getInstance(null).isGSTReturnCalendarChanged = true;
+	    }
 	}
 
 	getInvoicePartyRoles() {

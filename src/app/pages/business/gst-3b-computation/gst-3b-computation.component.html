@@ -1,0 +1,172 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="content content_full">
+
+  <div class="content__container">
+    <div class="card" *ngIf="is_applied_clicked" style="padding-top: 0px;">
+        <div class="card__row" style="    margin: 30px 0px 30px 0px;">     
+            <div class="card__col-xs-12 card__col-sm-4">
+                <div class="merchant-name">
+                    {{currentMerchantData ? (currentMerchantData.fName + " " + currentMerchantData.lName) : ""}}                    
+                </div>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-4 text-pull-center">
+                <div class="gstin-num">
+                    GSTN : {{currentMerchantData ? (currentMerchantData.gstDetails.gstinNumber || "") : ""}}
+                </div>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-4 text-pull-right">
+                <div class="last-updated-on">
+                    Last Updated ON :  {{gst3bComputation.updatedAt ? (gst3bComputation.updatedAt | backTipsDate:'full datetime') : ""}}
+                </div>
+            </div>
+        </div>
+        <div class="card__row" style="margin-top: 0px;">    
+            <div class="report-table-wrapper">
+              <table class="report-table" style="min-width: unset;">
+                  <thead class="report-table__head">
+                    <tr class="report-table__row report-table__row_head">
+                      <th class="report-table__cell report-table__cell_name text-pull-left" style="width: 180px;"></th>
+                      <th class="report-table__cell report-table__cell_name text-pull-right">Sales</th>
+                      <th class="report-table__cell report-table__cell_name text-pull-right">Total Credit Available</th>
+                      <th class="report-table__cell report-table__cell_name text-pull-right">GST Liability</th>
+                      <th class="report-table__cell report-table__cell_name"></th>                        
+                    </tr>
+                  </thead>
+                  <tbody class="report-table__body">
+                    <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_name text-pull-left">IGST</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input [label]="''" [type]="'number'" [name]="'salesigst'" [placeholder]="''" [value]="gst3bComputation.salesIgst" (sendValue)="gst3bComputation.salesIgst = $event; calculateComputationTotal('sales','IGST');" [is_only_positive_number_allowed]="true"></app-input>
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input [label]="''" [type]="'number'" [name]="'creditigst'" [placeholder]="''" [value]="gst3bComputation.creditIgst" (sendValue)="gst3bComputation.creditIgst = $event;calculateComputationTotal('credit','IGST');"  [is_only_positive_number_allowed]="true"></app-input>
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            {{gst3bComputation.liabilityIgst}}
+                            
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right"></td>
+                    </tr>
+
+                    <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_name text-pull-left">CGST</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input [label]="''" [type]="'number'" [name]="'salescgst'" [placeholder]="''" [value]="gst3bComputation.salesCgst" (sendValue)="gst3bComputation.salesCgst = $event;calculateComputationTotal('sales','CGST');" [is_only_positive_number_allowed]="true"></app-input>
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input [label]="''" [type]="'number'" [name]="'creditcgst'" [placeholder]="''" [value]="gst3bComputation.creditCgst" (sendValue)="gst3bComputation.creditCgst = $event;calculateComputationTotal('credit','CGST');" [is_only_positive_number_allowed]="true"></app-input>
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            {{gst3bComputation.liabilityCgst}}
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right"></td>
+                    </tr>
+
+                    <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_name text-pull-left">SGST/UTGST</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input [label]="''" [type]="'number'" [name]="'salessgst'" [placeholder]="''" [value]="gst3bComputation.salesSgst" (sendValue)="gst3bComputation.salesSgst = $event;calculateComputationTotal('sales','SGST');" [is_only_positive_number_allowed]="true"></app-input>
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input [label]="''" [type]="'number'" [name]="'creditsgst'" [placeholder]="''" [value]="gst3bComputation.creditSgst" (sendValue)="gst3bComputation.creditSgst = $event;calculateComputationTotal('credit','SGST');" [is_only_positive_number_allowed]="true"></app-input>
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            {{gst3bComputation.liabilitySgst}}
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right"></td>
+                    </tr>
+
+                    <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_name text-pull-left">CESS</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input [label]="''" [type]="'number'" [name]="'salescess'" [placeholder]="''" [value]="gst3bComputation.salesCess" (sendValue)="gst3bComputation.salesCess = $event;calculateComputationTotal('sales','CESS');" [is_only_positive_number_allowed]="true"></app-input>
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input [label]="''" [type]="'number'" [name]="'creditcess'" [placeholder]="''" [value]="gst3bComputation.creditCess" (sendValue)="gst3bComputation.creditCess = $event;calculateComputationTotal('credit','CESS');" [is_only_positive_number_allowed]="true"></app-input>
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            {{gst3bComputation.liabilityCess}}
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right"></td>
+                    </tr>
+
+                    <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_name text-pull-left">Total</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            {{gst3bComputation.salesTotal}}
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            {{gst3bComputation.creditTotal}}
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            {{gst3bComputation.liabilityTotal}}
+                        </td>
+                        <td class="report-table__cell report-table__cell_name text-pull-right">A</td>
+                    </tr>
+
+                    <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_name text-pull-left" style="background-color: rgba(128, 128, 128, 0.31);"></td>
+                        <td class="report-table__cell report-table__cell_name text-pull-right">
+                            Other Liability
+                        </td>
+                        <td class="report-table__cell report-table__cell_name text-pull-right">
+                            Credit Available
+                        </td>
+                        <td class="report-table__cell report-table__cell_name text-pull-right">
+                            Balance Liability
+                        </td>
+                        <td class="report-table__cell report-table__cell_name text-pull-right"></td>
+                    </tr>
+
+                    <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_name text-pull-left">Late Fees</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input [label]="''" [type]="'number'" [name]="'latefees'" [placeholder]="''" [value]="gst3bComputation.lateFee" (sendValue)="gst3bComputation.lateFee = $event;calculateComputationTotal('sales',null);" [is_only_positive_number_allowed]="true"></app-input>
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            
+                        </td>
+                        <td class="report-table__cell report-table__cell_name text-pull-right">B</td>
+                    </tr>
+
+                    <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_name text-pull-left">Interest</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <app-input [label]="''" [type]="'number'" [name]="'interest'" [placeholder]="''" [value]="gst3bComputation.interest" (sendValue)="gst3bComputation.interest = $event;calculateComputationTotal('sales',null);" [is_only_positive_number_allowed]="true"></app-input>
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            
+                        </td>
+                        <td class="report-table__cell report-table__cell_name text-pull-right">C</td>
+                    </tr>
+
+                    <tr class="report-table__row">                        
+                        <td class="report-table__cell report-table__cell_name text-pull-left">Total Liability</td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            {{gst3bComputation.computationTotal}}
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            {{gst3bComputation.creditTotal}}
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            {{gst3bComputation.liabilityTotal}}
+                        </td>
+                        <td class="report-table__cell report-table__cell_name text-pull-right">A+B+C</td>
+                    </tr>
+                  </tbody>
+              </table>
+            </div>
+        </div>
+        <div class="footer__buttons clearfix" style="margin-top: 40px;">
+            <a class="btn long-btn" (click)="saveGST3BData();">Save</a>
+        </div>
+    </div>
+  </div><!-- .content__container -->
+</div><!-- .content -->

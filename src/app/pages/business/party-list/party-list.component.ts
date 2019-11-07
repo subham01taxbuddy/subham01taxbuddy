@@ -173,7 +173,6 @@ export class PartyListComponent implements OnInit {
   }
 
   updatePartyDetail(item,index) {
-    console.log(item,index);
     if(item.upartyPhone && !(/^\d{10}$/.test(item.upartyPhone))) {
       this._toastMessageService.alert("error","Please add valid 10 digit phone number");
       return;

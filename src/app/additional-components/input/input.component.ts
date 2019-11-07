@@ -29,7 +29,7 @@ export class InputComponent implements OnInit {
 	@Input('label') label: string;
 	@Input('type') type: string;
 	@Input('name') name: string;
-  @Input('value') value: string;
+  @Input('value') value: any;
   @Input('currency') currency: string;
   @Input('placeholder') placeholder: string;
   @Input('disabled') disabled: boolean = false;
@@ -39,6 +39,7 @@ export class InputComponent implements OnInit {
   @Input('paste_disable') paste_disable: boolean = false;
   @Input('is_percent_currency_view') is_percent_currency_view: boolean = false;
   @Input('is_capital') is_capital: boolean = false;
+  @Input('is_only_positive_number_allowed') is_only_positive_number_allowed: boolean = false;
 
   public _disable_discount_type_change: boolean = false;
   @Input()
@@ -80,6 +81,11 @@ export class InputComponent implements OnInit {
       this.sendValue.emit(JSON.stringify(param));
     }else{
       if(this.is_capital && this.value) { this.value = this.value.toUpperCase(); }
+      if(this.type == "number") { 
+        this.value = parseFloat(this.value);
+        if(!this.value) { this.value = 0 };       
+      }
+      
       this.sendValue.emit(this.value);
     }
   }

@@ -28,6 +28,7 @@ import { GSTCloudComponent } from './business/gst-cloud/gst-cloud.component';
 import { BusinessDocumentsComponent } from './business/business-documents/business-documents.component';
 import { PartyListComponent } from './business/party-list/party-list.component';
 import { ImportPartyListComponent } from './business/import-party-list/import-party-list.component';
+import { GST3BComputationComponent } from './business/gst-3b-computation/gst-3b-computation.component';
 
 //dashboard | home  component
 import { HomeComponent } from './home/home.component';
@@ -50,6 +51,7 @@ export const routes: Routes = [
 				children: [
 					{ path: 'business-profile', component: BusinessProfileComponent },
 					{ path: 'gst-cloud', component: GSTCloudComponent },
+					{ path: 'gst-3b-computation', component: GST3BComputationComponent },
 					{ path: 'business-documents', component: BusinessDocumentsComponent },
 					{ path: 'party-list', component: PartyListComponent },
 					{ path: 'import-party-list', component: ImportPartyListComponent },

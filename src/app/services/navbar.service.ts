@@ -37,6 +37,9 @@ export class NavbarService {
 	merchantData: any;
 	isMerchantChanged: boolean = false;
 
+	selected_gst_return_calendars_data: any;
+	isGSTReturnCalendarChanged: boolean = false;
+
 	selected_party_role: any;
 	isPartyRoleChanged: boolean = false;
 
@@ -245,6 +248,22 @@ export class NavbarService {
 	getCreditDebitNoteInvoiceList(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/credit-debit-notes', 'method': 'GET' }, params);
 	}
+	
+	gstGSTReturnCalendarsData() {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-return-calendars', 'method': 'GET'}, {});
+	}
+
+	addGST3BComputation(params: any) {		
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'POST'}, params);
+	}
+
+	updateGST3BComputation(params: any) {		
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'PUT'}, params);
+	}
+
+	getGST3BComputation(params: any) {		
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'GET'}, params);
+	}
 
 	getITCLedgerDetails(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxpayerapi/v0.3/ledgers', 'method': 'GET', 'url_key':'gst_gov_url' }, params);
@@ -260,7 +279,7 @@ export class NavbarService {
 
 	getBankDetailByIFSCCode(ifsccode: any) {		
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/'+ifsccode, 'method': 'GET', 'url_key':'ifsc_url' }, {});
-	}
+	}	
 
 	getHeaders(): HttpHeaders {
 		if (!this.id_token) {

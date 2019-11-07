@@ -207,7 +207,6 @@ export class ListComponent implements OnInit {
             return bD - aD;
           });
           this.filterData = this.invoices_list;
-          console.log("getInvoiceList = ", this.filterData)
           return resolve(true);
         });
       });
@@ -219,6 +218,7 @@ export class ListComponent implements OnInit {
       let iParams = { page: 0, size: 1000 };
       if (this.page_query_type == "unassigned") {
         iParams["invoiceAssignedTo.specified"] = false;
+        iParams["invoiceStatusMasterInvoiceStatusMasterId.in"] = [1,2];
       } else if (this.page_query_type == "pending_processing") {
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"] = [2, 4];
       } else if (this.page_query_type == "my_pending_processing") {
@@ -267,6 +267,7 @@ export class ListComponent implements OnInit {
       let iParams = { page: 0, size: 1000 };
       if (this.page_query_type == "unassigned") {
         iParams["creditDebitNoteAssignedTo.specified"] = false;
+        iParams["invoiceStatusMasterInvoiceStatusMasterId.in"] = [1,2];        
       } else if (this.page_query_type == "pending_processing") {
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"] = [1, 2, 4];
       } else if (this.page_query_type == "my_pending_processing") {
