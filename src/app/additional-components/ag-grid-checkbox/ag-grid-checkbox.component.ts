@@ -10,7 +10,7 @@ import { IAfterGuiAttachedParams } from 'ag-grid-community';
 })
 export class AgGridCheckboxComponent implements AgRendererComponent {
 
-    private params: any;
+    public params: any;
 
     agInit(params: any): void {
         this.params = params;
