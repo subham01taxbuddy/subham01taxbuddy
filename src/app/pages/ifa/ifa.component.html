@@ -1,0 +1,20 @@
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading> -->
+
+<div class="main clearfix">
+  <div class="tab">
+    <ul class="tab__container clearfix">
+      <li class="tab__item" routerLinkActive="tab__item_active">
+        <a class="tab__link" routerLink="/pages/ifa/client-list">Client List</a>
+      </li>
+      <li class="tab__item" routerLinkActive="tab__item_active">
+        <a class="tab__link" routerLink="/pages/ifa/claim-client">Claim Client</a>
+      </li>
+    </ul>
+  </div>
+  <!-- .tab -->
+
+  <router-outlet></router-outlet>
+  <!-- components -->
+
+</div>
+<!-- .main -->

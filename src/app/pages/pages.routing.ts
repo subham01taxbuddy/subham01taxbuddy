@@ -37,6 +37,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from '../services/auth.guard';
 import { ActivatePackageComponent } from './activate-package/activate-package.component';
+import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 
 export const routes: Routes = [
 	{ path: 'login', canActivate: [AuthGuard], component: LoginComponent },
@@ -44,10 +45,10 @@ export const routes: Routes = [
 	{
 		path: 'pages', canActivate: [AuthGuard], component: PagesComponent,
 		children: [
-			{ path: 'home', component: HomeComponent },
-			{ path: 'list', component: ListComponent },
+			{ path: 'home', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: HomeComponent },
+			{ path: 'list', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: ListComponent },
 			{
-				path: 'business', component: BusinessComponent,
+				path: 'business', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: BusinessComponent,
 				children: [
 					{ path: 'business-profile', component: BusinessProfileComponent },
 					{ path: 'gst-cloud', component: GSTCloudComponent },
@@ -58,7 +59,9 @@ export const routes: Routes = [
 					{ path: '', redirectTo: '/pages/business/business-profile', pathMatch: 'full' }
 				]
 			},
-			{ path: 'activate-package', component: ActivatePackageComponent },
+			{ path: 'activate-package', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: ActivatePackageComponent },
+			{ path: 'reports', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './reports-module/reports.module#ReportsModule' },
+			{ path: 'ifa', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] }, loadChildren: './ifa/ifa.module#IfaModule' },
 			{ path: '**', redirectTo: '/pages/home', pathMatch: 'full' }
 		]
 	},

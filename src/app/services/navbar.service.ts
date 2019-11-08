@@ -109,7 +109,7 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/account/logout', 'method': 'DELETE' }, null);
 	}
 
-	getInvoiceSummary(businessId,params:any) {
+	getInvoiceSummary(businessId, params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-summary/' + businessId, 'method': 'GET' }, params);
 	}
 
@@ -181,8 +181,8 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/partiesByGstin', 'method': 'GET' }, params);
 	}
 
-	getPartyInfoByPartyRole(businessId,params) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/party-list/'+businessId, 'method': 'GET' }, params);
+	getPartyInfoByPartyRole(businessId, params) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/party-list/' + businessId, 'method': 'GET' }, params);
 	}
 
 	createInvoice(params: any) {
@@ -248,38 +248,42 @@ export class NavbarService {
 	getCreditDebitNoteInvoiceList(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/credit-debit-notes', 'method': 'GET' }, params);
 	}
-	
+
 	gstGSTReturnCalendarsData() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-return-calendars', 'method': 'GET'}, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-return-calendars', 'method': 'GET' }, {});
 	}
 
-	addGST3BComputation(params: any) {		
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'POST'}, params);
+	addGST3BComputation(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'POST' }, params);
 	}
 
-	updateGST3BComputation(params: any) {		
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'PUT'}, params);
+	updateGST3BComputation(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'PUT' }, params);
 	}
 
-	getGST3BComputation(params: any) {		
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'GET'}, params);
+	getGST3BComputation(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'GET' }, params);
 	}
 
 	getITCLedgerDetails(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxpayerapi/v0.3/ledgers', 'method': 'GET', 'url_key':'gst_gov_url' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxpayerapi/v0.3/ledgers', 'method': 'GET', 'url_key': 'gst_gov_url' }, params);
 	}
 
 	getLiabilityLedgerDetails(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxpayerapi/v0.3/ledgers', 'method': 'GET', 'url_key':'gst_gov_url' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxpayerapi/v0.3/ledgers', 'method': 'GET', 'url_key': 'gst_gov_url' }, params);
 	}
 
 	getCashITCBalance(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxpayerapi/v0.3/ledgers', 'method': 'GET', 'url_key':'gst_gov_url' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxpayerapi/v0.3/ledgers', 'method': 'GET', 'url_key': 'gst_gov_url' }, params);
 	}
 
-	getBankDetailByIFSCCode(ifsccode: any) {		
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/'+ifsccode, 'method': 'GET', 'url_key':'ifsc_url' }, {});
-	}	
+	getBankDetailByIFSCCode(ifsccode: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/' + ifsccode, 'method': 'GET', 'url_key': 'ifsc_url' }, {});
+	}
+
+	getUserWiseGstStatusReport(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-filing-status-report' + params, 'method': 'GET' }, {});
+	}
 
 	getHeaders(): HttpHeaders {
 		if (!this.id_token) {
@@ -292,7 +296,7 @@ export class NavbarService {
 
 	apiCall(apiKey: any, params: any, ): Observable<any> {
 		let options: any = { headers: this.getHeaders() }
-		if(['gst_gov_url','ifsc_url'].indexOf(apiKey["url_key"]) != -1) {			
+		if (['gst_gov_url', 'ifsc_url'].indexOf(apiKey["url_key"]) != -1) {
 			options = { headers: new HttpHeaders({}) };
 		}
 
@@ -305,7 +309,7 @@ export class NavbarService {
 			if (params) { options['body'] = JSON.stringify(params); }
 			return this.http.delete(pUrl + apiKey['url'], options)
 		} else {
-			options.params = params;			
+			options.params = params;
 			return this.http.get(pUrl + apiKey['url'], options)
 		}
 	}

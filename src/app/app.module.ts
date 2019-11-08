@@ -20,7 +20,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { ToastMessageComponent } from './additional-components/toast-message/toast-message.component';
@@ -38,6 +38,7 @@ import { appRoutes } from './app-routing.module';
 import { UtilsService } from './services/utils.service';
 
 import { NgxImageZoomModule } from 'ngx-image-zoom';
+import { TokenInterceptor } from './services/token-interceptor';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,12 @@ import { NgxImageZoomModule } from 'ngx-image-zoom';
     ExportTableService,
     ToastMessageService,
     AuthGuard,
-    UtilsService
+    UtilsService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    }
   ],
   bootstrap: [AppComponent]
 })
