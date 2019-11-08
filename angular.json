@@ -10,91 +10,90 @@
       "prefix": "app",
       "schematics": {},
       "architect": {
-          "build": {
-            "builder": "@angular-devkit/build-angular:browser",
-            "options": {
-              "outputPath": "dist",
-              "index": "src/index.html",
-              "main": "src/main.ts",
-              "tsConfig": "src/tsconfig.json",
-              "polyfills": "src/polyfills.ts",
-              "assets": [
-                {
-                  "glob": "**/*",
-                  "input": "src/assets",
-                  "output": "/assets"
-                },
-                {
-                  "glob": "favicon.ico",
-                  "input": "src",
-                  "output": "/"
-                }
-              ],
-              "styles": [
-              	"src/assets/styles/components.css",
-		            "src/assets/styles/colors.css",
-		            "src/assets/styles/style.css",		            
-		            "src/assets/styles/icons.css",
-		            "src/assets/styles/main.less"
-              ],
-              "scripts": [
-               
-              ],
-            },
-            "configurations": {
-              "production": {
-                "optimization": true,
-                "outputHashing": "all",
-                "sourceMap": false,
-                "extractCss": true,
-                "namedChunks": false,
-                "aot": true,
-                "extractLicenses": true,
-                "vendorChunk": false,
-                "buildOptimizer": true,
-                "serviceWorker": false,
-                "fileReplacements": [
-                  {
-                    "replace": "src/environments/environment.ts",
-                    "with": "src/environments/environment.prod.ts"
-                  }
-                ]
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "tsConfig": "src/tsconfig.json",
+            "polyfills": "src/polyfills.ts",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
               },
-              "staging": {
-                "optimization": true,
-                "outputHashing": "all",
-                "sourceMap": false,
-                "extractCss": true,
-                "namedChunks": false,
-                "aot": true,
-                "extractLicenses": true,
-                "vendorChunk": false,
-                "buildOptimizer": true,
-                "serviceWorker": false,
-                "fileReplacements": [
-                  {
-                    "replace": "src/environments/environment.ts",
-                    "with": "src/environments/environment.staging.ts"
-                  }
-                ]
+              {
+                "glob": "favicon.ico",
+                "input": "src",
+                "output": "/"
               }
-            }
+            ],
+            "styles": [
+              "src/styles.scss",
+              "src/assets/styles/components.css",
+              "src/assets/styles/colors.css",
+              "src/assets/styles/style.css",
+              "src/assets/styles/icons.css",
+              "src/assets/styles/main.less"
+            ],
+            "scripts": []
           },
-          "serve": {
-            "builder": "@angular-devkit/build-angular:dev-server",
-            "options": {
-              "browserTarget": "taxbuddy-backoffice:build"
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "serviceWorker": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
             },
-            "configurations": {
-              "production": {
-                "browserTarget": "taxbuddy-backoffice:build:production"
-              },
-              "staging": {
-                "browserTarget": "taxbuddy-backoffice:build:staging"
-              }
+            "staging": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "serviceWorker": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "taxbuddy-backoffice:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "taxbuddy-backoffice:build:production"
+            },
+            "staging": {
+              "browserTarget": "taxbuddy-backoffice:build:staging"
             }
           }
         }
+      }
     }
   },
   "defaultProject": "taxbuddy-backoffice"

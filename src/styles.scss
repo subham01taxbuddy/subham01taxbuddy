@@ -1,0 +1,21 @@
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+// @import "~ag-grid/src/styles/ag-grid";
+.ag-theme-balham .ag-root {
+  min-height: 82px !important;
+}
+.ag-root-wrapper-body.ag-layout-normal {
+  flex: 1 1 auto;
+  height: 100%;
+  /* min-height: 0; */
+}
+/* .ag-overlay-wrapper {
+  vertical-align: bottom !important;
+} */
+.ag-theme-balham .ag-header-cell-label {
+  justify-content: center;
+}
+.ag-overlay-wrapper {
+  align-items: flex-end;
+  padding-bottom: 15px;
+}

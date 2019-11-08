@@ -1,0 +1,35 @@
+<div class="content content_full">
+  <div class="content__container">
+    <div class="card">
+      <div class="card__row" style="margin-top: 0px;">
+        <!-- <table>
+          <tr class="table-head">
+            <th>IFA ID</th>
+            <th>Client Name</th>
+            <th>Client Mobile</th>
+            <th>Paid</th>
+            <th>Packages</th>
+          </tr>
+          <tr *ngFor="let item of clientList; let i=index">
+            <td>{{item.userId}}</td>
+
+            <td>{{item.firstName + " " + item.lastName}}</td>
+            <td>{{item.mobile}}</td>
+            <td> <i class="fa fa-times" style="color: red;" aria-hidden="true" *ngIf="item.mobile"></i>
+              <i class="fa fa-check" style="color: #63b12d;" aria-hidden="true" *ngIf="!item.mobile"></i>
+            </td>
+            <td>{{item.mobile}}</td>
+          </tr>
+
+        </table> -->
+        <div style="padding-bottom: 10px;">
+          <!-- Filtered Count: {{filterCount}} {{getCount()}} -->
+          <a style="color: blue;font-weight: bold;">User Manual</a>
+          <!-- <p class="pull-right"></p> -->
+        </div>
+        <ag-grid-angular class="ag-theme-balham" [gridOptions]="clientListGridOptions">
+        </ag-grid-angular>
+      </div>
+    </div>
+  </div>
+</div>

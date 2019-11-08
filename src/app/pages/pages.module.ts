@@ -1,3 +1,4 @@
+import { ReportsModule } from './reports-module/reports.module';
 /**
  * (c) OneGreenDiary Software Pvt. Ltd. 
  * This file is a part of OneGreenDiary platform code base.
@@ -85,6 +86,9 @@ import { ActivatePackageComponent } from './activate-package/activate-package.co
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { CommonModule } from '@angular/common';
+import { AgGridModule } from 'ag-grid-angular';
+import { AgGridCheckboxComponent } from 'app/additional-components/ag-grid-checkbox/ag-grid-checkbox.component';
 
 Auth.configure(environment.aws_cred);
 
@@ -133,14 +137,17 @@ Storage.configure({
     InputTagsViewComponent,
     ToggleComponent,
     AttributesFilterComponent,
-    ActivatePackageComponent
+    ActivatePackageComponent,
+    AgGridCheckboxComponent,
   ],
   entryComponents: [
     HomeComponent,
-    ConfirmationModalComponent
+    ConfirmationModalComponent,
+    AgGridCheckboxComponent
   ],
   imports: [
-    BrowserModule,
+    CommonModule,
+    // BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -149,7 +156,8 @@ Storage.configure({
     ModalModule.forRoot(),
     NgxImageZoomModule.forRoot(),
     PdfViewerModule,
-    // NgxExtendedPdfViewerModule
+    // NgxExtendedPdfViewerModule,
+    AgGridModule.withComponents([])
   ],
   providers: [
     SelectObjectFilterPipe,
@@ -159,6 +167,10 @@ Storage.configure({
     CapitalizeFirstPipe,
     SafePipe
   ],
-  bootstrap: [PagesComponent]
+  bootstrap: [PagesComponent],
+
+  exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,]
 })
 export class PagesModule { }

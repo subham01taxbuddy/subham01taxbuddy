@@ -1,0 +1,26 @@
+<div class="main clearfix">
+    <div class="card">
+        <!-- Search for data -->
+        <h1>Result for status report</h1>
+        <div class="card__row" style="margin: 0px;">
+            <div class="card__col-xs-12 card__col-sm-4">
+                <app-calendar [format]="'All'" [isCompareDateShow]="false" [label]="'All'" [type]="'text'"
+                    [name]="'from_to_date'"
+                    [value]="(selected_dates.from_date | backTipsDate) +' to '+ (selected_dates.to_date | backTipsDate)"
+                    (sendBeginDate)="selected_dates.from_date = $event;onSeletedDateChange();"
+                    (sendEndDate)="selected_dates.to_date = $event;onSeletedDateChange();"></app-calendar>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-4">
+                <a class="btn long-btn" (click)="onApply();">Apply</a>
+            </div>
+        </div>
+        <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
+            <!-- <ag-grid-angular class="ag-theme-balham" style="width: 500px; height: 500px;" [rowData]="rowData | async"
+                [columnDefs]="columnDefs">
+            </ag-grid-angular> -->
+            <ag-grid-angular class="ag-theme-balham" [gridOptions]="statusReportGridOptions"
+                (rowClicked)="onStatusReportRowClicked($event)">
+            </ag-grid-angular>
+        </div>
+    </div>
+</div>
