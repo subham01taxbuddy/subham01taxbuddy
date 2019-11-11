@@ -22,7 +22,7 @@ export class ClientListComponent implements OnInit {
       columnDefs: this.clientListCreateColoumnDef(),
       enableCellChangeFlash: true,
       onGridReady: params => {
-        params.api.sizeColumnsToFit();
+        // params.api.sizeColumnsToFit();
       },
       sortable: true,
       filter: true,
@@ -58,6 +58,8 @@ export class ClientListComponent implements OnInit {
       {
         headerName: 'IFA ID',
         field: 'ifaId',
+        width: 100,
+        pinned: 'left',
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains"],

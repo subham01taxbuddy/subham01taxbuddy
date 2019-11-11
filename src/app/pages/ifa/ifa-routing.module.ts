@@ -10,7 +10,7 @@ const routes: Routes = [
         children: [
             { path: 'client-list', component: ClientListComponent },
             { path: 'claim-client', component: ClaimClientComponent },
-            { path: '', redirectTo: '/pages/ifa/client-list', pathMatch: 'full' }
+            { path: '', redirectTo: '/pages/ifa/claim-client', pathMatch: 'full' }
         ]
     },
 
