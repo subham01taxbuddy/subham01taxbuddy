@@ -88,7 +88,8 @@
                 <app-input [label]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')"
                   [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [is_capital]="true"
                   [placeholder]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')"
-                  [value]="invoiceData.partyDTO.partyGstin" (sendValue)="onEnterGSTIN($event)"></app-input>
+                  [value]="invoiceData.partyDTO.partyGstin" (sendValue)="onEnterGSTIN($event)">
+                </app-input>
               </div>
 
               <div class="card__col-xs-12 card__col-sm-4">

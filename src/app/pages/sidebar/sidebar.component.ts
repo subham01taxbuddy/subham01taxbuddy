@@ -16,9 +16,10 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 import { Component, OnInit, DoCheck } from '@angular/core';
 import { NavbarService } from '../../services/navbar.service';
+import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -27,19 +28,24 @@ import { NavbarService } from '../../services/navbar.service';
 })
 export class SidebarComponent implements OnInit {
 
-	showSidebar: boolean;
-
-  constructor(private navbarService: NavbarService) { }
+  showSidebar: boolean;
+  loggedInUserData: any;
+  constructor(private navbarService: NavbarService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService) {
+    this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+  }
 
   ngOnInit() {
   }
 
   ngDoCheck() {
-  	this.showSidebar = NavbarService.getInstance(null).showSideBar;
+    this.showSidebar = NavbarService.getInstance(null).showSideBar;
   }
 
   closeSideBar() {
     NavbarService.getInstance(null).closeSideBar = true;
   }
 
+  isApplicable(permissionRoles) {
+    return this.roleBaseAuthGaurdService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
+  }
 }

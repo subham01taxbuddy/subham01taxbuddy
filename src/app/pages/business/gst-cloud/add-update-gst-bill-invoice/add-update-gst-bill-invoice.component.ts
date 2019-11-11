@@ -24,6 +24,7 @@ import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../../services/toast-message.service';
 import { HttpClient } from '@angular/common/http';
 import Storage from '@aws-amplify/storage';
+import { UtilsService } from 'app/services/utils.service';
 
 
 @Component({
@@ -86,7 +87,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   constructor(
     private navbarService: NavbarService,
     public router: Router, public http: HttpClient,
-    public _toastMessageService: ToastMessageService) {
+    public _toastMessageService: ToastMessageService, public utilsService: UtilsService) {
     NavbarService.getInstance(null).component_link_2 = 'add-update-gst-bill-invoice';
     NavbarService.getInstance(null).component_link_3 = '';
     NavbarService.getInstance(null).showBtns = 'add-update-gst-bill-invoice';
@@ -240,7 +241,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     } else if (this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2 && !this.invoiceData.partyDTO.partyGstin) {
       this._toastMessageService.alert("error", "Please add customer gstin");
       return;
-    } else if (this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2 && this.invoiceData.partyDTO.partyGstin.length != 15) {
+    } else if ((this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2 && this.invoiceData.partyDTO.partyGstin.length != 15) || !this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin)) {
       this._toastMessageService.alert("error", "Please add 15 character valid gstin number");
       return;
     } else if (this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2 && !this.invoiceData.partyDTO.partyName) {
@@ -254,6 +255,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       return;
     } else if (this.invoiceData.partyDTO.partyEmail && !(/\S+@\S+\.\S+/.test(this.invoiceData.partyDTO.partyEmail))) {
       this._toastMessageService.alert("error", "Please add valid email address");
+      return;
+    } else if (!(this.invoiceData.listInvoiceItems instanceof Array) || (this.invoiceData.listInvoiceItems instanceof Array && this.invoiceData.listInvoiceItems.length == 0)) {
+      this._toastMessageService.alert("error", "Please add atleast one item details.");
       return;
     }
 
@@ -460,7 +464,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       clearTimeout(this.gstinBounceBackTimeObj)
     }
     this.gstinBounceBackTimeObj = setTimeout(() => {
-      if (this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length == 15) {
+      if (this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length == 15 && this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin)) {
         this.getPartyInfoByGSTIN(event).then((partyInfo: any) => {
           if (partyInfo) {
             this.invoiceData.partyDTO.partyEmail = partyInfo.partyEmail;

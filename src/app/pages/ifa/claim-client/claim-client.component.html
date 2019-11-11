@@ -1,0 +1,102 @@
+<div class="content content_full">
+  <div class="content__container">
+    <div class="card">
+      <!-- Search for data -->
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-12">
+          <div class="filter__col card__col-sm-4 card__col-xs-12">
+            <div class="input">
+              <label class="input__label" for="attr">Select attribute</label>
+              <select class="select__box ogp_select" (change)="clearValue()" #advanceSearchKey>
+                <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
+                <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+                  {{drop.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter__col card__col-sm-4 card__col-xs-10">
+            <div class="input">
+              <label class="input__label" for="attr">Enter value</label>
+              <div class="input__select">
+                <input type="text" class="select__box ogp_select" style="background-image:none" [(ngModel)]="searchVal"
+                  name="searchVal" />
+              </div>
+            </div>
+          </div>
+          <div class="card__col-md-3 card__col-xs-12 pull-right">
+            <a class="btn btn_stroke filter__add-link" (click)="advanceSearch(advanceSearchKey.value)"><i
+                class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card__row" style="margin-top: 0px;">
+        <!--  <div class="tab-panel items-tab card__col-xs-12">
+          <div class="tab-panel__content tab-panel__content_visible">
+            <div class="table product__table">
+              <div class="table__row  table__row_header ">
+                <div class="table__cell product-row__cell-unit flex-10">
+                  <a class="table__sort-link">User Id</a>
+                </div>
+                <div class="table__cell product-row__cell-unit flex-30">
+                  <a class="table__sort-link">Name</a>
+                </div>
+                <div class="table__cell product-row__cell-unit flex-20">
+                  <a class="table__sort-link">Mobile</a>
+                </div>
+                <div class="table__cell product-row__cell-unit flex-20">
+                  <a class="table__sort-link">Email</a>
+                </div>
+                <div class="table__cell product-row__cell-unit flex-20">
+                  <a class="table__sort-link">PAN Number</a>
+                </div>
+              </div>
+
+
+              <div *ngFor="let item of user_data; let p=index ">
+                <div class="table__row-item product-row" [class.table__row-disabled]="false">
+                  <div class="table__row product-row__main-variant"
+                    [style.background-color]="currentUserId === item.userId ? '#ebffe7':''">
+                    <div class="table__cell product-row__cell-stock flex-10">
+                      <a class="a-phone-link" (click)="getUserEligiblePlans(item.userId)">{{item.userId}}</a>
+                    </div>
+                    <div class="table__cell product-row__cell-stock flex-30">
+                      {{item.fName + " " + item.lName}}
+                    </div>
+                    <div class="table__cell product-row__cell-stock flex-20">
+                      {{item.mobileNumber}}
+                    </div>
+                    <div class="table__cell product-row__cell-stock flex-20">
+                      {{item.emailAddress}}
+                    </div>
+                    <div class="table__cell product-row__cell-stock flex-20">
+                      {{item.panNumber}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <table style="margin-top: 20px;">
+          <tr class="table-head">
+            <th>User ID</th>
+            <th>Claim</th>
+            <th>Name</th>
+            <th>Mobile</th>
+          </tr>
+          <tr *ngFor="let item of user_data; let i=index">
+            <td>{{item.userId}}</td>
+            <td><i class="fa fa-check-circle" aria-hidden="true"
+                [ngClass]="{ 'claimed': item.ifaId >= 2,'un-claimed': item.ifaId < 2 }"
+                (click)="claimClient(item.userId)"></i>
+            </td>
+            <td>{{item.fName + " " + item.lName}}</td>
+            <td>{{item.mobileNumber}}</td>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

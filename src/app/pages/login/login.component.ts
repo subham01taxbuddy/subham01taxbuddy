@@ -16,22 +16,24 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 import { Component, OnInit } from '@angular/core';
 import { NavbarService } from '../../services/navbar.service';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 import Auth from '@aws-amplify/auth';
 
 import { ToastMessageService } from '../../services/toast-message.service';
+import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  providers: [RoleBaseAuthGaurdService]
 })
 export class LoginComponent implements OnInit {
 
@@ -40,8 +42,8 @@ export class LoginComponent implements OnInit {
   public user: AbstractControl;
   public passphrase: AbstractControl;
   public loading: boolean = false;
-  constructor(private fb: FormBuilder,private navbarService: NavbarService,public http: HttpClient,
-    public router: Router,private _toastMessageService:ToastMessageService) {
+  constructor(private fb: FormBuilder, private navbarService: NavbarService, public http: HttpClient,
+    public router: Router, private _toastMessageService: ToastMessageService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService) {
     NavbarService.getInstance(null).component_link = this.component_link;
   }
 
@@ -53,36 +55,44 @@ export class LoginComponent implements OnInit {
 
     this.user = this.form.controls['user'];
     this.passphrase = this.form.controls['passphrase'];
-  }  
-  
+  }
+
 
   public onSubmit(values: any): void {
-    let loginData:any = {
-      username:  values.user,
+    let loginData: any = {
+      username: values.user,
       password: values.passphrase,
-      accessToken:"",
-      outhProvider:""
+      accessToken: "",
+      outhProvider: ""
     }
 
     this.loading = true;
     NavbarService.getInstance(this.http).login(loginData).subscribe(res => {
-      if(res && res.role.indexOf("ROLE_ADMIN") == -1) {
-        this._toastMessageService.alert("error", "Access Denied.");        
-      } else if (res && res.id_token) {                
-        NavbarService.getInstance(null).setUserData(res);        
+      console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))
+      if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))) {
+        // if (res && (res.role.indexOf("ROLE_ADMIN") == -1 || res.role.indexOf("ROLE_IFA") == -1)) {
+        this._toastMessageService.alert("error", "Access Denied.");
+      } else if (res && res.id_token) {
+        NavbarService.getInstance(null).setUserData(res);
         this.authToAWS();
-        this.router.navigate(['pages/home']);       
+        if (res.role.indexOf("ROLE_ADMIN") !== -1) {
+          this.router.navigate(['pages/home']);
+        } else if (res.role.indexOf("ROLE_IFA") !== -1) {
+          this.router.navigate(['/pages/ifa/client-list']);
+        } else {
+          this._toastMessageService.alert("error", "Access Denied.");
+        }
       } else {
-        this._toastMessageService.alert("error", "The Mobile/Email address or Password entered, is not correct. Please check and try again");        
+        this._toastMessageService.alert("error", "The Mobile/Email address or Password entered, is not correct. Please check and try again");
       }
       this.loading = false;
     }, err => {
       let errorMessage = "Internal server error."
-      if([400,401].indexOf(err.status) != -1) {
+      if ([400, 401].indexOf(err.status) != -1) {
         errorMessage = "User name or Password is wrong."
       }
-      this._toastMessageService.alert("error", errorMessage );
-      this.loading = false;      
+      this._toastMessageService.alert("error", errorMessage);
+      this.loading = false;
     });
   }
 

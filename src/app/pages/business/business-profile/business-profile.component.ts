@@ -16,7 +16,7 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 
 import { Component, OnInit } from '@angular/core';
 import { NavbarService } from '../../../services/navbar.service';
@@ -24,6 +24,7 @@ import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../services/toast-message.service';
 import { HttpClient } from '@angular/common/http';
 import Storage from '@aws-amplify/storage';
+import { UtilsService } from 'app/services/utils.service';
 
 @Component({
   selector: 'app-business-profile',
@@ -31,28 +32,28 @@ import Storage from '@aws-amplify/storage';
   styleUrls: ['./business-profile.component.css']
 })
 export class BusinessProfileComponent implements OnInit {
-	selected_merchant: any;
+  selected_merchant: any;
 
-  state_list:any = [];
-  selected_gst_state:any;
+  state_list: any = [];
+  selected_gst_state: any;
 
-  loading: boolean = false;  
+  loading: boolean = false;
   gstCertLoader: boolean = false;
   bSignatureLoader: boolean = false;
   bLogoLoader: boolean = false;
 
-  gstinBounceBackTimeObj:any;
-  ifscBounceBackTimeObj:any;
+  gstinBounceBackTimeObj: any;
+  ifscBounceBackTimeObj: any;
 
   merchantData: any;
   constructor(
-  	private navbarService: NavbarService,
+    private navbarService: NavbarService,
     public router: Router, public http: HttpClient,
-    public _toastMessageService:ToastMessageService) { 
+    public _toastMessageService: ToastMessageService, public utilsService: UtilsService) {
     NavbarService.getInstance(null).component_link_2 = 'business-profile';
     NavbarService.getInstance(null).component_link_3 = '';
-  	NavbarService.getInstance(null).showBtns = 'business-profile';
-  } 
+    NavbarService.getInstance(null).showBtns = 'business-profile';
+  }
 
   ngOnInit() {
     if (!NavbarService.getInstance(null).isSessionValid()) {
@@ -60,85 +61,85 @@ export class BusinessProfileComponent implements OnInit {
       return;
     }
 
-    this.loading = true;    
+    this.loading = true;
     this.getGSTStateList().then(sR => {
       this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
       this.loading = false;
     })
-  }  
+  }
 
   ngDoCheck() {
     if (NavbarService.getInstance(null).saveBusinessProfile) {
-        this.saveBusinessProfile();
-        NavbarService.getInstance(null).saveBusinessProfile = false;
+      this.saveBusinessProfile();
+      NavbarService.getInstance(null).saveBusinessProfile = false;
     }
 
     if (NavbarService.getInstance(null).isMerchantChanged && NavbarService.getInstance(null).merchantData) {
-        this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
-        NavbarService.getInstance(null).isMerchantChanged = false;
+      this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+      NavbarService.getInstance(null).isMerchantChanged = false;
     }
   }
 
   getGSTStateList() {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       this.state_list = [];
       NavbarService.getInstance(this.http).getGSTStateDetails().subscribe(res => {
-        if(Array.isArray(res)) {
+        if (Array.isArray(res)) {
           res.forEach(sData => { sData.name = sData.stateMasterName });
           this.state_list = res;
-        }       
+        }
         resolve(true);
       }, err => {
         let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
-        this._toastMessageService.alert("error", "state list - " + errorMessage );
+        this._toastMessageService.alert("error", "state list - " + errorMessage);
         resolve(false);
       });
     })
   }
 
-  onSelectMerchant(event) {    
-    if(event && event.userId) {
+  onSelectMerchant(event) {
+    if (event && event.userId) {
       this.selected_merchant = event;
       this.getMerchantDetails(event);
-    }    
+    }
   }
 
-  getMerchantDetails(merchant) {        
+  getMerchantDetails(merchant) {
     this.loading = true;
     this.merchantData = null;
     NavbarService.getInstance(this.http).getGetGSTMerchantDetail(merchant.userId).subscribe(res => {
-      if(res) {
-        if(!res.gstDetails) { res.gstDetails = {}; };
+      if (res) {
+        if (!res.gstDetails) { res.gstDetails = {}; };
 
-        if(!res.gstDetails.bankInformation) {
-          res.gstDetails.bankInformation = {bankName:"",accountNumber:"",ifscCode:"",accountBranch:""};
+        if (!res.gstDetails.bankInformation) {
+          res.gstDetails.bankInformation = { bankName: "", accountNumber: "", ifscCode: "", accountBranch: "" };
         }
-        if(!res.gstDetails.businessAddress) {
-          res.gstDetails.businessAddress = {address:"",stateMasterCode:"",pincode:""};
+        if (!res.gstDetails.businessAddress) {
+          res.gstDetails.businessAddress = { address: "", stateMasterCode: "", pincode: "" };
         }
         this.merchantData = res;
-        this.merchantData.name = this.merchantData.fName +' '+ this.merchantData.lName;      
-        if(this.merchantData.gstDetails.businessLogo) {
+        this.merchantData.name = this.merchantData.fName + ' ' + this.merchantData.lName;
+        if (this.merchantData.gstDetails.businessLogo) {
           this.getS3Image(this.merchantData.gstDetails.businessLogo).then(s3Image => {
             this.merchantData.gstDetails.s3BusinessLogo = s3Image;
           });
         }
 
-        if(this.merchantData.gstDetails.businessSignature) {
+        if (this.merchantData.gstDetails.businessSignature) {
           this.getS3Image(this.merchantData.gstDetails.businessSignature).then(s3Image => {
             this.merchantData.gstDetails.s3BusinessSignature = s3Image;
           });
         }
 
-        if(this.merchantData.gstDetails.gstCertificate) {
+        if (this.merchantData.gstDetails.gstCertificate) {
           this.getS3Image(this.merchantData.gstDetails.gstCertificate).then(s3Image => {
             this.merchantData.gstDetails.s3GstCertificate = s3Image;
           });
-        } 
+        }
 
-        if(this.merchantData.gstDetails.businessAddress.state) {
+        if (this.merchantData.gstDetails.businessAddress.state) {
           let currentState = this.state_list.filter(sl => { return sl.stateMasterCode == this.merchantData.gstDetails.businessAddress.state });
-          if(currentState && currentState[0]) {
+          if (currentState && currentState[0]) {
             this.selected_gst_state = currentState[0];
           }
         }
@@ -146,13 +147,13 @@ export class BusinessProfileComponent implements OnInit {
       this.loading = false;
     }, err => {
       let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
-      this._toastMessageService.alert("error", "merchant detail - " + errorMessage );
+      this._toastMessageService.alert("error", "merchant detail - " + errorMessage);
       this.loading = false;
-    });      
+    });
   }
 
   onSelectGSTState(event) {
-    if(event && event.stateMasterCode) {
+    if (event && event.stateMasterCode) {
       this.merchantData.gstDetails.businessAddress.state = event.stateMasterCode;
       this.selected_gst_state = event;
     }
@@ -160,17 +161,17 @@ export class BusinessProfileComponent implements OnInit {
 
   onEnterGSTIN(event) {
     this.merchantData.gstDetails.gstinNumber = event;
-    if(this.gstinBounceBackTimeObj) {
+    if (this.gstinBounceBackTimeObj) {
       clearTimeout(this.gstinBounceBackTimeObj);
     }
     this.gstinBounceBackTimeObj = setTimeout(() => {
-      if(this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length == 15) {
-        let stateCode = this.merchantData.gstDetails.gstinNumber.substr(0,2);
-        let fState = this.state_list.filter(sl => { return sl.stateMasterCode == stateCode});
-        if(fState && fState[0]) { this.onSelectGSTState(fState[0]); }
+      if (this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length == 15 && this.utilsService.isGSTINValid(this.merchantData.gstDetails.gstinNumber)) {
+        let stateCode = this.merchantData.gstDetails.gstinNumber.substr(0, 2);
+        let fState = this.state_list.filter(sl => { return sl.stateMasterCode == stateCode });
+        if (fState && fState[0]) { this.onSelectGSTState(fState[0]); }
 
-        this.getPartyInfoByGSTIN(this.merchantData.gstDetails.gstinNumber).then((partyInfo:any) => {
-          if(partyInfo) {
+        this.getPartyInfoByGSTIN(this.merchantData.gstDetails.gstinNumber).then((partyInfo: any) => {
+          if (partyInfo) {
             this.merchantData.gstDetails.legalName = partyInfo.partyName;
             this.merchantData.gstDetails.gstinRegisteredMobileNumber = partyInfo.partyPhone;
           } else {
@@ -179,28 +180,28 @@ export class BusinessProfileComponent implements OnInit {
           }
         });
       }
-    },300);
+    }, 300);
   }
 
   getPartyInfoByGSTIN(gstin) {
-    return new Promise((resolve,reject) => {
-      NavbarService.getInstance(this.http).getPartyInfoByGSTIN({gstin:gstin}).subscribe(res => {
+    return new Promise((resolve, reject) => {
+      NavbarService.getInstance(this.http).getPartyInfoByGSTIN({ gstin: gstin }).subscribe(res => {
         return resolve(((res) ? res : null));
-      }, err => {        
-        if(err.error && err.error.title) { this._toastMessageService.alert("error",err.error.title); }
+      }, err => {
+        if (err.error && err.error.title) { this._toastMessageService.alert("error", err.error.title); }
         return resolve(null);
       });
     })
   }
 
   getS3Image(imagePath) {
-    return new Promise((resolve,reject) => { 
-      if(imagePath) {      
+    return new Promise((resolve, reject) => {
+      if (imagePath) {
         Storage.get(imagePath)
-          .then (result => {
+          .then(result => {
             return resolve(result);
           })
-          .catch(err => {            
+          .catch(err => {
             return resolve("");
           });
       } else {
@@ -210,108 +211,108 @@ export class BusinessProfileComponent implements OnInit {
   }
 
   setBusinessLogo(files) {
-    if(files && files[0]) {      
+    if (files && files[0]) {
       this.bLogoLoader = true;
       let extention = ".png";
-      if(files[0].name) {
+      if (files[0].name) {
         let splitData = files[0].name.split(".");
-        extention = "."+splitData[splitData.length-1];
-      }  
-      Storage.put('business-logo/blogo_'+this.merchantData.userId+"_"+new Date().getTime()+extention, files[0], {
-          contentType: files[0].type
+        extention = "." + splitData[splitData.length - 1];
+      }
+      Storage.put('business-logo/blogo_' + this.merchantData.userId + "_" + new Date().getTime() + extention, files[0], {
+        contentType: files[0].type
       })
-      .then ((result:any) => {
-        if(result && result.key) {
-          this.merchantData.gstDetails.businessLogo = result.key;
-          this.getS3Image(this.merchantData.gstDetails.businessLogo).then(s3Image => {
-            this.merchantData.gstDetails.s3BusinessLogo = s3Image;
+        .then((result: any) => {
+          if (result && result.key) {
+            this.merchantData.gstDetails.businessLogo = result.key;
+            this.getS3Image(this.merchantData.gstDetails.businessLogo).then(s3Image => {
+              this.merchantData.gstDetails.s3BusinessLogo = s3Image;
+              this.bLogoLoader = false;
+            });
+          } else {
             this.bLogoLoader = false;
-          });
-        } else {
+            this._toastMessageService.alert("error", "Error While uploading business image");
+          }
+        })
+        .catch(err => {
           this.bLogoLoader = false;
-          this._toastMessageService.alert("error","Error While uploading business image");
-        }        
-      })
-      .catch(err => {
-        this.bLogoLoader = false;
-        this._toastMessageService.alert("error","Error While uploading business image"+JSON.stringify(err));
-      });
+          this._toastMessageService.alert("error", "Error While uploading business image" + JSON.stringify(err));
+        });
     }
   }
 
   setBusinessSignature(files) {
-    if(files && files[0]) {      
-      this.bSignatureLoader = true;        
+    if (files && files[0]) {
+      this.bSignatureLoader = true;
       let extention = ".png";
-      if(files[0].name) {
+      if (files[0].name) {
         let splitData = files[0].name.split(".");
-        extention = "."+splitData[splitData.length-1];
-      }      
-      Storage.put('business-signature/bsignature_'+this.merchantData.userId+"_"+new Date().getTime()+extention, files[0], {
-          contentType: files[0].type
+        extention = "." + splitData[splitData.length - 1];
+      }
+      Storage.put('business-signature/bsignature_' + this.merchantData.userId + "_" + new Date().getTime() + extention, files[0], {
+        contentType: files[0].type
       })
-      .then ((result:any) => {
-        if(result && result.key) {
-          this.merchantData.gstDetails.businessSignature = result.key;
-          this.getS3Image(this.merchantData.gstDetails.businessSignature).then(s3Image => {
-            this.merchantData.gstDetails.s3BusinessSignature = s3Image;
-             this.bSignatureLoader = false;
-          });
-        } else {
+        .then((result: any) => {
+          if (result && result.key) {
+            this.merchantData.gstDetails.businessSignature = result.key;
+            this.getS3Image(this.merchantData.gstDetails.businessSignature).then(s3Image => {
+              this.merchantData.gstDetails.s3BusinessSignature = s3Image;
+              this.bSignatureLoader = false;
+            });
+          } else {
+            this.bSignatureLoader = false;
+            this._toastMessageService.alert("error", "Error While uploading business sig image");
+          }
+        })
+        .catch(err => {
           this.bSignatureLoader = false;
-          this._toastMessageService.alert("error","Error While uploading business sig image");
-        }
-      })
-      .catch(err => {
-        this.bSignatureLoader = false;
-        this._toastMessageService.alert("error","Error While uploading business sig image"+JSON.stringify(err));
-      });
-    } 
+          this._toastMessageService.alert("error", "Error While uploading business sig image" + JSON.stringify(err));
+        });
+    }
   }
 
   setGSTCertificate(files) {
-    if(files && files[0]) {      
-      this.gstCertLoader = true;      
+    if (files && files[0]) {
+      this.gstCertLoader = true;
       let extention = ".png";
-      if(files[0].name) {
+      if (files[0].name) {
         let splitData = files[0].name.split(".");
-        extention = "."+splitData[splitData.length-1];
-      } 
-      Storage.put('gst-certificate/bcertificate_'+this.merchantData.userId+"_"+new Date().getTime()+extention, files[0], {
-          contentType: files[0].type
+        extention = "." + splitData[splitData.length - 1];
+      }
+      Storage.put('gst-certificate/bcertificate_' + this.merchantData.userId + "_" + new Date().getTime() + extention, files[0], {
+        contentType: files[0].type
       })
-      .then ((result:any) => {
-        if(result && result.key) {
-          this.merchantData.gstDetails.gstCertificate = result.key;
-          this.getS3Image(this.merchantData.gstDetails.gstCertificate).then(s3Image => {
-            this.merchantData.gstDetails.s3GstCertificate = s3Image;
+        .then((result: any) => {
+          if (result && result.key) {
+            this.merchantData.gstDetails.gstCertificate = result.key;
+            this.getS3Image(this.merchantData.gstDetails.gstCertificate).then(s3Image => {
+              this.merchantData.gstDetails.s3GstCertificate = s3Image;
+              this.gstCertLoader = false;
+            });
+          } else {
             this.gstCertLoader = false;
-          });
-        } else {
+            this._toastMessageService.alert("error", "Error While uploading business cert image");
+          }
+        })
+        .catch(err => {
           this.gstCertLoader = false;
-          this._toastMessageService.alert("error","Error While uploading business cert image");
-        }
-      })
-      .catch(err => {
-        this.gstCertLoader = false;
-        this._toastMessageService.alert("error","Error While uploading business cert image"+JSON.stringify(err));
-      });
+          this._toastMessageService.alert("error", "Error While uploading business cert image" + JSON.stringify(err));
+        });
     }
   }
 
   saveBusinessProfile() {
-    if(this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length != 15) {
-      this._toastMessageService.alert("error","Please add 15 character valid gstin number");
+    if ((this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length != 15) || !this.utilsService.isGSTINValid(this.merchantData.gstDetails.gstinNumber)) {
+      this._toastMessageService.alert("error", "Please add 15 character valid gstin number");
       return
-    } else if(this.merchantData.gstDetails.gstinRegisteredMobileNumber && !(/^\d{10}$/.test(this.merchantData.gstDetails.gstinRegisteredMobileNumber))) {
-      this._toastMessageService.alert("error","Please add valid 10 digit phone number for gstin registered mobile number");
+    } else if (this.merchantData.gstDetails.gstinRegisteredMobileNumber && !(/^\d{10}$/.test(this.merchantData.gstDetails.gstinRegisteredMobileNumber))) {
+      this._toastMessageService.alert("error", "Please add valid 10 digit phone number for gstin registered mobile number");
       return;
-    } else if(this.merchantData.gstDetails.businessAddress &&  !(/^\d{6}$/.test(this.merchantData.gstDetails.businessAddress.pincode))) {
-      this._toastMessageService.alert("error","Please add valid pincode 6 digit of pincode");
+    } else if (this.merchantData.gstDetails.businessAddress && !(/^\d{6}$/.test(this.merchantData.gstDetails.businessAddress.pincode))) {
+      this._toastMessageService.alert("error", "Please add valid pincode 6 digit of pincode");
       return;
-    } else if(this.merchantData.gstDetails.bankInformation && this.merchantData.gstDetails.bankInformation.ifscCode && 
+    } else if (this.merchantData.gstDetails.bankInformation && this.merchantData.gstDetails.bankInformation.ifscCode &&
       this.merchantData.gstDetails.bankInformation.ifscCode.length != 11) {
-      this._toastMessageService.alert("error","Please add valid 11 character ifsc code");
+      this._toastMessageService.alert("error", "Please add valid 11 character ifsc code");
       return;
     }
 
@@ -326,13 +327,13 @@ export class BusinessProfileComponent implements OnInit {
       this.loading = false;
     }, err => {
       let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
-      this._toastMessageService.alert("error", "merchant detail - " + errorMessage );
+      this._toastMessageService.alert("error", "merchant detail - " + errorMessage);
       this.loading = false;
     });
   }
 
   viewUrl(url) {
-     window.open(url);
+    window.open(url);
   }
 
   getStartDateOfFY() {
@@ -350,7 +351,7 @@ export class BusinessProfileComponent implements OnInit {
     let currentDate = new Date();
     currentDate.setMonth(2);
     currentDate.setDate(31);
-    currentDate.setFullYear(currentDate.getFullYear()+1);
+    currentDate.setFullYear(currentDate.getFullYear() + 1);
     currentDate.setHours(23);
     currentDate.setMinutes(59);
     currentDate.setSeconds(59);
@@ -359,13 +360,13 @@ export class BusinessProfileComponent implements OnInit {
   }
 
   getITCLedgerDetails() {
-    if(!this.merchantData || !this.merchantData.gstDetails || !this.merchantData.gstDetails.gstinNumber) {
+    if (!this.merchantData || !this.merchantData.gstDetails || !this.merchantData.gstDetails.gstinNumber) {
       this._toastMessageService.alert("error", "Please add gstin number");
       return;
     }
 
     let params = {
-      action:"ITC",
+      action: "ITC",
       gstin: this.merchantData.gstDetails.gstinNumber,
       fr_dt: this.getStartDateOfFY(),
       to_dt: this.getEndDateOfFY()
@@ -377,19 +378,19 @@ export class BusinessProfileComponent implements OnInit {
       this.loading = false;
     }, err => {
       let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
-      this._toastMessageService.alert("error", "itc ledger detail - " + errorMessage );
+      this._toastMessageService.alert("error", "itc ledger detail - " + errorMessage);
       this.loading = false;
-    }); 
+    });
   }
 
   getLiabilityLedgerDetails() {
-    if(!this.merchantData || !this.merchantData.gstDetails || !this.merchantData.gstDetails.gstinNumber) {
+    if (!this.merchantData || !this.merchantData.gstDetails || !this.merchantData.gstDetails.gstinNumber) {
       this._toastMessageService.alert("error", "Please add gstin number");
       return;
     }
 
     let params = {
-      action:"TAX",
+      action: "TAX",
       gstin: this.merchantData.gstDetails.gstinNumber,
       fr_dt: this.getStartDateOfFY(),
       to_dt: this.getEndDateOfFY()
@@ -401,19 +402,19 @@ export class BusinessProfileComponent implements OnInit {
       this.loading = false;
     }, err => {
       let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
-      this._toastMessageService.alert("error", "Liability Ledger detail - " + errorMessage );
+      this._toastMessageService.alert("error", "Liability Ledger detail - " + errorMessage);
       this.loading = false;
-    }); 
+    });
   }
 
   getCashITCBalance() {
-    if(!this.merchantData || !this.merchantData.gstDetails || !this.merchantData.gstDetails.gstinNumber) {
+    if (!this.merchantData || !this.merchantData.gstDetails || !this.merchantData.gstDetails.gstinNumber) {
       this._toastMessageService.alert("error", "Please add gstin number");
       return;
     }
 
     let params = {
-      action:"TAX",
+      action: "TAX",
       gstin: this.merchantData.gstDetails.gstinNumber,
       fr_dt: this.getStartDateOfFY(),
       to_dt: this.getEndDateOfFY()
@@ -425,36 +426,36 @@ export class BusinessProfileComponent implements OnInit {
       this.loading = false;
     }, err => {
       let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
-      this._toastMessageService.alert("error", "cash itc balance detail - " + errorMessage );
+      this._toastMessageService.alert("error", "cash itc balance detail - " + errorMessage);
       this.loading = false;
-    }); 
+    });
   }
 
   onEnterIFSCCode(event) {
     this.merchantData.gstDetails.bankInformation.ifscCode = event;
-    if(this.ifscBounceBackTimeObj) {
+    if (this.ifscBounceBackTimeObj) {
       clearTimeout(this.ifscBounceBackTimeObj);
     }
     this.ifscBounceBackTimeObj = setTimeout(() => {
-      if(this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length == 11) {       
+      if (this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length == 11) {
         NavbarService.getInstance(this.http).getBankDetailByIFSCCode(this.merchantData.gstDetails.bankInformation.ifscCode).subscribe(res => {
-          this.merchantData.gstDetails.bankInformation.bankName  = res.BANK ? res.BANK : "";
-          this.merchantData.gstDetails.bankInformation.accountBranch  = res.BRANCH ? res.BRANCH : "";
-        }, err => {         
+          this.merchantData.gstDetails.bankInformation.bankName = res.BANK ? res.BANK : "";
+          this.merchantData.gstDetails.bankInformation.accountBranch = res.BRANCH ? res.BRANCH : "";
+        }, err => {
           this._toastMessageService.alert("error", "invalid ifsc code entered");
-          this.merchantData.gstDetails.bankInformation.bankName  = "";
-          this.merchantData.gstDetails.bankInformation.accountBranch  = "";
-        });      
+          this.merchantData.gstDetails.bankInformation.bankName = "";
+          this.merchantData.gstDetails.bankInformation.accountBranch = "";
+        });
       }
-    },300);
+    }, 300);
   }
 
-  onFoucusOutOfIFSCCode(event)  {
-    if(this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length != 11) {      
-      this._toastMessageService.alert("error", "ifsc code must be 11 character code."); 
+  onFoucusOutOfIFSCCode(event) {
+    if (this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length != 11) {
+      this._toastMessageService.alert("error", "ifsc code must be 11 character code.");
     } else {
       this.merchantData.gstDetails.bankInformation.ifscCode = this.merchantData.gstDetails.bankInformation.ifscCode.toUpperCase();
     }
   }
-  
+
 }
