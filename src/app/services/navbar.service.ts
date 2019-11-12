@@ -43,6 +43,9 @@ export class NavbarService {
 	selected_party_role: any;
 	isPartyRoleChanged: boolean = false;
 
+	selected_gst_return_type: any;
+	isGSTReturnTypeChanged: boolean = false;
+
 	selected_dates: any = { from_date: new Date(), to_date: new Date() };
 	isDateRangeChanged: boolean = false;
 
@@ -221,8 +224,24 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/assign-users', 'method': 'POST' }, params);
 	}
 
-	getGSTDocumentsList() {
+	getGSTSalesSummary(params:any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/sales-summary', 'method': 'POST' }, params);
+	}
+	
+	getGSTFilingStatuses() {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-filing-statuses', 'method': 'GET' }, {});
+	}
+
+	getGSTDocumentsTypes() {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-document-type-masters', 'method': 'GET' }, {});
+	}
+
+	getGSTDocumentsList(params:any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-return-documents', 'method': 'GET' }, params);
+	}
+
+	uploadGSTDocuments(params:any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-return-documents', 'method': 'POST' }, params);
 	}
 
 	createCreditDebitNoteInvoiceWithItems(params: any) {

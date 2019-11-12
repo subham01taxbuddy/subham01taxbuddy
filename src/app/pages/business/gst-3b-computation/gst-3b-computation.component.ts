@@ -72,7 +72,7 @@ export class GST3BComputationComponent implements OnInit {
     }
 
     if (NavbarService.getInstance(null).isApplyBtnClicked) {
-      NavbarService.getInstance(null).isApplyBtnClicked = false;      
+      NavbarService.getInstance(null).isApplyBtnClicked = false;
       this.getGST3BDetail();
     }
     
@@ -101,6 +101,37 @@ export class GST3BComputationComponent implements OnInit {
     });      
   }
 
+  getGSTSalesSummary() {
+    return new Promise((resolve,reject) => {
+      if(!this.merchantData || !this.merchantData.userId) {
+        this._toastMessageService.alert("error","Please select user");
+        return resolve(false);
+      } else if(!this.selected_gst_return_calendars_data || !this.selected_gst_return_calendars_data.id) {
+        this._toastMessageService.alert("error","Please select return date");
+        return resolve(false);
+      }
+
+      console.log(this.selected_gst_return_calendars_data);
+
+      let params = {
+        businessId:this.merchantData.userId,
+        month:this.selected_gst_return_calendars_data.gstReturnMonth,
+        year:this.selected_gst_return_calendars_data.gstReturnYear
+      }
+      NavbarService.getInstance(this.http).getGSTSalesSummary(params).subscribe(res => {
+        if(res) {
+          return resolve(res);
+        } else {
+          return resolve(false);
+        }        
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "get gst sales summary - " + errorMessage );
+        return resolve(false);
+      });
+    })
+  }
+
   getGST3BDetail() {
     if(!this.merchantData || !this.merchantData.userId) {
       this._toastMessageService.alert("error","Please select user");
@@ -122,34 +153,47 @@ export class GST3BComputationComponent implements OnInit {
     }
 
     this.loading = true;
-    NavbarService.getInstance(this.http).getGST3BComputation(params).subscribe(res => {
-      if(res && res.length > 0) {
-        this.gst3bComputation["id"] = res[0]["id"] || null;
-        this.gst3bComputation["salesIgst"] = res[0]["salesIgst"] || 0;
-        this.gst3bComputation["salesCgst"] = res[0]["salesCgst"] || 0;
-        this.gst3bComputation["salesSgst"] = res[0]["salesSgst"] || 0;
-        this.gst3bComputation["salesCess"] = res[0]["salesCess"] || 0;
-        this.gst3bComputation["salesTotal"] = res[0]["salesTotal"] || 0;
-        this.gst3bComputation["creditIgst"] = res[0]["creditIgst"] || 0;
-        this.gst3bComputation["creditCgst"] = res[0]["creditCgst"] || 0;
-        this.gst3bComputation["creditSgst"] = res[0]["creditSgst"] || 0;
-        this.gst3bComputation["creditCess"] = res[0]["creditCess"] || 0;
-        this.gst3bComputation["creditTotal"] = res[0]["creditTotal"] || 0;
-        this.gst3bComputation["liabilityIgst"] = res[0]["liabilityIgst"] || 0;
-        this.gst3bComputation["liabilityCgst"] = res[0]["liabilityCgst"] || 0;
-        this.gst3bComputation["liabilitySgst"] = res[0]["liabilitySgst"] || 0;
-        this.gst3bComputation["liabilityCess"] = res[0]["liabilityCess"] || 0;
-        this.gst3bComputation["liabilityTotal"] = res[0]["liabilityTotal"] || 0;
-        this.gst3bComputation["lateFee"] = res[0]["lateFee"] || 0;
-        this.gst3bComputation["interest"] = res[0]["interest"] || 0;
-        this.gst3bComputation["computationTotal"] = res[0]["computationTotal"] || 0;
-        this.gst3bComputation["computationStatusId"] = res[0]["computationStatusId"] || 1;
-        this.gst3bComputation["updatedAt"] = res[0]["updatedAt"] || null;
+    NavbarService.getInstance(this.http).getGST3BComputation(params).subscribe(res => {      
+      this.getGSTSalesSummary().then((summaryReportData:any) => {  
+        if(summaryReportData) {
+          this.gst3bComputation["salesIgst"] = (summaryReportData.salesIgst) ? summaryReportData.salesIgst : 0;
+          this.gst3bComputation["salesCgst"] = (summaryReportData.salesCgst) ? summaryReportData.salesCgst : 0;
+          this.gst3bComputation["salesSgst"] = (summaryReportData.salesSgst) ? summaryReportData.salesSgst : 0;;
+          this.gst3bComputation["salesCess"] = (summaryReportData.salesCess) ? summaryReportData.salesCess : 0;;      
 
-        this.calculateLiabilityTotal();
-      }      
-      this.gst3bComputation.businessId = this.currentMerchantData.userId;
-      this.loading = false;
+          this.gst3bComputation["purchaseIgst"] = (summaryReportData.purchaseIgst) ? summaryReportData.purchaseIgst : 0;
+          this.gst3bComputation["purchaseCgst"] = (summaryReportData.purchaseCgst) ? summaryReportData.purchaseCgst : 0;
+          this.gst3bComputation["purchaseSgst"] = (summaryReportData.purchaseSgst) ? summaryReportData.purchaseSgst : 0;;
+          this.gst3bComputation["purchaseCess"] = (summaryReportData.purchaseCess) ? summaryReportData.purchaseCess : 0;;      
+        }
+        if(res && res.length > 0) {        
+          this.gst3bComputation["id"] = res[0]["id"] || null;
+          this.gst3bComputation["salesTotal"] = res[0]["salesTotal"] || 0;
+          this.gst3bComputation["creditIgst"] = res[0]["creditIgst"] || 0;
+          this.gst3bComputation["creditCgst"] = res[0]["creditCgst"] || 0;
+          this.gst3bComputation["creditSgst"] = res[0]["creditSgst"] || 0;
+          this.gst3bComputation["creditCess"] = res[0]["creditCess"] || 0;
+          this.gst3bComputation["creditTotal"] = res[0]["creditTotal"] || 0;
+          this.gst3bComputation["liabilityIgst"] = res[0]["liabilityIgst"] || 0;
+          this.gst3bComputation["liabilityCgst"] = res[0]["liabilityCgst"] || 0;
+          this.gst3bComputation["liabilitySgst"] = res[0]["liabilitySgst"] || 0;
+          this.gst3bComputation["liabilityCess"] = res[0]["liabilityCess"] || 0;
+          this.gst3bComputation["liabilityTotal"] = res[0]["liabilityTotal"] || 0;
+          this.gst3bComputation["lateFee"] = res[0]["lateFee"] || 0;
+          this.gst3bComputation["interest"] = res[0]["interest"] || 0;
+          this.gst3bComputation["computationTotal"] = res[0]["computationTotal"] || 0;
+          this.gst3bComputation["computationStatusId"] = res[0]["computationStatusId"] || 1;
+          this.gst3bComputation["updatedAt"] = res[0]["updatedAt"] || null;
+        }
+
+        this.calculateLiabilityTotal();       
+        this.calculateComputationTotal('sales',"ALL");
+        this.calculateCreditTotal('purchase',"ALL");
+
+
+        this.gst3bComputation.businessId = this.currentMerchantData.userId;
+        this.loading = false;
+      });
     }, err => {
       let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
       this._toastMessageService.alert("error", "get gst 3b - " + errorMessage );
@@ -164,6 +208,12 @@ export class GST3BComputationComponent implements OnInit {
       "salesSgst" : 0.0,
       "salesCess" : 0.0,
       "salesTotal" : 0.0,
+      "purchaseIgst" : 0.0,
+      "purchaseCgst" : 0.0,
+      "purchaseSgst" : 0.0,
+      "purchaseCess" : 0.0,
+      "purchaseLateFee" : 0.0,
+      "purchaseTotal" : 0.0,
       "creditIgst" : 0.0,
       "creditCgst" : 0.0,
       "creditSgst" : 0.0,
@@ -190,21 +240,65 @@ export class GST3BComputationComponent implements OnInit {
     }
   }
 
+  calculateCreditTotal(type,subtype) {
+    if(!this.gst3bComputation.opBalCreditIgst) {
+      this.gst3bComputation.opBalCreditIgst = 0;
+    }
+
+    if(!this.gst3bComputation.opBalCreditCgst) {
+      this.gst3bComputation.opBalCreditCgst = 0;
+    }
+
+    if(!this.gst3bComputation.opBalCreditSgst) {
+      this.gst3bComputation.opBalCreditSgst = 0;
+    }
+
+    if(!this.gst3bComputation.opBalCreditCess) {
+      this.gst3bComputation.opBalCreditCess = 0;
+    }
+
+    if(!this.gst3bComputation.creditLateFee) {
+      this.gst3bComputation.creditLateFee = 0;
+    }
+
+    if(!this.gst3bComputation.opBalCreditLateFee) {
+      this.gst3bComputation.opBalCreditLateFee = 0;
+    }
+    
+    if(subtype == "IGST" || subtype=="ALL") {
+      this.gst3bComputation.creditIgst = this.gst3bComputation.opBalCreditIgst + this.gst3bComputation.purchaseIgst;
+    } else if(subtype == "CGST" || subtype=="ALL") {
+      this.gst3bComputation.creditCgst = this.gst3bComputation.opBalCreditCgst + this.gst3bComputation.purchaseCgst;
+    } else if(subtype == "SGST" || subtype=="ALL") {
+      this.gst3bComputation.creditSgst = this.gst3bComputation.opBalCreditSgst + this.gst3bComputation.purchaseSgst;
+    } else if(subtype == "CESS" || subtype=="ALL") {
+      this.gst3bComputation.creditCess = this.gst3bComputation.opBalCreditCess + this.gst3bComputation.purchaseCess;
+    } else if(subtype == "OP_LATE_FEE" || subtype=="ALL") {
+      this.gst3bComputation.creditLateFee = this.gst3bComputation.opBalCreditLateFee ;
+    }  
+
+
+    this.gst3bComputation.purchaseTotal = this.gst3bComputation.purchaseIgst + this.gst3bComputation.purchaseCgst+ this.gst3bComputation.purchaseSgst+ this.gst3bComputation.purchaseCess
+    this.gst3bComputation.opBalCreditTotal = this.gst3bComputation.opBalCreditIgst + this.gst3bComputation.opBalCreditCgst+ this.gst3bComputation.opBalCreditSgst+ this.gst3bComputation.opBalCreditCess + this.gst3bComputation.opBalCreditLateFee; 
+    this.gst3bComputation.creditTotal = this.gst3bComputation.purchaseTotal + this.gst3bComputation.opBalCreditTotal;    
+    this.calculateLiabilityTotal();
+  }
+
   calculateComputationTotal(type,subtype) {
     if(type == 'sales') {
       this.gst3bComputation.salesTotal = this.gst3bComputation.salesIgst + this.gst3bComputation.salesCgst+ this.gst3bComputation.salesSgst+ this.gst3bComputation.salesCess;
       this.gst3bComputation.computationTotal = this.gst3bComputation.salesTotal+this.gst3bComputation.lateFee+this.gst3bComputation.interest;
     } else if(type == 'credit') {
       this.gst3bComputation.creditTotal = this.gst3bComputation.creditIgst + this.gst3bComputation.creditCgst+ this.gst3bComputation.creditSgst+ this.gst3bComputation.creditCess;
-    } 
+    }
 
-    if(subtype == "IGST") {
+    if(subtype == "IGST" || subtype=="ALL") {
       this.gst3bComputation.liabilityIgst = this.gst3bComputation.salesIgst - this.gst3bComputation.creditIgst;
-    } else if(subtype == "CGST") {
+    } else if(subtype == "CGST" || subtype=="ALL") {
       this.gst3bComputation.liabilityCgst = this.gst3bComputation.salesCgst - this.gst3bComputation.creditCgst;
-    } else if(subtype == "SGST") {
+    } else if(subtype == "SGST" || subtype=="ALL") {
       this.gst3bComputation.liabilitySgst = this.gst3bComputation.salesSgst - this.gst3bComputation.creditSgst;
-    } else if(subtype == "CESS") {
+    } else if(subtype == "CESS" || subtype=="ALL") {
       this.gst3bComputation.liabilityCess = this.gst3bComputation.salesCess - this.gst3bComputation.creditCess;
     }   
 

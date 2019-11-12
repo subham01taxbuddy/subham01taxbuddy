@@ -3,6 +3,16 @@
 <div class="content content_full">
 
   <div class="content__container">
+    <div class="card" *ngIf="is_applied_clicked">
+      <div class="card__row" >      
+        <div class="card__col-xs-12 card__col-sm-12" style="padding: 10px 10px !important;">
+          <app-input-upload [upload]="upload" [input_id]="'invoiceData-s3GSTDocumentUrl'" (filesDropped)="uploadGSTDocument($event)"></app-input-upload>
+        </div>
+        <!-- <div class="card__col-xs-12" style="text-align: right;">
+          <div class="upload-btn-container" (click)="uploadGSTDocument()"></div>
+        </div> -->
+      </div>
+    </div>
     <div class="card" *ngIf="is_applied_clicked && documents_list && documents_list.length > 0">
         <div class="card__row">        
           <div class="report-table-wrapper">

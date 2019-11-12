@@ -23,6 +23,7 @@ import { NavbarService } from '../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../services/toast-message.service';
 import { HttpClient } from '@angular/common/http';
+import Storage from '@aws-amplify/storage';
 
 @Component({
   selector: 'app-business-documents',
@@ -35,10 +36,10 @@ export class BusinessDocumentsComponent implements OnInit {
   merchantData: any;
 
   documents_list: any = [];
-  is_applied_clicked: boolean = false;
+  selected_gst_return_type:any;
+  is_applied_clicked: boolean = false;  
 
-  from_date: any = new Date();
-  to_date: any = new Date();
+  loggedInUserInfo = JSON.parse(localStorage.getItem("UMD")) || {};
 
   filterData:any = [];      
   filters_list: any = [ 
@@ -60,7 +61,7 @@ export class BusinessDocumentsComponent implements OnInit {
       return;
     }
     
-    this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+    this.onSelectMerchant(NavbarService.getInstance(null).merchantData);  
   }  
 
   ngDoCheck() {
@@ -69,18 +70,18 @@ export class BusinessDocumentsComponent implements OnInit {
       NavbarService.getInstance(null).isMerchantChanged = false;
     }
 
-    if (NavbarService.getInstance(null).isDateRangeChanged && NavbarService.getInstance(null).selected_dates) {
-      let selected_dates = NavbarService.getInstance(null).selected_dates;
-      this.from_date = selected_dates.from_date;
-      this.to_date = selected_dates.to_date;
-      NavbarService.getInstance(null).isDateRangeChanged = false;
-    }
+    if (NavbarService.getInstance(null).isGSTReturnTypeChanged) {
+      this.selected_gst_return_type = NavbarService.getInstance(null).selected_gst_return_type;      
+      NavbarService.getInstance(null).isGSTReturnTypeChanged = false;
+    }    
 
     if (NavbarService.getInstance(null).isApplyBtnClicked) {
       NavbarService.getInstance(null).isApplyBtnClicked = false;
       this.getDocumentListByMerchant();
     }    
   }
+
+
 
   onSelectMerchant(event) {    
     if(event && event.userId) {
@@ -103,11 +104,17 @@ export class BusinessDocumentsComponent implements OnInit {
     if(!this.merchantData || !this.merchantData.userId) {
       this._toastMessageService.alert("error","Please select merchant");
       return;
+    } else if(!this.selected_gst_return_type || !this.selected_gst_return_type.id) {
+      this._toastMessageService.alert("error","Please select gst return type");
+      return;
     }
 
     this.documents_list = [];
     this.is_applied_clicked = true;
-    NavbarService.getInstance(this.http).getGSTDocumentsList().subscribe(res => {
+    let params = {
+      "gstDocumentTypeMasterGstDocumentTypeMasterId.equals":this.selected_gst_return_type.id
+    }
+    NavbarService.getInstance(this.http).getGSTDocumentsList(params).subscribe(res => {
       if(Array.isArray(res)) {
         res.forEach(d => {
           d.upload_date =  new Date();
@@ -140,5 +147,41 @@ export class BusinessDocumentsComponent implements OnInit {
     })
 
     this.filterData = JSON.parse(JSON.stringify(tempFD));    
+  }
+
+  uploadGSTDocument(files) {
+    console.log(files)
+    if(files && files[0]) {      
+      let gstDocmentSavePath = "gst_document_"+this.merchantData.userId+"_"+new Date().getTime()+".png";      
+      Storage.put("gst-documents/"+ gstDocmentSavePath, files[0], {
+          contentType: files[0].type
+      })
+      .then ((result:any) => {
+        if(result && result.key) {
+          let sendParam = {        
+            "businessId": this.merchantData.userId,        
+            "gstDocumentTypeMasterGstDocumentTypeMasterId": this.selected_gst_return_type.id,
+            "gstReturnDocumentsBy":  this.loggedInUserInfo.USER_UNIQUE_ID,
+            "gstReturnDocumentsUploadDate": new Date(),
+            "gstReturnDocumentsUrl": result.key,
+            "gstReturnStatusGstReturnStatusId": 2,  
+            "businessGstFiledId":0
+          }
+
+          NavbarService.getInstance(this.http).uploadGSTDocuments(sendParam).subscribe(res => {
+            if(Array.isArray(res)) {}
+            this.onChangeAttrFilter(this.documents_list);      
+          }, err => {
+            let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+            this._toastMessageService.alert("error", "upload gst document - " + errorMessage );
+          });
+        } else {
+          this._toastMessageService.alert("error","Error While uploading upload gst document");
+        }
+      })
+      .catch(err => {
+        this._toastMessageService.alert("error","Error While uploading upload gst document"+JSON.stringify(err));
+      });
+    }
   }
 }

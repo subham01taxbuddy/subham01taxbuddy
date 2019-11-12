@@ -42,6 +42,9 @@ export class BusinessComponent implements OnInit {
   	gst_return_calendars_data: any = [];
   	selected_gst_return_calendars_data: any;
 
+  	gst_documents_types: any = [];
+  	selected_gst_return_type: any;  	
+
 	loading: boolean = true;
 	currentUrl: any = "";
 	selected_dates: any = {
@@ -63,10 +66,12 @@ export class BusinessComponent implements OnInit {
 	    });
   		this.loading = true;
   		this.gstGSTReturnCalendarsData().then(igr => {
-	  		this.getInvoicePartyRoles().then(ipr => {
-	  			this.getMerchantList().then(mr => {
-	  				this.loading = false;
-	  			})
+	  		this.getInvoicePartyRoles().then(ipr => {	  			
+	  			this.getGSTDocumentsTypes().then(mpt => {
+		  			this.getMerchantList().then(mr => {
+		  				this.loading = false;
+		  			});	  			
+	  			});
 	  		});
   		});
   	}
@@ -161,6 +166,32 @@ export class BusinessComponent implements OnInit {
 	onSeletedDateChange() {
 		NavbarService.getInstance(null).selected_dates = this.selected_dates;
 	    NavbarService.getInstance(null).isDateRangeChanged = true;
+	}
+
+	getGSTDocumentsTypes() {
+	    return new Promise((resolve,reject) => {      
+	        NavbarService.getInstance(this.http).getGSTDocumentsTypes().subscribe(res => {
+	          if(Array.isArray(res)) {          
+	          	res.forEach(r =>{
+	          		r.name = r.gstDocumentTypeMasterName;
+	          	})
+	            this.gst_documents_types = res;
+	          }
+	          resolve(true);
+	        }, err => {
+	          let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+	          this._toastMessageService.alert("error", "gst document types list - " + errorMessage );
+	          resolve(false)
+	        });
+	    });      
+	}
+
+	onSelectGSTReturnType(event) {
+		if(event && event.id) {
+			this.selected_gst_return_type = event;
+			NavbarService.getInstance(null).selected_gst_return_type = this.selected_gst_return_type;
+	    	NavbarService.getInstance(null).isGSTReturnTypeChanged = true;
+		}
 	}
 
 	onApply() {
