@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit {
         if (res.role.indexOf("ROLE_ADMIN") !== -1) {
           this.router.navigate(['pages/home']);
         } else if (res.role.indexOf("ROLE_IFA") !== -1) {
-          this.router.navigate(['/pages/ifa/client-list']);
+          this.router.navigate(['/pages/ifa/claim-client']);
         } else {
           this._toastMessageService.alert("error", "Access Denied.");
         }
