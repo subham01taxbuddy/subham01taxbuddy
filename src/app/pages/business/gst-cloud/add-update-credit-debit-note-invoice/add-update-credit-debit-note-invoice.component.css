@@ -1,92 +1,100 @@
 .btn-clear {
-	margin-top: 0px;
+  margin-top: 0px;
 }
 
 .add-item-btn {
-	margin-top: 0px;
+  margin-top: 0px;
 }
 
 .invoice_images {
-	padding: 0px !important;
+  padding: 0px !important;
 }
 
 .invoice_images .card__row {
-	margin: 0px !important;
-	padding: 0px !important;
+  margin: 0px !important;
+  padding: 0px !important;
 }
 
 .invoice_images .card__row .card__col-xs-12 {
-	margin: 0px !important;
-	padding: 0px !important;
+  margin: 0px !important;
+  padding: 0px !important;
 }
 
 .invoice_images .card__row {
-	margin: 0px;
-	padding: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
 .invoice_images .image {
-	margin: 0px;	
-	min-height: 100vh;
+  margin: 0px;
+  min-height: 100vh;
 }
 
 .invoice_images .image__item {
-	max-height: unset !important;	
-	opacity: 0;
-	-webkit-transition: opacity 1s ease-in-out;
-  	-moz-transition: opacity 1s ease-in-out;
-  	transition: opacity 1s ease-in-out;
+  max-height: unset !important;
+  opacity: 0;
+  -webkit-transition: opacity 1s ease-in-out;
+  -moz-transition: opacity 1s ease-in-out;
+  transition: opacity 1s ease-in-out;
 }
 
 .hidder__line {
-	padding: 0px !important;
+  padding: 0px !important;
 }
 
 .wrapper {
-	position: relative;
-    min-height: 100vh;
+  position: relative;
+  min-height: 100vh;
 }
 
 .edit-invoice-image {
-	position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    text-align: right;
-    height: 100%;    
-    cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: right;
+  font-size: 20px;
+  cursor: pointer;
 }
 
-.edit-invoice-image > div {
-	display: none;
-	font-size: 30px;
-    color: white;
-    padding: 15px 20px;
-    cursor: pointer;
+.edit-invoice-image > .fa {
+  /* display: none; */
+  font-size: 30px;
+  color: black;
+  padding: 5px;
+  cursor: pointer;
 }
 
-.edit-invoice-image:hover {
+/* .edit-invoice-image:hover {
 	background: rgba(0, 0, 0, 0.5);
-}
+  } */
 
-.edit-invoice-image:hover > div {
-	display: block;
+.edit-invoice-image:hover > .fa {
+  display: block;
+  color: #307e00;
 }
-
 .invoice-item-summary-label {
-	text-align: right;
-    font-size: 17px;
-    margin-top: 10px;
+  text-align: right;
+  font-size: 17px;
+  margin-top: 10px;
 }
 
 .invoice-info-row > .card__col-sm-4 {
-	margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    margin: 0; 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+.verifyPopupImg .ngxImageZoomContainer {
+  max-width: 100% !important;
+  height: auto !important;
+  width: auto !important;
+  text-align: center;
+}
+.verifyPopupImg .ngxImageZoomContainer > img {
+  max-width: 100% !important;
 }

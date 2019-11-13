@@ -241,7 +241,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     } else if (this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2 && !this.invoiceData.partyDTO.partyGstin) {
       this._toastMessageService.alert("error", "Please add customer gstin");
       return;
-    } else if ((this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2 && this.invoiceData.partyDTO.partyGstin.length != 15) || !this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin)) {
+    } else if (this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2 && (this.invoiceData.partyDTO.partyGstin.length != 15 || !this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin))) {
       this._toastMessageService.alert("error", "Please add 15 character valid gstin number");
       return;
     } else if (this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId != 2 && !this.invoiceData.partyDTO.partyName) {
@@ -256,7 +256,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     } else if (this.invoiceData.partyDTO.partyEmail && !(/\S+@\S+\.\S+/.test(this.invoiceData.partyDTO.partyEmail))) {
       this._toastMessageService.alert("error", "Please add valid email address");
       return;
-    } else if (!(this.invoiceData.listInvoiceItems instanceof Array) || (this.invoiceData.listInvoiceItems instanceof Array && this.invoiceData.listInvoiceItems.length == 0)) {
+    } else if (this.invoiceData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId === 3 && (!(this.invoiceData.listInvoiceItems instanceof Array) || (this.invoiceData.listInvoiceItems instanceof Array && this.invoiceData.listInvoiceItems.length == 0))) {
       this._toastMessageService.alert("error", "Please add atleast one item details.");
       return;
     }
@@ -398,6 +398,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         contentType: files[0].type
       })
         .then((result: any) => {
+          debugger
           if (result && result.key) {
             this.invoiceData.invoiceDTO.invoiceImageUrl = result.key;
             this.invoiceData.invoiceDTO.invoiceImageUploadedOn = new Date();

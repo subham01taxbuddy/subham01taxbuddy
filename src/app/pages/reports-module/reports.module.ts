@@ -7,9 +7,10 @@ import { ReportsComponent } from './reports.component';
 import { UserGstStatusReportComponent } from './user-gst-status-report/user-gst-status-report.component';
 import { PagesModule } from '../pages.module';
 import { AgGridModule } from 'ag-grid-angular';
+import { Gstr1Component } from './gstr1/gstr1.component';
 
 @NgModule({
-    declarations: [ReportsComponent, UserGstStatusReportComponent],
+    declarations: [ReportsComponent, UserGstStatusReportComponent, Gstr1Component],
     imports: [
         CommonModule,
         FormsModule,

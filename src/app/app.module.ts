@@ -39,6 +39,7 @@ import { UtilsService } from './services/utils.service';
 
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { TokenInterceptor } from './services/token-interceptor';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { TokenInterceptor } from './services/token-interceptor';
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    HttpModule,
     RouterModule.forRoot(appRoutes),
     PagesModule,
     NgxImageZoomModule.forRoot()
