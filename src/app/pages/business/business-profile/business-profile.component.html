@@ -28,7 +28,7 @@
           <div class="card__col-xs-12 card__col-sm-4">
             <app-input [label]="'GSTIN Number'" [type]="'text'" [is_capital]="true"
               [name]="merchantData.gstDetails.gstn_number" [placeholder]="'GSTIN Number'"
-              [value]="merchantData.gstDetails.gstinNumber" (sendValue)="onEnterGSTIN($event)"></app-input>
+              [value]="merchantData.gstDetails.gstinNumber" (sendValue)="onEnterGSTIN($event)" [max_length]="15"></app-input>
             <!-- (inputFocusOut)="onFoucusOutOfGSTINNumber()" -->
           </div>
 
@@ -57,7 +57,7 @@
               [name]="merchantData.gstDetails.gstinRegisteredMobileNumber"
               [placeholder]="'GSTN Registered Mobile Number'"
               [value]="merchantData.gstDetails.gstinRegisteredMobileNumber"
-              (sendValue)="merchantData.gstDetails.gstinRegisteredMobileNumber = $event"></app-input>
+              (sendValue)="merchantData.gstDetails.gstinRegisteredMobileNumber = $event" [max_length]="15"></app-input>
           </div>
 
           <div class="card__col-xs-12 card__col-sm-4">

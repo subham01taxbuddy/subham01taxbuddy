@@ -78,7 +78,7 @@
 
             <div class="card__col-xs-12 card__col-sm-4">
               <app-input [label]="'Invoice Number'" [type]="'text'" [is_mandatory]="'true'" [name]="'Invoice Number'"
-                [placeholder]="'SSBA/2018-19/001'" [value]="invoiceData.invoiceDTO.invoiceNumber"
+                [placeholder]="'SSBA/2018-19/001'" [max_length]="16" [value]="invoiceData.invoiceDTO.invoiceNumber"
                 (sendValue)="invoiceData.invoiceDTO.invoiceNumber = $event"></app-input>
             </div>
 
@@ -88,7 +88,7 @@
                 <app-input [label]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')"
                   [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [is_capital]="true"
                   [placeholder]="'GSTIN of '+(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')"
-                  [value]="invoiceData.partyDTO.partyGstin" (sendValue)="onEnterGSTIN($event)">
+                  [value]="invoiceData.partyDTO.partyGstin" [max_length]="15" (sendValue)="onEnterGSTIN($event)">
                 </app-input>
               </div>
 

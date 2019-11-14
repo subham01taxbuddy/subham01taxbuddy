@@ -32,16 +32,4 @@ export class GstMsService {
     // .map(response => response.json())
   }
 
-  downloadFile(param, fileType) {
-    console.log('get Param', param);
-    this.userObj = JSON.parse(localStorage.getItem('UMD'));
-    const TOKEN = (this.userObj) ? this.userObj.id_token : null;
-    this.headers = new Headers();
-    this.headers.append('Authorization', 'Bearer ' + TOKEN);
-    console.log('Headers for get method=', this.headers);
-    return this.http.get(environment.url + this.microService + param, { headers: this.headers, responseType: ResponseContentType.Blob })
-      .pipe(map((response) => {
-        return new Blob([response.blob()], { type: fileType });
-      }));
-  }
 }
