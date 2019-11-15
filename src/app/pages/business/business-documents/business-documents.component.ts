@@ -165,7 +165,7 @@ export class BusinessDocumentsComponent implements OnInit {
             "gstReturnDocumentsUploadDate": new Date(),
             "gstReturnDocumentsUrl": result.key,
             "gstReturnStatusGstReturnStatusId": 2,  
-            "businessGstFiledId":0
+            "businessGstFiledId":1
           }
 
           NavbarService.getInstance(this.http).uploadGSTDocuments(sendParam).subscribe(res => {

@@ -284,6 +284,18 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'GET' }, params);
 	}
 
+	getGST3BComputationStatuses() {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/computation-statuses', 'method': 'GET' }, {});
+	}
+
+	getGSTBalanceOfBusiness(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gstBalanceByBusiness', 'method': 'POST' }, params);
+	}
+
+	updateGSTBalanceOfBusiness(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/business-gst-balances', 'method': 'PUT' }, params);
+	}
+
 	getITCLedgerDetails(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxpayerapi/v0.3/ledgers', 'method': 'GET', 'url_key': 'gst_gov_url' }, params);
 	}

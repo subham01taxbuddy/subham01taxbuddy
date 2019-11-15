@@ -222,7 +222,7 @@
                     <tr class="report-table__row">                        
                         <td class="report-table__cell report-table__cell_name text-pull-left">Cess</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'opbcreditCess'" [placeholder]="''" [value]="gst3bComputation.opBalCreditCess" (sendValue)="gst3bComputation.opBalCreditCess = $event;calculateCreditTotal('op_bal','SGST');" [is_only_positive_number_allowed]="true"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'opbcreditCess'" [placeholder]="''" [value]="gst3bComputation.opBalCreditCess" (sendValue)="gst3bComputation.opBalCreditCess = $event;calculateCreditTotal('op_bal','CESS');" [is_only_positive_number_allowed]="true"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             {{gst3bComputation.purchaseCess}}

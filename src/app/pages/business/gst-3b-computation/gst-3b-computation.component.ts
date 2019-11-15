@@ -132,6 +132,51 @@ export class GST3BComputationComponent implements OnInit {
     })
   }
 
+  getGSTBalance() {
+    return new Promise((resolve,reject) => {
+      if(!this.merchantData || !this.merchantData.userId) {
+        this._toastMessageService.alert("error","Please select user");
+        return resolve(false);
+      } else if(!this.selected_gst_return_calendars_data || !this.selected_gst_return_calendars_data.id) {
+        this._toastMessageService.alert("error","Please select return date");
+        return resolve(false);
+      }
+
+      let params = {
+        businessId:this.merchantData.userId,
+        month:this.selected_gst_return_calendars_data.gstReturnMonth,
+        year:this.selected_gst_return_calendars_data.gstReturnYear
+      }
+      NavbarService.getInstance(this.http).getGSTBalanceOfBusiness(params).subscribe(res => {
+        if(res) {
+          return resolve(res);
+        } else {
+          return resolve(false);
+        }        
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "get gst gst balance of business - " + errorMessage );
+        return resolve(false);
+      });
+    });
+  }
+
+  getGSTComputationStatuses() {
+    return new Promise((resolve,reject) => {
+      NavbarService.getInstance(this.http).getGST3BComputationStatuses().subscribe(res => {
+        if(res) {
+          return resolve(res);
+        } else {
+          return resolve(false);
+        }
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "get gst gst balance of business - " + errorMessage );
+        return resolve(false);
+      });
+    });
+  }
+
   getGST3BDetail() {
     if(!this.merchantData || !this.merchantData.userId) {
       this._toastMessageService.alert("error","Please select user");
@@ -154,50 +199,92 @@ export class GST3BComputationComponent implements OnInit {
 
     this.loading = true;
     NavbarService.getInstance(this.http).getGST3BComputation(params).subscribe(res => {      
-      this.getGSTSalesSummary().then((summaryReportData:any) => {  
-        if(summaryReportData) {
-          this.gst3bComputation["salesIgst"] = (summaryReportData.salesIgst) ? summaryReportData.salesIgst : 0;
-          this.gst3bComputation["salesCgst"] = (summaryReportData.salesCgst) ? summaryReportData.salesCgst : 0;
-          this.gst3bComputation["salesSgst"] = (summaryReportData.salesSgst) ? summaryReportData.salesSgst : 0;;
-          this.gst3bComputation["salesCess"] = (summaryReportData.salesCess) ? summaryReportData.salesCess : 0;;      
+      if(res && res.length > 0) {
+        this.gst3bComputation["id"] = res[0]["id"] || null;
+        this.gst3bComputation["salesTotal"] = res[0]["salesTotal"] || 0;
+        this.gst3bComputation["creditIgst"] = res[0]["creditIgst"] || 0;
+        this.gst3bComputation["creditCgst"] = res[0]["creditCgst"] || 0;
+        this.gst3bComputation["creditSgst"] = res[0]["creditSgst"] || 0;
+        this.gst3bComputation["creditCess"] = res[0]["creditCess"] || 0;
+        this.gst3bComputation["creditTotal"] = res[0]["creditTotal"] || 0;
+        this.gst3bComputation["liabilityIgst"] = res[0]["liabilityIgst"] || 0;
+        this.gst3bComputation["liabilityCgst"] = res[0]["liabilityCgst"] || 0;
+        this.gst3bComputation["liabilitySgst"] = res[0]["liabilitySgst"] || 0;
+        this.gst3bComputation["liabilityCess"] = res[0]["liabilityCess"] || 0;
+        this.gst3bComputation["liabilityTotal"] = res[0]["liabilityTotal"] || 0;
+        this.gst3bComputation["lateFee"] = res[0]["lateFee"] || 0;
+        this.gst3bComputation["interest"] = res[0]["interest"] || 0;
+        this.gst3bComputation["computationTotal"] = res[0]["computationTotal"] || 0;
+        this.gst3bComputation["computationStatusId"] = res[0]["computationStatusId"] || 1;
+        this.gst3bComputation["updatedAt"] = res[0]["updatedAt"] || null;
+      }
 
-          this.gst3bComputation["purchaseIgst"] = (summaryReportData.purchaseIgst) ? summaryReportData.purchaseIgst : 0;
-          this.gst3bComputation["purchaseCgst"] = (summaryReportData.purchaseCgst) ? summaryReportData.purchaseCgst : 0;
-          this.gst3bComputation["purchaseSgst"] = (summaryReportData.purchaseSgst) ? summaryReportData.purchaseSgst : 0;;
-          this.gst3bComputation["purchaseCess"] = (summaryReportData.purchaseCess) ? summaryReportData.purchaseCess : 0;;      
-        }
-        if(res && res.length > 0) {        
-          this.gst3bComputation["id"] = res[0]["id"] || null;
-          this.gst3bComputation["salesTotal"] = res[0]["salesTotal"] || 0;
-          this.gst3bComputation["creditIgst"] = res[0]["creditIgst"] || 0;
-          this.gst3bComputation["creditCgst"] = res[0]["creditCgst"] || 0;
-          this.gst3bComputation["creditSgst"] = res[0]["creditSgst"] || 0;
-          this.gst3bComputation["creditCess"] = res[0]["creditCess"] || 0;
-          this.gst3bComputation["creditTotal"] = res[0]["creditTotal"] || 0;
-          this.gst3bComputation["liabilityIgst"] = res[0]["liabilityIgst"] || 0;
-          this.gst3bComputation["liabilityCgst"] = res[0]["liabilityCgst"] || 0;
-          this.gst3bComputation["liabilitySgst"] = res[0]["liabilitySgst"] || 0;
-          this.gst3bComputation["liabilityCess"] = res[0]["liabilityCess"] || 0;
-          this.gst3bComputation["liabilityTotal"] = res[0]["liabilityTotal"] || 0;
-          this.gst3bComputation["lateFee"] = res[0]["lateFee"] || 0;
-          this.gst3bComputation["interest"] = res[0]["interest"] || 0;
-          this.gst3bComputation["computationTotal"] = res[0]["computationTotal"] || 0;
-          this.gst3bComputation["computationStatusId"] = res[0]["computationStatusId"] || 1;
-          this.gst3bComputation["updatedAt"] = res[0]["updatedAt"] || null;
-        }
+      this.gst3bComputation["salesIgst"] = 0;
+      this.gst3bComputation["salesCgst"] = 0;
+      this.gst3bComputation["salesSgst"] = 0;
+      this.gst3bComputation["salesCess"] = 0;
 
+      this.gst3bComputation["purchaseIgst"] = 0;
+      this.gst3bComputation["purchaseCgst"] = 0;
+      this.gst3bComputation["purchaseSgst"] = 0;
+      this.gst3bComputation["purchaseCess"] = 0;
+
+      this.gst3bComputation["opBalCreditLateFee"] = 0;
+      this.gst3bComputation["opBalCreditIgst"] = 0;
+      this.gst3bComputation["opBalCreditCgst"] = 0;
+      this.gst3bComputation["opBalCreditSgst"] = 0;
+      this.gst3bComputation["opBalCreditCess"] = 0;
+
+      this.gst3bComputation.businessId = this.currentMerchantData.userId;
+
+      if(this.gst3bComputation["computationStatusId"] == 1) {
+        this.getAndSetGst3BData().then(result => {
+            this.calculateLiabilityTotal();       
+            this.calculateComputationTotal('sales',"ALL");
+            this.calculateCreditTotal('purchase',"ALL");
+            this.loading = false;
+        });
+      } else {
         this.calculateLiabilityTotal();       
         this.calculateComputationTotal('sales',"ALL");
         this.calculateCreditTotal('purchase',"ALL");
-
-
-        this.gst3bComputation.businessId = this.currentMerchantData.userId;
         this.loading = false;
-      });
+      }
     }, err => {
       let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
       this._toastMessageService.alert("error", "get gst 3b - " + errorMessage );
       this.loading = false;
+    });
+  } 
+
+  getAndSetGst3BData() {
+    return new Promise((resolve,reject) => {
+      this.getGSTSalesSummary().then((summaryReportData:any) => {  
+        this.getGSTBalance().then((gstBalance:any) => {
+          if(summaryReportData) {
+            this.gst3bComputation["salesIgst"] = (summaryReportData.salesIgst) ? summaryReportData.salesIgst : 0;
+            this.gst3bComputation["salesCgst"] = (summaryReportData.salesCgst) ? summaryReportData.salesCgst : 0;
+            this.gst3bComputation["salesSgst"] = (summaryReportData.salesSgst) ? summaryReportData.salesSgst : 0;
+            this.gst3bComputation["salesCess"] = (summaryReportData.salesCess) ? summaryReportData.salesCess : 0;      
+
+            this.gst3bComputation["purchaseIgst"] = (summaryReportData.purchaseIgst) ? summaryReportData.purchaseIgst : 0;
+            this.gst3bComputation["purchaseCgst"] = (summaryReportData.purchaseCgst) ? summaryReportData.purchaseCgst : 0;
+            this.gst3bComputation["purchaseSgst"] = (summaryReportData.purchaseSgst) ? summaryReportData.purchaseSgst : 0;
+            this.gst3bComputation["purchaseCess"] = (summaryReportData.purchaseCess) ? summaryReportData.purchaseCess : 0;
+          }
+          
+          if(gstBalance) {
+            this.gst3bComputation["opBalId"] = (gstBalance.id);
+            this.gst3bComputation["opBalCreditIgst"] = (gstBalance.igst) ? gstBalance.igst : 0;
+            this.gst3bComputation["opBalCreditCgst"] = (gstBalance.cgst) ? gstBalance.cgst : 0;
+            this.gst3bComputation["opBalCreditSgst"] = (gstBalance.sgst) ? gstBalance.sgst : 0;
+            this.gst3bComputation["opBalCreditCess"] = (gstBalance.cess) ? gstBalance.cess : 0; 
+            this.gst3bComputation["opBalGstReturnCalendarId"] = (gstBalance.gstReturnCalendarId) ? gstBalance.gstReturnCalendarId : 0; 
+          }
+
+          return resolve(true);
+        });
+      });
     });
   }
 
@@ -321,27 +408,58 @@ export class GST3BComputationComponent implements OnInit {
       this._toastMessageService.alert("error", "Please select a user.");
       return;
     }
+
     let params = JSON.parse(JSON.stringify(this.gst3bComputation));
     params.updatedAt = new Date();
     this.loading = true;
-    if(params.id) {
-      NavbarService.getInstance(this.http).updateGST3BComputation(params).subscribe(res => {
-        this._toastMessageService.alert("success", "GST 3B Computation saved successfully.");
-        this.loading = false;
-      }, err => {
-        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-        this._toastMessageService.alert("error", "save gst 3b - " + errorMessage );
-        this.loading = false;
-      });
-    } else {
-      NavbarService.getInstance(this.http).addGST3BComputation(params).subscribe(res => {
-        this._toastMessageService.alert("success", "GST 3B Computation saved successfully.");
-        this.loading = false;
-      }, err => {
-        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-        this._toastMessageService.alert("error", "save gst 3b - " + errorMessage );
-        this.loading = false;
-      });
-    }    
+    
+    if(params.id) {      
+        NavbarService.getInstance(this.http).updateGST3BComputation(params).subscribe(res => {
+          this.updateGstBalance().then(ugb => {
+            this._toastMessageService.alert("success", "GST 3B Computation saved successfully.");
+            this.loading = false;
+          })
+        }, err => {
+          let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+          this._toastMessageService.alert("error", "save gst 3b - " + errorMessage );
+          this.loading = false;
+        });
+    } else {      
+        NavbarService.getInstance(this.http).addGST3BComputation(params).subscribe(res => {
+          this.updateGstBalance().then(ugb => {
+            this._toastMessageService.alert("success", "GST 3B Computation saved successfully.");
+            this.loading = false;
+          });
+        }, err => {
+          let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+          this._toastMessageService.alert("error", "save gst 3b - " + errorMessage );
+          this.loading = false;
+        });      
+    }
+  }
+
+  updateGstBalance() {
+    return new Promise((resolve,reject) => {
+      if(!this.gst3bComputation.opBalId) {
+        return resolve(false);
+      } else {
+        let balanceUpdate = {
+          "id" : this.gst3bComputation.opBalId,
+          "cgst" : this.gst3bComputation.opBalCreditCgst,
+          "sgst" : this.gst3bComputation.opBalCreditSgst,
+          "igst" : this.gst3bComputation.opBalCreditIgst,
+          "cess" : this.gst3bComputation.opBalCreditCess,
+          "businessId" : this.gst3bComputation.businessId,
+          "gstReturnCalendarId" : this.gst3bComputation.opBalGstReturnCalendarId
+        }
+        NavbarService.getInstance(this.http).updateGSTBalanceOfBusiness(balanceUpdate).subscribe(res => {
+          return resolve(true);
+        }, err => {
+          let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+          this._toastMessageService.alert("error", "save gst 3b - " + errorMessage );        
+          return resolve(false);
+        });
+      }
+    });
   }
 }
