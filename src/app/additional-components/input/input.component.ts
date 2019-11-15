@@ -36,6 +36,7 @@ export class InputComponent implements OnInit {
   @Input('is_mandatory') is_mandatory: string = 'false';
   @Input('flag_for_show_crncy') flag_for_show_crncy: boolean = false;
   @Input('step') step: any = 1;
+  @Input('max_length') max_length: any = 50;
   @Input('paste_disable') paste_disable: boolean = false;
   @Input('is_percent_currency_view') is_percent_currency_view: boolean = false;
   @Input('is_capital') is_capital: boolean = false;

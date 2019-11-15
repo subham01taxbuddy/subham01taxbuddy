@@ -75,7 +75,7 @@
             <div class="card__col-xs-12 card__col-sm-4">
               <app-input [label]="'Original Invoice Number'" [type]="'text'" [is_mandatory]="'true'"
                 [name]="'Original Invoice Number'" [placeholder]="'SSBA/2018-19/001'"
-                [value]="invoiceData.creditDebitNoteDTO.referenceInvoiceId"
+                [value]="invoiceData.creditDebitNoteDTO.referenceInvoiceId" [max_length]="16"
                 (sendValue)="invoiceData.creditDebitNoteDTO.referenceInvoiceId = $event"></app-input>
             </div>
 
@@ -89,7 +89,7 @@
               <app-input [label]="'GSTIN of '+(invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer')"
                 [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [is_capital]="true"
                 [placeholder]="'GSTIN of '+(invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer')"
-                [value]="invoiceData.partyDTO.partyGstin" (sendValue)="onEnterGSTIN($event)"></app-input>
+                [value]="invoiceData.partyDTO.partyGstin" [max_length]="15" (sendValue)="onEnterGSTIN($event)"></app-input>
             </div>
 
             <div class="card__col-xs-12 card__col-sm-4">

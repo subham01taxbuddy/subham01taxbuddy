@@ -5,6 +5,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { GstMsService } from 'app/services/gst-ms.service';
 import { DatePipe } from '@angular/common';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-gstr1',
@@ -145,10 +146,7 @@ export class Gstr1Component implements OnInit {
     NavbarService.getInstance(null).isApplyBtnClicked = true;
     const from_date = this.datepipe.transform(this.selected_dates.from_date, 'yyyy-MM-dd HH:mm:ss');
     const to_date = this.datepipe.transform(this.selected_dates.to_date, 'yyyy-MM-dd HH:mm:ss');
-    const param = `/invoice-types-Reports?businessId=${this.merchantData.userId}&fromInvoiceDate=` + from_date + `&toInvoiceDate=` + to_date + `&invoiceType=${this.invoiceTypeData.invoiceTypeId}&sendMail=false`;
-    this.gstMsService.downloadFile(param, 'text/csv').subscribe(res => {
-      const fileURL = URL.createObjectURL(res);
-      window.open(fileURL);
-    })
+    const param = `${environment.url}${this.gstMsService.microService}/invoice-types-Reports?businessId=${this.merchantData.userId}&fromInvoiceDate=` + from_date + `&toInvoiceDate=` + to_date + `&invoiceType=${this.invoiceTypeData.invoiceTypeId}&sendMail=false`;
+    window.open(param, '_blank');
   }
 }

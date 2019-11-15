@@ -32,7 +32,7 @@ export class ClientListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ifaClientList()
+    this.ifaClientList();
   }
 
   ifaClientList() {
@@ -43,6 +43,7 @@ export class ClientListComponent implements OnInit {
         this.clientList = res;
         if (Array.isArray(res)) {
           this.clientListGridOptions.api.setRowData(res);
+          this.setDefaultFilter();
         }
         return resolve(true)
       }, err => {
@@ -153,6 +154,16 @@ export class ClientListComponent implements OnInit {
         },
       }
     ];
+  }
+
+  setDefaultFilter() {
+    const userData = JSON.parse(localStorage.getItem('UMD'));
+    var filterComponent = this.clientListGridOptions.api.getFilterInstance("ifaId");
+    filterComponent.setModel({
+      type: "contains",
+      filter: userData.USER_UNIQUE_ID
+    });
+    this.clientListGridOptions.api.onFilterChanged()
   }
   /* filterCount: number;
   getCount() {
