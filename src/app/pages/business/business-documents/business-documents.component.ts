@@ -39,11 +39,11 @@ export class BusinessDocumentsComponent implements OnInit {
   gst_documents_types:any = [];
   admin_list: any = [];
   documents_list: any = [];
+  selected_gst_return_calendars_data:any;
   selected_gst_return_type:any;
   is_applied_clicked: boolean = false;  
 
   loggedInUserInfo = JSON.parse(localStorage.getItem("UMD")) || {};
-  selected_gst_return_calendars_data:any;
   selected_gst_filling_type:any;
   filterData:any = [];      
   filters_list: any = [ 
@@ -150,10 +150,10 @@ export class BusinessDocumentsComponent implements OnInit {
       return;
     } else if(!this.selected_gst_return_calendars_data || !this.selected_gst_return_calendars_data.id) {
       this._toastMessageService.alert("error","Please select return date");
-      return resolve(false);
+      return;
     } else if(!this.selected_gst_filling_type || !this.selected_gst_filling_type.id) {
       this._toastMessageService.alert("error","Please select return filling type");
-      return resolve(false);
+      return;
     }
 
     this.documents_list = [];

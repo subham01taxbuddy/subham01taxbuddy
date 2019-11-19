@@ -42,6 +42,9 @@ export class BusinessComponent implements OnInit {
   	gst_return_calendars_data: any = [];
   	selected_gst_return_calendars_data: any;
 
+  	gst_filling_types:any = [];
+  	selected_gst_filling_type: any;
+
   	gst_documents_types: any = [];
   	selected_gst_return_type: any;  	
 
