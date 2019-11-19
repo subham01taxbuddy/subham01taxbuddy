@@ -1,3 +1,5 @@
+import { UtilsService } from './../../../services/utils.service';
+import { UserMsService } from 'app/services/user-ms.service';
 import { Component, OnInit } from '@angular/core';
 import { NavbarService } from 'app/services/navbar.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
@@ -6,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
 import { GstMsService } from 'app/services/gst-ms.service';
 import { DatePipe } from '@angular/common';
 import { environment } from 'environments/environment';
+import { UpdateEmailDialogComponent } from 'app/pages/reports-module/update-email-dialog/update-email-dialog.component';
+import { SimpleModalService } from 'ngx-simple-modal';
 
 @Component({
   selector: 'app-gstr1',
@@ -17,7 +21,8 @@ export class Gstr1Component implements OnInit {
 
   constructor(private navbarService: NavbarService, private router: Router,
     private _toastMessageService: ToastMessageService,
-    private http: HttpClient, private gstMsService: GstMsService, public datepipe: DatePipe, ) { }
+    private http: HttpClient, private gstMsService: GstMsService, public datepipe: DatePipe,
+    private userMsService: UserMsService, private utilsService: UtilsService, private simpleModalService: SimpleModalService,) { }
   selected_merchant: any;
   available_merchant_list: any = [];
   merchantData: any;
@@ -142,11 +147,50 @@ export class Gstr1Component implements OnInit {
     NavbarService.getInstance(null).selected_dates = this.selected_dates;
     NavbarService.getInstance(null).isDateRangeChanged = true;
   }
-  onApply() {
+
+  downloadReport() {
     NavbarService.getInstance(null).isApplyBtnClicked = true;
     const from_date = this.datepipe.transform(this.selected_dates.from_date, 'yyyy-MM-dd HH:mm:ss');
     const to_date = this.datepipe.transform(this.selected_dates.to_date, 'yyyy-MM-dd HH:mm:ss');
     const param = `${environment.url}${this.gstMsService.microService}/invoice-types-Reports?businessId=${this.merchantData.userId}&fromInvoiceDate=` + from_date + `&toInvoiceDate=` + to_date + `&invoiceType=${this.invoiceTypeData.invoiceTypeId}&sendMail=false`;
     window.open(param, '_blank');
+  }
+
+  sendReport() {
+    if (this.merchantData && this.selected_dates && this.invoiceTypeData) {
+      const userParam = `/profile/${this.merchantData.userId}`;
+      this.userMsService.getMethod(userParam).subscribe((res: any) => {
+        console.log('User profile success:', res);
+        if (res && this.utilsService.isNonEmpty(res.emailAddress)) {
+          const from_date = this.datepipe.transform(this.selected_dates.from_date, 'yyyy-MM-dd HH:mm:ss');
+          const to_date = this.datepipe.transform(this.selected_dates.to_date, 'yyyy-MM-dd HH:mm:ss');
+          const param = `/invoice-types-Reports?businessId=${this.merchantData.userId}&fromInvoiceDate=` + from_date + `&toInvoiceDate=` + to_date + `&invoiceType=${this.invoiceTypeData.invoiceTypeId}&sendMail=true`;
+          this.gstMsService.getMethod(param).subscribe((data:any) => {
+            this._toastMessageService.alert('success', 'Email sent successfully.');
+            console.log('Email sent success:', data);
+          }, err => {
+            // this._toastMessageService.alert('error', 'Error while sending email.');
+            console.log('Email sent error:', err);
+          })
+        } else {
+          // this._toastMessageService.alert('error', 'Please update email address in user profile.');
+          const disposable = this.simpleModalService.addModal(UpdateEmailDialogComponent, {
+            title: 'Update Email',
+            message: 'Enter your email address here to update.',
+            userData:res
+        }).subscribe((isConfirmed) => {
+            if (isConfirmed) {
+              this._toastMessageService.alert('success', 'Email address updated successfully.');
+            } else {
+            }
+        });
+        }
+      }, error => {
+        console.log('get profile failure:', error);
+      })
+    } else {
+      this._toastMessageService.alert('error', 'Please select all parameters');
+    }
+
   }
 }

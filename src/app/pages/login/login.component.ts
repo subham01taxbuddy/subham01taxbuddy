@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit {
         this._toastMessageService.alert("error", "Access Denied.");
       } else if (res && res.id_token) {
         NavbarService.getInstance(null).setUserData(res);
-        this.authToAWS();
+        // this.authToAWS();
         if (res.role.indexOf("ROLE_ADMIN") !== -1) {
           this.router.navigate(['pages/home']);
         } else if (res.role.indexOf("ROLE_IFA") !== -1) {

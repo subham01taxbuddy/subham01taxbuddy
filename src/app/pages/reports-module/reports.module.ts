@@ -8,16 +8,27 @@ import { UserGstStatusReportComponent } from './user-gst-status-report/user-gst-
 import { PagesModule } from '../pages.module';
 import { AgGridModule } from 'ag-grid-angular';
 import { Gstr1Component } from './gstr1/gstr1.component';
+import { UpdateEmailDialogComponent } from './update-email-dialog/update-email-dialog.component';
+import { SimpleModalModule } from 'ngx-simple-modal';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from 'app/services/token-interceptor';
 
 @NgModule({
-    declarations: [ReportsComponent, UserGstStatusReportComponent, Gstr1Component],
+    declarations: [ReportsComponent, UserGstStatusReportComponent, Gstr1Component, UpdateEmailDialogComponent],
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
         ReportsRoutingModule,
         PagesModule,
-        AgGridModule.withComponents([])
+        AgGridModule.withComponents([]),
+        SimpleModalModule
     ],
+    providers:[{
+        provide: HTTP_INTERCEPTORS,
+        useClass: TokenInterceptor,
+        multi: true,
+      }],
+    entryComponents: [UpdateEmailDialogComponent]
 })
 export class ReportsModule { }
