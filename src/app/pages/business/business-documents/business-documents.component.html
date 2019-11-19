@@ -3,18 +3,16 @@
 <div class="content content_full">
 
   <div class="content__container">
-    <div class="card" *ngIf="is_applied_clicked">
-      <div class="card__row" >      
-        <div class="card__col-xs-12 card__col-sm-12" style="padding: 10px 10px !important;">
-          <app-input-upload [upload]="upload" [input_id]="'invoiceData-s3GSTDocumentUrl'" (filesDropped)="uploadGSTDocument($event)"></app-input-upload>
+      <div class="card" *ngIf="is_applied_clicked">
+        <div class="card__row" >      
+          <div class="card__col-xs-3 card__col-sm-3" style="float: right;">
+            <app-input-upload [upload]="upload" [input_id]="'invoiceData-s3GSTDocumentUrl'" (filesDropped)="uploadGSTDocument($event)"></app-input-upload>
+          </div>
+          <!-- <div class="card__col-xs-12" style="text-align: right;">
+            <div class="upload-btn-container" (click)="uploadGSTDocument()"></div>
+          </div> -->
         </div>
-        <!-- <div class="card__col-xs-12" style="text-align: right;">
-          <div class="upload-btn-container" (click)="uploadGSTDocument()"></div>
-        </div> -->
-      </div>
-    </div>
-    <div class="card" *ngIf="is_applied_clicked && documents_list && documents_list.length > 0">
-        <div class="card__row">        
+        <div class="card__row" *ngIf="documents_list && documents_list.length > 0">
           <div class="report-table-wrapper">
               <table class="report-table" style="min-width: unset;">
                   <thead class="report-table__head">
@@ -33,9 +31,10 @@
                       <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.upload_date | backTipsDate}}</td>
                       <td class="report-table__cell report-table__cell_day text-pull-right">{{tab.uploaded_by | capitalizeFirst}}</td>
                       <td class="report-table__cell report-table__cell_day text-pull-right">
-                          <div class="fa-icon-wrapper"><i class="fa fa-cloud-upload" tooltip="Upload Document"></i></div>                          
-                          <div class="fa-icon-wrapper"><i class="fa fa-cloud-download" tooltip="Download Document"></i></div>                          
-                          <div class="combobox__clear"></div>                            
+                          
+                          <!-- <div class="fa-icon-wrapper"><i class="fa fa-cloud-upload" tooltip="Upload Document"></i></div>                           -->
+                          <div class="fa-icon-wrapper" (click)="downloadDocument(tab)"><i class="fa fa-cloud-download" tooltip="Download Document"></i></div>                          
+                          <!-- <div class="combobox__clear"></div>                             -->
 
                       </td>
                       
@@ -45,10 +44,7 @@
               </table>
           </div>
         </div>
-    </div>
-    
-    <div class="card" *ngIf="is_applied_clicked && (!documents_list || documents_list.length == 0)">
-      <div class="card__row">
+        <div class="card__row" *ngIf="(!documents_list || documents_list.length == 0)">
           <div class="card__col-xs-12" style="font-size: 20px;text-align: center;">
             No Data Available.
           </div>

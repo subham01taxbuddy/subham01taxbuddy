@@ -111,8 +111,6 @@ export class GST3BComputationComponent implements OnInit {
         return resolve(false);
       }
 
-      console.log(this.selected_gst_return_calendars_data);
-
       let params = {
         businessId:this.merchantData.userId,
         month:this.selected_gst_return_calendars_data.gstReturnMonth,

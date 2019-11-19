@@ -34,6 +34,8 @@ export class NavbarService {
 	closeSideBar: boolean;
 	headers: any
 
+	available_merchant_list: any = [];
+	gst_documents_types: any = [];
 	merchantData: any;
 	isMerchantChanged: boolean = false;
 
@@ -48,6 +50,9 @@ export class NavbarService {
 
 	selected_dates: any = { from_date: new Date(), to_date: new Date() };
 	isDateRangeChanged: boolean = false;
+
+	isGSTFillingTypeChanged: boolean = false;
+	selected_gst_filling_type: any;
 
 	isApplyBtnClicked: boolean = false;
 
@@ -232,16 +237,22 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-filing-statuses', 'method': 'GET' }, {});
 	}
 
+	getGSTFilingTypes() {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-filing-type-masters', 'method': 'GET' }, {});
+	}
+
+	
+
 	getGSTDocumentsTypes() {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-document-type-masters', 'method': 'GET' }, {});
 	}
 
 	getGSTDocumentsList(params:any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-return-documents', 'method': 'GET' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gstReturnDocumentsByType', 'method': 'POST' }, params);
 	}
 
 	uploadGSTDocuments(params:any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-return-documents', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/uploadReturnDocumentsByType', 'method': 'POST' }, params);
 	}
 
 	createCreditDebitNoteInvoiceWithItems(params: any) {

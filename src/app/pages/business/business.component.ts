@@ -65,20 +65,47 @@ export class BusinessComponent implements OnInit {
 	      }     	      
 	    });
   		this.loading = true;
+  		this.resetAllData();
   		this.gstGSTReturnCalendarsData().then(igr => {
 	  		this.getInvoicePartyRoles().then(ipr => {	  			
 	  			this.getGSTDocumentsTypes().then(mpt => {
-		  			this.getMerchantList().then(mr => {
-		  				this.loading = false;
-		  			});	  			
+	  				this.getGSTFilingTypes().then(ft => {
+			  			this.getMerchantList().then(mr => {
+			  				this.loading = false;
+			  			});
+		  			});
 	  			});
 	  		});
   		});
   	}
 
+  	resetAllData() {
+	    NavbarService.getInstance(null).merchantData = null;
+	    NavbarService.getInstance(null).isMerchantChanged = true;
+
+	    NavbarService.getInstance(null).selected_gst_return_calendars_data = null;
+	    NavbarService.getInstance(null).isGSTReturnCalendarChanged = true;
+
+	    NavbarService.getInstance(null).selected_gst_filling_type = null;
+	    NavbarService.getInstance(null).isGSTFillingTypeChanged = true;
+
+	    NavbarService.getInstance(null).selected_party_role = null;
+	    NavbarService.getInstance(null).isPartyRoleChanged = true;
+
+	    NavbarService.getInstance(null).selected_dates = {
+			from_date: new Date(),
+			to_date: new Date()
+		};
+	    NavbarService.getInstance(null).isDateRangeChanged = true;
+	    
+	    NavbarService.getInstance(null).selected_gst_return_type = null;
+	    NavbarService.getInstance(null).isGSTReturnTypeChanged = true;
+  	}
+
 	getMerchantList() {
 	    return new Promise((resolve,reject) => {
 		    this.available_merchant_list = [];
+		    NavbarService.getInstance(null).available_merchant_list = [];
 		    NavbarService.getInstance(this.http).getGSTDetailList().subscribe(res => {
 		      	if(Array.isArray(res)) {
 			        res.forEach(bData => {
@@ -90,7 +117,9 @@ export class BusinessComponent implements OnInit {
 			          }
 			          this.available_merchant_list.push({userId:bData.userId,name:tName})
 			        });
-		      	}       
+
+		    		NavbarService.getInstance(null).available_merchant_list = this.available_merchant_list;
+		      	}
 		    	return resolve(true);
 		    }, err => {
 		      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
@@ -138,6 +167,33 @@ export class BusinessComponent implements OnInit {
 	    }
 	}
 
+	getGSTFilingTypes() {
+		return new Promise((resolve,reject) => {
+	      this.gst_filling_types = [];      
+	      NavbarService.getInstance(this.http).getGSTFilingTypes().subscribe(res => {
+	        if(Array.isArray(res)) {	          
+	          res.forEach(p => { 	          	
+	          	p.name = p.gstFilingTypeMasterName;
+	          });
+	          this.gst_filling_types = res;
+	        }       
+	        resolve(true);
+	      }, err => {
+	        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+	        this._toastMessageService.alert("error", " gst return calendar data - " + errorMessage );
+	        resolve(false);
+	      });
+	    })
+	}
+
+	onSelectGSTFillingType(event) {
+		if(event && event.id) {
+	    	this.selected_gst_filling_type = event;
+	      	NavbarService.getInstance(null).selected_gst_filling_type = this.selected_gst_filling_type;
+	      	NavbarService.getInstance(null).isGSTFillingTypeChanged = true;
+	    }
+	}
+
 	getInvoicePartyRoles() {
 	    return new Promise((resolve,reject) => {
 	      this.invoice_party_roles = [];      
@@ -169,13 +225,15 @@ export class BusinessComponent implements OnInit {
 	}
 
 	getGSTDocumentsTypes() {
-	    return new Promise((resolve,reject) => {      
+	    return new Promise((resolve,reject) => {     
+	    	NavbarService.getInstance(null).gst_documents_types = [];
 	        NavbarService.getInstance(this.http).getGSTDocumentsTypes().subscribe(res => {
 	          if(Array.isArray(res)) {          
 	          	res.forEach(r =>{
 	          		r.name = r.gstDocumentTypeMasterName;
 	          	})
 	            this.gst_documents_types = res;
+	            NavbarService.getInstance(null).gst_documents_types = res;
 	          }
 	          resolve(true);
 	        }, err => {
