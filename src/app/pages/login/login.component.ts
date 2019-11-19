@@ -28,12 +28,15 @@ import Auth from '@aws-amplify/auth';
 
 import { ToastMessageService } from '../../services/toast-message.service';
 import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
+import { UserMsService } from 'app/services/user-ms.service';
+
+declare let $: any;
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  providers: [RoleBaseAuthGaurdService]
+  providers: [RoleBaseAuthGaurdService, UserMsService]
 })
 export class LoginComponent implements OnInit {
 
@@ -43,7 +46,8 @@ export class LoginComponent implements OnInit {
   public passphrase: AbstractControl;
   public loading: boolean = false;
   constructor(private fb: FormBuilder, private navbarService: NavbarService, public http: HttpClient,
-    public router: Router, private _toastMessageService: ToastMessageService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService) {
+    public router: Router, private _toastMessageService: ToastMessageService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService,
+    private userMsService: UserMsService) {
     NavbarService.getInstance(null).component_link = this.component_link;
   }
 
@@ -68,7 +72,7 @@ export class LoginComponent implements OnInit {
 
     this.loading = true;
     NavbarService.getInstance(this.http).login(loginData).subscribe(res => {
-      console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))
+      console.log("Is admin template allowed", res, this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))
       if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))) {
         // if (res && (res.role.indexOf("ROLE_ADMIN") == -1 || res.role.indexOf("ROLE_IFA") == -1)) {
         this._toastMessageService.alert("error", "Access Denied.");
@@ -97,6 +101,98 @@ export class LoginComponent implements OnInit {
   }
 
   public authToAWS() {
-    Auth.signIn(environment.s3_cred.user_name, environment.s3_cred.password);
+    Auth.signIn(environment.s3_cred.user_name, environment.s3_cred.password)
+  }
+
+  onSubmit1(values: any) {
+    if (this.form.valid) {
+      this.loading = true;
+      Auth.signIn(`+91${values.user}`, values.passphrase).then(res => {
+        const temp = {
+          role: [],
+          userId: 0
+        }
+        this.setUserDataInsession(res, temp);
+        if (res.attributes['custom:user_type'] && res.attributes['custom:user_type'] === 'MIGRATED') {
+          this.updateCognitoId(res);
+        } else {
+          this.getUserByCognitoId(res);
+        }
+      }, err => {
+        this.loading = false;
+        this._toastMessageService.alert("error", err.message);
+      });
+    } else {
+      $('input.ng-invalid').first().focus();
+    }
+  }
+
+  apiCallCounter = 0;
+  updateCognitoId(data) {
+    const param = `user_account/${data.attributes['phone_number'].substring(3, 13)}/${data.attributes.sub}`;
+    this.userMsService.userPutMethod(param).subscribe((res: any) => {
+      this.loading = false;
+      console.log('Cognito Id updated result:', res);
+      data.deleteAttributes(['custom:user_type'], (err, result) => {
+        if (err) {
+          console.log('error while deleting after migration:', err); return;
+        }
+        console.log('User migrated successfully and key deleted:', result);
+      });
+
+      this.setUserDataInsession(data, res);
+    }, error => {
+      this.apiCallCounter = this.apiCallCounter + 1;
+      if (this.apiCallCounter < 3) {
+        this.updateCognitoId(data);
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert("error", 'Please contact our adminstrator, (** we need to tackale this point)');
+      }
+      console.log('Cognito Id failed result:', error);
+    });
+  }
+
+  getUserByCognitoId(data) {
+    NavbarService.getInstance(this.http).getUserByCognitoId(data.username).subscribe(res => {
+      console.log('By CognitoId data:', res)
+      console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))
+      if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))) {
+        this._toastMessageService.alert("error", "Access Denied.");
+      } else if (res && res.id_token) {
+        this.setUserDataInsession(data, res);
+        if (res.role.indexOf("ROLE_ADMIN") !== -1) {
+          this.router.navigate(['pages/home']);
+        } else if (res.role.indexOf("ROLE_IFA") !== -1) {
+          this.router.navigate(['/pages/ifa/claim-client']);
+        } else {
+          this._toastMessageService.alert("error", "Access Denied.");
+        }
+      } else {
+        this._toastMessageService.alert("error", "The Mobile/Email address or Password entered, is not correct. Please check and try again");
+      }
+      this.loading = false;
+    }, err => {
+      let errorMessage = "Internal server error."
+      if ([400, 401].indexOf(err.status) != -1) {
+        errorMessage = "User name or Password is wrong."
+      }
+      this._toastMessageService.alert("error", errorMessage);
+      this.loading = false;
+    });
+  }
+
+  setUserDataInsession(data, jhi) {
+    const userData = {
+      mobile: data.attributes['phone_number'].substring(3, 13),
+      email: data.attributes['email'] ? data.attributes['email'] : '',
+      firstName: data.attributes['custom:first_name'],
+      lastName: data.attributes['custom:last_name'],
+      id_token: data.signInUserSession.accessToken.jwtToken,
+      cognitoId: data.attributes.sub,
+      userId: jhi.userId,
+      role: jhi.role
+    };
+    NavbarService.getInstance(null).setUserData(userData);
   }
 }

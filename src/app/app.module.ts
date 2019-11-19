@@ -41,6 +41,9 @@ import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { TokenInterceptor } from './services/token-interceptor';
 import { HttpModule } from '@angular/http';
 
+import { AmplifyAngularModule, AmplifyService, AmplifyModules } from 'aws-amplify-angular';
+import Auth from '@aws-amplify/auth';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,6 +69,14 @@ import { HttpModule } from '@angular/http';
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true,
+    },
+    {
+      provide: AmplifyService,
+      useFactory: () => {
+        return AmplifyModules({
+          Auth,
+        });
+      }
     }
   ],
   bootstrap: [AppComponent]

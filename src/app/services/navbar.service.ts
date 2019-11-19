@@ -85,10 +85,11 @@ export class NavbarService {
 			USER_F_NAME: userData.firstName,
 			USER_L_NAME: userData.lastName,
 			USER_MOBILE: userData.mobile,
-			USER_NAME: userData.user,
+			// USER_NAME: userData.user, we dont have this value
 			USER_ROLE: userData.role,
 			USER_UNIQUE_ID: userData.userId,
-			id_token: this.id_token
+			id_token: this.id_token,
+			cognitoId: userData.cognitoId,
 		}
 		localStorage.setItem('UMD', JSON.stringify(userInfo));
 		this.setSession();
@@ -106,6 +107,10 @@ export class NavbarService {
 
 	login(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/account/token', 'method': 'POST' }, params);
+	}
+
+	getUserByCognitoId(cognitoId: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/user_account/' + cognitoId, 'method': 'GET' }, {});
 	}
 
 	logout() {
@@ -224,10 +229,10 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/assign-users', 'method': 'POST' }, params);
 	}
 
-	getGSTSalesSummary(params:any) {
+	getGSTSalesSummary(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/sales-summary', 'method': 'POST' }, params);
 	}
-	
+
 	getGSTFilingStatuses() {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-filing-statuses', 'method': 'GET' }, {});
 	}
@@ -236,11 +241,11 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-document-type-masters', 'method': 'GET' }, {});
 	}
 
-	getGSTDocumentsList(params:any) {
+	getGSTDocumentsList(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-return-documents', 'method': 'GET' }, params);
 	}
 
-	uploadGSTDocuments(params:any) {
+	uploadGSTDocuments(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-return-documents', 'method': 'POST' }, params);
 	}
 
