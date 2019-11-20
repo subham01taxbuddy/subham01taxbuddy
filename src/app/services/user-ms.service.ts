@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
+import { InterceptorSkipHeader } from './token-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,7 @@ export class UserMsService {
   userPutMethod<T>(...param): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers = this.headers.set(InterceptorSkipHeader, '');
+    this.headers = this.headers.set(InterceptorSkipHeader, '');
     console.log('put Param', param);
     return this.httpClient.put<T>(`${environment.url}${this.microService}${param[0]}`, {}, { headers: this.headers });
   }

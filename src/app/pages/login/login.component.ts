@@ -129,7 +129,7 @@ export class LoginComponent implements OnInit {
 
   apiCallCounter = 0;
   updateCognitoId(data) {
-    const param = `user_account/${data.attributes['phone_number'].substring(3, 13)}/${data.attributes.sub}`;
+    const param = `/user_account/${data.attributes['phone_number'].substring(3, 13)}/${data.attributes.sub}`;
     this.userMsService.userPutMethod(param).subscribe((res: any) => {
       this.loading = false;
       console.log('Cognito Id updated result:', res);
