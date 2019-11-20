@@ -42,6 +42,11 @@ export class ClientListComponent implements OnInit {
         console.log("IFA Client list:", res)
         this.clientList = res;
         if (Array.isArray(res)) {
+          res.sort(function (a, b) {
+            a = new Date(a.createdDate);
+            b = new Date(b.createdDate);
+            return a > b ? -1 : a < b ? 1 : 0;
+          });
           this.clientListGridOptions.api.setRowData(res);
           this.setDefaultFilter();
         }
