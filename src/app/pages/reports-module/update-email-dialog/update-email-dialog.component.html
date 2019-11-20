@@ -1,26 +1,27 @@
 <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body text-center">
-              <div class="row" style="padding: 35px 20px 5px 20px;">
-                    <div class="input" [class.input_disabled]="disabled">
-                                <label class="input__label">
-                                Email Address
-                                <span class="mandatory_icon">*</span>
-                                </label>
-                                <div style="display: flex; width: 100%;">
-                                    <input  type="text" class="input__text" placeholder="Email Address" name="emailAddress" [(ngModel)]="emailAddress" />
-                                </div>
+    <div class="modal-content">
+        <div class="modal-body text-center">
+            <div class="row" style="padding: 35px 20px 5px 20px;">
+                <div class="input">
+                    <label class="input__label">
+                        Email Address
+                        <span class="mandatory_icon">*</span>
+                    </label>
+                    <div style="display: flex; width: 100%;">
+                        <input type="text" class="input__text" placeholder="Email Address" name="emailAddress"
+                            [(ngModel)]="emailAddress" />
                     </div>
-                    <div class="pull-right">
-                            <a class="btn btn-logout" (click)="close()" >Cancel</a>
-                            <a class="btn" (click)="updateEmail()" >{{busy ? 'Wait...':'Update'}}</a>
+                </div>
+                <div class="pull-right">
+                    <a class="btn btn-logout" (click)="close()">Cancel</a>
+                    <a class="btn" (click)="updateEmail()">{{busy ? 'Wait...':'Update'}}</a>
 
-                            <!-- <button type="button" tabindex="3" class="btn cancel" (click)="close()">Cancel</button>
+                    <!-- <button type="button" tabindex="3" class="btn cancel" (click)="close()">Cancel</button>
                             <button type="submit" tabindex="2" class="btn save" (click)="confirm()"
                                 [style.cursor]="busy ?'not-allowed':'pointer'"
                                 [disabled]="busy">{{busy ? 'Wait...':'Update'}}</button> -->
-                    </div>
                 </div>
             </div>
         </div>
+    </div>
 </div>
