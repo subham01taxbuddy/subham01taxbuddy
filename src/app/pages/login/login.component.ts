@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
   }
 
 
-  public onSubmit(values: any): void {
+  public onSubmit1(values: any): void {
     let loginData: any = {
       username: values.user,
       password: values.passphrase,
@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit {
     Auth.signIn(environment.s3_cred.user_name, environment.s3_cred.password)
   }
 
-  onSubmit1(values: any) {
+  public onSubmit(values: any) {
     if (this.form.valid) {
       this.loading = true;
       Auth.signIn(`+91${values.user}`, values.passphrase).then(res => {
