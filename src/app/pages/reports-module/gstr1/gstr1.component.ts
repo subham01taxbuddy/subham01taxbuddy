@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
 import { GstMsService } from 'app/services/gst-ms.service';
 import { DatePipe } from '@angular/common';
 import { environment } from 'environments/environment';
-import { UpdateEmailDialogComponent } from 'app/pages/reports-module/update-email-dialog/update-email-dialog.component';
-import { SimpleModalService } from 'ngx-simple-modal';
+// import { UpdateEmailDialogComponent } from 'app/pages/reports-module/update-email-dialog/update-email-dialog.component';
+// import { SimpleModalService } from 'ngx-simple-modal';
 
 @Component({
   selector: 'app-gstr1',
@@ -22,7 +22,7 @@ export class Gstr1Component implements OnInit {
   constructor(private navbarService: NavbarService, private router: Router,
     private _toastMessageService: ToastMessageService,
     private http: HttpClient, private gstMsService: GstMsService, public datepipe: DatePipe,
-    private userMsService: UserMsService, private utilsService: UtilsService, private simpleModalService: SimpleModalService,) { }
+    private userMsService: UserMsService, private utilsService: UtilsService, /* private simpleModalService: SimpleModalService,  */) { }
   selected_merchant: any;
   available_merchant_list: any = [];
   merchantData: any;
@@ -165,7 +165,7 @@ export class Gstr1Component implements OnInit {
           const from_date = this.datepipe.transform(this.selected_dates.from_date, 'yyyy-MM-dd HH:mm:ss');
           const to_date = this.datepipe.transform(this.selected_dates.to_date, 'yyyy-MM-dd HH:mm:ss');
           const param = `/invoice-types-Reports?businessId=${this.merchantData.userId}&fromInvoiceDate=` + from_date + `&toInvoiceDate=` + to_date + `&invoiceType=${this.invoiceTypeData.invoiceTypeId}&sendMail=true`;
-          this.gstMsService.getMethod(param).subscribe((data:any) => {
+          this.gstMsService.getMethod(param).subscribe((data: any) => {
             this._toastMessageService.alert('success', 'Email sent successfully.');
             console.log('Email sent success:', data);
           }, err => {
@@ -174,16 +174,16 @@ export class Gstr1Component implements OnInit {
           })
         } else {
           // this._toastMessageService.alert('error', 'Please update email address in user profile.');
-          const disposable = this.simpleModalService.addModal(UpdateEmailDialogComponent, {
-            title: 'Update Email',
-            message: 'Enter your email address here to update.',
-            userData:res
-        }).subscribe((isConfirmed) => {
-            if (isConfirmed) {
-              this._toastMessageService.alert('success', 'Email address updated successfully.');
-            } else {
-            }
-        });
+          //   const disposable = this.simpleModalService.addModal(UpdateEmailDialogComponent, {
+          //     title: 'Update Email',
+          //     message: 'Enter your email address here to update.',
+          //     userData:res
+          // }).subscribe((isConfirmed) => {
+          //     if (isConfirmed) {
+          //       this._toastMessageService.alert('success', 'Email address updated successfully.');
+          //     } else {
+          //     }
+          // });
         }
       }, error => {
         console.log('get profile failure:', error);
