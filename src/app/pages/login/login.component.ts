@@ -154,20 +154,14 @@ export class LoginComponent implements OnInit {
   }
 
   getUserByCognitoId(data) {
-    NavbarService.getInstance(this.http).getUserByCognitoId(data.username).subscribe(res => {
+    NavbarService.getInstance(this.http).getUserByCognitoId(`${data.attributes.sub}`).subscribe(res => {
       console.log('By CognitoId data:', res)
+      debugger
       console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))
-      if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))) {
-        this._toastMessageService.alert("error", "Access Denied.");
-      } else if (res && res.id_token) {
+      if (res && data.signInUserSession.accessToken.jwtToken) {
         this.setUserDataInsession(data, res);
-        if (res.role.indexOf("ROLE_ADMIN") !== -1) {
-          this.router.navigate(['pages/home']);
-        } else if (res.role.indexOf("ROLE_IFA") !== -1) {
-          this.router.navigate(['/pages/ifa/claim-client']);
-        } else {
-          this._toastMessageService.alert("error", "Access Denied.");
-        }
+      } else if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))) {
+        this._toastMessageService.alert("error", "Access Denied.");
       } else {
         this._toastMessageService.alert("error", "The Mobile/Email address or Password entered, is not correct. Please check and try again");
       }
@@ -194,5 +188,15 @@ export class LoginComponent implements OnInit {
       role: jhi.role
     };
     NavbarService.getInstance(null).setUserData(userData);
+
+
+    if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
+      this.router.navigate(['pages/home']);
+    } else if (jhi.role.indexOf("ROLE_IFA") !== -1) {
+      this.router.navigate(['/pages/ifa/claim-client']);
+    } else {
+      if (jhi.role.length > 0)
+        this._toastMessageService.alert("error", "Access Denied.");
+    }
   }
 }

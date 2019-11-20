@@ -93,18 +93,22 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     this.loading = true;
-    NavbarService.getInstance(this.http).logout().subscribe(res => {
+    /* NavbarService.getInstance(this.http).logout().subscribe(res => {
       NavbarService.getInstance(null).clearAllSessionData();
       this.router.navigate(['']);
 
       this.loading = false;
     }, err => {
       this.loading = false;
-    });
+    }); */
 
     Auth.signOut()
       .then(data => {
         this.loading = false;
+        sessionStorage.clear();
+        NavbarService.getInstance(null).clearAllSessionData();
+        this.router.navigate(['']);
+        this.router.navigate(['/login']);
         console.log('sign out data:', data);
       })
       .catch(err => {
