@@ -22,6 +22,9 @@
             </div>
         </div>
         <div class="card__row" style="margin-top: 0px;">    
+            <div style="color: red" *ngIf="gst3bComputation.computationStatusId != 1">
+                *note: {{ gst3bComputation.computationStatusId == 2 ? 'Copy approved by user' :  'Copy sent for approval'}}
+            </div>
             <div class="report-table-wrapper">
               <table class="report-table" style="min-width: unset;">
                   <thead class="report-table__head">
@@ -40,7 +43,7 @@
                             {{gst3bComputation.salesIgst}}
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'creditigst'" [placeholder]="''" [value]="gst3bComputation.creditIgst" (sendValue)="gst3bComputation.creditIgst = $event;calculateComputationTotal('credit','IGST');"  [is_only_positive_number_allowed]="true"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'creditigst'" [placeholder]="''" [value]="gst3bComputation.creditIgst" (sendValue)="gst3bComputation.creditIgst = $event;calculateComputationTotal('credit','IGST');"  [is_only_positive_number_allowed]="true"  [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             {{gst3bComputation.liabilityIgst}}
@@ -55,7 +58,7 @@
                             {{gst3bComputation.salesCgst}}
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'creditcgst'" [placeholder]="''" [value]="gst3bComputation.creditCgst" (sendValue)="gst3bComputation.creditCgst = $event;calculateComputationTotal('credit','CGST');" [is_only_positive_number_allowed]="true"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'creditcgst'" [placeholder]="''" [value]="gst3bComputation.creditCgst" (sendValue)="gst3bComputation.creditCgst = $event;calculateComputationTotal('credit','CGST');" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             {{gst3bComputation.liabilityCgst}}
@@ -69,7 +72,7 @@
                             {{gst3bComputation.salesSgst}}
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'creditsgst'" [placeholder]="''" [value]="gst3bComputation.creditSgst" (sendValue)="gst3bComputation.creditSgst = $event;calculateComputationTotal('credit','SGST');" [is_only_positive_number_allowed]="true"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'creditsgst'" [placeholder]="''" [value]="gst3bComputation.creditSgst" (sendValue)="gst3bComputation.creditSgst = $event;calculateComputationTotal('credit','SGST');" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             {{gst3bComputation.liabilitySgst}}
@@ -83,7 +86,7 @@
                             {{gst3bComputation.salesCess}}
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'creditcess'" [placeholder]="''" [value]="gst3bComputation.creditCess" (sendValue)="gst3bComputation.creditCess = $event;calculateComputationTotal('credit','CESS');" [is_only_positive_number_allowed]="true"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'creditcess'" [placeholder]="''" [value]="gst3bComputation.creditCess" (sendValue)="gst3bComputation.creditCess = $event;calculateComputationTotal('credit','CESS');" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             {{gst3bComputation.liabilityCess}}
@@ -122,7 +125,7 @@
                     <tr class="report-table__row">                        
                         <td class="report-table__cell report-table__cell_name text-pull-left">Late Fees</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'latefees'" [placeholder]="''" [value]="gst3bComputation.lateFee" (sendValue)="gst3bComputation.lateFee = $event;calculateComputationTotal('sales',null);" [is_only_positive_number_allowed]="true"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'latefees'" [placeholder]="''" [value]="gst3bComputation.lateFee" (sendValue)="gst3bComputation.lateFee = $event;calculateComputationTotal('sales',null);" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             {{gst3bComputation.creditLateFee}}
@@ -136,7 +139,7 @@
                     <tr class="report-table__row">                        
                         <td class="report-table__cell report-table__cell_name text-pull-left">Interest</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'interest'" [placeholder]="''" [value]="gst3bComputation.interest" (sendValue)="gst3bComputation.interest = $event;calculateComputationTotal('sales',null);" [is_only_positive_number_allowed]="true"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'interest'" [placeholder]="''" [value]="gst3bComputation.interest" (sendValue)="gst3bComputation.interest = $event;calculateComputationTotal('sales',null);" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             
@@ -161,7 +164,7 @@
                         <td class="report-table__cell report-table__cell_name text-pull-right">A+B+C</td>
                     </tr>
                   </tbody>
-                  <tbody>
+                  <tbody *ngIf="gst3bComputation.computationStatusId == 1">
                       <tr class="report-table__row">
                          <td colspan="5" class="report-table__cell report-table__cell_name text-pull-center credit-table-title">
                              Working Notes : Total Available Credit
@@ -183,7 +186,7 @@
                     <tr class="report-table__row">                        
                         <td class="report-table__cell report-table__cell_name text-pull-left">IGST</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'opbcreditigst'" [placeholder]="''" [value]="gst3bComputation.opBalCreditIgst" (sendValue)="gst3bComputation.opBalCreditIgst = $event;calculateCreditTotal('op_bal','IGST');" [is_only_positive_number_allowed]="true"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'opbcreditigst'" [placeholder]="''" [value]="gst3bComputation.opBalCreditIgst" (sendValue)="gst3bComputation.opBalCreditIgst = $event;calculateCreditTotal('op_bal','IGST');" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             {{gst3bComputation.purchaseIgst}}
@@ -196,7 +199,7 @@
                     <tr class="report-table__row">                        
                         <td class="report-table__cell report-table__cell_name text-pull-left">CGST</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'opbcreditCgst'" [placeholder]="''" [value]="gst3bComputation.opBalCreditCgst" (sendValue)="gst3bComputation.opBalCreditCgst = $event;calculateCreditTotal('op_bal','CGST');" [is_only_positive_number_allowed]="true"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'opbcreditCgst'" [placeholder]="''" [value]="gst3bComputation.opBalCreditCgst" (sendValue)="gst3bComputation.opBalCreditCgst = $event;calculateCreditTotal('op_bal','CGST');" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             {{gst3bComputation.purchaseCgst}}
@@ -209,7 +212,7 @@
                     <tr class="report-table__row">                        
                         <td class="report-table__cell report-table__cell_name text-pull-left">SGST/UTGST</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'opbcreditSgst'" [placeholder]="''" [value]="gst3bComputation.opBalCreditSgst" (sendValue)="gst3bComputation.opBalCreditSgst = $event;calculateCreditTotal('op_bal','SGST');" [is_only_positive_number_allowed]="true"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'opbcreditSgst'" [placeholder]="''" [value]="gst3bComputation.opBalCreditSgst" (sendValue)="gst3bComputation.opBalCreditSgst = $event;calculateCreditTotal('op_bal','SGST');" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             {{gst3bComputation.purchaseSgst}}
@@ -222,7 +225,7 @@
                     <tr class="report-table__row">                        
                         <td class="report-table__cell report-table__cell_name text-pull-left">Cess</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'opbcreditCess'" [placeholder]="''" [value]="gst3bComputation.opBalCreditCess" (sendValue)="gst3bComputation.opBalCreditCess = $event;calculateCreditTotal('op_bal','CESS');" [is_only_positive_number_allowed]="true"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'opbcreditCess'" [placeholder]="''" [value]="gst3bComputation.opBalCreditCess" (sendValue)="gst3bComputation.opBalCreditCess = $event;calculateCreditTotal('op_bal','CESS');" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             {{gst3bComputation.purchaseCess}}
@@ -235,10 +238,10 @@
                     <tr class="report-table__row">                        
                         <td class="report-table__cell report-table__cell_name text-pull-left">Late Fees</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'opbcreditlatefees'" [placeholder]="''" [value]="gst3bComputation.opBalCreditLateFee" (sendValue)="gst3bComputation.opBalCreditLateFee = $event;calculateCreditTotal('op_bal','OP_LATE_FEE');" [is_only_positive_number_allowed]="true"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'opbcreditlatefees'" [placeholder]="''" [value]="gst3bComputation.opBalCreditLateFee" (sendValue)="gst3bComputation.opBalCreditLateFee = $event;calculateCreditTotal('op_bal','OP_LATE_FEE');" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                           <!--  <app-input [label]="''" [type]="'number'" [name]="'opbpurchaselatefees'" [placeholder]="''" [value]="gst3bComputation.purchaseLateFee" (sendValue)="gst3bComputation.purchaseLateFee = $event;calculateCreditTotal('purchase','');" [is_only_positive_number_allowed]="true"></app-input> -->
+                           <!--  <app-input [label]="''" [type]="'number'" [name]="'opbpurchaselatefees'" [placeholder]="''" [value]="gst3bComputation.purchaseLateFee" (sendValue)="gst3bComputation.purchaseLateFee = $event;calculateCreditTotal('purchase','');" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input> -->
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             {{gst3bComputation.creditLateFee}}
@@ -262,7 +265,7 @@
               </table>
             </div>
         </div>
-        <div class="footer__buttons clearfix" style="margin-top: 40px;">
+        <div class="footer__buttons clearfix" style="margin-top: 40px;"> <!-- *ngIf="gst3bComputation.computationStatusId == 1" -->
             <a class="btn long-btn" (click)="saveGST3BData('save');">Save</a>
             <a class="btn long-btn" (click)="saveGST3BData('save & send');">Save & Send</a>
         </div>

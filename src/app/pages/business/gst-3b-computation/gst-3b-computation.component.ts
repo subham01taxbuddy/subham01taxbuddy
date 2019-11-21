@@ -200,6 +200,10 @@ export class GST3BComputationComponent implements OnInit {
       if(res && res.length > 0) {
         this.gst3bComputation["id"] = res[0]["id"] || null;
         this.gst3bComputation["salesTotal"] = res[0]["salesTotal"] || 0;
+        this.gst3bComputation["salesIgst"] = res[0]["salesIgst"] || 0;
+        this.gst3bComputation["salesCgst"] = res[0]["salesCgst"] || 0;
+        this.gst3bComputation["salesSgst"] = res[0]["salesSgst"] || 0;
+        this.gst3bComputation["salesCess"] = res[0]["salesCess"] || 0;
         this.gst3bComputation["creditIgst"] = res[0]["creditIgst"] || 0;
         this.gst3bComputation["creditCgst"] = res[0]["creditCgst"] || 0;
         this.gst3bComputation["creditSgst"] = res[0]["creditSgst"] || 0;
@@ -213,14 +217,16 @@ export class GST3BComputationComponent implements OnInit {
         this.gst3bComputation["lateFee"] = res[0]["lateFee"] || 0;
         this.gst3bComputation["interest"] = res[0]["interest"] || 0;
         this.gst3bComputation["computationTotal"] = res[0]["computationTotal"] || 0;
-        this.gst3bComputation["computationStatusId"] = res[0]["computationStatusId"] || 1;
+        this.gst3bComputation["computationStatusId"] = res[0]["computationStatusId"] || 1; // 1 means pending status
         this.gst3bComputation["updatedAt"] = res[0]["updatedAt"] || null;
-      }
+      } 
 
-      this.gst3bComputation["salesIgst"] = 0;
-      this.gst3bComputation["salesCgst"] = 0;
-      this.gst3bComputation["salesSgst"] = 0;
-      this.gst3bComputation["salesCess"] = 0;
+      if(this.gst3bComputation["computationStatusId"] == 1) {
+        this.gst3bComputation["salesIgst"] = 0;
+        this.gst3bComputation["salesCgst"] = 0;
+        this.gst3bComputation["salesSgst"] = 0;
+        this.gst3bComputation["salesCess"] = 0;
+      }
 
       this.gst3bComputation["purchaseIgst"] = 0;
       this.gst3bComputation["purchaseCgst"] = 0;
@@ -238,14 +244,16 @@ export class GST3BComputationComponent implements OnInit {
       if(this.gst3bComputation["computationStatusId"] == 1) {
         this.getAndSetGst3BData().then(result => {
             this.calculateLiabilityTotal();       
-            this.calculateComputationTotal('sales',"ALL");
+            this.calculateComputationTotal('sales',"ALL");            
             this.calculateCreditTotal('purchase',"ALL");
             this.loading = false;
         });
       } else {
         this.calculateLiabilityTotal();       
         this.calculateComputationTotal('sales',"ALL");
-        this.calculateCreditTotal('purchase',"ALL");
+        if(this.gst3bComputation["computationStatusId"] == 1) {
+          this.calculateCreditTotal('purchase',"ALL");
+        }
         this.loading = false;
       }
     }, err => {
@@ -257,6 +265,9 @@ export class GST3BComputationComponent implements OnInit {
 
   getAndSetGst3BData() {
     return new Promise((resolve,reject) => {
+      if(this.gst3bComputation.computationStatusId != 1) {
+        return resolve(true);
+      }
       this.getGSTSalesSummary().then((summaryReportData:any) => {  
         this.getGSTBalance().then((gstBalance:any) => {
           if(summaryReportData) {
@@ -405,13 +416,16 @@ export class GST3BComputationComponent implements OnInit {
   saveGST3BData(type) {
       if(!this.gst3bComputation.businessId) {
         this._toastMessageService.alert("error", "Please select a user.");
-        return resolve(false);
+        return;
       }
 
       let params = JSON.parse(JSON.stringify(this.gst3bComputation));
       params.updatedAt = new Date();
       this.loading = true;
-      
+      if(type == "save & send") { 
+        params.computationStatusId = 2;  //3 means Sent For Approval // 2 means approved //  1 means pending
+        this.gst3bComputation.computationStatusId = 2;
+      }
       if(params.id) {      
           NavbarService.getInstance(this.http).updateGST3BComputation(params).subscribe(res => {
             this.updateGstBalance().then(ugb => {
@@ -460,7 +474,6 @@ export class GST3BComputationComponent implements OnInit {
       }
 
       NavbarService.getInstance(this.http).freezeGST3BComputationCopy(params).subscribe(res => {        
-        this._toastMessageService.alert("success", "GST 3B Computation saved successfully.");
         resolve(true);        
       }, err => {
         let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";

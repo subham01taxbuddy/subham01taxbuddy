@@ -502,10 +502,10 @@ export class BusinessProfileComponent implements OnInit {
   getOpeningBalance() {
       if(!this.merchantData || !this.merchantData.userId) {
         this._toastMessageService.alert("error","Please select user");
-        return resolve(false);
+        return;        
       } else if(!this.selected_gst_return_calendars_data || !this.selected_gst_return_calendars_data.id) {
         this._toastMessageService.alert("error","Please select return date");
-        return resolve(false);
+        return;
       }
 
       this.opBalCreditObj["igst"] = 0;
@@ -515,11 +515,13 @@ export class BusinessProfileComponent implements OnInit {
       this.opBalCreditObj["id"] = null;
       this.opBalCreditObj["gstReturnCalendarId"] = null;
 
+      this.loading = true;
       let params = {
         businessId:this.merchantData.userId,
         month:this.selected_gst_return_calendars_data.gstReturnMonth,
-        year:this.selected_gst_return_calendars_data.gstReturnYear
+        year:this.selected_gst_return_calendars_data.gstReturnYear        
       }
+
       NavbarService.getInstance(this.http).getGSTBalanceOfBusiness(params).subscribe(res => {
         if(res) {
           this.opBalCreditObj["igst"] = (res.igst) ? res.igst : 0;
@@ -529,10 +531,11 @@ export class BusinessProfileComponent implements OnInit {
           this.opBalCreditObj["id"] = (res.id) ? res.id : 0; 
           this.opBalCreditObj["gstReturnCalendarId"] = (res.gstReturnCalendarId) ? res.gstReturnCalendarId : 0; 
         }
+        this.loading = false;
       }, err => {
         let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
         this._toastMessageService.alert("error", "get gst gst balance of business - " + errorMessage );
-        
+        this.loading = false;
       });
   }
 
