@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ClientListComponent } from './client-list/client-list.component';
 import { ClaimClientComponent } from './claim-client/claim-client.component';
+import { UnClaimClientComponent } from './un-claim-client/un-claim-client.component';
 
 const routes: Routes = [
     {
@@ -10,6 +11,7 @@ const routes: Routes = [
         children: [
             { path: 'client-list', component: ClientListComponent },
             { path: 'claim-client', component: ClaimClientComponent },
+            { path: 'un-claim-client', component: UnClaimClientComponent },
             { path: '', redirectTo: '/pages/ifa/claim-client', pathMatch: 'full' }
         ]
     },

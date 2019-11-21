@@ -5,6 +5,7 @@ import { IfaComponent } from './ifa.component';
 import { IfaRoutingModule } from './ifa-routing.module';
 import { ClientListComponent } from './client-list/client-list.component';
 import { ClaimClientComponent } from './claim-client/claim-client.component';
+import { UnClaimClientComponent } from './un-claim-client/un-claim-client.component';
 
 @NgModule({
   imports: [
@@ -12,6 +13,6 @@ import { ClaimClientComponent } from './claim-client/claim-client.component';
     IfaRoutingModule,
     PagesModule
   ],
-  declarations: [IfaComponent, ClientListComponent, ClaimClientComponent]
+  declarations: [IfaComponent, ClientListComponent, ClaimClientComponent, UnClaimClientComponent]
 })
 export class IfaModule { }
