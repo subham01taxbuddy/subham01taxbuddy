@@ -401,39 +401,73 @@ export class GST3BComputationComponent implements OnInit {
     this.gst3bComputation.liabilityTotal = this.gst3bComputation.liabilityIgst + this.gst3bComputation.liabilityCgst+ this.gst3bComputation.liabilitySgst+ this.gst3bComputation.liabilityCess;
   }
 
-  saveGST3BData() {
-    if(!this.gst3bComputation.businessId) {
-      this._toastMessageService.alert("error", "Please select a user.");
-      return;
-    }
+ 
+  saveGST3BData(type) {
+      if(!this.gst3bComputation.businessId) {
+        this._toastMessageService.alert("error", "Please select a user.");
+        return resolve(false);
+      }
 
-    let params = JSON.parse(JSON.stringify(this.gst3bComputation));
-    params.updatedAt = new Date();
-    this.loading = true;
-    
-    if(params.id) {      
-        NavbarService.getInstance(this.http).updateGST3BComputation(params).subscribe(res => {
-          this.updateGstBalance().then(ugb => {
-            this._toastMessageService.alert("success", "GST 3B Computation saved successfully.");
-            this.loading = false;
-          })
-        }, err => {
-          let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-          this._toastMessageService.alert("error", "save gst 3b - " + errorMessage );
-          this.loading = false;
-        });
-    } else {      
-        NavbarService.getInstance(this.http).addGST3BComputation(params).subscribe(res => {
-          this.updateGstBalance().then(ugb => {
-            this._toastMessageService.alert("success", "GST 3B Computation saved successfully.");
+      let params = JSON.parse(JSON.stringify(this.gst3bComputation));
+      params.updatedAt = new Date();
+      this.loading = true;
+      
+      if(params.id) {      
+          NavbarService.getInstance(this.http).updateGST3BComputation(params).subscribe(res => {
+            this.updateGstBalance().then(ugb => {
+              if(type == "save & send") {
+                this.freezeGST3BComputationCopy().then(rd => {
+                  this._toastMessageService.alert("success", "GST 3B Computation saved successfully.");
+                  this.loading = false;
+                });
+              } else {
+                this._toastMessageService.alert("success", "GST 3B Computation saved successfully.");
+                this.loading = false;
+              }              
+            })
+          }, err => {
+            let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+            this._toastMessageService.alert("error", "save gst 3b - " + errorMessage );
             this.loading = false;
           });
-        }, err => {
-          let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-          this._toastMessageService.alert("error", "save gst 3b - " + errorMessage );
-          this.loading = false;
-        });      
-    }
+      } else {      
+          NavbarService.getInstance(this.http).addGST3BComputation(params).subscribe(res => {            
+              this.updateGstBalance().then(ugb => {
+                if(type == "save & send") {
+                  this.freezeGST3BComputationCopy().then(rd => {
+                    this._toastMessageService.alert("success", "GST 3B Computation saved successfully.");
+                    this.loading = false;
+                  });
+                } else {
+                  this._toastMessageService.alert("success", "GST 3B Computation saved successfully.");
+                  this.loading = false;
+                }              
+              });            
+          }, err => {
+            let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+            this._toastMessageService.alert("error", "save gst 3b - " + errorMessage );
+            this.loading = false;
+          });      
+      }
+  }
+
+  freezeGST3BComputationCopy() {
+    return new Promise((resolve,reject) => {
+      let params = {
+        businessId:this.merchantData.userId,
+        month:this.selected_gst_return_calendars_data.gstReturnMonth,
+        year:this.selected_gst_return_calendars_data.gstReturnYear
+      }
+
+      NavbarService.getInstance(this.http).freezeGST3BComputationCopy(params).subscribe(res => {        
+        this._toastMessageService.alert("success", "GST 3B Computation saved successfully.");
+        resolve(true);        
+      }, err => {
+        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "freeze gst 3b - " + errorMessage );
+        resolve(false);
+      });
+    });
   }
 
   updateGstBalance() {
