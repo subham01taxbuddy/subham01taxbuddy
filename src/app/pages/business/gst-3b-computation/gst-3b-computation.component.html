@@ -265,7 +265,7 @@
               </table>
             </div>
         </div>
-        <div class="footer__buttons clearfix" style="margin-top: 40px;"> <!-- *ngIf="gst3bComputation.computationStatusId == 1" -->
+        <div class="footer__buttons clearfix" style="margin-top: 40px;"  *ngIf="gst3bComputation.computationStatusId == 1">
             <a class="btn long-btn" (click)="saveGST3BData('save');">Save</a>
             <a class="btn long-btn" (click)="saveGST3BData('save & send');">Save & Send</a>
         </div>
