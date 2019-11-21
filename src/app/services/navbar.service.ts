@@ -291,6 +291,10 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'PUT' }, params);
 	}
 
+	freezeGST3BComputationCopy(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/freezeInvoices', 'method': 'POST' }, params);
+	}	
+
 	getGST3BComputation(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'GET' }, params);
 	}
