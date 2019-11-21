@@ -40,7 +40,7 @@ import { ActivatePackageComponent } from './activate-package/activate-package.co
 import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 
 export const routes: Routes = [
-	{ path: 'login', canActivate: [AuthGuard], component: LoginComponent },
+	{ path: 'login', /* canActivate: [AuthGuard], */ component: LoginComponent },
 
 	{
 		path: 'pages', canActivate: [AuthGuard], component: PagesComponent,
