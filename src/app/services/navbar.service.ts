@@ -90,10 +90,11 @@ export class NavbarService {
 			USER_F_NAME: userData.firstName,
 			USER_L_NAME: userData.lastName,
 			USER_MOBILE: userData.mobile,
-			USER_NAME: userData.user,
+			// USER_NAME: userData.user, we dont have this value
 			USER_ROLE: userData.role,
 			USER_UNIQUE_ID: userData.userId,
-			id_token: this.id_token
+			id_token: this.id_token,
+			cognitoId: userData.cognitoId,
 		}
 		localStorage.setItem('UMD', JSON.stringify(userInfo));
 		this.setSession();
@@ -110,205 +111,209 @@ export class NavbarService {
 	}
 
 	login(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/account/token', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gateway/account/token', 'method': 'POST' }, params);
+	}
+
+	getUserByCognitoId(cognitoId: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/user_account/' + cognitoId, 'method': 'GET' }, {});
 	}
 
 	logout() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/account/logout', 'method': 'DELETE' }, null);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gateway/account/logout', 'method': 'DELETE' }, null);
 	}
 
 	getInvoiceSummary(businessId, params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-summary/' + businessId, 'method': 'GET' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoice-summary/' + businessId, 'method': 'GET' }, params);
 	}
 
 	getAdminList() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdy_ms_user/getAdminList', 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/getAdminList', 'method': 'GET' }, {});
 	}
 
 	getUserSearchList(key, searchValue) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdy_ms_user/search/userprofile/query?' + key + "=" + searchValue, 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/search/userprofile/query?' + key + "=" + searchValue, 'method': 'GET' }, {});
 	}
 
 	getUserSubscriptions(userId) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdyitr/api/usersubscription?userId=' + userId, 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/api/usersubscription?userId=' + userId, 'method': 'GET' }, {});
 	}
 
 	createUserCart(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdyitr/cart', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/cart', 'method': 'POST' }, params);
 	}
 
 	createUserOrder(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdyitr/order', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/order', 'method': 'POST' }, params);
 	}
 
 	getUserEligiblePlans(userId) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdyitr/eligiblePlan?userId=' + userId + '&itrId=0', 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/eligiblePlan?userId=' + userId + '&itrId=0', 'method': 'GET' }, {});
 	}
 
 	getGSTDetailList() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdyitr/getGSTDetail', 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/getGSTDetail', 'method': 'GET' }, {});
 	}
 
 	getGetGSTMerchantDetail(userId) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdy_ms_user/profile/' + userId, 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/profile/' + userId, 'method': 'GET' }, {});
 	}
 
 	getSaveGSTMerchantDetail(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/txbdy_ms_user/profile/' + params.userId, 'method': 'PUT' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/profile/' + params.userId, 'method': 'PUT' }, params);
 	}
 
 	getGSTStateDetails() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/state-masters', 'method': 'GET' }, { page: 0, size: 50 });
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/state-masters', 'method': 'GET' }, { page: 0, size: 50 });
 	}
 
 	getGSTInvoiceTypes() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-types', 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoice-types', 'method': 'GET' }, {});
 	}
 
 	getInvoicePartyRoles() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/party-roles', 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/party-roles', 'method': 'GET' }, {});
 	}
 
 	getInvoiceStatusList() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoice-status-masters', 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoice-status-masters', 'method': 'GET' }, {});
 	}
 
 	updatePartyInfo(params) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/parties', 'method': 'PUT' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/parties', 'method': 'PUT' }, params);
 	}
 
 	createParty(params) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/parties', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/parties', 'method': 'POST' }, params);
 	}
 
 	importParties(params) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/import-parties', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/import-parties', 'method': 'POST' }, params);
 	}
 
 	getPartyInfoByGSTIN(params) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/partiesByGstin', 'method': 'GET' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/partiesByGstin', 'method': 'GET' }, params);
 	}
 
 	getPartyInfoByPartyRole(businessId, params) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/party-list/' + businessId, 'method': 'GET' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/party-list/' + businessId, 'method': 'GET' }, params);
 	}
 
 	createInvoice(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoices', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoices', 'method': 'POST' }, params);
 	}
 
 	createInvoiceWithItems(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoicewithInvoiceItems', 'method': 'POST' }, params);
 	}
 
 	updateInvoice(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoices', 'method': 'PUT' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoices', 'method': 'PUT' }, params);
 	}
 
 	updateInvoiceWithItems(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'PUT' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoicewithInvoiceItems', 'method': 'PUT' }, params);
 	}
 
 	getInvoiceList(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoices', 'method': 'GET' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoices', 'method': 'GET' }, params);
 	}
 
 	getInvoiceByInvoiceId(inv_id) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoices/' + inv_id, 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoices/' + inv_id, 'method': 'GET' }, {});
 	}
 
 	getInvoiceWithItemsByInvoiceId(inv_id) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoicewithInvoiceItems', 'method': 'GET' }, { 'id.equals': inv_id });
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoicewithInvoiceItems', 'method': 'GET' }, { 'id.equals': inv_id });
 	}
 
 	deleteInvoiceByInvoiceId(inv_id) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/invoices/' + inv_id, 'method': 'DELETE' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoices/' + inv_id, 'method': 'DELETE' }, {});
 	}
 
 	assignAdminUserToInvoice(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/assign-users', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/assign-users', 'method': 'POST' }, params);
 	}
 
-	getGSTSalesSummary(params:any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/sales-summary', 'method': 'POST' }, params);
+	getGSTSalesSummary(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/sales-summary', 'method': 'POST' }, params);
 	}
-	
+
 	getGSTFilingStatuses() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-filing-statuses', 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gst-filing-statuses', 'method': 'GET' }, {});
 	}
 
 	getGSTFilingTypes() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-filing-type-masters', 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gst-filing-type-masters', 'method': 'GET' }, {});
 	}
 
-	
+
 
 	getGSTDocumentsTypes() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-document-type-masters', 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gst-document-type-masters', 'method': 'GET' }, {});
 	}
 
-	getGSTDocumentsList(params:any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gstReturnDocumentsByType', 'method': 'POST' }, params);
+	getGSTDocumentsList(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gstReturnDocumentsByType', 'method': 'POST' }, params);
 	}
 
-	uploadGSTDocuments(params:any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/uploadReturnDocumentsByType', 'method': 'POST' }, params);
+	uploadGSTDocuments(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/uploadReturnDocumentsByType', 'method': 'POST' }, params);
 	}
 
 	createCreditDebitNoteInvoiceWithItems(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/creditdebitnotesWithNoteItems', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/creditdebitnotesWithNoteItems', 'method': 'POST' }, params);
 	}
 
 	updateCreditDebitNoteInvoice(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/credit-debit-notes', 'method': 'PUT' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/credit-debit-notes', 'method': 'PUT' }, params);
 	}
 
 	updateCreditDebitNoteInvoiceWithItems(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/creditdebitnotesWithNoteItems', 'method': 'PUT' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/creditdebitnotesWithNoteItems', 'method': 'PUT' }, params);
 	}
 
 	deleteCreditDebitNoteInvoiceByInvoiceId(inv_id) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/credit-debit-notes/' + inv_id, 'method': 'DELETE' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/credit-debit-notes/' + inv_id, 'method': 'DELETE' }, {});
 	}
 
 	getCreditDebitNoteInvoiceWithItemsByInvoiceId(inv_id) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/creditdebitnotesWithNoteItems', 'method': 'GET' }, { 'id.equals': inv_id });
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/creditdebitnotesWithNoteItems', 'method': 'GET' }, { 'id.equals': inv_id });
 	}
 
 	getCreditDebitNoteInvoiceList(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/credit-debit-notes', 'method': 'GET' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/credit-debit-notes', 'method': 'GET' }, params);
 	}
 
 	gstGSTReturnCalendarsData() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-return-calendars', 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gst-return-calendars', 'method': 'GET' }, {});
 	}
 
 	addGST3BComputation(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gst-computations', 'method': 'POST' }, params);
 	}
 
 	updateGST3BComputation(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'PUT' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gst-computations', 'method': 'PUT' }, params);
 	}
 
 	freezeGST3BComputationCopy(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/freezeInvoices', 'method': 'POST' }, params);
-	}	
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/freezeInvoices', 'method': 'POST' }, params);
+	}
 
 	getGST3BComputation(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-computations', 'method': 'GET' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gst-computations', 'method': 'GET' }, params);
 	}
 
 	getGST3BComputationStatuses() {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/computation-statuses', 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/computation-statuses', 'method': 'GET' }, {});
 	}
 
 	getGSTBalanceOfBusiness(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gstBalanceByBusiness', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gstBalanceByBusiness', 'method': 'POST' }, params);
 	}
 
 	updateGSTBalanceOfBusiness(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/business-gst-balances', 'method': 'PUT' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/business-gst-balances', 'method': 'PUT' }, params);
 	}
 
 	getITCLedgerDetails(params: any) {
@@ -328,15 +333,16 @@ export class NavbarService {
 	}
 
 	getUserWiseGstStatusReport(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/taxbuddygst/api/gst-filing-status-report' + params, 'method': 'GET' }, {});
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gst-filing-status-report' + params, 'method': 'GET' }, {});
 	}
 
 	getHeaders(): HttpHeaders {
 		if (!this.id_token) {
 			let userData = JSON.parse(localStorage.getItem('UMD'));
 			if (userData && userData.id_token) { this.id_token = userData.id_token; }
+			console.log("ssss",userData)
 		}
-
+		console.log(this.id_token)
 		return new HttpHeaders({ 'Content-Type': "application/json", "Authorization": "Bearer " + this.id_token });
 	}
 

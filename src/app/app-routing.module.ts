@@ -16,15 +16,15 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 import { ModuleWithProviders } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './services/auth.guard';
 
 export const appRoutes: Routes = [
-    { path: '',canActivate: [AuthGuard], redirectTo: 'login', pathMatch: 'full' },
-    { path: '**', redirectTo: 'login' }
-  ];
+  { path: '', canActivate: [AuthGuard], redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' }
+];
 
- export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes, { useHash: false });
+export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes, { useHash: false });
