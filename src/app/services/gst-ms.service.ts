@@ -11,7 +11,7 @@ import { environment } from 'environments/environment';
 export class GstMsService {
   headers: any;
   userObj: any;
-  microService: string = '/taxbuddygst/api';
+  microService: string = '/gst/api';
   constructor(private httpClient: HttpClient, private http: Http, ) { }
 
   getMethod<T>(...param): Observable<T> {

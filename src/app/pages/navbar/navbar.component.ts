@@ -16,11 +16,12 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 import { Component, OnInit, DoCheck, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavbarService } from '../../services/navbar.service';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import Auth from '@aws-amplify/auth/lib';
 
 @Component({
   selector: 'app-navbar',
@@ -29,9 +30,9 @@ import { HttpClient} from '@angular/common/http';
 })
 export class NavbarComponent implements OnInit {
 
-	sidebar_open: boolean = false;
-	menu_btn_rotate: boolean = false;
-	menu_hide_component: boolean = false;
+  sidebar_open: boolean = false;
+  menu_btn_rotate: boolean = false;
+  menu_hide_component: boolean = false;
 
   component_link: string;
   component_link_2: string;
@@ -42,7 +43,7 @@ export class NavbarComponent implements OnInit {
   loading: boolean = false;
 
   constructor(
-    private http:HttpClient,
+    private http: HttpClient,
     private router: Router,
     private navbarService: NavbarService) { }
 
@@ -55,34 +56,34 @@ export class NavbarComponent implements OnInit {
     this.component_link_2 = NavbarService.getInstance(null).component_link_2;
     this.component_link_3 = NavbarService.getInstance(null).component_link_3;
     this.showBtns = NavbarService.getInstance(null).showBtns;
-    if(NavbarService.getInstance(null).closeSideBar) {
+    if (NavbarService.getInstance(null).closeSideBar) {
       this.sideBar();
       NavbarService.getInstance(null).closeSideBar = false;
     }
   }
 
   sideBar() {
-  	if(window.innerWidth < 768) {
-  		if (this.sidebar_open) {
-  			this.menu_btn_rotate = false;
-  			setTimeout(() => {
-  				this.sidebar_open = false;
+    if (window.innerWidth < 768) {
+      if (this.sidebar_open) {
+        this.menu_btn_rotate = false;
+        setTimeout(() => {
+          this.sidebar_open = false;
           NavbarService.getInstance(null).showSideBar = this.sidebar_open;
           this.menu_hide_component = false;
-  			}, 300);
-  		} else {
-  			this.sidebar_open = true;
+        }, 300);
+      } else {
+        this.sidebar_open = true;
         setTimeout(() => {
           NavbarService.getInstance(null).showSideBar = this.sidebar_open;
-  				this.menu_btn_rotate = true;
-  				this.menu_hide_component = true;
-  			}, 300);
-  		}
-  	}
+          this.menu_btn_rotate = true;
+          this.menu_hide_component = true;
+        }, 300);
+      }
+    }
   }
 
   //Http Functions
-  getSingletonNavbarObj(){
+  getSingletonNavbarObj() {
     return NavbarService.getInstance(null);
   }
 
@@ -90,16 +91,31 @@ export class NavbarComponent implements OnInit {
     NavbarService.getInstance(null).saveBusinessProfile = true;
   }
 
-  logout(){
+  logout() {
     this.loading = true;
-    NavbarService.getInstance(this.http).logout().subscribe(res => {            
-      NavbarService.getInstance(null).clearAllSessionData();        
+    /* NavbarService.getInstance(this.http).logout().subscribe(res => {
+      NavbarService.getInstance(null).clearAllSessionData();
       this.router.navigate(['']);
 
       this.loading = false;
-    }, err => {      
-      this.loading = false;      
-    });    
+    }, err => {
+      this.loading = false;
+    }); */
+
+    Auth.signOut()
+      .then(data => {
+        this.loading = false;
+        sessionStorage.clear();
+        NavbarService.getInstance(null).clearAllSessionData();
+        this.router.navigate(['']);
+        this.router.navigate(['/login']);
+        console.log('sign out data:', data);
+      })
+      .catch(err => {
+        this.loading = false;
+        console.log('sign out err:', err);
+      });
+
   }
 
   onClickSalesIQ() {

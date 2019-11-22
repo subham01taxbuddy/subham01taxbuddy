@@ -91,7 +91,7 @@ import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
 import { AgGridCheckboxComponent } from 'app/additional-components/ag-grid-checkbox/ag-grid-checkbox.component';
 
-Auth.configure(environment.aws_cred);
+Auth.configure(environment.AMPLIFY_CONFIG);
 
 Storage.configure({
   AWSS3: {

@@ -9,6 +9,7 @@ import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/internal/operators';
 import { UtilsService } from './utils.service';
+export const InterceptorSkipHeader = 'X-Skip-Interceptor';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -27,6 +28,10 @@ export class TokenInterceptor implements HttpInterceptor {
         this.userData = JSON.parse(localStorage.getItem('UMD'));
         const TOKEN = (this.userData) ? this.userData.id_token : null;
         if (TOKEN) {
+            if (request.headers.has(InterceptorSkipHeader)) {
+                const headers = request.headers.delete(InterceptorSkipHeader);
+                return next.handle(request.clone({ headers }));
+            }
             request = request.clone({
                 setHeaders: {
                     Authorization: `Bearer ` + TOKEN
