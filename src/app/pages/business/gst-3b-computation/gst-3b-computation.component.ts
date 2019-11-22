@@ -423,8 +423,8 @@ export class GST3BComputationComponent implements OnInit {
       params.updatedAt = new Date();
       this.loading = true;
       if(type == "save & send") { 
-        params.computationStatusId = 1;  //3 means Sent For Approval // 2 means approved //  1 means pending
-        this.gst3bComputation.computationStatusId = 1;
+        params.computationStatusId = 3;  //3 means Sent For Approval // 2 means approved //  1 means pending
+        this.gst3bComputation.computationStatusId = 3;
       }
       if(params.id) {      
           NavbarService.getInstance(this.http).updateGST3BComputation(params).subscribe(res => {
