@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="content content_full">
   <div class="content__container">
     <div class="card">
@@ -22,12 +23,12 @@
           </app-input-select-object>
         </div>
         <div class="card__col-xs-12 card__col-sm-1">
-          <a class="btn" (click)="downloadReport();" style="min-width: 10px;"><i class="fa fa-download"
-              aria-hidden="true"></i></a>
+          <a class="btn" (click)="downloadReport();" style="min-width: 10px;" title="Download report"><i
+              class="fa fa-download" aria-hidden="true"></i></a>
         </div>
         <div class="card__col-xs-12 card__col-sm-1">
-          <a class="btn" (click)="sendReport();" style="min-width: 10px;"><i class="fa fa-envelope"
-              aria-hidden="true"></i></a>
+          <a class="btn" (click)="sendReport();" style="min-width: 10px;" title="Send report on email"><i
+              class="fa fa-envelope" aria-hidden="true"></i></a>
         </div>
       </div>
     </div>

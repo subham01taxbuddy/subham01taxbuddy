@@ -173,6 +173,6 @@ Storage.configure({
 
   exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,
     ReactiveFormsModule,
-    HttpClientModule, InputSelectObjectComponent]
+    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule,]
 })
 export class PagesModule { }

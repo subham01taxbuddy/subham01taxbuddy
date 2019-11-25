@@ -8,8 +8,9 @@ import { HttpClient } from '@angular/common/http';
 import { GstMsService } from 'app/services/gst-ms.service';
 import { DatePipe } from '@angular/common';
 import { environment } from 'environments/environment';
-// import { UpdateEmailDialogComponent } from 'app/pages/reports-module/update-email-dialog/update-email-dialog.component';
-// import { SimpleModalService } from 'ngx-simple-modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { UpdateEmailDialogComponent } from '../update-email-dialog/update-email-dialog.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-gstr1',
@@ -22,7 +23,7 @@ export class Gstr1Component implements OnInit {
   constructor(private navbarService: NavbarService, private router: Router,
     private _toastMessageService: ToastMessageService,
     private http: HttpClient, private gstMsService: GstMsService, public datepipe: DatePipe,
-    private userMsService: UserMsService, private utilsService: UtilsService, /* private simpleModalService: SimpleModalService,  */) { }
+    private userMsService: UserMsService, private utilsService: UtilsService, private modalService: BsModalService,/* private simpleModalService: SimpleModalService,  */) { }
   selected_merchant: any;
   available_merchant_list: any = [];
   merchantData: any;
@@ -44,6 +45,8 @@ export class Gstr1Component implements OnInit {
 
   gst_return_calendars_data: any = [];
   selected_gst_return_calendars_data: any;
+  modalRef: BsModalRef;
+
   ngOnInit() {
     this.currentUrl = this.router.url;
     this.router.events.subscribe(event => {
@@ -158,6 +161,7 @@ export class Gstr1Component implements OnInit {
 
   sendReport() {
     if (this.merchantData && this.selected_dates && this.invoiceTypeData) {
+      this.loading = true
       const userParam = `/profile/${this.merchantData.userId}`;
       this.userMsService.getMethod(userParam).subscribe((res: any) => {
         console.log('User profile success:', res);
@@ -166,24 +170,27 @@ export class Gstr1Component implements OnInit {
           const to_date = this.datepipe.transform(this.selected_dates.to_date, 'yyyy-MM-dd HH:mm:ss');
           const param = `/invoice-types-Reports?businessId=${this.merchantData.userId}&fromInvoiceDate=` + from_date + `&toInvoiceDate=` + to_date + `&invoiceType=${this.invoiceTypeData.invoiceTypeId}&sendMail=true`;
           this.gstMsService.getMethod(param).subscribe((data: any) => {
+            this.loading = false;
             this._toastMessageService.alert('success', 'Email sent successfully.');
             console.log('Email sent success:', data);
           }, err => {
+            this.loading = false;
             // this._toastMessageService.alert('error', 'Error while sending email.');
+            // I am not getting proper success and error response thats why i chacked in error condition
+            if (err.status === 200) {
+              this._toastMessageService.alert('success', 'Email sent successfully.');
+            } else {
+              this._toastMessageService.alert('error', 'Error while sending email.');
+            }
             console.log('Email sent error:', err);
           })
         } else {
-          // this._toastMessageService.alert('error', 'Please update email address in user profile.');
-          //   const disposable = this.simpleModalService.addModal(UpdateEmailDialogComponent, {
-          //     title: 'Update Email',
-          //     message: 'Enter your email address here to update.',
-          //     userData:res
-          // }).subscribe((isConfirmed) => {
-          //     if (isConfirmed) {
-          //       this._toastMessageService.alert('success', 'Email address updated successfully.');
-          //     } else {
-          //     }
-          // });
+          this.loading = false;
+          this.updateEmail(res).then(result => {
+            this._toastMessageService.alert('success', 'Email address updated successfully.');
+          }).catch(err => {
+            this._toastMessageService.alert('error', 'Failed to update email address.');
+          })
         }
       }, error => {
         console.log('get profile failure:', error);
@@ -193,4 +200,23 @@ export class Gstr1Component implements OnInit {
     }
 
   }
+
+  updateEmail(res) {
+    return new Promise((resolve, reject) => {
+      this.modalRef = this.modalService.show(UpdateEmailDialogComponent, {});
+      this.modalRef.content.isUpdated = false;
+      this.modalRef.content.confirmation_text = "Please update customer email address.";
+      this.modalRef.content.confirmation_popup_type = 'update_email';
+      this.modalRef.content.userData = res;
+      var tempSubObj: Subscription = this.modalService.onHide.subscribe(() => {
+        if (this.modalRef.content.isUpdated) {
+          return resolve(true);
+        } else {
+          return resolve(false);
+        }
+        tempSubObj.unsubscribe();
+      });
+    });
+  }
+
 }

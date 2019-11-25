@@ -1,0 +1,59 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="modal-dialog">
+    <!--     <div class="modal-content">
+        <div class="modal-body text-center">
+            <div class="row" style="padding: 35px 20px 5px 20px;">
+                <div class="input">
+                    <label class="input__label">
+                        Email Address
+                        <span class="mandatory_icon">*</span>
+                    </label>
+                    <div style="display: flex; width: 100%;">
+                        <input type="text" class="input__text" placeholder="Email Address" name="emailAddress"
+                            [(ngModel)]="emailAddress" />
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <a class="btn btn-logout" (click)="close()">Cancel</a>
+                    <a class="btn" (click)="updateEmail()">{{busy ? 'Wait...':'Update'}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+    <div class="overlay" style="z-index: 1000;"></div>
+
+    <div class="modal modal_show">
+        <div class="modal-wrapper modal-wrapper_show">
+            <div class="modal-content ">
+                <div class="modal-content__container">
+                    <div class="card__row">
+                        <div class="card__col-xs-12">
+                            <div class="confirmation_text">{{confirmation_text}}</div>
+                        </div>
+
+                        <div class="card__col-xs-12" style="padding-left: 35px;
+                        padding-right: 35px;
+                        padding-bottom: 15px;">
+                            <label class="input__label">
+                                Email Address
+                                <span class="mandatory_icon">*</span>
+                            </label>
+                            <div style="display: flex; width: 100%;">
+                                <input type="text" class="input__text" placeholder="Email Address" name="emailAddress"
+                                    [(ngModel)]="emailAddress" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer clearfix">
+                <div class="pull-right">
+                    <a class="btn btn-cancel" (click)="onClosePopup()">Cancel</a>
+                    <a class="btn modifier__save" (click)="updateEmailPopUp()">Update</a>
+                </div>
+            </div>
+        </div>
+    </div>
