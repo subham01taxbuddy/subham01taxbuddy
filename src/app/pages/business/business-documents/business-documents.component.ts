@@ -50,6 +50,7 @@ export class BusinessDocumentsComponent implements OnInit {
     {'in_prod_name':'Document Type'},
     {'in_prod_name':'Uploaded By'}
   ];
+  isResetUploadedFile: boolean = false;
   constructor(
   	private navbarService: NavbarService,
     public router: Router, public http: HttpClient,
@@ -250,7 +251,6 @@ export class BusinessDocumentsComponent implements OnInit {
   }
 
   uploadGSTDocument(files) {
-    console.log(files)
     if(files && files[0]) {   
       let extention = ".png";
       if (files[0].name) {
@@ -291,10 +291,13 @@ export class BusinessDocumentsComponent implements OnInit {
         } else {
           this._toastMessageService.alert("error","Error While uploading upload gst document");
         }
+        this.isResetUploadedFile = true;
       })
       .catch(err => {
         this._toastMessageService.alert("error","Error While uploading upload gst document"+JSON.stringify(err));
+        this.isResetUploadedFile = true;
       });
+      
     }
   }
 

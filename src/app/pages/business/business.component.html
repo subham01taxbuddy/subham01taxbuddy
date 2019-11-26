@@ -16,11 +16,11 @@
             </app-input-select-object>
         </div> 
         <div class="card__col-xs-12 card__col-sm-4" *ngIf="currentUrl == '/pages/business/business-documents'">
-            <app-input-select-object [label]="'Select Return Type'" [type]="'text'" [value]="selected_gst_return_type" [type]="'text'" [name]="'selected_gst_return_type'" [filter_items]="gst_documents_types" (sendValue)="onSelectGSTReturnType($event)">
+            <app-input-select-object [label]="'Document Type'" [type]="'text'" [value]="selected_gst_return_type" [type]="'text'" [name]="'selected_gst_return_type'" [filter_items]="gst_documents_types" (sendValue)="onSelectGSTReturnType($event)">
             </app-input-select-object>
         </div> 
         <div class="card__col-xs-12 card__col-sm-4" *ngIf="currentUrl == '/pages/business/business-documents'" style="margin-top: 15px;">
-            <app-input-select-object [label]="'Select Filling Type'" [type]="'text'" [value]="selected_gst_filling_type" [type]="'text'" [name]="'selected_gst_filling_type'" [filter_items]="gst_filling_types" (sendValue)="onSelectGSTFillingType($event)">
+            <app-input-select-object [label]="'Return Type'" [type]="'text'" [value]="selected_gst_filling_type" [type]="'text'" [name]="'selected_gst_filling_type'" [filter_items]="gst_filling_types" (sendValue)="onSelectGSTFillingType($event)">
             </app-input-select-object>
         </div>         
         <div class="card__col-xs-12 card__col-sm-4" *ngIf="['/pages/business/gst-cloud'].indexOf(currentUrl) != -1">

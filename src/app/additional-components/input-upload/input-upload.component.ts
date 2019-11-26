@@ -28,15 +28,33 @@ export class InputUploadComponent implements OnInit {
 
 	@Input('upload') upload: boolean;
 	@Input('input_id') input_id: string;
+	@Input('isResetUploadedFile') isResetUploadedFile: boolean = false;
 
 	@Output() filesDropped = new EventEmitter<FileList>();
 	@Output() filesHovered = new EventEmitter();
 	@Output() filesUpload = new EventEmitter();
+	@Output() onResetFile = new EventEmitter();
 
   constructor() { }
 
   ngOnInit() {
 	this.input_id = this.input_id ? this.input_id : 'ogp_images';
+  }
+
+  ngDoCheck() {
+  	if(this.isResetUploadedFile) {
+  		this.resetUploadedFile();
+  	}
+  }
+
+  resetUploadedFile() {
+  	let fileObj:any = document.getElementById(this.input_id);
+  	if(fileObj) {
+  		fileObj.value = "";  		
+  	}
+  	setTimeout(() => {
+  		this.onResetFile.emit(true);
+  	},500)
   }
 
     getBase64(file) {

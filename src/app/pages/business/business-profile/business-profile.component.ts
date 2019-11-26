@@ -118,9 +118,23 @@ export class BusinessProfileComponent implements OnInit {
     }
   }
 
+  resetOpeningBalanceCredits() {
+    this.opBalCreditObj = {
+      igst: 0,
+      cgst: 0,
+      sgst: 0,
+      cess: 0,
+      gstReturnCalendarId:0,
+      id:0
+    }
+
+    this.selected_gst_return_calendars_data = null;
+  }
+
   getMerchantDetails(merchant) {
     this.loading = true;
     this.merchantData = null;
+    this.resetOpeningBalanceCredits();
     NavbarService.getInstance(this.http).getGetGSTMerchantDetail(merchant.userId).subscribe(res => {
       if (res) {
         if (!res.gstDetails) { res.gstDetails = {}; };
@@ -540,8 +554,10 @@ export class BusinessProfileComponent implements OnInit {
   }
 
   updateGstOpeningBalance() {
-      if(!this.opBalCreditObj.id) {
-        this._toastMessageService.alert("error", "id not found to update opening balance." );
+      if(!this.opBalCreditObj.gstReturnCalendarId) {        
+        this._toastMessageService.alert("error", "please first click on get credits button and then try to save it." );
+      } else  if(!this.opBalCreditObj.id) {
+        this._toastMessageService.alert("error", "id not found. please first click on get credits button and then try to save it." );
       } else {
         this.loading = true;
         let balanceUpdate = {
