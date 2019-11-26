@@ -25,7 +25,7 @@ export const environment = {
 	s3_cred: {
 		user_name: "ashish@ssbainnovations.com",
 		password: "testPwd8761$",
-		bucket: 'tb-gst-docs-dev',
+		bucket: 'tb-gst-docs-uat-dev',
 		region: 'ap-south-1'
 	},
 	aws_cred: {
