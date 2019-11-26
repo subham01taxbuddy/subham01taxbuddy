@@ -129,7 +129,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
 
 
       this.addItem();
-      this.addItem();
+      // this.addItem();
     } else if (this.invoiceToUpdate) {
       //for edit invoice
 
@@ -267,7 +267,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     } else if (!this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId) {
       this._toastMessageService.alert("error", "Please select place of supply");
       return;
-    } else if (this.invoiceData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId === 3 && (!(this.invoiceData.noteItemDTO instanceof Array) || (this.invoiceData.noteItemDTO instanceof Array && this.invoiceData.noteItemDTO.length == 0))) {
+    } else if (this.invoiceData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId === 3 && this.isItemDetailsInValid('add')) {
       this._toastMessageService.alert("error", "Please add atleast one item details.");
       return;
     }
@@ -276,6 +276,29 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       this.updateInvoice();
     } else {
       this.addInvoice();
+    }
+  }
+  isItemDetailsInValid(ref) {
+    debugger
+    if (this.invoiceData.noteItemDTO instanceof Array) {
+      let temp = this.invoiceData.noteItemDTO.filter(item => item.isMarkForFlag !== 'T')
+      for (let i = 0; i < temp.length; i++) {
+        if (this.utilsService.isNonZero(temp[i].noteItemsTaxableValue)) {
+          continue;
+        } else {
+          return true;
+        }
+      }
+
+      if (ref === 'add') {
+        if (temp.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    } else {
+      return true;
     }
   }
 
@@ -355,20 +378,24 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   }
 
   addItem() {
-    let defaultItemValue = {
-      itemTaxCode: "",
-      noteItemsTaxableValue: 0,
-      noteItemsRate: 0,
-      noteItemsIgst: 0,
-      noteItemsCgst: 0,
-      noteItemsSgst: 0,
-      noteItemsCess: 0,
-      noteItemsGrossValue: 0
-    };
-    if (this.invoiceData.noteItemDTO) {
-      this.invoiceData.noteItemDTO.push(defaultItemValue)
+    if (!this.isItemDetailsInValid('new')) {
+      let defaultItemValue = {
+        itemTaxCode: "",
+        noteItemsTaxableValue: 0,
+        noteItemsRate: 0,
+        noteItemsIgst: 0,
+        noteItemsCgst: 0,
+        noteItemsSgst: 0,
+        noteItemsCess: 0,
+        noteItemsGrossValue: 0
+      };
+      if (this.invoiceData.noteItemDTO) {
+        this.invoiceData.noteItemDTO.push(defaultItemValue)
+      } else {
+        this.invoiceData.noteItemDTO = [defaultItemValue];
+      }
     } else {
-      this.invoiceData.noteItemDTO = [defaultItemValue];
+      this._toastMessageService.alert('error', 'Please add all required feilds in item details.')
     }
   }
 

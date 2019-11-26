@@ -125,7 +125,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       }
 
       this.addItem();
-      this.addItem();
+      // this.addItem();
     } else if (this.invoiceToUpdate) {
       //for edit invoice
 
@@ -256,8 +256,8 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     } else if (this.invoiceData.partyDTO.partyEmail && !(/\S+@\S+\.\S+/.test(this.invoiceData.partyDTO.partyEmail))) {
       this._toastMessageService.alert("error", "Please add valid email address");
       return;
-    } else if (this.invoiceData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId === 3 && (!(this.invoiceData.listInvoiceItems instanceof Array) || (this.invoiceData.listInvoiceItems instanceof Array && this.invoiceData.listInvoiceItems.length == 0))) {
-      this._toastMessageService.alert("error", "Please add atleast one item details.");
+    } else if (this.invoiceData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId === 3 && this.isItemDetailsInValid('add')) {
+      this._toastMessageService.alert("error", "Please add atleast one item details and fill all mandatory feilds.");
       return;
     }
 
@@ -265,6 +265,29 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       this.updateInvoice();
     } else {
       this.addInvoice();
+    }
+  }
+
+  isItemDetailsInValid(ref) {
+    if (this.invoiceData.listInvoiceItems instanceof Array) {
+      let temp = this.invoiceData.listInvoiceItems.filter(item => item.isMarkForFlag !== 'T')
+      for (let i = 0; i < temp.length; i++) {
+        if (this.utilsService.isNonZero(temp[i].invoiceItemsTaxableValue)) {
+          continue;
+        } else {
+          return true;
+        }
+      }
+
+      if (ref === 'add') {
+        if (temp.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    } else {
+      return true;
     }
   }
 
@@ -354,24 +377,29 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
 
   addItem() {
-    let defaultItemValue = {
-      itemTaxCode: "",
-      invoiceItemsTaxableValue: 0,
-      invoiceItemsTaxRate: 0,
-      invoiceItemsIgst: 0,
-      invoiceItemsCgst: 0,
-      invoiceItemsSgst: 0,
-      invoiceItemsCess: 0,
-      invoiceItemsGross: 0
-    };
-    if (this.invoiceData.listInvoiceItems) {
-      this.invoiceData.listInvoiceItems.push(defaultItemValue)
+    if (!this.isItemDetailsInValid('new')) {
+      let defaultItemValue = {
+        itemTaxCode: "",
+        invoiceItemsTaxableValue: 0,
+        invoiceItemsTaxRate: 0,
+        invoiceItemsIgst: 0,
+        invoiceItemsCgst: 0,
+        invoiceItemsSgst: 0,
+        invoiceItemsCess: 0,
+        invoiceItemsGross: 0
+      };
+      if (this.invoiceData.listInvoiceItems) {
+        this.invoiceData.listInvoiceItems.push(defaultItemValue)
+      } else {
+        this.invoiceData.listInvoiceItems = [defaultItemValue];
+      }
     } else {
-      this.invoiceData.listInvoiceItems = [defaultItemValue];
+      this._toastMessageService.alert('error', 'Please add all required feilds in item details.')
     }
   }
 
   deleteItem(index) {
+    debugger
     if (this.invoiceData.listInvoiceItems[index].id) {
       this.invoiceData.listInvoiceItems[index]["isMarkForFlag"] = "T";
     } else {

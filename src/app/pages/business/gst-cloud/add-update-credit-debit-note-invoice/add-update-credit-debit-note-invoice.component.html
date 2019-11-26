@@ -89,7 +89,8 @@
               <app-input [label]="'GSTIN of '+(invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer')"
                 [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [is_capital]="true"
                 [placeholder]="'GSTIN of '+(invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer')"
-                [value]="invoiceData.partyDTO.partyGstin" [max_length]="15" (sendValue)="onEnterGSTIN($event)"></app-input>
+                [value]="invoiceData.partyDTO.partyGstin" [max_length]="15" (sendValue)="onEnterGSTIN($event)">
+              </app-input>
             </div>
 
             <div class="card__col-xs-12 card__col-sm-4">
@@ -143,8 +144,10 @@
                             <tr class="report-table__row report-table__row_head">
                               <th class="report-table__cell report-table__cell_name">#</th>
                               <th class="report-table__cell report-table__cell_name">HSN/SAC</th>
-                              <th class="report-table__cell report-table__cell_name">Taxable<br />Value</th>
-                              <th class="report-table__cell report-table__cell_name">Rate</th>
+                              <th class="report-table__cell report-table__cell_name">Taxable<br />Value <span
+                                  style="color: red;">*</span></th>
+                              <th class="report-table__cell report-table__cell_name">Rate <span
+                                  style="color: red;">*</span></th>
                               <th class="report-table__cell report-table__cell_name" *ngIf="isIGSTEnabled">IGST</th>
                               <th class="report-table__cell report-table__cell_name" *ngIf="!isIGSTEnabled">CGST</th>
                               <th class="report-table__cell report-table__cell_name" *ngIf="!isIGSTEnabled">SGST</th>
