@@ -399,6 +399,7 @@ export class GST3BComputationComponent implements OnInit {
     if(subtype == "IGST" || subtype=="ALL") {
       this.gst3bComputation.liabilityIgst = this.gst3bComputation.salesIgst - this.gst3bComputation.creditIgst;
     } 
+    
 
     if(subtype == "CGST" || subtype=="ALL") {
       this.gst3bComputation.liabilityCgst = this.gst3bComputation.salesCgst - this.gst3bComputation.creditCgst;
