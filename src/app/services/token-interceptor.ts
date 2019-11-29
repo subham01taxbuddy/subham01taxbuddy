@@ -42,7 +42,7 @@ export class TokenInterceptor implements HttpInterceptor {
         /**
          * continues request execution
          */
-        console.log('Im in intercept====', request);
+        // console.log('Im in intercept====', request);
         return next.handle(request).pipe(catchError((error, caught) => {
             // intercept the respons error and displace it to the console
             console.log(error);
@@ -59,7 +59,7 @@ export class TokenInterceptor implements HttpInterceptor {
      */
     private handleAuthError(err: HttpErrorResponse): Observable<any> {
         // handle your auth error or rethrow
-        console.log('handled error ', err);
+        // console.log('handled error ', err);
         if (this.utilsService.isNonEmpty(err) && this.utilsService.isNonEmpty(err.error)) {
             if (err.error.status === 401 && err.error.detail === 'TOKEN_EXPIRED') {
                 // navigate /delete cookies or whatever
@@ -69,7 +69,7 @@ export class TokenInterceptor implements HttpInterceptor {
                 // if you've caught / handled the error, you don't want to rethrow it unless you also want downstream consumers to have to handle it as well.
                 return of(err.message);
             } else {
-                console.log('Some other error in Interceptor====');
+                // console.log('Some other error in Interceptor====');
             }
         }
         throw err;

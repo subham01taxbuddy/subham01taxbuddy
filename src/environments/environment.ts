@@ -23,17 +23,17 @@ export const environment = {
 	gst_gov_url: "https://devapi.gst.gov.in",
 	ifsc_url: "https://ifsc.razorpay.com",
 	s3_cred: {
-		user_name: "ashish@ssbainnovations.com",
-		password: "testPwd8761$",
+		// user_name: "ashish@ssbainnovations.com",
+		// password: "testPwd8761$",
 		bucket: 'tb-gst-docs-uat-dev',
 		region: 'ap-south-1'
 	},
-	aws_cred: {
+	/* aws_cred: {
 		identityPoolId: 'ap-south-1:441cb3f2-c1a9-4ca1-8964-ea56f5184aea',
 		region: 'ap-south-1',
 		userPoolId: 'ap-south-1_s42HgYzaY',
 		userPoolWebClientId: '289f0frh4oj9rp5rh6q9opo4qn',
-	},
+	}, */
 	AMPLIFY_CONFIG: {
 		aws_project_region: 'ap-south-1',
 		aws_cognito_identity_pool_id: 'ap-south-1:f7280802-a172-4b2a-a3b2-adf642b67b38',

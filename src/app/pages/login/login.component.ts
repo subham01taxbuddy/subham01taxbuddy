@@ -100,9 +100,9 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  public authToAWS() {
+  /* public authToAWS() {
     Auth.signIn(environment.s3_cred.user_name, environment.s3_cred.password)
-  }
+  } */
 
   public onSubmit(values: any) {
     if (this.form.valid) {
