@@ -359,17 +359,25 @@ export class GST3BComputationComponent implements OnInit {
 
     if(!this.gst3bComputation.opBalCreditLateFee) {
       this.gst3bComputation.opBalCreditLateFee = 0;
-    }
+    }    
     
     if(subtype == "IGST" || subtype=="ALL") {
       this.gst3bComputation.creditIgst = this.gst3bComputation.opBalCreditIgst + this.gst3bComputation.purchaseIgst;
-    } else if(subtype == "CGST" || subtype=="ALL") {
+    } 
+
+    if(subtype == "CGST" || subtype=="ALL") {
       this.gst3bComputation.creditCgst = this.gst3bComputation.opBalCreditCgst + this.gst3bComputation.purchaseCgst;
-    } else if(subtype == "SGST" || subtype=="ALL") {
+    } 
+
+    if(subtype == "SGST" || subtype=="ALL") {
       this.gst3bComputation.creditSgst = this.gst3bComputation.opBalCreditSgst + this.gst3bComputation.purchaseSgst;
-    } else if(subtype == "CESS" || subtype=="ALL") {
+    } 
+
+    if(subtype == "CESS" || subtype=="ALL") {
       this.gst3bComputation.creditCess = this.gst3bComputation.opBalCreditCess + this.gst3bComputation.purchaseCess;
-    } else if(subtype == "OP_LATE_FEE" || subtype=="ALL") {
+    }
+
+    if(subtype == "OP_LATE_FEE" || subtype=="ALL") {
       this.gst3bComputation.creditLateFee = this.gst3bComputation.opBalCreditLateFee ;
     }  
 
@@ -377,7 +385,7 @@ export class GST3BComputationComponent implements OnInit {
     this.gst3bComputation.purchaseTotal = this.gst3bComputation.purchaseIgst + this.gst3bComputation.purchaseCgst+ this.gst3bComputation.purchaseSgst+ this.gst3bComputation.purchaseCess
     this.gst3bComputation.opBalCreditTotal = this.gst3bComputation.opBalCreditIgst + this.gst3bComputation.opBalCreditCgst+ this.gst3bComputation.opBalCreditSgst+ this.gst3bComputation.opBalCreditCess + this.gst3bComputation.opBalCreditLateFee; 
     this.gst3bComputation.creditTotal = this.gst3bComputation.purchaseTotal + this.gst3bComputation.opBalCreditTotal;    
-    this.calculateLiabilityTotal();
+    this.calculateLiabilityTotal();    
   }
 
   calculateComputationTotal(type,subtype) {
@@ -390,17 +398,22 @@ export class GST3BComputationComponent implements OnInit {
 
     if(subtype == "IGST" || subtype=="ALL") {
       this.gst3bComputation.liabilityIgst = this.gst3bComputation.salesIgst - this.gst3bComputation.creditIgst;
-    } else if(subtype == "CGST" || subtype=="ALL") {
+    } 
+
+    if(subtype == "CGST" || subtype=="ALL") {
       this.gst3bComputation.liabilityCgst = this.gst3bComputation.salesCgst - this.gst3bComputation.creditCgst;
-    } else if(subtype == "SGST" || subtype=="ALL") {
+    } 
+
+    if(subtype == "SGST" || subtype=="ALL") {
       this.gst3bComputation.liabilitySgst = this.gst3bComputation.salesSgst - this.gst3bComputation.creditSgst;
-    } else if(subtype == "CESS" || subtype=="ALL") {
+    } 
+
+    if(subtype == "CESS" || subtype=="ALL") {
       this.gst3bComputation.liabilityCess = this.gst3bComputation.salesCess - this.gst3bComputation.creditCess;
     }   
 
     if(subtype) {
       this.gst3bComputation.liabilityTotal = this.gst3bComputation.liabilityIgst + this.gst3bComputation.liabilityCgst+ this.gst3bComputation.liabilitySgst+ this.gst3bComputation.liabilityCess;
-
     }
   }
 
