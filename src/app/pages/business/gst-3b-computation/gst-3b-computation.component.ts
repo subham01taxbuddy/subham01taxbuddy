@@ -414,7 +414,7 @@ export class GST3BComputationComponent implements OnInit {
     }   
 
     if(subtype) {
-      this.gst3bComputation.liabilityTotal = this.gst3bComputation.liabilityIgst + this.gst3bComputation.liabilityCgst+ this.gst3bComputation.liabilitySgst+ this.gst3bComputation.liabilityCess;
+      this.gst3bComputation.liabilityTotal = ((this.gst3bComputation.computationTotal || 0) - (this.gst3bComputation.creditTotal || 0));
     }
   }
 
@@ -423,7 +423,7 @@ export class GST3BComputationComponent implements OnInit {
     this.gst3bComputation.liabilityCgst = this.gst3bComputation.salesCgst - this.gst3bComputation.creditCgst;    
     this.gst3bComputation.liabilitySgst = this.gst3bComputation.salesSgst - this.gst3bComputation.creditSgst;    
     this.gst3bComputation.liabilityCess = this.gst3bComputation.salesCess - this.gst3bComputation.creditCess;
-    this.gst3bComputation.liabilityTotal = this.gst3bComputation.liabilityIgst + this.gst3bComputation.liabilityCgst+ this.gst3bComputation.liabilitySgst+ this.gst3bComputation.liabilityCess;
+    this.gst3bComputation.liabilityTotal = ((this.gst3bComputation.computationTotal || 0) - (this.gst3bComputation.creditTotal || 0));
   }
 
  

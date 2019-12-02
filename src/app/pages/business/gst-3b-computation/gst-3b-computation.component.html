@@ -125,13 +125,13 @@
                     <tr class="report-table__row">                        
                         <td class="report-table__cell report-table__cell_name text-pull-left">Late Fees</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'latefees'" [placeholder]="''" [value]="gst3bComputation.lateFee" (sendValue)="gst3bComputation.lateFee = $event;calculateComputationTotal('sales',null);" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'latefees'" [placeholder]="''" [value]="gst3bComputation.lateFee" (sendValue)="gst3bComputation.lateFee = $event;calculateComputationTotal('sales','liability');" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             {{gst3bComputation.creditLateFee}}
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            {{gst3bComputation.lateFee }}
+                            {{gst3bComputation.lateFee+ gst3bComputation.opBalCreditLateFee}}
                         </td>
                         <td class="report-table__cell report-table__cell_name text-pull-right">B</td>
                     </tr>
@@ -139,7 +139,7 @@
                     <tr class="report-table__row">                        
                         <td class="report-table__cell report-table__cell_name text-pull-left">Interest</td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            <app-input [label]="''" [type]="'number'" [name]="'interest'" [placeholder]="''" [value]="gst3bComputation.interest" (sendValue)="gst3bComputation.interest = $event;calculateComputationTotal('sales',null);" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
+                            <app-input [label]="''" [type]="'number'" [name]="'interest'" [placeholder]="''" [value]="gst3bComputation.interest" (sendValue)="gst3bComputation.interest = $event;calculateComputationTotal('sales','interest');" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input>
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
                             
