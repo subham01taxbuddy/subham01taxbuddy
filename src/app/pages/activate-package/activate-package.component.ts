@@ -123,7 +123,7 @@ export class ActivatePackageComponent implements OnInit {
 
   activatePackage(service) {
     if (!this.isPackageActivated(service.planId)) {
-      let plan = [{ "subscriptionType": service.subscriptionType, "type": service.type }];
+      let plan = [{ "subscriptionType": service.subscriptionType, "planId": service.planId }];
       let myCart = { "userId": this.currentUserId, "plan": plan, "itemCount": plan.length }
 
       return new Promise((resolve, reject) => {
