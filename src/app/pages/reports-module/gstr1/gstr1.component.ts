@@ -187,7 +187,8 @@ export class Gstr1Component implements OnInit {
         } else {
           this.loading = false;
           this.updateEmail(res).then(result => {
-            this._toastMessageService.alert('success', 'Email address updated successfully.');
+            if (result)
+              this._toastMessageService.alert('success', 'Email address updated successfully.');
           }).catch(err => {
             this._toastMessageService.alert('error', 'Failed to update email address.');
           })

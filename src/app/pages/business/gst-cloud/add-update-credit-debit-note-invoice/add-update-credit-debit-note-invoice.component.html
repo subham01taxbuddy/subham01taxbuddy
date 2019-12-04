@@ -143,6 +143,7 @@
                           <thead class="report-table__head">
                             <tr class="report-table__row report-table__row_head">
                               <th class="report-table__cell report-table__cell_name">#</th>
+                              <th class="report-table__cell report-table__cell_name">Description</th>
                               <th class="report-table__cell report-table__cell_name">HSN/SAC</th>
                               <th class="report-table__cell report-table__cell_name">Taxable<br />Value <span
                                   style="color: red;">*</span></th>
@@ -161,6 +162,10 @@
                             <ng-template ngFor let-tab [ngForOf]="invoiceData.noteItemDTO" let-i="index">
                               <tr *ngIf="tab.isMarkForDeletion != 'T'" class="report-table__row">
                                 <td class="report-table__cell report-table__cell_day">{{i+1}}</td>
+                                <td class="report-table__cell report-table__cell_day" style="position: relative;">
+                                  <input class="table__row-input" type="text" name="'description'"
+                                    [(ngModel)]="tab.itemDescription" title={{tab.itemDescription}}>
+                                </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
                                   <input class="table__row-input" type="text" name="'taxcode'"
                                     [(ngModel)]="tab.itemTaxCode">

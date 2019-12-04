@@ -381,6 +381,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     if (!this.isItemDetailsInValid('new')) {
       let defaultItemValue = {
         itemTaxCode: "",
+        itemDescription: "",
         noteItemsTaxableValue: 0,
         noteItemsRate: 0,
         noteItemsIgst: 0,

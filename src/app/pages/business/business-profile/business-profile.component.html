@@ -28,7 +28,8 @@
           <div class="card__col-xs-12 card__col-sm-4">
             <app-input [label]="'GSTIN Number'" [type]="'text'" [is_capital]="true"
               [name]="merchantData.gstDetails.gstn_number" [placeholder]="'GSTIN Number'"
-              [value]="merchantData.gstDetails.gstinNumber" (sendValue)="onEnterGSTIN($event)" [max_length]="15"></app-input>
+              [value]="merchantData.gstDetails.gstinNumber" (sendValue)="onEnterGSTIN($event)" [max_length]="15">
+            </app-input>
             <!-- (inputFocusOut)="onFoucusOutOfGSTINNumber()" -->
           </div>
 
@@ -254,7 +255,9 @@
         <div class="card__title">GST Opening Balance</div>
         <div class="card__row">
           <div class="card__col-xs-12 card__col-sm-6">
-            <app-input-select-object [label]="'Select Return Date'" [type]="'text'" [value]="selected_gst_return_calendars_data" [type]="'text'" [name]="'selected_gst_return_calendars_data'" [filter_items]="gst_return_calendars_data" (sendValue)="onSelectGSTReturnCalendar($event)">
+            <app-input-select-object [label]="'Select Return Date'" [type]="'text'"
+              [value]="selected_gst_return_calendars_data" [type]="'text'" [name]="'selected_gst_return_calendars_data'"
+              [filter_items]="gst_return_calendars_data" (sendValue)="onSelectGSTReturnCalendar($event)">
             </app-input-select-object>
           </div>
 
@@ -265,41 +268,49 @@
         <div class="card__row">
           <div class="report-table-wrapper">
             <table class="report-table" style="min-width: unset;">
-                <thead class="report-table__head">
-                  <tr class="report-table__row report-table__row_head">
-                    <th class="report-table__cell report-table__cell_name text-pull-left" style="width: 180px;"></th>
-                    <th class="report-table__cell report-table__cell_name text-pull-right">Op. Bal. of Credit</th>                                        
-                  </tr>
-                </thead>
-                <tbody class="report-table__body">
-                  <tr class="report-table__row">                        
-                    <td class="report-table__cell report-table__cell_name text-pull-left">IGST</td>
-                    <td class="report-table__cell report-table__cell_day text-pull-right">
-                        <app-input [label]="''" [type]="'number'" [name]="'opbcreditigst'" [placeholder]="''" [value]="opBalCreditObj.igst" (sendValue)="opBalCreditObj.igst = $event;" [is_only_positive_number_allowed]="true"></app-input>
-                    </td>                      
-                  </tr>
+              <thead class="report-table__head">
+                <tr class="report-table__row report-table__row_head">
+                  <th class="report-table__cell report-table__cell_name text-pull-left" style="width: 180px;"></th>
+                  <th class="report-table__cell report-table__cell_name text-pull-right">Op. Bal. of Credit</th>
+                </tr>
+              </thead>
+              <tbody class="report-table__body">
+                <tr class="report-table__row">
+                  <td class="report-table__cell report-table__cell_name text-pull-left">IGST</td>
+                  <td class="report-table__cell report-table__cell_day text-pull-right">
+                    <app-input [label]="''" [type]="'number'" [name]="'opbcreditigst'" [placeholder]="''"
+                      [value]="opBalCreditObj.igst" (sendValue)="opBalCreditObj.igst = $event;"
+                      [is_only_positive_number_allowed]="true"></app-input>
+                  </td>
+                </tr>
 
-                  <tr class="report-table__row">                        
-                    <td class="report-table__cell report-table__cell_name text-pull-left">CGST</td>
-                    <td class="report-table__cell report-table__cell_day text-pull-right">
-                        <app-input [label]="''" [type]="'number'" [name]="'opbcreditcgst'" [placeholder]="''" [value]="opBalCreditObj.cgst" (sendValue)="opBalCreditObj.cgst = $event;" [is_only_positive_number_allowed]="true"></app-input>
-                    </td>                      
-                  </tr>
+                <tr class="report-table__row">
+                  <td class="report-table__cell report-table__cell_name text-pull-left">CGST</td>
+                  <td class="report-table__cell report-table__cell_day text-pull-right">
+                    <app-input [label]="''" [type]="'number'" [name]="'opbcreditcgst'" [placeholder]="''"
+                      [value]="opBalCreditObj.cgst" (sendValue)="opBalCreditObj.cgst = $event;"
+                      [is_only_positive_number_allowed]="true"></app-input>
+                  </td>
+                </tr>
 
-                  <tr class="report-table__row">                        
-                    <td class="report-table__cell report-table__cell_name text-pull-left">SGST/UTGST</td>
-                    <td class="report-table__cell report-table__cell_day text-pull-right">
-                        <app-input [label]="''" [type]="'number'" [name]="'opbcreditsgst'" [placeholder]="''" [value]="opBalCreditObj.sgst" (sendValue)="opBalCreditObj.sgst = $event;" [is_only_positive_number_allowed]="true"></app-input>
-                    </td>                      
-                  </tr>
+                <tr class="report-table__row">
+                  <td class="report-table__cell report-table__cell_name text-pull-left">SGST/UTGST</td>
+                  <td class="report-table__cell report-table__cell_day text-pull-right">
+                    <app-input [label]="''" [type]="'number'" [name]="'opbcreditsgst'" [placeholder]="''"
+                      [value]="opBalCreditObj.sgst" (sendValue)="opBalCreditObj.sgst = $event;"
+                      [is_only_positive_number_allowed]="true"></app-input>
+                  </td>
+                </tr>
 
-                  <tr class="report-table__row">                        
-                    <td class="report-table__cell report-table__cell_name text-pull-left">CESS</td>
-                    <td class="report-table__cell report-table__cell_day text-pull-right">
-                        <app-input [label]="''" [type]="'number'" [name]="'opbcreditcess'" [placeholder]="''" [value]="opBalCreditObj.cess" (sendValue)="opBalCreditObj.cess = $event;" [is_only_positive_number_allowed]="true"></app-input>
-                    </td>                      
-                  </tr>
-                </tbody>
+                <tr class="report-table__row">
+                  <td class="report-table__cell report-table__cell_name text-pull-left">CESS</td>
+                  <td class="report-table__cell report-table__cell_day text-pull-right">
+                    <app-input [label]="''" [type]="'number'" [name]="'opbcreditcess'" [placeholder]="''"
+                      [value]="opBalCreditObj.cess" (sendValue)="opBalCreditObj.cess = $event;"
+                      [is_only_positive_number_allowed]="true"></app-input>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
@@ -310,6 +321,19 @@
         </div>
       </div>
       <!-- Opening Balance -->
+
+      <!-- Terms and Conditions -->
+      <div class="ogp_images gst-btns-card card card_main">
+        <div class="card__title">Terms and Conditions</div>
+        <div class="card__row">
+          <div class="card__col-xs-12">
+            <textarea rows="10" style="width: 100%;" class="input__text"
+              placeholder="You can add your personalised business terms and conditions."
+              [(ngModel)]="merchantData.gstDetails.termsAndConditions"></textarea>
+          </div>
+        </div>
+      </div>
+      <!-- Terms and Conditions -->
 
       <div class="footer__buttons clearfix" style="margin-top: 40px;">
         <a class="btn long-btn" (click)="saveBusinessProfile();">Save Profile</a>

@@ -220,6 +220,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
 
   saveGSTBillInvoice() {
+    console.log("this.invoiceData:", this.invoiceData)
     if (!this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId) {
       this._toastMessageService.alert("error", "Please Select Invoice Type");
       return;
@@ -314,6 +315,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }
 
     delete sendData.invoiceDTO.s3InvoiceImageUrl;
+    console.log("sendData add Invoice:", sendData)
     NavbarService.getInstance(this.http).createInvoiceWithItems(sendData).subscribe(res => {
       this.loading = false;
       this._toastMessageService.alert("success", "Invoice created successfully.");
@@ -380,6 +382,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     if (!this.isItemDetailsInValid('new')) {
       let defaultItemValue = {
         itemTaxCode: "",
+        itemDescription: "",
         invoiceItemsTaxableValue: 0,
         invoiceItemsTaxRate: 0,
         invoiceItemsIgst: 0,

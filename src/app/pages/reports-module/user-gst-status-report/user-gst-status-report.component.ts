@@ -19,17 +19,11 @@ export class UserGstStatusReportComponent implements OnInit {
         to_date: new Date()
     }
     statusReportGridOptions: GridOptions;
-    // public columnDefs;
-    columnDefs = [
-        { headerName: 'Make', field: 'make', sortable: true },
-        { headerName: 'Model', field: 'model', sortable: true },
-        { headerName: 'Price', field: 'price', sortable: true }
-    ];
     // public rowData;
     constructor(private navbarService: NavbarService, private http: HttpClient, public datepipe: DatePipe, public _toastMessageService: ToastMessageService) {
         this.statusReportGridOptions = <GridOptions>{
             rowData: [],
-            columnDefs: this.scientificdonationCreateColoumnDef(),
+            columnDefs: this.statusReportCreateColoumnDef(),
             /* onGridReady: () => {
                 this.statusReportGridOptions.api.sizeColumnsToFit();
             }, */
@@ -141,7 +135,7 @@ export class UserGstStatusReportComponent implements OnInit {
     }
 
     rowData: any;
-    scientificdonationCreateColoumnDef() {
+    statusReportCreateColoumnDef() {
         return [
             {
                 headerName: 'No.',
