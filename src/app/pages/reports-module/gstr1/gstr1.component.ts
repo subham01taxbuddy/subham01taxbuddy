@@ -25,7 +25,9 @@ export class Gstr1Component implements OnInit {
     private http: HttpClient, private gstMsService: GstMsService, public datepipe: DatePipe,
     private userMsService: UserMsService, private utilsService: UtilsService, private modalService: BsModalService,/* private simpleModalService: SimpleModalService,  */) { }
   selected_merchant: any;
+  selected_calender: any;
   available_merchant_list: any = [];
+  available_calender_list: any = [];
   merchantData: any;
   selected_invoice_type: any;
   invoice_types_list: any = [{ invoiceTypeId: 1, name: "Sales B2B" },
@@ -135,6 +137,17 @@ export class Gstr1Component implements OnInit {
       this.merchantData = event;
       NavbarService.getInstance(null).merchantData = this.merchantData;
       NavbarService.getInstance(null).isMerchantChanged = true;
+      this.getReturnCalenderList().then(response => {
+        console.log("Calender Response in then: ", response);
+      }).catch(error => {
+        console.log("Calender Response in catch: ", error);
+      })
+    }
+  }
+  onSelectCalender(event) {
+    if (event) {
+      this.selected_calender = event;
+      console.log("selected_calender: ", this.selected_calender);
     }
   }
   onSelectInvoiceType(event) {
@@ -142,8 +155,6 @@ export class Gstr1Component implements OnInit {
       this.selected_invoice_type = event;
       this.invoiceTypeData = event;
       console.log("invoiceTypeData:", this.invoiceTypeData)
-      /* NavbarService.getInstance(null).invoiceTypeData = this.invoiceTypeData;
-      NavbarService.getInstance(null).isMerchantChanged = true; */
     }
   }
   onSeletedDateChange() {
@@ -220,4 +231,31 @@ export class Gstr1Component implements OnInit {
     });
   }
 
+  getReturnCalenderList() {
+    return new Promise((resolve, reject) => {
+      this.available_calender_list = [];
+      this.loading = true
+      // TODO: For GSTR1 report get master(gstr_filling_type_master) values from db
+      // Here one is hard coded value because of the values are stored in master data
+      // Table name: gstr_filling_type_master
+      // 1: GSTR1
+      // 2: GSTR3B
+      const param = `/gst-return-calendars/?businessId=${this.merchantData.userId}&gstrType=${1}`;
+      this.gstMsService.getMethod(param).subscribe((res: any) => {
+        console.log('Calender list success:', res);
+        if (Array.isArray(res)) {
+          res.forEach((cData: any) => {
+            let tName = cData.gstReturnMonthDisplay + "-" + cData.gstReturnYear;
+            this.available_calender_list.push({ id: cData.id, name: tName })
+          });
+        }
+        this.loading = false;
+        return resolve(true);
+      }, error => {
+        this.loading = false;
+        console.log('get profile failure:', error);
+        return resolve(error);
+      })
+    })
+  }
 }

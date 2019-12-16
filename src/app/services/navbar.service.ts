@@ -123,7 +123,8 @@ export class NavbarService {
 	}
 
 	getInvoiceSummary(businessId, params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoice-summary/' + businessId, 'method': 'GET' }, params);
+		// TODO: [IP-9] Here Financial year is hardcoded currently we dont have mastr for FY.
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoice-summary/' + businessId + '?year=2019-2020', 'method': 'GET' }, params);
 	}
 
 	getAdminList() {
@@ -340,7 +341,7 @@ export class NavbarService {
 		if (!this.id_token) {
 			let userData = JSON.parse(localStorage.getItem('UMD'));
 			if (userData && userData.id_token) { this.id_token = userData.id_token; }
-			console.log("ssss",userData)
+			console.log("ssss", userData)
 		}
 		console.log(this.id_token)
 		return new HttpHeaders({ 'Content-Type': "application/json", "Authorization": "Bearer " + this.id_token });

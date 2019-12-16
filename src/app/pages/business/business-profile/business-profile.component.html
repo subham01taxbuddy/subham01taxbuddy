@@ -323,13 +323,31 @@
       <!-- Opening Balance -->
 
       <!-- Terms and Conditions -->
-      <div class="ogp_images gst-btns-card card card_main">
-        <div class="card__title">Terms and Conditions</div>
-        <div class="card__row">
-          <div class="card__col-xs-12">
-            <textarea rows="10" style="width: 100%;" class="input__text"
-              placeholder="You can add your personalised business terms and conditions."
-              [(ngModel)]="merchantData.gstDetails.termsAndConditions"></textarea>
+      <div class="ogp_images gst-btns-card ">
+        <div class="card card_main">
+          <div class="card__title">Opening Balance(User Onboarding)</div>
+          <div class="card__row">
+            <div class="card__col-xs-12">
+              <app-input [label]="'Purchase Value'" [type]="'text'"
+                [name]="merchantData.gstDetails.openingPurchaseValue" [placeholder]="'Opening Purchase Value'"
+                [value]="merchantData.gstDetails.openingPurchaseValue" [is_capital]="true"
+                (sendValue)="merchantData.gstDetails.openingPurchaseValue = $event"></app-input>
+            </div>
+            <div class="card__col-xs-12" style="padding-top: 10px;">
+              <app-input [label]="'Sales Value'" [type]="'text'" [name]="merchantData.gstDetails.openingSalesValue"
+                [placeholder]="'Opening Sales Value'" [value]="merchantData.gstDetails.openingSalesValue"
+                (sendValue)="merchantData.gstDetails.openingSalesValue = $event"></app-input>
+            </div>
+          </div>
+        </div>
+        <div class="card card_main">
+          <div class="card__title">Terms and Conditions</div>
+          <div class="card__row">
+            <div class="card__col-xs-12">
+              <textarea rows="10" style="width: 100%;" class="input__text"
+                placeholder="You can add your personalised business terms and conditions."
+                [(ngModel)]="merchantData.gstDetails.termsAndConditions"></textarea>
+            </div>
           </div>
         </div>
       </div>

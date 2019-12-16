@@ -10,11 +10,15 @@
           </app-input-select-object>
         </div>
         <div class="card__col-xs-12 card__col-sm-4">
-          <app-calendar [format]="'All'" [isCompareDateShow]="false" [label]="'All'" [type]="'text'"
+          <app-input-select-object [label]="'Select Period'" [type]="'text'" [value]="selected_calender" [type]="'text'"
+            [name]="'selected_calender'" [filter_items]="available_calender_list"
+            (sendValue)="onSelectCalender($event)">
+          </app-input-select-object>
+          <!-- <app-calendar [format]="'All'" [isCompareDateShow]="false" [label]="'All'" [type]="'text'"
             [name]="'from_to_date'"
             [value]="(selected_dates.from_date | backTipsDate) +' to '+ (selected_dates.to_date | backTipsDate)"
             (sendBeginDate)="selected_dates.from_date = $event;onSeletedDateChange();"
-            (sendEndDate)="selected_dates.to_date = $event;onSeletedDateChange();"></app-calendar>
+            (sendEndDate)="selected_dates.to_date = $event;onSeletedDateChange();"></app-calendar> -->
         </div>
         <div class="card__col-xs-12 card__col-sm-2">
           <app-input-select-object [label]="'Select Type'" [type]="'text'" [value]="selected_invoice_type"

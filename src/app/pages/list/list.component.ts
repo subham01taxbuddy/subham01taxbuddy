@@ -117,6 +117,13 @@ export class ListComponent implements OnInit {
         ) {
           is_match = false;
           break;
+        } else {
+          // TODO: We can upgrade this invoice list filter
+          // Note: for removing data who has invoice owner as N/A
+          if (it.attr == 'Invoice Owner' && it.value && (!rd.hasOwnProperty("processedBy") || rd.processedBy === "" || rd.processedBy === undefined || rd.processedBy === null)) {
+            is_match = false;
+            break;
+          }
         }
       }
 
