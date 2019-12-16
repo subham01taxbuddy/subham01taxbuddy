@@ -163,7 +163,7 @@
                               <tr *ngIf="tab.isMarkForDeletion != 'T'" class="report-table__row">
                                 <td class="report-table__cell report-table__cell_day">{{i+1}}</td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                  <input class="table__row-input" type="text" name="'description'"
+                                  <input class="table__row-input" type="text" name="'description'" maxLength="200"
                                     [(ngModel)]="tab.itemDescription" title={{tab.itemDescription}}>
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
