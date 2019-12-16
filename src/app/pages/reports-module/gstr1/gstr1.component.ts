@@ -166,7 +166,7 @@ export class Gstr1Component implements OnInit {
     NavbarService.getInstance(null).isApplyBtnClicked = true;
     const from_date = this.datepipe.transform(this.selected_dates.from_date, 'yyyy-MM-dd HH:mm:ss');
     const to_date = this.datepipe.transform(this.selected_dates.to_date, 'yyyy-MM-dd HH:mm:ss');
-    const param = `${environment.url}${this.gstMsService.microService}/invoice-types-Reports?businessId=${this.merchantData.userId}&fromInvoiceDate=` + from_date + `&toInvoiceDate=` + to_date + `&invoiceType=${this.invoiceTypeData.invoiceTypeId}&sendMail=false`;
+    const param = `${environment.url}${this.gstMsService.microService}/invoice-types-Reports?businessId=${this.merchantData.userId}&gstReturnCalendarId=${this.selected_calender.id}&invoiceType=${this.invoiceTypeData.invoiceTypeId}&sendMail=false`;/* fromInvoiceDate=` + from_date + `&toInvoiceDate=` + to_date +  */
     window.open(param, '_blank');
   }
 
@@ -179,7 +179,7 @@ export class Gstr1Component implements OnInit {
         if (res && this.utilsService.isNonEmpty(res.emailAddress)) {
           const from_date = this.datepipe.transform(this.selected_dates.from_date, 'yyyy-MM-dd HH:mm:ss');
           const to_date = this.datepipe.transform(this.selected_dates.to_date, 'yyyy-MM-dd HH:mm:ss');
-          const param = `/invoice-types-Reports?businessId=${this.merchantData.userId}&fromInvoiceDate=` + from_date + `&toInvoiceDate=` + to_date + `&invoiceType=${this.invoiceTypeData.invoiceTypeId}&sendMail=true`;
+          const param = `/invoice-types-Reports?businessId=${this.merchantData.userId}&gstReturnCalendarId=${this.selected_calender.id}&invoiceType=${this.invoiceTypeData.invoiceTypeId}&sendMail=true`;
           this.gstMsService.getMethod(param).subscribe((data: any) => {
             this.loading = false;
             this._toastMessageService.alert('success', 'Email sent successfully.');
