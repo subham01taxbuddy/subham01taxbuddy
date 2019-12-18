@@ -25,7 +25,6 @@ import { ToastMessageService } from '../../../../services/toast-message.service'
 import { HttpClient } from '@angular/common/http';
 import Storage from '@aws-amplify/storage';
 import { UtilsService } from 'app/services/utils.service';
-const path = require('path');
 
 @Component({
   selector: 'app-add-update-gst-bill-invoice',
@@ -317,7 +316,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         partyEmail: null
       }
     }
-
+    if (sendData.listInvoiceItems.length > 0) {
+      sendData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId = 3;
+    }
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
     let cField = (this.invoice_main_type == "sales-invoice") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
     if (cField) {

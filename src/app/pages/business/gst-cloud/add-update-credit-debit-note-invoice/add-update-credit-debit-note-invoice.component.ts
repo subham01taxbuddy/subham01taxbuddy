@@ -319,6 +319,9 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     if (sendData.creditDebitNoteDTO.invoiceDate) {
       sendData.creditDebitNoteDTO.invoiceDate = new Date(sendData.creditDebitNoteDTO.invoiceDate)
     }
+    if (sendData.noteItemDTO.length > 0) {
+      sendData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId = 3;
+    }
     sendData.creditDebitNoteDTO.noteGrossValue = parseFloat(sendData.creditDebitNoteDTO.noteGrossValue);
     let cField = (this.invoice_main_type == "credit-note") ? "customer" : (this.invoice_main_type == "debit-note") ? "supplier" : "";
     if (cField) {
