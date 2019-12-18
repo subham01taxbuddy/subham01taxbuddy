@@ -49,6 +49,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   loading: boolean = false;
   gstinBounceBackTimeObj: any;
   imageLoader: boolean = false;
+  showOriginal: boolean = false;
   loggedInUserInfo = JSON.parse(localStorage.getItem("UMD")) || {};
   invoiceData: any = {
     partyRoleID: "",
@@ -179,7 +180,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
           this.onSelectGSTState(slfData[0]);
         }
       }
-      this.getS3Image();
+      this.getS3Image(this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl);
     }
 
     if (this.invoiceData.creditDebitNoteDTO.invoiceDate) {
@@ -191,18 +192,15 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     }
   }
 
-  getS3Image() {
-    if (this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl) {
+  getS3Image(filename) {
+    if (filename) {
       this.imageLoader = true;
-      this.fileType = this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl.split('.').pop();
-      /*let imgUrl = JSON.parse(JSON.stringify(this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl));
-      imgUrl = imgUrl.replace("public/","");*/
-      Storage.get(this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl)
+      this.fileType = filename.split('.').pop();
+      Storage.get(filename)
         .then(result => {
           this.invoiceData.creditDebitNoteDTO.s3InvoiceImageUrl = result;
           this.imageLoader = false;
           this.s3FilePath = this.invoiceData.creditDebitNoteDTO.s3InvoiceImageUrl;
-          console.log("this.s3FilePath: ", this.s3FilePath)
         })
         .catch(err => {
           this._toastMessageService.alert("error", "Error While fetching invoice image");
@@ -210,6 +208,19 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     }
   }
 
+  showOriginalImage() {
+    this.showOriginal = !this.showOriginal;
+    if (this.showOriginal && (this.fileType === 'png' || this.fileType === 'jpg' || this.fileType === 'jpeg')) {
+      const filename = this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl
+      if (filename.indexOf(".") > 0) {
+        const orgFileName = filename.substring(0, filename.lastIndexOf("."));
+        const name = `${orgFileName}_org.${this.fileType}`;
+        this.getS3Image(name);
+      }
+    } else {
+      this.getS3Image(this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl);
+    }
+  }
   convertDateToHTMLInputDateFormat(i_Date) {
     let d = new Date(i_Date);
     let result: any = "";
@@ -279,7 +290,6 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     }
   }
   isItemDetailsInValid(ref) {
-    debugger
     if (this.invoiceData.noteItemDTO instanceof Array) {
       let temp = this.invoiceData.noteItemDTO.filter(item => item.isMarkForFlag !== 'T')
       for (let i = 0; i < temp.length; i++) {
@@ -415,10 +425,14 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   }
 
   uploadInvoiceImage(files) {
+    debugger
     if (files && files[0]) {
       this.isEditInvoiceImage = false;
       this.imageLoader = true;
       let fileExt = '.png';
+      if (files[0].name && files[0].name.split('.').pop()) {
+        fileExt = `.${files[0].name.split('.').pop()}`;
+      }
       if (files[0].type === 'application/pdf') {
         fileExt = '.pdf';
       }
@@ -431,7 +445,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
             this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl = result.key;
             this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUploadedOn = new Date();
             this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUploadedBy = this.loggedInUserInfo.USER_UNIQUE_ID;
-            this.getS3Image();
+            this.getS3Image(this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl);
           } else {
             this.imageLoader = false;
             this._toastMessageService.alert("error", "Error While uploading invoice image");

@@ -46,7 +46,19 @@
   position: relative;
   min-height: 100vh;
 }
-
+.toggel-on-off {
+  position: absolute;
+  top: 0;
+  right: 45px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.toggel-on-off > .fa {
+  font-size: 30px;
+  color: black;
+  padding: 5px;
+  cursor: pointer;
+}
 .edit-invoice-image {
   position: absolute;
   top: 0;

@@ -25,7 +25,7 @@ import { ToastMessageService } from '../../../../services/toast-message.service'
 import { HttpClient } from '@angular/common/http';
 import Storage from '@aws-amplify/storage';
 import { UtilsService } from 'app/services/utils.service';
-
+const path = require('path');
 
 @Component({
   selector: 'app-add-update-gst-bill-invoice',
@@ -47,6 +47,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   @Output() onCancelInvoice: EventEmitter<any> = new EventEmitter();
 
   loading: boolean = false;
+  showOriginal: boolean = false;
   gstinBounceBackTimeObj: any;
   imageLoader: boolean = false;
   fileType: string = 'png';
@@ -175,7 +176,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
           this.onSelectGSTState(slfData[0]);
         }
       }
-      this.getS3Image();
+      this.getS3Image(this.invoiceData.invoiceDTO.invoiceImageUrl);
     }
 
     if (this.invoiceData.invoiceDTO.invoiceDate) {
@@ -183,24 +184,34 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }
   }
 
-  getS3Image() {
-    if (this.invoiceData.invoiceDTO.invoiceImageUrl) {
+  getS3Image(filename) {
+    if (filename) {
       this.imageLoader = true;
-      this.fileType = this.invoiceData.invoiceDTO.invoiceImageUrl.split('.').pop();
-      /*let imgUrl = JSON.parse(JSON.stringify(this.invoiceData.invoiceDTO.invoiceImageUrl));
-      imgUrl = imgUrl.replace("public/","");*/
-      Storage.get(this.invoiceData.invoiceDTO.invoiceImageUrl)
+      this.fileType = filename.split('.').pop();
+      Storage.get(filename)
         .then(result => {
           this.invoiceData.invoiceDTO.s3InvoiceImageUrl = result;
           this.imageLoader = false;
           this.s3FilePath = this.invoiceData.invoiceDTO.s3InvoiceImageUrl
-          console.log("this.s3FilePath: ", this.s3FilePath)
         })
         .catch(err => {
           this._toastMessageService.alert("error", "Error While fetching invoice image");
         });
     }
-    console.log("this.s3FilePath: ", this.s3FilePath)
+  }
+
+  showOriginalImage() {
+    this.showOriginal = !this.showOriginal;
+    if (this.showOriginal && (this.fileType === 'png' || this.fileType === 'jpg' || this.fileType === 'jpeg')) {
+      const filename = this.invoiceData.invoiceDTO.invoiceImageUrl
+      if (filename.indexOf(".") > 0) {
+        const orgFileName = filename.substring(0, filename.lastIndexOf("."));
+        const name = `${orgFileName}_org.${this.fileType}`;
+        this.getS3Image(name);
+      }
+    } else {
+      this.getS3Image(this.invoiceData.invoiceDTO.invoiceImageUrl);
+    }
   }
 
   convertDateToHTMLInputDateFormat(i_Date) {
@@ -421,6 +432,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       this.isEditInvoiceImage = false;
       this.imageLoader = true;
       let fileExt = '.png';
+      if (files[0].name && files[0].name.split('.').pop()) {
+        fileExt = `.${files[0].name.split('.').pop()}`;
+      }
       if (files[0].type === 'application/pdf') {
         fileExt = '.pdf';
       }
@@ -429,12 +443,11 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         contentType: files[0].type
       })
         .then((result: any) => {
-          debugger
           if (result && result.key) {
             this.invoiceData.invoiceDTO.invoiceImageUrl = result.key;
             this.invoiceData.invoiceDTO.invoiceImageUploadedOn = new Date();
             this.invoiceData.invoiceDTO.invoiceImageUploadedBy = this.loggedInUserInfo.USER_UNIQUE_ID;
-            this.getS3Image();
+            this.getS3Image(this.invoiceData.invoiceDTO.invoiceImageUrl);
           } else {
             this.imageLoader = false;
             this._toastMessageService.alert("error", "Error While uploading invoice image");

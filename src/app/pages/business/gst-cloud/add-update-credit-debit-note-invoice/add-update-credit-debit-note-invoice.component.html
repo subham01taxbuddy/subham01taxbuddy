@@ -25,6 +25,10 @@
                 <pdf-viewer *ngIf="fileType === 'pdf'" [src]="s3FilePath" [render-text]="true" style="display: block">
                 </pdf-viewer>
               </div>
+              <div class="toggel-on-off" *ngIf="fileType === 'png' || fileType === 'jpg' || fileType === 'jpeg'"><i
+                class="fa fa-toggle-on" *ngIf="showOriginal" style="color: green;" title="Show compressed image"
+                (click)="showOriginalImage()"></i><i class="fa fa-toggle-off" *ngIf="!showOriginal"
+                title="Show original image" (click)="showOriginalImage()"></i></div>
               <div class="edit-invoice-image"><i class="fa fa-edit" (click)="isEditInvoiceImage=true"></i></div>
             </div>
           </div>
