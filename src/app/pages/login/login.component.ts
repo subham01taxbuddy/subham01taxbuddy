@@ -156,7 +156,6 @@ export class LoginComponent implements OnInit {
   getUserByCognitoId(data) {
     NavbarService.getInstance(this.http).getUserByCognitoId(`${data.attributes.sub}`).subscribe(res => {
       console.log('By CognitoId data:', res)
-      debugger
       console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))
       if (res && data.signInUserSession.accessToken.jwtToken) {
         this.setUserDataInsession(data, res);

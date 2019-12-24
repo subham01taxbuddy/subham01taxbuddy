@@ -43,6 +43,7 @@ import { HttpModule } from '@angular/http';
 
 import { AmplifyAngularModule, AmplifyService, AmplifyModules } from 'aws-amplify-angular';
 import Auth from '@aws-amplify/auth';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import Auth from '@aws-amplify/auth';
     HttpModule,
     RouterModule.forRoot(appRoutes),
     PagesModule,
-    NgxImageZoomModule.forRoot()
+    NgxImageZoomModule.forRoot(),
+    BrowserAnimationsModule
   ],
   providers: [
     NavbarService,

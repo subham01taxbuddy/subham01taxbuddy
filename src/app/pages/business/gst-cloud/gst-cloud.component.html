@@ -159,7 +159,7 @@
         <div class="modal-content modal-content_scrollbar">
             <div class="modal-content__container bill-invoice-popup__content">
 
-                <app-add-update-gst-bill-invoice *ngIf="['sales-invoice','purchase-invoice'].indexOf(invoice_main_type) != -1" [state_list]="state_list" [invoice_types]="selected_invoice_types" [merchantData]="merchantData" [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list" [invoiceToUpdate]="invoiceToUpdate" [is_update_item]="is_update_invoice" (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)">                  
+                <app-add-update-gst-bill-invoice *ngIf="['sales-invoice','purchase-invoice'].indexOf(invoice_main_type) != -1" [state_list]="state_list" [invoice_types]="selected_invoice_types" [merchantData]="merchantData" [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list" [invoiceToUpdate]="invoiceToUpdate" [is_update_item]="is_update_invoice" (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)" (onCancelInvoice)="onCancelInvoice($event)">                  
                 </app-add-update-gst-bill-invoice>
 
                 <app-add-update-credit-debit-note-invoice *ngIf="['credit-note','debit-note'].indexOf(invoice_main_type) != -1" [state_list]="state_list" [invoice_types]="selected_invoice_types" [merchantData]="merchantData" [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list" [invoiceToUpdate]="invoiceToUpdate" [is_update_item]="is_update_invoice" (onUpdateInvoice)="onUpdateInvoice($event)" (onAddInvoice)="onAddInvoice($event)">                  
@@ -167,7 +167,7 @@
 
             </div>
         </div>
-        <div class="modal-footer clearfix">
+        <div class="modal-footer clearfix" *ngIf="['credit-note','debit-note'].indexOf(invoice_main_type) != -1">
             <div class="pull-right">
                 <a class="btn btn-cancel" (click)="onCancelInvoiceBtnClicked()">Cancel</a>
                 <a class="btn product__save" (click)="onSaveGSTBillInvoice()">Save Invoice</a>                

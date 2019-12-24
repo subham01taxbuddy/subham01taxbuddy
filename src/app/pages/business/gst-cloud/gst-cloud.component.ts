@@ -568,6 +568,11 @@ export class GSTCloudComponent implements OnInit {
     this.onCancelInvoiceBtnClicked();
   }
 
+  onCancelInvoice(event) {
+    this.isGSTBillViewShown = false;
+    this.bodyTag.setAttribute("class", "");
+    }
+
   onUpdateInvoice(event) {
     /*NavbarService.getInstance(null).saveGSTBillInvoice = true;    */
     if (event && event.id) {

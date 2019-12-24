@@ -90,6 +90,10 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
 import { AgGridCheckboxComponent } from 'app/additional-components/ag-grid-checkbox/ag-grid-checkbox.component';
+import { MaterialModule } from 'app/shared/material.module';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { SharedModule } from 'app/shared/shared.module';
 
 Auth.configure(environment.AMPLIFY_CONFIG);
 
@@ -100,6 +104,18 @@ Storage.configure({
   }
 });
 
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  }
+};
 @NgModule({
   declarations: [
     PagesComponent,
@@ -159,7 +175,9 @@ Storage.configure({
     NgxImageZoomModule.forRoot(),
     PdfViewerModule,
     // NgxExtendedPdfViewerModule,
-    AgGridModule.withComponents([])
+    AgGridModule.withComponents([]),
+    MaterialModule,
+    SharedModule
   ],
   providers: [
     SelectObjectFilterPipe,
@@ -167,7 +185,9 @@ Storage.configure({
     SelectObjFilterPipe,
     BacktipsDatePipe,
     CapitalizeFirstPipe,
-    SafePipe
+    SafePipe,
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   ],
   bootstrap: [PagesComponent],
 

@@ -1643,6 +1643,7 @@ body.modal-body .content {
 
 .modal-footer .btn {
     margin-right: 0;
+    border: none;
 }
 
 .modal-fullscreen {
