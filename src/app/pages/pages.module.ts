@@ -175,7 +175,7 @@ export const MY_FORMATS = {
     NgxImageZoomModule.forRoot(),
     PdfViewerModule,
     // NgxExtendedPdfViewerModule,
-    AgGridModule.withComponents([]),
+    // AgGridModule.withComponents([]),
     MaterialModule,
     SharedModule
   ],
