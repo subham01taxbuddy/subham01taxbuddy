@@ -32,7 +32,7 @@ export class UpperCaseDirective {
 }
 
 
-@Directive({
+/* @Directive({
   selector: 'input[tolowerCase],'
 })
 export class converToLowerCaseDirective {
@@ -48,4 +48,4 @@ export class converToLowerCaseDirective {
       this.control.control.setValue(trim);
     }
   }
-}
+} */
