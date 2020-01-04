@@ -316,7 +316,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       $('input.ng-invalid').first().focus();
       return
     } else if (this.invoiceData.invoiceDTO.paidAmount > this.invoiceData.invoiceDTO.invoiceGrossValue) {
-      this._toastMessageService.alert("error", "Amount received can be greater than invoice gross value.");
+      this._toastMessageService.alert("error", "Amount received can't be greater than gross value.");
       return
     } else if (this.invoiceFormGroup.value.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId === 3 && this.isItemDetailsInValid('add')) {
       this._toastMessageService.alert("error", "Please add atleast one item details and fill all mandatory feilds.");
@@ -416,7 +416,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         delete sendData.partyDTO.id;
       }      */
       sendData.invoiceDTO.partyHasRolePartyHasRoleId = -1;
-      delete sendData.partyDTO.id;
+      // delete sendData.partyDTO.id;
       delete sendData.partyDTO.partyUpdatedAt;
       delete sendData.partyDTO.partyCreatedAt;
     }
@@ -556,7 +556,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }
   }
 
-  onEnterGSTIN(event) {
+  /* onEnterGSTIN(event) {
     this.invoiceData.partyDTO.partyGstin = event;
     if (this.gstinBounceBackTimeObj) {
       clearTimeout(this.gstinBounceBackTimeObj)
@@ -591,7 +591,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         this.setPartyPlaceOfSupply();
       }
     }, 500)
-  }
+  } */
 
   onGSTINKeypress(gstn) {
     console.log("Enetr GSTN:", gstn)
