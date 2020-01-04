@@ -22,7 +22,12 @@
   align-items: flex-end;
   padding-bottom: 15px;
 }
-
+/* input type number style */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 /* .modal {
   position: fixed;
   top: 0;

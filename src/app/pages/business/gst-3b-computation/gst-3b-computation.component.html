@@ -1,7 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
 <div class="content content_full">
-
     <div class="content__container">
         <div class="card" *ngIf="is_applied_clicked" style="padding-top: 0px;">
             <div class="card__row" style="    margin: 30px 0px 30px 0px;">
@@ -18,11 +17,25 @@
                 <div class="card__col-xs-12 card__col-sm-4 text-pull-right">
                     <div class="last-updated-on">
                         Last Updated ON :
-                        {{gst3bComputation.updatedAt ? (gst3bComputation.updatedAt | backTipsDate:'full datetime') : ""}}
+                        {{gst3BCompData.updatedAt ? (gst3BCompData.updatedAt | backTipsDate:'full datetime') : ""}}
                     </div>
                 </div>
             </div>
-            <div class="card__row" style="margin-top: 0px;">
+            <div class="card card_main">
+                <div class="card__title">GST Computation
+                    <span style="color: red;float: right;" *ngIf="gst3BCompData.computationStatusId != 1">
+                        *note:
+                        {{ gst3BCompData.computationStatusId == 2 ? 'Copy approved by user' :  'Copy sent for approval'}}
+                    </span>
+                </div>
+                <div class="card__row">
+                    <ag-grid-angular class="ag-theme-balham" [gridOptions]="computationGridOptions"
+                        (cellValueChanged)="onCellValueChanged($event)">
+                    </ag-grid-angular>
+                </div>
+            </div>
+
+            <!-- <div class="card__row" style="margin-top: 0px;">
                 <div style="color: red" *ngIf="gst3bComputation.computationStatusId != 1">
                     *note:
                     {{ gst3bComputation.computationStatusId == 2 ? 'Copy approved by user' :  'Copy sent for approval'}}
@@ -305,7 +318,6 @@
                                     </app-input>
                                 </td>
                                 <td class="report-table__cell report-table__cell_day text-pull-right">
-                                    <!--  <app-input [label]="''" [type]="'number'" [name]="'opbpurchaselatefees'" [placeholder]="''" [value]="gst3bComputation.purchaseLateFee" (sendValue)="gst3bComputation.purchaseLateFee = $event;calculateCreditTotal('purchase','');" [is_only_positive_number_allowed]="true" [disabled]="gst3bComputation.computationStatusId != 1 ? true: false"></app-input> -->
                                 </td>
                                 <td class="report-table__cell report-table__cell_day text-pull-right">
                                     {{gst3bComputation.creditLateFee}}
@@ -328,10 +340,9 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <div class="footer__buttons clearfix" style="margin-top: 40px;"
-                *ngIf="gst3bComputation.computationStatusId == 1">
-                <a class="btn long-btn" (click)="saveGST3BData('save');">Save</a>
+            </div> -->
+            <div class="footer__buttons clearfix" *ngIf="gst3BCompData.computationStatusId == 1">
+                <a class="btn long-btn" (click)="save3BDetails()">Save</a>
                 <a class="btn long-btn" (click)="saveGST3BData('save & send');">Save & Send</a>
             </div>
         </div>

@@ -236,7 +236,7 @@ export class NavbarService {
 	}
 
 	getGSTSalesSummary(params: any) {
-		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/sales-summary', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': `/gst/api/sales-summary?businessId=${params.businessId}&gstReturnCalendarId=${params.gstReturnCalendarId}`, 'method': 'POST' }, {});
 	}
 
 	getGSTFilingStatuses() {
@@ -301,12 +301,25 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/freezeInvoices', 'method': 'POST' }, params);
 	}
 
+	getGST3BComputationByPost(params: any) {
+		// return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gst-computations', 'method': 'POST' }, params);
+		return NavbarService.getInstance(this.http).apiCall({ 'url': `/gst/api/gst-computations?businessId=${params.businessId}&gstReturnCalendarId=${params.gstReturnCalendarId}`, 'method': 'POST' }, {});
+	}
+
+	updateOpeningBalance(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/business-gst-balances', 'method': 'PUT' }, params);
+	}
+
 	getGST3BComputation(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gst-computations', 'method': 'GET' }, params);
 	}
 
 	getGST3BComputationStatuses() {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/computation-statuses', 'method': 'GET' }, {});
+	}
+
+	getOpeningBalance(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': `/gst/api/business-gst-balances-gst-return-calendar?businessId=${params.businessId}&gstReturnCalendarId=${params.gstReturnCalendarId}`, 'method': 'GET' }, {});
 	}
 
 	getGSTBalanceOfBusiness(params: any) {
