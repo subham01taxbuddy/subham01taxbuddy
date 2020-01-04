@@ -66,12 +66,14 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       invoiceImageUploadedOn: new Date(),
       invoiceDate: new Date(),
       invoiceNumber: "",
+      paidAmount: null,
       supplyStateId: "",
       invoiceAssignedTo: "",
       invoiceTypesInvoiceTypesId: "",
       invoiceStatusMasterInvoiceStatusMasterId: "",
     },
     partyDTO: {
+      id: null,
       partyEmail: "",
       partyGstin: "",
       partyName: "",
@@ -161,6 +163,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       this.invoiceData = JSON.parse(JSON.stringify(this.invoiceToUpdate));
       if (!this.invoiceData.partyDTO) {
         this.invoiceData.partyDTO = {
+          id: null,
           partyEmail: "",
           partyGstin: "",
           partyName: "",
@@ -311,6 +314,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     if (!this.invoiceFormGroup.valid) {
       console.log("Invoice Form Group:", this.invoiceFormGroup);
       $('input.ng-invalid').first().focus();
+      return
+    } else if (this.invoiceData.invoiceDTO.paidAmount > this.invoiceData.invoiceDTO.invoiceGrossValue) {
+      this._toastMessageService.alert("error", "Amount received can be greater than invoice gross value.");
       return
     } else if (this.invoiceFormGroup.value.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId === 3 && this.isItemDetailsInValid('add')) {
       this._toastMessageService.alert("error", "Please add atleast one item details and fill all mandatory feilds.");
@@ -751,7 +757,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
 
   changeInvoiceType() {
-    if (this.invoiceFormGroup.value.invoiceDTO.invoiceTypesInvoiceTypesId !== 1) {
+    if (this.invoiceFormGroup.value.invoiceDTO.invoiceTypesInvoiceTypesId === 2) {
       this.invoiceFormGroup['controls'].partyDTO['controls'].partyGstin.setValidators(null);
       this.invoiceFormGroup['controls'].partyDTO['controls'].partyGstin.updateValueAndValidity();
     }

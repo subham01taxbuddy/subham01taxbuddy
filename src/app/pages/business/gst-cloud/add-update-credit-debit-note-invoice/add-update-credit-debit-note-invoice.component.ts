@@ -72,6 +72,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       invoiceStatusMasterInvoiceStatusMasterId: "",
     },
     partyDTO: {
+      id: null,
       partyEmail: "",
       partyGstin: "",
       partyName: "",
@@ -138,6 +139,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
 
       if (!this.invoiceData.partyDTO) {
         this.invoiceData.partyDTO = {
+          id: null,
           partyEmail: "",
           partyGstin: "",
           partyName: "",
@@ -279,7 +281,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       this._toastMessageService.alert("error", "Please select place of supply");
       return;
     } else if (this.invoiceData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId === 3 && this.isItemDetailsInValid('add')) {
-      this._toastMessageService.alert("error", "Please add atleast one item details.");
+      this._toastMessageService.alert("error", "Please add atleast one item details and fill all mandatory feilds.");
       return;
     }
 
@@ -319,6 +321,9 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     if (sendData.creditDebitNoteDTO.invoiceDate) {
       sendData.creditDebitNoteDTO.invoiceDate = new Date(sendData.creditDebitNoteDTO.invoiceDate)
     }
+    if (sendData.creditDebitNoteDTO.noteDate) {
+      sendData.creditDebitNoteDTO.noteDate = new Date(sendData.creditDebitNoteDTO.noteDate)
+    }
     if (sendData.noteItemDTO.length > 0) {
       sendData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId = 3;
     }
@@ -329,10 +334,10 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       if (fData && fData[0]) { sendData.partyRoleID = fData[0].id; }
     }
 
-    let sfData = this.invoice_status_list.filter(isl => { return isl.invoiceStatusMasterName == "uploaded" })
-    if (sfData && sfData[0]) {
-      sendData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId = sfData[0].id;
-    }
+    // let sfData = this.invoice_status_list.filter(isl => { return isl.invoiceStatusMasterName == "uploaded" })
+    // if (sfData && sfData[0]) {
+    //   sendData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId = sfData[0].id;
+    // }
 
     delete sendData.creditDebitNoteDTO.s3InvoiceImageUrl;
     NavbarService.getInstance(this.http).createCreditDebitNoteInvoiceWithItems(sendData).subscribe(res => {
@@ -351,6 +356,9 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     let sendData = JSON.parse(JSON.stringify(this.invoiceData));
     if (sendData.creditDebitNoteDTO.invoiceDate) {
       sendData.creditDebitNoteDTO.invoiceDate = new Date(sendData.creditDebitNoteDTO.invoiceDate)
+    }
+    if (sendData.creditDebitNoteDTO.noteDate) {
+      sendData.creditDebitNoteDTO.noteDate = new Date(sendData.creditDebitNoteDTO.noteDate)
     }
 
     sendData.creditDebitNoteDTO.noteGrossValue = parseFloat(sendData.creditDebitNoteDTO.noteGrossValue);
@@ -520,7 +528,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
             this.invoiceData.partyDTO.partyEmail = "";
             this.invoiceData.partyDTO.partyPhone = "";
             this.invoiceData.partyDTO.partyName = "";
-            delete this.invoiceData.partyDTO.id;
+            // delete this.invoiceData.partyDTO.id;
             delete this.invoiceData.partyDTO.partyUpdatedAt;
           }
 
@@ -530,7 +538,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
         this.invoiceData.partyDTO.partyEmail = "";
         this.invoiceData.partyDTO.partyPhone = "";
         this.invoiceData.partyDTO.partyName = "";
-        delete this.invoiceData.partyDTO.id;
+        // delete this.invoiceData.partyDTO.id;
         delete this.invoiceData.partyDTO.partyUpdatedAt;
         this.setPartyPlaceOfSupply();
       }

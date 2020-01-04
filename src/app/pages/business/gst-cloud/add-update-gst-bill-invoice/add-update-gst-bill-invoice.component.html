@@ -124,8 +124,8 @@
                   <input matInput
                     placeholder="GSTIN of {{invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer'}}"
                     formControlName="partyGstin" type="text" upperCase maxlength="15"
-                    (keyup)="onGSTINKeypress(this.invoiceFormGroup.value.partyDTO.partyGstin)"
-                    [required]="invoiceFormGroup.value.invoiceDTO.invoiceTypesInvoiceTypesId === 1 ? true : false">
+                    (blur)="onGSTINKeypress(this.invoiceFormGroup.value.partyDTO.partyGstin)"
+                    [required]="invoiceFormGroup.value.invoiceDTO.invoiceTypesInvoiceTypesId !== 2 ? true : false">
                   <mat-error *ngIf="invoiceFormGroup['controls'].partyDTO['controls'].partyGstin.hasError('pattern')">
                     Please enter valid GSTN.</mat-error>
                 </mat-form-field>
@@ -142,9 +142,11 @@
                 <mat-form-field appearance="outline">
                   <mat-label>{{(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')}} Contact No.
                   </mat-label>
-                  <input matInput
+                  <input matInput type="number"
                     placeholder="{{(invoice_main_type == 'purchase-invoice' ? 'Supplier' : 'Customer')}} Contact No."
                     formControlName="partyPhone" maxlength="10"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                     (keyup)="onEnterContact(this.invoiceFormGroup.value.partyDTO.partyPhone)"
                     [required]="invoiceFormGroup.value.invoiceDTO.invoiceTypesInvoiceTypesId === 2">
                   <mat-error *ngIf="invoiceFormGroup['controls'].partyDTO['controls'].partyPhone.hasError('pattern')">
@@ -334,7 +336,17 @@
               </div>
             </div>
             <div class="card__row">
-              <div class="card__col-xs-9 invoice-item-summary-label">
+              <div class="card__col-xs-3 invoice-item-summary-label">
+                Amount Received
+              </div>
+              <div class="card__col-xs-3">
+                <!-- <app-input [label]="''" [type]="'number'" [name]="'gross value'" [placeholder]="'Enter Gross Value'" [value]="invoiceData.invoiceDTO.invoiceGrossValue" (sendValue)="invoiceData.invoiceDTO.invoiceGrossValue = $event"></app-input> -->
+                <input class="select__box ogp_select ng-untouched ng-pristine ng-valid" type="number"
+                  name="'gross value'" [placeholder]="'Enter Amount Received'"
+                  [(ngModel)]="invoiceData.invoiceDTO.paidAmount"
+                  onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+              </div>
+              <div class="card__col-xs-3 invoice-item-summary-label">
                 Gross Value
               </div>
               <div class="card__col-xs-3">
