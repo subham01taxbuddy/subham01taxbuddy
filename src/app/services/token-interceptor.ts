@@ -1,3 +1,4 @@
+import Auth from '@aws-amplify/auth';
 import { Injectable } from '@angular/core';
 import {
     HttpRequest,
@@ -26,6 +27,11 @@ export class TokenInterceptor implements HttpInterceptor {
      */
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         this.userData = JSON.parse(localStorage.getItem('UMD'));
+        Auth.currentSession().then(data => {
+            console.log('Auth.currentSession:', data);
+            this.userData.id_token = data.getAccessToken().getJwtToken();
+            localStorage.setItem('UMD', JSON.stringify(this.userData));
+        }).catch(err => console.log('Auth.currentSession err:', err));
         const TOKEN = (this.userData) ? this.userData.id_token : null;
         if (TOKEN) {
             if (request.headers.has(InterceptorSkipHeader)) {
@@ -58,18 +64,17 @@ export class TokenInterceptor implements HttpInterceptor {
      * @returns {any}
      */
     private handleAuthError(err: HttpErrorResponse): Observable<any> {
-        // handle your auth error or rethrow
-        // console.log('handled error ', err);
-        if (this.utilsService.isNonEmpty(err) && this.utilsService.isNonEmpty(err.error)) {
-            if (err.error.status === 401 && err.error.detail === 'TOKEN_EXPIRED') {
-                // navigate /delete cookies or whatever
-                console.log('handled error ' + err.status);
-                // this.utilsService.disposable.unsubscribe();
-                this.router.navigate(['/log/userlogin']);
-                // if you've caught / handled the error, you don't want to rethrow it unless you also want downstream consumers to have to handle it as well.
-                return of(err.message);
+        if (this.utilsService.isNonEmpty(err)) {
+            if (err.status === 0) {
+                Auth.signOut()
+                    .then(data => {
+                        console.log('sign out data:', data);
+                        this.router.navigate(['/login']);
+                        return of(err.message);
+                    }).catch(error => console.log('sign out err:', error));
+
             } else {
-                // console.log('Some other error in Interceptor====');
+                // return of(err.message);
             }
         }
         throw err;
