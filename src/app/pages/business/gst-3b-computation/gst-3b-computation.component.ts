@@ -230,8 +230,8 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
         }
       }, err => {
         this.loading = false;
-        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-        this._toastMessageService.alert("error", "get gst 3b - " + errorMessage);
+        let errorMessage = (err.error && err.error.title) ? err.error.title : "Internal server error.";
+        this._toastMessageService.alert("error", "GST 3B - " + errorMessage);
         return resolve(false);
       });
     });

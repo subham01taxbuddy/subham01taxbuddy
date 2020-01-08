@@ -310,6 +310,15 @@
                       [is_only_positive_number_allowed]="true"></app-input>
                   </td>
                 </tr>
+
+                <tr class="report-table__row">
+                  <td class="report-table__cell report-table__cell_name text-pull-left">LATE FEE</td>
+                  <td class="report-table__cell report-table__cell_day text-pull-right">
+                    <app-input [label]="''" [type]="'number'" [name]="'opbcreditlatefee'" [placeholder]="''"
+                      [value]="opBalCreditObj.lateFee" (sendValue)="opBalCreditObj.lateFee = $event;"
+                      [is_only_positive_number_allowed]="true"></app-input>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>

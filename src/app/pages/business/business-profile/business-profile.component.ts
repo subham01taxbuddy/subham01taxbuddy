@@ -25,11 +25,13 @@ import { ToastMessageService } from '../../../services/toast-message.service';
 import { HttpClient } from '@angular/common/http';
 import Storage from '@aws-amplify/storage';
 import { UtilsService } from 'app/services/utils.service';
+import { GstMsService } from 'app/services/gst-ms.service';
 
 @Component({
   selector: 'app-business-profile',
   templateUrl: './business-profile.component.html',
-  styleUrls: ['./business-profile.component.css']
+  styleUrls: ['./business-profile.component.css'],
+  providers: [GstMsService]
 })
 export class BusinessProfileComponent implements OnInit {
   selected_merchant: any;
@@ -53,6 +55,7 @@ export class BusinessProfileComponent implements OnInit {
     cgst: 0,
     sgst: 0,
     cess: 0,
+    lateFee: 0,
     gstReturnCalendarId: 0,
     id: 0
   }
@@ -60,7 +63,7 @@ export class BusinessProfileComponent implements OnInit {
   merchantData: any;
   constructor(
     private navbarService: NavbarService,
-    public router: Router, public http: HttpClient,
+    public router: Router, public http: HttpClient, private gstMsService: GstMsService,
     public _toastMessageService: ToastMessageService, public utilsService: UtilsService) {
     NavbarService.getInstance(null).component_link_2 = 'business-profile';
     NavbarService.getInstance(null).component_link_3 = '';
@@ -75,10 +78,10 @@ export class BusinessProfileComponent implements OnInit {
 
     this.loading = true;
     this.getGSTStateList().then(sR => {
-      this.gstGSTReturnCalendarsData().then(ss => {
-        this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
-        this.loading = false;
-      })
+      // this.gstGSTReturnCalendarsData().then(ss => {
+      this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+      this.loading = false;
+      // })
     })
   }
 
@@ -176,7 +179,10 @@ export class BusinessProfileComponent implements OnInit {
           }
         }
       }
-      this.loading = false;
+
+      this.gstGSTReturnCalendarsData().then(data => {
+        this.loading = false;
+      })
     }, err => {
       console.log("err:", err)
       let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
@@ -494,22 +500,46 @@ export class BusinessProfileComponent implements OnInit {
   gstGSTReturnCalendarsData() {
     return new Promise((resolve, reject) => {
       this.gst_return_calendars_data = [];
-      NavbarService.getInstance(this.http).gstGSTReturnCalendarsData().subscribe(res => {
+      // TODO: For GSTR1 report get master(gstr_filling_type_master) values from db
+      // Here one is hard coded value because of the values are stored in master data
+      // Table name: gstr_filling_type_master
+      // 1: GSTR1
+      // 2: GSTR3B
+      const param = `/gst-return-calendars/?businessId=${this.merchantData.userId}&gstrType=${2}`;
+      this.gstMsService.getMethod(param).subscribe((res: any) => {
+        console.log('Calender list success:', res);
         if (Array.isArray(res)) {
-          let month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-          res.forEach(p => {
-            let monthName = month_names[p.gstReturnMonth - 1] || p.gstReturnMonth;
-            p.name = monthName + " - " + p.gstReturnYear;
+          res.forEach((cData: any) => {
+            let tName = cData.gstReturnMonthDisplay + "-" + cData.gstReturnYear;
+            this.gst_return_calendars_data.push({ id: cData.id, name: tName })
           });
-          this.gst_return_calendars_data = res;
         }
+        this.loading = false;
         resolve(true);
       }, err => {
-        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this.loading = false;
+        let errorMessage = (err.error && err.error.title) ? err.error.title : "Internal server error.";
         this._toastMessageService.alert("error", " gst return calendar data - " + errorMessage);
         resolve(false);
-      });
+      })
     })
+    //   this.gst_return_calendars_data = [];
+    //   NavbarService.getInstance(this.http).gstGSTReturnCalendarsData().subscribe(res => {
+    //     if (Array.isArray(res)) {
+    //       let month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    //       res.forEach(p => {
+    //         let monthName = month_names[p.gstReturnMonth - 1] || p.gstReturnMonth;
+    //         p.name = monthName + " - " + p.gstReturnYear;
+    //       });
+    //       this.gst_return_calendars_data = res;
+    //     }
+    //     resolve(true);
+    //   }, err => {
+    //     let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+    //     this._toastMessageService.alert("error", " gst return calendar data - " + errorMessage);
+    //     resolve(false);
+    //   });
+    // })
   }
 
   onSelectGSTReturnCalendar(event) {
@@ -519,6 +549,48 @@ export class BusinessProfileComponent implements OnInit {
   }
 
   getOpeningBalance() {
+    if (!this.merchantData || !this.merchantData.userId) {
+      this._toastMessageService.alert("error", "Please select user");
+      return;
+    } else if (!this.selected_gst_return_calendars_data || !this.selected_gst_return_calendars_data.id) {
+      this._toastMessageService.alert("error", "Please select return date");
+      return;
+    }
+    this.loading = true;
+    this.opBalCreditObj["igst"] = 0;
+    this.opBalCreditObj["cgst"] = 0;
+    this.opBalCreditObj["sgst"] = 0;
+    this.opBalCreditObj["cess"] = 0;
+    this.opBalCreditObj["lateFee"] = 0;
+    this.opBalCreditObj["businessId"] = this.merchantData.userId;
+    this.opBalCreditObj["id"] = this.opBalCreditObj["id"] || null;
+    this.opBalCreditObj["gstReturnCalendarId"] = null;
+    // this.currentMerchantData = JSON.parse(JSON.stringify(this.merchantData));
+    let params = {
+      businessId: this.merchantData.userId,
+      gstReturnCalendarId: this.selected_gst_return_calendars_data.id,
+    }
+    NavbarService.getInstance(this.http).getOpeningBalance(params).subscribe(res => {
+      if (res) {
+        this.opBalCreditObj["igst"] = (res.igst) ? res.igst : 0;
+        this.opBalCreditObj["cgst"] = (res.cgst) ? res.cgst : 0;
+        this.opBalCreditObj["sgst"] = (res.sgst) ? res.sgst : 0;
+        this.opBalCreditObj["cess"] = (res.cess) ? res.cess : 0;
+        this.opBalCreditObj["id"] = (res.id) ? res.id : 0;
+        this.opBalCreditObj["lateFee"] = (res.lateFee) ? res.lateFee : 0;
+        this.opBalCreditObj["businessId"] = this.merchantData.userId;
+        this.opBalCreditObj["gstReturnCalendarId"] = (res.gstReturnCalendarId) ? res.gstReturnCalendarId : 0;
+      }
+      this.loading = false;
+    }, err => {
+      this.loading = false;
+      let errorMessage = (err.error && err.error.title) ? err.error.title : "Internal server error.";
+      this._toastMessageService.alert("error", "get gst gst balance of business - " + errorMessage);
+    });
+  }
+
+  //! Deprecated we are  ot using now
+  /* getOpeningBalance() {
     if (!this.merchantData || !this.merchantData.userId) {
       this._toastMessageService.alert("error", "Please select user");
       return;
@@ -556,7 +628,7 @@ export class BusinessProfileComponent implements OnInit {
       this._toastMessageService.alert("error", "get gst gst balance of business - " + errorMessage);
       this.loading = false;
     });
-  }
+  } */
 
   updateGstOpeningBalance() {
     if (!this.opBalCreditObj.gstReturnCalendarId) {
@@ -571,10 +643,12 @@ export class BusinessProfileComponent implements OnInit {
         "sgst": this.opBalCreditObj.sgst,
         "igst": this.opBalCreditObj.igst,
         "cess": this.opBalCreditObj.cess,
+        lateFee: this.opBalCreditObj.lateFee,
         "businessId": this.merchantData.userId,
         "gstReturnCalendarId": this.opBalCreditObj.gstReturnCalendarId
       }
-      NavbarService.getInstance(this.http).updateGSTBalanceOfBusiness(balanceUpdate).subscribe(res => {
+
+      NavbarService.getInstance(this.http).updateOpeningBalance(balanceUpdate).subscribe(res => {
         this._toastMessageService.alert("success", "Opening Balance Saved Successfully.");
         this.loading = false;
       }, err => {
