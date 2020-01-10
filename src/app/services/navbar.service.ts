@@ -310,6 +310,10 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/business-gst-balances', 'method': 'PUT' }, params);
 	}
 
+	addOpeningBalance(params: any) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/business-gst-balances', 'method': 'POST' }, params);
+	}
+
 	getGST3BComputation(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gst-computations', 'method': 'GET' }, params);
 	}

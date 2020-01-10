@@ -69,7 +69,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       referenceInvoiceId: "",
       invoiceInvoiceId: "",
       stateMasterStateMasterId: "",
-      creditDebitNoteAssignedTo: "",
+      creditDebitNoteAssignedTo: null,
       invoiceTypesInvoiceTypesId: "",
       invoiceStatusMasterInvoiceStatusMasterId: "",
     },
@@ -108,11 +108,11 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       return;
     }
 
-    this.creditDebitNoteFormGroup = this.createInvoiceFormGroup();
+    this.creditDebitNoteFormGroup = this.createCreditDebitNoteFormGroup();
     this.initData();
   }
 
-  createInvoiceFormGroup() {
+  createCreditDebitNoteFormGroup() {
     return this.fb.group({
       creditDebitNoteDTO: this.fb.group({
         noteDate: ['', [Validators.required]],
@@ -123,7 +123,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
         invoiceStatusMasterInvoiceStatusMasterId: ['', [Validators.required]]
       }),
       partyDTO: this.fb.group({
-        partyGstin: ['', [Validators.pattern(AppConstants.GSTNRegex)]],
+        partyGstin: ['', [Validators.required, Validators.pattern(AppConstants.GSTNRegex)]],
         partyName: ['', [Validators.required]]
       }),
     });
@@ -195,14 +195,15 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
           item.tempInvoiceItemsTaxRate = parseFloat(item.noteItemsRate).toFixed(2);
         }
       })
-
+      /* @ Setting data to form Group */
+      this.creditDebitNoteFormGroup.patchValue(this.invoiceData);
       //init place of supply
       if (this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId && this.state_list) {
-        let slfData = this.state_list.filter(sl => { return sl.id == this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId; });
+        let slfData = this.state_list.filter(sl => { return sl.stateMasterCode == this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId; });
         if (slfData && slfData[0]) {
           console.log(slfData)
           this.selected_invoice_state = slfData[0];
-          this.onSelectGSTState(slfData[0]);
+          this.onSelectGSTState(slfData[0].stateMasterCode);
         }
       }
       this.getS3Image(this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl);
@@ -368,8 +369,12 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     if (sendData.creditDebitNoteDTO.noteDate) {
       sendData.creditDebitNoteDTO.noteDate = new Date(sendData.creditDebitNoteDTO.noteDate)
     }
-    if (sendData.noteItemDTO.length > 0) {
+    if (sendData.noteItemDTO.length > 0 && !this.isItemDetailsInValid('add')) {
       sendData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId = 3;
+    }
+    if (sendData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId === 3) {
+      const loggedInUser = JSON.parse(localStorage.getItem('UMD'));
+      sendData.creditDebitNoteDTO.creditDebitNoteAssignedTo = loggedInUser.USER_UNIQUE_ID;
     }
     sendData.creditDebitNoteDTO.noteGrossValue = parseFloat(sendData.creditDebitNoteDTO.noteGrossValue);
     let cField = (this.invoice_main_type == "credit-note") ? "customer" : (this.invoice_main_type == "debit-note") ? "supplier" : "";
@@ -407,7 +412,10 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     if (sendData.creditDebitNoteDTO.noteDate) {
       sendData.creditDebitNoteDTO.noteDate = new Date(sendData.creditDebitNoteDTO.noteDate)
     }
-
+    if (sendData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId === 3) {
+      const loggedInUser = JSON.parse(localStorage.getItem('UMD'));
+      sendData.creditDebitNoteDTO.creditDebitNoteAssignedTo = loggedInUser.USER_UNIQUE_ID;
+    }
     sendData.creditDebitNoteDTO.noteGrossValue = parseFloat(sendData.creditDebitNoteDTO.noteGrossValue);
 
     if (!sendData.partyRoleID) {
@@ -484,7 +492,6 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   }
 
   uploadInvoiceImage(files) {
-    debugger
     if (files && files[0]) {
       this.isEditInvoiceImage = false;
       this.imageLoader = true;

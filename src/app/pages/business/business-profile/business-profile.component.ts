@@ -630,13 +630,14 @@ export class BusinessProfileComponent implements OnInit {
     });
   } */
 
-  updateGstOpeningBalance() {
-    if (!this.opBalCreditObj.gstReturnCalendarId) {
+  saveGstOpeningBalance() {
+    if (!this.selected_gst_return_calendars_data || !this.selected_gst_return_calendars_data.id) {
       this._toastMessageService.alert("error", "please first click on get credits button and then try to save it.");
-    } else if (!this.opBalCreditObj.id) {
-      this._toastMessageService.alert("error", "id not found. please first click on get credits button and then try to save it.");
-    } else {
-      this.loading = true;
+      return;
+    }
+
+    this.loading = true;
+    if (this.opBalCreditObj.id > 0 && this.opBalCreditObj.gstReturnCalendarId > 0) {
       let balanceUpdate = {
         "id": this.opBalCreditObj.id,
         "cgst": this.opBalCreditObj.cgst,
@@ -647,15 +648,46 @@ export class BusinessProfileComponent implements OnInit {
         "businessId": this.merchantData.userId,
         "gstReturnCalendarId": this.opBalCreditObj.gstReturnCalendarId
       }
-
-      NavbarService.getInstance(this.http).updateOpeningBalance(balanceUpdate).subscribe(res => {
-        this._toastMessageService.alert("success", "Opening Balance Saved Successfully.");
-        this.loading = false;
-      }, err => {
-        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-        this._toastMessageService.alert("error", "save gst opening balance - " + errorMessage);
-        this.loading = false;
-      });
+      this.updateGstOpeningBalance(balanceUpdate);
+    } else {
+      let balanceUpdate = {
+        "id": null,
+        "cgst": this.opBalCreditObj.cgst,
+        "sgst": this.opBalCreditObj.sgst,
+        "igst": this.opBalCreditObj.igst,
+        "cess": this.opBalCreditObj.cess,
+        lateFee: this.opBalCreditObj.lateFee,
+        "businessId": this.merchantData.userId,
+        "gstReturnCalendarId": this.selected_gst_return_calendars_data.id
+      }
+      this.addGstOpeningBalance(balanceUpdate);
     }
+
+  }
+
+  addGstOpeningBalance(balanceUpdate) {
+    NavbarService.getInstance(this.http).addOpeningBalance(balanceUpdate).subscribe(res => {
+      console.log("Opening Balance Added result", res);
+      this.opBalCreditObj = res
+      this._toastMessageService.alert("success", "Opening Balance Saved Successfully.");
+      this.loading = false;
+    }, err => {
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+      this._toastMessageService.alert("error", "save gst opening balance - " + errorMessage);
+      this.loading = false;
+    });
+  }
+
+  updateGstOpeningBalance(balanceUpdate) {
+    NavbarService.getInstance(this.http).updateOpeningBalance(balanceUpdate).subscribe(res => {
+      console.log("Opening Balance updated result", res);
+      this.opBalCreditObj = res
+      this._toastMessageService.alert("success", "Opening Balance Saved Successfully.");
+      this.loading = false;
+    }, err => {
+      let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+      this._toastMessageService.alert("error", "save gst opening balance - " + errorMessage);
+      this.loading = false;
+    });
   }
 }

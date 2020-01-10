@@ -460,14 +460,16 @@ export class GSTCloudComponent implements OnInit {
   }
 
   getAdminName(id) {
-    if (!id) {
-      return "N/A";
-    } else {
-      let fData = this.admin_list.filter(al => { return al.userId == id });
-      if (fData && fData[0]) {
-        return fData[0].name;
-      }
+    // if (!id) {
+    //   return "N/A";
+    // } else {
+    let fData = this.admin_list.filter(al => { return al.userId == id });
+    if (fData && fData[0]) {
+      return fData[0].name;
+    }else{
+      return "N/A"
     }
+    // }
   }
 
   onClickEditInvoice(invoice) {
@@ -573,7 +575,7 @@ export class GSTCloudComponent implements OnInit {
   onCancelInvoice(event) {
     this.isGSTBillViewShown = false;
     this.bodyTag.setAttribute("class", "");
-    }
+  }
 
   onUpdateInvoice(event) {
     /*NavbarService.getInstance(null).saveGSTBillInvoice = true;    */
