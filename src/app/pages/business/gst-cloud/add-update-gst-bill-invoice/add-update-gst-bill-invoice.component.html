@@ -211,7 +211,7 @@
               </app-input-select-object> -->
                 <mat-form-field appearance="outline">
                   <mat-label>Invoice Status</mat-label>
-                  <mat-select placeholder="Invoice Status" (selectionChange)="changeInvoiceType()"
+                  <mat-select placeholder="Invoice Status"
                     formControlName="invoiceStatusMasterInvoiceStatusMasterId" required>
                     <mat-option *ngFor="let type of invoice_status_list" [value]="type.id">
                       {{type.name}}

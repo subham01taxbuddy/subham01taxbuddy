@@ -461,7 +461,6 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
 
   deleteItem(index) {
-    debugger
     if (this.invoiceData.listInvoiceItems[index].id) {
       this.invoiceData.listInvoiceItems[index]["isMarkForFlag"] = "T";
     } else {

@@ -389,7 +389,8 @@ export class GSTCloudComponent implements OnInit {
       this.selected_invoice_types = tInvT.map(t => { return { id: t.id, name: t.invoiceTypesName } });
       this.selected_invoices_list = this.summarised_invoice.debit_note.invoice_list;
     }
-
+    
+    console.log(this.selected_invoices_list)
     this.onChangeAttrFilter(this.selected_invoices_list);
     this.invoice_main_type = bill_type;
     this.selected_bill_type = bill_type;
@@ -538,6 +539,7 @@ export class GSTCloudComponent implements OnInit {
   }
 
   onChangeAttrFilter(event) {
+    console.log(event)
     var tempFD = this.selected_invoices_list.filter(rd => {
       var is_match = true;
       for (var i = 0; i < event.length; i++) {

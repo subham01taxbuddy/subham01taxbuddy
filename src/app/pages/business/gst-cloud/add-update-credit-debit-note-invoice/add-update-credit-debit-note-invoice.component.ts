@@ -17,7 +17,7 @@
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
 
-
+import { AppConstants } from './../../../../shared/constants';
 import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { NavbarService } from '../../../../services/navbar.service';
 import { Router } from '@angular/router';
@@ -25,6 +25,7 @@ import { ToastMessageService } from '../../../../services/toast-message.service'
 import { HttpClient } from '@angular/common/http';
 import Storage from '@aws-amplify/storage';
 import { UtilsService } from 'app/services/utils.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 
 @Component({
@@ -50,6 +51,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   gstinBounceBackTimeObj: any;
   imageLoader: boolean = false;
   showOriginal: boolean = false;
+  creditDebitNoteFormGroup: FormGroup;
   loggedInUserInfo = JSON.parse(localStorage.getItem("UMD")) || {};
   invoiceData: any = {
     partyRoleID: "",
@@ -89,10 +91,12 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   showSubOpt: any = { 'inv_info': true, 'inv_item_detail_block': true };
   fileType: string = 'png';
   s3FilePath: any;
+  maxCreditDebitNoteDTO = new Date();
   constructor(
     private navbarService: NavbarService,
     public router: Router, public http: HttpClient,
-    public _toastMessageService: ToastMessageService, public utilsService: UtilsService) {
+    public _toastMessageService: ToastMessageService, public utilsService: UtilsService,
+    private fb: FormBuilder) {
     NavbarService.getInstance(null).component_link_2 = 'add-update-gst-bill-invoice';
     NavbarService.getInstance(null).component_link_3 = '';
     NavbarService.getInstance(null).showBtns = 'add-update-gst-bill-invoice';
@@ -104,7 +108,25 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       return;
     }
 
+    this.creditDebitNoteFormGroup = this.createInvoiceFormGroup();
     this.initData();
+  }
+
+  createInvoiceFormGroup() {
+    return this.fb.group({
+      creditDebitNoteDTO: this.fb.group({
+        noteDate: ['', [Validators.required]],
+        noteNumber: ['', [Validators.required]],
+        referenceInvoiceId: ['', [Validators.required]],
+        invoiceDate: ['', [Validators.required]],
+        stateMasterStateMasterId: ['', [Validators.required]],
+        invoiceStatusMasterInvoiceStatusMasterId: ['', [Validators.required]]
+      }),
+      partyDTO: this.fb.group({
+        partyGstin: ['', [Validators.pattern(AppConstants.GSTNRegex)]],
+        partyName: ['', [Validators.required]]
+      }),
+    });
   }
 
   ngDoCheck() {
@@ -178,6 +200,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       if (this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId && this.state_list) {
         let slfData = this.state_list.filter(sl => { return sl.id == this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId; });
         if (slfData && slfData[0]) {
+          console.log(slfData)
           this.selected_invoice_state = slfData[0];
           this.onSelectGSTState(slfData[0]);
         }
@@ -185,8 +208,8 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       this.getS3Image(this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl);
     }
 
-    if (this.invoiceData.creditDebitNoteDTO.invoiceDate) {
-      this.invoiceData.creditDebitNoteDTO.invoiceDate = this.convertDateToHTMLInputDateFormat(this.invoiceData.creditDebitNoteDTO.invoiceDate);
+    if (this.invoiceData.creditDebitNoteDTO.creditDebitNoteDTO) {
+      this.invoiceData.creditDebitNoteDTO.creditDebitNoteDTO = this.convertDateToHTMLInputDateFormat(this.invoiceData.creditDebitNoteDTO.creditDebitNoteDTO);
     }
 
     if (this.invoiceData.creditDebitNoteDTO.noteDate) {
@@ -240,57 +263,76 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   }
 
   saveGSTBillInvoice() {
-    if (!this.invoiceData.creditDebitNoteDTO.invoiceTypesInvoiceTypesId) {
-      this._toastMessageService.alert("error", "Please Select Invoice Type");
-      return;
-    } else if (!this.invoiceData.creditDebitNoteDTO.noteNumber) {
-      this._toastMessageService.alert("error", "Please add note number");
-      return;
-    } else if (!this.invoiceData.creditDebitNoteDTO.noteDate) {
-      this._toastMessageService.alert("error", "Please add note date");
-      return;
-    } else if (new Date(this.invoiceData.creditDebitNoteDTO.noteDate) > new Date()) {
-      this._toastMessageService.alert("error", "note date can't be future date");
-      return;
-    } else if (!this.invoiceData.creditDebitNoteDTO.invoiceDate) {
-      this._toastMessageService.alert("error", "Please add invoice date");
-      return;
-    } else if (new Date(this.invoiceData.creditDebitNoteDTO.invoiceDate) > new Date()) {
-      this._toastMessageService.alert("error", "Invoice date can't be future date");
-      return;
-    } else if (!this.invoiceData.creditDebitNoteDTO.referenceInvoiceId) {
-      this._toastMessageService.alert("error", "Please add invoice number");
-      return;
-    } else if (this.invoice_main_type == "credit-note" && this.invoiceData.creditDebitNoteDTO.referenceInvoiceId.length > 16) {
-      this._toastMessageService.alert("error", "invoice number max length can be 16 character");
-      return;
-    } else if (this.invoice_main_type != "credit-note" && this.invoiceData.creditDebitNoteDTO.referenceInvoiceId.length > 45) {
-      this._toastMessageService.alert("error", "invoice number max length can be 45 character");
-      return;
-    } else if (!this.invoiceData.partyDTO.partyGstin) {
-      this._toastMessageService.alert("error", "Please add customer gstin");
-      return;
-      // } else if (this.invoiceData.partyDTO.partyGstin.length != 15) {
-    } else if (this.invoiceData.partyDTO.partyGstin.length != 15 || !this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin)) {
-      this._toastMessageService.alert("error", "Please add 15 character valid gstin number");
-      return;
-    } else if (!this.invoiceData.partyDTO.partyName) {
-      this._toastMessageService.alert("error", "Please add customer name");
-      return;
-    } else if (!this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId) {
-      this._toastMessageService.alert("error", "Please select place of supply");
-      return;
-    } else if (this.invoiceData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId === 3 && this.isItemDetailsInValid('add')) {
+
+    // if (!this.invoiceData.creditDebitNoteDTO.invoiceTypesInvoiceTypesId) {
+    //   this._toastMessageService.alert("error", "Please Select Invoice Type");
+    //   return;
+    // } else if (!this.invoiceData.creditDebitNoteDTO.noteNumber) {
+    //   this._toastMessageService.alert("error", "Please add note number");
+    //   return;
+    // } else if (!this.invoiceData.creditDebitNoteDTO.noteDate) {
+    //   this._toastMessageService.alert("error", "Please add note date");
+    //   return;
+    // } else if (new Date(this.invoiceData.creditDebitNoteDTO.noteDate) > new Date()) {
+    //   this._toastMessageService.alert("error", "note date can't be future date");
+    //   return;
+    // } else if (!this.invoiceData.creditDebitNoteDTO.creditDebitNoteDTO) {
+    //   this._toastMessageService.alert("error", "Please add invoice date");
+    //   return;
+    // } else if (new Date(this.invoiceData.creditDebitNoteDTO.creditDebitNoteDTO) > new Date()) {
+    //   this._toastMessageService.alert("error", "Invoice date can't be future date");
+    //   return;
+    // } else if (!this.invoiceData.creditDebitNoteDTO.referenceInvoiceId) {
+    //   this._toastMessageService.alert("error", "Please add invoice number");
+    //   return;
+    // } else if (this.invoice_main_type == "credit-note" && this.invoiceData.creditDebitNoteDTO.referenceInvoiceId.length > 16) {
+    //   this._toastMessageService.alert("error", "invoice number max length can be 16 character");
+    //   return;
+    // } else if (this.invoice_main_type != "credit-note" && this.invoiceData.creditDebitNoteDTO.referenceInvoiceId.length > 45) {
+    //   this._toastMessageService.alert("error", "invoice number max length can be 45 character");
+    //   return;
+    // } else if (!this.invoiceData.partyDTO.partyGstin) {
+    //   this._toastMessageService.alert("error", "Please add customer gstin");
+    //   return;
+    //   // } else if (this.invoiceData.partyDTO.partyGstin.length != 15) {
+    // } else if (this.invoiceData.partyDTO.partyGstin.length != 15 || !this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin)) {
+    //   this._toastMessageService.alert("error", "Please add 15 character valid gstin number");
+    //   return;
+    // } else if (!this.invoiceData.partyDTO.partyName) {
+    //   this._toastMessageService.alert("error", "Please add customer name");
+    //   return;
+    // } else if (!this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId) {
+    //   this._toastMessageService.alert("error", "Please select place of supply");
+    //   return;
+    // } else if (this.invoiceData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId === 3 && this.isItemDetailsInValid('add')) {
+    //   this._toastMessageService.alert("error", "Please add atleast one item details and fill all mandatory feilds.");
+    //   return;
+    // }
+
+    if (!this.creditDebitNoteFormGroup.valid) {
+      console.log("Invoice Form Group:", this.creditDebitNoteFormGroup);
+      $('input.ng-invalid').first().focus();
+      return
+    } else if (this.creditDebitNoteFormGroup.value.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId === 3 && this.isItemDetailsInValid('add')) {
       this._toastMessageService.alert("error", "Please add atleast one item details and fill all mandatory feilds.");
       return;
     }
-
+    // else if (this.invoiceData.invoiceDTO.paidAmount > this.invoiceData.invoiceDTO.invoiceGrossValue) {
+    //   this._toastMessageService.alert("error", "Amount received can't be greater than gross value.");
+    //   return
+    // } else if (this.creditDebitNoteFormGroup.value.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId === 3 && this.isItemDetailsInValid('add')) {
+    //   this._toastMessageService.alert("error", "Please add atleast one item details and fill all mandatory feilds.");
+    //   return;
+    // }
+    console.log("Responce: ", this.creditDebitNoteFormGroup.value)
+    console.log(this.is_update_item)
     if (this.is_update_item) {
       this.updateInvoice();
     } else {
       this.addInvoice();
     }
   }
+
   isItemDetailsInValid(ref) {
     if (this.invoiceData.noteItemDTO instanceof Array) {
       let temp = this.invoiceData.noteItemDTO.filter(item => item.isMarkForFlag !== 'T')
@@ -316,6 +358,8 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
 
   addInvoice() {
     this.loading = true;
+    Object.assign(this.invoiceData.creditDebitNoteDTO, this.creditDebitNoteFormGroup.value.creditDebitNoteDTO)
+    Object.assign(this.invoiceData.partyDTO, this.creditDebitNoteFormGroup.value.partyDTO)
     let sendData = JSON.parse(JSON.stringify(this.invoiceData));
     sendData.creditDebitNoteDTO.invoiceInvoiceId = 1;//dummy data
     if (sendData.creditDebitNoteDTO.invoiceDate) {
@@ -340,6 +384,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     // }
 
     delete sendData.creditDebitNoteDTO.s3InvoiceImageUrl;
+    console.log(sendData)
     NavbarService.getInstance(this.http).createCreditDebitNoteInvoiceWithItems(sendData).subscribe(res => {
       this.loading = false;
       this._toastMessageService.alert("success", "Invoice created successfully.");
@@ -353,6 +398,8 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
 
   updateInvoice() {
     this.loading = true;
+    Object.assign(this.invoiceData.creditDebitNoteDTO, this.creditDebitNoteFormGroup.value.creditDebitNoteDTO)
+    Object.assign(this.invoiceData.partyDTO, this.creditDebitNoteFormGroup.value.partyDTO)
     let sendData = JSON.parse(JSON.stringify(this.invoiceData));
     if (sendData.creditDebitNoteDTO.invoiceDate) {
       sendData.creditDebitNoteDTO.invoiceDate = new Date(sendData.creditDebitNoteDTO.invoiceDate)
@@ -387,6 +434,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     delete sendData.partyDTO.partyPreviousGstin;
     delete sendData.partyDTO.partyPreviousId;
     delete sendData.creditDebitNoteDTO.s3InvoiceImageUrl;
+    console.log(sendData)
     NavbarService.getInstance(this.http).updateCreditDebitNoteInvoiceWithItems(sendData).subscribe(res => {
       this.loading = false;
       this._toastMessageService.alert("success", "Invoice updated successfully.");
@@ -480,17 +528,34 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     return invoiceSavePath;
   }
 
-  onSelectGSTState(event) {
-    if (event && event.id) {
-      this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId = event.id;
+  // onSelectGSTState(event) {
+  //   if (event && event.id) {
+  //     debugger
+  //     this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId = event.id;
+  //    // this.invoiceData.invoiceDTO.supplyStateId = event;
+  //     if (this.merchantData && this.merchantData.gstDetails && this.merchantData.gstDetails.businessAddress &&
+  //       this.merchantData.gstDetails.businessAddress.state && this.merchantData.gstDetails.businessAddress.state != event.stateMasterCode) {
+  //       this.isIGSTEnabled = true;
+  //     } else {
+  //       this.isIGSTEnabled = false;
+  //     }
+  //     this.selected_invoice_state = event.stateMasterName;
+  //     // this.creditDebitNoteFormGroup.value.invoiceDTO.stateMasterStateMasterId.setValue(event.id);
+  //     // this.calculateTaxFields("all", this.invoiceData.noteItemDTO);
+  //   }
+  // }
+
+  onSelectGSTState(stateId) {
+    if (stateId) {
+      console.log("state_list:", this.state_list)
+      this.creditDebitNoteFormGroup['controls'].creditDebitNoteDTO['controls'].stateMasterStateMasterId.setValue(stateId);
+      this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId = stateId;
       if (this.merchantData && this.merchantData.gstDetails && this.merchantData.gstDetails.businessAddress &&
-        this.merchantData.gstDetails.businessAddress.state && this.merchantData.gstDetails.businessAddress.state != event.stateMasterCode) {
+        this.merchantData.gstDetails.businessAddress.state && this.merchantData.gstDetails.businessAddress.state != stateId) {
         this.isIGSTEnabled = true;
       } else {
         this.isIGSTEnabled = false;
       }
-      this.selected_invoice_state = event;
-      this.calculateTaxFields("all", this.invoiceData.noteItemDTO);
     }
   }
 
@@ -549,7 +614,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     if (this.invoiceData.partyDTO.partyGstin) {
       let stateCode = this.invoiceData.partyDTO.partyGstin.substr(0, 2);
       let fState = this.state_list.filter(sl => { return sl.stateMasterCode == stateCode });
-      if (fState && fState[0]) { this.onSelectGSTState(fState[0]); }
+      if (fState && fState[0]) { this.onSelectGSTState(fState[0].stateMasterCode); }
     }
   }
 
@@ -620,6 +685,49 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   fixedToDecimal(value): any {
     return parseFloat(value).toFixed(2);
   }
+
+  onGSTINKeypress(gstn) {
+    console.log("Enetr GSTN:", gstn)
+    this.invoiceData.partyDTO.partyGstin = gstn;
+    if (this.gstinBounceBackTimeObj) {
+      clearTimeout(this.gstinBounceBackTimeObj)
+    }
+    this.gstinBounceBackTimeObj = setTimeout(() => {
+      if (this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length == 15 && this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin)) {
+        this.getPartyInfoByGSTIN(gstn).then((partyInfo: any) => {
+          if (partyInfo) {
+            this.creditDebitNoteFormGroup['controls'].partyDTO.patchValue(partyInfo);
+            /* this.invoiceData.partyDTO.partyEmail = partyInfo.partyEmail;
+            this.invoiceData.partyDTO.partyPhone = partyInfo.partyPhone;
+            this.invoiceData.partyDTO.partyName = partyInfo.partyName; */
+            if (partyInfo.id) {
+              this.invoiceData.partyDTO.id = partyInfo.id;
+              this.invoiceData.partyDTO.partyUpdatedAt = new Date();
+            }
+          } else {
+            /*  this.invoiceData.partyDTO.partyEmail = "";
+             this.invoiceData.partyDTO.partyPhone = "";
+             this.invoiceData.partyDTO.partyName = ""; */
+            this.creditDebitNoteFormGroup['controls'].partyDTO['controls'].partyName.patchValue('');
+
+            delete this.invoiceData.partyDTO.id;
+            delete this.invoiceData.partyDTO.partyUpdatedAt;
+          }
+
+          this.setPartyPlaceOfSupply();
+        });
+      } else {
+        /* this.invoiceData.partyDTO.partyEmail = "";
+        this.invoiceData.partyDTO.partyPhone = "";
+        this.invoiceData.partyDTO.partyName = ""; */
+        this.creditDebitNoteFormGroup['controls'].partyDTO['controls'].partyName.patchValue('');
+        delete this.invoiceData.partyDTO.id;
+        delete this.invoiceData.partyDTO.partyUpdatedAt;
+        this.setPartyPlaceOfSupply();
+      }
+    }, 500)
+  }
+
 }
 
 
