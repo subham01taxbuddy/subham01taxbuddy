@@ -389,7 +389,8 @@ export class GSTCloudComponent implements OnInit {
       this.selected_invoice_types = tInvT.map(t => { return { id: t.id, name: t.invoiceTypesName } });
       this.selected_invoices_list = this.summarised_invoice.debit_note.invoice_list;
     }
-
+    
+    console.log(this.selected_invoices_list)
     this.onChangeAttrFilter(this.selected_invoices_list);
     this.invoice_main_type = bill_type;
     this.selected_bill_type = bill_type;
@@ -459,14 +460,16 @@ export class GSTCloudComponent implements OnInit {
   }
 
   getAdminName(id) {
-    if (!id) {
-      return "N/A";
-    } else {
-      let fData = this.admin_list.filter(al => { return al.userId == id });
-      if (fData && fData[0]) {
-        return fData[0].name;
-      }
+    // if (!id) {
+    //   return "N/A";
+    // } else {
+    let fData = this.admin_list.filter(al => { return al.userId == id });
+    if (fData && fData[0]) {
+      return fData[0].name;
+    }else{
+      return "N/A"
     }
+    // }
   }
 
   onClickEditInvoice(invoice) {
@@ -538,6 +541,7 @@ export class GSTCloudComponent implements OnInit {
   }
 
   onChangeAttrFilter(event) {
+    console.log(event)
     var tempFD = this.selected_invoices_list.filter(rd => {
       var is_match = true;
       for (var i = 0; i < event.length; i++) {
@@ -571,7 +575,7 @@ export class GSTCloudComponent implements OnInit {
   onCancelInvoice(event) {
     this.isGSTBillViewShown = false;
     this.bodyTag.setAttribute("class", "");
-    }
+  }
 
   onUpdateInvoice(event) {
     /*NavbarService.getInstance(null).saveGSTBillInvoice = true;    */

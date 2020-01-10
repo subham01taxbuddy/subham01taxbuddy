@@ -26,9 +26,9 @@
                 </pdf-viewer>
               </div>
               <div class="toggel-on-off" *ngIf="fileType === 'png' || fileType === 'jpg' || fileType === 'jpeg'"><i
-                class="fa fa-toggle-on" *ngIf="showOriginal" style="color: green;" title="Show compressed image"
-                (click)="showOriginalImage()"></i><i class="fa fa-toggle-off" *ngIf="!showOriginal"
-                title="Show original image" (click)="showOriginalImage()"></i></div>
+                  class="fa fa-toggle-on" *ngIf="showOriginal" style="color: green;" title="Show compressed image"
+                  (click)="showOriginalImage()"></i><i class="fa fa-toggle-off" *ngIf="!showOriginal"
+                  title="Show original image" (click)="showOriginalImage()"></i></div>
               <div class="edit-invoice-image"><i class="fa fa-edit" (click)="isEditInvoiceImage=true"></i></div>
             </div>
           </div>
@@ -59,66 +59,127 @@
           </div>
         </div>
         <div *ngIf="showSubOpt['inv_info']" class="hidder__content card__col-xs-12">
-          <div class="card__row invoice-info-row">
-            <div class="card__col-xs-12 card__col-sm-4">
-              <app-input [label]="((invoice_main_type == 'debit-note') ? 'Debit': 'Credit')+' Note Date'"
+          <form [formGroup]="creditDebitNoteFormGroup" id="creditDebitNoteFormGroupId">
+            <div class="card__row invoice-info-row">
+              <div class="card__col-xs-12 card__col-sm-4" formGroupName="creditDebitNoteDTO">
+                <!-- <app-input [label]="((invoice_main_type == 'debit-note') ? 'Debit': 'Credit')+' Note Date'"
                 [type]="'date'" [is_mandatory]="'true'"
                 [name]="((invoice_main_type == 'debit-note') ? 'Debit': 'Credit')+' Note Date'" [placeholder]="''"
                 [value]="invoiceData.creditDebitNoteDTO.noteDate"
-                (sendValue)="invoiceData.creditDebitNoteDTO.noteDate = $event"></app-input>
-            </div>
+                (sendValue)="invoiceData.creditDebitNoteDTO.noteDate = $event"></app-input> -->
+                <mat-form-field appearance="outline">
+                  <mat-label>{{(invoice_main_type == 'debit-note') ? 'Debit': 'Credit'}} Note Date</mat-label>
+                  <input placeholder="" formControlName="noteDate" matInput [max]="maxCreditDebitNoteDTO"
+                    [matDatepicker]="noteDatepicker" required>
+                  <mat-datepicker-toggle matSuffix [for]="noteDatepicker"></mat-datepicker-toggle>
+                  <mat-datepicker #noteDatepicker></mat-datepicker>
+                </mat-form-field>
+              </div>
 
-            <div class="card__col-xs-12 card__col-sm-4">
-              <app-input [label]="((invoice_main_type == 'debit-note') ? 'Debit': 'Credit')+' Note Number'"
+              <div class="card__col-xs-12 card__col-sm-4" formGroupName="creditDebitNoteDTO">
+                <!-- <app-input [label]="((invoice_main_type == 'debit-note') ? 'Debit': 'Credit')+' Note Number'"
                 [type]="'text'" [is_mandatory]="'true'"
                 [name]="((invoice_main_type == 'debit-note') ? 'Debit': 'Credit')+' Note Number'"
                 [placeholder]="'SSBA/2018-19/001'" [value]="invoiceData.creditDebitNoteDTO.noteNumber"
-                (sendValue)="invoiceData.creditDebitNoteDTO.noteNumber = $event"></app-input>
-            </div>
+                (sendValue)="invoiceData.creditDebitNoteDTO.noteNumber = $event"></app-input> -->
+                <mat-form-field appearance="outline">
+                  <mat-label>{{(invoice_main_type == 'debit-note') ? 'Debit': 'Credit'}} Note Number</mat-label>
+                  <input matInput placeholder="SSBA/2018-19/001" maxlength="16" formControlName="noteNumber" required>
+                </mat-form-field>
+              </div>
 
-            <div class="card__col-xs-12 card__col-sm-4">
-              <app-input [label]="'Original Invoice Number'" [type]="'text'" [is_mandatory]="'true'"
+              <div class="card__col-xs-12 card__col-sm-4" formGroupName="creditDebitNoteDTO">
+                <!-- <app-input [label]="'Original Invoice Number'" [type]="'text'" [is_mandatory]="'true'"
                 [name]="'Original Invoice Number'" [placeholder]="'SSBA/2018-19/001'"
                 [value]="invoiceData.creditDebitNoteDTO.referenceInvoiceId" [max_length]="16"
-                (sendValue)="invoiceData.creditDebitNoteDTO.referenceInvoiceId = $event"></app-input>
-            </div>
+                (sendValue)="invoiceData.creditDebitNoteDTO.referenceInvoiceId = $event"></app-input> -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Original Invoice Number</mat-label>
+                  <input matInput placeholder="SSBA/2018-19/001" formControlName="referenceInvoiceId" maxlength="16"
+                    required>
+                </mat-form-field>
+              </div>
 
-            <div class="card__col-xs-12 card__col-sm-4">
-              <app-input [label]="'Original Invoice Date'" [type]="'date'" [is_mandatory]="'true'"
+              <div class="card__col-xs-12 card__col-sm-4" formGroupName="creditDebitNoteDTO">
+                <!-- <app-input [label]="'Original Invoice Date'" [type]="'date'" [is_mandatory]="'true'"
                 [name]="'Original Invoice Date'" [placeholder]="''" [value]="invoiceData.creditDebitNoteDTO.invoiceDate"
-                (sendValue)="invoiceData.creditDebitNoteDTO.invoiceDate = $event"></app-input>
-            </div>
+                (sendValue)="invoiceData.creditDebitNoteDTO.invoiceDate = $event"></app-input> -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Original Invoice Date</mat-label>
+                  <input placeholder="" formControlName="invoiceDate" matInput [max]="maxCreditDebitNoteDTO"
+                    [matDatepicker]="invoiceDatepicker" required>
+                  <mat-datepicker-toggle matSuffix [for]="invoiceDatepicker"></mat-datepicker-toggle>
+                  <mat-datepicker #invoiceDatepicker></mat-datepicker>
+                </mat-form-field>
 
-            <div class="card__col-xs-12 card__col-sm-4">
-              <app-input [label]="'GSTIN of '+(invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer')"
-                [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [is_capital]="true"
-                [placeholder]="'GSTIN of '+(invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer')"
-                [value]="invoiceData.partyDTO.partyGstin" [max_length]="15" (sendValue)="onEnterGSTIN($event)">
-              </app-input>
-            </div>
+              </div>
 
-            <div class="card__col-xs-12 card__col-sm-4">
-              <app-input [label]="(invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer')+' Name'" [type]="'text'"
-                [is_mandatory]="'true'" [name]="'Customer Name'"
-                [placeholder]="(invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer')+' Name'"
-                [value]="invoiceData.partyDTO.partyName" (sendValue)="invoiceData.partyDTO.partyName = $event">
-              </app-input>
-            </div>
+              <div class="card__col-xs-12 card__col-sm-4" formGroupName="partyDTO">
+                <!-- <app-input [label]="'GSTIN of '+(invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer')"
+                  [type]="'text'" [is_mandatory]="'true'" [name]="'GSTIN of Customer'" [is_capital]="true"
+                  [placeholder]="'GSTIN of '+(invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer')"
+                  [value]="invoiceData.partyDTO.partyGstin" [max_length]="15" (sendValue)="onEnterGSTIN($event)">
+                </app-input> -->
+                <mat-form-field appearance="outline">
+                  <mat-label>GSTIN of {{invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer'}}</mat-label>
+                  <input matInput
+                    [placeholder]="invoice_main_type == 'debit-note' ? 'GSTIN of Supplier' : 'GSTIN of Customer'"
+                    formControlName="partyGstin" upperCase maxlength="15" type="text"
+                    (blur)="onGSTINKeypress(this.creditDebitNoteFormGroup.value.partyDTO.partyGstin)" required>
+                  <mat-error
+                    *ngIf="creditDebitNoteFormGroup['controls'].partyDTO['controls'].partyGstin.hasError('pattern')">
+                    Please enter valid GSTN.</mat-error>
+                </mat-form-field>
 
-            <div class="card__col-xs-12 card__col-sm-4">
-              <app-input-select-object [label]="'Place of Supply'" [is_mandatory]="'true'" [type]="'text'"
-                [value]="selected_invoice_state" [name]="'place of supply'" [filter_items]="state_list"
-                (sendValue)="onSelectGSTState($event)">
-              </app-input-select-object>
-            </div>
+              </div>
 
-            <div class="card__col-xs-12 card__col-sm-4">
-              <app-input-select-object [label]="'Invoice Status'" [type]="'text'" [value]="selected_invoice_status"
-                [name]="'invoice status'" [filter_items]="invoice_status_list"
-                (sendValue)="onSelectInvoiceStatus($event)">
-              </app-input-select-object>
+              <div class="card__col-xs-12 card__col-sm-4" formGroupName="partyDTO">
+                <!-- <app-input [label]="(invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer')+' Name'"
+                  [type]="'text'" [is_mandatory]="'true'" [name]="'Customer Name'"
+                  [placeholder]="(invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer')+' Name'"
+                  [value]="invoiceData.partyDTO.partyName" (sendValue)="invoiceData.partyDTO.partyName = $event">
+                </app-input> -->
+                <mat-form-field appearance="outline">
+                  <mat-label>{{invoice_main_type == 'debit-note' ? 'Supplier' : 'Customer'}} Name</mat-label>
+                  <input matInput [placeholder]="invoice_main_type == 'debit-note' ? 'Supplier Name' : 'Customer Name'"
+                    formControlName="partyName" required>
+                </mat-form-field>
+              </div>
+
+              <div class="card__col-xs-12 card__col-sm-4" formGroupName="creditDebitNoteDTO">
+                <!-- <app-input-select-object [label]="'Place of Supply'" [is_mandatory]="'true'" [type]="'text'"
+                  [value]="selected_invoice_state" [name]="'place of supply'" [filter_items]="state_list"
+                  (sendValue)="onSelectGSTState($event)">
+                </app-input-select-object> -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Place of Supply</mat-label>
+                  <mat-select placeholder=""
+                    (selectionChange)="onSelectGSTState(this.creditDebitNoteFormGroup.value.creditDebitNoteDTO.stateMasterStateMasterId)"
+                    formControlName="stateMasterStateMasterId" required>
+                    <mat-option *ngFor="let type of state_list" [value]="type.stateMasterCode">
+                      {{type.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="card__col-xs-12 card__col-sm-4" formGroupName="creditDebitNoteDTO">
+                <!-- <app-input-select-object [label]="'Invoice Status'" [type]="'text'" [value]="selected_invoice_status"
+                  [name]="'invoice status'" [filter_items]="invoice_status_list"
+                  (sendValue)="onSelectInvoiceStatus($event)">
+                </app-input-select-object> -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Invoice Status</mat-label>
+                  <mat-select placeholder="Invoice Status"
+                    formControlName="invoiceStatusMasterInvoiceStatusMasterId" required>
+                    <mat-option *ngFor="let type of invoice_status_list" [value]="type.id">
+                      {{type.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -247,6 +308,14 @@
         </div>
       </div>
       <!-- .card__content -->
+    </div>
+
+    <div class="modal-footer clearfix">
+      <div class="pull-right">
+        <a class="btn btn-cancel" (click)="onCancelBtnClicked()">Cancel</a>
+        <button class="btn" style="cursor: pointer;" form="creditDebitNoteFormGroupId" (click)="saveGSTBillInvoice()">Save
+          Invoice</button>
+      </div>
     </div>
     <!-- .ogp_composite-product -->
 

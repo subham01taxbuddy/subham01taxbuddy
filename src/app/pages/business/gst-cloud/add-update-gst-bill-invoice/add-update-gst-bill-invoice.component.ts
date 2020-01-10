@@ -68,7 +68,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       invoiceNumber: "",
       paidAmount: null,
       supplyStateId: "",
-      invoiceAssignedTo: "",
+      invoiceAssignedTo: null,
       invoiceTypesInvoiceTypesId: "",
       invoiceStatusMasterInvoiceStatusMasterId: "",
     },
@@ -368,6 +368,10 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     if (sendData.listInvoiceItems.length > 0 && !this.isItemDetailsInValid('add')) {
       sendData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId = 3;
     }
+    if (sendData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId === 3) {
+      const loggedInUser = JSON.parse(localStorage.getItem('UMD'));
+      sendData.invoiceDTO.invoiceAssignedTo = loggedInUser.USER_UNIQUE_ID;
+    }
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
     let cField = (this.invoice_main_type == "sales-invoice") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
     if (cField) {
@@ -399,6 +403,10 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
 
     if (sendData.invoiceDTO.invoiceTypesInvoiceTypesId == 2) {
       sendData.partyDTO.partyGstin = null
+    }
+    if (sendData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId === 3) {
+      const loggedInUser = JSON.parse(localStorage.getItem('UMD'));
+      sendData.invoiceDTO.invoiceAssignedTo = loggedInUser.USER_UNIQUE_ID;
     }
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
 
@@ -461,7 +469,6 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
 
   deleteItem(index) {
-    debugger
     if (this.invoiceData.listInvoiceItems[index].id) {
       this.invoiceData.listInvoiceItems[index]["isMarkForFlag"] = "T";
     } else {
