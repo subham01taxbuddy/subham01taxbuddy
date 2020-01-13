@@ -170,8 +170,8 @@
                 </app-input-select-object> -->
                 <mat-form-field appearance="outline">
                   <mat-label>Invoice Status</mat-label>
-                  <mat-select placeholder="Invoice Status"
-                    formControlName="invoiceStatusMasterInvoiceStatusMasterId" required>
+                  <mat-select placeholder="Invoice Status" formControlName="invoiceStatusMasterInvoiceStatusMasterId"
+                    required>
                     <mat-option *ngFor="let type of invoice_status_list" [value]="type.id">
                       {{type.name}}
                     </mat-option>
@@ -232,13 +232,14 @@
                                     [(ngModel)]="tab.itemDescription" title={{tab.itemDescription}}>
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                  <input class="table__row-input" type="text" name="'taxcode'"
+                                  <input class="table__row-input" type="text" name="'taxcode'" maxlength="8"
                                     [(ngModel)]="tab.itemTaxCode">
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
                                   <input class="table__row-input" type="number" name="'taxvalue'"
                                     [(ngModel)]="tab.noteItemsTaxableValue"
-                                    (ngModelChange)="calculateTaxFields('taxable_value',tab)"
+                                    (ngModelChange)="calculateTaxFields('taxable_value',tab)" maxlength="11"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
@@ -252,29 +253,34 @@
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;"
                                   *ngIf="isIGSTEnabled">
                                   <input class="table__row-input" type="number" name="'igst'"
-                                    [(ngModel)]="tab.noteItemsIgst"
+                                    [(ngModel)]="tab.noteItemsIgst" maxlength="11"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;"
                                   *ngIf="!isIGSTEnabled">
                                   <input class="table__row-input" type="number" name="'csgt'"
-                                    [(ngModel)]="tab.noteItemsCgst"
+                                    [(ngModel)]="tab.noteItemsCgst" maxlength="11"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;"
                                   *ngIf="!isIGSTEnabled">
                                   <input class="table__row-input" type="number" name="'sgst_ugst'"
-                                    [(ngModel)]="tab.noteItemsSgst"
+                                    [(ngModel)]="tab.noteItemsSgst" maxlength="11"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                  <input class="table__row-input" type="number" name="'cess'"
+                                  <input class="table__row-input" type="number" name="'cess'" maxlength="11"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     [(ngModel)]="tab.noteItemsCess" (ngModelChange)="calculateTaxFields('cess',tab)"
                                     onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
                                   <input class="table__row-input" type="number" name="'invoiceItemsGross'"
-                                    [(ngModel)]="tab.noteItemsGrossValue"
+                                    [(ngModel)]="tab.noteItemsGrossValue" maxlength="11"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                                 <td class="report-table__cell report-table__cell_day">
@@ -313,7 +319,8 @@
     <div class="modal-footer clearfix">
       <div class="pull-right">
         <a class="btn btn-cancel" (click)="onCancelBtnClicked()">Cancel</a>
-        <button class="btn" style="cursor: pointer;" form="creditDebitNoteFormGroupId" (click)="saveGSTBillInvoice()">Save
+        <button class="btn" style="cursor: pointer;" form="creditDebitNoteFormGroupId"
+          (click)="saveGSTBillInvoice()">Save
           Invoice</button>
       </div>
     </div>

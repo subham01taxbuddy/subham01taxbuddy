@@ -86,6 +86,7 @@ import Storage from '@aws-amplify/storage';
 import { ActivatePackageComponent } from './activate-package/activate-package.component';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
@@ -177,7 +178,8 @@ export const MY_FORMATS = {
     // NgxExtendedPdfViewerModule,
     // AgGridModule.withComponents([]),
     MaterialModule,
-    SharedModule
+    SharedModule,
+    NgxDocViewerModule
   ],
   providers: [
     SelectObjectFilterPipe,

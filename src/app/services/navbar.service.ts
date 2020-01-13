@@ -366,9 +366,9 @@ export class NavbarService {
 
 	apiCall(apiKey: any, params: any, ): Observable<any> {
 		let options: any = { headers: this.getHeaders() }
-		if (['gst_gov_url', 'ifsc_url'].indexOf(apiKey["url_key"]) != -1) {
-			options = { headers: new HttpHeaders({}) };
-		}
+		// if (['gst_gov_url', 'ifsc_url'].indexOf(apiKey["url_key"]) != -1) {
+		// 	options = { headers: new HttpHeaders({}) };
+		// }
 
 		let pUrl = environment[(apiKey["url_key"] ? apiKey["url_key"] : "url")];
 		if (apiKey['method'] === 'POST') {
