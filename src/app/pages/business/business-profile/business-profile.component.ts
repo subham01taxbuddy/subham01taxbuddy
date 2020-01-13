@@ -26,6 +26,7 @@ import { HttpClient } from '@angular/common/http';
 import Storage from '@aws-amplify/storage';
 import { UtilsService } from 'app/services/utils.service';
 import { GstMsService } from 'app/services/gst-ms.service';
+import { ThirdPartyService } from 'app/services/third-party.service';
 
 @Component({
   selector: 'app-business-profile',
@@ -63,6 +64,7 @@ export class BusinessProfileComponent implements OnInit {
   merchantData: any;
   constructor(
     private navbarService: NavbarService,
+    private thirdPartyService: ThirdPartyService,
     public router: Router, public http: HttpClient, private gstMsService: GstMsService,
     public _toastMessageService: ToastMessageService, public utilsService: UtilsService) {
     NavbarService.getInstance(null).component_link_2 = 'business-profile';
@@ -477,14 +479,25 @@ export class BusinessProfileComponent implements OnInit {
     }
     this.ifscBounceBackTimeObj = setTimeout(() => {
       if (this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length == 11) {
-        NavbarService.getInstance(this.http).getBankDetailByIFSCCode(this.merchantData.gstDetails.bankInformation.ifscCode).subscribe(res => {
-          this.merchantData.gstDetails.bankInformation.bankName = res.BANK ? res.BANK : "";
-          this.merchantData.gstDetails.bankInformation.accountBranch = res.BRANCH ? res.BRANCH : "";
+        let param = `/${this.merchantData.gstDetails.bankInformation.ifscCode}`;
+        this.thirdPartyService.getBankDetailByIFSCCode(param).subscribe((res: any) => {
+          console.log("Bank details by IFSC:", res)
+          let data = JSON.parse(res._body);
+          this.merchantData.gstDetails.bankInformation.bankName = data.BANK ? data.BANK : "";
+          this.merchantData.gstDetails.bankInformation.accountBranch = data.BRANCH ? data.BRANCH : "";
         }, err => {
           this._toastMessageService.alert("error", "invalid ifsc code entered");
           this.merchantData.gstDetails.bankInformation.bankName = "";
           this.merchantData.gstDetails.bankInformation.accountBranch = "";
         });
+        // NavbarService.getInstance(this.http).getBankDetailByIFSCCode(this.merchantData.gstDetails.bankInformation.ifscCode).subscribe(res => {
+        //   this.merchantData.gstDetails.bankInformation.bankName = res.BANK ? res.BANK : "";
+        //   this.merchantData.gstDetails.bankInformation.accountBranch = res.BRANCH ? res.BRANCH : "";
+        // }, err => {
+        //   this._toastMessageService.alert("error", "invalid ifsc code entered");
+        //   this.merchantData.gstDetails.bankInformation.bankName = "";
+        //   this.merchantData.gstDetails.bankInformation.accountBranch = "";
+        // });
       }
     }, 300);
   }

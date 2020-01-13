@@ -506,6 +506,10 @@ export class ListComponent implements OnInit {
     this.bodyTag.setAttribute("class", "");
   }
 
+  onCancelInvoice(event) {
+    this.isGSTBillViewShown = false;
+    this.bodyTag.setAttribute("class", "");
+  }
   onSaveGSTBillInvoice() {
     NavbarService.getInstance(null).saveGSTBillInvoice = true;
   }

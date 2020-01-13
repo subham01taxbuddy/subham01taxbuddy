@@ -23,6 +23,10 @@
               <div style="max-height: 210px;">
                 <pdf-viewer *ngIf="fileType === 'pdf'" [src]="s3FilePath" [render-text]="true" style="display: block">
                 </pdf-viewer>
+                <!-- <ngx-doc-viewer
+                  url="https://docs.google.com/spreadsheets/d/1Lv_P_hFaj3L1UH_oVqYxojvCHGwR2gr4uSKOSWHkw2Q/edit#gid=244303686"
+                  style="width:100%;height:50vh;">
+                </ngx-doc-viewer> -->
               </div>
               <div class="toggel-on-off" *ngIf="fileType === 'png' || fileType === 'jpg' || fileType === 'jpeg'"><i
                   class="fa fa-toggle-on" *ngIf="showOriginal" style="color: green;" title="Show compressed image"
@@ -211,8 +215,8 @@
               </app-input-select-object> -->
                 <mat-form-field appearance="outline">
                   <mat-label>Invoice Status</mat-label>
-                  <mat-select placeholder="Invoice Status"
-                    formControlName="invoiceStatusMasterInvoiceStatusMasterId" required>
+                  <mat-select placeholder="Invoice Status" formControlName="invoiceStatusMasterInvoiceStatusMasterId"
+                    required>
                     <mat-option *ngFor="let type of invoice_status_list" [value]="type.id">
                       {{type.name}}
                     </mat-option>
@@ -273,13 +277,14 @@
                                     [(ngModel)]="tab.itemDescription" title={{tab.itemDescription}}>
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
-                                  <input class="table__row-input" type="text" name="'taxcode'"
+                                  <input class="table__row-input" type="text" name="'taxcode'" maxlength="8"
                                     [(ngModel)]="tab.itemTaxCode" title={{tab.itemTaxCode}}>
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
                                   <input class="table__row-input" type="number" name="'taxvalue'"
                                     [(ngModel)]="tab.invoiceItemsTaxableValue" title={{tab.invoiceItemsTaxableValue}}
-                                    (ngModelChange)="calculateTaxFields('taxable_value',tab)"
+                                    (ngModelChange)="calculateTaxFields('taxable_value',tab)" maxlength="11"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
@@ -294,25 +299,29 @@
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;"
                                   *ngIf="isIGSTEnabled">
                                   <input class="table__row-input" type="number" name="'igst'"
-                                    [(ngModel)]="tab.invoiceItemsIgst" title={{tab.invoiceItemsIgst}}
+                                    [(ngModel)]="tab.invoiceItemsIgst" title={{tab.invoiceItemsIgst}} maxlength="11"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;"
                                   *ngIf="!isIGSTEnabled">
                                   <input class="table__row-input" type="number" name="'csgt'"
-                                    [(ngModel)]="tab.invoiceItemsCgst" title={{tab.invoiceItemsCgst}}
+                                    [(ngModel)]="tab.invoiceItemsCgst" title={{tab.invoiceItemsCgst}} maxlength="11"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;"
                                   *ngIf="!isIGSTEnabled">
                                   <input class="table__row-input" type="number" name="'sgst_ugst'"
-                                    [(ngModel)]="tab.invoiceItemsSgst" title={{tab.invoiceItemsSgst}}
+                                    [(ngModel)]="tab.invoiceItemsSgst" title={{tab.invoiceItemsSgst}} maxlength="11"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
                                   <input class="table__row-input" type="number" name="'cess'"
                                     [(ngModel)]="tab.invoiceItemsCess" title={{tab.invoiceItemsCess}}
-                                    (ngModelChange)="calculateTaxFields('cess',tab)"
+                                    (ngModelChange)="calculateTaxFields('cess',tab)" maxlength="11"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                                 <td class="report-table__cell report-table__cell_day" style="position: relative;">
@@ -342,7 +351,8 @@
               <div class="card__col-xs-3">
                 <!-- <app-input [label]="''" [type]="'number'" [name]="'gross value'" [placeholder]="'Enter Gross Value'" [value]="invoiceData.invoiceDTO.invoiceGrossValue" (sendValue)="invoiceData.invoiceDTO.invoiceGrossValue = $event"></app-input> -->
                 <input class="select__box ogp_select ng-untouched ng-pristine ng-valid" type="number"
-                  name="'gross value'" [placeholder]="" [(ngModel)]="invoiceData.invoiceDTO.paidAmount"
+                  name="'gross value'" [placeholder]="" [(ngModel)]="invoiceData.invoiceDTO.paidAmount" maxlength="7"
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
               </div>
               <div class="card__col-xs-3 invoice-item-summary-label">

@@ -165,7 +165,7 @@
                     [merchantData]="selected_invoice_merchant_data" [invoice_main_type]="invoice_main_type"
                     [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list"
                     [invoiceToUpdate]="invoiceToUpdate" [is_update_item]="true"
-                    (onUpdateInvoice)="onUpdateInvoice($event)">
+                    (onUpdateInvoice)="onUpdateInvoice($event)" (onCancelInvoice)="onCancelInvoice($event)">
                 </app-add-update-gst-bill-invoice>
 
                 <app-add-update-credit-debit-note-invoice
@@ -173,17 +173,18 @@
                     [invoice_types]="selected_invoice_types" [merchantData]="selected_invoice_merchant_data"
                     [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles"
                     [invoice_status_list]="invoice_status_list" [invoiceToUpdate]="invoiceToUpdate"
-                    [is_update_item]="true" (onUpdateInvoice)="onUpdateInvoice($event)">
+                    [is_update_item]="true" (onUpdateInvoice)="onUpdateInvoice($event)"
+                    (onCancelInvoice)="onCancelInvoice($event)">
                 </app-add-update-credit-debit-note-invoice>
 
             </div>
         </div>
-        <div class="modal-footer clearfix">
+        <!--  <div class="modal-footer clearfix">
             <div class="pull-right">
                 <a class="btn btn-cancel" (click)="onCancelInvoiceBtnClicked()">Cancel</a>
                 <a class="btn product__save" (click)="onSaveGSTBillInvoice()">Save Invoice</a>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 <!-- Edit Invoice Overlay Close -->

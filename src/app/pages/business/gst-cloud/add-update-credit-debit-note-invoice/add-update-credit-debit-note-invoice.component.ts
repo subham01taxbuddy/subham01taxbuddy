@@ -336,7 +336,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
 
   isItemDetailsInValid(ref) {
     if (this.invoiceData.noteItemDTO instanceof Array) {
-      let temp = this.invoiceData.noteItemDTO.filter(item => item.isMarkForFlag !== 'T')
+      let temp = this.invoiceData.noteItemDTO.filter(item => item.isMarkForDeletion !== 'T')
       for (let i = 0; i < temp.length; i++) {
         if (this.utilsService.isNonZero(temp[i].noteItemsTaxableValue)) {
           continue;

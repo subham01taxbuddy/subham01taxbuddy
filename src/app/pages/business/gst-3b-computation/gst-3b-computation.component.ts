@@ -83,7 +83,6 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
     }
   }
   onCellValueChanged(event) {
-    console.log("On cell value changed:", event);
     this.computationGridOptions.api.setPinnedBottomRowData([this.calTotalRowData()])
   }
 
@@ -291,19 +290,19 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
       id: this.gst3BCompData.id,
       salesIgst: rowData3B[0].data.sales,
       purchaseIgst: rowData3B[0].data.purchases,
-      liabilityIgst: rowData3B[0].data.liability,
+      liabilityIgst: Math.round(rowData3B[0].data.liability * 100) / 100,
 
       salesCgst: rowData3B[1].data.sales,
       purchaseCgst: rowData3B[1].data.purchases,
-      liabilityCgst: rowData3B[1].data.liability,
+      liabilityCgst: Math.round(rowData3B[1].data.liability * 100) / 100,
 
       salesSgst: rowData3B[2].data.sales,
       purchaseSgst: rowData3B[2].data.purchases,
-      liabilitySgst: rowData3B[2].data.liability,
+      liabilitySgst: Math.round(rowData3B[2].data.liability * 100) / 100,
 
       salesCess: rowData3B[3].data.sales,
       purchaseCess: rowData3B[3].data.purchases,
-      liabilityCess: rowData3B[3].data.liability,
+      liabilityCess: Math.round(rowData3B[3].data.liability * 100) / 100,
 
       salesLateFee: rowData3B[4].data.sales,
       liabilityLateFee: rowData3B[4].data.liability,
@@ -382,7 +381,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
           return (params.data.taxId === 'Late Fees' || params.data.taxId === 'Interest') ? true : false;
         },
         valueFormatter: function valueFormatter(params) {
-          return params.data.sales ? params.data.sales.toFixed(2).toLocaleString('en-IN') : params.data.sales;
+          return params.data.sales ? (Math.round(params.data.sales * 100) / 100).toLocaleString('en-IN') : params.data.sales;
         },
         cellStyle: function (params) {
           if (params.data.taxId === 'Late Fees' || params.data.taxId === 'Interest') {
@@ -398,7 +397,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
         suppressMovable: true,
         valueFormatter: function valueFormatter(params) {
           if (params.data.purchases && params.data.purchases !== 'NA') {
-            return params.data.purchases.toFixed(2).toLocaleString('en-IN')
+            return (Math.round(params.data.purchases * 100) / 100).toLocaleString('en-IN')
           } else {
             return params.data.purchases
           }
@@ -417,7 +416,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
         cellEditor: 'numericEditor',
         valueFormatter: function valueFormatter(params) {
           if (params.data.opBal && params.data.opBal !== 'NA') {
-            return params.data.opBal.toFixed(2).toLocaleString('en-IN')
+            return (Math.round(params.data.opBal * 100) / 100).toLocaleString('en-IN')
           } else {
             return params.data.opBal
           }
@@ -438,8 +437,8 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
           const purchases = params.data.purchases === 'NA' ? 0 : params.data.purchases;
           const opBal = params.data.opBal === 'NA' ? 0 : params.data.opBal;
           const inc = (params.data.sales - (purchases + opBal));
-          params.data.liability = inc;
-          return params.data.liability.toFixed(2).toLocaleString('en-IN');
+          params.data.liability = Math.round(inc * 100) / 100;
+          return params.data.liability.toLocaleString('en-IN');
         },
         cellStyle: { 'text-align': "right" }
       }
