@@ -84,7 +84,7 @@
                 (sendValue)="invoiceData.creditDebitNoteDTO.noteNumber = $event"></app-input> -->
                 <mat-form-field appearance="outline">
                   <mat-label>{{(invoice_main_type == 'debit-note') ? 'Debit': 'Credit'}} Note Number</mat-label>
-                  <input matInput placeholder="SSBA/2018-19/001" maxlength="16" formControlName="noteNumber" required>
+                  <input matInput placeholder="SSBA/2018-19/001" maxlength="20" formControlName="noteNumber" required>
                 </mat-form-field>
               </div>
 
@@ -95,7 +95,7 @@
                 (sendValue)="invoiceData.creditDebitNoteDTO.referenceInvoiceId = $event"></app-input> -->
                 <mat-form-field appearance="outline">
                   <mat-label>Original Invoice Number</mat-label>
-                  <input matInput placeholder="SSBA/2018-19/001" formControlName="referenceInvoiceId" maxlength="16"
+                  <input matInput placeholder="SSBA/2018-19/001" formControlName="referenceInvoiceId" maxlength="20"
                     required>
                 </mat-form-field>
               </div>
