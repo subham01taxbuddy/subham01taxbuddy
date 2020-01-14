@@ -57,6 +57,8 @@ export class BusinessProfileComponent implements OnInit {
     sgst: 0,
     cess: 0,
     lateFee: 0,
+    createdAt: new Date(),
+    updatedAt: new Date(),
     gstReturnCalendarId: 0,
     id: 0
   }
@@ -129,6 +131,8 @@ export class BusinessProfileComponent implements OnInit {
       cgst: 0,
       sgst: 0,
       cess: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
       gstReturnCalendarId: 0,
       id: 0
     }
@@ -576,6 +580,9 @@ export class BusinessProfileComponent implements OnInit {
     this.opBalCreditObj["cess"] = 0;
     this.opBalCreditObj["lateFee"] = 0;
     this.opBalCreditObj["businessId"] = this.merchantData.userId;
+    this.opBalCreditObj["createdAt"] = new Date();
+    this.opBalCreditObj["updatedAt"] = new Date();
+
     this.opBalCreditObj["id"] = this.opBalCreditObj["id"] || null;
     this.opBalCreditObj["gstReturnCalendarId"] = null;
     // this.currentMerchantData = JSON.parse(JSON.stringify(this.merchantData));
@@ -592,6 +599,8 @@ export class BusinessProfileComponent implements OnInit {
         this.opBalCreditObj["id"] = (res.id) ? res.id : 0;
         this.opBalCreditObj["lateFee"] = (res.lateFee) ? res.lateFee : 0;
         this.opBalCreditObj["businessId"] = this.merchantData.userId;
+        this.opBalCreditObj["createdAt"] = (res.createdAt) ? new Date(res.createdAt) : new Date();
+        this.opBalCreditObj["updatedAt"] = (res.updatedAt) ? new Date(res.updatedAt) : new Date();
         this.opBalCreditObj["gstReturnCalendarId"] = (res.gstReturnCalendarId) ? res.gstReturnCalendarId : 0;
       }
       this.loading = false;
@@ -657,6 +666,8 @@ export class BusinessProfileComponent implements OnInit {
         "sgst": this.opBalCreditObj.sgst,
         "igst": this.opBalCreditObj.igst,
         "cess": this.opBalCreditObj.cess,
+        createdAt: new Date(this.opBalCreditObj.cess),
+        updatedAt: new Date(),
         lateFee: this.opBalCreditObj.lateFee,
         "businessId": this.merchantData.userId,
         "gstReturnCalendarId": this.opBalCreditObj.gstReturnCalendarId
@@ -669,6 +680,8 @@ export class BusinessProfileComponent implements OnInit {
         "sgst": this.opBalCreditObj.sgst,
         "igst": this.opBalCreditObj.igst,
         "cess": this.opBalCreditObj.cess,
+        createdAt: new Date(),
+        updatedAt: new Date(),
         lateFee: this.opBalCreditObj.lateFee,
         "businessId": this.merchantData.userId,
         "gstReturnCalendarId": this.selected_gst_return_calendars_data.id
