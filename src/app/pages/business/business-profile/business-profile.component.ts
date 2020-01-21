@@ -406,19 +406,19 @@ export class BusinessProfileComponent implements OnInit {
     //     return;
     //   }
       
-      // this.loading = true;
-      // let sendData = JSON.parse(JSON.stringify(this.merchantData));
-      // delete sendData.gstDetails.s3BusinessLogo;
-      // delete sendData.gstDetails.s3BusinessSignature;
-      // delete sendData.gstDetails.s3GstCertificate;
-      // NavbarService.getInstance(this.http).getSaveGSTMerchantDetail(sendData).subscribe(res => {
-      //   this._toastMessageService.alert("success", sendData.fName + "'s profile updated successfully.");
-      //   this.loading = false;
-      // }, err => {
-      //   let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
-      //   this._toastMessageService.alert("error", "merchant detail - " + errorMessage);
-      //   this.loading = false;
-      // });
+      this.loading = true;
+      let sendData = JSON.parse(JSON.stringify(this.merchantData));
+      delete sendData.gstDetails.s3BusinessLogo;
+      delete sendData.gstDetails.s3BusinessSignature;
+      delete sendData.gstDetails.s3GstCertificate;
+      NavbarService.getInstance(this.http).getSaveGSTMerchantDetail(sendData).subscribe(res => {
+        this._toastMessageService.alert("success", sendData.fName + "'s profile updated successfully.");
+        this.loading = false;
+      }, err => {
+        let errorMessage = (err.error && err.error.message) ? err.error.message : "Internal server error.";
+        this._toastMessageService.alert("error", "merchant detail - " + errorMessage);
+        this.loading = false;
+      });
     }else{
       $('input.ng-invalid').first().focus();
       return
