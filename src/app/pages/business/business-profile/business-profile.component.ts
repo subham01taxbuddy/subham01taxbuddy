@@ -109,13 +109,13 @@ export class BusinessProfileComponent implements OnInit {
         gstType: ['',[Validators.required]],
         businessAddress: this.fb.group({
           address:[''],
-          pincode:['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)]],
+          pincode:['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode), Validators.required]],
           state:['']
         }),
         bankInformation: this.fb.group({
           bankName:[''],
           accountBranch:[''],
-          accountNumber:[''],
+          accountNumber:['',Validators.required],
           ifscCode:['', [Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex), Validators.required]]
         })
       })
