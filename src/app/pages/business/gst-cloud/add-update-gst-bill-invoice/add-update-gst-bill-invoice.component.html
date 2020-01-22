@@ -345,10 +345,10 @@
               </div>
             </div>
             <div class="card__row">
-              <div class="card__col-xs-3 invoice-item-summary-label">
+              <div class="card__col-xs-3 invoice-item-summary-label" *ngIf="invoice_main_type !== 'purchase-invoice'">
                 Amount Received
               </div>
-              <div class="card__col-xs-3">
+              <div class="card__col-xs-3" *ngIf="invoice_main_type !== 'purchase-invoice'">
                 <!-- <app-input [label]="''" [type]="'number'" [name]="'gross value'" [placeholder]="'Enter Gross Value'" [value]="invoiceData.invoiceDTO.invoiceGrossValue" (sendValue)="invoiceData.invoiceDTO.invoiceGrossValue = $event"></app-input> -->
                 <input class="select__box ogp_select ng-untouched ng-pristine ng-valid" type="number"
                   name="'gross value'" [placeholder]="" [(ngModel)]="invoiceData.invoiceDTO.paidAmount" maxlength="7"
