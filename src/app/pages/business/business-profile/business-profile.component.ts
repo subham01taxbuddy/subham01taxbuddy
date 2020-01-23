@@ -242,7 +242,7 @@ export class BusinessProfileComponent implements OnInit {
   }
 
   onEnterGSTIN(event) {
-    this.merchantData.gstDetails.gstinNumber = event;
+    this.merchantData.gstDetails.gstinNumber = event.target.value;
     if (this.gstinBounceBackTimeObj) {
       clearTimeout(this.gstinBounceBackTimeObj);
     }
@@ -256,6 +256,7 @@ export class BusinessProfileComponent implements OnInit {
           if (partyInfo) {
             this.merchantData.gstDetails.legalName = partyInfo.partyName;
             this.merchantData.gstDetails.gstinRegisteredMobileNumber = partyInfo.partyPhone;
+            this.gstDetails.patchValue(this.merchantData.gstDetails);
           } else {
             this.merchantData.gstDetails.legalName = "";
             this.merchantData.gstDetails.gstinRegisteredMobileNumber = "";

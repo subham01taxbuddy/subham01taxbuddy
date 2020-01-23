@@ -46,7 +46,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>GSTIN Number</mat-label>
                 <input placeholder="GSTIN Number" maxlength="15" type="text" formControlName="gstinNumber" required
-                  matInput>
+                 (blur)="onEnterGSTIN($event)"  matInput>
               </mat-form-field>
               <mat-error *ngIf="gstDetails['controls'].gstinNumber.hasError('pattern')">
                 Please enter valid GSTN.
