@@ -2535,4 +2535,5 @@ body.modal-body .content {
 
 .mat-fab.mat-primary, .mat-flat-button.mat-primary, .mat-mini-fab.mat-primary, .mat-raised-button.mat-primary {
     background-color: #63b12d;
+    margin-top: 4%;
 }
