@@ -23,6 +23,15 @@ export class UserMsService {
     // .map(response => response.json())
   }
 
+  getMethodInfo<T>(...param): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    //  this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
+    console.log('update Param', param);
+    return this.httpClient.get<T>(environment.url + param[0], { headers: this.headers });
+    // .map(response => response.json())
+  }
+
   patchMethod<T>(...param): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');

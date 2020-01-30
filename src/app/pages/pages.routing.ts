@@ -38,6 +38,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from '../services/auth.guard';
 import { ActivatePackageComponent } from './activate-package/activate-package.component';
 import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
+import { AssignComponent } from './assign/assign.component';
 
 export const routes: Routes = [
 	{ path: 'login', /* canActivate: [AuthGuard], */ component: LoginComponent },
@@ -60,9 +61,11 @@ export const routes: Routes = [
 				]
 			},
 			{ path: 'activate-package', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: ActivatePackageComponent },
+			{ path: 'assign', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: AssignComponent },
 			{ path: 'reports', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './reports-module/reports.module#ReportsModule' },
 			{ path: 'ifa', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] }, loadChildren: './ifa/ifa.module#IfaModule' },
-			{ path: '**', redirectTo: '/pages/home', pathMatch: 'full' }
+			{ path: '**', redirectTo: '/pages/home', pathMatch: 'full' },
+			
 		]
 	},
 

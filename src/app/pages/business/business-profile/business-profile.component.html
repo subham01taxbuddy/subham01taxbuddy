@@ -173,7 +173,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>IFSC Code</mat-label>
                 <input placeholder="IFSC Code" maxlength="11" formControlName="ifscCode" matInput
-                 (blur)="onEnterIFSCCode($event);" type="text" upperCase required>
+                 (blur)="onEnterIFSCCode($event);" type="text" upperCase >
                 <mat-error *ngIf="gstDetails['controls'].bankInformation['controls'].ifscCode.hasError('pattern')">
                   Please enter valid IFSC code.</mat-error>
               </mat-form-field>
@@ -210,7 +210,7 @@
                 <mat-label>Account Number</mat-label>
                 <input placeholder="Account Number" maxlength="18" formControlName="accountNumber" matInput
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput required>
+                  onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput>
               </mat-form-field>
             </div>
           </div>
