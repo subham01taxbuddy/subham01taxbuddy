@@ -95,6 +95,7 @@ import { MaterialModule } from 'app/shared/material.module';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { SharedModule } from 'app/shared/shared.module';
+import { AssignComponent } from './assign/assign.component';
 
 Auth.configure(environment.AMPLIFY_CONFIG);
 
@@ -158,6 +159,7 @@ export const MY_FORMATS = {
     AttributesFilterComponent,
     ActivatePackageComponent,
     AgGridCheckboxComponent,
+    AssignComponent,
   ],
   entryComponents: [
     HomeComponent,

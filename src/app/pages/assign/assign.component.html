@@ -1,0 +1,115 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="main clearfix">
+    <div class="card">
+        <!-- Search for data -->
+
+        <mat-tab-group>
+            <mat-tab label="Re-Run">
+                <div class="card__col-xs-12 card__col-sm-5 pos">
+                    <button mat-button (click)="run()">Run</button>
+
+                </div>
+            </mat-tab>
+            <mat-tab label="Re-assign">
+                <form [formGroup]="reAssignForm" class="card_row pos">
+                    <div class="card__col-xs-12 card__col-sm-5">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Select old tax expert</mat-label>
+                            <mat-select placeholder="Old tax expert" formControlName="oldTaxExpert" required>
+                                <mat-option *ngFor="let admin of adminData" [value]="admin.userId">
+                                    {{admin.fName}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="reAssignForm['controls'].oldTaxExpert.hasError('required')">Select
+                                old
+                                tax expert</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-5">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Select new tax expert</mat-label>
+                            <mat-select placeholder="New tax expert" formControlName="newTaxExpert" required>
+                                <mat-option *ngFor="let admin of adminData" [value]="admin.userId">
+                                    {{admin.fName}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="reAssignForm['controls'].newTaxExpert.hasError('required')">Select
+                                new
+                                tax expert</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-2">
+                        <button mat-button (click)="assign()">Re-Assign</button>
+                    </div>
+
+                </form>
+            </mat-tab>
+        </mat-tab-group>
+
+
+
+        <!-- <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-12">
+                <div class="filter__col card__col-sm-6 card__col-xs-12">
+                    <div class="input">
+                        <button (click)="reRun()">Re-Run</button>
+                    </div>
+                </div>
+                <div class="filter__col card__col-sm-6 card__col-xs-10">
+                    <div class="input">
+                    
+                        <button (click)="reAssign()">Re-Assign</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card__row" *ngIf="!isReAssign" style="margin-top: 0px;">
+            <div class="tab-panel items-tab card__col-xs-12">
+                <div class="tab-panel__content tab-panel__content_visible">
+                    <div class="card__col-xs-12 card__col-sm-5">
+                        <button mat-flat-button color="primary" (click)="run()">Run</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card_row" *ngIf="isReAssign" style="margin-top: 0px;">
+            <div class="tab-panel items-tab card__col-xs-12">
+                <div class="tab-panel__content tab-panel__content_visible">
+                    <form [formGroup]="reAssignForm" class="card_row">
+                        <div class="card__col-xs-12 card__col-sm-5">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Select old tax expert</mat-label>
+                                <mat-select placeholder="Old tax expert" formControlName="oldTaxExpert" required>
+                                    <mat-option *ngFor="let admin of adminData" [value]="admin.userId">
+                                        {{admin.fName}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="reAssignForm['controls'].oldTaxExpert.hasError('required')">Select old
+                                    tax expert</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-xs-12 card__col-sm-5">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Select new tax expert</mat-label>
+                                <mat-select placeholder="New tax expert" formControlName="newTaxExpert" required>
+                                    <mat-option *ngFor="let admin of adminData" [value]="admin.userId">
+                                        {{admin.fName}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="reAssignForm['controls'].newTaxExpert.hasError('required')">Select new
+                                    tax expert</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-xs-12 card__col-sm-2">
+                            <button mat-flat-button color="primary" (click)="assign()">Re-Assign</button>
+                        </div>
+                      
+                    </form>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>

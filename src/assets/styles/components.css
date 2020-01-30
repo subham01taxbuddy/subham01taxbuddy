@@ -2532,3 +2532,8 @@ body.modal-body .content {
     display: inline-block;
     margin: auto;
 }
+
+.mat-button, .mat-flat-button, .mat-icon-button, .mat-stroked-button {
+    background-color: #63b12d;
+    color: #fff;
+}

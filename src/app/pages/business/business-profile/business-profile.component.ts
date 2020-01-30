@@ -56,7 +56,7 @@ export class BusinessProfileComponent implements OnInit {
   selected_gst_return_calendars_data: any;
 
   gstr1List: any = [{ label: 'Monthly', value: 'Monthly' }, { label: 'Quarterly', value: 'Quarterly' }];
-  gstType: any = [{ label: 'Regular', value: 'REGULAR' }, { label: 'Composite', value: 'COMPOSITE' }]
+  gstType: any = [{ label: 'Regular', value: 'Regular' }, { label: 'Composite', value: 'Composite' },{label:'Input Service Distributor (ISD)', value:'Input Service Distributor (ISD)'}]
 
   opBalCreditObj: any = {
     igst: 0,
@@ -97,28 +97,28 @@ export class BusinessProfileComponent implements OnInit {
     })
 
     console.log(AppConstants.GSTNRegex)
-      this.gstDetails = this.fb.group({
-        gstPortalUserName: [''],
-        gstPortalPassword: [''],
-        gstinNumber: ['', [Validators.pattern(AppConstants.GSTNRegex), Validators.required]],
-        tradeName: ['', Validators.required],
-        legalName: [''],
-        gstinRegisteredMobileNumber: ['', [Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex)]],
-        salesInvoicePrefix: [''],
-        gstr1Type: ['',[Validators.required]],
-        gstType: ['',[Validators.required]],
-        businessAddress: this.fb.group({
-          address:[''],
-          pincode:['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode), Validators.required]],
-          state:['']
-        }),
-        bankInformation: this.fb.group({
-          bankName:[''],
-          accountBranch:[''],
-          accountNumber:['',Validators.required],
-          ifscCode:['', [Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex), Validators.required]]
-        })
+    this.gstDetails = this.fb.group({
+      gstPortalUserName: [''],
+      gstPortalPassword: [''],
+      gstinNumber: ['', [Validators.pattern(AppConstants.GSTNRegex), Validators.required]],
+      tradeName: ['', Validators.required],
+      legalName: [''],
+      gstinRegisteredMobileNumber: ['', [Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex)]],
+      salesInvoicePrefix: [''],
+      gstr1Type: ['', [Validators.required]],
+      gstType: ['', [Validators.required]],
+      businessAddress: this.fb.group({
+        address: [''],
+        pincode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode), Validators.required]],
+        state: ['']
+      }),
+      bankInformation: this.fb.group({
+        bankName: [''],
+        accountBranch: [''],
+        accountNumber: [''],
+        ifscCode: ['', [Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]]
       })
+    })
   }
 
   ngDoCheck() {
@@ -130,7 +130,7 @@ export class BusinessProfileComponent implements OnInit {
     if (NavbarService.getInstance(null).isMerchantChanged && NavbarService.getInstance(null).merchantData) {
       this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
       NavbarService.getInstance(null).isMerchantChanged = false;
-     
+
     }
   }
 
@@ -254,8 +254,16 @@ export class BusinessProfileComponent implements OnInit {
 
         this.getPartyInfoByGSTIN(this.merchantData.gstDetails.gstinNumber).then((partyInfo: any) => {
           if (partyInfo) {
-            this.merchantData.gstDetails.legalName = partyInfo.partyName;
+
+            // let otherData = JSON.parse(partyInfo.otherData)
+            // console.log('otherData',otherData)
+            this.merchantData.gstDetails.legalName = partyInfo.legalName;
             this.merchantData.gstDetails.gstinRegisteredMobileNumber = partyInfo.partyPhone;
+            this.merchantData.gstDetails.tradeName = partyInfo.tradeName;
+            this.merchantData.gstDetails.gstType = this.getGstType(partyInfo.gstnType);
+            this.merchantData.gstDetails.businessAddress.state = this.getStateName(partyInfo.stateName);
+            this.merchantData.gstDetails.businessAddress.pincode = partyInfo.pineCode;
+            this.merchantData.gstDetails.businessAddress.address = this.getAddress(partyInfo);
             this.gstDetails.patchValue(this.merchantData.gstDetails);
           } else {
             this.merchantData.gstDetails.legalName = "";
@@ -266,9 +274,39 @@ export class BusinessProfileComponent implements OnInit {
     }, 300);
   }
 
+  //Sagar
+  getGstType(gstCode){
+  //  console.log(this.gstType.find(item=> item.code == gstCode).label)
+    console.log(this.gstType.find(item=> item.label == gstCode));
+    return this.gstType.find(item=> item.label == gstCode).label
+  }   
+
+  getStateName(stateName){
+    console.log(stateName)
+    console.log(this.state_list)
+   return this.state_list.find(item=> item.name == stateName).stateMasterCode
+  }
+
+  getAddress(partyInfo) {
+    let address = "";
+    if (this.utilsService.isNonEmpty(partyInfo.street)) {
+      address = address + partyInfo.street + ', ';
+    }
+    if (this.utilsService.isNonEmpty(partyInfo.location)) {
+      address = address + partyInfo.location + ', ';
+    }
+    if (this.utilsService.isNonEmpty(partyInfo.dist)) {
+      address = address + partyInfo.dist;
+    }
+
+    return address;
+  }
+
+
   getPartyInfoByGSTIN(gstin) {
     return new Promise((resolve, reject) => {
       NavbarService.getInstance(this.http).getPartyInfoByGSTIN({ gstin: gstin }).subscribe(res => {
+        console.log(res)
         return resolve(((res) ? res : null));
       }, err => {
         if (err.error && err.error.title) { this._toastMessageService.alert("error", err.error.title); }
@@ -384,29 +422,29 @@ export class BusinessProfileComponent implements OnInit {
   }
 
   saveBusinessProfile() {
-    if(this.gstDetails.valid){
+    if (this.gstDetails.valid) {
       console.log(this.gstDetails)
       console.log(this.gstDetails.value)
       console.log(this.merchantData.gstDetails)
       Object.assign(this.merchantData.gstDetails, this.gstDetails.value)
       console.log(this.merchantData)
-    //   if ((this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length != 15) || !this.utilsService.isGSTINValid(this.merchantData.gstDetails.gstinNumber)) {
-    //     this._toastMessageService.alert("error", "Please add 15 character valid gstin number");
-    //     return
-    //   } else if (this.merchantData.gstDetails.gstinRegisteredMobileNumber && !(/^\d{10}$/.test(this.merchantData.gstDetails.gstinRegisteredMobileNumber))) {
-    //     this._toastMessageService.alert("error", "Please add valid 10 digit phone number for gstin registered mobile number");
-    //     return;
-    //   } 
-    //   else if (this.merchantData.gstDetails.businessAddress && !(/^\d{6}$/.test(this.merchantData.gstDetails.businessAddress.pincode))) {
-    //     this._toastMessageService.alert("error", "Please add valid pincode 6 digit of pincode");
-    //     return;
-    //  }
-    //    else if (this.merchantData.gstDetails.bankInformation && this.merchantData.gstDetails.bankInformation.ifscCode &&
-    //     this.merchantData.gstDetails.bankInformation.ifscCode.length != 11) {
-    //     this._toastMessageService.alert("error", "Please add valid 11 character ifsc code");
-    //     return;
-    //   }
-      
+      //   if ((this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length != 15) || !this.utilsService.isGSTINValid(this.merchantData.gstDetails.gstinNumber)) {
+      //     this._toastMessageService.alert("error", "Please add 15 character valid gstin number");
+      //     return
+      //   } else if (this.merchantData.gstDetails.gstinRegisteredMobileNumber && !(/^\d{10}$/.test(this.merchantData.gstDetails.gstinRegisteredMobileNumber))) {
+      //     this._toastMessageService.alert("error", "Please add valid 10 digit phone number for gstin registered mobile number");
+      //     return;
+      //   } 
+      //   else if (this.merchantData.gstDetails.businessAddress && !(/^\d{6}$/.test(this.merchantData.gstDetails.businessAddress.pincode))) {
+      //     this._toastMessageService.alert("error", "Please add valid pincode 6 digit of pincode");
+      //     return;
+      //  }
+      //    else if (this.merchantData.gstDetails.bankInformation && this.merchantData.gstDetails.bankInformation.ifscCode &&
+      //     this.merchantData.gstDetails.bankInformation.ifscCode.length != 11) {
+      //     this._toastMessageService.alert("error", "Please add valid 11 character ifsc code");
+      //     return;
+      //   }
+
       this.loading = true;
       let sendData = JSON.parse(JSON.stringify(this.merchantData));
       delete sendData.gstDetails.s3BusinessLogo;
@@ -420,11 +458,11 @@ export class BusinessProfileComponent implements OnInit {
         this._toastMessageService.alert("error", "merchant detail - " + errorMessage);
         this.loading = false;
       });
-    }else{
+    } else {
       $('input.ng-invalid').first().focus();
       return
     }
-    
+
   }
 
   viewUrl(url) {
