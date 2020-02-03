@@ -29,12 +29,13 @@ import { GstMsService } from 'app/services/gst-ms.service';
 import { ThirdPartyService } from 'app/services/third-party.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AppConstants } from 'app/shared/constants';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-business-profile',
   templateUrl: './business-profile.component.html',
   styleUrls: ['./business-profile.component.css'],
-  providers: [GstMsService]
+  providers: [GstMsService,TitleCasePipe]
 })
 export class BusinessProfileComponent implements OnInit {
   selected_merchant: any;
@@ -73,6 +74,7 @@ export class BusinessProfileComponent implements OnInit {
   merchantData: any;
   constructor(
     private navbarService: NavbarService,
+    private titleCasePipe: TitleCasePipe,
     private thirdPartyService: ThirdPartyService,
     public router: Router, public http: HttpClient, private gstMsService: GstMsService,
     public _toastMessageService: ToastMessageService, public utilsService: UtilsService, public fb: FormBuilder) {
@@ -220,6 +222,7 @@ export class BusinessProfileComponent implements OnInit {
           }
         }
         this.gstDetails.patchValue(this.merchantData.gstDetails);
+        this.gstDetails.controls['gstr1Type'].setValue(this.titleCasePipe.transform(this.merchantData.gstDetails['gstr1Type']))
       }
 
       this.gstGSTReturnCalendarsData().then(data => {
@@ -459,6 +462,7 @@ export class BusinessProfileComponent implements OnInit {
         this.loading = false;
       });
     } else {
+      this._toastMessageService.alert("error", "Please fill mandatory fillds.");
       $('input.ng-invalid').first().focus();
       return
     }
