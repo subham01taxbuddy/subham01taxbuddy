@@ -76,6 +76,7 @@ export class AssignComponent implements OnInit {
     }
     else {
       $('input.ng-invalid').first().focus();
+      return
     }
   }
 

@@ -2533,7 +2533,7 @@ body.modal-body .content {
     margin: auto;
 }
 
-.mat-button, .mat-flat-button, .mat-icon-button, .mat-stroked-button {
+.mat-fab.mat-primary, .mat-flat-button.mat-primary, .mat-mini-fab.mat-primary, .mat-raised-button.mat-primary {
     background-color: #63b12d;
-    color: #fff;
+    margin-top: 4%;
 }
