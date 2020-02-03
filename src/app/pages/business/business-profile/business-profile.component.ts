@@ -267,6 +267,8 @@ export class BusinessProfileComponent implements OnInit {
             this.merchantData.gstDetails.businessAddress.state = this.getStateName(partyInfo.stateName);
             this.merchantData.gstDetails.businessAddress.pincode = partyInfo.pineCode;
             this.merchantData.gstDetails.businessAddress.address = this.getAddress(partyInfo);
+            this.merchantData.gstDetails.gstr1Type = this.titleCasePipe.transform(this.merchantData.gstDetails['gstr1Type'])
+            console.log( this.merchantData.gstDetails)
             this.gstDetails.patchValue(this.merchantData.gstDetails);
           } else {
             this.merchantData.gstDetails.legalName = "";
