@@ -1,21 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { GstMsService } from 'app/services/gst-ms.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
-
+import { GridOptions } from 'ag-grid-community';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-assign',
   templateUrl: './assign.component.html',
   styleUrls: ['./assign.component.css']
 })
 export class AssignComponent implements OnInit {
-   
+
   reAssignForm: FormGroup;
   adminData: any = [];
   loading: boolean;
+  uploadedData: any;
+  excelTamplateForm: FormGroup;
+  available_merchant_list = []// Observable<any[]>;
+  filteredOptions: Observable<any[]>;
+  natureCode: any;
+  clientListGridOptions: GridOptions;
+  uplodedFile: any;
+  csvDataInArray = [];
+  showCsvGrid: boolean;
+  invoice_types_list: any = [{ invoiceTypeId: 1, name: "Sales" },
+  { invoiceTypeId: 2, name: "Purchase" }];
 
-  constructor(public gstMsService: GstMsService, public userMsService: UserMsService, public fb: FormBuilder, public _toastMessageService: ToastMessageService) { }
+
+  constructor(public gstMsService: GstMsService, public userMsService: UserMsService, public fb: FormBuilder,
+    public _toastMessageService: ToastMessageService) {
+
+    this.clientListGridOptions = <GridOptions>{
+      rowData: [],
+      columnDefs: [],
+      enableCellChangeFlash: true,
+      onGridReady: params => {
+        // params.api.sizeColumnsToFit();
+      },
+      sortable: true,
+      filter: true,
+      // floatingFilter: true
+    };
+  }
 
   ngOnInit() {
     this.adminList();
@@ -23,6 +50,7 @@ export class AssignComponent implements OnInit {
       oldTaxExpert: ['', Validators.required],
       newTaxExpert: ['', Validators.required],
     })
+
   }
 
   adminList() {
@@ -79,5 +107,15 @@ export class AssignComponent implements OnInit {
       return
     }
   }
+
+  /// Doc Upload Part ///////////////
+
+
+
+  // papaParseCompleteFunction(results) {
+  //    console.log('Results', results);
+  // }
+
+
 
 }

@@ -1,0 +1,71 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="card__col-xs-12 card__col-sm-12 pos">
+    <form [formGroup]="excelTamplateForm" class="card_row pos">
+        <div class="card__col-xs-12 card__col-sm-3">
+            <mat-form-field appearance="outline">
+                <mat-label>Select User</mat-label>
+
+                <input matInput placeholder="Select User" aria-label="Select User" [matAutocomplete]="auto"
+                    formControlName="user">
+                <!--(select)="getCodeFromLabelOnBlur()"-->
+                <mat-error *ngIf="excelTamplateForm.controls['user'].invalid">
+                    Please select value from dropdown only.
+                </mat-error>
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                    (optionSelected)="getCodeFromLabelOnBlur()">
+                    <!--(optionSelected)="getPeriodList($event.option.value)"-->
+                    <mat-option *ngFor="let user of filteredOptions | async" [value]="user.name">
+                        <span>{{user.name}}</span>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-12 card__col-sm-2">
+            <mat-form-field appearance="outline">
+                <mat-label>Select Period</mat-label>
+                <mat-select placeholder="Select period" formControlName="period" required>
+                    <mat-option *ngFor="let type of periodType" [value]="type.id">
+                        {{type.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-12 card__col-sm-2">
+            <mat-form-field appearance="outline">
+                <mat-label>Select Type</mat-label>
+                <mat-select placeholder="Select type" formControlName="type" required>
+                    <mat-option *ngFor="let type of invoice_types_list" [value]="type.invoiceTypeId">
+                        {{type.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-2">
+            <input type="file" id="fileUploaded" (change)="uploadFile($event)" accept=".csv" #fileInput>
+            <!-- style="display:none;"-->
+            <!-- <button mat-raised-button color="primary" (click)="mainUpload()">Upload</button> -->
+        </div>
+        <div class="card_col-xs-12 card__col-sm-2">
+            <button style="float: right;" mat-raised-button color="primary" [disabled]="excelTamplateForm.invalid"
+                (click)="uploadInfo()">Parse CSV</button>
+        </div>
+    </form>
+
+</div><br>
+
+
+<div class="card__col-xs-12 card__col-sm-12 pos">
+    <!-- <div class="card"> -->
+    <div class="card__row" style="margin-top: 0px;">
+        <ag-grid-angular class="ag-theme-balham" [gridOptions]="clientListGridOptions">
+        </ag-grid-angular>
+    </div><br>
+
+    <button mat-raised-button color="primary" [disabled]="excelTamplateForm.invalid"
+        (click)="checkAndSubimit()">Validate GSTN</button>&nbsp;
+    <button mat-raised-button color="primary" [disabled]="excelTamplateForm.invalid">Upload</button>
+
+    <!-- </div> -->
+</div>

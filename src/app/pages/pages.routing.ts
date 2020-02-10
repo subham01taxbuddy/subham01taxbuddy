@@ -39,6 +39,7 @@ import { AuthGuard } from '../services/auth.guard';
 import { ActivatePackageComponent } from './activate-package/activate-package.component';
 import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 import { AssignComponent } from './assign/assign.component';
+import { CSVParseTemplateComponent } from './assign/csv-parse-template/csv-parse-template.component';
 
 export const routes: Routes = [
 	{ path: 'login', /* canActivate: [AuthGuard], */ component: LoginComponent },
