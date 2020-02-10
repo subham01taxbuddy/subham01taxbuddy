@@ -5,14 +5,14 @@ import { ICellEditorAngularComp } from 'ag-grid-angular';
 @Component({
     selector: 'numeric-cell',
     template: `<input #input type="number" maxlength="14" (keydown)="onKeyDown($event)" [(ngModel)]="value" style="width: 100%" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-    onkeypress="return event.charCode >= 48 && event.charCode <= 57" min="0">`
+    onkeypress="return event.charCode >= 48 && event.charCode <= 57">`
 })
 export class NumericEditor implements ICellEditorAngularComp, AfterViewInit {
     private params: any;
     public value: number;
     private cancelBeforeStart = false;
 
-    @ViewChild('input', { read: ViewContainerRef, static: false }) public input;
+    // @ViewChild('input', { read: ViewContainerRef }) public input;
 
 
     agInit(params: any): void {
@@ -46,7 +46,7 @@ export class NumericEditor implements ICellEditorAngularComp, AfterViewInit {
     // dont use afterGuiAttached for post gui events - hook into ngAfterViewInit instead for this
     ngAfterViewInit() {
         window.setTimeout(() => {
-            this.input.element.nativeElement.focus();
+            // this.input.element.nativeElement.focus();
         });
     }
 

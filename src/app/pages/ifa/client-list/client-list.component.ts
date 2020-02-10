@@ -26,7 +26,7 @@ export class ClientListComponent implements OnInit {
       },
       sortable: true,
       filter: true,
-      floatingFilter: true
+     // floatingFilter: true
     };
 
   }

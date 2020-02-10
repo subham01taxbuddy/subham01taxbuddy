@@ -88,3 +88,19 @@ body {
   font-style: italic;
   padding-right: 5px;
 }
+
+// New Ag-grid css part
+.cell-span {
+  background-color: #ffffff;
+  vertical-align: middle;
+  border: #d9dcde solid 1px !important;
+}
+.ag-theme-balham .invalid-row {
+  border: 1px solid sandybrown !important;
+}
+.ag-theme-balham .ag-root {
+  min-height: 62px !important;
+}
+.ag-overlay-wrapper {
+  vertical-align: bottom !important;
+}

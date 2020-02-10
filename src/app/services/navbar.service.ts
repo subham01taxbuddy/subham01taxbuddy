@@ -195,6 +195,10 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/partiesByGstin', 'method': 'GET' }, params);
 	}
 
+	getPartyInfoByNoOfGSTIN(params) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/partiesByGstin', 'method': 'GET' }, params);
+	}
+
 	getPartyInfoByPartyRole(businessId, params) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/party-list/' + businessId, 'method': 'GET' }, params);
 	}
@@ -380,6 +384,7 @@ export class NavbarService {
 			return this.http.delete(pUrl + apiKey['url'], options)
 		} else {
 			options.params = params;
+			console.log(pUrl + apiKey['url'], options)
 			return this.http.get(pUrl + apiKey['url'], options)
 		}
 	}

@@ -3,24 +3,39 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpperCaseDirective, InputDataMaskDirective, /* converToLowerCaseDirective */ } from './input-data-mask.directive';
 import { AgGridModule } from 'ag-grid-angular';
 import { NumericEditor } from './numeric-editor.component';
+import { CustomDateComponent } from './date.component';
+import { MatSelectComponent } from './mat-select.component';
+import { MaterialModule } from './material.module';
+import { AgGridMaterialSelectEditorComponent } from './dropdown.component';
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
     declarations: [
         UpperCaseDirective,
         InputDataMaskDirective,
-        NumericEditor
+        NumericEditor,
+        CustomDateComponent,
+        MatSelectComponent,
+        AgGridMaterialSelectEditorComponent
     ],
     imports: [
+        CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        AgGridModule.withComponents([NumericEditor]),
+        MaterialModule,
+        AgGridModule.withComponents([NumericEditor, CustomDateComponent ,AgGridMaterialSelectEditorComponent]),  //MatSelectComponent
     ],
     exports: [
+        CommonModule,
         UpperCaseDirective,
         InputDataMaskDirective,
         NumericEditor,
-        AgGridModule
+        MaterialModule,
+        CustomDateComponent,
+        MatSelectComponent,
+        AgGridModule,
+        AgGridMaterialSelectEditorComponent
     ],
     providers: [],
 })

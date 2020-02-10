@@ -19,7 +19,7 @@ import { ReportsModule } from './reports-module/reports.module';
  */
 
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Component, OnInit, Input } from '@angular/core';
+import { NgModule, Component, OnInit, Input, NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -96,6 +96,9 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { SharedModule } from 'app/shared/shared.module';
 import { AssignComponent } from './assign/assign.component';
+import { CSVParseTemplateComponent } from './assign/csv-parse-template/csv-parse-template.component';
+import { GstRegistrationClientComponent } from './assign/gst-registration-client/gst-registration-client.component';
+// import { NO_ERRORS_SCHEMA } from '@angular/compiler/src/core';
 
 Auth.configure(environment.AMPLIFY_CONFIG);
 
@@ -160,6 +163,8 @@ export const MY_FORMATS = {
     ActivatePackageComponent,
     AgGridCheckboxComponent,
     AssignComponent,
+    CSVParseTemplateComponent,
+    GstRegistrationClientComponent,
   ],
   entryComponents: [
     HomeComponent,
@@ -179,7 +184,7 @@ export const MY_FORMATS = {
     PdfViewerModule,
     // NgxExtendedPdfViewerModule,
     // AgGridModule.withComponents([]),
-    MaterialModule,
+    //MaterialModule,
     SharedModule,
     // NgxDocViewerModule
   ],
@@ -194,6 +199,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   ],
   bootstrap: [PagesComponent],
+  schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ],
 
   exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,
     ReactiveFormsModule,
