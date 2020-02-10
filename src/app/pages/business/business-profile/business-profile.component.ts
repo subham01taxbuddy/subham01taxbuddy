@@ -35,7 +35,7 @@ import { TitleCasePipe } from '@angular/common';
   selector: 'app-business-profile',
   templateUrl: './business-profile.component.html',
   styleUrls: ['./business-profile.component.css'],
-  providers: [GstMsService,TitleCasePipe]
+  providers: [GstMsService, TitleCasePipe]
 })
 export class BusinessProfileComponent implements OnInit {
   selected_merchant: any;
@@ -57,7 +57,7 @@ export class BusinessProfileComponent implements OnInit {
   selected_gst_return_calendars_data: any;
 
   gstr1List: any = [{ label: 'Monthly', value: 'Monthly' }, { label: 'Quarterly', value: 'Quarterly' }];
-  gstType: any = [{ label: 'Regular', value: 'Regular' }, { label: 'Composite', value: 'Composite' },{label:'Input Service Distributor (ISD)', value:'Input Service Distributor (ISD)'}]
+  gstType: any = [{ label: 'Regular', value: 'Regular' }, { label: 'Composite', value: 'Composite' }, { label: 'Input Service Distributor (ISD)', value: 'Input Service Distributor (ISD)' }]
 
   opBalCreditObj: any = {
     igst: 0,
@@ -268,7 +268,7 @@ export class BusinessProfileComponent implements OnInit {
             this.merchantData.gstDetails.businessAddress.pincode = partyInfo.pineCode;
             this.merchantData.gstDetails.businessAddress.address = this.getAddress(partyInfo);
             this.merchantData.gstDetails.gstr1Type = this.titleCasePipe.transform(this.merchantData.gstDetails['gstr1Type'])
-            console.log( this.merchantData.gstDetails)
+            console.log(this.merchantData.gstDetails)
             this.gstDetails.patchValue(this.merchantData.gstDetails);
           } else {
             this.merchantData.gstDetails.legalName = "";
@@ -280,16 +280,16 @@ export class BusinessProfileComponent implements OnInit {
   }
 
   //Sagar
-  getGstType(gstCode){
-  //  console.log(this.gstType.find(item=> item.code == gstCode).label)
-    console.log(this.gstType.find(item=> item.label == gstCode));
-    return this.gstType.find(item=> item.label == gstCode).label
-  }   
+  getGstType(gstCode) {
+    //  console.log(this.gstType.find(item=> item.code == gstCode).label)
+    console.log(this.gstType.find(item => item.label == gstCode));
+    return this.gstType.find(item => item.label == gstCode).label
+  }
 
-  getStateName(stateName){
+  getStateName(stateName) {
     console.log(stateName)
     console.log(this.state_list)
-   return this.state_list.find(item=> item.name == stateName).stateMasterCode
+    return this.state_list.find(item => item.name == stateName).stateMasterCode
   }
 
   getAddress(partyInfo) {

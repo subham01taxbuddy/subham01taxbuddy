@@ -8,6 +8,7 @@ import { MatSelectComponent } from './mat-select.component';
 import { MaterialModule } from './material.module';
 import { AgGridMaterialSelectEditorComponent } from './dropdown.component';
 import { CommonModule } from '@angular/common';
+import { MatInputComponent } from './mat-input.component';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { CommonModule } from '@angular/common';
         NumericEditor,
         CustomDateComponent,
         MatSelectComponent,
+        MatInputComponent,
         AgGridMaterialSelectEditorComponent
     ],
     imports: [
@@ -24,7 +26,7 @@ import { CommonModule } from '@angular/common';
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
-        AgGridModule.withComponents([NumericEditor, CustomDateComponent ,AgGridMaterialSelectEditorComponent]),  //MatSelectComponent
+        AgGridModule.withComponents([NumericEditor, CustomDateComponent, AgGridMaterialSelectEditorComponent, MatInputComponent]),  //MatSelectComponent
     ],
     exports: [
         CommonModule,
@@ -35,6 +37,7 @@ import { CommonModule } from '@angular/common';
         CustomDateComponent,
         MatSelectComponent,
         AgGridModule,
+        MatInputComponent,
         AgGridMaterialSelectEditorComponent
     ],
     providers: [],
