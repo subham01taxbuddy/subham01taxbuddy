@@ -32,6 +32,22 @@ export class UserMsService {
     // .map(response => response.json())
   }
 
+  getUserDetail(...param) {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json'); 
+    return this.httpClient.get(environment.url +'/user'+param[0], { headers: this.headers });
+  }
+
+  sentChatMessage(...param) {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json'); 
+    let body={
+      "textMessage" : param[0],
+      "whatsAppNumber" : param[1]
+    }
+    return this.httpClient.post(environment.url +'/user/send-text-message', body, { headers: this.headers });
+  }
+
   patchMethod<T>(...param): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');

@@ -1,0 +1,142 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="main clearfix">
+  <div class="content content_full">
+    <div class="content__container">
+      <div class="card">
+        <div class="card__row">
+          <button *ngIf="this.selectedUser" mat-raised-button color="primary"
+            (click)="geUserChatDetail(selectedUser)" class="refreshBtn" style="float: right;">Refresh</button>
+          <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 10px;">
+            <div class="card__col-lg-3">
+              <mat-form-field appearance="outline">
+                <input matInput [formControl]="searchNumber" placeholder="Search User" required
+                  (keyup)="searchMyNumber()">
+              </mat-form-field>
+              <br>
+              <ul *ngFor="let user of filteredArray">
+                <li style="padding: 10px;" (click)="geUserChatDetail(user)"><a
+                    style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user.fName}} {{user.lName}}</a> <br>
+                  <span style="font-size: 11px; padding-left: 30px;">{{user.whatsAppNumber}}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card__col-md-9">
+              <mat-accordion *ngIf="this.selectedUser">
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <b> {{selectedUser.fName}} {{selectedUser.lName}}</b>
+                    </mat-panel-title>
+                    <!-- <mat-panel-description>
+                        Type your name and age
+                      </mat-panel-description> -->
+                  </mat-expansion-panel-header>
+                  <div class="card__row">
+                    <div class="card__col-lg-2">
+                      <label><b>User Id: </b></label>
+                      {{selectedUser.userId}}
+                    </div>
+                    <div class="card__col-lg-3">
+                      <label><b>User Name: </b></label>
+                      {{selectedUser.fName}}
+                    </div>
+                    <div class="card__col-lg-4">
+                      <label><b>Phone Number: </b></label>
+                      {{selectedUser.whatsAppNumber}}
+                    </div>
+                    <div class="card__col-lg-3">
+                      <label><b>Services Availed: </b></label>
+                      {{serviceAvailedInfo}}
+                    </div>
+                  </div>
+                  <div class="card__row">
+                    <div class="card__col-lg-3">
+                      <label><b>Consent Status: </b></label>
+                      {{selectedUser.isUserOpted ? 'Opt-in' : 'Opt-out'}}
+                    </div>
+                    <div class="card__col-lg-3">
+                      <label><b>Ticket Owner: </b></label>
+                      {{smeInfo.USER_MOBILE !== "0014082016"? smeInfo.USER_F_NAME : 'NA'}}
+                    </div>
+                    <div class="card__col-lg-3">
+                      <label><b>Chat Window Timer: </b></label>
+                      Not applicable
+                    </div>
+                    <div class="card__col-lg-3">
+                      <label><b>Conversation Status: </b></label>
+                      Not applicable
+                    </div>
+                  </div>
+
+                </mat-expansion-panel>
+
+              </mat-accordion><br>
+
+              <div class="chat-box" *ngIf="this.selectedUser">
+                <div class="chat-header">
+                  Chat Corner:
+                </div>
+
+                <div class="card_body" *ngIf="this.userchatData">
+                  <div class="card__row" *ngFor="let data of userchatData">
+                    <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
+
+                      <span class="self" *ngIf="!data.isReceived">
+                        {{data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent:(data.mediaId? this.showLink(data.mediaId):''))}}<br>
+                        <b style="float: right; padding-top:5px; font-size: 11px;"
+                          *ngIf="!data.isReceived">{{this.getChatTime(data.dateLong)}}</b>
+                      </span>
+
+
+                    </div>
+                    <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
+                      <span class="sender"
+                        *ngIf="data.isReceived && !data.mediaId">{{data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent:(data.mediaId? this.showLink(data.mediaId):''))}}<br>
+                        <b style="float: left; padding-top:5px; font-size: 11px;"
+                          *ngIf="data.isReceived && !data.mediaId">{{this.getChatTime(data.dateLong)}}</b>
+                      </span>
+
+                      <span class="sender"
+                        *ngIf="data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)"><img
+                          (click)="downloadDoc(data.mediaId)" alt="Not Show"
+                          src="https://uat-api.taxbuddy.com/user/download-media-file?mediaId={{data.mediaId}}"><br>
+                        <b style="float: left; padding-top:5px; font-size: 11px;"
+                          *ngIf="data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)">{{this.getChatTime(data.dateLong)}}</b>
+                      </span>
+
+                      <span class="sender" *ngIf="data.isReceived && data.mediaId && this.checkImgType(data.mimeType)"
+                        (click)="downloadDoc(data.mediaId)">
+                        <i class="fa fa-file-pdf-o fa-5x" aria-hidden="true"> </i><br>
+                        <b style="padding-top: 5px;">{{data.fileName}}</b><br>
+                        <b style="float: left; padding-top:5px; font-size: 11px;"
+                          *ngIf="data.isReceived && data.mediaId && this.checkImgType(data.mimeType)">{{this.getChatTime(data.dateLong)}}</b>
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+
+
+                <div class="chat-footer msger-inputarea">
+                  <!-- <form (ngSubmit)="sentMsg(f)" #f="ngForm" class="msger-inputarea"> -->
+                  <div class="card__col-lg-10 card__col-sm-6">
+                    <mat-form-field appearance="outline">
+                      <input matInput [formControl]="sentMessage" name="sentMsg" (blur)="sentMsg()"
+                        placeholder="Enter your message...">
+                    </mat-form-field>
+                  </div>
+                  <div class="card__col-lg-2 card__col-sm-6">
+                    <button mat-raised-button color="primary" (click)="sentMsg()">Sent</button>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

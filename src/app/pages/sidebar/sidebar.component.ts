@@ -20,6 +20,7 @@
 import { Component, OnInit, DoCheck } from '@angular/core';
 import { NavbarService } from '../../services/navbar.service';
 import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -30,7 +31,7 @@ export class SidebarComponent implements OnInit {
 
   showSidebar: boolean;
   loggedInUserData: any;
-  constructor(private navbarService: NavbarService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService) {
+  constructor(private navbarService: NavbarService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService, private route: Router) {
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
   }
 
@@ -47,5 +48,10 @@ export class SidebarComponent implements OnInit {
 
   isApplicable(permissionRoles) {
     return this.roleBaseAuthGaurdService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
+  }
+
+
+  chatCorner(){
+    this.route.navigate(['/pages/chat-corner'])
   }
 }

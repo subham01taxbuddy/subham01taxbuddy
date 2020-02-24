@@ -289,7 +289,7 @@ export class BusinessProfileComponent implements OnInit {
   getStateName(stateName){
     console.log(stateName)
     console.log(this.state_list)
-   return this.state_list.find(item=> item.name == stateName).stateMasterCode
+   return this.state_list.find(item=> (item.name).toLowerCase() == stateName.toLowerCase()).stateMasterCode
   }
 
   getAddress(partyInfo) {
@@ -465,8 +465,8 @@ export class BusinessProfileComponent implements OnInit {
       });
     } else {
       this._toastMessageService.alert("error", "Please fill mandatory fillds.");
-      $('input.ng-invalid').first().focus();
-      return
+      // $('input.ng-invalid').first().focus();
+      // return
     }
 
   }
