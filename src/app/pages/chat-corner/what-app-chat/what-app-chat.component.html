@@ -5,8 +5,8 @@
     <div class="content__container">
       <div class="card">
         <div class="card__row">
-          <button *ngIf="this.selectedUser" mat-raised-button color="primary"
-            (click)="geUserChatDetail(selectedUser)" class="refreshBtn" style="float: right;">Refresh</button>
+          <button *ngIf="this.selectedUser" mat-raised-button color="primary" (click)="geUserChatDetail(selectedUser)"
+            class="refreshBtn" style="float: right;">Refresh</button>
           <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 10px;">
             <div class="card__col-lg-3">
               <mat-form-field appearance="outline">
@@ -16,7 +16,8 @@
               <br>
               <ul *ngFor="let user of filteredArray">
                 <li style="padding: 10px;" (click)="geUserChatDetail(user)"><a
-                    style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user.fName}} {{user.lName}}</a> <br>
+                    style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user.fName}}
+                    {{user.lName}}</a> <br>
                   <span style="font-size: 11px; padding-left: 30px;">{{user.whatsAppNumber}}</span>
                 </li>
               </ul>
@@ -83,22 +84,25 @@
                     <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
 
                       <span class="self" *ngIf="!data.isReceived">
+                        <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br>
                         {{data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent:(data.mediaId? this.showLink(data.mediaId):''))}}<br>
                         <b style="float: right; padding-top:5px; font-size: 11px;"
-                          *ngIf="!data.isReceived">{{this.getChatTime(data.dateLong)}}</b>
+                          *ngIf="!data.isReceived">{{this.getChatTime(data.dateLong)}} </b>
                       </span>
 
 
                     </div>
                     <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
-                      <span class="sender"
-                        *ngIf="data.isReceived && !data.mediaId">{{data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent:(data.mediaId? this.showLink(data.mediaId):''))}}<br>
+                      <span class="sender" *ngIf="data.isReceived && !data.mediaId">
+                        <b style="float: left;">{{selectedUser.fName}}</b><br>
+                        {{data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent:(data.mediaId? this.showLink(data.mediaId):''))}}<br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
-                          *ngIf="data.isReceived && !data.mediaId">{{this.getChatTime(data.dateLong)}}</b>
+                          *ngIf="data.isReceived && !data.mediaId"> {{this.getChatTime(data.dateLong)}}</b>
                       </span>
 
                       <span class="sender"
-                        *ngIf="data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)"><img
+                        *ngIf="data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)">
+                        <b style="float: left;">{{selectedUser.fName}}</b><br><img
                           (click)="downloadDoc(data.mediaId)" alt="Not Show"
                           src="https://uat-api.taxbuddy.com/user/download-media-file?mediaId={{data.mediaId}}"><br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
@@ -107,6 +111,7 @@
 
                       <span class="sender" *ngIf="data.isReceived && data.mediaId && this.checkImgType(data.mimeType)"
                         (click)="downloadDoc(data.mediaId)">
+                        <b style="float: left;">{{selectedUser.fName}}</b><br>
                         <i class="fa fa-file-pdf-o fa-5x" aria-hidden="true"> </i><br>
                         <b style="padding-top: 5px;">{{data.fileName}}</b><br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
@@ -120,19 +125,48 @@
 
                 <div class="chat-footer msger-inputarea">
                   <!-- <form (ngSubmit)="sentMsg(f)" #f="ngForm" class="msger-inputarea"> -->
-                  <div class="card__col-lg-10 card__col-sm-6">
-                    <mat-form-field appearance="outline">
-                      <input matInput [formControl]="sentMessage" name="sentMsg" (blur)="sentMsg()"
-                        placeholder="Enter your message...">
-                    </mat-form-field>
-                  </div>
-                  <div class="card__col-lg-2 card__col-sm-6">
-                    <button mat-raised-button color="primary" (click)="sentMsg()">Sent</button>
-                  </div>
+                  <form>
+                    <div class="card__col-lg-3 card__col-sm-4">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Select Template</mat-label>
+                        <mat-select placeholder="Select Template" [formControl]="selectTemplate" #selectTemp
+                          [disabled]="(sentMessage.value && !selectTemplate.value) ? true: false" (selectionChange)="showTemplateMsg($event)">
+                          <mat-option *ngFor="let temp of templateInfo" [value]="temp.templateName">
+                            {{temp.templateName}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-7 card__col-sm-4" *ngIf="!this.selectTemplate.value">
+                      <mat-form-field appearance="outline">
+                        <input matInput [formControl]="sentMessage" name="sentMsg" placeholder="Enter your message...">
+                      </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-7 card__col-sm-4" *ngIf="this.selectTemplate.value">
+                      <mat-form-field appearance="outline">
+                        <textarea matInput [formControl]="sentMessage" cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="9"
+                          name="sentMsg" placeholder="Enter your message..."></textarea>
+                      </mat-form-field>
+                    </div>
+                    <!-- <div class="card__col-lg-1 card__col-sm-4">
+                      <button  (click)="sentMsg()">Sent</button>
+                    </div> -->
+                    <div class="card__col-lg-1 card__col-sm-4">
+                      <button mat-raised-button color="primary" (click)="sentMsg()">Send</button>  <!--mat-raised-button color="primary"-->
+                    </div><br>
 
+                    <!-- <div class="card_row"> -->
+                    <!-- <div class="card__col-lg-12 card__col-sm-12" *ngIf="selectTemplate.value">
+                      <mat-form-field appearance="outline">
+                        <textarea matInput name="sentMsg" [formControl]="selectTemplate"></textarea>
+                      </mat-form-field>
+                    </div> -->
+                  </form>
+                  <!-- </div> -->
                 </div>
 
               </div>
+
             </div>
 
           </div>

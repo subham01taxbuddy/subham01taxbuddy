@@ -41,11 +41,7 @@ export class UserMsService {
   sentChatMessage(...param) {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json'); 
-    let body={
-      "textMessage" : param[0],
-      "whatsAppNumber" : param[1]
-    }
-    return this.httpClient.post(environment.url +'/user/send-text-message', body, { headers: this.headers });
+    return this.httpClient.post(environment.url +param[0], param[1], { headers: this.headers });
   }
 
   patchMethod<T>(...param): Observable<T> {

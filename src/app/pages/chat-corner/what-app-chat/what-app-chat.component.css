@@ -26,17 +26,26 @@
 }
 
 .msger-inputarea {
-  display: flex;
+  /* display: flex; */
+  display: flow-root;
   padding: 10px;
   border-top: var(--border);
   background: #eee;
 }
 
-.msger-input {
+.temp-inputarea{
+  display: flex;
+  padding: 0px 20px 0px 20px;
+  border-top: var(--border);
+  background: #eee;
+}
+
+/* .msger-input {
   flex: 1;
   background: #ddd;
   height: 30px;
-}
+} */
+
 .msger-send-btn {
   margin-left: 10px;
   background: rgb(0, 196, 65);
@@ -107,4 +116,12 @@ li a.active {
   float: right;
   margin-top: 0 !important;
   /* padding: 10px; */
+}
+
+.sendBtn{
+  background-color: #63B12D;
+  height: 36px;
+  width: 50px;
+  border-radius: 6px;
+  color: #eee;
 }
