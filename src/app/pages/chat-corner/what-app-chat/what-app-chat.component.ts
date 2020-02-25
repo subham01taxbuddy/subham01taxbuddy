@@ -271,8 +271,8 @@ export class WhatAppChatComponent implements OnInit {
         attributes.push(this.smeInfo.USER_MOBILE)
       }
       else if (tempMessage.attributes[i] === 'whatsAppContactLink') {
-        // let whatsAppLink = 'https://wa.me/+91' + this.smeInfo.USER_MOBILE + '/?text=hello'
-        let whatsAppLink = 'https://wa.me/+919545428497/?text=hello'
+       let whatsAppLink = 'https://wa.me/+91' + this.smeInfo.USER_MOBILE + '/?text=hello'
+       // let whatsAppLink = 'https://wa.me/+919545428497/?text=hello'
         attributes.push(whatsAppLink)
       }
       else if (tempMessage.attributes[i] === 'appLink') {
@@ -283,4 +283,5 @@ export class WhatAppChatComponent implements OnInit {
     console.log('attributes: ', attributes)
     return attributes;
   }
+
 }
