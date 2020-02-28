@@ -16,8 +16,9 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 import { Component } from '@angular/core';
+// import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -25,5 +26,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  // timer: any;
   title = 'app works!';
+
+  // constructor() {
+  
+  //   this.timer = interval(5000)
+  //   this.timer.subscribe(()=>{
+  //     //alert('What app chat')
+  //   })
+  // }
+
+  // ngOnInit() {
+    
+  // }
 }

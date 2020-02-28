@@ -58,8 +58,8 @@ export class WhatAppChatComponent implements OnInit, AfterViewChecked {
   }
 
   getUserDetail() {
-    //let smeMobNo = '9767374273';     //'8879882025'
-    let param = '/user-whatsapp-detail?smeMobileNumber=8669304341'      //+this.smeInfo.USER_MOBILE;
+    //let smeMobNo = '9767374273';     //'8669304341'
+    let param = '/user-whatsapp-detail?smeMobileNumber='+this.smeInfo.USER_MOBILE;      //;
     this.loading = true;
     this.userService.getUserDetail(param).subscribe((res) => {
       console.log(res)
