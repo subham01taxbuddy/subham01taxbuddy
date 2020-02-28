@@ -21,10 +21,6 @@
 }
 
 
-.chat-body{
- padding: 10px;
-}
-
 .msger-inputarea {
   /* display: flex; */
   display: flow-root;
@@ -121,7 +117,41 @@ li a.active {
 .sendBtn{
   background-color: #63B12D;
   height: 36px;
-  width: 50px;
+  width: auto;
   border-radius: 6px;
   color: #eee;
+}
+.wrapper{
+  display: grid;
+    grid-template-columns: 1fr 0;
+}
+
+.icon{
+  width: 40px;
+  position: relative;
+  right: 45px;
+  font-size: 35px;
+  line-height: 40px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.newUserMsg{
+  font-weight: bold;
+}
+
+.closeBtn{
+  background-color: #6a6a67;
+  height: 36px;
+  width: auto;
+  border-radius: 6px;
+  color: #eee;
+}
+
+.selectedUser{
+  background-color: #6a6a67;
+}
+
+#cardBody{
+  height: 500px;
 }

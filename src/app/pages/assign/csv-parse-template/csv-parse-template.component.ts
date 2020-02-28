@@ -158,7 +158,7 @@ export class CSVParseTemplateComponent implements OnInit {
     //const fileList = $event.FileList;
     this.parseCsvFile(fileList[0]);
     this.excelTamplateForm.controls['upload'].setValue(fileList[0]);
-    console.log(this.excelTamplateForm)
+    console.log(this.excelTamplateForm.controls['upload'].value)
   }
   parseCsvFile(file) {
     this.papa.parse(file, {

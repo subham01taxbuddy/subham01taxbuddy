@@ -5,29 +5,29 @@
     <div class="content__container">
       <div class="card">
         <div class="card__row">
-          <button *ngIf="this.selectedUser" mat-raised-button color="primary" (click)="geUserChatDetail(selectedUser)"
-            class="refreshBtn" style="float: right;">Refresh</button>
+          <!-- <button *ngIf="this.selectedUser" mat-raised-button color="primary" (click)="geUserChatDetail(selectedUser)"
+            class="refreshBtn" style="float: right;">Refresh</button> -->
           <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 10px;">
             <div class="card__col-lg-3">
               <mat-form-field appearance="outline">
                 <input matInput [formControl]="searchNumber" placeholder="Search User" required
-                  (keyup)="searchMyNumber()">
+                  (keyup)="searchMyNumber()" autocomplete="off">
               </mat-form-field>
               <br>
               <ul *ngFor="let user of filteredArray">
-                <li style="padding: 10px;" (click)="geUserChatDetail(user)"><a
-                    style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user.fName}}
-                    {{user.lName}}</a> <br>
+                <li [class.newUserMsg]="user.lastUnreadMessageDateTime !== 0" style="padding: 10px;" (click)="geUserChatDetail(user)">
+                  <span *ngIf="user.lastUnreadMessageDateTime !== 0" >*</span>
+                  <a style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user.name}}</a><br>
                   <span style="font-size: 11px; padding-left: 30px;">{{user.whatsAppNumber}}</span>
                 </li>
-              </ul>
+              </ul> 
             </div>
             <div class="card__col-md-9">
               <mat-accordion *ngIf="this.selectedUser">
                 <mat-expansion-panel>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
-                      <b> {{selectedUser.fName}} {{selectedUser.lName}}</b>
+                      <b> {{selectedUser.name}}</b>
                     </mat-panel-title>
                     <!-- <mat-panel-description>
                         Type your name and age
@@ -40,7 +40,7 @@
                     </div>
                     <div class="card__col-lg-3">
                       <label><b>User Name: </b></label>
-                      {{selectedUser.fName}}
+                      {{selectedUser.name}}
                     </div>
                     <div class="card__col-lg-4">
                       <label><b>Phone Number: </b></label>
@@ -79,31 +79,46 @@
                   Chat Corner:
                 </div>
 
-                <div class="card_body" *ngIf="this.userchatData">
+                <div class="card_body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
                   <div class="card__row" *ngFor="let data of userchatData">
-                    <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
+                    <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12" >
 
-                      <span class="self" *ngIf="!data.isReceived">
+                      <span class="self" *ngIf="!data.isReceived && !data.mediaId">
                         <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br>
-                        {{data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent:(data.mediaId? this.showLink(data.mediaId):''))}}<br>
+                        {{ data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent: '')}}<br>  <!--(data.mediaId? this.showLink(data.mediaId):'')-->
                         <b style="float: right; padding-top:5px; font-size: 11px;"
                           *ngIf="!data.isReceived">{{this.getChatTime(data.dateLong)}} </b>
                       </span>
 
+                      <span class="self" *ngIf="!data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)">
+                        <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br><img (click)="downloadDoc(data.mediaId)"
+                          alt="Not Show"
+                          src="https://uat-api.taxbuddy.com/user/download-media-file?mediaId={{data.mediaId}}"><br>
+                        <b style="float: right; padding-top:5px; font-size: 11px;"
+                          *ngIf="!data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)">{{this.getChatTime(data.dateLong)}}</b>
+                      </span>
+
+                      <span class="self" *ngIf="!data.isReceived && data.mediaId && this.checkImgType(data.mimeType)"
+                        (click)="downloadDoc(data.mediaId)">
+                        <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br>
+                        <i class="fa fa-file-pdf-o fa-5x" aria-hidden="true"> </i><br>
+                        <b style="padding-top: 5px;">{{data.fileName}}</b><br>
+                        <b style="float: right; padding-top:5px; font-size: 11px;"
+                          *ngIf="!data.isReceived && data.mediaId && this.checkImgType(data.mimeType)">{{this.getChatTime(data.dateLong)}}</b>
+                      </span>
 
                     </div>
                     <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
                       <span class="sender" *ngIf="data.isReceived && !data.mediaId">
-                        <b style="float: left;">{{selectedUser.fName}}</b><br>
+                        <b style="float: left;">{{selectedUser.name}}</b><br>
                         {{data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent:(data.mediaId? this.showLink(data.mediaId):''))}}<br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
                           *ngIf="data.isReceived && !data.mediaId"> {{this.getChatTime(data.dateLong)}}</b>
                       </span>
 
-                      <span class="sender"
-                        *ngIf="data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)">
-                        <b style="float: left;">{{selectedUser.fName}}</b><br><img
-                          (click)="downloadDoc(data.mediaId)" alt="Not Show"
+                      <span class="sender" *ngIf="data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)">
+                        <b style="float: left;">{{selectedUser.name}}</b><br><img (click)="downloadDoc(data.mediaId)"
+                          alt="Not Show"
                           src="https://uat-api.taxbuddy.com/user/download-media-file?mediaId={{data.mediaId}}"><br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
                           *ngIf="data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)">{{this.getChatTime(data.dateLong)}}</b>
@@ -111,7 +126,7 @@
 
                       <span class="sender" *ngIf="data.isReceived && data.mediaId && this.checkImgType(data.mimeType)"
                         (click)="downloadDoc(data.mediaId)">
-                        <b style="float: left;">{{selectedUser.fName}}</b><br>
+                        <b style="float: left;">{{selectedUser.name}}</b><br>
                         <i class="fa fa-file-pdf-o fa-5x" aria-hidden="true"> </i><br>
                         <b style="padding-top: 5px;">{{data.fileName}}</b><br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
@@ -125,42 +140,59 @@
 
                 <div class="chat-footer msger-inputarea">
                   <!-- <form (ngSubmit)="sentMsg(f)" #f="ngForm" class="msger-inputarea"> -->
-                  <form>
+                  <form [formGroup]="whatsAppForm">
                     <div class="card__col-lg-3 card__col-sm-4">
                       <mat-form-field appearance="outline">
                         <mat-label>Select Template</mat-label>
-                        <mat-select placeholder="Select Template" [formControl]="selectTemplate" #selectTemp
-                          [disabled]="(sentMessage.value && !selectTemplate.value) ? true: false" (selectionChange)="showTemplateMsg($event)">
+                        <mat-select placeholder="Select Template" formControlName="selectTemplate" #selectTemp
+                          [disabled]="(this.whatsAppForm.controls['sentMessage'].value && !this.whatsAppForm.controls['selectTemplate'].value) ? true: false"
+                          (selectionChange)="showTemplateMsg($event)">
                           <mat-option *ngFor="let temp of templateInfo" [value]="temp.templateName">
                             {{temp.templateName}}
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>
-                    <div class="card__col-lg-7 card__col-sm-4" *ngIf="!this.selectTemplate.value">
+
+                    <!-- <div class="card__col-lg-7 card__col-sm-4"
+                      *ngIf="!this.whatsAppForm.controls['selectTemplate'].value">
                       <mat-form-field appearance="outline">
-                        <input matInput [formControl]="sentMessage" name="sentMsg" placeholder="Enter your message...">
+                        <input matInput formControlName="sentMessage" name="sentMsg"
+                          placeholder="Enter your message...">
                       </mat-form-field>
-                    </div>
-                    <div class="card__col-lg-7 card__col-sm-4" *ngIf="this.selectTemplate.value">
-                      <mat-form-field appearance="outline">
-                        <textarea matInput [formControl]="sentMessage" cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="9"
-                          name="sentMsg" placeholder="Enter your message..."></textarea>
-                      </mat-form-field>
-                    </div>
-                    <!-- <div class="card__col-lg-1 card__col-sm-4">
-                      <i class="fa fa-cloud-upload" (click)="uploadFile()" style="font-size:30px"></i>
                     </div> -->
-                    <div class="card__col-lg-1 card__col-sm-4">
-                      <button mat-raised-button color="primary" (click)="sentMsg()">Send</button>  <!--mat-raised-button color="primary"-->
+
+                    <div class="card__col-lg-7 card__col-sm-4">  <!--*ngIf="this.whatsAppForm.controls['selectTemplate'].value"-->
+                      <mat-form-field appearance="outline">
+                        <textarea matInput formControlName="sentMessage" cdkTextareaAutosize cdkAutosizeMinRows="1"
+                          cdkAutosizeMaxRows="9" name="sentMsg" placeholder="Enter your message..."></textarea>
+                        <mat-error *ngIf="this.whatsAppForm.controls['sentMessage'].hasError('fillmandate')">
+                          Please fill all attributes values.
+                        </mat-error>
+                      </mat-form-field>
                     </div>
 
-                    <!-- <div class="card_row"> -->
-                    <!-- <div class="card__col-lg-12 card__col-sm-12" *ngIf="selectTemplate.value">
-                      <mat-form-field appearance="outline">
-                        <textarea matInput name="sentMsg" [formControl]="selectTemplate"></textarea>
-                      </mat-form-field>
-                    </div> -->
+                   
+                    <div class="card__col-lg-2 card__col-sm-4">
+                      <button class="sendBtn" (click)="sendMsg()">Send</button>
+                    </div><br>
+
+                    <div class="card__col-lg-3 card__col-sm-4">
+                      <input type="file" hidden id="input-file-id" #file
+                        (change)="uploadMideaFile($event.target.files)">
+                      <button class="sendBtn" (click)="upload()"
+                        [disabled]="((this.whatsAppForm.controls['sentMessage'].value || this.whatsAppForm.controls['selectTemplate'].value) ? true : false) ">
+                        <!-- <i class="fa fa-cloud-upload" style="font-size: 15px;"></i> -->
+                        Upload Media File
+                      </button>
+                    </div>
+
+                    <div class="card__col-lg-9 card__col-sm-8" *ngIf="whatsAppForm.controls['mediaFile'].value">
+                      <label>{{whatsAppForm.controls['mediaFile'].value.name}}</label>&nbsp;&nbsp;
+                      <button class="closeBtn" (click)="clearFile()">Close</button>
+                    </div>
+
+
                   </form>
                   <!-- </div> -->
                 </div>
