@@ -5,8 +5,8 @@
     <div class="content__container">
       <div class="card">
         <div class="card__row">
-          <!-- <button *ngIf="this.selectedUser" mat-raised-button color="primary" (click)="geUserChatDetail(selectedUser)"
-            class="refreshBtn" style="float: right;">Refresh</button> -->
+          <button *ngIf="this.selectedUser" mat-raised-button color="primary" (click)="geUserChatDetail(selectedUser)"
+            class="refreshBtn" style="float: right;">Refresh</button>
           <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 10px;">
             <div class="card__col-lg-3">
               <mat-form-field appearance="outline">
@@ -15,8 +15,8 @@
               </mat-form-field>
               <br>
               <ul *ngFor="let user of filteredArray">
-                <li [class.newUserMsg]="user.lastUnreadMessageDateTime !== 0" style="padding: 10px;" (click)="geUserChatDetail(user)">
-                  <span *ngIf="user.lastUnreadMessageDateTime !== 0" >*</span>
+                <li [class.newUserMsg]="user.isRead === false" style="padding: 10px;" (click)="geUserChatDetail(user)">
+                  <span *ngIf="user.isRead === false" >*</span>
                   <a style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user.name}}</a><br>
                   <span style="font-size: 11px; padding-left: 30px;">{{user.whatsAppNumber}}</span>
                 </li>
