@@ -1,9 +1,10 @@
-import { Component, OnInit, SimpleChanges, ViewChild, ElementRef, AfterViewChecked, } from '@angular/core';
+import { Component, OnInit, SimpleChanges, ViewChild, ElementRef, } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { UserMsService } from 'app/services/user-ms.service';
 import { environment } from 'environments/environment';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UtilsService } from 'app/services/utils.service';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-what-app-chat',
@@ -11,7 +12,7 @@ import { UtilsService } from 'app/services/utils.service';
   styleUrls: ['./what-app-chat.component.css'],
   //encapsulation: ViewEncapsulation.None
 })
-export class WhatAppChatComponent implements OnInit, AfterViewChecked {
+export class WhatAppChatComponent implements OnInit {
 
 
   loading: boolean;
@@ -22,6 +23,9 @@ export class WhatAppChatComponent implements OnInit, AfterViewChecked {
   serviceAvailedInfo: any;
   templateInfo: any;
   tempArrributes: any;
+  userTimer: any;
+  userLastMsgTime: any;
+  userFetchChatTimer: any;
   oldAttributes: any = [];
   newAttributes: any = [];
   whatsAppForm: FormGroup;
@@ -31,6 +35,18 @@ export class WhatAppChatComponent implements OnInit, AfterViewChecked {
     public utileService: UtilsService) {
     this.smeInfo = JSON.parse(localStorage.getItem('UMD'));
     console.log("SME info: ", this.smeInfo)
+
+    this.userTimer = interval(5000)
+    this.userTimer.subscribe(() => {
+      this.getUserDetail('continues');
+    })
+
+    // this.userFetchChatTimer = interval(6000)
+    // this.userFetchChatTimer.subscribe(() => {
+    //   if (this.selectedUser) {
+    //     this.geUserChatDetail(this.selectedUser, 'continues');
+    //   }
+    // })
   }
 
   ngOnInit() {
@@ -39,14 +55,9 @@ export class WhatAppChatComponent implements OnInit, AfterViewChecked {
       selectTemplate: [''],
       mediaFile: ['']
     })
-    this.getUserDetail();
+    this.getUserDetail('not-continues');
     this.getTemplateInfo();
   }
-
-  ngAfterViewChecked() {
-    // this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-  }
-
 
   filteredArray: any;
   searchMyNumber() {
@@ -57,10 +68,15 @@ export class WhatAppChatComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  getUserDetail() {
-    //let smeMobNo = '9767374273';     //'8669304341'
-    let param = '/user-whatsapp-detail?smeMobileNumber='+this.smeInfo.USER_MOBILE;      //;
-    this.loading = true;
+  getUserDetail(apicall) {
+    let smeMobNo = '9767374273';     //'8669304341'
+    let param = '/user-whatsapp-detail?smeMobileNumber='  //+this.smeInfo.USER_MOBILE;      ;
+    if (apicall === 'continues') {
+      this.loading = false;
+    } else {
+      this.loading = true;
+    }
+    console.log('Here we getting SME whatsapp users info')
     this.userService.getUserDetail(param).subscribe((res) => {
       console.log(res)
       this.loading = false;
@@ -95,31 +111,40 @@ export class WhatAppChatComponent implements OnInit, AfterViewChecked {
       })
   }
 
-  geUserChatDetail(user) {
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      left: 0,
-      behavior: 'smooth'
-    });
+  geUserChatDetail(user, apicall) {
+    debugger
+    if (apicall !== 'continues') {
+      // window.scrollTo({
+      //   top: document.body.scrollHeight,
+      //   left: 0,
+      //   behavior: 'smooth'
+      // });
 
-    const el: HTMLDivElement = this._el.nativeElement;
-    el.scrollTop = Math.max(0, el.scrollHeight - el.offsetHeight);
+      // const el: HTMLDivElement = this._el.nativeElement;
+      // el.scrollTop = Math.max(0, el.scrollHeight - el.offsetHeight);
 
-    this.whatsAppForm.reset();
-    this.whatsAppForm.controls['selectTemplate'].enable();
-    this.whatsAppForm.controls['sentMessage'].enable();
-    this.selectedUser = user;
-    this.getServicesAvailed(user.userId)
+      this.whatsAppForm.reset();
+      this.whatsAppForm.controls['selectTemplate'].enable();
+      this.whatsAppForm.controls['sentMessage'].enable();
+      this.selectedUser = user;
+      this.loading = true;
+      this.getServicesAvailed(user.userId)
+
+    } else {
+      this.loading = false;
+    }
+
+    console.log('Here we getting selected user chat details')
     let param = '/whatsapp-chat-log?whatsAppNumber=' + user.whatsAppNumber;
-    this.loading = true;
     this.userService.getUserDetail(param).subscribe((res) => {
       console.log(res, typeof res)
       if (Object.entries(res).length > 0) {
         this.loading = false;
         this.userchatData = res;
-        this.getUserDetail();
+        this.getTiemCount(res)
       } else {
         this.loading = false;
+        this.userchatData = [];
         this._toastMessageService.alert("error", "There is no chatting data.");
       }
     },
@@ -204,7 +229,7 @@ export class WhatAppChatComponent implements OnInit, AfterViewChecked {
       formData.append('multipartFile', this.uploadedFile);
       console.log('formData: ', formData)
       let param = '/user/send-media-message';
-
+      this.loading = true;
       console.log(formData)
       this.userService.sentChatMessage(param, formData).subscribe((result) => {
         this.loading = false;
@@ -276,25 +301,13 @@ export class WhatAppChatComponent implements OnInit, AfterViewChecked {
   }
 
   checkImgType(fileName) {
-    if (fileName.includes('pdf')) {
+    if (fileName.includes('ima')) {
       return true;
     } else {
       return false
     }
   }
 
-  getChatTime(longDate) {
-    let d = new Date(longDate)
-    //return d.toLocaleString();
-    var dateStr =
-      ("00" + d.getDate()).slice(-2) + "/" + ("00" + (d.getMonth() + 1)).slice(-2) + "/" +
-      +
-      d.getFullYear() + " " +
-      ("00" + d.getHours()).slice(-2) + ":" +
-      ("00" + d.getMinutes()).slice(-2) + ":" +
-      ("00" + d.getSeconds()).slice(-2);
-    return dateStr;
-  }
 
   getServicesAvailed(userId) {
     console.log('User Id: ', userId)
@@ -351,7 +364,7 @@ export class WhatAppChatComponent implements OnInit, AfterViewChecked {
   }
 
   getTempAttributes(tempMessage) {
-    this.oldAttributes=[];
+    this.oldAttributes = [];
     console.log(tempMessage.attributes)
     for (let i = 0; i < tempMessage.attributes.length; i++) {
       if (tempMessage.attributes[i] === 'name') {
@@ -408,5 +421,14 @@ export class WhatAppChatComponent implements OnInit, AfterViewChecked {
     this.whatsAppForm.controls['mediaFile'].reset();
     this.whatsAppForm.controls['selectTemplate'].enable();
     this.whatsAppForm.controls['sentMessage'].enable();
+  }
+
+  getTiemCount(chatDetail) {
+    this.userLastMsgTime = '';
+    let userChatInfo = chatDetail.filter(item => item.isReceived === true);
+    let length = userChatInfo.length - 1;
+    console.log('date: ', new Date(userChatInfo[length].dateLong))
+    this.userLastMsgTime = new Date(userChatInfo[length].dateLong).toISOString();
+    console.log('userLastMsgTime ', this.userLastMsgTime)
   }
 }

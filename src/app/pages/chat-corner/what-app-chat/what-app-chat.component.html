@@ -5,17 +5,15 @@
     <div class="content__container">
       <div class="card">
         <div class="card__row">
-          <button *ngIf="this.selectedUser" mat-raised-button color="primary" (click)="geUserChatDetail(selectedUser)"
-            class="refreshBtn" style="float: right;">Refresh</button>
           <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 10px;">
-            <div class="card__col-lg-3">
-              <mat-form-field appearance="outline">
+            <div class="card__col-lg-3 userList">
+              <mat-form-field appearance="outline" >
                 <input matInput [formControl]="searchNumber" placeholder="Search User" required
                   (keyup)="searchMyNumber()" autocomplete="off">
               </mat-form-field>
               <br>
               <ul *ngFor="let user of filteredArray">
-                <li [class.newUserMsg]="user.isRead === false" style="padding: 10px;" (click)="geUserChatDetail(user)">
+                <li [class.newUserMsg]="user.isRead === false" style="padding: 10px;" (click)="geUserChatDetail(user, 'not-continues')">
                   <span *ngIf="user.isRead === false" >*</span>
                   <a style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user.name}}</a><br>
                   <span style="font-size: 11px; padding-left: 30px;">{{user.whatsAppNumber}}</span>
@@ -87,25 +85,34 @@
                         <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br>
                         {{ data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent: '')}}<br>  <!--(data.mediaId? this.showLink(data.mediaId):'')-->
                         <b style="float: right; padding-top:5px; font-size: 11px;"
-                          *ngIf="!data.isReceived">{{this.getChatTime(data.dateLong)}} </b>
+                          *ngIf="!data.isReceived"> {{data.dateLong | date:'medium':'+0530'}} </b>
                       </span>
 
-                      <span class="self" *ngIf="!data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)">
+                      <span class="self" *ngIf="!data.isReceived && data.mediaId && data.mimeType.includes('image')">
                         <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br><img (click)="downloadDoc(data.mediaId)"
                           alt="Not Show"
                           src="https://uat-api.taxbuddy.com/user/download-media-file?mediaId={{data.mediaId}}"><br>
                         <b style="float: right; padding-top:5px; font-size: 11px;"
-                          *ngIf="!data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)">{{this.getChatTime(data.dateLong)}}</b>
+                          *ngIf="!data.isReceived && data.mediaId && data.mimeType.includes('image')">{{data.dateLong | date:'medium':'+0530'}}</b>
                       </span>
 
-                      <span class="self" *ngIf="!data.isReceived && data.mediaId && this.checkImgType(data.mimeType)"
+                      <span class="self" *ngIf="!data.isReceived && data.mediaId && data.mimeType.includes('pdf')"
                         (click)="downloadDoc(data.mediaId)">
                         <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br>
                         <i class="fa fa-file-pdf-o fa-5x" aria-hidden="true"> </i><br>
                         <b style="padding-top: 5px;">{{data.fileName}}</b><br>
                         <b style="float: right; padding-top:5px; font-size: 11px;"
-                          *ngIf="!data.isReceived && data.mediaId && this.checkImgType(data.mimeType)">{{this.getChatTime(data.dateLong)}}</b>
+                          *ngIf="!data.isReceived && data.mediaId && data.mimeType.includes('pdf')">{{data.dateLong | date:'medium':'+0530'}}</b>
                       </span>
+
+                      <span class="sender" *ngIf="!data.isReceived && data.mediaId && (!data.mimeType.includes('pdf') && !data.mimeType.includes('image'))"
+                      (click)="downloadDoc(data.mediaId)">
+                      <b style="float: left;">{{selectedUser.name}}</b><br>
+                        Click here to download file<br>
+                      <b style="padding-top: 5px;">{{data.fileName}}</b><br>
+                      <b style="float: left; padding-top:5px; font-size: 11px;"
+                        *ngIf="!data.isReceived && data.mediaId && (!data.mimeType.includes('pdf') && !data.mimeType.includes('image'))">{{data.dateLong | date:'medium':'+0530'}}</b>
+                    </span>
 
                     </div>
                     <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
@@ -113,25 +120,35 @@
                         <b style="float: left;">{{selectedUser.name}}</b><br>
                         {{data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent:(data.mediaId? this.showLink(data.mediaId):''))}}<br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
-                          *ngIf="data.isReceived && !data.mediaId"> {{this.getChatTime(data.dateLong)}}</b>
+                          *ngIf="data.isReceived && !data.mediaId"> {{data.dateLong | date:'medium':'+0530'}}</b>
                       </span>
 
-                      <span class="sender" *ngIf="data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)">
-                        <b style="float: left;">{{selectedUser.name}}</b><br><img (click)="downloadDoc(data.mediaId)"
+                      <span class="sender" *ngIf="data.isReceived && data.mediaId && data.mimeType.includes('image')">
+                        <b style="float: left;">{{selectedUser.name}}</b><br>
+                        <img (click)="downloadDoc(data.mediaId)"
                           alt="Not Show"
                           src="https://uat-api.taxbuddy.com/user/download-media-file?mediaId={{data.mediaId}}"><br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
-                          *ngIf="data.isReceived && data.mediaId && !this.checkImgType(data.mimeType)">{{this.getChatTime(data.dateLong)}}</b>
+                          *ngIf="data.isReceived && data.mediaId && data.mimeType.includes('image')">{{data.dateLong | date:'medium':'+0530'}}</b>
                       </span>
 
-                      <span class="sender" *ngIf="data.isReceived && data.mediaId && this.checkImgType(data.mimeType)"
+                      <span class="sender" *ngIf="data.isReceived && data.mediaId && data.mimeType.includes('pdf')"
                         (click)="downloadDoc(data.mediaId)">
                         <b style="float: left;">{{selectedUser.name}}</b><br>
                         <i class="fa fa-file-pdf-o fa-5x" aria-hidden="true"> </i><br>
                         <b style="padding-top: 5px;">{{data.fileName}}</b><br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
-                          *ngIf="data.isReceived && data.mediaId && this.checkImgType(data.mimeType)">{{this.getChatTime(data.dateLong)}}</b>
+                          *ngIf="data.isReceived && data.mediaId && data.mimeType.includes('pdf')">{{data.dateLong | date:'medium':'+0530'}}</b>
                       </span>
+
+                      <span class="sender" *ngIf="data.isReceived && data.mediaId && (!data.mimeType.includes('pdf') && !data.mimeType.includes('image'))"
+                      (click)="downloadDoc(data.mediaId)">
+                      <b style="float: left;">{{selectedUser.name}}</b><br>
+                        Click here to download file<br>
+                      <b style="padding-top: 5px;">{{data.fileName}}</b><br>
+                      <b style="float: left; padding-top:5px; font-size: 11px;"
+                        *ngIf="data.isReceived && data.mediaId && (!data.mimeType.includes('pdf') && !data.mimeType.includes('image'))">{{data.dateLong | date:'medium':'+0530'}}</b>
+                    </span>
                     </div>
 
                   </div>
@@ -179,7 +196,7 @@
 
                     <div class="card__col-lg-3 card__col-sm-4">
                       <input type="file" hidden id="input-file-id" #file
-                        (change)="uploadMideaFile($event.target.files)">
+                        (change)="uploadMideaFile($event.target.files)" accept=".pdf, .jpeg, .png">
                       <button class="sendBtn" (click)="upload()"
                         [disabled]="((this.whatsAppForm.controls['sentMessage'].value || this.whatsAppForm.controls['selectTemplate'].value) ? true : false) ">
                         <!-- <i class="fa fa-cloud-upload" style="font-size: 15px;"></i> -->
@@ -192,7 +209,8 @@
                       <button class="closeBtn" (click)="clearFile()">Close</button>
                     </div>
 
-
+                    <button *ngIf="this.selectedUser" mat-raised-button color="primary" (click)="geUserChatDetail(selectedUser, 'not-continues')"
+                    class="refreshBtn" style="float: right;">Refresh</button>
                   </form>
                   <!-- </div> -->
                 </div>

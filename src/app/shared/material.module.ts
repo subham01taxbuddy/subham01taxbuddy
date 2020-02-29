@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import {
     MatAutocompleteModule,
     MatButtonModule,
@@ -36,6 +37,7 @@ import {
 
 @NgModule({
     imports: [
+        DragDropModule,
         MatAutocompleteModule,
         MatButtonModule,
         MatButtonToggleModule,
@@ -71,6 +73,7 @@ import {
     ],
     declarations: [],
     exports: [
+        DragDropModule,
         MatAutocompleteModule,
         MatButtonModule,
         MatButtonToggleModule,

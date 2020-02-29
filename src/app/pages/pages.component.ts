@@ -16,9 +16,11 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserMsService } from 'app/services/user-ms.service';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'pages-root',
@@ -26,7 +28,61 @@ import { Router } from '@angular/router';
   styleUrls: ['./pages.component.css']
 })
 export class PagesComponent implements OnInit {
-  constructor(private router: Router) {}
 
-  ngOnInit() {}
+
+  timer: any;
+  userMsgInfo: any;
+  msgCount: any = 0;
+  showNotifivation: boolean = false;
+  routePath: any;
+  //  title = 'app works!';
+
+  constructor(private router: Router, private userService: UserMsService) {
+   this.router.events.subscribe((url:any) => {
+     console.log('Path: ', router.url)
+       this.routePath = router.url;
+    });
+
+
+    this.timer = interval(5000)
+    this.timer.subscribe(() => {
+      this.showWhatsAppNotification()
+    })
+  }
+
+  ngOnInit() {
+    
+  }
+
+  showWhatsAppNotification() {
+    let param = '/user-whatsapp-detail?smeMobileNumber=';   //+this.smeInfo.USER_MOBILE;   
+    if (this.showNotifivation === false && (this.routePath !== '/pages/chat-corner')) {
+      this.userService.getUserDetail(param).subscribe((res) => {
+        this.userMsgInfo = res;
+        console.log(this.userMsgInfo)
+        if (res) {
+          this.msgCount = 0;
+          for (let i = 0; i < this.userMsgInfo.length; i++) {
+            if (this.userMsgInfo[i].isRead === false) {
+              this.msgCount = this.msgCount + 1;
+            }
+          }
+
+          if (this.msgCount > 0) {
+            this.showNotifivation = true;
+          } else {
+            this.showNotifivation = false;
+          }
+        }
+      },
+        error => {
+          //this._toastMessageService.alert("error", "Failed to tetch chating data.");
+        })
+    }
+
+  }
+
+  closeNotification(){
+    this.showNotifivation = false;
+  }
 }
