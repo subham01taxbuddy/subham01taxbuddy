@@ -25,6 +25,7 @@ export class WhatAppChatComponent implements OnInit {
   tempArrributes: any;
   userTimer: any;
   userLastMsgTime: any;
+  environmentPath: any;
   userFetchChatTimer: any;
   oldAttributes: any = [];
   newAttributes: any = [];
@@ -33,6 +34,7 @@ export class WhatAppChatComponent implements OnInit {
 
   constructor(private _el: ElementRef, private fb: FormBuilder, private userService: UserMsService, private _toastMessageService: ToastMessageService,
     public utileService: UtilsService) {
+    this.environmentPath = environment.url;
     this.smeInfo = JSON.parse(localStorage.getItem('UMD'));
     console.log("SME info: ", this.smeInfo)
 
@@ -247,20 +249,6 @@ export class WhatAppChatComponent implements OnInit {
     }
   }
 
-  // attrChangeIndex: any;
-  // checkAttribueSame(){
-  //   console.log(this.oldAttributes[0])
-  //   console.log(this.oldAttributes, this.newAttributes)
-  //   for(let i=0; i<this.oldAttributes.length; i++){
-  //     if(this.oldAttributes[i] === this.newAttributes[i]){
-  //       return true;
-  //     }else{
-  //       this.attrChangeIndex = i;
-  //       this.editedAttriValidation()
-  //       return false;
-  //     }
-  //   }
-  // }
 
   templateAttribute: any;
   isTemplateValid(templateMsg: String) {
