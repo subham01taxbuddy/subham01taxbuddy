@@ -81,7 +81,7 @@
                   <div class="card__row" *ngFor="let data of userchatData">
                     <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12" >
 
-                      <span class="self" *ngIf="!data.isReceived && !data.mediaId">
+                      <span class="self" *ngIf="!data.isReceived && !data.mediaId && data.messageType !== 'media_template'">
                         <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br>
                         {{ data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent: '')}}<br>  <!--(data.mediaId? this.showLink(data.mediaId):'')-->
                         <b style="float: right; padding-top:5px; font-size: 11px;"
@@ -105,6 +105,14 @@
                           *ngIf="!data.isReceived && data.mediaId && data.mimeType.includes('pdf')">{{data.dateLong | date:'medium':'+0530'}}</b>
                       </span>
 
+                      <span class="self" *ngIf="!data.isReceived && data.messageType === 'media_template'" (click)="downloadDoc(data.mediaId)">
+                        <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br>
+                        <strong> Click here to download Media File</strong><br>
+                        <p style="padding-top: 5px;">{{data.templateContent}}</p><br>
+                        <b style="float: right; padding-top:5px; font-size: 11px;"
+                          *ngIf="!data.isReceived && data.messageType === 'media_template'">{{data.dateLong | date:'medium':'+0530'}}</b>
+                      </span>
+
                       <span class="sender" *ngIf="!data.isReceived && data.mediaId && (!data.mimeType.includes('pdf') && !data.mimeType.includes('image'))"
                       (click)="downloadDoc(data.mediaId)">
                       <b style="float: left;">{{selectedUser.name}}</b><br>
@@ -116,7 +124,7 @@
 
                     </div>
                     <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
-                      <span class="sender" *ngIf="data.isReceived && !data.mediaId">
+                      <span class="sender" *ngIf="data.isReceived && !data.mediaId  && data.messageType !== 'media_template'">
                         <b style="float: left;">{{selectedUser.name}}</b><br>
                         {{data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent:(data.mediaId? this.showLink(data.mediaId):''))}}<br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
@@ -139,6 +147,14 @@
                         <b style="padding-top: 5px;">{{data.fileName}}</b><br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
                           *ngIf="data.isReceived && data.mediaId && data.mimeType.includes('pdf')">{{data.dateLong | date:'medium':'+0530'}}</b>
+                      </span>
+
+                      <span class="self" *ngIf="data.isReceived && data.messageType === 'media_template'" (click)="downloadDoc(data.mediaId)">
+                        <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br>
+                        <strong> Click here to download Media File</strong><br>
+                        <p style="padding-top: 5px;">{{data.templateContent}}</p><br>
+                        <b style="float: right; padding-top:5px; font-size: 11px;"
+                          *ngIf="data.isReceived && data.messageType === 'media_template'">{{data.dateLong | date:'medium':'+0530'}}</b>
                       </span>
 
                       <span class="sender" *ngIf="data.isReceived && data.mediaId && (!data.mimeType.includes('pdf') && !data.mimeType.includes('image'))"

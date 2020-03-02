@@ -114,7 +114,6 @@ export class WhatAppChatComponent implements OnInit {
   }
 
   geUserChatDetail(user, apicall) {
-    debugger
     if (apicall !== 'continues') {
       // window.scrollTo({
       //   top: document.body.scrollHeight,
@@ -203,6 +202,7 @@ export class WhatAppChatComponent implements OnInit {
           }
         }
         console.log('body: ', body)
+        this.loading = true;
         let param = '/user/send-template';
         this.userService.sentChatMessage(param, body).subscribe((result) => {
           this.loading = false;
