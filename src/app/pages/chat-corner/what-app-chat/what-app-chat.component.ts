@@ -4,7 +4,7 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { environment } from 'environments/environment';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UtilsService } from 'app/services/utils.service';
-import { interval } from 'rxjs';
+//import { interval, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-what-app-chat',
@@ -17,7 +17,9 @@ export class WhatAppChatComponent implements OnInit {
 
   loading: boolean;
   userDetail: any;
+  intr: any;
   userchatData: any;
+  backUpChatData: any;
   selectedUser: any;
   smeInfo: any;
   serviceAvailedInfo: any;
@@ -38,10 +40,14 @@ export class WhatAppChatComponent implements OnInit {
     this.smeInfo = JSON.parse(localStorage.getItem('UMD'));
     console.log("SME info: ", this.smeInfo)
 
-    this.userTimer = interval(5000)
-    this.userTimer.subscribe(() => {
+    // this.userTimer = interval(5000);
+    // this.userTimer.subscribe(() => {
+    //   this.getUserDetail('continues');
+    // })
+
+    this.userTimer = setInterval(() => {
       this.getUserDetail('continues');
-    })
+    }, 10000);
 
     // this.userFetchChatTimer = interval(6000)
     // this.userFetchChatTimer.subscribe(() => {
@@ -49,7 +55,15 @@ export class WhatAppChatComponent implements OnInit {
     //     this.geUserChatDetail(this.selectedUser, 'continues');
     //   }
     // })
+
+    this.userFetchChatTimer = setInterval(() => {
+      if (this.selectedUser) {
+        this.geUserChatDetail(this.selectedUser, 'continues');
+      }
+    }, 3000)
   }
+
+
 
   ngOnInit() {
     this.whatsAppForm = this.fb.group({
@@ -59,6 +73,11 @@ export class WhatAppChatComponent implements OnInit {
     })
     this.getUserDetail('not-continues');
     this.getTemplateInfo();
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.userTimer);
+    clearInterval(this.userFetchChatTimer)
   }
 
   filteredArray: any;
@@ -95,7 +114,6 @@ export class WhatAppChatComponent implements OnInit {
   }
 
   getTemplateInfo() {
-    // let param = '/user-whatsapp-detail?smeMobileNumber=9767374273'
     let param = '/template'
     this.loading = true;
     this.userService.getUserDetail(param).subscribe((res) => {
@@ -112,7 +130,7 @@ export class WhatAppChatComponent implements OnInit {
         this._toastMessageService.alert("error", "Failed to tetch chating data.");
       })
   }
-
+  
   geUserChatDetail(user, apicall) {
     if (apicall !== 'continues') {
       // window.scrollTo({
@@ -141,8 +159,22 @@ export class WhatAppChatComponent implements OnInit {
       console.log(res, typeof res)
       if (Object.entries(res).length > 0) {
         this.loading = false;
-        this.userchatData = res;
-        this.getTiemCount(res)
+        if (this.backUpChatData) {
+          if (this.checkFetchInfoSame(res)) {
+
+          } else {
+            this.userchatData = res;
+            this.backUpChatData = this.userchatData;
+          }
+
+        } else {
+          this.userchatData = res;
+          this.backUpChatData = this.userchatData;
+        }
+
+        console.log('backUpChatData: ', this.backUpChatData)
+        console.log('Check here: ', this.checkFetchInfoSame(res))
+        // this.getTiemCount(res)
       } else {
         this.loading = false;
         this.userchatData = [];
@@ -153,6 +185,18 @@ export class WhatAppChatComponent implements OnInit {
         this.loading = false;
         this._toastMessageService.alert("error", "Failed to fetch chating data.");
       })
+  }
+
+  checkFetchInfoSame(fetchedInfo) {
+    // console.log(fetchedInfo, Object.entries(fetchedInfo))
+    // console.log(fetchedInfo.length)
+    // console.log(this.mainChatData.length)
+    // console.log('Equality: ',(Object.entries(fetchedInfo).length === this.mainChatData.length) )
+    if (Object.entries(fetchedInfo).length === this.backUpChatData.length) {
+      return true;
+    } else {
+      return false
+    }
   }
 
   sendMsg() {
@@ -179,10 +223,9 @@ export class WhatAppChatComponent implements OnInit {
     }
     else if (this.whatsAppForm.controls['selectTemplate'].value && this.whatsAppForm.controls['sentMessage'].value) {
       if (this.isTemplateValid(this.whatsAppForm.controls['sentMessage'].value)) {
-        //if(this.checkAttribueSame()){
         let templateMsgInfo = this.templateInfo.find(item => item.templateName === this.whatsAppForm.controls['selectTemplate'].value)
         let body;
-        if (templateMsgInfo.mediaType === null) {
+        if (templateMsgInfo.mediaId === null) {
           body = {
             "whatsAppNumber": this.selectedUser.whatsAppNumber,
             "templateName": templateMsgInfo.templateName,
@@ -195,10 +238,10 @@ export class WhatAppChatComponent implements OnInit {
             "templateName": templateMsgInfo.templateName,
             "attributes": this.newAttributes,
             "templateMessage": this.whatsAppForm.controls['selectTemplate'].value,
-            "mediaType": templateMsgInfo.mediaType,
             "mediaId": templateMsgInfo.mediaId,
             "fileName": templateMsgInfo.fileName,
-            "isMediaTemplate": true
+            "isMediaTemplate": true,
+            "mimeType": templateMsgInfo.mimeType
           }
         }
         console.log('body: ', body)
@@ -207,8 +250,6 @@ export class WhatAppChatComponent implements OnInit {
         this.userService.sentChatMessage(param, body).subscribe((result) => {
           this.loading = false;
           console.log(result)
-          // this.selectTemplate.reset();
-          // this.sentMessage.reset();
           this.whatsAppForm.reset();
           this._toastMessageService.alert("success", "Template sent successfully.");
           this.userchatData = result;

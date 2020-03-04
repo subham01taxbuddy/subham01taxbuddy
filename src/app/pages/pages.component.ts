@@ -38,16 +38,15 @@ export class PagesComponent implements OnInit {
   //  title = 'app works!';
 
   constructor(private router: Router, private userService: UserMsService) {
-   this.router.events.subscribe((url:any) => {
-     console.log('Path: ', router.url)
-       this.routePath = router.url;
-    });
-
-
     this.timer = interval(5000)
     this.timer.subscribe(() => {
       this.showWhatsAppNotification()
     })
+
+    this.router.events.subscribe((url:any) => {
+      console.log('Path: ', router.url)
+        this.routePath = router.url;
+     });
   }
 
   ngOnInit() {
@@ -55,8 +54,9 @@ export class PagesComponent implements OnInit {
   }
 
   showWhatsAppNotification() {
-    let param = '/user-whatsapp-detail?smeMobileNumber=';   //+this.smeInfo.USER_MOBILE;   
-    if (this.showNotifivation === false && (this.routePath !== '/pages/chat-corner')) {
+    let param = '/user-whatsapp-detail?smeMobileNumber=';   //+this.smeInfo.USER_MOBILE;  
+    console.log(this.routePath !== '/pages/chat-corner', this.routePath !== '/login', (this.routePath !== '/pages/chat-corner' && this.routePath !== '/login')) 
+    if (this.showNotifivation === false && (this.routePath !== '/pages/chat-corner' && this.routePath !== '/login')) {
       this.userService.getUserDetail(param).subscribe((res) => {
         this.userMsgInfo = res;
         console.log(this.userMsgInfo)
