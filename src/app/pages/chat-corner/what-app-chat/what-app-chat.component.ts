@@ -109,7 +109,7 @@ export class WhatAppChatComponent implements OnInit {
     },
       error => {
         this.loading = false;
-        this._toastMessageService.alert("error", "Failed to tetch chating data.");
+        this._toastMessageService.alert("error", "Failed to fetch chat data.");
       })
   }
 
@@ -127,7 +127,7 @@ export class WhatAppChatComponent implements OnInit {
     },
       error => {
         this.loading = false;
-        this._toastMessageService.alert("error", "Failed to tetch chating data.");
+        this._toastMessageService.alert("error", "Failed to fetch chat data.");
       })
   }
   
@@ -178,12 +178,12 @@ export class WhatAppChatComponent implements OnInit {
       } else {
         this.loading = false;
         this.userchatData = [];
-        this._toastMessageService.alert("error", "There is no chatting data.");
+        this._toastMessageService.alert("error", "There is no chat data.");
       }
     },
       error => {
         this.loading = false;
-        this._toastMessageService.alert("error", "Failed to fetch chating data.");
+        this._toastMessageService.alert("error", "Failed to fetch chat data.");
       })
   }
 
@@ -358,7 +358,7 @@ export class WhatAppChatComponent implements OnInit {
         if (error.error.title === "Not_found") {
           this.serviceAvailedInfo = 'No plan activated.';
         } else {
-          this._toastMessageService.alert("error", "Failed to tetch chating data.");
+          this._toastMessageService.alert("error", "Failed to fetch chat data.");
         }
       })
   }
