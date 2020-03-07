@@ -161,3 +161,17 @@ li a.active {
 #cardBody{
   height: 500px;
 }
+
+.btnDisable{
+  background: #dddddd;
+  cursor: not-allowed;
+  height: 36px;
+  width: auto;
+  border-radius: 6px;
+  color: #6a6a67;
+}
+
+.disableTestArea{
+  cursor: not-allowed;
+}
+.multi_lines_text { white-space: pre-line; }

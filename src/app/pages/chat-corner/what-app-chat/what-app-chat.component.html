@@ -8,8 +8,8 @@
           <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 10px;">
             <div class="card__col-lg-3 userList">
               <mat-form-field appearance="outline">
-                <input matInput [formControl]="searchNumber" placeholder="Search User" required
-                  (keyup)="searchMyNumber()" autocomplete="off">
+                <input matInput [formControl]="searchNumber" placeholder="Search User" (keyup)="searchMyNumber()"
+                  autocomplete="off">
               </mat-form-field>
               <br>
               <ul *ngFor="let user of filteredArray">
@@ -61,7 +61,9 @@
                     </div>
                     <div class="card__col-lg-3">
                       <label><b>Chat Window Timer: </b></label>
-                      Not applicable
+                      {{timeExpired ? '00:00:00' : (countDown | async)}}
+                      <!-- {{(Math.floor(countDown / (60 * 60))) | async}}:{{(countDown / (60) ) | async}} : {{(countDown % (60) ) | async}} -->
+                      <!-- <span id="timer"></span> -->
                     </div>
                     <div class="card__col-lg-3">
                       <label><b>Conversation Status: </b></label>
@@ -85,7 +87,8 @@
                       <span class="self"
                         *ngIf="!data.isReceived && !data.mediaId && data.messageType !== 'media_template'">
                         <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br>
-                        {{ data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent: '')}}<br>
+                        <!-- {{ data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent: '')}}<br> -->
+                        <p class="multi_lines_text" [innerHTML]="data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent: '')"></p><br>
                         <!--(data.mediaId? this.showLink(data.mediaId):'')-->
                         <b style="float: right; padding-top:5px; font-size: 11px;" *ngIf="!data.isReceived">
                           {{data.dateLong | date:'medium':'+0530'}} </b>
@@ -200,13 +203,13 @@
                       <!--*ngIf="this.whatsAppForm.controls['selectTemplate'].value"-->
                       <mat-form-field appearance="outline">
                         <textarea matInput formControlName="sentMessage" cdkTextareaAutosize cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="9" name="sentMsg" placeholder="Enter your message..."></textarea>
+                          cdkAutosizeMaxRows="9" [class.disableTestArea]="timeExpired" [readOnly]="timeExpired"
+                          name="sentMsg" placeholder="Enter your message..."></textarea>
                         <mat-error *ngIf="this.whatsAppForm.controls['sentMessage'].hasError('fillmandate')">
                           Please fill all attributes values.
                         </mat-error>
                       </mat-form-field>
                     </div>
-
 
                     <div class="card__col-lg-2 card__col-sm-4">
                       <button class="sendBtn" (click)="sendMsg()">Send</button>
@@ -215,8 +218,8 @@
                     <div class="card__col-lg-3 card__col-sm-4">
                       <input type="file" hidden id="input-file-id" #file (change)="uploadMideaFile($event.target.files)"
                         accept=".pdf, .jpg, .jpeg, .png">
-                      <button class="sendBtn" (click)="upload()"
-                        [disabled]="((this.whatsAppForm.controls['sentMessage'].value || this.whatsAppForm.controls['selectTemplate'].value) ? true : false) ">
+                      <button class="sendBtn" (click)="upload()" [ngClass]="timeExpired ? 'btnDisable' : 'sendBtn'"
+                        [disabled]="((this.whatsAppForm.controls['sentMessage'].value || this.whatsAppForm.controls['selectTemplate'].value || timeExpired) ? true : false) ">
                         <!-- <i class="fa fa-cloud-upload" style="font-size: 15px;"></i> -->
                         Upload Media File
                       </button>

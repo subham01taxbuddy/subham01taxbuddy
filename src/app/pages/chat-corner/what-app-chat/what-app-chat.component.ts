@@ -4,6 +4,8 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { environment } from 'environments/environment';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UtilsService } from 'app/services/utils.service';
+import { Observable, timer } from 'rxjs';
+import { take, map } from 'rxjs/operators';
 //import { interval, Observable } from 'rxjs';
 
 @Component({
@@ -28,6 +30,8 @@ export class WhatAppChatComponent implements OnInit {
   userTimer: any;
   userLastMsgTime: any;
   environmentPath: any;
+  countDown: any;
+  timeExpired: boolean;
   userFetchChatTimer: any;
   oldAttributes: any = [];
   newAttributes: any = [];
@@ -36,6 +40,7 @@ export class WhatAppChatComponent implements OnInit {
 
   constructor(private _el: ElementRef, private fb: FormBuilder, private userService: UserMsService, private _toastMessageService: ToastMessageService,
     public utileService: UtilsService) {
+
     this.environmentPath = environment.url;
     this.smeInfo = JSON.parse(localStorage.getItem('UMD'));
     console.log("SME info: ", this.smeInfo)
@@ -103,7 +108,11 @@ export class WhatAppChatComponent implements OnInit {
       this.loading = false;
       if (res) {
         this.userDetail = res;
-        this.filteredArray = res;
+        if(apicall === 'continues'){
+
+        }else{
+          this.filteredArray = res;
+        }
         console.log(this.userDetail)
       }
     },
@@ -130,8 +139,9 @@ export class WhatAppChatComponent implements OnInit {
         this._toastMessageService.alert("error", "Failed to fetch chat data.");
       })
   }
-  
+
   geUserChatDetail(user, apicall) {
+
     if (apicall !== 'continues') {
       // window.scrollTo({
       //   top: document.body.scrollHeight,
@@ -147,10 +157,12 @@ export class WhatAppChatComponent implements OnInit {
       this.whatsAppForm.controls['sentMessage'].enable();
       this.selectedUser = user;
       this.loading = true;
-      this.getServicesAvailed(user.userId)
-
+      this.getServicesAvailed(user.userId);
+      this.timeExpired = false;
+      this.countDown = 0;
     } else {
       this.loading = false;
+
     }
 
     console.log('Here we getting selected user chat details')
@@ -159,22 +171,23 @@ export class WhatAppChatComponent implements OnInit {
       console.log(res, typeof res)
       if (Object.entries(res).length > 0) {
         this.loading = false;
+
         if (this.backUpChatData) {
           if (this.checkFetchInfoSame(res)) {
 
           } else {
             this.userchatData = res;
             this.backUpChatData = this.userchatData;
+            this.getTiemCount(res)
           }
 
         } else {
           this.userchatData = res;
           this.backUpChatData = this.userchatData;
+          this.getTiemCount(res)   //Show Timer Counter
         }
 
-        console.log('backUpChatData: ', this.backUpChatData)
-        console.log('Check here: ', this.checkFetchInfoSame(res))
-        // this.getTiemCount(res)
+
       } else {
         this.loading = false;
         this.userchatData = [];
@@ -188,10 +201,6 @@ export class WhatAppChatComponent implements OnInit {
   }
 
   checkFetchInfoSame(fetchedInfo) {
-    // console.log(fetchedInfo, Object.entries(fetchedInfo))
-    // console.log(fetchedInfo.length)
-    // console.log(this.mainChatData.length)
-    // console.log('Equality: ',(Object.entries(fetchedInfo).length === this.mainChatData.length) )
     if (Object.entries(fetchedInfo).length === this.backUpChatData.length) {
       return true;
     } else {
@@ -204,7 +213,7 @@ export class WhatAppChatComponent implements OnInit {
       this.loading = true;
       let mobileNo = this.selectedUser.whatsAppNumber;
       let body = {
-        "textMessage": this.whatsAppForm.controls['sentMessage'].value,
+        "textMessage": this.whatsAppForm.controls['sentMessage'].value,   //toUTF8String
         "whatsAppNumber": mobileNo
       }
       let param = '/user/send-text-message';
@@ -216,6 +225,12 @@ export class WhatAppChatComponent implements OnInit {
         this.whatsAppForm.reset();
         this._toastMessageService.alert("success", "Message sent successfully.");
         this.userchatData = result;
+        this.userchatData.forEach(element => {
+          console.log("BEFORE:", element.textMessage);
+          // if (this.utileService.isNonEmpty(element.textMessage))
+          //   element.textMessage = element.textMessage.replace("\n", "\\n");
+          // console.log("AFTER:", element.textMessage);
+        });
       }, error => {
         this.loading = false;
         this._toastMessageService.alert("error", "Failed to sent chat message.");
@@ -261,7 +276,6 @@ export class WhatAppChatComponent implements OnInit {
 
       } else {
         this.whatsAppForm.controls['sentMessage'].setErrors({ 'fillmandate': true })
-
       }
 
     } else if (this.whatsAppForm.controls['mediaFile'].value) {
@@ -459,5 +473,38 @@ export class WhatAppChatComponent implements OnInit {
     console.log('date: ', new Date(userChatInfo[length].dateLong))
     this.userLastMsgTime = new Date(userChatInfo[length].dateLong).toISOString();
     console.log('userLastMsgTime ', this.userLastMsgTime)
+    let lastChatTime: any = new Date(userChatInfo[length].dateLong);
+    let currentTime: any = new Date();
+    var diffTime = Math.abs(currentTime - lastChatTime) / 36e5;
+    console.log('Difference time: ', diffTime)
+    if (diffTime > 24) {
+      this.timeExpired = true;
+    } else {
+      let diffInSec = Math.floor((24 - diffTime) * 60 * 60);
+      console.log('In second: ', diffInSec)
+      this.showTimer(diffInSec)
+    }
+  }
+
+
+  showTimer(remaining) {
+    this.countDown = timer(0, 1000).pipe(
+      take(remaining),
+      map(() => {
+        --remaining
+        let hours = Math.floor(remaining / 3600).toString()
+        let minutes = Math.floor((remaining % 3600) / 60).toString();
+        let seconds = Math.floor(remaining % 60).toString();
+
+        hours = parseInt(minutes) < 10 ? "0" + hours : hours;
+        minutes = parseInt(minutes) < 10 ? "0" + minutes : minutes;
+        seconds = parseInt(seconds) < 10 ? "0" + seconds : seconds;
+        if (remaining === 0) {
+          this.timeExpired = false;
+        }
+        return hours + ":" + minutes + ":" + seconds;
+      })
+    )
+
   }
 }
