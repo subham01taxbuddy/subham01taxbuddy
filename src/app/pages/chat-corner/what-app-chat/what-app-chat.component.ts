@@ -126,7 +126,7 @@ export class WhatAppChatComponent implements OnInit {
     let param = '/template'
     this.loading = true;
     this.userService.getUserDetail(param).subscribe((res) => {
-      console.log(res)
+      console.log('templates info: ',res)
       this.loading = false;
       if (res) {
         this.templateInfo = res;
@@ -240,6 +240,7 @@ export class WhatAppChatComponent implements OnInit {
       if (this.isTemplateValid(this.whatsAppForm.controls['sentMessage'].value)) {
         let templateMsgInfo = this.templateInfo.find(item => item.templateName === this.whatsAppForm.controls['selectTemplate'].value)
         let body;
+        console.log('Selected Template Info: ',templateMsgInfo)
         if (templateMsgInfo.mediaId === null) {
           body = {
             "whatsAppNumber": this.selectedUser.whatsAppNumber,
