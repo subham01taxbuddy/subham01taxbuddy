@@ -108,11 +108,7 @@ export class WhatAppChatComponent implements OnInit {
       this.loading = false;
       if (res) {
         this.userDetail = res;
-        if(apicall === 'continues'){
-
-        }else{
-          this.filteredArray = res;
-        }
+        this.filteredArray = res;
         console.log(this.userDetail)
       }
     },
@@ -126,7 +122,7 @@ export class WhatAppChatComponent implements OnInit {
     let param = '/template'
     this.loading = true;
     this.userService.getUserDetail(param).subscribe((res) => {
-      console.log('templates info: ',res)
+      console.log('templates info: ', res)
       this.loading = false;
       if (res) {
         this.templateInfo = res;
@@ -143,14 +139,14 @@ export class WhatAppChatComponent implements OnInit {
   geUserChatDetail(user, apicall) {
 
     if (apicall !== 'continues') {
-      // window.scrollTo({
-      //   top: document.body.scrollHeight,
-      //   left: 0,
-      //   behavior: 'smooth'
-      // });
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        left: 0,
+        behavior: 'smooth'
+      });
 
-      // const el: HTMLDivElement = this._el.nativeElement;
-      // el.scrollTop = Math.max(0, el.scrollHeight - el.offsetHeight);
+      const el: HTMLDivElement = this._el.nativeElement;
+      el.scrollTop = Math.max(0, el.scrollHeight - el.offsetHeight);
 
       this.whatsAppForm.reset();
       this.whatsAppForm.controls['selectTemplate'].enable();
@@ -173,17 +169,21 @@ export class WhatAppChatComponent implements OnInit {
         this.loading = false;
 
         if (this.backUpChatData) {
+          console.log('checkFetchInfoSame ',this.checkFetchInfoSame(res))
           if (this.checkFetchInfoSame(res)) {
+            this.getTiemCount(res)
 
           } else {
             this.userchatData = res;
             this.backUpChatData = this.userchatData;
+            this.getUserDetail('not-continues');
             this.getTiemCount(res)
           }
 
         } else {
           this.userchatData = res;
           this.backUpChatData = this.userchatData;
+          this.getUserDetail('not-continues');
           this.getTiemCount(res)   //Show Timer Counter
         }
 
@@ -240,7 +240,7 @@ export class WhatAppChatComponent implements OnInit {
       if (this.isTemplateValid(this.whatsAppForm.controls['sentMessage'].value)) {
         let templateMsgInfo = this.templateInfo.find(item => item.templateName === this.whatsAppForm.controls['selectTemplate'].value)
         let body;
-        console.log('Selected Template Info: ',templateMsgInfo)
+        console.log('Selected Template Info: ', templateMsgInfo)
         if (templateMsgInfo.mediaId === null) {
           body = {
             "whatsAppNumber": this.selectedUser.whatsAppNumber,
@@ -467,24 +467,35 @@ export class WhatAppChatComponent implements OnInit {
     this.whatsAppForm.controls['sentMessage'].enable();
   }
 
+  clearTemplate(){
+    this.whatsAppForm.reset();
+  }
+
   getTiemCount(chatDetail) {
     this.userLastMsgTime = '';
+
     let userChatInfo = chatDetail.filter(item => item.isReceived === true);
-    let length = userChatInfo.length - 1;
-    console.log('date: ', new Date(userChatInfo[length].dateLong))
-    this.userLastMsgTime = new Date(userChatInfo[length].dateLong).toISOString();
-    console.log('userLastMsgTime ', this.userLastMsgTime)
-    let lastChatTime: any = new Date(userChatInfo[length].dateLong);
-    let currentTime: any = new Date();
-    var diffTime = Math.abs(currentTime - lastChatTime) / 36e5;
-    console.log('Difference time: ', diffTime)
-    if (diffTime > 24) {
+    if (userChatInfo.length === 0) {
       this.timeExpired = true;
     } else {
-      let diffInSec = Math.floor((24 - diffTime) * 60 * 60);
-      console.log('In second: ', diffInSec)
-      this.showTimer(diffInSec)
+      let length = userChatInfo.length - 1;
+      console.log('date: ', new Date(userChatInfo[length].dateLong))
+      this.userLastMsgTime = new Date(userChatInfo[length].dateLong).toISOString();
+      console.log('userLastMsgTime ', this.userLastMsgTime)
+      let lastChatTime: any = new Date(userChatInfo[length].dateLong);
+      let currentTime: any = new Date();
+      var diffTime = Math.abs(currentTime - lastChatTime) / 36e5;
+      console.log('Difference time: ', diffTime)
+      if (diffTime > 24) {
+        this.timeExpired = true;
+      } else {
+        this.timeExpired = false;
+        let diffInSec = Math.floor((24 - diffTime) * 60 * 60);
+        console.log('In second: ', diffInSec)
+        this.showTimer(diffInSec)
+      }
     }
+
   }
 
 

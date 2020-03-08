@@ -225,6 +225,11 @@
                       </button>
                     </div>
 
+                    <div class="card__col-lg-9 card__col-sm-8" *ngIf="whatsAppForm.controls['selectTemplate'].value">
+                      <label>Clear Selected template:</label>&nbsp;&nbsp;
+                      <button class="closeBtn" (click)="clearTemplate()">Clear</button>
+                    </div>
+
                     <div class="card__col-lg-9 card__col-sm-8" *ngIf="whatsAppForm.controls['mediaFile'].value">
                       <label>{{whatsAppForm.controls['mediaFile'].value.name}}</label>&nbsp;&nbsp;
                       <button class="closeBtn" (click)="clearFile()">Close</button>
