@@ -6,6 +6,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { UtilsService } from 'app/services/utils.service';
 import { Observable, timer } from 'rxjs';
 import { take, map } from 'rxjs/operators';
+import { DomSanitizer } from '@angular/platform-browser';
 //import { interval, Observable } from 'rxjs';
 
 @Component({
@@ -39,7 +40,7 @@ export class WhatAppChatComponent implements OnInit {
   searchNumber = new FormControl('')
 
   constructor(private _el: ElementRef, private fb: FormBuilder, private userService: UserMsService, private _toastMessageService: ToastMessageService,
-    public utileService: UtilsService) {
+    public utileService: UtilsService, public _d: DomSanitizer) {
 
     this.environmentPath = environment.url;
     this.smeInfo = JSON.parse(localStorage.getItem('UMD'));
@@ -52,7 +53,7 @@ export class WhatAppChatComponent implements OnInit {
 
     this.userTimer = setInterval(() => {
       this.getUserDetail('continues');
-    }, 10000);
+    }, 5000);
 
     // this.userFetchChatTimer = interval(6000)
     // this.userFetchChatTimer.subscribe(() => {
@@ -139,11 +140,11 @@ export class WhatAppChatComponent implements OnInit {
   geUserChatDetail(user, apicall) {
 
     if (apicall !== 'continues') {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        left: 0,
-        behavior: 'smooth'
-      });
+      // window.scrollTo({
+      //   top: document.body.scrollHeight,
+      //   left: 0,
+      //   behavior: 'smooth'
+      // });
 
       const el: HTMLDivElement = this._el.nativeElement;
       el.scrollTop = Math.max(0, el.scrollHeight - el.offsetHeight);
@@ -169,7 +170,7 @@ export class WhatAppChatComponent implements OnInit {
         this.loading = false;
 
         if (this.backUpChatData) {
-          console.log('checkFetchInfoSame ',this.checkFetchInfoSame(res))
+          console.log('checkFetchInfoSame ', this.checkFetchInfoSame(res))
           if (this.checkFetchInfoSame(res)) {
             this.getTiemCount(res)
 
@@ -189,9 +190,15 @@ export class WhatAppChatComponent implements OnInit {
 
 
       } else {
-        this.loading = false;
-        this.userchatData = [];
-        this._toastMessageService.alert("error", "There is no chat data.");
+        if (apicall !== 'continues') {
+          this.loading = false;
+          this.userchatData = [];
+          this._toastMessageService.alert("error", "There is no chat data.");
+        }
+         else {
+
+        }
+
       }
     },
       error => {
@@ -467,7 +474,7 @@ export class WhatAppChatComponent implements OnInit {
     this.whatsAppForm.controls['sentMessage'].enable();
   }
 
-  clearTemplate(){
+  clearTemplate() {
     this.whatsAppForm.reset();
   }
 
