@@ -52,7 +52,7 @@ export class WhatAppChatComponent implements OnInit {
 
     this.userTimer = setInterval(() => {
       this.getUserDetail('continues');
-    }, 10000);
+    }, 5000);
 
     // this.userFetchChatTimer = interval(6000)
     // this.userFetchChatTimer.subscribe(() => {
@@ -139,11 +139,11 @@ export class WhatAppChatComponent implements OnInit {
   geUserChatDetail(user, apicall) {
 
     if (apicall !== 'continues') {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        left: 0,
-        behavior: 'smooth'
-      });
+      // window.scrollTo({
+      //   top: document.body.scrollHeight,
+      //   left: 0,
+      //   behavior: 'smooth'
+      // });
 
       const el: HTMLDivElement = this._el.nativeElement;
       el.scrollTop = Math.max(0, el.scrollHeight - el.offsetHeight);
@@ -189,9 +189,14 @@ export class WhatAppChatComponent implements OnInit {
 
 
       } else {
-        this.loading = false;
-        this.userchatData = [];
-        this._toastMessageService.alert("error", "There is no chat data.");
+        if (apicall !== 'continues') {
+          this.loading = false;
+          this.userchatData = [];
+          this._toastMessageService.alert("error", "There is no chat data.");
+        }else{
+          
+        }
+      
       }
     },
       error => {

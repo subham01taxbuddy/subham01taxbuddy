@@ -6,20 +6,22 @@
       <div class="card">
         <div class="card__row">
           <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 10px;">
-            <div class="card__col-lg-3 userList">
+            <div class="card__col-lg-3 ">   <!--userList-->
               <mat-form-field appearance="outline">
                 <input matInput [formControl]="searchNumber" placeholder="Search User" (keyup)="searchMyNumber()"
                   autocomplete="off">
               </mat-form-field>
               <br>
-              <ul *ngFor="let user of filteredArray">
-                <li [class.newUserMsg]="user.isRead === false" style="padding: 10px;"
-                  (click)="geUserChatDetail(user, 'not-continues')">
-                  <span *ngIf="user.isRead === false">*</span>
-                  <a style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user.name}}</a><br>
-                  <span style="font-size: 11px; padding-left: 30px;">{{user.whatsAppNumber}}</span>
-                </li>
-              </ul>
+              <div class="userList">
+                <ul *ngFor="let user of filteredArray">
+                  <li [class.newUserMsg]="user.isRead === false" style="padding: 10px;"
+                    (click)="geUserChatDetail(user, 'not-continues')">
+                    <span *ngIf="user.isRead === false">*</span>
+                    <a style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user.name}}</a><br>
+                    <span style="font-size: 11px; padding-left: 30px;">{{user.whatsAppNumber}}</span>
+                  </li>
+                </ul>
+              </div>
             </div>
             <div class="card__col-md-9">
               <mat-accordion *ngIf="this.selectedUser">
@@ -88,7 +90,9 @@
                         *ngIf="!data.isReceived && !data.mediaId && data.messageType !== 'media_template'">
                         <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br>
                         <!-- {{ data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent: '')}}<br> -->
-                        <p class="multi_lines_text" [innerHTML]="data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent: '')"></p><br>
+                        <p class="multi_lines_text"
+                          [innerHTML]="data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent: '')">
+                        </p><br>
                         <!--(data.mediaId? this.showLink(data.mediaId):'')-->
                         <b style="float: right; padding-top:5px; font-size: 11px;" *ngIf="!data.isReceived">
                           {{data.dateLong | date:'medium':'+0530'}} </b>
