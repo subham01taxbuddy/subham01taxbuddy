@@ -213,7 +213,7 @@
                                         autocomplete="off"
                                         (selectionChange)="changeCountry(invoiceForm.controls['country'].value)">
                                         <mat-option *ngFor="let country of countryDropdown"
-                                            [value]="country.countryCode">
+                                            [value]="country.countryName">   <!--countryCode-->
                                             {{country.countryName | titlecase}}
                                         </mat-option>
                                     </mat-select>
@@ -226,7 +226,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>State</mat-label>
                                     <mat-select formControlName="state" matInput placeholder="State" autocomplete="off">
-                                        <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
+                                        <mat-option *ngFor="let state of stateDropdown" [value]="state.stateName">  <!--stateCode-->
                                             {{state.stateName | titlecase}}
                                         </mat-option>
                                     </mat-select>
