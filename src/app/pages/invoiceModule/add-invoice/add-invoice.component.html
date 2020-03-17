@@ -1,0 +1,331 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="main clearfix">
+    <div class="content content_full">
+        <div class="content__container">
+            <div class="card">
+                <div class="card__row">
+                    <div class="card__col-lg-3">
+                        <!-- <mat-form-field appearance="outline">
+                            <mat-label>Select User </mat-label>
+                            <mat-select formControlName="country" matInput placeholder="Select User"
+                                autocomplete="off"
+                                (selectionChange)="changeCountry(invoiceForm.controls['country'].value)">
+                                <mat-option *ngFor="let country of countryDropdown"
+                                    [value]="country.countryCode">
+                                    {{country.countryName | titlecase}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="invoiceForm.controls['country'].hasError('required')">Select country</mat-error>
+                        </mat-form-field> -->
+                        <form [formGroup]="selectUser">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Select User</mat-label>
+
+                                <input matInput placeholder="Select User" aria-label="Select User"
+                                    [matAutocomplete]="auto" formControlName="user">
+                                <!--(select)="getCodeFromLabelOnBlur()"-->
+                                <mat-error *ngIf="selectUser.invalid">
+                                    Please select value from dropdown only.
+                                </mat-error>
+                                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                                    (optionSelected)="getUserInvoiceList()">
+                                    <!--(optionSelected)="getPeriodList($event.option.value)"-->
+                                    <mat-option *ngFor="let user of filteredOptions | async" [value]="user.name">
+                                        <span>{{user.name}}</span>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </form>
+                    </div>
+
+                    <div class="card__col-lg-9" *ngIf="invoiceDetail">
+                        <mat-accordion>
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <b>Invoice</b>
+                                    </mat-panel-title>
+                                    <!-- <mat-panel-description>
+                                    Type your name and age
+                                  </mat-panel-description> -->
+                                </mat-expansion-panel-header>
+                                <div class="card__row">
+                                    <table>
+                                        <tr>
+                                            <th>Invoice No</th>
+                                            <th>Invoice Date</th>
+                                            <th>Bill to</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        <tr *ngFor="let invoice of invoiceDetail">
+                                            <td>{{invoice.invoiceNo}}</td>
+                                            <td>{{invoice.invoiceDate}}</td>
+                                            <td>{{invoice.billTo}}</td>
+                                            <td><a href="javascript:0" (click)="downloadInvoice(invoice)">
+                                                    <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+                                                </a></td>
+                                        </tr>
+                                        <tr *ngIf="invoiceDetail.length === 0">
+                                            <td style="text-align: center;" colspan="4">There is No invoice records</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="card" *ngIf="selectUser.controls['user'].value">
+                <form [formGroup]="invoiceForm">
+                    <mat-card>
+                        <div class="card__row">
+                            <label>Invoice Information:</label><br><br>
+                            <div class="card__col-lg-4">
+                                <!-- <label><b>Invoice No: </b></label> -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Invoice Number</mat-label>
+                                    <input matInput formControlName="invoiceNo" maxlength="15"
+                                        placeholder="Invoice Number" autocomplete="off">
+                                    <mat-error *ngIf="invoiceForm.controls['invoiceNo'].hasError('required')">Enter
+                                        Invoice Number</mat-error>
+                                    <mat-error *ngIf="invoiceForm.controls['invoiceNo'].hasError('pattern')">Enter valid
+                                        Invoice Number</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-4">
+                                <!-- <label><b>Invoice Date: </b></label> -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Invoice Date</mat-label>
+                                    <input matInput formControlName="invoiceDate" [matDatepicker]="picker"
+                                        [max]="maxDate" autocomplete="off">
+                                    <!--(dateChange)="setDueDate(this.invoiceForm.controls['invoiceDate'].value)"-->
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                    <mat-error *ngIf="invoiceForm.controls['invoiceNo'].hasError('required')">Select
+                                        Invoice date</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-4">
+                                <!-- <label><b>Terms: </b></label> -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Terms</mat-label>
+                                    <input matInput formControlName="terms" placeholder="Terms" readonly
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-4">
+                                <!-- <label><b>Due Date: </b></label> -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Due Date</mat-label>
+                                    <input matInput formControlName="dueDate" [matDatepicker]="picker1" [max]="maxDate"
+                                        autocomplete="off">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                    <mat-error *ngIf="invoiceForm.controls['dueDate'].hasError('required')">Select Due
+                                        date</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-4">
+                                <!-- <label><b>SAC Code: </b></label> -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>SAC Code</mat-label>
+                                    <input matInput formControlName="sacCode" placeholder="SAC Code" readonly
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-4">
+                                <!-- <label><b>CIN: </b></label> -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>CIN</mat-label>
+                                    <input matInput formControlName="cin" placeholder="CIN" readonly autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-4">
+                                <!-- <label><b>Mode of Payment: </b></label> -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Mode of Payment</mat-label>
+                                    <input matInput formControlName="modeOfPayment" placeholder="Mode of Payment"
+                                        readonly autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-card>
+                    <br>
+
+                    <mat-card>
+                        <div class="card__row">
+                            <!-- <b style="font-size: 15px;">Bill To: </b> -->
+                            <label>Bill to:</label><br><br>
+                            <div class="card__col-lg-8">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>User name</mat-label>
+                                    <input matInput formControlName="billTo" placeholder="User name" autocomplete="off">
+                                    <mat-error *ngIf="invoiceForm.controls['billTo'].hasError('required')">Enter User
+                                        name</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-card><br><br>
+
+                    <mat-card>
+                        <div class="card__row">
+                            <label>Address Information:</label><br><br>
+                            <div class="card__col-lg-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Address Line 1: </mat-label>
+                                    <input formControlName="addressLine1" maxlength="50" matInput
+                                        placeholder="Address Line 1: " autocomplete="off">
+                                    <mat-error *ngIf="invoiceForm.controls['addressLine1'].hasError('required')">Enter
+                                        Address line 1</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Address Line 2: </mat-label>
+                                    <input formControlName="addressLine2" maxlength="50" matInput
+                                        placeholder="Address Line 2: " autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>PIN Code</mat-label>
+                                    <input formControlName="pincode" maxlength="6"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
+                                        placeholder="PIN Code" autocomplete="off"
+                                        (blur)="getCityData(this.invoiceForm.controls['pincode'])">
+                                    <mat-error *ngIf="invoiceForm.controls['pincode'].hasError('required')">Enter pin
+                                    </mat-error>
+                                    <mat-error *ngIf="invoiceForm.controls['pincode'].hasError('pattern')">Enter valid
+                                        pin
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="card__col-lg-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Country</mat-label>
+                                    <mat-select formControlName="country" matInput placeholder="Country"
+                                        autocomplete="off"
+                                        (selectionChange)="changeCountry(invoiceForm.controls['country'].value)">
+                                        <mat-option *ngFor="let country of countryDropdown"
+                                            [value]="country.countryCode">
+                                            {{country.countryName | titlecase}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="invoiceForm.controls['country'].hasError('required')">Select
+                                        country</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="card__col-lg-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>State</mat-label>
+                                    <mat-select formControlName="state" matInput placeholder="State" autocomplete="off">
+                                        <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
+                                            {{state.stateName | titlecase}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="invoiceForm.controls['state'].hasError('required')">Select state
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="card__col-lg-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>City:</mat-label>
+                                    <input formControlName="city" maxlength="50" matInput placeholder="city"
+                                        autocomplete="off">
+                                    <mat-error *ngIf="invoiceForm.controls['city'].hasError('required')">Enter city name
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="card__col-lg-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>GSTIN:</mat-label>
+                                    <input formControlName="gstin" maxlength="15" matInput placeholder="GSTIN"
+                                        autocomplete="off">
+                                    <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('required')">Enter GSTIN
+                                        number</mat-error>
+                                    <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('pattern')">Enter valid
+                                        GSTIN</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Phone</mat-label>
+                                    <input formControlName="phone"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
+                                        placeholder="Phone" maxlength="10" autocomplete="off">
+                                    <mat-error *ngIf="invoiceForm.controls['phone'].hasError('required')">Enter phone
+                                        number</mat-error>
+                                    <mat-error *ngIf="invoiceForm.controls['phone'].hasError('pattern')">Enter valid
+                                        phone number</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Email</mat-label>
+                                    <input formControlName="email" matInput placeholder="Email" autocomplete="off">
+                                    <mat-error *ngIf="invoiceForm.controls['email'].hasError('required')">Enter email
+                                        address</mat-error>
+                                    <mat-error *ngIf="invoiceForm.controls['email'].hasError('pattern')">Enter valid
+                                        email address</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                    </mat-card><br><br>
+
+
+                    <mat-card>
+                        <label>Invoice table:</label><br><br>
+                        <div class="card__row" style="margin-top: 0px;">
+                            <ag-grid-angular class="ag-theme-balham" [gridOptions]="clientListGridOptions"
+                            (rowClicked)="onInvoiceRowClicked($event)">
+                            </ag-grid-angular>
+                        </div> <br>
+                        <div class="card__row">
+                            <div class="card__col-lg-4">
+                                <button class="btn" (click)="addNewRow()">Add Row</button>
+                            </div>
+                            <div class="card__col-lg-4 total">
+                                <div class="card__col-lg-7">Sub Total
+                                    <span >(Tax inclusive)</span>
+                                </div>
+                                <div style="float: right;" class="card__col-lg-5">₹
+                                    {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceTotal)}}</div>
+                                <div class="card__col-lg-7">CGST (9%)</div>
+                                <div style="float: right;" class="card__col-lg-5">₹
+                                     {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceCGST)}}   <!--(getRoundAmount) -->
+                                </div>
+                                <div class="card__col-lg-7">SGST (9%)</div>
+                                <div style="float: right;" class="card__col-lg-5">₹
+                                    {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceSGST)}}  <!--getRoundAmount()-->
+                                </div>
+                                <div class="card__col-lg-7 bold">Total</div>
+                                <div style="float: right;" class="card__col-lg-5 bold">₹
+                                    {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceTotal)}}</div>
+                                <div class="card__col-lg-7 bold">Balance Due</div>
+                                <div style="float: right;" class="card__col-lg-5 bold">₹
+                                    {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceTotal)}}</div>
+                            </div>
+
+                        </div>
+                    </mat-card>
+
+                    <div class="btns">
+                        <button class="btn" (click)="saveInvoice()">Save & Download Invoice</button>
+                    </div>
+                    <br><br><br><br>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
