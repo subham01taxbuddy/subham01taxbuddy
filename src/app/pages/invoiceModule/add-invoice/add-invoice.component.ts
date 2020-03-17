@@ -463,9 +463,9 @@ export class AddInvoiceComponent implements OnInit {
           'quantity': this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity,
           'rate': this.clientListGridOptions.api.getRenderedNodes()[i].data.rate,
           'cgstPercent': this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent,
-          'cgstAmount': (this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity,
+          'cgstAmount': Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity),
           'sgstPercent': this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent,
-          'sgstAmount': (this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity,
+          'sgstAmount': Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity),
           'amount': this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity
         })
       }
