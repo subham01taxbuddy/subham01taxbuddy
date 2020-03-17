@@ -118,7 +118,7 @@ export class AddInvoiceComponent implements OnInit {
       this.userInfo = this.available_merchant_list.filter(item => item.name.toLowerCase() === this.selectUser.value.user.toLowerCase());
       console.log('select USER: ', this.userInfo)
       if (this.userInfo.length !== 0) {
-        const param = '/itr/invoice/'+ this.userInfo[0].userId;
+        const param = '/itr/invoice/' + this.userInfo[0].userId;
         this.userService.getMethodInfo(param).subscribe((result: any) => {
           console.log('User Detail: ', result)
           this.invoiceDetail = result;
@@ -383,24 +383,28 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   changeCountry(country) {
-    const param = '/fnbmaster/statebycountrycode?countryCode=' + country;
-    this.userService.getMethod(param).subscribe((result: any) => {
-      this.stateDropdown = result;
-    }, error => {
-    });
-    if (country !== '91') {
-      this.invoiceForm.controls['state'].setValue('99');
+    if (country === 'INDIA') {
+      let country = '91';
+      const param = '/fnbmaster/statebycountrycode?countryCode=' + country;
+      this.userService.getMethod(param).subscribe((result: any) => {
+        this.stateDropdown = result;
+      }, error => {
+      });
+    } else if (country !== 'INDIA') {   
+      this.invoiceForm.controls['state'].setValue('Foreign');   //99
+      this.stateDropdown = [{ stateName: 'Foreign' }]
     }
   }
 
   getCityData(pinCode) {
+    console.log(pinCode)
     if (pinCode.valid) {
-      this.changeCountry('91');
+      this.changeCountry('INDIA');   //91
       const param = '/pincode/' + pinCode.value;
       this.userService.getMethod(param).subscribe((result: any) => {
-        this.invoiceForm.controls['country'].setValue('91');
+        this.invoiceForm.controls['country'].setValue('INDIA');   //91
         this.invoiceForm.controls['city'].setValue(result.taluka);
-        this.invoiceForm.controls['state'].setValue(result.stateCode);
+        this.invoiceForm.controls['state'].setValue(result.stateName);  //stateCode
       }, error => {
         if (error.status === 404) {
           this.invoiceForm.controls['city'].setValue(null);
@@ -444,7 +448,7 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   saveInvoice() {
-   
+
     if (this.clientListGridOptions && this.clientListGridOptions.api && this.clientListGridOptions.api.getRenderedNodes() && this.clientListGridOptions.api.getRenderedNodes()[0].data.itemDescription) {
       this.invoiceForm.controls['subTotal'].setValue(this.invoiceData.invoiceTotal)
       this.invoiceForm.controls['cgstTotal'].setValue(this.invoiceData.invoiceCGST)
@@ -452,7 +456,7 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.controls['total'].setValue(this.invoiceData.invoiceTotal)
       this.invoiceForm.controls['balanceDue'].setValue(this.invoiceData.invoiceTotal)
       this.invoiceTableInfo = [];
-      
+
       for (let i = 0; i < this.clientListGridOptions.api.getRenderedNodes().length; i++) {
         this.invoiceTableInfo.push({
           'itemDescription': this.clientListGridOptions.api.getRenderedNodes()[i].data.itemDescription,
