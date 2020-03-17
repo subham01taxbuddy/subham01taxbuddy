@@ -54,4 +54,9 @@ export class SidebarComponent implements OnInit {
   chatCorner(){
     this.route.navigate(['/pages/chat-corner'])
   }
+
+  taxSummary(){
+    alert('Ok')
+    this.route.navigate(['/pages/tax-summary'])
+  }
 }

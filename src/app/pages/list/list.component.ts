@@ -208,11 +208,11 @@ export class ListComponent implements OnInit {
           } else {
             this.invoices_list = spInv.concat(cdnInv)
           }
-          this.invoices_list = this.invoices_list.sort((a, b) => {
-            let aD: any = new Date(a.invoiceCreatedAt);
-            let bD: any = new Date(b.invoiceCreatedAt);
-            return bD - aD;
-          });
+          // this.invoices_list = this.invoices_list.sort((a, b) => {
+          //   let aD: any = new Date(a.invoiceCreatedAt);
+          //   let bD: any = new Date(b.invoiceCreatedAt);
+          //   return bD - aD;
+          // });
           this.filterData = this.invoices_list;
           return resolve(true);
         });

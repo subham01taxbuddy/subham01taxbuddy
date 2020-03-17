@@ -52,7 +52,7 @@ export class WhatAppChatComponent implements OnInit {
 
     this.userTimer = setInterval(() => {
       this.getUserDetail('continues');
-    }, 10000);
+    }, 4000);
 
     // this.userFetchChatTimer = interval(6000)
     // this.userFetchChatTimer.subscribe(() => {
@@ -94,6 +94,9 @@ export class WhatAppChatComponent implements OnInit {
     }
   }
 
+  backUpNoOfNotification: any;
+  numberOfNotifivation: any;
+  tempData: any;
   getUserDetail(apicall) {
     let smeMobNo = '9767374273';     //'8669304341'
     let param = '/user-whatsapp-detail?smeMobileNumber='  //+this.smeInfo.USER_MOBILE;      ;
@@ -107,9 +110,28 @@ export class WhatAppChatComponent implements OnInit {
       console.log(res)
       this.loading = false;
       if (res) {
-        this.userDetail = res;
-        this.filteredArray = res;
-        console.log(this.userDetail)
+        if (this.backUpNoOfNotification) {
+          this.tempData = res;
+          this.numberOfNotifivation = this.tempData.filter(item => item.isRead === false);
+          if (this.numberOfNotifivation.length === this.backUpNoOfNotification.length) {       // If new notification not came then we not update filter array list 
+              // const el = document.getElementById("chatScroll");
+              // el.scrollTop = el.scrollHeight;//Math.max(0, 0); //el.scrollHeight; 
+
+          } else {
+            this.userDetail = res;
+            this.filteredArray = res;
+            this.backUpNoOfNotification = this.userDetail.filter(item => item.isRead === false);
+            
+            // const el = document.getElementById("chatScroll");
+            // el.scrollTop = el.scrollHeight; //Math.max(0, 0);  // el.scrollHeight - el.offsetHeight
+          }
+
+        } else {
+          this.userDetail = res;
+          this.filteredArray = res;
+          this.backUpNoOfNotification = this.userDetail.filter(item => item.isRead === false);
+        }
+
       }
     },
       error => {
@@ -139,14 +161,14 @@ export class WhatAppChatComponent implements OnInit {
   geUserChatDetail(user, apicall) {
 
     if (apicall !== 'continues') {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        left: 0,
-        behavior: 'smooth'
-      });
+      // window.scrollTo({
+      //   top: document.body.scrollHeight,
+      //   left: 0,
+      //   behavior: 'smooth'
+      // });
 
-      const el: HTMLDivElement = this._el.nativeElement;
-      el.scrollTop = Math.max(0, el.scrollHeight - el.offsetHeight);
+      // const el: HTMLDivElement = this._el.nativeElement;
+      // el.scrollTop = Math.max(0, el.scrollHeight - el.offsetHeight);
 
       this.whatsAppForm.reset();
       this.whatsAppForm.controls['selectTemplate'].enable();
@@ -169,7 +191,7 @@ export class WhatAppChatComponent implements OnInit {
         this.loading = false;
 
         if (this.backUpChatData) {
-          console.log('checkFetchInfoSame ',this.checkFetchInfoSame(res))
+          console.log('checkFetchInfoSame ', this.checkFetchInfoSame(res))
           if (this.checkFetchInfoSame(res)) {
             this.getTiemCount(res)
 
@@ -189,9 +211,14 @@ export class WhatAppChatComponent implements OnInit {
 
 
       } else {
-        this.loading = false;
-        this.userchatData = [];
-        this._toastMessageService.alert("error", "There is no chat data.");
+        if (apicall !== 'continues') {
+          this.loading = false;
+          this.userchatData = [];
+          this._toastMessageService.alert("error", "There is no chat data.");
+        } else {
+
+        }
+
       }
     },
       error => {
@@ -467,7 +494,7 @@ export class WhatAppChatComponent implements OnInit {
     this.whatsAppForm.controls['sentMessage'].enable();
   }
 
-  clearTemplate(){
+  clearTemplate() {
     this.whatsAppForm.reset();
   }
 
