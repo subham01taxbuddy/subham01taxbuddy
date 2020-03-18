@@ -6,30 +6,18 @@
             <div class="card">
                 <div class="card__row">
                     <div class="card__col-lg-3">
-                        <!-- <mat-form-field appearance="outline">
-                            <mat-label>Select User </mat-label>
-                            <mat-select formControlName="country" matInput placeholder="Select User"
-                                autocomplete="off"
-                                (selectionChange)="changeCountry(invoiceForm.controls['country'].value)">
-                                <mat-option *ngFor="let country of countryDropdown"
-                                    [value]="country.countryCode">
-                                    {{country.countryName | titlecase}}
-                                </mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="invoiceForm.controls['country'].hasError('required')">Select country</mat-error>
-                        </mat-form-field> -->
+                      
                         <form [formGroup]="selectUser">
                             <mat-form-field appearance="outline">
                                 <mat-label>Select User</mat-label>
 
                                 <input matInput placeholder="Select User" aria-label="Select User"
                                     [matAutocomplete]="auto" formControlName="user">
-                                <!--(select)="getCodeFromLabelOnBlur()"-->
                                 <mat-error *ngIf="selectUser.invalid">
                                     Please select value from dropdown only.
                                 </mat-error>
                                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
-                                    (optionSelected)="getUserInvoiceList()">
+                                    (optionSelected)="getUserInvoiceList('fromSelect')">
                                     <!--(optionSelected)="getPeriodList($event.option.value)"-->
                                     <mat-option *ngFor="let user of filteredOptions | async" [value]="user.name">
                                         <span>{{user.name}}</span>
@@ -84,8 +72,7 @@
                     <mat-card>
                         <div class="card__row">
                             <label>Invoice Information:</label><br><br>
-                            <div class="card__col-lg-4">
-                                <!-- <label><b>Invoice No: </b></label> -->
+                            <!-- <div class="card__col-lg-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Invoice Number</mat-label>
                                     <input matInput formControlName="invoiceNo" maxlength="15"
@@ -95,7 +82,7 @@
                                     <mat-error *ngIf="invoiceForm.controls['invoiceNo'].hasError('pattern')">Enter valid
                                         Invoice Number</mat-error>
                                 </mat-form-field>
-                            </div>
+                            </div> -->
                             <div class="card__col-lg-4">
                                 <!-- <label><b>Invoice Date: </b></label> -->
                                 <mat-form-field appearance="outline">
