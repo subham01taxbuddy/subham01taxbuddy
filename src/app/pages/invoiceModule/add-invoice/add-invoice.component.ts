@@ -45,7 +45,7 @@ export class AddInvoiceComponent implements OnInit {
 
     this.invoiceForm = this.fb.group({
       userId: [''],
-      invoiceNo: ['', Validators.required],
+      invoiceNo: [''],
       invoiceDate: [(new Date()), Validators.required],
       terms: ['Due on Receipt', Validators.required],
       dueDate: [(new Date()), Validators.required],
@@ -59,7 +59,7 @@ export class AddInvoiceComponent implements OnInit {
       state: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
-      gstin: ['', [Validators.pattern(AppConstants.GSTNRegex), Validators.required]],
+      gstin: ['', [Validators.pattern(AppConstants.GSTNRegex)]],
       phone: ['', [Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex), Validators.required]],
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
       subTotal: ['', Validators.required],
@@ -111,7 +111,7 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   invoiceDetail: any;
-  getUserInvoiceList() {
+  getUserInvoiceList(key) {
     if (this.selectUser.controls['user'].valid) {
 
       console.log('user: ', this.selectUser.controls['user'].value)
@@ -123,12 +123,31 @@ export class AddInvoiceComponent implements OnInit {
           console.log('User Detail: ', result)
           this.invoiceDetail = result;
           this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
+          if(key === 'fromSelect'){
+            this.serUserAddressInfo()
+          }
         }, error => {
           this._toastMessageService.alert("error", "There is some issue to fetch user invoice data.");
         });
       }
       console.log('invoiceForm: ', this.invoiceForm)
     }
+  }
+
+  serUserAddressInfo(){
+    const param = '/user/profile/' + this.userInfo[0].userId;
+    this.userService.getMethodInfo(param).subscribe((result: any) => {
+      console.log('User Address info: ', result)
+      if(result){
+        let name = result.fName+' '+(result.mName ? result.mName : '')+' '+result.lName
+        this.invoiceForm.controls['billTo'].setValue(name);
+        this.invoiceForm.controls['phone'].setValue(result.mobileNumber);
+        this.invoiceForm.controls['email'].setValue(result.emailAddress);
+      }
+      //this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
+    }, error => {
+    //  this._toastMessageService.alert("error", "There is some issue to fetch user profile data.");
+    });
   }
 
   createInvoice(): FormGroup {
@@ -471,7 +490,7 @@ export class AddInvoiceComponent implements OnInit {
       }
       console.log('invoiceTableInfo ', this.invoiceTableInfo)
       this.invoiceForm.controls['itemList'].setValue(this.invoiceTableInfo)
-
+      debugger
       if (this.invoiceForm.valid) {
         console.log('Invoice Form: ', this.invoiceForm)
         console.log('Invoice Form: ', this.clientListGridOptions.api.getRenderedNodes())
@@ -490,7 +509,7 @@ export class AddInvoiceComponent implements OnInit {
           // this.selectUser.reset();
           // this.invoiceForm.reset();
           // this.invoiceDetail = '';
-          this.getUserInvoiceList();
+          this.getUserInvoiceList('not-select');
         }, error => {
           this.loading = false;
           this._toastMessageService.alert("error", "There is some issue to save user invoice data.");
