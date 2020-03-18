@@ -139,10 +139,10 @@ export class AddInvoiceComponent implements OnInit {
     this.userService.getMethodInfo(param).subscribe((result: any) => {
       console.log('User Address info: ', result)
       if(result){
-        let name = result.fName+' '+(result.mName ? result.mName : '')+' '+result.lName
+        let name = (result.fName ? result.fName : '')+' '+(result.mName ? result.mName : '')+' '+(result.lName ? result.lName : '')
         this.invoiceForm.controls['billTo'].setValue(name);
-        this.invoiceForm.controls['phone'].setValue(result.mobileNumber);
-        this.invoiceForm.controls['email'].setValue(result.emailAddress);
+        this.invoiceForm.controls['phone'].setValue(result.mobileNumber ? result.mobileNumber : '');
+        this.invoiceForm.controls['email'].setValue(result.emailAddress ? result.emailAddress : '');
       }
       //this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
     }, error => {
