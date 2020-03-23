@@ -10,11 +10,29 @@ import { NumericEditor } from 'app/shared/numeric-editor.component';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { GstMsService } from 'app/services/gst-ms.service';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+
+export const MY_FORMATS = {
+  parse: {
+      dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+      dateInput: 'DD/MM/YYYY',
+      monthYearLabel: 'MMM YYYY',
+      dateA11yLabel: 'LL',
+      monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-add-invoice',
   templateUrl: './add-invoice.component.html',
-  styleUrls: ['./add-invoice.component.css']
+  styleUrls: ['./add-invoice.component.css'],
+  providers:[
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
+  ]
 })
 export class AddInvoiceComponent implements OnInit {
 
@@ -29,23 +47,33 @@ export class AddInvoiceComponent implements OnInit {
   countryDropdown: any;
   natureCode: any;
   stateDropdown: any;
+  showInvoices: boolean;
   invoiceTableInfo: any = [];
+  editInvoice: boolean;
+  paymentMode: any = [{ value: 'Online' }, { value: 'Cash' }]
   maxDate = new Date();
   constructor(private userMsService: UserMsService, private gstMsService: GstMsService, public utilsService: UtilsService, private _toastMessageService: ToastMessageService, private fb: FormBuilder, private userService: UserMsService) {
     this.getUserList();
+
+    this.selectUser = this.fb.group({
+      user: ['', Validators.required]
+    })
   }
 
   ngOnInit() {
     this.getCountryDropdown();
     this.invoiceInfoCalled();
-    this.selectUser = this.fb.group({
-      user: ['', Validators.required]
-    })
+
+    this.setInitiatedData()
+  }
+
+  setInitiatedData() {
 
 
     this.invoiceForm = this.fb.group({
+      _id:[null],
       userId: [''],
-      invoiceNo: [''],
+      invoiceNo: [null],
       invoiceDate: [(new Date()), Validators.required],
       terms: ['Due on Receipt', Validators.required],
       dueDate: [(new Date()), Validators.required],
@@ -53,6 +81,10 @@ export class AddInvoiceComponent implements OnInit {
       cin: ['U74999MH2017PT298565', Validators.required],
       modeOfPayment: ['Online', Validators.required],
       billTo: ['', Validators.required],
+      paymentCollectedBy: '',
+      dateOfReceipt: '',
+      dateOfDeposit: '',
+      paymentStatus:['Unpaid'],
       addressLine1: ['', Validators.required],
       addressLine2: [''],
       pincode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode), Validators.required]],
@@ -69,6 +101,24 @@ export class AddInvoiceComponent implements OnInit {
       balanceDue: ['', Validators.required],
       itemList: ['', Validators.required]
     })
+  }
+
+  setFormControl(payMode) {
+    console.log(payMode)
+    if (payMode === 'Cash') {
+      this.invoiceForm.controls['paymentCollectedBy'].setValidators([Validators.required]);
+      this.invoiceForm.controls['dateOfReceipt'].setValidators([Validators.required]);
+      this.invoiceForm.controls['dateOfDeposit'].setValidators([Validators.required]);
+    } else if (payMode === 'Online') {
+      this.invoiceForm.controls['paymentCollectedBy'].setValidators(null);
+      this.invoiceForm.controls['dateOfReceipt'].setValidators(null);
+      this.invoiceForm.controls['dateOfDeposit'].setValidators(null);
+    }
+  }
+
+  minDepositInBank: any;
+  setDepositInBankValidation(reciptDate){
+   this.minDepositInBank = reciptDate;
   }
 
   getUserList() {
@@ -114,6 +164,9 @@ export class AddInvoiceComponent implements OnInit {
   getUserInvoiceList(key) {
     if (this.selectUser.controls['user'].valid) {
 
+      if (key === 'fromSelect') {
+        this.setInitiatedData()
+      }
       console.log('user: ', this.selectUser.controls['user'].value)
       this.userInfo = this.available_merchant_list.filter(item => item.name.toLowerCase() === this.selectUser.value.user.toLowerCase());
       console.log('select USER: ', this.userInfo)
@@ -123,8 +176,20 @@ export class AddInvoiceComponent implements OnInit {
           console.log('User Detail: ', result)
           this.invoiceDetail = result;
           this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
-          if(key === 'fromSelect'){
-            this.serUserAddressInfo()
+
+          let blankTableRow = [{
+            itemDescription: '',
+            quantity: '',
+            rate: '',
+            cgstPercent: '9',
+            cgstAmnt: '',
+            sgstPercent: '9',
+            sgstAmnt: '',
+            amnt: ''
+          }]
+          this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))
+          if (key === 'fromSelect') {
+            this.setUserAddressInfo()
           }
         }, error => {
           this._toastMessageService.alert("error", "There is some issue to fetch user invoice data.");
@@ -134,19 +199,19 @@ export class AddInvoiceComponent implements OnInit {
     }
   }
 
-  serUserAddressInfo(){
+  setUserAddressInfo() {
     const param = '/user/profile/' + this.userInfo[0].userId;
     this.userService.getMethodInfo(param).subscribe((result: any) => {
       console.log('User Address info: ', result)
-      if(result){
-        let name = (result.fName ? result.fName : '')+' '+(result.mName ? result.mName : '')+' '+(result.lName ? result.lName : '')
+      if (result) {
+        let name = (result.fName ? result.fName : '') + ' ' + (result.mName ? result.mName : '') + ' ' + (result.lName ? result.lName : '')
         this.invoiceForm.controls['billTo'].setValue(name);
         this.invoiceForm.controls['phone'].setValue(result.mobileNumber ? result.mobileNumber : '');
         this.invoiceForm.controls['email'].setValue(result.emailAddress ? result.emailAddress : '');
       }
       //this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
     }, error => {
-    //  this._toastMessageService.alert("error", "There is some issue to fetch user profile data.");
+      //  this._toastMessageService.alert("error", "There is some issue to fetch user profile data.");
     });
   }
 
@@ -409,7 +474,7 @@ export class AddInvoiceComponent implements OnInit {
         this.stateDropdown = result;
       }, error => {
       });
-    } else if (country !== 'INDIA') {   
+    } else if (country !== 'INDIA') {
       this.invoiceForm.controls['state'].setValue('Foreign');   //99
       this.stateDropdown = [{ stateName: 'Foreign' }]
     }
@@ -474,6 +539,7 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.controls['sgstTotal'].setValue(this.invoiceData.invoiceSGST)
       this.invoiceForm.controls['total'].setValue(this.invoiceData.invoiceTotal)
       this.invoiceForm.controls['balanceDue'].setValue(this.invoiceData.invoiceTotal)
+      this.invoiceForm.controls['paymentStatus'].setValue(this.invoiceForm.controls['modeOfPayment'].value === 'Cash' ? 'Paid' : 'Unpaid')
       this.invoiceTableInfo = [];
 
       for (let i = 0; i < this.clientListGridOptions.api.getRenderedNodes().length; i++) {
@@ -490,7 +556,6 @@ export class AddInvoiceComponent implements OnInit {
       }
       console.log('invoiceTableInfo ', this.invoiceTableInfo)
       this.invoiceForm.controls['itemList'].setValue(this.invoiceTableInfo)
-      debugger
       if (this.invoiceForm.valid) {
         console.log('Invoice Form: ', this.invoiceForm)
         console.log('Invoice Form: ', this.clientListGridOptions.api.getRenderedNodes())
@@ -501,9 +566,13 @@ export class AddInvoiceComponent implements OnInit {
         let body = this.invoiceForm.value;
         this.userService.postMethodDownloadDoc(param, body).subscribe((result: any) => {
           this.loading = false;
+            this.editInvoice = false
           console.log("result: ", result)
-          var fileURL = new Blob([result.blob()], { type: 'application/pdf' })
-          window.open(URL.createObjectURL(fileURL))
+          this.utilsService.smoothScrollToTop();
+          this.showInvoices = true;
+          // var fileURL = new Blob([result.blob()], { type: 'application/pdf' })
+          // window.open(URL.createObjectURL(fileURL))
+
           this._toastMessageService.alert("success", "Invoice save succesfully.");
           // this.invoiceTableInfo =[];
           // this.selectUser.reset();
@@ -527,7 +596,7 @@ export class AddInvoiceComponent implements OnInit {
   downloadInvoice(invoiceInfo) {
     console.log('invoiceInfo: ', invoiceInfo)
     this.loading = true;
-    const param = '/itr/invoice?invoiceNo=' + invoiceInfo.invoiceNo;
+    const param = '/itr/invoice/download?invoiceNo=' + invoiceInfo.invoiceNo;
     this.userService.invoiceDownloadDoc(param).subscribe((result: any) => {
       this.loading = false;
       console.log('User Detail: ', result)
@@ -537,6 +606,63 @@ export class AddInvoiceComponent implements OnInit {
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Faild to generate Invoice.");
+    });
+  }
+
+  sendMail(invoiceInfo) {
+   // https://uat-api.taxbuddy.com/itr/invoice/sendInvoice?invoiceNo=
+   this.loading = true;
+   const param = '/itr/invoice/send-invoice?invoiceNo=' + invoiceInfo.invoiceNo;
+   this.userService.getMethodInfo(param).subscribe((result: any) => {
+     this.loading = false;
+     console.log('Email sent responce: ', result)
+     this._toastMessageService.alert("success", "Invoice mail sent successfully.");
+   }, error => {
+     this.loading = false;
+     this._toastMessageService.alert("error", "Faild to send invoice mail.");
+   });
+  }
+
+  updateInvoice(invoiceInfo) {
+    this.editInvoice = true;
+    this.loading = true;
+    const param = '/itr/invoice?invoiceNo=' + invoiceInfo.invoiceNo;
+    this.userService.getMethodInfo(param).subscribe((result: any) => {
+      this.loading = false;
+
+      console.log('User Profile: ', result)
+
+      this.invoiceForm.patchValue(result)
+      console.log('Updated Form: ',this.invoiceForm)
+      this.clientListGridOptions.api.setRowData(this.setCreateRowDate(this.invoiceForm.value.itemList))
+     // this._toastMessageService.alert("success", "Invoice download successfully.");
+    }, error => {
+      this.loading = false;
+      //this._toastMessageService.alert("error", "Faild to generate Invoice.");
+    });
+  }
+
+  setCreateRowDate(userInvoiceData){
+    console.log('userInvoiceData: ',userInvoiceData)
+    var invoices = [];
+   for(let i=0; i<userInvoiceData.length; i++){
+     let updateInvoice = Object.assign({}, userInvoiceData[i], {itemDescription: userInvoiceData[i].itemDescription, quantity: userInvoiceData[i].quantity, rate: userInvoiceData[i].rate, cgstPercent: userInvoiceData[i].cgstPercent, cgstAmnt: userInvoiceData[i].cgstAmount, sgstPercent: userInvoiceData[i].sgstPercent, sgstAmnt: userInvoiceData[i].sgstAmnt, amnt: userInvoiceData[i].amount } )
+     invoices.push(updateInvoice)
+   }
+    console.log('user invoices: ',invoices);
+    return invoices;
+  }
+
+  sendNotification(invoiceInfo){
+    this.loading = true;
+    const param = '/itr/invoice/send-reminder';
+    this.userService.postMethodInfo(param, invoiceInfo).subscribe((result: any) => {
+      this.loading = false;
+      console.log('Email sent responce: ', result)
+      this._toastMessageService.alert("success", "Reminder sent successfully.");
+    }, error => {
+      this.loading = false;
+      this._toastMessageService.alert("error", "Faild to send Reminder.");
     });
   }
 
