@@ -10,18 +10,18 @@ import { NumericEditor } from 'app/shared/numeric-editor.component';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { GstMsService } from 'app/services/gst-ms.service';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 export const MY_FORMATS = {
   parse: {
-      dateInput: 'DD/MM/YYYY',
+    dateInput: 'DD/MM/YYYY',
   },
   display: {
-      dateInput: 'DD/MM/YYYY',
-      monthYearLabel: 'MMM YYYY',
-      dateA11yLabel: 'LL',
-      monthYearA11yLabel: 'MMMM YYYY',
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
   },
 };
 
@@ -29,7 +29,7 @@ export const MY_FORMATS = {
   selector: 'app-add-invoice',
   templateUrl: './add-invoice.component.html',
   styleUrls: ['./add-invoice.component.css'],
-  providers:[
+  providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   ]
@@ -71,7 +71,7 @@ export class AddInvoiceComponent implements OnInit {
 
 
     this.invoiceForm = this.fb.group({
-      _id:[null],
+      _id: [null],
       userId: [''],
       invoiceNo: [null],
       invoiceDate: [(new Date()), Validators.required],
@@ -84,7 +84,7 @@ export class AddInvoiceComponent implements OnInit {
       paymentCollectedBy: '',
       dateOfReceipt: '',
       dateOfDeposit: '',
-      paymentStatus:['Unpaid'],
+      paymentStatus: ['Unpaid'],
       addressLine1: ['', Validators.required],
       addressLine2: [''],
       pincode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode), Validators.required]],
@@ -117,12 +117,12 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.controls['dateOfDeposit'].setValidators(null);
       this.invoiceForm.controls['dateOfDeposit'].updateValueAndValidity();
     }
-    console.log('this.invoiceForm: ',this.invoiceForm)
+    console.log('this.invoiceForm: ', this.invoiceForm)
   }
 
   minDepositInBank: any;
-  setDepositInBankValidation(reciptDate){
-   this.minDepositInBank = reciptDate;
+  setDepositInBankValidation(reciptDate) {
+    this.minDepositInBank = reciptDate;
   }
 
   getUserList() {
@@ -166,23 +166,53 @@ export class AddInvoiceComponent implements OnInit {
 
   invoiceDetail: any;
   getUserInvoiceList(key) {
-  //  debugger
+    debugger
     if (this.selectUser.controls['user'].valid) {
-
-      if (key === 'fromSelect') {
-        this.setInitiatedData()
-       // this.invoiceForm.reset();
-      }
+    
+      this.setInitiatedData()
+      
       console.log('user: ', this.selectUser.controls['user'].value)
       this.userInfo = this.available_merchant_list.filter(item => item.name.toLowerCase() === this.selectUser.value.user.toLowerCase());
       console.log('select USER: ', this.userInfo)
+      console.log('this.invoiceForm', this.invoiceForm)
       if (this.userInfo.length !== 0) {
         const param = '/itr/invoice/' + this.userInfo[0].userId;
         this.userService.getMethodInfo(param).subscribe((result: any) => {
-          //debugger
+
+          console.log('this.invoiceForm', this.invoiceForm)
+          debugger
+          this.invoiceForm.controls['paymentCollectedBy'].setValidators(null);
+          this.invoiceForm.controls['paymentCollectedBy'].updateValueAndValidity();
+          this.invoiceForm.controls['dateOfReceipt'].setValidators(null);
+          this.invoiceForm.controls['dateOfReceipt'].updateValueAndValidity();
+          this.invoiceForm.controls['dateOfDeposit'].setValidators(null);
+          this.invoiceForm.controls['dateOfDeposit'].updateValueAndValidity();
+
+          this.invoiceForm.controls['billTo'].setValidators(null);
+          this.invoiceForm.controls['billTo'].updateValueAndValidity();
+          this.invoiceForm.controls['addressLine1'].setValidators(null);
+          this.invoiceForm.controls['addressLine1'].updateValueAndValidity();
+          this.invoiceForm.controls['addressLine2'].setValidators(null);
+          this.invoiceForm.controls['addressLine2'].updateValueAndValidity();
+          this.invoiceForm.controls['pincode'].setValidators(null);
+          this.invoiceForm.controls['pincode'].updateValueAndValidity();
+          this.invoiceForm.controls['state'].setValidators(null);
+          this.invoiceForm.controls['state'].updateValueAndValidity();
+          this.invoiceForm.controls['city'].setValidators(null);
+          this.invoiceForm.controls['city'].updateValueAndValidity();
+          this.invoiceForm.controls['country'].setValidators(null);
+          this.invoiceForm.controls['country'].updateValueAndValidity();
+          this.invoiceForm.controls['gstin'].setValidators(null);
+          this.invoiceForm.controls['gstin'].updateValueAndValidity();
+          this.invoiceForm.controls['phone'].setValidators(null);
+          this.invoiceForm.controls['phone'].updateValueAndValidity();
+          this.invoiceForm.controls['email'].setValidators(null);
+          this.invoiceForm.controls['email'].updateValueAndValidity();
+          debugger
           console.log('User Detail: ', result)
           this.invoiceDetail = result;
-          this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
+          
+            this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
 
           let blankTableRow = [{
             itemDescription: '',
@@ -574,7 +604,7 @@ export class AddInvoiceComponent implements OnInit {
         let body = this.invoiceForm.value;
         this.userService.postMethodDownloadDoc(param, body).subscribe((result: any) => {
           this.loading = false;
-            this.editInvoice = false
+          this.editInvoice = false
           console.log("result: ", result)
           this.utilsService.smoothScrollToTop();
           this.showInvoices = true;
@@ -584,7 +614,8 @@ export class AddInvoiceComponent implements OnInit {
           this._toastMessageService.alert("success", "Invoice save succesfully.");
           // this.invoiceTableInfo =[];
           // this.selectUser.reset();
-          // this.invoiceForm.reset();
+          this.invoiceForm.reset();
+          console.log('InvoiceForm: ', this.invoiceForm)
           // this.invoiceDetail = '';
           this.getUserInvoiceList('not-select');
         }, error => {
@@ -618,17 +649,17 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   sendMail(invoiceInfo) {
-   // https://uat-api.taxbuddy.com/itr/invoice/sendInvoice?invoiceNo=
-   this.loading = true;
-   const param = '/itr/invoice/send-invoice?invoiceNo=' + invoiceInfo.invoiceNo;
-   this.userService.getMethodInfo(param).subscribe((result: any) => {
-     this.loading = false;
-     console.log('Email sent responce: ', result)
-     this._toastMessageService.alert("success", "Invoice mail sent successfully.");
-   }, error => {
-     this.loading = false;
-     this._toastMessageService.alert("error", "Faild to send invoice mail.");
-   });
+    // https://uat-api.taxbuddy.com/itr/invoice/sendInvoice?invoiceNo=
+    this.loading = true;
+    const param = '/itr/invoice/send-invoice?invoiceNo=' + invoiceInfo.invoiceNo;
+    this.userService.getMethodInfo(param).subscribe((result: any) => {
+      this.loading = false;
+      console.log('Email sent responce: ', result)
+      this._toastMessageService.alert("success", "Invoice mail sent successfully.");
+    }, error => {
+      this.loading = false;
+      this._toastMessageService.alert("error", "Faild to send invoice mail.");
+    });
   }
 
   updateInvoice(invoiceInfo) {
@@ -641,37 +672,41 @@ export class AddInvoiceComponent implements OnInit {
       console.log('User Profile: ', result)
 
       this.invoiceForm.patchValue(result)
-      console.log('Updated Form: ',this.invoiceForm)
+      console.log('Updated Form: ', this.invoiceForm)
       this.clientListGridOptions.api.setRowData(this.setCreateRowDate(this.invoiceForm.value.itemList))
-     // this._toastMessageService.alert("success", "Invoice download successfully.");
+      // this._toastMessageService.alert("success", "Invoice download successfully.");
     }, error => {
       this.loading = false;
       //this._toastMessageService.alert("error", "Faild to generate Invoice.");
     });
   }
 
-  setCreateRowDate(userInvoiceData){
-    console.log('userInvoiceData: ',userInvoiceData)
+  setCreateRowDate(userInvoiceData) {
+    console.log('userInvoiceData: ', userInvoiceData)
     var invoices = [];
-   for(let i=0; i<userInvoiceData.length; i++){
-     let updateInvoice = Object.assign({}, userInvoiceData[i], {itemDescription: userInvoiceData[i].itemDescription, quantity: userInvoiceData[i].quantity, rate: userInvoiceData[i].rate, cgstPercent: userInvoiceData[i].cgstPercent, cgstAmnt: userInvoiceData[i].cgstAmount, sgstPercent: userInvoiceData[i].sgstPercent, sgstAmnt: userInvoiceData[i].sgstAmnt, amnt: userInvoiceData[i].amount } )
-     invoices.push(updateInvoice)
-   }
-    console.log('user invoices: ',invoices);
+    for (let i = 0; i < userInvoiceData.length; i++) {
+      let updateInvoice = Object.assign({}, userInvoiceData[i], { itemDescription: userInvoiceData[i].itemDescription, quantity: userInvoiceData[i].quantity, rate: userInvoiceData[i].rate, cgstPercent: userInvoiceData[i].cgstPercent, cgstAmnt: userInvoiceData[i].cgstAmount, sgstPercent: userInvoiceData[i].sgstPercent, sgstAmnt: userInvoiceData[i].sgstAmnt, amnt: userInvoiceData[i].amount })
+      invoices.push(updateInvoice)
+    }
+    console.log('user invoices: ', invoices);
     return invoices;
   }
 
-  sendNotification(invoiceInfo){
+  sendMailNotification(invoiceInfo) {
     this.loading = true;
     const param = '/itr/invoice/send-reminder';
     this.userService.postMethodInfo(param, invoiceInfo).subscribe((result: any) => {
       this.loading = false;
       console.log('Email sent responce: ', result)
-      this._toastMessageService.alert("success", "Reminder sent successfully.");
+      this._toastMessageService.alert("success", "Mail Reminder sent successfully.");
     }, error => {
       this.loading = false;
-      this._toastMessageService.alert("error", "Faild to send Reminder.");
+      this._toastMessageService.alert("error", "Faild to send Mail Reminder.");
     });
+  }
+
+  sendWhatAppNotification() {
+    alert('WhatApp notification inprogress')
   }
 
 }

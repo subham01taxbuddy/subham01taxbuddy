@@ -46,7 +46,8 @@
                                             <th>Bill to</th>
                                             <th>Email</th>
                                             <th>Action</th>
-                                            <th>Payment Status</th>
+                                            <th>Notify</th>
+                                            <th>Pay Status</th>
                                         </tr>
                                         <tr *ngFor="let invoice of invoiceDetail">
                                             <td>{{invoice.invoiceNo}}</td>
@@ -61,17 +62,25 @@
                                                     <i class="fa fa-download fa-lg" aria-hidden="true"></i>
                                                 </a>&nbsp;&nbsp;
 
-                                                <a href="javascript:0" (click)="updateInvoice(invoice)" title="Edit Invoice">  <!--
-                                                    [class.disabledBtn]="invoice.modeOfPayment === 'Cash'"-->
+                                                <a href="javascript:0" (click)="updateInvoice(invoice)" title="Edit Invoice"
+                                                    [class.disabledBtn]="invoice.modeOfPayment === 'Cash'|| invoice.paymentStatus === 'Paid'">
                                                     <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
+                                                </a>
+                                            </td>
+
+                                            <td>
+                                                <a href="javascript:0" (click)="sendWhatAppNotification(invoice)" title="Send WhatsApp Reminder"
+                                                [class.disabledBtn]="invoice.modeOfPayment === 'Cash' || invoice.paymentStatus === 'Paid'">
+                                                    <i class="fa fa-whatsapp fa-lg" aria-hidden="true"></i>
                                                 </a>
 
                                                 &nbsp;&nbsp;
-                                                <a href="javascript:0" (click)="sendNotification(invoice)" title="Send Reminder"
+                                                <a href="javascript:0" (click)="sendMailNotification(invoice)" title="Send Mail Reminder"
                                                 [class.disabledBtn]="invoice.modeOfPayment === 'Cash' || invoice.paymentStatus === 'Paid'">
                                                     <i class="fa fa-bell fa-lg" aria-hidden="true"></i>
                                                 </a>
                                             </td>
+
                                             <td style="text-align: center; font-weight: bold;">{{invoice.paymentStatus}}</td>
                                         </tr>
                                       
