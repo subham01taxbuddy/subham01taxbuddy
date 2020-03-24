@@ -111,9 +111,13 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.controls['dateOfDeposit'].setValidators([Validators.required]);
     } else if (payMode === 'Online') {
       this.invoiceForm.controls['paymentCollectedBy'].setValidators(null);
+      this.invoiceForm.controls['paymentCollectedBy'].updateValueAndValidity();
       this.invoiceForm.controls['dateOfReceipt'].setValidators(null);
+      this.invoiceForm.controls['dateOfReceipt'].updateValueAndValidity();
       this.invoiceForm.controls['dateOfDeposit'].setValidators(null);
+      this.invoiceForm.controls['dateOfDeposit'].updateValueAndValidity();
     }
+    console.log('this.invoiceForm: ',this.invoiceForm)
   }
 
   minDepositInBank: any;
@@ -162,10 +166,12 @@ export class AddInvoiceComponent implements OnInit {
 
   invoiceDetail: any;
   getUserInvoiceList(key) {
+  //  debugger
     if (this.selectUser.controls['user'].valid) {
 
       if (key === 'fromSelect') {
         this.setInitiatedData()
+       // this.invoiceForm.reset();
       }
       console.log('user: ', this.selectUser.controls['user'].value)
       this.userInfo = this.available_merchant_list.filter(item => item.name.toLowerCase() === this.selectUser.value.user.toLowerCase());
@@ -173,6 +179,7 @@ export class AddInvoiceComponent implements OnInit {
       if (this.userInfo.length !== 0) {
         const param = '/itr/invoice/' + this.userInfo[0].userId;
         this.userService.getMethodInfo(param).subscribe((result: any) => {
+          //debugger
           console.log('User Detail: ', result)
           this.invoiceDetail = result;
           this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
@@ -187,7 +194,8 @@ export class AddInvoiceComponent implements OnInit {
             sgstAmnt: '',
             amnt: ''
           }]
-          this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))
+          this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))    //use for clear invoice table fields
+
           if (key === 'fromSelect') {
             this.setUserAddressInfo()
           }

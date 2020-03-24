@@ -17,7 +17,7 @@
                                     Please select value from dropdown only.
                                 </mat-error>
                                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
-                                    (optionSelected)="getUserInvoiceList('fromSelect')">
+                                     (optionSelected)="getUserInvoiceList('fromSelect')">
                                     <!--(optionSelected)="getPeriodList($event.option.value)"-->
                                     <mat-option *ngFor="let user of filteredOptions | async" [value]="user.name">
                                         <span>{{user.name}}</span>
