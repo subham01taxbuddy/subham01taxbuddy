@@ -33,6 +33,15 @@ export class UserMsService {
     // .map(response => response.json())
   }
 
+  postMethodInfo<T>(...param): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+   
+    console.log('update Param', param);
+    return this.httpClient.post<T>(environment.url + param[0], param[1] ,{ headers: this.headers });
+    // .map(response => response.json())
+  }
+
   invoiceDownloadDoc(...params) {
     this.headers = new Headers();
     this.headers.append('Content-Type', 'application/json');
