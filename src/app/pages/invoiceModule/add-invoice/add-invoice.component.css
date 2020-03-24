@@ -61,3 +61,10 @@ table {
     /* display: block; */
     font-size: 12px;
   }
+
+  .disabledBtn{
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+    color: black;
+  }
