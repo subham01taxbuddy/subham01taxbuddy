@@ -44,12 +44,12 @@ export class AddInvoiceComponent implements OnInit {
   userInfo: any;
   clientListGridOptions: GridOptions;
   invoiceForm: FormGroup;
-  countryDropdown: any;
   natureCode: any;
   stateDropdown: any;
   showInvoices: boolean;
   invoiceTableInfo: any = [];
   editInvoice: boolean;
+  countryDropdown : any =[{  "countryId" : 1, "countryName" : "INDIA", "countryCode" : "91"}];
   paymentMode: any = [{ value: 'Online' }, { value: 'Cash' }];
   paymentStatus: any = [{value: 'Paid', label: 'Paid'},{value: 'Failed', label: 'Failed'},{value: 'Unpaid', label: 'Unpaid'}]
   maxDate = new Date();
@@ -64,7 +64,7 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getCountryDropdown();
+    this.changeCountry('INDIA');
     this.invoiceInfoCalled();
 
     this.setInitiatedData()
@@ -192,26 +192,26 @@ export class AddInvoiceComponent implements OnInit {
           this.invoiceForm.controls['dateOfDeposit'].setValidators(null);
           this.invoiceForm.controls['dateOfDeposit'].updateValueAndValidity();
 
-          this.invoiceForm.controls['billTo'].setValidators(null);
-          this.invoiceForm.controls['billTo'].updateValueAndValidity();
-          this.invoiceForm.controls['addressLine1'].setValidators(null);
-          this.invoiceForm.controls['addressLine1'].updateValueAndValidity();
-          this.invoiceForm.controls['addressLine2'].setValidators(null);
-          this.invoiceForm.controls['addressLine2'].updateValueAndValidity();
-          this.invoiceForm.controls['pincode'].setValidators(null);
-          this.invoiceForm.controls['pincode'].updateValueAndValidity();
-          this.invoiceForm.controls['state'].setValidators(null);
-          this.invoiceForm.controls['state'].updateValueAndValidity();
-          this.invoiceForm.controls['city'].setValidators(null);
-          this.invoiceForm.controls['city'].updateValueAndValidity();
-          this.invoiceForm.controls['country'].setValidators(null);
-          this.invoiceForm.controls['country'].updateValueAndValidity();
-          this.invoiceForm.controls['gstin'].setValidators(null);
-          this.invoiceForm.controls['gstin'].updateValueAndValidity();
-          this.invoiceForm.controls['phone'].setValidators(null);
-          this.invoiceForm.controls['phone'].updateValueAndValidity();
-          this.invoiceForm.controls['email'].setValidators(null);
-          this.invoiceForm.controls['email'].updateValueAndValidity();
+          // this.invoiceForm.controls['billTo'].setValidators(null);
+          // this.invoiceForm.controls['billTo'].updateValueAndValidity();
+          // this.invoiceForm.controls['addressLine1'].setValidators(null);
+          // this.invoiceForm.controls['addressLine1'].updateValueAndValidity();
+          // this.invoiceForm.controls['addressLine2'].setValidators(null);
+          // this.invoiceForm.controls['addressLine2'].updateValueAndValidity();
+          // this.invoiceForm.controls['pincode'].setValidators(null);
+          // this.invoiceForm.controls['pincode'].updateValueAndValidity();
+          // this.invoiceForm.controls['state'].setValidators(null);
+          // this.invoiceForm.controls['state'].updateValueAndValidity();
+          // this.invoiceForm.controls['city'].setValidators(null);
+          // this.invoiceForm.controls['city'].updateValueAndValidity();
+          // this.invoiceForm.controls['country'].setValidators(null);
+          // this.invoiceForm.controls['country'].updateValueAndValidity();
+          // this.invoiceForm.controls['gstin'].setValidators(null);
+          // this.invoiceForm.controls['gstin'].updateValueAndValidity();
+          // this.invoiceForm.controls['phone'].setValidators(null);
+          // this.invoiceForm.controls['phone'].updateValueAndValidity();
+          // this.invoiceForm.controls['email'].setValidators(null);
+          // this.invoiceForm.controls['email'].updateValueAndValidity();
           debugger
           console.log('User Detail: ', result)
           this.invoiceDetail = result;
@@ -287,17 +287,20 @@ export class AddInvoiceComponent implements OnInit {
       });
     }
     else if(type === 'InvoiceData'){
+      debugger
       console.log('InvoiceDetail: ',  this.invoiceDetail[0])
       this.invoiceForm.controls['billTo'].setValue(this.invoiceDetail[0].billTo);
       this.invoiceForm.controls['addressLine1'].setValue(this.invoiceDetail[0].addressLine1);
       this.invoiceForm.controls['addressLine2'].setValue(this.invoiceDetail[0].addressLine2 ? this.invoiceDetail[0].addressLine2 : '');
       this.invoiceForm.controls['pincode'].setValue(this.invoiceDetail[0].pincode);
-      this.invoiceForm.controls['state'].setValue(this.invoiceDetail[0].state);
       this.invoiceForm.controls['city'].setValue(this.invoiceDetail[0].city);
+      this.invoiceForm.controls['state'].setValue(this.invoiceDetail[0].state);
       this.invoiceForm.controls['country'].setValue(this.invoiceDetail[0].country);
       this.invoiceForm.controls['gstin'].setValue(this.invoiceDetail[0].gstin ? this.invoiceDetail[0].gstin : '');
       this.invoiceForm.controls['phone'].setValue(this.invoiceDetail[0].phone);
       this.invoiceForm.controls['email'].setValue(this.invoiceDetail[0].email);
+
+      console.log('invoiceForm: ',  this.invoiceForm)
     }
    
   }
@@ -544,14 +547,16 @@ export class AddInvoiceComponent implements OnInit {
 
   }
 
-  getCountryDropdown() {
-    const param = '/fnbmaster/countrymaster?sort=countryId,asc';
-    this.userService.getMethod(param).subscribe((result: any) => {
-      this.countryDropdown = result;
-      sessionStorage.setItem('COUNTRY_CODE', JSON.stringify(this.countryDropdown));
-    }, error => {
-    });
-  }
+  // getCountryDropdown() {
+  //   const param = '/fnbmaster/countrymaster?sort=countryId,asc';
+  //   this.userService.getMethod(param).subscribe((result: any) => {
+  //     this.countryDropdown = result;
+    
+   
+  //     sessionStorage.setItem('COUNTRY_CODE', JSON.stringify(this.countryDropdown));
+  //   }, error => {
+  //   });
+  // }
 
   changeCountry(country) {
     if (country === 'INDIA') {
