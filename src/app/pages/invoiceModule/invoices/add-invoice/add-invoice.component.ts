@@ -50,7 +50,8 @@ export class AddInvoiceComponent implements OnInit {
   showInvoices: boolean;
   invoiceTableInfo: any = [];
   editInvoice: boolean;
-  paymentMode: any = [{ value: 'Online' }, { value: 'Cash' }]
+  paymentMode: any = [{ value: 'Online' }, { value: 'Cash' }];
+  paymentStatus: any = [{value: 'Paid', label: 'Paid'},{value: 'Failed', label: 'Failed'},{value: 'Unpaid', label: 'Unpaid'}]
   maxDate = new Date();
   constructor(private userMsService: UserMsService, private gstMsService: GstMsService, public utilsService: UtilsService, private _toastMessageService: ToastMessageService, private fb: FormBuilder, private userService: UserMsService) {
     this.getUserList();
@@ -58,6 +59,8 @@ export class AddInvoiceComponent implements OnInit {
     this.selectUser = this.fb.group({
       user: ['', Validators.required]
     })
+
+
   }
 
   ngOnInit() {
@@ -119,6 +122,7 @@ export class AddInvoiceComponent implements OnInit {
     }
     console.log('this.invoiceForm: ', this.invoiceForm)
   }
+  
 
   minDepositInBank: any;
   setDepositInBankValidation(reciptDate) {
@@ -226,9 +230,14 @@ export class AddInvoiceComponent implements OnInit {
           }]
           this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))    //use for clear invoice table fields
 
-          if (key === 'fromSelect') {
-            this.setUserAddressInfo()
-          }
+          // if (key === 'fromSelect') {
+            if(this.invoiceDetail.length == 1 || this.invoiceDetail.length > 1){
+              this.setUserAddressInfo('InvoiceData')
+            }else{
+              this.setUserAddressInfo('GSTProfileData')
+            }
+          // }
+          
         }, error => {
           this._toastMessageService.alert("error", "There is some issue to fetch user invoice data.");
         });
@@ -237,20 +246,60 @@ export class AddInvoiceComponent implements OnInit {
     }
   }
 
-  setUserAddressInfo() {
-    const param = '/user/profile/' + this.userInfo[0].userId;
-    this.userService.getMethodInfo(param).subscribe((result: any) => {
-      console.log('User Address info: ', result)
-      if (result) {
-        let name = (result.fName ? result.fName : '') + ' ' + (result.mName ? result.mName : '') + ' ' + (result.lName ? result.lName : '')
-        this.invoiceForm.controls['billTo'].setValue(name);
-        this.invoiceForm.controls['phone'].setValue(result.mobileNumber ? result.mobileNumber : '');
-        this.invoiceForm.controls['email'].setValue(result.emailAddress ? result.emailAddress : '');
-      }
-      //this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
-    }, error => {
-      //  this._toastMessageService.alert("error", "There is some issue to fetch user profile data.");
-    });
+  changePayStatus(event, invoice){
+    if(event){
+      console.log('Selected pay status', event.target.value)
+      console.log('invoice: ', invoice)
+      var newInvoice = { paymentStatus: event.target.value};
+      this.loading = true;
+      const param = '/itr/invoice';
+       let body = invoice;                                                  //Object.assign(invoice, newInvoice);  
+      console.log('After payment status change: ',body)
+      this.userService.postMethodDownloadDoc(param, body).subscribe((result: any) => {
+        this.loading = false;
+        console.log("result: ", result)
+        this.utilsService.smoothScrollToTop();
+        this.showInvoices = true;
+        this._toastMessageService.alert("success", "Payment status update succesfully.");
+        // this.invoiceDetail = '';
+        this.getUserInvoiceList('not-select');
+      }, error => {
+        this.loading = false;
+        this._toastMessageService.alert("error", "There is some issue to update payment status.");
+      });
+    } 
+  }
+
+  setUserAddressInfo(type) {
+    if(type === 'GSTProfileData'){
+      const param = '/user/profile/' + this.userInfo[0].userId;
+      this.userService.getMethodInfo(param).subscribe((result: any) => {
+        console.log('User Address info: ', result)
+        if (result) {
+          let name = (result.fName ? result.fName : '') + ' ' + (result.mName ? result.mName : '') + ' ' + (result.lName ? result.lName : '')
+          this.invoiceForm.controls['billTo'].setValue(name);
+          this.invoiceForm.controls['phone'].setValue(result.mobileNumber ? result.mobileNumber : '');
+          this.invoiceForm.controls['email'].setValue(result.emailAddress ? result.emailAddress : '');
+        }
+        //this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
+      }, error => {
+        //  this._toastMessageService.alert("error", "There is some issue to fetch user profile data.");
+      });
+    }
+    else if(type === 'InvoiceData'){
+      console.log('InvoiceDetail: ',  this.invoiceDetail[0])
+      this.invoiceForm.controls['billTo'].setValue(this.invoiceDetail[0].billTo);
+      this.invoiceForm.controls['addressLine1'].setValue(this.invoiceDetail[0].addressLine1);
+      this.invoiceForm.controls['addressLine2'].setValue(this.invoiceDetail[0].addressLine2 ? this.invoiceDetail[0].addressLine2 : '');
+      this.invoiceForm.controls['pincode'].setValue(this.invoiceDetail[0].pincode);
+      this.invoiceForm.controls['state'].setValue(this.invoiceDetail[0].state);
+      this.invoiceForm.controls['city'].setValue(this.invoiceDetail[0].city);
+      this.invoiceForm.controls['country'].setValue(this.invoiceDetail[0].country);
+      this.invoiceForm.controls['gstin'].setValue(this.invoiceDetail[0].gstin ? this.invoiceDetail[0].gstin : '');
+      this.invoiceForm.controls['phone'].setValue(this.invoiceDetail[0].phone);
+      this.invoiceForm.controls['email'].setValue(this.invoiceDetail[0].email);
+    }
+   
   }
 
   createInvoice(): FormGroup {

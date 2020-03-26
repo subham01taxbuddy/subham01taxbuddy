@@ -1,0 +1,9 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="card">
+    <div class="card__row">
+
+        <ag-grid-angular class="ag-theme-balham" [gridOptions]="invoiceListGridOptions">
+        </ag-grid-angular>
+    </div>
+</div>

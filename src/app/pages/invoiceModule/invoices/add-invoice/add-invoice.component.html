@@ -1,9 +1,9 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
-<div class="main clearfix">
+<!-- <div class="main clearfix">
     <div class="content content_full">
-        <div class="content__container">
-            <div class="card">
+        <div class="content__container">-->
+            <div class="card"> 
                 <div class="card__row">
                     <div class="card__col-lg-3">
 
@@ -81,7 +81,16 @@
                                                 </a>
                                             </td>
 
-                                            <td style="text-align: center; font-weight: bold;">{{invoice.paymentStatus}}</td>
+                                            <td style="text-align: center; font-weight: bold;">
+                                                <!-- {{invoice.paymentStatus}} -->
+                                                <select [(ngModel)]="invoice.paymentStatus" (change)="changePayStatus($event, invoice)"
+                                                  [disabled]="invoice.modeOfPayment === 'Cash' || invoice.paymentStatus === 'Paid'">
+                                                    <option selected disabled>Select</option>
+                                                    <option *ngFor="let status of paymentStatus" [value]="status.value">
+                                                        {{status.label}}
+                                                    </option>
+                                                </select>
+                                            </td>
                                         </tr>
                                       
                                         <tr *ngIf="invoiceDetail.length === 0">
@@ -132,7 +141,7 @@
                                 <!-- <label><b>Terms: </b></label> -->
                                 <mat-form-field appearance="outline">
                                     <mat-label>Terms</mat-label>
-                                    <input matInput formControlName="terms" placeholder="Terms" autocomplete="off">
+                                    <input matInput formControlName="terms" readonly placeholder="Terms" autocomplete="off">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-4">
@@ -151,7 +160,7 @@
                                 <!-- <label><b>SAC Code: </b></label> -->
                                 <mat-form-field appearance="outline">
                                     <mat-label>SAC Code</mat-label>
-                                    <input matInput formControlName="sacCode" placeholder="SAC Code" autocomplete="off">
+                                    <input matInput formControlName="sacCode" readonly placeholder="SAC Code" autocomplete="off">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-4">
@@ -394,7 +403,7 @@
                     <br><br><br><br>
                 </form>
 
-            </div>
-        </div>
+             </div>
+        <!--</div>
     </div>
-</div>
+</div> -->

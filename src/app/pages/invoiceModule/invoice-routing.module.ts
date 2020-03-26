@@ -1,9 +1,9 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { AddInvoiceComponent } from "./add-invoice/add-invoice.component";
+import { InvoicesComponent } from "./invoices/invoices.component";
 
 const routes: Routes=[
-    {path:'' ,component: AddInvoiceComponent}
+    {path:'' ,component: InvoicesComponent}   //AddInvoiceComponent
 ]
 
 @NgModule({

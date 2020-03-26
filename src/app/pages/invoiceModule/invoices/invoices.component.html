@@ -1,0 +1,23 @@
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading> -->
+<div class="main clearfix">
+    <div class="card">
+        <!-- Search for data -->
+
+        <mat-tab-group>
+            <mat-tab label="Add Invoice">
+                <ng-template matTabContent><br><br>
+                    <app-add-invoice></app-add-invoice>
+                </ng-template>
+            </mat-tab>
+
+            <mat-tab label="All Invoice Detail">
+                <ng-template matTabContent><br><br>
+                    <app-invoices-status></app-invoices-status>
+                </ng-template>
+            </mat-tab>
+
+
+        </mat-tab-group>
+
+    </div>
+</div>
