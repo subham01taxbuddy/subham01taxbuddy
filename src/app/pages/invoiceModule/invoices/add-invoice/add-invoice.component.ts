@@ -759,8 +759,27 @@ export class AddInvoiceComponent implements OnInit {
     });
   }
 
-  sendWhatAppNotification() {
-    alert('WhatApp notification inprogress')
+  sendWhatAppNotification(invoice) {
+    // alert('WhatApp notification inprogress')
+    console.log('Whatsapp reminder: ',invoice)
+    this.loading = true;
+    const param = '/itr/invoice/send-invoice-whatsapp?invoiceNo='+invoice.invoiceNo;
+    let body = this.invoiceForm.value;
+      this.userMsService.getMethodInfo(param).subscribe((res: any) => {
+      this.loading = false;
+      console.log("result: ", res)
+      this._toastMessageService.alert("success", "Whatsapp reminder send succesfully.");
+      // this.invoiceTableInfo =[];
+      // this.selectUser.reset();
+     // this.invoiceForm.reset();
+      console.log('InvoiceForm: ', this.invoiceForm)
+      // this.invoiceDetail = '';
+      //this.getUserInvoiceList('not-select');
+    }, error => {
+      this.loading = false;
+      this._toastMessageService.alert("error", "Failed ti send Whatsapp reminder.");
+    });
+
   }
 
 }
