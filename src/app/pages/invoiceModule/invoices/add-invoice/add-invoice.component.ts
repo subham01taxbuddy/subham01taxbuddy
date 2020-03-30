@@ -212,7 +212,8 @@ export class AddInvoiceComponent implements OnInit {
           // this.invoiceForm.controls['phone'].updateValueAndValidity();
           // this.invoiceForm.controls['email'].setValidators(null);
           // this.invoiceForm.controls['email'].updateValueAndValidity();
-          debugger
+
+         // debugger
           console.log('User Detail: ', result)
           this.invoiceDetail = result;
           
@@ -232,9 +233,9 @@ export class AddInvoiceComponent implements OnInit {
 
           // if (key === 'fromSelect') {
             if(this.invoiceDetail.length == 1 || this.invoiceDetail.length > 1){
-              this.setUserAddressInfo('InvoiceData')
+              this.setUserAddressInfo('InvoiceData')                  //set 1st invoice field into user profile 
             }else{
-              this.setUserAddressInfo('GSTProfileData')
+              this.setUserAddressInfo('GSTProfileData')               //set user GST profile field into user profile 
             }
           // }
           
@@ -710,6 +711,7 @@ export class AddInvoiceComponent implements OnInit {
       this.loading = false;
       console.log('Email sent responce: ', result)
       this._toastMessageService.alert("success", "Invoice mail sent successfully.");
+      this.getUserInvoiceList('not-select');
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Faild to send invoice mail.");
@@ -753,6 +755,7 @@ export class AddInvoiceComponent implements OnInit {
       this.loading = false;
       console.log('Email sent responce: ', result)
       this._toastMessageService.alert("success", "Mail Reminder sent successfully.");
+      this.getUserInvoiceList('not-select');
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Faild to send Mail Reminder.");
@@ -774,7 +777,7 @@ export class AddInvoiceComponent implements OnInit {
      // this.invoiceForm.reset();
       console.log('InvoiceForm: ', this.invoiceForm)
       // this.invoiceDetail = '';
-      //this.getUserInvoiceList('not-select');
+      this.getUserInvoiceList('not-select');
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Failed ti send Whatsapp reminder.");
