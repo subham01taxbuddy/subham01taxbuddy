@@ -67,11 +67,11 @@ export const routes: Routes = [
 			{ path: 'chat-corner', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './chat-corner/chat-corner.module#ChatCornerModule' },
 			{ path: 'tax-summary', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './summary-tax/summary.module#SummaryModule' }, 
 			{ path: 'invoice', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './invoiceModule/invoice.module#InvoiceModule' }, 
-			{
-				path: 'user-info',
-				canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] },
-				loadChildren: '../user-module/user-module.module#UserModuleModule'
-			},
+			// {
+			// 	path: 'user-info',
+			// 	canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] },
+			// 	loadChildren: '../user-module/user-module.module#UserModuleModule'
+			// },
 			{ path: 'reports', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './reports-module/reports.module#ReportsModule' },
 			{ path: 'ifa', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] }, loadChildren: './ifa/ifa.module#IfaModule' },
 			{ path: '**', redirectTo: '/pages/home', pathMatch: 'full' },
