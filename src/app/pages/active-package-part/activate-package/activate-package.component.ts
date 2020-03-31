@@ -4,12 +4,12 @@
 * @author Ashish Hulwan
 */
 import { Component, OnInit } from '@angular/core';
-import { NavbarService } from '../../services/navbar.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { ToastMessageService } from '../../services/toast-message.service';
 import { DatePipe } from '@angular/common';
 import { UtilsService } from 'app/services/utils.service';
+import { NavbarService } from 'app/services/navbar.service';
+import { ToastMessageService } from 'app/services/toast-message.service';
 
 @Component({
   selector: 'app-activate-package',

@@ -83,7 +83,7 @@ import { environment } from '../../environments/environment';
 
 import Auth from '@aws-amplify/auth';
 import Storage from '@aws-amplify/storage';
-import { ActivatePackageComponent } from './activate-package/activate-package.component';
+import { ActivatePackageComponent } from './Active-Package-Part/activate-package/activate-package.component';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 // import { NgxDocViewerModule } from 'ngx-doc-viewer';
@@ -98,6 +98,8 @@ import { SharedModule } from 'app/shared/shared.module';
 import { AssignComponent } from './assign/assign.component';
 import { CSVParseTemplateComponent } from './assign/csv-parse-template/csv-parse-template.component';
 import { GstRegistrationClientComponent } from './assign/gst-registration-client/gst-registration-client.component';
+import { ActivePackagePartComponent } from './active-package-part/active-package-part.component';
+import { FcmDetailComponent } from './active-package-part/fcm-detail/fcm-detail.component';
 // import { NO_ERRORS_SCHEMA } from '@angular/compiler/src/core';
 
 Auth.configure(environment.AMPLIFY_CONFIG);
@@ -165,6 +167,8 @@ export const MY_FORMATS = {
     AssignComponent,
     CSVParseTemplateComponent,
     GstRegistrationClientComponent,
+    ActivePackagePartComponent,
+    FcmDetailComponent
   ],
   entryComponents: [
     HomeComponent,

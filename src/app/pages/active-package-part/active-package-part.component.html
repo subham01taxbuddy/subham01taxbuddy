@@ -1,0 +1,23 @@
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading> -->
+<div class="main clearfix">
+    <div class="card">
+        <!-- Search for data -->
+
+        <mat-tab-group>
+            <mat-tab label="Activate Package">
+                <ng-template matTabContent><br><br>
+                    <app-activate-package></app-activate-package>
+                </ng-template>
+            </mat-tab>
+
+            <mat-tab label="FCM detail">
+                <ng-template matTabContent><br><br>
+                   <app-fcm-detail></app-fcm-detail>
+                </ng-template>
+            </mat-tab>
+
+
+        </mat-tab-group>
+
+    </div>
+</div>

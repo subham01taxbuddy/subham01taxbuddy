@@ -36,10 +36,11 @@ import { HomeComponent } from './home/home.component';
 // Login component
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from '../services/auth.guard';
-import { ActivatePackageComponent } from './activate-package/activate-package.component';
+import { ActivatePackageComponent } from './Active-Package-Part/activate-package/activate-package.component';
 import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 import { AssignComponent } from './assign/assign.component';
 import { CSVParseTemplateComponent } from './assign/csv-parse-template/csv-parse-template.component';
+import { ActivePackagePartComponent } from './active-package-part/active-package-part.component';
 
 export const routes: Routes = [
 	{ path: 'login', /* canActivate: [AuthGuard], */ component: LoginComponent },
@@ -61,11 +62,16 @@ export const routes: Routes = [
 					{ path: '', redirectTo: '/pages/business/business-profile', pathMatch: 'full' }
 				]
 			},
-			{ path: 'activate-package', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: ActivatePackageComponent },
+			{ path: 'activate-package', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: ActivePackagePartComponent },
 			{ path: 'assign', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: AssignComponent },
 			{ path: 'chat-corner', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './chat-corner/chat-corner.module#ChatCornerModule' },
 			{ path: 'tax-summary', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './summary-tax/summary.module#SummaryModule' }, 
 			{ path: 'invoice', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './invoiceModule/invoice.module#InvoiceModule' }, 
+			{
+				path: 'user-info',
+				canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] },
+				loadChildren: '../user-module/user-module.module#UserModuleModule'
+			},
 			{ path: 'reports', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './reports-module/reports.module#ReportsModule' },
 			{ path: 'ifa', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] }, loadChildren: './ifa/ifa.module#IfaModule' },
 			{ path: '**', redirectTo: '/pages/home', pathMatch: 'full' },
