@@ -36,7 +36,7 @@ import { HomeComponent } from './home/home.component';
 // Login component
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from '../services/auth.guard';
-import { ActivatePackageComponent } from './Active-Package-Part/activate-package/activate-package.component';
+//import { ActivatePackageComponent } from './Active-Package-Part/activate-package/activate-package.component';
 import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 import { AssignComponent } from './assign/assign.component';
 import { CSVParseTemplateComponent } from './assign/csv-parse-template/csv-parse-template.component';
