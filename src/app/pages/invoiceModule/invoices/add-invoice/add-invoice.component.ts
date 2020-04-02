@@ -8,10 +8,11 @@ import { environment } from 'environments/environment';
 import { UserMsService } from 'app/services/user-ms.service';
 import { NumericEditor } from 'app/shared/numeric-editor.component';
 import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, filter, pairwise } from 'rxjs/operators';
 import { GstMsService } from 'app/services/gst-ms.service';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { Router, RoutesRecognized } from '@angular/router';
 
 export const MY_FORMATS = {
   parse: {
@@ -49,11 +50,13 @@ export class AddInvoiceComponent implements OnInit {
   showInvoices: boolean;
   invoiceTableInfo: any = [];
   editInvoice: boolean;
-  countryDropdown : any =[{  "countryId" : 1, "countryName" : "INDIA", "countryCode" : "91"}];
+  addNewUser: boolean;
+  countryDropdown: any = [{ "countryId": 1, "countryName": "INDIA", "countryCode": "91" }];
   paymentMode: any = [{ value: 'Online' }, { value: 'Cash' }];
-  paymentStatus: any = [{value: 'Paid', label: 'Paid'},{value: 'Failed', label: 'Failed'},{value: 'Unpaid', label: 'Unpaid'}]
+  paymentStatus: any = [{ value: 'Paid', label: 'Paid' }, { value: 'Failed', label: 'Failed' }, { value: 'Unpaid', label: 'Unpaid' }]
   maxDate = new Date();
-  constructor(private userMsService: UserMsService, private gstMsService: GstMsService, public utilsService: UtilsService, private _toastMessageService: ToastMessageService, private fb: FormBuilder, private userService: UserMsService) {
+  constructor(private userMsService: UserMsService, private gstMsService: GstMsService, public utilsService: UtilsService, private _toastMessageService: ToastMessageService,
+    private fb: FormBuilder, private userService: UserMsService, private router: Router) {
     this.getUserList();
 
     this.selectUser = this.fb.group({
@@ -64,6 +67,7 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.changeCountry('INDIA');
     this.invoiceInfoCalled();
 
@@ -75,7 +79,7 @@ export class AddInvoiceComponent implements OnInit {
 
     this.invoiceForm = this.fb.group({
       _id: [null],
-      userId: [''],
+      userId: [null],
       invoiceNo: [null],
       invoiceDate: [(new Date()), Validators.required],
       terms: ['Due on Receipt', Validators.required],
@@ -122,7 +126,7 @@ export class AddInvoiceComponent implements OnInit {
     }
     console.log('this.invoiceForm: ', this.invoiceForm)
   }
-  
+
 
   minDepositInBank: any;
   setDepositInBankValidation(reciptDate) {
@@ -169,12 +173,14 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   invoiceDetail: any;
-  getUserInvoiceList(key) {
-    debugger
+  getUserInvoiceList() {      //key
+    //debugger
     if (this.selectUser.controls['user'].valid) {
-    
+
+      this.editInvoice = false;
+      this.addNewUser = false;
       this.setInitiatedData()
-      
+
       console.log('user: ', this.selectUser.controls['user'].value)
       this.userInfo = this.available_merchant_list.filter(item => item.name.toLowerCase() === this.selectUser.value.user.toLowerCase());
       console.log('select USER: ', this.userInfo)
@@ -184,7 +190,7 @@ export class AddInvoiceComponent implements OnInit {
         this.userService.getMethodInfo(param).subscribe((result: any) => {
 
           console.log('this.invoiceForm', this.invoiceForm)
-          debugger
+          // debugger
           this.invoiceForm.controls['paymentCollectedBy'].setValidators(null);
           this.invoiceForm.controls['paymentCollectedBy'].updateValueAndValidity();
           this.invoiceForm.controls['dateOfReceipt'].setValidators(null);
@@ -192,32 +198,11 @@ export class AddInvoiceComponent implements OnInit {
           this.invoiceForm.controls['dateOfDeposit'].setValidators(null);
           this.invoiceForm.controls['dateOfDeposit'].updateValueAndValidity();
 
-          // this.invoiceForm.controls['billTo'].setValidators(null);
-          // this.invoiceForm.controls['billTo'].updateValueAndValidity();
-          // this.invoiceForm.controls['addressLine1'].setValidators(null);
-          // this.invoiceForm.controls['addressLine1'].updateValueAndValidity();
-          // this.invoiceForm.controls['addressLine2'].setValidators(null);
-          // this.invoiceForm.controls['addressLine2'].updateValueAndValidity();
-          // this.invoiceForm.controls['pincode'].setValidators(null);
-          // this.invoiceForm.controls['pincode'].updateValueAndValidity();
-          // this.invoiceForm.controls['state'].setValidators(null);
-          // this.invoiceForm.controls['state'].updateValueAndValidity();
-          // this.invoiceForm.controls['city'].setValidators(null);
-          // this.invoiceForm.controls['city'].updateValueAndValidity();
-          // this.invoiceForm.controls['country'].setValidators(null);
-          // this.invoiceForm.controls['country'].updateValueAndValidity();
-          // this.invoiceForm.controls['gstin'].setValidators(null);
-          // this.invoiceForm.controls['gstin'].updateValueAndValidity();
-          // this.invoiceForm.controls['phone'].setValidators(null);
-          // this.invoiceForm.controls['phone'].updateValueAndValidity();
-          // this.invoiceForm.controls['email'].setValidators(null);
-          // this.invoiceForm.controls['email'].updateValueAndValidity();
-
-         // debugger
+          // debugger
           console.log('User Detail: ', result)
           this.invoiceDetail = result;
-          
-            this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
+
+          this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
 
           let blankTableRow = [{
             itemDescription: '',
@@ -232,30 +217,82 @@ export class AddInvoiceComponent implements OnInit {
           this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))    //use for clear invoice table fields
 
           // if (key === 'fromSelect') {
-            if(this.invoiceDetail.length == 1 || this.invoiceDetail.length > 1){
-              this.setUserAddressInfo('InvoiceData')                  //set 1st invoice field into user profile 
-            }else{
-              this.setUserAddressInfo('GSTProfileData')               //set user GST profile field into user profile 
-            }
+          if (this.invoiceDetail.length == 1 || this.invoiceDetail.length > 1) {
+            this.setUserAddressInfo('InvoiceData')                  //set 1st invoice field into user profile 
+          } else {
+            this.setUserAddressInfo('GSTProfileData')               //set user GST profile field into user profile 
+          }
           // }
-          
+
         }, error => {
           this._toastMessageService.alert("error", "There is some issue to fetch user invoice data.");
         });
       }
       console.log('invoiceForm: ', this.invoiceForm)
     }
+    else {
+      debugger
+      this.selectUser.controls['user'].setValidators(null);
+      this.selectUser.controls['user'].updateValueAndValidity();
+
+      this.invoiceForm.controls['invoiceDate'].setValue(new Date());
+      this.invoiceForm.controls['terms'].setValue('Due on Receipt');
+      this.invoiceForm.controls['dueDate'].setValue(new Date());
+      this.invoiceForm.controls['sacCode'].setValue('998232');
+      this.invoiceForm.controls['cin'].setValue('U74999MH2017PT298565');
+      this.invoiceForm.controls['modeOfPayment'].setValue('Online');
+
+      // this.setInitiatedData()
+      // this.invoiceForm.controls['paymentCollectedBy'].setValidators(null);
+      // this.invoiceForm.controls['paymentCollectedBy'].updateValueAndValidity();
+      // this.invoiceForm.controls['dateOfReceipt'].setValidators(null);
+      // this.invoiceForm.controls['dateOfReceipt'].updateValueAndValidity();
+      // this.invoiceForm.controls['dateOfDeposit'].setValidators(null);
+      // this.invoiceForm.controls['dateOfDeposit'].updateValueAndValidity();
+      // this.invoiceForm.controls['billTo'].setValidators(null);
+      // this.invoiceForm.controls['billTo'].updateValueAndValidity();
+      // this.invoiceForm.controls['addressLine1'].setValidators(null);
+      // this.invoiceForm.controls['addressLine1'].updateValueAndValidity();
+      // this.invoiceForm.controls['addressLine2'].setValidators(null);
+      // this.invoiceForm.controls['addressLine2'].updateValueAndValidity();
+      // this.invoiceForm.controls['pincode'].setValidators(null);
+      // this.invoiceForm.controls['pincode'].updateValueAndValidity();
+      // this.invoiceForm.controls['state'].setValidators(null);
+      // this.invoiceForm.controls['state'].updateValueAndValidity();
+      // this.invoiceForm.controls['city'].setValidators(null);
+      // this.invoiceForm.controls['city'].updateValueAndValidity();
+      // this.invoiceForm.controls['country'].setValidators(null);
+      // this.invoiceForm.controls['country'].updateValueAndValidity();
+      // this.invoiceForm.controls['gstin'].setValidators(null);
+      // this.invoiceForm.controls['gstin'].updateValueAndValidity();
+      // this.invoiceForm.controls['phone'].setValidators(null);
+      // this.invoiceForm.controls['phone'].updateValueAndValidity();
+      // this.invoiceForm.controls['email'].setValidators(null);
+      // this.invoiceForm.controls['email'].updateValueAndValidity();
+
+      let blankTableRow = [{
+        itemDescription: '',
+        quantity: '',
+        rate: '',
+        cgstPercent: '9',
+        cgstAmnt: '',
+        sgstPercent: '9',
+        sgstAmnt: '',
+        amnt: ''
+      }]
+      this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))
+    }
   }
 
-  changePayStatus(event, invoice){
-    if(event){
+  changePayStatus(event, invoice) {
+    if (event) {
       console.log('Selected pay status', event.target.value)
       console.log('invoice: ', invoice)
-      var newInvoice = { paymentStatus: event.target.value};
+      var newInvoice = { paymentStatus: event.target.value };
       this.loading = true;
       const param = '/itr/invoice';
-       let body = invoice;                                                  //Object.assign(invoice, newInvoice);  
-      console.log('After payment status change: ',body)
+      let body = invoice;                                                  //Object.assign(invoice, newInvoice);  
+      console.log('After payment status change: ', body)
       this.userService.postMethodDownloadDoc(param, body).subscribe((result: any) => {
         this.loading = false;
         console.log("result: ", result)
@@ -263,16 +300,16 @@ export class AddInvoiceComponent implements OnInit {
         this.showInvoices = true;
         this._toastMessageService.alert("success", "Payment status update succesfully.");
         // this.invoiceDetail = '';
-        this.getUserInvoiceList('not-select');
+        this.getUserInvoiceList();  //'not-select'
       }, error => {
         this.loading = false;
         this._toastMessageService.alert("error", "There is some issue to update payment status.");
       });
-    } 
+    }
   }
 
   setUserAddressInfo(type) {
-    if(type === 'GSTProfileData'){
+    if (type === 'GSTProfileData') {
       const param = '/user/profile/' + this.userInfo[0].userId;
       this.userService.getMethodInfo(param).subscribe((result: any) => {
         console.log('User Address info: ', result)
@@ -287,9 +324,9 @@ export class AddInvoiceComponent implements OnInit {
         //  this._toastMessageService.alert("error", "There is some issue to fetch user profile data.");
       });
     }
-    else if(type === 'InvoiceData'){
+    else if (type === 'InvoiceData') {
       debugger
-      console.log('InvoiceDetail: ',  this.invoiceDetail[0])
+      console.log('InvoiceDetail: ', this.invoiceDetail[0])
       this.invoiceForm.controls['billTo'].setValue(this.invoiceDetail[0].billTo);
       this.invoiceForm.controls['addressLine1'].setValue(this.invoiceDetail[0].addressLine1);
       this.invoiceForm.controls['addressLine2'].setValue(this.invoiceDetail[0].addressLine2 ? this.invoiceDetail[0].addressLine2 : '');
@@ -301,9 +338,9 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.controls['phone'].setValue(this.invoiceDetail[0].phone);
       this.invoiceForm.controls['email'].setValue(this.invoiceDetail[0].email);
 
-      console.log('invoiceForm: ',  this.invoiceForm)
+      console.log('invoiceForm: ', this.invoiceForm)
     }
-   
+
   }
 
   createInvoice(): FormGroup {
@@ -552,8 +589,8 @@ export class AddInvoiceComponent implements OnInit {
   //   const param = '/fnbmaster/countrymaster?sort=countryId,asc';
   //   this.userService.getMethod(param).subscribe((result: any) => {
   //     this.countryDropdown = result;
-    
-   
+
+
   //     sessionStorage.setItem('COUNTRY_CODE', JSON.stringify(this.countryDropdown));
   //   }, error => {
   //   });
@@ -627,6 +664,7 @@ export class AddInvoiceComponent implements OnInit {
   saveInvoice() {
 
     if (this.clientListGridOptions && this.clientListGridOptions.api && this.clientListGridOptions.api.getRenderedNodes() && this.clientListGridOptions.api.getRenderedNodes()[0].data.itemDescription) {
+      this.invoiceForm.controls['userId'].setValue(this.utilsService.isNonEmpty(this.invoiceForm.controls['userId'].value) ? this.invoiceForm.controls['userId'].value : null)
       this.invoiceForm.controls['subTotal'].setValue(this.invoiceData.invoiceTotal)
       this.invoiceForm.controls['cgstTotal'].setValue(this.invoiceData.invoiceCGST)
       this.invoiceForm.controls['sgstTotal'].setValue(this.invoiceData.invoiceSGST)
@@ -672,7 +710,7 @@ export class AddInvoiceComponent implements OnInit {
           this.invoiceForm.reset();
           console.log('InvoiceForm: ', this.invoiceForm)
           // this.invoiceDetail = '';
-          this.getUserInvoiceList('not-select');
+          this.getUserInvoiceList();  //'not-select'
         }, error => {
           this.loading = false;
           this._toastMessageService.alert("error", "There is some issue to save user invoice data.");
@@ -711,7 +749,7 @@ export class AddInvoiceComponent implements OnInit {
       this.loading = false;
       console.log('Email sent responce: ', result)
       this._toastMessageService.alert("success", "Invoice mail sent successfully.");
-      this.getUserInvoiceList('not-select');
+      this.getUserInvoiceList();  //'not-select'
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Faild to send invoice mail.");
@@ -755,7 +793,7 @@ export class AddInvoiceComponent implements OnInit {
       this.loading = false;
       console.log('Email sent responce: ', result)
       this._toastMessageService.alert("success", "Mail Reminder sent successfully.");
-      this.getUserInvoiceList('not-select');
+      this.getUserInvoiceList();   //'not-select'
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Faild to send Mail Reminder.");
@@ -764,25 +802,30 @@ export class AddInvoiceComponent implements OnInit {
 
   sendWhatAppNotification(invoice) {
     // alert('WhatApp notification inprogress')
-    console.log('Whatsapp reminder: ',invoice)
+    console.log('Whatsapp reminder: ', invoice)
     this.loading = true;
-    const param = '/itr/invoice/send-invoice-whatsapp?invoiceNo='+invoice.invoiceNo;
+    const param = '/itr/invoice/send-invoice-whatsapp?invoiceNo=' + invoice.invoiceNo;
     let body = this.invoiceForm.value;
-      this.userMsService.getMethodInfo(param).subscribe((res: any) => {
+    this.userMsService.getMethodInfo(param).subscribe((res: any) => {
       this.loading = false;
       console.log("result: ", res)
       this._toastMessageService.alert("success", "Whatsapp reminder send succesfully.");
       // this.invoiceTableInfo =[];
       // this.selectUser.reset();
-     // this.invoiceForm.reset();
+      // this.invoiceForm.reset();
       console.log('InvoiceForm: ', this.invoiceForm)
       // this.invoiceDetail = '';
-      this.getUserInvoiceList('not-select');
+      this.getUserInvoiceList();  //'not-select'
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Failed ti send Whatsapp reminder.");
     });
 
+  }
+
+  addNewUserInvoice() {
+    this.addNewUser = true;
+    this.getUserInvoiceList();
   }
 
 }
