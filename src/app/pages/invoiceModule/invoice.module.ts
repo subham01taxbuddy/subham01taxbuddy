@@ -8,9 +8,10 @@ import { invoiceRoutingModule } from "./invoice-routing.module";
 import { InvoicesComponent } from './invoices/invoices.component';
 import { InvoicesStatusComponent } from './invoices/invoices-status/invoices-status.component';
 import { AddInvoiceComponent } from "./invoices/add-invoice/add-invoice.component";
+import { InvoiceDialogComponent } from './invoices/invoice-dialog/invoice-dialog.component';
 
 @NgModule({
-    declarations:[AddInvoiceComponent, InvoicesComponent, InvoicesStatusComponent],
+    declarations:[AddInvoiceComponent, InvoicesComponent, InvoicesStatusComponent, InvoiceDialogComponent],
     imports:[
         invoiceRoutingModule,
         CommonModule,
@@ -19,6 +20,7 @@ import { AddInvoiceComponent } from "./invoices/add-invoice/add-invoice.componen
         HttpClientModule,
         SharedModule,
         NgxLoadingModule.forRoot({}),
-    ]
+    ],
+    entryComponents: [InvoiceDialogComponent]
 })
 export class InvoiceModule {}

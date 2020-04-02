@@ -3,8 +3,15 @@
 <!-- <div class="main clearfix">
     <div class="content content_full">
         <div class="content__container">-->
+            <div class="card__col-lg-12">
+                <div class="btns">
+                    <button class="btn" (click)="addNewUserInvoice()">Add New User Invoice</button>
+                </div>
+            </div>
+
             <div class="card"> 
                 <div class="card__row">
+                   
                     <div class="card__col-lg-3">
 
                         <form [formGroup]="selectUser">
@@ -17,7 +24,7 @@
                                     Please select value from dropdown only.
                                 </mat-error>
                                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
-                                     (optionSelected)="getUserInvoiceList('fromSelect')">
+                                     (optionSelected)="getUserInvoiceList()">    <!--'fromSelect'-->
                                     <!--(optionSelected)="getPeriodList($event.option.value)"-->
                                     <mat-option *ngFor="let user of filteredOptions | async" [value]="user.name">
                                         <span>{{user.name}}</span>
@@ -108,7 +115,7 @@
 
             </div>
 
-            <div class="card" *ngIf="selectUser.controls['user'].value">
+            <div class="card" *ngIf="selectUser.controls['user'].value || addNewUser">
                 <form [formGroup]="invoiceForm">
                     <mat-card>
                         <div class="card__row">
@@ -178,8 +185,8 @@
                                         readonly autocomplete="off"> -->
                                     <mat-select formControlName="modeOfPayment" matInput
                                         placeholder="Select Mode of Payment" autocomplete="off"
-                                        (selectionChange)="setFormControl(invoiceForm.controls['modeOfPayment'].value)">
-                                        <mat-option *ngFor="let payment of paymentMode" [value]="payment.value">
+                                        (selectionChange)="setFormControl(invoiceForm.controls['modeOfPayment'].value)" required>
+                                        <mat-option *ngFor="let payment of paymentMode" [value]="payment.value" >
                                             <!--stateCode-->
                                             {{payment.value}}
                                         </mat-option>
@@ -195,7 +202,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Payment Collected By</mat-label>
                                     <input matInput formControlName="paymentCollectedBy" placeholder="Payment Collected By"
-                                        autocomplete="off" maxlength="15">
+                                        autocomplete="off" maxlength="15" required>
                                     <mat-error *ngIf="invoiceForm.controls['paymentCollectedBy'].hasError('required')">Enter
                                         payment collected by
                                     </mat-error>
@@ -204,7 +211,7 @@
                             <div class="card__col-lg-4" *ngIf="invoiceForm.controls['modeOfPayment'].value === 'Cash'">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Date of receipt</mat-label>
-                                    <input matInput formControlName="dateOfReceipt" [matDatepicker]="picker3"
+                                    <input matInput formControlName="dateOfReceipt" [matDatepicker]="picker3" required
                                         [max]="maxDate" (dateChange)="setDepositInBankValidation(invoiceForm.controls['dateOfReceipt'].value)"  autocomplete="off">
                                     <!--(dateChange)="setDueDate(this.invoiceForm.controls['invoiceDate'].value)"-->
                                     <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
@@ -217,7 +224,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Deposite in Bank</mat-label>
                                     <input matInput formControlName="dateOfDeposit" [matDatepicker]="picker4"
-                                     [min]="minDepositInBank"   [max]="maxDate" autocomplete="off">
+                                     [min]="minDepositInBank"   [max]="maxDate" autocomplete="off" required>
                                     <!--(dateChange)="setDueDate(this.invoiceForm.controls['invoiceDate'].value)"-->
                                     <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                                     <mat-datepicker #picker4></mat-datepicker>
@@ -237,7 +244,7 @@
                             <div class="card__col-lg-8">
                                 <mat-form-field appearance="outline">
                                     <mat-label>User name</mat-label>
-                                    <input matInput formControlName="billTo" placeholder="User name" autocomplete="off">
+                                    <input matInput formControlName="billTo" placeholder="User name" autocomplete="off" required>
                                     <mat-error *ngIf="invoiceForm.controls['billTo'].hasError('required')">Enter User
                                         name</mat-error>
                                 </mat-form-field>
@@ -252,7 +259,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Address Line 1: </mat-label>
                                     <input formControlName="addressLine1" maxlength="50" matInput
-                                        placeholder="Address Line 1: " autocomplete="off">
+                                        placeholder="Address Line 1: " autocomplete="off" required>
                                     <mat-error *ngIf="invoiceForm.controls['addressLine1'].hasError('required')">Enter
                                         Address line 1</mat-error>
                                 </mat-form-field>
@@ -261,7 +268,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Address Line 2: </mat-label>
                                     <input formControlName="addressLine2" maxlength="50" matInput
-                                        placeholder="Address Line 2: " autocomplete="off">
+                                        placeholder="Address Line 2: " autocomplete="off" >
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-4">
@@ -271,7 +278,7 @@
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
                                         placeholder="PIN Code" autocomplete="off"
-                                        (blur)="getCityData(this.invoiceForm.controls['pincode'])">
+                                        (blur)="getCityData(this.invoiceForm.controls['pincode'])" required>
                                     <mat-error *ngIf="invoiceForm.controls['pincode'].hasError('required')">Enter pin
                                     </mat-error>
                                     <mat-error *ngIf="invoiceForm.controls['pincode'].hasError('pattern')">Enter valid
@@ -285,7 +292,7 @@
                                     <mat-label>Country</mat-label>
                                     <mat-select formControlName="country" matInput placeholder="Country"
                                         autocomplete="off"
-                                        (selectionChange)="changeCountry(invoiceForm.controls['country'].value)">
+                                        (selectionChange)="changeCountry(invoiceForm.controls['country'].value)" required>
                                         <mat-option *ngFor="let country of countryDropdown"
                                             [value]="country.countryName">
                                             <!--countryCode-->
@@ -300,7 +307,7 @@
                             <div class="card__col-lg-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>State</mat-label>
-                                    <mat-select formControlName="state" matInput placeholder="State" autocomplete="off">
+                                    <mat-select formControlName="state" matInput placeholder="State" autocomplete="off" required>
                                         <mat-option *ngFor="let state of stateDropdown" [value]="state.stateName">
                                             <!--stateCode-->
                                             {{state.stateName | titlecase}}
@@ -315,7 +322,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>City:</mat-label>
                                     <input formControlName="city" maxlength="50" matInput placeholder="city"
-                                        autocomplete="off">
+                                        autocomplete="off" required>
                                     <mat-error *ngIf="invoiceForm.controls['city'].hasError('required')">Enter city name
                                     </mat-error>
                                 </mat-form-field>
@@ -337,7 +344,7 @@
                                     <mat-label>Phone</mat-label>
                                     <input formControlName="phone"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
-                                        placeholder="Phone" maxlength="10" autocomplete="off">
+                                        placeholder="Phone" maxlength="10" autocomplete="off" required>
                                     <mat-error *ngIf="invoiceForm.controls['phone'].hasError('required')">Enter phone
                                         number</mat-error>
                                     <mat-error *ngIf="invoiceForm.controls['phone'].hasError('pattern')">Enter valid
@@ -347,7 +354,7 @@
                             <div class="card__col-lg-4">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Email</mat-label>
-                                    <input formControlName="email" matInput placeholder="Email" autocomplete="off">
+                                    <input formControlName="email" matInput placeholder="Email" autocomplete="off" required>
                                     <mat-error *ngIf="invoiceForm.controls['email'].hasError('required')">Enter email
                                         address</mat-error>
                                     <mat-error *ngIf="invoiceForm.controls['email'].hasError('pattern')">Enter valid
