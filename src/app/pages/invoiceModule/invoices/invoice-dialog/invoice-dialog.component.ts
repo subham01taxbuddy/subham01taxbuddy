@@ -40,6 +40,7 @@ export class InvoiceDialogComponent implements OnInit {
   stateDropdown: any=[];
   invoiceTableInfo: any=[];
   clientListGridOptions: GridOptions;
+  loading: boolean;
 
   constructor(public dialogRef: MatDialogRef<InvoiceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder, public userService: UserMsService, private _toastMessageService: ToastMessageService, public utilsService: UtilsService) { }
@@ -151,7 +152,7 @@ export class InvoiceDialogComponent implements OnInit {
       this.invoiceEditForm.controls['sgstTotal'].setValue(this.invoiceData.invoiceSGST)
       this.invoiceEditForm.controls['total'].setValue(this.invoiceData.invoiceTotal)
       this.invoiceEditForm.controls['balanceDue'].setValue(this.invoiceData.invoiceTotal)
-      this.invoiceEditForm.controls['paymentStatus'].setValue(this.invoiceEditForm.controls['modeOfPayment'].value === 'Cash' ? 'Paid' : 'Unpaid')
+     // this.invoiceEditForm.controls['paymentStatus'].setValue(this.invoiceEditForm.controls['modeOfPayment'].value === 'Cash' ? 'Paid' : 'Unpaid')
       this.invoiceTableInfo = [];
 
       for (let i = 0; i < this.clientListGridOptions.api.getRenderedNodes().length; i++) {
@@ -172,20 +173,20 @@ export class InvoiceDialogComponent implements OnInit {
 
     if (this.invoiceEditForm.valid) {
         console.log('Invoice Form: ', this.invoiceEditForm)
-        //this.loading = true;
+        this.loading = true;
         const param = '/itr/invoice';
         let body = this.invoiceEditForm.value;
         this.userService.postMethodDownloadDoc(param, body).subscribe((result: any) => {
-         // this.loading = false;
-         this._toastMessageService.alert("success", "Invoice save succesfully.");
+         this.loading = false;
+         this._toastMessageService.alert("success", "Invoice update succesfully.");
         setTimeout(()=>{
           this.dialogRef.close({event:'close', msg:'Update'})
         },3000)
          
         
         }, error => {
-         // this.loading = false;
-          this._toastMessageService.alert("error", "There is some issue to save user invoice data.");
+          this.loading = false;
+          this._toastMessageService.alert("error", "There is some issue to Update user invoice data.");
         });
 
       } else {
