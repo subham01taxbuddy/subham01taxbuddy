@@ -79,7 +79,12 @@ export class InvoiceDialogComponent implements OnInit {
       sgstTotal: ['', Validators.required],
       total: ['', Validators.required],
       balanceDue: ['', Validators.required],
-      itemList: ['', Validators.required]
+      itemList: ['', Validators.required],
+      paymentLink: null,
+      invoiceId: null,
+      isLinkInvalid: false,
+      amountInWords: ''
+
     })
   
   }
