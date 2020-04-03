@@ -18,11 +18,11 @@ export class InvoicesStatusComponent implements OnInit {
   invoiceData: any;
   invoiceListGridOptions: GridOptions;
 
- // @Output() editInvoice = new EventEmitter<any>();
-  
+  // @Output() editInvoice = new EventEmitter<any>();
+
   constructor(private userMsService: UserMsService, private _toastMessageService: ToastMessageService,
     @Inject(LOCALE_ID) private locale: string, private userService: UserMsService, private dialog: MatDialog,
-     private utilService: UtilsService, private router: Router) {
+    private utilService: UtilsService, private router: Router) {
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.invoicesCreateColoumnDef(),
@@ -57,7 +57,7 @@ export class InvoicesStatusComponent implements OnInit {
     console.log('userInvoices: ', userInvoices)
     var invoices = [];
     for (let i = 0; i < userInvoices.length; i++) {
-      let updateInvoice = Object.assign({}, userInvoices[i], { userId: userInvoices[i].userId, billTo: userInvoices[i].billTo, phone: userInvoices[i].phone, email: userInvoices[i].email , invoiceNo: userInvoices[i].invoiceNo, invoiceDate: userInvoices[i].invoiceDate, modeOfPayment: userInvoices[i].modeOfPayment, paymentStatus: userInvoices[i].paymentStatus })
+      let updateInvoice = Object.assign({}, userInvoices[i], { userId: userInvoices[i].userId, billTo: userInvoices[i].billTo, phone: userInvoices[i].phone, email: userInvoices[i].email, invoiceNo: userInvoices[i].invoiceNo, invoiceDate: userInvoices[i].invoiceDate, modeOfPayment: userInvoices[i].modeOfPayment, paymentStatus: userInvoices[i].paymentStatus })
       invoices.push(updateInvoice)
     }
     console.log('user invoices: ', invoices);
@@ -175,7 +175,7 @@ export class InvoicesStatusComponent implements OnInit {
         cellRenderer: function (params) {
           console.log('condition: ', (params.data.modeOfPayment === 'Cash' || params.data.paymentStatus === 'Paid'))
           if ((params.data.modeOfPayment === 'Cash' || params.data.paymentStatus === 'Paid') || (params.data.modeOfPayment === 'Cash' && params.data.paymentStatus === 'Paid')) {
-            return `<button type="button" class="action_icon add_button" title="Edit" disabled>
+            return `<button type="button" class="action_icon add_button" title="Edit" disabled>  
             <span><i class="fa fa-pencil-square" aria-hidden="true" data-action-type="edit"></i></span>
            </button>`;
           } else {
@@ -188,10 +188,28 @@ export class InvoicesStatusComponent implements OnInit {
         },
         width: 55,
         pinned: 'right',
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
+        cellStyle: function (params) {
+          if ((params.data.modeOfPayment === 'Cash' || params.data.paymentStatus === 'Paid') || (params.data.modeOfPayment === 'Cash' && params.data.paymentStatus === 'Paid')) {
+
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              backgroundColor: '#dddddd',
+              color: '#dddddd',
+            }
+          }
+          else {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center'
+            }
+          }
+
+
         },
       },
       {
@@ -255,10 +273,23 @@ export class InvoicesStatusComponent implements OnInit {
         },
         width: 55,
         pinned: 'right',
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
+        cellStyle: function (params) {
+          if ((params.data.modeOfPayment === 'Cash' || params.data.paymentStatus === 'Paid') || (params.data.modeOfPayment === 'Cash' && params.data.paymentStatus === 'Paid')) {
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              backgroundColor: '#dddddd',
+              color: '#dddddd',
+            }
+          }else{
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center'
+            }
+          }
+
         },
       },
       {
@@ -282,33 +313,26 @@ export class InvoicesStatusComponent implements OnInit {
         },
         width: 55,
         pinned: 'right',
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
+        cellStyle: function (params) {
+          if ((params.data.modeOfPayment === 'Cash' || params.data.paymentStatus === 'Paid') || (params.data.modeOfPayment === 'Cash' && params.data.paymentStatus === 'Paid')) {
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              backgroundColor: '#dddddd',
+              color: '#dddddd',
+            }
+          }else{
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center'
+            }
+          }
+
         },
       }
-      // ,
-      // {
-      //   headerName: 'Upload Doc',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params) {
-      //     return `<button type="button" class="action_icon add_button" title="Upload Doc">
-      //     <i class="fa fa-cloud-upload" aria-hidden="true" data-action-type="upload-doc"></i>
-      //    </button>`;
-
-      //   },
-      //   width: 55,
-      //   pinned: 'right',
-      //   cellStyle: {
-      //     textAlign: 'center', display: 'flex',
-      //     'align-items': 'center',
-      //     'justify-content': 'center'
-      //   },
-      // },
+    
     ]
 
   }
@@ -346,11 +370,11 @@ export class InvoicesStatusComponent implements OnInit {
     console.log(myUser)
     console.log('modeOfPayment: ', myUser.modeOfPayment, ' paymentStatus: ', myUser.paymentStatus)
     if (!((myUser.modeOfPayment === 'Cash' || myUser.paymentStatus === 'Paid') || (myUser.modeOfPayment === 'Cash' && myUser.paymentStatus === 'Paid'))) {
-      
+
       // this.router.navigate(['/pages/invoice']);
       // this.editInvoice.emit(myUser)
 
-   //  this.addInvoice.updateInvoice(myUser)
+      //  this.addInvoice.updateInvoice(myUser)
 
       let disposable = this.dialog.open(InvoiceDialogComponent, {
         width: '60%',
@@ -410,7 +434,7 @@ export class InvoicesStatusComponent implements OnInit {
   }
 
   sendWhatsAppReminder(data) {
-    if (!((data.modeOfPayment === 'Cash' || data.paymentStatus === 'Paid') || (data.modeOfPayment === 'Cash' && data.paymentStatus === 'Paid'))) { 
+    if (!((data.modeOfPayment === 'Cash' || data.paymentStatus === 'Paid') || (data.modeOfPayment === 'Cash' && data.paymentStatus === 'Paid'))) {
       console.log('Whatsapp reminder: ', data)
       this.loading = true;
       const param = '/itr/invoice/send-invoice-whatsapp?invoiceNo=' + data.invoiceNo;
@@ -425,12 +449,12 @@ export class InvoicesStatusComponent implements OnInit {
         this._toastMessageService.alert("error", "Failed ti send Whatsapp reminder.");
       });
     }
-    
+
   }
 
   sendMailReminder(invoiceInfo) {
 
-    if (!((invoiceInfo.modeOfPayment === 'Cash' || invoiceInfo.paymentStatus === 'Paid') || (invoiceInfo.modeOfPayment === 'Cash' && invoiceInfo.paymentStatus === 'Paid'))) { 
+    if (!((invoiceInfo.modeOfPayment === 'Cash' || invoiceInfo.paymentStatus === 'Paid') || (invoiceInfo.modeOfPayment === 'Cash' && invoiceInfo.paymentStatus === 'Paid'))) {
       this.loading = true;
       const param = '/itr/invoice/send-reminder';
       this.userService.postMethodInfo(param, invoiceInfo).subscribe((result: any) => {
@@ -443,7 +467,7 @@ export class InvoicesStatusComponent implements OnInit {
         this._toastMessageService.alert("error", "Faild to send Mail Reminder.");
       });
     }
-   
+
   }
 
 }

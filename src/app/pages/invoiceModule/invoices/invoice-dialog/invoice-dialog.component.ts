@@ -47,6 +47,8 @@ export class InvoiceDialogComponent implements OnInit {
 
   ngOnInit() {
     this.changeCountry('INDIA');
+    this.invoiceInfoCalled();
+    this.getUserInvoiceData(this.data.userObject);
 
     this.invoiceEditForm = this.fb.group({
       _id: [null],
@@ -79,11 +81,24 @@ export class InvoiceDialogComponent implements OnInit {
       balanceDue: ['', Validators.required],
       itemList: ['', Validators.required]
     })
-    
-    console.log('data: ',this.data)
-    this.invoiceEditForm.patchValue(this.data.userObject)
-    console.log('invoiceEditForm: ',this.invoiceEditForm)
-    this.invoiceInfoCalled(this.data);
+  
+  }
+
+  getUserInvoiceData(invoiceInfo){
+    console.log('invoiceInfo: ',invoiceInfo)
+    this.loading = true;
+    const param = '/itr/invoice?invoiceNo=' + invoiceInfo.invoiceNo;
+    this.userService.getMethodInfo(param).subscribe((result: any) => {
+      this.loading = false;
+      console.log('User Profile: ', result)
+       this.invoiceEditForm.patchValue(result)
+      console.log('invoiceEditForm: ',this.invoiceEditForm)
+      
+     this.clientListGridOptions.api.setRowData(this.setInvoiceRowData(this.invoiceEditForm.value.itemList))
+    }, error => {
+      this.loading = false;
+      //this._toastMessageService.alert("error", "Faild to generate Invoice.");
+    });
   }
 
   setFormControl(payMode) {
@@ -198,9 +213,11 @@ export class InvoiceDialogComponent implements OnInit {
     }
   }
   
-  invoiceInfoCalled(invoiceVal) {
+  invoiceInfoCalled() {    //invoiceVal
+  
     this.clientListGridOptions = <GridOptions>{
-      rowData: this.setInvoiceRowData(invoiceVal.userObject.itemList),
+     // rowData: this.setInvoiceRowData(invoiceVal.itemList),
+      rowData: [this.setInvoiceRow()],
       columnDefs: this.createColumnDefs(),
       enableCellChangeFlash: true,
       onGridReady: params => {
