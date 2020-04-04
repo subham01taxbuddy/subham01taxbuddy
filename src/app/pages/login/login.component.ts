@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
 
   component_link: string = 'login';
   public form: FormGroup;
+  public otpForm: FormGroup;
   public user: AbstractControl;
   public passphrase: AbstractControl;
   public loading: boolean = false;
@@ -54,11 +55,16 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       'user': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
-      'passphrase': ['', Validators.compose([Validators.required, Validators.minLength(3)])]
+      // 'passphrase': ['', Validators.compose([Validators.required, Validators.minLength(3)])]
+    });
+
+    this.otpForm = this.fb.group({
+      'otp': ['', Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(6)])],
+      // 'passphrase': ['', Validators.compose([Validators.required, Validators.minLength(3)])]
     });
 
     this.user = this.form.controls['user'];
-    this.passphrase = this.form.controls['passphrase'];
+    // this.passphrase = this.form.controls['passphrase'];
   }
 
 
@@ -104,11 +110,14 @@ export class LoginComponent implements OnInit {
     Auth.signIn(environment.s3_cred.user_name, environment.s3_cred.password)
   } */
 
+  cognitoUser: any;
   public onSubmit(values: any) {
     if (this.form.valid) {
       this.loading = true;
       Auth.signIn(`+91${values.user}`, values.passphrase).then(res => {
-        const temp = {
+        this.cognitoUser = res;
+        this.loading = false;
+        /* const temp = {
           role: [],
           userId: 0
         }
@@ -117,7 +126,8 @@ export class LoginComponent implements OnInit {
           this.updateCognitoId(res);
         } else {
           this.getUserByCognitoId(res);
-        }
+        } */
+        this._toastMessageService.alert("success", 'OTP Sent on your mobile number');
       }, err => {
         this.loading = false;
         this._toastMessageService.alert("error", err.message);
@@ -127,6 +137,34 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  public onOTPValidate(values: any) {
+    if (this.otpForm.valid && this.cognitoUser) {
+      this.loading = true;
+      Auth.sendCustomChallengeAnswer(this.cognitoUser, values.otp).then(res => {
+        const temp = {
+          role: [],
+          userId: 0
+        }
+        // this.setUserDataInsession(res, temp);
+        /* if (res.attributes['custom:user_type'] && res.attributes['custom:user_type'] === 'MIGRATED') {
+          this.updateCognitoId(res);
+        } else {
+          this.getUserByCognitoId(res);
+        } */
+        console.log("OTP Validation result:", res);
+        if (res.signInUserSession) {
+          this.getUserByCognitoId(res);
+        } else {
+          this._toastMessageService.alert("error", 'Please enter valid OTP');
+        }
+      }, err => {
+        this.loading = false;
+        this._toastMessageService.alert("error", err.message);
+
+      });
+    }
+
+  }
   apiCallCounter = 0;
   updateCognitoId(data) {
     const param = `/user_account/${data.attributes['phone_number'].substring(3, 13)}/${data.attributes.sub}`;
