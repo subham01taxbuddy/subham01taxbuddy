@@ -18,7 +18,7 @@
  */
 
 export const environment = {
-	production: true,
+	production: false,
 	url: "https://uat-api.taxbuddy.com",
 	gst_gov_url: "https://devapi.gst.gov.in",
 	ifsc_url: "https://ifsc.razorpay.com",

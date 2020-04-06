@@ -42,10 +42,14 @@ export class LoginComponent implements OnInit {
 
   component_link: string = 'login';
   public form: FormGroup;
+  public mobileForm: FormGroup;
   public otpForm: FormGroup;
   public user: AbstractControl;
   public passphrase: AbstractControl;
   public loading: boolean = false;
+  public isProd: boolean = false;
+  cognitoUser: any;
+
   constructor(private fb: FormBuilder, private navbarService: NavbarService, public http: HttpClient,
     public router: Router, private _toastMessageService: ToastMessageService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService,
     private userMsService: UserMsService) {
@@ -53,71 +57,29 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isProd = environment.production;
     this.form = this.fb.group({
-      'user': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
-      // 'passphrase': ['', Validators.compose([Validators.required, Validators.minLength(3)])]
+      'user': ['', Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(10)])],
+      'passphrase': ['', Validators.compose([Validators.required, Validators.minLength(3)])]
     });
 
+    this.mobileForm = this.fb.group({
+      'user': ['', Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(10)])],
+    });
     this.otpForm = this.fb.group({
       'otp': ['', Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(6)])],
-      // 'passphrase': ['', Validators.compose([Validators.required, Validators.minLength(3)])]
     });
 
     this.user = this.form.controls['user'];
     // this.passphrase = this.form.controls['passphrase'];
   }
 
-
-  public onSubmit1(values: any): void {
-    let loginData: any = {
-      username: values.user,
-      password: values.passphrase,
-      accessToken: "",
-      outhProvider: ""
-    }
-
-    this.loading = true;
-    NavbarService.getInstance(this.http).login(loginData).subscribe(res => {
-      console.log("Is admin template allowed", res, this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))
-      if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))) {
-        // if (res && (res.role.indexOf("ROLE_ADMIN") == -1 || res.role.indexOf("ROLE_IFA") == -1)) {
-        this._toastMessageService.alert("error", "Access Denied.");
-      } else if (res && res.id_token) {
-        NavbarService.getInstance(null).setUserData(res);
-        // this.authToAWS();
-        if (res.role.indexOf("ROLE_ADMIN") !== -1) {
-          this.router.navigate(['pages/home']);
-        } else if (res.role.indexOf("ROLE_IFA") !== -1) {
-          this.router.navigate(['/pages/ifa/claim-client']);
-        } else {
-          this._toastMessageService.alert("error", "Access Denied.");
-        }
-      } else {
-        this._toastMessageService.alert("error", "The Mobile/Email address or Password entered, is not correct. Please check and try again");
-      }
-      this.loading = false;
-    }, err => {
-      let errorMessage = "Internal server error."
-      if ([400, 401].indexOf(err.status) != -1) {
-        errorMessage = "User name or Password is wrong."
-      }
-      this._toastMessageService.alert("error", errorMessage);
-      this.loading = false;
-    });
-  }
-
-  /* public authToAWS() {
-    Auth.signIn(environment.s3_cred.user_name, environment.s3_cred.password)
-  } */
-
-  cognitoUser: any;
   public onSubmit(values: any) {
     if (this.form.valid) {
       this.loading = true;
       Auth.signIn(`+91${values.user}`, values.passphrase).then(res => {
-        this.cognitoUser = res;
         this.loading = false;
-        /* const temp = {
+        const temp = {
           role: [],
           userId: 0
         }
@@ -126,7 +88,23 @@ export class LoginComponent implements OnInit {
           this.updateCognitoId(res);
         } else {
           this.getUserByCognitoId(res);
-        } */
+        }
+        this._toastMessageService.alert("success", 'OTP Sent on your mobile number');
+      }, err => {
+        this.loading = false;
+        this._toastMessageService.alert("error", err.message);
+      });
+    } else {
+      $('input.ng-invalid').first().focus();
+    }
+  }
+
+  public onOTPSent(values: any) {
+    if (this.mobileForm.valid) {
+      this.loading = true;
+      Auth.signIn(`+91${values.user}`).then(res => {
+        this.cognitoUser = res;
+        this.loading = false;
         this._toastMessageService.alert("success", 'OTP Sent on your mobile number');
       }, err => {
         this.loading = false;
@@ -145,12 +123,6 @@ export class LoginComponent implements OnInit {
           role: [],
           userId: 0
         }
-        // this.setUserDataInsession(res, temp);
-        /* if (res.attributes['custom:user_type'] && res.attributes['custom:user_type'] === 'MIGRATED') {
-          this.updateCognitoId(res);
-        } else {
-          this.getUserByCognitoId(res);
-        } */
         console.log("OTP Validation result:", res);
         if (res.signInUserSession) {
           this.setUserDataInsession(res, temp);
@@ -164,8 +136,8 @@ export class LoginComponent implements OnInit {
 
       });
     }
-
   }
+
   apiCallCounter = 0;
   updateCognitoId(data) {
     const param = `/user_account/${data.attributes['phone_number'].substring(3, 13)}/${data.attributes.sub}`;
