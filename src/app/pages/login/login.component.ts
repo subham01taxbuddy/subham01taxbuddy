@@ -153,6 +153,7 @@ export class LoginComponent implements OnInit {
         } */
         console.log("OTP Validation result:", res);
         if (res.signInUserSession) {
+          this.setUserDataInsession(res, temp);
           this.getUserByCognitoId(res);
         } else {
           this._toastMessageService.alert("error", 'Please enter valid OTP');

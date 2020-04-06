@@ -3,26 +3,50 @@ import { GridOptions } from 'ag-grid-community';
 import { UserMsService } from 'app/services/user-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { formatDate } from '@angular/common';
-import { MatDialog } from '@angular/material';
+import { MatDialog, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material';
 import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.component';
 import { UtilsService } from 'app/services/utils.service';
 import { Router } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { environment } from 'environments/environment';
+// import { saveAs } from 'file-saver';
+
+// export const MY_FORMATS = {
+//   parse: {
+//     dateInput: 'DD/MM/YYYY',
+//   },
+//   display: {
+//     dateInput: 'DD/MM/YYYY',
+//     monthYearLabel: 'MMM YYYY',
+//     dateA11yLabel: 'LL',
+//     monthYearA11yLabel: 'MMMM YYYY',
+//   },
+// };
+
 @Component({
   selector: 'app-invoices-status',
   templateUrl: './invoices-status.component.html',
-  styleUrls: ['./invoices-status.component.css']
+  styleUrls: ['./invoices-status.component.css'],
+  // providers: [
+  //   { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+  //   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
+  // ]
 })
 export class InvoicesStatusComponent implements OnInit {
 
   loading: boolean;
   invoiceData: any;
   invoiceListGridOptions: GridOptions;
+  maxDate: any = new Date();
+  toDateMin: any;
+  summartDetailForm: FormGroup;
 
   // @Output() editInvoice = new EventEmitter<any>();
 
   constructor(private userMsService: UserMsService, private _toastMessageService: ToastMessageService,
     @Inject(LOCALE_ID) private locale: string, private userService: UserMsService, private dialog: MatDialog,
-    private utilService: UtilsService, private router: Router) {
+    private utilService: UtilsService, private router: Router, private fb: FormBuilder) {
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.invoicesCreateColoumnDef(),
@@ -37,6 +61,10 @@ export class InvoicesStatusComponent implements OnInit {
 
   ngOnInit() {
     this.getAllInvoiceInfo();
+    this.summartDetailForm = this.fb.group({
+      fromDate: ['', Validators.required],
+      toDate: ['', Validators.required]
+    })
   }
 
   getAllInvoiceInfo() {
@@ -282,7 +310,7 @@ export class InvoicesStatusComponent implements OnInit {
               backgroundColor: '#dddddd',
               color: '#dddddd',
             }
-          }else{
+          } else {
             return {
               textAlign: 'center', display: 'flex',
               'align-items': 'center',
@@ -322,7 +350,7 @@ export class InvoicesStatusComponent implements OnInit {
               backgroundColor: '#dddddd',
               color: '#dddddd',
             }
-          }else{
+          } else {
             return {
               textAlign: 'center', display: 'flex',
               'align-items': 'center',
@@ -332,7 +360,7 @@ export class InvoicesStatusComponent implements OnInit {
 
         },
       }
-    
+
     ]
 
   }
@@ -467,6 +495,49 @@ export class InvoicesStatusComponent implements OnInit {
         this._toastMessageService.alert("error", "Faild to send Mail Reminder.");
       });
     }
+
+  }
+
+  setToDateValidation(FromDate) {
+    console.log('FromDate: ', FromDate)
+    console.log('formated-1 FrmDate: ', new Date(FromDate))
+    //console.log('formated-2 FrmDate: ', new Date(FromDate).format('dd/MM/yyyy'))
+    this.toDateMin = FromDate;
+  }
+
+  downloadInvoicesSummary() {
+    console.log('this.summartDetailForm.value: ', this.summartDetailForm)
+    if (this.summartDetailForm.valid) {
+      console.log(this.summartDetailForm.value)
+      
+      // const param = '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
+      let fromData = this.summartDetailForm.value.fromDate;
+      let toData = this.summartDetailForm.value.toDate;
+      location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData.toISOString() + '&toDate=' + toData.toISOString();
+      // const param = '/itr/invoice/csv-report?fromDate=' + fromData.toISOString() + '&toDate=' + toData.toISOString();
+      // this.loading = true;
+      // this.userService.invoiceDownloadDoc(param).subscribe((result: any) => {
+      //   this.loading = false;
+      //   console.log('Invoice details: ', result)
+      //   //var fileURL = new Blob([result], { type: 'text/csv' })
+      //  // saveAs(fileURL, "inoicesDetail.csv");
+      //  // window.open(URL.createObjectURL(fileURL))
+      //   this._toastMessageService.alert("success", "Invoice's Summary download successfully.");
+      // }, error => {
+      //   this.loading = false;
+      //   this._toastMessageService.alert("error", "Faild to generate Invoice Summary.");
+      // });
+
+    }
+  }
+
+  getDateSutaibleInUrl(date) {
+    var time = new Date(date);
+    var deadLineDate = deadLineDate / 1000;
+    time.setUTCSeconds(deadLineDate);
+    var requestObject = time.toISOString().slice(0, 10);
+    console.log('date format: ',requestObject)
+    return requestObject;
 
   }
 
