@@ -84,7 +84,6 @@ export class InvoiceDialogComponent implements OnInit {
       invoiceId: null,
       isLinkInvalid: false,
       amountInWords: ''
-
     })
   
   }

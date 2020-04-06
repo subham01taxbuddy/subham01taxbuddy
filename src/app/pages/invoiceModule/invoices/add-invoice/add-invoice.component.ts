@@ -691,8 +691,8 @@ export class AddInvoiceComponent implements OnInit {
       }
       console.log('invoiceTableInfo ', this.invoiceTableInfo)
       this.invoiceForm.controls['itemList'].setValue(this.invoiceTableInfo)
-      if (this.invoiceForm.valid) {
-        console.log('Invoice Form: ', this.invoiceForm)
+       if (this.invoiceForm.valid) {
+         console.log('Invoice Form: ', this.invoiceForm)
         console.log('Invoice Form: ', this.clientListGridOptions.api.getRenderedNodes())
         console.log(this.clientListGridOptions.api.getRenderedNodes()[0].data)
 
@@ -718,7 +718,7 @@ export class AddInvoiceComponent implements OnInit {
         }, error => {
           this.loading = false;
           this._toastMessageService.alert("error", "There is some issue to save user invoice data.");
-        });
+       });
 
       } else {
         $('input.ng-invalid').first().focus();
