@@ -6,9 +6,10 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { SharedModule } from "app/shared/shared.module";
 import { NgxLoadingModule } from "ngx-loading";
+import { SumaryDialogComponent } from './sumary-dialog/sumary-dialog.component';
 
 @NgModule({
-    declarations:[TaxSummaryComponent],
+    declarations:[TaxSummaryComponent, SumaryDialogComponent],
     imports:[
         SummaryRoutingModule,
         CommonModule,
@@ -17,7 +18,9 @@ import { NgxLoadingModule } from "ngx-loading";
         HttpClientModule,
         SharedModule,
         NgxLoadingModule.forRoot({}),
-    ]
+        
+    ],
+    entryComponents:[SumaryDialogComponent] 
 })
 
 export class SummaryModule {}

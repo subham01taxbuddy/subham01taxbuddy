@@ -4,79 +4,261 @@
     <div class="content content_full">
         <div class="content__container">
             <div class="card">
-                <div class="card__row">
+                <form [formGroup]="itrSummaryForm">
+                    <div class="card__row">
 
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Name</mat-label>
-                            <input matInput placeholder="Name" autocomplete="off">
-                        </mat-form-field>
-                    </div>
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Date of Birth</mat-label>
-                            <input matInput placeholder="Date of Birth" [matDatepicker]="picker" autocomplete="off">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Residential Status</mat-label>
-                            <mat-select matInput placeholder="Select Residential Status" autocomplete="off">
-                                <mat-option>India</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
+                        <div class="card__col-lg-12" style="margin-bottom: 20px;">
+                            <div class="top-head">
+                                <div class="card__col-lg-3" style="margin-top: 10px;">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Type of ITR</mat-label>
+                                        <mat-select matInput formControlName="itrType" placeholder="Select ITR type"
+                                            autocomplete="off" required>
+                                            <mat-option *ngFor="let itr of itrTypesData" [value]="itr.value">
+                                                {{ itr.label }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="itrSummaryForm.controls['itrType'].hasError('required')">
+                                            Select ITR type</mat-error>
+                                    </mat-form-field>
 
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>PAN</mat-label>
-                            <input matInput placeholder="PAN" autocomplete="off">
-                        </mat-form-field>
-                    </div>
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Aadhaar number</mat-label>
-                            <input matInput placeholder="Aadhaar number" autocomplete="off">
-                        </mat-form-field>
-                    </div>
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Financial Year</mat-label>
-                            <mat-select matInput placeholder="Financial Year" autocomplete="off">
-                                <mat-option>2019-2020</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
+                                </div>
+                                <div class="card__col-lg-3">
 
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Address</mat-label>
-                            <input matInput placeholder="Address" autocomplete="off">
-                        </mat-form-field>
-                    </div>
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>E-mail</mat-label>
-                            <input matInput placeholder="E-mail" autocomplete="off">
-                        </mat-form-field>
-                    </div>
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Assessment Year</mat-label>
-                            <input matInput placeholder="Assessment Year" autocomplete="off">
-                        </mat-form-field>
-                    </div>
+                                </div>
+                                <div class="card__col-lg-3">
+                                    <!-- <mat-form-field appearance="outline">
+                                        <mat-label>Taxable Income:</mat-label>
+                                        <input matInput placeholder="TTaxable Income" disabled autocomplete="off">
+                                    </mat-form-field> -->
+                                    <label>Taxable Income</label>
+                                    <input type="number" placeholder="Taxable Income" formControlName="totalIncome" required disabled class="disableInput">
+                                   
+                                </div>
+
+                                <div class="card__col-lg-3">
+                                    <!-- <mat-form-field appearance="outline">
+                                        <mat-label>Tax Payable/ Refund:</mat-label>
+                                        <input matInput placeholder="Tax Payable/ Refund" disabled autocomplete="off">
+                                    </mat-form-field> -->
+                                    <label>Tax Payable/ Refund</label>
+                                    <input type="number" placeholder="Tax Payable/ Refund" [value]="netTaxPayble" disabled
+                                        class="disableInput">
+                                </div>
+                            </div>
+                        </div><br><br>
 
 
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Mobile Number</mat-label>
-                            <input matInput placeholder="Mobile Number" autocomplete="off">
-                        </mat-form-field>
-                    </div>
-                    <div class="card__col-lg-4">
+
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>PAN</mat-label>
+                                <input matInput placeholder="PAN" formControlName="pan" autocomplete="off" type="text"
+                                    maxlength="10" minlength="10"
+                                    (blur)="getUserInfoByPan(itrSummaryForm.controls['pan'])" required upperCase>
+                                <mat-error *ngIf="itrSummaryForm.controls['pan'].hasError('required')">Enter PAN number
+                                </mat-error>
+                                <mat-error *ngIf="itrSummaryForm.controls['pan'].hasError('pattern')">Enter valid PAN
+                                    (e.g XXXXX1234X)</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Firet Name</mat-label>
+                                <input matInput placeholder="First Name" formControlName="firstName" maxlength="75"
+                                    autocomplete="off" required>
+                                <mat-error *ngIf="itrSummaryForm.controls['firstName'].hasError('required')">Enter first
+                                    name
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Middle Name</mat-label>
+                                <input matInput placeholder="Middle Name" formControlName="middleName" maxlength="75"
+                                    autocomplete="off">
+                                <!-- <mat-error *ngIf="itrSummaryForm.controls['name'].hasError('required')">Enter name
+                                </mat-error> -->
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Last Name</mat-label>
+                                <input matInput placeholder="Last Name" formControlName="lastName" maxlength="75"
+                                    autocomplete="off" required>
+                                <mat-error *ngIf="itrSummaryForm.controls['lastName'].hasError('required')">Enter last
+                                    name
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Father's Name</mat-label>
+                                <input matInput placeholder="Father's Name" formControlName="fatherName" maxlength="75"
+                                    autocomplete="off" required>
+                                <mat-error *ngIf="itrSummaryForm.controls['fatherName'].hasError('required')">Enter
+                                    father name</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Date of Birth</mat-label>
+                                <input matInput formControlName="dob" placeholder="Date of Birth" [min]="minDate"
+                                    [max]="maxDate" [matDatepicker]="picker" autocomplete="off" required>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                                <mat-error *ngIf="itrSummaryForm.controls['dob'].hasError('required')">Select Date of
+                                    Birth</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Residential Status</mat-label>
+                                <mat-select matInput formControlName="residentialStatus"
+                                    placeholder="Select Residential Status" autocomplete="off" required>
+                                    <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
+                                        {{ res.label }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="itrSummaryForm.controls['residentialStatus'].hasError('required')">
+                                    Select Residential Status</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Aadhaar Number</mat-label>
+                                <input matInput placeholder="Aadhaar Number" formControlName="aadhaarNumber"
+                                    maxlength="12" autocomplete="off" required>
+                                <mat-error *ngIf="itrSummaryForm.controls['aadhaarNumber'].hasError('required')">Enter
+                                    Aadhar number</mat-error>
+                                <mat-error
+                                    *ngIf="itrSummaryForm.controls['aadhaarNumber'].hasError('pattern') || itrSummaryForm.controls['aadhaarNumber'].hasError('maxLength')">
+                                    Enter
+                                    12 digit aadhar number</mat-error>
+                            </mat-form-field>
+                        </div>
+
+
+
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Passport No</mat-label>
+                                <input matInput placeholder="Passport No" formControlName="passportNo" minlength="8"
+                                    maxlength="8" autocomplete="off">
+                                <mat-error *ngIf="itrSummaryForm.controls['passportNo'].hasError('minlength')">Enter
+                                    8 digit passport number</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>E-mail</mat-label>
+                                <input matInput placeholder="E-mail" formControlName="email" maxlength="50"
+                                    autocomplete="off" required>
+                                <mat-error *ngIf="itrSummaryForm.controls['email'].hasError('required')">Enter email
+                                </mat-error>
+                                <mat-error *ngIf="itrSummaryForm.controls['email'].hasError('pattern')">Enter valid
+                                    email</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Mobile Number</mat-label>
+                                <input matInput formControlName="mobileNumber" maxlength="10"
+                                    placeholder="Mobile Number" autocomplete="off"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
+                                <mat-error *ngIf="itrSummaryForm.controls['mobileNumber'].hasError('required')">Enter
+                                    mobile number</mat-error>
+                                <mat-error
+                                    *ngIf="itrSummaryForm.controls['mobileNumber'].hasError('pattern') || itrSummaryForm.controls['mobileNumber'].hasError('minlength') || itrSummaryForm.controls['mobileNumber'].hasError('maxlength')">
+                                    Enter
+                                    10 digit mobile number</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Address</mat-label>
+                                <input matInput formControlName="address" maxlength="200" placeholder="Address" required
+                                    autocomplete="off">
+                                <mat-error *ngIf="itrSummaryForm.controls['address'].hasError('required')">Enter address
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <input formControlName="pinCode" maxlength="6"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
+                                    placeholder="PIN Code" autocomplete="off"
+                                    (blur)="getCityData(itrSummaryForm.controls['pinCode'], 'profile')" required>
+                                <mat-error *ngIf="itrSummaryForm.controls['pinCode'].hasError('required')">Enter pin
+                                </mat-error>
+                                <mat-error *ngIf="itrSummaryForm.controls['pinCode'].hasError('pattern')">Enter valid
+                                    pin
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Country</mat-label>
+                                <input matInput formControlName="country" placeholder="Country" disabled
+                                    autocomplete="off">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>State</mat-label>
+                                <input matInput formControlName="state" disabled placeholder="State" autocomplete="off">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>City</mat-label>
+                                <input matInput formControlName="city" disabled placeholder="City" autocomplete="off">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Return Type</mat-label>
+                                <mat-select matInput formGroupName="returnType" autocomplete="off" required>
+                                    <mat-option *ngFor="let ret of returnTypeData" [value]="ret.value">
+                                        {{ret.label}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="itrSummaryForm.controls['returnType'].hasError('required')">Select
+                                    return type</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Assessment Year</mat-label>
+                                <mat-select matInput formControlName="assessmentYear" placeholder="Financial Year"
+                                    autocomplete="off" required>
+                                    <mat-option *ngFor="let year of financialYear" [value]="year.value">
+                                        {{year.value}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Financial Year</mat-label>
+                                <mat-select matInput formControlName="financialYear" placeholder="Financial Year"
+                                    autocomplete="off" required>
+                                    <mat-option *ngFor="let year of financialYear" [value]="year.value">
+                                        {{year.value}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <!-- <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>ITR Form</mat-label>
                             <mat-select matInput placeholder="ITR Form" autocomplete="off">
@@ -84,170 +266,1170 @@
                                 <mat-option>4</mat-option>
                             </mat-select>
                         </mat-form-field>
+                    </div> -->
+
                     </div>
 
-                </div>
 
-                <div class="card__row">
+                    <!-- <div class="card__row"> -->
                     <div class="heading">COMPUTATION OF INCOME</div><br>
                     <div class="table-responsive">
                         <table>
                             <tr>
                                 <th></th>
                                 <th><b>Particulars</b></th>
-                                <th><b>Amount (Rs.)</b></th>
+                                <th><b>Rs.</b></th>
+                                <th><b>Rs.</b></th>
                             </tr>
                             <tr>
                                 <td>1</td>
-                                <td>Income from Salary (Refer annexure) </td>
-                                <td>6,82,384 </td>
+                                <td>Income from Salary </td>
+                                <td></td>
+                                <td><input type="number" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>2</td>
-                                <td>Income from House Property (Refer annexure) </td>
-                                <td>0</td>
+                                <td>Income from House Property (Refer Annexure) </td>
+                                <td></td>
+                                <td><input type="number" formControlName="netHousePropertyIncome" maxlength="8"></td>
+
                             </tr>
                             <tr>
                                 <td>3</td>
-                                <td>Income from Business and Profession </td>
-                                <td>0</td>
+                                <td>Income from Other Sources (Refer annexure) </td>
+                                <td></td>
+                                <td><input type="number" 
+                                        maxlength="8">   <!--[value]="incomes.controls['totalOtherIncome'].value"-->
+                                </td>
                             </tr>
                             <tr>
                                 <td>4</td>
-                                <td>Income from Capital gains </td>
-                                <td>0</td>
+                                <td><b>Gross Total Income (1+2+3)</b> </td>
+                                <td></td>
+                                <td><b><input type="number" formControlName="grossTotalIncome" maxlength="8"></b></td>
+
                             </tr>
                             <tr>
                                 <td>5</td>
-                                <td>Income from Other sources </td>
-                                <td>86,253 </td>
+                                <td>Less: Deduction under Chap- VIA (Refer Annexure) </td>
+                                <td></td>
+                                <td><input type="number" formControlName="deductionUnderChapterVIA" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>6</td>
-                                <td><b>Total Headwise Income (1+2+3+4+5) </b></td>
-                                <td><b> 7,68,637 </b> </td>
+                                <td><b>Total Income(4-5) </b></td>
+                                <td></td>
+                                <td><b><input type="number" formControlName="totalIncome" required disabled maxlength="8"></b>
+                                </td>
                             </tr>
                             <tr>
                                 <td>7</td>
-                                <td>7Losses of Current Year Setoff House Property </td>
-                                <td>1,52,010</td>
+                                <td>Tax Payable on Total Income </td>
+                                <td></td>
+                                <td><input type="number" formControlName="taxPayable" (blur)="calculateTaxAfterRebate()"
+                                      required  maxlength="8"></td>
+
                             </tr>
                             <tr>
                                 <td>8</td>
-                                <td>Balance After Setoff of Current Year Losses </td>
-                                <td>6,16,627 </td>
+                                <td>Less: Rebate u/s 87A </td>
+                                <td></td>
+                                <td><input type="number" formControlName="rebate"  (blur)="calculateTaxAfterRebate()"
+                                      required  maxlength="8"></td>
+
                             </tr>
                             <tr>
                                 <td>9</td>
-                                <td>Balance After Setoff of Current Year Losses </td>
-                                <td>6,16,627 </td>
+                                <td>Tax after rebate</td>
+                                <td></td>
+                                <td><input type="number" formControlName="taxAfterRebate" disabled required maxlength="8"></td>
+
                             </tr>
                             <tr>
                                 <td>10</td>
-                                <td><b>Gross Total Income </b></td>
-                                <td><b>6,16,627 </b></td>
+                                <td>Health and Education cess @4% on (9)</td>
+                                <td></td>
+                                <td><input type="number" formControlName="healthAndEducationCess" disabled
+                                      required  maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>11</td>
-                                <td> Income Chargeable to Tax at Special Rate U/S 111A, 112 etc </td>
-                                <td>0</td>
+                                <td> Total Tax and cess (9 + 10)</td>
+                                <td></td>
+                                <td><input type="number" formControlName="totalTaxAndCess" disabled required maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>12</td>
-                                <td>Deductions Under Chapter VI-A </td>
-                                <td>3,03,253 </td>
+                                <td>Less: Relief u/s 89 (Please ensure to submit Form 10E to claim this relief)</td>
+                                <td></td>
+                                <td><input type="number" formControlName="reliefUS89l" (blur)="calculateTaxAfterRelif()"
+                                      maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>13</td>
-                                <td><b> Total Income (10-12)</b></td>
-                                <td><b>3,13,370 </b></td>
+                                <td>Balance Tax after relief (11-12)</td>
+                                <td></td>
+                                <td><input type="number" formControlName="balanceTaxAfterRelief" required disabled maxlength="8">
+                                </td>
                             </tr>
                             <tr>
                                 <td>14</td>
-                                <td> Income chargeable at Special Rates after adjusting BEL** </td>
-                                <td>0 </td>
+                                <td><b>Interest and Fees</b></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>u/s 234A</td>
+                                <td><input type="number" formControlName="section234A" maxlength="8"
+                                        (blur)="calculateTotalInterestFees()"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>u/s 234B</td>
+                                <td><input type="number" formControlName="section234B" maxlength="8"
+                                        (blur)="calculateTotalInterestFees()"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>u/s 234C</td>
+                                <td><input type="number" formControlName="section234C" maxlength="8"
+                                        (blur)="calculateTotalInterestFees()"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>u/s 234F</td>
+                                <td><input type="number" formControlName="section234F" maxlength="8"
+                                        (blur)="calculateTotalInterestFees()"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+
+                                <td><input type="number" disabled [value]="totalInterest" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>15</td>
-                                <td>Net Agricultural Income </td>
-                                <td>0</td>
+                                <td>Total Tax, fee and Interest (13 + 14)</td>
+                                <td></td>
+                                <td><input type="number" formControlName="totalTaxFeeAndInterest" disabled
+                                       required maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>16</td>
-                                <td><b>Aggregate Income (13-14+15)</b></td>
-                                <td><b>3,13,370 </b></td>
+                                <td><b>Taxes Paid</b></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>TDS on Salary (Refer Annexure)</td>
+                                <td><input type="number" disabled formControlName="totalTdsOnSalary" maxlength="8"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>TDS other than Salary (Refer Annexure)</td>
+                                <td><input type="number" disabled formControlName="totalTdsOnOtherThanSalary" maxlength="8"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>TDS on Sale of Property 26QB (Refer Annexure)</td>
+                                <td><input type="number" disabled formControlName="totalTdsSaleOfProperty26QB"
+                                        maxlength="8"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>TCS (Refer Annexure)</td>
+                                <td><input type="number" disabled formControlName="totalTaxCollectedAtSources" maxlength="8"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>Advance/ Self-Assessment Tax (Refer Annexure)</td>
+                                <td><input type="number" disabled formControlName="totalAdvanceTax" maxlength="8"></td>
+                                <td><input type="number" [value]="totalTDS" disabled  maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>17</td>
-                                <td>Losses To be Carried Forward (Refer Annexure) </td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <td>18</td>
-                                <td>Total Tax </td>
-                                <td>3,169 </td>
-                            </tr>
-                            <tr>
-                                <td>19</td>
-                                <td> Rebate Under Section 87A </td>
-                                <td>2,500 </td>
-                            </tr>
-                            <tr>
-                                <td>20</td>
-                                <td>Tax After Rebate (18-19) </td>
-                                <td>669</td>
-                            </tr>
-                            <tr>
-                                <td>21</td>
-                                <td>Surcharge </td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <td>22</td>
-                                <td> Health and Education Cess </td>
-                                <td>27 </td>
-                            </tr>
-                            <tr>
-                                <td>23</td>
-                                <td>Gross Tax Liability (20+21+22) </td>
-                                <td>696</td>
-                            </tr>
-                            <tr>
-                                <td>24</td>
-                                <td>Tax Relief </td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <td>25</td>
-                                <td>Net Tax Liability (23-24)</td>
-                                <td>696 </td>
-                            </tr>
-                            <tr>
-                                <td>26</td>
-                                <td><b> Interest and Fee Payable </b></td>
-                                <td> 1,000 </td>
-                            </tr>
-                            <tr>
-                                <td>27</td>
-                                <td>Aggregate Liability (25+26) </td>
-                                <td>1,696 </td>
-                            </tr>
-                            <tr>
-                                <td>28</td>
-                                <td>Taxes Paid </td>
-                                <td>1,52,469 </td>
-                            </tr>
-                            <tr>
-                                <td>29</td>
                                 <td><b>Net Tax Payable/ (Refund)</b></td>
-                                <td><b>(1,50,770 )</b></td>
+                                <td></td>
+                                <td><b><input type="number" [value]="netTaxPayble" disabled maxlength="8"></b></td>
                             </tr>
-
 
                         </table>
                     </div>
+                <!-- </form> -->
+                <br><br><br>
 
+                <div class="heading">ANNEXURES</div><br>
+
+                <div class="tableHead">Annexures: Bank Details</div>
+                <button (click)="openDialog('Add Bank Info','Add','','Bank')">Add</button>
+                <br>
+                <table>
+                    <tr>
+                        <th>IFSC/ Swiss Code</th>
+                        <th>Name of the Bank</th>
+                        <th>Account Number</th>
+                        <th>Refund</th>
+                    </tr>
+                    <tr *ngIf="bankData.length === 0">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr *ngFor="let bank of bankData">
+                        <td>{{bank.ifsCode}}</td>
+                        <td>{{bank.name}}</td>
+                        <td>{{bank.accountNumber}}</td>
+                        <td *ngIf="bank.hasRefund" style="text-align: center;"><i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i></td>
+                        <td *ngIf="!bank.hasRefund" style="text-align: center;"><i class="fa fa-times fa-lg" aria-hidden="true"></i></td>
+                    </tr>
+
+                </table><br><br>
+
+                <div class="tableHead">Annexures: House Properties</div>
+                <button (click)="openDialog('Add House Property','Add','','House')">Add House Info</button><br>
+                <table class="verticle">
+                    <tr>
+                        <th>Property Type</th>
+                        <th>Address</th>
+                        <th>Ownership</th>
+                        <th>Co-owned Name</th>
+                        <th>Co-owned PAN</th>
+                        <th>Co-owned share</th>
+                        <th>Tenat name</th>
+                        <th>Gross Rent Recived</th>
+                        <th>Less: Taxes Paid</th>
+                        <th><b>Annulal Value</b></th>
+                        <th >Standared deduction</th>
+                        <th>Interest on Home Loan</th>
+                        <th><b>Net House Pro Income</b></th>
+                    </tr>
+                   
+                    <tr *ngIf="housingData.length === 0">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        
+                    </tr>
+                    <tr *ngFor="let house of housingData">
+                        <td>{{house.propertyType}}</td>
+                        <td>{{house.address}}</td>
+                        <td>{{house.Ownership}}</td>
+                        <td>{{house.coOwnerName}}</td>
+                        <td>{{house.coOwnerPAN}}</td>
+                        <td>{{house.coOwnerShare}}</td>
+                        <td>{{house.tenant}}</td>
+                        <td>{{house.grossRentRecived}}</td>
+                        <td>{{house.annulaVal}}</td>
+                        <td>{{house.standeredDeduction}}</td>
+                        <td>{{house.interestOnHomeLoan}}</td>
+                        <td>{{house.netSalary}}</td>
+                        <td>{{house.netHousePro}}</td>
+                    </tr>
+                </table><br><br>
+
+
+                <div class="tableHead">Annexures: Salary</div>
+                <button (click)="openDialog('Add Salary Info','Add','','Salary')">Add</button><br>
+                <table class="verticle">
+                    <tr>
+                        <th><b>Employer Name</b></th>
+                        <th>Employer Address</th>
+                        <th>Nature of Employer</th>
+                        <th>Salary as per section 17(1)</th>
+                        <th>Value of Perquisites as per Section 17(2)</th>
+                        <th>Profit in lieu of Salary as per Section 17(3)</th>
+                        <th>Gross Salary</th>
+                        <th colspan="3">Less: Exempt Allowance</th>
+                        <th>Total Exempt Allowance</th>
+                        <th>Net Salary</th>
+                        <th colspan="3">Less: Deduction u/s 16(ia)</th>
+                        <th>Total deduction</th>
+                        <th><b>Net Salary</b></th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>HRA</th>
+                        <th>LTE</th>
+                        <th>O</th>
+                        <th></th>
+                        <th></th>
+                        <th>SD</th>
+                        <th>EA</th>
+                        <th>PT</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr *ngIf="salaryItrratedData.length === 0">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr *ngFor="let sal of salaryItrratedData">
+                        <td><b>{{sal.employerName}}</b></td>
+                        <td>{{sal.address}}</td>
+                        <td>{{sal.employerCategory}}</td>
+                        <td>{{sal.sal171}}</td>
+                        <td>{{sal.perquisites}}</td>
+                        <td>{{sal.profitinLieu}}</td>
+                        <td>{{sal.grossSalary}}</td>
+                        <td>{{sal.houseRentAllow}}</td>
+                        <td>{{sal.leaveTravelExpense}}</td>
+                        <td>{{sal.other}}</td>
+                        <td>{{sal.totalExemptAllow}}</td>
+                        <td>{{sal.netSalary}}</td>
+                        <td>{{sal.standardDeduction}}</td>
+                        <td>{{sal.entertainAllow}}</td>
+                        <td>{{sal.professionalTax}}</td>
+                        <td>{{sal.totalSalaryDeduction}}</td>
+                        <td><b>{{sal.taxableSalary}}</b></td>
+                    </tr>
+                </table><br><br>
+
+                 <!-- <form [formGroup]="houseProperties"> -->
+                <!-- <mat-card>
+                        <div class="tableHead">Annexures: House Property</div>
+                        <div class="card__row">
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Types of Property</mat-label>
+                                    <mat-select matInput formControlName="propertyType" placeholder="Types of Property"
+                                        (selectionChange)="setTenantValue(this.itrSummaryForm.value.houseProperties.propertyType)"
+                                        autocomplete="off">
+                                        <mat-option *ngFor="let property of propertyTypeData" [value]="property.value">
+                                            {{property.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Flat No:</mat-label>
+                                    <input matInput placeholder="Flat No" formControlName="flatNo" autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Building</mat-label>
+                                    <input matInput formControlName="building" placeholder="Building"
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Location </mat-label>
+                                    <input matInput placeholder="Location" formControlName="locality"
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Street:</mat-label>
+                                    <input matInput placeholder="Street" formControlName="street" autocomplete="off">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Pin Code:</mat-label>
+                                    <input formControlName="pinCode" maxlength="6"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
+                                        placeholder="PIN Code" autocomplete="off"
+                                        (blur)="getCityData(itrSummaryForm.value.houseProperties.pinCode, 'house')"
+                                        required> 
+                                      
+                                    <mat-error *ngIf="itrSummaryForm['controls'].houseProperties['controls'].pinCode.hasError('required')">
+                                        Enter pin
+                                    </mat-error>
+                                    <mat-error *ngIf="itrSummaryForm['controls'].houseProperties['controls'].pinCode.hasError('pattern')">
+                                        Enter valid
+                                        pin
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Country:</mat-label>
+                                    <input matInput placeholder="Country" disabled formControlName="country"
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline" >
+                                    <mat-label>State:</mat-label>
+                                    <input matInput placeholder="State" disabled formControlName="state"
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>City:</mat-label>
+                                    <input matInput placeholder="City" disabled formControlName="city"
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Ownership</mat-label>
+                                    <mat-select matInput formControlName="ownerOfProperty" placeholder="Ownership"
+                                        autocomplete="off"
+                                        (selectionChange)="onOwnerSelfSetVal(this.itrSummaryForm.value.houseProperties.ownerOfProperty)"
+                                        required>
+                                        <mat-option *ngFor="let property of ownerships" [value]="property.value">
+                                            {{property.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="card__col-lg-3" formGroupName="houseProperties"
+                                *ngIf="itrSummaryForm['controls'].houseProperties.controls['ownerOfProperty'].value !== 'SELF'">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Co-ownwer</mat-label>
+                                    <mat-select matInput formControlName="otherOwnerOfProperty" placeholder="Co-ownwer"
+                                        (selectionChange)="setCOwnerVal(itrSummaryForm['controls'].houseProperties['controls'].otherOwnerOfProperty)"
+                                        autocomplete="off" required>
+                                        <mat-option *ngFor="let property of coOwnwerData" [value]="property.value">
+                                            {{property.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div formGroupName="houseProperties" *ngIf="itrSummaryForm['controls'].houseProperties.controls['otherOwnerOfProperty'].value === 'YES'">
+                                <div class="card__col-lg-3" formGroupName="coOwners">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Co-ownwer name</mat-label>
+                                        <input matInput placeholder="Co-ownwer name" formControlName="name"
+                                            maxlength="20" autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-lg-3" formGroupName="houseProperties" >
+                                    <div formGroupName="coOwners">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Co-ownwer PAN</mat-label>
+                                        <input matInput placeholder="PAN" formControlName="panNumber" autocomplete="off"
+                                            type="text" maxlength="10" minlength="10" required
+                                            (blur)="checkPanDuplicate(itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].panNumber)"
+                                            upperCase>
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].panNumber.hasError('pattern')">
+                                            Enter valid PAN (e.g XXXXX1234X)</mat-error>
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].panNumber.hasError('duplicate')">
+                                            PAN Can't be same as User's PAN</mat-error>
+
+                                    </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="card__col-lg-3" formGroupName="houseProperties" formGroupName="coOwners">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Co-ownwer share</mat-label>
+                                        <input matInput placeholder="Co-ownwer share" formControlName="percentage"
+                                            maxlength="3" max="101" autocomplete="off"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].percentage.hasError('max')">
+                                            Maximum amount should be 100
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div formGroupName="houseProperties" *ngIf="itrSummaryForm['controls'].houseProperties.controls['propertyType'].value === 'Rented'">
+                                <div class="card__col-lg-3" formGroupName="tenant">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Tenent name</mat-label>
+                                        <input matInput placeholder="Tenent name" formControlName="name" maxlength="20"
+                                            autocomplete="off">
+                                    </mat-form-field>
+                                </div>
+                                <div formGroupName="houseProperties" class="card__col-lg-3" formGroupName="tenant">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Tenent PAN</mat-label>
+                                        <input matInput placeholder="PAN" formControlName="panNumber" autocomplete="off"
+                                            type="text" maxlength="10" minlength="10" required
+                                            (blur)="checkPanDuplicate(itrSummaryForm['controls'].houseProperties['controls'].tenant['controls'].panNumber)"
+                                            upperCase>
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].houseProperties['controls'].tenant['controls'].panNumber.hasError('pattern')">
+                                            Enter valid PAN (e.g XXXXX1234X)</mat-error>
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].houseProperties['controls'].tenant['controls'].panNumber.hasError('duplicate')">
+                                            PAN Can't be same as User's PAN</mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card__row">
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field  appearance="outline">
+                                    <mat-label>Gross rent received</mat-label>
+                                    <input matInput placeholder="Gross rent received" maxlength="8"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        formControlName="grossAnnualRentReceived" autocomplete="off"
+                                        (blur)="setAnnualVal()">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Less: Taxes paid</mat-label>
+                                    <input matInput placeholder="Less: Taxes paid" formControlName="propertyTax"
+                                        maxlength="8" (blur)="setAnnualVal()"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline">
+                                    <mat-label><b>Annual value</b></mat-label>
+                                    <input matInput placeholder="Annual value" disabled formControlName="annualValue"
+                                        maxlength="8" autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="card__row">
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                            
+                                <mat-form-field appearance="outline">
+                                    <mat-label><b>Less- Deduction under section 24</b></mat-label>
+                                    <input matInput placeholder="Less- Deduction under section 24" disabled>
+                                    
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>(a) Standard deduction (30% of Annual Value)</mat-label>
+                                    <input matInput placeholder="(a) Standard deduction (30% of Annual Value)"
+                                        [value]="itrSummaryForm.controls['hpStandardDeduction'].value" disabled>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" formGroupName="houseProperties">
+                                <mat-form-field appearance="outline"  formGroupName="loans">
+                                    <mat-label>(b) Interest on home loan</mat-label>
+                                    <input matInput placeholder="(b) Interest on home loan" maxlength="8"
+                                        formControlName="interestAmount"
+                                        (blur)="setValueInLoanObj(itrSummaryForm['controls'].houseProperties['controls'].loans['controls'].interestAmount)"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label><b>Net House property Income</b></mat-label>
+                                    <input matInput placeholder="Net House property Income" maxlength="8"
+                                        [value]="itrSummaryForm.controls['netHousePropertyIncome'].value"
+                                        autocomplete="off" disabled>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                </mat-card><br><br> -->
+
+                <div class="tableHead">Annexures: Other Sources</div><br>
+
+                <mat-card>
+                    <div class="card__row">
+                        <!-- <form [formGroup]="incomes"> -->
+                            <div class="card__col-lg-3">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Interest from Saving Account</mat-label>
+                                    <input matInput placeholder="Interest from Saving Account"
+                                       [value]="incmesValue.savingAmount" id="savingAmount" name="savingAmount"
+                                        (blur)="setOtherSourceIncomeValue($event.target.value,'saving')"
+                                        maxlength="8" autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3">
+                                <mat-form-field appearance="outline" >
+                                    <mat-label>Interest from Deposits((Bank/ Post-Office/ Co-operative Society)
+                                    </mat-label>
+                                    <input matInput placeholder="Interest from Deposits((Bank/ Post-Office/ Co-operative Society)" 
+                                        maxlength="8" [value]="incmesValue.bankAmonut" id="bankAmonut" name="bankAmonut"
+                                        (blur)="setOtherSourceIncomeValue($event.target.value,'bank')"
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Interest from Income tax refund</mat-label>
+                                    <input matInput placeholder="Interest from Income tax refund"
+                                        [value]="incmesValue.incomeTaxAmount" maxlength="8" id="incomeTaxAmount" name="incomeTaxAmount"
+                                        (blur)="setOtherSourceIncomeValue($event.target.value,'it')"
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Others</mat-label>
+                                    <input matInput placeholder="Others" maxlength="8" 
+                                        autocomplete="off"  [value]="incmesValue.otherAmount" id="otherAmount" name="otherAmount"
+                                        (blur)="setOtherSourceIncomeValue($event.target.value,'other')">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3">
+                                <mat-form-field appearance="outline">
+                                    <mat-label><b>Total Income from Other sources</b></mat-label>
+                                    <input matInput placeholder="Total Income from Other sources"
+                                   [value]="sourcesOfIncome.toatlIncome" maxlength="8" autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                        <!-- </form> -->
+                    </div>
+                </mat-card><br><br>
+
+
+
+                <div class="tableHead">Annexures: Deductions under Chap-VI A</div><br>
+
+                <p class="subLabel">Under Section 80D</p><br>
+                <mat-card>
+                    <div class="card__row">
+                        <!-- <form [formGroup]="sec80DForm"> -->
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Health Insurance Premium for Self</mat-label>
+                                    <input matInput placeholder="Health Insurance Premium for Self" maxlength="8"
+                                       type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        formControlName="helathInsuarancePremiumSelf" autocomplete="off"
+                                        (blur)="setDeduction80DVal()">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Health Insurance Premium for Parents</mat-label>
+                                    <input matInput placeholder="Health Insurance Premium for Parents" maxlength="8"
+                                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        formControlName="helathInsuarancePremiumParents" autocomplete="off"
+                                        (blur)="setDeduction80DVal()">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Preventive Health Check-up for Whole Family</mat-label>
+                                    <input matInput placeholder="Preventive Health Check-up for Whole Family"
+                                    type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
+                                        autocomplete="off" formControlName="preventiveHealthCheckupFamily"
+                                        (blur)="setDeduction80DVal()">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Parents Age</mat-label>
+                                    <mat-select matInput placeholder="Select Parents Age" formControlName="parentAge">
+                                        <mat-option *ngFor="let age of ageDropdown" [value]="age.value">
+                                            {{age.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        <!-- </form> -->
+                    </div>
+                </mat-card><br><br>
+
+
+                <mat-card>
+                    <p class="subLabel">Under Section 80G</p>
+                    <button style="float: right;"
+                        (click)="openDialog('Add Donation(Section 80G)','Add','','donationSec80G')">Add
+                        Donation Info</button><br>
+                    <table>
+                        <tr>
+                            <th>Type of Donation</th>
+                            <th>Name of Doner</th>
+                            <th>Amont in Cash</th>
+                            <th>Amount Other than Cash</th>
+                            <th>Eligibal Amount</th>
+                        </tr>
+                        <tr *ngFor="let donation of donationData">
+                            <td>{{donation.donationType}}</td>
+                            <td>{{donation.name}}</td>
+                            <td>{{donation.amountInCash}}</td>
+                            <td>{{donation.amountOtherThanCash}}</td>
+                            <td>{{donation.eligibleAmount}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"><b>Total</b></td>
+                            <!--itrSummaryForm['controls'].houseProperties['controls']-->
+                            <td><b>{{itrSummaryForm.controls['us80g'].value}}</b></td>
+                        </tr>
+                    </table><br><br>
+
+
+                    <div class="card__row">
+                        <!-- <form [formGroup]="deduction"> -->
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">   <!--formGroupName="deduction"-->
+                                    <mat-label>Under section 80C</mat-label>
+                                    <input matInput placeholder="Under section 80C" formControlName="us80c"
+                                        (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80CCC</mat-label>
+                                    <input matInput placeholder="Under section 80CCC" formControlName="us80ccc"
+                                        (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80CCC (1)</mat-label>
+                                    <input matInput placeholder="Under section 80CCC (1)" formControlName="us80ccc1"
+                                        (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80CCC (2)</mat-label>
+                                    <input matInput placeholder="Under section 80CCC (2)" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80ccd2" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80CCD (1B)</mat-label>
+                                    <input matInput placeholder="Under section 80CCD (1B)" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80ccd1b"
+                                        autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80DD</mat-label>
+                                    <input matInput placeholder="Under section 80DD" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80dd" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80DDB</mat-label>
+                                    <input matInput placeholder="Under section 80DDB" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80ddb" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80E</mat-label>
+                                    <input matInput placeholder="Under section 80E" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80e" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80EE</mat-label>
+                                    <input matInput placeholder="Under section 80EE" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80ee" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80GG</mat-label>
+                                    <input matInput placeholder="Under section 80GG" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80gg" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80GGA</mat-label>
+                                    <input matInput placeholder="Under section 80GGA" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80gga" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80GGC</mat-label>
+                                    <input matInput placeholder="Under section 80GGC" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80ggc" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80TTA/ 80TTB</mat-label>
+                                    <input matInput placeholder="Under section 80TTA/ 80TTB" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80ttaTtb"
+                                        autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80U</mat-label>
+                                    <input matInput placeholder="Under section 80U" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80u" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80G</mat-label>
+                                    <input matInput placeholder="Under section 80G" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80g" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" >
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Under section 80D</mat-label>
+                                    <input matInput placeholder="Under section 80D" maxlength="8"
+                                        (blur)="calculateTotalDeduction()" formControlName="us80d" autocomplete="off"
+                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                        <!-- </form> -->
+                    </div>
+                </mat-card><br><br>
+
+
+
+                <!-- <table>
+                        <tr>
+                            <th>Particulars</th>
+                            <th>Rs.</th>
+                            <th>Rs.</th>
+                        </tr>
+                        <tr>
+                            <td>Under section 80C</td>
+                            <td><input type="number" maxlength="8"></td>
+                            <td></td>
+
+                        </tr>
+                        <tr>
+                            <td>Under section 80CCC</td>
+                            <td><input type="number" maxlength="8"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Under section 80CCC (1)</td>
+                            <td><input type="number" maxlength="8"></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+                        <tr>
+                            <td>Under section 80CCD (2)</td>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+                        <tr>
+                            <td>Under section 80CCD (1B)</td>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+                        <tr>
+                            <td>Under section 80D</td>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+
+
+
+                        <tr>
+                            <td>Under section 80DD</td>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+                        <tr>
+                            <td>Under section 80DDB</td>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+                        <tr>
+                            <td>Under section 80E</td>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+                        <tr>
+                            <td>Under section 80EE</td>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+                        <tr>
+                            <td>Under section 80G</td>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+                        <tr>
+                            <td>Under section 80GG</td>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+                        <tr>
+                            <td>Under section 80GGA</td>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+                        <tr>
+                            <td>Under section 80TTA/ 80TTB</td>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+                        <tr>
+                            <td>Under section 80U</td>
+                            <td></td>
+                            <td><input type="number" maxlength="8"></td>
+                        </tr>
+
+                    </table><br><br> -->
+
+
+                <!-- <table>
+                        <tr>
+                            <th>Particulars</th>
+                            <th>Rs.</th>
+                        </tr>
+                        <tr>
+                            <td>PPF Interest</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Gift from relative</td>
+                            <td></td>
+                        </tr>
+
+                    </table> -->
+
+                <div class="tableHead">Annexures: Tax deducted at Sources</div><br>
+                <p class="subLabel">TDS on Salary</p>
+                <button style="float: right;" (click)="openDialog('Add TDS on Salary','Add','','tdsOnSal')">Add TDS
+                    on Salary</button><br>
+                <table>
+                    <tr>
+                        <th>TAN of Employer</th>
+                        <th>Name of Employer</th>
+                        <th>Gross Salary</th>
+                        <th>Total TDS</th>
+                    </tr>
+                    <tr *ngIf="tdsOnSal.length === 0">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr *ngFor="let tds of tdsOnSal">
+                        <td>{{tds.deductorTAN}}</td>
+                        <td>{{tds.deductorName}}</td>
+                        <td>{{tds.totalAmountCredited}}</td>
+                        <td>{{tds.totalTdsDeposited}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><b>Total</b></td>
+                        <td><b></b></td>
+                    </tr>
+
+                </table><br>
+
+                <p class="subLabel">TDS on Other than Salary</p>
+                <button style="float: right;"
+                    (click)="openDialog('Add TDS on Other than Salary','Add','','tdsOnOtherThanSal')">Add TDS on
+                    Other than Salary</button><br>
+                <table>
+                    <tr>
+                        <th>TAN of Deductor</th>
+                        <th>Name of Deductor</th>
+                        <th>Gross Salary</th>
+                        <th>Total TDS</th>
+                    </tr>
+                    <tr *ngIf="tdsOtherThanSal.length === 0">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr *ngFor="let tds of tdsOtherThanSal">
+                        <td>{{tds.deductorTAN}}</td>
+                        <td>{{tds.deductorName}}</td>
+                        <td>{{tds.totalAmountCredited}}</td>
+                        <td>{{tds.totalTdsDeposited}}</td>
+                    </tr>
+                </table><br>
+
+                <p class="subLabel">TDS Sales of property 26QB</p>
+                <button style="float: right;"
+                    (click)="openDialog('TDS Sales of property 26QB','Add','','tdsOnSalOfPro26Q')">Add TDS Sales of
+                    property 26QB</button><br>
+                <table>
+                    <tr>
+                        <th>TAN of Deductor</th>
+                        <th>Name of Deductor</th>
+                        <th>Gross Salary</th>
+                        <th>Total TDS</th>
+                    </tr>
+                    <tr *ngIf="tdsSalesPro.length === 0">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr *ngFor="let tds of tdsSalesPro">
+                        <td>{{tds.deductorTAN}}</td>
+                        <td>{{tds.deductorName}}</td>
+                        <td>{{tds.totalAmountCredited}}</td>
+                        <td>{{tds.totalTdsDeposited}}</td>
+                    </tr>
+                </table><br><br>
+
+                <div class="tableHead">Annexure: Tax Collected at Sources</div><br>
+                <button style="float: right;"
+                    (click)="openDialog('TDS Tax Collected at Sources','Add','','taxCollSources')">Add Tax Collected
+                    at Sources</button><br>
+                <table>
+                    <tr>
+                        <th>TAN of Collector</th>
+                        <th>Name of Collector</th>
+                        <th>Gross Income</th>
+                        <th>Total TCS</th>
+                    </tr>
+                    <tr *ngIf="taxCollAtSource.length === 0">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr *ngFor="let tcs of taxCollAtSource">
+                        <td>{{tcs.collectorTAN}}</td>
+                        <td>{{tcs.collectorName}}</td>
+                        <td>{{tcs.totalAmountPaid}}</td>
+                        <td>{{tcs.totalTcsDeposited}}</td>
+                    </tr>
+
+                </table><br><br>
+
+                <div class="tableHead">Annexures: Advance Tax/ Self-Assessment Tax</div><br>
+                <button style="float: right;"
+                    (click)="openDialog('Annexures: Advance Tax/ Self-Assessment Tax','Add','','advanceSelfAssTax')">Add
+                    Tax Collected at Sources</button><br>
+                <table>
+                    <tr>
+                        <th>BSR Code</th>
+                        <th>Date</th>
+                        <th>Challan No</th>
+                        <th>Tax deposited</th>
+                    </tr>
+                    <tr *ngIf="advanceSelfTax.length === 0">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr *ngFor="let advTax of advanceSelfTax">
+                        <td>{{advTax.bsrCode}}</td>
+                        <td>{{advTax.dateOfDeposit | date : 'dd/MM/yyyy'}}</td>
+                        <td>{{advTax.challanNumber}}</td>
+                        <td>{{advTax.totalTax}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><b>Total</b></td>
+                        <td><b></b></td>
+                    </tr>
+
+                </table><br><br>
+
+                <div class="tableHead">Annexures: Exempt Income</div><br>
+                <mat-card>
+                    <div class="card__row">
+                        <!-- <form [formGroup]="exemptIncome"> -->
+                            <div class="card__col-lg-3">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>PPF Interest</mat-label>
+                                    <input matInput placeholder="PPF Interest" formControlName="ppfInterest"
+                                        (blur)="setTotalOfExempt()" maxlength="8" type="number"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Gift from relative</mat-label>
+                                    <input matInput placeholder="Gift from relative" formControlName="giftFromRelative"
+                                        (blur)="setTotalOfExempt()" type="number"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Any other</mat-label>
+                                    <input matInput placeholder="Any other" maxlength="8" type="number"
+                                        formControlName="anyOtherExcemptIncome" (blur)="setTotalOfExempt()"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3">
+                                <mat-form-field appearance="outline">
+                                    <mat-label><b>Total</b></mat-label>
+                                    <input matInput placeholder="Total" maxlength="8"
+                                      disabled  formControlName="totalExcemptIncome" autocomplete="off">
+                                </mat-form-field>
+                            </div>
+                        <!-- </form> -->
+                    </div>
+                </mat-card><br><br>
+
+                <!-- </div> -->
+                <div class="card__row">
+                    <button class="btn" (click)="addItrSummary()">Download Summary</button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
