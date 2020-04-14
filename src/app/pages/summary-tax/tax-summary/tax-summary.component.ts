@@ -400,7 +400,16 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   createHouseDataObj(houseData, hpStandardDeduction, netHousePropertyIncome){
-    let address = 'Gharkul nagar'
+
+    let flatNo = houseData[0].flatNo ? houseData[0].flatNo : '';
+    let building = houseData[0].building ? houseData[0].building : '';
+    let street= houseData[0].street ? houseData[0].street : '';
+    let locality= houseData[0].locality ? houseData[0].locality : '';
+    let city= houseData[0].city ? houseData[0].city : '';
+    let country= houseData[0].country ? houseData[0].country : '';
+    let state= houseData[0].state ? houseData[0].state : '';
+    let address = flatNo+' '+building+' '+' '+street+' '+locality+' '+city+' '+country+' '+state;
+
 console.log("houseData: ",houseData)
     let house = {
       propertyType: houseData[0].propertyType,  

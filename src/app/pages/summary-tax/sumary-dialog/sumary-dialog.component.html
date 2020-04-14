@@ -650,7 +650,7 @@
             </mat-form-field>
         </div>
 
-        <div *ngIf="summaryDialogForm['controls'].houseProperties.controls['ownerOfProperty'].value !== 'SELF'">
+        <div >  <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['ownerOfProperty'].value !== 'SELF'"-->
             <div class="card__col-lg-3" formGroupName="houseProperties"  *ngIf="data.mode == 'House'"> <!---->
                 <mat-form-field appearance="outline">
                     <mat-label>Co-ownwer</mat-label>
@@ -666,7 +666,7 @@
         </div>
        
 
-        <div *ngIf="summaryDialogForm['controls'].houseProperties.controls['otherOwnerOfProperty'].value === 'YES'">
+        <div >  <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['otherOwnerOfProperty'].value === 'YES'"-->
             <div  *ngIf="data.mode == 'House'" > <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['otherOwnerOfProperty'].value === 'YES'"-->
                 <div class="card__col-lg-3" >
                     <mat-form-field appearance="outline">
@@ -706,7 +706,7 @@
             </div>
         </div>
 
-        <div *ngIf="summaryDialogForm['controls'].houseProperties.controls['propertyType'].value === 'LOP'" > <!---->
+        <div  > <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['propertyType'].value === 'LOP'"-->
             <div class="card__col-lg-3"  *ngIf="data.mode == 'House'">
                 <mat-form-field appearance="outline">
                     <mat-label>Tenent name</mat-label>
@@ -738,7 +738,7 @@
                 <mat-label>Gross rent received</mat-label>
                 <input matInput placeholder="Gross rent received" maxlength="8"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                    formControlName="grossAnnualRentReceived" autocomplete="off"
+                    formControlName="grossAnnualRentReceived" autocomplete="off" type="number"
                     (blur)="setAnnualVal()">
             </mat-form-field>
         </div>
@@ -748,14 +748,14 @@
                 <input matInput placeholder="Less: Taxes paid" formControlName="propertyTax"
                     maxlength="8" (blur)="setAnnualVal()"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                    autocomplete="off">
+                    type="number" autocomplete="off">
             </mat-form-field>
         </div>
         <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
             <mat-form-field appearance="outline">
                 <mat-label><b>Annual value</b></mat-label>
                 <input matInput placeholder="Annual value" disabled formControlName="annualValue"
-                    maxlength="8" autocomplete="off">
+                type="number"  maxlength="8" autocomplete="off">
             </mat-form-field>
         </div>
     </div>
@@ -765,14 +765,14 @@
             <mat-form-field appearance="outline">
                 <mat-label>(a) Standard deduction (30% of Annual Value)</mat-label>
                 <input matInput placeholder="(a) Standard deduction (30% of Annual Value)"
-                  formControlName="hpStandardDeduction"   disabled>   <!--[value]="summaryDialogForm.controls['hpStandardDeduction'].value"-->
+                type="number" formControlName="hpStandardDeduction"   disabled>   <!--[value]="summaryDialogForm.controls['hpStandardDeduction'].value"-->
             </mat-form-field>
         </div>
         <div class="card__col-lg-3"  *ngIf="data.mode == 'House'">
             <mat-form-field appearance="outline" >
                 <mat-label>(b) Interest on home loan</mat-label>
                 <input matInput placeholder="(b) Interest on home loan" maxlength="8"
-                    formControlName="interestAmount"
+                    formControlName="interestAmount" type="number"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                     autocomplete="off">  <!--(blur)="setValueInLoanObj(summaryDialogForm.controls['interestAmount'])-->
             </mat-form-field>
@@ -781,7 +781,7 @@
             <mat-form-field appearance="outline" *ngIf="data.mode == 'House'">
                 <mat-label><b>Net House property Income</b></mat-label>
                 <input matInput placeholder="Net House property Income" maxlength="8"
-                   formControlName="netHousePropertyIncome"
+                 type="number"  formControlName="netHousePropertyIncome"
                     autocomplete="off" disabled>  <!-- [value]="summaryDialogForm.controls['netHousePropertyIncome'].value"-->
             </mat-form-field>
         </div>
