@@ -227,8 +227,8 @@
                         <div class="card__col-lg-3">
                             <mat-form-field appearance="outline">
                                 <mat-label>Return Type</mat-label>
-                                <mat-select matInput formGroupName="returnType" autocomplete="off" required>
-                                    <mat-option *ngFor="let ret of returnTypeData" [value]="ret.value">
+                                <mat-select matInput formGroupName="returnType" (selectionChange)="showAcknowData($event.value)" autocomplete="off" required>
+                                    <mat-option *ngFor="let ret of returnTypeData"  [value]="ret.value">
                                         {{ret.label}}
                                     </mat-option>
                                 </mat-select>
@@ -251,11 +251,29 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Financial Year</mat-label>
                                 <mat-select matInput formControlName="financialYear" placeholder="Financial Year"
-                                    autocomplete="off" required>
+                                    autocomplete="off"  required>
                                     <mat-option *ngFor="let year of financialYear" [value]="year.value">
                                         {{year.value}}
                                     </mat-option>
                                 </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-3" *ngIf="showAcknowInput">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Acknowledgement Number</mat-label>
+                                <input matInput formControlName="acknowledgementNumber" disabled placeholder="Acknowledgement Number" autocomplete="off">
+                                <mat-error *ngIf="itrSummaryForm.controls['acknowledgementNumber'].hasError('required')">Enter acknowledgment number</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-lg-3" *ngIf="showAcknowInput">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Date of filling</mat-label>
+                                <input matInput formControlName="dateOfFiling" placeholder="Date of filling" [min]="minDate"
+                                    [max]="maxDate" [matDatepicker]="picker1" autocomplete="off">
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                                <mat-error *ngIf="itrSummaryForm.controls['dateOfFiling'].hasError('required')">Select Date of
+                                    filling</mat-error>
                             </mat-form-field>
                         </div>
                         <!-- <div class="card__col-lg-4">
@@ -285,28 +303,28 @@
                                 <td>1</td>
                                 <td>Income from Salary </td>
                                 <td></td>
-                                <td><input type="number" maxlength="8"></td>
+                                <td><input type="number" formControlName="incomeFromSalary" disabled maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>2</td>
                                 <td>Income from House Property (Refer Annexure) </td>
                                 <td></td>
-                                <td><input type="number" formControlName="netHousePropertyIncome" maxlength="8"></td>
+                                <td><input type="number"  formControlName="netHousePropertyIncome" maxlength="8"></td>
 
                             </tr>
                             <tr>
                                 <td>3</td>
                                 <td>Income from Other Sources (Refer annexure) </td>
                                 <td></td>
-                                <td><input type="number" 
-                                        maxlength="8">   <!--[value]="incomes.controls['totalOtherIncome'].value"-->
+                                <td><input type="number" formControlName="totalIncomeFromOtherResources" disabled
+                                        maxlength="8">   
                                 </td>
                             </tr>
                             <tr>
                                 <td>4</td>
                                 <td><b>Gross Total Income (1+2+3)</b> </td>
                                 <td></td>
-                                <td><b><input type="number" formControlName="grossTotalIncome" maxlength="8"></b></td>
+                                <td><b><input type="number" disabled formControlName="grossTotalIncome" maxlength="8"></b></td>
 
                             </tr>
                             <tr>
