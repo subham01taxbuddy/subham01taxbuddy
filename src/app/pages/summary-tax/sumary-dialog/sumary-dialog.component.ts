@@ -89,6 +89,7 @@ export class SumaryDialogComponent implements OnInit {
         city: null,
         country: [''],
         pinCode: null,
+        standardDeduction: [0],
         state: null,
         employerPAN: null,
         employerTAN: null,
@@ -114,7 +115,7 @@ export class SumaryDialogComponent implements OnInit {
       other: [0],
       totalExemptAllow: [0],
       netSalary: [0],
-      standardDeduction: [0],
+     // standardDeduction: [0],
       entertainAllow: [0],
       professionalTax: [0],
       totalSalaryDeduction: [0],
@@ -449,7 +450,7 @@ export class SumaryDialogComponent implements OnInit {
 
         let employer = {
           employers: this.summaryDialogForm.controls.employers.value,
-          standardDeduction: Number(this.summaryDialogForm.value.standardDeduction),
+          //standardDeduction: Number(this.summaryDialogForm.value.standardDeduction),
           grossSalary: Number(this.summaryDialogForm.value.grossSalary),
           netSalary: Number(this.summaryDialogForm.value.netSalary),
           totalSalaryDeduction: Number(this.summaryDialogForm.value.totalSalaryDeduction),
@@ -608,9 +609,10 @@ export class SumaryDialogComponent implements OnInit {
     let amnt = Number(this.summaryDialogForm.controls['entertainAllow'].value) - Number(this.summaryDialogForm.controls['professionalTax'].value)
     let standeredDeduct = this.salObjectVal.netSalary - amnt;
     if (standeredDeduct < 50000) {
-      this.summaryDialogForm.controls['standardDeduction'].setValue(standeredDeduct);
+     // this.summaryDialogForm.controls['standardDeduction'].setValue(standeredDeduct);
+     this.summaryDialogForm.controls.employers['controls'].standardDeduction.setValue(standeredDeduct);
     } else {
-      this.summaryDialogForm.controls['standardDeduction'].setValue(50000);
+      this.summaryDialogForm.controls.employers['controls'].standardDeduction.setValue(50000);
     }
 
     this.calTotalDeduction()
@@ -632,8 +634,9 @@ export class SumaryDialogComponent implements OnInit {
     this.calNetSalary();
   }
 
-  calTotalDeduction() {
-    this.salObjectVal.totalDedction = Number(this.summaryDialogForm.controls['standardDeduction'].value) + Number(this.summaryDialogForm.controls['entertainAllow'].value) + Number(this.summaryDialogForm.controls['professionalTax'].value)
+  calTotalDeduction() {   //this.summaryDialogForm.controls['standardDeduction']  
+    console.log('Standard deduction Val: ',this.summaryDialogForm.controls.employers['controls'].standardDeduction.value)
+    this.salObjectVal.totalDedction = Number(this.summaryDialogForm.controls.employers['controls'].standardDeduction.value) + Number(this.summaryDialogForm.controls['entertainAllow'].value) + Number(this.summaryDialogForm.controls['professionalTax'].value)
     this.summaryDialogForm.controls['totalSalaryDeduction'].setValue(this.salObjectVal.totalDedction);
     //this.calNetSalary()
     this.calTaxableSalary();

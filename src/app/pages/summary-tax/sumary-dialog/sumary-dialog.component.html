@@ -32,9 +32,10 @@
                     <mat-label>Account Number: </mat-label>
                     <input matInput placeholder="Account number" formControlName="accountNumber"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="18" required>
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" minlength="3" maxlength="18" required>
                     <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].accountNumber.hasError('required')">Enter
                         account number.</mat-error>
+                        <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].accountNumber.hasError('minlength')">Account number should be minimum 3 digit</mat-error>
                 </mat-form-field>
             </div>
 
@@ -231,7 +232,7 @@
                     valid mobile number</mat-error> -->
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" formGroupName="employers"  *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label><b>Standard deduction </b></mat-label>
                 <input matInput placeholder="Standard deduction" formControlName="standardDeduction"

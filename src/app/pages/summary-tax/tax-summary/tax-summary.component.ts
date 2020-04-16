@@ -99,7 +99,7 @@ export class TaxSummaryComponent implements OnInit {
       returnType: ['ORIGINAL', [Validators.required]],
       assessmentYear: ['2020-2021', [Validators.required]],
       financialYear: ['2019-2020', [Validators.required]],
-      acknowledgementNumber: [],
+      acknowledgementNumber: [0],
       dateOfFiling: [],
       us80c: [0],
       us80ccc: [0],
@@ -138,6 +138,7 @@ export class TaxSummaryComponent implements OnInit {
       section234B: [0],
       section234C: [0],
       section234F: [0],
+      interestAndFees: [0],
       totalTaxFeeAndInterest: [0, Validators.required],
 
       totalTdsOnSalary: [0],
@@ -145,6 +146,7 @@ export class TaxSummaryComponent implements OnInit {
       totalTdsSaleOfProperty26QB: [0],
       totalTaxCollectedAtSources: [0],
       totalAdvanceTax: [0],
+      totalTaxPaid: [0],
 
       helathInsuarancePremiumSelf: [0],
       helathInsuarancePremiumParents: [0],
@@ -157,7 +159,7 @@ export class TaxSummaryComponent implements OnInit {
       totalExcemptIncome: [0],
       revised: false,
 
-      medium: null,
+      medium: 'BACK OFFICE',
 
       bankDetails: [],
       employers: [],
@@ -271,6 +273,8 @@ export class TaxSummaryComponent implements OnInit {
     }
     else if (returnType === 'ORIGINAL') {
       this.showAcknowInput = false;
+      this.itrSummaryForm.controls['acknowledgementNumber'].reset();
+       this.itrSummaryForm.controls['dateOfFiling'].reset();
       // this.itrSummaryForm.controls['acknowledgementNumber'].setValidators(null);
       // this.itrSummaryForm.controls['dateOfFiling'].setValidators(null);
       // console.log(this.itrSummaryForm.controls['dateOfFiling'], ' ', this.itrSummaryForm.controls['acknowledgementNumber'])
@@ -427,42 +431,47 @@ export class TaxSummaryComponent implements OnInit {
     let netHousePro = [];
     hpStadDeduct.push(Number(housingData.hpStandardDeduction))
     netHousePro.push(Number(housingData.netHousePropertyIncome))
-    this.createHouseDataObj(houseArray, housingData.hpStandardDeduction, housingData.netHousePropertyIncome);
     this.itrSummaryForm.controls['hpStandardDeduction'].setValue(hpStadDeduct);
     this.itrSummaryForm.controls['netHousePropertyIncome'].setValue(netHousePro);
+
+    this.createHouseDataObj(houseArray, housingData.hpStandardDeduction, housingData.netHousePropertyIncome);
+   
    // this.setNetHousingProLoan()
    this.calculateGrossTotalIncome()
   }
 
   createHouseDataObj(houseData, hpStandardDeduction, netHousePropertyIncome) {
 
-    let flatNo = houseData[0].flatNo ? houseData[0].flatNo : '';
-    let building = houseData[0].building ? houseData[0].building : '';
-    let street = houseData[0].street ? houseData[0].street : '';
-    let locality = houseData[0].locality ? houseData[0].locality : '';
-    let city = houseData[0].city ? houseData[0].city : '';
-    let country = houseData[0].country ? houseData[0].country : '';
-    let state = houseData[0].state ? houseData[0].state : '';
+    let flatNo =  this.utilService.isNonEmpty(houseData[0].flatNo)  ? houseData[0].flatNo : '';
+    let building = this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
+    let street = this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '';
+    let locality = this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '';
+    let city = this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '';
+    let country = this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '';
+    let state = this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '';
     let address = flatNo + ' ' + building + ' ' + ' ' + street + ' ' + locality + ' ' + city + ' ' + country + ' ' + state;
 
     console.log("houseData: ", houseData)
+    //console.log('co-Owner Name: ', houseData[0].coOwners[0], houseData[0].coOwners[0].name)
+    console.log('Condition: ',houseData[0].coOwners.length > 0)
     let house = {
       propertyType: houseData[0].propertyType,
       address: address,
       Ownership: houseData[0].ownerOfProperty,
-      coOwnerName: houseData[0].coOwnerName ? houseData[0].coOwnerName : '',
-      coOwnerPAN: houseData[0].coOwnerPanNumber ? houseData[0].coOwnerPanNumber : '',
-      coOwnerShare: houseData[0].coOwnerPercentage ? houseData[0].coOwnerPercentage : 0,
-      tenant: houseData[0].tenantName ? houseData[0].tenantName : '',
+      coOwnerName: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].name : '',
+      coOwnerPAN: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].panNumber : '',
+      coOwnerShare:  (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].percentage : '',
+      tenant:  (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].name : '',
       grossRentRecived: houseData[0].grossAnnualRentReceived,
       annulaVal: houseData[0].annualValue,
       standeredDeduction: hpStandardDeduction ? Number(hpStandardDeduction) : 0,
-      interestOnHomeLoan: houseData[0].loans[0].interestAmount,
+      interestOnHomeLoan: (Array.isArray(houseData[0].loans) && houseData[0].loans.length > 0) ? houseData[0].loans[0].interestAmount : '',
       netHousePro: netHousePropertyIncome ? Number(netHousePropertyIncome) : 0
     }
     this.housingData.push(house)
     console.log('Housing:--- ', this.housingData)
   }
+  
 
   employersData: any = [];
   salaryItrratedData: any = [];
@@ -473,46 +482,55 @@ export class TaxSummaryComponent implements OnInit {
   setEmployerData(emplyersData) {
     this.employersData.push(emplyersData)
     console.log('employersData: ', this.employersData)
-    console.log('employersData Salary: ', this.employersData)
-    console.log('employersData Allowance: ', this.employersData)
-    console.log('employersData deductions: ', this.employersData)
+    console.log('employersData Allowance: ', this.employersData[0].employers.allowance.filter(item=> item.allowanceType === 'HOUSE_RENT'))
+    console.log('employersData Allowance amnt: ', (this.employersData[0].employers.allowance.filter(item=> item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount)
+    // console.log('employersData Deduction: ', this.employersData[0].employers.deductions.filter(item=> item.deductionType === 'ENTERTAINMENT_ALLOW'))
+    // console.log('employersData Deduction amnt: ', (this.employersData[0].employers.deductions.filter(item=> item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount)
     // for (let i = 0; i < this.employersData.length; i++) {
+      var employerArray = [];
+      var totalNetSalary = 0;
     debugger
-    let salObj = {
-      employerName: this.employersData[0].employers.employerName,
-      address: this.employersData[0].employers.address,
-      employerTAN: this.employersData[0].employers.employerTAN,
-      employerCategory: this.employersData[0].employers.employerCategory,
-      sal171: this.setSalaryValue(this.employersData[0].employers.salary, '"SEC17_1"', 'taxableAmount'),
-      perquisites: this.setSalaryValue(this.employersData[0].employers.salary, '"SEC17_2"', 'taxableAmount'),
-      profitinLieu: this.setSalaryValue(this.employersData[0].employers.salary, '"SEC17_3"', 'taxableAmount'),
-      grossSalary: this.employersData[0].grossSalary,
-      houseRentAllow: this.setSalaryValue(this.employersData[0].employers.allowance, 'HOUSE_RENT', 'exemptAmount'),
-      leaveTravelExpense: this.setSalaryValue(this.employersData[0].employers.allowance, 'LTA', 'exemptAmount'),
-      other: this.setSalaryValue(this.employersData[0].employers.allowance, 'ALL_ALLOWANCES', 'exemptAmount'),
-      totalExemptAllow: this.setSalaryValue(this.employersData[0].employers.allowance, 'ALL_ALLOWANCES', 'exemptAmount'),
-      netSalary: this.employersData[0].netSalary,
-      standardDeduction: this.employersData[0].standardDeduction,
-      entertainAllow: this.setSalaryValue(this.employersData[0].employers.deductions, 'ENTERTAINMENT_ALLOW', 'exemptAmount'),
-      professionalTax: this.setSalaryValue(this.employersData[0].employers.deductions, 'PROFESSIONAL_TAX', 'exemptAmount'),
-      totalSalaryDeduction: this.employersData[0].totalSalaryDeduction,
-      taxableSalary: this.employersData[0].taxableSalary
+    for(let i= (this.employersData.length - 1); i < this.employersData.length; i++){
+      let salObj = {
+        employerName: this.employersData[i].employers.employerName,
+        address: this.employersData[i].employers.address,
+        employerTAN: this.employersData[i].employers.employerTAN,
+        employerCategory: this.employersData[i].employers.employerCategory,
+        sal171:  this.employersData[i].employers.salary.length > 0 ? this.employersData[i].employers.salary[0].taxableAmount : 0,//this.setSalaryValue(this.employersData[i].employers.salary, '"SEC17_1"', 'taxableAmount'),
+        perquisites: this.employersData[i].employers.perquisites.length > 0 ? this.employersData[i].employers.perquisites[0].taxableAmount : 0, //this.setSalaryValue(this.employersData[i].employers.salary, '"SEC17_2"', 'taxableAmount'),
+        profitinLieu: this.employersData[i].employers.profitsInLieuOfSalaryType.length > 0 ? this.employersData[i].employers.profitsInLieuOfSalaryType[0].taxableAmount : 0,// this.setSalaryValue(this.employersData[i].employers.salary, '"SEC17_3"', 'taxableAmount'),
+        grossSalary: this.employersData[i].grossSalary,
+        houseRentAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'HOUSE_RENT')).length > 0) ? (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0, //this.setSalaryValue(this.employersData[i].employers.allowance, 'HOUSE_RENT', 'exemptAmount'),
+        leaveTravelExpense: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'LTA')).length > 0) ? (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'LTA'))[0].exemptAmount : 0, //this.setSalaryValue(this.employersData[i].employers.allowance, 'LTA', 'exemptAmount'),
+        other: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'ANY_OTHER')).length > 0) ? (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0, //this.setSalaryValue(this.employersData[i].employers.allowance, 'ALL_ALLOWANCES', 'exemptAmount'),
+        totalExemptAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0, //this.setSalaryValue(this.employersData[i].employers.allowance, 'ALL_ALLOWANCES', 'exemptAmount'),
+        netSalary: this.employersData[i].netSalary,
+        // standardDeduction: this.employersData[i].standardDeduction,
+        standardDeduction: this.employersData[i].employers.standardDeduction,
+        entertainAllow: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter(item=> item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (this.employersData[i].employers.deductions.filter(item=> item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0, //this.setSalaryValue(this.employersData[i].employers.deductions, 'ENTERTAINMENT_ALLOW', 'exemptAmount'),
+        professionalTax: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter(item=> item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (this.employersData[i].employers.deductions.filter(item=> item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0, //this.setSalaryValue(this.employersData[i].employers.deductions, 'PROFESSIONAL_TAX', 'exemptAmount'),
+        totalSalaryDeduction: this.employersData[i].totalSalaryDeduction,
+        taxableSalary: this.employersData[i].taxableSalary
+      }
+      this.salaryItrratedData.push(salObj);
+      this.grossSalary.push(this.employersData[i].grossSalary)
+      this.netSalary.push(this.employersData[i].netSalary)
+      this.totalSalaryDeduction.push(this.employersData[i].totalSalaryDeduction)
+      this.taxableSalary.push(this.employersData[i].taxableSalary)
     }
-    this.salaryItrratedData.push(salObj);
 
+    for (let i = 0; i < this.employersData.length; i++) {
+      totalNetSalary = totalNetSalary + this.employersData[i].taxableSalary;
+      employerArray.push(this.employersData[i].employers)
+    }
 
-    this.grossSalary.push(this.employersData[0].grossSalary)
-    this.netSalary.push(this.employersData[0].netSalary)
-    this.totalSalaryDeduction.push(this.employersData[0].totalSalaryDeduction)
-    this.taxableSalary.push(this.employersData[0].taxableSalary)
+    this.itrSummaryForm.controls['incomeFromSalary'].setValue(totalNetSalary)
+    this.itrSummaryForm.controls['employers'].setValue(employerArray)
+   
     // }
 
-    var employerArray = [];
+  
     
-    for (let i = 0; i < this.employersData.length; i++) {
-      employerArray.push(this.employersData[i].employers)
-      this.itrSummaryForm.controls['employers'].setValue(employerArray)
-    }
     this.itrSummaryForm.controls['grossSalary'].setValue(this.grossSalary)
     this.itrSummaryForm.controls['netSalary'].setValue(this.netSalary)
     this.itrSummaryForm.controls['totalSalaryDeduction'].setValue(this.totalSalaryDeduction)
@@ -721,7 +739,7 @@ export class TaxSummaryComponent implements OnInit {
     this.calculateGrossTotalIncome()
   }
 
-  calculateGrossTotalIncome() {
+  calculateGrossTotalIncome() {    //Calculate point 4 
     let gti = Number(this.itrSummaryForm.controls['netHousePropertyIncome'].value) +  Number(this.itrSummaryForm.controls['totalIncomeFromOtherResources'].value) + Number(this.itrSummaryForm.controls['incomeFromSalary'].value);
     this.itrSummaryForm.controls['grossTotalIncome'].setValue(gti);
     this.calculateTotalIncome();
@@ -811,8 +829,8 @@ export class TaxSummaryComponent implements OnInit {
   calculateTotalInterestFees() {    //Calculate point 14 (Total Tax, fee and Interest (13+14))
     this.totalInterest = Number(this.itrSummaryForm.controls['section234A'].value) + Number(this.itrSummaryForm.controls['section234B'].value) +
       Number(this.itrSummaryForm.controls['section234C'].value) + Number(this.itrSummaryForm.controls['section234F'].value);
-
-
+      this.itrSummaryForm.controls['interestAndFees'].setValue(this.totalInterest)
+  
     let totalInterstFees = Number(this.itrSummaryForm.controls['balanceTaxAfterRelief'].value) + this.totalInterest;
     this.itrSummaryForm.controls['totalTaxFeeAndInterest'].setValue(totalInterstFees)
 
@@ -847,6 +865,7 @@ export class TaxSummaryComponent implements OnInit {
     this.totalTDS = Number(this.itrSummaryForm.controls['totalTdsOnSalary'].value) + Number(this.itrSummaryForm.controls['totalTdsOnOtherThanSalary'].value) +
       Number(this.itrSummaryForm.controls['totalTdsSaleOfProperty26QB'].value) + Number(this.itrSummaryForm.controls['totalTaxCollectedAtSources'].value) +
       Number(this.itrSummaryForm.controls['totalAdvanceTax'].value);
+      this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS)
 
     this.calculateNetTaxPayble();        //Calculate point 17
   }
@@ -861,7 +880,7 @@ export class TaxSummaryComponent implements OnInit {
     this.totalTDS = Number(this.itrSummaryForm.controls['totalTdsOnSalary'].value) + Number(this.itrSummaryForm.controls['totalTdsOnOtherThanSalary'].value) +
       Number(this.itrSummaryForm.controls['totalTdsSaleOfProperty26QB'].value) + Number(this.itrSummaryForm.controls['totalTaxCollectedAtSources'].value) +
       Number(this.itrSummaryForm.controls['totalAdvanceTax'].value);
-
+      this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS)
     this.calculateNetTaxPayble();        //Calculate point 17
   }
 
@@ -987,17 +1006,6 @@ export class TaxSummaryComponent implements OnInit {
       this.itrSummaryForm.controls['donations'].value ? this.itrSummaryForm.controls['donations'].value : this.itrSummaryForm.controls['donations'].setValue(blankArray)
 
       console.log('ITR summary Data: ', this.itrSummaryForm.value)
-
-      // var tenant = [];
-      // var coPower = [];
-      // var loan = [];
-      // //this.itrSummaryForm['controls'].houseProperties['controls'].loans['controls'].loanType.setValue('HOUSING');
-      // tenant.push(this.itrSummaryForm['controls'].houseProperties['controls'].tenant.value)
-      // coPower.push(this.itrSummaryForm['controls'].houseProperties['controls'].coOwners.value)
-      // loan.push(this.itrSummaryForm['controls'].houseProperties['controls'].loans.value)
-      // this.itrSummaryForm['controls'].houseProperties['controls'].tenant.setValue(tenant);
-      // this.itrSummaryForm['controls'].houseProperties['controls'].coOwners.setValue(coPower);
-      // this.itrSummaryForm['controls'].houseProperties['controls'].loanssetValue(loan);
 
       console.log('sumarryObj: ', this.itrSummaryForm.value)
       this.loading = true;

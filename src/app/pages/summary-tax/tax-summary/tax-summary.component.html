@@ -32,8 +32,9 @@
                                         <input matInput placeholder="TTaxable Income" disabled autocomplete="off">
                                     </mat-form-field> -->
                                     <label>Taxable Income</label>
-                                    <input type="number" placeholder="Taxable Income" formControlName="totalIncome" required disabled class="disableInput">
-                                   
+                                    <input type="number" placeholder="Taxable Income" formControlName="totalIncome"
+                                        required disabled class="disableInput">
+
                                 </div>
 
                                 <div class="card__col-lg-3">
@@ -42,8 +43,8 @@
                                         <input matInput placeholder="Tax Payable/ Refund" disabled autocomplete="off">
                                     </mat-form-field> -->
                                     <label>Tax Payable/ Refund</label>
-                                    <input type="number" placeholder="Tax Payable/ Refund" [value]="netTaxPayble" disabled
-                                        class="disableInput">
+                                    <input type="number" placeholder="Tax Payable/ Refund" [value]="netTaxPayble"
+                                        disabled class="disableInput">
                                 </div>
                             </div>
                         </div><br><br>
@@ -64,7 +65,7 @@
                         </div>
                         <div class="card__col-lg-3">
                             <mat-form-field appearance="outline">
-                                <mat-label>Firet Name</mat-label>
+                                <mat-label>First Name</mat-label>
                                 <input matInput placeholder="First Name" formControlName="firstName" maxlength="75"
                                     autocomplete="off" required>
                                 <mat-error *ngIf="itrSummaryForm.controls['firstName'].hasError('required')">Enter first
@@ -130,7 +131,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Aadhaar Number</mat-label>
                                 <input matInput placeholder="Aadhaar Number" formControlName="aadhaarNumber"
-                                    maxlength="12" autocomplete="off" required>
+                                    maxlength="12" onkeypress="return event.charCode >= 48 && event.charCode <= 57" autocomplete="off" required>
                                 <mat-error *ngIf="itrSummaryForm.controls['aadhaarNumber'].hasError('required')">Enter
                                     Aadhar number</mat-error>
                                 <mat-error
@@ -166,7 +167,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Mobile Number</mat-label>
                                 <input matInput formControlName="mobileNumber" maxlength="10"
-                                    placeholder="Mobile Number" autocomplete="off"
+                                    placeholder="Mobile Number" autocomplete="off" type="number"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
                                 <mat-error *ngIf="itrSummaryForm.controls['mobileNumber'].hasError('required')">Enter
@@ -192,7 +193,7 @@
                                 <input formControlName="pinCode" maxlength="6"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
-                                    placeholder="PIN Code" autocomplete="off"
+                                    placeholder="PIN Code" autocomplete="off" type="number"
                                     (blur)="getCityData(itrSummaryForm.controls['pinCode'], 'profile')" required>
                                 <mat-error *ngIf="itrSummaryForm.controls['pinCode'].hasError('required')">Enter pin
                                 </mat-error>
@@ -227,8 +228,9 @@
                         <div class="card__col-lg-3">
                             <mat-form-field appearance="outline">
                                 <mat-label>Return Type</mat-label>
-                                <mat-select matInput formGroupName="returnType" (selectionChange)="showAcknowData($event.value)" autocomplete="off" required>
-                                    <mat-option *ngFor="let ret of returnTypeData"  [value]="ret.value">
+                                <mat-select matInput formGroupName="returnType"
+                                    (selectionChange)="showAcknowData($event.value)" autocomplete="off" required>
+                                    <mat-option *ngFor="let ret of returnTypeData" [value]="ret.value">
                                         {{ret.label}}
                                     </mat-option>
                                 </mat-select>
@@ -251,7 +253,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Financial Year</mat-label>
                                 <mat-select matInput formControlName="financialYear" placeholder="Financial Year"
-                                    autocomplete="off"  required>
+                                    autocomplete="off" required>
                                     <mat-option *ngFor="let year of financialYear" [value]="year.value">
                                         {{year.value}}
                                     </mat-option>
@@ -261,18 +263,26 @@
                         <div class="card__col-lg-3" *ngIf="showAcknowInput">
                             <mat-form-field appearance="outline">
                                 <mat-label>Acknowledgement Number</mat-label>
-                                <input matInput formControlName="acknowledgementNumber" disabled placeholder="Acknowledgement Number" autocomplete="off">
-                                <mat-error *ngIf="itrSummaryForm.controls['acknowledgementNumber'].hasError('required')">Enter acknowledgment number</mat-error>
+                                <input matInput formControlName="acknowledgementNumber"  maxlength="15"
+                                  type="number"  disabled placeholder="Acknowledgement Number"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" autocomplete="off"> <!--minlength="15"-->
+                                <mat-error
+                                    *ngIf="itrSummaryForm.controls['acknowledgementNumber'].hasError('required')">Enter
+                                    acknowledgment number</mat-error>
+                                <mat-error
+                                    *ngIf="itrSummaryForm.controls['acknowledgementNumber'].hasError('minlength')">
+                                    Acknowldegemant number should be 15 digit</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="card__col-lg-3" *ngIf="showAcknowInput">
                             <mat-form-field appearance="outline">
                                 <mat-label>Date of filling</mat-label>
-                                <input matInput formControlName="dateOfFiling" placeholder="Date of filling" [min]="minDate"
-                                    [max]="maxDate" [matDatepicker]="picker1" autocomplete="off">
+                                <input matInput formControlName="dateOfFiling" placeholder="Date of filling"
+                                    [min]="minDate" [max]="maxDate" [matDatepicker]="picker1" autocomplete="off">
                                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                 <mat-datepicker #picker1></mat-datepicker>
-                                <mat-error *ngIf="itrSummaryForm.controls['dateOfFiling'].hasError('required')">Select Date of
+                                <mat-error *ngIf="itrSummaryForm.controls['dateOfFiling'].hasError('required')">Select
+                                    Date of
                                     filling</mat-error>
                             </mat-form-field>
                         </div>
@@ -309,7 +319,7 @@
                                 <td>2</td>
                                 <td>Income from House Property (Refer Annexure) </td>
                                 <td></td>
-                                <td><input type="number"  formControlName="netHousePropertyIncome" maxlength="8"></td>
+                                <td><input type="number" formControlName="netHousePropertyIncome" disabled maxlength="8"></td>
 
                             </tr>
                             <tr>
@@ -317,27 +327,29 @@
                                 <td>Income from Other Sources (Refer annexure) </td>
                                 <td></td>
                                 <td><input type="number" formControlName="totalIncomeFromOtherResources" disabled
-                                        maxlength="8">   
+                                        maxlength="8">
                                 </td>
                             </tr>
                             <tr>
                                 <td>4</td>
                                 <td><b>Gross Total Income (1+2+3)</b> </td>
                                 <td></td>
-                                <td><b><input type="number" disabled formControlName="grossTotalIncome" maxlength="8"></b></td>
+                                <td><b><input type="number" disabled formControlName="grossTotalIncome"
+                                            maxlength="8"></b></td>
 
                             </tr>
                             <tr>
                                 <td>5</td>
                                 <td>Less: Deduction under Chap- VIA (Refer Annexure) </td>
                                 <td></td>
-                                <td><input type="number" formControlName="deductionUnderChapterVIA" maxlength="8"></td>
+                                <td><input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" formControlName="deductionUnderChapterVIA" disabled maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>6</td>
                                 <td><b>Total Income(4-5) </b></td>
                                 <td></td>
-                                <td><b><input type="number" formControlName="totalIncome" required disabled maxlength="8"></b>
+                                <td><b><input type="number" formControlName="totalIncome" required disabled
+                                            maxlength="8"></b>
                                 </td>
                             </tr>
                             <tr>
@@ -345,49 +357,54 @@
                                 <td>Tax Payable on Total Income </td>
                                 <td></td>
                                 <td><input type="number" formControlName="taxPayable" (blur)="calculateTaxAfterRebate()"
-                                      required  maxlength="8"></td>
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"    required maxlength="8"></td>
 
                             </tr>
                             <tr>
                                 <td>8</td>
                                 <td>Less: Rebate u/s 87A </td>
                                 <td></td>
-                                <td><input type="number" formControlName="rebate"  (blur)="calculateTaxAfterRebate()"
-                                      required  maxlength="8"></td>
+                                <td><input  formControlName="rebate" (blur)="calculateTaxAfterRebate()"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"  required maxlength="8"></td>
 
                             </tr>
                             <tr>
                                 <td>9</td>
                                 <td>Tax after rebate</td>
                                 <td></td>
-                                <td><input type="number" formControlName="taxAfterRebate" disabled required maxlength="8"></td>
+                                <td><input type="number" formControlName="taxAfterRebate" disabled required
+                                        maxlength="8"></td>
 
                             </tr>
                             <tr>
                                 <td>10</td>
                                 <td>Health and Education cess @4% on (9)</td>
                                 <td></td>
-                                <td><input type="number" formControlName="healthAndEducationCess" disabled
-                                      required  maxlength="8"></td>
+                                <td><input type="number" formControlName="healthAndEducationCess" disabled required
+                                        maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>11</td>
                                 <td> Total Tax and cess (9 + 10)</td>
                                 <td></td>
-                                <td><input type="number" formControlName="totalTaxAndCess" disabled required maxlength="8"></td>
+                                <td><input type="number" formControlName="totalTaxAndCess" disabled required
+                                        maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>12</td>
                                 <td>Less: Relief u/s 89 (Please ensure to submit Form 10E to claim this relief)</td>
                                 <td></td>
-                                <td><input type="number" formControlName="reliefUS89l" (blur)="calculateTaxAfterRelif()"
-                                      maxlength="8"></td>
+                                <td><input formControlName="reliefUS89l" (blur)="calculateTaxAfterRelif()" type="number"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"  maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>13</td>
                                 <td>Balance Tax after relief (11-12)</td>
                                 <td></td>
-                                <td><input type="number" formControlName="balanceTaxAfterRelief" required disabled maxlength="8">
+                                <td><input type="number" formControlName="balanceTaxAfterRelief" required disabled
+                                        maxlength="8">
                                 </td>
                             </tr>
                             <tr>
@@ -399,42 +416,46 @@
                             <tr>
                                 <td></td>
                                 <td>u/s 234A</td>
-                                <td><input type="number" formControlName="section234A" maxlength="8"
-                                        (blur)="calculateTotalInterestFees()"
+                                <td><input  formControlName="section234A" maxlength="8"
+                                        (blur)="calculateTotalInterestFees()" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>u/s 234B</td>
-                                <td><input type="number" formControlName="section234B" maxlength="8"
-                                        (blur)="calculateTotalInterestFees()"
+                                <td><input  formControlName="section234B" maxlength="8"
+                                        (blur)="calculateTotalInterestFees()" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>u/s 234C</td>
-                                <td><input type="number" formControlName="section234C" maxlength="8"
-                                        (blur)="calculateTotalInterestFees()"
+                                <td><input  formControlName="section234C" maxlength="8"
+                                        (blur)="calculateTotalInterestFees()" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>u/s 234F</td>
-                                <td><input type="number" formControlName="section234F" maxlength="8"
-                                        (blur)="calculateTotalInterestFees()"
+                                <td><input  formControlName="section234F" maxlength="8"
+                                        (blur)="calculateTotalInterestFees()" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
 
-                                <td><input type="number" disabled [value]="totalInterest" maxlength="8"></td>
+                                <td><input type="number" formControlName="interestAndFees" disabled  maxlength="8"></td>  <!--[value]="totalInterest"-->
                             </tr>
                             <tr>
                                 <td>15</td>
                                 <td>Total Tax, fee and Interest (13 + 14)</td>
                                 <td></td>
-                                <td><input type="number" formControlName="totalTaxFeeAndInterest" disabled
-                                       required maxlength="8"></td>
+                                <td><input type="number" formControlName="totalTaxFeeAndInterest" disabled required
+                                        maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>16</td>
@@ -451,7 +472,8 @@
                             <tr>
                                 <td></td>
                                 <td>TDS other than Salary (Refer Annexure)</td>
-                                <td><input type="number" disabled formControlName="totalTdsOnOtherThanSalary" maxlength="8"></td>
+                                <td><input type="number" disabled formControlName="totalTdsOnOtherThanSalary"
+                                        maxlength="8"></td>
                                 <td></td>
                             </tr>
                             <tr>
@@ -464,14 +486,15 @@
                             <tr>
                                 <td></td>
                                 <td>TCS (Refer Annexure)</td>
-                                <td><input type="number" disabled formControlName="totalTaxCollectedAtSources" maxlength="8"></td>
+                                <td><input type="number" disabled formControlName="totalTaxCollectedAtSources"
+                                        maxlength="8"></td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>Advance/ Self-Assessment Tax (Refer Annexure)</td>
                                 <td><input type="number" disabled formControlName="totalAdvanceTax" maxlength="8"></td>
-                                <td><input type="number" [value]="totalTDS" disabled  maxlength="8"></td>
+                                <td><input type="number" formControlName="totalTaxPaid"  disabled maxlength="8"></td>  <!--[value]="totalTDS"-->
                             </tr>
                             <tr>
                                 <td>17</td>
@@ -482,169 +505,171 @@
 
                         </table>
                     </div>
-                <!-- </form> -->
-                <br><br><br>
+                    <!-- </form> -->
+                    <br><br><br>
 
-                <div class="heading">ANNEXURES</div><br>
+                    <div class="heading">ANNEXURES</div><br>
 
-                <div class="tableHead">Annexures: Bank Details</div>
-                <button (click)="openDialog('Add Bank Info','Add','','Bank')">Add</button>
-                <br>
-                <table>
-                    <tr>
-                        <th>IFSC/ Swiss Code</th>
-                        <th>Name of the Bank</th>
-                        <th>Account Number</th>
-                        <th>Refund</th>
-                    </tr>
-                    <tr *ngIf="bankData.length === 0">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr *ngFor="let bank of bankData">
-                        <td>{{bank.ifsCode}}</td>
-                        <td>{{bank.name}}</td>
-                        <td>{{bank.accountNumber}}</td>
-                        <td *ngIf="bank.hasRefund" style="text-align: center;"><i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i></td>
-                        <td *ngIf="!bank.hasRefund" style="text-align: center;"><i class="fa fa-times fa-lg" aria-hidden="true"></i></td>
-                    </tr>
+                    <div class="tableHead">Annexures: Bank Details</div>
+                    <button (click)="openDialog('Add Bank Info','Add','','Bank')">Add</button>
+                    <br>
+                    <table>
+                        <tr>
+                            <th>IFSC/ Swiss Code</th>
+                            <th>Name of the Bank</th>
+                            <th>Account Number</th>
+                            <th>Refund</th>
+                        </tr>
+                        <tr *ngIf="bankData.length === 0">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr *ngFor="let bank of bankData">
+                            <td>{{bank.ifsCode}}</td>
+                            <td>{{bank.name}}</td>
+                            <td>{{bank.accountNumber}}</td>
+                            <td *ngIf="bank.hasRefund" style="text-align: center;"><i class="fa fa-check-square-o fa-lg"
+                                    aria-hidden="true"></i></td>
+                            <td *ngIf="!bank.hasRefund" style="text-align: center;"><i class="fa fa-times fa-lg"
+                                    aria-hidden="true"></i></td>
+                        </tr>
 
-                </table><br><br>
+                    </table><br><br>
 
-                <div class="tableHead">Annexures: House Properties</div>
-                <button (click)="openDialog('Add House Property','Add','','House')">Add House Info</button><br>
-                <table class="verticle">
-                    <tr>
-                        <th>Property Type</th>
-                        <th>Address</th>
-                        <th>Ownership</th>
-                        <th>Co-owned Name</th>
-                        <th>Co-owned PAN</th>
-                        <th>Co-owned share</th>
-                        <th>Tenat name</th>
-                        <th>Gross Rent Recived</th>
-                        <th>Less: Taxes Paid</th>
-                        <th><b>Annulal Value</b></th>
-                        <th >Standared deduction</th>
-                        <th>Interest on Home Loan</th>
-                        <th><b>Net House Pro Income</b></th>
-                    </tr>
-                   
-                    <tr *ngIf="housingData.length === 0">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        
-                    </tr>
-                    <tr *ngFor="let house of housingData">
-                        <td>{{house.propertyType}}</td>
-                        <td>{{house.address}}</td>
-                        <td>{{house.Ownership}}</td>
-                        <td>{{house.coOwnerName}}</td>
-                        <td>{{house.coOwnerPAN}}</td>
-                        <td>{{house.coOwnerShare}}</td>
-                        <td>{{house.tenant}}</td>
-                        <td>{{house.grossRentRecived}}</td>
-                        <td>{{house.annulaVal}}</td>
-                        <td>{{house.standeredDeduction}}</td>
-                        <td>{{house.interestOnHomeLoan}}</td>
-                        <td>{{house.netSalary}}</td>
-                        <td>{{house.netHousePro}}</td>
-                    </tr>
-                </table><br><br>
+                    <div class="tableHead">Annexures: House Properties</div>
+                    <button (click)="openDialog('Add House Property','Add','','House')">Add House Info</button><br>
+                    <table class="verticle">
+                        <tr>
+                            <th>Property Type</th>
+                            <th>Address</th>
+                            <th>Ownership</th>
+                            <th>Co-owned Name</th>
+                            <th>Co-owned PAN</th>
+                            <th>Co-owned share</th>
+                            <th>Tenat name</th>
+                            <th>Gross Rent Recived</th>
+                            <th>Less: Taxes Paid</th>
+                            <th><b>Annulal Value</b></th>
+                            <th>Standared deduction</th>
+                            <th>Interest on Home Loan</th>
+                            <th><b>Net House Pro Income</b></th>
+                        </tr>
+
+                        <tr *ngIf="housingData.length === 0">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                        <tr *ngFor="let house of housingData">
+                            <td>{{house.propertyType}}</td>
+                            <td>{{house.address}}</td>
+                            <td>{{house.Ownership}}</td>
+                            <td>{{house.coOwnerName}}</td>
+                            <td>{{house.coOwnerPAN}}</td>
+                            <td>{{house.coOwnerShare}}</td>
+                            <td>{{house.tenant}}</td>
+                            <td>{{house.grossRentRecived}}</td>
+                            <td>{{house.annulaVal}}</td>
+                            <td>{{house.standeredDeduction}}</td>
+                            <td>{{house.interestOnHomeLoan}}</td>
+                            <td>{{house.netSalary}}</td>
+                            <td>{{house.netHousePro}}</td>
+                        </tr>
+                    </table><br><br>
 
 
-                <div class="tableHead">Annexures: Salary</div>
-                <button (click)="openDialog('Add Salary Info','Add','','Salary')">Add</button><br>
-                <table class="verticle">
-                    <tr>
-                        <th><b>Employer Name</b></th>
-                        <th>Employer Address</th>
-                        <th>Nature of Employer</th>
-                        <th>Salary as per section 17(1)</th>
-                        <th>Value of Perquisites as per Section 17(2)</th>
-                        <th>Profit in lieu of Salary as per Section 17(3)</th>
-                        <th>Gross Salary</th>
-                        <th colspan="3">Less: Exempt Allowance</th>
-                        <th>Total Exempt Allowance</th>
-                        <th>Net Salary</th>
-                        <th colspan="3">Less: Deduction u/s 16(ia)</th>
-                        <th>Total deduction</th>
-                        <th><b>Net Salary</b></th>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>HRA</th>
-                        <th>LTE</th>
-                        <th>O</th>
-                        <th></th>
-                        <th></th>
-                        <th>SD</th>
-                        <th>EA</th>
-                        <th>PT</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    <tr *ngIf="salaryItrratedData.length === 0">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr *ngFor="let sal of salaryItrratedData">
-                        <td><b>{{sal.employerName}}</b></td>
-                        <td>{{sal.address}}</td>
-                        <td>{{sal.employerCategory}}</td>
-                        <td>{{sal.sal171}}</td>
-                        <td>{{sal.perquisites}}</td>
-                        <td>{{sal.profitinLieu}}</td>
-                        <td>{{sal.grossSalary}}</td>
-                        <td>{{sal.houseRentAllow}}</td>
-                        <td>{{sal.leaveTravelExpense}}</td>
-                        <td>{{sal.other}}</td>
-                        <td>{{sal.totalExemptAllow}}</td>
-                        <td>{{sal.netSalary}}</td>
-                        <td>{{sal.standardDeduction}}</td>
-                        <td>{{sal.entertainAllow}}</td>
-                        <td>{{sal.professionalTax}}</td>
-                        <td>{{sal.totalSalaryDeduction}}</td>
-                        <td><b>{{sal.taxableSalary}}</b></td>
-                    </tr>
-                </table><br><br>
+                    <div class="tableHead">Annexures: Salary</div>
+                    <button (click)="openDialog('Add Salary Info','Add','','Salary')">Add</button><br>
+                    <table class="verticle">
+                        <tr>
+                            <th><b>Employer Name</b></th>
+                            <th>Employer Address</th>
+                            <th>Nature of Employer</th>
+                            <th>Salary as per section 17(1)</th>
+                            <th>Value of Perquisites as per Section 17(2)</th>
+                            <th>Profit in lieu of Salary as per Section 17(3)</th>
+                            <th>Gross Salary</th>
+                            <th colspan="3">Less: Exempt Allowance</th>
+                            <th>Total Exempt Allowance</th>
+                            <th>Net Salary</th>
+                            <th colspan="3">Less: Deduction u/s 16(ia)</th>
+                            <th>Total deduction</th>
+                            <th><b>Taxable Salary</b></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>HRA</th>
+                            <th>LTE</th>
+                            <th>O</th>
+                            <th></th>
+                            <th></th>
+                            <th>SD</th>
+                            <th>EA</th>
+                            <th>PT</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr *ngIf="salaryItrratedData.length === 0">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr *ngFor="let sal of salaryItrratedData">
+                            <td><b>{{sal.employerName}}</b></td>
+                            <td>{{sal.address}}</td>
+                            <td>{{sal.employerCategory}}</td>
+                            <td>{{sal.sal171}}</td>
+                            <td>{{sal.perquisites}}</td>
+                            <td>{{sal.profitinLieu}}</td>
+                            <td>{{sal.grossSalary}}</td>
+                            <td>{{sal.houseRentAllow}}</td>
+                            <td>{{sal.leaveTravelExpense}}</td>
+                            <td>{{sal.other}}</td>
+                            <td>{{sal.totalExemptAllow}}</td>
+                            <td>{{sal.netSalary}}</td>
+                            <td>{{sal.standardDeduction}}</td>
+                            <td>{{sal.entertainAllow}}</td>
+                            <td>{{sal.professionalTax}}</td>
+                            <td>{{sal.totalSalaryDeduction}}</td>
+                            <td><b>{{sal.taxableSalary}}</b></td>
+                        </tr>
+                    </table><br><br>
 
-                 <!-- <form [formGroup]="houseProperties"> -->
-                <!-- <mat-card>
+                    <!-- <form [formGroup]="houseProperties"> -->
+                    <!-- <mat-card>
                         <div class="tableHead">Annexures: House Property</div>
                         <div class="card__row">
                             <div class="card__col-lg-3" formGroupName="houseProperties">
@@ -887,26 +912,29 @@
 
                 </mat-card><br><br> -->
 
-                <div class="tableHead">Annexures: Other Sources</div><br>
+                    <div class="tableHead">Annexures: Other Sources</div><br>
 
-                <mat-card>
-                    <div class="card__row">
-                        <!-- <form [formGroup]="incomes"> -->
+                    <mat-card>
+                        <div class="card__row">
+                            <!-- <form [formGroup]="incomes"> -->
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Interest from Saving Account</mat-label>
                                     <input matInput placeholder="Interest from Saving Account"
-                                       [value]="incmesValue.savingAmount" id="savingAmount" name="savingAmount"
-                                        (blur)="setOtherSourceIncomeValue($event.target.value,'saving')"
-                                        maxlength="8" autocomplete="off">
+                                        [value]="incmesValue.savingAmount" id="savingAmount" name="savingAmount"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        (blur)="setOtherSourceIncomeValue($event.target.value,'saving')" maxlength="8"
+                                        autocomplete="off">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
-                                <mat-form-field appearance="outline" >
+                                <mat-form-field appearance="outline">
                                     <mat-label>Interest from Deposits((Bank/ Post-Office/ Co-operative Society)
                                     </mat-label>
-                                    <input matInput placeholder="Interest from Deposits((Bank/ Post-Office/ Co-operative Society)" 
+                                    <input matInput
+                                        placeholder="Interest from Deposits((Bank/ Post-Office/ Co-operative Society)"
                                         maxlength="8" [value]="incmesValue.bankAmonut" id="bankAmonut" name="bankAmonut"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                         (blur)="setOtherSourceIncomeValue($event.target.value,'bank')"
                                         autocomplete="off">
                                 </mat-form-field>
@@ -915,16 +943,18 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Interest from Income tax refund</mat-label>
                                     <input matInput placeholder="Interest from Income tax refund"
-                                        [value]="incmesValue.incomeTaxAmount" maxlength="8" id="incomeTaxAmount" name="incomeTaxAmount"
-                                        (blur)="setOtherSourceIncomeValue($event.target.value,'it')"
-                                        autocomplete="off">
+                                        [value]="incmesValue.incomeTaxAmount" maxlength="8" id="incomeTaxAmount"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        name="incomeTaxAmount"
+                                        (blur)="setOtherSourceIncomeValue($event.target.value,'it')" autocomplete="off">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Others</mat-label>
-                                    <input matInput placeholder="Others" maxlength="8" 
-                                        autocomplete="off"  [value]="incmesValue.otherAmount" id="otherAmount" name="otherAmount"
+                                    <input matInput placeholder="Others" maxlength="8" autocomplete="off"
+                                        [value]="incmesValue.otherAmount" id="otherAmount" name="otherAmount"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                         (blur)="setOtherSourceIncomeValue($event.target.value,'other')">
                                 </mat-form-field>
                             </div>
@@ -932,49 +962,49 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label><b>Total Income from Other sources</b></mat-label>
                                     <input matInput placeholder="Total Income from Other sources"
-                                   [value]="sourcesOfIncome.toatlIncome" maxlength="8" autocomplete="off">
+                                        [value]="sourcesOfIncome.toatlIncome" maxlength="8" autocomplete="off">
                                 </mat-form-field>
                             </div>
-                        <!-- </form> -->
-                    </div>
-                </mat-card><br><br>
+                            <!-- </form> -->
+                        </div>
+                    </mat-card><br><br>
 
 
 
-                <div class="tableHead">Annexures: Deductions under Chap-VI A</div><br>
+                    <div class="tableHead">Annexures: Deductions under Chap-VI A</div><br>
 
-                <p class="subLabel">Under Section 80D</p><br>
-                <mat-card>
-                    <div class="card__row">
-                        <!-- <form [formGroup]="sec80DForm"> -->
-                            <div class="card__col-lg-3" >
+                    <p class="subLabel">Under Section 80D</p><br>
+                    <mat-card>
+                        <div class="card__row">
+                            <!-- <form [formGroup]="sec80DForm"> -->
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Health Insurance Premium for Self</mat-label>
                                     <input matInput placeholder="Health Insurance Premium for Self" maxlength="8"
-                                       type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        type="number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         formControlName="helathInsuarancePremiumSelf" autocomplete="off"
                                         (blur)="setDeduction80DVal()">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Health Insurance Premium for Parents</mat-label>
                                     <input matInput placeholder="Health Insurance Premium for Parents" maxlength="8"
-                                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        type="number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         formControlName="helathInsuarancePremiumParents" autocomplete="off"
                                         (blur)="setDeduction80DVal()">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Preventive Health Check-up for Whole Family</mat-label>
                                     <input matInput placeholder="Preventive Health Check-up for Whole Family"
-                                    type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
-                                        autocomplete="off" formControlName="preventiveHealthCheckupFamily"
+                                        type="number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        maxlength="8" autocomplete="off" formControlName="preventiveHealthCheckupFamily"
                                         (blur)="setDeduction80DVal()">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Parents Age</mat-label>
                                     <mat-select matInput placeholder="Select Parents Age" formControlName="parentAge">
@@ -984,50 +1014,51 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                        <!-- </form> -->
-                    </div>
-                </mat-card><br><br>
+                            <!-- </form> -->
+                        </div>
+                    </mat-card><br><br>
 
 
-                <mat-card>
-                    <p class="subLabel">Under Section 80G</p>
-                    <button style="float: right;"
-                        (click)="openDialog('Add Donation(Section 80G)','Add','','donationSec80G')">Add
-                        Donation Info</button><br>
-                    <table>
-                        <tr>
-                            <th>Type of Donation</th>
-                            <th>Name of Doner</th>
-                            <th>Amont in Cash</th>
-                            <th>Amount Other than Cash</th>
-                            <th>Eligibal Amount</th>
-                        </tr>
-                        <tr *ngFor="let donation of donationData">
-                            <td>{{donation.donationType}}</td>
-                            <td>{{donation.name}}</td>
-                            <td>{{donation.amountInCash}}</td>
-                            <td>{{donation.amountOtherThanCash}}</td>
-                            <td>{{donation.eligibleAmount}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4"><b>Total</b></td>
-                            <!--itrSummaryForm['controls'].houseProperties['controls']-->
-                            <td><b>{{itrSummaryForm.controls['us80g'].value}}</b></td>
-                        </tr>
-                    </table><br><br>
+                    <mat-card>
+                        <p class="subLabel">Under Section 80G</p>
+                        <button style="float: right;"
+                            (click)="openDialog('Add Donation(Section 80G)','Add','','donationSec80G')">Add
+                            Donation Info</button><br>
+                        <table>
+                            <tr>
+                                <th>Type of Donation</th>
+                                <th>Name of Doner</th>
+                                <th>Amont in Cash</th>
+                                <th>Amount Other than Cash</th>
+                                <th>Eligibal Amount</th>
+                            </tr>
+                            <tr *ngFor="let donation of donationData">
+                                <td>{{donation.donationType}}</td>
+                                <td>{{donation.name}}</td>
+                                <td>{{donation.amountInCash}}</td>
+                                <td>{{donation.amountOtherThanCash}}</td>
+                                <td>{{donation.eligibleAmount}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><b>Total</b></td>
+                                <!--itrSummaryForm['controls'].houseProperties['controls']-->
+                                <td><b>{{itrSummaryForm.controls['us80g'].value}}</b></td>
+                            </tr>
+                        </table><br><br>
 
 
-                    <div class="card__row">
-                        <!-- <form [formGroup]="deduction"> -->
-                            <div class="card__col-lg-3" >
-                                <mat-form-field appearance="outline">   <!--formGroupName="deduction"-->
+                        <div class="card__row">
+                            <!-- <form [formGroup]="deduction"> -->
+                            <div class="card__col-lg-3">
+                                <mat-form-field appearance="outline">
+                                    <!--formGroupName="deduction"-->
                                     <mat-label>Under section 80C</mat-label>
                                     <input matInput placeholder="Under section 80C" formControlName="us80c"
                                         (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off"
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80CCC</mat-label>
                                     <input matInput placeholder="Under section 80CCC" formControlName="us80ccc"
@@ -1035,7 +1066,7 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80CCC (1)</mat-label>
                                     <input matInput placeholder="Under section 80CCC (1)" formControlName="us80ccc1"
@@ -1043,7 +1074,7 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80CCC (2)</mat-label>
                                     <input matInput placeholder="Under section 80CCC (2)" maxlength="8"
@@ -1051,16 +1082,16 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80CCD (1B)</mat-label>
                                     <input matInput placeholder="Under section 80CCD (1B)" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80ccd1b"
-                                        autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        autocomplete="off" type="number"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80DD</mat-label>
                                     <input matInput placeholder="Under section 80DD" maxlength="8"
@@ -1068,7 +1099,7 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80DDB</mat-label>
                                     <input matInput placeholder="Under section 80DDB" maxlength="8"
@@ -1076,7 +1107,7 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80E</mat-label>
                                     <input matInput placeholder="Under section 80E" maxlength="8"
@@ -1084,7 +1115,7 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80EE</mat-label>
                                     <input matInput placeholder="Under section 80EE" maxlength="8"
@@ -1092,7 +1123,7 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80GG</mat-label>
                                     <input matInput placeholder="Under section 80GG" maxlength="8"
@@ -1100,7 +1131,7 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80GGA</mat-label>
                                     <input matInput placeholder="Under section 80GGA" maxlength="8"
@@ -1108,7 +1139,7 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80GGC</mat-label>
                                     <input matInput placeholder="Under section 80GGC" maxlength="8"
@@ -1116,16 +1147,16 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80TTA/ 80TTB</mat-label>
                                     <input matInput placeholder="Under section 80TTA/ 80TTB" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80ttaTtb"
-                                        autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        autocomplete="off" type="number"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80U</mat-label>
                                     <input matInput placeholder="Under section 80U" maxlength="8"
@@ -1133,7 +1164,7 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80G</mat-label>
                                     <input matInput placeholder="Under section 80G" maxlength="8"
@@ -1141,7 +1172,7 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >
+                            <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80D</mat-label>
                                     <input matInput placeholder="Under section 80D" maxlength="8"
@@ -1149,13 +1180,13 @@
                                         type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
-                        <!-- </form> -->
-                    </div>
-                </mat-card><br><br>
+                            <!-- </form> -->
+                        </div>
+                    </mat-card><br><br>
 
 
 
-                <!-- <table>
+                    <!-- <table>
                         <tr>
                             <th>Particulars</th>
                             <th>Rs.</th>
@@ -1249,7 +1280,7 @@
                     </table><br><br> -->
 
 
-                <!-- <table>
+                    <!-- <table>
                         <tr>
                             <th>Particulars</th>
                             <th>Rs.</th>
@@ -1265,146 +1296,146 @@
 
                     </table> -->
 
-                <div class="tableHead">Annexures: Tax deducted at Sources</div><br>
-                <p class="subLabel">TDS on Salary</p>
-                <button style="float: right;" (click)="openDialog('Add TDS on Salary','Add','','tdsOnSal')">Add TDS
-                    on Salary</button><br>
-                <table>
-                    <tr>
-                        <th>TAN of Employer</th>
-                        <th>Name of Employer</th>
-                        <th>Gross Salary</th>
-                        <th>Total TDS</th>
-                    </tr>
-                    <tr *ngIf="tdsOnSal.length === 0">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr *ngFor="let tds of tdsOnSal">
-                        <td>{{tds.deductorTAN}}</td>
-                        <td>{{tds.deductorName}}</td>
-                        <td>{{tds.totalAmountCredited}}</td>
-                        <td>{{tds.totalTdsDeposited}}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><b>Total</b></td>
-                        <td><b></b></td>
-                    </tr>
+                    <div class="tableHead">Annexures: Tax deducted at Sources</div><br>
+                    <p class="subLabel">TDS on Salary</p>
+                    <button style="float: right;" (click)="openDialog('Add TDS on Salary','Add','','tdsOnSal')">Add TDS
+                        on Salary</button><br>
+                    <table>
+                        <tr>
+                            <th>TAN of Employer</th>
+                            <th>Name of Employer</th>
+                            <th>Gross Salary</th>
+                            <th>Total TDS</th>
+                        </tr>
+                        <tr *ngIf="tdsOnSal.length === 0">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr *ngFor="let tds of tdsOnSal">
+                            <td>{{tds.deductorTAN}}</td>
+                            <td>{{tds.deductorName}}</td>
+                            <td>{{tds.totalAmountCredited}}</td>
+                            <td>{{tds.totalTdsDeposited}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><b>Total</b></td>
+                            <td><b></b></td>
+                        </tr>
 
-                </table><br>
+                    </table><br>
 
-                <p class="subLabel">TDS on Other than Salary</p>
-                <button style="float: right;"
-                    (click)="openDialog('Add TDS on Other than Salary','Add','','tdsOnOtherThanSal')">Add TDS on
-                    Other than Salary</button><br>
-                <table>
-                    <tr>
-                        <th>TAN of Deductor</th>
-                        <th>Name of Deductor</th>
-                        <th>Gross Salary</th>
-                        <th>Total TDS</th>
-                    </tr>
-                    <tr *ngIf="tdsOtherThanSal.length === 0">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr *ngFor="let tds of tdsOtherThanSal">
-                        <td>{{tds.deductorTAN}}</td>
-                        <td>{{tds.deductorName}}</td>
-                        <td>{{tds.totalAmountCredited}}</td>
-                        <td>{{tds.totalTdsDeposited}}</td>
-                    </tr>
-                </table><br>
+                    <p class="subLabel">TDS on Other than Salary</p>
+                    <button style="float: right;"
+                        (click)="openDialog('Add TDS on Other than Salary','Add','','tdsOnOtherThanSal')">Add TDS on
+                        Other than Salary</button><br>
+                    <table>
+                        <tr>
+                            <th>TAN of Deductor</th>
+                            <th>Name of Deductor</th>
+                            <th>Gross Salary</th>
+                            <th>Total TDS</th>
+                        </tr>
+                        <tr *ngIf="tdsOtherThanSal.length === 0">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr *ngFor="let tds of tdsOtherThanSal">
+                            <td>{{tds.deductorTAN}}</td>
+                            <td>{{tds.deductorName}}</td>
+                            <td>{{tds.totalAmountCredited}}</td>
+                            <td>{{tds.totalTdsDeposited}}</td>
+                        </tr>
+                    </table><br>
 
-                <p class="subLabel">TDS Sales of property 26QB</p>
-                <button style="float: right;"
-                    (click)="openDialog('TDS Sales of property 26QB','Add','','tdsOnSalOfPro26Q')">Add TDS Sales of
-                    property 26QB</button><br>
-                <table>
-                    <tr>
-                        <th>TAN of Deductor</th>
-                        <th>Name of Deductor</th>
-                        <th>Gross Salary</th>
-                        <th>Total TDS</th>
-                    </tr>
-                    <tr *ngIf="tdsSalesPro.length === 0">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr *ngFor="let tds of tdsSalesPro">
-                        <td>{{tds.deductorTAN}}</td>
-                        <td>{{tds.deductorName}}</td>
-                        <td>{{tds.totalAmountCredited}}</td>
-                        <td>{{tds.totalTdsDeposited}}</td>
-                    </tr>
-                </table><br><br>
+                    <p class="subLabel">TDS Sales of property 26QB</p>
+                    <button style="float: right;"
+                        (click)="openDialog('TDS Sales of property 26QB','Add','','tdsOnSalOfPro26Q')">Add TDS Sales of
+                        property 26QB</button><br>
+                    <table>
+                        <tr>
+                            <th>TAN of Deductor</th>
+                            <th>Name of Deductor</th>
+                            <th>Gross Salary</th>
+                            <th>Total TDS</th>
+                        </tr>
+                        <tr *ngIf="tdsSalesPro.length === 0">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr *ngFor="let tds of tdsSalesPro">
+                            <td>{{tds.deductorTAN}}</td>
+                            <td>{{tds.deductorName}}</td>
+                            <td>{{tds.totalAmountCredited}}</td>
+                            <td>{{tds.totalTdsDeposited}}</td>
+                        </tr>
+                    </table><br><br>
 
-                <div class="tableHead">Annexure: Tax Collected at Sources</div><br>
-                <button style="float: right;"
-                    (click)="openDialog('TDS Tax Collected at Sources','Add','','taxCollSources')">Add Tax Collected
-                    at Sources</button><br>
-                <table>
-                    <tr>
-                        <th>TAN of Collector</th>
-                        <th>Name of Collector</th>
-                        <th>Gross Income</th>
-                        <th>Total TCS</th>
-                    </tr>
-                    <tr *ngIf="taxCollAtSource.length === 0">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr *ngFor="let tcs of taxCollAtSource">
-                        <td>{{tcs.collectorTAN}}</td>
-                        <td>{{tcs.collectorName}}</td>
-                        <td>{{tcs.totalAmountPaid}}</td>
-                        <td>{{tcs.totalTcsDeposited}}</td>
-                    </tr>
+                    <div class="tableHead">Annexure: Tax Collected at Sources</div><br>
+                    <button style="float: right;"
+                        (click)="openDialog('TDS Tax Collected at Sources','Add','','taxCollSources')">Add Tax Collected
+                        at Sources</button><br>
+                    <table>
+                        <tr>
+                            <th>TAN of Collector</th>
+                            <th>Name of Collector</th>
+                            <th>Gross Income</th>
+                            <th>Total TCS</th>
+                        </tr>
+                        <tr *ngIf="taxCollAtSource.length === 0">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr *ngFor="let tcs of taxCollAtSource">
+                            <td>{{tcs.collectorTAN}}</td>
+                            <td>{{tcs.collectorName}}</td>
+                            <td>{{tcs.totalAmountPaid}}</td>
+                            <td>{{tcs.totalTcsDeposited}}</td>
+                        </tr>
 
-                </table><br><br>
+                    </table><br><br>
 
-                <div class="tableHead">Annexures: Advance Tax/ Self-Assessment Tax</div><br>
-                <button style="float: right;"
-                    (click)="openDialog('Annexures: Advance Tax/ Self-Assessment Tax','Add','','advanceSelfAssTax')">Add
-                    Tax Collected at Sources</button><br>
-                <table>
-                    <tr>
-                        <th>BSR Code</th>
-                        <th>Date</th>
-                        <th>Challan No</th>
-                        <th>Tax deposited</th>
-                    </tr>
-                    <tr *ngIf="advanceSelfTax.length === 0">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr *ngFor="let advTax of advanceSelfTax">
-                        <td>{{advTax.bsrCode}}</td>
-                        <td>{{advTax.dateOfDeposit | date : 'dd/MM/yyyy'}}</td>
-                        <td>{{advTax.challanNumber}}</td>
-                        <td>{{advTax.totalTax}}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><b>Total</b></td>
-                        <td><b></b></td>
-                    </tr>
+                    <div class="tableHead">Annexures: Advance Tax/ Self-Assessment Tax</div><br>
+                    <button style="float: right;"
+                        (click)="openDialog('Annexures: Advance Tax/ Self-Assessment Tax','Add','','advanceSelfAssTax')">Add
+                        Tax Collected at Sources</button><br>
+                    <table>
+                        <tr>
+                            <th>BSR Code</th>
+                            <th>Date</th>
+                            <th>Challan No</th>
+                            <th>Tax deposited</th>
+                        </tr>
+                        <tr *ngIf="advanceSelfTax.length === 0">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr *ngFor="let advTax of advanceSelfTax">
+                            <td>{{advTax.bsrCode}}</td>
+                            <td>{{advTax.dateOfDeposit | date : 'dd/MM/yyyy'}}</td>
+                            <td>{{advTax.challanNumber}}</td>
+                            <td>{{advTax.totalTax}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><b>Total</b></td>
+                            <td><b></b></td>
+                        </tr>
 
-                </table><br><br>
+                    </table><br><br>
 
-                <div class="tableHead">Annexures: Exempt Income</div><br>
-                <mat-card>
-                    <div class="card__row">
-                        <!-- <form [formGroup]="exemptIncome"> -->
+                    <div class="tableHead">Annexures: Exempt Income</div><br>
+                    <mat-card>
+                        <div class="card__row">
+                            <!-- <form [formGroup]="exemptIncome"> -->
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>PPF Interest</mat-label>
@@ -1435,18 +1466,18 @@
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label><b>Total</b></mat-label>
-                                    <input matInput placeholder="Total" maxlength="8"
-                                      disabled  formControlName="totalExcemptIncome" autocomplete="off">
+                                    <input matInput placeholder="Total" maxlength="8" readonly
+                                        formControlName="totalExcemptIncome" autocomplete="off">
                                 </mat-form-field>
                             </div>
-                        <!-- </form> -->
-                    </div>
-                </mat-card><br><br>
+                            <!-- </form> -->
+                        </div>
+                    </mat-card><br><br>
 
-                <!-- </div> -->
-                <div class="card__row">
-                    <button class="btn" (click)="addItrSummary()">Download Summary</button>
-                </div>
+                    <!-- </div> -->
+                    <div class="card__row">
+                        <button class="btn" (click)="addItrSummary()">Download Summary</button>
+                    </div>
                 </form>
             </div>
         </div>
