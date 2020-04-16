@@ -13,7 +13,7 @@
                                     <mat-form-field appearance="outline">
                                         <mat-label>Type of ITR</mat-label>
                                         <mat-select matInput formControlName="itrType" placeholder="Select ITR type"
-                                            autocomplete="off" required>
+                                            autocomplete="off" required (selectionChange)="setItrType($event.value)">
                                             <mat-option *ngFor="let itr of itrTypesData" [value]="itr.value">
                                                 {{ itr.label }}
                                             </mat-option>
@@ -512,7 +512,7 @@
                     <div class="heading">ANNEXURES</div><br>
 
                     <div class="tableHead">Annexures: Bank Details</div>
-                    <button (click)="openDialog('Add Bank Info','Add','','Bank')">Add</button>
+                    <button style="float: right;" (click)="openDialog('Add Bank Info','Add','','Bank')">Add</button>
                     <br>
                     <table>
                         <tr>
@@ -540,7 +540,8 @@
                     </table><br><br>
 
                     <div class="tableHead">Annexures: House Properties</div>
-                    <button (click)="openDialog('Add House Property','Add','','House')">Add House Info</button><br>
+                    <button [disabled]="housingData.length > 0" style="float: right;"
+                    (click)="openDialog('Add House Property','Add','','House')">Add House Info</button><br>
                     <table class="verticle">
                         <tr>
                             <th>Property Type</th>
@@ -593,7 +594,7 @@
 
 
                     <div class="tableHead">Annexures: Salary</div>
-                    <button (click)="openDialog('Add Salary Info','Add','','Salary')">Add</button><br>
+                    <button style="float: right;" [disabled]="salaryItrratedData.length > 3" (click)="openDialog('Add Salary Info','Add','','Salary')">Add Employer Salary</button><br>
                     <table class="verticle">
                         <tr>
                             <th><b>Employer Name</b></th>
