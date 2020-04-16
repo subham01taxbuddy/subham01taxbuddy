@@ -167,11 +167,11 @@ export class TaxSummaryComponent implements OnInit {
 
       medium: 'BACK OFFICE',
 
-      sumOfUs80cUs80cccUs80ccc1: [0],
-      sumOfUs80ggaUs80ggc: [0],
-      totalDonationInCash: [0],
-      totalDonationOtherThanCash: [0],
-      totalHpDeduction: [0],
+      // sumOfUs80cUs80cccUs80ccc1: [0],
+      // sumOfUs80ggaUs80ggc: [0],
+      // // totalDonationInCash: [0],
+      // // totalDonationOtherThanCash: [0],
+      // totalHpDeduction: [0],
 
       bankDetails: [],
       employers: [],
