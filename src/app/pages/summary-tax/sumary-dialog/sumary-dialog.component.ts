@@ -92,7 +92,7 @@ export class SumaryDialogComponent implements OnInit {
         standardDeduction: [0],
         state: null,
         employerPAN: null,
-        employerTAN: null,
+        employerTAN: ['', Validators.pattern(AppConstants.tanNumberRegex)],
         periodFrom: null,
         periodTo: null,
         taxRelief: 0,
@@ -116,8 +116,8 @@ export class SumaryDialogComponent implements OnInit {
       totalExemptAllow: [0],
       netSalary: [0],
      // standardDeduction: [0],
-      entertainAllow: [0],
-      professionalTax: [0],
+      entertainAllow: [0, Validators.max(5000)],
+      professionalTax: [0, Validators.max(2500)],
       totalSalaryDeduction: [0],
       taxableSalary: [0],
 
@@ -207,15 +207,25 @@ export class SumaryDialogComponent implements OnInit {
 
       hpStandardDeduction: [0],
       netHousePropertyIncome: [0],
-
-
-
-
     })
 
 
-    console.log(this.data.callerObj)
+    console.log("CALLEROBJ: ",this.data.callerObj)
+    console.log('MODE:', this.data.mode)
+    if(this.data.mode === 'Bank'){
+      this.setBankRefundVal();
+    }
+
     this.setUserProfileTo(this.data.callerObj);
+  }
+
+  setBankRefundVal(){
+    console.log('bankData length: ', this.data.callerObj.bankData, this.data.callerObj.bankData.length)
+    if(this.data.callerObj.bankData.length === 0){
+      this.summaryDialogForm['controls'].bankDetails['controls'].hasRefund.setValue(true)
+    }else{
+      this.summaryDialogForm['controls'].bankDetails['controls'].hasRefund.setValue(false)
+    }
   }
 
   setUserProfileTo(userProfileData) {
@@ -605,6 +615,26 @@ export class SumaryDialogComponent implements OnInit {
       this.summaryDialogForm.controls['dneeAmountOtherThanCash'].setValidators(null);
     }
   }
+
+
+  calculateGrossSal() {
+    this.salObjectVal.grossSalary = Number(this.summaryDialogForm.controls['salAsPerSec171'].value) + Number(this.summaryDialogForm.controls['valOfPerquisites'].value) + Number(this.summaryDialogForm.controls['profitInLieu'].value)
+    this.summaryDialogForm.controls['grossSalary'].setValue(this.salObjectVal.grossSalary);
+    this.calNetSalary();
+  }
+
+  calTotalExemptAmnt() {
+    this.salObjectVal.totalExcemptAllowance = Number(this.summaryDialogForm.controls['houseRentAllow'].value) + Number(this.summaryDialogForm.controls['leaveTravelExpense'].value) + Number(this.summaryDialogForm.controls['other'].value)
+    this.summaryDialogForm.controls['totalExemptAllow'].setValue(this.salObjectVal.totalExcemptAllowance);
+    this.calNetSalary();
+  }
+
+  calNetSalary() {
+    this.salObjectVal.netSalary = this.salObjectVal.grossSalary - this.salObjectVal.totalExcemptAllowance;
+    this.summaryDialogForm.controls['netSalary'].setValue(this.salObjectVal.netSalary);
+    this.calStanderdDedtuction();
+  }
+
   calStanderdDedtuction() {
     let amnt = Number(this.summaryDialogForm.controls['entertainAllow'].value) - Number(this.summaryDialogForm.controls['professionalTax'].value)
     let standeredDeduct = this.salObjectVal.netSalary - amnt;
@@ -616,22 +646,6 @@ export class SumaryDialogComponent implements OnInit {
     }
 
     this.calTotalDeduction()
-  }
-
-  calculateGrossSal() {
-    this.salObjectVal.grossSalary = Number(this.summaryDialogForm.controls['salAsPerSec171'].value) + Number(this.summaryDialogForm.controls['valOfPerquisites'].value) + Number(this.summaryDialogForm.controls['profitInLieu'].value)
-    this.summaryDialogForm.controls['grossSalary'].setValue(this.salObjectVal.grossSalary);
-  }
-
-  calNetSalary() {
-    this.salObjectVal.netSalary = this.salObjectVal.grossSalary - this.salObjectVal.totalExcemptAllowance;
-    this.summaryDialogForm.controls['netSalary'].setValue(this.salObjectVal.netSalary);
-  }
-
-  calTotalExemptAmnt() {
-    this.salObjectVal.totalExcemptAllowance = Number(this.summaryDialogForm.controls['houseRentAllow'].value) + Number(this.summaryDialogForm.controls['leaveTravelExpense'].value) + Number(this.summaryDialogForm.controls['other'].value)
-    this.summaryDialogForm.controls['totalExemptAllow'].setValue(this.salObjectVal.totalExcemptAllowance);
-    this.calNetSalary();
   }
 
   calTotalDeduction() {   //this.summaryDialogForm.controls['standardDeduction']  
@@ -741,6 +755,26 @@ export class SumaryDialogComponent implements OnInit {
           console.log('summaryDialogForm: ', this.summaryDialogForm.controls['tenentPanNumber'])
         }
       }
+    }
+  }
+
+  setTotalMinValdation(value, mode){
+
+    if(mode === 'tdsOnSal'){
+     this.summaryDialogForm['controls'].onSalary['controls'].totalTdsDeposited.setValidators([Validators.min(value)]);
+     this.summaryDialogForm['controls'].onSalary['controls'].totalTdsDeposited.updateValueAndValidity();
+    }
+    else if(mode === 'tdsOnOtherThanSal'){
+        this.summaryDialogForm['controls'].otherThanSalary16A['controls'].totalTdsDeposited.setValidators([Validators.min(value)]);
+        this.summaryDialogForm['controls'].otherThanSalary16A['controls'].totalTdsDeposited.updateValueAndValidity();
+    }
+    else if(mode === 'tdsOnSalOfPro26Q'){
+      this.summaryDialogForm['controls'].otherThanSalary26QB['controls'].totalTdsDeposited.setValidators([Validators.min(value)]);
+      this.summaryDialogForm['controls'].otherThanSalary26QB['controls'].totalTdsDeposited.updateValueAndValidity();
+    }
+    else if(mode === 'taxCollSources'){
+      this.summaryDialogForm['controls'].tcs['controls'].totalTcsDeposited.setValidators([Validators.min(value)]);
+      this.summaryDialogForm['controls'].tcs['controls'].totalTcsDeposited.updateValueAndValidity();
     }
   }
 

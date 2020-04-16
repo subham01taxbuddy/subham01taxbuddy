@@ -216,9 +216,11 @@
         <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Entertainment allowances </mat-label>
-                <input matInput placeholder="Entertainment allowances" formControlName="entertainAllow"
+                <input matInput placeholder="Entertainment allowances" formControlName="entertainAllow" max="5000"
                 type="number" (blur)="calStanderdDedtuction();" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                     maxlength="8">
+                     <mat-error *ngIf="summaryDialogForm.controls['entertainAllow'].hasError('max')">Maximum amount should be 5000</mat-error>
+                    
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['grossSalary'].invalid">Enter
                     valid mobile number</mat-error> -->
             </mat-form-field>
@@ -226,8 +228,9 @@
         <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Professional Tax </mat-label>
-                <input matInput placeholder="Professional Tax" formControlName="professionalTax" (blur)="calStanderdDedtuction();"
+                <input matInput placeholder="Professional Tax" formControlName="professionalTax" max="2500" (blur)="calStanderdDedtuction();"
                 type="number"   onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                <mat-error *ngIf="summaryDialogForm.controls['professionalTax'].hasError('max')">Maximum amount should be 2500</mat-error>
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['grossSalary'].invalid">Enter
                     valid mobile number</mat-error> -->
             </mat-form-field>
@@ -391,7 +394,8 @@
         <div class="card__col-lg-6" formGroupName="onSalary" *ngIf="data.mode == 'tdsOnSal'">
             <mat-form-field appearance="outline">
                 <mat-label>Gross Salary</mat-label>
-                <input matInput placeholder="Gross Salary" formControlName="totalAmountCredited"
+                <!-- summaryDialogForm['controls'].onSalary['controls'].totalAmountCredited -->
+                <input matInput placeholder="Gross Salary" formControlName="totalAmountCredited" (blur)="setTotalMinValdation( summaryDialogForm['controls'].onSalary['controls'].totalAmountCredited.value,data.mode)"
                 type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
 
             </mat-form-field>
@@ -399,9 +403,11 @@
         <div class="card__col-lg-6" formGroupName="onSalary" *ngIf="data.mode == 'tdsOnSal'">
             <mat-form-field appearance="outline">
                 <mat-label>Total TDS</mat-label>
-                <input matInput placeholder="Total TDS" formControlName="totalTdsDeposited"
+                <input matInput placeholder="Total TDS" formControlName="totalTdsDeposited" 
                 type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
-
+                <mat-error *ngIf="summaryDialogForm['controls'].onSalary['controls'].totalTdsDeposited.hasError('min')">
+                    Total tds should be greater than gross salary
+                </mat-error>
             </mat-form-field>
         </div>
 
@@ -430,7 +436,7 @@
         <div class="card__col-lg-6" formGroupName="otherThanSalary16A" *ngIf="data.mode == 'tdsOnOtherThanSal'">
             <mat-form-field appearance="outline">
                 <mat-label>Gross Income</mat-label>
-                <input matInput placeholder="Gross Income" formControlName="totalAmountCredited"
+                <input matInput placeholder="Gross Income" formControlName="totalAmountCredited" (blur)="setTotalMinValdation( summaryDialogForm['controls'].otherThanSalary16A['controls'].totalAmountCredited.value, data.mode)"
                 type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
 
             </mat-form-field>
@@ -440,6 +446,9 @@
                 <mat-label>Total TDS</mat-label>
                 <input matInput placeholder="Total TDS" formControlName="totalTdsDeposited"
                 type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                <mat-error *ngIf="summaryDialogForm['controls'].otherThanSalary16A['controls'].totalTdsDeposited.hasError('min')">
+                    Total tds should be greater than gross salary
+                </mat-error>
 
             </mat-form-field>
         </div>
@@ -469,7 +478,7 @@
         <div class="card__col-lg-6" formGroupName="otherThanSalary26QB" *ngIf="data.mode == 'tdsOnSalOfPro26Q'">
             <mat-form-field appearance="outline">
                 <mat-label>Gross Amount</mat-label>
-                <input matInput placeholder="Gross Amount" formControlName="totalAmountCredited"
+                <input matInput placeholder="Gross Amount" formControlName="totalAmountCredited" (blur)="setTotalMinValdation( summaryDialogForm['controls'].otherThanSalary26QB['controls'].totalAmountCredited.value, data.mode)"
                 type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
 
             </mat-form-field>
@@ -479,6 +488,9 @@
                 <mat-label>Total TDS</mat-label>
                 <input matInput placeholder="Total TDS" formControlName="totalTdsDeposited"
                 type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                <mat-error *ngIf="summaryDialogForm['controls'].otherThanSalary26QB['controls'].totalTdsDeposited.hasError('min')">
+                    Total tds should be greater than gross salary
+                </mat-error>
 
             </mat-form-field>
         </div>
@@ -506,7 +518,7 @@
         <div class="card__col-lg-6" formGroupName="tcs" *ngIf="data.mode == 'taxCollSources'">
             <mat-form-field appearance="outline">
                 <mat-label>Gross Income</mat-label>
-                <input matInput placeholder="Gross Income" formControlName="totalAmountPaid"
+                <input matInput placeholder="Gross Income" formControlName="totalAmountPaid" (blur)="setTotalMinValdation( summaryDialogForm['controls'].tcs['controls'].totalAmountPaid.value, data.mode)"
                 type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
 
             </mat-form-field>
@@ -516,6 +528,9 @@
                 <mat-label>Total TCS</mat-label>
                 <input matInput placeholder="Total TCS" formControlName="totalTcsDeposited"
                 type="number"   onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                <mat-error *ngIf="summaryDialogForm['controls'].tcs['controls'].totalTcsDeposited.hasError('min')">
+                    Total tcs should be greater than gross income
+                </mat-error>
 
             </mat-form-field>
         </div>

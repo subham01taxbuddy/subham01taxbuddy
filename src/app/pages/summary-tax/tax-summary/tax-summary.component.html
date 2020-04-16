@@ -43,7 +43,7 @@
                                         <input matInput placeholder="Tax Payable/ Refund" disabled autocomplete="off">
                                     </mat-form-field> -->
                                     <label>Tax Payable/ Refund</label>
-                                    <input type="number" placeholder="Tax Payable/ Refund" [value]="netTaxPayble"
+                                    <input type="number" placeholder="Tax Payable/ Refund" formControlName="netTaxPayable"
                                         disabled class="disableInput">
                                 </div>
                             </div>
@@ -264,6 +264,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Acknowledgement Number</mat-label>
                                 <input matInput formControlName="acknowledgementNumber"  maxlength="15"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                   type="number"  disabled placeholder="Acknowledgement Number"
                                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" autocomplete="off"> <!--minlength="15"-->
                                 <mat-error
@@ -500,7 +501,7 @@
                                 <td>17</td>
                                 <td><b>Net Tax Payable/ (Refund)</b></td>
                                 <td></td>
-                                <td><b><input type="number" [value]="netTaxPayble" disabled maxlength="8"></b></td>
+                                <td><b><input type="number" formControlName="netTaxPayable" disabled maxlength="8"></b></td>
                             </tr>
 
                         </table>
@@ -551,7 +552,7 @@
                             <th>Tenat name</th>
                             <th>Gross Rent Recived</th>
                             <th>Less: Taxes Paid</th>
-                            <th><b>Annulal Value</b></th>
+                            <th><b>Annual Value</b></th>
                             <th>Standared deduction</th>
                             <th>Interest on Home Loan</th>
                             <th><b>Net House Pro Income</b></th>
@@ -1185,117 +1186,6 @@
                     </mat-card><br><br>
 
 
-
-                    <!-- <table>
-                        <tr>
-                            <th>Particulars</th>
-                            <th>Rs.</th>
-                            <th>Rs.</th>
-                        </tr>
-                        <tr>
-                            <td>Under section 80C</td>
-                            <td><input type="number" maxlength="8"></td>
-                            <td></td>
-
-                        </tr>
-                        <tr>
-                            <td>Under section 80CCC</td>
-                            <td><input type="number" maxlength="8"></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Under section 80CCC (1)</td>
-                            <td><input type="number" maxlength="8"></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-                        <tr>
-                            <td>Under section 80CCD (2)</td>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-                        <tr>
-                            <td>Under section 80CCD (1B)</td>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-                        <tr>
-                            <td>Under section 80D</td>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-
-
-
-                        <tr>
-                            <td>Under section 80DD</td>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-                        <tr>
-                            <td>Under section 80DDB</td>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-                        <tr>
-                            <td>Under section 80E</td>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-                        <tr>
-                            <td>Under section 80EE</td>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-                        <tr>
-                            <td>Under section 80G</td>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-                        <tr>
-                            <td>Under section 80GG</td>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-                        <tr>
-                            <td>Under section 80GGA</td>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-                        <tr>
-                            <td>Under section 80TTA/ 80TTB</td>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-                        <tr>
-                            <td>Under section 80U</td>
-                            <td></td>
-                            <td><input type="number" maxlength="8"></td>
-                        </tr>
-
-                    </table><br><br> -->
-
-
-                    <!-- <table>
-                        <tr>
-                            <th>Particulars</th>
-                            <th>Rs.</th>
-                        </tr>
-                        <tr>
-                            <td>PPF Interest</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Gift from relative</td>
-                            <td></td>
-                        </tr>
-
-                    </table> -->
-
                     <div class="tableHead">Annexures: Tax deducted at Sources</div><br>
                     <p class="subLabel">TDS on Salary</p>
                     <button style="float: right;" (click)="openDialog('Add TDS on Salary','Add','','tdsOnSal')">Add TDS
@@ -1321,7 +1211,7 @@
                         </tr>
                         <tr>
                             <td colspan="3"><b>Total</b></td>
-                            <td><b></b></td>
+                            <td><b>{{itrSummaryForm.controls['totalTdsOnSalary'].value}}</b></td>
                         </tr>
 
                     </table><br>
@@ -1348,6 +1238,9 @@
                             <td>{{tds.deductorName}}</td>
                             <td>{{tds.totalAmountCredited}}</td>
                             <td>{{tds.totalTdsDeposited}}</td>
+                        </tr> <tr>
+                            <td colspan="3"><b>Total</b></td>
+                            <td><b>{{itrSummaryForm.controls['totalTdsOnOtherThanSalary'].value}}</b></td>
                         </tr>
                     </table><br>
 
@@ -1374,6 +1267,10 @@
                             <td>{{tds.totalAmountCredited}}</td>
                             <td>{{tds.totalTdsDeposited}}</td>
                         </tr>
+                        <tr>
+                            <td colspan="3"><b>Total</b></td>
+                            <td><b>{{itrSummaryForm.controls['totalTdsSaleOfProperty26QB'].value}}</b></td>
+                        </tr>
                     </table><br><br>
 
                     <div class="tableHead">Annexure: Tax Collected at Sources</div><br>
@@ -1398,6 +1295,11 @@
                             <td>{{tcs.collectorName}}</td>
                             <td>{{tcs.totalAmountPaid}}</td>
                             <td>{{tcs.totalTcsDeposited}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><b>Total</b></td>
+                            <td><b>{{itrSummaryForm.controls['totalTaxCollectedAtSources'].value}}</b></td>
+                            
                         </tr>
 
                     </table><br><br>
@@ -1427,7 +1329,7 @@
                         </tr>
                         <tr>
                             <td colspan="3"><b>Total</b></td>
-                            <td><b></b></td>
+                            <td><b>{{itrSummaryForm.controls['totalAdvanceTax'].value}}</b></td>
                         </tr>
 
                     </table><br><br>

@@ -60,7 +60,6 @@ export class TaxSummaryComponent implements OnInit {
 
   totalInterest: any = 0;
   totalTDS: any = 0;
-  netTaxPayble: any = 0;
 
   incmesValue = {
     savingAmount: 0,
@@ -147,6 +146,7 @@ export class TaxSummaryComponent implements OnInit {
       totalTaxCollectedAtSources: [0],
       totalAdvanceTax: [0],
       totalTaxPaid: [0],
+      netTaxPayable: [0],
 
       helathInsuarancePremiumSelf: [0],
       helathInsuarancePremiumParents: [0],
@@ -300,9 +300,9 @@ export class TaxSummaryComponent implements OnInit {
       if (result) {
         console.log('Result: ', result)
         if (result.data.type === 'Bank') {
-          this.bankData.push(result.data.bankDetails)
+          // this.bankData.push(result.data.bankDetails)
           console.log('bankData: ', this.bankData)
-          this.itrSummaryForm.controls['bankDetails'].setValue(this.bankData)
+          this.setBankValue(result.data.bankDetails)
         }
         else if (result.data.type === 'House') {
 
@@ -371,6 +371,29 @@ export class TaxSummaryComponent implements OnInit {
       }
     });
   }
+
+  setBankValue(latestBankInfo){
+  //  console.log('this.bankData: ',this.bankData)
+    if(this.bankData.length !== 0){
+      console.log('latestBankInfo: ',latestBankInfo)
+       if(latestBankInfo.hasRefund === true){
+         for(let i=0; i< this.bankData.length; i++){
+          this.bankData[i].hasRefund = false;
+         }
+         this.bankData.push(latestBankInfo)
+       }
+       else{
+        this.bankData.push(latestBankInfo)
+       }
+      
+    }else{
+      this.bankData.push(latestBankInfo)
+      this.itrSummaryForm.controls['bankDetails'].setValue(this.bankData)
+    }
+    console.log('this.bankData: ',this.bankData)
+   
+  }
+  
 
 
   onSalary: any = [];
@@ -482,33 +505,28 @@ export class TaxSummaryComponent implements OnInit {
   setEmployerData(emplyersData) {
     this.employersData.push(emplyersData)
     console.log('employersData: ', this.employersData)
-    console.log('employersData Allowance: ', this.employersData[0].employers.allowance.filter(item=> item.allowanceType === 'HOUSE_RENT'))
-    console.log('employersData Allowance amnt: ', (this.employersData[0].employers.allowance.filter(item=> item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount)
-    // console.log('employersData Deduction: ', this.employersData[0].employers.deductions.filter(item=> item.deductionType === 'ENTERTAINMENT_ALLOW'))
-    // console.log('employersData Deduction amnt: ', (this.employersData[0].employers.deductions.filter(item=> item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount)
+    
     // for (let i = 0; i < this.employersData.length; i++) {
       var employerArray = [];
       var totalNetSalary = 0;
-    debugger
     for(let i= (this.employersData.length - 1); i < this.employersData.length; i++){
       let salObj = {
         employerName: this.employersData[i].employers.employerName,
         address: this.employersData[i].employers.address,
         employerTAN: this.employersData[i].employers.employerTAN,
         employerCategory: this.employersData[i].employers.employerCategory,
-        sal171:  this.employersData[i].employers.salary.length > 0 ? this.employersData[i].employers.salary[0].taxableAmount : 0,//this.setSalaryValue(this.employersData[i].employers.salary, '"SEC17_1"', 'taxableAmount'),
-        perquisites: this.employersData[i].employers.perquisites.length > 0 ? this.employersData[i].employers.perquisites[0].taxableAmount : 0, //this.setSalaryValue(this.employersData[i].employers.salary, '"SEC17_2"', 'taxableAmount'),
-        profitinLieu: this.employersData[i].employers.profitsInLieuOfSalaryType.length > 0 ? this.employersData[i].employers.profitsInLieuOfSalaryType[0].taxableAmount : 0,// this.setSalaryValue(this.employersData[i].employers.salary, '"SEC17_3"', 'taxableAmount'),
+        sal171:  this.employersData[i].employers.salary.length > 0 ? this.employersData[i].employers.salary[0].taxableAmount : 0,
+        perquisites: this.employersData[i].employers.perquisites.length > 0 ? this.employersData[i].employers.perquisites[0].taxableAmount : 0,
+        profitinLieu: this.employersData[i].employers.profitsInLieuOfSalaryType.length > 0 ? this.employersData[i].employers.profitsInLieuOfSalaryType[0].taxableAmount : 0,
         grossSalary: this.employersData[i].grossSalary,
-        houseRentAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'HOUSE_RENT')).length > 0) ? (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0, //this.setSalaryValue(this.employersData[i].employers.allowance, 'HOUSE_RENT', 'exemptAmount'),
-        leaveTravelExpense: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'LTA')).length > 0) ? (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'LTA'))[0].exemptAmount : 0, //this.setSalaryValue(this.employersData[i].employers.allowance, 'LTA', 'exemptAmount'),
-        other: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'ANY_OTHER')).length > 0) ? (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0, //this.setSalaryValue(this.employersData[i].employers.allowance, 'ALL_ALLOWANCES', 'exemptAmount'),
-        totalExemptAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0, //this.setSalaryValue(this.employersData[i].employers.allowance, 'ALL_ALLOWANCES', 'exemptAmount'),
+        houseRentAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'HOUSE_RENT')).length > 0) ? (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0, 
+        leaveTravelExpense: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'LTA')).length > 0) ? (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'LTA'))[0].exemptAmount : 0, 
+        other: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'ANY_OTHER')).length > 0) ? (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0, 
+        totalExemptAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (this.employersData[i].employers.allowance.filter(item=> item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
         netSalary: this.employersData[i].netSalary,
-        // standardDeduction: this.employersData[i].standardDeduction,
         standardDeduction: this.employersData[i].employers.standardDeduction,
-        entertainAllow: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter(item=> item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (this.employersData[i].employers.deductions.filter(item=> item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0, //this.setSalaryValue(this.employersData[i].employers.deductions, 'ENTERTAINMENT_ALLOW', 'exemptAmount'),
-        professionalTax: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter(item=> item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (this.employersData[i].employers.deductions.filter(item=> item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0, //this.setSalaryValue(this.employersData[i].employers.deductions, 'PROFESSIONAL_TAX', 'exemptAmount'),
+        entertainAllow: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter(item=> item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (this.employersData[i].employers.deductions.filter(item=> item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0, 
+        professionalTax: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter(item=> item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (this.employersData[i].employers.deductions.filter(item=> item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0, 
         totalSalaryDeduction: this.employersData[i].totalSalaryDeduction,
         taxableSalary: this.employersData[i].taxableSalary
       }
@@ -527,10 +545,6 @@ export class TaxSummaryComponent implements OnInit {
     this.itrSummaryForm.controls['incomeFromSalary'].setValue(totalNetSalary)
     this.itrSummaryForm.controls['employers'].setValue(employerArray)
    
-    // }
-
-  
-    
     this.itrSummaryForm.controls['grossSalary'].setValue(this.grossSalary)
     this.itrSummaryForm.controls['netSalary'].setValue(this.netSalary)
     this.itrSummaryForm.controls['totalSalaryDeduction'].setValue(this.totalSalaryDeduction)
@@ -538,22 +552,6 @@ export class TaxSummaryComponent implements OnInit {
 
     console.log('Salary Data: ', this.salaryItrratedData);
     console.log('ITR formData: ', this.itrSummaryForm.value);
-  }
-
-  setSalaryValue(salaryData, type, bindVal) {
-    debugger
-    // if(this.utilService.isNonEmpty(salaryData)){
-    if (this.utilService.isNonEmpty(salaryData)) {
-      for (let i = 0; i < salaryData.length; i++) {
-        if (salaryData[i].salaryType === type) {
-          return salaryData[i].bindVal;
-        } else {
-          return 0;
-        }
-      }
-    } else {
-      return 0;
-    }
   }
 
   checkPanDuplicate(panNum) {
@@ -613,7 +611,8 @@ export class TaxSummaryComponent implements OnInit {
         console.log('userInfo by Pan number: ', result)
         this.itrSummaryForm.controls['firstName'].setValue(result.firstName ? result.firstName : '');   //91
         this.itrSummaryForm.controls['middleName'].setValue(result.middleName ? result.middleName : '');
-        this.itrSummaryForm.controls['lastName'].setValue(result.lastName ? result.lastName : '');  //stateCode
+        this.itrSummaryForm.controls['lastName'].setValue(result.lastName ? result.lastName : '');  //stateCode   
+        this.itrSummaryForm.controls['fatherName'].setValue(result.middleName ? result.middleName : '');
       }, error => {
         if (error.status === 404) {
           //   this.itrSummaryForm.controls['city'].setValue(null);
@@ -703,6 +702,28 @@ export class TaxSummaryComponent implements OnInit {
       // this.incomes.controls['totalOtherIncome'].setValue(this.sourcesOfIncome.toatlIncome);
       // this.incmesValue.totalOtherIncome = this.sourcesOfIncome.toatlIncome;
       this.calculateGrossTotalIncome()
+    }
+    else{
+      if (incomeVal === 0 || incomeVal === '' || incomeVal === 'undefined') {
+        if (type === 'saving') {
+          this.sourcesOfIncome.interestFromSaving = 0;
+        }
+        else if (type === 'bank') {
+          this.sourcesOfIncome.interestFromBank = 0;
+        }
+        else if (type === 'it') {
+          this.sourcesOfIncome.interestFromIncomeTax = 0;
+        }
+        else if (type === 'other') {
+          this.sourcesOfIncome.interestFromOther = 0;
+        }
+        console.log('this.otherSource: ', this.otherSource)
+        this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther;
+        console.log('Total other income: ', this.sourcesOfIncome.toatlIncome)
+  
+        this.itrSummaryForm.controls['totalIncomeFromOtherResources'].setValue(this.sourcesOfIncome.toatlIncome)
+        this.calculateGrossTotalIncome()
+      }
     }
 
   }
@@ -839,7 +860,8 @@ export class TaxSummaryComponent implements OnInit {
 
   calculateNetTaxPayble() {          //Calculate point 17 (Net Tax Payable/ (Refund) (15 - 16))
     console.log(this.totalInterest, this.totalTDS)
-    this.netTaxPayble = Number(this.itrSummaryForm.controls['totalTaxFeeAndInterest'].value) - this.totalTDS;
+     let netTaxPayble = Number(this.itrSummaryForm.controls['totalTaxFeeAndInterest'].value) - this.totalTDS;
+    this.itrSummaryForm.controls['netTaxPayable'].setValue(netTaxPayble)
   }
 
 
@@ -894,6 +916,7 @@ export class TaxSummaryComponent implements OnInit {
     this.totalTDS = Number(this.itrSummaryForm.controls['totalTdsOnSalary'].value) + Number(this.itrSummaryForm.controls['totalTdsOnOtherThanSalary'].value) +
       Number(this.itrSummaryForm.controls['totalTdsSaleOfProperty26QB'].value) + Number(this.itrSummaryForm.controls['totalTaxCollectedAtSources'].value) +
       Number(this.itrSummaryForm.controls['totalAdvanceTax'].value);
+      this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS)
     //console.log('taxesPaid: ', this.taxesPaid)
 
     this.calculateNetTaxPayble();        //Calculate point 17
@@ -921,6 +944,7 @@ export class TaxSummaryComponent implements OnInit {
     if (this.itrSummaryForm.valid) {
 
       if (this.utilService.isNonEmpty(this.sourcesOfIncome)) {
+        this.incomeData = [];
         if (this.sourcesOfIncome.interestFromSaving !== 0) {
           let obj = {
             expenses: 0,
