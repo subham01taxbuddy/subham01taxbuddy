@@ -60,6 +60,8 @@ export class TaxSummaryComponent implements OnInit {
 
   totalInterest: any = 0;
   totalTDS: any = 0;
+  fillingMinDate : any = new Date("2019-04-01");
+  fillingMaxDate : any = new Date();
 
   incmesValue = {
     savingAmount: 0,
@@ -104,7 +106,7 @@ export class TaxSummaryComponent implements OnInit {
       returnType: ['ORIGINAL', [Validators.required]],
       assessmentYear: ['2020-2021', [Validators.required]],
       financialYear: ['2019-2020', [Validators.required]],
-      acknowledgementNumber: [0],
+      acknowledgementNumber: [0, Validators.minLength(15)],
       dateOfFiling: [],
       us80c: [0],
       us80ccc: [0],
@@ -828,7 +830,13 @@ export class TaxSummaryComponent implements OnInit {
 
   calculateTotalIncome() {  //Calculate point 6
     let totalIncome = Number(this.itrSummaryForm.controls['grossTotalIncome'].value) - Number(this.itrSummaryForm.controls['deductionUnderChapterVIA'].value);
-    this.itrSummaryForm.controls['totalIncome'].setValue(totalIncome);
+    if(totalIncome > 0){
+      this.itrSummaryForm.controls['totalIncome'].setValue(totalIncome);
+    }
+    else{
+      this.itrSummaryForm.controls['totalIncome'].setValue(0);
+    }
+   
 
     this.calculateRebateus87A()
   }
@@ -848,7 +856,13 @@ export class TaxSummaryComponent implements OnInit {
   calculateTaxAfterRebate() {      //Calculate point 9 (Tax after rebate (7-8))
 
     let taxAfterRebat = Number(this.itrSummaryForm.controls['taxPayable'].value) - Number(this.itrSummaryForm.controls['rebate'].value);
-    this.itrSummaryForm.controls['taxAfterRebate'].setValue(taxAfterRebat);
+    if(taxAfterRebat > 0){
+      this.itrSummaryForm.controls['taxAfterRebate'].setValue(taxAfterRebat);
+    }
+    else{
+      this.itrSummaryForm.controls['taxAfterRebate'].setValue(0);
+    }
+    
     this.calculateHealthEducsCess()
   }
 
@@ -862,12 +876,21 @@ export class TaxSummaryComponent implements OnInit {
 
   calculateTotalTaxCess() {      //Calculate point 11 (Total tax & cess (9 + 10))
     let totalTaxCess = Number(this.itrSummaryForm.controls['taxAfterRebate'].value) + Number(this.itrSummaryForm.controls['healthAndEducationCess'].value);
-    this.itrSummaryForm.controls['totalTaxAndCess'].setValue(totalTaxCess);
+    if(totalTaxCess > 0){
+      this.itrSummaryForm.controls['totalTaxAndCess'].setValue(totalTaxCess);
+    }else{
+      this.itrSummaryForm.controls['totalTaxAndCess'].setValue(0);
+    }
   }
 
   calculateTaxAfterRelif() {   //Calculate point 13 (Tax after relief  (11-12))
     let taxAfterRelif = Number(this.itrSummaryForm.controls['totalTaxAndCess'].value) - Number(this.itrSummaryForm.controls['reliefUS89l'].value);
-    this.itrSummaryForm.controls['balanceTaxAfterRelief'].setValue(taxAfterRelif);
+    if(taxAfterRelif > 0){
+      this.itrSummaryForm.controls['balanceTaxAfterRelief'].setValue(taxAfterRelif);
+    }else{
+      this.itrSummaryForm.controls['balanceTaxAfterRelief'].setValue(0);
+    }
+    
   }
 
   calculateTotalInterestFees() {    //Calculate point 14 (Total Tax, fee and Interest (13+14))

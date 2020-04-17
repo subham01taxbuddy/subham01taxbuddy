@@ -43,8 +43,8 @@
                                         <input matInput placeholder="Tax Payable/ Refund" disabled autocomplete="off">
                                     </mat-form-field> -->
                                     <label>Tax Payable/ Refund</label>
-                                    <input type="number" placeholder="Tax Payable/ Refund" formControlName="netTaxPayable"
-                                        disabled class="disableInput">
+                                    <input type="number" placeholder="Tax Payable/ Refund"
+                                        formControlName="netTaxPayable" disabled class="disableInput">
                                 </div>
                             </div>
                         </div><br><br>
@@ -131,7 +131,8 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Aadhaar Number</mat-label>
                                 <input matInput placeholder="Aadhaar Number" formControlName="aadhaarNumber"
-                                    maxlength="12" onkeypress="return event.charCode >= 48 && event.charCode <= 57" autocomplete="off" required>
+                                    maxlength="12" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                    autocomplete="off" required>
                                 <mat-error *ngIf="itrSummaryForm.controls['aadhaarNumber'].hasError('required')">Enter
                                     Aadhar number</mat-error>
                                 <mat-error
@@ -228,10 +229,11 @@
                         <div class="card__col-lg-3">
                             <mat-form-field appearance="outline">
                                 <mat-label>Return Type</mat-label>
-                                <mat-select matInput formGroupName="returnType"
-                                    (selectionChange)="showAcknowData($event.value)" autocomplete="off" required>
-                                    <mat-option *ngFor="let ret of returnTypeData" [value]="ret.value">
-                                        {{ret.label}}
+                                <mat-select matInput formControlName="returnType"
+                                    (selectionChange)="showAcknowData($event.value)" placeholder="Select return type"
+                                    autocomplete="off" required>
+                                    <mat-option *ngFor="let res of returnTypeData" [value]="res.value">
+                                        {{ res.label }}
                                     </mat-option>
                                 </mat-select>
                                 <mat-error *ngIf="itrSummaryForm.controls['returnType'].hasError('required')">Select
@@ -263,10 +265,11 @@
                         <div class="card__col-lg-3" *ngIf="showAcknowInput">
                             <mat-form-field appearance="outline">
                                 <mat-label>Acknowledgement Number</mat-label>
-                                <input matInput formControlName="acknowledgementNumber"  maxlength="15"
-                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                  type="number"  disabled placeholder="Acknowledgement Number"
-                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" autocomplete="off"> <!--minlength="15"-->
+                                <input matInput formControlName="acknowledgementNumber" maxlength="15" minlength="15"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    disabled placeholder="Acknowledgement Number"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
+                                <!--minlength="15"-->
                                 <mat-error
                                     *ngIf="itrSummaryForm.controls['acknowledgementNumber'].hasError('required')">Enter
                                     acknowledgment number</mat-error>
@@ -279,7 +282,8 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Date of filling</mat-label>
                                 <input matInput formControlName="dateOfFiling" placeholder="Date of filling"
-                                    [min]="minDate" [max]="maxDate" [matDatepicker]="picker1" autocomplete="off">
+                                    [max]="fillingMaxDate" [min]="fillingMinDate" [max]="maxDate"
+                                    [matDatepicker]="picker1" autocomplete="off">
                                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                 <mat-datepicker #picker1></mat-datepicker>
                                 <mat-error *ngIf="itrSummaryForm.controls['dateOfFiling'].hasError('required')">Select
@@ -320,7 +324,8 @@
                                 <td>2</td>
                                 <td>Income from House Property (Refer Annexure) </td>
                                 <td></td>
-                                <td><input type="number" formControlName="netHousePropertyIncome" disabled maxlength="8"></td>
+                                <td><input type="number" formControlName="netHousePropertyIncome" disabled
+                                        maxlength="8"></td>
 
                             </tr>
                             <tr>
@@ -343,7 +348,9 @@
                                 <td>5</td>
                                 <td>Less: Deduction under Chap- VIA (Refer Annexure) </td>
                                 <td></td>
-                                <td><input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" formControlName="deductionUnderChapterVIA" disabled maxlength="8"></td>
+                                <td><input type="number"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        formControlName="deductionUnderChapterVIA" disabled maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>6</td>
@@ -358,16 +365,18 @@
                                 <td>Tax Payable on Total Income </td>
                                 <td></td>
                                 <td><input type="number" formControlName="taxPayable" (blur)="calculateTaxAfterRebate()"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"    required maxlength="8"></td>
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" required
+                                        maxlength="8"></td>
 
                             </tr>
                             <tr>
                                 <td>8</td>
                                 <td>Less: Rebate u/s 87A </td>
                                 <td></td>
-                                <td><input  formControlName="rebate" (blur)="calculateTaxAfterRebate()"
-                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"  required maxlength="8"></td>
+                                <td><input formControlName="rebate" (blur)="calculateTaxAfterRebate()"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" required
+                                        maxlength="8"></td>
 
                             </tr>
                             <tr>
@@ -397,8 +406,9 @@
                                 <td>Less: Relief u/s 89 (Please ensure to submit Form 10E to claim this relief)</td>
                                 <td></td>
                                 <td><input formControlName="reliefUS89l" (blur)="calculateTaxAfterRelif()" type="number"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"  maxlength="8"></td>
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                                </td>
                             </tr>
                             <tr>
                                 <td>13</td>
@@ -417,7 +427,7 @@
                             <tr>
                                 <td></td>
                                 <td>u/s 234A</td>
-                                <td><input  formControlName="section234A" maxlength="8"
+                                <td><input formControlName="section234A" maxlength="8"
                                         (blur)="calculateTotalInterestFees()" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
@@ -426,7 +436,7 @@
                             <tr>
                                 <td></td>
                                 <td>u/s 234B</td>
-                                <td><input  formControlName="section234B" maxlength="8"
+                                <td><input formControlName="section234B" maxlength="8"
                                         (blur)="calculateTotalInterestFees()" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
@@ -435,7 +445,7 @@
                             <tr>
                                 <td></td>
                                 <td>u/s 234C</td>
-                                <td><input  formControlName="section234C" maxlength="8"
+                                <td><input formControlName="section234C" maxlength="8"
                                         (blur)="calculateTotalInterestFees()" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
@@ -444,12 +454,13 @@
                             <tr>
                                 <td></td>
                                 <td>u/s 234F</td>
-                                <td><input  formControlName="section234F" maxlength="8"
+                                <td><input formControlName="section234F" maxlength="8"
                                         (blur)="calculateTotalInterestFees()" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
 
-                                <td><input type="number" formControlName="interestAndFees" disabled  maxlength="8"></td>  <!--[value]="totalInterest"-->
+                                <td><input type="number" formControlName="interestAndFees" disabled maxlength="8"></td>
+                                <!--[value]="totalInterest"-->
                             </tr>
                             <tr>
                                 <td>15</td>
@@ -495,13 +506,15 @@
                                 <td></td>
                                 <td>Advance/ Self-Assessment Tax (Refer Annexure)</td>
                                 <td><input type="number" disabled formControlName="totalAdvanceTax" maxlength="8"></td>
-                                <td><input type="number" formControlName="totalTaxPaid"  disabled maxlength="8"></td>  <!--[value]="totalTDS"-->
+                                <td><input type="number" formControlName="totalTaxPaid" disabled maxlength="8"></td>
+                                <!--[value]="totalTDS"-->
                             </tr>
                             <tr>
                                 <td>17</td>
                                 <td><b>Net Tax Payable/ (Refund)</b></td>
                                 <td></td>
-                                <td><b><input type="number" formControlName="netTaxPayable" disabled maxlength="8"></b></td>
+                                <td><b><input type="number" formControlName="netTaxPayable" disabled maxlength="8"></b>
+                                </td>
                             </tr>
 
                         </table>
@@ -541,7 +554,7 @@
 
                     <div class="tableHead">Annexures: House Properties</div>
                     <button [disabled]="housingData.length > 0" style="float: right;"
-                    (click)="openDialog('Add House Property','Add','','House')">Add House Info</button><br>
+                        (click)="openDialog('Add House Property','Add','','House')">Add House Info</button><br>
                     <table class="verticle">
                         <tr>
                             <th>Property Type</th>
@@ -594,7 +607,8 @@
 
 
                     <div class="tableHead">Annexures: Salary</div>
-                    <button style="float: right;" [disabled]="salaryItrratedData.length > 3" (click)="openDialog('Add Salary Info','Add','','Salary')">Add Employer Salary</button><br>
+                    <button style="float: right;" [disabled]="salaryItrratedData.length > 3"
+                        (click)="openDialog('Add Salary Info','Add','','Salary')">Add Employer Salary</button><br>
                     <table class="verticle">
                         <tr>
                             <th><b>Employer Name</b></th>
@@ -983,7 +997,8 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Health Insurance Premium for Self</mat-label>
                                     <input matInput placeholder="Health Insurance Premium for Self" maxlength="8"
-                                        type="number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         formControlName="helathInsuarancePremiumSelf" autocomplete="off"
                                         (blur)="setDeduction80DVal()">
                                 </mat-form-field>
@@ -992,7 +1007,8 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Health Insurance Premium for Parents</mat-label>
                                     <input matInput placeholder="Health Insurance Premium for Parents" maxlength="8"
-                                        type="number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         formControlName="helathInsuarancePremiumParents" autocomplete="off"
                                         (blur)="setDeduction80DVal()">
                                 </mat-form-field>
@@ -1001,7 +1017,8 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Preventive Health Check-up for Whole Family</mat-label>
                                     <input matInput placeholder="Preventive Health Check-up for Whole Family"
-                                        type="number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         maxlength="8" autocomplete="off" formControlName="preventiveHealthCheckupFamily"
                                         (blur)="setDeduction80DVal()">
                                 </mat-form-field>
@@ -1057,7 +1074,9 @@
                                     <mat-label>Under section 80C</mat-label>
                                     <input matInput placeholder="Under section 80C" formControlName="us80c"
                                         (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1065,7 +1084,9 @@
                                     <mat-label>Under section 80CCC</mat-label>
                                     <input matInput placeholder="Under section 80CCC" formControlName="us80ccc"
                                         (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1073,7 +1094,9 @@
                                     <mat-label>Under section 80CCC (1)</mat-label>
                                     <input matInput placeholder="Under section 80CCC (1)" formControlName="us80ccc1"
                                         (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1081,7 +1104,9 @@
                                     <mat-label>Under section 80CCC (2)</mat-label>
                                     <input matInput placeholder="Under section 80CCC (2)" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80ccd2" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1090,6 +1115,7 @@
                                     <input matInput placeholder="Under section 80CCD (1B)" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80ccd1b"
                                         autocomplete="off" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
@@ -1098,7 +1124,9 @@
                                     <mat-label>Under section 80DD</mat-label>
                                     <input matInput placeholder="Under section 80DD" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80dd" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1106,7 +1134,9 @@
                                     <mat-label>Under section 80DDB</mat-label>
                                     <input matInput placeholder="Under section 80DDB" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80ddb" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1114,7 +1144,9 @@
                                     <mat-label>Under section 80E</mat-label>
                                     <input matInput placeholder="Under section 80E" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80e" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1122,7 +1154,9 @@
                                     <mat-label>Under section 80EE</mat-label>
                                     <input matInput placeholder="Under section 80EE" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80ee" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1130,7 +1164,9 @@
                                     <mat-label>Under section 80GG</mat-label>
                                     <input matInput placeholder="Under section 80GG" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80gg" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1138,7 +1174,9 @@
                                     <mat-label>Under section 80GGA</mat-label>
                                     <input matInput placeholder="Under section 80GGA" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80gga" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1146,7 +1184,9 @@
                                     <mat-label>Under section 80GGC</mat-label>
                                     <input matInput placeholder="Under section 80GGC" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80ggc" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1155,6 +1195,7 @@
                                     <input matInput placeholder="Under section 80TTA/ 80TTB" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80ttaTtb"
                                         autocomplete="off" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
@@ -1163,23 +1204,29 @@
                                     <mat-label>Under section 80U</mat-label>
                                     <input matInput placeholder="Under section 80U" maxlength="8"
                                         (blur)="calculateTotalDeduction()" formControlName="us80u" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80G</mat-label>
-                                    <input matInput placeholder="Under section 80G" maxlength="8"
+                                    <input matInput placeholder="Under section 80G" maxlength="8" readonly
                                         (blur)="calculateTotalDeduction()" formControlName="us80g" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Under section 80D</mat-label>
-                                    <input matInput placeholder="Under section 80D" maxlength="8"
+                                    <input matInput placeholder="Under section 80D" maxlength="8" readonly
                                         (blur)="calculateTotalDeduction()" formControlName="us80d" autocomplete="off"
-                                        type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <!-- </form> -->
@@ -1239,7 +1286,8 @@
                             <td>{{tds.deductorName}}</td>
                             <td>{{tds.totalAmountCredited}}</td>
                             <td>{{tds.totalTdsDeposited}}</td>
-                        </tr> <tr>
+                        </tr>
+                        <tr>
                             <td colspan="3"><b>Total</b></td>
                             <td><b>{{itrSummaryForm.controls['totalTdsOnOtherThanSalary'].value}}</b></td>
                         </tr>
@@ -1300,7 +1348,7 @@
                         <tr>
                             <td colspan="3"><b>Total</b></td>
                             <td><b>{{itrSummaryForm.controls['totalTaxCollectedAtSources'].value}}</b></td>
-                            
+
                         </tr>
 
                     </table><br><br>
@@ -1343,6 +1391,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>PPF Interest</mat-label>
                                     <input matInput placeholder="PPF Interest" formControlName="ppfInterest"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         (blur)="setTotalOfExempt()" maxlength="8" type="number"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                         autocomplete="off">
@@ -1352,6 +1401,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Gift from relative</mat-label>
                                     <input matInput placeholder="Gift from relative" formControlName="giftFromRelative"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         (blur)="setTotalOfExempt()" type="number"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
                                         autocomplete="off">
@@ -1361,6 +1411,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Any other</mat-label>
                                     <input matInput placeholder="Any other" maxlength="8" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         formControlName="anyOtherExcemptIncome" (blur)="setTotalOfExempt()"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                         autocomplete="off">
