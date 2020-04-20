@@ -106,7 +106,7 @@ export class TaxSummaryComponent implements OnInit {
       returnType: ['ORIGINAL', [Validators.required]],
       assessmentYear: ['2020-2021', [Validators.required]],
       financialYear: ['2019-2020', [Validators.required]],
-      acknowledgementNumber: [0, Validators.minLength(15)],
+      acknowledgementNumber: [0],
       dateOfFiling: [],
       us80c: [0],
       us80ccc: [0],
@@ -282,13 +282,17 @@ export class TaxSummaryComponent implements OnInit {
     console.log('Selected return type: ', returnType)
     if (returnType === 'REVISED') {
       this.showAcknowInput = true;
-      // this.itrSummaryForm.controls['acknowledgementNumber'].setValidators([Validators.required]);
+       this.itrSummaryForm.controls['acknowledgementNumber'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
       // this.itrSummaryForm.controls['dateOfFiling'].setValidators([Validators.required]);
+      console.log('acknowledgementNumber: ',this.itrSummaryForm.controls['acknowledgementNumber'])
     }
     else if (returnType === 'ORIGINAL') {
       this.showAcknowInput = false;
       this.itrSummaryForm.controls['acknowledgementNumber'].reset();
       this.itrSummaryForm.controls['dateOfFiling'].reset();
+      this.itrSummaryForm.controls['acknowledgementNumber'].setValidators(null);
+      this.itrSummaryForm.controls['acknowledgementNumber'].updateValueAndValidity();
+      console.log('acknowledgementNumber: ',this.itrSummaryForm.controls['acknowledgementNumber'])
       // this.itrSummaryForm.controls['acknowledgementNumber'].setValidators(null);
       // this.itrSummaryForm.controls['dateOfFiling'].setValidators(null);
       // console.log(this.itrSummaryForm.controls['dateOfFiling'], ' ', this.itrSummaryForm.controls['acknowledgementNumber'])
