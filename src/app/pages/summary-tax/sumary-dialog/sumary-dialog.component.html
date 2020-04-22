@@ -8,19 +8,24 @@
                 <mat-form-field appearance="outline">
                     <mat-label>IFSC code: </mat-label>
                     <input matInput type="text" placeholder="IFSC code" formControlName="ifsCode" trim upperCase
-                        maxlength="11" (blur)="getBankInfoFromIfsc(summaryDialogForm['controls'].bankDetails['controls'].ifsCode)"  required>   <!---->
-                        <!-- summaryDialogForm['controls'].onSalary['controls'].deductorTAN.hasError('required') -->
-                    <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].ifsCode.hasError('required')">
+                        maxlength="11"
+                        (blur)="getBankInfoFromIfsc(summaryDialogForm['controls'].bankDetails['controls'].ifsCode)"
+                        required>
+                    <!---->
+                    <!-- summaryDialogForm['controls'].onSalary['controls'].deductorTAN.hasError('required') -->
+                    <mat-error
+                        *ngIf="summaryDialogForm['controls'].bankDetails['controls'].ifsCode.hasError('required')">
                         Enter valid IFSC code.</mat-error>
-                    <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].ifsCode.hasError('pattern')">
+                    <mat-error
+                        *ngIf="summaryDialogForm['controls'].bankDetails['controls'].ifsCode.hasError('pattern')">
                         Enter valid IFSC code.</mat-error>
                 </mat-form-field>
             </div>
             <div class=" card__col-xs-12 card__col-sm-6" formGroupName="bankDetails" *ngIf="data.mode == 'Bank'">
                 <mat-form-field appearance="outline">
                     <mat-label>Bank name: </mat-label>
-                    <input matInput type="text" placeholder="Enter bank name" formControlName="name"
-                          maxlength="35" required>
+                    <input matInput type="text" placeholder="Enter bank name" formControlName="name" maxlength="35"
+                        required>
                     <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].name.hasError('required')">
                         Bank name is required</mat-error>
                 </mat-form-field>
@@ -32,10 +37,15 @@
                     <mat-label>Account Number: </mat-label>
                     <input matInput placeholder="Account number" formControlName="accountNumber"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" minlength="3" maxlength="18" required>
-                    <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].accountNumber.hasError('required')">Enter
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" minlength="3" maxlength="18"
+                        required>
+                    <mat-error
+                        *ngIf="summaryDialogForm['controls'].bankDetails['controls'].accountNumber.hasError('required')">
+                        Enter
                         account number.</mat-error>
-                        <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].accountNumber.hasError('minlength')">Account number should be minimum 3 digit</mat-error>
+                    <mat-error
+                        *ngIf="summaryDialogForm['controls'].bankDetails['controls'].accountNumber.hasError('minlength')">
+                        Account number should be minimum 3 digit</mat-error>
                 </mat-form-field>
             </div>
 
@@ -45,7 +55,7 @@
         </div>
 
         <!-- <div class="row"> -->
-        <div class="card__col-lg-3" formGroupName="employers"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Employer name</mat-label>
                 <input matInput placeholder="Employer name" formControlName="employerName" maxlength="40" required>
@@ -55,7 +65,8 @@
         </div>
         <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
-                <mat-label>Nature of employer </mat-label>  <!--natureOfEmp-->
+                <mat-label>Nature of employer </mat-label>
+                <!--natureOfEmp-->
                 <mat-select matInput formControlName="employerCategory" placeholder="Select Nature of employer"
                     autocomplete="off" required>
                     <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
@@ -67,11 +78,13 @@
         <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>TAN of Employer</mat-label>
-                <input matInput placeholder="Employer's Address 1" upperCase formControlName="employerTAN" maxlength="10"
-                type="text" required>
-                <mat-error *ngIf="summaryDialogForm['controls'].employers['controls'].employerTAN.hasError('required')">Enter TAN of employer
+                <input matInput placeholder="Employer's Address 1" upperCase formControlName="employerTAN"
+                    maxlength="10" type="text" required>
+                <mat-error *ngIf="summaryDialogForm['controls'].employers['controls'].employerTAN.hasError('required')">
+                    Enter TAN of employer
                 </mat-error>
-                <mat-error *ngIf="summaryDialogForm['controls'].employers['controls'].employerTAN.hasError('pattern')">Enter valid TAN of employer
+                <mat-error *ngIf="summaryDialogForm['controls'].employers['controls'].employerTAN.hasError('pattern')">
+                    Enter valid TAN of employer
                 </mat-error>
             </mat-form-field>
         </div>
@@ -79,8 +92,7 @@
         <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Employer's Address</mat-label>
-                <input matInput placeholder="Employer's Address 2" formControlName="address" maxlength="50"
-                    required>
+                <input matInput placeholder="Employer's Address 2" formControlName="address" maxlength="50" required>
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employeAddress'].invalid">Enter
                             address</mat-error> -->
             </mat-form-field>
@@ -92,11 +104,14 @@
                 <input formControlName="pinCode" maxlength="6"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput placeholder="PIN Code"
-                    autocomplete="off" (blur)="getCityData(summaryDialogForm.controls.employers['controls'].pinCode,data.mode)" required>
-                    
-                <mat-error *ngIf="summaryDialogForm['controls'].employers['controls'].pinCode.hasError('required')">Enter pin
+                    autocomplete="off"
+                    (blur)="getCityData(summaryDialogForm.controls.employers['controls'].pinCode,data.mode)" required>
+
+                <mat-error *ngIf="summaryDialogForm['controls'].employers['controls'].pinCode.hasError('required')">
+                    Enter pin
                 </mat-error>
-                <mat-error *ngIf="summaryDialogForm['controls'].employers['controls'].pinCode.hasError('pattern')">Enter valid
+                <mat-error *ngIf="summaryDialogForm['controls'].employers['controls'].pinCode.hasError('pattern')">Enter
+                    valid
                     pin
                 </mat-error>
             </mat-form-field>
@@ -124,34 +139,36 @@
         </div><br><br>
 
 
-        <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Salary as per section 17(1) </mat-label>
                 <input matInput placeholder="Salary as per section 17(1)" formControlName="salAsPerSec171" maxlength="8"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" (blur)="calculateGrossSal()"
-                    required>
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                    (blur)="calculateGrossSal()" required>
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employeAddress'].invalid">Enter
                     address</mat-error> -->
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Value of Perquisites as per Section 17(2) </mat-label>
-                <input matInput placeholder="Value of Perquisites as per Section 17(2)" formControlName="valOfPerquisites"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number"  maxlength="8" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                <input matInput placeholder="Value of Perquisites as per Section 17(2)"
+                    formControlName="valOfPerquisites"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" maxlength="8" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                     (blur)="calculateGrossSal()">
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employeAddress'].invalid">Enter
                     address</mat-error> -->
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Profit in lieu of Salary as per Section 17(3) </mat-label>
-                <input matInput placeholder="Profit in lieu of Salary as per Section 17(3)" formControlName="profitInLieu"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number"  maxlength="8" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                <input matInput placeholder="Profit in lieu of Salary as per Section 17(3)"
+                    formControlName="profitInLieu"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" maxlength="8" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                     (blur)="calculateGrossSal()">
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employeAddress'].invalid">Enter
                     address</mat-error> -->
@@ -161,96 +178,103 @@
             <mat-form-field appearance="outline">
                 <mat-label><b>Gross Salary</b></mat-label>
                 <input matInput placeholder="Gross Salary" type="number" formControlName="grossSalary"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required readonly>
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    required readonly>
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employeAddress'].invalid">Enter
                     address</mat-error> -->
             </mat-form-field>
         </div>
 
-        <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>House rent Allowance(section 10(13A)): </mat-label>
-                <input matInput placeholder="House rent Allowance" formControlName="houseRentAllow" (blur)="calTotalExemptAmnt()"
-                type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                <input matInput placeholder="House rent Allowance" formControlName="houseRentAllow"
+                    (blur)="calTotalExemptAmnt()" type="number"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['grossSalary'].invalid">Enter
                     valid mobile number</mat-error> -->
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Leave travel Expenses (section 10(5)) </mat-label>
-                <input matInput placeholder="Leave travel Expenses" formControlName="leaveTravelExpense" (blur)="calTotalExemptAmnt()"
-                type="number"   onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                <input matInput placeholder="Leave travel Expenses" formControlName="leaveTravelExpense"
+                    (blur)="calTotalExemptAmnt()" type="number"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['grossSalary'].invalid">Enter
                     valid mobile number</mat-error> -->
             </mat-form-field>
         </div>
         <!-- </div>
         <div class="row"> -->
-        <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Others (all except above 2) </mat-label>
-                <input matInput placeholder="Others (all except above 2)" formControlName="other"
-                type="number" (blur)="calTotalExemptAmnt()" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                <input matInput placeholder="Others (all except above 2)" formControlName="other" type="number"
+                    (blur)="calTotalExemptAmnt()" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     maxlength="8">
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['grossSalary'].invalid">Enter
                     valid mobile number</mat-error> -->
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label><b>Total exempt allowances</b></mat-label>
-                <input matInput placeholder="Total exempt allowances" type="number" formControlName="totalExemptAllow" readonly>
+                <input matInput placeholder="Total exempt allowances" type="number" formControlName="totalExemptAllow"
+                    readonly>
                 <!-- <label>Net Salary</label>
                 <input type="number" placeholder="Total exempt allowances" formControlName="netSalary" readonly
                     class="disableInput"> -->
             </mat-form-field>
         </div>
 
-        <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
             <!-- <mat-form-field appearance="outline">
                 <mat-label><b>Net Salary(Gross Salary-Total Exempt Allowance)</b></mat-label>
                 <input matInput placeholder="Net Salary" formControlName="netSalary" readonly> -->
             <label>Net Salary</label>
-            <input type="number" type="number" placeholder="Net Salary(Gross Salary-Total Exempt Allowance)" formControlName="netSalary"
-                readonly class="disableInput">
+            <input type="number" type="number" placeholder="Net Salary(Gross Salary-Total Exempt Allowance)"
+                formControlName="netSalary" readonly class="disableInput">
             <!-- </mat-form-field> -->
         </div>
 
-        <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Entertainment allowances </mat-label>
                 <input matInput placeholder="Entertainment allowances" formControlName="entertainAllow" max="5000"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number" (blur)="calStanderdDedtuction();" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                    maxlength="8">
-                     <mat-error *ngIf="summaryDialogForm.controls['entertainAllow'].hasError('max')">Maximum amount should be 5000</mat-error>
-                    
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" (blur)="calStanderdDedtuction();"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                <mat-error *ngIf="summaryDialogForm.controls['entertainAllow'].hasError('max')">Maximum amount should be
+                    5000</mat-error>
+
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['grossSalary'].invalid">Enter
                     valid mobile number</mat-error> -->
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Professional Tax </mat-label>
-                <input matInput placeholder="Professional Tax" formControlName="professionalTax" max="2500" (blur)="calStanderdDedtuction();"
-                type="number"   onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-                <mat-error *ngIf="summaryDialogForm.controls['professionalTax'].hasError('max')">Maximum amount should be 2500</mat-error>
+                <input matInput placeholder="Professional Tax" formControlName="professionalTax" max="2500"
+                    (blur)="calStanderdDedtuction();" type="number"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                <mat-error *ngIf="summaryDialogForm.controls['professionalTax'].hasError('max')">Maximum amount should
+                    be 2500</mat-error>
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['grossSalary'].invalid">Enter
                     valid mobile number</mat-error> -->
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3" formGroupName="employers"  *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label><b>Standard deduction </b></mat-label>
                 <input matInput placeholder="Standard deduction" formControlName="standardDeduction"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number" (blur)="calTotalDeduction()" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                    maxlength="8" readonly>
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" (blur)="calTotalDeduction()"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" readonly>
                 <!-- <label>Standard deduction</label>
             <input type="number" placeholder="Standard deduction" formControlName="standardDeduction" readonly
                 class="disableInput" (blur)="calTotalDeduction()"> -->
@@ -258,7 +282,7 @@
         </div>
 
         <div class="row">
-            <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+            <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
                 <!-- <mat-form-field appearance="outline">
                   <mat-label><b>Total Deduction </b></mat-label>
                     <input matInput placeholder="Total Deduction" formControlName="totalSalaryDeduction" readonly
@@ -269,7 +293,7 @@
                 <!-- </mat-form-field> -->
             </div>
 
-            <div class="card__col-lg-3"  *ngIf="data.mode == 'Salary'">
+            <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
                 <!-- <mat-form-field appearance="outline">
                     <mat-label><b> Taxable Salary </b></mat-label>
                     <input matInput placeholder="Total Deduction" formControlName="taxableSalary" readonly maxlength="8"> -->
@@ -297,7 +321,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>PAN of Donee</mat-label>
                 <input matInput placeholder="PAN" formControlName="dneePanNumber" autocomplete="off" type="text"
-                    maxlength="10" minlength="10" 
+                    maxlength="10" minlength="10"
                     (blur)="checkPanDuplicate(summaryDialogForm.controls['dneePanNumber'], 'donation')" upperCase>
                 <mat-error *ngIf="summaryDialogForm.controls['dneePanNumber'].hasError('pattern')">
                     Enter valid PAN (e.g XXXXX1234X)</mat-error>
@@ -354,9 +378,10 @@
         <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>Amount in Cash</mat-label>
-                <input matInput placeholder="Amount in Cash" (blur)="calEligibleDonation()" formControlName="dneeAmountInCash"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number"  maxlength="8" >
+                <input matInput placeholder="Amount in Cash" (blur)="calEligibleDonation()"
+                    formControlName="dneeAmountInCash"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" maxlength="8">
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['amountInCash'].invalid">Enter valid TAN of employer
                 </mat-error> -->
             </mat-form-field>
@@ -365,9 +390,10 @@
         <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>Amount Other than Cash</mat-label>
-                <input matInput placeholder="Amount Other than Cash" (blur)="calEligibleDonation()" formControlName="dneeAmountOtherThanCash"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  type="number"  maxlength="8" >
+                <input matInput placeholder="Amount Other than Cash" (blur)="calEligibleDonation()"
+                    formControlName="dneeAmountOtherThanCash"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" maxlength="8">
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employeAddress'].invalid">Enter
                             address</mat-error> -->
             </mat-form-field>
@@ -375,13 +401,13 @@
         <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>Eligibal Donation</mat-label>
-                <input matInput placeholder="Amount Other than Cash" formControlName="eligibleAmount"
-                  readonly  maxlength="8" required>
+                <input matInput placeholder="Amount Other than Cash" formControlName="eligibleAmount" readonly
+                    maxlength="8" required>
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employeAddress'].invalid">Enter
                             address</mat-error> -->
             </mat-form-field>
         </div>
-       
+
 
 
         <div class="card__col-lg-6" formGroupName="onSalary" *ngIf="data.mode == 'tdsOnSal'">
@@ -408,18 +434,19 @@
             <mat-form-field appearance="outline">
                 <mat-label>Gross Salary</mat-label>
                 <!-- summaryDialogForm['controls'].onSalary['controls'].totalAmountCredited -->
-                <input matInput placeholder="Gross Salary" formControlName="totalAmountCredited" (blur)="setTotalMinValdation( summaryDialogForm['controls'].onSalary['controls'].totalAmountCredited.value,data.mode)"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                <input matInput placeholder="Gross Salary" formControlName="totalAmountCredited"
+                    (blur)="setTotalMinValdation( summaryDialogForm['controls'].onSalary['controls'].totalAmountCredited.value,data.mode)"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
 
             </mat-form-field>
         </div>
         <div class="card__col-lg-6" formGroupName="onSalary" *ngIf="data.mode == 'tdsOnSal'">
             <mat-form-field appearance="outline">
                 <mat-label>Total TDS</mat-label>
-                <input matInput placeholder="Total TDS" formControlName="totalTdsDeposited" 
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                <input matInput placeholder="Total TDS" formControlName="totalTdsDeposited"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
                 <mat-error *ngIf="summaryDialogForm['controls'].onSalary['controls'].totalTdsDeposited.hasError('max')">
                     Total tds should be less than gross salary
                 </mat-error>
@@ -451,9 +478,10 @@
         <div class="card__col-lg-6" formGroupName="otherThanSalary16A" *ngIf="data.mode == 'tdsOnOtherThanSal'">
             <mat-form-field appearance="outline">
                 <mat-label>Gross Income</mat-label>
-                <input matInput placeholder="Gross Income" formControlName="totalAmountCredited" (blur)="setTotalMinValdation( summaryDialogForm['controls'].otherThanSalary16A['controls'].totalAmountCredited.value, data.mode)"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                <input matInput placeholder="Gross Income" formControlName="totalAmountCredited"
+                    (blur)="setTotalMinValdation( summaryDialogForm['controls'].otherThanSalary16A['controls'].totalAmountCredited.value, data.mode)"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
 
             </mat-form-field>
         </div>
@@ -461,9 +489,10 @@
             <mat-form-field appearance="outline">
                 <mat-label>Total TDS</mat-label>
                 <input matInput placeholder="Total TDS" formControlName="totalTdsDeposited"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
-                <mat-error *ngIf="summaryDialogForm['controls'].otherThanSalary16A['controls'].totalTdsDeposited.hasError('max')">
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                <mat-error
+                    *ngIf="summaryDialogForm['controls'].otherThanSalary16A['controls'].totalTdsDeposited.hasError('max')">
                     Total tds should be less than gross salary
                 </mat-error>
 
@@ -495,9 +524,10 @@
         <div class="card__col-lg-6" formGroupName="otherThanSalary26QB" *ngIf="data.mode == 'tdsOnSalOfPro26Q'">
             <mat-form-field appearance="outline">
                 <mat-label>Gross Amount</mat-label>
-                <input matInput placeholder="Gross Amount" formControlName="totalAmountCredited" (blur)="setTotalMinValdation( summaryDialogForm['controls'].otherThanSalary26QB['controls'].totalAmountCredited.value, data.mode)"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                <input matInput placeholder="Gross Amount" formControlName="totalAmountCredited"
+                    (blur)="setTotalMinValdation( summaryDialogForm['controls'].otherThanSalary26QB['controls'].totalAmountCredited.value, data.mode)"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
 
             </mat-form-field>
         </div>
@@ -505,9 +535,10 @@
             <mat-form-field appearance="outline">
                 <mat-label>Total TDS</mat-label>
                 <input matInput placeholder="Total TDS" formControlName="totalTdsDeposited"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
-                <mat-error *ngIf="summaryDialogForm['controls'].otherThanSalary26QB['controls'].totalTdsDeposited.hasError('max')">
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                <mat-error
+                    *ngIf="summaryDialogForm['controls'].otherThanSalary26QB['controls'].totalTdsDeposited.hasError('max')">
                     Total tds should be less than gross salary
                 </mat-error>
 
@@ -537,18 +568,19 @@
         <div class="card__col-lg-6" formGroupName="tcs" *ngIf="data.mode == 'taxCollSources'">
             <mat-form-field appearance="outline">
                 <mat-label>Gross Income</mat-label>
-                <input matInput placeholder="Gross Income" formControlName="totalAmountPaid" (blur)="setTotalMinValdation( summaryDialogForm['controls'].tcs['controls'].totalAmountPaid.value, data.mode)"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                <input matInput placeholder="Gross Income" formControlName="totalAmountPaid"
+                    (blur)="setTotalMinValdation( summaryDialogForm['controls'].tcs['controls'].totalAmountPaid.value, data.mode)"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
 
             </mat-form-field>
         </div>
         <div class="card__col-lg-6" formGroupName="tcs" *ngIf="data.mode == 'taxCollSources'">
-            <mat-form-field appearance="outline">   
+            <mat-form-field appearance="outline">
                 <mat-label>Total TCS</mat-label>
                 <input matInput placeholder="Total TCS" formControlName="totalTcsDeposited"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number"   onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
                 <mat-error *ngIf="summaryDialogForm['controls'].tcs['controls'].totalTcsDeposited.hasError('max')">
                     Total tcs should be less than gross income
                 </mat-error>
@@ -587,8 +619,8 @@
             <mat-form-field appearance="outline">
                 <mat-label>Tax deposited</mat-label>
                 <input matInput placeholder="Tax deposited" formControlName="totalTax"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                type="number"  onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
 
             </mat-form-field>
         </div>
@@ -610,21 +642,19 @@
         <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
             <mat-form-field appearance="outline">
                 <mat-label>Flat No:</mat-label>
-                <input matInput placeholder="Flat No" maxlength="5"  formControlName="flatNo" autocomplete="off">
+                <input matInput placeholder="Flat No" maxlength="5" formControlName="flatNo" autocomplete="off">
             </mat-form-field>
         </div>
         <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
             <mat-form-field appearance="outline">
                 <mat-label>Building</mat-label>
-                <input matInput formControlName="building" maxlength="25" placeholder="Building"
-                    autocomplete="off">
+                <input matInput formControlName="building" maxlength="25" placeholder="Building" autocomplete="off">
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3" formGroupName="houseProperties"  *ngIf="data.mode == 'House'">
+        <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
             <mat-form-field appearance="outline">
                 <mat-label>Location </mat-label>
-                <input matInput placeholder="Location" maxlength="25" formControlName="locality"
-                    autocomplete="off">
+                <input matInput placeholder="Location" maxlength="25" formControlName="locality" autocomplete="off">
             </mat-form-field>
         </div>
         <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
@@ -639,15 +669,17 @@
                 <mat-label>Pin Code:</mat-label>
                 <input formControlName="pinCode" maxlength="6"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
-                    placeholder="PIN Code" autocomplete="off"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput placeholder="PIN Code"
+                    autocomplete="off"
                     (blur)="getCityData(summaryDialogForm.controls.houseProperties['controls'].pinCode, data.mode)"
-                    required> 
-                  
-                <mat-error *ngIf="summaryDialogForm['controls'].houseProperties['controls'].pinCode.hasError('required')">
+                    required>
+
+                <mat-error
+                    *ngIf="summaryDialogForm['controls'].houseProperties['controls'].pinCode.hasError('required')">
                     Enter pin
                 </mat-error>
-                <mat-error *ngIf="summaryDialogForm['controls'].houseProperties['controls'].pinCode.hasError('pattern')">
+                <mat-error
+                    *ngIf="summaryDialogForm['controls'].houseProperties['controls'].pinCode.hasError('pattern')">
                     Enter valid
                     pin
                 </mat-error>
@@ -656,22 +688,19 @@
         <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
             <mat-form-field appearance="outline">
                 <mat-label>Country:</mat-label>
-                <input matInput placeholder="Country" readonly formControlName="country"
-                    autocomplete="off">
+                <input matInput placeholder="Country" readonly formControlName="country" autocomplete="off">
             </mat-form-field>
         </div>
         <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
-            <mat-form-field appearance="outline" >
+            <mat-form-field appearance="outline">
                 <mat-label>State:</mat-label>
-                <input matInput placeholder="State" readonly formControlName="state"
-                    autocomplete="off">
+                <input matInput placeholder="State" readonly formControlName="state" autocomplete="off">
             </mat-form-field>
         </div>
         <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
             <mat-form-field appearance="outline">
                 <mat-label>City:</mat-label>
-                <input matInput placeholder="City" readonly formControlName="city"
-                    autocomplete="off">
+                <input matInput placeholder="City" readonly formControlName="city" autocomplete="off">
             </mat-form-field>
         </div>
 
@@ -679,8 +708,7 @@
             <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
                 <mat-form-field appearance="outline">
                     <mat-label>Ownership</mat-label>
-                    <mat-select matInput formControlName="ownerOfProperty" placeholder="Ownership"
-                        autocomplete="off"
+                    <mat-select matInput formControlName="ownerOfProperty" placeholder="Ownership" autocomplete="off"
                         (selectionChange)="onOwnerSelfSetVal(this.summaryDialogForm.value.houseProperties.ownerOfProperty)"
                         required>
                         <mat-option *ngFor="let property of ownerships" [value]="property.value">
@@ -690,10 +718,12 @@
                 </mat-form-field>
             </div>
         </div>
-       
 
-        <div *ngIf="housingShow.ownership">  <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['ownerOfProperty'].value !== 'SELF'"-->
-            <div class="card__col-lg-3" formGroupName="houseProperties"  *ngIf="data.mode == 'House'"> <!---->
+
+        <div *ngIf="housingShow.ownership">
+            <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['ownerOfProperty'].value !== 'SELF'"-->
+            <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
+                <!---->
                 <mat-form-field appearance="outline">
                     <mat-label>Co-ownwer</mat-label>
                     <mat-select matInput formControlName="otherOwnerOfProperty" placeholder="Co-ownwer"
@@ -708,39 +738,44 @@
         </div>
 
 
-        <div *ngIf="housingShow.showCoOwner">  <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['otherOwnerOfProperty'].value === 'YES'"-->
-            <div  *ngIf="data.mode == 'House'" > <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['otherOwnerOfProperty'].value === 'YES'"-->
-                <div class="card__col-lg-3" >
+        <div *ngIf="housingShow.showCoOwner">
+            <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['otherOwnerOfProperty'].value === 'YES'"-->
+            <div *ngIf="data.mode == 'House'">
+                <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['otherOwnerOfProperty'].value === 'YES'"-->
+                <div class="card__col-lg-3">
                     <mat-form-field appearance="outline">
                         <mat-label>Co-ownwer name</mat-label>
-                        <input matInput placeholder="Co-ownwer name" formControlName="coOwnerName"
-                            maxlength="20" autocomplete="off">
+                        <input matInput placeholder="Co-ownwer name" formControlName="coOwnerName" maxlength="20"
+                            autocomplete="off">
+                        <mat-error *ngIf="summaryDialogForm.controls['coOwnerName'].hasError('required')">Enter
+                            Co-ownwer name</mat-error>
                     </mat-form-field>
                 </div>
-                <div class="card__col-lg-3"  *ngIf="data.mode == 'House'" >
+                <div class="card__col-lg-3" *ngIf="data.mode == 'House'">
                     <mat-form-field appearance="outline">
                         <mat-label>Co-ownwer PAN</mat-label>
-                        <input matInput placeholder="PAN"  autocomplete="off"
-                            type="text" maxlength="10" minlength="10" required formControlName="coOwnerPanNumber" 
+                        <input matInput placeholder="PAN" autocomplete="off" type="text" maxlength="10" minlength="10"
+                            required formControlName="coOwnerPanNumber"
                             (blur)="checkPanDuplicate(summaryDialogForm.controls['coOwnerPanNumber'], 'coOwnerPan')"
                             upperCase>
-                        <mat-error
-                            *ngIf="summaryDialogForm.controls['coOwnerPanNumber'].hasError('pattern')">
+                        <mat-error *ngIf="summaryDialogForm.controls['coOwnerPanNumber'].hasError('required')">Enter
+                            Co-ownwer PAN</mat-error>
+                        <mat-error *ngIf="summaryDialogForm.controls['coOwnerPanNumber'].hasError('pattern')">
                             Enter valid PAN (e.g XXXXX1234X)</mat-error>
-                        <mat-error
-                            *ngIf="summaryDialogForm.controls['coOwnerPanNumber'].hasError('incorrect')">
+                        <mat-error *ngIf="summaryDialogForm.controls['coOwnerPanNumber'].hasError('incorrect')">
                             PAN Can't be same as User's PAN</mat-error>
-    
+
                     </mat-form-field>
                 </div>
-                <div class="card__col-lg-3"  *ngIf="data.mode == 'House'">
+                <div class="card__col-lg-3" *ngIf="data.mode == 'House'">
                     <mat-form-field appearance="outline">
                         <mat-label>Co-ownwer share</mat-label>
-                        <input matInput placeholder="Co-ownwer share" formControlName="coOwnerPercentage"
-                            maxlength="3" max="101" autocomplete="off" type="number"
+                        <input matInput placeholder="Co-ownwer share" formControlName="coOwnerPercentage" maxlength="3"
+                            max="101" autocomplete="off" type="number"
                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                        <mat-error
-                            *ngIf="summaryDialogForm.controls['coOwnerPercentage'].hasError('max')">
+                        <mat-error *ngIf="summaryDialogForm.controls['coOwnerPercentage'].hasError('required')">Enter
+                            Co-ownwer share</mat-error>
+                        <mat-error *ngIf="summaryDialogForm.controls['coOwnerPercentage'].hasError('max')">
                             Maximum amount should be 100
                         </mat-error>
                     </mat-form-field>
@@ -748,99 +783,109 @@
             </div>
         </div>
 
-        <div  *ngIf="housingShow.showTenant"> <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['propertyType'].value === 'LOP'"-->
-            <div class="card__col-lg-3"  *ngIf="data.mode == 'House'">
+        <div *ngIf="housingShow.showTenant">
+            <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['propertyType'].value === 'LOP'"-->
+            <div class="card__col-lg-3" *ngIf="data.mode == 'House'">
                 <mat-form-field appearance="outline">
                     <mat-label>Tenant name</mat-label>
                     <input matInput placeholder="Tenent name" formControlName="tenantName" maxlength="20"
                         autocomplete="off">
-                    <mat-error *ngIf="summaryDialogForm.controls['tenantName'].hasError('required')">Enter tenant name</mat-error>
+                    <mat-error *ngIf="summaryDialogForm.controls['tenantName'].hasError('required')">Enter tenant name
+                    </mat-error>
                 </mat-form-field>
             </div>
-            <div  *ngIf="data.mode == 'House'" class="card__col-lg-3">
+            <div *ngIf="data.mode == 'House'" class="card__col-lg-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Tenant PAN</mat-label>
-                    <input matInput placeholder="PAN" formControlName="tenentPanNumber" autocomplete="off"
-                        type="text" maxlength="10" minlength="10" 
+                    <input matInput placeholder="PAN" formControlName="tenentPanNumber" autocomplete="off" type="text"
+                        maxlength="10" minlength="10"
                         (blur)="checkPanDuplicate(summaryDialogForm.controls['tenentPanNumber'], 'tenantPan')"
                         upperCase>
-                    <mat-error
-                        *ngIf="summaryDialogForm.controls['tenentPanNumber'].hasError('pattern')">
+                    <mat-error *ngIf="summaryDialogForm.controls['tenentPanNumber'].hasError('required')">Enter tenant PAN
+                    </mat-error>
+                    <mat-error *ngIf="summaryDialogForm.controls['tenentPanNumber'].hasError('pattern')">
                         Enter valid PAN (e.g XXXXX1234X)</mat-error>
-                    <mat-error
-                        *ngIf="summaryDialogForm.controls['tenentPanNumber'].hasError('incorrect')">
+                    <mat-error *ngIf="summaryDialogForm.controls['tenentPanNumber'].hasError('incorrect')">
                         PAN Can't be same as User's PAN</mat-error>
 
                 </mat-form-field>
             </div>
         </div>
 
-    <div class="card__row" *ngIf="!housingShow.isSOP">
-        <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
-            <mat-form-field  appearance="outline">
-                <mat-label>Gross rent received</mat-label>
-                <input matInput placeholder="Gross rent received" maxlength="8"
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" 
-                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    formControlName="grossAnnualRentReceived" autocomplete="off" type="number"
-                    (blur)="setAnnualVal()">
-            </mat-form-field>
-        </div>
-        <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
-            <mat-form-field appearance="outline">
-                <mat-label>Less: Taxes paid</mat-label>
-                <input matInput placeholder="Less: Taxes paid" formControlName="propertyTax"
-                    maxlength="8" (blur)="setAnnualVal()" 
-                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                    type="number" autocomplete="off">
-            </mat-form-field>
-        </div>
-        <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
-            <mat-form-field appearance="outline">
-                <mat-label><b>Annual value</b></mat-label>
-                <input matInput placeholder="Annual value" readonly formControlName="annualValue"
-                type="number"  maxlength="8" autocomplete="off">
-            </mat-form-field>
-        </div>
-    </div>
-    
-
-    <div class="card__row">
-        
-        <div *ngIf="!housingShow.isSOP">
-            <div class="card__col-lg-3"  *ngIf="data.mode == 'House'">
+        <div class="card__row" *ngIf="!housingShow.isSOP">
+            <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
                 <mat-form-field appearance="outline">
-                    <mat-label>(a) Standard deduction (30% of Annual Value)</mat-label>
-                    <input matInput placeholder="(a) Standard deduction (30% of Annual Value)"
-                    type="number" formControlName="hpStandardDeduction"   readonly>   <!--[value]="summaryDialogForm.controls['hpStandardDeduction'].value"-->
+                    <mat-label>Gross rent received</mat-label>
+                    <input matInput placeholder="Gross rent received" maxlength="8"
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        formControlName="grossAnnualRentReceived" autocomplete="off" type="number"
+                        (blur)="setAnnualVal()">
+                </mat-form-field>
+            </div>
+            <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
+                <mat-form-field appearance="outline">
+                    <mat-label>Less: Taxes paid</mat-label>
+                    <input matInput placeholder="Less: Taxes paid" formControlName="propertyTax" maxlength="8"
+                        (blur)="setAnnualVal()"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" type="number"
+                        autocomplete="off">
+                </mat-form-field>
+            </div>
+            <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
+                <mat-form-field appearance="outline">
+                    <mat-label><b>Annual value</b></mat-label>
+                    <input matInput placeholder="Annual value" readonly formControlName="annualValue" type="number"
+                        maxlength="8" autocomplete="off">
                 </mat-form-field>
             </div>
         </div>
-      
-        <div class="card__col-lg-3"  *ngIf="data.mode == 'House'">
-            <mat-form-field appearance="outline" >
-                <mat-label>(b) Interest on home loan</mat-label>
-                <input matInput placeholder="(b) Interest on home loan" maxlength="8"
-                    formControlName="interestAmount" type="number" [max]="!housingShow.isSOP ? 200000 : 99999999"
-                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                    autocomplete="off" (blur)="calNetHouseProIncome()">   <!--(blur)="setValueInLoanObj(summaryDialogForm.controls['interestAmount'])-->
-                    <mat-error *ngIf="summaryDialogForm.controls['interestAmount'].hasError('max') && (!housingShow.isSOP)">
+
+
+        <div class="card__row">
+
+            <div *ngIf="!housingShow.isSOP">
+                <div class="card__col-lg-3" *ngIf="data.mode == 'House'">
+                    <mat-form-field appearance="outline">
+                        <mat-label>(a) Standard deduction (30% of Annual Value)</mat-label>
+                        <input matInput placeholder="(a) Standard deduction (30% of Annual Value)" type="number"
+                            formControlName="hpStandardDeduction" readonly>
+                        <!--[value]="summaryDialogForm.controls['hpStandardDeduction'].value"-->
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="card__col-lg-3" *ngIf="data.mode == 'House'">
+                <mat-form-field appearance="outline">
+                    <mat-label>(b) Interest on home loan</mat-label>
+                    <input matInput placeholder="(b) Interest on home loan" maxlength="8"
+                        formControlName="interestAmount" type="number" [max]="housingShow.isSOP ? 200000 : 99999999"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" autocomplete="off"
+                        (blur)="calNetHouseProIncome()">
+                    <!--(blur)="setValueInLoanObj(summaryDialogForm.controls['interestAmount'])-->
+                    <mat-error
+                        *ngIf="summaryDialogForm.controls['interestAmount'].hasError('max') && (housingShow.isSOP)">
                         Interest should be less than 2,00,000
                     </mat-error>
-            </mat-form-field>
+                    <mat-error
+                        *ngIf="summaryDialogForm.controls['interestAmount'].hasError('max') && (!housingShow.isSOP)">
+                        Maximum Interest should be 10,00,00,000
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-lg-3">
+                <mat-form-field appearance="outline" *ngIf="data.mode == 'House'">
+                    <mat-label><b>Net House property Income</b></mat-label>
+                    <input matInput placeholder="Net House property Income" maxlength="8" type="number"
+                        formControlName="netHousePropertyIncome"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        autocomplete="off" readonly read>
+                    <!-- [value]="summaryDialogForm.controls['netHousePropertyIncome'].value"-->
+                </mat-form-field>
+            </div>
         </div>
-        <div class="card__col-lg-3" >
-            <mat-form-field appearance="outline" *ngIf="data.mode == 'House'">
-                <mat-label><b>Net House property Income</b></mat-label>
-                <input matInput placeholder="Net House property Income" maxlength="8"
-                 type="number"  formControlName="netHousePropertyIncome"
-                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    autocomplete="off" readonly read>  <!-- [value]="summaryDialogForm.controls['netHousePropertyIncome'].value"-->
-            </mat-form-field>
-        </div>
-    </div>
 
 
     </mat-dialog-content>

@@ -191,6 +191,7 @@
                         </div>
                         <div class="card__col-lg-3">
                             <mat-form-field appearance="outline">
+                                <mat-label>Pin code</mat-label>
                                 <input formControlName="pinCode" maxlength="6"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
@@ -208,21 +209,23 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Country</mat-label>
                                 <input matInput formControlName="country" placeholder="Country" disabled
-                                    autocomplete="off">
+                                    autocomplete="off" required>
                             </mat-form-field>
                         </div>
 
                         <div class="card__col-lg-3">
                             <mat-form-field appearance="outline">
                                 <mat-label>State</mat-label>
-                                <input matInput formControlName="state" disabled placeholder="State" autocomplete="off">
+                                <input matInput formControlName="state" disabled placeholder="State" autocomplete="off"
+                                    required>
                             </mat-form-field>
                         </div>
 
                         <div class="card__col-lg-3">
                             <mat-form-field appearance="outline">
                                 <mat-label>City</mat-label>
-                                <input matInput formControlName="city" disabled placeholder="City" autocomplete="off">
+                                <input matInput formControlName="city" disabled placeholder="City" autocomplete="off"
+                                    required>
                             </mat-form-field>
                         </div>
 
@@ -244,7 +247,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Assessment Year</mat-label>
                                 <mat-select matInput formControlName="assessmentYear" placeholder="Financial Year"
-                                    autocomplete="off" required>
+                                    autocomplete="off" disabled required>
                                     <mat-option *ngFor="let year of financialYear" [value]="year.value">
                                         {{year.value}}
                                     </mat-option>
@@ -255,7 +258,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Financial Year</mat-label>
                                 <mat-select matInput formControlName="financialYear" placeholder="Financial Year"
-                                    autocomplete="off" required>
+                                    autocomplete="off" disabled required>
                                     <mat-option *ngFor="let year of financialYear" [value]="year.value">
                                         {{year.value}}
                                     </mat-option>
@@ -533,14 +536,16 @@
                             <th>Name of the Bank</th>
                             <th>Account Number</th>
                             <th>Refund</th>
+                            <!-- <th>Action</th> -->
                         </tr>
                         <tr *ngIf="bankData.length === 0">
                             <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
+                            <!-- <td></td> -->
                         </tr>
-                        <tr *ngFor="let bank of bankData">
+                        <tr *ngFor="let bank of bankData; let i=index">
                             <td>{{bank.ifsCode}}</td>
                             <td>{{bank.name}}</td>
                             <td>{{bank.accountNumber}}</td>
@@ -548,6 +553,10 @@
                                     aria-hidden="true"></i></td>
                             <td *ngIf="!bank.hasRefund" style="text-align: center;"><i class="fa fa-times fa-lg"
                                     aria-hidden="true"></i></td>
+                            <!-- <td>
+                                <button (click)="openDialog('Add Bank Info','Edit',bankData[i],'Bank')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                            </td> -->
                         </tr>
 
                     </table><br><br>

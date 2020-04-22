@@ -213,8 +213,10 @@ export class SumaryDialogComponent implements OnInit {
 
     console.log("CALLEROBJ: ",this.data.callerObj)
     console.log('MODE:', this.data.mode)
+    console.log('userObject: ==>', this.data.userObject)
     if(this.data.mode === 'Bank'){
       this.setBankRefundVal();
+      this.updateBankData(this.data.userObject)
     }
 
     this.setUserProfileTo(this.data.callerObj);
@@ -237,6 +239,11 @@ export class SumaryDialogComponent implements OnInit {
       this.summaryDialogForm['controls'].houseProperties['controls'].state.setValue(userProfileData.itrSummaryForm.value.state)
       this.summaryDialogForm['controls'].houseProperties['controls'].city.setValue(userProfileData.itrSummaryForm.value.city)
     }
+  }
+
+  updateBankData(bankInfo){
+    console.log('selected bank info: ',bankInfo),
+    this.summaryDialogForm['controls'].bankDetails.patchValue(bankInfo)
   }
 
 
@@ -277,16 +284,17 @@ export class SumaryDialogComponent implements OnInit {
     if (propertyType === 'SOP') {
       this.housingShow.showTenant = false;
       this.housingShow.isSOP = true;                      //On SOP we hide some part's of housing info using isSOP
-      // this.summaryDialogForm.controls['tenantName'].setValue(null);
-      // this.summaryDialogForm.controls['tenentPanNumber'].setValue(null);
+      
       this.summaryDialogForm.controls['tenantName'].reset();
       this.summaryDialogForm.controls['tenentPanNumber'].reset();
-      //this.summaryDialogForm.controls['coOwnerPanNumber'].reset();
-     // this.summaryDialogForm.controls['tenentPanNumber'].reset();
-      // this.summaryDialogForm['controls'].houseProperties['controls'].tenant['controls'].panNumber.updateValueAndValidity();
       console.log('panNumber: ', this.summaryDialogForm.controls['tenentPanNumber'])
+      this.summaryDialogForm['controls'].houseProperties['controls'].otherOwnerOfProperty.setValue(null)
 
        this.summaryDialogForm.controls['tenantName'].setValidators(null);
+       this.summaryDialogForm.controls['tenentPanNumber'].setValidators(null);
+       this.housingShow.ownership = false;
+       this.housingShow.showCoOwner = false;
+       this.setCOwnerVal('NO')
       // this.summaryDialogForm.controls['tenentPanNumber'].setValidators(null);
       //this.summaryDialogForm.controls['coOwnerPanNumber'].setValidators(null);
 
@@ -295,8 +303,14 @@ export class SumaryDialogComponent implements OnInit {
     } else if (propertyType === 'LOP') {
       this.housingShow.showTenant = true;
       this.housingShow.isSOP = false;
+      // this.housingShow.ownership = false;
+      // this.housingShow.showCoOwner = false;
+      // this.setCOwnerVal('NO')
+      this.summaryDialogForm['controls'].houseProperties['controls'].otherOwnerOfProperty.setValue('NO')
+
       this.summaryDialogForm.controls['interestAmount'].reset();
       this.summaryDialogForm.controls['tenantName'].setValidators(Validators.required)
+      this.summaryDialogForm.controls['tenentPanNumber'].setValidators([Validators.required, Validators.pattern(AppConstants.panIndHUFRegex)])
     }
    
   }
@@ -320,17 +334,26 @@ export class SumaryDialogComponent implements OnInit {
     console.log(co_ownerProperty)
     if (co_ownerProperty === 'NO') {
       this.housingShow.showCoOwner = false;
+      this.summaryDialogForm.controls['coOwnerName'].setValidators(null);
+      this.summaryDialogForm.controls['coOwnerPanNumber'].setValidators(null);
+      this.summaryDialogForm.controls['coOwnerPercentage'].setValidators(null);
+      
       this.summaryDialogForm.controls['coOwnerName'].setValue(null);
       this.summaryDialogForm.controls['coOwnerPanNumber'].setValue(null);
       this.summaryDialogForm.controls['coOwnerPercentage'].setValue(0);
       this.summaryDialogForm.controls['coOwnerPanNumber'].reset(null);
+      console.log('coOwnerName control: ==', this.summaryDialogForm.controls['coOwnerName'])
 
       //  this.itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].panNumber.updateValueAndValidity();
     }
     else if (co_ownerProperty === 'YES') {
-      this.summaryDialogForm.controls['coOwnerPanNumber'].setValidators(null);
+      //this.summaryDialogForm.controls['coOwnerPanNumber'].setValidators(null);
+      this.summaryDialogForm.controls['coOwnerName'].setValidators(Validators.required);
+      this.summaryDialogForm.controls['coOwnerPanNumber'].setValidators([Validators.required, Validators.pattern(AppConstants.panIndHUFRegex)]);
+      this.summaryDialogForm.controls['coOwnerPercentage'].setValidators([Validators.required, Validators.max(100)]);
       this.housingShow.showCoOwner = true;
     }
+    console.log('summaryDialogForm: ',this.summaryDialogForm.controls)
   }
 
   setAnnualVal() {
@@ -567,7 +590,8 @@ export class SumaryDialogComponent implements OnInit {
       else if (mode === 'Bank') {
         let banKObj = {
           bankDetails: this.summaryDialogForm.controls.bankDetails.value,
-          type: this.data.mode
+          type: this.data.mode,
+          action: this.data.submitBtn
         }
         this.dialogRef.close({ event: 'close', data: banKObj })
       }

@@ -60,8 +60,8 @@ export class TaxSummaryComponent implements OnInit {
 
   totalInterest: any = 0;
   totalTDS: any = 0;
-  fillingMinDate : any = new Date("2019-04-01");
-  fillingMaxDate : any = new Date();
+  fillingMinDate: any = new Date("2019-04-01");
+  fillingMaxDate: any = new Date();
 
   incmesValue = {
     savingAmount: 0,
@@ -71,7 +71,7 @@ export class TaxSummaryComponent implements OnInit {
     totalOtherIncome: 0
   }
 
-  itrType ={
+  itrType = {
     itrOne: false,
     itrTwo: false
 
@@ -255,6 +255,12 @@ export class TaxSummaryComponent implements OnInit {
 
     console.log('itrSummaryForm: ', this.itrSummaryForm)
     console.log('houseProperties: ', this.houseProperties)
+
+    // window.addEventListener('beforeunload', function (e) {
+    //   console.log('e: ', e)
+    //   e.preventDefault();
+    //   e.returnValue = `Are you sure, you want to leave page?`;
+    // });
   }
 
   getIncomesValue() {
@@ -282,9 +288,9 @@ export class TaxSummaryComponent implements OnInit {
     console.log('Selected return type: ', returnType)
     if (returnType === 'REVISED') {
       this.showAcknowInput = true;
-       this.itrSummaryForm.controls['acknowledgementNumber'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
+      this.itrSummaryForm.controls['acknowledgementNumber'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
       // this.itrSummaryForm.controls['dateOfFiling'].setValidators([Validators.required]);
-      console.log('acknowledgementNumber: ',this.itrSummaryForm.controls['acknowledgementNumber'])
+      console.log('acknowledgementNumber: ', this.itrSummaryForm.controls['acknowledgementNumber'])
     }
     else if (returnType === 'ORIGINAL') {
       this.showAcknowInput = false;
@@ -292,19 +298,19 @@ export class TaxSummaryComponent implements OnInit {
       this.itrSummaryForm.controls['dateOfFiling'].reset();
       this.itrSummaryForm.controls['acknowledgementNumber'].setValidators(null);
       this.itrSummaryForm.controls['acknowledgementNumber'].updateValueAndValidity();
-      console.log('acknowledgementNumber: ',this.itrSummaryForm.controls['acknowledgementNumber'])
+      console.log('acknowledgementNumber: ', this.itrSummaryForm.controls['acknowledgementNumber'])
       // this.itrSummaryForm.controls['acknowledgementNumber'].setValidators(null);
       // this.itrSummaryForm.controls['dateOfFiling'].setValidators(null);
       // console.log(this.itrSummaryForm.controls['dateOfFiling'], ' ', this.itrSummaryForm.controls['acknowledgementNumber'])
     }
   }
 
-  setItrType(itrType){
-    if(itrType === 1){
+  setItrType(itrType) {
+    if (itrType === 1) {
       this.itrType.itrOne = true;
       this.itrType.itrTwo = false;
     }
-    else if(itrType === 2){
+    else if (itrType === 2) {
       this.itrType.itrTwo = true;
       this.itrType.itrOne = false;
     }
@@ -331,7 +337,7 @@ export class TaxSummaryComponent implements OnInit {
         if (result.data.type === 'Bank') {
           // this.bankData.push(result.data.bankDetails)
           console.log('bankData: ', this.bankData)
-          this.setBankValue(result.data.bankDetails)
+          this.setBankValue(result.data.bankDetails, result.data.action)
         }
         else if (result.data.type === 'House') {
 
@@ -401,8 +407,11 @@ export class TaxSummaryComponent implements OnInit {
     });
   }
 
-  setBankValue(latestBankInfo) {
+  setBankValue(latestBankInfo, action) {
     //  console.log('this.bankData: ',this.bankData)
+    // if(action === 'add') {
+
+    // }
     if (this.bankData.length !== 0) {
       console.log('latestBankInfo: ', latestBankInfo)
       if (latestBankInfo.hasRefund === true) {
@@ -572,6 +581,7 @@ export class TaxSummaryComponent implements OnInit {
     }
 
     this.itrSummaryForm.controls['incomeFromSalary'].setValue(totalNetSalary)
+    this.calculateGrossTotalIncome();     //Calculate point 4 (Total gross salary)
     this.itrSummaryForm.controls['employers'].setValue(employerArray)
 
     this.itrSummaryForm.controls['grossSalary'].setValue(this.grossSalary)
@@ -834,13 +844,13 @@ export class TaxSummaryComponent implements OnInit {
 
   calculateTotalIncome() {  //Calculate point 6
     let totalIncome = Number(this.itrSummaryForm.controls['grossTotalIncome'].value) - Number(this.itrSummaryForm.controls['deductionUnderChapterVIA'].value);
-    if(totalIncome > 0){
+    if (totalIncome > 0) {
       this.itrSummaryForm.controls['totalIncome'].setValue(totalIncome);
     }
-    else{
+    else {
       this.itrSummaryForm.controls['totalIncome'].setValue(0);
     }
-   
+
 
     this.calculateRebateus87A()
   }
@@ -860,14 +870,15 @@ export class TaxSummaryComponent implements OnInit {
   calculateTaxAfterRebate() {      //Calculate point 9 (Tax after rebate (7-8))
 
     let taxAfterRebat = Number(this.itrSummaryForm.controls['taxPayable'].value) - Number(this.itrSummaryForm.controls['rebate'].value);
-    if(taxAfterRebat > 0){
+    if (taxAfterRebat > 0) {
       this.itrSummaryForm.controls['taxAfterRebate'].setValue(taxAfterRebat);
     }
-    else{
+    else {
       this.itrSummaryForm.controls['taxAfterRebate'].setValue(0);
     }
-    
+
     this.calculateHealthEducsCess()
+   
   }
 
   calculateHealthEducsCess() {      //Calculate point 10 (Tax after rebate (7-8))
@@ -880,21 +891,22 @@ export class TaxSummaryComponent implements OnInit {
 
   calculateTotalTaxCess() {      //Calculate point 11 (Total tax & cess (9 + 10))
     let totalTaxCess = Number(this.itrSummaryForm.controls['taxAfterRebate'].value) + Number(this.itrSummaryForm.controls['healthAndEducationCess'].value);
-    if(totalTaxCess > 0){
+    if (totalTaxCess > 0) {
       this.itrSummaryForm.controls['totalTaxAndCess'].setValue(totalTaxCess);
-    }else{
+    } else {
       this.itrSummaryForm.controls['totalTaxAndCess'].setValue(0);
     }
+    this.calculateTaxAfterRelif();
   }
 
   calculateTaxAfterRelif() {   //Calculate point 13 (Tax after relief  (11-12))
     let taxAfterRelif = Number(this.itrSummaryForm.controls['totalTaxAndCess'].value) - Number(this.itrSummaryForm.controls['reliefUS89l'].value);
-    if(taxAfterRelif > 0){
+    if (taxAfterRelif > 0) {
       this.itrSummaryForm.controls['balanceTaxAfterRelief'].setValue(taxAfterRelif);
-    }else{
+    } else {
       this.itrSummaryForm.controls['balanceTaxAfterRelief'].setValue(0);
     }
-    
+
   }
 
   calculateTotalInterestFees() {    //Calculate point 14 (Total Tax, fee and Interest (13+14))
