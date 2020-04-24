@@ -79,7 +79,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>TAN of Employer</mat-label>
                 <input matInput placeholder="Employer's Address 1" upperCase formControlName="employerTAN"
-                    maxlength="10" type="text" required>
+                    maxlength="10" type="text">
                 <mat-error *ngIf="summaryDialogForm['controls'].employers['controls'].employerTAN.hasError('required')">
                     Enter TAN of employer
                 </mat-error>

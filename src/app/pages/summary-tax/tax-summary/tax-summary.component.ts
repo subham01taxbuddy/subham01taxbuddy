@@ -256,11 +256,11 @@ export class TaxSummaryComponent implements OnInit {
     console.log('itrSummaryForm: ', this.itrSummaryForm)
     console.log('houseProperties: ', this.houseProperties)
 
-    // window.addEventListener('beforeunload', function (e) {
-    //   console.log('e: ', e)
-    //   e.preventDefault();
-    //   e.returnValue = `Are you sure, you want to leave page?`;
-    // });
+    window.addEventListener('beforeunload', function (e) {
+      console.log('e: ', e)
+      e.preventDefault();
+      e.returnValue = `Are you sure, you want to leave page?`;
+    });
   }
 
   getIncomesValue() {
