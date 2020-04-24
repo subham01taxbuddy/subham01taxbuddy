@@ -214,9 +214,37 @@ export class SumaryDialogComponent implements OnInit {
     console.log("CALLEROBJ: ",this.data.callerObj)
     console.log('MODE:', this.data.mode)
     console.log('userObject: ==>', this.data.userObject)
-    if(this.data.mode === 'Bank'){
+    if(this.data.mode === 'Bank' ){
       this.setBankRefundVal();
       this.updateBankData(this.data.userObject)
+    }
+    // else if(this.data.mode === 'Bank' && this.data.submitBtn === 'Edit'){
+    //   alert('Bank update')
+    //   this.updateBankData(this.data.userObject)
+    // }
+    else if(this.data.mode === 'tdsOnSal' && this.data.submitBtn === 'Edit'){
+      this.updateTdsOnSal(this.data.userObject)
+    }
+    else if(this.data.mode === 'tdsOnOtherThanSal' && this.data.submitBtn === 'Edit'){
+      this.updateTdsOtherThanSal(this.data.userObject)
+    }
+    else if(this.data.mode === 'tdsOnSalOfPro26Q' && this.data.submitBtn === 'Edit'){
+      this.updateTdsOnSalOf26Q(this.data.userObject)
+    }
+    else if(this.data.mode === 'taxCollSources' && this.data.submitBtn === 'Edit'){
+      this.updateTcs(this.data.userObject)
+    }
+    else if(this.data.mode === 'advanceSelfAssTax' && this.data.submitBtn === 'Edit'){
+      this.updateAdvanceSelfAssTax(this.data.userObject)
+    }
+    else if(this.data.mode === 'donationSec80G' && this.data.submitBtn === 'Edit'){
+      this.updateDonation80G(this.data.userObject)
+    }
+    else if(this.data.mode === 'House' && this.data.submitBtn === 'Edit'){
+      this.updateHouseInfo(this.data.userObject)
+    }
+    else if(this.data.mode === 'Salary' && this.data.submitBtn === 'Edit'){
+      this.updateSalaryInfo(this.data.userObject)
     }
 
     this.setUserProfileTo(this.data.callerObj);
@@ -244,6 +272,76 @@ export class SumaryDialogComponent implements OnInit {
   updateBankData(bankInfo){
     console.log('selected bank info: ',bankInfo),
     this.summaryDialogForm['controls'].bankDetails.patchValue(bankInfo)
+  }
+  updateTdsOnSal(tdsOnSalInfo){
+    this.summaryDialogForm['controls'].onSalary.patchValue(tdsOnSalInfo)
+  }
+  updateTdsOtherThanSal(tdsOtherThanSal){
+    this.summaryDialogForm['controls'].otherThanSalary16A.patchValue(tdsOtherThanSal)
+  }
+  updateTdsOnSalOf26Q(tds26Q){
+    this.summaryDialogForm['controls'].otherThanSalary26QB.patchValue(tds26Q)
+  }
+  updateTcs(tcsInfo){
+    this.summaryDialogForm['controls'].tcs.patchValue(tcsInfo)
+  }
+  updateAdvanceSelfAssTax(assSelfTax){
+    this.summaryDialogForm['controls'].otherThanTDSTCS.patchValue(assSelfTax)
+  }
+  updateDonation80G(donationInfo){
+    console.log('donationInfo: ',donationInfo)
+    this.summaryDialogForm.controls['dneeDonationType'].setValue(donationInfo.donationType)
+    this.summaryDialogForm.controls['dneePanNumber'].setValue(donationInfo.panNumber ? donationInfo.panNumber : '')
+    this.summaryDialogForm.controls['dneeName'].setValue(donationInfo.name)
+    this.summaryDialogForm.controls['dneeState'].setValue(donationInfo.state)
+    this.summaryDialogForm.controls['dneeCity'].setValue(donationInfo.city)
+    this.summaryDialogForm.controls['dneeAddress'].setValue(donationInfo.address)
+    this.summaryDialogForm.controls['dneePinCode'].setValue(donationInfo.pinCode)  
+    this.summaryDialogForm.controls['dneeAmountInCash'].setValue(donationInfo.amountInCash)
+    this.summaryDialogForm.controls['dneeAmountOtherThanCash'].setValue(donationInfo.amountOtherThanCash)
+    this.summaryDialogForm.controls['eligibleAmount'].setValue(donationInfo.eligibleAmount)
+  }
+  updateHouseInfo(houseInfo){
+    console.log('houseInfo: ',houseInfo, houseInfo.interestAmount)
+    this.summaryDialogForm['controls'].houseProperties.patchValue(houseInfo)
+
+    this.summaryDialogForm.controls['tenantName'].setValue(houseInfo.tenantName);
+    this.summaryDialogForm.controls['tenentPanNumber'].setValue(houseInfo.tenentPanNumber)
+    this.summaryDialogForm.controls['coOwnerName'].setValue(houseInfo.coOwnerName)
+    this.summaryDialogForm.controls['coOwnerIsSelf'].setValue(houseInfo.coOwnerIsSelf)
+    this.summaryDialogForm.controls['coOwnerPanNumber'].setValue(houseInfo.coOwnerPanNumber)
+    this.summaryDialogForm.controls['coOwnerPercentage'].setValue(houseInfo.coOwnerPercentage)
+    this.summaryDialogForm.controls['loanType'].setValue(houseInfo.loanType)
+    this.summaryDialogForm.controls['principalAmount'].setValue(houseInfo.principalAmount)
+    this.summaryDialogForm.controls['interestAmount'].setValue(houseInfo.interestAmount)
+    this.summaryDialogForm.controls['hpStandardDeduction'].setValue(houseInfo.hpStandardDeduction)
+    this.summaryDialogForm.controls['netHousePropertyIncome'].setValue(houseInfo.netHousePropertyIncome)
+   
+    this.setTenantValue(this.summaryDialogForm['controls'].houseProperties['controls'].propertyType.value, 'fromEditInfo')
+    // if( this.summaryDialogForm['controls'].houseProperties['controls'].propertyType.value === 'SOP'){
+    //   this.setCOwnerVal('NO')
+    // }
+   
+    console.log('houseProperties form control data: ',this.summaryDialogForm['controls'].houseProperties, this.summaryDialogForm.controls['interestAmount'])
+  }
+
+  updateSalaryInfo(salaryInfo){
+    this.summaryDialogForm['controls'].employers.patchValue(salaryInfo)
+
+    this.summaryDialogForm.controls['salAsPerSec171'].setValue(salaryInfo.salAsPerSec171);
+    this.summaryDialogForm.controls['valOfPerquisites'].setValue(salaryInfo.valOfPerquisites);
+    this.summaryDialogForm.controls['profitInLieu'].setValue(salaryInfo.profitInLieu);
+    this.summaryDialogForm.controls['grossSalary'].setValue(salaryInfo.grossSalary);
+    this.summaryDialogForm.controls['houseRentAllow'].setValue(salaryInfo.houseRentAllow);
+    this.summaryDialogForm.controls['leaveTravelExpense'].setValue(salaryInfo.leaveTravelExpense);
+    this.summaryDialogForm.controls['other'].setValue(salaryInfo.other);
+    this.summaryDialogForm.controls['totalExemptAllow'].setValue(salaryInfo.totalExemptAllow);
+    this.summaryDialogForm.controls['netSalary'].setValue(salaryInfo.netSalary);
+    this.summaryDialogForm.controls['entertainAllow'].setValue(salaryInfo.entertainAllow);
+    this.summaryDialogForm.controls['professionalTax'].setValue(salaryInfo.professionalTax);
+    this.summaryDialogForm.controls['totalSalaryDeduction'].setValue(salaryInfo.totalSalaryDeduction);
+    this.summaryDialogForm.controls['taxableSalary'].setValue(salaryInfo.taxableSalary);
+    
   }
 
 
@@ -279,19 +377,38 @@ export class SumaryDialogComponent implements OnInit {
     }
   }
 
-  setTenantValue(propertyType) {
+  setTenantValue(propertyType, key) {
     console.log('propertyType: ', propertyType)
     if (propertyType === 'SOP') {
       this.housingShow.showTenant = false;
       this.housingShow.isSOP = true;                      //On SOP we hide some part's of housing info using isSOP
       
+      this.summaryDialogForm.controls['tenantName'].clearValidators();
+      this.summaryDialogForm.controls['tenantName'].updateValueAndValidity()
+      this.summaryDialogForm.controls['tenentPanNumber'].clearValidators();
+      this.summaryDialogForm.controls['tenentPanNumber'].updateValueAndValidity();
       this.summaryDialogForm.controls['tenantName'].reset();
       this.summaryDialogForm.controls['tenentPanNumber'].reset();
       console.log('panNumber: ', this.summaryDialogForm.controls['tenentPanNumber'])
       this.summaryDialogForm['controls'].houseProperties['controls'].otherOwnerOfProperty.setValue(null)
 
-       this.summaryDialogForm.controls['tenantName'].setValidators(null);
-       this.summaryDialogForm.controls['tenentPanNumber'].setValidators(null);
+      this.summaryDialogForm['controls'].houseProperties['controls'].grossAnnualRentReceived.clearValidators()
+      this.summaryDialogForm['controls'].houseProperties['controls'].grossAnnualRentReceived.updateValueAndValidity();
+      // this.summaryDialogForm['controls'].houseProperties['controls'].grossAnnualRentReceived.setValue(null)
+      // this.summaryDialogForm['controls'].houseProperties['controls'].propertyTax.setValue(null)
+      // this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.setValue(null)
+
+      // this.summaryDialogForm['controls'].houseProperties['controls'].ownerOfProperty.setValue(null)
+      // this.summaryDialogForm['controls'].houseProperties['controls'].otherOwnerOfProperty.setValue(null)
+      // this.summaryDialogForm['controls'].coOwnerName.setValue(null)
+      // this.summaryDialogForm['controls'].coOwnerPanNumber.setValue(null)
+      // this.summaryDialogForm['controls'].coOwnerPercentage.setValue(null)
+
+      // this.summaryDialogForm['controls'].hpStandardDeduction.setValue(null)
+      // this.summaryDialogForm['controls'].interestAmount.setValue(null)
+      // this.summaryDialogForm['controls'].netHousePropertyIncome.setValue(null)
+
+      console.log('houseProperties value: ',this.summaryDialogForm['controls'].houseProperties['controls'].value)
        this.housingShow.ownership = false;
        this.housingShow.showCoOwner = false;
        this.setCOwnerVal('NO')
@@ -299,6 +416,7 @@ export class SumaryDialogComponent implements OnInit {
       //this.summaryDialogForm.controls['coOwnerPanNumber'].setValidators(null);
 
       this.summaryDialogForm.controls['interestAmount'].setValidators([Validators.max(200000)]);
+      this.summaryDialogForm.controls['interestAmount'].updateValueAndValidity();
      
     } else if (propertyType === 'LOP') {
       this.housingShow.showTenant = true;
@@ -306,11 +424,16 @@ export class SumaryDialogComponent implements OnInit {
       // this.housingShow.ownership = false;
       // this.housingShow.showCoOwner = false;
       // this.setCOwnerVal('NO')
-      this.summaryDialogForm['controls'].houseProperties['controls'].otherOwnerOfProperty.setValue('NO')
+     
 
-      this.summaryDialogForm.controls['interestAmount'].reset();
+      if(key === 'fromDialog'){                                                      //when edit hose data then interestAmount show properly
+        this.summaryDialogForm.controls['interestAmount'].reset();
+      }
+      this.summaryDialogForm['controls'].houseProperties['controls'].otherOwnerOfProperty.setValue('NO')
       this.summaryDialogForm.controls['tenantName'].setValidators(Validators.required)
       this.summaryDialogForm.controls['tenentPanNumber'].setValidators([Validators.required, Validators.pattern(AppConstants.panIndHUFRegex)])
+      this.summaryDialogForm['controls'].houseProperties['controls'].grossAnnualRentReceived.setValidators(Validators.required)
+
     }
    
   }
@@ -515,7 +638,9 @@ export class SumaryDialogComponent implements OnInit {
           netSalary: Number(this.summaryDialogForm.value.netSalary),
           totalSalaryDeduction: Number(this.summaryDialogForm.value.totalSalaryDeduction),
           taxableSalary: Number(this.summaryDialogForm.value.taxableSalary),
-          type: this.data.mode
+          type: this.data.mode,
+          action: this.data.submitBtn,
+          index: this.data.editIndex
 
         }
         this.dialogRef.close({ event: 'close', data: employer })
@@ -579,7 +704,9 @@ export class SumaryDialogComponent implements OnInit {
           house: this.summaryDialogForm.controls.houseProperties.value,
           hpStandardDeduction: this.summaryDialogForm.value.hpStandardDeduction,
           netHousePropertyIncome: this.summaryDialogForm.value.netHousePropertyIncome,
-          type: this.data.mode
+          type: this.data.mode,
+          action: this.data.submitBtn,
+          index: this.data.editIndex
         }
         this.dialogRef.close({ event: 'close', data: housingData })
         // }
@@ -591,49 +718,62 @@ export class SumaryDialogComponent implements OnInit {
         let banKObj = {
           bankDetails: this.summaryDialogForm.controls.bankDetails.value,
           type: this.data.mode,
-          action: this.data.submitBtn
+          action: this.data.submitBtn,
+          index: this.data.editIndex
         }
         this.dialogRef.close({ event: 'close', data: banKObj })
       }
       else if (mode === 'donationSec80G') {
         let donation = {
           donationInfo: this.summaryDialogForm.value,
-          type: this.data.mode
+          type: this.data.mode,
+          action: this.data.submitBtn,
+          index: this.data.editIndex
         }
         this.dialogRef.close({ event: 'close', data: donation })
       }
       else if (mode === 'tdsOnSal') {
         let tdsOnSal = {
           onSalary: this.summaryDialogForm.controls.onSalary.value,
-          type: this.data.mode
+          type: this.data.mode,
+          action: this.data.submitBtn,
+          index: this.data.editIndex
         }
         this.dialogRef.close({ event: 'close', data: tdsOnSal })
       }
       else if (mode === 'tdsOnOtherThanSal') {
         let otherThanSalary16AObj = {
           otherThanSalary16A: this.summaryDialogForm.controls.otherThanSalary16A.value,
-          type: this.data.mode
+          type: this.data.mode,
+          action: this.data.submitBtn,
+          index: this.data.editIndex
         }
         this.dialogRef.close({ event: 'close', data: otherThanSalary16AObj })
       }
       else if (mode === 'tdsOnSalOfPro26Q') {
         let tdsOnSalOfPro26QObj = {
           otherThanSalary26QB: this.summaryDialogForm.controls.otherThanSalary26QB.value,
-          type: this.data.mode
+          type: this.data.mode,
+          action: this.data.submitBtn,
+          index: this.data.editIndex
         }
         this.dialogRef.close({ event: 'close', data: tdsOnSalOfPro26QObj })
       }
       else if (mode === 'taxCollSources') {
         let taxCollSourcesObj = {
           tcs: this.summaryDialogForm.controls.tcs.value,
-          type: this.data.mode
+          type: this.data.mode,
+          action: this.data.submitBtn,
+          index: this.data.editIndex
         }
         this.dialogRef.close({ event: 'close', data: taxCollSourcesObj })
       }
       else if (mode === 'advanceSelfAssTax') {
         let advanceSelfAssTaxObj = {
           otherThanTDSTCS: this.summaryDialogForm.controls.otherThanTDSTCS.value,
-          type: this.data.mode
+          type: this.data.mode,
+          action: this.data.submitBtn,
+          index: this.data.editIndex
         }
         this.dialogRef.close({ event: 'close', data: advanceSelfAssTaxObj })
       }
@@ -652,18 +792,29 @@ export class SumaryDialogComponent implements OnInit {
   //   this.summaryDialogForm.controls['netSalary'].setValue(netSalary);
   // }
 
-  calEligibleDonation() {
+  calEligibleDonation(key) {
     let eligibleDonation = Number(this.summaryDialogForm.controls['dneeAmountInCash'].value) + Number(this.summaryDialogForm.controls['dneeAmountOtherThanCash'].value);
     this.summaryDialogForm.controls['eligibleAmount'].setValue(eligibleDonation);
 
     //set Amnt-in-cash & Amnt-other-than-cash 'rwquired' validator
-    if (this.utilService.isNonEmpty(this.summaryDialogForm.controls['dneeAmountInCash'].value)) {
-      this.summaryDialogForm.controls['dneeAmountOtherThanCash'].setValidators([Validators.required]);
-      this.summaryDialogForm.controls['dneeAmountInCash'].setValidators(null);
+    if(key === 'dneeAmountInCash'){
+      if (this.utilService.isNonEmpty(this.summaryDialogForm.controls['dneeAmountInCash'].value)) {
+        this.summaryDialogForm.controls['dneeAmountInCash'].setValidators([Validators.required]);
+        this.summaryDialogForm.controls['dneeAmountOtherThanCash'].setValidators(null);
+        this.summaryDialogForm.controls['dneeAmountOtherThanCash'].updateValueAndValidity();
+        // this.summaryDialogForm.controls['dneeAmountOtherThanCash'].setValidators([Validators.required]);
+        // this.summaryDialogForm.controls['dneeAmountInCash'].setValidators(null);
+      }
     }
-    else if (this.utilService.isNonEmpty(this.summaryDialogForm.controls['dneeAmountOtherThanCash'].value)) {
-      this.summaryDialogForm.controls['dneeAmountInCash'].setValidators([Validators.required]);
-      this.summaryDialogForm.controls['dneeAmountOtherThanCash'].setValidators(null);
+   
+    else if(key === 'dneeAmountOtherThanCash'){
+      if (this.utilService.isNonEmpty(this.summaryDialogForm.controls['dneeAmountOtherThanCash'].value)) {
+        this.summaryDialogForm.controls['dneeAmountOtherThanCash'].setValidators([Validators.required]);
+        this.summaryDialogForm.controls['dneeAmountInCash'].setValidators(null);
+        this.summaryDialogForm.controls['dneeAmountInCash'].updateValueAndValidity();
+        // this.summaryDialogForm.controls['dneeAmountInCash'].setValidators([Validators.required]);
+        // this.summaryDialogForm.controls['dneeAmountOtherThanCash'].setValidators(null);
+      }
     }
   }
 
@@ -867,6 +1018,7 @@ export class SumaryDialogComponent implements OnInit {
 export interface ConfirmModel {
   title: string;
   submitBtn: string;
+  editIndex : any;
   userObject: any;
   mode: string;
   callerObj: any;

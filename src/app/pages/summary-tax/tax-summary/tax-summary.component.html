@@ -528,7 +528,7 @@
                     <div class="heading">ANNEXURES</div><br>
 
                     <div class="tableHead">Annexures: Bank Details</div>
-                    <button style="float: right;" (click)="openDialog('Add Bank Info','Add','','Bank')">Add</button>
+                    <button style="float: right;" (click)="openDialog('Add Bank Info','Add', null,'','Bank')">Add</button>
                     <br>
                     <table>
                         <tr>
@@ -536,14 +536,14 @@
                             <th>Name of the Bank</th>
                             <th>Account Number</th>
                             <th>Refund</th>
-                            <!-- <th>Action</th> -->
+                            <th>Action</th>
                         </tr>
                         <tr *ngIf="bankData.length === 0">
                             <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <!-- <td></td> -->
+                            <td></td>
                         </tr>
                         <tr *ngFor="let bank of bankData; let i=index">
                             <td>{{bank.ifsCode}}</td>
@@ -553,17 +553,17 @@
                                     aria-hidden="true"></i></td>
                             <td *ngIf="!bank.hasRefund" style="text-align: center;"><i class="fa fa-times fa-lg"
                                     aria-hidden="true"></i></td>
-                            <!-- <td>
-                                <button (click)="openDialog('Add Bank Info','Edit',bankData[i],'Bank')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                                <button><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
-                            </td> -->
+                            <td>
+                                <button (click)="openDialog('Edit Bank Info','Edit', i, bankData[i],'Bank')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('Bank',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                            </td>
                         </tr>
 
                     </table><br><br>
 
                     <div class="tableHead">Annexures: House Properties</div>
                     <button [disabled]="housingData.length > 0" style="float: right;"
-                        (click)="openDialog('Add House Property','Add','','House')">Add House Info</button><br>
+                        (click)="openDialog('Add House Property','Add', null, '','House')">Add House Info</button><br>
                     <table class="verticle">
                         <tr>
                             <th>Property Type</th>
@@ -579,6 +579,8 @@
                             <th>Standared deduction</th>
                             <th>Interest on Home Loan</th>
                             <th><b>Net House Pro Income</b></th>
+
+                            <th>Action</th>
                         </tr>
 
                         <tr *ngIf="housingData.length === 0">
@@ -595,29 +597,34 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
 
                         </tr>
-                        <tr *ngFor="let house of housingData">
+                        <tr *ngFor="let house of housingData; let i = index">
                             <td>{{house.propertyType}}</td>
                             <td>{{house.address}}</td>
-                            <td>{{house.Ownership}}</td>
+                            <td>{{house.ownerOfProperty}}</td>
                             <td>{{house.coOwnerName}}</td>
-                            <td>{{house.coOwnerPAN}}</td>
-                            <td>{{house.coOwnerShare}}</td>
-                            <td>{{house.tenant}}</td>
-                            <td>{{house.grossRentRecived}}</td>
-                            <td>{{house.annulaVal}}</td>
-                            <td>{{house.standeredDeduction}}</td>
-                            <td>{{house.interestOnHomeLoan}}</td>
-                            <td>{{house.netSalary}}</td>
-                            <td>{{house.netHousePro}}</td>
+                            <td>{{house.coOwnerPanNumber}}</td>
+                            <td>{{house.coOwnerPercentage}}</td>
+                            <td>{{house.tenantName}}</td>
+                            <td>{{house.grossAnnualRentReceived}}</td>
+                            <td>{{house.propertyTax}}</td>
+                            <td>{{house.annualValue}}</td>
+                            <td>{{house.hpStandardDeduction}}</td>
+                            <td>{{house.interestAmount}}</td>
+                            <td>{{house.netHousePropertyIncome}}</td>
+                            <td>
+                                <button (click)="openDialog('Edit House Property','Edit', i, housingData[i],'House')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('House',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                            </td>
                         </tr>
                     </table><br><br>
 
 
                     <div class="tableHead">Annexures: Salary</div>
                     <button style="float: right;" [disabled]="salaryItrratedData.length > 3"
-                        (click)="openDialog('Add Salary Info','Add','','Salary')">Add Employer Salary</button><br>
+                        (click)="openDialog('Add Salary Info','Add', null, '','Salary')">Add Employer Salary</button><br>
                     <table class="verticle">
                         <tr>
                             <th><b>Employer Name</b></th>
@@ -633,6 +640,7 @@
                             <th colspan="3">Less: Deduction u/s 16(ia)</th>
                             <th>Total deduction</th>
                             <th><b>Taxable Salary</b></th>
+                            <th>Action</th>
                         </tr>
                         <tr>
                             <th></th>
@@ -650,6 +658,7 @@
                             <th>SD</th>
                             <th>EA</th>
                             <th>PT</th>
+                            <th></th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -671,14 +680,15 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                         </tr>
-                        <tr *ngFor="let sal of salaryItrratedData">
+                        <tr *ngFor="let sal of salaryItrratedData; let i=index">
                             <td><b>{{sal.employerName}}</b></td>
                             <td>{{sal.address}}</td>
                             <td>{{sal.employerCategory}}</td>
-                            <td>{{sal.sal171}}</td>
-                            <td>{{sal.perquisites}}</td>
-                            <td>{{sal.profitinLieu}}</td>
+                            <td>{{sal.salAsPerSec171}}</td>
+                            <td>{{sal.valOfPerquisites}}</td>
+                            <td>{{sal.profitInLieu}}</td>
                             <td>{{sal.grossSalary}}</td>
                             <td>{{sal.houseRentAllow}}</td>
                             <td>{{sal.leaveTravelExpense}}</td>
@@ -690,6 +700,10 @@
                             <td>{{sal.professionalTax}}</td>
                             <td>{{sal.totalSalaryDeduction}}</td>
                             <td><b>{{sal.taxableSalary}}</b></td>
+                            <td>
+                                <button (click)="openDialog('Edit Salary Info','Edit', i, salaryItrratedData[i],'Salary')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('Salary',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                            </td>
                         </tr>
                     </table><br><br>
 
@@ -1050,7 +1064,7 @@
                     <mat-card>
                         <p class="subLabel">Under Section 80G</p>
                         <button style="float: right;"
-                            (click)="openDialog('Add Donation(Section 80G)','Add','','donationSec80G')">Add
+                            (click)="openDialog('Add Donation(Section 80G)','Add', null,'','donationSec80G')">Add
                             Donation Info</button><br>
                         <table>
                             <tr>
@@ -1059,16 +1073,21 @@
                                 <th>Amont in Cash</th>
                                 <th>Amount Other than Cash</th>
                                 <th>Eligibal Amount</th>
+                                <th>Action</th>
                             </tr>
-                            <tr *ngFor="let donation of donationData">
+                            <tr *ngFor="let donation of donationData; let i= index">
                                 <td>{{donation.donationType}}</td>
                                 <td>{{donation.name}}</td>
                                 <td>{{donation.amountInCash}}</td>
                                 <td>{{donation.amountOtherThanCash}}</td>
                                 <td>{{donation.eligibleAmount}}</td>
+                                <td>
+                                    <button (click)="openDialog('Edit Donation(Section 80G)','Edit', i, donationData[i],'donationSec80G')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                    <button (click)="deleteData('donationSec80G',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                </td>
                             </tr>
                             <tr>
-                                <td colspan="4"><b>Total</b></td>
+                                <td colspan="5"><b>Total</b></td>
                                 <!--itrSummaryForm['controls'].houseProperties['controls']-->
                                 <td><b>{{itrSummaryForm.controls['us80g'].value}}</b></td>
                             </tr>
@@ -1245,7 +1264,7 @@
 
                     <div class="tableHead">Annexures: Tax deducted at Sources</div><br>
                     <p class="subLabel">TDS on Salary</p>
-                    <button style="float: right;" (click)="openDialog('Add TDS on Salary','Add','','tdsOnSal')">Add TDS
+                    <button style="float: right;" (click)="openDialog('Add TDS on Salary','Add', null,'','tdsOnSal')">Add TDS
                         on Salary</button><br>
                     <table>
                         <tr>
@@ -1253,21 +1272,27 @@
                             <th>Name of Employer</th>
                             <th>Gross Salary</th>
                             <th>Total TDS</th>
+                            <th>Action</th>
                         </tr>
                         <tr *ngIf="tdsOnSal.length === 0">
                             <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                         </tr>
-                        <tr *ngFor="let tds of tdsOnSal">
+                        <tr *ngFor="let tds of tdsOnSal; let i=index">
                             <td>{{tds.deductorTAN}}</td>
                             <td>{{tds.deductorName}}</td>
                             <td>{{tds.totalAmountCredited}}</td>
                             <td>{{tds.totalTdsDeposited}}</td>
+                            <td>
+                                <button (click)="openDialog('Edit TDS on Salary','Edit', i, tdsOnSal[i],'tdsOnSal')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('tdsOnSal',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                            </td>
                         </tr>
                         <tr>
-                            <td colspan="3"><b>Total</b></td>
+                            <td colspan="4"><b>Total</b></td>
                             <td><b>{{itrSummaryForm.controls['totalTdsOnSalary'].value}}</b></td>
                         </tr>
 
@@ -1275,7 +1300,7 @@
 
                     <p class="subLabel">TDS on Other than Salary</p>
                     <button style="float: right;"
-                        (click)="openDialog('Add TDS on Other than Salary','Add','','tdsOnOtherThanSal')">Add TDS on
+                        (click)="openDialog('Add TDS on Other than Salary','Add', null, '','tdsOnOtherThanSal')">Add TDS on
                         Other than Salary</button><br>
                     <table>
                         <tr>
@@ -1283,28 +1308,34 @@
                             <th>Name of Deductor</th>
                             <th>Gross Salary</th>
                             <th>Total TDS</th>
+                            <th>Action</th>
                         </tr>
                         <tr *ngIf="tdsOtherThanSal.length === 0">
                             <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                         </tr>
-                        <tr *ngFor="let tds of tdsOtherThanSal">
+                        <tr *ngFor="let tds of tdsOtherThanSal; let i=index">
                             <td>{{tds.deductorTAN}}</td>
                             <td>{{tds.deductorName}}</td>
                             <td>{{tds.totalAmountCredited}}</td>
                             <td>{{tds.totalTdsDeposited}}</td>
+                            <td>
+                                <button (click)="openDialog('Edit TDS on Other than Salary','Edit', i, tdsOtherThanSal[i],'tdsOnOtherThanSal')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('tdsOnOtherThanSal',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                            </td>
                         </tr>
                         <tr>
-                            <td colspan="3"><b>Total</b></td>
+                            <td colspan="4"><b>Total</b></td>
                             <td><b>{{itrSummaryForm.controls['totalTdsOnOtherThanSalary'].value}}</b></td>
                         </tr>
                     </table><br>
 
                     <p class="subLabel">TDS Sales of property 26QB</p>
                     <button style="float: right;"
-                        (click)="openDialog('TDS Sales of property 26QB','Add','','tdsOnSalOfPro26Q')">Add TDS Sales of
+                        (click)="openDialog('TDS Sales of property 26QB','Add', null, '','tdsOnSalOfPro26Q')">Add TDS Sales of
                         property 26QB</button><br>
                     <table>
                         <tr>
@@ -1312,28 +1343,34 @@
                             <th>Name of Deductor</th>
                             <th>Gross Salary</th>
                             <th>Total TDS</th>
+                            <th>Action</th>
                         </tr>
                         <tr *ngIf="tdsSalesPro.length === 0">
                             <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                         </tr>
-                        <tr *ngFor="let tds of tdsSalesPro">
+                        <tr *ngFor="let tds of tdsSalesPro; let i=index">
                             <td>{{tds.deductorTAN}}</td>
                             <td>{{tds.deductorName}}</td>
                             <td>{{tds.totalAmountCredited}}</td>
                             <td>{{tds.totalTdsDeposited}}</td>
+                            <td>
+                                <button (click)="openDialog('Edit TDS Sales of property 26QB','Edit', i, tdsSalesPro[i],'tdsOnSalOfPro26Q')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('tdsOnSalOfPro26Q',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                            </td>
                         </tr>
                         <tr>
-                            <td colspan="3"><b>Total</b></td>
+                            <td colspan="4"><b>Total</b></td>
                             <td><b>{{itrSummaryForm.controls['totalTdsSaleOfProperty26QB'].value}}</b></td>
                         </tr>
                     </table><br><br>
 
                     <div class="tableHead">Annexure: Tax Collected at Sources</div><br>
                     <button style="float: right;"
-                        (click)="openDialog('TDS Tax Collected at Sources','Add','','taxCollSources')">Add Tax Collected
+                        (click)="openDialog('TDS Tax Collected at Sources','Add', null,'','taxCollSources')">Add Tax Collected
                         at Sources</button><br>
                     <table>
                         <tr>
@@ -1341,21 +1378,27 @@
                             <th>Name of Collector</th>
                             <th>Gross Income</th>
                             <th>Total TCS</th>
+                            <th>Action</th>
                         </tr>
                         <tr *ngIf="taxCollAtSource.length === 0">
                             <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                         </tr>
-                        <tr *ngFor="let tcs of taxCollAtSource">
+                        <tr *ngFor="let tcs of taxCollAtSource; let i=index">
                             <td>{{tcs.collectorTAN}}</td>
                             <td>{{tcs.collectorName}}</td>
                             <td>{{tcs.totalAmountPaid}}</td>
                             <td>{{tcs.totalTcsDeposited}}</td>
+                            <td>
+                                <button (click)="openDialog('Edit TDS Tax Collected at Sources','Edit', i, taxCollAtSource[i],'taxCollSources')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('taxCollSources',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                            </td>
                         </tr>
                         <tr>
-                            <td colspan="3"><b>Total</b></td>
+                            <td colspan="4"><b>Total</b></td>
                             <td><b>{{itrSummaryForm.controls['totalTaxCollectedAtSources'].value}}</b></td>
 
                         </tr>
@@ -1364,7 +1407,7 @@
 
                     <div class="tableHead">Annexures: Advance Tax/ Self-Assessment Tax</div><br>
                     <button style="float: right;"
-                        (click)="openDialog('Annexures: Advance Tax/ Self-Assessment Tax','Add','','advanceSelfAssTax')">Add
+                        (click)="openDialog('Annexures: Advance Tax/ Self-Assessment Tax','Add', null, '','advanceSelfAssTax')">Add
                         Tax Collected at Sources</button><br>
                     <table>
                         <tr>
@@ -1372,21 +1415,27 @@
                             <th>Date</th>
                             <th>Challan No</th>
                             <th>Tax deposited</th>
+                            <th>Action</th>
                         </tr>
                         <tr *ngIf="advanceSelfTax.length === 0">
                             <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                         </tr>
-                        <tr *ngFor="let advTax of advanceSelfTax">
+                        <tr *ngFor="let advTax of advanceSelfTax; let i=index">
                             <td>{{advTax.bsrCode}}</td>
                             <td>{{advTax.dateOfDeposit | date : 'dd/MM/yyyy'}}</td>
                             <td>{{advTax.challanNumber}}</td>
                             <td>{{advTax.totalTax}}</td>
+                            <td>
+                                <button (click)="openDialog('Edit Annexures: Advance Tax/ Self-Assessment Tax','Edit', i, advanceSelfTax[i],'advanceSelfAssTax')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('advanceSelfAssTax',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                            </td>
                         </tr>
                         <tr>
-                            <td colspan="3"><b>Total</b></td>
+                            <td colspan="4"><b>Total</b></td>
                             <td><b>{{itrSummaryForm.controls['totalAdvanceTax'].value}}</b></td>
                         </tr>
 

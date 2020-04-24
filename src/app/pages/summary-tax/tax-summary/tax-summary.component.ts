@@ -316,13 +316,14 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  openDialog(windowTitle: string, windowBtn: string, myUser: any, mode: string) {
+  openDialog(windowTitle: string, windowBtn: string, index: any, myUser: any, mode: string) {
     let disposable = this.dialog.open(SumaryDialogComponent, {
       width: (mode === 'Salary' || mode === 'donationSec80G' || mode === 'House') ? '70%' : '30%',
       height: 'auto',
       data: {
         title: windowTitle,
         submitBtn: windowBtn,
+        editIndex: index,
         userObject: myUser,
         mode: mode,
         callerObj: this
@@ -335,71 +336,40 @@ export class TaxSummaryComponent implements OnInit {
       if (result) {
         console.log('Result: ', result)
         if (result.data.type === 'Bank') {
-          // this.bankData.push(result.data.bankDetails)
           console.log('bankData: ', this.bankData)
-          this.setBankValue(result.data.bankDetails, result.data.action)
+          this.setBankValue(result.data.bankDetails, result.data.action, result.data.index)
         }
         else if (result.data.type === 'House') {
 
-          this.setHousingData(result.data);
+          this.setHousingData(result.data, result.data.action, result.data.index);
         }
         else if (result.data.type === 'Salary') {
 
-          this.setEmployerData(result.data);
-          // console.log('salaryInfo: ', salaryInfo)
-          // this.salaryData.push(salaryInfo)
+          this.setEmployerData(result.data, result.data.action, result.data.index);
         }
         else if (result.data.type === 'donationSec80G') {
           console.log('result.data: ', result.data)
-          let body = {
-            name: result.data.donationInfo.dneeName,
-            address: result.data.donationInfo.dneeAddress,
-            city: result.data.donationInfo.dneeCity,
-            pinCode: result.data.donationInfo.dneePinCode,
-            state: result.data.donationInfo.dneeState,
-            panNumber: result.data.donationInfo.dneePanNumber ? result.data.donationInfo.dneePanNumber : '',
-            amountInCash: result.data.donationInfo.dneeAmountInCash ? result.data.donationInfo.dneeAmountInCash : 0,
-            amountOtherThanCash: result.data.donationInfo.dneeAmountOtherThanCash ? result.data.donationInfo.dneeAmountOtherThanCash : 0,
-            eligibleAmount: result.data.donationInfo.eligibleAmount,
-            pcDeduction: 0,
-            schemeCode: '',
-            donationType: result.data.donationInfo.dneeDonationType,
-            details: '',
-            category: ''
-          }
-          this.donationData.push(body);
-          this.itrSummaryForm.controls['donations'].setValue(this.donationData);
-          console.log('Donation sec 80G: ', this.donationData)
-          this.getdeductionTotal(this.donationData)
+          this.setDonationValue(result.data.donationInfo, result.data.action, result.data.index)
         }
         else if (result.data.type === 'tdsOnSal') {
 
-          this.tdsOnSal.push(result.data.onSalary);
-          console.log('this.tdsOnSal: ', this.tdsOnSal)
-          this.setTotalTDSVal(this.tdsOnSal, 'tdsOnSal')
-          this.setTaxValInObject(result.data.onSalary, 'tdsOnSal')
+          this.setTdsOnSalValue(result.data.onSalary, result.data.action, result.data.index)
         }
         else if (result.data.type === 'tdsOnOtherThanSal') {
 
-          this.tdsOtherThanSal.push(result.data.otherThanSalary16A);
-          this.setTotalTDSVal(this.tdsOtherThanSal, 'otherThanSalary16A')
-          this.setTaxValInObject(result.data.otherThanSalary16A, 'otherThanSalary16A')
+          this.setTdsOnOtherThanSalValue(result.data.otherThanSalary16A, result.data.action, result.data.index)
         }
         else if (result.data.type === 'tdsOnSalOfPro26Q') {
 
-          this.tdsSalesPro.push(result.data.otherThanSalary26QB);
-          this.setTotalTDSVal(this.tdsSalesPro, 'otherThanSalary26QB')
-          this.setTaxValInObject(result.data.otherThanSalary26QB, 'otherThanSalary26QB')
+          this.setTdsOnSal26QValue(result.data.otherThanSalary26QB, result.data.action, result.data.index)
         }
         else if (result.data.type === 'taxCollSources') {
-          this.taxCollAtSource.push(result.data.tcs);
-          this.setTotalTCSVal(this.taxCollAtSource);
-          this.setTaxValInObject(result.data.tcs, 'taxCollSources')
+
+          this.setTcsValue(result.data.tcs, result.data.action, result.data.index)
         }
         else if (result.data.type === 'advanceSelfAssTax') {
-          this.advanceSelfTax.push(result.data.otherThanTDSTCS);
-          this.setTotalAdvSelfTaxVal(this.advanceSelfTax);
-          this.setTaxValInObject(result.data.otherThanTDSTCS, 'advanceSelfAssTax')
+
+          this.setAdvanSelfAssTaxValue(result.data.otherThanTDSTCS, result.data.action, result.data.index)
         }
       }
       else {
@@ -407,29 +377,160 @@ export class TaxSummaryComponent implements OnInit {
     });
   }
 
-  setBankValue(latestBankInfo, action) {
-    //  console.log('this.bankData: ',this.bankData)
-    // if(action === 'add') {
+  setBankValue(latestBankInfo, action, index) {
+    console.log('DDAATTAA==>: ', latestBankInfo, action, index)
+    if (action === 'Add') {
+      if (this.bankData.length !== 0) {
+        console.log('latestBankInfo: ', latestBankInfo)
+        if (latestBankInfo.hasRefund === true) {
+          for (let i = 0; i < this.bankData.length; i++) {
+            this.bankData[i].hasRefund = false;
+          }
+          this.bankData.push(latestBankInfo)
+        }
+        else {
+          this.bankData.push(latestBankInfo)
+        }
 
-    // }
-    if (this.bankData.length !== 0) {
-      console.log('latestBankInfo: ', latestBankInfo)
+      } else {
+        this.bankData.push(latestBankInfo)
+        this.itrSummaryForm.controls['bankDetails'].setValue(this.bankData)
+      }
+    }
+    else if (action === 'Edit') {
       if (latestBankInfo.hasRefund === true) {
         for (let i = 0; i < this.bankData.length; i++) {
           this.bankData[i].hasRefund = false;
         }
-        this.bankData.push(latestBankInfo)
+        this.bankData.splice(index, 1, latestBankInfo)
+        console.log('After edit data is: ', this.bankData)
+        //this.bankData.push(latestBankInfo)
       }
       else {
-        this.bankData.push(latestBankInfo)
+        this.bankData.splice(index, 1, latestBankInfo)
+        console.log('After edit data is: ', this.bankData)
+        // this.bankData.push(latestBankInfo)
       }
-
-    } else {
-      this.bankData.push(latestBankInfo)
-      this.itrSummaryForm.controls['bankDetails'].setValue(this.bankData)
     }
-    console.log('this.bankData: ', this.bankData)
 
+    console.log('this.bankData: ', this.bankData)
+  }
+
+  setDonationValue(latestDonationInfo, action, index) {
+    if (action === 'Add') {
+      let body = {
+        name: latestDonationInfo.dneeName,
+        address: latestDonationInfo.dneeAddress,
+        city: latestDonationInfo.dneeCity,
+        pinCode: latestDonationInfo.dneePinCode,
+        state: latestDonationInfo.dneeState,
+        panNumber: latestDonationInfo.dneePanNumber ? latestDonationInfo.dneePanNumber : '',
+        amountInCash: latestDonationInfo.dneeAmountInCash ? latestDonationInfo.dneeAmountInCash : 0,
+        amountOtherThanCash: latestDonationInfo.dneeAmountOtherThanCash ? latestDonationInfo.dneeAmountOtherThanCash : 0,
+        eligibleAmount: latestDonationInfo.eligibleAmount,
+        pcDeduction: 0,
+        schemeCode: '',
+        donationType: latestDonationInfo.dneeDonationType,
+        details: '',
+        category: ''
+      }
+      // this.setDonationValue(result.data.donationInfo, result.data.action, result.data.index)
+      this.donationData.push(body);
+      this.itrSummaryForm.controls['donations'].setValue(this.donationData);
+      console.log('Donation sec 80G: ', this.donationData)
+      this.getdeductionTotal(this.donationData)
+    }
+    else if (action === 'Edit') {
+      let donationInfo = {
+        name: latestDonationInfo.dneeName,
+        address: latestDonationInfo.dneeAddress,
+        city: latestDonationInfo.dneeCity,
+        pinCode: latestDonationInfo.dneePinCode,
+        state: latestDonationInfo.dneeState,
+        panNumber: latestDonationInfo.dneePanNumber ? latestDonationInfo.dneePanNumber : '',
+        amountInCash: latestDonationInfo.dneeAmountInCash ? latestDonationInfo.dneeAmountInCash : 0,
+        amountOtherThanCash: latestDonationInfo.dneeAmountOtherThanCash ? latestDonationInfo.dneeAmountOtherThanCash : 0,
+        eligibleAmount: latestDonationInfo.eligibleAmount,
+        pcDeduction: 0,
+        schemeCode: '',
+        donationType: latestDonationInfo.dneeDonationType,
+        details: '',
+        category: ''
+      }
+      this.donationData.splice(index, 1, donationInfo);
+      this.itrSummaryForm.controls['donations'].setValue(this.donationData);
+      console.log('Donation sec 80G after update: ', this.donationData)
+      this.getdeductionTotal(this.donationData)
+    }
+
+  }
+
+  setTdsOnSalValue(tdsOnSalInfo, action, index) {
+    if (action === 'Add') {
+      this.tdsOnSal.push(tdsOnSalInfo);
+      console.log('this.tdsOnSal: ', this.tdsOnSal)
+      this.setTotalTDSVal(this.tdsOnSal, 'tdsOnSal')
+      this.setTaxValInObject(tdsOnSalInfo, 'tdsOnSal', action, index)
+    }
+    else if (action === 'Edit') {
+      this.tdsOnSal.splice(index, 1, tdsOnSalInfo);
+      console.log('tdsOnSal after update: ', this.tdsOnSal)
+      this.setTotalTDSVal(this.tdsOnSal, 'tdsOnSal')
+      this.setTaxValInObject(tdsOnSalInfo, 'tdsOnSal', action, index)
+    }
+  }
+
+  setTdsOnOtherThanSalValue(tdsOnOtherThanSal, action, index) {
+    if (action === 'Add') {
+      this.tdsOtherThanSal.push(tdsOnOtherThanSal);
+      this.setTotalTDSVal(this.tdsOtherThanSal, 'otherThanSalary16A')
+      this.setTaxValInObject(tdsOnOtherThanSal, 'otherThanSalary16A', action, index)
+    }
+    else if (action === 'Edit') {
+      this.tdsOtherThanSal.splice(index, 1, tdsOnOtherThanSal);
+      this.setTotalTDSVal(this.tdsOtherThanSal, 'otherThanSalary16A')
+      this.setTaxValInObject(tdsOnOtherThanSal, 'otherThanSalary16A', action, index)
+    }
+  }
+
+  setTdsOnSal26QValue(tdsOnSal26Q, action, index) {
+    console.log('tdsOnSal26Q CHECK =>', tdsOnSal26Q, action, index)
+    if (action === 'Add') {
+      this.tdsSalesPro.push(tdsOnSal26Q);
+      this.setTotalTDSVal(this.tdsSalesPro, 'otherThanSalary26QB')
+      this.setTaxValInObject(tdsOnSal26Q, 'otherThanSalary26QB', action, index)
+    }
+    else if (action === 'Edit') {
+      this.tdsSalesPro.splice(index, 1, tdsOnSal26Q);
+      this.setTotalTDSVal(this.tdsSalesPro, 'otherThanSalary26QB')
+      this.setTaxValInObject(tdsOnSal26Q, 'otherThanSalary26QB', action, index)
+    }
+  }
+
+  setTcsValue(tcs, action, index) {
+    if (action === 'Add') {
+      this.taxCollAtSource.push(tcs);
+      this.setTotalTCSVal(this.taxCollAtSource);
+      this.setTaxValInObject(tcs, 'taxCollSources', action, index)
+    }
+    else if (action === 'Edit') {
+      this.taxCollAtSource.splice(index, 1, tcs);
+      this.setTotalTCSVal(this.taxCollAtSource);
+      this.setTaxValInObject(tcs, 'taxCollSources', action, index)
+    }
+  }
+
+  setAdvanSelfAssTaxValue(advanSelfAssTax, action, index) {
+    if (action === 'Add') {
+      this.advanceSelfTax.push(advanSelfAssTax);
+      this.setTotalAdvSelfTaxVal(this.advanceSelfTax);
+      this.setTaxValInObject(advanSelfAssTax, 'advanceSelfAssTax', action, index)
+    }
+    else if (action === 'Edit') {
+      this.advanceSelfTax.splice(index, 1, advanSelfAssTax);
+      this.setTotalAdvSelfTaxVal(this.advanceSelfTax);
+      this.setTaxValInObject(advanSelfAssTax, 'advanceSelfAssTax', action, index)
+    }
   }
 
 
@@ -448,31 +549,70 @@ export class TaxSummaryComponent implements OnInit {
     "otherThanTDSTCS": [],
   }
 
-  setTaxValInObject(taxData, type) {
+  setTaxValInObject(taxData, type, action, index) {
     if (type === 'tdsOnSal') {
-      console.log('tdsOnSal Data:', taxData)
-      // this.onSalary.push(taxData)   array
-      this.taxPaiObj.onSalary.push(taxData)
+      if (action === 'Add') {
+        console.log('tdsOnSal Data:', taxData)
+        this.taxPaiObj.onSalary.push(taxData)
+      }
+      else if (action === 'Edit') {
+        this.taxPaiObj.onSalary.splice(index, 1, taxData)
+      }
+      else if (action === 'Delete') {
+        this.taxPaiObj.onSalary.splice(index, 1)
+      }
+
     }
     else if (type === 'otherThanSalary16A') {
       console.log('otherThanSalary16A Data:', taxData)
-      // this.otherThanSalary16A.push(taxData) array
-      this.taxPaiObj.otherThanSalary16A.push(taxData)
+      if (action === 'Add') {
+        this.taxPaiObj.otherThanSalary16A.push(taxData)
+      }
+      else if (action === 'Edit') {
+        this.taxPaiObj.otherThanSalary16A.splice(index, 1, taxData)
+      }
+      else if (action === 'Delete') {
+        this.taxPaiObj.otherThanSalary16A.splice(index, 1)
+      }
+
     }
     else if (type === 'otherThanSalary26QB') {
       console.log('otherThanSalary26QB Data:', taxData)
-      // this.otherThanSalary26QB.push(taxData)  array
-      this.taxPaiObj.otherThanSalary26QB.push(taxData)
+      if (action === 'Add') {
+        this.taxPaiObj.otherThanSalary26QB.push(taxData)
+      }
+      else if (action === 'Edit') {
+        this.taxPaiObj.otherThanSalary26QB.splice(index, 1, taxData)
+      }
+      else if (action === 'Delete') {
+        this.taxPaiObj.otherThanSalary26QB.splice(index, 1)
+      }
     }
     else if (type === 'taxCollSources') {
       console.log('taxCollSources Data:', taxData)
-      //this.tcs.push(taxData)    array
-      this.taxPaiObj.tcs.push(taxData)
+      if (action === 'Add') {
+        this.taxPaiObj.tcs.push(taxData)
+      }
+      else if (action === 'Edit') {
+        this.taxPaiObj.tcs.splice(index, 1, taxData)
+      }
+      else if (action === 'Delete') {
+        this.taxPaiObj.tcs.splice(index, 1)
+      }
+
     }
     else if (type === 'advanceSelfAssTax') {
       console.log('advanceSelfAssTax Data:', taxData)
-      // this.otherThanTDSTCS.push(taxData)  array
-      this.taxPaiObj.otherThanTDSTCS.push(taxData)
+      if (action === 'Add') {
+        this.taxPaiObj.otherThanTDSTCS.push(taxData)
+      }
+      else if (action === 'Edit') {
+        this.taxPaiObj.otherThanTDSTCS.splice(index, 1, taxData)
+      }
+      else if (action === 'Delete') {
+        this.taxPaiObj.otherThanTDSTCS.splice(index, 1)
+      }
+
     }
     console.log('this.taxPaiObj', this.taxPaiObj)
     //taxPaiObj.onSalary.push
@@ -482,55 +622,123 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   housingData: any = [];
-  setHousingData(housingData) {
-    console.log('Housing Data: ', housingData.house)
-    var houseArray = [];
-    houseArray.push(housingData.house)
-    this.itrSummaryForm.controls['houseProperties'].setValue(houseArray);
-    console.log('Housing Data: ', this.itrSummaryForm.controls['houseProperties'].value)
-    let hpStadDeduct = [];
-    let netHousePro = [];
-    hpStadDeduct.push(Number(housingData.hpStandardDeduction))
-    netHousePro.push(Number(housingData.netHousePropertyIncome))
-    this.itrSummaryForm.controls['hpStandardDeduction'].setValue(hpStadDeduct);
-    this.itrSummaryForm.controls['netHousePropertyIncome'].setValue(netHousePro);
+  hpStadDeduct: any = [];
+  netHousePro: any = [];
+  houseArray: any = [];
+  setHousingData(housingData, action, index) {
+    if (action === 'Add') {
+      console.log('Housing Data: ', housingData.house)
+      //var houseArray = [];
+      this.houseArray.push(housingData.house)
+      this.itrSummaryForm.controls['houseProperties'].setValue(this.houseArray);
+      console.log('Housing Data: ', this.itrSummaryForm.controls['houseProperties'].value)
+      // let hpStadDeduct = [];
+      // let netHousePro = [];
+      this.hpStadDeduct.push(Number(housingData.hpStandardDeduction))
+      this.netHousePro.push(Number(housingData.netHousePropertyIncome))
+      this.itrSummaryForm.controls['hpStandardDeduction'].setValue(this.hpStadDeduct);
+      this.itrSummaryForm.controls['netHousePropertyIncome'].setValue(this.netHousePro);
+      this.createHouseDataObj(this.houseArray, housingData.hpStandardDeduction, housingData.netHousePropertyIncome, action, null);
+      this.calculateGrossTotalIncome()
+    }
+    else if (action === 'Edit') {
+      this.houseArray.splice(index, 1, housingData.house)
+      this.itrSummaryForm.controls['houseProperties'].setValue(this.houseArray);
+      console.log('Housing Data: ', this.itrSummaryForm.controls['houseProperties'].value)
+      this.hpStadDeduct.splice(index, 1, Number(housingData.hpStandardDeduction))
+      this.netHousePro.splice(index, 1, Number(housingData.netHousePropertyIncome))
+      this.itrSummaryForm.controls['hpStandardDeduction'].setValue(this.hpStadDeduct);
+      this.itrSummaryForm.controls['netHousePropertyIncome'].setValue(this.netHousePro);
+      this.createHouseDataObj(this.houseArray, housingData.hpStandardDeduction, housingData.netHousePropertyIncome, action, index);
+      this.calculateGrossTotalIncome()
+    }
 
-    this.createHouseDataObj(houseArray, housingData.hpStandardDeduction, housingData.netHousePropertyIncome);
-
-    // this.setNetHousingProLoan()
-    this.calculateGrossTotalIncome()
   }
 
-  createHouseDataObj(houseData, hpStandardDeduction, netHousePropertyIncome) {
+  createHouseDataObj(houseData, hpStandardDeduction, netHousePropertyIncome, action, index) {
+    if (action === 'Add') {
+      let flatNo = this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '';
+      let building = this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
+      let street = this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '';
+      let locality = this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '';
+      let city = this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '';
+      let country = this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '';
+      let state = this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '';
+      let address = flatNo + ' ' + building + ' ' + ' ' + street + ' ' + locality + ' ' + city + ' ' + country + ' ' + state;
 
-    let flatNo = this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '';
-    let building = this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
-    let street = this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '';
-    let locality = this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '';
-    let city = this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '';
-    let country = this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '';
-    let state = this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '';
-    let address = flatNo + ' ' + building + ' ' + ' ' + street + ' ' + locality + ' ' + city + ' ' + country + ' ' + state;
+      console.log("houseData: ", houseData)
+      console.log('Condition: ', houseData[0].coOwners.length > 0)
+      let house = {
+        propertyType: houseData[0].propertyType,
+        address: address,
+        ownerOfProperty: houseData[0].ownerOfProperty,
+        coOwnerName: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].name : '',
+        coOwnerPanNumber: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].panNumber : '',
+        coOwnerPercentage: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].percentage : '',
+        tenantName: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].name : '',
+        tenentPanNumber: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].panNumber : '',
+        grossAnnualRentReceived: houseData[0].grossAnnualRentReceived ? houseData[0].grossAnnualRentReceived : '',
+        annualValue: houseData[0].annualValue,
+        propertyTax: houseData[0].propertyTax,
+        hpStandardDeduction: hpStandardDeduction ? Number(hpStandardDeduction) : 0,
+        interestAmount: (Array.isArray(houseData[0].loans) && houseData[0].loans.length > 0) ? houseData[0].loans[0].interestAmount : '',
+        netHousePropertyIncome: netHousePropertyIncome ? Number(netHousePropertyIncome) : 0,
 
-    console.log("houseData: ", houseData)
-    //console.log('co-Owner Name: ', houseData[0].coOwners[0], houseData[0].coOwners[0].name)
-    console.log('Condition: ', houseData[0].coOwners.length > 0)
-    let house = {
-      propertyType: houseData[0].propertyType,
-      address: address,
-      Ownership: houseData[0].ownerOfProperty,
-      coOwnerName: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].name : '',
-      coOwnerPAN: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].panNumber : '',
-      coOwnerShare: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].percentage : '',
-      tenant: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].name : '',
-      grossRentRecived: houseData[0].grossAnnualRentReceived,
-      annulaVal: houseData[0].annualValue,
-      standeredDeduction: hpStandardDeduction ? Number(hpStandardDeduction) : 0,
-      interestOnHomeLoan: (Array.isArray(houseData[0].loans) && houseData[0].loans.length > 0) ? houseData[0].loans[0].interestAmount : '',
-      netHousePro: netHousePropertyIncome ? Number(netHousePropertyIncome) : 0
+        pinCode: this.utilService.isNonEmpty(houseData[0].pinCode) ? houseData[0].pinCode : '',
+        flatNo: this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '',
+        building: this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '',
+        street: this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '',
+        locality: this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '',
+        city: this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '',
+        country: this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '',
+        state: this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '',
+      }
+      this.housingData.push(house)
+      console.log('Housing:--- ', this.housingData)
     }
-    this.housingData.push(house)
-    console.log('Housing:--- ', this.housingData)
+    else if (action === 'Edit') {
+
+      let flatNo = this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '';
+      let building = this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
+      let street = this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '';
+      let locality = this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '';
+      let city = this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '';
+      let country = this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '';
+      let state = this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '';
+      let address = flatNo + ' ' + building + ' ' + ' ' + street + ' ' + locality + ' ' + city + ' ' + country + ' ' + state;
+
+      console.log("houseData: ", houseData)
+      console.log('Condition: ', houseData[0].coOwners.length > 0)
+      let house = {
+        propertyType: houseData[0].propertyType,
+        address: address,
+        ownerOfProperty: houseData[0].ownerOfProperty,
+        coOwnerName: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].name : '',
+        coOwnerPanNumber: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].panNumber : '',
+        coOwnerPercentage: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].percentage : '',
+        tenantName: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].name : '',
+        tenentPanNumber: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].panNumber : '',
+        grossAnnualRentReceived: houseData[0].grossAnnualRentReceived ? houseData[0].grossAnnualRentReceived : '',
+        annualValue: houseData[0].annualValue,
+        propertyTax: houseData[0].propertyTax,
+
+        hpStandardDeduction: hpStandardDeduction ? Number(hpStandardDeduction) : 0,
+        interestAmount: (Array.isArray(houseData[0].loans) && houseData[0].loans.length > 0) ? houseData[0].loans[0].interestAmount : '',
+        netHousePropertyIncome: netHousePropertyIncome ? Number(netHousePropertyIncome) : 0,
+
+        pinCode: this.utilService.isNonEmpty(houseData[0].pinCode) ? houseData[0].pinCode : '',
+        flatNo: this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '',
+        building: this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '',
+        street: this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '',
+        locality: this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '',
+        city: this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '',
+        country: this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '',
+        state: this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '',
+      }
+      this.housingData.splice(index, 1, house)
+      console.log('Housing:--- ', this.housingData)
+    }
+
   }
 
 
@@ -540,57 +748,120 @@ export class TaxSummaryComponent implements OnInit {
   netSalary: any = [];
   totalSalaryDeduction: any = [];
   taxableSalary: any = [];
-  setEmployerData(emplyersData) {
-    this.employersData.push(emplyersData)
-    console.log('employersData: ', this.employersData)
+  setEmployerData(emplyersData, action, index) {
+    if (action === 'Add') {
+      this.employersData.push(emplyersData)
+      console.log('employersData: ', this.employersData)
+      var employerArray = [];
+      var totalNetSalary = 0;
+      for (let i = (this.employersData.length - 1); i < this.employersData.length; i++) {
+        let salObj = {
+          employerName: this.employersData[i].employers.employerName,
+          address: this.employersData[i].employers.address,
+          employerTAN: this.employersData[i].employers.employerTAN,
+          employerCategory: this.employersData[i].employers.employerCategory,
+          salAsPerSec171: this.employersData[i].employers.salary.length > 0 ? this.employersData[i].employers.salary[0].taxableAmount : 0,
+          valOfPerquisites: this.employersData[i].employers.perquisites.length > 0 ? this.employersData[i].employers.perquisites[0].taxableAmount : 0,
+          profitInLieu: this.employersData[i].employers.profitsInLieuOfSalaryType.length > 0 ? this.employersData[i].employers.profitsInLieuOfSalaryType[0].taxableAmount : 0,
+          grossSalary: this.employersData[i].grossSalary,
+          houseRentAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
+          leaveTravelExpense: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'LTA')).length > 0) ? (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
+          other: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER')).length > 0) ? (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
+          totalExemptAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
+          netSalary: this.employersData[i].netSalary,
+          standardDeduction: this.employersData[i].employers.standardDeduction,
+          entertainAllow: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (this.employersData[i].employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
+          professionalTax: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (this.employersData[i].employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
+          totalSalaryDeduction: this.employersData[i].totalSalaryDeduction,
+          taxableSalary: this.employersData[i].taxableSalary,
 
-    // for (let i = 0; i < this.employersData.length; i++) {
-    var employerArray = [];
-    var totalNetSalary = 0;
-    for (let i = (this.employersData.length - 1); i < this.employersData.length; i++) {
-      let salObj = {
-        employerName: this.employersData[i].employers.employerName,
-        address: this.employersData[i].employers.address,
-        employerTAN: this.employersData[i].employers.employerTAN,
-        employerCategory: this.employersData[i].employers.employerCategory,
-        sal171: this.employersData[i].employers.salary.length > 0 ? this.employersData[i].employers.salary[0].taxableAmount : 0,
-        perquisites: this.employersData[i].employers.perquisites.length > 0 ? this.employersData[i].employers.perquisites[0].taxableAmount : 0,
-        profitinLieu: this.employersData[i].employers.profitsInLieuOfSalaryType.length > 0 ? this.employersData[i].employers.profitsInLieuOfSalaryType[0].taxableAmount : 0,
-        grossSalary: this.employersData[i].grossSalary,
-        houseRentAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
-        leaveTravelExpense: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'LTA')).length > 0) ? (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
-        other: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER')).length > 0) ? (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
-        totalExemptAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
-        netSalary: this.employersData[i].netSalary,
-        standardDeduction: this.employersData[i].employers.standardDeduction,
-        entertainAllow: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (this.employersData[i].employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
-        professionalTax: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (this.employersData[i].employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
-        totalSalaryDeduction: this.employersData[i].totalSalaryDeduction,
-        taxableSalary: this.employersData[i].taxableSalary
+          pinCode: this.employersData[i].employers.pinCode,
+          country: this.employersData[i].employers.country,
+          state: this.employersData[i].employers.state,
+          city: this.employersData[i].employers.city,
+        }
+        this.salaryItrratedData.push(salObj);
+        this.grossSalary.push(this.employersData[i].grossSalary)
+        this.netSalary.push(this.employersData[i].netSalary)
+        this.totalSalaryDeduction.push(this.employersData[i].totalSalaryDeduction)
+        this.taxableSalary.push(this.employersData[i].taxableSalary)
       }
-      this.salaryItrratedData.push(salObj);
-      this.grossSalary.push(this.employersData[i].grossSalary)
-      this.netSalary.push(this.employersData[i].netSalary)
-      this.totalSalaryDeduction.push(this.employersData[i].totalSalaryDeduction)
-      this.taxableSalary.push(this.employersData[i].taxableSalary)
+
+      for (let i = 0; i < this.employersData.length; i++) {
+        totalNetSalary = totalNetSalary + this.employersData[i].taxableSalary;
+        employerArray.push(this.employersData[i].employers)
+      }
+
+      this.itrSummaryForm.controls['incomeFromSalary'].setValue(totalNetSalary)
+      this.calculateGrossTotalIncome();     //Calculate point 4 (Total gross salary)
+      this.itrSummaryForm.controls['employers'].setValue(employerArray)
+
+      this.itrSummaryForm.controls['grossSalary'].setValue(this.grossSalary)
+      this.itrSummaryForm.controls['netSalary'].setValue(this.netSalary)
+      this.itrSummaryForm.controls['totalSalaryDeduction'].setValue(this.totalSalaryDeduction)
+      this.itrSummaryForm.controls['taxableSalary'].setValue(this.taxableSalary)
+
+      console.log('Salary Data: ', this.salaryItrratedData);
+      console.log('ITR formData: ', this.itrSummaryForm.value);
+    }
+    else if (action === 'Edit') {
+
+      console.log('employersData: ', emplyersData)
+      this.employersData.splice(index, 1, emplyersData)
+      console.log('employersData: ', this.employersData)
+      var employerArray = [];
+      var totalNetSalary = 0;
+      // for (let i = (this.employersData.length - 1); i < this.employersData.length; i++) {
+      let salObj = {
+        employerName: emplyersData.employers.employerName,
+        address: emplyersData.employers.address,
+        employerTAN: emplyersData.employers.employerTAN,
+        employerCategory: emplyersData.employers.employerCategory,
+        salAsPerSec171: emplyersData.employers.salary.length > 0 ? emplyersData.employers.salary[0].taxableAmount : 0,
+        valOfPerquisites: emplyersData.employers.perquisites.length > 0 ? emplyersData.employers.perquisites[0].taxableAmount : 0,
+        profitInLieu: emplyersData.employers.profitsInLieuOfSalaryType.length > 0 ? emplyersData.employers.profitsInLieuOfSalaryType[0].taxableAmount : 0,
+        grossSalary: emplyersData.grossSalary,
+        houseRentAllow: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
+        leaveTravelExpense: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'LTA')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
+        other: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
+        totalExemptAllow: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
+        netSalary: emplyersData.netSalary,
+        standardDeduction: emplyersData.employers.standardDeduction,
+        entertainAllow: (emplyersData.employers.deductions.length > 0 && (emplyersData.employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (emplyersData.employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
+        professionalTax: (emplyersData.employers.deductions.length > 0 && (emplyersData.employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (emplyersData.employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
+        totalSalaryDeduction: emplyersData.totalSalaryDeduction,
+        taxableSalary: emplyersData.taxableSalary,
+
+        pinCode: emplyersData.employers.pinCode,
+        country: emplyersData.employers.country,
+        state: emplyersData.employers.state,
+        city: emplyersData.employers.city,
+      }
+      this.salaryItrratedData.splice(index, 1, salObj);
+      this.grossSalary.splice(index, 1, emplyersData.grossSalary)
+      this.netSalary.splice(index, 1, emplyersData.netSalary)
+      this.totalSalaryDeduction.splice(index, 1, emplyersData.totalSalaryDeduction)
+      this.taxableSalary.splice(index, 1, emplyersData.taxableSalary)
+      // }
+
+      for (let i = 0; i < this.employersData.length; i++) {
+        totalNetSalary = totalNetSalary + this.employersData[i].taxableSalary;
+        employerArray.push(this.employersData[i].employers)
+      }
+
+      this.itrSummaryForm.controls['incomeFromSalary'].setValue(totalNetSalary)
+      this.calculateGrossTotalIncome();     //Calculate point 4 (Total gross salary)
+      this.itrSummaryForm.controls['employers'].setValue(employerArray)
+
+      this.itrSummaryForm.controls['grossSalary'].setValue(this.grossSalary)
+      this.itrSummaryForm.controls['netSalary'].setValue(this.netSalary)
+      this.itrSummaryForm.controls['totalSalaryDeduction'].setValue(this.totalSalaryDeduction)
+      this.itrSummaryForm.controls['taxableSalary'].setValue(this.taxableSalary)
+
+      console.log('Salary Data: ', this.salaryItrratedData);
+      console.log('ITR formData: ', this.itrSummaryForm.value);
     }
 
-    for (let i = 0; i < this.employersData.length; i++) {
-      totalNetSalary = totalNetSalary + this.employersData[i].taxableSalary;
-      employerArray.push(this.employersData[i].employers)
-    }
-
-    this.itrSummaryForm.controls['incomeFromSalary'].setValue(totalNetSalary)
-    this.calculateGrossTotalIncome();     //Calculate point 4 (Total gross salary)
-    this.itrSummaryForm.controls['employers'].setValue(employerArray)
-
-    this.itrSummaryForm.controls['grossSalary'].setValue(this.grossSalary)
-    this.itrSummaryForm.controls['netSalary'].setValue(this.netSalary)
-    this.itrSummaryForm.controls['totalSalaryDeduction'].setValue(this.totalSalaryDeduction)
-    this.itrSummaryForm.controls['taxableSalary'].setValue(this.taxableSalary)
-
-    console.log('Salary Data: ', this.salaryItrratedData);
-    console.log('ITR formData: ', this.itrSummaryForm.value);
   }
 
   checkPanDuplicate(panNum) {
@@ -878,7 +1149,7 @@ export class TaxSummaryComponent implements OnInit {
     }
 
     this.calculateHealthEducsCess()
-   
+
   }
 
   calculateHealthEducsCess() {      //Calculate point 10 (Tax after rebate (7-8))
@@ -923,7 +1194,12 @@ export class TaxSummaryComponent implements OnInit {
   calculateNetTaxPayble() {          //Calculate point 17 (Net Tax Payable/ (Refund) (15 - 16))
     console.log(this.totalInterest, this.totalTDS)
     let netTaxPayble = Number(this.itrSummaryForm.controls['totalTaxFeeAndInterest'].value) - this.totalTDS;
-    this.itrSummaryForm.controls['netTaxPayable'].setValue(netTaxPayble)
+    if (netTaxPayble > 0) {
+      this.itrSummaryForm.controls['netTaxPayable'].setValue(netTaxPayble)
+    } else {
+      this.itrSummaryForm.controls['netTaxPayable'].setValue(0)
+    }
+
   }
 
 
@@ -1114,5 +1390,77 @@ export class TaxSummaryComponent implements OnInit {
       $('input.ng-invalid').first().focus();
       return
     }
+  }
+
+  deleteData(type, index) {
+    if (type === 'Bank') {
+      this.bankData.splice(index, 1)
+    }
+    else if (type === 'donationSec80G') {
+      this.donationData.splice(index, 1)
+      this.itrSummaryForm.controls['donations'].setValue(this.donationData);
+      this.getdeductionTotal(this.donationData)
+    }
+    else if (type === 'tdsOnSal') {
+      this.tdsOnSal.splice(index, 1)
+      this.setTotalTDSVal(this.tdsOnSal, 'tdsOnSal')
+      this.setTaxValInObject(this.tdsOnSal[index], 'tdsOnSal', 'Delete', index)
+    }
+    else if (type === 'tdsOnOtherThanSal') {
+      this.tdsOtherThanSal.splice(index, 1)
+      this.setTotalTDSVal(this.tdsOtherThanSal, 'otherThanSalary16A')
+      this.setTaxValInObject(this.tdsOtherThanSal[index], 'otherThanSalary16A', 'Delete', index)
+    }
+    else if (type === 'tdsOnSalOfPro26Q') {
+      this.tdsSalesPro.splice(index, 1)
+      this.setTotalTDSVal(this.tdsSalesPro, 'otherThanSalary26QB')
+      this.setTaxValInObject(this.tdsSalesPro[index], 'otherThanSalary26QB', 'Delete', index)
+    }
+    else if (type === 'taxCollSources') {
+      this.taxCollAtSource.splice(index, 1)
+      this.setTotalTCSVal(this.taxCollAtSource);
+      this.setTaxValInObject(this.taxCollAtSource[index], 'taxCollSources', 'Delete', index)
+    }
+    else if (type === 'advanceSelfAssTax') {
+      this.advanceSelfTax.splice(index, 1)
+      this.setTotalAdvSelfTaxVal(this.advanceSelfTax);
+      this.setTaxValInObject(this.advanceSelfTax[index], 'advanceSelfAssTax', 'Delete', index)
+    }
+    else if (type === 'Salary') {
+      var totalNetSalary = 0;
+      var employerArray = [];
+      this.employersData.splice(index, 1);
+      this.salaryItrratedData.splice(index, 1);
+      this.grossSalary.splice(index, 1)
+      this.netSalary.splice(index, 1)
+      this.totalSalaryDeduction.splice(index, 1)
+      this.taxableSalary.splice(index, 1)
+
+      for (let i = 0; i < this.employersData.length; i++) {
+        totalNetSalary = totalNetSalary + this.employersData[i].taxableSalary;
+        employerArray.push(this.employersData[i].employers)
+      }
+
+      this.itrSummaryForm.controls['incomeFromSalary'].setValue(totalNetSalary)
+      this.calculateGrossTotalIncome();     //Calculate point 4 (Total gross salary)
+      this.itrSummaryForm.controls['employers'].setValue(employerArray)
+      this.itrSummaryForm.controls['grossSalary'].setValue(this.grossSalary)
+      this.itrSummaryForm.controls['netSalary'].setValue(this.netSalary)
+      this.itrSummaryForm.controls['totalSalaryDeduction'].setValue(this.totalSalaryDeduction)
+      this.itrSummaryForm.controls['taxableSalary'].setValue(this.taxableSalary)
+    }
+    else if(type === 'House'){
+      this.houseArray.splice(index, 1)
+      this.itrSummaryForm.controls['houseProperties'].setValue(this.houseArray);
+      console.log('Housing Data: ', this.itrSummaryForm.controls['houseProperties'].value)
+      this.hpStadDeduct.splice(index, 1)
+      this.netHousePro.splice(index, 1)
+      this.itrSummaryForm.controls['hpStandardDeduction'].setValue(this.hpStadDeduct);
+      this.itrSummaryForm.controls['netHousePropertyIncome'].setValue(this.netHousePro);
+     // this.createHouseDataObj(this.houseArray, housingData.hpStandardDeduction, housingData.netHousePropertyIncome, action, index);
+     this.housingData.splice(index, 1)
+      this.calculateGrossTotalIncome()
+    }
+
   }
 }
