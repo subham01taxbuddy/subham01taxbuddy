@@ -324,7 +324,7 @@
                 <mat-label>PAN of Donee</mat-label>
                 <input matInput placeholder="PAN" formControlName="dneePanNumber" autocomplete="off" type="text"
                     maxlength="10" minlength="10"
-                    (blur)="checkPanDuplicate(summaryDialogForm.controls['dneePanNumber'], 'donation')" upperCase>
+                    (blur)="checkPanDuplicate(summaryDialogForm.controls['dneePanNumber'], 'donation', 0)" upperCase>
                 <mat-error *ngIf="summaryDialogForm.controls['dneePanNumber'].hasError('pattern')">
                     Enter valid PAN (e.g XXXXX1234X)</mat-error>
                 <mat-error *ngIf="summaryDialogForm.controls['dneePanNumber'].hasError('incorrect')">
@@ -607,9 +607,12 @@
         <div class="card__col-lg-6" formGroupName="otherThanTDSTCS" *ngIf="data.mode == 'advanceSelfAssTax'">
             <mat-form-field appearance="outline">
                 <mat-label>BSR Code </mat-label>
-                <input matInput placeholder="BSR Code" formControlName="bsrCode"
+                <input matInput placeholder="BSR Code" formControlName="bsrCode" minlength="8"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
-
+                <mat-error
+                    *ngIf="summaryDialogForm['controls'].otherThanTDSTCS['controls'].bsrCode.hasError('minlength')">
+                    Minimum length should be 8
+                </mat-error>
             </mat-form-field>
         </div>
         <div class="card__col-lg-6" formGroupName="otherThanTDSTCS" *ngIf="data.mode == 'advanceSelfAssTax'">
@@ -626,8 +629,12 @@
         <div class="card__col-lg-6" formGroupName="otherThanTDSTCS" *ngIf="data.mode == 'advanceSelfAssTax'">
             <mat-form-field appearance="outline">
                 <mat-label>Challan No</mat-label>
-                <input matInput placeholder="Challan No" formControlName="challanNumber"
+                <input matInput placeholder="Challan No" formControlName="challanNumber" minlength="6"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="6">
+                <mat-error
+                    *ngIf="summaryDialogForm['controls'].otherThanTDSTCS['controls'].challanNumber.hasError('minlength')">
+                    Minimum length should be 6
+                </mat-error>
 
             </mat-form-field>
         </div>
@@ -648,7 +655,7 @@
                 <mat-label>Types of Property</mat-label>
                 <mat-select matInput formControlName="propertyType" placeholder="Types of Property"
                     (selectionChange)="setTenantValue(this.summaryDialogForm.value.houseProperties.propertyType, 'fromDialog')"
-                    autocomplete="off">
+                    autocomplete="off" required>
                     <mat-option *ngFor="let property of propertyTypeData" [value]="property.value">
                         {{property.label}}
                     </mat-option>
@@ -720,7 +727,8 @@
             </mat-form-field>
         </div>
 
-        <div *ngIf="!housingShow.isSOP">
+        <div>
+            <!--*ngIf="!housingShow.isSOP"-->
             <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
                 <mat-form-field appearance="outline">
                     <mat-label>Ownership</mat-label>
@@ -739,7 +747,6 @@
         <div *ngIf="housingShow.ownership">
             <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['ownerOfProperty'].value !== 'SELF'"-->
             <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
-                <!---->
                 <mat-form-field appearance="outline">
                     <mat-label>Co-ownwer</mat-label>
                     <mat-select matInput formControlName="otherOwnerOfProperty" placeholder="Co-ownwer"
@@ -755,15 +762,13 @@
 
 
         <div *ngIf="housingShow.showCoOwner">
-            <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['otherOwnerOfProperty'].value === 'YES'"-->
-            <div *ngIf="data.mode == 'House'">
-                <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['otherOwnerOfProperty'].value === 'YES'"-->
+            <!-- <div *ngIf="data.mode == 'House'">
                 <div class="card__col-lg-3">
                     <mat-form-field appearance="outline">
                         <mat-label>Co-ownwer name</mat-label>
-                        <input matInput placeholder="Co-ownwer name" formControlName="coOwnerName" maxlength="20"
+                        <input matInput placeholder="Co-ownwer name" formControlName="name" maxlength="20"
                             autocomplete="off">
-                        <mat-error *ngIf="summaryDialogForm.controls['coOwnerName'].hasError('required')">Enter
+                        <mat-error *ngIf="summaryDialogForm.controls['name'].hasError('required')">Enter
                             Co-ownwer name</mat-error>
                     </mat-form-field>
                 </div>
@@ -771,14 +776,14 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Co-ownwer PAN</mat-label>
                         <input matInput placeholder="PAN" autocomplete="off" type="text" maxlength="10" minlength="10"
-                            required formControlName="coOwnerPanNumber"
-                            (blur)="checkPanDuplicate(summaryDialogForm.controls['coOwnerPanNumber'], 'coOwnerPan')"
+                            required formControlName="panNumber"
+                            (blur)="checkPanDuplicate(summaryDialogForm.controls['panNumber'], 'coOwnerPan')"
                             upperCase>
-                        <mat-error *ngIf="summaryDialogForm.controls['coOwnerPanNumber'].hasError('required')">Enter
+                        <mat-error *ngIf="summaryDialogForm.controls['panNumber'].hasError('required')">Enter
                             Co-ownwer PAN</mat-error>
-                        <mat-error *ngIf="summaryDialogForm.controls['coOwnerPanNumber'].hasError('pattern')">
+                        <mat-error *ngIf="summaryDialogForm.controls['panNumber'].hasError('pattern')">
                             Enter valid PAN (e.g XXXXX1234X)</mat-error>
-                        <mat-error *ngIf="summaryDialogForm.controls['coOwnerPanNumber'].hasError('incorrect')">
+                        <mat-error *ngIf="summaryDialogForm.controls['panNumber'].hasError('incorrect')">
                             PAN Can't be same as User's PAN</mat-error>
 
                     </mat-form-field>
@@ -786,20 +791,81 @@
                 <div class="card__col-lg-3" *ngIf="data.mode == 'House'">
                     <mat-form-field appearance="outline">
                         <mat-label>Co-ownwer share</mat-label>
-                        <input matInput placeholder="Co-ownwer share" formControlName="coOwnerPercentage" maxlength="3"
+                        <input matInput placeholder="Co-ownwer share" formControlName="percentage" maxlength="3"
                             max="101" autocomplete="off" type="number"
                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                        <mat-error *ngIf="summaryDialogForm.controls['coOwnerPercentage'].hasError('required')">Enter
+                        <mat-error *ngIf="summaryDialogForm.controls['percentage'].hasError('required')">Enter
                             Co-ownwer share</mat-error>
-                        <mat-error *ngIf="summaryDialogForm.controls['coOwnerPercentage'].hasError('max')">
+                        <mat-error *ngIf="summaryDialogForm.controls['percentage'].hasError('max')">
                             Maximum amount should be 100
                         </mat-error>
                     </mat-form-field>
                 </div>
-            </div>
+            </div> -->
+
+            <table formGroupName="houseProperties">
+                <thead>
+                    <tr>
+                        <th><b>Co-owner name</b></th>
+                        <th><b>PAN</b></th>
+                        <th><b>Share(%)</b></th>
+                        <th><button (click)="addCoOwnerInfo()"><i class="fa fa-plus" aria-hidden="true"></i></button></th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="coOwners">
+                    <tr *ngFor="let coOwn of getCoOwnersArray.controls; let i=index" [formGroupName]="i">
+                        <td>
+                            <mat-form-field>
+                                <!--appearance="outline"-->
+                                <!-- <mat-label>Co-ownwer name</mat-label> -->
+                                <input matInput placeholder="Co-ownwer name" name="coOwn[i]"
+                                pattern="[a-zA-Z ]*"  formControlName="name" maxlength="20" autocomplete="off">
+                                <mat-error
+                                    *ngIf="summaryDialogForm['controls'].houseProperties['controls'].coOwners.controls[i].controls['name'].hasError('pattern')">
+                                    Enter valid Co-ownwer name</mat-error>
+                            </mat-form-field>
+                        </td>
+
+                        <td>
+                            <mat-form-field>
+                                <!-- <mat-label>Co-ownwer PAN</mat-label> -->
+                                <input matInput placeholder="PAN" autocomplete="off" name="coOwn[i]" type="text"
+                                    maxlength="10" minlength="10" required formControlName="panNumber"
+                                    (blur)="checkPanDuplicate(summaryDialogForm['controls'].houseProperties['controls'].coOwners.controls[i].controls['panNumber'], 'coOwnerPan', i)"
+                                    upperCase>   <!--coOwn.controls['panNumber']-->
+                                <!-- <mat-error *ngIf="summaryDialogForm.controls['panNumber'].hasError('required')">
+                                    Enter
+                                    Co-ownwer PAN</mat-error> -->
+                                <mat-error *ngIf="summaryDialogForm['controls'].houseProperties['controls'].coOwners.controls[i].controls['panNumber'].hasError('pattern')">
+                                    Enter valid PAN (e.g XXXXX1234X)</mat-error>
+                                <mat-error *ngIf="summaryDialogForm['controls'].houseProperties['controls'].coOwners.controls[i].controls['panNumber'].hasError('incorrect')">
+                                    PAN Can't be same as User's PAN</mat-error>
+
+                            </mat-form-field>
+                        </td>
+
+                        <td>
+                            <mat-form-field>
+                                <!-- <mat-label>Co-ownwer share</mat-label> -->
+                                <input matInput placeholder="Co-ownwer share" name="coOwn[i]"
+                                    formControlName="percentage" maxlength="2" max="99" autocomplete="off"
+                                    type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <!-- <mat-error *ngIf="summaryDialogForm.controls['percentage'].hasError('required')">
+                                    Enter
+                                    Co-ownwer share</mat-error> -->
+                                <mat-error *ngIf="summaryDialogForm['controls'].houseProperties['controls'].coOwners.controls[i].controls['percentage'].hasError('max')">
+                                    Maximum amount should be 100
+                                </mat-error>
+                            </mat-form-field>
+                        </td>
+
+                        <td><button (click)="removeCoOwner(i)"><i class="fa fa-trash" aria-hidden="true"></i></button></td>
+                    </tr>
+                </tbody>
+            </table><br><br>
         </div>
 
-        <div *ngIf="housingShow.showTenant">
+        <div *ngIf="housingShow.showTenant">  <!-- class="card__row"-->
             <!--*ngIf="summaryDialogForm['controls'].houseProperties.controls['propertyType'].value === 'LOP'"-->
             <div class="card__col-lg-3" *ngIf="data.mode == 'House'">
                 <mat-form-field appearance="outline">
@@ -815,7 +881,7 @@
                     <mat-label>Tenant PAN</mat-label>
                     <input matInput placeholder="PAN" formControlName="tenentPanNumber" autocomplete="off" type="text"
                         maxlength="10" minlength="10"
-                        (blur)="checkPanDuplicate(summaryDialogForm.controls['tenentPanNumber'], 'tenantPan')"
+                        (blur)="checkPanDuplicate(summaryDialogForm.controls['tenentPanNumber'], 'tenantPan', 0)"
                         upperCase>
                     <mat-error *ngIf="summaryDialogForm.controls['tenentPanNumber'].hasError('required')">Enter tenant
                         PAN
@@ -829,7 +895,7 @@
             </div>
         </div>
 
-        <div class="card__row" *ngIf="!housingShow.isSOP">
+        <div  *ngIf="!housingShow.isSOP">  <!--class="card__row"-->
             <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
                 <mat-form-field appearance="outline">
                     <mat-label>Gross rent received</mat-label>
@@ -837,7 +903,7 @@
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         formControlName="grossAnnualRentReceived" autocomplete="off" type="number"
-                        (blur)="setAnnualVal()" >
+                        (blur)="setAnnualVal()">
                     <mat-error
                         *ngIf="summaryDialogForm['controls'].houseProperties['controls'].grossAnnualRentReceived.hasError('required')">
                         Enter Gross rent recived
@@ -864,8 +930,7 @@
         </div>
 
 
-        <div class="card__row">
-
+        <!-- <div class="card__row"> -->
             <div *ngIf="!housingShow.isSOP">
                 <div class="card__col-lg-3" *ngIf="data.mode == 'House'">
                     <mat-form-field appearance="outline">
@@ -906,7 +971,7 @@
                     <!-- [value]="summaryDialogForm.controls['netHousePropertyIncome'].value"-->
                 </mat-form-field>
             </div>
-        </div>
+        <!-- </div> -->
 
 
     </mat-dialog-content>
