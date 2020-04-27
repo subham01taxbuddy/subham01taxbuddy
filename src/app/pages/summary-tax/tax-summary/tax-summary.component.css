@@ -81,3 +81,11 @@ tbody {
   overflow-y: scroll;
   display: block;
 }
+
+.disableBtn{
+  pointer-events: none;
+  background-color: grey;
+}
+.cursorNotAllow{
+  cursor: not-allowed;
+}

@@ -7,6 +7,7 @@ import { AppConstants } from 'app/shared/constants';
 import { UserMsService } from 'app/services/user-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { environment } from 'environments/environment';
 
 export const MY_FORMATS = {
   parse: {
@@ -256,11 +257,11 @@ export class TaxSummaryComponent implements OnInit {
     console.log('itrSummaryForm: ', this.itrSummaryForm)
     console.log('houseProperties: ', this.houseProperties)
 
-    window.addEventListener('beforeunload', function (e) {
-      console.log('e: ', e)
-      e.preventDefault();
-      e.returnValue = `Are you sure, you want to leave page?`;
-    });
+    // window.addEventListener('beforeunload', function (e) {
+    //   console.log('e: ', e)
+    //   e.preventDefault();
+    //   e.returnValue = `Are you sure, you want to leave page?`;
+    // });
   }
 
   getIncomesValue() {
@@ -640,6 +641,7 @@ export class TaxSummaryComponent implements OnInit {
       this.itrSummaryForm.controls['netHousePropertyIncome'].setValue(this.netHousePro);
       this.createHouseDataObj(this.houseArray, housingData.hpStandardDeduction, housingData.netHousePropertyIncome, action, null);
       this.calculateGrossTotalIncome()
+      console.log('BEFORE SAVE SUMMARY Housing Data:=> ', this.itrSummaryForm.controls['houseProperties'].value)
     }
     else if (action === 'Edit') {
       this.houseArray.splice(index, 1, housingData.house)
@@ -672,9 +674,11 @@ export class TaxSummaryComponent implements OnInit {
         propertyType: houseData[0].propertyType,
         address: address,
         ownerOfProperty: houseData[0].ownerOfProperty,
-        coOwnerName: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].name : '',
-        coOwnerPanNumber: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].panNumber : '',
-        coOwnerPercentage: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].percentage : '',
+        // coOwnerName: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].name : '',
+        // coOwnerPanNumber: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].panNumber : '',
+        // coOwnerPercentage: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].percentage : '',
+        coOwners:  houseData[0].coOwners ,
+        otherOwnerOfProperty:  houseData[0].otherOwnerOfProperty ,
         tenantName: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].name : '',
         tenentPanNumber: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].panNumber : '',
         grossAnnualRentReceived: houseData[0].grossAnnualRentReceived ? houseData[0].grossAnnualRentReceived : '',
@@ -713,9 +717,12 @@ export class TaxSummaryComponent implements OnInit {
         propertyType: houseData[0].propertyType,
         address: address,
         ownerOfProperty: houseData[0].ownerOfProperty,
-        coOwnerName: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].name : '',
-        coOwnerPanNumber: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].panNumber : '',
-        coOwnerPercentage: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].percentage : '',
+        // coOwnerName: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].name : '',
+        // coOwnerPanNumber: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].panNumber : '',
+        // coOwnerPercentage: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].percentage : '',
+
+        coOwners:  houseData[0].coOwners,
+        otherOwnerOfProperty:  houseData[0].otherOwnerOfProperty,
         tenantName: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].name : '',
         tenentPanNumber: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].panNumber : '',
         grossAnnualRentReceived: houseData[0].grossAnnualRentReceived ? houseData[0].grossAnnualRentReceived : '',
@@ -947,25 +954,25 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  onOwnerSelfSetVal(ownerOfProperty) {
-    console.log('ownerOfProperty: ', ownerOfProperty)
-    if (ownerOfProperty === 'SELF') {
-      this.itrSummaryForm['controls'].houseProperties['controls'].otherOwnerOfProperty.setValue('NO')
-      console.log('otherOwnerOfProperty: ', this.itrSummaryForm['controls'].houseProperties['controls'].otherOwnerOfProperty.value)
-      this.setCOwnerVal(this.itrSummaryForm['controls'].houseProperties['controls'].otherOwnerOfProperty.value)
-    }
-  }
+  // onOwnerSelfSetVal(ownerOfProperty) {
+  //   console.log('ownerOfProperty: ', ownerOfProperty)
+  //   if (ownerOfProperty === 'SELF') {
+  //     this.itrSummaryForm['controls'].houseProperties['controls'].otherOwnerOfProperty.setValue('NO')
+  //     console.log('otherOwnerOfProperty: ', this.itrSummaryForm['controls'].houseProperties['controls'].otherOwnerOfProperty.value)
+  //     this.setCOwnerVal(this.itrSummaryForm['controls'].houseProperties['controls'].otherOwnerOfProperty.value)
+  //   }
+  // }
 
-  setCOwnerVal(co_ownerProperty) {
-    console.log(co_ownerProperty)
-    if (co_ownerProperty === 'NO') {
-      this.itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].name.setValue(null);
-      this.itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].panNumber.setValue(null);
-      this.itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].percentage.setValue(0);
-      this.itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].panNumber.reset();
-      //  this.itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].panNumber.updateValueAndValidity();
-    }
-  }
+  // setCOwnerVal(co_ownerProperty) {
+  //   console.log(co_ownerProperty)
+  //   if (co_ownerProperty === 'NO') {
+  //     this.itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].name.setValue(null);
+  //     this.itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].panNumber.setValue(null);
+  //     this.itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].percentage.setValue(0);
+  //     this.itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].panNumber.reset();
+  //     //  this.itrSummaryForm['controls'].houseProperties['controls'].coOwners['controls'].panNumber.updateValueAndValidity();
+  //   }
+  // }
 
   // ngAfterContentChecked() {
   //   console.log('houseProperties: ',this.houseProperties.value)
@@ -1177,7 +1184,7 @@ export class TaxSummaryComponent implements OnInit {
     } else {
       this.itrSummaryForm.controls['balanceTaxAfterRelief'].setValue(0);
     }
-
+   this.calculateTotalInterestFees();
   }
 
   calculateTotalInterestFees() {    //Calculate point 14 (Total Tax, fee and Interest (13+14))
@@ -1194,11 +1201,7 @@ export class TaxSummaryComponent implements OnInit {
   calculateNetTaxPayble() {          //Calculate point 17 (Net Tax Payable/ (Refund) (15 - 16))
     console.log(this.totalInterest, this.totalTDS)
     let netTaxPayble = Number(this.itrSummaryForm.controls['totalTaxFeeAndInterest'].value) - this.totalTDS;
-    if (netTaxPayble > 0) {
       this.itrSummaryForm.controls['netTaxPayable'].setValue(netTaxPayble)
-    } else {
-      this.itrSummaryForm.controls['netTaxPayable'].setValue(0)
-    }
 
   }
 
@@ -1271,7 +1274,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   incomeData: any = [];
-  addItrSummary() {
+  saveItrSummary() {
 
     console.log('this.sourcesOfIncome: ', this.sourcesOfIncome);
 
@@ -1373,16 +1376,20 @@ export class TaxSummaryComponent implements OnInit {
       this.loading = true;
       const param = '/itr/summary';
       let body = this.itrSummaryForm.value;
-      this.userService.postMethodDownloadDoc(param, body).subscribe((result: any) => {
+      // this.userService.postMethodDownloadDoc(param, body).subscribe((result: any) => {
+      this.userService.postMethodInfo(param, body).subscribe((result: any) => {
         console.log("result: ", result)
         this.loading = false;
-        var fileURL = new Blob([result.blob()], { type: 'application/pdf' })
-        window.open(URL.createObjectURL(fileURL))
-        this._toastMessageService.alert("success", "Summary download save succesfully.");
+        
+        this.itrSummaryForm.patchValue(result)
+        console.log('itrSummaryForm value: ', this.itrSummaryForm.value)
+        // var fileURL = new Blob([result.blob()], { type: 'application/pdf' })
+        // window.open(URL.createObjectURL(fileURL))
+        this._toastMessageService.alert("success", "Summary save succesfully.");
         //this.invoiceForm.reset();
       }, error => {
         this.loading = false;
-        this._toastMessageService.alert("error", "There is some issue to download summary.");
+        this._toastMessageService.alert("error", "There is some issue save to summary.");
       });
 
     }
@@ -1390,6 +1397,10 @@ export class TaxSummaryComponent implements OnInit {
       $('input.ng-invalid').first().focus();
       return
     }
+  }
+
+  downloadItrSummary(){
+    location.href =  environment.url +'/itr/summary/download/'+this.itrSummaryForm.value.summaryId;
   }
 
   deleteData(type, index) {

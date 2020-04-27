@@ -569,9 +569,9 @@
                             <th>Property Type</th>
                             <th>Address</th>
                             <th>Ownership</th>
-                            <th>Co-owned Name</th>
+                            <!-- <th>Co-owned Name</th>
                             <th>Co-owned PAN</th>
-                            <th>Co-owned share</th>
+                            <th>Co-owned share</th> -->
                             <th>Tenat name</th>
                             <th>Gross Rent Recived</th>
                             <th>Less: Taxes Paid</th>
@@ -587,9 +587,9 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <!-- <td></td>
                             <td></td>
-                            <td></td>
-                            <td></td>
+                            <td></td> -->
                             <td></td>
                             <td></td>
                             <td></td>
@@ -604,9 +604,9 @@
                             <td>{{house.propertyType}}</td>
                             <td>{{house.address}}</td>
                             <td>{{house.ownerOfProperty}}</td>
-                            <td>{{house.coOwnerName}}</td>
+                            <!-- <td>{{house.coOwnerName}}</td>
                             <td>{{house.coOwnerPanNumber}}</td>
-                            <td>{{house.coOwnerPercentage}}</td>
+                            <td>{{house.coOwnerPercentage}}</td> -->
                             <td>{{house.tenantName}}</td>
                             <td>{{house.grossAnnualRentReceived}}</td>
                             <td>{{house.propertyTax}}</td>
@@ -1488,7 +1488,10 @@
 
                     <!-- </div> -->
                     <div class="card__row">
-                        <button class="btn" (click)="addItrSummary()">Download Summary</button>
+                        <button class="btn" (click)="saveItrSummary()">Save Summary</button> &nbsp;
+                        <span [class.cursorNotAllow]="itrSummaryForm.value.summaryId === 0">
+                            <button class="btn" [class.disableBtn]="itrSummaryForm.value.summaryId === 0" (click)="downloadItrSummary()">Download Summary</button>
+                        </span>
                     </div>
                 </form>
             </div>
