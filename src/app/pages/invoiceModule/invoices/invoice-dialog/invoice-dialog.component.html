@@ -167,7 +167,8 @@
         <div class="card__col-xs-4 card__col-sm-4">
             <mat-form-field appearance="outline">
                 <mat-label>State</mat-label>
-                <mat-select formControlName="state" matInput placeholder="State" autocomplete="off" required>
+                <mat-select formControlName="state" matInput placeholder="State" autocomplete="off" required
+                (selectionChange)="this.showTaxRelatedState(this.invoiceEditForm.controls['state'].value)">
                     <mat-option *ngFor="let state of stateDropdown" [value]="state.stateName">
                         <!--stateCode-->
                         {{state.stateName | titlecase}}
@@ -254,13 +255,18 @@
                         </div>
                         <div style="float: right;" class="card__col-lg-5">₹
                             {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceTotal)}}</div>
-                        <div class="card__col-lg-7">CGST (9%)</div>
-                        <div style="float: right;" class="card__col-lg-5">₹
+                        <div *ngIf="isMaharashtraState" class="card__col-lg-7">CGST (9%)</div>
+                        <div *ngIf="isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
                             {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceCGST)}}
                         </div>
-                        <div class="card__col-lg-7">SGST (9%)</div>
-                        <div style="float: right;" class="card__col-lg-5">₹
+                        <div *ngIf="isMaharashtraState" class="card__col-lg-7">SGST (9%)</div>
+                        <div *ngIf="isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
                             {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceSGST)}}
+                        </div>
+                        <div *ngIf="!isMaharashtraState" class="card__col-lg-7">IGST (18%)</div>
+                        <div *ngIf="!isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
+                            {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceIGST)}}
+                            <!--getRoundAmount()-->
                         </div>
                         <div class="card__col-lg-7 bold">Total</div>
                         <div style="float: right;" class="card__col-lg-5 bold">₹

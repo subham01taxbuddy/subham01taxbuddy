@@ -51,6 +51,7 @@ export class AddInvoiceComponent implements OnInit {
   invoiceTableInfo: any = [];
   editInvoice: boolean;
   addNewUser: boolean;
+  isMaharashtraState: boolean;
   countryDropdown: any = [{ "countryId": 1, "countryName": "INDIA", "countryCode": "91" }];
   paymentMode: any = [{ value: 'Online' }, { value: 'Cash' }];
   paymentStatus: any = [{ value: 'Paid', label: 'Paid' }, { value: 'Failed', label: 'Failed' }, { value: 'Unpaid', label: 'Unpaid' }]
@@ -102,8 +103,9 @@ export class AddInvoiceComponent implements OnInit {
       phone: ['', [Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex), Validators.required]],
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
       subTotal: ['', Validators.required],
-      cgstTotal: ['', Validators.required],
-      sgstTotal: ['', Validators.required],
+      cgstTotal: [''],
+      sgstTotal: [''],
+      igstTotal: [''],
       total: ['', Validators.required],
       balanceDue: ['', Validators.required],
       itemList: ['', Validators.required],
@@ -216,6 +218,8 @@ export class AddInvoiceComponent implements OnInit {
             cgstAmnt: '',
             sgstPercent: '9',
             sgstAmnt: '',
+            igstPercent: '18',
+            igstAmnt: '',
             amnt: ''
           }]
           this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))    //use for clear invoice table fields
@@ -282,6 +286,8 @@ export class AddInvoiceComponent implements OnInit {
         cgstAmnt: '',
         sgstPercent: '9',
         sgstAmnt: '',
+        igstPercent: '18',
+        igstAmnt: '',
         amnt: ''
       }]
       this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))
@@ -343,6 +349,7 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.controls['email'].setValue(this.invoiceDetail[0].email);
 
       console.log('invoiceForm: ', this.invoiceForm)
+      this.showTaxRelatedState(this.invoiceForm.controls['state'].value);
     }
 
   }
@@ -369,6 +376,8 @@ export class AddInvoiceComponent implements OnInit {
       cgstAmnt: '',
       sgstPercent: '9',
       sgstAmnt: '',
+      igstPercent: '18',
+      igstAmnt: '',
       amnt: ''
     }
   }
@@ -453,13 +462,16 @@ export class AddInvoiceComponent implements OnInit {
       },
       {
         headerName: 'CGST',
-        cellStyle: { textAlign: 'center' },
+        field: 'cgst',
+        // hide: (this.isMaharashtraState === true) ? false : true,
+        cellStyle: { textAlign: 'center' } ,
         //field: 'cgstPercent',
         children: [
           {
             headerName: "9%",
             field: "cgstPercent",
             width: 70,
+            // hide: this.isMaharashtraState ? false : true,
             valueGetter: function (params) {
               if (params.data.rate) {
                 console.log(params.data.rate)
@@ -473,7 +485,9 @@ export class AddInvoiceComponent implements OnInit {
             headerName: "Amt",
             field: "cgstAmnt",
             width: 110,
-            valueGetter: function (params) {
+            // hide: this.isMaharashtraState ? false : true,
+            valueGetter: function (params) { 
+              console.log('CGST params=> ', params)
               if (params.data.quantity && params.data.rate && params.data.cgstPercent) {
                 console.log(params.data.rate);
                 return Math.round(((params.data.rate * params.data.cgstPercent / 118) * params.data.quantity))  //.toFixed(2);
@@ -483,6 +497,8 @@ export class AddInvoiceComponent implements OnInit {
       },
       {
         headerName: 'SGST',
+        field: 'sgst',
+        // hide: this.isMaharashtraState ? false : true,
         cellStyle: { textAlign: 'center' },
         //field: 'ifaId',
         children: [
@@ -490,6 +506,7 @@ export class AddInvoiceComponent implements OnInit {
             headerName: "9%",
             field: "sgstPercent",
             width: 70,
+            // hide: this.isMaharashtraState ? false : true,
             valueGetter: function (params) {
               if (params.data.rate) {
                 console.log('cgstPercent: ', params.data.cgstPercent)
@@ -502,10 +519,44 @@ export class AddInvoiceComponent implements OnInit {
             headerName: "Amt",
             field: "sgstAmnt",
             width: 110,
+            // hide: this.isMaharashtraState ? false : true,
             valueGetter: function (params) {
               if (params.data.quantity && params.data.rate && params.data.cgstPercent) {
                 console.log(params.data.rate)
                 return Math.round((params.data.rate * params.data.cgstPercent / 118) * params.data.quantity)  //.toFixed(2)
+              }
+            },
+          }]
+      },
+      {
+        headerName: 'IGST',
+        field: 'igst',
+        // hide: this.isMaharashtraState ? true : false,
+        cellStyle: { textAlign: 'center' },
+        //field: 'ifaId',
+        children: [
+          {
+            headerName: "18%",
+            field: "igstPercent",
+            width: 140,
+            // hide: this.isMaharashtraState ? true : false,
+            valueGetter: function (params) {
+              if (params.data.rate) {
+                console.log('cgstPercent: ', params.data.igstPercent)
+                return params.data.igstPercent + '%';
+              }
+            },
+          }
+          ,
+          {
+            headerName: "Amt",
+            field: "igstAmnt",
+            width: 220,
+            // hide: this.isMaharashtraState ? true : false,
+            valueGetter: function (params) {
+              if (params.data.quantity && params.data.rate && params.data.igstPercent) {
+                console.log("igstPercent: ",params.data.igstPercent)
+                return Math.round((params.data.rate * params.data.igstPercent / 118) * params.data.quantity)  //.toFixed(2)
               }
             },
           }]
@@ -623,6 +674,8 @@ export class AddInvoiceComponent implements OnInit {
         this.invoiceForm.controls['country'].setValue('INDIA');   //91
         this.invoiceForm.controls['city'].setValue(result.taluka);
         this.invoiceForm.controls['state'].setValue(result.stateName);  //stateCode
+
+        this.showTaxRelatedState(this.invoiceForm.controls['state'].value);
       }, error => {
         if (error.status === 404) {
           this.invoiceForm.controls['city'].setValue(null);
@@ -652,14 +705,16 @@ export class AddInvoiceComponent implements OnInit {
     this.invoiceData = {
       'invoiceTotal': 0,
       'invoiceCGST': 0,
-      'invoiceSGST': 0
+      'invoiceSGST': 0,
+      'invoiceIGST': 0
     }
 
     if (this.clientListGridOptions && this.clientListGridOptions.api && this.clientListGridOptions.api.getRenderedNodes()) {
       for (let i = 0; i < this.clientListGridOptions.api.getRenderedNodes().length; i++) {
         this.invoiceData.invoiceTotal = this.invoiceData.invoiceTotal + (this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity)
-        this.invoiceData.invoiceCGST = this.invoiceData.invoiceCGST + Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity)
-        this.invoiceData.invoiceSGST = this.invoiceData.invoiceSGST + Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity)
+        this.invoiceData.invoiceCGST = this.isMaharashtraState ? this.invoiceData.invoiceCGST + Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity) : 0;
+        this.invoiceData.invoiceSGST = this.isMaharashtraState ? this.invoiceData.invoiceSGST + Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity) : 0;
+        this.invoiceData.invoiceIGST = !this.isMaharashtraState ? this.invoiceData.invoiceIGST + Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.igstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity) : 0;
       }
     }
     return this.invoiceData;
@@ -672,6 +727,7 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.controls['subTotal'].setValue(this.invoiceData.invoiceTotal)
       this.invoiceForm.controls['cgstTotal'].setValue(this.invoiceData.invoiceCGST)
       this.invoiceForm.controls['sgstTotal'].setValue(this.invoiceData.invoiceSGST)
+      this.invoiceForm.controls['igstTotal'].setValue(this.invoiceData.invoiceIGST )
       this.invoiceForm.controls['total'].setValue(this.invoiceData.invoiceTotal)
       this.invoiceForm.controls['balanceDue'].setValue(this.invoiceData.invoiceTotal)
       this.invoiceForm.controls['paymentStatus'].setValue(this.invoiceForm.controls['modeOfPayment'].value === 'Cash' ? 'Paid' : 'Unpaid')
@@ -683,9 +739,11 @@ export class AddInvoiceComponent implements OnInit {
           'quantity': this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity,
           'rate': this.clientListGridOptions.api.getRenderedNodes()[i].data.rate,
           'cgstPercent': this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent,
-          'cgstAmount': Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity),
+          'cgstAmount': this.isMaharashtraState ? Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity) : 0,
           'sgstPercent': this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent,
-          'sgstAmount': Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity),
+          'sgstAmount': this.isMaharashtraState ? Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity) : 0,
+          'igstPercent': this.clientListGridOptions.api.getRenderedNodes()[i].data.igstPercent,
+          'igstAmount': !this.isMaharashtraState ? Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.igstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity) : 0, 
           'amount': this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity
         })
       }
@@ -705,9 +763,6 @@ export class AddInvoiceComponent implements OnInit {
           console.log("result: ", result)
           this.utilsService.smoothScrollToTop();
           this.showInvoices = true;
-          // var fileURL = new Blob([result.blob()], { type: 'application/pdf' })
-          // window.open(URL.createObjectURL(fileURL))
-
           this._toastMessageService.alert("success", "Invoice save succesfully.");
           // this.invoiceTableInfo =[];
           // this.selectUser.reset();
@@ -772,6 +827,7 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.patchValue(result)
       console.log('Updated Form: ', this.invoiceForm)
       this.clientListGridOptions.api.setRowData(this.setCreateRowDate(this.invoiceForm.value.itemList))
+      this.showTaxRelatedState(this.invoiceForm.controls['state'])
       // this._toastMessageService.alert("success", "Invoice download successfully.");
     }, error => {
       this.loading = false;
@@ -783,7 +839,7 @@ export class AddInvoiceComponent implements OnInit {
     console.log('userInvoiceData: ', userInvoiceData)
     var invoices = [];
     for (let i = 0; i < userInvoiceData.length; i++) {
-      let updateInvoice = Object.assign({}, userInvoiceData[i], { itemDescription: userInvoiceData[i].itemDescription, quantity: userInvoiceData[i].quantity, rate: userInvoiceData[i].rate, cgstPercent: userInvoiceData[i].cgstPercent, cgstAmnt: userInvoiceData[i].cgstAmount, sgstPercent: userInvoiceData[i].sgstPercent, sgstAmnt: userInvoiceData[i].sgstAmnt, amnt: userInvoiceData[i].amount })
+      let updateInvoice = Object.assign({}, userInvoiceData[i], { itemDescription: userInvoiceData[i].itemDescription, quantity: userInvoiceData[i].quantity, rate: userInvoiceData[i].rate, cgstPercent: userInvoiceData[i].cgstPercent, cgstAmnt: userInvoiceData[i].cgstAmount, sgstPercent: userInvoiceData[i].sgstPercent, sgstAmnt: userInvoiceData[i].sgstAmnt, igstPercent: userInvoiceData[i].igstPercent, igstAmnt: userInvoiceData[i].igstAmnt,  amnt: userInvoiceData[i].amount })
       invoices.push(updateInvoice)
     }
     console.log('user invoices: ', invoices);
@@ -830,6 +886,25 @@ export class AddInvoiceComponent implements OnInit {
   addNewUserInvoice() {
     this.addNewUser = true;
     this.getUserInvoiceList();
+  }
+
+
+  showTaxRelatedState(state){
+    if(state === 'Maharashtra'){
+      this.isMaharashtraState = true;
+      // alert(this.isMaharashtraState)  
+       //   this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))     
+      this.clientListGridOptions.columnApi.setColumnsVisible(['cgst','cgstPercent','cgstAmnt','sgst','sgstPercent','sgstAmnt'], true)
+      this.clientListGridOptions.columnApi.setColumnsVisible(['igst','igstPercent','igstAmnt'], false)
+     // this.invoiceInfoCalled();
+
+    }else{
+      this.isMaharashtraState = false;
+   //   alert(this.isMaharashtraState)
+       this.clientListGridOptions.columnApi.setColumnsVisible(['cgst','cgstPercent','cgstAmnt','sgst','sgstPercent','sgstAmnt'], false)
+       this.clientListGridOptions.columnApi.setColumnsVisible(['igst','igstPercent','igstAmnt'], true)
+     //  this.invoiceInfoCalled();
+    }
   }
 
 }
