@@ -37,10 +37,11 @@ export class InvoiceDialogComponent implements OnInit {
   countryDropdown: any = [{ "countryId": 1, "countryName": "INDIA", "countryCode": "91" }];
   paymentMode: any = [{ value: 'Online' }, { value: 'Cash' }];
   paymentStatus: any = [{ value: 'Paid', label: 'Paid' }, { value: 'Failed', label: 'Failed' }, { value: 'Unpaid', label: 'Unpaid' }]
-  stateDropdown: any=[];
-  invoiceTableInfo: any=[];
+  stateDropdown: any = [];
+  invoiceTableInfo: any = [];
   clientListGridOptions: GridOptions;
   loading: boolean;
+  isMaharashtraState: boolean;
 
   constructor(public dialogRef: MatDialogRef<InvoiceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder, public userService: UserMsService, private _toastMessageService: ToastMessageService, public utilsService: UtilsService) { }
@@ -75,8 +76,9 @@ export class InvoiceDialogComponent implements OnInit {
       phone: ['', [Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex), Validators.required]],
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
       subTotal: ['', Validators.required],
-      cgstTotal: ['', Validators.required],
-      sgstTotal: ['', Validators.required],
+      cgstTotal: [''],
+      sgstTotal: [''],
+      igstTotal: [''],
       total: ['', Validators.required],
       balanceDue: ['', Validators.required],
       itemList: ['', Validators.required],
@@ -85,20 +87,21 @@ export class InvoiceDialogComponent implements OnInit {
       isLinkInvalid: false,
       amountInWords: ''
     })
-  
+
   }
 
-  getUserInvoiceData(invoiceInfo){
-    console.log('invoiceInfo: ',invoiceInfo)
+  getUserInvoiceData(invoiceInfo) {
+    console.log('invoiceInfo: ', invoiceInfo)
     this.loading = true;
     const param = '/itr/invoice?invoiceNo=' + invoiceInfo.invoiceNo;
     this.userService.getMethodInfo(param).subscribe((result: any) => {
       this.loading = false;
       console.log('User Profile: ', result)
-       this.invoiceEditForm.patchValue(result)
-      console.log('invoiceEditForm: ',this.invoiceEditForm)
-      
-     this.clientListGridOptions.api.setRowData(this.setInvoiceRowData(this.invoiceEditForm.value.itemList))
+      this.invoiceEditForm.patchValue(result)
+      console.log('invoiceEditForm: ', this.invoiceEditForm)
+
+      this.clientListGridOptions.api.setRowData(this.setInvoiceRowData(this.invoiceEditForm.value.itemList))
+      this.showTaxRelatedState(this.invoiceEditForm.controls['state'].value)
     }, error => {
       this.loading = false;
       //this._toastMessageService.alert("error", "Faild to generate Invoice.");
@@ -162,16 +165,17 @@ export class InvoiceDialogComponent implements OnInit {
     }
   }
 
-  updateInvoice(){
+  updateInvoice() {
 
     if (this.clientListGridOptions && this.clientListGridOptions.api && this.clientListGridOptions.api.getRenderedNodes() && this.clientListGridOptions.api.getRenderedNodes()[0].data.itemDescription) {
       this.invoiceEditForm.controls['userId'].setValue(this.utilsService.isNonEmpty(this.invoiceEditForm.controls['userId'].value) ? this.invoiceEditForm.controls['userId'].value : null)
       this.invoiceEditForm.controls['subTotal'].setValue(this.invoiceData.invoiceTotal)
       this.invoiceEditForm.controls['cgstTotal'].setValue(this.invoiceData.invoiceCGST)
       this.invoiceEditForm.controls['sgstTotal'].setValue(this.invoiceData.invoiceSGST)
+      this.invoiceEditForm.controls['igstTotal'].setValue(this.invoiceData.invoiceIGST)
       this.invoiceEditForm.controls['total'].setValue(this.invoiceData.invoiceTotal)
       this.invoiceEditForm.controls['balanceDue'].setValue(this.invoiceData.invoiceTotal)
-     // this.invoiceEditForm.controls['paymentStatus'].setValue(this.invoiceEditForm.controls['modeOfPayment'].value === 'Cash' ? 'Paid' : 'Unpaid')
+      // this.invoiceEditForm.controls['paymentStatus'].setValue(this.invoiceEditForm.controls['modeOfPayment'].value === 'Cash' ? 'Paid' : 'Unpaid')
       this.invoiceTableInfo = [];
 
       for (let i = 0; i < this.clientListGridOptions.api.getRenderedNodes().length; i++) {
@@ -180,9 +184,11 @@ export class InvoiceDialogComponent implements OnInit {
           'quantity': this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity,
           'rate': this.clientListGridOptions.api.getRenderedNodes()[i].data.rate,
           'cgstPercent': this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent,
-          'cgstAmount': Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity),
+          'cgstAmount': this.isMaharashtraState ? Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity) : 0,
           'sgstPercent': this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent,
-          'sgstAmount': Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity),
+          'sgstAmount': this.isMaharashtraState ? Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity) : 0,
+          'igstPercent': this.clientListGridOptions.api.getRenderedNodes()[i].data.igstPercent,
+          'igstAmount': !this.isMaharashtraState ? Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.igstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity) : 0,
           'amount': this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity
         })
       }
@@ -190,19 +196,19 @@ export class InvoiceDialogComponent implements OnInit {
       console.log('invoiceTableInfo ', this.invoiceTableInfo)
       this.invoiceEditForm.controls['itemList'].setValue(this.invoiceTableInfo)
 
-    if (this.invoiceEditForm.valid) {
+      if (this.invoiceEditForm.valid) {
         console.log('Invoice Form: ', this.invoiceEditForm)
         this.loading = true;
         const param = '/itr/invoice';
         let body = this.invoiceEditForm.value;
         this.userService.postMethodDownloadDoc(param, body).subscribe((result: any) => {
-         this.loading = false;
-         this._toastMessageService.alert("success", "Invoice update succesfully.");
-        setTimeout(()=>{
-          this.dialogRef.close({event:'close', msg:'Update'})
-        },3000)
-         
-        
+          this.loading = false;
+          this._toastMessageService.alert("success", "Invoice update succesfully.");
+          setTimeout(() => {
+            this.dialogRef.close({ event: 'close', msg: 'Update' })
+          }, 3000)
+
+
         }, error => {
           this.loading = false;
           this._toastMessageService.alert("error", "There is some issue to Update user invoice data.");
@@ -212,15 +218,15 @@ export class InvoiceDialogComponent implements OnInit {
         $('input.ng-invalid').first().focus();
         this._toastMessageService.alert("error", "Fill all mandatory form fields.");
       }
-    }else{
+    } else {
       this._toastMessageService.alert("error", "Fill invoice table date.");
     }
   }
-  
+
   invoiceInfoCalled() {    //invoiceVal
-  
+
     this.clientListGridOptions = <GridOptions>{
-     // rowData: this.setInvoiceRowData(invoiceVal.itemList),
+      // rowData: this.setInvoiceRowData(invoiceVal.itemList),
       rowData: [this.setInvoiceRow()],
       columnDefs: this.createColumnDefs(),
       enableCellChangeFlash: true,
@@ -234,16 +240,16 @@ export class InvoiceDialogComponent implements OnInit {
     };
   }
 
-  setInvoiceRowData(userInvoiceData){
+  setInvoiceRowData(userInvoiceData) {
     console.log('userInvoiceData: ', userInvoiceData)
     var invoices = [];
     for (let i = 0; i < userInvoiceData.length; i++) {
-      let updateInvoice = Object.assign({}, userInvoiceData[i], { itemDescription: userInvoiceData[i].itemDescription, quantity: userInvoiceData[i].quantity, rate: userInvoiceData[i].rate, cgstPercent: userInvoiceData[i].cgstPercent, cgstAmnt: userInvoiceData[i].cgstAmount, sgstPercent: userInvoiceData[i].sgstPercent, sgstAmnt: userInvoiceData[i].sgstAmnt, amnt: userInvoiceData[i].amount })
+      let updateInvoice = Object.assign({}, userInvoiceData[i], { itemDescription: userInvoiceData[i].itemDescription, quantity: userInvoiceData[i].quantity, rate: userInvoiceData[i].rate, cgstPercent: userInvoiceData[i].cgstPercent, cgstAmnt: userInvoiceData[i].cgstAmount, sgstPercent: userInvoiceData[i].sgstPercent, sgstAmnt: userInvoiceData[i].sgstAmnt, igstPercent: userInvoiceData[i].igstPercent, igstAmnt: userInvoiceData[i].igstAmnt, amnt: userInvoiceData[i].amount })
       invoices.push(updateInvoice)
     }
     console.log('user invoices: ', invoices);
     return invoices;
-  } 
+  }
 
   createColumnDefs() {
     return [
@@ -286,7 +292,7 @@ export class InvoiceDialogComponent implements OnInit {
       {
         headerName: 'CGST',
         cellStyle: { textAlign: 'center' },
-        //field: 'cgstPercent',
+        field: 'cgst',
         children: [
           {
             headerName: "9%",
@@ -316,7 +322,7 @@ export class InvoiceDialogComponent implements OnInit {
       {
         headerName: 'SGST',
         cellStyle: { textAlign: 'center' },
-        //field: 'ifaId',
+        field: 'sgst',
         children: [
           {
             headerName: "9%",
@@ -338,6 +344,37 @@ export class InvoiceDialogComponent implements OnInit {
               if (params.data.quantity && params.data.rate && params.data.cgstPercent) {
                 console.log(params.data.rate)
                 return Math.round((params.data.rate * params.data.cgstPercent / 118) * params.data.quantity)  //.toFixed(2)
+              }
+            },
+          }]
+      },
+      {
+        headerName: 'IGST',
+        field: 'igst',
+        cellStyle: { textAlign: 'center' },
+        //field: 'ifaId',
+        children: [
+          {
+            headerName: "18%",
+            field: "igstPercent",
+            width: 140,
+            valueGetter: function (params) {
+              if (params.data.rate) {
+                console.log('cgstPercent: ', params.data.igstPercent)
+                return params.data.igstPercent + '%';
+              }
+            },
+          }
+          ,
+          {
+            headerName: "Amt",
+            field: "igstAmnt",
+            width: 220,
+            // hide: this.isMaharashtraState ? true : false,
+            valueGetter: function (params) {
+              if (params.data.quantity && params.data.rate && params.data.igstPercent) {
+                console.log("igstPercent: ", params.data.igstPercent)
+                return Math.round((params.data.rate * params.data.igstPercent / 118) * params.data.quantity)  //.toFixed(2)
               }
             },
           }]
@@ -384,20 +421,22 @@ export class InvoiceDialogComponent implements OnInit {
       }
     }
   }
-  
+
   invoiceData: any;
   getInvoiceTotal() {
     this.invoiceData = {
       'invoiceTotal': 0,
       'invoiceCGST': 0,
-      'invoiceSGST': 0
+      'invoiceSGST': 0,
+      'invoiceIGST': 0
     }
 
     if (this.clientListGridOptions && this.clientListGridOptions.api && this.clientListGridOptions.api.getRenderedNodes()) {
       for (let i = 0; i < this.clientListGridOptions.api.getRenderedNodes().length; i++) {
         this.invoiceData.invoiceTotal = this.invoiceData.invoiceTotal + (this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity)
-        this.invoiceData.invoiceCGST = this.invoiceData.invoiceCGST + Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity)
-        this.invoiceData.invoiceSGST = this.invoiceData.invoiceSGST + Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity)
+        this.invoiceData.invoiceCGST = this.isMaharashtraState ? this.invoiceData.invoiceCGST + Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.cgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity) : 0;
+        this.invoiceData.invoiceSGST = this.isMaharashtraState ? this.invoiceData.invoiceSGST + Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.sgstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity) : 0;
+        this.invoiceData.invoiceIGST = !this.isMaharashtraState ? this.invoiceData.invoiceIGST + Math.round((this.clientListGridOptions.api.getRenderedNodes()[i].data.rate * this.clientListGridOptions.api.getRenderedNodes()[i].data.igstPercent / 118) * this.clientListGridOptions.api.getRenderedNodes()[i].data.quantity) : 0;
       }
     }
     return this.invoiceData;
@@ -412,6 +451,8 @@ export class InvoiceDialogComponent implements OnInit {
       cgstAmnt: '',
       sgstPercent: '9',
       sgstAmnt: '',
+      igstPercent: '18',
+      igstAmnt: '',
       amnt: ''
     }
   }
@@ -450,6 +491,25 @@ export class InvoiceDialogComponent implements OnInit {
       this._toastMessageService.alert("error", "Please fill previous row first.");
     }
 
+  }
+
+
+  showTaxRelatedState(state) {
+    if (state === 'Maharashtra') {
+      this.isMaharashtraState = true;
+     // alert(this.isMaharashtraState)
+      //   this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))     
+      this.clientListGridOptions.columnApi.setColumnsVisible(['cgst', 'cgstPercent', 'cgstAmnt', 'sgst', 'sgstPercent', 'sgstAmnt'], true)
+      this.clientListGridOptions.columnApi.setColumnsVisible(['igst', 'igstPercent', 'igstAmnt'], false)
+      // this.invoiceInfoCalled();
+
+    } else {
+      this.isMaharashtraState = false;
+     // alert(this.isMaharashtraState)
+      this.clientListGridOptions.columnApi.setColumnsVisible(['cgst', 'cgstPercent', 'cgstAmnt', 'sgst', 'sgstPercent', 'sgstAmnt'], false)
+      this.clientListGridOptions.columnApi.setColumnsVisible(['igst', 'igstPercent', 'igstAmnt'], true)
+      //  this.invoiceInfoCalled();
+    }
   }
 }
 
