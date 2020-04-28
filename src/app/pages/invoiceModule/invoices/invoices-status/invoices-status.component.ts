@@ -447,18 +447,19 @@ export class InvoicesStatusComponent implements OnInit {
   }
 
   dowloadInvoice(data) {
-    this.loading = true;
-    const param = '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
-    this.userService.invoiceDownloadDoc(param).subscribe((result: any) => {
-      this.loading = false;
-      console.log('User Detail: ', result)
-      var fileURL = new Blob([result.blob()], { type: 'application/pdf' })
-      window.open(URL.createObjectURL(fileURL))
-      this._toastMessageService.alert("success", "Invoice download successfully.");
-    }, error => {
-      this.loading = false;
-      this._toastMessageService.alert("error", "Faild to generate Invoice.");
-    });
+   // this.loading = true;
+   // const param = '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
+    location.href = environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
+    // this.userService.invoiceDownloadDoc(param).subscribe((result: any) => {
+    //   this.loading = false;
+    //   console.log('User Detail: ', result)
+    //   var fileURL = new Blob([result.blob()], { type: 'application/pdf' })
+    //   window.open(URL.createObjectURL(fileURL))
+    //   this._toastMessageService.alert("success", "Invoice download successfully.");
+    // }, error => {
+    //   this.loading = false;
+    //   this._toastMessageService.alert("error", "Faild to generate Invoice.");
+    // });
   }
 
   sendWhatsAppReminder(data) {
