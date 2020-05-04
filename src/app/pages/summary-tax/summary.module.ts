@@ -7,9 +7,10 @@ import { HttpClientModule } from "@angular/common/http";
 import { SharedModule } from "app/shared/shared.module";
 import { NgxLoadingModule } from "ngx-loading";
 import { SumaryDialogComponent } from './sumary-dialog/sumary-dialog.component';
+import { Itr4partComponent } from './itr4part/itr4part.component';
 
 @NgModule({
-    declarations:[TaxSummaryComponent, SumaryDialogComponent],
+    declarations:[TaxSummaryComponent, SumaryDialogComponent, Itr4partComponent],
     imports:[
         SummaryRoutingModule,
         CommonModule,

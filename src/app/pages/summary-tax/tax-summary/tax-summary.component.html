@@ -9,7 +9,7 @@
 
                         <div class="card__col-lg-12" style="margin-bottom: 20px;">
                             <div class="top-head">
-                                <div class="card__col-lg-3" style="margin-top: 10px;">
+                                <div class="card__col-lg-3" formGroupName="assesse" style="margin-top: 10px;">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Type of ITR</mat-label>
                                         <mat-select matInput formControlName="itrType" placeholder="Select ITR type"
@@ -18,7 +18,7 @@
                                                 {{ itr.label }}
                                             </mat-option>
                                         </mat-select>
-                                        <mat-error *ngIf="itrSummaryForm.controls['itrType'].hasError('required')">
+                                        <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].itrType.hasError('required')">
                                             Select ITR type</mat-error>
                                     </mat-form-field>
 
@@ -26,94 +26,100 @@
                                 <div class="card__col-lg-3">
 
                                 </div>
-                                <div class="card__col-lg-3">
-                                    <!-- <mat-form-field appearance="outline">
-                                        <mat-label>Taxable Income:</mat-label>
-                                        <input matInput placeholder="TTaxable Income" disabled autocomplete="off">
-                                    </mat-form-field> -->
+                                <div class="card__col-lg-3" formGroupName="taxSummary">
                                     <label>Taxable Income</label>
-                                    <input type="number" placeholder="Taxable Income" formControlName="totalIncome"
+                                    <input type="number" placeholder="Taxable Income" formControlName="totalIncomeAfterDeductionIncludeSR"
                                         required disabled class="disableInput">
 
                                 </div>
 
-                                <div class="card__col-lg-3">
-                                    <!-- <mat-form-field appearance="outline">
-                                        <mat-label>Tax Payable/ Refund:</mat-label>
-                                        <input matInput placeholder="Tax Payable/ Refund" disabled autocomplete="off">
-                                    </mat-form-field> -->
+                                <div class="card__col-lg-3" formGroupName="taxSummary" *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0" >
                                     <label>Tax Payable/ Refund</label>
                                     <input type="number" placeholder="Tax Payable/ Refund"
-                                        formControlName="netTaxPayable" disabled class="disableInput">
+                                        formControlName="taxpayable" disabled class="disableInput">
+                                </div>
+                                <div class="card__col-lg-3" formGroupName="taxSummary" *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
+                                    <label>Tax Payable/ Refund</label>
+                                    <input type="number" placeholder="Tax Payable/ Refund"
+                                        formControlName="taxRefund" disabled class="disableInput">
                                 </div>
                             </div>
                         </div><br><br>
 
 
 
-                        <div class="card__col-lg-3">
+                        <div class="card__col-lg-3" formGroupName="assesse">
                             <mat-form-field appearance="outline">
                                 <mat-label>PAN</mat-label>
-                                <input matInput placeholder="PAN" formControlName="pan" autocomplete="off" type="text"
+                                <input matInput placeholder="PAN" formControlName="panNumber" autocomplete="off" type="text"
                                     maxlength="10" minlength="10"
-                                    (blur)="getUserInfoByPan(itrSummaryForm.controls['pan'])" required upperCase>
-                                <mat-error *ngIf="itrSummaryForm.controls['pan'].hasError('required')">Enter PAN number
+                                    (blur)="getUserInfoByPan(itrSummaryForm['controls'].assesse['controls'].panNumber)" required upperCase>
+                                <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].panNumber.hasError('required')">Enter PAN number
                                 </mat-error>
-                                <mat-error *ngIf="itrSummaryForm.controls['pan'].hasError('pattern')">Enter valid PAN
+                                <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].panNumber.hasError('pattern')">Enter valid PAN
                                     (e.g XXXXX1234X)</mat-error>
                             </mat-form-field>
                         </div>
-                        <div class="card__col-lg-3">
-                            <mat-form-field appearance="outline">
-                                <mat-label>First Name</mat-label>
-                                <input matInput placeholder="First Name" formControlName="firstName" maxlength="75"
-                                    autocomplete="off" required>
-                                <mat-error *ngIf="itrSummaryForm.controls['firstName'].hasError('required')">Enter first
-                                    name
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-lg-3">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Middle Name</mat-label>
-                                <input matInput placeholder="Middle Name" formControlName="middleName" maxlength="75"
-                                    autocomplete="off">
-                                <!-- <mat-error *ngIf="itrSummaryForm.controls['name'].hasError('required')">Enter name
-                                </mat-error> -->
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-lg-3">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Last Name</mat-label>
-                                <input matInput placeholder="Last Name" formControlName="lastName" maxlength="75"
-                                    autocomplete="off" required>
-                                <mat-error *ngIf="itrSummaryForm.controls['lastName'].hasError('required')">Enter last
-                                    name
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
 
-                        <div class="card__col-lg-3">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Father's Name</mat-label>
-                                <input matInput placeholder="Father's Name" formControlName="fatherName" maxlength="75"
-                                    autocomplete="off" required>
-                                <mat-error *ngIf="itrSummaryForm.controls['fatherName'].hasError('required')">Enter
-                                    father name</mat-error>
-                            </mat-form-field>
+                        <div formGroupName="assesse">
+                            <div formArrayName="family">
+                                <div *ngFor="let family of getFamilyArray.controls; let i=index" [formGroupName]="i" >
+                                    <div class="card__col-lg-3">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>First Name</mat-label>
+                                            <input matInput placeholder="First Name" formControlName="fName" maxlength="75"
+                                                autocomplete="off" name="family[i]" required>
+                                            <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['fName'].hasError('required')">Enter first
+                                                name
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="card__col-lg-3">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Middle Name</mat-label>
+                                            <input matInput placeholder="Middle Name" formControlName="mName" maxlength="75"
+                                                autocomplete="off" name="family[i]">
+                                            <!-- <mat-error *ngIf="itrSummaryForm.controls['name'].hasError('required')">Enter name
+                                            </mat-error> -->
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="card__col-lg-3">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Last Name</mat-label>
+                                            <input matInput placeholder="Last Name" formControlName="lName" maxlength="75"
+                                                autocomplete="off" required name="family[i]">
+                                            <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['lName'].hasError('required')">Enter last
+                                                name
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+            
+                                    <div class="card__col-lg-3">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Father's Name</mat-label>
+                                            <input matInput placeholder="Father's Name" formControlName="fathersName" maxlength="75"
+                                                autocomplete="off" required>
+                                            <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['fathersName'].hasError('required')">Enter
+                                                father name</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="card__col-lg-3">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Date of Birth</mat-label>
+                                            <input matInput formControlName="dateOfBirth" placeholder="Date of Birth" [min]="minDate"
+                                            name="family[i]"  [max]="maxDate" [matDatepicker]="picker" autocomplete="off" required>
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                            <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['dateOfBirth'].hasError('required')">Select Date of
+                                                Birth</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
-                        <div class="card__col-lg-3">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Date of Birth</mat-label>
-                                <input matInput formControlName="dob" placeholder="Date of Birth" [min]="minDate"
-                                    [max]="maxDate" [matDatepicker]="picker" autocomplete="off" required>
-                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker #picker></mat-datepicker>
-                                <mat-error *ngIf="itrSummaryForm.controls['dob'].hasError('required')">Select Date of
-                                    Birth</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-lg-3">
+                       
+                        <div class="card__col-lg-3" formGroupName="assesse">
                             <mat-form-field appearance="outline">
                                 <mat-label>Residential Status</mat-label>
                                 <mat-select matInput formControlName="residentialStatus"
@@ -122,111 +128,121 @@
                                         {{ res.label }}
                                     </mat-option>
                                 </mat-select>
-                                <mat-error *ngIf="itrSummaryForm.controls['residentialStatus'].hasError('required')">
+                                <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].residentialStatus.hasError('required')">
                                     Select Residential Status</mat-error>
                             </mat-form-field>
                         </div>
 
-                        <div class="card__col-lg-3">
+                        <div class="card__col-lg-3" formGroupName="assesse">
                             <mat-form-field appearance="outline">
                                 <mat-label>Aadhaar Number</mat-label>
-                                <input matInput placeholder="Aadhaar Number" formControlName="aadhaarNumber"
+                                <input matInput placeholder="Aadhaar Number" formControlName="aadharNumber"
                                     maxlength="12" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                     autocomplete="off" required>
-                                <mat-error *ngIf="itrSummaryForm.controls['aadhaarNumber'].hasError('required')">Enter
+                                <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].aadharNumber.hasError('required')">Enter
                                     Aadhar number</mat-error>
                                 <mat-error
-                                    *ngIf="itrSummaryForm.controls['aadhaarNumber'].hasError('pattern') || itrSummaryForm.controls['aadhaarNumber'].hasError('maxLength')">
+                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].aadharNumber.hasError('pattern') || itrSummaryForm['controls'].assesse['controls'].aadharNumber.hasError('maxLength')">
                                     Enter
                                     12 digit aadhar number</mat-error>
                             </mat-form-field>
                         </div>
 
 
-
-                        <div class="card__col-lg-3">
+                        <div class="card__col-lg-3" formGroupName="assesse">
                             <mat-form-field appearance="outline">
                                 <mat-label>Passport No</mat-label>
-                                <input matInput placeholder="Passport No" formControlName="passportNo" minlength="8"
+                                <input matInput placeholder="Passport No" formControlName="passportNumber" minlength="8"
                                     maxlength="8" autocomplete="off">
-                                <mat-error *ngIf="itrSummaryForm.controls['passportNo'].hasError('minlength')">Enter
+                                <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].passportNumber.hasError('minlength')">Enter
                                     8 digit passport number</mat-error>
                             </mat-form-field>
                         </div>
-                        <div class="card__col-lg-3">
+
+                        <div class="card__col-lg-3" formGroupName="assesse">
                             <mat-form-field appearance="outline">
                                 <mat-label>E-mail</mat-label>
                                 <input matInput placeholder="E-mail" formControlName="email" maxlength="50"
                                     autocomplete="off" required>
-                                <mat-error *ngIf="itrSummaryForm.controls['email'].hasError('required')">Enter email
+                                <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].email.hasError('required')">Enter email
                                 </mat-error>
-                                <mat-error *ngIf="itrSummaryForm.controls['email'].hasError('pattern')">Enter valid
+                                <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].email.hasError('pattern')">Enter valid
                                     email</mat-error>
                             </mat-form-field>
                         </div>
-                        <div class="card__col-lg-3">
+                        <div class="card__col-lg-3" formGroupName="assesse">
                             <mat-form-field appearance="outline">
                                 <mat-label>Mobile Number</mat-label>
-                                <input matInput formControlName="mobileNumber" maxlength="10"
+                                <input matInput formControlName="contactNumber" maxlength="10"
                                     placeholder="Mobile Number" autocomplete="off" type="number"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
-                                <mat-error *ngIf="itrSummaryForm.controls['mobileNumber'].hasError('required')">Enter
+                                <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('required')">Enter
                                     mobile number</mat-error>
                                 <mat-error
-                                    *ngIf="itrSummaryForm.controls['mobileNumber'].hasError('pattern') || itrSummaryForm.controls['mobileNumber'].hasError('minlength') || itrSummaryForm.controls['mobileNumber'].hasError('maxlength')">
+                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('pattern') || itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('minlength') || itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('maxlength')">
                                     Enter
                                     10 digit mobile number</mat-error>
                             </mat-form-field>
                         </div>
 
-                        <div class="card__col-lg-3">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Address</mat-label>
-                                <input matInput formControlName="address" maxlength="200" placeholder="Address" required
-                                    autocomplete="off">
-                                <mat-error *ngIf="itrSummaryForm.controls['address'].hasError('required')">Enter address
-                                </mat-error>
-                            </mat-form-field>
+                        <div class="card__col-lg-3" formGroupName="assesse">
+                            <div formGroupName="address">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Address</mat-label>
+                                    <input matInput formControlName="premisesName" maxlength="200" placeholder="Address" required
+                                        autocomplete="off">
+                                    <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].address['controls'].premisesName.hasError('required')">Enter address
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
                         </div>
-                        <div class="card__col-lg-3">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Pin code</mat-label>
-                                <input formControlName="pinCode" maxlength="6"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
-                                    placeholder="PIN Code" autocomplete="off" type="number"
-                                    (blur)="getCityData(itrSummaryForm.controls['pinCode'], 'profile')" required>
-                                <mat-error *ngIf="itrSummaryForm.controls['pinCode'].hasError('required')">Enter pin
-                                </mat-error>
-                                <mat-error *ngIf="itrSummaryForm.controls['pinCode'].hasError('pattern')">Enter valid
-                                    pin
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-
-                        <div class="card__col-lg-3">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Country</mat-label>
-                                <input matInput formControlName="country" placeholder="Country" disabled
-                                    autocomplete="off" required>
-                            </mat-form-field>
+                        <div class="card__col-lg-3" formGroupName="assesse">
+                            <div formGroupName="address">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Pin code</mat-label>
+                                    <input formControlName="pinCode" maxlength="6"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
+                                        placeholder="PIN Code" autocomplete="off" type="number"
+                                        (blur)="getCityData(itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode, 'profile')" required>
+                                    <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode.hasError('required')">Enter pin
+                                    </mat-error>
+                                    <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode.hasError('pattern')">Enter valid
+                                        pin
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
                         </div>
 
-                        <div class="card__col-lg-3">
-                            <mat-form-field appearance="outline">
-                                <mat-label>State</mat-label>
-                                <input matInput formControlName="state" disabled placeholder="State" autocomplete="off"
-                                    required>
-                            </mat-form-field>
+                        <div class="card__col-lg-3" formGroupName="assesse">
+                            <div formGroupName="address">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Country</mat-label>
+                                    <input matInput formControlName="country" placeholder="Country" disabled
+                                        autocomplete="off" required>
+                                </mat-form-field>
+                            </div>
                         </div>
 
-                        <div class="card__col-lg-3">
-                            <mat-form-field appearance="outline">
-                                <mat-label>City</mat-label>
-                                <input matInput formControlName="city" disabled placeholder="City" autocomplete="off"
-                                    required>
-                            </mat-form-field>
+                        <div class="card__col-lg-3" formGroupName="assesse">
+                            <div formGroupName="address">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>State</mat-label>
+                                    <input matInput formControlName="state" disabled placeholder="State" autocomplete="off"
+                                        required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="card__col-lg-3" formGroupName="assesse">
+                            <div formGroupName="address">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>City</mat-label>
+                                    <input matInput formControlName="city" disabled placeholder="City" autocomplete="off"
+                                        required>
+                                </mat-form-field>
+                            </div>
                         </div>
 
                         <div class="card__col-lg-3">
@@ -243,7 +259,7 @@
                                     return type</mat-error>
                             </mat-form-field>
                         </div>
-                        <div class="card__col-lg-3">
+                        <div class="card__col-lg-3" formGroupName="assesse">
                             <mat-form-field appearance="outline">
                                 <mat-label>Assessment Year</mat-label>
                                 <mat-select matInput formControlName="assessmentYear" placeholder="Financial Year"
@@ -254,7 +270,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="card__col-lg-3">
+                        <div class="card__col-lg-3" >
                             <mat-form-field appearance="outline">
                                 <mat-label>Financial Year</mat-label>
                                 <mat-select matInput formControlName="financialYear" placeholder="Financial Year"
@@ -265,31 +281,31 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="card__col-lg-3" *ngIf="showAcknowInput">
+                        <div class="card__col-lg-3" formGroupName="assesse" *ngIf="showAcknowInput">
                             <mat-form-field appearance="outline">
                                 <mat-label>Acknowledgement Number</mat-label>
-                                <input matInput formControlName="acknowledgementNumber" maxlength="15" minlength="15"
+                                <input matInput formControlName="ackNumber" maxlength="15" minlength="15"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     disabled placeholder="Acknowledgement Number"
                                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
                                 <!--minlength="15"-->
                                 <mat-error
-                                    *ngIf="itrSummaryForm.controls['acknowledgementNumber'].hasError('required')">Enter
+                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].ackNumber.hasError('required')">Enter
                                     acknowledgment number</mat-error>
                                 <mat-error
-                                    *ngIf="itrSummaryForm.controls['acknowledgementNumber'].hasError('minlength')">
+                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].ackNumber.hasError('minlength')">
                                     Acknowldegemant number should be 15 digit</mat-error>
                             </mat-form-field>
                         </div>
-                        <div class="card__col-lg-3" *ngIf="showAcknowInput">
+                        <div class="card__col-lg-3" formGroupName="assesse" *ngIf="showAcknowInput">
                             <mat-form-field appearance="outline">
                                 <mat-label>Date of filling</mat-label>
-                                <input matInput formControlName="dateOfFiling" placeholder="Date of filling"
+                                <input matInput formControlName="eFillingDate" placeholder="Date of filling"
                                     [max]="fillingMaxDate" [min]="fillingMinDate" [max]="maxDate"
                                     [matDatepicker]="picker1" autocomplete="off">
                                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                 <mat-datepicker #picker1></mat-datepicker>
-                                <mat-error *ngIf="itrSummaryForm.controls['dateOfFiling'].hasError('required')">Select
+                                <mat-error *ngIf="itrSummaryForm['controls'].assesse['controls'].eFillingDate.hasError('required')">Select
                                     Date of
                                     filling</mat-error>
                             </mat-form-field>
@@ -321,108 +337,156 @@
                                 <td>1</td>
                                 <td>Income from Salary </td>
                                 <td></td>
-                                <td><input type="number" formControlName="incomeFromSalary" disabled maxlength="8"></td>
+                                <td formGroupName="taxSummary"><input type="number" formControlName="salary" disabled maxlength="8"></td>  <!--formControlName="incomeFromSalary"-->
                             </tr>
                             <tr>
                                 <td>2</td>
                                 <td>Income from House Property (Refer Annexure) </td>
                                 <td></td>
-                                <td><input type="number" formControlName="netHousePropertyIncome" disabled
-                                        maxlength="8"></td>
+                                <td formGroupName="taxSummary"><input type="number"  disabled
+                                    formControlName="housePropertyIncome"  maxlength="8"></td>    <!--formControlName="netHousePropertyIncome"-->
 
                             </tr>
-                            <tr>
+                            <tr *ngIf="itrType.itrFour">
                                 <td>3</td>
+                                <td>Income from Business or Profession </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td><b>Presumptive Business Income U/s 44AD</b> – {{this.businessObject.tradeName44AD ? this.businessObject.tradeName44AD : ''}}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td>Gross Receipts/ Turnover </td>
+                                <td><input type="number" [value]="this.businessObject.received44ADtaotal" disabled maxlength="8"></td>
+                                <td></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td>Presumptive Income </td>
+                                <td></td>
+                                <td><input type="number" [value]="this.businessObject.presumptive44ADtotal" disabled maxlength="8"></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td><b>Presumptive Income from Profession U/s 44ADA</b> – {{this.businessObject.tradeName44ADA ? this.businessObject.tradeName44ADA : ''}}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td>Gross Receipts/ Turnover </td>
+                                <td><input type="number" [value]="this.businessObject.grossReciept" disabled maxlength="8"></td>
+                                <td></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td>Presumptive Income </td>
+                                <td></td>
+                                <td><input type="number" [value]="this.businessObject.presumptiveIncome" disabled maxlength="8"></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td> </td>
+                                <td></td>
+                                <td><input type="number" [value]="this.businessObject.prsumptiveIncomeTotal" disabled maxlength="8"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 4 : 3}}</td>
                                 <td>Income from Other Sources (Refer annexure) </td>
                                 <td></td>
-                                <td><input type="number" formControlName="totalIncomeFromOtherResources" disabled
-                                        maxlength="8">
+                                <td formGroupName="taxSummary"><input type="number"  disabled
+                                    formControlName="otherIncome" maxlength="8">   <!--formControlName="totalIncomeFromOtherResources"-->
                                 </td>
                             </tr>
                             <tr>
-                                <td>4</td>
-                                <td><b>Gross Total Income (1+2+3)</b> </td>
+                                <td>{{itrType.itrFour ? 5 : 4}}</td>
+                                <td><b>Gross Total Income {{itrType.itrFour ? '(1+2+3+4)' : '(1+2+3)'}}</b> </td>
                                 <td></td>
-                                <td><b><input type="number" disabled formControlName="grossTotalIncome"
+                                <td formGroupName="taxSummary"><b><input type="number" disabled formControlName="grossTotalIncome"
                                             maxlength="8"></b></td>
 
                             </tr>
                             <tr>
-                                <td>5</td>
+                                <td>{{itrType.itrFour ? 6 : 5}}</td>
                                 <td>Less: Deduction under Chap- VIA (Refer Annexure) </td>
                                 <td></td>
-                                <td><input type="number"
+                                <td formGroupName="taxSummary"><input type="number"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                                        formControlName="deductionUnderChapterVIA" disabled maxlength="8"></td>
+                                        formControlName="totalDeduction" disabled maxlength="8"></td> <!--deductionUnderChapterVIA-->
                             </tr>
                             <tr>
-                                <td>6</td>
-                                <td><b>Total Income(4-5) </b></td>
+                                <td>{{itrType.itrFour ? 7 : 6}}</td>
+                                <td><b>Total Income {{itrType.itrFour ? '(5-6)' : '(4-5)'}} </b></td>
                                 <td></td>
-                                <td><b><input type="number" formControlName="totalIncome" required disabled
-                                            maxlength="8"></b>
+                                <td formGroupName="taxSummary"><b><input type="number" formControlName="totalIncomeAfterDeductionIncludeSR" required disabled
+                                            maxlength="8"></b>  <!--totalIncome-->
                                 </td>
                             </tr>
                             <tr>
-                                <td>7</td>
+                                <td>{{itrType.itrFour ? 8 : 7}}</td>
                                 <td>Tax Payable on Total Income </td>
                                 <td></td>
-                                <td><input type="number" formControlName="taxPayable" (blur)="calculateTaxAfterRebate()"
+                                <td formGroupName="taxSummary"><input type="number" formControlName="taxOnTotalIncome" (blur)="calculateTaxAfterRebate()"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57" required
-                                        maxlength="8"></td>
+                                        maxlength="8"></td> <!--taxPayable-->
 
                             </tr>
                             <tr>
-                                <td>8</td>
+                                <td>{{itrType.itrFour ? 9 : 8}}</td>
                                 <td>Less: Rebate u/s 87A </td>
                                 <td></td>
-                                <td><input formControlName="rebate" (blur)="calculateTaxAfterRebate()"
+                                <td formGroupName="taxSummary"><input formControlName="forRebate87Tax" (blur)="calculateTaxAfterRebate()"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57" required
-                                        maxlength="8"></td>
+                                        maxlength="8"></td> <!--rebate-->
 
                             </tr>
                             <tr>
-                                <td>9</td>
+                                <td>{{itrType.itrFour ? 10 : 9}}</td>
                                 <td>Tax after rebate</td>
                                 <td></td>
-                                <td><input type="number" formControlName="taxAfterRebate" disabled required
+                                <td formGroupName="taxSummary"><input type="number" formControlName="taxAfterRebate" disabled required
                                         maxlength="8"></td>
 
                             </tr>
                             <tr>
-                                <td>10</td>
-                                <td>Health and Education cess @4% on (9)</td>
+                                <td>{{itrType.itrFour ? 11 : 10}}</td>
+                                <td>Health and Education cess @4% on {{itrType.itrFour ? '(10)' : '(9)'}}</td>
                                 <td></td>
-                                <td><input type="number" formControlName="healthAndEducationCess" disabled required
-                                        maxlength="8"></td>
+                                <td formGroupName="taxSummary"><input type="number" formControlName="cessAmount" disabled required
+                                        maxlength="8"></td>  <!--healthAndEducationCess-->
                             </tr>
                             <tr>
-                                <td>11</td>
-                                <td> Total Tax and cess (9 + 10)</td>
+                                <td>{{itrType.itrFour ? 12 : 11}}</td>
+                                <td> Total Tax and cess {{itrType.itrFour ? '(10 + 11)' : '(9 + 10)'}}</td>
                                 <td></td>
-                                <td><input type="number" formControlName="totalTaxAndCess" disabled required
-                                        maxlength="8"></td>
+                                <td formGroupName="taxSummary"><input type="number"  disabled required
+                                      formControlName="totalTax"  maxlength="8"></td>  <!--formControlName="totalTaxAndCess"-->
                             </tr>
                             <tr>
-                                <td>12</td>
+                                <td>{{itrType.itrFour ? 13 : 12}}</td>
                                 <td>Less: Relief u/s 89 (Please ensure to submit Form 10E to claim this relief)</td>
                                 <td></td>
-                                <td><input formControlName="reliefUS89l" (blur)="calculateTaxAfterRelif()" type="number"
+                                <td formGroupName="taxSummary"><input formControlName="taxReliefUnder89" (blur)="calculateTaxAfterRelif()" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
-                                </td>
+                                </td> <!--reliefUS89l-->
                             </tr>
                             <tr>
-                                <td>13</td>
-                                <td>Balance Tax after relief (11-12)</td>
+                                <td>{{itrType.itrFour ? 14 : 13}}</td>
+                                <td>Balance Tax after relief {{itrType.itrFour ? '(12-13)' : '(11-12)'}}</td>
                                 <td></td>
-                                <td><input type="number" formControlName="balanceTaxAfterRelief" required disabled
-                                        maxlength="8">
+                                <td formGroupName="taxSummary"><input type="number" formControlName="totalTaxRelief" required disabled
+                                        maxlength="8">  <!--balanceTaxAfterRelief-->
                                 </td>
                             </tr>
                             <tr>
-                                <td>14</td>
+                                <td>{{itrType.itrFour ? 15 : 14}}</td>
                                 <td><b>Interest and Fees</b></td>
                                 <td></td>
                                 <td></td>
@@ -430,16 +494,16 @@
                             <tr>
                                 <td></td>
                                 <td>u/s 234A</td>
-                                <td><input formControlName="section234A" maxlength="8"
+                                <td formGroupName="taxSummary"><input formControlName="s234A" maxlength="8"
                                         (blur)="calculateTotalInterestFees()" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
-                                <td></td>
+                                <td></td><!--section234A-->
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>u/s 234B</td>
-                                <td><input formControlName="section234B" maxlength="8"
+                                <td formGroupName="taxSummary"><input formControlName="s234B" maxlength="8"
                                         (blur)="calculateTotalInterestFees()" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
@@ -448,7 +512,7 @@
                             <tr>
                                 <td></td>
                                 <td>u/s 234C</td>
-                                <td><input formControlName="section234C" maxlength="8"
+                                <td formGroupName="taxSummary"><input formControlName="s234C" maxlength="8"
                                         (blur)="calculateTotalInterestFees()" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
@@ -457,23 +521,23 @@
                             <tr>
                                 <td></td>
                                 <td>u/s 234F</td>
-                                <td><input formControlName="section234F" maxlength="8"
+                                <td formGroupName="taxSummary"><input formControlName="s234F" maxlength="8"
                                         (blur)="calculateTotalInterestFees()" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
 
-                                <td><input type="number" formControlName="interestAndFees" disabled maxlength="8"></td>
+                                <td formGroupName="taxSummary"><input type="number" formControlName="interestAndFeesPayable" disabled maxlength="8"></td>  <!--interestAndFees-->
                                 <!--[value]="totalInterest"-->
                             </tr>
-                            <tr>
-                                <td>15</td>
-                                <td>Total Tax, fee and Interest (13 + 14)</td>
+                            <tr >
+                                <td>{{itrType.itrFour ? 16 : 15}}</td>
+                                <td>Total Tax, fee and Interest {{itrType.itrFour ? '(14 + 15)' : '(13 + 14)'}}</td>
                                 <td></td>
-                                <td><input type="number" formControlName="totalTaxFeeAndInterest" disabled required
-                                        maxlength="8"></td>
+                                <td formGroupName="taxSummary"><input type="number" formControlName="agrigateLiability" disabled required
+                                        maxlength="8"></td>  <!--totalTaxFeeAndInterest-->
                             </tr>
                             <tr>
-                                <td>16</td>
+                                <td>{{itrType.itrFour ? 17 : 16}}</td>
                                 <td><b>Taxes Paid</b></td>
                                 <td></td>
                                 <td></td>
@@ -481,42 +545,50 @@
                             <tr>
                                 <td></td>
                                 <td>TDS on Salary (Refer Annexure)</td>
-                                <td><input type="number" disabled formControlName="totalTdsOnSalary" maxlength="8"></td>
+                                <td><input type="number" [value]="taxesPaid.tdsOnSalary" disabled  maxlength="8"></td>  <!--formControlName="totalTdsOnSalary"-->
                                 <td></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>TDS other than Salary (Refer Annexure)</td>
-                                <td><input type="number" disabled formControlName="totalTdsOnOtherThanSalary"
-                                        maxlength="8"></td>
+                                <td><input type="number" disabled [value]="taxesPaid.tdsOtherThanSalary"
+                                        maxlength="8"></td>  <!--formControlName="totalTdsOnOtherThanSalary"-->
                                 <td></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>TDS on Sale of Property 26QB (Refer Annexure)</td>
-                                <td><input type="number" disabled formControlName="totalTdsSaleOfProperty26QB"
-                                        maxlength="8"></td>
+                                <td><input type="number" disabled [value]="taxesPaid.tdsOnSal26QB"
+                                        maxlength="8"></td>   <!--formControlName="totalTdsSaleOfProperty26QB"-->
                                 <td></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>TCS (Refer Annexure)</td>
-                                <td><input type="number" disabled formControlName="totalTaxCollectedAtSources"
-                                        maxlength="8"></td>
+                                <td formGroupName="taxSummary"><input type="number" disabled [value]="taxesPaid.tcs" 
+                                        maxlength="8"></td>  <!--totalTaxCollectedAtSources    formControlName="taxPaidTCS"-->
                                 <td></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>Advance/ Self-Assessment Tax (Refer Annexure)</td>
-                                <td><input type="number" disabled formControlName="totalAdvanceTax" maxlength="8"></td>
-                                <td><input type="number" formControlName="totalTaxPaid" disabled maxlength="8"></td>
+                                <td><input type="number" disabled [value]="taxesPaid.advanceSelfAssTax"  maxlength="8"></td>  <!--totalAdvanceTax-->
+                                <td formGroupName="taxSummary"><input type="number" formControlName="totalTaxesPaid" disabled maxlength="8"></td><!--totalTaxPaid     formControlName="advanceTaxSelfAssessmentTax"-->
                                 <!--[value]="totalTDS"-->
                             </tr>
-                            <tr>
-                                <td>17</td>
+
+                            <tr *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0">
+                                <td>{{itrType.itrFour ? 18 : 17}}</td>
                                 <td><b>Net Tax Payable/ (Refund)</b></td>
                                 <td></td>
-                                <td><b><input type="number" formControlName="netTaxPayable" disabled maxlength="8"></b>
+                                <td formGroupName="taxSummary"><b><input type="number" formControlName="taxpayable" disabled maxlength="8"></b>  <!--formControlName="netTaxPayable"-->
+                                </td>
+                            </tr>
+                            <tr  *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
+                                <td>{{itrType.itrFour ? 18 : 17}}</td>
+                                <td><b>Net Tax Payable/ (Refund)</b></td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><b><input type="number" formControlName="taxRefund" disabled maxlength="8"></b>  <!--formControlName="netTaxPayable"-->
                                 </td>
                             </tr>
 
@@ -528,7 +600,8 @@
                     <div class="heading">ANNEXURES</div><br>
 
                     <div class="tableHead">Annexures: Bank Details</div>
-                    <button style="float: right;" (click)="openDialog('Add Bank Info','Add', null,'','Bank')">Add</button>
+                    <button style="float: right;"
+                        (click)="openDialog('Add Bank Info','Add', null,'','Bank')">Add</button>
                     <br>
                     <table>
                         <tr>
@@ -554,8 +627,10 @@
                             <td *ngIf="!bank.hasRefund" style="text-align: center;"><i class="fa fa-times fa-lg"
                                     aria-hidden="true"></i></td>
                             <td>
-                                <button (click)="openDialog('Edit Bank Info','Edit', i, bankData[i],'Bank')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                                <button (click)="deleteData('Bank',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                <button (click)="openDialog('Edit Bank Info','Edit', i, bankData[i],'Bank')"><i
+                                        class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('Bank',i)"><i class="fa fa-trash fa-lg"
+                                        aria-hidden="true"></i></button>
                             </td>
                         </tr>
 
@@ -611,12 +686,14 @@
                             <td>{{house.grossAnnualRentReceived}}</td>
                             <td>{{house.propertyTax}}</td>
                             <td>{{house.annualValue}}</td>
-                            <td>{{house.hpStandardDeduction}}</td>
+                            <td>{{house.taxableIncome}}</td>
                             <td>{{house.interestAmount}}</td>
-                            <td>{{house.netHousePropertyIncome}}</td>
+                            <td>{{house.exemptIncome}}</td>
                             <td>
-                                <button (click)="openDialog('Edit House Property','Edit', i, housingData[i],'House')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                                <button (click)="deleteData('House',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                <button (click)="openDialog('Edit House Property','Edit', i, housingData[i],'House')"><i
+                                        class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('House',i)"><i class="fa fa-trash fa-lg"
+                                        aria-hidden="true"></i></button>
                             </td>
                         </tr>
                     </table><br><br>
@@ -624,7 +701,8 @@
 
                     <div class="tableHead">Annexures: Salary</div>
                     <button style="float: right;" [disabled]="salaryItrratedData.length > 3"
-                        (click)="openDialog('Add Salary Info','Add', null, '','Salary')">Add Employer Salary</button><br>
+                        (click)="openDialog('Add Salary Info','Add', null, '','Salary')">Add Employer
+                        Salary</button><br>
                     <table class="verticle">
                         <tr>
                             <th><b>Employer Name</b></th>
@@ -699,10 +777,13 @@
                             <td>{{sal.entertainAllow}}</td>
                             <td>{{sal.professionalTax}}</td>
                             <td>{{sal.totalSalaryDeduction}}</td>
-                            <td><b>{{sal.taxableSalary}}</b></td>
+                            <td><b>{{sal.taxableIncome}}</b></td>
                             <td>
-                                <button (click)="openDialog('Edit Salary Info','Edit', i, salaryItrratedData[i],'Salary')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                                <button (click)="deleteData('Salary',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                <button
+                                    (click)="openDialog('Edit Salary Info','Edit', i, salaryItrratedData[i],'Salary')"><i
+                                        class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('Salary',i)"><i class="fa fa-trash fa-lg"
+                                        aria-hidden="true"></i></button>
                             </td>
                         </tr>
                     </table><br><br>
@@ -951,11 +1032,16 @@
 
                 </mat-card><br><br> -->
 
+                <div *ngIf="itrType.itrFour">
+                    <div class="tableHead">Annexure: Income from Business or Profession</div><br>
+                    <app-itr4part [itrType]="itrSummaryForm['controls'].assesse['controls'].value" (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
+                </div>
+                    
+
                     <div class="tableHead">Annexures: Other Sources</div><br>
 
                     <mat-card>
                         <div class="card__row">
-                            <!-- <form [formGroup]="incomes"> -->
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Interest from Saving Account</mat-label>
@@ -1004,14 +1090,11 @@
                                         [value]="sourcesOfIncome.toatlIncome" maxlength="8" autocomplete="off">
                                 </mat-form-field>
                             </div>
-                            <!-- </form> -->
                         </div>
                     </mat-card><br><br>
 
 
-
                     <div class="tableHead">Annexures: Deductions under Chap-VI A</div><br>
-
                     <p class="subLabel">Under Section 80D</p><br>
                     <mat-card>
                         <div class="card__row">
@@ -1020,36 +1103,37 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Health Insurance Premium for Self</mat-label>
                                     <input matInput placeholder="Health Insurance Premium for Self" maxlength="8"
-                                        type="number"
+                                        type="number" id="healthInsuarancePremiumSelf" name="healthInsuarancePremiumSelf"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        formControlName="helathInsuarancePremiumSelf" autocomplete="off"
-                                        (blur)="setDeduction80DVal()">
+                                         autocomplete="off" [value]="sec80DobjVal.healthInsuarancePremiumSelf"
+                                        (blur)="setDeduction80DVal($event.target.value, 'forSelf')">  <!--helathInsuarancePremiumSelf-->
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Health Insurance Premium for Parents</mat-label>
                                     <input matInput placeholder="Health Insurance Premium for Parents" maxlength="8"
-                                        type="number"
+                                        type="number" id="healthInsuarancePremiumParents" name="healthInsuarancePremiumParents"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        formControlName="helathInsuarancePremiumParents" autocomplete="off"
-                                        (blur)="setDeduction80DVal()">
+                                         autocomplete="off" [value]="sec80DobjVal.healthInsuarancePremiumParents"
+                                        (blur)="setDeduction80DVal($event.target.value, 'forParent')">  <!--helathInsuarancePremiumParents-->
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Preventive Health Check-up for Whole Family</mat-label>
                                     <input matInput placeholder="Preventive Health Check-up for Whole Family"
-                                        type="number"
+                                        type="number" id="preventiveHealthCheckupFamily" name="preventiveHealthCheckupFamily"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        maxlength="8" autocomplete="off" formControlName="preventiveHealthCheckupFamily"
-                                        (blur)="setDeduction80DVal()">
+                                        maxlength="8" autocomplete="off" [value]="sec80DobjVal.preventiveHealthCheckupFamily"
+                                        (blur)="setDeduction80DVal($event.target.value, 'forFamily')">  <!--preventiveHealthCheckupFamily-->
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Parents Age</mat-label>
-                                    <mat-select matInput placeholder="Select Parents Age" formControlName="parentAge">
+                                    <mat-select matInput placeholder="Select Parents Age" id="parentAge" name="parentAge"
+                                    [value]="sec80DobjVal.parentAge"  (selectionChange)="setDeduction80DVal($event.value, 'parentAge')" >  <!--formControlName="parentAge"-->
                                         <mat-option *ngFor="let age of ageDropdown" [value]="age.value">
                                             {{age.label}}
                                         </mat-option>
@@ -1082,8 +1166,11 @@
                                 <td>{{donation.amountOtherThanCash}}</td>
                                 <td>{{donation.eligibleAmount}}</td>
                                 <td>
-                                    <button (click)="openDialog('Edit Donation(Section 80G)','Edit', i, donationData[i],'donationSec80G')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                                    <button (click)="deleteData('donationSec80G',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                    <button
+                                        (click)="openDialog('Edit Donation(Section 80G)','Edit', i, donationData[i],'donationSec80G')"><i
+                                            class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                    <button (click)="deleteData('donationSec80G',i)"><i class="fa fa-trash fa-lg"
+                                            aria-hidden="true"></i></button>
                                 </td>
                             </tr>
                             <tr>
@@ -1264,7 +1351,8 @@
 
                     <div class="tableHead">Annexures: Tax deducted at Sources</div><br>
                     <p class="subLabel">TDS on Salary</p>
-                    <button style="float: right;" (click)="openDialog('Add TDS on Salary','Add', null,'','tdsOnSal')">Add TDS
+                    <button style="float: right;"
+                        (click)="openDialog('Add TDS on Salary','Add', null,'','tdsOnSal')">Add TDS
                         on Salary</button><br>
                     <table>
                         <tr>
@@ -1287,20 +1375,23 @@
                             <td>{{tds.totalAmountCredited}}</td>
                             <td>{{tds.totalTdsDeposited}}</td>
                             <td>
-                                <button (click)="openDialog('Edit TDS on Salary','Edit', i, tdsOnSal[i],'tdsOnSal')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                                <button (click)="deleteData('tdsOnSal',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                <button (click)="openDialog('Edit TDS on Salary','Edit', i, tdsOnSal[i],'tdsOnSal')"><i
+                                        class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('tdsOnSal',i)"><i class="fa fa-trash fa-lg"
+                                        aria-hidden="true"></i></button>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4"><b>Total</b></td>
-                            <td><b>{{itrSummaryForm.controls['totalTdsOnSalary'].value}}</b></td>
+                            <!-- <td><b>{{itrSummaryForm.controls['totalTdsOnSalary'].value}}</b></td> -->
                         </tr>
 
                     </table><br>
 
                     <p class="subLabel">TDS on Other than Salary</p>
                     <button style="float: right;"
-                        (click)="openDialog('Add TDS on Other than Salary','Add', null, '','tdsOnOtherThanSal')">Add TDS on
+                        (click)="openDialog('Add TDS on Other than Salary','Add', null, '','tdsOnOtherThanSal')">Add TDS
+                        on
                         Other than Salary</button><br>
                     <table>
                         <tr>
@@ -1323,19 +1414,23 @@
                             <td>{{tds.totalAmountCredited}}</td>
                             <td>{{tds.totalTdsDeposited}}</td>
                             <td>
-                                <button (click)="openDialog('Edit TDS on Other than Salary','Edit', i, tdsOtherThanSal[i],'tdsOnOtherThanSal')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                                <button (click)="deleteData('tdsOnOtherThanSal',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                <button
+                                    (click)="openDialog('Edit TDS on Other than Salary','Edit', i, tdsOtherThanSal[i],'tdsOnOtherThanSal')"><i
+                                        class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('tdsOnOtherThanSal',i)"><i class="fa fa-trash fa-lg"
+                                        aria-hidden="true"></i></button>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4"><b>Total</b></td>
-                            <td><b>{{itrSummaryForm.controls['totalTdsOnOtherThanSalary'].value}}</b></td>
+                            <!-- <td><b>{{itrSummaryForm.controls['totalTdsOnOtherThanSalary'].value}}</b></td> -->
                         </tr>
                     </table><br>
 
                     <p class="subLabel">TDS Sales of property 26QB</p>
                     <button style="float: right;"
-                        (click)="openDialog('TDS Sales of property 26QB','Add', null, '','tdsOnSalOfPro26Q')">Add TDS Sales of
+                        (click)="openDialog('TDS Sales of property 26QB','Add', null, '','tdsOnSalOfPro26Q')">Add TDS
+                        Sales of
                         property 26QB</button><br>
                     <table>
                         <tr>
@@ -1358,19 +1453,23 @@
                             <td>{{tds.totalAmountCredited}}</td>
                             <td>{{tds.totalTdsDeposited}}</td>
                             <td>
-                                <button (click)="openDialog('Edit TDS Sales of property 26QB','Edit', i, tdsSalesPro[i],'tdsOnSalOfPro26Q')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                                <button (click)="deleteData('tdsOnSalOfPro26Q',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                <button
+                                    (click)="openDialog('Edit TDS Sales of property 26QB','Edit', i, tdsSalesPro[i],'tdsOnSalOfPro26Q')"><i
+                                        class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('tdsOnSalOfPro26Q',i)"><i class="fa fa-trash fa-lg"
+                                        aria-hidden="true"></i></button>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4"><b>Total</b></td>
-                            <td><b>{{itrSummaryForm.controls['totalTdsSaleOfProperty26QB'].value}}</b></td>
+                            <!-- <td><b>{{itrSummaryForm.controls['totalTdsSaleOfProperty26QB'].value}}</b></td> -->
                         </tr>
                     </table><br><br>
 
                     <div class="tableHead">Annexure: Tax Collected at Sources</div><br>
                     <button style="float: right;"
-                        (click)="openDialog('TDS Tax Collected at Sources','Add', null,'','taxCollSources')">Add Tax Collected
+                        (click)="openDialog('TDS Tax Collected at Sources','Add', null,'','taxCollSources')">Add Tax
+                        Collected
                         at Sources</button><br>
                     <table>
                         <tr>
@@ -1393,13 +1492,16 @@
                             <td>{{tcs.totalAmountPaid}}</td>
                             <td>{{tcs.totalTcsDeposited}}</td>
                             <td>
-                                <button (click)="openDialog('Edit TDS Tax Collected at Sources','Edit', i, taxCollAtSource[i],'taxCollSources')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                                <button (click)="deleteData('taxCollSources',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                <button
+                                    (click)="openDialog('Edit TDS Tax Collected at Sources','Edit', i, taxCollAtSource[i],'taxCollSources')"><i
+                                        class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('taxCollSources',i)"><i class="fa fa-trash fa-lg"
+                                        aria-hidden="true"></i></button>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4"><b>Total</b></td>
-                            <td><b>{{itrSummaryForm.controls['totalTaxCollectedAtSources'].value}}</b></td>
+                            <!-- <td><b>{{itrSummaryForm.controls['totalTaxCollectedAtSources'].value}}</b></td> -->
 
                         </tr>
 
@@ -1430,13 +1532,16 @@
                             <td>{{advTax.challanNumber}}</td>
                             <td>{{advTax.totalTax}}</td>
                             <td>
-                                <button (click)="openDialog('Edit Annexures: Advance Tax/ Self-Assessment Tax','Edit', i, advanceSelfTax[i],'advanceSelfAssTax')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                                <button (click)="deleteData('advanceSelfAssTax',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                <button
+                                    (click)="openDialog('Edit Annexures: Advance Tax/ Self-Assessment Tax','Edit', i, advanceSelfTax[i],'advanceSelfAssTax')"><i
+                                        class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                <button (click)="deleteData('advanceSelfAssTax',i)"><i class="fa fa-trash fa-lg"
+                                        aria-hidden="true"></i></button>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4"><b>Total</b></td>
-                            <td><b>{{itrSummaryForm.controls['totalAdvanceTax'].value}}</b></td>
+                            <!-- <td><b>{{itrSummaryForm.controls['totalAdvanceTax'].value}}</b></td> -->
                         </tr>
 
                     </table><br><br>
@@ -1448,21 +1553,21 @@
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>PPF Interest</mat-label>
-                                    <input matInput placeholder="PPF Interest" formControlName="ppfInterest"
+                                    <input matInput placeholder="PPF Interest" 
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        (blur)="setTotalOfExempt()" maxlength="8" type="number"
+                                        (blur)="setTotalOfExempt()" maxlength="8" type="number" formControlName="ppfInterest"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                                        autocomplete="off">
+                                        autocomplete="off"> 
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Gift from relative</mat-label>
-                                    <input matInput placeholder="Gift from relative" formControlName="giftFromRelative"
+                                    <input matInput placeholder="Gift from relative" 
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        (blur)="setTotalOfExempt()" type="number"
+                                        (blur)="setTotalOfExempt()" type="number" formControlName="giftFromRelative"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
-                                        autocomplete="off">
+                                        autocomplete="off">   
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1470,17 +1575,17 @@
                                     <mat-label>Any other</mat-label>
                                     <input matInput placeholder="Any other" maxlength="8" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        formControlName="anyOtherExcemptIncome" (blur)="setTotalOfExempt()"
+                                         (blur)="setTotalOfExempt()" formControlName="anyOtherExcemptIncome"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                                        autocomplete="off">
+                                        autocomplete="off">  
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label><b>Total</b></mat-label>
                                     <input matInput placeholder="Total" maxlength="8" readonly
-                                        formControlName="totalExcemptIncome" autocomplete="off">
-                                </mat-form-field>
+                                        autocomplete="off" [value]="totalOfExcempt">
+                                </mat-form-field>   <!-- formControlName="totalExcemptIncome"-->
                             </div>
                             <!-- </form> -->
                         </div>
@@ -1490,7 +1595,8 @@
                     <div class="card__row">
                         <button class="btn" (click)="saveItrSummary()">Save Summary</button> &nbsp;
                         <span [class.cursorNotAllow]="itrSummaryForm.value.summaryId === 0">
-                            <button class="btn" [class.disableBtn]="itrSummaryForm.value.summaryId === 0" (click)="downloadItrSummary()">Download Summary</button>
+                            <button class="btn" [class.disableBtn]="itrSummaryForm.value.summaryId === 0"
+                                (click)="downloadItrSummary()">Download Summary</button>
                         </span>
                     </div>
                 </form>
