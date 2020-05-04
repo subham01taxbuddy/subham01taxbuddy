@@ -22,16 +22,14 @@ export class Itr4partComponent implements OnInit {
   natureOfBusinessForm: FormGroup;
   filteredOptions: Observable<any[]>;
   filteredOptions44ADA: Observable<any[]>;
-  business = {
-    presumptiveIncomes: [],
-    financialParticulars: {}
-  }
+  
 
   constructor(private userService: UserMsService, private fb: FormBuilder, private utilService: UtilsService) {
 
   }
 
   ngOnInit() {
+    this.getMastersData();
     this.natureOfBusinessForm = this.fb.group({
       natureOfBusiness44AD: ['', Validators.required],
       natureOfBusiness44ADA: [''],
@@ -67,7 +65,7 @@ export class Itr4partComponent implements OnInit {
 
     })
 
-    this.getMastersData();
+    
   }
 
 
@@ -122,11 +120,13 @@ export class Itr4partComponent implements OnInit {
   }
 
   _filter(name) {
+   console.log('44AD name: ',name)
     const filterValue = name.toLowerCase();
     return this.natureOfBusinessDropdown44AD.filter(option => option.label.toLowerCase().indexOf(filterValue) === 0);
   }
 
   _filter44DA(name) {
+    console.log('44ADA name: ',name)
     const filterValue = name.toLowerCase();
     return this.natureOfBusinessDropdown44ADA.filter(option => option.label.toLowerCase().indexOf(filterValue) === 0);
   }
@@ -140,10 +140,10 @@ export class Itr4partComponent implements OnInit {
         this.natureCode = this.natureCode[0].code;
         console.log('natureCode on blur = ', this.natureCode);
       }
-      // else {
-      //   this.natureOfBusinessForm.setErrors(invalid);
-      //   console.log('natureCode on blur = ', this.natureCode);
-      // }
+      else {
+        // this.natureOfBusinessForm['controls'].natureOfBusiness44AD.setErrors(invalid);
+        // console.log('natureCode on blur = ', this.natureCode);
+      }
 
 
     }
@@ -295,53 +295,7 @@ export class Itr4partComponent implements OnInit {
 
   ngDoCheck() {
     if (this.natureOfBusinessForm.valid) {
-
-      if (this.utilService.isNonEmpty(this.natureOfBusinessForm['controls'].natureOfBusiness44AD.value) && this.utilService.isNonEmpty(this.natureOfBusinessForm['controls'].tradeName44AD.value)) {
-
-        var presumptiveIncomeObj = {
-          businessType: 'BUSINESS',
-          natureOfBusiness: this.natureOfBusinessForm['controls'].natureOfBusiness44AD.value,//profession code
-          tradeName: this.natureOfBusinessForm['controls'].tradeName44AD.value,//trade name
-          incomes: []
-        }
-        if (this.utilService.isNonEmpty(this.natureOfBusinessForm['controls'].recieptRecievedInBank.value)) {
-
-          let incomeObj = {
-            id: null,
-            incomeType: "BANK",
-            receipts: Number(this.natureOfBusinessForm['controls'].recieptRecievedInBank.value),// received in cash
-            presumptiveIncome: Number(this.natureOfBusinessForm['controls'].presumptiveIncomeRecieveBank.value),//peresumptrive income at 8%
-            periodOfHolding: 0,
-            minimumPresumptiveIncome: 0,
-            registrationNo: null,
-            ownership: null,
-            tonnageCapacity: null
-          }
-          presumptiveIncomeObj.incomes.push(incomeObj)
-        }
-
-        if (this.utilService.isNonEmpty(this.natureOfBusinessForm['controls'].recievedinCash.value)) {
-          let incomeObj = {
-            id: null,
-            incomeType: "CASH",
-            receipts: Number(this.natureOfBusinessForm['controls'].recievedinCash.value),// received in cash
-            presumptiveIncome: Number(this.natureOfBusinessForm['controls'].presumptiveIncomeRecievedCash.value),//peresumptrive income at 8%
-            periodOfHolding: 0,
-            minimumPresumptiveIncome: 0,
-            registrationNo: null,
-            ownership: null,
-            tonnageCapacity: null
-          }
-          presumptiveIncomeObj.incomes.push(incomeObj)
-        }
-
-      }
-
-
-      if (this.utilService.isNonEmpty(this.natureOfBusinessForm['controls'].natureOfBusiness44ADA.value) && this.utilService.isNonEmpty(this.natureOfBusinessForm['controls'].tradeName44ADA.value)) {
-
-      }
-
+      //console.log('natureOfBusinessForm value: ',this.natureOfBusinessForm.value)
       this.getBusinessInfo.emit(this.natureOfBusinessForm)
     }
   }
