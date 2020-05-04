@@ -174,7 +174,7 @@
                     address</mat-error> -->
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label><b>Gross Salary</b></mat-label>
                 <input matInput placeholder="Gross Salary" type="number" formControlName="grossSalary"
@@ -231,7 +231,7 @@
             </mat-form-field>
         </div>
 
-        <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
+        <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <!-- <mat-form-field appearance="outline">
                 <mat-label><b>Net Salary(Gross Salary-Total Exempt Allowance)</b></mat-label>
                 <input matInput placeholder="Net Salary" formControlName="netSalary" readonly> -->
@@ -293,12 +293,12 @@
                 <!-- </mat-form-field> -->
             </div>
 
-            <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
+            <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
                 <!-- <mat-form-field appearance="outline">
                     <mat-label><b> Taxable Salary </b></mat-label>
                     <input matInput placeholder="Total Deduction" formControlName="taxableSalary" readonly maxlength="8"> -->
                 <label>Taxable Salary</label>
-                <input type="number" placeholder="Taxable Salary" formControlName="taxableSalary" readonly
+                <input type="number" placeholder="Taxable Salary" formControlName="taxableIncome" readonly
                     class="disableInput">
                 <!-- </mat-form-field> -->
             </div>
@@ -306,116 +306,116 @@
 
         <!-- </div> -->
 
-        <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>Type of donee </mat-label>
-                <mat-select matInput formControlName="dneeDonationType" placeholder="Select type of donee"
+                <mat-select matInput formControlName="donationType" placeholder="Select type of donee"
                     autocomplete="off" required>
                     <mat-option *ngFor="let donation of donationType" [value]="donation.value">
                         {{ donation.label }}
                     </mat-option>
                 </mat-select>
-                <mat-error *ngIf="summaryDialogForm.controls['dneeDonationType'].hasError('required')">
+                <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].donationType.hasError('required')">
                     Select Type of donee</mat-error>
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>PAN of Donee</mat-label>
-                <input matInput placeholder="PAN" formControlName="dneePanNumber" autocomplete="off" type="text"
+                <input matInput placeholder="PAN" formControlName="panNumber" autocomplete="off" type="text"
                     maxlength="10" minlength="10"
-                    (blur)="checkPanDuplicate(summaryDialogForm.controls['dneePanNumber'], 'donation', 0)" upperCase>
-                <mat-error *ngIf="summaryDialogForm.controls['dneePanNumber'].hasError('pattern')">
+                    (blur)="checkPanDuplicate(summaryDialogForm['controls'].donations['controls'].panNumber, 'donation', 0)" upperCase>
+                <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].panNumber.hasError('pattern')">
                     Enter valid PAN (e.g XXXXX1234X)</mat-error>
-                <mat-error *ngIf="summaryDialogForm.controls['dneePanNumber'].hasError('incorrect')">
+                <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].panNumber.hasError('incorrect')">
                     PAN Can't be same as User's PAN</mat-error>
 
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>Name of donee</mat-label>
-                <input matInput placeholder="Name of donee" formControlName="dneeName" maxlength="30" required>
+                <input matInput placeholder="Name of donee" formControlName="name" maxlength="30" required>
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employerTAN'].invalid">Enter valid TAN of employer
                 </mat-error> -->
-                <mat-error *ngIf="summaryDialogForm.controls['dneeName'].hasError('required')">
+                <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].name.hasError('required')">
                     Enter name of donee</mat-error>
             </mat-form-field>
 
         </div>
-        <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>Address</mat-label>
-                <input matInput formControlName="dneeAddress" maxlength="200" placeholder="Address" required
+                <input matInput formControlName="address" maxlength="200" placeholder="Address" required
                     autocomplete="off">
-                <mat-error *ngIf="summaryDialogForm.controls['dneeAddress'].hasError('required')">
+                <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].address.hasError('required')">
                     Enter address</mat-error>
             </mat-form-field>
         </div>
 
-        <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>PIN code</mat-label>
-                <input formControlName="dneePinCode" maxlength="6"
+                <input formControlName="pinCode" maxlength="6"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput placeholder="PIN Code"
-                    autocomplete="off" (blur)="getCityData(summaryDialogForm.controls['dneePinCode'], data.mode)"
+                    autocomplete="off" (blur)="getCityData(summaryDialogForm['controls'].donations['controls'].pinCode, data.mode)"
                     required>
-                <mat-error *ngIf="summaryDialogForm.controls['dneePinCode'].hasError('required')">Enter pin
+                <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].pinCode.hasError('required')">Enter pin
                 </mat-error>
-                <mat-error *ngIf="summaryDialogForm.controls['dneePinCode'].hasError('pattern')">Enter valid
+                <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].pinCode.hasError('pattern')">Enter valid
                     pin
                 </mat-error>
             </mat-form-field>
         </div>
 
-        <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>State</mat-label>
-                <input matInput formControlName="dneeState" readonly placeholder="State" required autocomplete="off">
+                <input matInput formControlName="state" readonly placeholder="State" required autocomplete="off">
             </mat-form-field>
         </div>
 
-        <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>City</mat-label>
-                <input matInput formControlName="dneeCity" readonly placeholder="City" required autocomplete="off">
+                <input matInput formControlName="city" readonly placeholder="City" required autocomplete="off">
             </mat-form-field>
         </div>
 
-        <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>Amount in Cash</mat-label>
                 <input matInput placeholder="Amount in Cash" (blur)="calEligibleDonation('dneeAmountInCash')"
-                    formControlName="dneeAmountInCash"
+                    formControlName="amountInCash"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number" maxlength="8" required>
-                <mat-error *ngIf="summaryDialogForm.controls['dneeAmountInCash'].hasError('required')">
+                <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].amountInCash.hasError('required')">
                     Enter amount in Cash</mat-error>
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['amountInCash'].invalid">Enter valid TAN of employer
                 </mat-error> -->
             </mat-form-field>
         </div>
 
-        <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>Amount Other than Cash</mat-label>
                 <input matInput placeholder="Amount Other than Cash"
-                    (blur)="calEligibleDonation('dneeAmountOtherThanCash')" formControlName="dneeAmountOtherThanCash"
+                    (blur)="calEligibleDonation('dneeAmountOtherThanCash')" formControlName="amountOtherThanCash"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number" maxlength="8">
-                <mat-error *ngIf="summaryDialogForm.controls['dneeAmountOtherThanCash'].hasError('required')">
+                <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].amountOtherThanCash.hasError('required')">
                     Enter amount Other than Cash</mat-error>
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employeAddress'].invalid">Enter
                             address</mat-error> -->
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3" *ngIf="data.mode == 'donationSec80G'">
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>Eligibal Donation</mat-label>
                 <input matInput placeholder="Amount Other than Cash" formControlName="eligibleAmount" readonly
                     maxlength="8" required>
-                <mat-error *ngIf="summaryDialogForm.controls['eligibleAmount'].hasError('required')">Enter
+                <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].eligibleAmount.hasError('required')">Enter
                     eligiable donation</mat-error>
             </mat-form-field>
         </div>
@@ -932,12 +932,12 @@
 
         <!-- <div class="card__row"> -->
             <div *ngIf="!housingShow.isSOP">
-                <div class="card__col-lg-3" *ngIf="data.mode == 'House'">
+                <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
                     <mat-form-field appearance="outline">
                         <mat-label>(a) Standard deduction (30% of Annual Value)</mat-label>
                         <input matInput placeholder="(a) Standard deduction (30% of Annual Value)" type="number"
-                            formControlName="hpStandardDeduction" readonly>
-                        <!--[value]="summaryDialogForm.controls['hpStandardDeduction'].value"-->
+                            formControlName="taxableIncome" readonly>
+                        <!--[value]="summaryDialogForm.controls['taxableIncome'].value"-->
                     </mat-form-field>
                 </div>
             </div>
@@ -962,13 +962,13 @@
                 </mat-form-field>
             </div>
             <div class="card__col-lg-3">
-                <mat-form-field appearance="outline" *ngIf="data.mode == 'House'">
+                <mat-form-field appearance="outline" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
                     <mat-label><b>Net House property Income</b></mat-label>
                     <input matInput placeholder="Net House property Income" maxlength="8" type="number"
-                        formControlName="netHousePropertyIncome"
+                        formControlName="exemptIncome"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         autocomplete="off" readonly read>
-                    <!-- [value]="summaryDialogForm.controls['netHousePropertyIncome'].value"-->
+                    <!-- [value]="summaryDialogForm.controls['exemptIncome'].value"-->
                 </mat-form-field>
             </div>
         <!-- </div> -->
