@@ -1266,21 +1266,13 @@ export class TaxSummaryComponent implements OnInit {
     }
     if (type === 'tdsOnSal') {
       this.taxesPaid.tdsOnSalary = total;
-
     }
     else if (type === 'otherThanSalary16A') {
-      //this.taxesPaid.tdsOtherThanSalary = total;
-      // this.itrSummaryForm.controls['totalTdsOnOtherThanSalary'].setValue(total)
       this.taxesPaid.tdsOtherThanSalary = total;
     }
     else if (type === 'otherThanSalary26QB') {
-      // this.taxesPaid.tdsOnSaleOdProperty26QB = total;
-      //  this.itrSummaryForm.controls['totalTdsSaleOfProperty26QB'].setValue(total)
       this.taxesPaid.tdsOnSal26QB = total;
     }
-    // this.totalTDS = Number(this.itrSummaryForm.controls['totalTdsOnSalary'].value) + Number(this.itrSummaryForm.controls['totalTdsOnOtherThanSalary'].value) +
-    //   Number(this.itrSummaryForm.controls['totalTdsSaleOfProperty26QB'].value) + Number(this.itrSummaryForm.controls['totalTaxCollectedAtSources'].value) +
-    //   Number(this.itrSummaryForm.controls['totalAdvanceTax'].value);
     this.totalTDS = this.taxesPaid.tdsOnSalary + this.taxesPaid.tdsOtherThanSalary + this.taxesPaid.tdsOnSal26QB + this.taxesPaid.tcs + this.taxesPaid.advanceSelfAssTax;
     //this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS) 
     this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxesPaid.setValue(this.totalTDS)
@@ -1292,12 +1284,6 @@ export class TaxSummaryComponent implements OnInit {
     for (let i = 0; i < tscInfo.length; i++) {
       total = total + Number(tscInfo[i].totalTcsDeposited);
     }
-    // this.taxesPaid.tsc = total;
-    // this.itrSummaryForm.controls['totalTaxCollectedAtSources'].setValue(total);
-    // this.totalTDS = Number(this.itrSummaryForm.controls['totalTdsOnSalary'].value) + Number(this.itrSummaryForm.controls['totalTdsOnOtherThanSalary'].value) +
-    //   Number(this.itrSummaryForm.controls['totalTdsSaleOfProperty26QB'].value) + Number(this.itrSummaryForm.controls['totalTaxCollectedAtSources'].value) +
-    //   Number(this.itrSummaryForm.controls['totalAdvanceTax'].value);
-    // this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS)
 
     this.taxesPaid.tcs = total;
     this.totalTDS = this.taxesPaid.tdsOnSalary + this.taxesPaid.tdsOtherThanSalary + this.taxesPaid.tdsOnSal26QB + this.taxesPaid.tcs + this.taxesPaid.advanceSelfAssTax;
