@@ -46,6 +46,8 @@ export class Itr4partComponent implements OnInit {
       minimumPresumptiveIncome: [],
       received44ADtaotal: [],
       presumptive44ADtotal: [],
+      totalLabilities: [ { value: 0, disabled: true}],
+      totalAssets: [ { value: 0, disabled: true}],
 
       grossTurnOverAmount: null,
       membersOwnCapital: [],
@@ -298,5 +300,22 @@ export class Itr4partComponent implements OnInit {
       //console.log('natureOfBusinessForm value: ',this.natureOfBusinessForm.value)
       this.getBusinessInfo.emit(this.natureOfBusinessForm)
     }
+  }
+
+  calTotalLiabilities(){
+    let totalLibilities = Number(this.natureOfBusinessForm.controls['membersOwnCapital'].value) + Number(this.natureOfBusinessForm.controls['securedLoans'].value)
+                        + Number(this.natureOfBusinessForm.controls['unSecuredLoans'].value) + Number(this.natureOfBusinessForm.controls['advances'].value)
+                        + Number(this.natureOfBusinessForm.controls['sundryCreditorsAmount'].value) + Number(this.natureOfBusinessForm.controls['otherLiabilities'].value);
+
+    this.natureOfBusinessForm.controls['totalLabilities'].setValue(totalLibilities);                 
+  }
+
+  calTotalAssets(){
+    let totalAssets = Number(this.natureOfBusinessForm.controls['fixedAssets'].value) + Number(this.natureOfBusinessForm.controls['inventories'].value)
+    + Number(this.natureOfBusinessForm.controls['sundryDebtorsAmount'].value) + Number(this.natureOfBusinessForm.controls['balanceWithBank'].value)
+    + Number(this.natureOfBusinessForm.controls['cashInHand'].value) + Number(this.natureOfBusinessForm.controls['loanAndAdvances'].value);
+    + Number(this.natureOfBusinessForm.controls['otherAssets'].value)
+
+    this.natureOfBusinessForm.controls['totalAssets'].setValue(totalAssets);   
   }
 }
