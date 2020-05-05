@@ -43,7 +43,6 @@
                         formControlName="recieptRecievedInBank"
                         (blur)="calBankPresumptiveIncome(natureOfBusinessForm.controls['recieptRecievedInBank'].value)"></td>
                        
-                        <p></p>
                 <td></td>
             </tr>
             <tr>
@@ -154,8 +153,8 @@
     </mat-card><br>
     
     <mat-card>
-        <p class="subLabel">Presumptive Business Income U/S 44ADA</p><br>
-        <span><b>Liabilities:</b></span>
+        <p class="subLabel">Financial Information as on 31/03/2020</p><br>
+        <span style="font-size: 15px;"><b>Liabilities:</b></span>
         <div class="card__row">
             <div class="card__col-lg-3">
                 <mat-form-field appearance="outline">
@@ -163,7 +162,7 @@
                     <mat-label>Pertner's/Member's capital or Own capital</mat-label>
                     <input matInput placeholder="Pertner's/Member's capital or Own capital" formControlName="membersOwnCapital"
                        maxlength="8" autocomplete="off"
-                        type="number"
+                        type="number" (blur)="calTotalLiabilities()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -174,7 +173,7 @@
                     <mat-label>Secured loan</mat-label>
                     <input matInput placeholder="Secured loan" formControlName="securedLoans"
                        maxlength="8" autocomplete="off"
-                        type="number"
+                        type="number" (blur)="calTotalLiabilities()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -182,10 +181,10 @@
             <div class="card__col-lg-3">
                 <mat-form-field appearance="outline">
                     <!--formGroupName="deduction"-->
-                    <mat-label>unsecured loab n</mat-label>
-                    <input matInput placeholder="unsecured loan" formControlName="unSecuredLoans"
+                    <mat-label>Unsecured loab</mat-label>
+                    <input matInput placeholder="Unsecured loan" formControlName="unSecuredLoans"
                        maxlength="8" autocomplete="off"
-                        type="number"
+                        type="number" (blur)="calTotalLiabilities()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -196,7 +195,7 @@
                     <mat-label>Advances</mat-label>
                     <input matInput placeholder="Advances" formControlName="advances"
                        maxlength="8" autocomplete="off"
-                        type="number"
+                        type="number" (blur)="calTotalLiabilities()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -207,7 +206,7 @@
                     <mat-label>Sundry creditors</mat-label>
                     <input matInput placeholder="Sundry creditors" formControlName="sundryCreditorsAmount"
                        maxlength="8" autocomplete="off"
-                        type="number" required
+                        type="number" required (blur)="calTotalLiabilities()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -218,14 +217,22 @@
                     <mat-label>Other liabilities</mat-label>
                     <input matInput placeholder="Other liabilities" formControlName="otherLiabilities"
                        maxlength="8" autocomplete="off"
-                        type="number"
+                        type="number" (blur)="calTotalLiabilities()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
             </div>
+
+            <div class="card__col-lg-3" style="float: right;">
+                <mat-form-field appearance="outline">
+                    <!--formGroupName="deduction"-->
+                    <mat-label>Total liabilities</mat-label>
+                    <input matInput placeholder="Total liabilities" formControlName="totalLabilities" autocomplete="off">
+                </mat-form-field>
+            </div>
         </div><br>
 
-        <span><b>Assets:</b></span>
+        <span style="font-size: 15px;"><b>Assets:</b></span>
         <div class="card__row">
             <div class="card__col-lg-3">
                 <mat-form-field appearance="outline">
@@ -233,7 +240,7 @@
                     <mat-label>Fixed assets</mat-label>
                     <input matInput placeholder="Fixed assets" formControlName="fixedAssets"
                        maxlength="8" autocomplete="off"
-                        type="number"
+                        type="number" (blur)="calTotalAssets()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -244,7 +251,7 @@
                     <mat-label>Inventories</mat-label>
                     <input matInput placeholder="Inventories" formControlName="inventories"
                        maxlength="8" autocomplete="off"
-                        type="number" required
+                        type="number" required (blur)="calTotalAssets()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -255,7 +262,7 @@
                     <mat-label>Sundry debtors</mat-label>
                     <input matInput placeholder="Sundry debtors" formControlName="sundryDebtorsAmount"
                        maxlength="8" autocomplete="off"
-                        type="number" required
+                        type="number" required (blur)="calTotalAssets()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -266,7 +273,7 @@
                     <mat-label>Balance with Bank</mat-label>
                     <input matInput placeholder="Balance with Bank" formControlName="balanceWithBank"
                        maxlength="8" autocomplete="off"
-                        type="number"
+                        type="number" (blur)="calTotalAssets()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -277,7 +284,7 @@
                     <mat-label>Cash in hand</mat-label>
                     <input matInput placeholder="Cash in hand" formControlName="cashInHand"
                        maxlength="8" autocomplete="off"
-                        type="number" required
+                        type="number" required (blur)="calTotalAssets()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -288,7 +295,7 @@
                     <mat-label>Loans and advance</mat-label>
                     <input matInput placeholder="Loans and advance" formControlName="loanAndAdvances"
                        maxlength="8" autocomplete="off"
-                        type="number"
+                        type="number" (blur)="calTotalAssets()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -299,9 +306,16 @@
                     <mat-label>Other assets</mat-label>
                     <input matInput placeholder="Other assets" formControlName="otherAssets"
                        maxlength="8" autocomplete="off"
-                        type="number"
+                        type="number" (blur)="calTotalAssets()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                </mat-form-field>
+            </div>
+            <div class="card__col-lg-3">
+                <mat-form-field appearance="outline">
+                    <!--formGroupName="deduction"-->
+                    <mat-label>Total Assets</mat-label>
+                    <input matInput placeholder="Total Assets" formControlName="totalAssets" autocomplete="off">
                 </mat-form-field>
             </div>
             

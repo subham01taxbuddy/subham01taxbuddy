@@ -36,3 +36,9 @@ table {
   font-size: 14px;
   font-weight: bold;
 }
+
+.subLabel{
+  color: #04a4bc;
+  font-size: 14px;
+  text-decoration: underline;
+}
