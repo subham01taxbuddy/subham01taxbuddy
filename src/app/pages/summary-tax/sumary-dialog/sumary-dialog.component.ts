@@ -310,6 +310,8 @@ export class SumaryDialogComponent implements OnInit {
     this.summaryDialogForm['controls'].donations.patchValue(donationInfo)
   }
   updateHouseInfo(houseInfo) {
+    debugger
+    console.log('houseInfo: ', houseInfo)
     console.log('houseInfo: ', houseInfo, houseInfo.interestAmount)
     this.summaryDialogForm['controls'].houseProperties.patchValue(houseInfo)
 
@@ -322,6 +324,7 @@ export class SumaryDialogComponent implements OnInit {
     // this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.setValue(houseInfo.exemptIncome)
 
     console.log('houseProperties: ', this.summaryDialogForm['controls'].houseProperties)
+    console.log('interestAmount: ',this.summaryDialogForm.controls['interestAmount'].value)
     if (houseInfo.coOwners instanceof Array) {
       const coOwners = <FormArray>this.summaryDialogForm['controls'].houseProperties.get('coOwners');
       houseInfo.coOwners.forEach(obj => {
@@ -420,7 +423,6 @@ export class SumaryDialogComponent implements OnInit {
       this.summaryDialogForm.controls['tenantName'].reset();
       this.summaryDialogForm.controls['tenentPanNumber'].reset();
       console.log('panNumber: ', this.summaryDialogForm.controls['tenentPanNumber'])
-      // this.summaryDialogForm['controls'].houseProperties['controls'].otherOwnerOfProperty.setValue(null)
 
       this.summaryDialogForm['controls'].houseProperties['controls'].grossAnnualRentReceived.clearValidators()
       this.summaryDialogForm['controls'].houseProperties['controls'].grossAnnualRentReceived.updateValueAndValidity();
@@ -429,30 +431,15 @@ export class SumaryDialogComponent implements OnInit {
       this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.setValue(null)
       // this.summaryDialogForm.controls['taxableIncome'].setValue(null);
       this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.setValue(null);
-      this.summaryDialogForm.controls['interestAmount'].setValue(null);
+      
       // this.summaryDialogForm.controls['exemptIncome'].setValue(null);
-      this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.setValue(null);
-
-
-      // this.summaryDialogForm['controls'].name.setValue(null)
-      // this.summaryDialogForm['controls'].panNumber.setValue(null)
-      // this.summaryDialogForm['controls'].percentage.setValue(null)
-
-      // this.summaryDialogForm['controls'].taxableIncome.setValue(null)
-      // this.summaryDialogForm['controls'].interestAmount.setValue(null)
-      // this.summaryDialogForm['controls'].exemptIncome.setValue(null)
+      if(key === 'fromDialog'){
+        this.summaryDialogForm.controls['interestAmount'].setValue(null);
+        this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.setValue(null);
+      }
+      
       console.log('houseProperties value: ', this.summaryDialogForm['controls'].houseProperties['controls'].value)
 
-      // this.housingShow.ownership = false;
-      // this.housingShow.showCoOwner = false;
-
-      // this.summaryDialogForm.controls['tenentPanNumber'].setValidators(null);
-      //this.summaryDialogForm.controls['panNumber'].setValidators(null);
-
-      // if (key === 'fromEditInfo') {
-      //   this.summaryDialogForm['controls'].houseProperties['controls'].otherOwnerOfProperty.setValue('NO')   //On edit house info if co-owner NO then  coOwner table
-      //   this.housingShow.showCoOwner = false;
-      // }
 
       this.summaryDialogForm.controls['interestAmount'].setValidators([Validators.max(200000)]);
       this.summaryDialogForm.controls['interestAmount'].updateValueAndValidity();
