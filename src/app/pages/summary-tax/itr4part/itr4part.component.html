@@ -21,7 +21,7 @@
             <div class="card__col-lg-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Trade Name</mat-label>
-                    <input matInput placeholder="Trade Name" formControlName="tradeName44AD" maxlength="75" autocomplete="off">
+                    <input matInput placeholder="Trade Name" formControlName="tradeName44AD" (blur)="getCodeFromLabelOnBlur()" maxlength="75" autocomplete="off">
                     <!-- <mat-error *ngIf="natureOfBusinessForm['controls'].tradeName44AD.hasError('pattern')">
                         Name should contain character only
                     </mat-error> -->
@@ -49,7 +49,8 @@
                 <td>Presumptive Income at 6%</td>
                 <td></td>
                 <td>
-                    <input type="number" formControlName="presumptiveIncomeRecieveBank" maxlength="8">
+                    <input type="number" formControlName="presumptiveIncomeRecieveBank" (blur)="calculateTotalAmnt()" maxlength="8">
+
                     <div style="color: red;"  *ngIf="natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].hasError('min')">
                         Minimum value must be {{natureOfBusinessForm.controls['minimumPresumptiveIncomeRecivedInBank'].value}}
                     </div>
@@ -72,7 +73,8 @@
                 <td>Presumptive Income at 8%</td>
                 <td></td>
                 <td>
-                    <input type="number" formControlName="presumptiveIncomeRecievedCash" maxlength="8">
+                    <input type="number" formControlName="presumptiveIncomeRecievedCash" (blur)="calculateTotalAmnt()" maxlength="8">
+
                     <div style="color: red;"  *ngIf="natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].hasError('min')">
                         Minimum value must be {{natureOfBusinessForm.controls['minimumPresumptiveIncomeCashInBank'].value}}
                     </div>
@@ -112,7 +114,7 @@
             <div class="card__col-lg-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Trade Name</mat-label>
-                    <input matInput placeholder="Trade Name" disabled formControlName="tradeName44ADA" maxlength="75" autocomplete="off">
+                    <input matInput placeholder="Trade Name" disabled formControlName="tradeName44ADA" (blur)="getCodeFromLabelOnBlur44ADA()" maxlength="75" autocomplete="off">
                     <!-- <mat-error *ngIf="natureOfBusinessForm['controls'].tradeName44ADA.hasError('pattern')">
                         Name should contain character only
                     </mat-error> -->
