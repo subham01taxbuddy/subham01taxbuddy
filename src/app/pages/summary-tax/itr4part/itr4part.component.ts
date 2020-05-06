@@ -33,8 +33,8 @@ export class Itr4partComponent implements OnInit {
     this.natureOfBusinessForm = this.fb.group({
       natureOfBusiness44AD: ['', Validators.required],
       natureOfBusiness44ADA: [''],
-      tradeName44AD: ['', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
-      tradeName44ADA: ['', [, Validators.pattern(AppConstants.charRegex)]],
+      tradeName44AD: ['', [Validators.required]],  //Validators.pattern(AppConstants.charRegex)
+      tradeName44ADA: [''],
       recieptRecievedInBank: [],
       presumptiveIncomeRecieveBank: [],
       recievedinCash: [],

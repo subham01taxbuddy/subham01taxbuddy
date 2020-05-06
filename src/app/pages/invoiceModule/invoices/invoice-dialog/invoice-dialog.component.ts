@@ -169,7 +169,16 @@ export class InvoiceDialogComponent implements OnInit {
 
     if (this.clientListGridOptions && this.clientListGridOptions.api && this.clientListGridOptions.api.getRenderedNodes() && this.clientListGridOptions.api.getRenderedNodes()[0].data.itemDescription) {
       this.invoiceEditForm.controls['userId'].setValue(this.utilsService.isNonEmpty(this.invoiceEditForm.controls['userId'].value) ? this.invoiceEditForm.controls['userId'].value : null)
-      this.invoiceEditForm.controls['subTotal'].setValue(this.invoiceData.invoiceTotal)
+
+      if(this.isMaharashtraState){
+        let subTotal = this.invoiceData.invoiceTotal - (this.invoiceData.invoiceCGST + this.invoiceData.invoiceSGST)
+        this.invoiceEditForm.controls['subTotal'].setValue(subTotal)
+       }
+       else{
+        let subTotal = this.invoiceData.invoiceTotal - this.invoiceData.invoiceIGST;
+        this.invoiceEditForm.controls['subTotal'].setValue(subTotal)
+  
+       }
       this.invoiceEditForm.controls['cgstTotal'].setValue(this.invoiceData.invoiceCGST)
       this.invoiceEditForm.controls['sgstTotal'].setValue(this.invoiceData.invoiceSGST)
       this.invoiceEditForm.controls['igstTotal'].setValue(this.invoiceData.invoiceIGST)

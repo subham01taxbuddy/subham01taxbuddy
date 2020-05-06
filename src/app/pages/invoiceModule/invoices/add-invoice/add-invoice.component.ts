@@ -73,6 +73,9 @@ export class AddInvoiceComponent implements OnInit {
     this.invoiceInfoCalled();
 
     this.setInitiatedData()
+  
+    this.isMaharashtraState = true;                      //For default cgst & sgst taxes show in table
+    this.showTaxRelatedState('Maharashtra')
   }
 
   setInitiatedData() {
@@ -180,7 +183,7 @@ export class AddInvoiceComponent implements OnInit {
 
   invoiceDetail: any;
   getUserInvoiceList() {      //key
-    //debugger
+    debugger
     if (this.selectUser.controls['user'].valid) {
 
       this.editInvoice = false;
@@ -196,7 +199,7 @@ export class AddInvoiceComponent implements OnInit {
         this.userService.getMethodInfo(param).subscribe((result: any) => {
 
           console.log('this.invoiceForm', this.invoiceForm)
-          // debugger
+           debugger
           this.invoiceForm.controls['paymentCollectedBy'].setValidators(null);
           this.invoiceForm.controls['paymentCollectedBy'].updateValueAndValidity();
           this.invoiceForm.controls['dateOfReceipt'].setValidators(null);
@@ -204,7 +207,7 @@ export class AddInvoiceComponent implements OnInit {
           this.invoiceForm.controls['dateOfDeposit'].setValidators(null);
           this.invoiceForm.controls['dateOfDeposit'].updateValueAndValidity();
 
-          // debugger
+           debugger
           console.log('User Detail: ', result)
           this.invoiceDetail = result;
 
@@ -250,7 +253,7 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.controls['cin'].setValue('U74999MH2017PT298565');
       this.invoiceForm.controls['modeOfPayment'].setValue('Online');
 
-      // this.setInitiatedData()
+       this.setInitiatedData()
       // this.invoiceForm.controls['paymentCollectedBy'].setValidators(null);
       // this.invoiceForm.controls['paymentCollectedBy'].updateValueAndValidity();
       // this.invoiceForm.controls['dateOfReceipt'].setValidators(null);
@@ -278,6 +281,8 @@ export class AddInvoiceComponent implements OnInit {
       // this.invoiceForm.controls['email'].setValidators(null);
       // this.invoiceForm.controls['email'].updateValueAndValidity();
 
+      //this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))
+
       let blankTableRow = [{
         itemDescription: '',
         quantity: '',
@@ -290,8 +295,12 @@ export class AddInvoiceComponent implements OnInit {
         igstAmnt: '',
         amnt: ''
       }]
-      this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))
+      this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))    //use for clear invoice table fields
+      this.showTaxRelatedState('Maharashtra');        //for defalt show cgst & sgst tax in table
+
+      
     }
+
   }
 
   changePayStatus(event, invoice) {
@@ -333,6 +342,8 @@ export class AddInvoiceComponent implements OnInit {
       }, error => {
         //  this._toastMessageService.alert("error", "There is some issue to fetch user profile data.");
       });
+
+      this.showTaxRelatedState('Maharashtra');
     }
     else if (type === 'InvoiceData') {
       debugger
@@ -383,6 +394,7 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   invoiceInfoCalled() {
+    console.log('GRID INITIALISE')
     this.clientListGridOptions = <GridOptions>{
       rowData: [this.setInvoiceRowData()],
       columnDefs: this.createColumnDefs(),
@@ -724,7 +736,16 @@ export class AddInvoiceComponent implements OnInit {
 
     if (this.clientListGridOptions && this.clientListGridOptions.api && this.clientListGridOptions.api.getRenderedNodes() && this.clientListGridOptions.api.getRenderedNodes()[0].data.itemDescription) {
       this.invoiceForm.controls['userId'].setValue(this.utilsService.isNonEmpty(this.invoiceForm.controls['userId'].value) ? this.invoiceForm.controls['userId'].value : null)
-      this.invoiceForm.controls['subTotal'].setValue(this.invoiceData.invoiceTotal)
+
+     if(this.isMaharashtraState){
+      let subTotal = this.invoiceData.invoiceTotal - (this.invoiceData.invoiceCGST + this.invoiceData.invoiceSGST)
+      this.invoiceForm.controls['subTotal'].setValue(subTotal)
+     }
+     else{
+      let subTotal = this.invoiceData.invoiceTotal - this.invoiceData.invoiceIGST;
+      this.invoiceForm.controls['subTotal'].setValue(subTotal)
+
+     }
       this.invoiceForm.controls['cgstTotal'].setValue(this.invoiceData.invoiceCGST)
       this.invoiceForm.controls['sgstTotal'].setValue(this.invoiceData.invoiceSGST)
       this.invoiceForm.controls['igstTotal'].setValue(this.invoiceData.invoiceIGST )
@@ -885,7 +906,9 @@ export class AddInvoiceComponent implements OnInit {
 
   addNewUserInvoice() {
     this.addNewUser = true;
+    this.invoiceInfoCalled();
     this.getUserInvoiceList();
+   
   }
 
 
