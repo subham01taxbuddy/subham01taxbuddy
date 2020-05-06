@@ -438,7 +438,7 @@
         <div class="card__col-lg-6" formGroupName="onSalary" *ngIf="data.mode == 'tdsOnSal'">
             <mat-form-field appearance="outline">
                 <mat-label>Name of Employer </mat-label>
-                <input matInput placeholder="Name of Employer" formControlName="deductorName" maxlength="15">
+                <input matInput placeholder="Name of Employer" formControlName="deductorName" maxlength="30">
 
             </mat-form-field>
         </div>
@@ -484,7 +484,7 @@
         <div class="card__col-lg-6" formGroupName="otherThanSalary16A" *ngIf="data.mode == 'tdsOnOtherThanSal'">
             <mat-form-field appearance="outline">
                 <mat-label>Name of Deductor </mat-label>
-                <input matInput placeholder="Name of Deductor" formControlName="deductorName" maxlength="15">
+                <input matInput placeholder="Name of Deductor" formControlName="deductorName" maxlength="30">
 
             </mat-form-field>
         </div>
@@ -531,7 +531,7 @@
         <div class="card__col-lg-6" formGroupName="otherThanSalary26QB" *ngIf="data.mode == 'tdsOnSalOfPro26Q'">
             <mat-form-field appearance="outline">
                 <mat-label>Name of Deductor </mat-label>
-                <input matInput placeholder="Name of Deductor" formControlName="deductorName" maxlength="15">
+                <input matInput placeholder="Name of Deductor" formControlName="deductorName" maxlength="30">
 
             </mat-form-field>
         </div>
@@ -576,7 +576,7 @@
         <div class="card__col-lg-6" formGroupName="tcs" *ngIf="data.mode == 'taxCollSources'">
             <mat-form-field appearance="outline">
                 <mat-label>Name of Collector </mat-label>
-                <input matInput placeholder="Name of Collector" formControlName="collectorName" maxlength="15">
+                <input matInput placeholder="Name of Collector" formControlName="collectorName" maxlength="30">
 
             </mat-form-field>
         </div>
