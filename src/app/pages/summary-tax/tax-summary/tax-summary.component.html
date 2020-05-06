@@ -605,20 +605,20 @@
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 17 : 16}}</td>
-                                <td><b>Taxes Paid</b></td>
+                                <td><b>Taxes Paid (Refer Annexure)</b></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td>TDS on Salary (Refer Annexure)</td>
+                                <td>TDS on Salary </td>
                                 <td><input type="number" [value]="taxesPaid.tdsOnSalary" disabled maxlength="8"></td>
                                 <!--formControlName="totalTdsOnSalary"-->
                                 <td></td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td>TDS other than Salary (Refer Annexure)</td>
+                                <td>TDS other than Salary</td>
                                 <td><input type="number" disabled [value]="taxesPaid.tdsOtherThanSalary" maxlength="8">
                                 </td>
                                 <!--formControlName="totalTdsOnOtherThanSalary"-->
@@ -626,14 +626,14 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td>TDS on Sale of Property 26QB (Refer Annexure)</td>
+                                <td>TDS on Sale of Property 26QB </td>
                                 <td><input type="number" disabled [value]="taxesPaid.tdsOnSal26QB" maxlength="8"></td>
                                 <!--formControlName="totalTdsSaleOfProperty26QB"-->
                                 <td></td>
                             </tr>
                             <tr>
                                 <td></td>
-                                <td>TCS (Refer Annexure)</td>
+                                <td>TCS </td>
                                 <td formGroupName="taxSummary"><input type="number" disabled [value]="taxesPaid.tcs"
                                         maxlength="8"></td>
                                 <!--totalTaxCollectedAtSources    formControlName="taxPaidTCS"-->
@@ -641,7 +641,7 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td>Advance/ Self-Assessment Tax (Refer Annexure)</td>
+                                <td>Advance/ Self-Assessment Tax </td>
                                 <td><input type="number" disabled [value]="taxesPaid.advanceSelfAssTax" maxlength="8">
                                 </td>
                                 <!--totalAdvanceTax-->
