@@ -954,7 +954,7 @@ export class TaxSummaryComponent implements OnInit {
   updateFamilyForm(obj) {
     return this.fb.group({
       fName: [obj.firstName || '', Validators.required],
-      mName: [obj.middleName || '', Validators.required],
+      mName: [obj.middleName || ''],
       lName: [obj.lastName || '', Validators.required],
       dateOfBirth: [obj.dateOfBirth || '', Validators.required],
       fathersName: [obj.middleName || '']
@@ -1177,11 +1177,13 @@ export class TaxSummaryComponent implements OnInit {
     // debugger
     console.log(this.itrSummaryForm['controls'].taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.value)
     console.log(this.itrSummaryForm['controls'].assesse['controls'].residentialStatus.value)
-    if (this.itrSummaryForm['controls'].assesse['controls'].residentialStatus.value === 'RESIDENT' && (this.itrSummaryForm['controls'].taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.value < 500000)) {
-      this.itrSummaryForm['controls'].taxSummary['controls'].forRebate87Tax.setValue(12500)
-    } else {
-      this.itrSummaryForm['controls'].taxSummary['controls'].forRebate87Tax.setValue(0)
-    }
+          // Remove logic as descuss with brij, user direct enter this amount
+          
+    // if (this.itrSummaryForm['controls'].assesse['controls'].residentialStatus.value === 'RESIDENT' && (this.itrSummaryForm['controls'].taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.value < 500000)) {
+    //   this.itrSummaryForm['controls'].taxSummary['controls'].forRebate87Tax.setValue(12500)
+    // } else {
+    //   this.itrSummaryForm['controls'].taxSummary['controls'].forRebate87Tax.setValue(0)
+    // }
 
     this.calculateTaxAfterRebate();
   }
