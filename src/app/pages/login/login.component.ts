@@ -29,6 +29,8 @@ import Auth from '@aws-amplify/auth';
 import { ToastMessageService } from '../../services/toast-message.service';
 import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 import { UserMsService } from 'app/services/user-ms.service';
+import { ValidateOtpByWhatAppComponent } from './validate-otp-by-what-app/validate-otp-by-what-app.component';
+import { MatDialog } from '@angular/material';
 
 declare let $: any;
 
@@ -52,7 +54,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private navbarService: NavbarService, public http: HttpClient,
     public router: Router, private _toastMessageService: ToastMessageService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService,
-    private userMsService: UserMsService) {
+    private userMsService: UserMsService, private dialog: MatDialog) {
     NavbarService.getInstance(null).component_link = this.component_link;
   }
 
@@ -116,6 +118,7 @@ export class LoginComponent implements OnInit {
   }
 
   public onOTPValidate(values: any) {
+    debugger
     if (this.otpForm.valid && this.cognitoUser) {
       this.loading = true;
       Auth.sendCustomChallengeAnswer(this.cognitoUser, values.otp).then(res => {
@@ -209,4 +212,22 @@ export class LoginComponent implements OnInit {
         this._toastMessageService.alert("error", "Access Denied.");
     }
   }
+
+  sendOtpOnWhatapp(values){
+      let disposable = this.dialog.open(ValidateOtpByWhatAppComponent, {
+        width: '47%',
+        height: 'auto',
+        data: {
+         userName: values
+        }
+      })
+  
+      disposable.afterClosed().subscribe(result => {
+
+
+        // window.open('https://wa.me/919321908755?text=OTP%20WEB')
+      })
+   
+  }
 }
+

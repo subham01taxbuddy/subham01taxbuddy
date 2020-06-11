@@ -100,6 +100,7 @@ import { GstRegistrationClientComponent } from './assign/gst-registration-client
 import { ActivePackagePartComponent } from './active-package-part/active-package-part.component';
 import { FcmDetailComponent } from './active-package-part/fcm-detail/fcm-detail.component';
 import { ActivatePackageComponent } from './active-package-part/activate-package/activate-package.component';
+import { ValidateOtpByWhatAppComponent } from './login/validate-otp-by-what-app/validate-otp-by-what-app.component';
 // import { NO_ERRORS_SCHEMA } from '@angular/compiler/src/core';
 
 Auth.configure(environment.AMPLIFY_CONFIG);
@@ -168,12 +169,15 @@ export const MY_FORMATS = {
     CSVParseTemplateComponent,
     GstRegistrationClientComponent,
     ActivePackagePartComponent,
-    FcmDetailComponent
+    FcmDetailComponent,
+    ValidateOtpByWhatAppComponent
+    
   ],
   entryComponents: [
     HomeComponent,
     ConfirmationModalComponent,
-    AgGridCheckboxComponent
+    AgGridCheckboxComponent,
+    ValidateOtpByWhatAppComponent
   ],
   imports: [
     CommonModule,

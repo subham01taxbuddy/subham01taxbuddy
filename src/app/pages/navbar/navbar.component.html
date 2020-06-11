@@ -1,6 +1,8 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
 <header class="header clearfix fixed">
+
+    <mat-slide-toggle >Slide me!</mat-slide-toggle>&nbsp;
     <a class="header__logo" (click)="sideBar()">
         <span class="header__logo-img1"></span>
         <span class="header__logo-button" [class.header__logo-button-open]="sidebar_open"
