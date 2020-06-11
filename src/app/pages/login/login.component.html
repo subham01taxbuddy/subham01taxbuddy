@@ -27,7 +27,13 @@
                     <button [disabled]="!mobileForm.valid" type="submit" class="btn"
                         style="margin-left: auto; margin-right: auto; display: block; min-width:40%;border:none;outline:none;">Send
                         OTP</button>
+                      
                 </form>
+
+                <button [disabled]="!mobileForm.valid" type="submit" class="btn" (click)="sendOtpOnWhatapp(mobileForm.value)"
+                style="margin-left: auto; margin-right: auto; display: block; min-width:40%;border:none;outline:none;">Whats app link</button>
+
+
                 <form [formGroup]="otpForm" (ngSubmit)="onOTPValidate(otpForm.value)" class="form-horizontal">
                     <div class="card__row">
                         <div class="card__col-xs-12 card__col-sm-7"
@@ -42,6 +48,7 @@
                     <button [disabled]="!otpForm.valid" type="submit" class="btn"
                         style="margin-left: auto; margin-right: auto; display: block; min-width:40%;border:none;outline:none;">Validate
                         OTP</button>
+                 
                 </form>
 
                 <div class="card__row">
@@ -52,7 +59,7 @@
 
             </div>
 
-            <!-- <div class="card" *ngIf="isProd">
+            <!-- <div class="card" *ngIf="!isProd">
                 <h2><img src="assets/img/logo-img.svg" style="margin-left:auto;margin-right:auto;display:block;"
                         alt="Smiley face" height="20%" width="50%"></h2>
                 <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
