@@ -51,6 +51,7 @@ export class ValidateOtpByWhatAppComponent implements OnInit {
               this.getUserByCognitoId(res);
             } else {
               this._toastMessageService.alert("error", 'Please enter valid OTP');
+              
             }
           }, err => {
            // this.loading = false;
@@ -77,7 +78,7 @@ export class ValidateOtpByWhatAppComponent implements OnInit {
       role: jhi.role
     };
     NavbarService.getInstance(null).setUserData(userData);
-
+    this.dialogRef.close();
 
     if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
       this.router.navigate(['pages/home']);
