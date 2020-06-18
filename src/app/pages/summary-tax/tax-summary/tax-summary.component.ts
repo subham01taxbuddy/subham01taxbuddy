@@ -1189,7 +1189,6 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   calculateTaxAfterRebate() {      //Calculate point 9 (Tax after rebate (7-8))
-
     let taxAfterRebat = Number(this.itrSummaryForm['controls'].taxSummary['controls'].taxOnTotalIncome.value) - Number(this.itrSummaryForm['controls'].taxSummary['controls'].forRebate87Tax.value);
     if (taxAfterRebat > 0) {
       this.itrSummaryForm['controls'].taxSummary['controls'].taxAfterRebate.setValue(taxAfterRebat);
@@ -1205,6 +1204,9 @@ export class TaxSummaryComponent implements OnInit {
     if (this.itrSummaryForm['controls'].taxSummary['controls'].taxAfterRebate.value > 0) {
       let healthEduCes = Math.round((this.itrSummaryForm['controls'].taxSummary['controls'].taxAfterRebate.value * 4) / 100)
       this.itrSummaryForm['controls'].taxSummary['controls'].cessAmount.setValue(healthEduCes);
+    }
+    else{
+      this.itrSummaryForm['controls'].taxSummary['controls'].cessAmount.setValue(0);
     }
     this.calculateTotalTaxCess();
   }
