@@ -1,22 +1,3 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
-
 import { Component, OnInit } from '@angular/core';
 import { NavbarService } from '../../services/navbar.service';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
@@ -44,13 +25,7 @@ export class LoginComponent implements OnInit {
 
   component_link: string = 'login';
   public form: FormGroup;
-  public mobileForm: FormGroup;
-  public otpForm: FormGroup;
-  public user: AbstractControl;
-  public passphrase: AbstractControl;
   public loading: boolean = false;
-  public isProd: boolean = false;
-  cognitoUser: any;
 
   constructor(private fb: FormBuilder, private navbarService: NavbarService, public http: HttpClient,
     public router: Router, private _toastMessageService: ToastMessageService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService,
@@ -59,27 +34,18 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isProd = environment.production;
     this.form = this.fb.group({
-      'user': ['', Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(10)])],
-      'passphrase': ['', Validators.compose([Validators.required, Validators.minLength(3)])]
+      user: ['', Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(10)])],
+      passphrase: ['']
     });
-
-    this.mobileForm = this.fb.group({
-      'user': ['', Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(10)])],
-    });
-    this.otpForm = this.fb.group({
-      'otp': ['', Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(6)])],
-    });
-
-    this.user = this.form.controls['user'];
-    // this.passphrase = this.form.controls['passphrase'];
   }
 
-  public onSubmit(values: any) {
+  public onSubmit() {
+    this.form.controls['passphrase'].setValidators([Validators.required, Validators.minLength(6)]);
+    this.form.controls['passphrase'].updateValueAndValidity();
     if (this.form.valid) {
       this.loading = true;
-      Auth.signIn(`+91${values.user}`, values.passphrase).then(res => {
+      Auth.signIn(`+91${this.form.controls.user.value}`, this.form.controls.passphrase.value).then(res => {
         this.loading = false;
         const temp = {
           role: [],
@@ -91,53 +57,12 @@ export class LoginComponent implements OnInit {
         } else {
           this.getUserByCognitoId(res);
         }
-        this._toastMessageService.alert("success", 'OTP Sent on your mobile number');
       }, err => {
         this.loading = false;
         this._toastMessageService.alert("error", err.message);
       });
     } else {
       $('input.ng-invalid').first().focus();
-    }
-  }
-
-  public onOTPSent(values: any) {
-    if (this.mobileForm.valid) {
-      this.loading = true;
-      Auth.signIn(`+91${values.user}`).then(res => {
-        this.cognitoUser = res;
-        this.loading = false;
-        this._toastMessageService.alert("success", 'OTP Sent on your mobile number');
-      }, err => {
-        this.loading = false;
-        this._toastMessageService.alert("error", err.message);
-      });
-    } else {
-      $('input.ng-invalid').first().focus();
-    }
-  }
-
-  public onOTPValidate(values: any) {
-    debugger
-    if (this.otpForm.valid && this.cognitoUser) {
-      this.loading = true;
-      Auth.sendCustomChallengeAnswer(this.cognitoUser, values.otp).then(res => {
-        const temp = {
-          role: [],
-          userId: 0
-        }
-        console.log("OTP Validation result:", res);
-        if (res.signInUserSession) {
-          this.setUserDataInsession(res, temp);
-          this.getUserByCognitoId(res);
-        } else {
-          this._toastMessageService.alert("error", 'Please enter valid OTP');
-        }
-      }, err => {
-        this.loading = false;
-        this._toastMessageService.alert("error", err.message);
-
-      });
     }
   }
 
@@ -213,21 +138,37 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  sendOtpOnWhatapp(values){
-      let disposable = this.dialog.open(ValidateOtpByWhatAppComponent, {
-        width: '47%',
-        height: 'auto',
-        data: {
-         userName: values
-        }
-      })
-  
-      disposable.afterClosed().subscribe(result => {
+  sendOtpOnWhatapp(values) {
+    this.form.controls['passphrase'].setValidators(null);
+    this.form.controls['passphrase'].updateValueAndValidity();
+    let disposable = this.dialog.open(ValidateOtpByWhatAppComponent, {
+      width: '47%',
+      height: 'auto',
+      data: {
+        userName: values
+      }
+    })
 
+    disposable.afterClosed().subscribe(result => {
+      // window.open('https://wa.me/919321908755?text=OTP%20WEB')
+    })
 
-        // window.open('https://wa.me/919321908755?text=OTP%20WEB')
-      })
-   
+  }
+
+  mode: string = 'SIGN_IN';
+  username: string = '';
+  changeMode(view) {
+    this.mode = view;
+  }
+
+  fromForgotPassword(event) {
+    console.log('FOrgot pass Event result in component:', event);
+    this.mode = event.view;
+    this.username = event.username;
+  }
+
+  fromOtp(event) {
+    this.mode = event.view;
   }
 }
 

@@ -19,7 +19,7 @@ import { ReportsModule } from './reports-module/reports.module';
  */
 
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Component, OnInit, Input, NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, Component, OnInit, Input, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -101,6 +101,8 @@ import { ActivePackagePartComponent } from './active-package-part/active-package
 import { FcmDetailComponent } from './active-package-part/fcm-detail/fcm-detail.component';
 import { ActivatePackageComponent } from './active-package-part/activate-package/activate-package.component';
 import { ValidateOtpByWhatAppComponent } from './login/validate-otp-by-what-app/validate-otp-by-what-app.component';
+import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
+import { ValidateOtpComponent } from './login/validate-otp/validate-otp.component';
 // import { NO_ERRORS_SCHEMA } from '@angular/compiler/src/core';
 
 Auth.configure(environment.AMPLIFY_CONFIG);
@@ -170,14 +172,16 @@ export const MY_FORMATS = {
     GstRegistrationClientComponent,
     ActivePackagePartComponent,
     FcmDetailComponent,
-    ValidateOtpByWhatAppComponent
-    
+    ValidateOtpByWhatAppComponent,
+    ForgotPasswordComponent,
+    ValidateOtpComponent
+
   ],
   entryComponents: [
     HomeComponent,
     ConfirmationModalComponent,
     AgGridCheckboxComponent,
-    ValidateOtpByWhatAppComponent
+    ValidateOtpByWhatAppComponent,
   ],
   imports: [
     CommonModule,
@@ -207,7 +211,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   ],
   bootstrap: [PagesComponent],
-  schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ],
+  schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
 
   exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,
     ReactiveFormsModule,

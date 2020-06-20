@@ -1,24 +1,23 @@
 .page-bg {
-    padding-top: 30px;
-    padding-left: 170px;
-    padding-right: 30px;
-    margin: auto;
-    background-color: #f2f2f2;
+  padding-top: 30px;
+  padding-left: 170px;
+  padding-right: 30px;
+  margin: auto;
+  background-color: #f2f2f2;
 }
 
 .auth-block {
-    background: #fff !important;
-    width: 30% !important;
+  background: #fff !important;
+  width: 30% !important;
 }
 
 .login_content {
-    width: 60%;
+  width: 60%;
 }
 
 .login_content_container {
-    margin: 0 10px;
+  margin: 0 10px;
 }
-
 
 /*.main1 {
     padding-top: 200px;
@@ -30,22 +29,20 @@
 }*/
 
 .main1 {
-    padding-top: 263px;
-    padding-left: 25%;
-    padding-right: 25%;
-    margin: auto;
-    background-color: #f2f2f2;
-    min-height: 100vh;
+  padding-top: 70px;
+  padding-left: 25%;
+  padding-right: 25%;
+  margin: auto;
+  background-color: #f2f2f2;
+  min-height: 100vh;
 }
 
 .login_content1 {
-    width: 50%;
-    margin: auto;
+  width: 50%;
+  margin: auto;
 }
 
-
 /*RESPONSIVE*/
-
 
 /* @media screen and (max-width: 970px) {
     .main1 {
@@ -53,25 +50,24 @@
     }
 } */
 
-
 /*768px*/
 
 @media screen and (max-width: 1300px) {
-    .main1 {
-        margin: 0;
-        padding-right: 10px;
-        padding-left: 10px;
-    }
+  .main1 {
+    margin: 0;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
 }
 
 @media screen and (max-width: 415px) {
-    .login_content1 {
-        width: 85%;
-    }
+  .login_content1 {
+    width: 85%;
+  }
 }
 
 @media screen and (max-width: 1024px) {
-    .main1 {
-        padding-top: 40%;
-    }
+  .main1 {
+    padding-top: 40%;
+  }
 }
