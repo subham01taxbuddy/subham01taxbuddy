@@ -1,0 +1,42 @@
+.resend-disable {
+  cursor: not-allowed;
+  color: gray;
+}
+
+.resend-enable {
+  cursor: pointer;
+  color: #3fbaeb;
+  font-weight: 600;
+}
+
+.loginbt {
+  background: #e97d17 !important;
+  width: 100%;
+  margin: 20px 0!important;
+}
+
+.WtsApBtn {
+  background: #ffffff !important;
+    border-radius: 25px;
+    border: 2px solid #11960f;
+    width: 70%;
+    margin-top: 30px!important;
+    display: block;
+    margin: 0 auto;
+    padding: 1%;
+}
+.WtsApBtn:hover {
+  background: #eefcee !important;
+  }
+
+.icoClr {
+  color:#11960f;
+  font-size:26px;
+}
+
+.icoTx {
+  color: #11960f;
+    font-size: 18px;
+    font-weight: 600;
+    padding-right: 10px;
+}

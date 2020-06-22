@@ -1,0 +1,57 @@
+<div>
+  <form [formGroup]="otpForm">
+    <mat-form-field appearance="outline">
+      <mat-label>OTP</mat-label>
+      <input autofocus="true" matInput required placeholder="Enter OTP Here" name="OTP" pattern="[0-9]*"
+        formControlName="otp" maxlength="6" />
+      <mat-error class="error-msg" *ngIf="otpForm.controls['otp'].hasError('required')">
+        This
+        field
+        is required</mat-error>
+      <mat-error class="error-msg" *ngIf="otpForm.controls['otp'].hasError('pattern')">
+        Please
+        enter
+        only number</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input matInput [type]="hide ? 'password' : 'text'" placeholder="Enter new password" formControlName="password"
+        name="password" required maxLength="20">
+      <mat-icon matSuffix (click)="hide = !hide" style="cursor: pointer;">{{hide ? 'visibility_off' : 'visibility'}}
+      </mat-icon>
+      <mat-error class="error-msg" *ngIf="otpForm.controls['password'].hasError('minlength')">
+        Minimum 6 characters required.</mat-error>
+    </mat-form-field>
+
+
+    <div class="row" *ngIf="isError">
+      <div class='mat-error '>
+        <div class='text-center'>
+          {{errorMessage}}
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="isOtpSent">
+      <div class='success-message'>
+        <div class='text-center' style="color: green;">
+          OTP sent successfully.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group clearfix">
+      <button type="submit" (click)="otpValidationMethod()" class="btn whiteTxt uppercase loginbt"
+        [style.cursor]="busy ?'not-allowed':'pointer'"
+        [disabled]="busy">{{busy ? 'Validating OTP...':'SUBMIT'}}</button>
+    </div>
+
+    <!-- Didn't receive a OTP? <br>
+    <a (click)="resendOTP()" class="fgt_txt" [class]="counter != 0 ? 'resend-disable':'resend-enable'"
+      style="font-size: 14px"> Resend OTP via SMS
+    </a> &nbsp;&nbsp;<span *ngIf="counter != 0 " style="font-size: 12px">{{countDown | async}}
+      sec</span> -->
+  </form>
+
+
+</div>
