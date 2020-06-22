@@ -58,7 +58,7 @@
         <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Employer name</mat-label>
-                <input matInput placeholder="Employer name" formControlName="employerName" maxlength="40" required>
+                <input matInput placeholder="Employer name" formControlName="employerName" maxlength="40">
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employerName'].invalid">Enter
                     Employer name</mat-error> -->
             </mat-form-field>
@@ -68,7 +68,7 @@
                 <mat-label>Nature of employer </mat-label>
                 <!--natureOfEmp-->
                 <mat-select matInput formControlName="employerCategory" placeholder="Select Nature of employer"
-                    autocomplete="off" required>
+                    autocomplete="off">
                     <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
                         {{ emp.label }}
                     </mat-option>
@@ -92,7 +92,7 @@
         <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Employer's Address</mat-label>
-                <input matInput placeholder="Employer's Address 2" formControlName="address" maxlength="50" required>
+                <input matInput placeholder="Employer's Address 2" formControlName="address" maxlength="50">
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employeAddress'].invalid">Enter
                             address</mat-error> -->
             </mat-form-field>
@@ -105,7 +105,7 @@
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput placeholder="PIN Code"
                     autocomplete="off"
-                    (blur)="getCityData(summaryDialogForm.controls.employers['controls'].pinCode,data.mode)" required>
+                    (blur)="getCityData(summaryDialogForm.controls.employers['controls'].pinCode,data.mode)" >
 
                 <mat-error *ngIf="summaryDialogForm['controls'].employers['controls'].pinCode.hasError('required')">
                     Enter pin
@@ -120,21 +120,21 @@
         <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Country</mat-label>
-                <input matInput formControlName="country" placeholder="Country" required readonly autocomplete="off">
+                <input matInput formControlName="country" placeholder="Country" readonly autocomplete="off">
             </mat-form-field>
         </div>
 
         <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>State</mat-label>
-                <input matInput formControlName="state" readonly placeholder="State" required autocomplete="off">
+                <input matInput formControlName="state" readonly placeholder="State" autocomplete="off">
             </mat-form-field>
         </div>
 
         <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>City</mat-label>
-                <input matInput formControlName="city" readonly placeholder="City" required autocomplete="off">
+                <input matInput formControlName="city" readonly placeholder="City" autocomplete="off">
             </mat-form-field>
         </div><br><br>
 
@@ -694,8 +694,7 @@
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput placeholder="PIN Code"
                     autocomplete="off"
-                    (blur)="getCityData(summaryDialogForm.controls.houseProperties['controls'].pinCode, data.mode)"
-                    required>
+                    (blur)="getCityData(summaryDialogForm.controls.houseProperties['controls'].pinCode, data.mode)">
 
                 <mat-error
                     *ngIf="summaryDialogForm['controls'].houseProperties['controls'].pinCode.hasError('required')">
