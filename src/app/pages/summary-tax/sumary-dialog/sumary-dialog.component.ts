@@ -138,7 +138,7 @@ export class SumaryDialogComponent implements OnInit {
         city: [''],
         pinCode: [''],
         state: [''],
-        panNumber: ['', Validators.pattern(AppConstants.panIndHUFRegex)],
+        panNumber: ['', Validators.pattern(AppConstants.panDoneeRegex)],
         amountInCash: [''],
         amountOtherThanCash: [''],
         eligibleAmount: [''],

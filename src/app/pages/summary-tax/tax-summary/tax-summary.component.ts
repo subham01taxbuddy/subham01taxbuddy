@@ -1162,6 +1162,7 @@ export class TaxSummaryComponent implements OnInit {
     let totalIncome = Number(this.itrSummaryForm['controls'].taxSummary['controls'].grossTotalIncome.value) - Number(this.itrSummaryForm['controls'].taxSummary['controls'].totalDeduction.value);
     if (totalIncome > 0) {
       // this.itrSummaryForm.controls['totalIncome'].setValue(totalIncome);
+      totalIncome = this.roundOf10Val(totalIncome)
       this.itrSummaryForm['controls'].taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.setValue(totalIncome)
     }
     else {
@@ -1171,6 +1172,13 @@ export class TaxSummaryComponent implements OnInit {
 
 
     this.calculateRebateus87A()
+  }
+
+  roundOf10Val(num){
+      num = parseFloat(num);
+      console.log(num)
+      console.log('num: ',num,' num/10: ',num/10,' Math.round(num / 10): ',Math.round(num / 10),' (Math.round(num / 10) * 10)',(Math.round(num / 10) * 10))
+      return (Math.round(num / 10) * 10);
   }
 
   calculateRebateus87A() {    //Calculate point 8 (Less: Rebate u/s 87A)
