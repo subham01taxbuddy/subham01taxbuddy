@@ -65,8 +65,8 @@ export const routes: Routes = [
 			{ path: 'activate-package', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: ActivePackagePartComponent },
 			{ path: 'assign', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: AssignComponent },
 			{ path: 'chat-corner', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './chat-corner/chat-corner.module#ChatCornerModule' },
-			{ path: 'tax-summary', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './summary-tax/summary.module#SummaryModule' }, 
-			{ path: 'invoice', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './invoiceModule/invoice.module#InvoiceModule' }, 
+			{ path: 'tax-summary', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './summary-tax/summary.module#SummaryModule' },
+			{ path: 'invoice', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './invoiceModule/invoice.module#InvoiceModule' },
 			// {
 			// 	path: 'user-info',
 			// 	canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] },
@@ -74,8 +74,9 @@ export const routes: Routes = [
 			// },
 			{ path: 'reports', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './reports-module/reports.module#ReportsModule' },
 			{ path: 'ifa', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] }, loadChildren: './ifa/ifa.module#IfaModule' },
+			{ path: 'itr-filing', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './itr-filing/itr-filing.module#ItrFilingModule' },
 			{ path: '**', redirectTo: '/pages/home', pathMatch: 'full' },
-			
+
 		]
 	},
 
