@@ -1,0 +1,84 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="content" style="margin-top: 30px;width: 40%">
+    <div class="invoice_images card card_main" style="position: relative;">
+        <ngx-loading [show]="imageLoader"></ngx-loading>
+        <div class="card__row">
+            <div class="wrapper" style="padding-top: 0;position: relative;">
+                <div class="container">
+                    <!-- <div class="card__col-xs-12 card__col-sm-12">
+                                    <div class="image" >
+                                        <img src="{{invoiceData.creditDebitNoteDTO.s3InvoiceImageUrl}}" alt="" class="image__item" [style.opacity]="(invoiceData.creditDebitNoteDTO.s3InvoiceImageUrl) ? '1' : '0'">
+                                    </div>
+                                    <div class="edit-invoice-image">
+                                      <div (click)="isEditInvoiceImage=true"><i class="fa fa-edit"></i></div>
+                                    </div>
+                                </div> -->
+                    <div class="card__col-xs-12 card__col-sm-12">
+                        <!--  <div class="verifyPopupImg" *ngIf="fileType !== 'pdf'">
+                          <ngx-image-zoom [thumbImage]=s3FilePath [fullImage]=s3FilePath [magnification]="1"
+                            [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200"></ngx-image-zoom>
+                        </div>
+                        <div style="max-height: 210px;">
+                          <pdf-viewer *ngIf="fileType === 'pdf'" [src]="s3FilePath" [render-text]="true" style="display: block">
+                          </pdf-viewer>
+                        </div> -->
+                        <!--  <div class="toggel-on-off" *ngIf="fileType === 'png' || fileType === 'jpg' || fileType === 'jpeg'"><i
+                            class="fa fa-toggle-on" *ngIf="showOriginal" style="color: green;" title="Show compressed image"
+                            (click)="showOriginalImage()"></i><i class="fa fa-toggle-off" *ngIf="!showOriginal"
+                            title="Show original image" (click)="showOriginalImage()"></i></div> -->
+                        <div class="edit-invoice-image"><i class="fa fa-edit" (click)="isEditInvoiceImage=true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /drag-wrapper -->
+            <div class="card__col-xs-12 card__col-sm-12" style="padding: 10px 10px !important;">
+                <!--  <app-input-upload [upload]="upload" [input_id]="'invoiceData-s3InvoiceImageUrl'"
+                      (filesDropped)="uploadInvoiceImage($event)"></app-input-upload> -->
+            </div>
+            <div class="card__col-xs-12 card__col-sm-12" style="text-align: center;">
+                <a class="btn btn-cancel" (click)="isEditInvoiceImage=false">Cancel</a>
+            </div>
+        </div>
+        <!-- </div> -->
+    </div><!-- .content__container -->
+</div>
+
+
+<div class="content" style="margin-top: 30px;width: 60%">
+    <div class="content__container">
+        <div class="card card_main">
+            <form [formGroup]="gstDetails">
+                <div class="card__title">Basic information</div>
+
+                <div class="card__row">
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>User Name</mat-label>
+                            <input placeholder="User Name" matInput>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>GST Portal User Name</mat-label>
+                            <input placeholder="GST Portal User Name" formControlName="gstPortalUserName" maxlength="50"
+                                matInput>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>GST Portal Password</mat-label>
+                            <input placeholder="Password" formControlName="gstPortalPassword" maxlength="50" matInput>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="footer__buttons clearfix" style="margin-top: 40px;">
+                    <button class="btn long-btn" style="border: none;">Save
+                        Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
