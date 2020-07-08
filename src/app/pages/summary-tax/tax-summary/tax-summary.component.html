@@ -4,6 +4,37 @@
     <div class="content content_full">
         <div class="content__container">
             <div class="card">
+                <div class="card__row ">
+                    <div class="card__col-xs-12 card__col-sm-12">
+                      <div class="filter__col card__col-sm-4 card__col-xs-12">
+                        <div class="input">
+                          <label class="input__label" for="attr">Select attribute</label>
+                          <select class="select__box ogp_select" (change)="clearValue()" #advanceSearchKey>
+                            <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
+                            <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+                              {{drop.name}}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="filter__col card__col-sm-4 card__col-xs-10">
+                        <div class="input">
+                          <label class="input__label" for="attr">Enter value</label>
+                          <div class="input__select">
+                            <input type="text" class="select__box ogp_select" style="background-image:none" [(ngModel)]="searchVal"
+                              name="searchVal" maxlength="10" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card__col-md-3 card__col-xs-12 pull-right">
+                        <a class="btn btn_stroke filter__add-link" (click)="advanceSearch(advanceSearchKey.value)"><i
+                            class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+
+
+            <div class="card">
                 <form [formGroup]="itrSummaryForm">
                     <div class="card__row">
 
@@ -1126,10 +1157,10 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Interest from Saving Account</mat-label>
                                     <input matInput placeholder="Interest from Saving Account"
-                                        [value]="incmesValue.savingAmount" id="savingAmount" name="savingAmount"
+                                        [value]="sourcesOfIncome.interestFromSaving" id="savingAmount" name="savingAmount"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                         (blur)="setOtherSourceIncomeValue($event.target.value,'saving')" maxlength="8"
-                                        autocomplete="off">
+                                        autocomplete="off">  
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1138,7 +1169,7 @@
                                     </mat-label>
                                     <input matInput
                                         placeholder="Interest from Deposits((Bank/ Post-Office/ Co-operative Society)"
-                                        maxlength="8" [value]="incmesValue.bankAmonut" id="bankAmonut" name="bankAmonut"
+                                        maxlength="8" [value]="sourcesOfIncome.interestFromBank" id="bankAmonut" name="bankAmonut"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                         (blur)="setOtherSourceIncomeValue($event.target.value,'bank')"
                                         autocomplete="off">
@@ -1148,7 +1179,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Interest from Income tax refund</mat-label>
                                     <input matInput placeholder="Interest from Income tax refund"
-                                        [value]="incmesValue.incomeTaxAmount" maxlength="8" id="incomeTaxAmount"
+                                        [value]="sourcesOfIncome.interestFromIncomeTax" maxlength="8" id="incomeTaxAmount"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                         name="incomeTaxAmount"
                                         (blur)="setOtherSourceIncomeValue($event.target.value,'it')" autocomplete="off">
@@ -1158,7 +1189,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Others</mat-label>
                                     <input matInput placeholder="Others" maxlength="8" autocomplete="off"
-                                        [value]="incmesValue.otherAmount" id="otherAmount" name="otherAmount"
+                                        [value]="sourcesOfIncome.interestFromOther" id="otherAmount" name="otherAmount"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                         (blur)="setOtherSourceIncomeValue($event.target.value,'other')">
                                 </mat-form-field>

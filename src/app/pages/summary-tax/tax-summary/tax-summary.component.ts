@@ -58,6 +58,21 @@ export class TaxSummaryComponent implements OnInit {
   ];
   financialYear = [{ value: '2019-2020' }, { value: '2020-2021' }];
 
+  searchVal: string = "";
+  currentUserId: number = 0;
+  searchMenus = [{
+    value: 'fName', name: 'First Name'
+  }, {
+    value: 'lName', name: 'Last Name'
+  }, {
+    value: 'emailAddress', name: 'Email Id'
+  }, {
+    value: 'mobileNumber', name: 'Mobile Number'
+  }, {
+    value: 'panNumber', name: 'PAN Number'
+  }, {
+    value: 'userId', name: 'User Id'
+  }];
 
   ageDropdown = [{ value: 'bellow60', label: 'Bellow 60' }, { value: 'above60', label: 'Above 60' }];
   itrTypesData = [{ value: "1", label: 'ITR 1' }, { value: "4", label: 'ITR 4' }];
@@ -74,14 +89,6 @@ export class TaxSummaryComponent implements OnInit {
   totalTDS: any = 0;
   fillingMinDate: any = new Date("2019-04-01");
   fillingMaxDate: any = new Date();
-
-  incmesValue = {
-    savingAmount: 0,
-    bankAmonut: 0,
-    incomeTaxAmount: 0,
-    otherAmount: 0,
-    totalOtherIncome: 0
-  }
 
   itrType = {
     itrOne: false,
@@ -267,6 +274,162 @@ export class TaxSummaryComponent implements OnInit {
     // });
     const familyData = <FormArray>this.itrSummaryForm['controls'].assesse.get('family');
     familyData.push(this.createFamilyForm())
+  }
+
+  clearValue() {
+    this.searchVal = "";
+    this.currentUserId = 0;
+  }
+
+  advanceSearch(key) {
+   // this.user_data = [];
+    if (this.searchVal !== "") {
+      this.getUerSummary(this.searchVal);
+    }
+  }
+
+  getUerSummary(mobNum){
+      let param = '/itr/summary/contact-number/'+mobNum;
+      this.userService.getMethodInfo(param).subscribe(summary=>{
+            console.log('User summary: => ',summary)
+            this.itrSummaryForm.patchValue(summary)
+            console.log(this.itrSummaryForm.value )
+            console.log(this.itrSummaryForm['controls'].assesse['controls'].donations)
+            console.log(this.itrSummaryForm['controls'].assesse['controls'].bankDetails);
+            console.log(this.itrSummaryForm['controls'].assesse['controls'].employers);
+            console.log(this.itrSummaryForm['controls'].assesse['controls'].houseProperties);
+            this.bankData = this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value;
+            this.housingData = this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value;
+            //this.salaryItrratedData = this.itrSummaryForm['controls'].assesse['controls'].employers.value;
+            this.updateSalatyInfo(this.itrSummaryForm['controls'].assesse['controls'].employers.value)
+            this.updateOtherSource(this.itrSummaryForm['controls'].assesse['controls'].incomes.value)
+            this.updateInuranceVal(this.itrSummaryForm['controls'].assesse['controls'].insurances.value)
+            this.donationData = this.itrSummaryForm['controls'].assesse['controls'].donations.value;
+            this.updateTaxDeductionAtSourceVal(this.itrSummaryForm['controls'].assesse['controls'].taxPaid.value);
+            this.setTotalOfExempt();
+      },
+      error=>{
+
+      })
+  }
+
+  updateSalatyInfo(salaryData){
+    console.log("salaryData: ",salaryData)
+    if(salaryData.length > 0){
+      for(let i=0; i < salaryData.length; i++){
+        let salObj = {
+          employerName: salaryData[i].employerName,
+          address: salaryData[i].address,
+          employerTAN: salaryData[i].employerTAN,
+          employerCategory: salaryData[i].employerCategory,
+          salAsPerSec171: salaryData[i].salary.length > 0 ? salaryData[i].salary[0].taxableAmount : 0,
+          valOfPerquisites: salaryData[i].perquisites.length > 0 ? salaryData[i].perquisites[0].taxableAmount : 0,
+          profitInLieu: salaryData[i].profitsInLieuOfSalaryType.length > 0 ? salaryData[i].profitsInLieuOfSalaryType[0].taxableAmount : 0,
+          grossSalary: salaryData[i].grossSalary,
+          houseRentAllow: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter(item => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (salaryData[i].allowance.filter(item => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
+          leaveTravelExpense: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter(item => item.allowanceType === 'LTA')).length > 0) ? (salaryData[i].allowance.filter(item => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
+          other: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter(item => item.allowanceType === 'ANY_OTHER')).length > 0) ? (salaryData[i].allowance.filter(item => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
+          totalExemptAllow: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (salaryData[i].allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
+          netSalary: salaryData[i].netSalary,
+          standardDeduction: salaryData[i].standardDeduction,
+          entertainAllow: (salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (salaryData[i].deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
+          professionalTax: (salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (salaryData[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
+          totalSalaryDeduction: (salaryData[i].standardDeduction + ((salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (salaryData[i].deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0) + ((salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (salaryData[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0)),
+          taxableIncome: salaryData[i].taxableIncome,
+  
+          pinCode: salaryData[i].pinCode,
+          country: salaryData[i].country,
+          state: salaryData[i].state,
+          city: salaryData[i].city,
+        }
+
+        this.salaryItrratedData.push(salObj)
+      }
+      console.log('this.salaryItrratedData ====>> ',this.salaryItrratedData)
+    }
+
+  }
+
+  updateOtherSource(otherSource){
+    console.log('otherSource: ',otherSource, typeof otherSource)
+    console.log('otherSource length: ',otherSource.length)
+    debugger
+    if(otherSource.length > 0){
+      for(let i=0; i < otherSource.length; i++){
+        debugger
+        if(otherSource[i].incomeType === "SAVING_INTEREST"){
+          debugger
+          this.sourcesOfIncome.interestFromSaving = otherSource[i].amount;
+        }
+        else if(otherSource[i].incomeType === "FD_RD_INTEREST"){
+          this.sourcesOfIncome.interestFromBank = otherSource[i].amount;
+        }
+        else if(otherSource[i].incomeType === "TAX_REFUND_INTEREST"){
+          this.sourcesOfIncome.interestFromIncomeTax = otherSource[i].amount;
+        }
+        else if(otherSource[i].incomeType === "ANY_OTHER"){
+          this.sourcesOfIncome.interestFromOther = otherSource[i].amount;
+        }
+        else if(otherSource[i].incomeType === "GIFT_NONTAXABLE"){
+          this.sourcesOfIncome.toatlIncome = otherSource[i].amount;
+        }
+      } 
+      console.log('sourcesOfIncome: ', this.sourcesOfIncome)   
+    }
+  }
+
+  updateInuranceVal(insuranceVal){
+    console.log('insuranceVal: ',insuranceVal)
+    debugger
+    if(insuranceVal.length > 0){
+      for(let i=0; i < insuranceVal.length; i++){
+        debugger
+        if(insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].premium)){
+          debugger
+          this.sec80DobjVal.healthInsuarancePremiumSelf = insuranceVal[i].premium;
+        }
+        if(insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].preventiveCheckUp)){
+          debugger
+          this.sec80DobjVal.preventiveHealthCheckupFamily = insuranceVal[i].preventiveCheckUp;
+        }
+        if(insuranceVal[i].policyFor === "PARENTS" && this.utilService.isNonEmpty(insuranceVal[i].premium)){
+          debugger
+          this.sec80DobjVal.healthInsuarancePremiumParents = insuranceVal[i].premium;
+        }
+      } 
+      console.log('sec80DobjVal: ', this.sec80DobjVal)   
+    }
+
+    console.log('hasParentOverSixty: ',this.itrSummaryForm['controls'].assesse['controls'].systemFlags['controls'].hasParentOverSixty.value)
+    if(this.itrSummaryForm['controls'].assesse['controls'].systemFlags['controls'].hasParentOverSixty.value){
+      this.sec80DobjVal.parentAge = 'above60';
+    }else{
+      this.sec80DobjVal.parentAge = 'bellow60';
+    }
+  }
+
+  updateTaxDeductionAtSourceVal(taxPaidValue){
+    console.log('taxPaidValue: ',taxPaidValue)
+    if(taxPaidValue.onSalary.length > 0){
+      this.tdsOnSal = taxPaidValue.onSalary;
+      this.setTotalTDSVal(this.tdsOnSal, 'tdsOnSal')
+    }
+    if(taxPaidValue.otherThanSalary16A.length > 0){
+      this.tdsOtherThanSal = taxPaidValue.otherThanSalary16A;
+      this.setTotalTDSVal(this.tdsOtherThanSal, 'otherThanSalary16A')
+    }
+    if(taxPaidValue.otherThanSalary26QB.length > 0){
+      this.tdsSalesPro = taxPaidValue.otherThanSalary26QB;
+      this.setTotalTDSVal(this.tdsSalesPro, 'otherThanSalary26QB')
+    }
+    if(taxPaidValue.otherThanTDSTCS.length > 0){
+      this.advanceSelfTax = taxPaidValue.otherThanTDSTCS;
+      this.setTotalAdvSelfTaxVal(this.advanceSelfTax);
+    }
+    if(taxPaidValue.tcs.length > 0){
+      this.taxCollAtSource = taxPaidValue.tcs;
+      this.setTotalTCSVal(this.taxCollAtSource);
+    }
   }
 
   createFamilyForm(obj: { fName?: string, mName?: string, lName?: string, dateOfBirth?: number, fathersName?: string } = {}): FormGroup {
