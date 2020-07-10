@@ -289,33 +289,44 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   getUerSummary(mobNum){
+    this.loading = true;
       let param = '/itr/summary/contact-number/'+mobNum;
       this.userService.getMethodInfo(param).subscribe(summary=>{
+        this.loading = false;
             console.log('User summary: => ',summary)
+            this.itrSummaryForm.reset();
+            this.bankData = [];
+            this.housingData = [];
+            this.donationData = [];
+            this.salaryItrratedData = [];
+            this.setTotalOfExempt();
             this.itrSummaryForm.patchValue(summary)
             console.log(this.itrSummaryForm.value )
-            console.log(this.itrSummaryForm['controls'].assesse['controls'].donations)
-            console.log(this.itrSummaryForm['controls'].assesse['controls'].bankDetails);
-            console.log(this.itrSummaryForm['controls'].assesse['controls'].employers);
-            console.log(this.itrSummaryForm['controls'].assesse['controls'].houseProperties);
             this.bankData = this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value;
             this.housingData = this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value;
             //this.salaryItrratedData = this.itrSummaryForm['controls'].assesse['controls'].employers.value;
-            this.updateSalatyInfo(this.itrSummaryForm['controls'].assesse['controls'].employers.value)
-            this.updateOtherSource(this.itrSummaryForm['controls'].assesse['controls'].incomes.value)
-            this.updateInuranceVal(this.itrSummaryForm['controls'].assesse['controls'].insurances.value)
+            this.updateSalatyInfo(this.itrSummaryForm['controls'].assesse['controls'].employers)
+            this.updateOtherSource(this.itrSummaryForm['controls'].assesse['controls'].incomes)
+            this.updateInuranceVal(this.itrSummaryForm['controls'].assesse['controls'].insurances)
             this.donationData = this.itrSummaryForm['controls'].assesse['controls'].donations.value;
-            this.updateTaxDeductionAtSourceVal(this.itrSummaryForm['controls'].assesse['controls'].taxPaid.value);
+            this.updateTaxDeductionAtSourceVal(this.itrSummaryForm['controls'].assesse['controls'].taxPaid);
             this.setTotalOfExempt();
       },
       error=>{
-
+        this.loading = false;
+        // this.itrSummaryForm.reset();
+        // this.bankData = [];
+        // this.housingData = [];
+        // this.donationData = [];
+        // this.setTotalOfExempt();
+        this._toastMessageService.alert("error", error.error);
       })
   }
 
-  updateSalatyInfo(salaryData){
-    console.log("salaryData: ",salaryData)
-    if(salaryData.length > 0){
+  updateSalatyInfo(salaryInfo){
+    console.log("salaryInfo: ",salaryInfo)
+    if(salaryInfo.value){
+      var salaryData = salaryInfo.value;
       for(let i=0; i < salaryData.length; i++){
         let salObj = {
           employerName: salaryData[i].employerName,
@@ -350,11 +361,12 @@ export class TaxSummaryComponent implements OnInit {
 
   }
 
-  updateOtherSource(otherSource){
-    console.log('otherSource: ',otherSource, typeof otherSource)
-    console.log('otherSource length: ',otherSource.length)
+  updateOtherSource(otherInfo){
+    console.log('otherInfo: ',otherInfo)
     debugger
-    if(otherSource.length > 0){
+    
+    if(otherInfo.value){
+      var otherSource = otherInfo.value;
       for(let i=0; i < otherSource.length; i++){
         debugger
         if(otherSource[i].incomeType === "SAVING_INTEREST"){
@@ -378,10 +390,11 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  updateInuranceVal(insuranceVal){
-    console.log('insuranceVal: ',insuranceVal)
+  updateInuranceVal(insuranceInfo){
+    console.log('insuranceInfo: ',insuranceInfo)
     debugger
-    if(insuranceVal.length > 0){
+    if(insuranceInfo.value){
+      var insuranceVal = insuranceInfo.value;
       for(let i=0; i < insuranceVal.length; i++){
         debugger
         if(insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].premium)){
@@ -408,27 +421,30 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  updateTaxDeductionAtSourceVal(taxPaidValue){
-    console.log('taxPaidValue: ',taxPaidValue)
-    if(taxPaidValue.onSalary.length > 0){
-      this.tdsOnSal = taxPaidValue.onSalary;
-      this.setTotalTDSVal(this.tdsOnSal, 'tdsOnSal')
-    }
-    if(taxPaidValue.otherThanSalary16A.length > 0){
-      this.tdsOtherThanSal = taxPaidValue.otherThanSalary16A;
-      this.setTotalTDSVal(this.tdsOtherThanSal, 'otherThanSalary16A')
-    }
-    if(taxPaidValue.otherThanSalary26QB.length > 0){
-      this.tdsSalesPro = taxPaidValue.otherThanSalary26QB;
-      this.setTotalTDSVal(this.tdsSalesPro, 'otherThanSalary26QB')
-    }
-    if(taxPaidValue.otherThanTDSTCS.length > 0){
-      this.advanceSelfTax = taxPaidValue.otherThanTDSTCS;
-      this.setTotalAdvSelfTaxVal(this.advanceSelfTax);
-    }
-    if(taxPaidValue.tcs.length > 0){
-      this.taxCollAtSource = taxPaidValue.tcs;
-      this.setTotalTCSVal(this.taxCollAtSource);
+  updateTaxDeductionAtSourceVal(taxPaidInfo){
+    console.log('taxPaidInfo: ',taxPaidInfo)
+    if(taxPaidInfo){
+      var taxPaidValue = taxPaidInfo.value;
+      if(taxPaidValue.onSalary.length > 0){
+        this.tdsOnSal = taxPaidValue.onSalary;
+        this.setTotalTDSVal(this.tdsOnSal, 'tdsOnSal')
+      }
+      if(taxPaidValue.otherThanSalary16A.length > 0){
+        this.tdsOtherThanSal = taxPaidValue.otherThanSalary16A;
+        this.setTotalTDSVal(this.tdsOtherThanSal, 'otherThanSalary16A')
+      }
+      if(taxPaidValue.otherThanSalary26QB.length > 0){
+        this.tdsSalesPro = taxPaidValue.otherThanSalary26QB;
+        this.setTotalTDSVal(this.tdsSalesPro, 'otherThanSalary26QB')
+      }
+      if(taxPaidValue.otherThanTDSTCS.length > 0){
+        this.advanceSelfTax = taxPaidValue.otherThanTDSTCS;
+        this.setTotalAdvSelfTaxVal(this.advanceSelfTax);
+      }
+      if(taxPaidValue.tcs.length > 0){
+        this.taxCollAtSource = taxPaidValue.tcs;
+        this.setTotalTCSVal(this.taxCollAtSource);
+      }
     }
   }
 
