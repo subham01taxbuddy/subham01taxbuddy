@@ -53,28 +53,18 @@ export class WhatAppChatComponent implements OnInit {
     this.smeInfo = JSON.parse(localStorage.getItem("UMD"));
     console.log("SME info: ", this.smeInfo);
 
-    // this.userTimer = interval(5000);
-    // this.userTimer.subscribe(() => {
-    //   this.getUserNotify('continues');
-    // })
-
+  
     this.userTimer = setInterval(() => {
       // this.getUserNotify('continues');
       this.getRandomUserDetail()
     }, 10000);   
-
-    // this.userFetchChatTimer = interval(6000)
-    // this.userFetchChatTimer.subscribe(() => {
-    //   if (this.selectedUser) {
-    //     this.geUserChatDetail(this.selectedUser, 'continues');
-    //   }
-    // })
+    
 
     this.userFetchChatTimer = setInterval(() => {
       if (this.selectedUser) {
         this.geUserChatDetail(this.selectedUser, "continues");
       }
-    }, 3000);
+    }, 5000);
   }
 
   ngOnInit() {
@@ -109,41 +99,10 @@ export class WhatAppChatComponent implements OnInit {
   numberOfNotifivation: any;
   tempData: any;
   getUserNotify(apicall) {
-    let smeMobNo = "9767374273"; 
-    let param = "/user-whatsapp-detail?smeMobileNumber=";
-    this.loading = true;
-    
-    console.log("Here we getting SME whatsapp users info");
-    this.userService.getUserDetail(param).subscribe(
-      (res) => {
-        console.log(res);
-        this.loading = false;
-        if (res) {
-          // if (this.backUpNoOfNotification) {
-          //   this.tempData = res;
-          //   this.numberOfNotifivation = this.tempData.filter(item => item.isRead === false);
-          //   if (this.numberOfNotifivation.length === this.backUpNoOfNotification.length) {       // If new notification not came then we not update filter array list
-
-          //   } else {
-          //     this.userDetail = res;
-          //     this.filteredArray = res;
-          //     this.backUpNoOfNotification = this.userDetail.filter(item => item.isRead === false);
-          //   }
-          // } else {
-          this.userDetail = res;
-          this.filteredArray = res;
-          this.backUpNoOfNotification = this.userDetail.filter(
-            (item) => item.isRead === false
-          );
-         
-          // }
-        }
-      },
-      (error) => {
-        this.loading = false;
-        this._toastMessageService.alert("error", "Failed to fetch chat data.");
-      }
-    );
+          let userChatData = JSON.parse(sessionStorage.getItem('userChatNotifications'))
+          this.userDetail = userChatData;
+          this.filteredArray = userChatData;
+        
   }
 
   updatedChat: any;
