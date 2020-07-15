@@ -38,15 +38,15 @@ export class PagesComponent implements OnInit {
   //  title = 'app works!';
 
   constructor(private router: Router, private userService: UserMsService) {
-     this.timer = interval(5000)
-    this.timer.subscribe(() => {
-      this.showWhatsAppNotification()
-    })
+    //  this.timer = interval(5000)
+    // this.timer.subscribe(() => {
+    //   this.showWhatsAppNotification()
+    // })
 
-    this.router.events.subscribe((url:any) => {
-      console.log('Path: ', router.url)
-        this.routePath = router.url;
-     }); 
+    // this.router.events.subscribe((url:any) => {
+    //   console.log('Path: ', router.url)
+    //     this.routePath = router.url;
+    //  }); 
   }
 
   ngOnInit() {
