@@ -41,8 +41,7 @@ export class PagesComponent implements OnInit {
   constructor(private router: Router, private userService: UserMsService) {
      this.timer = interval(10000)
     this.timer.subscribe(() => {
-      // this.showWhatsAppNotification()
-      if(this.showNotifivation === false){
+      if(this.showNotifivation === false && this.userMsgInfo){
         this.showRandomWhatsAppNotification()
       }
     })
@@ -63,6 +62,7 @@ export class PagesComponent implements OnInit {
     if (this.showNotifivation === false && (this.routePath !== '/pages/chat-corner' && this.routePath !== '/login')) {
       this.userService.getUserDetail(param).subscribe((res) => {
         this.userMsgInfo = res;
+        sessionStorage.setItem('userChatNotifications',JSON.stringify(this.userMsgInfo))
         console.log(this.userMsgInfo)
         if (res) {
           this.msgCount = 0;
@@ -93,7 +93,6 @@ export class PagesComponent implements OnInit {
     let param = "/whatsapp/latest-user-detail?dateLong=" + latestMsgTime;
     this.userService.getUserDetail(param).subscribe(
       (res) => {
-        debugger
         this.updatedChat = res;
         if (this.updatedChat.length > 0) {
           console.log("RES ====> ",res," updateChat: ",this.updatedChat,typeof this.updatedChat);
@@ -104,17 +103,14 @@ export class PagesComponent implements OnInit {
               }
             }
           }
-          debugger
           for (let i = 0; i < this.updatedChat.length; i++) {
             this.userMsgInfo.push(this.updatedChat[i]);
           }
-          debugger
           console.log("After Data Push userMsgInfo: ", this.userMsgInfo);
           this.userMsgInfo.sort(function (a, b) {
             return b.lastMessageDateTime - a.lastMessageDateTime;
           })
           console.log("After srting userMsgInfo: ",this.userMsgInfo);
-          debugger
           if (res) {
             this.msgCount = 0;
             for (let i = 0; i < this.userMsgInfo.length; i++) {
@@ -125,10 +121,8 @@ export class PagesComponent implements OnInit {
           }
         }
           if (this.msgCount > 0) {
-            debugger
             this.showNotifivation = true;
           } else {
-            debugger
             this.showNotifivation = false;
           }
       },
