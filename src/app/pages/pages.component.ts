@@ -46,10 +46,10 @@ export class PagesComponent implements OnInit {
       }
     })
 
-    // this.router.events.subscribe((url:any) => {
-    //   console.log('Path: ', router.url)
-    //     this.routePath = router.url;
-    //  }); 
+    this.router.events.subscribe((url:any) => {
+      console.log('Path: ', router.url)
+        this.routePath = router.url;
+     }); 
   }
 
   ngOnInit() {
