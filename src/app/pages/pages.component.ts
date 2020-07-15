@@ -35,13 +35,17 @@ export class PagesComponent implements OnInit {
   msgCount: any = 0;
   showNotifivation: boolean = false;
   routePath: any;
+  updatedChat: any;
   //  title = 'app works!';
 
   constructor(private router: Router, private userService: UserMsService) {
-    //  this.timer = interval(5000)
-    // this.timer.subscribe(() => {
-    //   this.showWhatsAppNotification()
-    // })
+     this.timer = interval(10000)
+    this.timer.subscribe(() => {
+      // this.showWhatsAppNotification()
+      if(this.showNotifivation === false){
+        this.showRandomWhatsAppNotification()
+      }
+    })
 
     // this.router.events.subscribe((url:any) => {
     //   console.log('Path: ', router.url)
@@ -50,7 +54,7 @@ export class PagesComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.showWhatsAppNotification();
   }
 
   showWhatsAppNotification() {
@@ -80,6 +84,58 @@ export class PagesComponent implements OnInit {
         })
     }
 
+  }
+
+  showRandomWhatsAppNotification(){
+    this.updatedChat = [];
+    let latestMsgTime = this.userMsgInfo[0].lastMessageDateTime;
+    console.log("latestMsgTime: ", latestMsgTime, this.userMsgInfo[0]);
+    let param = "/whatsapp/latest-user-detail?dateLong=" + latestMsgTime;
+    this.userService.getUserDetail(param).subscribe(
+      (res) => {
+        debugger
+        this.updatedChat = res;
+        if (this.updatedChat.length > 0) {
+          console.log("RES ====> ",res," updateChat: ",this.updatedChat,typeof this.updatedChat);
+          for (let i = 0; i < this.updatedChat.length; i++) {
+            for (let j = 0; j < this.userMsgInfo.length; j++) {
+              if (this.updatedChat[i].userId === this.userMsgInfo[j].userId) {
+                this.userMsgInfo.splice(j, 1);
+              }
+            }
+          }
+          debugger
+          for (let i = 0; i < this.updatedChat.length; i++) {
+            this.userMsgInfo.push(this.updatedChat[i]);
+          }
+          debugger
+          console.log("After Data Push userMsgInfo: ", this.userMsgInfo);
+          this.userMsgInfo.sort(function (a, b) {
+            return b.lastMessageDateTime - a.lastMessageDateTime;
+          })
+          console.log("After srting userMsgInfo: ",this.userMsgInfo);
+          debugger
+          if (res) {
+            this.msgCount = 0;
+            for (let i = 0; i < this.userMsgInfo.length; i++) {
+              if (this.userMsgInfo[i].isRead === false) {
+                this.msgCount = this.msgCount + 1;
+              }
+            }
+          }
+        }
+          if (this.msgCount > 0) {
+            debugger
+            this.showNotifivation = true;
+          } else {
+            debugger
+            this.showNotifivation = false;
+          }
+      },
+      (error) => {
+        //this._toastMessageService.alert("error", "Failed to user data.");
+      }
+    );
   }
 
   closeNotification() {

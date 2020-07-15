@@ -55,13 +55,13 @@ export class WhatAppChatComponent implements OnInit {
 
     // this.userTimer = interval(5000);
     // this.userTimer.subscribe(() => {
-    //   this.getUserDetail('continues');
+    //   this.getUserNotify('continues');
     // })
 
     this.userTimer = setInterval(() => {
-      // this.getUserDetail('continues');
+      // this.getUserNotify('continues');
       this.getRandomUserDetail()
-    }, 4000);   
+    }, 10000);   
 
     // this.userFetchChatTimer = interval(6000)
     // this.userFetchChatTimer.subscribe(() => {
@@ -83,7 +83,7 @@ export class WhatAppChatComponent implements OnInit {
       selectTemplate: [""],
       mediaFile: [""],
     });
-    this.getUserDetail("not-continues");
+    this.getUserNotify("not-continues");
     this.getTemplateInfo();
   }
 
@@ -108,14 +108,11 @@ export class WhatAppChatComponent implements OnInit {
   backUpNoOfNotification: any;
   numberOfNotifivation: any;
   tempData: any;
-  getUserDetail(apicall) {
-    let smeMobNo = "9767374273"; //'8669304341'
-    let param = "/user-whatsapp-detail?smeMobileNumber="; //+this.smeInfo.USER_MOBILE;      ;
-    if (apicall === "continues") {
-      this.loading = false;
-    } else {
-      this.loading = true;
-    }
+  getUserNotify(apicall) {
+    let smeMobNo = "9767374273"; 
+    let param = "/user-whatsapp-detail?smeMobileNumber=";
+    this.loading = true;
+    
     console.log("Here we getting SME whatsapp users info");
     this.userService.getUserDetail(param).subscribe(
       (res) => {
@@ -245,13 +242,13 @@ export class WhatAppChatComponent implements OnInit {
             } else {
               this.userchatData = res;
               this.backUpChatData = this.userchatData;
-              this.getUserDetail("not-continues");
+              this.getUserNotify("not-continues");
               this.getTiemCount(res);
             }
           } else {
             this.userchatData = res;
             this.backUpChatData = this.userchatData;
-            this.getUserDetail("not-continues");
+            this.getUserNotify("not-continues");
             this.getTiemCount(res); //Show Timer Counter
           }
         } else {
