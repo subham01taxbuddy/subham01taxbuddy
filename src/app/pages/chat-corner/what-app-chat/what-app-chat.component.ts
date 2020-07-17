@@ -378,29 +378,35 @@ export class WhatAppChatComponent implements OnInit {
         item.templateName === this.whatsAppForm.controls["selectTemplate"].value
     ).attributes;
     console.log("attributes: ", attributes, attributes.length);
-    for (let i = 0; i < attributes.length; i++) {
-      let posFirstSign = templateMsg.indexOf("{{");
-      let posSecondSign = templateMsg.indexOf("}}");
-      this.templateAttribute = templateMsg.slice(
-        posFirstSign + 2,
-        posSecondSign
-      );
-      templateMsg = templateMsg.replace("{{", "");
-      templateMsg = templateMsg.replace("}}", "");
-      console.log(this.templateAttribute, i + 1);
-      console.log("condition: ", this.templateAttribute !== (i + 1).toString());
-      // if (this.utileService.isNonEmpty(this.templateAttribute) && (this.templateAttribute !== (i + 1).toString())) {
-      if (this.utileService.isNonEmpty(this.templateAttribute)) {
-        this.newAttributes.push(this.templateAttribute);
-        console.log("newAttributes: " + this.newAttributes);
-        console.log("attributes len: " + attributes.length);
-        if (this.newAttributes.length === attributes.length) {
-          return true;
+    if(attributes.length > 0){
+      for (let i = 0; i < attributes.length; i++) {
+        let posFirstSign = templateMsg.indexOf("{{");
+        let posSecondSign = templateMsg.indexOf("}}");
+        this.templateAttribute = templateMsg.slice(
+          posFirstSign + 2,
+          posSecondSign
+        );
+        templateMsg = templateMsg.replace("{{", "");
+        templateMsg = templateMsg.replace("}}", "");
+        console.log(this.templateAttribute, i + 1);
+        console.log("condition: ", this.templateAttribute !== (i + 1).toString());
+        // if (this.utileService.isNonEmpty(this.templateAttribute) && (this.templateAttribute !== (i + 1).toString())) {
+        if (this.utileService.isNonEmpty(this.templateAttribute)) {
+          this.newAttributes.push(this.templateAttribute);
+          console.log("newAttributes: " + this.newAttributes);
+          console.log("attributes len: " + attributes.length);
+          if (this.newAttributes.length === attributes.length) {
+            return true;
+          }
+        } else {
+          return false;
         }
-      } else {
-        return false;
       }
     }
+    else{
+      return true;
+    }
+ 
   }
 
   showLink(mediaId) {
