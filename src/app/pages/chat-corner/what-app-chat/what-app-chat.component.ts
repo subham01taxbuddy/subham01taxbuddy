@@ -406,7 +406,6 @@ export class WhatAppChatComponent implements OnInit {
     else{
       return true;
     }
- 
   }
 
   showLink(mediaId) {
