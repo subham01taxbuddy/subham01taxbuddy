@@ -404,9 +404,8 @@ export class WhatAppChatComponent implements OnInit {
       }
     }
     else{
-      return true;               //Use if perticular tempalte of templateInfo have attribute length 0 (templateName: "reminder") 
+      return true;
     }
-   
   }
 
   showLink(mediaId) {
