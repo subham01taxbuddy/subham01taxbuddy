@@ -510,7 +510,12 @@ export class WhatAppChatComponent implements OnInit {
         let appLink =
           "https://play.google.com/store/apps/details?id=com.taxbuddy.gst";
         this.oldAttributes.push(appLink);
-      } else if (
+      }
+      else if (tempMessage.attributes[i] === "pdfLink") {
+        let pdfLink =
+          "https://rb.gy/4mjjab";
+        this.oldAttributes.push(pdfLink);
+      }else if (
         tempMessage.attributes[i] === null ||
         tempMessage.attributes[i] === "" ||
         tempMessage.attributes[i] === undefined
