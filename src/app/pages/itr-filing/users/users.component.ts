@@ -44,7 +44,8 @@ export class UsersComponent implements OnInit {
   ITR_JSON: ITR_JSON;
 
   constructor(navbarService: NavbarService, public router: Router, public http: HttpClient, private itrMsService: ItrMsService,
-    public _toastMessageService: ToastMessageService, private datePipe: DatePipe, private utilsService: UtilsService) {
+    public _toastMessageService: ToastMessageService, private datePipe: DatePipe, private utilsService: UtilsService,
+  ) {
     NavbarService.getInstance(null).component_link_2 = 'activate-package';
     NavbarService.getInstance(null).component_link_3 = '';
     NavbarService.getInstance(null).showBtns = 'activate-package';
@@ -57,6 +58,7 @@ export class UsersComponent implements OnInit {
       return;
     }
   }
+
 
   clearValue() {
     this.searchVal = "";
@@ -93,7 +95,7 @@ export class UsersComponent implements OnInit {
 
   getITRByUserIdAndAssesmentYear(profile) {
     // this.isLoggedIn = this.encrDecrService.get(AppConstants.IS_USER_LOGGED_IN);
-    const param = '?userId=' + profile.userId + '&assessmentYear=' + AppConstants.ayYear;
+    const param = '/itr?userId=' + profile.userId + '&assessmentYear=' + AppConstants.ayYear;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       console.log('My ITR by user Id and Assesment Years=', result);
       if (result.length !== 0) {
@@ -113,7 +115,7 @@ export class UsersComponent implements OnInit {
                 this.ITR_JSON.orgITRDate = currentFiledITR[0].eFillingDate;
               }
             }
-            sessionStorage.set(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
             break;
           }
         }
@@ -148,12 +150,12 @@ export class UsersComponent implements OnInit {
       } else {
         this.ITR_JSON = this.createEmptyJson(profile, AppConstants.ayYear, AppConstants.fyYear);
 
-        const param = '';
+        const param = '/itr';
         this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
           console.log('My iTR Json successfully created-==', result);
           this.ITR_JSON = result;
           this.loading = false;
-          sessionStorage.set(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
           this.router.navigate(['/pages/itr-filing/customer-profile'])
         }, error => {
           this.loading = false;
@@ -163,12 +165,12 @@ export class UsersComponent implements OnInit {
     }, error => {
       if (error.status === 404) {
         this.ITR_JSON = this.createEmptyJson(profile, AppConstants.ayYear, AppConstants.fyYear);
-        const param = '';
+        const param = '/itr';
         this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
           console.log('My iTR Json successfully created-==', result);
           this.loading = false;
           this.ITR_JSON = result;
-          sessionStorage.set(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
           this.router.navigate(['/pages/itr-filing/customer-profile'])
         }, error => {
           this.loading = false;
@@ -198,6 +200,7 @@ export class UsersComponent implements OnInit {
       currency: 'INR',
       locale: 'en_IN',
       financialYear: financialYear,
+      filingTeamMemberId: null,
       eFillingPortalPassword: '*****',
       isRevised: 'N',
       isDefective: 'N',
@@ -290,7 +293,8 @@ export class UsersComponent implements OnInit {
       directorInCompany: [],
       unlistedSharesDetails: [],
       dateOfDividendIncome: null,
-      lastVisitedURL: ''
+      lastVisitedURL: '',
+      seventhProviso139: null
     };
 
     return ITR_JSON;
