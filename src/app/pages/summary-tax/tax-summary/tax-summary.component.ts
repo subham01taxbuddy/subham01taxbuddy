@@ -11,6 +11,7 @@ import { environment } from 'environments/environment';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { invalid } from '@angular/compiler/src/render3/view/util';
+import { Router } from '@angular/router';
 
 export const MY_FORMATS = {
   parse: {
@@ -99,7 +100,8 @@ export class TaxSummaryComponent implements OnInit {
     return <FormArray>this.itrSummaryForm['controls'].assesse.get('family');
   }
 
-  constructor(private dialog: MatDialog, public utilService: UtilsService, private fb: FormBuilder, private userService: UserMsService, private _toastMessageService: ToastMessageService) {
+  constructor(private dialog: MatDialog, public utilService: UtilsService, private fb: FormBuilder, private userService: UserMsService, private _toastMessageService: ToastMessageService,
+              private router: Router) {
 
   }
 
@@ -264,7 +266,6 @@ export class TaxSummaryComponent implements OnInit {
 
       netTaxPayable: [0],
     })
-
     console.log('itrSummaryForm: ', this.itrSummaryForm)
 
     // window.addEventListener('beforeunload', function (e) {
@@ -275,6 +276,13 @@ export class TaxSummaryComponent implements OnInit {
     const familyData = <FormArray>this.itrSummaryForm['controls'].assesse.get('family');
     familyData.push(this.createFamilyForm())
   }
+
+  openSecondItr(){
+    this.router.navigate(['/pages/tax-summary/itrSecond'])
+    //routerLink="/pages/tax-summary/itrSecond"
+  }
+  
+
 
   clearValue() {
     this.searchVal = "";
@@ -295,12 +303,15 @@ export class TaxSummaryComponent implements OnInit {
         this.loading = false;
             console.log('User summary: => ',summary)
             this.itrSummaryForm.reset();
+           // this.sourcesOfIncome    sakjdnkasjdkja  
             this.bankData = [];
             this.housingData = [];
             this.donationData = [];
             this.salaryItrratedData = [];
             this.setTotalOfExempt();
             this.itrSummaryForm.patchValue(summary)
+            this.setItrType(this.itrSummaryForm['controls'].assesse['controls'].itrType.value)
+            this.calculateGrossTotalIncome();
             console.log(this.itrSummaryForm.value )
             this.bankData = this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value;
             this.housingData = this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value;
@@ -363,7 +374,13 @@ export class TaxSummaryComponent implements OnInit {
 
   updateOtherSource(otherInfo){
     console.log('otherInfo: ',otherInfo)
-    debugger
+    this.sourcesOfIncome = {
+      interestFromSaving: 0,
+      interestFromBank: 0,
+      interestFromIncomeTax: 0,
+      interestFromOther: 0,
+      toatlIncome: 0
+    }
     
     if(otherInfo.value){
       var otherSource = otherInfo.value;
@@ -392,7 +409,12 @@ export class TaxSummaryComponent implements OnInit {
 
   updateInuranceVal(insuranceInfo){
     console.log('insuranceInfo: ',insuranceInfo)
-    debugger
+    this.sec80DobjVal = {
+      healthInsuarancePremiumSelf: 0,
+      healthInsuarancePremiumParents: 0,
+      preventiveHealthCheckupFamily: 0,
+      parentAge: ''
+    }
     if(insuranceInfo.value){
       var insuranceVal = insuranceInfo.value;
       for(let i=0; i < insuranceVal.length; i++){
@@ -423,6 +445,19 @@ export class TaxSummaryComponent implements OnInit {
 
   updateTaxDeductionAtSourceVal(taxPaidInfo){
     console.log('taxPaidInfo: ',taxPaidInfo)
+    this.taxesPaid = {
+      tdsOnSalary: 0,
+      tdsOtherThanSalary: 0,
+      tdsOnSal26QB: 0,
+      tcs: 0,
+      advanceSelfAssTax: 0
+    }
+    this.tdsOnSal = [];
+    this.tdsOtherThanSal = [];
+    this.tdsSalesPro = [];
+    this.taxCollAtSource = [];
+    this.advanceSelfTax = [];
+
     if(taxPaidInfo){
       var taxPaidValue = taxPaidInfo.value;
       if(taxPaidValue.onSalary.length > 0){
@@ -1159,8 +1194,9 @@ export class TaxSummaryComponent implements OnInit {
     toatlIncome: 0
   }
   setOtherSourceIncomeValue(incomeVal, type) {
+    debugger
     console.log('incomeVal: ', incomeVal, ' type: ', type)
-    if (incomeVal !== 0 && this.utilService.isNonEmpty(incomeVal)) {
+    if (Number(incomeVal) !== 0 && this.utilService.isNonEmpty(incomeVal)) {
       if (type === 'saving') {
         this.sourcesOfIncome.interestFromSaving = Number(incomeVal);
       }
@@ -1182,7 +1218,8 @@ export class TaxSummaryComponent implements OnInit {
       this.calculateGrossTotalIncome()
     }
     else {
-      if (incomeVal === 0 || incomeVal === '' || incomeVal === 'undefined') {
+      debugger
+      if (Number(incomeVal) === 0 || incomeVal === '' || incomeVal === 'undefined') {
         if (type === 'saving') {
           this.sourcesOfIncome.interestFromSaving = 0;
         }
@@ -1243,7 +1280,9 @@ export class TaxSummaryComponent implements OnInit {
 
   calculateGrossTotalIncome() {    //Calculate point 4 
     // this.businessObject.prsumptiveIncomeTotal
+    debugger
     if (this.itrType.itrOne) {
+      debugger
       let gti = Number(this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.value) + Number(this.itrSummaryForm['controls'].taxSummary['controls'].otherIncome.value) + Number(this.itrSummaryForm['controls'].taxSummary['controls'].salary.value);
       this.itrSummaryForm['controls'].taxSummary['controls'].grossTotalIncome.setValue(gti);
       this.calculateTotalIncome();
@@ -1261,7 +1300,6 @@ export class TaxSummaryComponent implements OnInit {
   setTotalOfExempt() {
     this.totalOfExcempt = Number(this.itrSummaryForm.controls['ppfInterest'].value) + Number(this.itrSummaryForm.controls['giftFromRelative'].value) + Number(this.itrSummaryForm.controls['anyOtherExcemptIncome'].value)
     console.log('totalOfExcempt: ', this.totalOfExcempt)
-
     console.log('totalOfExcempt in Incomes: ', this.itrSummaryForm['controls'].assesse['controls'].incomes.value)
   }
 
@@ -1338,8 +1376,10 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   calculateTotalIncome() {  //Calculate point 6
+    debugger
     let totalIncome = Number(this.itrSummaryForm['controls'].taxSummary['controls'].grossTotalIncome.value) - Number(this.itrSummaryForm['controls'].taxSummary['controls'].totalDeduction.value);
     if (totalIncome > 0) {
+      debugger
       // this.itrSummaryForm.controls['totalIncome'].setValue(totalIncome);
       totalIncome = this.roundOf10Val(totalIncome)
       this.itrSummaryForm['controls'].taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.setValue(totalIncome)
