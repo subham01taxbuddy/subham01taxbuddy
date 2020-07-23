@@ -10,6 +10,16 @@ import { NgxLoadingModule } from 'ngx-loading';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SharedModule } from 'app/shared/shared.module';
+import { ItrWizardComponent } from './itr-wizard/itr-wizard.component';
+import { PersonalInformationComponent } from './personal-information/personal-information.component';
+import { SalaryComponent } from './salary/salary.component';
+import { HousePropertyComponent } from './house-property/house-property.component';
+import { OtherIncomeComponent } from './other-income/other-income.component';
+import { InvestmentsDeductionsComponent } from './investments-deductions/investments-deductions.component';
+import { AddDonationDialogComponent } from './investments-deductions/add-donation-dialog/add-donation-dialog.component';
+import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
+import { DeclarationComponent } from './declaration/declaration.component';
+import { SummaryComponent } from './summary/summary.component';
 
 @NgModule({
     imports: [
@@ -22,6 +32,17 @@ import { SharedModule } from 'app/shared/shared.module';
         PdfViewerModule,
         SharedModule
     ],
-    declarations: [ItrFilingComponent, UsersComponent, CustomerProfileComponent]
+    declarations: [
+        ItrFilingComponent,
+        UsersComponent,
+        CustomerProfileComponent,
+        ItrWizardComponent,
+        PersonalInformationComponent,
+        SalaryComponent,
+        HousePropertyComponent,
+        OtherIncomeComponent,
+        InvestmentsDeductionsComponent, AddDonationDialogComponent, TaxesPaidComponent, DeclarationComponent, SummaryComponent],
+    entryComponents: [AddDonationDialogComponent]
+
 })
 export class ItrFilingModule { }

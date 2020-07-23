@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 
 @Injectable()
 
 export class UtilsService {
-    constructor() { }
+    constructor(private snackBar: MatSnackBar,) { }
     /**
     * @function isNonEmpty()
     * @param param
@@ -51,6 +52,14 @@ export class UtilsService {
     smoothScrollToDiv(divId) {
         console.log(divId)
         return document.getElementById(divId).scrollIntoView({ behavior: "smooth" });
+    }
+
+    showSnackBar(msg) {
+        this.snackBar.open(msg, 'OK', {
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            duration: 3000
+        });
     }
 
 }

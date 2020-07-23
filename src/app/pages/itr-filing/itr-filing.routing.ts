@@ -3,6 +3,7 @@ import { CustomerProfileComponent } from './customer-profile/customer-profile.co
 import { UsersComponent } from './users/users.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { ItrWizardComponent } from './itr-wizard/itr-wizard.component';
 
 const routes: Routes = [
     {
@@ -10,6 +11,7 @@ const routes: Routes = [
         children: [
             { path: 'users', component: UsersComponent },
             { path: 'customer-profile', component: CustomerProfileComponent },
+            { path: 'itr', component: ItrWizardComponent },
             { path: '', redirectTo: '/pages/itr-filing/users', pathMatch: 'full' }
         ]
     },

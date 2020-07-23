@@ -4,7 +4,9 @@ import { ResponseContentType, Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'environments/environment';
-
+import { AppConstants } from 'app/shared/constants';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
 @Injectable({
     providedIn: 'root'
 })
@@ -28,7 +30,16 @@ export class ItrMsService {
         this.headers.append('Content-Type', 'application/json');
         // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
         console.log('POst Param', param);
-        return this.httpClient.patch<T>(environment.url + this.microService + param[0], param[1], { headers: this.headers });
+        return this.httpClient.post<T>(environment.url + this.microService + param[0], param[1], { headers: this.headers });
+        // .map(response => response.json())
+    }
+
+    putMethod<T>(...param): Observable<T> {
+        this.headers = new HttpHeaders();
+        this.headers.append('Content-Type', 'application/json');
+        // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
+        console.log('Put Param', param);
+        return this.httpClient.put<T>(environment.url + this.microService + param[0], param[1], { headers: this.headers });
         // .map(response => response.json())
     }
     patchMethod<T>(...param): Observable<T> {
@@ -38,6 +49,33 @@ export class ItrMsService {
         console.log('update Param', param);
         return this.httpClient.patch<T>(environment.url + this.microService + param[0], param[1], { headers: this.headers });
         // .map(response => response.json())
+    }
+
+    downloadXML(param) {
+        console.log('Download XML Param', param);
+        const TOKEN = sessionStorage.getItem(AppConstants.TOKEN);
+        this.headers = new Headers();
+        this.headers.append('Authorization', 'Bearer ' + TOKEN);
+        console.log('Headers for get method=', this.headers);
+        return this.http.get(environment.url + this.microService + param, { headers: this.headers, responseType: ResponseContentType.Blob })
+            .map((response) => {
+                return new Blob([response.blob()], { type: 'application/xhtml+xml' });
+            });
+    }
+
+    downloadFile(param, fileType) {
+        console.log('get Param', param);
+        const userData = JSON.parse(localStorage.getItem('UMD'));
+        const TOKEN = (userData) ? userData.id_token : null;
+        // const TOKEN = sessionStorage.getItem(AppConstants.TOKEN);
+        console.log('My logged in usre objecty===', this.userObj);
+        this.headers = new Headers();
+        this.headers.append('Authorization', 'Bearer ' + TOKEN);
+        console.log('Headers for get method=', this.headers);
+        return this.http.get(environment.url + this.microService + param, { headers: this.headers, responseType: ResponseContentType.Blob })
+            .map((response) => {
+                return new Blob([response.blob()], { type: fileType });
+            });
     }
 
 }
