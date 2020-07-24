@@ -441,10 +441,13 @@ export class CustomerProfileComponent implements OnInit {
       "assessmentYear": AppConstants.ayYear,
       "completed": true
     }
+    this.loading = true;
     this.userMsService.postMethod(param, request).subscribe(result => {
       console.log(result);
       this.utilsService.showSnackBar('Filing status updated successfully.')
+      this.loading = false;
     }, err => {
+      this.loading = false;
       this.utilsService.showSnackBar('Failed to update Filing status.')
     })
   }

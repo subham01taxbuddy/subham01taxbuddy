@@ -53,7 +53,8 @@ export class ItrMsService {
 
     downloadXML(param) {
         console.log('Download XML Param', param);
-        const TOKEN = sessionStorage.getItem(AppConstants.TOKEN);
+        const userData = JSON.parse(localStorage.getItem('UMD'));
+        const TOKEN = (userData) ? userData.id_token : null;
         this.headers = new Headers();
         this.headers.append('Authorization', 'Bearer ' + TOKEN);
         console.log('Headers for get method=', this.headers);
