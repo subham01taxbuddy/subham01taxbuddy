@@ -53,27 +53,34 @@ export class SummaryComponent implements OnInit {
     this.loading = true;
     const param = '/tax';
     this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
+      // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
       console.log('result is=====', result);
-      this.losses = result;
-      for (let i = 0; i < this.losses.carryForwordLosses.length; i++) {
-        this.totalCarryForword = this.totalCarryForword + this.losses.carryForwordLosses[i].totalLoss;
-      }
-      this.summaryDetail = result.taxSummary;
-      this.taxable = this.summaryDetail.taxpayable;
 
-      this.refund = this.summaryDetail.taxRefund;
-      this.deductionDetail = result.summaryDeductions.filter(item => item.sectionType !== '80C' && item.sectionType !== '80CCC' && item.sectionType !== '80CCD1' && item.sectionType !== '80GAGTI');
-      this.capitalGain = result.summaryIncome.cgIncomeN;
-      this.totalLoss = result.currentYearLosses;
-      this.show = true;
-      sessionStorage.setItem('ITR_SUMMARY_JSON', JSON.stringify(this.summaryDetail));
+      const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
+      this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
+        console.log('SUMMARY Result=> ', summary);
+        this.losses = summary.assessment;
+        for (let i = 0; i < this.losses.carryForwordLosses.length; i++) {
+          this.totalCarryForword = this.totalCarryForword + this.losses.carryForwordLosses[i].totalLoss;
+        }
+        this.summaryDetail = summary.assessment.taxSummary;
+        this.taxable = this.summaryDetail.taxpayable;
 
-      this.losses.pastYearLosses.forEach(item => {
-        this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
-        this.stLoss = this.stLoss + item.setOffWithCurrentYearSTCGIncome;
-        this.ltLoss = this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
-      });
-      this.loading = false;
+        this.refund = this.summaryDetail.taxRefund;
+        this.deductionDetail = summary.assessment.summaryDeductions.filter(item => item.sectionType !== '80C' && item.sectionType !== '80CCC' && item.sectionType !== '80CCD1' && item.sectionType !== '80GAGTI');
+        this.capitalGain = summary.assessment.summaryIncome.cgIncomeN;
+        this.totalLoss = summary.assessment.currentYearLosses;
+        this.show = true;
+        sessionStorage.setItem('ITR_SUMMARY_JSON', JSON.stringify(this.summaryDetail));
+
+        this.losses.pastYearLosses.forEach(item => {
+          this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
+          this.stLoss = this.stLoss + item.setOffWithCurrentYearSTCGIncome;
+          this.ltLoss = this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
+        });
+        this.loading = false;
+      })
+
     }, error => {
       this.loading = false;
       this.show = false;
@@ -286,7 +293,7 @@ export class SummaryComponent implements OnInit {
   downloadXML() {
     if (this.taxable === 0) {
       this.loading = true;
-      const param = '/api/efillingDownload?userId=' + this.ITR_JSON.userId + '&itrId=' + this.ITR_JSON.itrId + '&assessmentYear=' + this.ITR_JSON.assessmentYear; // + '&action=download'
+      const param = `/api/downloadXml?itrId=${this.ITR_JSON.itrId}`;
       this.itrMsService.downloadXML(param).subscribe(result => {
         console.log('XML Result', result);
         const fileURL = URL.createObjectURL(result);
