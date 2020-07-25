@@ -1,6 +1,40 @@
 <!-- <div class="row"> -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="content" style="width: 35%;">Ashish</div>
+<div class="content" style="width: 35%; padding-right: 20px;">
+    <ngx-image-zoom [thumbImage]="getDocumentUrl('PAN')" [fullImage]="getDocumentUrl('PAN')" [magnification]="1"
+        [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
+    </ngx-image-zoom>
+    <div *ngIf="getDocumentUrl('PAN') ===''">
+        PAN Card not uploaded
+    </div>
+    <br>
+    <hr>
+    <br>
+    <ngx-image-zoom [thumbImage]="getDocumentUrl('AADHAAR_FRONT')" [fullImage]="getDocumentUrl('AADHAAR_FRONT')"
+        [magnification]="1" [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
+    </ngx-image-zoom>
+    <div *ngIf="getDocumentUrl('AADHAAR_FRONT') ===''">
+        Aadhaar Card front not uploaded
+    </div>
+    <br>
+    <hr>
+    <br>
+    <ngx-image-zoom [thumbImage]="getDocumentUrl('AADHAAR_BACK')" [fullImage]="getDocumentUrl('AADHAAR_BACK')"
+        [magnification]="1" [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
+    </ngx-image-zoom>
+    <div *ngIf="getDocumentUrl('AADHAAR_BACK') ===''">
+        Aadhaar Card back not uploaded
+    </div>
+    <br>
+    <hr>
+    <br>
+    <ngx-image-zoom [thumbImage]="getDocumentUrl('BANK')" [fullImage]="getDocumentUrl('BANK')" [magnification]="1"
+        [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
+    </ngx-image-zoom>
+    <div *ngIf="getDocumentUrl('BANK') ===''">
+        Bank check not uploaded
+    </div>
+</div>
 <div class="content" style="width: 65%;">
     <div class="card__title" style="padding:10px; font-size: 20px;">Customer Profile</div>
     <form [formGroup]="customerProfileForm">

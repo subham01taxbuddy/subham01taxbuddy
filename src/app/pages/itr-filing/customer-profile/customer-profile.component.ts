@@ -11,6 +11,8 @@ import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, DateAdapter } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { UserMsService } from 'app/services/user-ms.service';
+import Storage from '@aws-amplify/storage';
+
 declare let $: any;
 export const MY_FORMATS = {
   parse: {
@@ -61,6 +63,18 @@ export class CustomerProfileComponent implements OnInit {
     { value: 1707, label: 'Kavita Singh' },
     { value: 1706, label: 'Nimisha Panda' },
     { value: 24346, label: 'Tushar Shilimkar' },
+    { value: 19529, label: 'Kirti Gorad' },
+    { value: 24348, label: 'Geetanjali Panchal' },
+    { value: 23553, label: 'Renuka Kalekar' },
+    { value: 23550, label: 'Bhavana Patil' },
+    { value: 23567, label: 'Sneha Suresh Utekar' },
+    { value: 23552, label: 'Roshan Vilas Kakade' },
+    { value: 23551, label: 'Pradnya Tambade' },
+    { value: 983, label: 'Usha Chellani' },
+    { value: 23670, label: 'Ashwini Kapale' },
+    { value: 23578, label: 'Aditi Ravindra Gujar' },
+    { value: 23564, label: 'Sonali Ghanwat' },
+    { value: 23668, label: 'Chaitanya Prakash Masurkar' },
     { value: 1065, label: 'Urmila Warve' },
     { value: 1067, label: 'Divya Bhanushali' },
     { value: 21354, label: 'Brijmohan Lavaniya' },
@@ -262,12 +276,25 @@ export class CustomerProfileComponent implements OnInit {
     //   relationType: 'SELF'
     // }]
   }
-
+  s3FilePath: any;
+  fileType = 'pdf'
   ngOnInit() {
     this.customerProfileForm = this.createCustomerProfileForm();
     this.setCustomerProfileValues();
     this.changeReviseForm();
     this.getFilingStatus();
+    this.getCommonDocuments();
+    this.s3FilePath = "https://dev-uploads.taxbuddy.com.s3.ap-south-1.amazonaws.com/4314/Common/images.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200724T135952Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Credential=AKIA2LS2FCUFDB2UWKO7%2F20200724%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=13422d714888136a354fd1c94d1de60e55b70b645dcc0aeb0e980b2b379b4980"
+    // Storage.get('sales-invoice/inv_2263_1595577807982.bmp')
+    //   .then(result => {
+    //     // this.invoiceData.invoiceDTO.s3InvoiceImageUrl = result;
+    //     // this.imageLoader = false;
+    //     this.s3FilePath = result;
+    //     console.log('FILE result=>', result)
+    //   })
+    //   .catch(err => {
+    //     // this._toastMessageService.alert("error", "Error While fetching invoice image");
+    //   });
   }
 
   createCustomerProfileForm() {
@@ -463,5 +490,24 @@ export class CustomerProfileComponent implements OnInit {
       }
 
     })
+  }
+
+  documents = []
+  getCommonDocuments() {
+    const param = `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/Common`;
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      console.log('Documents', result)
+      this.documents = result;
+    })
+  }
+
+  getDocumentUrl(documentTag) {
+    const doc = this.documents.filter(item => item.documentTag === documentTag)
+    if (doc.length > 0) {
+      return doc[0].signedUrl;
+    } else {
+      return ''
+    }
+
   }
 }

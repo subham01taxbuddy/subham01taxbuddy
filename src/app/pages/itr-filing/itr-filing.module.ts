@@ -1,3 +1,4 @@
+// import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsersComponent } from './users/users.component';
 import { PagesModule } from './../pages.module';
@@ -30,7 +31,8 @@ import { SummaryComponent } from './summary/summary.component';
         NgxLoadingModule.forRoot({}),
         NgxImageZoomModule.forRoot(),
         PdfViewerModule,
-        SharedModule
+        SharedModule,
+        // NgxExtendedPdfViewerModule
     ],
     declarations: [
         ItrFilingComponent,
