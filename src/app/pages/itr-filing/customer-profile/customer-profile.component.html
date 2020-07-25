@@ -2,10 +2,12 @@
 <div class="main clearfix">
     <div class="content" style="width: 35%">
         <div class="card card_main" style="position: relative;">
-            <ngx-loading [show]="imageLoader"></ngx-loading>
+            <!-- <button (click)="rotate()">Press me to rotate</button> -->
+            <!-- <div [@rotatedState]='state'> -->
             <ngx-image-zoom [thumbImage]="getDocumentUrl('PAN')" [fullImage]="getDocumentUrl('PAN')" [magnification]="1"
                 [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
             </ngx-image-zoom>
+            <!-- </div> -->
             <div *ngIf="getDocumentUrl('PAN') ===''">
                 PAN Card not uploaded
             </div>
@@ -310,6 +312,7 @@
 
                     </div>
                     <div class="footer__buttons clearfix" style="margin-top: 40px;">
+                        <button class="btn long-btn" style="border: none;" (click)="previousRoute()">Back</button>
                         <button class="btn long-btn" style="border: none;" (click)="saveProfile('SAVE')">Save
                             Profile</button>
                         <button class="btn long-btn" style="border: none;" (click)="saveProfile('NEXT')">Continue

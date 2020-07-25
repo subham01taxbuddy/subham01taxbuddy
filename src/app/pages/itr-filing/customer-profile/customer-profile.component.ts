@@ -12,6 +12,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import Storage from '@aws-amplify/storage';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -29,6 +30,19 @@ export const MY_FORMATS = {
   selector: 'app-customer-profile',
   templateUrl: './customer-profile.component.html',
   styleUrls: ['./customer-profile.component.css'],
+  animations: [
+    // Each unique animation requires its own trigger. The first argument of the trigger function is the name
+    trigger('rotatedState', [
+      state('default', style({ transform: 'rotate(0)' })),
+      state('deg90', style({ transform: 'rotate(90deg)' })),
+      state('deg180', style({ transform: 'rotate(180deg)' })),
+      state('deg270', style({ transform: 'rotate(270deg)' })),
+      transition('deg270 => default', animate('1500ms ease-out')),
+      transition('default => deg90', animate('400ms ease-in')),
+      transition('deg90 => deg180', animate('400ms ease-in')),
+      transition('deg180 => deg270', animate('400ms ease-in'))
+    ])
+  ],
   providers: [TitleCasePipe, { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
@@ -284,6 +298,7 @@ export class CustomerProfileComponent implements OnInit {
     this.changeReviseForm();
     this.getFilingStatus();
     this.getCommonDocuments();
+    // this.rotateImage180('left');
     this.s3FilePath = "https://dev-uploads.taxbuddy.com.s3.ap-south-1.amazonaws.com/4314/Common/images.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200724T135952Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Credential=AKIA2LS2FCUFDB2UWKO7%2F20200724%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=13422d714888136a354fd1c94d1de60e55b70b645dcc0aeb0e980b2b379b4980"
     // Storage.get('sales-invoice/inv_2263_1595577807982.bmp')
     //   .then(result => {
@@ -337,18 +352,20 @@ export class CustomerProfileComponent implements OnInit {
     }
     this.customerProfileForm.patchValue(this.ITR_JSON);
     this.customerProfileForm.controls['planIdSelectedByUser'].disable();
-    this.ITR_JSON.family.filter(item => {
-      if (item.relationShipCode === 'SELF') {
-        this.customerProfileForm.patchValue({
-          firstName: item.fName,
-          middleName: item.mName,
-          lastName: item.lName,
-          fatherName: item.fatherName,
-          dateOfBirth: this.utilsService.isNonEmpty(item.dateOfBirth) ? item.dateOfBirth : null,
-          gender: item.gender,
-        });
-      }
-    });
+    if (this.utilsService.isNonEmpty(this.ITR_JSON.family) && this.ITR_JSON.family instanceof Array) {
+      this.ITR_JSON.family.filter(item => {
+        if (item.relationShipCode === 'SELF') {
+          this.customerProfileForm.patchValue({
+            firstName: item.fName,
+            middleName: item.mName,
+            lastName: item.lName,
+            fatherName: item.fatherName,
+            dateOfBirth: this.utilsService.isNonEmpty(item.dateOfBirth) ? item.dateOfBirth : null,
+            gender: item.gender,
+          });
+        }
+      });
+    }
 
   }
   findAssesseeType() {
@@ -393,6 +410,7 @@ export class CustomerProfileComponent implements OnInit {
 
   }
   saveProfile(ref) {
+    this.findAssesseeType()
     if (this.customerProfileForm.valid) {
       this.loading = true;
       const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
@@ -419,7 +437,6 @@ export class CustomerProfileComponent implements OnInit {
       Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
       console.log('this.ITR_JSON: ', this.ITR_JSON);
       this.itrMsService.putMethod(param, this.ITR_JSON).subscribe(result => {
-        debugger
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
         this.loading = false;
         this.utilsService.showSnackBar('Customer profile updated successfully.');
@@ -468,6 +485,7 @@ export class CustomerProfileComponent implements OnInit {
       "assessmentYear": AppConstants.ayYear,
       "completed": true
     }
+
     this.loading = true;
     this.userMsService.postMethod(param, request).subscribe(result => {
       console.log(result);
@@ -509,5 +527,21 @@ export class CustomerProfileComponent implements OnInit {
       return ''
     }
 
+  }
+  previousRoute() {
+    this.router.navigate(['/pages/itr-filing/users']);
+  }
+  state: string = 'default';
+
+  rotate() {
+    if (this.state === 'default') {
+      this.state = 'deg90';
+    } else if (this.state === 'deg90') {
+      this.state = 'deg180';
+    } else if (this.state === 'deg180') {
+      this.state = 'deg270';
+    } else {
+      this.state = 'default'
+    }
   }
 }

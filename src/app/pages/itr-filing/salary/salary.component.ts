@@ -146,6 +146,9 @@ export class SalaryComponent implements OnInit {
 
     this.maxPT = 5000;
     this.maxEA = 5000;
+    if (this.ITR_JSON.employers === null || this.ITR_JSON.employers === undefined) {
+      this.ITR_JSON.employers = [];
+    }
     this.ITR_JSON.employers.forEach(item => {
       item.deductions.forEach(deductions => {
         if (deductions.deductionType === 'PROFESSIONAL_TAX') {
