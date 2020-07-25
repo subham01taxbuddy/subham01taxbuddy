@@ -115,13 +115,28 @@ export class UsersComponent implements OnInit {
                 this.ITR_JSON.orgITRDate = currentFiledITR[0].eFillingDate;
               }
             }
-            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+            console.log('this.ITR_JSON JUST before saving:', this.ITR_JSON)
+            Object.entries(this.ITR_JSON).forEach((key, value) => {
+              console.log(key, value)
+              if (key[1] === null) {
+                delete this.ITR_JSON[key[0]];
+              }
+              // if(key )
+              // delete this.ITR_JSON[key];
+            });
+            console.log('this.ITR_JSON after deleted keys:', this.ITR_JSON)
+
             break;
           }
         }
 
         if (!isWIP_ITRFound) {
           this.loading = false;
+          let obj = this.createEmptyJson(profile, AppConstants.ayYear, AppConstants.fyYear)
+          Object.assign(obj, this.ITR_JSON)
+          console.log('obj:', obj)
+          this.ITR_JSON = JSON.parse(JSON.stringify(obj))
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
           this.router.navigate(['/pages/itr-filing/customer-profile'])
           /* if (this.utilsService.isNonEmpty(profile.panNumber)) {
             if (this.utilsService.isNonEmpty(this.ITR_JSON.panNumber) ? (this.ITR_JSON.panNumber !== profile.panNumber) : false) {

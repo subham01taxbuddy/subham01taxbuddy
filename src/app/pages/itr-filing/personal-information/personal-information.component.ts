@@ -487,8 +487,11 @@ export class PersonalInformationComponent implements OnInit {
         pinCode: '',
         premisesName: '',
         road: '',
-        state: '91'
+        state: ''
       }
+    }
+    if (this.ITR_JSON.bankDetails === null || this.ITR_JSON.bankDetails === undefined) {
+      this.ITR_JSON.bankDetails = []
     }
     this.customerProfileForm.patchValue(this.ITR_JSON);
     if (this.ITR_JSON.bankDetails instanceof Array && this.ITR_JSON.bankDetails.length > 0) {
