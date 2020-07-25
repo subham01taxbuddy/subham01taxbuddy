@@ -1,7 +1,7 @@
 <div class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar">
     <nav class="sidebar">
         <a class="sidebar__item" routerLink="/pages/home" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN'])">
+            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM'])">
             <span class="sidebar__ico">
                 <svg id="ico-home" class="sidebar__ico-img" data-name="home" xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 416.16 440.64">
@@ -40,7 +40,7 @@
         </a>
 
         <a class="sidebar__item" routerLink="/pages/itr-filing" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN'])">
+            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM'])">
             <span class="sidebar__ico">
                 <svg id="ico-business" data-name="business" class="sidebar__ico-img" xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 561.03 413.38">
@@ -90,7 +90,7 @@
             <span class="sidebar__name">BUSINESS</span>
         </a>
         <a class="sidebar__item" routerLink="/pages/activate-package" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN'])">
+            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM'])">
             <span class="sidebar__ico">
                 <svg id="ico-business" data-name="business" class="sidebar__ico-img" xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 561.03 413.38">
@@ -220,7 +220,7 @@
 
 
         <a class="sidebar__item" (click)="chatCorner()" routerLinkActive="sidebar__item_active" (click)="closeSideBar()"
-            *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_IFA'])">
+            *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_IFA','ROLE_FILING_TEAM'])">
             <span class="sidebar__ico">
                 <svg id="ico-business" data-name="business" class="sidebar__ico-img" xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 561.03 413.38">
@@ -245,7 +245,7 @@
             <span class="sidebar__name">Chat Corner</span>
         </a>
         <a class="sidebar__item" routerLink="/pages/tax-summary" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_IFA'])">
+            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_IFA','ROLE_FILING_TEAM'])">
             <!--routerLink="/pages/tax-summary" -->
             <span class="sidebar__ico">
                 <svg id="ico-business" data-name="business" class="sidebar__ico-img" xmlns="http://www.w3.org/2000/svg"
@@ -272,7 +272,7 @@
         </a>
 
         <a class="sidebar__item" routerLink="/pages/invoice" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_IFA'])">
+            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_IFA','ROLE_FILING_TEAM'])">
             <!--routerLink="/pages/tax-summary" -->
             <span class="sidebar__ico">
                 <svg id="ico-business" data-name="business" class="sidebar__ico-img" xmlns="http://www.w3.org/2000/svg"

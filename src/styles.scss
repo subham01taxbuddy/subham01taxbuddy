@@ -104,3 +104,16 @@ body {
 .ag-overlay-wrapper {
   vertical-align: bottom !important;
 }
+
+.ngxImageZoomContainer[_ngcontent-owf-c7] {
+  position: relative;
+  margin: auto;
+  overflow: hidden;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.ngxImageZoomThumbnail {
+  width: 320px !important;
+  // height: 200px;
+}

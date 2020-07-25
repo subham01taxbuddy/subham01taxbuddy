@@ -11,6 +11,8 @@ import { environment } from 'environments/environment';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { UserMsService } from 'app/services/user-ms.service';
+import Storage from '@aws-amplify/storage';
+
 declare let $: any;
 export const MY_FORMATS = {
   parse: {
@@ -311,12 +313,14 @@ export class PersonalInformationComponent implements OnInit {
     private userMsService: UserMsService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
-
+  s3FilePath: any;
+  fileType = 'pdf'
   ngOnInit() {
     this.customerProfileForm = this.createCustomerProfileForm();
     this.setCustomerProfileValues();
     this.getAllBankByIfsc();
     this.stateDropdown = this.stateDropdownMaster;
+    this.getCommonDocuments();
   }
 
   createCustomerProfileForm(): FormGroup {
@@ -552,5 +556,23 @@ export class PersonalInformationComponent implements OnInit {
     const today: any = new Date(currentYear, 2, 31);
     const timeDiff: any = ((today - birthday) / (31557600000));
     return Math.floor(timeDiff);
+  }
+
+  documents = []
+  getCommonDocuments() {
+    const param = `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/Common`;
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      console.log('Documents', result)
+      this.documents = result;
+    })
+  }
+  getDocumentUrl(documentTag) {
+    const doc = this.documents.filter(item => item.documentTag === documentTag)
+    if (doc.length > 0) {
+      return doc[0].signedUrl;
+    } else {
+      return ''
+    }
+
   }
 }
