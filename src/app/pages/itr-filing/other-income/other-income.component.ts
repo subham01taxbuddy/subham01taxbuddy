@@ -144,6 +144,7 @@ export class OtherIncomeComponent implements OnInit {
 
   saveOtherIncome() {
     debugger
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
     this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes.filter(item => item.incomeType !== 'SAVING_INTEREST' &&
       item.incomeType !== 'FD_RD_INTEREST' && item.incomeType !== 'TAX_REFUND_INTEREST' &&

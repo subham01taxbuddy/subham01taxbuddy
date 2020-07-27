@@ -1,37 +1,48 @@
 <!-- <div class="row"> -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="content" style="width: 35%; padding-right: 20px;">
-    <ngx-image-zoom [thumbImage]="getDocumentUrl('PAN')" [fullImage]="getDocumentUrl('PAN')" [magnification]="1"
-        [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
+    <ngx-image-zoom [thumbImage]="getDocumentUrl('PAN').docUrl" [fullImage]="getDocumentUrl('PAN').docUrl"
+        [magnification]="1" [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
     </ngx-image-zoom>
-    <div *ngIf="getDocumentUrl('PAN') ===''">
+    <div *ngIf="getDocumentUrl('PAN').docUrl ===''">
         PAN Card not uploaded
     </div>
     <br>
     <hr>
     <br>
-    <ngx-image-zoom [thumbImage]="getDocumentUrl('AADHAAR_FRONT')" [fullImage]="getDocumentUrl('AADHAAR_FRONT')"
-        [magnification]="1" [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
+    <ngx-image-zoom [thumbImage]="getDocumentUrl('AADHAAR_FRONT').docUrl"
+        [fullImage]="getDocumentUrl('AADHAAR_FRONT').docUrl" [magnification]="1" [enableScrollZoom]="true"
+        [enableLens]="true" [lensWidth]="200">
     </ngx-image-zoom>
-    <div *ngIf="getDocumentUrl('AADHAAR_FRONT') ===''">
+    <div style="max-height: 210px;" *ngIf="getDocumentUrl('AADHAAR_FRONT').docType === 'pdf'">
+        <pdf-viewer [src]="getDocumentUrl('AADHAAR_FRONT').docUrl" [render-text]="true" style="display: block">
+        </pdf-viewer>
+    </div>
+    <div *ngIf="getDocumentUrl('AADHAAR_FRONT').docUrl ===''">
         Aadhaar Card front not uploaded
     </div>
     <br>
     <hr>
     <br>
-    <ngx-image-zoom [thumbImage]="getDocumentUrl('AADHAAR_BACK')" [fullImage]="getDocumentUrl('AADHAAR_BACK')"
-        [magnification]="1" [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
+    <ngx-image-zoom [thumbImage]="getDocumentUrl('AADHAAR_BACK').docUrl"
+        [fullImage]="getDocumentUrl('AADHAAR_BACK').docUrl" [magnification]="1" [enableScrollZoom]="true"
+        [enableLens]="true" [lensWidth]="200">
     </ngx-image-zoom>
-    <div *ngIf="getDocumentUrl('AADHAAR_BACK') ===''">
+    <div style="max-height: 210px;" *ngIf="getDocumentUrl('AADHAAR_BACK').docType === 'pdf'">
+        <pdf-viewer [src]="getDocumentUrl('AADHAAR_BACK').docUrl" [render-text]="true" style="display: block">
+        </pdf-viewer>
+    </div>
+    <div *ngIf="getDocumentUrl('AADHAAR_BACK').docUrl ===''">
         Aadhaar Card back not uploaded
     </div>
     <br>
     <hr>
     <br>
-    <ngx-image-zoom [thumbImage]="getDocumentUrl('BANK')" [fullImage]="getDocumentUrl('BANK')" [magnification]="1"
-        [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
+    <ngx-image-zoom [thumbImage]="getDocumentUrl('BANK_STATEMENT').docUrl"
+        [fullImage]="getDocumentUrl('BANK_STATEMENT').docUrl" [magnification]="1" [enableScrollZoom]="true"
+        [enableLens]="true" [lensWidth]="200">
     </ngx-image-zoom>
-    <div *ngIf="getDocumentUrl('BANK') ===''">
+    <div *ngIf="getDocumentUrl('BANK_STATEMENT').docUrl ===''">
         Bank check not uploaded
     </div>
 </div>

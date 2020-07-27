@@ -26,7 +26,7 @@ export class SalaryComponent implements OnInit {
   maxPT = 5000;
   maxEA = 5000;
   salaryView: string = "FORM";
-  employerMode = "";
+  employerMode = "ADD";
   currentIndex: number = null;
   salaryDropdown = [{
     "value": "SEC17_1",

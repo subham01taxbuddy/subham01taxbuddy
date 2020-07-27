@@ -94,6 +94,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   saveHpDetails() {
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
     if (this.housePropertyForm.valid) {
       let hp: HouseProperties = this.housePropertyForm.getRawValue();
