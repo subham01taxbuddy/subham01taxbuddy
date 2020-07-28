@@ -339,7 +339,8 @@ export class SummaryComponent implements OnInit {
   }
   fileITR() {
     this.loading = true;
-    const param = '/api/efillingItr?userId=' + this.ITR_JSON.userId + '&itrId=' + this.ITR_JSON.itrId + '&assessmentYear=' + this.ITR_JSON.assessmentYear; // + '&action=efile'
+    const param = '/api/efillingItr?itrId=' + this.ITR_JSON.itrId
+    // const param = '/api/efillingItr?userId=' + this.ITR_JSON.userId + '&itrId=' + this.ITR_JSON.itrId + '&assessmentYear=' + this.ITR_JSON.assessmentYear; // + '&action=efile'
     this.itrMsService.getMethod(param).subscribe((result: ITR_JSON) => {
       console.log('ITR filled result===', result);
       this.ITR_JSON = JSON.parse(JSON.stringify(result));
