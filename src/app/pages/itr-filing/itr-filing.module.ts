@@ -1,3 +1,6 @@
+import { AckFailureComponent } from './acknowledgement/ack-failure/ack-failure.component';
+import { AckDelayComponent } from './acknowledgement/ack-delay/ack-delay.component';
+import { AckSuccessComponent } from './acknowledgement/ack-success/ack-success.component';
 // import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsersComponent } from './users/users.component';
@@ -21,6 +24,7 @@ import { AddDonationDialogComponent } from './investments-deductions/add-donatio
 import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
+import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
 
 @NgModule({
     imports: [
@@ -43,7 +47,16 @@ import { SummaryComponent } from './summary/summary.component';
         SalaryComponent,
         HousePropertyComponent,
         OtherIncomeComponent,
-        InvestmentsDeductionsComponent, AddDonationDialogComponent, TaxesPaidComponent, DeclarationComponent, SummaryComponent],
+        InvestmentsDeductionsComponent,
+        AddDonationDialogComponent,
+        TaxesPaidComponent,
+        DeclarationComponent,
+        SummaryComponent,
+        AcknowledgementComponent,
+        AckSuccessComponent,
+        AckDelayComponent,
+        AckFailureComponent
+    ],
     entryComponents: [AddDonationDialogComponent]
 
 })

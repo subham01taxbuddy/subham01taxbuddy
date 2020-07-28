@@ -15,6 +15,8 @@ export class HousePropertyComponent implements OnInit {
   housePropertyForm: FormGroup;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
+  itrDocuments = [];
+
   propertyTypeDropdown = [{
     "value": "SOP",
     "label": "Self Occupied",
@@ -33,6 +35,8 @@ export class HousePropertyComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getItrDocuments();
+    this.getHpDocsUrl(0);
     this.housePropertyForm = this.createHousePropertyForm();
     if (this.utilsService.isNonEmpty(this.ITR_JSON) && this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties)
       && this.ITR_JSON.houseProperties instanceof Array && this.ITR_JSON.houseProperties.length > 0) {
@@ -94,6 +98,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   saveHpDetails() {
+    debugger
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
     if (this.housePropertyForm.valid) {
@@ -132,5 +137,42 @@ export class HousePropertyComponent implements OnInit {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Failed to update House Property income.');
     });
+  }
+
+  getItrDocuments() {
+    // TODO
+    const param1 =
+      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
+    this.itrMsService.getMethod(param1).subscribe((result: any) => {
+      console.log('Documents ITR', result)
+      this.itrDocuments = result;
+      localStorage.setItem(AppConstants.ITR_DOCS, JSON.stringify(this.itrDocuments));
+      this.getHpDocsUrl(0);
+    })
+  }
+
+  getAllHpDocs(documentTag) {
+    return this.itrDocuments.filter(item => item.documentTag === documentTag)
+
+  }
+  zoom: number = 1.0;
+  incrementZoom(amount: number) {
+    this.zoom += amount;
+  }
+
+  hpDocDetails = {
+    docUrl: '',
+    docType: ''
+  };
+  getHpDocsUrl(index) {
+    const doc = this.itrDocuments.filter(item => item.documentTag === 'LOAN_STATEMENT')
+    if (doc.length > 0) {
+      const docType = doc[index].fileName.split('.').pop();
+      this.hpDocDetails.docUrl = doc[index].signedUrl;
+      this.hpDocDetails.docType = docType;
+    } else {
+      this.hpDocDetails.docUrl = '';
+      this.hpDocDetails.docType = '';
+    }
   }
 }

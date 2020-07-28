@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { BankDetails, ITR_JSON, Family } from 'app/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'app/services/utils.service';
 import { AppConstants } from 'app/shared/constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-summary',
@@ -36,7 +37,7 @@ export class SummaryComponent implements OnInit {
   natureOfBusinessDropdown = [];
   assestTypesDropdown = [];
   constructor(private itrMsService: ItrMsService,
-    public utilsService: UtilsService) {
+    public utilsService: UtilsService, private router: Router) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     const mybank = this.ITR_JSON.bankDetails.filter(item => item.hasRefund === true);
     if (mybank instanceof Array && mybank.length > 0) {
@@ -351,14 +352,19 @@ export class SummaryComponent implements OnInit {
       // Commented both routes as its currenly option is for download xml file
       // this.router.navigate(['itr-result/success']);
       // TODO
-      /* if (this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'SUCCESS') {
-        this.router.navigate(['ack/success']);
+      if (this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'SUCCESS') {
+        // this.router.navigate(['ack/success']);
+        this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'success' } })
       } else if (!this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'DELAY') {
-        this.router.navigate(['ack/delay']);
-      } */
+        // this.router.navigate(['ack/delay']);
+        this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'delay' } })
+      }
+      this.router.navigate(['/pages/itr-filing/acknowledgement'])
     }, error => {
       console.log('ITR filled error===', error);
       this.loading = false;
+      this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'fail' } })
+
       // TODO
       /* if (error.error.status === 400 && error.error.detail === 'ERROR') {
         this.router.navigate(['ack/failure']);

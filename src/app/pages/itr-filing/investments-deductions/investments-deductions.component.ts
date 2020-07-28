@@ -27,6 +27,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
   public rowData;
   api: GridApi;
   userAge: number = 0;
+  itrDocuments = [];
   ash = {
     "id": "5b62a2cd61f09d4d9837248a",
     "salaryType": [{
@@ -3790,6 +3791,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getItrDocuments();
     this.investmentDeductionForm = this.fb.group({
       ELSS: [null, Validators.pattern(AppConstants.numericRegex)],
       PENSION_FUND: [null, Validators.pattern(AppConstants.numericRegex)],
@@ -4193,6 +4195,39 @@ export class InvestmentsDeductionsComponent implements OnInit {
       this.investmentDeductionForm.controls['premium'].setValue(null);
       this.investmentDeductionForm.controls['preventiveCheckUp'].setValue(null);
       this.investmentDeductionForm.controls['medicalExpenditure'].setValue(null);
+    }
+  }
+
+  getItrDocuments() {
+    // TODO
+    const param1 =
+      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
+    this.itrMsService.getMethod(param1).subscribe((result: any) => {
+      console.log('Documents ITR', result)
+      this.itrDocuments = result;
+      localStorage.setItem(AppConstants.ITR_DOCS, JSON.stringify(this.itrDocuments));
+      // this.getDocsUrl(0);
+    })
+  }
+
+
+  zoom: number = 1.0;
+  incrementZoom(amount: number) {
+    this.zoom += amount;
+  }
+
+  docDetails = {
+    docUrl: '',
+    docType: ''
+  };
+  getDocsUrl(index) {
+    if (this.itrDocuments.length > 0) {
+      const docType = this.itrDocuments[index].fileName.split('.').pop();
+      this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
+      this.docDetails.docType = docType;
+    } else {
+      this.docDetails.docUrl = '';
+      this.docDetails.docType = '';
     }
   }
 }

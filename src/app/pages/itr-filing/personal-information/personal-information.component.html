@@ -4,6 +4,17 @@
     <ngx-image-zoom [thumbImage]="getDocumentUrl('PAN').docUrl" [fullImage]="getDocumentUrl('PAN').docUrl"
         [magnification]="1" [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
     </ngx-image-zoom>
+    <div *ngIf="getDocumentUrl('PAN').docType === 'pdf'">
+        <button ion-button (click)="incrementZoom(-0.1)">
+            <!-- <img src="assets/Zoom_Out.png"/> -->-
+        </button>&nbsp;
+        <button ion-button (click)="incrementZoom(0.1)">
+            <!-- <img src="assets/Zoom_in.png"/> -->+
+        </button>
+        <pdf-viewer [src]="getDocumentUrl('PAN').docUrl" [zoom]="zoom" [original-size]="true" [autoresize]="true"
+            [render-text]="true" style="display: block;height: 100%">
+        </pdf-viewer>
+    </div>
     <div *ngIf="getDocumentUrl('PAN').docUrl ===''">
         PAN Card not uploaded
     </div>
@@ -14,8 +25,15 @@
         [fullImage]="getDocumentUrl('AADHAAR_FRONT').docUrl" [magnification]="1" [enableScrollZoom]="true"
         [enableLens]="true" [lensWidth]="200">
     </ngx-image-zoom>
-    <div style="max-height: 210px;" *ngIf="getDocumentUrl('AADHAAR_FRONT').docType === 'pdf'">
-        <pdf-viewer [src]="getDocumentUrl('AADHAAR_FRONT').docUrl" [render-text]="true" style="display: block">
+    <div *ngIf="getDocumentUrl('AADHAAR_FRONT').docType === 'pdf'">
+        <button ion-button (click)="incrementZoom(-0.1)">
+            <!-- <img src="assets/Zoom_Out.png"/> -->-
+        </button>&nbsp;
+        <button ion-button (click)="incrementZoom(0.1)">
+            <!-- <img src="assets/Zoom_in.png"/> -->+
+        </button>
+        <pdf-viewer [src]="getDocumentUrl('AADHAAR_FRONT').docUrl" [zoom]="zoom" [original-size]="true"
+            [autoresize]="true" [render-text]="true" style="display: block;height: 100%">
         </pdf-viewer>
     </div>
     <div *ngIf="getDocumentUrl('AADHAAR_FRONT').docUrl ===''">
@@ -28,8 +46,15 @@
         [fullImage]="getDocumentUrl('AADHAAR_BACK').docUrl" [magnification]="1" [enableScrollZoom]="true"
         [enableLens]="true" [lensWidth]="200">
     </ngx-image-zoom>
-    <div style="max-height: 210px;" *ngIf="getDocumentUrl('AADHAAR_BACK').docType === 'pdf'">
-        <pdf-viewer [src]="getDocumentUrl('AADHAAR_BACK').docUrl" [render-text]="true" style="display: block">
+    <div *ngIf="getDocumentUrl('AADHAAR_BACK').docType === 'pdf'">
+        <button ion-button (click)="incrementZoom(-0.1)">
+            <!-- <img src="assets/Zoom_Out.png"/> -->-
+        </button>&nbsp;
+        <button ion-button (click)="incrementZoom(0.1)">
+            <!-- <img src="assets/Zoom_in.png"/> -->+
+        </button>
+        <pdf-viewer [src]="getDocumentUrl('AADHAAR_BACK').docUrl" [zoom]="zoom" [original-size]="true"
+            [autoresize]="true" [render-text]="true" style="display: block;height: 100%">
         </pdf-viewer>
     </div>
     <div *ngIf="getDocumentUrl('AADHAAR_BACK').docUrl ===''">
@@ -42,6 +67,17 @@
         [fullImage]="getDocumentUrl('BANK_STATEMENT').docUrl" [magnification]="1" [enableScrollZoom]="true"
         [enableLens]="true" [lensWidth]="200">
     </ngx-image-zoom>
+    <div *ngIf="getDocumentUrl('BANK_STATEMENT').docType === 'pdf'">
+        <button ion-button (click)="incrementZoom(-0.1)">
+            <!-- <img src="assets/Zoom_Out.png"/> -->-
+        </button>&nbsp;
+        <button ion-button (click)="incrementZoom(0.1)">
+            <!-- <img src="assets/Zoom_in.png"/> -->+
+        </button>
+        <pdf-viewer [src]="getDocumentUrl('BANK_STATEMENT').docUrl" [zoom]="zoom" [original-size]="true"
+            [autoresize]="true" [render-text]="true" style="display: block;height: 100%">
+        </pdf-viewer>
+    </div>
     <div *ngIf="getDocumentUrl('BANK_STATEMENT').docUrl ===''">
         Bank check not uploaded
     </div>

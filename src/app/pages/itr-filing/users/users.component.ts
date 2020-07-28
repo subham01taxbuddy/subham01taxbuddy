@@ -216,6 +216,8 @@ export class UsersComponent implements OnInit {
       locale: 'en_IN',
       financialYear: financialYear,
       filingTeamMemberId: null,
+      planIdSelectedByUser: null,
+      planIdSelectedByTaxExpert: null,
       eFillingPortalPassword: '*****',
       isRevised: 'N',
       isDefective: 'N',
@@ -309,7 +311,8 @@ export class UsersComponent implements OnInit {
       unlistedSharesDetails: [],
       dateOfDividendIncome: null,
       lastVisitedURL: '',
-      seventhProviso139: null
+      seventhProviso139: null,
+      depPayInvClmUndDednVIA: 'N'
     };
 
     return ITR_JSON;

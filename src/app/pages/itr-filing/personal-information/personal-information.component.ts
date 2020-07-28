@@ -602,4 +602,9 @@ export class PersonalInformationComponent implements OnInit {
     }
 
   }
+  zoom: number = 1.0;
+  incrementZoom(amount: number) {
+    this.zoom += amount;
+  }
+
 }

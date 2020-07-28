@@ -1,8 +1,5 @@
-<!-- <div class="row"> -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<!-- <div class="content vertLine" style="width: 35%;">Ashish</div> -->
 <div>
-    <!-- <div class="card__title" style="padding:10px; font-size: 20px;">Customer Profile</div> -->
     <form [formGroup]="employerDetailsFormGroup">
         <mat-accordion>
             <mat-expansion-panel class="color-panel accordion-border" [expanded]="true">
@@ -10,7 +7,28 @@
                     <div class="card__title" style="font-size: 20px;">Salary Income</div>
                 </mat-expansion-panel-header>
 
-                <div class="content vertLine" style="width: 35%;padding-right: 20px;">Ashish</div>
+                <div class="content vertLine" style="width: 35%;padding-right: 20px;">
+                    <div>
+                        <span *ngFor="let form16 of getAllForm16s('FORM_16'); let i=index">
+                            <a href="javascript:;" (click)="getForm16Url(i)">{{form16.fileName}}</a> &nbsp;&nbsp;
+                        </span>
+                    </div>
+                    <ngx-image-zoom *ngIf="form16DocDetails.docType !== 'pdf'" [thumbImage]="form16DocDetails.docUrl"
+                        [fullImage]="form16DocDetails.docUrl" [magnification]="1" [enableScrollZoom]="true"
+                        [enableLens]="true" [lensWidth]="200">
+                    </ngx-image-zoom>
+                    <div *ngIf="form16DocDetails.docType === 'pdf'">
+                        <button ion-button (click)="incrementZoom(-0.1)">
+                            -
+                        </button>&nbsp;
+                        <button ion-button (click)="incrementZoom(0.1)">
+                            +
+                        </button>
+                        <pdf-viewer [src]="form16DocDetails.docUrl" [zoom]="zoom" [original-size]="true"
+                            [autoresize]="true" [render-text]="true" style="display: block;height: 100%">
+                        </pdf-viewer>
+                    </div>
+                </div>
                 <div class="content" style="width: 65%;" *ngIf="salaryView === 'TABLE'">
                     <div>
                         <button class="btn long-btn" style="border: none;" (click)=" addEmployer(null)">Add Employer
@@ -127,96 +145,5 @@
                 </div>
             </mat-expansion-panel>
         </mat-accordion>
-        <!--  <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>First name</mat-label>
-                    <input matTooltip="First name as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above"
-                        matInput  placeholder="First name" name="FirstName" formControlName="firstName"
-                        class="input-field" maxlength="25">
-                    <mat-error *ngIf="customerProfileForm.controls['firstName'].hasError('pattern')">Enter
-                        character only</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>Middle name</mat-label>
-                    <input matTooltip="Middle name as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above"
-                        matInput  placeholder="Middle name" name="MiddleName" formControlName="middleName"
-                        class="input-field" maxlength="75">
-                    <mat-error *ngIf="customerProfileForm.controls['middleName'].hasError('pattern')">Enter
-                        character only</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>Last name</mat-label>
-                    <input matTooltip="Last name as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above"
-                        matInput  placeholder="Last name" name="LastName" formControlName="lastName"
-                        class="input-field" maxlength="75" required>
-                    <mat-error *ngIf="customerProfileForm.controls['lastName'].hasError('pattern')">Enter
-                        character only</mat-error>
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>PAN Number</mat-label>
-                    <input [style.cursor]="ITR_JSON.eFillingCompleted == true ? 'not-allowed':''"
-                        [disabled]="ITR_JSON.eFillingCompleted === true"
-                        matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
-                        matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput placeholder="PAN"
-                        name="panNumber" formControlName="panNumber" class="input-field" maxlength="10" minlength="10"
-                        required (keyup)="findAssesseeType()"
-                        (blur)="getUserDataByPan(customerProfileForm.controls['panNumber'].value)">
-                    <mat-error *ngIf="customerProfileForm.controls['panNumber'].hasError('pattern')">Enter
-                        valid PAN (e.g
-                        XXXXX1234X)</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-8">
-                <mat-form-field appearance="outline">
-                    <mat-label>Father Name</mat-label>
-                    <input matTooltip="Father's name as per PAN" matTooltipClass="tab-tooltip"
-                        matTooltipPosition="above" matInput  placeholder="Father's name" name="mobile"
-                        [formControl]="customerProfileForm.controls['fatherName']" class="input-field" maxlength="125"
-                        required>
-                    <mat-error *ngIf="customerProfileForm.controls['fatherName'].hasError('pattern')">
-                        Enter character only</mat-error>
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>Date Of Birth</mat-label>
-                    <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip"
-                        matTooltipPosition="above" matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
-                        class="input-field" placeholder="Date of birth" name="dateOfBirth"
-                        [formControl]="customerProfileForm.controls['dateOfBirth']" required>
-                    <mat-hint>Format: DD/MM/YYYY</mat-hint>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-8">
-                <mat-form-field appearance="outline">
-                    <mat-label>Aadhaar Number</mat-label>
-                    <input matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
-                        matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput 
-                        placeholder="Aadhaar" name="aadharNumber" formControlName="aadharNumber" class="input-field"
-                        maxlength="12" [required]="customerProfileForm.controls['assesseeType'].value === 'INDIVIDUAL'">
-                    <mat-error
-                        *ngIf="customerProfileForm.controls['aadharNumber'].hasError('pattern') || customerProfileForm.controls['aadharNumber'].hasError('minLength') || customerProfileForm.controls['aadharNumber'].hasError('maxLength')">
-                        Enter
-                        12 digit aadhar number</mat-error>
-                </mat-form-field>
-            </div>
-        </div> -->
-
-
-
     </form>
 </div>
-<!-- </div> -->

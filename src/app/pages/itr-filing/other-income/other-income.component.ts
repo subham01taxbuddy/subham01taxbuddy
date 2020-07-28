@@ -18,6 +18,7 @@ export class OtherIncomeComponent implements OnInit {
   loading: boolean = false;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
+  itrDocuments = [];
   otherIncomeDropdown = [{
     "value": "SAVING_INTEREST",
     "label": "Interest from Saving Account",
@@ -39,6 +40,7 @@ export class OtherIncomeComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.otherIncomeCallInConstructor(this.otherIncomeDropdown);
     this.setOtherIncomeValues();
+    this.getItrDocuments();
 
   }
 
@@ -195,4 +197,37 @@ export class OtherIncomeComponent implements OnInit {
     }
   }
 
+  getItrDocuments() {
+    // TODO
+    const param1 =
+      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
+    this.itrMsService.getMethod(param1).subscribe((result: any) => {
+      console.log('Documents ITR', result)
+      this.itrDocuments = result;
+      localStorage.setItem(AppConstants.ITR_DOCS, JSON.stringify(this.itrDocuments));
+      // this.getDocsUrl(0);
+    })
+  }
+
+
+  zoom: number = 1.0;
+  incrementZoom(amount: number) {
+    this.zoom += amount;
+  }
+
+  docDetails = {
+    docUrl: '',
+    docType: ''
+  };
+  getDocsUrl(index) {
+
+    if (this.itrDocuments.length > 0) {
+      const docType = this.itrDocuments[index].fileName.split('.').pop();
+      this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
+      this.docDetails.docType = docType;
+    } else {
+      this.docDetails.docUrl = '';
+      this.docDetails.docType = '';
+    }
+  }
 }

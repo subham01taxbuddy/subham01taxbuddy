@@ -434,14 +434,40 @@ export class CustomerProfileComponent implements OnInit {
       } else {
         param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
       }
+      let isPlanChanged = false;
+      if (this.ITR_JSON.planIdSelectedByTaxExpert !== Number(this.customerProfileForm.controls['planIdSelectedByTaxExpert'].value)) {
+        isPlanChanged = true;
+      }
       Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
-      console.log('this.ITR_JSON: ', this.ITR_JSON);
-      this.itrMsService.putMethod(param, this.ITR_JSON).subscribe(result => {
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-        this.loading = false;
-        this.utilsService.showSnackBar('Customer profile updated successfully.');
-        if (ref === "NEXT") {
-          this.router.navigate(['/pages/itr-filing/itr']);
+      if (isPlanChanged) {
+        this.ITR_JSON.planIdSelectedByTaxExpert = null
+      }
+
+      this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
+        this.ITR_JSON = result;
+        if (isPlanChanged) {
+          const planParam = '/change-plan-by-expert';
+          this.ITR_JSON.planIdSelectedByTaxExpert = Number(this.customerProfileForm.controls['planIdSelectedByTaxExpert'].value)
+          this.itrMsService.putMethod(planParam, this.ITR_JSON).subscribe((result: any) => {
+            this.ITR_JSON = result;
+            console.log('Plan changed successfully by tax expert', result);
+            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+            this.loading = false;
+            this.utilsService.showSnackBar('Customer profile updated successfully.');
+            if (ref === "NEXT") {
+              this.router.navigate(['/pages/itr-filing/itr']);
+            }
+          }, error => {
+            this.utilsService.showSnackBar('Fialed to update customer profile.');
+            this.loading = false;
+          });
+        } else {
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+          this.loading = false;
+          this.utilsService.showSnackBar('Customer profile updated successfully.');
+          if (ref === "NEXT") {
+            this.router.navigate(['/pages/itr-filing/itr']);
+          }
         }
       }, error => {
         this.utilsService.showSnackBar('Fialed to update customer profile.');
