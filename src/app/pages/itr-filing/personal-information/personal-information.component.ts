@@ -321,10 +321,7 @@ export class PersonalInformationComponent implements OnInit {
     this.getAllBankByIfsc();
     this.stateDropdown = this.stateDropdownMaster;
     this.getCommonDocuments();
-    this.itrDocuments = JSON.parse(localStorage.getItem(AppConstants.ITR_DOCS));
-    if (!(this.itrDocuments instanceof Array && this.itrDocuments.length > 0)) {
-      this.getItrDocuments();
-    }
+    this.getItrDocuments();
   }
 
   createCustomerProfileForm(): FormGroup {
@@ -584,7 +581,6 @@ export class PersonalInformationComponent implements OnInit {
     this.itrMsService.getMethod(param1).subscribe((result: any) => {
       console.log('Documents ITR', result)
       this.itrDocuments = result;
-      localStorage.setItem(AppConstants.ITR_DOCS, JSON.stringify(this.itrDocuments));
     })
   }
 

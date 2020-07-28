@@ -1063,6 +1063,7 @@ export class TaxesPaidComponent implements OnInit {
     }
 
     if (this.addOtherThanTdsTcs('SAVE')) {
+      debugger
       if (this.otherThanTdsTcsGridOptions.api.getRenderedNodes().length > 0) {
         let data = this.otherThanTdsTcsGridOptions.api.getRenderedNodes();
         for (let i = 0; i < data.length; i++) {
@@ -1092,7 +1093,6 @@ export class TaxesPaidComponent implements OnInit {
     this.itrMsService.getMethod(param1).subscribe((result: any) => {
       console.log('Documents ITR', result)
       this.itrDocuments = result;
-      localStorage.setItem(AppConstants.ITR_DOCS, JSON.stringify(this.itrDocuments));
       // this.getDocsUrl(0);
     })
   }

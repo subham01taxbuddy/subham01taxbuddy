@@ -140,7 +140,6 @@ export class SalaryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.itrDocuments = JSON.parse(localStorage.getItem(AppConstants.ITR_DOCS));
     this.getItrDocuments();
     this.getForm16Url(0);
 
@@ -546,6 +545,7 @@ export class SalaryComponent implements OnInit {
   }
 
   serviceCall() {
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
     if (this.employerMode === 'ADD') {
       const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
@@ -839,7 +839,6 @@ export class SalaryComponent implements OnInit {
     this.itrMsService.getMethod(param1).subscribe((result: any) => {
       console.log('Documents ITR', result)
       this.itrDocuments = result;
-      localStorage.setItem(AppConstants.ITR_DOCS, JSON.stringify(this.itrDocuments));
       this.getForm16Url(0);
     })
   }

@@ -146,7 +146,6 @@ export class HousePropertyComponent implements OnInit {
     this.itrMsService.getMethod(param1).subscribe((result: any) => {
       console.log('Documents ITR', result)
       this.itrDocuments = result;
-      localStorage.setItem(AppConstants.ITR_DOCS, JSON.stringify(this.itrDocuments));
       this.getHpDocsUrl(0);
     })
   }
