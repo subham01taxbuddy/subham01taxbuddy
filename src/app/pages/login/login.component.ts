@@ -95,10 +95,10 @@ export class LoginComponent implements OnInit {
   getUserByCognitoId(data) {
     NavbarService.getInstance(this.http).getUserByCognitoId(`${data.attributes.sub}`).subscribe(res => {
       console.log('By CognitoId data:', res)
-      console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))
+      console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA", 'ROLE_FILING_TEAM']))
       if (res && data.signInUserSession.accessToken.jwtToken) {
         this.setUserDataInsession(data, res);
-      } else if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA"]))) {
+      } else if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", "ROLE_IFA", 'ROLE_FILING_TEAM']))) {
         this._toastMessageService.alert("error", "Access Denied.");
       } else {
         this._toastMessageService.alert("error", "The Mobile/Email address or Password entered, is not correct. Please check and try again");
@@ -129,6 +129,8 @@ export class LoginComponent implements OnInit {
 
 
     if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
+      this.router.navigate(['pages/home']);
+    } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
       this.router.navigate(['pages/home']);
     } else if (jhi.role.indexOf("ROLE_IFA") !== -1) {
       this.router.navigate(['/pages/ifa/claim-client']);

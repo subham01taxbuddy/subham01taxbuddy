@@ -18,8 +18,8 @@ export class AppConstants {
     public static amountWithDecimal = /^\s*-?\d+(\.\d{1,2})?\s*$/;
     public static indianCurrencySymbol = '₹ ';
     public static PINCode = '[1-9]{1}[0-9]{5}';
-    public static ayYear = '2019-2020';
-    public static fyYear = '2018-2019';
+    public static ayYear = '2020-2021';
+    public static fyYear = '2019-2020';
 
     public static USER_OBJ = environment.production ? 'USER_OBJ' : 'USER_OBJ';
     public static TOKEN = environment.production ? 'TOKEN' : 'TOKEN';
@@ -27,4 +27,5 @@ export class AppConstants {
     public static ITR_JSON = environment.production ? 'ITR_JSON' : 'ITR_JSON';
     public static TAX_SUM = environment.production ? 'TAX_SUM' : 'TAX_SUM';
     public static NAME = environment.production ? 'name' : 'name';
+    public static ITR_DOCS = environment.production ? 'ITR_DOCS' : 'ITR_DOCS';
 }

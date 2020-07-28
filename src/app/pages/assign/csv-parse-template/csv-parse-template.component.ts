@@ -192,8 +192,8 @@ export class CSVParseTemplateComponent implements OnInit {
 
   clientListCreateColoumnDef(headers, calenderData, invoiceType) {
     console.log(invoiceType)
-    let invoiceTypeSales = [{ countryCode: 'B2B', countryName: 'Sales B2B' }, { countryCode: 'B2C', countryName: 'Sales B2C' }]
-    let invoiceTypePurchase = [{ countryCode: 'Purchase', countryName: 'Purchase' }, { countryCode: 'Expense', countryName: 'Expense' }]
+    let invoiceTypeSales = [{ code: 'B2B', name: 'Sales B2B' }, { code: 'B2C', name: 'Sales B2C' }]
+    let invoiceTypePurchase = [{ code: 'Purchase', name: 'Purchase' }, { code: 'Expense', name: 'Expense' }]
     let startDate = new Date(calenderData.gstReturnYear, (calenderData.gstReturnMonth - 1), 1);
     let endDay = new Date(calenderData.gstReturnYear, calenderData.gstReturnMonth, 0).getDate();
     let endDate = new Date(calenderData.gstReturnYear, (calenderData.gstReturnMonth - 1), endDay);
@@ -402,7 +402,7 @@ export class CSVParseTemplateComponent implements OnInit {
         cellEditor: 'numericEditor',
         cellStyle: { textAlign: 'right' },
         valueFormatter: function valueFormatter(params) {
-          return params.data.taxVal ? params.data.taxVal.toLocaleString('en-IN'): params.data.taxVal;   
+          return params.data.taxVal ? params.data.taxVal.toLocaleString('en-IN') : params.data.taxVal;
         }
       },
       {
@@ -421,7 +421,7 @@ export class CSVParseTemplateComponent implements OnInit {
         cellEditor: 'numericEditor',
         cellStyle: { textAlign: 'right' },
         valueFormatter: function valueFormatter(params) {
-          return params.data.cgst ? params.data.cgst.toLocaleString('en-IN'): params.data.cgst;   
+          return params.data.cgst ? params.data.cgst.toLocaleString('en-IN') : params.data.cgst;
         }
       },
       {
@@ -432,7 +432,7 @@ export class CSVParseTemplateComponent implements OnInit {
         cellEditor: 'numericEditor',
         cellStyle: { textAlign: 'right' },
         valueFormatter: function valueFormatter(params) {
-          return params.data.sgst ? params.data.sgst.toLocaleString('en-IN'): params.data.sgst;   
+          return params.data.sgst ? params.data.sgst.toLocaleString('en-IN') : params.data.sgst;
         }
 
       },
@@ -444,7 +444,7 @@ export class CSVParseTemplateComponent implements OnInit {
         cellEditor: 'numericEditor',
         cellStyle: { textAlign: 'right' },
         valueFormatter: function valueFormatter(params) {
-          return params.data.igst ? params.data.igst.toLocaleString('en-IN'): params.data.igst;   
+          return params.data.igst ? params.data.igst.toLocaleString('en-IN') : params.data.igst;
         }
       },
       {
@@ -467,7 +467,7 @@ export class CSVParseTemplateComponent implements OnInit {
           return params.data.grossVal ? (Math.round(params.data.sales * 100) / 100).toLocaleString('en-IN') : params.data.sales;
         }, */
         valueFormatter: function valueFormatter(params) {
-          return params.data.grossVal ? params.data.grossVal.toLocaleString('en-IN'): params.data.grossVal;   
+          return params.data.grossVal ? params.data.grossVal.toLocaleString('en-IN') : params.data.grossVal;
         }
       },
       {
@@ -604,8 +604,8 @@ function extractValues(mappings) {
 function lookupValue(mappings, key) {
   let country = '';
   mappings.forEach(element => {
-    if (element.countryCode == key) {
-      country = element.countryName
+    if (element.code == key) {
+      country = element.name
     }
   });
   if (country !== '' && country !== undefined && country !== null) {
@@ -618,8 +618,8 @@ function lookupValue(mappings, key) {
 // convert value to code
 function lookupKey(mappings, name) {
   mappings.forEach(element => {
-    if (element.countryCode == name) {
-      return element.countryName
+    if (element.code == name) {
+      return element.name
     }
   });
 }

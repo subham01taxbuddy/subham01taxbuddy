@@ -15,6 +15,9 @@ export interface ITR_JSON {
     currency: string;
     locale: string;
     financialYear: string;
+    filingTeamMemberId: number;
+    planIdSelectedByUser: number;
+    planIdSelectedByTaxExpert: number;
     eFillingPortalPassword: string;
     isRevised: string;
     isDefective: string;
@@ -56,6 +59,8 @@ export interface ITR_JSON {
     unlistedSharesDetails: UnlistedSharesDetails[];
     dateOfDividendIncome: string;
     lastVisitedURL: string;
+    seventhProviso139: SeventhProviso139,
+    depPayInvClmUndDednVIA: string;
 }
 export interface DirectorInCompany {
     companyName: string;
@@ -130,6 +135,7 @@ export interface HouseProperties {
     taxableIncome: number;
     exemptIncome: number;
     isEligibleFor80EE: boolean;
+    isEligibleFor80EEA: boolean;
     tenant: Tenant[];
     coOwners: CoOwners[];
     loans: Loans[];
@@ -505,4 +511,10 @@ export interface PaidRefund {
     intrest: number;
     dateOfPayment: any;
     taxDeduction: any;
+}
+
+export interface SeventhProviso139 {
+    depAmtAggAmtExcd1CrPrYrFlg: number;
+    incrExpAggAmt2LkTrvFrgnCntryFlg: number;
+    incrExpAggAmt1LkElctrctyPrYrFlg: number;
 }

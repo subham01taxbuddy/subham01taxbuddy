@@ -1,0 +1,462 @@
+.btn-right {
+  float: right;
+}
+.disable-label {
+  color: black;
+}
+.top_padding_heading {
+  padding-top: 11px;
+}
+.left_padding_tb_cnt {
+  padding-left: 0;
+  padding-right: 0px;
+}
+/* // .lbl-right{
+//     float: right;
+//     padding-right: 20px
+// } */
+.expand-lbl-right {
+  float: right;
+  padding-right: 10px;
+}
+.active-card-wrapper {
+  display: flex;
+  position: relative;
+  justify-content: space-around;
+}
+.section-sm-90 {
+  padding-top: 90px;
+  padding-bottom: 50px;
+}
+.tbl-lbl-right {
+  text-align: right;
+}
+.accordion-border {
+  border-bottom: 1px solid #211f1f14;
+}
+.content-center-align {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+}
+
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+#main {
+  width: 100%;
+  display: flex;
+}
+#main .div1 {
+  width: 50%;
+  display: flex;
+}
+a:focus {
+  text-decoration: none;
+}
+table {
+  border-bottom: none;
+  border-top: none;
+}
+/*Rizwan 15 May 2019*/
+.accoTab {
+  width: 100%;
+  margin-top: 20px;
+  overflow-x: scroll;
+}
+.tpOfBx {
+  margin-top: -34px !important;
+}
+.txHdLf {
+  font-size: 18px;
+  text-align: left;
+  font-weight: bold;
+  margin-bottom: 15px;
+  margin-left: -14px;
+}
+.whieTx {
+  font-size: 17px !important;
+  color: #2f2b31 !important;
+  padding: 0px 0px 0px 0px !important;
+}
+.arRigt {
+  float: right;
+  margin-right: 0px;
+}
+.AdjAr1 {
+  float: right;
+  margin-right: -15px !important;
+}
+.AdjAr {
+  float: right;
+  margin-right: -7px !important;
+}
+.AdjAr2 {
+  position: relative;
+  left: 30px;
+}
+.mat-expansion-indicator {
+  display: none !important;
+}
+.rtNumb {
+  font-size: 17px !important;
+  color: #2f2b31 !important;
+  float: right;
+  margin-right: 25px;
+  min-width: 107px;
+  text-align: right;
+  /*  background-color: #cccccc; */
+}
+.rtNumb1 {
+  font-size: 17px !important;
+  color: #2f2b31 !important;
+  float: right;
+  min-width: 107px;
+  text-align: right;
+  /*  background-color: #cccccc; */
+  margin-top: -5px;
+  margin-right: 7px;
+}
+
+.mat-expansion-panel-header {
+  padding: 8px 5px 8px 20px;
+  border-radius: inherit;
+  background-color: #e9f5ff !important;
+  height: auto !important;
+}
+.mat-expansion-panel-header.mat-expanded,
+.mat-expansion-panel-header.mat-expanded:hover {
+  background: #cbe7ff !important;
+  height: 45px !important;
+}
+.mat-expansion-panel-body {
+  padding: 0 24px 16px;
+  background-color: #ffffff !important;
+}
+.icRup {
+  font-size: 20px !important;
+}
+
+.icRupA {
+  font-size: 20px !important;
+  margin-left: -20px;
+}
+
+.grBut {
+  /* width: 85px; */
+  line-height: 24px;
+  border-radius: 0px;
+  background: #39670b;
+  color: #fff;
+  text-transform: uppercase;
+  display: block;
+  font-size: 12px;
+  text-align: center;
+  margin-left: 10px;
+  border: #39670b solid 1px;
+  font-weight: 500;
+  float: left;
+  outline: none;
+  font-family: Avenir Book;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  margin-bottom: 15px;
+}
+
+.prvBut {
+  /* width: 85px; */
+  line-height: 24px;
+  border-radius: 0px;
+  background: #f5f5f5;
+  color: #000000;
+  text-transform: uppercase;
+  display: block;
+  font-size: 12px;
+  text-align: center;
+  margin-left: 10px;
+  border: #707070 solid 1px;
+  font-weight: 500;
+  float: left;
+  outline: none;
+  font-family: Avenir Book;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+.pri {
+  font-size: 14px;
+  font-weight: 700;
+  display: block;
+  color: #01a2fe;
+  margin: 20px 0px 0px 25px;
+}
+.perBx {
+  background-color: #f8f8f8 !important;
+  padding: 10px !important;
+  padding-top: 15px !important;
+}
+.tItX {
+  margin: 79px 0px 13px 0px !important;
+}
+.mvBtU {
+  margin: -10px 0px 0px 0px !important;
+}
+.txBt {
+  padding: 10px 0px 10px 0px;
+  border-bottom: 1px solid #dcdada;
+}
+.txLf {
+  font-weight: bold;
+  float: left;
+}
+.txMuLf {
+  margin: 0px 0px 0px 138px;
+  font-size: 16.5px;
+  display: block;
+}
+.incBx {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #c4c0c0;
+  padding: 2%;
+  margin-top: -16px;
+}
+.incBx1 {
+  width: 89%;
+  background-color: #ffffff;
+  border: 1px solid #c4c0c0;
+  padding: 2%;
+  margin: 5px 0px 20px 5px;
+}
+.inTex {
+  font-size: 17px;
+  font-weight: bold;
+  color: #000000;
+  margin: 5px 0px -10px 46px;
+  display: block;
+}
+.inNo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ba3131;
+  margin: -6px 0px 10px 57px;
+  display: block;
+}
+
+.inRef {
+  font-size: 22px;
+  font-weight: bold;
+  color: #698f34;
+  margin: -6px 0px 10px 57px;
+  display: block;
+}
+.paIncTx {
+  padding: 2%;
+  /* margin-right: 119px; */
+  margin-left: -5px;
+  color: #000000;
+  line-height: 25px;
+}
+.paIncTx1 {
+  color: #000000;
+  white-space: normal;
+  margin-top: 22px;
+  /* // line-height:30px;
+  // font-size:18px;
+  // padding-top:20px; */
+}
+.LkTx {
+  font-weight: bold;
+  color: #0f8cf8;
+}
+.lwBtDn {
+  margin: 25px 41px 0px 0px;
+}
+.bxHed {
+  padding: 8px;
+  background-color: #e2eaec;
+  color: #000000;
+  margin-top: 20px;
+  font-size: 15px;
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 992px) {
+  .pri {
+    margin: 20px 0px 0px -21px;
+  }
+  .txBt {
+    padding: 10px 0px 10px 0px;
+    border-bottom: 1px solid #dcdada;
+  }
+  .txMuLf {
+    margin: 0px 0px 0px 140px;
+  }
+  .inTex {
+    font-size: 17px;
+    font-weight: bold;
+    color: #000000;
+    margin: 5px 0px -10px 11px;
+    display: block;
+  }
+  .inNo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ba3131;
+    margin: -6px 0px 5px 30px;
+    display: block;
+  }
+  .inRef {
+    font-size: 22px;
+    font-weight: bold;
+    color: #698f34;
+    margin: -6px 0px 5px 30px;
+    display: block;
+  }
+}
+
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .pri {
+    margin: 20px 0px 0px -76px;
+  }
+  .txBt {
+    padding: 10px 0px 10px 0px;
+    border-bottom: 1px solid #dcdada;
+  }
+  .incBx {
+    width: 82%;
+    background-color: #ffffff;
+    border: 1px solid #c4c0c0;
+    padding: 2%;
+    margin-top: 21px;
+  }
+  .inTex {
+    font-size: 17px;
+    font-weight: bold;
+    color: #000000;
+    margin: 0px 0px -10px 11px;
+    display: block;
+  }
+  .inNo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ba3131;
+    margin: -6px 0px 0px 24px;
+    display: block;
+  }
+  .inRef {
+    font-size: 22px;
+    font-weight: bold;
+    color: #698f34;
+    margin: -6px 0px 0px 24px;
+    display: block;
+  }
+}
+@media only screen and (max-width: 767px) and (min-width: 0px) {
+  .pri {
+    margin: 10px 0px 15px 11px;
+  }
+  .txHdLf {
+    font-size: 18px;
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-left: 12px;
+    margin-top: 40px;
+  }
+  .txBt {
+    padding: 10px 0px 10px 0px;
+    border-bottom: 1px solid #dcdada;
+  }
+  .incBx {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #c4c0c0;
+    padding: 2%;
+    margin-top: 21px;
+  }
+  .inTex {
+    font-size: 17px;
+    font-weight: bold;
+    color: #000000;
+    margin: 0px 0px -10px 11px;
+    display: block;
+  }
+  .inNo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ba3131;
+    margin: -6px 0px 0px 24px;
+    display: block;
+  }
+  .inRef {
+    font-size: 22px;
+    font-weight: bold;
+    color: #698f34;
+    margin: -6px 0px 0px 24px;
+    display: block;
+  }
+  .paIncTx {
+    padding: 2%;
+    margin-right: 119px;
+    margin-left: -5px;
+    color: #000000;
+    line-height: 30px;
+    width: 100%;
+  }
+  .mvBtU {
+    margin: -41px 22px 0px 0px !important;
+    float: right;
+  }
+}
+@media only screen and (max-width: 500px) and (min-width: 0px) {
+  .txLf {
+    font-weight: bold;
+    float: left;
+    font-size: 14px;
+  }
+  .txMuLf {
+    margin: 0px 0px 0px 119px;
+    font-size: 14.5px;
+    display: block;
+    word-break: break-all;
+  }
+  .mat-expansion-panel {
+    display: block;
+    overflow-x: scroll;
+    width: 100%;
+  }
+}
+
+.incBx1 {
+  width: 89%;
+  background-color: #ffffff;
+  border: 1px solid #c4c0c0;
+  padding: 2%;
+  margin: 5px 0px 20px -14px;
+}
+
+.icRup {
+  font-size: 23px !important;
+}
+
+.lwBtDn {
+  margin: 25px 0px 0px 0px;
+}
+
+.icRup {
+  font-size: 23px !important;
+}
+
+.paIncTx1 {
+  margin-top: 25px;
+  margin-bottom: 41px;
+}
+
+/*Rizwan 15 May 2019*/

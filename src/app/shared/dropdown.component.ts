@@ -8,8 +8,8 @@ import { MatSelect } from '@angular/material';
     template: `
 
     <select #select (selectionChange)="onSelectChange($event)" [(ngModel)]="value" [style.width]="columnWidth">
-<option *ngFor="let item of values" [value]="item.countryCode">
-{{ item.countryName | titlecase }}
+<option *ngFor="let item of values" [value]="item.code">
+{{ item.name | titlecase }}
 </option>
 </select>
 `,
@@ -41,14 +41,14 @@ export class AgGridMaterialSelectEditorComponent implements OnInit, AgEditorComp
     values: [];
     params: ICellEditorParams;
     public value: string;
-     @ViewChild('select',{static: true,}) select;
+    @ViewChild('select', { static: true, }) select;
 
     constructor() { }
 
     ngOnInit() { }
 
     ngAfterViewInit() {
-         this.select.open();
+        // this.select.open();
     }
 
     isPopup(): boolean {

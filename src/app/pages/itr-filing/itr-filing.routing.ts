@@ -3,6 +3,8 @@ import { CustomerProfileComponent } from './customer-profile/customer-profile.co
 import { UsersComponent } from './users/users.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { ItrWizardComponent } from './itr-wizard/itr-wizard.component';
+import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
 
 const routes: Routes = [
     {
@@ -10,6 +12,9 @@ const routes: Routes = [
         children: [
             { path: 'users', component: UsersComponent },
             { path: 'customer-profile', component: CustomerProfileComponent },
+            { path: 'itr', component: ItrWizardComponent },
+            { path: 'acknowledgement', component: AcknowledgementComponent },
+
             { path: '', redirectTo: '/pages/itr-filing/users', pathMatch: 'full' }
         ]
     },

@@ -1,0 +1,175 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="content" style="width: 35%;padding-right: 20px;">
+    <div>
+        <span *ngFor="let docs of itrDocuments; let i=index">
+            <a href="javascript:;" (click)="getDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
+        </span>
+    </div>
+    <ngx-image-zoom *ngIf="docDetails.docType !== 'pdf'" [thumbImage]="docDetails.docUrl"
+        [fullImage]="docDetails.docUrl" [magnification]="1" [enableScrollZoom]="true" [enableLens]="true"
+        [lensWidth]="200">
+    </ngx-image-zoom>
+    <div *ngIf="docDetails.docType === 'pdf'">
+        <button ion-button (click)="incrementZoom(-0.1)">
+            -
+        </button>&nbsp;
+        <button ion-button (click)="incrementZoom(0.1)">
+            +
+        </button>
+        <pdf-viewer [src]="docDetails.docUrl" [zoom]="zoom" [original-size]="true" [autoresize]="true"
+            [render-text]="true" style="display: block;height: 100%">
+        </pdf-viewer>
+    </div>
+</div>
+<div class="content" style="width: 65%;">
+    <mat-accordion>
+        <mat-expansion-panel class="color-panel accordion-border" [expanded]="true">
+            <mat-expansion-panel-header>
+                <div class="card__title" style="font-size: 20px;">TDS on salary</div>
+            </mat-expansion-panel-header>
+            <div class="card__row">
+                <div class="card__col-xs-12 card__col-sm-8">This is TDS on salary deducted by your employer. Enter the
+                    amount from form 16 or
+                    26AS</div>
+                <div class="pull-right">
+                    <button type="button" class="btn" style="border: none;" (click)="onAddRow('ADD')">Add Row <i
+                            class="fa fa-plus"></i></button>
+                </div>
+            </div>
+
+            <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
+                <ag-grid-angular class="ag-theme-balham" [gridOptions]="onSalaryGridOptions"
+                    (rowClicked)="onSalaryRowClicked($event)">
+                </ag-grid-angular>
+            </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="color-panel accordion-border" [expanded]="false">
+            <mat-expansion-panel-header>
+                <div class="card__title" style="font-size: 20px;">TDS other than salary</div>
+            </mat-expansion-panel-header>
+            <div class="card__row">
+                <div class="card__col-xs-12 card__col-sm-8">This is TDS on incomes other than salary. Enter the amount
+                    from form 16A or 26AS</div>
+                <div class="pull-right">
+                    <button type="button" class="btn" style="border: none;"
+                        (click)="addTdsOtherThanSalary16A('ADD')">Add Row <i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+            <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
+                <ag-grid-angular class="ag-theme-balham" [gridOptions]="tdsOtherThanSalary16AGridOptions"
+                    (rowClicked)="tdsOtherThanSalary16ARowClicked($event)">
+                </ag-grid-angular>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="color-panel accordion-border" [expanded]="false">
+            <mat-expansion-panel-header>
+                <div class="card__title" style="font-size: 20px;">TDS other than salary 26QB</div>
+            </mat-expansion-panel-header>
+            <div class="card__row">
+                <div class="card__col-xs-12 card__col-sm-8">This is TDS on incomes other than salary. Enter the amount
+                    from form 16A or 26AS</div>
+                <div class="pull-right">
+                    <button type="button" class="btn" style="border: none;"
+                        (click)="addTdsOtherThanSalary26QB('ADD')">Add Row <i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+            <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
+                <ag-grid-angular class="ag-theme-balham" [gridOptions]="tdsOtherThanSalary26QBGridOptions"
+                    (rowClicked)="tdsOtherThanSalary26QBRowClicked($event)">
+                </ag-grid-angular>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="color-panel accordion-border" [expanded]="false">
+            <mat-expansion-panel-header>
+                <div class="card__title" style="font-size: 20px;">TCS</div>
+            </mat-expansion-panel-header>
+            <div class="card__row">
+                <div class="card__col-xs-12 card__col-sm-8">In case of some incomes the payer of income collects TCS
+                    from you. Enter the amount
+                    from form 16A or 26AS</div>
+                <div class="pull-right">
+                    <button type="button" class="btn" style="border: none;" (click)="addTcs('ADD')">Add Row <i
+                            class="fa fa-plus"></i></button>
+                </div>
+            </div>
+            <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
+                <ag-grid-angular class="ag-theme-balham" [gridOptions]="tcsGridOptions"
+                    (rowClicked)="tcsRowClicked($event)">
+                </ag-grid-angular>
+            </div>
+        </mat-expansion-panel>
+
+
+        <mat-expansion-panel class="color-panel accordion-border" [expanded]="false">
+            <mat-expansion-panel-header>
+                <div class="card__title" style="font-size: 20px;">Advance and self assesment tax</div>
+            </mat-expansion-panel-header>
+            <div class="card__row">
+                <div class="card__col-xs-12 card__col-sm-8">Please enter the amount of advance tax or self assessment
+                    tax paid</div>
+                <div class="pull-right">
+                    <button type="button" class="btn" style="border: none;" (click)="addOtherThanTdsTcs('ADD')">Add Row
+                        <i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+            <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
+                <ag-grid-angular class="ag-theme-balham" [gridOptions]="otherThanTdsTcsGridOptions"
+                    (rowClicked)="otherThanTdsTcsRowClicked($event)">
+                </ag-grid-angular>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <div class="pull-right">
+        <button class="btn long-btn" style="border: none;" (click)="saveAndContinue()">Save And Continue
+        </button>
+    </div>
+    <!--  <hr>
+
+
+    <hr>
+
+    <h2><span class="card__title" style="padding:10px; font-size: 20px;">TDS other than salary 26QB</span>
+        <a href="javascript:;" class="fR action_icon" title="Add" (click)="addTdsOtherThanSalary26QB('ADD')">
+            <button type="button" class="btn" style="border: none;">Add Row <i class="fa fa-plus"></i></button>
+        </a>
+    </h2>
+
+    <p>This is TDS on incomes other than salary. Enter the amount from form 16A or 26AS</p>
+    <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
+        <ag-grid-angular class="ag-theme-balham" [gridOptions]="tdsOtherThanSalary26QBGridOptions"
+            (rowClicked)="tdsOtherThanSalary26QBRowClicked($event)">
+        </ag-grid-angular>
+    </div>
+    <hr> -->
+
+    <!-- <h2><span class="card__title" style="padding:10px; font-size: 20px;">TCS</span>
+        <a href="javascript:;" class="fR action_icon" title="Add" (click)="addTcs('ADD')">
+            <button type="button" class="btn" style="border: none;">Add Row <i class="fa fa-plus"></i></button>
+        </a>
+    </h2>
+
+    <p>In case of some incomes the payer of income collects TCS from you. Enter the amount
+        from form 16A or 26AS</p>
+    <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
+        <ag-grid-angular class="ag-theme-balham" [gridOptions]="tcsGridOptions" (rowClicked)="tcsRowClicked($event)">
+        </ag-grid-angular>
+    </div>
+
+    <hr> -->
+
+    <!-- <h2><span class="card__title" style="padding:10px; font-size: 20px;">Advance and self assesment tax.</span>
+        <a href="javascript:;" class="fR action_icon" title="Add" (click)="addOtherThanTdsTcs('ADD')">
+            <button type="button" class="btn" style="border: none;">Add Row <i class="fa fa-plus"></i></button>
+        </a>
+    </h2>
+
+    <p>Please enter the amount of advance tax or self assessment tax paid.</p>
+    <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
+        <ag-grid-angular class="ag-theme-balham" [gridOptions]="otherThanTdsTcsGridOptions"
+            (rowClicked)="otherThanTdsTcsRowClicked($event)">
+        </ag-grid-angular>
+    </div> -->
+</div>

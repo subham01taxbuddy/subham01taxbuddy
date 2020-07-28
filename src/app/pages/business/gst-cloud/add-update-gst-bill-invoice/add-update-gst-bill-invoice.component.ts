@@ -227,11 +227,13 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
 
   getS3Image(filename) {
+    console.log('getS3Image fileName: ', filename);
     if (filename) {
       this.imageLoader = true;
       this.fileType = filename.split('.').pop();
       Storage.get(filename)
         .then(result => {
+          console.log('getS3Image fileName result: ', result);
           this.invoiceData.invoiceDTO.s3InvoiceImageUrl = result;
           this.imageLoader = false;
           this.s3FilePath = this.invoiceData.invoiceDTO.s3InvoiceImageUrl

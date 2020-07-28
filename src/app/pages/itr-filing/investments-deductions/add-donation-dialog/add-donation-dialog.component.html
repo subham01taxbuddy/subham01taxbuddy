@@ -1,0 +1,281 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<h1 mat-dialog-title>{{data.title}}</h1>
+<!-- <button type="button" class="close" style="cursor: pointer"
+  (click)="dialogRef.close()">&times;</button> -->
+
+<form [formGroup]="generalDonationForm">
+  <mat-dialog-content>
+
+    <div class="row">
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Type of donee</mat-label>
+          <mat-select (selectionChange)="displayTooltip()" matTooltip="{{donationToolTip}}"
+            matTooltipClass="tab-tooltip" matTooltipPosition="above" placeholder="Type of donee"
+            formControlName="schemeCode" required>
+            <mat-option *ngFor="let dropdown of otherDonationToDropdown" [value]="dropdown.value"
+              matTooltip="{{dropdown.label}}" matTooltipClass="tab-tooltip" matTooltipPosition="above">
+              {{ dropdown.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Amount in Cash</mat-label>
+          <input type="number" formControlName="amountInCash" matInput placeholder="Amount in Cash" name="amount"
+            required class="input-field" maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+          <mat-error *ngIf="generalDonationForm.controls['amountInCash'].hasError('pattern')">
+            Enter
+            positive amount without decimal.</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Amount Other Than Cash</mat-label>
+          <input type="number" formControlName="amountOtherThanCash" matInput placeholder="Amount Other Than Cash"
+            name="amount" required class="input-field" maxlength="14"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+          <mat-error *ngIf="generalDonationForm.controls['amountOtherThanCash'].hasError('pattern')">
+            Enter
+            positive amount without decimal.</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Name of donee</mat-label>
+          <input formControlName="name" matInput placeholder="Name of donee" name="name" class="input-field"
+            maxlength="125" required type="text" trim>
+          <mat-error *ngIf="generalDonationForm.controls['name'].hasError('pattern')">
+            Name should be character only</mat-error>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Address</mat-label>
+          <input formControlName="address" matInput currencyMask placeholder="Address" name="Address" maxlength="200"
+            class="input-field" required type="text" trim>
+        </mat-form-field>
+      </div>
+
+
+
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>PIN</mat-label>
+          <input formControlName="pinCode" matInput currencyMask placeholder="PIN" name="Pin" class="input-field"
+            maxlength="6" minlength="6" required type="text" trim
+            (blur)="getData(generalDonationForm.controls['pinCode'].value)">
+          <mat-error
+            *ngIf="generalDonationForm.controls['pinCode'].hasError('pattern') || generalDonationForm.controls['pinCode'].hasError('minlength') || generalDonationForm.controls['pinCode'].hasError('maxlength')">
+            PIN
+            should be numeric and having 6 digits.</mat-error>
+        </mat-form-field>
+      </div>
+
+
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>City/Taluka/District</mat-label>
+          <input formControlName="city" matInput placeholder="City/Taluka/District" name="city" class="input-field"
+            maxlength="50" required type="text" trim>
+          <mat-error *ngIf="generalDonationForm.controls['city'].hasError('pattern')">
+            Enter
+            valid city name.</mat-error>
+        </mat-form-field>
+      </div>
+
+
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>State</mat-label>
+          <mat-select placeholder="State" name="state" formControlName="state" required>
+            <mat-option>Select One</mat-option>
+            <mat-option *ngFor="let state of stateDropdown;let i=index" [value]="state.stateCode">
+              {{state.stateName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>PAN of done</mat-label>
+          <input matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
+            matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="panNumber" matInput currencyMask
+            placeholder="PAN of donee" name="panNumber" class="input-field" maxlength="10" minlength="10" required
+            type="text" trim upperCase>
+          <mat-hint
+            *ngIf="data.donationType!==null && data.donationType!=='' && data.donationType!==undefined && data.donationType === 'OTHER'">
+            In case
+            of funds set by govt as described in section 80G(2), please Use PAN
+            as 'GGGGG0000G'</mat-hint>
+          <mat-error *ngIf="generalDonationForm.controls['panNumber'].hasError('pattern')">
+            Enter
+            valid PAN (e.g XXXXX1234X)</mat-error>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" tabindex="1" (click)="saveGeneralDonation()">Save</button>
+    <button mat-raised-button tabindex="-1" (click)="dialogRef.close()">Cancel</button>
+  </mat-dialog-actions>
+</form>
+
+
+
+
+
+
+<!-- <div class="modal-header header-common-style">
+  <button type="button" class="close" style="cursor: pointer" (click)="dialogRef.close()">&times;</button>
+  <h4 class="modal-title">{{data.title}}</h4>
+</div> -->
+
+
+<!-- <ng-container>
+  <mat-dialog-content>
+    <form [formGroup]="generalDonationForm">
+      <div class="dialog-min-height">
+        <div class="row">
+          <div class="col-md-4 col-xs-12">
+            <mat-form-field appearance="outline">
+              <mat-select (selectionChange)="displayTooltip()" matTooltip="{{donationToolTip}}"
+                matTooltipClass="tab-tooltip" matTooltipPosition="above" placeholder="Type of donee"
+                formControlName="schemeCode" required>
+                <mat-option *ngFor="let dropdown of otherDonationToDropdown" [value]="dropdown.value"
+                  matTooltip="{{dropdown.label}}" matTooltipClass="tab-tooltip" matTooltipPosition="above">
+                  {{ dropdown.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4 col-xs-12">
+            <mat-form-field appearance="outline">
+              <mat-icon matPrefix> &#8377;</mat-icon>
+              <input type="number" formControlName="amountInCash" matInput placeholder="Amount in Cash" name="amount"
+                required class="input-field" maxlength="14"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+              <mat-error *ngIf="generalDonationForm.controls['amountInCash'].hasError('pattern')">
+                Enter
+                positive amount without decimal.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4 col-xs-12">
+            <mat-form-field appearance="outline">
+              <mat-icon matPrefix> &#8377;</mat-icon>
+              <input type="number" formControlName="amountOtherThanCash" matInput placeholder="Amount Other Than Cash"
+                name="amount" required class="input-field" maxlength="14"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+              <mat-error *ngIf="generalDonationForm.controls['amountOtherThanCash'].hasError('pattern')">
+                Enter
+                positive amount without decimal.</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-xs-12">
+            <mat-form-field appearance="outline">
+              <input formControlName="name" matInput placeholder="Name of donee" name="name" class="input-field"
+                maxlength="125" required type="text" trim>
+              <mat-error *ngIf="generalDonationForm.controls['name'].hasError('pattern')">
+                Name
+                should be character only</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4 col-xs-12">
+            <mat-form-field appearance="outline">
+              <input formControlName="address" matInput currencyMask placeholder="Address" name="Address"
+                maxlength="200" class="input-field" required type="text" trim>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4 col-xs-12">
+            <mat-form-field appearance="outline">
+              <input formControlName="pinCode" matInput currencyMask placeholder="PIN" name="Pin" class="input-field"
+                maxlength="6" minlength="6" required type="text" trim
+                (blur)="getData(generalDonationForm.controls['pinCode'].value)">
+              <mat-error
+                *ngIf="generalDonationForm.controls['pinCode'].hasError('pattern') || generalDonationForm.controls['pinCode'].hasError('minlength') || generalDonationForm.controls['pinCode'].hasError('maxlength')">
+                PIN
+                should be numeric and having 6 digits.</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-xs-12">
+            <mat-form-field appearance="outline">
+              <input formControlName="city" matInput placeholder="City/Taluka/District" name="city" class="input-field"
+                maxlength="50" required type="text" trim>
+              <mat-error *ngIf="generalDonationForm.controls['city'].hasError('pattern')">
+                Enter
+                valid city name.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4 col-xs-12">
+            <mat-form-field appearance="outline">
+              <mat-select placeholder="State" name="state" formControlName="state" required>
+                <mat-option>Select One</mat-option>
+                <mat-option *ngFor="let state of stateDropdown;let i=index" [value]="state.stateCode">
+                  {{state.stateName}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4 col-xs-12">
+            <mat-form-field appearance="outline">
+              <input matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
+                matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="panNumber" matInput
+                currencyMask placeholder="PAN of donee" name="panNumber" class="input-field" maxlength="10"
+                minlength="10" required type="text" trim upperCase>
+              <mat-hint
+                *ngIf="data.donationType!==null && data.donationType!=='' && data.donationType!==undefined && data.donationType === 'OTHER'">
+                In case
+                of funds set by govt as described in section 80G(2), please Use PAN
+                as 'GGGGG0000G'</mat-hint>
+              <mat-error *ngIf="generalDonationForm.controls['panNumber'].hasError('pattern')">
+                Enter
+                valid PAN (e.g XXXXX1234X)</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 col-xs-12 BtTpTst">
+          <div class="sub_btn ">
+            <button type="submit" class="btn save" (click)="saveGeneralDonation()">Save</button>
+            <button type="button" class="btn cancel" (click)="dialogRef.close()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </mat-dialog-content>
+</ng-container> -->

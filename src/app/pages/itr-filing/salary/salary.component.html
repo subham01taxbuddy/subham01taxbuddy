@@ -1,0 +1,149 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div>
+    <form [formGroup]="employerDetailsFormGroup">
+        <mat-accordion>
+            <mat-expansion-panel class="color-panel accordion-border" [expanded]="true">
+                <mat-expansion-panel-header>
+                    <div class="card__title" style="font-size: 20px;">Salary Income</div>
+                </mat-expansion-panel-header>
+
+                <div class="content vertLine" style="width: 35%;padding-right: 20px;">
+                    <div>
+                        <span *ngFor="let form16 of getAllForm16s('FORM_16'); let i=index">
+                            <a href="javascript:;" (click)="getForm16Url(i)">{{form16.fileName}}</a> &nbsp;&nbsp;
+                        </span>
+                    </div>
+                    <ngx-image-zoom *ngIf="form16DocDetails.docType !== 'pdf'" [thumbImage]="form16DocDetails.docUrl"
+                        [fullImage]="form16DocDetails.docUrl" [magnification]="1" [enableScrollZoom]="true"
+                        [enableLens]="true" [lensWidth]="200">
+                    </ngx-image-zoom>
+                    <div *ngIf="form16DocDetails.docType === 'pdf'">
+                        <button ion-button (click)="incrementZoom(-0.1)">
+                            -
+                        </button>&nbsp;
+                        <button ion-button (click)="incrementZoom(0.1)">
+                            +
+                        </button>
+                        <pdf-viewer [src]="form16DocDetails.docUrl" [zoom]="zoom" [original-size]="true"
+                            [autoresize]="true" [render-text]="true" style="display: block;height: 100%">
+                        </pdf-viewer>
+                    </div>
+                </div>
+                <div class="content" style="width: 65%;" *ngIf="salaryView === 'TABLE'">
+                    <div>
+                        <button class="btn long-btn" style="border: none;" (click)=" addEmployer(null)">Add Employer
+                        </button>
+                    </div>
+                    <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
+                        <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
+                            [gridOptions]="employersGridOptions" (rowClicked)="onEmployerRowClicked($event)">
+                        </ag-grid-angular>
+                    </div>
+                </div>
+                <div class="content" style="width: 65%;" *ngIf="salaryView === 'FORM'">
+                    <div class="card__title" style="padding:10px; font-size: 20px;">Employer Details</div>
+                    <div class="card__row">
+                        <div class="card__col-xs-12 card__col-sm-8">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Name of the employer</mat-label>
+                                <input type="text" trim matInput placeholder="Name of the employer"
+                                    name="NameOfEmployer" class="input-field" formControlName="employerName"
+                                    maxlength="125">
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-xs-12 card__col-sm-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Employer TAN</mat-label>
+                                <input type="text" trim
+                                    matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number."
+                                    matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput upperCase
+                                    placeholder="TAN" name="TAN" class="input-field" formControlName="employerTAN"
+                                    maxlength="10">
+                                <mat-error *ngIf="employerDetailsFormGroup.controls['employerTAN'].hasError('pattern')">
+                                    Enter
+                                    valid TAN (e.g XXXX12345X)
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <!-- <div class="card__col-xs-12 card__col-sm-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Employer PAN</mat-label>
+                                <input type="text" trim
+                                    matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
+                                    matTooltipClass="tab-tooltip" matTooltipPosition="above" class="input-field"
+                                    upperCase matInput placeholder="PAN" name="PAN" formControlName="employerPAN"
+                                    maxlength="10">
+                                <mat-error *ngIf="employerDetailsFormGroup.controls['employerPAN'].hasError('pattern')">
+                                    Enter valid PAN (e.g XXXXX1234X)
+                                </mat-error>
+                            </mat-form-field>
+                        </div> -->
+
+                    </div>
+                    <!--  <div class="card__row">
+                        <div class="card__col-xs-12 card__col-sm-8">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Address of employer</mat-label>
+                                <input type="text" trim matInput placeholder="Address of employer"
+                                    name="AddressOfEmployer" class="input-field" formControlName="address"
+                                    maxlength="200">
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-xs-12 card__col-sm-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Employer TAN</mat-label>
+                                <input type="text" trim
+                                    matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number."
+                                    matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput upperCase
+                                    placeholder="TAN" name="TAN" class="input-field" formControlName="employerTAN"
+                                    maxlength="10">
+                                <mat-error *ngIf="employerDetailsFormGroup.controls['employerTAN'].hasError('pattern')">
+                                    Enter
+                                    valid TAN (e.g XXXX12345X)
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+                    <hr>
+                    <div class="card__title" style="padding:10px; font-size: 20px;">Salary Details</div>
+                    <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
+                        <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
+                            [gridOptions]="salaryGridOptions" (rowClicked)="onSalaryRowClicked($event)">
+                        </ag-grid-angular>
+                    </div>
+                    <hr>
+                    <div class="card__title" style="padding:10px; font-size: 20px;">Exempt Allowance</div>
+                    <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
+                        <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
+                            [gridOptions]="summaryAllowGridOptions" (rowClicked)="onSummaryAllowRowClicked($event)">
+                        </ag-grid-angular>
+                    </div>
+                    <hr>
+                    <div class="card__title" style="padding:10px; font-size: 20px;">Deductions u/s 16</div>
+                    <div class="card__row">
+                        <div class="card__col-xs-12 card__col-sm-6">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Entertainment Allowance</mat-label>
+                                <input type="number" trim matInput placeholder="Entertainment Allowance u/s 16(ii)"
+                                    name="entertainmentAllow" class="input-field" formControlName="entertainmentAllow">
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-xs-12 card__col-sm-6">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Professional Tax</mat-label>
+                                <input type="number" trim class="input-field" matInput
+                                    placeholder="Professional Tax u/s 16(iii)" name="professionalTax"
+                                    formControlName="professionalTax" maxlength="10">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <a class="btn btn-cancel" (click)="cancelEmployer()">Cancel</a>
+                        <button class="btn long-btn" style="border: none;" (click)="saveEmployerDetails()">Save
+                        </button>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </form>
+</div>
