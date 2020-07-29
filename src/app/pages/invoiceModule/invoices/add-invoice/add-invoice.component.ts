@@ -115,7 +115,10 @@ export class AddInvoiceComponent implements OnInit {
       paymentLink: null,
       invoiceId: null,
       isLinkInvalid: false,
-      amountInWords: ''
+      amountInWords: '',
+      inovicePreparedBy: '',
+      ifaLeadClient: '',
+      paymentDate: ''
     })
   }
 
@@ -227,12 +230,13 @@ export class AddInvoiceComponent implements OnInit {
           }]
           this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))    //use for clear invoice table fields
 
-          // if (key === 'fromSelect') {
-          if (this.invoiceDetail.length == 1 || this.invoiceDetail.length > 1) {
-            this.setUserAddressInfo('InvoiceData')                  //set 1st invoice field into user profile 
-          } else {
+          // // if (key === 'fromSelect') {
+          // if (this.invoiceDetail.length == 1 || this.invoiceDetail.length > 1) {
+          //   this.setUserAddressInfo('InvoiceData')                  //set 1st invoice field into user profile 
+          // } else {
             this.setUserAddressInfo('GSTProfileData')               //set user GST profile field into user profile 
-          }
+          // }
+          
           // }
 
         }, error => {
@@ -254,34 +258,8 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.controls['modeOfPayment'].setValue('Online');
 
        this.setInitiatedData()
-      // this.invoiceForm.controls['paymentCollectedBy'].setValidators(null);
-      // this.invoiceForm.controls['paymentCollectedBy'].updateValueAndValidity();
-      // this.invoiceForm.controls['dateOfReceipt'].setValidators(null);
-      // this.invoiceForm.controls['dateOfReceipt'].updateValueAndValidity();
-      // this.invoiceForm.controls['dateOfDeposit'].setValidators(null);
-      // this.invoiceForm.controls['dateOfDeposit'].updateValueAndValidity();
-      // this.invoiceForm.controls['billTo'].setValidators(null);
-      // this.invoiceForm.controls['billTo'].updateValueAndValidity();
-      // this.invoiceForm.controls['addressLine1'].setValidators(null);
-      // this.invoiceForm.controls['addressLine1'].updateValueAndValidity();
-      // this.invoiceForm.controls['addressLine2'].setValidators(null);
-      // this.invoiceForm.controls['addressLine2'].updateValueAndValidity();
-      // this.invoiceForm.controls['pincode'].setValidators(null);
-      // this.invoiceForm.controls['pincode'].updateValueAndValidity();
-      // this.invoiceForm.controls['state'].setValidators(null);
-      // this.invoiceForm.controls['state'].updateValueAndValidity();
-      // this.invoiceForm.controls['city'].setValidators(null);
-      // this.invoiceForm.controls['city'].updateValueAndValidity();
-      // this.invoiceForm.controls['country'].setValidators(null);
-      // this.invoiceForm.controls['country'].updateValueAndValidity();
-      // this.invoiceForm.controls['gstin'].setValidators(null);
-      // this.invoiceForm.controls['gstin'].updateValueAndValidity();
-      // this.invoiceForm.controls['phone'].setValidators(null);
-      // this.invoiceForm.controls['phone'].updateValueAndValidity();
-      // this.invoiceForm.controls['email'].setValidators(null);
-      // this.invoiceForm.controls['email'].updateValueAndValidity();
-
-      //this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))
+      let smeInfo = JSON.parse(localStorage.getItem('UMD'));
+      this.invoiceForm.controls['inovicePreparedBy'].setValue(smeInfo.USER_UNIQUE_ID)
 
       let blankTableRow = [{
         itemDescription: '',
@@ -328,6 +306,7 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   setUserAddressInfo(type) {
+    debugger
     if (type === 'GSTProfileData') {
       const param = '/user/profile/' + this.userInfo[0].userId;
       this.userService.getMethodInfo(param).subscribe((result: any) => {
@@ -337,6 +316,9 @@ export class AddInvoiceComponent implements OnInit {
           this.invoiceForm.controls['billTo'].setValue(name);
           this.invoiceForm.controls['phone'].setValue(result.mobileNumber ? result.mobileNumber : '');
           this.invoiceForm.controls['email'].setValue(result.emailAddress ? result.emailAddress : '');
+
+          let smeInfo = JSON.parse(localStorage.getItem('UMD'));
+          this.invoiceForm.controls['inovicePreparedBy'].setValue(smeInfo.USER_UNIQUE_ID)
         }
         //this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
       }, error => {
@@ -348,17 +330,32 @@ export class AddInvoiceComponent implements OnInit {
     else if (type === 'InvoiceData') {
       debugger
       console.log('InvoiceDetail: ', this.invoiceDetail[0])
-      this.invoiceForm.controls['billTo'].setValue(this.invoiceDetail[0].billTo);
-      this.invoiceForm.controls['addressLine1'].setValue(this.invoiceDetail[0].addressLine1);
-      this.invoiceForm.controls['addressLine2'].setValue(this.invoiceDetail[0].addressLine2 ? this.invoiceDetail[0].addressLine2 : '');
-      this.invoiceForm.controls['pincode'].setValue(this.invoiceDetail[0].pincode);
-      this.invoiceForm.controls['city'].setValue(this.invoiceDetail[0].city);
-      this.invoiceForm.controls['state'].setValue(this.invoiceDetail[0].state);
-      this.invoiceForm.controls['country'].setValue(this.invoiceDetail[0].country);
-      this.invoiceForm.controls['gstin'].setValue(this.invoiceDetail[0].gstin ? this.invoiceDetail[0].gstin : '');
-      this.invoiceForm.controls['phone'].setValue(this.invoiceDetail[0].phone);
-      this.invoiceForm.controls['email'].setValue(this.invoiceDetail[0].email);
-
+      // this.invoiceForm.controls['billTo'].setValue(this.invoiceDetail[0].billTo);
+      // this.invoiceForm.controls['addressLine1'].setValue(this.invoiceDetail[0].addressLine1);
+      // this.invoiceForm.controls['addressLine2'].setValue(this.invoiceDetail[0].addressLine2 ? this.invoiceDetail[0].addressLine2 : '');
+      // this.invoiceForm.controls['pincode'].setValue(this.invoiceDetail[0].pincode);
+      // this.invoiceForm.controls['city'].setValue(this.invoiceDetail[0].city);
+      // this.invoiceForm.controls['state'].setValue(this.invoiceDetail[0].state);
+      // this.invoiceForm.controls['country'].setValue(this.invoiceDetail[0].country);
+      // this.invoiceForm.controls['gstin'].setValue(this.invoiceDetail[0].gstin ? this.invoiceDetail[0].gstin : '');
+      // this.invoiceForm.controls['phone'].setValue(this.invoiceDetail[0].phone);
+      // this.invoiceForm.controls['email'].setValue(this.invoiceDetail[0].email);
+      // this.invoiceForm.controls['ifaLeadClient'].setValue(this.invoiceDetail[0].ifaLeadClient);
+      this.invoiceForm.patchValue(this.invoiceDetail[0])
+      debugger
+      console.log('Invoice Form: ', this.invoiceForm)
+        let smeInfo = JSON.parse(localStorage.getItem('UMD'));
+        this.invoiceForm.controls['inovicePreparedBy'].setValue(smeInfo.USER_UNIQUE_ID)
+        console.log('Invoice inovicePreparedBy: ', this.invoiceForm.controls['inovicePreparedBy'].value)
+      // if(this.invoiceForm.controls['paymentStatus'].value === "Paid"){    
+      //   this.invoiceForm.controls['paymentDate'].setValidators(Validators.required);
+      //   this.invoiceForm.controls['paymentDate'].updateValueAndValidity();
+      // }else{
+      //   this.invoiceForm.controls['paymentDate'].reset();
+      //   this.invoiceForm.controls['paymentDate'].setValidators(null);
+      //   this.invoiceForm.controls['paymentDate'].updateValueAndValidity();
+      // }
+  
       console.log('invoiceForm: ', this.invoiceForm)
       this.showTaxRelatedState(this.invoiceForm.controls['state'].value);
     }
@@ -652,16 +649,6 @@ export class AddInvoiceComponent implements OnInit {
 
   }
 
-  // getCountryDropdown() {
-  //   const param = '/fnbmaster/countrymaster?sort=countryId,asc';
-  //   this.userService.getMethod(param).subscribe((result: any) => {
-  //     this.countryDropdown = result;
-
-
-  //     sessionStorage.setItem('COUNTRY_CODE', JSON.stringify(this.countryDropdown));
-  //   }, error => {
-  //   });
-  // }
 
   changeCountry(country) {
     if (country === 'INDIA') {
@@ -694,6 +681,7 @@ export class AddInvoiceComponent implements OnInit {
         }
       });
     }
+    console.log('invoiceForm control value: ', this.invoiceForm.value)
   }
 
   setDueDate(invoiceDate) {
@@ -908,7 +896,6 @@ export class AddInvoiceComponent implements OnInit {
     this.addNewUser = true;
     this.invoiceInfoCalled();
     this.getUserInvoiceList();
-   
   }
 
 

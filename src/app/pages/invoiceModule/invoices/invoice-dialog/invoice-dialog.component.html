@@ -102,6 +102,18 @@
             </mat-form-field>
         </div>
 
+        <div class="card__col-lg-4">
+            <!-- <label><b>SAC Code: </b></label> -->
+            <mat-form-field appearance="outline">
+                <mat-label>IFA / Lead client</mat-label>
+                <input matInput formControlName="ifaLeadClient" placeholder="IFA / Lead client"
+                    autocomplete="off" maxlength="30" required>
+                <mat-error *ngIf="invoiceEditForm.controls['ifaLeadClient'].hasError('required')">Enter
+                    IFA / Lead client info
+                </mat-error>
+            </mat-form-field>
+        </div>
+
         <div class="card__col-xs-4 card__col-sm-4">
             <mat-form-field appearance="outline">
                 <mat-label>Bill to</mat-label>
@@ -218,7 +230,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>Payment Status</mat-label>
                 <mat-select formControlName="paymentStatus" matInput placeholder="Payment status" autocomplete="off"
-                    required>
+                    required (selectionChange)="setAmntRecivedValidator($event.value)">
                     <mat-option *ngFor="let pay of paymentStatus" [value]="pay.value">
                         <!--stateCode-->
                         {{pay.label}}
@@ -226,6 +238,17 @@
                 </mat-select>
                 <mat-error *ngIf="invoiceEditForm.controls['paymentStatus'].hasError('required')">Select payment status
                 </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="card__col-lg-4" *ngIf="invoiceEditForm.controls['paymentStatus'].value === 'Paid'">
+            <mat-form-field appearance="outline">
+                <mat-label>Amount receipt with Date</mat-label>
+                <input matInput formControlName="paymentDate" [matDatepicker]="picker2" [max]="maxDate"
+                    autocomplete="off">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error *ngIf="invoiceEditForm.controls['paymentDate'].hasError('required')">Select Amount receipt date</mat-error>
             </mat-form-field>
         </div>
 

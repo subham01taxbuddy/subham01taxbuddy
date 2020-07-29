@@ -241,6 +241,28 @@
                             Invoice date</mat-error>
                     </mat-form-field>
                 </div>
+
+                <div class="card__col-lg-4">
+                    <!-- <label><b>SAC Code: </b></label> -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>IFA / Lead client</mat-label>
+                        <input matInput formControlName="ifaLeadClient" placeholder="IFA / Lead client"
+                            autocomplete="off" maxlength="30" required>
+                        <mat-error *ngIf="invoiceForm.controls['ifaLeadClient'].hasError('required')">Enter
+                            IFA / Lead client info
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-4" *ngIf="this.invoiceForm.controls['paymentStatus'].value === 'Paid'">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Amount receipt with Date</mat-label>
+                        <input matInput formControlName="paymentDate" [matDatepicker]="picker2" [max]="maxDate"
+                            autocomplete="off">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error *ngIf="invoiceForm.controls['paymentDate'].hasError('required')">Select Amount receipt date</mat-error>
+                    </mat-form-field>
+                </div>
             </div>
         </mat-card>
         <br>

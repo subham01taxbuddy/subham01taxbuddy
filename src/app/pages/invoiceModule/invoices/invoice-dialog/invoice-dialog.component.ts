@@ -85,7 +85,10 @@ export class InvoiceDialogComponent implements OnInit {
       paymentLink: null,
       invoiceId: null,
       isLinkInvalid: false,
-      amountInWords: ''
+      amountInWords: '',
+      inovicePreparedBy: '',
+      ifaLeadClient: '',
+      paymentDate: ''
     })
 
   }
@@ -163,6 +166,18 @@ export class InvoiceDialogComponent implements OnInit {
         }
       });
     }
+  }
+
+  setAmntRecivedValidator(payStatus){
+      if(payStatus === 'Paid'){
+        this.invoiceEditForm.controls['paymentDate'].setValidators(Validators.required);
+        this.invoiceEditForm.controls['paymentDate'].updateValueAndValidity();
+      }
+      else{
+        this.invoiceEditForm.controls['paymentDate'].reset();
+        this.invoiceEditForm.controls['paymentDate'].setValidators(null);
+        this.invoiceEditForm.controls['paymentDate'].updateValueAndValidity();
+      }
   }
 
   updateInvoice() {

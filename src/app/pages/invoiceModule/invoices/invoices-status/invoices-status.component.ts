@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, LOCALE_ID, Output, EventEmitter } from '@ang
 import { GridOptions } from 'ag-grid-community';
 import { UserMsService } from 'app/services/user-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
-import { formatDate } from '@angular/common';
+import { formatDate, DatePipe } from '@angular/common';
 import { MatDialog, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material';
 import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.component';
 import { UtilsService } from 'app/services/utils.service';
@@ -28,6 +28,7 @@ import { environment } from 'environments/environment';
   selector: 'app-invoices-status',
   templateUrl: './invoices-status.component.html',
   styleUrls: ['./invoices-status.component.css'],
+  providers: [DatePipe]
   // providers: [
   //   { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
   //   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
@@ -46,7 +47,7 @@ export class InvoicesStatusComponent implements OnInit {
 
   constructor(private userMsService: UserMsService, private _toastMessageService: ToastMessageService,
     @Inject(LOCALE_ID) private locale: string, private userService: UserMsService, private dialog: MatDialog,
-    private utilService: UtilsService, private router: Router, private fb: FormBuilder) {
+    private utilService: UtilsService, private router: Router, private fb: FormBuilder, private datePipe: DatePipe) {
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.invoicesCreateColoumnDef(),
@@ -83,9 +84,10 @@ export class InvoicesStatusComponent implements OnInit {
 
   createRowData(userInvoices) {
     console.log('userInvoices: ', userInvoices)
+    console.log('paymentDate',this.datePipe.transform(userInvoices[0].paymentDate, 'dd/MM/yyyy'));
     var invoices = [];
     for (let i = 0; i < userInvoices.length; i++) {
-      let updateInvoice = Object.assign({}, userInvoices[i], { userId: userInvoices[i].userId, billTo: userInvoices[i].billTo, phone: userInvoices[i].phone, email: userInvoices[i].email, invoiceNo: userInvoices[i].invoiceNo, invoiceDate: userInvoices[i].invoiceDate, modeOfPayment: userInvoices[i].modeOfPayment, paymentStatus: userInvoices[i].paymentStatus })
+      let updateInvoice = Object.assign({}, userInvoices[i], { userId: userInvoices[i].userId, billTo: userInvoices[i].billTo, phone: userInvoices[i].phone, email: userInvoices[i].email, invoiceNo: userInvoices[i].invoiceNo, invoiceDate: userInvoices[i].invoiceDate, modeOfPayment: userInvoices[i].modeOfPayment, paymentStatus: userInvoices[i].paymentStatus, purpose: userInvoices[i].itemList[0].itemDescription, invoicePrpardBy: userInvoices[i].inovicePreparedBy, ifaLeadClient: userInvoices[i].ifaLeadClient, amntReceiptDate: this.datePipe.transform(userInvoices[i].paymentDate, 'dd/MM/yyyy') })
       invoices.push(updateInvoice)
     }
     console.log('user invoices: ', invoices);
@@ -193,6 +195,49 @@ export class InvoicesStatusComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
+      },
+      {
+        headerName: 'Purpose',
+        field: 'purpose',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' }
+      },
+      {
+        headerName: 'Invoice Prepared by',
+        field: 'invoicePrpardBy',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'IFA / Lead Client',
+        field: 'ifaLeadClient',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Amount receipt with Date',
+        field: 'amntReceiptDate',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        // filter: "agTextColumnFilter",
+        // filterParams: {
+        //   filterOptions: ["contains", "notContains"],
+        //   debounceMs: 0
+        // }
       },
       {
         headerName: 'Edit',
