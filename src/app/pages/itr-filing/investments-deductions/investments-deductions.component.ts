@@ -4192,8 +4192,8 @@ export class InvestmentsDeductionsComponent implements OnInit {
   isParentOverSixty() {
     if (!this.ITR_JSON.systemFlags.hasParentOverSixty) {
       console.log('clear parent related values');
-      this.investmentDeductionForm.controls['premium'].setValue(null);
-      this.investmentDeductionForm.controls['preventiveCheckUp'].setValue(null);
+      // this.investmentDeductionForm.controls['premium'].setValue(null);
+      // this.investmentDeductionForm.controls['preventiveCheckUp'].setValue(null);
       this.investmentDeductionForm.controls['medicalExpenditure'].setValue(null);
     }
   }
