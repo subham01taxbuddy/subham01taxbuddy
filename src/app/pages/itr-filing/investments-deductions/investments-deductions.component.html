@@ -173,7 +173,7 @@
                 </mat-checkbox>
             </div>
         </div>
-        <div class="card__row" *ngIf="ITR_JSON.systemFlags.hasParentOverSixty">
+        <div class="card__row">
             <div class="card__col-lg-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Health insurance premium paid for parents</mat-label>
@@ -196,7 +196,7 @@
                 </mat-form-field>
             </div>
 
-            <div class="card__col-lg-4">
+            <div class="card__col-lg-4" *ngIf="ITR_JSON.systemFlags.hasParentOverSixty">
                 <mat-form-field appearance="outline">
                     <mat-label>Medical Expenditure for self, spouse or children</mat-label>
                     <input matInput placeholder="Medical expenditure for parents" maxlength="8"

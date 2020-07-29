@@ -316,6 +316,7 @@ export class PersonalInformationComponent implements OnInit {
   s3FilePath: any;
   fileType = 'pdf'
   ngOnInit() {
+    this.utilsService.smoothScrollToTop();
     this.customerProfileForm = this.createCustomerProfileForm();
     this.setCustomerProfileValues();
     this.getAllBankByIfsc();
@@ -615,5 +616,7 @@ export class PersonalInformationComponent implements OnInit {
   incrementZoom(amount: number) {
     this.zoom += amount;
   }
-
+  previousRoute() {
+    this.router.navigate(['/pages/itr-filing/customer-profile']);
+  }
 }

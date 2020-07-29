@@ -138,7 +138,13 @@ export class HousePropertyComponent implements OnInit {
       this.utilsService.showSnackBar('Failed to update House Property income.');
     });
   }
-
+  getHpTaxableIncome() {
+    let taxable = 0
+    for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
+      taxable = taxable + this.ITR_JSON.houseProperties[i].taxableIncome;
+    }
+    return this.utilsService.currencyFormatter(taxable);
+  }
   getItrDocuments() {
     // TODO
     const param1 =
