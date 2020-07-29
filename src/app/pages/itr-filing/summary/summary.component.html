@@ -97,6 +97,10 @@
             </div>
         </div>
     </div>
+    <br>
+    <hr>
+    <app-update-status></app-update-status>
+    <hr>
     <!-- <div _ngcontent-c4="" class="sub_btn mvBtU"><button _ngcontent-c4="" class="btn prvBut"
         routerlink="/warning" type="button" tabindex="0" ng-reflect-router-link="/warning">Previous</button>
       <button _ngcontent-c4="" class="btn grBut" type="button" style="cursor: pointer;"><i _ngcontent-c4=""
@@ -119,6 +123,7 @@
         <button type="button" (click)="downloadXML()" class="btn grBut" [disabled]="taxable && taxable > 0"
             [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'">
             Download XML</button><!-- *ngIf="ITR_JSON.isDefective === 'Y'" -->
+
     </div>
     <h3 class="txHdLf tItX" *ngIf="show">Computation of Income and Tax</h3>
     <div class="container-fluid main-body content-center-align section" *ngIf="show">

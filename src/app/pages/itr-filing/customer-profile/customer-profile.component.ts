@@ -50,7 +50,7 @@ export class CustomerProfileComponent implements OnInit {
   loading: boolean = false;
   imageLoader: boolean = false;
   customerProfileForm: FormGroup;
-  fillingStatus = new FormControl('', Validators.required);
+  // fillingStatus = new FormControl('', Validators.required);
   ITR_JSON: ITR_JSON;
   minDate = new Date(1900, 0, 1);
   maxDate = new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate());
@@ -118,151 +118,151 @@ export class CustomerProfileComponent implements OnInit {
     { value: 'FEMALE', label: 'Female' },
   ]
 
-  fillingMasterStatus = [
-    {
-      "createdDate": "2020-05-19T09:19:51.335Z",
-      "id": "5ec3a4b7d5220f2e3cd22bd3",
-      "statusId": 1,
-      "statusName": "Assisted Mode",
-      "sequence": 1,
-      "source": "BOTH",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T09:29:06.095Z",
-      "id": "5ec3a6e2d5220f375473036c",
-      "statusId": 2,
-      "statusName": "Documents Uploaded",
-      "sequence": 2,
-      "source": "USER",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T09:29:22.881Z",
-      "id": "5ec3a6f2d5220f375473036d",
-      "statusId": 3,
-      "statusName": "Document Received",
-      "sequence": 3,
-      "source": "BACK_OFFICE",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T09:29:37.125Z",
-      "id": "5ec3a701d5220f375473036e",
-      "statusId": 4,
-      "statusName": "Document Reviewed",
-      "sequence": 4,
-      "source": "BACK_OFFICE",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T09:29:46.983Z",
-      "id": "5ec3a70ad5220f375473036f",
-      "statusId": 5,
-      "statusName": "Preparing ITR",
-      "sequence": 5,
-      "source": "USER",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T09:30:11.260Z",
-      "id": "5ec3a723d5220f3754730370",
-      "statusId": 6,
-      "statusName": "ITR Work In Progress",
-      "sequence": 6,
-      "source": "BACK_OFFICE",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T09:30:39.172Z",
-      "id": "5ec3a73fd5220f3754730371",
-      "statusId": 7,
-      "statusName": "Waiting for Confirmation",
-      "sequence": 7,
-      "source": "BACK_OFFICE",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T10:38:41.191Z",
-      "id": "5ec3b731d5220f0aa8ef4bda",
-      "statusId": 8,
-      "statusName": "ITR Confirmation",
-      "sequence": 8,
-      "source": "USER",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T10:39:34.199Z",
-      "id": "5ec3b766d5220f0aa8ef4bdb",
-      "statusId": 9,
-      "statusName": "Confirmation Received",
-      "sequence": 9,
-      "source": "BACK_OFFICE",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T10:41:51.436Z",
-      "id": "5ec3b7efd5220f0aa8ef4bdc",
-      "statusId": 10,
-      "statusName": "Return Filed",
-      "sequence": 10,
-      "source": "BACK_OFFICE",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T10:42:12.278Z",
-      "id": "5ec3b804d5220f0aa8ef4bdd",
-      "statusId": 11,
-      "statusName": "ITR Filed",
-      "sequence": 11,
-      "source": "USER",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T10:42:28.023Z",
-      "id": "5ec3b814d5220f0aa8ef4bde",
-      "statusId": 12,
-      "statusName": "Payment Status",
-      "sequence": 12,
-      "source": "BACK_OFFICE",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T10:42:42.368Z",
-      "id": "5ec3b822d5220f0aa8ef4bdf",
-      "statusId": 13,
-      "statusName": "Payment Received",
-      "sequence": 13,
-      "source": "USER",
-      "active": true,
-      "message": "",
-      "channel": ""
-    }
-  ]
+  // fillingMasterStatus = [
+  //   {
+  //     "createdDate": "2020-05-19T09:19:51.335Z",
+  //     "id": "5ec3a4b7d5220f2e3cd22bd3",
+  //     "statusId": 1,
+  //     "statusName": "Assisted Mode",
+  //     "sequence": 1,
+  //     "source": "BOTH",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   },
+  //   {
+  //     "createdDate": "2020-05-19T09:29:06.095Z",
+  //     "id": "5ec3a6e2d5220f375473036c",
+  //     "statusId": 2,
+  //     "statusName": "Documents Uploaded",
+  //     "sequence": 2,
+  //     "source": "USER",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   },
+  //   {
+  //     "createdDate": "2020-05-19T09:29:22.881Z",
+  //     "id": "5ec3a6f2d5220f375473036d",
+  //     "statusId": 3,
+  //     "statusName": "Document Received",
+  //     "sequence": 3,
+  //     "source": "BACK_OFFICE",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   },
+  //   {
+  //     "createdDate": "2020-05-19T09:29:37.125Z",
+  //     "id": "5ec3a701d5220f375473036e",
+  //     "statusId": 4,
+  //     "statusName": "Document Reviewed",
+  //     "sequence": 4,
+  //     "source": "BACK_OFFICE",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   },
+  //   {
+  //     "createdDate": "2020-05-19T09:29:46.983Z",
+  //     "id": "5ec3a70ad5220f375473036f",
+  //     "statusId": 5,
+  //     "statusName": "Preparing ITR",
+  //     "sequence": 5,
+  //     "source": "USER",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   },
+  //   {
+  //     "createdDate": "2020-05-19T09:30:11.260Z",
+  //     "id": "5ec3a723d5220f3754730370",
+  //     "statusId": 6,
+  //     "statusName": "ITR Work In Progress",
+  //     "sequence": 6,
+  //     "source": "BACK_OFFICE",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   },
+  //   {
+  //     "createdDate": "2020-05-19T09:30:39.172Z",
+  //     "id": "5ec3a73fd5220f3754730371",
+  //     "statusId": 7,
+  //     "statusName": "Waiting for Confirmation",
+  //     "sequence": 7,
+  //     "source": "BACK_OFFICE",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   },
+  //   {
+  //     "createdDate": "2020-05-19T10:38:41.191Z",
+  //     "id": "5ec3b731d5220f0aa8ef4bda",
+  //     "statusId": 8,
+  //     "statusName": "ITR Confirmation",
+  //     "sequence": 8,
+  //     "source": "USER",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   },
+  //   {
+  //     "createdDate": "2020-05-19T10:39:34.199Z",
+  //     "id": "5ec3b766d5220f0aa8ef4bdb",
+  //     "statusId": 9,
+  //     "statusName": "Confirmation Received",
+  //     "sequence": 9,
+  //     "source": "BACK_OFFICE",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   },
+  //   {
+  //     "createdDate": "2020-05-19T10:41:51.436Z",
+  //     "id": "5ec3b7efd5220f0aa8ef4bdc",
+  //     "statusId": 10,
+  //     "statusName": "Return Filed",
+  //     "sequence": 10,
+  //     "source": "BACK_OFFICE",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   },
+  //   {
+  //     "createdDate": "2020-05-19T10:42:12.278Z",
+  //     "id": "5ec3b804d5220f0aa8ef4bdd",
+  //     "statusId": 11,
+  //     "statusName": "ITR Filed",
+  //     "sequence": 11,
+  //     "source": "USER",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   },
+  //   {
+  //     "createdDate": "2020-05-19T10:42:28.023Z",
+  //     "id": "5ec3b814d5220f0aa8ef4bde",
+  //     "statusId": 12,
+  //     "statusName": "Payment Status",
+  //     "sequence": 12,
+  //     "source": "BACK_OFFICE",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   },
+  //   {
+  //     "createdDate": "2020-05-19T10:42:42.368Z",
+  //     "id": "5ec3b822d5220f0aa8ef4bdf",
+  //     "statusId": 13,
+  //     "statusName": "Payment Received",
+  //     "sequence": 13,
+  //     "source": "USER",
+  //     "active": true,
+  //     "message": "",
+  //     "channel": ""
+  //   }
+  // ]
   constructor(public fb: FormBuilder,
     public utilsService: UtilsService,
     public httpClient: HttpClient,
@@ -296,7 +296,7 @@ export class CustomerProfileComponent implements OnInit {
     this.customerProfileForm = this.createCustomerProfileForm();
     this.setCustomerProfileValues();
     this.changeReviseForm();
-    this.getFilingStatus();
+    // this.getFilingStatus();
     this.getCommonDocuments();
     // this.rotateImage180('left');
     this.s3FilePath = "https://dev-uploads.taxbuddy.com.s3.ap-south-1.amazonaws.com/4314/Common/images.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200724T135952Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Credential=AKIA2LS2FCUFDB2UWKO7%2F20200724%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=13422d714888136a354fd1c94d1de60e55b70b645dcc0aeb0e980b2b379b4980"
@@ -503,38 +503,38 @@ export class CustomerProfileComponent implements OnInit {
     }
   }
 
-  updateStatus() {
-    const param = '/itr-status'
-    const request = {
-      "statusId": Number(this.fillingStatus.value),
-      "userId": this.ITR_JSON.userId,
-      "assessmentYear": AppConstants.ayYear,
-      "completed": true
-    }
+  // updateStatus() {
+  //   const param = '/itr-status'
+  //   const request = {
+  //     "statusId": Number(this.fillingStatus.value),
+  //     "userId": this.ITR_JSON.userId,
+  //     "assessmentYear": AppConstants.ayYear,
+  //     "completed": true
+  //   }
 
-    this.loading = true;
-    this.userMsService.postMethod(param, request).subscribe(result => {
-      console.log(result);
-      this.utilsService.showSnackBar('Filing status updated successfully.')
-      this.loading = false;
-    }, err => {
-      this.loading = false;
-      this.utilsService.showSnackBar('Failed to update Filing status.')
-    })
-  }
+  //   this.loading = true;
+  //   this.userMsService.postMethod(param, request).subscribe(result => {
+  //     console.log(result);
+  //     this.utilsService.showSnackBar('Filing status updated successfully.')
+  //     this.loading = false;
+  //   }, err => {
+  //     this.loading = false;
+  //     this.utilsService.showSnackBar('Failed to update Filing status.')
+  //   })
+  // }
 
-  getFilingStatus() {
-    const param = `/itr-status?userId=${this.ITR_JSON.userId}&source=USER&assessmentYear=${AppConstants.ayYear}`;
-    this.userMsService.getMethod(param).subscribe(result => {
-      if (result instanceof Array) {
-        const completedStatus = result.filter(item => item.completed === 'true' || item.completed === true)
-        const ids = completedStatus.map(status => status.statusId);
-        const sorted = ids.sort((a, b) => a - b);
-        this.fillingStatus.setValue(sorted[sorted.length - 1])
-      }
+  // getFilingStatus() {
+  //   const param = `/itr-status?userId=${this.ITR_JSON.userId}&source=USER&assessmentYear=${AppConstants.ayYear}`;
+  //   this.userMsService.getMethod(param).subscribe(result => {
+  //     if (result instanceof Array) {
+  //       const completedStatus = result.filter(item => item.completed === 'true' || item.completed === true)
+  //       const ids = completedStatus.map(status => status.statusId);
+  //       const sorted = ids.sort((a, b) => a - b);
+  //       this.fillingStatus.setValue(sorted[sorted.length - 1])
+  //     }
 
-    })
-  }
+  //   })
+  // }
 
   documents = []
   getCommonDocuments() {

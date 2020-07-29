@@ -25,6 +25,7 @@ import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
 import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
+import { UpdateStatusComponent } from './update-status/update-status.component';
 
 @NgModule({
     imports: [
@@ -55,7 +56,8 @@ import { AcknowledgementComponent } from './acknowledgement/acknowledgement.comp
         AcknowledgementComponent,
         AckSuccessComponent,
         AckDelayComponent,
-        AckFailureComponent
+        AckFailureComponent,
+        UpdateStatusComponent
     ],
     entryComponents: [AddDonationDialogComponent]
 

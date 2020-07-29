@@ -13,6 +13,9 @@
                             <a href="javascript:;" (click)="getForm16Url(i)">{{form16.fileName}}</a> &nbsp;&nbsp;
                         </span>
                     </div>
+                    <br>
+                    <br>
+                    <br>
                     <ngx-image-zoom *ngIf="form16DocDetails.docType !== 'pdf'" [thumbImage]="form16DocDetails.docUrl"
                         [fullImage]="form16DocDetails.docUrl" [magnification]="1" [enableScrollZoom]="true"
                         [enableLens]="true" [lensWidth]="200">
@@ -27,6 +30,9 @@
                         <pdf-viewer [src]="form16DocDetails.docUrl" [zoom]="zoom" [original-size]="true"
                             [autoresize]="true" [render-text]="true" style="display: block;height: 100%">
                         </pdf-viewer>
+                    </div>
+                    <div *ngIf="form16DocDetails.docUrl ===''">
+                        Form 16 not uploaded/Selected
                     </div>
                 </div>
                 <div class="content" style="width: 65%;" *ngIf="salaryView === 'TABLE'">

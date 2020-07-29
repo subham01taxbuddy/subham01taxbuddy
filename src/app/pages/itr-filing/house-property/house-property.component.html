@@ -13,6 +13,7 @@
                             <a href="javascript:;" (click)="getHpDocsUrl(i)">{{hpDocs.fileName}}</a> &nbsp;&nbsp;
                         </span>
                     </div>
+                    <br><br><br>
                     <ngx-image-zoom *ngIf="hpDocDetails.docType !== 'pdf'" [thumbImage]="hpDocDetails.docUrl"
                         [fullImage]="hpDocDetails.docUrl" [magnification]="1" [enableScrollZoom]="true"
                         [enableLens]="true" [lensWidth]="200">
@@ -27,6 +28,9 @@
                         <pdf-viewer [src]="hpDocDetails.docUrl" [zoom]="zoom" [original-size]="true" [autoresize]="true"
                             [render-text]="true" style="display: block;height: 100%">
                         </pdf-viewer>
+                    </div>
+                    <div *ngIf="hpDocDetails.docUrl ===''">
+                        House property documents not uploaded/Selected
                     </div>
                 </div>
 
