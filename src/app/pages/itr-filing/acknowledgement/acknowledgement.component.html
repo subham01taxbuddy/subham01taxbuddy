@@ -1,0 +1,17 @@
+<div class="main clearfix">
+    <div class="card">
+        <span *ngIf="this.status === 'fail'">
+            <app-ack-failure></app-ack-failure>
+        </span>
+        <span *ngIf="this.status === 'delay'">
+            <app-ack-delay></app-ack-delay>
+        </span>
+        <span *ngIf="this.status === 'success'">
+            <app-ack-success></app-ack-success>
+        </span>
+        <br>
+        <br>
+        <hr>
+        <app-update-status></app-update-status>
+    </div>
+</div>

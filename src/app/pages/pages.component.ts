@@ -39,17 +39,17 @@ export class PagesComponent implements OnInit {
   //  title = 'app works!';
 
   constructor(private router: Router, private userService: UserMsService) {
-     this.timer = interval(10000)
+    this.timer = interval(10000)
     this.timer.subscribe(() => {
-      if(this.showNotifivation === false && this.userMsgInfo){
+      if (this.showNotifivation === false && this.userMsgInfo && this.userMsgInfo instanceof Array && this.userMsgInfo.length > 0) {
         this.showRandomWhatsAppNotification()
       }
     })
 
-    this.router.events.subscribe((url:any) => {
-      console.log('Path: ', router.url)
-        this.routePath = router.url;
-     }); 
+    this.router.events.subscribe((url: any) => {
+      // console.log('Path: ', router.url)
+      this.routePath = router.url;
+    });
   }
 
   ngOnInit() {
@@ -62,7 +62,7 @@ export class PagesComponent implements OnInit {
     if (this.showNotifivation === false && (this.routePath !== '/pages/chat-corner' && this.routePath !== '/login')) {
       this.userService.getUserDetail(param).subscribe((res) => {
         this.userMsgInfo = res;
-        sessionStorage.setItem('userChatNotifications',JSON.stringify(this.userMsgInfo))
+        sessionStorage.setItem('userChatNotifications', JSON.stringify(this.userMsgInfo))
         console.log(this.userMsgInfo)
         if (res) {
           this.msgCount = 0;
@@ -86,7 +86,8 @@ export class PagesComponent implements OnInit {
 
   }
 
-  showRandomWhatsAppNotification(){
+  showRandomWhatsAppNotification() {
+    console.log('showRandomWhatsAppNotification', this.userMsgInfo)
     this.updatedChat = [];
     let latestMsgTime = this.userMsgInfo[0].lastMessageDateTime;
     console.log("latestMsgTime: ", latestMsgTime, this.userMsgInfo[0]);
@@ -95,7 +96,7 @@ export class PagesComponent implements OnInit {
       (res) => {
         this.updatedChat = res;
         if (this.updatedChat.length > 0) {
-          console.log("RES ====> ",res," updateChat: ",this.updatedChat,typeof this.updatedChat);
+          console.log("RES ====> ", res, " updateChat: ", this.updatedChat, typeof this.updatedChat);
           for (let i = 0; i < this.updatedChat.length; i++) {
             for (let j = 0; j < this.userMsgInfo.length; j++) {
               if (this.updatedChat[i].userId === this.userMsgInfo[j].userId) {
@@ -110,7 +111,7 @@ export class PagesComponent implements OnInit {
           this.userMsgInfo.sort(function (a, b) {
             return b.lastMessageDateTime - a.lastMessageDateTime;
           })
-          console.log("After srting userMsgInfo: ",this.userMsgInfo);
+          console.log("After srting userMsgInfo: ", this.userMsgInfo);
           if (res) {
             this.msgCount = 0;
             for (let i = 0; i < this.userMsgInfo.length; i++) {
@@ -120,11 +121,11 @@ export class PagesComponent implements OnInit {
             }
           }
         }
-          if (this.msgCount > 0) {
-            this.showNotifivation = true;
-          } else {
-            this.showNotifivation = false;
-          }
+        if (this.msgCount > 0) {
+          this.showNotifivation = true;
+        } else {
+          this.showNotifivation = false;
+        }
       },
       (error) => {
         //this._toastMessageService.alert("error", "Failed to user data.");

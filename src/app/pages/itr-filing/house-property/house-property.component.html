@@ -7,7 +7,32 @@
                     <div class="card__title" style="font-size: 20px;">House Property Income</div>
                 </mat-expansion-panel-header>
 
-                <div class="content vertLine" style="width: 35%; padding-right: 20px;">Ashish</div>
+                <div class="content vertLine" style="width: 35%; padding-right: 20px;">
+                    <div>
+                        <span *ngFor="let hpDocs of getAllHpDocs('LOAN_STATEMENT'); let i=index">
+                            <a href="javascript:;" (click)="getHpDocsUrl(i)">{{hpDocs.fileName}}</a> &nbsp;&nbsp;
+                        </span>
+                    </div>
+                    <br><br><br>
+                    <ngx-image-zoom *ngIf="hpDocDetails.docType !== 'pdf'" [thumbImage]="hpDocDetails.docUrl"
+                        [fullImage]="hpDocDetails.docUrl" [magnification]="1" [enableScrollZoom]="true"
+                        [enableLens]="true" [lensWidth]="200">
+                    </ngx-image-zoom>
+                    <div *ngIf="hpDocDetails.docType === 'pdf'">
+                        <button ion-button (click)="incrementZoom(-0.1)">
+                            -
+                        </button>&nbsp;
+                        <button ion-button (click)="incrementZoom(0.1)">
+                            +
+                        </button>
+                        <pdf-viewer [src]="hpDocDetails.docUrl" [zoom]="zoom" [original-size]="true" [autoresize]="true"
+                            [render-text]="true" style="display: block;height: 100%">
+                        </pdf-viewer>
+                    </div>
+                    <div *ngIf="hpDocDetails.docUrl ===''">
+                        House property documents not uploaded/Selected
+                    </div>
+                </div>
 
                 <div class="content" style="width: 65%;">
                     <div class="card__row">

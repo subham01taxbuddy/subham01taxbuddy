@@ -460,6 +460,7 @@ export class WhatAppChatComponent implements OnInit {
       (item) => item.templateName === event.value
     );
     this.tempArrributes = this.getTempAttributes(tempInfo);
+    console.log('Retunrn tempAttributes: ',this.tempArrributes)
     var mapObjj = {
       "1": "",
       "2": "",

@@ -26,8 +26,10 @@ export class SalaryComponent implements OnInit {
   maxPT = 5000;
   maxEA = 5000;
   salaryView: string = "FORM";
-  employerMode = "";
+  employerMode = "ADD";
   currentIndex: number = null;
+  itrDocuments = [];
+
   salaryDropdown = [{
     "value": "SEC17_1",
     "label": "Salary as per section 17(1)",
@@ -138,6 +140,9 @@ export class SalaryComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getItrDocuments();
+    this.getForm16Url(0);
+
     this.utilsService.smoothScrollToTop();
     this.employerDetailsFormGroup = this.createEmployerDetailsFormGroup();
     this.salaryCallInConstructor(this.salaryDropdown);
@@ -540,6 +545,7 @@ export class SalaryComponent implements OnInit {
   }
 
   serviceCall() {
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
     if (this.employerMode === 'ADD') {
       const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
@@ -824,5 +830,41 @@ export class SalaryComponent implements OnInit {
       }
     }
     return data;
+  }
+
+  getItrDocuments() {
+    // TODO
+    const param1 =
+      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
+    this.itrMsService.getMethod(param1).subscribe((result: any) => {
+      console.log('Documents ITR', result)
+      this.itrDocuments = result;
+      this.getForm16Url(0);
+    })
+  }
+
+  getAllForm16s(documentTag) {
+    return this.itrDocuments.filter(item => item.documentTag === documentTag)
+
+  }
+  zoom: number = 1.0;
+  incrementZoom(amount: number) {
+    this.zoom += amount;
+  }
+
+  form16DocDetails = {
+    docUrl: '',
+    docType: ''
+  };
+  getForm16Url(index) {
+    const doc = this.itrDocuments.filter(item => item.documentTag === 'FORM_16')
+    if (doc.length > 0) {
+      const docType = doc[index].fileName.split('.').pop();
+      this.form16DocDetails.docUrl = doc[index].signedUrl;
+      this.form16DocDetails.docType = docType;
+    } else {
+      this.form16DocDetails.docUrl = '';
+      this.form16DocDetails.docType = '';
+    }
   }
 }

@@ -27,4 +27,5 @@ export class AppConstants {
     public static ITR_JSON = environment.production ? 'ITR_JSON' : 'ITR_JSON';
     public static TAX_SUM = environment.production ? 'TAX_SUM' : 'TAX_SUM';
     public static NAME = environment.production ? 'name' : 'name';
+    public static ITR_DOCS = environment.production ? 'ITR_DOCS' : 'ITR_DOCS';
 }
