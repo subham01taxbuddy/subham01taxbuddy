@@ -168,7 +168,7 @@ export class UpdateStatusComponent implements OnInit {
   }
 
   getFilingStatus() {
-    const param = `/itr-status?userId=${this.ITR_JSON.userId}&source=USER&assessmentYear=${AppConstants.ayYear}`;
+    const param = `/itr-status?userId=${this.ITR_JSON.userId}&assessmentYear=${AppConstants.ayYear}`;
     this.userMsService.getMethod(param).subscribe(result => {
       if (result instanceof Array) {
         const completedStatus = result.filter(item => item.completed === 'true' || item.completed === true)
