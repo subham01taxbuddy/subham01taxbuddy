@@ -1,0 +1,16 @@
+<div class="card__row">
+    <div class="card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+            <mat-label>Filling Status</mat-label>
+            <mat-select placeholder="Filling Status" name="fillingStatus" [formControl]="fillingStatus">
+                <mat-option *ngFor="let status of fillingMasterStatus" [value]="status.statusId">
+                    {{ status.statusName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <!-- TODO -->
+        <button class="btn long-btn" style="border: none;" (click)="updateStatus()">Update</button>
+    </div>
+</div>

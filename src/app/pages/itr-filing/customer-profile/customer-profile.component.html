@@ -28,8 +28,8 @@
         <div class="content__container">
             <div class="card card_main">
                 <div class="card__title">Customer Profile</div>
-
-                <div class="card__row">
+                <app-update-status></app-update-status>
+                <!-- <div class="card__row">
                     <div class="card__col-xs-12 card__col-sm-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Filling Status</mat-label>
@@ -41,10 +41,10 @@
                         </mat-form-field>
                     </div>
                     <div>
-                        <!-- TODO -->
+                        
                         <button class="btn long-btn" style="border: none;" (click)="updateStatus()">Update</button>
                     </div>
-                </div>
+                </div> -->
                 <hr>
                 <form [formGroup]="customerProfileForm">
                     <div class="card__row">

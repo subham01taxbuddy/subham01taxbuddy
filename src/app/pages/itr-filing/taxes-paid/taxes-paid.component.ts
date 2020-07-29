@@ -25,6 +25,7 @@ export class TaxesPaidComponent implements OnInit {
   tcsGridOptions: GridOptions;
   otherThanTdsTcsGridOptions: GridOptions;
   ITR_JSON: ITR_JSON;
+  itrDocuments = [];
   // headOfIncomeDropdownTDS2 = [];
 
   // headOfIncomeDropdownTDS3 = [
@@ -64,6 +65,8 @@ export class TaxesPaidComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getItrDocuments();
+
     this.onSalaryCallInConstructor();
     this.onSalaryGridOptions.rowData = this.ITR_JSON.taxPaid.onSalary;
     this.tdsOtherThanSalary16ACallInConstructor();
@@ -1060,6 +1063,7 @@ export class TaxesPaidComponent implements OnInit {
     }
 
     if (this.addOtherThanTdsTcs('SAVE')) {
+      debugger
       if (this.otherThanTdsTcsGridOptions.api.getRenderedNodes().length > 0) {
         let data = this.otherThanTdsTcsGridOptions.api.getRenderedNodes();
         for (let i = 0; i < data.length; i++) {
@@ -1080,6 +1084,38 @@ export class TaxesPaidComponent implements OnInit {
       this.utilsService.showSnackBar('Failed to update Taxes paid.');
       this.loading = false;
     });
+  }
+
+  getItrDocuments() {
+    // TODO
+    const param1 =
+      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
+    this.itrMsService.getMethod(param1).subscribe((result: any) => {
+      console.log('Documents ITR', result)
+      this.itrDocuments = result;
+      // this.getDocsUrl(0);
+    })
+  }
+
+
+  zoom: number = 1.0;
+  incrementZoom(amount: number) {
+    this.zoom += amount;
+  }
+
+  docDetails = {
+    docUrl: '',
+    docType: ''
+  };
+  getDocsUrl(index) {
+    if (this.itrDocuments.length > 0) {
+      const docType = this.itrDocuments[index].fileName.split('.').pop();
+      this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
+      this.docDetails.docType = docType;
+    } else {
+      this.docDetails.docUrl = '';
+      this.docDetails.docType = '';
+    }
   }
 
 }

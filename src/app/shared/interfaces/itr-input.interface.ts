@@ -16,6 +16,8 @@ export interface ITR_JSON {
     locale: string;
     financialYear: string;
     filingTeamMemberId: number;
+    planIdSelectedByUser: number;
+    planIdSelectedByTaxExpert: number;
     eFillingPortalPassword: string;
     isRevised: string;
     isDefective: string;
@@ -57,7 +59,8 @@ export interface ITR_JSON {
     unlistedSharesDetails: UnlistedSharesDetails[];
     dateOfDividendIncome: string;
     lastVisitedURL: string;
-    seventhProviso139: SeventhProviso139
+    seventhProviso139: SeventhProviso139,
+    depPayInvClmUndDednVIA: string;
 }
 export interface DirectorInCompany {
     companyName: string;

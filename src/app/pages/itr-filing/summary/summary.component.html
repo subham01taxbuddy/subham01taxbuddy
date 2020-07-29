@@ -97,6 +97,10 @@
             </div>
         </div>
     </div>
+    <br>
+    <hr>
+    <app-update-status></app-update-status>
+    <hr>
     <!-- <div _ngcontent-c4="" class="sub_btn mvBtU"><button _ngcontent-c4="" class="btn prvBut"
         routerlink="/warning" type="button" tabindex="0" ng-reflect-router-link="/warning">Previous</button>
       <button _ngcontent-c4="" class="btn grBut" type="button" style="cursor: pointer;"><i _ngcontent-c4=""
@@ -119,6 +123,7 @@
         <button type="button" (click)="downloadXML()" class="btn grBut" [disabled]="taxable && taxable > 0"
             [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'">
             Download XML</button><!-- *ngIf="ITR_JSON.isDefective === 'Y'" -->
+
     </div>
     <h3 class="txHdLf tItX" *ngIf="show">Computation of Income and Tax</h3>
     <div class="container-fluid main-body content-center-align section" *ngIf="show">
@@ -173,7 +178,7 @@
                                                 <tr>
                                                     <td>1. Employer's Name</td>
                                                     <td *ngFor="let salary of ITR_JSON.employers; let i=index">
-                                                        {{salary.employerName}}
+                                                        {{utilsService.isNonEmpty(salary.employerName) ? salary.employerName : 'Employer '+(i+1)}}
                                                     </td>
                                                     <!-- <td>ABC Company</td>
                             <td>XYZ Company</td> -->
@@ -261,7 +266,7 @@
                                                         *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
                                                         {{hp.propertyType}}</th>
                                                 </tr>
-                                                <tr>
+                                                <!-- <tr>
                                                     <td>1. Property Address</td>
                                                     <th
                                                         *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
@@ -273,9 +278,9 @@
                                                     <td
                                                         *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
                                                         {{hp.ownerOfProperty}}</td>
-                                                </tr>
+                                                </tr> -->
                                                 <tr>
-                                                    <td>3. Gross Rent Received</td>
+                                                    <td>1. Gross Rent Received</td>
                                                     <td
                                                         *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
                                                         Rs
@@ -283,31 +288,31 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>4. Taxes Paid</td>
+                                                    <td>2. Taxes Paid</td>
                                                     <td
                                                         *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
                                                         Rs {{utilsService.currencyFormatter(hp.propertyTax)}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>5. Annual Value (3-4)</td>
+                                                    <td>3. Annual Value (1-2)</td>
                                                     <td
                                                         *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
                                                         Rs {{utilsService.currencyFormatter(hp.annualValue)}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>6. Standard Deduction @30%</td>
+                                                    <td>4. Standard Deduction @30%</td>
                                                     <td
                                                         *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
                                                         Rs {{utilsService.currencyFormatter(hp.exemptIncome)}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>7. Interest On Home Loan</td>
+                                                    <td>5. Interest On Home Loan</td>
                                                     <td
                                                         *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
                                                         Rs {{getHomeLoan(hp.loans)}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>8. Net Income (5-6-7)</th>
+                                                    <th>6. Net Income (3-4-5)</th>
                                                     <td
                                                         *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
                                                         Rs {{utilsService.currencyFormatter(hp.taxableIncome)}}</td>

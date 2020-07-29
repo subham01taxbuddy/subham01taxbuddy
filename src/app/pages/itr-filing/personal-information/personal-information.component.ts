@@ -321,6 +321,7 @@ export class PersonalInformationComponent implements OnInit {
     this.getAllBankByIfsc();
     this.stateDropdown = this.stateDropdownMaster;
     this.getCommonDocuments();
+    // this.getItrDocuments();
   }
 
   createCustomerProfileForm(): FormGroup {
@@ -568,14 +569,51 @@ export class PersonalInformationComponent implements OnInit {
       console.log('Documents', result)
       this.documents = result;
     })
+
+
   }
+  docDetails = {
+    docUrl: '',
+    docType: ''
+  };
+  getDocsUrl(index) {
+    if (this.documents.length > 0) {
+      const docType = this.documents[index].fileName.split('.').pop();
+      this.docDetails.docUrl = this.documents[index].signedUrl;
+      this.docDetails.docType = docType;
+    } else {
+      this.docDetails.docUrl = '';
+      this.docDetails.docType = '';
+    }
+  }
+  // itrDocuments = [];
+  // getItrDocuments() {
+  //   // TODO
+  //   const param1 =
+  //     `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
+  //   this.itrMsService.getMethod(param1).subscribe((result: any) => {
+  //     console.log('Documents ITR', result)
+  //     this.itrDocuments = result;
+  //   })
+  // }
+
   getDocumentUrl(documentTag) {
     const doc = this.documents.filter(item => item.documentTag === documentTag)
     if (doc.length > 0) {
-      return doc[0].signedUrl;
+      const docType = doc[0].fileName.split('.').pop();
+      return {
+        docUrl: doc[0].signedUrl, docType: docType
+      };
     } else {
-      return ''
+      return {
+        docUrl: '', docType: ''
+      }
     }
 
   }
+  zoom: number = 1.0;
+  incrementZoom(amount: number) {
+    this.zoom += amount;
+  }
+
 }
