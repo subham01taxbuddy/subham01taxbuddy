@@ -65,7 +65,7 @@ export class UserMsService {
   getUserDetail(...param) {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    return this.httpClient.get(environment.url + '/user' + param[0], { headers: this.headers });
+    return this.httpClient.get(environment.url + '/gateway' + param[0], { headers: this.headers });
   }
 
   sentChatMessage(...param) {
