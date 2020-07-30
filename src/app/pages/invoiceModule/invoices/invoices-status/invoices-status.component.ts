@@ -84,10 +84,10 @@ export class InvoicesStatusComponent implements OnInit {
 
   createRowData(userInvoices) {
     console.log('userInvoices: ', userInvoices)
-    console.log('paymentDate',this.datePipe.transform(userInvoices[0].paymentDate, 'dd/MM/yyyy'));
+    // console.log('paymentDate',this.datePipe.transform(userInvoices[0].paymentDate, 'dd/MM/yyyy'));
     var invoices = [];
     for (let i = 0; i < userInvoices.length; i++) {
-      let updateInvoice = Object.assign({}, userInvoices[i], { userId: userInvoices[i].userId, billTo: userInvoices[i].billTo, phone: userInvoices[i].phone, email: userInvoices[i].email, invoiceNo: userInvoices[i].invoiceNo, invoiceDate: userInvoices[i].invoiceDate, modeOfPayment: userInvoices[i].modeOfPayment, paymentStatus: userInvoices[i].paymentStatus, purpose: userInvoices[i].itemList[0].itemDescription, invoicePrpardBy: userInvoices[i].inovicePreparedBy, ifaLeadClient: userInvoices[i].ifaLeadClient, amntReceiptDate: this.datePipe.transform(userInvoices[i].paymentDate, 'dd/MM/yyyy') })
+      let updateInvoice = Object.assign({}, userInvoices[i], { userId: userInvoices[i].userId, billTo: userInvoices[i].billTo, phone: userInvoices[i].phone, email: userInvoices[i].email, invoiceNo: userInvoices[i].invoiceNo, invoiceDate: userInvoices[i].invoiceDate, modeOfPayment: userInvoices[i].modeOfPayment, paymentStatus: userInvoices[i].paymentStatus, purpose: userInvoices[i].itemList[0].itemDescription, invoicePrpardBy: userInvoices[i].inovicePreparedBy, ifaLeadClient: userInvoices[i].ifaLeadClient, amntReceiptDate:userInvoices[i].paymentDate })
       invoices.push(updateInvoice)
     }
     console.log('user invoices: ', invoices);
@@ -167,6 +167,7 @@ export class InvoicesStatusComponent implements OnInit {
         // valueFormatter: function (param){
         //   return moment(params.value).format('D MMM YYYY');
         // },
+        
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         }
@@ -233,6 +234,11 @@ export class InvoicesStatusComponent implements OnInit {
         width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellRenderer: (data) => {
+          if(this.utilService.isNonEmpty(data.value)){
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+          }
+        }
         // filter: "agTextColumnFilter",
         // filterParams: {
         //   filterOptions: ["contains", "notContains"],
