@@ -759,7 +759,7 @@ export class SalaryComponent implements OnInit {
     return [
       {
         headerName: 'No',
-        field: 'id',
+        field: 'index',
         suppressMovable: true,
         editable: false,
         width: 75,
@@ -800,13 +800,15 @@ export class SalaryComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.employersGridOptions.rowData.splice(params.rowIndex, 1, {
-            id: params.data.id,
-            allowanceType: params.data.allowanceType,
-            taxableAmount: null,
-            exemptAmount: 0
-          });
-          this.employersGridOptions.api.setRowData(this.employersGridOptions.rowData);
+          console.log('Params for delete', params)
+          // this.employersGridOptions.rowData.splice(params.rowIndex, 1, {
+          //   id: params.data.id,
+          //   allowanceType: params.data.allowanceType,
+          //   taxableAmount: null,
+          //   exemptAmount: 0
+          // });
+          // this.employersGridOptions.api.setRowData(this.employersGridOptions.rowData);
+          this.deleteEmployer(params)
           break;
         }
         case 'edit': {
@@ -816,13 +818,60 @@ export class SalaryComponent implements OnInit {
       }
     }
   }
+  deleteEmployer(params) {
+    this.loading = true;
+    this.Copy_ITR_JSON.employers = this.Copy_ITR_JSON.employers.filter(item => item.id !== params.data.id);
+    // const param = `/itremployer?docId=${id}&userId=${this.ITR_JSON.userId}&itrId=${this.ITR_JSON.itrId}&assessmentYear=${this.ITR_JSON.assessmentYear}`;
+    // this.itrMsService.deleteMethod(param).subscribe((result: any) => {
+    //   this.ITR_JSON = result;
+    //   this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    //   if(this.ITR_JSON.employers.length > 0){
+    //     this.employerCallInConstructor();
+    //   }else{
+    //     this.addEmployer(null);
+    //   }
+    //   sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+    //   this.loading = false;
+    // }, error => {
+    //   this.loading = false;
+    // });
 
+    const param = '/taxitr?type=employers';
+    this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+      this.ITR_JSON = result;
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+      if (this.ITR_JSON.employers.length > 0) {
+        this.employersGridOptions.api.updateRowData({ remove: [params.data] });
+      } else {
+        this.addEmployer(null);
+      }
+
+      this.loading = false;
+      this.utilsService.showSnackBar('Employer deleted Successfully.');
+    }, error => {
+      this.loading = false;
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      // this.utilsService.disposable.unsubscribe();
+      this.utilsService.showSnackBar('Failed to delete employer detail.');
+      this.utilsService.smoothScrollToTop();
+    });
+
+  }
+  getSalaryTaxableIncome() {
+    let taxable = 0
+    for (let i = 0; i < this.ITR_JSON.employers.length; i++) {
+      taxable = taxable + this.ITR_JSON.employers[i].taxableIncome;
+    }
+    return this.utilsService.currencyFormatter(taxable);
+  }
   employerCreateRowData() {
     const data = [];
     if (this.utilsService.isNonEmpty(this.ITR_JSON) && this.utilsService.isNonEmpty(this.ITR_JSON.employers) && this.ITR_JSON.employers instanceof Array) {
       for (let i = 0; i < this.ITR_JSON.employers.length; i++) {
         data.push({
-          id: i + 1,
+          index: i + 1,
+          id: this.ITR_JSON.employers[i].id,
           employerName: this.utilsService.isNonEmpty(this.ITR_JSON.employers[i].employerName) ? this.ITR_JSON.employers[i].employerName : `Employer ${i + 1}`,
           taxableIncome: this.ITR_JSON.employers[i].taxableIncome,
           // exemptAmount: null

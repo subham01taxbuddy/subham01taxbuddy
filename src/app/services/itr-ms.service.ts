@@ -51,6 +51,15 @@ export class ItrMsService {
         // .map(response => response.json())
     }
 
+    deleteMethod<T>(param): Observable<T> {
+        // this.TOKEN = this.encrDecrService.get(AppConstants.TOKEN);
+        this.headers = new HttpHeaders();
+        this.headers.append('Content-Type', 'application/json');
+        // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
+        console.log('delete Param', param);
+        return this.httpClient.delete<T>(environment.url + this.microService + param, { headers: this.headers });
+        // .map(response => response.json())
+    }
     downloadXML(param) {
         console.log('Download XML Param', param);
         const userData = JSON.parse(localStorage.getItem('UMD'));
