@@ -290,16 +290,17 @@ export class CustomerProfileComponent implements OnInit {
     //   relationType: 'SELF'
     // }]
   }
-  s3FilePath: any;
-  fileType = 'pdf'
+  // s3FilePath: any;
+  // fileType = 'pdf'
   ngOnInit() {
+    this.utilsService.smoothScrollToTop();
     this.customerProfileForm = this.createCustomerProfileForm();
     this.setCustomerProfileValues();
     this.changeReviseForm();
     // this.getFilingStatus();
     this.getCommonDocuments();
     // this.rotateImage180('left');
-    this.s3FilePath = "https://dev-uploads.taxbuddy.com.s3.ap-south-1.amazonaws.com/4314/Common/images.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200724T135952Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Credential=AKIA2LS2FCUFDB2UWKO7%2F20200724%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=13422d714888136a354fd1c94d1de60e55b70b645dcc0aeb0e980b2b379b4980"
+    // this.s3FilePath = "https://dev-uploads.taxbuddy.com.s3.ap-south-1.amazonaws.com/4314/Common/images.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200724T135952Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Credential=AKIA2LS2FCUFDB2UWKO7%2F20200724%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=13422d714888136a354fd1c94d1de60e55b70b645dcc0aeb0e980b2b379b4980"
     // Storage.get('sales-invoice/inv_2263_1595577807982.bmp')
     //   .then(result => {
     //     // this.invoiceData.invoiceDTO.s3InvoiceImageUrl = result;
