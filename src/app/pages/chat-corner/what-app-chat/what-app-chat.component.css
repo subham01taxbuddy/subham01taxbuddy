@@ -115,14 +115,20 @@ li a.active {
 }
 
 .refreshBtn{
-  float: right;
-  margin-top: 0 !important;
-  /* padding: 10px; */
+  /* float: right;
+  margin-top: 0 !important; */
+  background-color: #6a6a67;
+  height: 48px;
+  width: 233px;
+  border-radius: 6px;
+  color: #eee;
+  font-size: 17px;
+  font-weight: 700;
 }
 
 .sendBtn{
   background-color: #63B12D;
-  height: 36px;
+  height: 40px;
   width: auto;
   border-radius: 6px;
   color: #eee;
@@ -165,7 +171,7 @@ li a.active {
 .btnDisable{
   background: #dddddd;
   cursor: not-allowed;
-  height: 36px;
+  height: 40px;
   width: auto;
   border-radius: 6px;
   color: #6a6a67;

@@ -4,31 +4,51 @@
   <div class="content content_full">
     <div class="content__container">
       <div class="card">
+
         <div class="card__row">
-          <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 10px;">
+         <div class="card__col-xs-3 card__col-sm-3">
+          <mat-form-field appearance="outline">
+            <input matInput [formControl]="searchNumber" maxlength="10" placeholder="Search By Mobile number" autocomplete="off"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+          </mat-form-field>
+         </div>
+         <div class="card__col-xs-2 card__col-sm-2">
+          <button class="sendBtn" [class.btnDisable]="!this.utileService.isNonEmpty(this.searchNumber.value) || !this.searchNumber.valid" style="padding-left: 15px; padding-right: 15px; margin-top: 3px;"
+          [disabled]="!this.utileService.isNonEmpty(this.searchNumber.value) || !this.searchNumber.valid" (click)="geUserChatDetail('bySearch')">Search</button>
+         </div>
+         
+        </div>
+
+        <div class="card__row">
+          <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 0px;">
             <div class="card__col-lg-3 ">   <!--userList-->
-              <mat-form-field appearance="outline">
+              <!-- <mat-form-field appearance="outline">
                 <input matInput [formControl]="searchNumber" placeholder="Search User" (keyup)="searchMyNumber()"
                   autocomplete="off">
-              </mat-form-field>
+              </mat-form-field> -->
+              <button class="refreshBtn" (click)="getUserNotify()">Refresh User List</button>
               <br>
               <div class="userList"  #chatScroll >  <!--[scrollTop]="chatScroll.scrollHeight"-->
                 <ul *ngFor="let user of filteredArray">
-                  <li [class.newUserMsg]="user.isRead === false" style="padding: 10px;"
+                  <!-- <li [class.newUserMsg]="user.isRead === false" style="padding: 10px;"
                     (click)="geUserChatDetail(user, 'not-continues')">
                     <span *ngIf="user.isRead === false">*</span>
                     <a style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user.name}}</a><br>
                     <span style="font-size: 11px; padding-left: 30px;">{{user.whatsAppNumber}}</span>
-                  </li>
+                  </li> -->
+                  <li style="padding: 10px;" (click)="geUserChatDetail(user)">
+                      <a style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user}}</a><br>
+                </li>
                 </ul>
               </div>
             </div>
             <div class="card__col-md-9">
-              <mat-accordion *ngIf="this.selectedUser">
+              <mat-accordion *ngIf="this.userchatData">  <!--selectedUser-->
                 <mat-expansion-panel>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
-                      <b> {{selectedUser.name}}</b>
+                      <b> {{selectedUser ? selectedUser.name : 'User Not available in our system'}}</b>
                     </mat-panel-title>
                     <!-- <mat-panel-description>
                         Type your name and age
@@ -37,25 +57,25 @@
                   <div class="card__row">
                     <div class="card__col-lg-2">
                       <label><b>User Id: </b></label>
-                      {{selectedUser.userId}}
+                      {{selectedUser ? selectedUser.userId : ' -'}}
                     </div>
                     <div class="card__col-lg-3">
                       <label><b>User Name: </b></label>
-                      {{selectedUser.name}}
+                      {{selectedUser ? selectedUser.name: ' -'}}
                     </div>
                     <div class="card__col-lg-4">
                       <label><b>Phone Number: </b></label>
-                      {{selectedUser.whatsAppNumber}}
+                      {{selectedUser ? selectedUser.whatsAppNumber : ' -'}}
                     </div>
                     <div class="card__col-lg-3">
                       <label><b>Services Availed: </b></label>
-                      {{serviceAvailedInfo}}
+                      {{serviceAvailedInfo ? serviceAvailedInfo : ' -'}}
                     </div>
                   </div>
                   <div class="card__row">
                     <div class="card__col-lg-3">
                       <label><b>Consent Status: </b></label>
-                      {{selectedUser.isUserOpted ? 'Opt-in' : 'Opt-out'}}
+                      {{selectedUser ? (selectedUser.isUserOpted ? 'Opt-in' : 'Opt-out') : ' -'}}
                     </div>
                     <div class="card__col-lg-3">
                       <label><b>Ticket Owner: </b></label>
@@ -63,7 +83,7 @@
                     </div>
                     <div class="card__col-lg-3">
                       <label><b>Chat Window Timer: </b></label>
-                      {{timeExpired ? '00:00:00' : (countDown | async)}}
+                      {{selectedUser ? (timeExpired ? '00:00:00' : (countDown | async)) : ' -'}}
                       <!-- {{(Math.floor(countDown / (60 * 60))) | async}}:{{(countDown / (60) ) | async}} : {{(countDown % (60) ) | async}} -->
                       <!-- <span id="timer"></span> -->
                     </div>
@@ -77,7 +97,7 @@
 
               </mat-accordion><br>
 
-              <div class="chat-box" *ngIf="this.selectedUser">
+              <div class="chat-box" *ngIf="this.userchatData">
                 <div class="chat-header">
                   Chat Corner:
                 </div>
@@ -128,7 +148,7 @@
                       <span class="sender"
                         *ngIf="!data.isReceived && data.mediaId && (!data.mimeType.includes('pdf') && !data.mimeType.includes('image'))"
                         (click)="downloadDoc(data.mediaId)">
-                        <b style="float: left;">{{selectedUser.name}}</b><br>
+                        <b style="float: left;">{{selectedUser ? selectedUser.name : ''}}</b><br>
                         Click here to download file<br>
                         <b style="padding-top: 5px;">{{data.fileName}}</b><br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
@@ -139,14 +159,14 @@
                     <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
                       <span class="sender"
                         *ngIf="data.isReceived && !data.mediaId  && data.messageType !== 'media_template'">
-                        <b style="float: left;">{{selectedUser.name}}</b><br>
+                        <b style="float: left;">{{selectedUser ? selectedUser.name : ''}}</b><br>
                         {{data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent:(data.mediaId? this.showLink(data.mediaId):''))}}<br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
                           *ngIf="data.isReceived && !data.mediaId"> {{data.dateLong | date:'medium':'+0530'}}</b>
                       </span>
 
                       <span class="sender" *ngIf="data.isReceived && data.mediaId && data.mimeType.includes('image')">
-                        <b style="float: left;">{{selectedUser.name}}</b><br>
+                        <b style="float: left;">{{selectedUser ? selectedUser.name : ''}}</b><br>
                         <img (click)="downloadDoc(data.mediaId)" alt="Not Show"
                           src="{{environmentPath}}/user/download-media-file?mediaId={{data.mediaId}}"><br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
@@ -156,7 +176,7 @@
                       <span class="sender"
                         *ngIf="data.isReceived && data.mediaId && data.mimeType.includes('pdf') && data.messageType !== 'media_template'"
                         (click)="downloadDoc(data.mediaId)">
-                        <b style="float: left;">{{selectedUser.name}}</b><br>
+                        <b style="float: left;">{{selectedUser ? selectedUser.name : ' -'}}</b><br>
                         <i class="fa fa-file-pdf-o fa-5x" aria-hidden="true"> </i><br>
                         <b style="padding-top: 5px;">{{data.fileName}}</b><br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
@@ -175,7 +195,7 @@
                       <span class="sender"
                         *ngIf="data.isReceived && data.mediaId && (!data.mimeType.includes('pdf') && !data.mimeType.includes('image'))"
                         (click)="downloadDoc(data.mediaId)">
-                        <b style="float: left;">{{selectedUser.name}}</b><br>
+                        <b style="float: left;">{{selectedUser ? selectedUser.name : ''}}</b><br>
                         Click here to download file<br>
                         <b style="padding-top: 5px;">{{data.fileName}}</b><br>
                         <b style="float: left; padding-top:5px; font-size: 11px;"
@@ -186,8 +206,11 @@
                   </div>
                 </div>
 
+                <div class="chat-footer msger-inputarea" *ngIf="!startConversation">
+                  <button class="sendBtn" (click)="startChat(selectedUser ? selectedUser.whatsAppNumber : selectdMobNum)">Start Conversation</button>
+                </div>
 
-                <div class="chat-footer msger-inputarea">
+                <div class="chat-footer msger-inputarea" *ngIf="startConversation">
                   <form [formGroup]="whatsAppForm">
                     <div class="card__col-lg-3 card__col-sm-4">
                       <mat-form-field appearance="outline">

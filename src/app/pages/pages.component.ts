@@ -53,7 +53,7 @@ export class PagesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.showWhatsAppNotification();
+    // this.showWhatsAppNotification();          //New whatsApp msg notifivation part hide
   }
 
   showWhatsAppNotification() {
