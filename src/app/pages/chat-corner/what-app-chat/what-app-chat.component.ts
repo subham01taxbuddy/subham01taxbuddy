@@ -313,26 +313,20 @@ export class WhatAppChatComponent implements OnInit {
       let body = {
         textMessage: this.whatsAppForm.controls["sentMessage"].value, //toUTF8String
         whatsAppNumber: mobileNo,
+        source: 'BO',
+        dialogueConstant: null
       };
-      let param = "/user/send-text-message";
+      let param = "/gateway/send-text-message";
       this.userService.sentChatMessage(param, body).subscribe(
         (result) => {
           this.loading = false;
           console.log(result);
-          // this.selectTemplate.reset();
-          // this.sentMessage.reset();
           this.whatsAppForm.reset();
           this._toastMessageService.alert(
             "success",
             "Message sent successfully."
           );
-          this.userchatData = result;
-          this.userchatData.forEach((element) => {
-            console.log("BEFORE:", element.textMessage);
-            // if (this.utileService.isNonEmpty(element.textMessage))
-            //   element.textMessage = element.textMessage.replace("\n", "\\n");
-            // console.log("AFTER:", element.textMessage);
-          });
+         
         },
         (error) => {
           this.loading = false;
@@ -362,6 +356,7 @@ export class WhatAppChatComponent implements OnInit {
             templateName: templateMsgInfo.templateName,
             attributes: this.newAttributes, //this.tempArrributes
             templateMessage: this.whatsAppForm.controls["sentMessage"].value,
+            source: 'BO'
           };
         } else {
           body = {
@@ -373,6 +368,7 @@ export class WhatAppChatComponent implements OnInit {
             fileName: templateMsgInfo.fileName,
             isMediaTemplate: true,
             mimeType: templateMsgInfo.mimeType,
+            source: 'BO'
           };
         }
         console.log("body: ", body);
