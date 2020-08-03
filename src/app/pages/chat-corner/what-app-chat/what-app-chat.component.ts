@@ -5,13 +5,14 @@ import {
   ViewChild,
   ElementRef,
 } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { UserMsService } from "app/services/user-ms.service";
 import { environment } from "environments/environment";
 import { ToastMessageService } from "app/services/toast-message.service";
 import { UtilsService } from "app/services/utils.service";
 import { Observable, timer } from "rxjs";
 import { take, map } from "rxjs/operators";
+import { AppConstants } from "app/shared/constants";
 //import { interval, Observable } from 'rxjs';
 
 @Component({
@@ -40,7 +41,9 @@ export class WhatAppChatComponent implements OnInit {
   oldAttributes: any = [];
   newAttributes: any = [];
   whatsAppForm: FormGroup;
-  searchNumber = new FormControl("");
+  searchNumber = new FormControl('',[Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex)]);
+  startConversation: boolean;
+  selectdMobNum: any;
 
   constructor(
     private _el: ElementRef,
@@ -54,17 +57,17 @@ export class WhatAppChatComponent implements OnInit {
     console.log("SME info: ", this.smeInfo);
 
   
-    this.userTimer = setInterval(() => {
-      // this.getUserNotify('continues');
-      this.getRandomUserDetail()
-    }, 10000);   
+    // this.userTimer = setInterval(() => {
+    //   // this.getUserNotify('continues');
+    //   this.getRandomUserDetail()
+    // }, 10000);   
     
 
-    this.userFetchChatTimer = setInterval(() => {
-      if (this.selectedUser) {
-        this.geUserChatDetail(this.selectedUser, "continues");
-      }
-    }, 5000);
+    // this.userFetchChatTimer = setInterval(() => {
+    //   if (this.selectedUser) {
+    //     this.geUserChatDetail(this.selectedUser, "continues");
+    //   }
+    // }, 5000);
   }
 
   ngOnInit() {
@@ -99,10 +102,44 @@ export class WhatAppChatComponent implements OnInit {
   numberOfNotifivation: any;
   tempData: any;
   getUserNotify(apicall) {
-          let userChatData = JSON.parse(sessionStorage.getItem('userChatNotifications'))
-          this.userDetail = userChatData;
-          this.filteredArray = userChatData;
-        
+          // let userChatData = JSON.parse(sessionStorage.getItem('userChatNotifications'))
+      this.loading = true;
+      let param = '/whatsapp/unread';
+      this.userService.getUserDetail(param).subscribe((res) => {
+          this.userDetail = res;
+          this.filteredArray = res;
+          console.log(this.userDetail)
+          this.loading = false;
+          this.startConversation = false;
+          },
+        error => {
+          this.loading = false;
+            //this._toastMessageService.alert("error", "Failed to tetch chating data.");
+      })
+
+      // this.userDetail = userChatData;
+      // this.filteredArray = userChatData;
+  }
+
+  getChatInfoByMobNo(){
+    console.log('this.searchNumber: ',this.searchNumber)
+    if(this.utileService.isNonEmpty(this.searchNumber.value) && this.searchNumber.valid){
+      this.loading = true;
+      let param = '/whatsapp/chat/'+this.searchNumber.value;
+      this.userService.getUserDetail(param).subscribe((res) => {
+       
+          console.log('res: ',res)
+          this.loading = false;
+          },
+        error => {
+          this.loading = false;
+            //this._toastMessageService.alert("error", "Failed to tetch chating data.");
+      })
+
+    }
+    else{
+      this._toastMessageService.alert("error", "Enter valid mobile number.");
+    }
   }
 
   updatedChat: any;
@@ -163,61 +200,93 @@ export class WhatAppChatComponent implements OnInit {
     );
   }
 
-  geUserChatDetail(user, apicall) {
-    if (apicall !== "continues") {
-      // window.scrollTo({
-      //   top: document.body.scrollHeight,
-      //   left: 0,
-      //   behavior: 'smooth'
-      // });
+  geUserChatDetail(user) {
+    // if (apicall !== "continues") {
+    //   // window.scrollTo({
+    //   //   top: document.body.scrollHeight,
+    //   //   left: 0,
+    //   //   behavior: 'smooth'
+    //   // });
 
-      // const el: HTMLDivElement = this._el.nativeElement;
-      // el.scrollTop = Math.max(0, el.scrollHeight - el.offsetHeight);
+    //   // const el: HTMLDivElement = this._el.nativeElement;
+    //   // el.scrollTop = Math.max(0, el.scrollHeight - el.offsetHeight);
 
-      this.whatsAppForm.reset();
-      this.whatsAppForm.controls["selectTemplate"].enable();
-      this.whatsAppForm.controls["sentMessage"].enable();
-      this.selectedUser = user;
-      this.loading = true;
-      this.getServicesAvailed(user.userId);
-      this.timeExpired = false;
-      this.countDown = 0;
-    } else {
-      this.loading = false;
+    //   this.whatsAppForm.reset();
+    //   this.whatsAppForm.controls["selectTemplate"].enable();
+    //   this.whatsAppForm.controls["sentMessage"].enable();
+    //   this.selectedUser = user;
+    //   this.loading = true;
+    //   this.getServicesAvailed(user.userId);
+    //   this.timeExpired = false;
+    //   this.countDown = 0;
+    // } else {
+    //   this.loading = false;
+    // }
+
+    if(user === 'bySearch'){
+      if(this.utileService.isNonEmpty(this.searchNumber.value) && this.searchNumber.valid){
+          user = '91'+this.searchNumber.value;
+      }
+      else{
+        this._toastMessageService.alert("error", "Enter valid mobile number.");
+      }
     }
 
+    this.loading = true;
+    this.selectdMobNum = user;
+    this.selectedUser = '';
+    this.serviceAvailedInfo = '';
     console.log("Here we getting selected user chat details");
-    let param = "/whatsapp-chat-log?whatsAppNumber=" + user.whatsAppNumber;
+    let mNO = 918299224792  //919545428497
+    let param = "/whatsapp/chat/"+ user;
     this.userService.getUserDetail(param).subscribe(
       (res) => {
         console.log(res, typeof res);
-        if (Object.entries(res).length > 0) {
+        console.log('CHECK', res.hasOwnProperty('userInfo'))
+        this.startConversation = false;
+       
+        if(res.hasOwnProperty('userInfo')){
+          this.getServicesAvailed(res['userInfo'].userId);
+          this.selectedUser = res['userInfo'];
+          this.timeExpired = false;
+          this.countDown = 0;
+          this.getTiemCount(res['chat']);
+          this.userchatData = res['chat'];
           this.loading = false;
-
-          if (this.backUpChatData) {
-            console.log("checkFetchInfoSame ", this.checkFetchInfoSame(res));
-            if (this.checkFetchInfoSame(res)) {
-              this.getTiemCount(res);
-            } else {
-              this.userchatData = res;
-              this.backUpChatData = this.userchatData;
-              this.getUserNotify("not-continues");
-              this.getTiemCount(res);
-            }
-          } else {
-            this.userchatData = res;
-            this.backUpChatData = this.userchatData;
-            this.getUserNotify("not-continues");
-            this.getTiemCount(res); //Show Timer Counter
-          }
-        } else {
-          if (apicall !== "continues") {
-            this.loading = false;
-            this.userchatData = [];
-            this._toastMessageService.alert("error", "There is no chat data.");
-          } else {
-          }
         }
+        else{
+          this.userchatData = res['chat'];
+          this.loading = false;
+        }
+        
+
+        // if (Object.entries(res).length > 0) {
+        //   this.loading = false;
+
+        //   if (this.backUpChatData) {
+        //     console.log("checkFetchInfoSame ", this.checkFetchInfoSame(res));
+        //     if (this.checkFetchInfoSame(res)) {
+        //       this.getTiemCount(res);
+        //     } else {
+        //       this.userchatData = res;
+        //       this.backUpChatData = this.userchatData;
+        //       this.getUserNotify("not-continues");
+        //       this.getTiemCount(res);
+        //     }
+        //   } else {
+        //     this.userchatData = res;
+        //     this.backUpChatData = this.userchatData;
+        //     this.getUserNotify("not-continues");
+        //     this.getTiemCount(res); //Show Timer Counter
+        //   }
+        // } else {
+        //   if (apicall !== "continues") {
+        //     this.loading = false;
+        //     this.userchatData = [];
+        //     this._toastMessageService.alert("error", "There is no chat data.");
+        //   } else {
+        //   }
+        // }
       },
       (error) => {
         this.loading = false;
@@ -614,5 +683,19 @@ export class WhatAppChatComponent implements OnInit {
         return hours + ":" + minutes + ":" + seconds;
       })
     );
+  }
+
+  startChat(whatsAppNumber){
+    console.log('whatsAppNumber: ',whatsAppNumber)
+    this.startConversation = !this.startConversation;
+    if(this.startConversation && this.utileService.isNonEmpty(whatsAppNumber)){
+      let param = "/whatsapp/unread/remove/"+whatsAppNumber;
+      this.userService.getUserDetail(param).subscribe(res=>{
+          console.log('User number remove form Unread Message')
+      },
+      error=>{
+        console.log('THere is Error for User number remove form Unread Message')
+      })
+    }
   }
 }
