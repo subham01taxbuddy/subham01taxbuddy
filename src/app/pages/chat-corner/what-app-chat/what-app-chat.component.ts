@@ -326,7 +326,7 @@ export class WhatAppChatComponent implements OnInit {
             "success",
             "Message sent successfully."
           );
-         
+          this.userchatData = result;
         },
         (error) => {
           this.loading = false;
@@ -407,6 +407,7 @@ export class WhatAppChatComponent implements OnInit {
       const formData = new FormData();
       formData.append("whatsAppNumber", this.selectedUser.whatsAppNumber);
       formData.append("multipartFile", this.uploadedFile);
+      formData.append("source", 'BO');
       console.log("formData: ", formData);
       let param = "/user/send-media-message";
       this.loading = true;
