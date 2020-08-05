@@ -355,7 +355,8 @@ export class SummaryComponent implements OnInit {
       // TODO
       if (this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'SUCCESS') {
         // this.router.navigate(['ack/success']);
-        this.router.navigate(['/pages/itr-filing/acknowledgement?status=success'])
+        // this.router.navigate(['/pages/itr-filing/acknowledgement?status=success'])
+        this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'success' } })
       } else if (!this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'DELAY') {
         // this.router.navigate(['ack/delay']);
         this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'delay' } })
