@@ -7,7 +7,7 @@
                     <div class="card__title" style="font-size: 20px;">Salary Income: {{getSalaryTaxableIncome()}}</div>
                 </mat-expansion-panel-header>
 
-                <div class="content vertLine" style="width: 35%;padding-right: 20px;">
+                <div class="content vertLine" style="width: 50%;padding-right: 20px;">
                     <div>
                         <span *ngFor="let form16 of getAllForm16s('FORM_16'); let i=index">
                             <a href="javascript:;" (click)="getForm16Url(i)">{{form16.fileName}}</a> &nbsp;&nbsp;
@@ -35,7 +35,7 @@
                         Form 16 not uploaded/Selected
                     </div>
                 </div>
-                <div class="content" style="width: 65%;" *ngIf="salaryView === 'TABLE'">
+                <div class="content" style="width: 50%;" *ngIf="salaryView === 'TABLE'">
                     <div>
                         <button class="btn long-btn" style="border: none;" (click)=" addEmployer(null)">Add Employer
                         </button>

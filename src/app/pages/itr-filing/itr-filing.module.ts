@@ -26,6 +26,8 @@ import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
 import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
 import { UpdateStatusComponent } from './update-status/update-status.component';
+import { DirectUploadComponent } from './direct-upload/direct-upload.component';
+// import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
     imports: [
@@ -37,6 +39,7 @@ import { UpdateStatusComponent } from './update-status/update-status.component';
         NgxImageZoomModule.forRoot(),
         PdfViewerModule,
         SharedModule,
+        PagesModule
         // NgxExtendedPdfViewerModule
     ],
     declarations: [
@@ -57,7 +60,9 @@ import { UpdateStatusComponent } from './update-status/update-status.component';
         AckSuccessComponent,
         AckDelayComponent,
         AckFailureComponent,
-        UpdateStatusComponent
+        UpdateStatusComponent,
+        DirectUploadComponent,
+        // InputUploadComponent
     ],
     entryComponents: [AddDonationDialogComponent]
 

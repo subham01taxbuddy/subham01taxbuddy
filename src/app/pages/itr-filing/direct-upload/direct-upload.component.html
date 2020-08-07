@@ -1,0 +1,53 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="main clearfix">
+    <div class="card" style="padding: 0 !important;">
+        <!-- <div class="col-md-12 col-sm-12 col-12"> -->
+        <mat-horizontal-stepper labelPosition="bottom" linear="true" #stepper (selectionChange)="tabChanged($event)">
+            <ng-template matStepperIcon="edit">
+                <mat-icon>done</mat-icon>
+            </ng-template>
+            <mat-step [stepControl]="personalForm">
+                <ng-template matStepLabel>Upload XML</ng-template>
+                <app-update-status></app-update-status>
+                <div class="card__row">
+                    <div class="card__col-xs-12 card__col-sm-12" style="padding: 10px 10px !important;">
+                        <!--  <app-input-upload [upload]="upload" [input_id]="'importFile'"
+                            (filesDropped)="onUploadFile($event)"></app-input-upload> -->
+                        <input type="file" file-model="MeterFile" class="inptfile" id="fileIDProof"
+                            (change)='onUploadFile($event)'>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="showProgress">
+                    <div class="col-lg-12">
+                        <progress id="file" max="100" [value]="uploaded" bufferValue="10" style="width:100%">
+                        </progress>{{uploaded}} %
+                    </div>
+                </div>
+                <!-- <label class="text-success">successMsg</label>
+                <label class="text-danger">errorMessage}}</label> -->
+
+                <button type="submit" class="btn" style="border: none;" (click)='uploadXML()'>Upload</button>
+            </mat-step>
+
+            <!-- <mat-step [stepControl]="incomeForm">
+                <ng-template matStepLabel>Generate PDF</ng-template>
+                <app-update-status *ngIf="tabIndex=== 1"></app-update-status>
+                <hr>
+                <app-salary *ngIf="tabIndex=== 1"></app-salary>
+                <app-house-property *ngIf="tabIndex=== 1"></app-house-property>
+                <app-other-income (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-other-income>
+            </mat-step>
+
+            <mat-step [stepControl]="taxSavingForm">
+                <ng-template matStepLabel>Submit XML</ng-template>
+                <app-investments-deductions (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 2">
+                </app-investments-deductions>
+            </mat-step> -->
+
+            <ng-template matStepperIcon="create">
+                <mat-icon>done</mat-icon>
+            </ng-template>
+        </mat-horizontal-stepper>
+    </div>
+</div>

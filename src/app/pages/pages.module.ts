@@ -215,6 +215,6 @@ export const MY_FORMATS = {
 
   exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,
     ReactiveFormsModule,
-    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule,]
+    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent]
 })
 export class PagesModule { }
