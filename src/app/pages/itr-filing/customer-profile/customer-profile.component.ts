@@ -92,7 +92,7 @@ export class CustomerProfileComponent implements OnInit {
     { value: 983, label: 'Usha Chellani' },
     { value: 23670, label: 'Ashwini Kapale' },
     { value: 23578, label: 'Aditi Ravindra Gujar' },
-    { value: 23564, label: 'Sonali Ghanwat' },
+    // { value: 23564, label: 'Sonali Ghanwat' },
     { value: 23668, label: 'Chaitanya Prakash Masurkar' },
 
 
