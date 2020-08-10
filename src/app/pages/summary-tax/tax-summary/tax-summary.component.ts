@@ -1354,7 +1354,7 @@ export class TaxSummaryComponent implements OnInit {
   getdeductionTotal(deductionArray) {
     var total = 0;
     for (let i = 0; i < deductionArray.length; i++) {
-      total = total + Number(deductionArray[0].eligibleAmount);
+      total = total + Number(deductionArray[i].eligibleAmount);
     }
     console.log('Total dneeAmountInCash: ', total)
     this.itrSummaryForm.controls['us80g'].setValue(total);
