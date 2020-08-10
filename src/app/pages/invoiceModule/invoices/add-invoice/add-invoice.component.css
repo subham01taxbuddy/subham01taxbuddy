@@ -35,7 +35,7 @@ table {
     float: right;
   }
 
-  .btn{
+  .butn{
     background-color: #63B12D;
     height: 36px;
     width: auto;
@@ -67,4 +67,9 @@ table {
     cursor: default;
     text-decoration: none;
     color: black;
+  }
+
+  .initiatedInfo{
+    font-size: 14px;
+    padding-left: 100px;
   }
