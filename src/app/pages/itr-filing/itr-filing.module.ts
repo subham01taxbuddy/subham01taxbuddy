@@ -27,6 +27,7 @@ import { SummaryComponent } from './summary/summary.component';
 import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
 import { UpdateStatusComponent } from './update-status/update-status.component';
 import { DirectUploadComponent } from './direct-upload/direct-upload.component';
+import { MyAssignedItrsComponent } from './my-assigned-itrs/my-assigned-itrs.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -62,6 +63,7 @@ import { DirectUploadComponent } from './direct-upload/direct-upload.component';
         AckFailureComponent,
         UpdateStatusComponent,
         DirectUploadComponent,
+        MyAssignedItrsComponent,
         // InputUploadComponent
     ],
     entryComponents: [AddDonationDialogComponent]
