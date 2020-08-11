@@ -247,16 +247,13 @@ export class AddInvoiceComponent implements OnInit {
       this.editInvoice = false;
       this.addNewUser = false;
       this.setInitiatedData()
-      this.selectedUserId = userId; //;3012
-      // console.log('user: ', this.selectUser.controls['user'].value)
-      // this.userInfo = this.available_merchant_list.filter(item => item.name.toLowerCase() === this.selectUser.value.user.toLowerCase());
-      // console.log('select USER: ', this.userInfo)
-      // console.log('this.invoiceForm', this.invoiceForm)
-      // if (this.userInfo.length !== 0) {
-       // const param = '/itr/invoice/' + this.userInfo[0].userId;
+      this.selectedUserId = userId; 
+
+        this.loading = true;
         const param = '/itr/invoice/' + this.selectedUserId;
         this.userService.getMethodInfo(param).subscribe((result: any) => {
           this.getUserInitiatedData();
+          this.loading = false;
           console.log('this.invoiceForm', this.invoiceForm)
            debugger
           this.invoiceForm.controls['paymentCollectedBy'].setValidators(null);
@@ -296,6 +293,7 @@ export class AddInvoiceComponent implements OnInit {
           this.setUserAddressInfo();        
 
         }, error => {
+          this.loading = false;
           this._toastMessageService.alert("error", "There is some issue to fetch user invoice data.");
         });
       // }
@@ -373,43 +371,9 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   setUserAddressInfo() {
-    debugger
-    // if (type === 'GSTProfileData') {
-    //   // const param = '/user/profile/' + this.userInfo[0].userId;
-    //   const param = '/user/profile/' + this.selectedUserId
-    //   this.userService.getMethodInfo(param).subscribe((result: any) => {
-    //     console.log('User Address info: ', result)
-    //     if (result) {
-    //       let name = (result.fName ? result.fName : '') + ' ' + (result.mName ? result.mName : '') + ' ' + (result.lName ? result.lName : '')
-    //       this.invoiceForm.controls['billTo'].setValue(name);
-    //       this.invoiceForm.controls['phone'].setValue(result.mobileNumber ? result.mobileNumber : '');
-    //       this.invoiceForm.controls['email'].setValue(result.emailAddress ? result.emailAddress : '');
-
-    //       let smeInfo = JSON.parse(localStorage.getItem('UMD'));
-    //       this.invoiceForm.controls['inovicePreparedBy'].setValue(smeInfo.USER_UNIQUE_ID)
-    //     }
-    //     //this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
-    //   }, error => {
-    //     //  this._toastMessageService.alert("error", "There is some issue to fetch user profile data.");
-    //   });
-
-    //   this.showTaxRelatedState('Maharashtra');
-    // }
-    // else if (type === 'InvoiceData') {
       debugger
       if(this.invoiceDetail.length > 0){
         console.log('InvoiceDetail: ', this.invoiceDetail[0])
-        // this.invoiceForm.controls['billTo'].setValue(this.invoiceDetail[0].billTo);
-        // this.invoiceForm.controls['addressLine1'].setValue(this.invoiceDetail[0].addressLine1);
-        // this.invoiceForm.controls['addressLine2'].setValue(this.invoiceDetail[0].addressLine2 ? this.invoiceDetail[0].addressLine2 : '');
-        // this.invoiceForm.controls['pincode'].setValue(this.invoiceDetail[0].pincode);
-        // this.invoiceForm.controls['city'].setValue(this.invoiceDetail[0].city);
-        // this.invoiceForm.controls['state'].setValue(this.invoiceDetail[0].state);
-        // this.invoiceForm.controls['country'].setValue(this.invoiceDetail[0].country);
-        // this.invoiceForm.controls['gstin'].setValue(this.invoiceDetail[0].gstin ? this.invoiceDetail[0].gstin : '');
-        // this.invoiceForm.controls['phone'].setValue(this.invoiceDetail[0].phone);
-        // this.invoiceForm.controls['email'].setValue(this.invoiceDetail[0].email);
-        // this.invoiceForm.controls['ifaLeadClient'].setValue(this.invoiceDetail[0].ifaLeadClient);
         this.invoiceForm.patchValue(this.invoiceDetail[0])
         debugger
         console.log('Invoice Form: ', this.invoiceForm)
@@ -420,8 +384,6 @@ export class AddInvoiceComponent implements OnInit {
   
       console.log('invoiceForm: ', this.invoiceForm)
       this.showTaxRelatedState(this.invoiceForm.controls['state'].value);
-  // }
-
   }
 
   createInvoice(): FormGroup {
@@ -929,6 +891,11 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   addNewUserInvoice() {
+    this.currentUserId = 0;
+    this.user_data = [];
+    this.searchVal = "";
+    this.invoiceDetail = '';
+
     this.addNewUser = true;
     this.invoiceInfoCalled();
     this.getUserInvoiceList();
