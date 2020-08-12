@@ -243,7 +243,7 @@ export class AddInvoiceComponent implements OnInit {
       this.selectedUserId = '';
     }
     // if (this.selectUser.controls['user'].valid) {
-    if (this.searchVal !== "" && userId) {
+    if (this.utilsService.isNonEmpty(userId)) {
       this.editInvoice = false;
       this.addNewUser = false;
       this.setInitiatedData()
@@ -374,8 +374,18 @@ export class AddInvoiceComponent implements OnInit {
       debugger
       if(this.invoiceDetail.length > 0){
         console.log('InvoiceDetail: ', this.invoiceDetail[0])
-        this.invoiceForm.patchValue(this.invoiceDetail[0])
-        debugger
+        //this.invoiceForm.patchValue(this.invoiceDetail[0])
+        this.invoiceForm.controls['billTo'].setValue(this.invoiceDetail[0].billTo);
+        this.invoiceForm.controls['addressLine1'].setValue(this.invoiceDetail[0].addressLine1);
+        this.invoiceForm.controls['addressLine2'].setValue(this.invoiceDetail[0].addressLine2);
+        this.invoiceForm.controls['pincode'].setValue(this.invoiceDetail[0].pincode);
+        this.invoiceForm.controls['city'].setValue(this.invoiceDetail[0].city);
+        this.invoiceForm.controls['state'].setValue(this.invoiceDetail[0].state);
+        this.invoiceForm.controls['country'].setValue(this.invoiceDetail[0].country);
+        this.invoiceForm.controls['gstin'].setValue(this.invoiceDetail[0].gstin);
+        this.invoiceForm.controls['phone'].setValue(this.invoiceDetail[0].phone);
+        this.invoiceForm.controls['email'].setValue(this.invoiceDetail[0].email);
+        this.invoiceForm.controls['ifaLeadClient'].setValue(this.invoiceDetail[0].ifaLeadClient);
         console.log('Invoice Form: ', this.invoiceForm)
       }
         let smeInfo = JSON.parse(localStorage.getItem('UMD'));
@@ -776,7 +786,8 @@ export class AddInvoiceComponent implements OnInit {
           this.invoiceForm.reset();
           console.log('InvoiceForm: ', this.invoiceForm)
           // this.invoiceDetail = '';
-          this.getUserInvoiceList(this.user_data.userId);  //'not-select'
+            this.getUserInvoiceList(this.selectedUserId);  //'not-select'
+          
         }, error => {
           this.loading = false;
           this._toastMessageService.alert("error", "There is some issue to save user invoice data.");
