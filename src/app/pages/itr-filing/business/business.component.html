@@ -1,0 +1,493 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div>
+    <form>
+        <mat-accordion>
+            <mat-expansion-panel class="color-panel accordion-border" [expanded]="true">
+                <mat-expansion-panel-header>
+                    <div class="card__title" style="font-size: 20px;">Business Income: {{calTotalPresumptiveIncome()}}
+                        <!-- {{getSalaryTaxableIncome()}} -->
+                    </div>
+                </mat-expansion-panel-header>
+
+                <div class="content vertLine" style="width: 35%;padding-right: 20px;">
+                    <div>
+                        <span *ngFor="let docs of itrDocuments; let i=index">
+                            <a href="javascript:;" (click)="getDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
+                        </span>
+                    </div>
+                    <br><br><br>
+                    <ngx-image-zoom *ngIf="docDetails.docType !== 'pdf'" [thumbImage]="docDetails.docUrl"
+                        [fullImage]="docDetails.docUrl" [magnification]="1" [enableScrollZoom]="true"
+                        [enableLens]="true" [lensWidth]="200">
+                    </ngx-image-zoom>
+                    <div *ngIf="docDetails.docType === 'pdf'">
+                        <button ion-button (click)="incrementZoom(-0.1)">
+                            -
+                        </button>&nbsp;
+                        <button ion-button (click)="incrementZoom(0.1)">
+                            +
+                        </button>
+                        <pdf-viewer [src]="docDetails.docUrl" [zoom]="zoom" [original-size]="true" [autoresize]="true"
+                            [render-text]="true" style="display: block;height: 100%">
+                        </pdf-viewer>
+                    </div>
+                    <div *ngIf="docDetails.docUrl ===''">
+                        Documents not uploaded/Selected
+                    </div>
+                </div>
+                <div class="content" style="width: 65%;" *ngIf="businessMode === 'TABLE'">
+                    <div>
+                        <button class="btn long-btn" style="border: none;"
+                            [style.cursor]="ITR_JSON.business.presumptiveIncomes.length > 2 ?'not-allowed':'pointer'"
+                            [disabled]="ITR_JSON.business.presumptiveIncomes.length > 2"
+                            (click)="addBusinessIncome()">Add
+                        </button>
+                    </div>
+                    <!--  <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
+                        <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
+                            [gridOptions]="businessGridOptions" (rowClicked)="onBusinessRowClicked($event)">
+                        </ag-grid-angular>
+                    </div> -->
+                    <div class="card__row">
+                        <div class="card__col-xs-12">
+                            <div class="report-table-container">
+                                <div class="report-table-wrapper">
+                                    <table class="report-table">
+                                        <thead class="report-table__head">
+                                            <tr class="report-table__row report-table__row_head">
+                                                <th class="report-table__cell report-table__cell_name">Nature of
+                                                    business</th>
+                                                <th class="report-table__cell report-table__cell_name">Presumptive
+                                                    income</th>
+                                                <th class="report-table__cell report-table__cell_name"></th>
+                                                <th class="report-table__cell report-table__cell_name"></th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody class="report-table__body">
+                                            <ng-template ngFor let-tab [ngForOf]="ITR_JSON.business.presumptiveIncomes"
+                                                let-i="index">
+                                                <tr class="report-table__row">
+                                                    <td class="report-table__cell report-table__cell_day">
+                                                        {{tab.natureOfBusiness}} -
+                                                        {{natureOfBusinessFromCode(tab.natureOfBusiness)}}</td>
+                                                    <td class="report-table__cell report-table__cell_day">
+                                                        {{calPresumptiveIncome(tab.incomes)}}
+                                                    </td>
+
+                                                    <td class="report-table__cell report-table__cell_day">
+                                                        <i class="fa fa-pencil" aria-hidden="true"
+                                                            style="cursor: pointer;" (click)="editBusiness(i)"></i>
+                                                    </td>
+                                                    <td class="report-table__cell report-table__cell_day">
+                                                        <i class="fa fa-trash" aria-hidden="true"
+                                                            style="cursor: pointer;" (click)="deleteBusiness(i)"></i>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="commonValidForm">
+                        <div class="com_model col-xs-12">
+                            <h3>Provide values as per balance sheet as on
+                                31/03/{{this.ITR_JSON.assessmentYear.substring(0,4)}}. These are mandatory to be filled
+                                as per income tax return.</h3>
+
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6"> <label>Liabilities <span
+                                            class="fa fa-info-circle"></span></label></div>
+                                <div class="card__col-xs-12 card__col-sm-6"> <label>Assets <span
+                                            class="fa fa-info-circle"></span></label></div>
+                            </div>
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Partner’s/Member’s capital or own capital</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['partnerOwnCapital']"
+                                            matInput placeholder="Partner’s/Member’s capital or own capital"
+                                            name="partnerOwnCapital" class="input-field" maxlength="14"
+                                            (blur)="calculateTotal1()">
+                                        <mat-error *ngIf="commonForm.controls['partnerOwnCapital'].hasError('pattern')">
+                                            Enter positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Fixed assets</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['fixedAssets']" matInput
+                                            placeholder="Fixed assets" name="fixedAssets" class="input-field"
+                                            maxlength="14" (blur)="calculateTotal2()">
+                                        <mat-error *ngIf="commonForm.controls['fixedAssets'].hasError('pattern')">
+                                            Enter positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Secured loan</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['securedLoan']" matInput
+                                            placeholder="Secured loan" name="securedLoan" class="input-field"
+                                            maxlength="14" (blur)="calculateTotal1()">
+                                        <mat-error *ngIf="commonForm.controls['securedLoan'].hasError('pattern')">
+                                            Enter positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Inventories</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['inventories']" matInput
+                                            placeholder="Inventories" name="Inventories" class="input-field"
+                                            maxlength="14" (blur)="calculateTotal2()" required>
+                                        <mat-error *ngIf="commonForm.controls['inventories'].hasError('pattern')">
+                                            Enter positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Unsecured loan</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['unsecuredLoan']"
+                                            matInput placeholder="Unsecured loan" name="unsecuredLoan"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal1()">
+                                        <mat-error *ngIf="commonForm.controls['unsecuredLoan'].hasError('pattern')">
+                                            Enter positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Sundry debtors</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['sundryDeptors']"
+                                            matInput placeholder="Sundry debtors" name="sundryDeptors"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal2()" required>
+                                        <mat-error *ngIf="commonForm.controls['sundryDeptors'].hasError('pattern')">
+                                            Enter positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Advances</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['advances']" matInput
+                                            placeholder="Advances" name="Advances" class="input-field" maxlength="14"
+                                            (blur)="calculateTotal1()">
+                                        <mat-error *ngIf="commonForm.controls['advances'].hasError('pattern')">Enter
+                                            positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Balance with bank</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['balanceWithBank']"
+                                            matInput placeholder="Balance with bank" name="balanceWithBank"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal2()">
+                                        <mat-error *ngIf="commonForm.controls['balanceWithBank'].hasError('pattern')">
+                                            Enter positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Sundry creditors</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['sundryCreditors']"
+                                            matInput placeholder="Sundry creditors" name="sundryCreditors"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal1()" required>
+                                        <mat-error *ngIf="commonForm.controls['sundryCreditors'].hasError('pattern')">
+                                            Enter positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Cash in hand</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['cashInHand']" matInput
+                                            placeholder="Cash in hand" name="cashInHand" class="input-field"
+                                            maxlength="14" (blur)="calculateTotal2()" required>
+                                        <mat-error *ngIf="commonForm.controls['cashInHand'].hasError('pattern')">
+                                            Enter positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Other liabilities</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['otherLiabilities']"
+                                            matInput placeholder="Other liabilities" name="otherLiabilities"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal1()">
+                                        <mat-error *ngIf="commonForm.controls['otherLiabilities'].hasError('pattern')">
+                                            Enter positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Loans and advance</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['loanandAdvance']"
+                                            matInput placeholder="Loans and advance" name="loanandAdvance"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal2()">
+                                        <mat-error *ngIf="commonForm.controls['loanandAdvance'].hasError('pattern')">
+                                            Enter positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6"> &nbsp;</div>
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Other assets</mat-label>
+                                        <input type="number" [formControl]="commonForm.controls['otherAsset']" matInput
+                                            placeholder="Other assets" name="otherAsset" class="input-field"
+                                            maxlength="14" (blur)="calculateTotal2()">
+                                        <mat-error *ngIf="commonForm.controls['otherAsset'].hasError('pattern')">
+                                            Enter positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <h3>Total: <span class="fa fa-inr"></span>{{utilsService.currencyFormatter(total1)}}
+                                    </h3>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <h3>Total: <span class="fa fa-inr"></span>
+                                        {{utilsService.currencyFormatter(total2)}}</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <b>Provide your turnover details as per GST returns (Optional)</b>
+                        <div class="card__row">
+                            <div class="card__col-xs-12 card__col-sm-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>GST Number</mat-label>
+                                    <input
+                                        matTooltip="(GST pattern is NNXXXXXNNNNXZZZ N is number, X is character, Z is number or character)"
+                                        matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput upperCase
+                                        placeholder="GST Number" name="gstrNumber"
+                                        [formControl]="commonForm.controls['gstrNumber']" class="input-field">
+                                    <mat-error *ngIf="commonForm.controls['gstrNumber'].hasError('pattern')">Enter
+                                        valid GST Number</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-xs-12 card__col-sm-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Turnover amount</mat-label>
+                                    <input matInput placeholder="Turnover amount" name="TurnOver"
+                                        [formControl]="commonForm.controls['turnOverAsPerGST']" class="input-field"
+                                        maxlength="14">
+                                    <mat-error *ngIf="commonForm.controls['turnOverAsPerGST'].hasError('pattern')">
+                                        Enter positive number without decimal.</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="pull-right">
+                            <button class="btn long-btn" style="border: none;" (click)="saveCommonForm()">Save Business
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="content" style="width: 65%;" *ngIf="businessMode === 'FORM'">
+                    <div class="card__row">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Select Type of Business</mat-label>
+                            <mat-select placeholder="Select Type of Business" name="businessType"
+                                [formControl]="businessType"
+                                (selectionChange)="changeNatureOfBusiness(businessType.value)" required>
+                                <mat-option *ngFor="let businessType of businessTypeDropdown"
+                                    [value]="businessType.value">
+                                    {{ businessType.label}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <!-- TODO -->
+                    <!-- *ngIf="businesTypeString === 'BUSINESS'" -->
+                    <div class="card__title" style="padding:10px; font-size: 20px;"
+                        *ngIf="businessType.value === 'BUSINESS'">
+                        Business income – section 44AD
+                    </div>
+                    <div class="card__title" style="padding:10px; font-size: 20px;"
+                        *ngIf="businessType.value === 'PROFESSIONAL'">
+                        Professional income - section 44ADA
+                    </div>
+                    <form>
+                        <div class="card__row">
+                            <div class="card__col-xs-12 card__col-sm-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>{{natureOfBusinessPlaceholder}}</mat-label>
+                                    <input type="text" placeholder="{{natureOfBusinessPlaceholder}}"
+                                        aria-label="Assignee" matInput [formControl]="natureOfBusinessForm"
+                                        [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()" required>
+                                    <!-- <i class="material-icons align-arrow-right">arrow_drop_down</i> -->
+                                    <mat-error *ngIf="natureOfBusinessForm.invalid">
+                                        Please select value from dropdown only.
+                                    </mat-error>
+                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                        <mat-option *ngFor="let option of filteredOptions | async"
+                                            [value]="option.label">
+                                            {{option.label}}-{{option.code}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-xs-12 card__col-sm-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Trade name</mat-label>
+                                    <input matInput placeholder="Trade name" name="tradeName" [formControl]="tradeName"
+                                        class="input-field" maxlength="75" required>
+                                    <mat-error *ngIf="tradeName.hasError('pattern')">Name
+                                        should contain character only</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <span *ngIf="businessType.value === 'BUSINESS'">
+                            <h4 class="col-xs-12">Gross turnover of the year – received in bank</h4>
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Receipt received in bank</mat-label>
+                                        <input matInput
+                                            matTooltip="Total collection from client received in bank (including cheque)"
+                                            matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                            placeholder="Receipt received in bank" name="ReceiptReceivedInBank"
+                                            [formControl]="businessIncomeBankForm.controls['recieptRecievedInBank']"
+                                            class="input-field" maxlength="8" type="number"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            (blur)="calBankPresumptiveIncome(businessIncomeBankForm.controls['recieptRecievedInBank'].value)">
+                                        <mat-error
+                                            *ngIf="businessIncomeBankForm.controls['recieptRecievedInBank'].hasError('pattern')">
+                                            Enter
+                                            positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Presumptive income at 6%</mat-label>
+                                        <input matInput placeholder="Presumptive income at 6%"
+                                            name="presumptiveIncomeRecieveBank"
+                                            matTooltip="Minimum income as per section 44AD (6%)"
+                                            matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                            [formControl]="businessIncomeBankForm.controls['presumptiveIncomeRecieveBank']"
+                                            class="input-field" maxlength="14" type="number"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        <mat-error
+                                            *ngIf="businessIncomeBankForm.controls['presumptiveIncomeRecieveBank'].hasError('pattern')">
+                                            Enter
+                                            positive number without decimal.</mat-error>
+                                        <mat-error
+                                            *ngIf="businessIncomeBankForm.controls['presumptiveIncomeRecieveBank'].hasError('min')">
+                                            Minimum
+                                            value must be
+                                            {{businessIncomeBankForm.controls['minimumPresumptiveIncome'].value}}
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="businessIncomeBankForm.controls['presumptiveIncomeRecieveBank'].hasError('max')">
+                                            Amount
+                                            can not exceed receipt.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <h4>Gross turnover of the year – received other than bank</h4>
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Received in any other mode</mat-label>
+                                        <input matInput
+                                            matTooltip="Total collection from client received in any other mode (example cash)"
+                                            matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                            placeholder="Received in any other mode" name="ReceivedInCash"
+                                            [formControl]="businessIncomeCashForm.controls['recievedinCash']"
+                                            class="input-field" maxlength="8" type="number"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            (blur)="calCashPresumptiveIncome(businessIncomeCashForm.controls['recievedinCash'].value)">
+                                        <mat-error
+                                            *ngIf="businessIncomeCashForm.controls['recievedinCash'].hasError('pattern')">
+                                            Enter
+                                            positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Presumptive income at 8%</mat-label>
+                                        <input matInput matTooltip="Minimum income as per section 44AD (8%)"
+                                            matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                            placeholder="Presumptive income at 8%" name="presumptiveIncomeRecievedCash"
+                                            [formControl]="businessIncomeCashForm.controls['presumptiveIncomeRecievedCash']"
+                                            class="input-field" maxlength="14" type="number"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        <mat-error
+                                            *ngIf="businessIncomeCashForm.controls['presumptiveIncomeRecievedCash'].hasError('pattern')">
+                                            Enter
+                                            positive number without decimal.</mat-error>
+                                        <mat-error
+                                            *ngIf="businessIncomeCashForm.controls['presumptiveIncomeRecievedCash'].hasError('min')">
+                                            Minimum
+                                            value must be
+                                            {{businessIncomeCashForm.controls['minimumPresumptiveIncome'].value}}
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="businessIncomeCashForm.controls['presumptiveIncomeRecievedCash'].hasError('max')">
+                                            Amount
+                                            can not exceed receipt.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </span>
+                        <span *ngIf="businessType.value === 'PROFESSIONAL'">
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Gross receipts</mat-label>
+                                        <input matInput placeholder="Gross receipts" name="grossReciept"
+                                            [formControl]="professionIncomeForm.controls['grossReciept']"
+                                            class="input-field" maxlength="7" type="number"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            (blur)="calprofessionPresumptiveIncome(professionIncomeForm.controls['grossReciept'].value)">
+                                        <mat-error
+                                            *ngIf="professionIncomeForm.controls['grossReciept'].hasError('pattern')">
+                                            Enter
+                                            positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Presumptive income min 50%</mat-label>
+                                        <input matInput currencyMask placeholder="Presumptive income min 50%"
+                                            name="presumptiveIncome44ADA"
+                                            [formControl]="professionIncomeForm.controls['presumptiveIncome']"
+                                            class="input-field" maxlength="14">
+                                        <mat-error
+                                            *ngIf="professionIncomeForm.controls['presumptiveIncome'].hasError('pattern')">
+                                            Enter
+                                            positive number without decimal.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </span>
+                        <div class="pull-right">
+                            <a class="btn btn-cancel" (click)="cancelBusinessForm()">Cancel</a>
+                            <button class="btn long-btn" style="border: none;" (click)="saveBusinessDetail()">Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </form>
+</div>

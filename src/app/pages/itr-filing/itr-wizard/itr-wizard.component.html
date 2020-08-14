@@ -26,6 +26,7 @@
         <hr>
         <app-salary *ngIf="tabIndex=== 1"></app-salary>
         <app-house-property *ngIf="tabIndex=== 1"></app-house-property>
+        <app-business *ngIf="tabIndex=== 1"></app-business>
         <app-other-income (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-other-income>
         <!--  <div class="rightBt">
             <button class="backBt" mat-button (click)="previousTab('personal')" matStepperPrevious>Back</button>

@@ -86,7 +86,7 @@ import Storage from '@aws-amplify/storage';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 // import { NgxDocViewerModule } from 'ngx-doc-viewer';
-// import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
 import { AgGridCheckboxComponent } from 'app/additional-components/ag-grid-checkbox/ag-grid-checkbox.component';
@@ -194,7 +194,7 @@ export const MY_FORMATS = {
     ModalModule.forRoot(),
     NgxImageZoomModule.forRoot(),
     PdfViewerModule,
-    // NgxExtendedPdfViewerModule,
+    NgxExtendedPdfViewerModule,
     // AgGridModule.withComponents([]),
     //MaterialModule,
     SharedModule,
@@ -215,6 +215,6 @@ export const MY_FORMATS = {
 
   exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,
     ReactiveFormsModule,
-    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent]
+    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent, NgxExtendedPdfViewerModule]
 })
 export class PagesModule { }
