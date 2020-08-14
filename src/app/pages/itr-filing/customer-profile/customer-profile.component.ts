@@ -63,6 +63,11 @@ export class CustomerProfileComponent implements OnInit {
   itrTypes = [
     { value: '1', label: 'ITR-1' },
     { value: '4', label: 'ITR-4' },
+    { value: '2', label: 'ITR-2' },
+    { value: '3', label: 'ITR-3' },
+    { value: '5', label: 'ITR-5' },
+    { value: '6', label: 'ITR-6' },
+    { value: '7', label: 'ITR-7' },
   ];
   returnTypes = [
     { value: 'N', label: 'Original' },
@@ -87,8 +92,21 @@ export class CustomerProfileComponent implements OnInit {
     { value: 983, label: 'Usha Chellani' },
     { value: 23670, label: 'Ashwini Kapale' },
     { value: 23578, label: 'Aditi Ravindra Gujar' },
-    { value: 23564, label: 'Sonali Ghanwat' },
+    // { value: 23564, label: 'Sonali Ghanwat' },
     { value: 23668, label: 'Chaitanya Prakash Masurkar' },
+
+
+    { value: 25942, label: 'Vaibhav M. Nilkanth' },
+    { value: 26220, label: 'Pratiksha Shivaji Jagtap' },
+    { value: 177, label: 'Aditya U.Singh' },
+    { value: 26195, label: 'Tejaswi Suraj Bodke' },
+    { value: 23505, label: 'Tejshri Hanumant Bansode' },
+    { value: 26215, label: 'Deepali Nivrutti Pachangane' },
+    { value: 26217, label: 'Manasi Jadhav' },
+    { value: 26236, label: 'Supriya Mahindrakar' },
+    { value: 26218, label: 'Mrudula Vishvas Shivalkar' },
+    { value: 26235, label: 'Chaitrali Ranalkar' },
+
     { value: 1065, label: 'Urmila Warve' },
     { value: 1067, label: 'Divya Bhanushali' },
     { value: 21354, label: 'Brijmohan Lavaniya' },
@@ -353,6 +371,9 @@ export class CustomerProfileComponent implements OnInit {
     }
     this.customerProfileForm.patchValue(this.ITR_JSON);
     this.customerProfileForm.controls['planIdSelectedByUser'].disable();
+    if (this.customerProfileForm.controls['planIdSelectedByTaxExpert'].value === 0) {
+      this.customerProfileForm.controls['planIdSelectedByTaxExpert'].setValue(null);
+    }
     if (this.utilsService.isNonEmpty(this.ITR_JSON.family) && this.ITR_JSON.family instanceof Array) {
       this.ITR_JSON.family.filter(item => {
         if (item.relationShipCode === 'SELF') {
@@ -411,6 +432,7 @@ export class CustomerProfileComponent implements OnInit {
 
   }
   saveProfile(ref) {
+    console.log('customerProfileForm: ', this.customerProfileForm);
     this.findAssesseeType()
     if (this.customerProfileForm.valid) {
       this.loading = true;
@@ -455,8 +477,14 @@ export class CustomerProfileComponent implements OnInit {
             sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
             this.loading = false;
             this.utilsService.showSnackBar('Customer profile updated successfully.');
-            if (ref === "NEXT") {
-              this.router.navigate(['/pages/itr-filing/itr']);
+            if (ref === "CONTINUE") {
+              if (this.customerProfileForm.controls['itrType'].value === '1'
+                || this.customerProfileForm.controls['itrType'].value === '4')
+                this.router.navigate(['/pages/itr-filing/itr']);
+              else
+                this.router.navigate(['/pages/itr-filing/direct-upload']);
+            } else if (ref === "DIRECT") {
+              this.router.navigate(['/pages/itr-filing/direct-upload']);
             }
           }, error => {
             this.utilsService.showSnackBar('Fialed to update customer profile.');
@@ -466,8 +494,14 @@ export class CustomerProfileComponent implements OnInit {
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
           this.loading = false;
           this.utilsService.showSnackBar('Customer profile updated successfully.');
-          if (ref === "NEXT") {
-            this.router.navigate(['/pages/itr-filing/itr']);
+          if (ref === "CONTINUE") {
+            if (this.customerProfileForm.controls['itrType'].value === '1'
+              || this.customerProfileForm.controls['itrType'].value === '4')
+              this.router.navigate(['/pages/itr-filing/itr']);
+            else
+              this.router.navigate(['/pages/itr-filing/direct-upload']);
+          } else if (ref === "DIRECT") {
+            this.router.navigate(['/pages/itr-filing/direct-upload']);
           }
         }
       }, error => {

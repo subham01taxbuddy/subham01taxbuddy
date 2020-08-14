@@ -62,4 +62,124 @@ export class UtilsService {
         });
     }
 
+    createEmptyJson(profile, assessmentYear, financialYear) {
+        const ITR_JSON = {
+            ackStatus: '',
+            acknowledgementReceived: false,
+            userId: this.isNonEmpty(profile) ? profile.userId : null,
+            itrId: null,
+            pid: '',
+            email: this.isNonEmpty(profile) ? profile.emailAddress : '',
+            contactNumber: this.isNonEmpty(profile) ? profile.mobileNumber : '',
+            panNumber: this.isNonEmpty(profile) ? profile.panNumber : '',
+            aadharNumber: '', // profile.aadharNumber,
+            residentialStatus: this.isNonEmpty(profile) ? profile.residentialStatus : '',
+            maritalStatus: this.isNonEmpty(profile) ? profile.maritalStatus : '',
+            assesseeType: '',
+            assessmentYear: assessmentYear,
+            currency: 'INR',
+            locale: 'en_IN',
+            financialYear: financialYear,
+            filingTeamMemberId: null,
+            planIdSelectedByUser: null,
+            planIdSelectedByTaxExpert: null,
+            eFillingPortalPassword: '*****',
+            isRevised: 'N',
+            isDefective: 'N',
+            dateOfNotice: '',
+            noticeIdentificationNo: '',
+            isLate: 'N',
+            eFillingCompleted: false,
+            eFillingDate: '',
+            employerCategory: '',
+            orgITRAckNum: null,
+            ackNumber: '',
+            orgITRDate: '',
+            itrType: '',
+            planName: '',
+            family: [
+                {
+                    pid: null,
+                    fName: this.isNonEmpty(profile) ? profile.fName : '',
+                    mName: this.isNonEmpty(profile) ? profile.mName : '',
+                    lName: this.isNonEmpty(profile) ? profile.lName : '',
+                    fatherName: this.isNonEmpty(profile) ? profile.fatherName : '', // Added by arati
+                    age: null,
+                    gender: this.isNonEmpty(profile) ? profile.gender : '',
+                    relationShipCode: 'SELF',
+                    relationType: 'SELF',
+                    dateOfBirth: this.isNonEmpty(profile) ? profile.dateOfBirth : ''
+                }
+            ],
+            address: this.isNonEmpty(profile) && this.isNonEmpty(profile.address) ? profile.address[0] : null,
+            declaration: null,
+            disability: null,
+            upload: [],
+            employers: [],
+            houseProperties: [],
+            capitalGain: [],
+            business: {
+                presumptiveIncomes: [],
+                financialParticulars: null
+            },
+            pastYearLosses: [],
+            foreignIncome: null,
+            incomes: [],
+            investments: [],
+            donations: [],
+            loans: [],
+            expenses: [],
+            insurances: [],
+            assetsLiabilities: null,
+            bankDetails: this.isNonEmpty(profile) && this.isNonEmpty(profile.bankDetails) ? profile.bankDetails : [],
+            taxPaid: {
+                onSalary: [],
+                otherThanSalary16A: [],
+                otherThanSalary26QB: [],
+                tcs: [],
+                otherThanTDSTCS: [],
+                paidRefund: []
+            },
+            systemFlags: {
+                hasSalary: false,
+                hasHouseProperty: false,
+                hasMultipleProperties: false,
+                hasPresumptiveIncome: false,
+                hasForeignAssets: false,
+                hasCapitalGain: false,
+                hasBroughtForwardLosses: false,
+                hasAgricultureIncome: false,
+                hasOtherIncome: false,
+                hasParentOverSixty: false,
+                hraAvailed: false,
+
+                // Mobile Use
+                hasDisabilitySelf: false,
+                hasEducationalLoan: false,
+                hasHRA: false,
+                hasAnyOtherDonations: false,
+                hasMedicalExpense: false,
+                hasExtendedEndDate: false,
+                hasForeignBank: false,
+                directorInCompany: false,
+                haveUnlistedShares: false
+            },
+            agriculturalDetails: {
+                nameOfDistrict: '',
+                landInAcre: null,
+                owner: '',
+                typeOfLand: '',
+                pinCode: ''
+            },
+            itrProgress: [],
+            directorInCompany: [],
+            unlistedSharesDetails: [],
+            dateOfDividendIncome: null,
+            lastVisitedURL: '',
+            seventhProviso139: null,
+            depPayInvClmUndDednVIA: 'N'
+        };
+
+        return ITR_JSON;
+    }
 }

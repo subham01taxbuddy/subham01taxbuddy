@@ -1,0 +1,12 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="main clearfix">
+    <div class="card">
+        <!-- Search for data -->
+        <div class="card__row">
+            <ag-grid-angular class="ag-theme-balham" [gridOptions]="myItrsGridOptions"
+                (rowClicked)="onRowClicked($event)">
+            </ag-grid-angular>
+        </div>
+    </div>
+</div>

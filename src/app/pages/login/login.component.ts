@@ -129,9 +129,9 @@ export class LoginComponent implements OnInit {
 
 
     if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
-      this.router.navigate(['pages/home']);
+      this.router.navigate(['/pages/itr-filing/my-itrs']);
     } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
-      this.router.navigate(['pages/home']);
+      this.router.navigate(['/pages/itr-filing/my-itrs']);
     } else if (jhi.role.indexOf("ROLE_IFA") !== -1) {
       this.router.navigate(['/pages/ifa/claim-client']);
     } else {

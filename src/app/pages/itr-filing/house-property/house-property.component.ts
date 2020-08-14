@@ -67,7 +67,7 @@ export class HousePropertyComponent implements OnInit {
       loans: this.fb.array([this.fb.group({
         loanType: ['HOUSING'],
         principalAmount: [null, Validators.pattern(AppConstants.numericRegex)],
-        interestAmount: [null, [Validators.pattern(AppConstants.numericRegex), Validators.min(1)]],
+        interestAmount: [0, [Validators.pattern(AppConstants.numericRegex)/* , Validators.min(1) */]],
       })])
     });
   }
@@ -91,14 +91,19 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValidators(null);
       this.housePropertyForm.controls['grossAnnualRentReceived'].updateValueAndValidity();
       this.housePropertyForm.controls['propertyTax'].setValue(null);
+
+      this.housePropertyForm.controls.loans['controls'][0].controls['interestAmount'].setValidators([Validators.required, Validators.min(1)])
+      this.housePropertyForm.controls.loans['controls'][0].controls['interestAmount'].updateValueAndValidity()
     } else {
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.min(1)]);
       this.housePropertyForm.controls['grossAnnualRentReceived'].updateValueAndValidity();
+
+      this.housePropertyForm.controls.loans['controls'][0].controls['interestAmount'].setValidators(null)
+      this.housePropertyForm.controls.loans['controls'][0].controls['interestAmount'].updateValueAndValidity()
     }
   }
 
   saveHpDetails() {
-    debugger
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
     if (this.housePropertyForm.valid) {
@@ -117,20 +122,30 @@ export class HousePropertyComponent implements OnInit {
       this.Copy_ITR_JSON.houseProperties.push(hp);
       // this.ITR_JSON = JSON.parse(JSON.stringify(this.Copy_ITR_JSON));
       // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-      this.serviceCall(this.Copy_ITR_JSON);
+      this.serviceCall(this.Copy_ITR_JSON, 'SAVE');
     } else {
       $('input.ng-invalid').first().focus();
     }
   }
 
-  serviceCall(request) {
+  deleteHpDetails() {
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON.houseProperties = [];
+    this.serviceCall(this.Copy_ITR_JSON, 'DELETE');
+  }
+  serviceCall(request, ref) {
     this.loading = true;
     const param = '/taxitr?type=houseProperties';
     this.itrMsService.postMethod(param, request).subscribe((result: ITR_JSON) => {
       this.ITR_JSON = result;
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-      this.utilsService.showSnackBar('House Property income updated successfully.');
+      if (ref === 'DELETE') {
+        this.utilsService.showSnackBar('House Property income deleted successfully.');
+        this.housePropertyForm = this.createHousePropertyForm();
+      } else {
+        this.utilsService.showSnackBar('House Property income updated successfully.');
+      }
       this.loading = false;
     }, error => {
       this.loading = false;

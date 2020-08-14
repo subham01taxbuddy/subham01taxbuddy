@@ -79,10 +79,9 @@
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
                                         <mat-error
-                                            *ngIf="housePropertyForm.controls.loans['controls'][i].controls['interestAmount'].hasError('pattern') ||
-                                  housePropertyForm.controls.loans['controls'][i].controls['interestAmount'].hasError('min')">
-                                            Enter
-                                            positive number without decimal.</mat-error>
+                                            *ngIf="housePropertyForm.controls.loans['controls'][i].controls['interestAmount'].hasError('pattern')">
+                                            <!-- || housePropertyForm.controls.loans['controls'][i].controls['interestAmount'].hasError('min') -->
+                                            Enter positive number without decimal.</mat-error>
                                     </mat-form-field>
                                 </div>
                             </span>
@@ -144,6 +143,8 @@
 
                     <div class="pull-right">
                         <!-- <a class="btn btn-cancel">Cancel</a> -->
+                        <button class="btn long-btn" style="border: none;" (click)="deleteHpDetails()">Delete
+                        </button>
                         <button class="btn long-btn" style="border: none;" (click)="saveHpDetails()">Save
                         </button>
                     </div>
