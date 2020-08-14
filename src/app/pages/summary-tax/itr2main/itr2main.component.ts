@@ -218,7 +218,7 @@ export class Itr2mainComponent implements OnInit {
       memberCapita:[''],
       fixedAsset:[''],
       securedLoan:[''],
-      inventoried:[''],
+      inventories:[''],
       unsecuredLoan:[''],
       sundryDebtors:[''],
       advances:[''],
@@ -344,6 +344,21 @@ export class Itr2mainComponent implements OnInit {
         this.itr3Form.controls['minimumPresumptiveIncome'].setValue(result.minimumPresumptiveIncome);
       });
     }
+  }
+
+  totalOfLiabilities(){
+    let totalLiabilitie = Number(this.itr3Form['controls'].memberCapita.value) + Number(this.itr3Form['controls'].securedLoan.value)
+                        + Number(this.itr3Form['controls'].unsecuredLoan.value) + Number(this.itr3Form['controls'].advances.value)
+                        + Number(this.itr3Form['controls'].sundryCreditors.value) + Number(this.itr3Form['controls'].otherLiabilies.value);
+    this.itr3Form['controls'].liabilitiesTotal.setValue(totalLiabilitie);
+  }
+
+  totalOfAssets(){
+    let totalAssets = Number(this.itr3Form['controls'].fixedAsset.value) + Number(this.itr3Form['controls'].inventories.value)
+                    + Number(this.itr3Form['controls'].sundryDebtors.value) + Number(this.itr3Form['controls'].balanceWithBank.value)
+                    + Number(this.itr3Form['controls'].cashInHand.value) + Number(this.itr3Form['controls'].loadAndAdvance.value)
+                    + Number(this.itr3Form['controls'].otherAssest.value);
+    this.itr3Form['controls'].assetsTotal.setValue(totalAssets);
   }
 
 
