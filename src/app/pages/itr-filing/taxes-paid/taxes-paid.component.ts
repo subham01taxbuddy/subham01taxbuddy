@@ -872,7 +872,7 @@ export class TaxesPaidComponent implements OnInit {
         field: 'bsrCode',
         editable: true,
         suppressMovable: true,
-        cellEditor: 'numericEditor',
+        // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
             if (params.data.bsrCode.length !== 7) {
@@ -916,7 +916,7 @@ export class TaxesPaidComponent implements OnInit {
         field: 'challanNumber',
         editable: true,
         suppressMovable: true,
-        cellEditor: 'numericEditor',
+        // cellEditor: 'numericEditor',
         tooltip: function (params) {
           return ('Serial number of challan should be numeric, upto 5 digit.');
         },
