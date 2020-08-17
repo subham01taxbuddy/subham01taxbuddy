@@ -311,6 +311,9 @@ export class TaxSummaryComponent implements OnInit {
             this.setTotalOfExempt();
             this.itrSummaryForm.patchValue(summary)
             this.setItrType(this.itrSummaryForm['controls'].assesse['controls'].itrType.value)
+            if(this.itrSummaryForm['controls'].assesse['controls'].itrType.value === "4"){
+              this.updateItr4Info();
+            }
             this.calculateGrossTotalIncome();
             console.log(this.itrSummaryForm.value )
             this.bankData = this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value;
@@ -442,6 +445,7 @@ export class TaxSummaryComponent implements OnInit {
       this.sec80DobjVal.parentAge = 'bellow60';
     }
   }
+  
 
   updateTaxDeductionAtSourceVal(taxPaidInfo){
     console.log('taxPaidInfo: ',taxPaidInfo)
@@ -483,9 +487,13 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
+  updateItr4Info(){
+    console.log('ITR-4 info: ',this.itrSummaryForm['controls'].assesse['controls'].business['controls'].financialParticulars.value)
+  }
+
   createFamilyForm(obj: { fName?: string, mName?: string, lName?: string, dateOfBirth?: number, fathersName?: string } = {}): FormGroup {
     return this.fb.group({
-      fName: [obj.fName || '', Validators.required],
+      fName: [obj.fName || ''],
       mName: [obj.mName || ''],
       lName: [obj.lName || '', Validators.required],
       dateOfBirth: [obj.dateOfBirth || '', Validators.required],

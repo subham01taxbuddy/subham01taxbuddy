@@ -36,6 +36,7 @@
     "moment": "^2.22.2",
     "ng2-pdf-viewer": "^6.0.1",
     "ngx-bootstrap": "5.1.2",
+    "ngx-extended-pdf-viewer": "^4.1.0",
     "ngx-image-zoom": "^0.4.1",
     "ngx-loading": "3.0.1",
     "ngx-papaparse": "^4.0.4",

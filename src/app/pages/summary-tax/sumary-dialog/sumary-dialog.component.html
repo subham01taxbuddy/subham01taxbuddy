@@ -274,7 +274,7 @@
                 <input matInput placeholder="Standard deduction" formControlName="standardDeduction"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number" (blur)="calTotalDeduction()"
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" readonly>
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
                 <!-- <label>Standard deduction</label>
             <input type="number" placeholder="Standard deduction" formControlName="standardDeduction" readonly
                 class="disableInput" (blur)="calTotalDeduction()"> -->
