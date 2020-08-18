@@ -729,8 +729,8 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   saveInvoice() {
-
-    if (this.clientListGridOptions && this.clientListGridOptions.api && this.clientListGridOptions.api.getRenderedNodes() && this.clientListGridOptions.api.getRenderedNodes()[0].data.itemDescription) {
+    console.log('clientListGridOptions => ',this.clientListGridOptions, this.clientListGridOptions.api, this.clientListGridOptions.api.getRenderedNodes(), this.clientListGridOptions.api.getRenderedNodes()[0].data.itemDescription)
+    if (this.clientListGridOptions && this.clientListGridOptions.api && this.clientListGridOptions.api.getRenderedNodes() && this.isHoleRowAdded()) {
       this.invoiceForm.controls['userId'].setValue(this.utilsService.isNonEmpty(this.invoiceForm.controls['userId'].value) ? this.invoiceForm.controls['userId'].value : null)
 
      if(this.isMaharashtraState){
@@ -799,6 +799,34 @@ export class AddInvoiceComponent implements OnInit {
       }
     } else {
       this._toastMessageService.alert("error", "Fill invoice table date.");
+    }
+  }
+
+  isHoleRowAdded(){
+    const data = this.setInvoiceRowData()
+    const temp = this.clientListGridOptions.api.getRenderedNodes();
+    let isDataValid = false;
+    console.log('temp = ', temp);
+    if (temp.length !== 0) {
+      for (let i = 0; i < temp.length; i++) {
+        if (this.utilsService.isNonEmpty(temp[i].data.itemDescription) &&
+          this.utilsService.isNonEmpty(temp[i].data.quantity) &&
+          this.utilsService.isNonEmpty(temp[i].data.rate)
+        ) {
+          isDataValid = true;
+        } else {
+          isDataValid = false;
+          break;
+        }
+      }
+    } else if (temp.length === 0) {
+      isDataValid = true;
+    }
+
+    if (isDataValid) {
+     return true;
+    } else {
+      return false;
     }
   }
 
