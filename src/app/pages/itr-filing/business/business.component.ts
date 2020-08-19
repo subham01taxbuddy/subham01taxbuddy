@@ -491,31 +491,6 @@ export class BusinessComponent implements OnInit {
     };
   }
 
-  public onBusinessRowClicked(params) {
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'remove': {
-          console.log('Params for delete', params)
-          // this.employersGridOptions.rowData.splice(params.rowIndex, 1, {
-          //   id: params.data.id,
-          //   allowanceType: params.data.allowanceType,
-          //   taxableAmount: null,
-          //   exemptAmount: 0
-          // });
-          // this.employersGridOptions.api.setRowData(this.employersGridOptions.rowData);
-
-          // this.deleteBusiness(params)
-          break;
-        }
-        case 'edit': {
-          // this.editBusiness(params.rowIndex);
-          break;
-        }
-      }
-    }
-  }
-
   natureOfBusinessFromCode(natureOfBusiness) {
     if (this.natureOfBusinessDropdownAll.length !== 0) {
       const nameArray = this.natureOfBusinessDropdownAll.filter(item => item.code === natureOfBusiness);

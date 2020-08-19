@@ -1,13 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ITR_JSON } from './../../../shared/interfaces/itr-input.interface';
+import { Component, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material';
+import { AppConstants } from 'app/shared/constants';
 
 @Component({
   selector: 'app-itr-wizard',
   templateUrl: './itr-wizard.component.html',
   styleUrls: ['./itr-wizard.component.css']
 })
-export class ItrWizardComponent implements OnInit {
+export class ItrWizardComponent implements OnInit, AfterContentChecked {
   @ViewChild('stepper', { static: true, read: MatStepper }) private stepper: MatStepper;
   personalForm: FormGroup;
   incomeForm: FormGroup;
@@ -16,12 +18,15 @@ export class ItrWizardComponent implements OnInit {
   tdsTcsForm: FormGroup;
   declarationForm: FormGroup;
   tabIndex = 0;
+  ITR_JSON: ITR_JSON;
 
   constructor() { }
 
   ngOnInit() {
   }
-
+  ngAfterContentChecked() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+  }
   previousTab(tab) {
     // if (tab === 'personal') {
     //   this.progressBarValue = 20;

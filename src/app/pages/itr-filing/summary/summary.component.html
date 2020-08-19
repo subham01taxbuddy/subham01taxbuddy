@@ -108,7 +108,6 @@
     <div class="sub_btn lwBtDn" *ngIf="show">
         <!-- <button type="button" class="btn prvBut" (click)="previousRoute()"
             [disabled]="isPreviousAvailable()">Previous</button> -->
-        <button type="button" class="btn save" (click)="downloadPDF()"> Download PDF</button>
         <!-- <button type="button" *ngIf="ITR_JSON.eFillingCompleted" routerLink="/taxreturn" class="btn save"> Back
             To My ITR(s)</button> -->
 
@@ -117,14 +116,17 @@
                 class="fas fa-download"></i> Download XML</button> -->
         <!-- TODO -->
         <button *ngIf="!ITR_JSON.eFillingCompleted && ITR_JSON.isDefective !== 'Y'" type="button" (click)="fileITR()"
-            class="btn grBut" [disabled]="(taxable && taxable > 0) || isPreviousAvailable()"
-            [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"> File
+            class="btn grBut pull-right" [disabled]="(taxable && taxable > 0) || isPreviousAvailable()"
+            [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"
+            style="background-color: red;"> File
             ITR</button>
         <button type="button" (click)="downloadXML()" class="btn grBut" [disabled]="taxable && taxable > 0"
-            [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'">
+            [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'" style="background-color: orange;">
             Download XML</button><!-- *ngIf="ITR_JSON.isDefective === 'Y'" -->
+        <button type="button" (click)="downloadPDF()" class="btn grBut"> Download PDF</button>
 
     </div>
+    <br>
     <h3 class="txHdLf tItX" *ngIf="show">Computation of Income and Tax</h3>
     <div class="container-fluid main-body content-center-align section" *ngIf="show">
 
@@ -1916,21 +1918,15 @@
     </div>
     <!-- </div> -->
     <div class="sub_btn lwBtDn" *ngIf="show">
-        <!-- <button type="button" class="btn prvBut" (click)="previousRoute()"
-            [disabled]="isPreviousAvailable()">Previous</button> -->
-        <button type="button" class="btn save" (click)="downloadPDF()"> Download PDF</button>
-        <!--  <button type="button" *ngIf="ITR_JSON.eFillingCompleted" routerLink="/taxreturn" class="btn save"> Back
-            To My ITR(s)</button> -->
-        <!-- <button *ngIf="!ITR_JSON.eFillingCompleted" type="button" (click)="downloadXML()" class="btn grBut"
-        [disabled]="taxable && taxable > 0" [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"> <i
-          class="fas fa-download"></i> Download XML</button> -->
         <button *ngIf="!ITR_JSON.eFillingCompleted && ITR_JSON.isDefective !== 'Y'" type="button" (click)="fileITR()"
-            class="btn grBut" [disabled]="(taxable && taxable > 0) || isPreviousAvailable()"
-            [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"> File
+            class="btn grBut pull-right" [disabled]="(taxable && taxable > 0) || isPreviousAvailable()"
+            [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"
+            style="background-color: red;"> File
             ITR</button>
         <button type="button" (click)="downloadXML()" class="btn grBut" [disabled]="taxable && taxable > 0"
-            [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'">
-            Download XML</button>
+            [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'" style="background-color: orange;">
+            Download XML</button><!-- *ngIf="ITR_JSON.isDefective === 'Y'" -->
+        <button type="button" (click)="downloadPDF()" class="btn grBut"> Download PDF</button>
 
     </div>
     <div *ngIf="!show" class="text-center-align">
