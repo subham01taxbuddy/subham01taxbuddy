@@ -4,6 +4,9 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'app/shared/constants';
 import { UtilsService } from 'app/services/utils.service';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { WhatsAppDialogComponent } from '../whats-app-dialog/whats-app-dialog.component';
 
 @Component({
   selector: 'app-update-status',
@@ -159,7 +162,7 @@ export class UpdateStatusComponent implements OnInit {
     }
   ]
 
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService) {
+  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private route: Router, private dialog: MatDialog) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
@@ -198,5 +201,24 @@ export class UpdateStatusComponent implements OnInit {
       // this.loading = false;
       this.utilsService.showSnackBar('Failed to update Filing status.')
     })
+  }
+
+  openUserChat(){
+    // this.route.navigate(['/pages/chat-corner', this.ITR_JSON.contactNumber])
+    let disposable = this.dialog.open(WhatsAppDialogComponent, {
+      width:  '50%',
+      height: 'auto',
+      data: {
+       mobileNum: this.ITR_JSON.contactNumber
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+  kommunicateChat(){
+    
   }
 }
