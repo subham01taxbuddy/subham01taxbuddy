@@ -110,6 +110,17 @@ export class CustomerProfileComponent implements OnInit {
     { value: 1065, label: 'Urmila Warve' },
     { value: 1067, label: 'Divya Bhanushali' },
     { value: 21354, label: 'Brijmohan Lavaniya' },
+
+    { value: 28033, label: 'Shrikanth Elegeti' },
+    { value: 28032, label: 'Pranali Patil' },
+    { value: 28040, label: 'Namrata Shringarpure' },
+    { value: 28035, label: 'Rupali Onamshetty' },
+    { value: 27474, label: 'Poonam Hase' },
+    { value: 28044, label: 'Bhakti Khatavkar' },
+    { value: 28034, label: 'Dipali Waghmode' },
+    { value: 28031, label: 'Harsha Kashyap' },
+    { value: 28222, label: 'Ankita Pawar' },
+    // { value: 0000, label: 'Smita Yadav' }
   ];
   // TODO
   planMaster = [
