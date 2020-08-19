@@ -1,4 +1,4 @@
-<div class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar">
+<div class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar" [class.hideSideMenu]="hideSideBar">
     <nav class="sidebar">
         <a class="sidebar__item" routerLink="/pages/home" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM'])">

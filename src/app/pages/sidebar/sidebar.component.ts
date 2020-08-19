@@ -31,8 +31,18 @@ export class SidebarComponent implements OnInit {
 
   showSidebar: boolean;
   loggedInUserData: any;
+
+  hideSideBar: boolean;
   constructor(private navbarService: NavbarService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService, private route: Router) {
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+    this.route.events.subscribe((url: any) => {
+      console.log('Path: ', route.url)
+      if(route.url === '/pages/itr-filing/itr'){
+          this.hideSideBar = true;
+      }else{
+        this.hideSideBar = false;
+      }
+    });
   }
 
   ngOnInit() {
