@@ -105,7 +105,8 @@ export class OtherIncomeComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         template:
-          `<button type="button" class="action_icon add_button" title="Clear">
+          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: red">
         <i class="fa fa-times-circle" aria-hidden="true" data-action-type="remove"></i>
        </button>`,
         width: 75,

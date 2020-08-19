@@ -2,12 +2,13 @@
 <div>
     <form [formGroup]="employerDetailsFormGroup">
         <mat-accordion>
-            <mat-expansion-panel class="color-panel accordion-border" [expanded]="true">
+            <mat-expansion-panel class="color-panel accordion-border" [expanded]="true"
+                style="display: contents !important; padding: 0px !important;">
                 <mat-expansion-panel-header>
                     <div class="card__title" style="font-size: 20px;">Salary Income: {{getSalaryTaxableIncome()}}</div>
                 </mat-expansion-panel-header>
 
-                <div class="content vertLine" style="width: 50%;padding-right: 20px;">
+                <div class="content" style="width: 60%;padding-right: 10px;">
                     <div>
                         <span *ngFor="let form16 of getAllForm16s('FORM_16'); let i=index">
                             <a href="javascript:;" (click)="getForm16Url(i)">{{form16.fileName}}</a> &nbsp;&nbsp;
@@ -39,7 +40,7 @@
                         Form 16 not uploaded/Selected
                     </div>
                 </div>
-                <div class="content" style="width: 50%;" *ngIf="salaryView === 'TABLE'">
+                <div class="content" style="width: 40%;" *ngIf="salaryView === 'TABLE'">
                     <div>
                         <button class="btn long-btn" style="border: none;" (click)=" addEmployer(null)">Add Employer
                         </button>
@@ -50,7 +51,7 @@
                         </ag-grid-angular>
                     </div>
                 </div>
-                <div class="content" style="width: 50%;" *ngIf="salaryView === 'FORM'">
+                <div class="content" style="width: 40%;" *ngIf="salaryView === 'FORM'">
                     <div class="card__title" style="padding:10px; font-size: 20px;">Employer Details</div>
                     <div class="card__row">
                         <div class="card__col-xs-12 card__col-sm-8">

@@ -4091,12 +4091,13 @@ export class InvestmentsDeductionsComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Edit">
+          return `<button type="button" class="action_icon add_button" title="Edit" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: green">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
          </button>`;
 
         },
-        width: 60,
+        width: 50,
         pinned: 'right',
         cellStyle: {
           textAlign: 'center', display: 'flex',
@@ -4111,12 +4112,13 @@ export class InvestmentsDeductionsComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Delete">
+          return `<button type="button" class="action_icon add_button" title="Delete" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: red">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
          </button>`;
 
         },
-        width: 60,
+        width: 50,
         pinned: 'right',
         cellStyle: {
           textAlign: 'center', display: 'flex',

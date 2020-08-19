@@ -244,7 +244,8 @@ export class SalaryComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         template:
-          `<button type="button" class="action_icon add_button" title="Clear">
+          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: red">
         <i class="fa fa-times-circle" aria-hidden="true" data-action-type="remove"></i>
        </button>`,
         width: 75,
@@ -342,7 +343,8 @@ export class SalaryComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         template:
-          `<button type="button" class="action_icon add_button" title="Clear">
+          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: red">
           <i class="fa fa-times-circle" aria-hidden="true" data-action-type="remove"></i>
          </button>`,
         width: 75,
@@ -777,19 +779,22 @@ export class SalaryComponent implements OnInit {
         suppressMovable: true,
       },
       {
-        headerName: 'Clear',
+        headerName: 'Actions',
         editable: false,
         suppressMovable: true,
         suppressMenu: true,
         sortable: true,
+        pinned: 'right',
         template:
-          `<button type="button" class="action_icon add_button" title="Clear">
+          `<button type="button" class="action_icon add_button" title="Delete Employer" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: red">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
          </button>
-          <button type="button" class="action_icon add_button" title="Edit">
+          <button type="button" class="action_icon add_button"  title="Update Employer details" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: green">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
          </button>`,
-        width: 75,
+        width: 100,
         cellStyle: { textAlign: 'center' }
       },
     ];

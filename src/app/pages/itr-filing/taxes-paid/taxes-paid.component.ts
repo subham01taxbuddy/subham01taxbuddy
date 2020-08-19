@@ -178,7 +178,8 @@ export class TaxesPaidComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         template:
-          `<button type="button" class="action_icon add_button" title="Clear">
+          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: red">
       <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
      </button>`,
         width: 70,
@@ -206,10 +207,7 @@ export class TaxesPaidComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-
           this.onSalaryGridOptions.api.updateRowData({ remove: [params.data] });
-
-
           break;
         }
       }
@@ -376,7 +374,8 @@ export class TaxesPaidComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         template:
-          `<button type="button" class="action_icon add_button" title="Clear">
+          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: red">
       <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
      </button>`,
         width: 70,
@@ -578,7 +577,8 @@ export class TaxesPaidComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         template:
-          `<button type="button" class="action_icon add_button" title="Clear">
+          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: red">
       <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
      </button>`,
         width: 70,
@@ -759,7 +759,8 @@ export class TaxesPaidComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         template:
-          `<button type="button" class="action_icon add_button" title="Clear">
+          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: red">
         <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
        </button>`,
         width: 70,
@@ -938,7 +939,8 @@ export class TaxesPaidComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         template:
-          `<button type="button" class="action_icon add_button" title="Clear">
+          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: red">
         <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
        </button>`,
         width: 70,

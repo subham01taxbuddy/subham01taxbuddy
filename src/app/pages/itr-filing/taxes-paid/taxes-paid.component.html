@@ -1,5 +1,5 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="content" style="width: 35%;padding-right: 20px;">
+<div class="content" style="width: 60%;padding-right: 10px;">
     <div>
         <span *ngFor="let docs of itrDocuments; let i=index">
             <a href="javascript:;" (click)="getDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
@@ -25,7 +25,7 @@
         Documents not uploaded/Selected
     </div>
 </div>
-<div class="content" style="width: 65%;">
+<div class="content" style="width: 40%;">
     <app-update-status></app-update-status>
     <hr>
     <mat-accordion>
@@ -132,50 +132,4 @@
         <button class="btn long-btn" style="border: none;" (click)="saveAndContinue()">Save And Continue
         </button>
     </div>
-    <!--  <hr>
-
-
-    <hr>
-
-    <h2><span class="card__title" style="padding:10px; font-size: 20px;">TDS other than salary 26QB</span>
-        <a href="javascript:;" class="fR action_icon" title="Add" (click)="addTdsOtherThanSalary26QB('ADD')">
-            <button type="button" class="btn" style="border: none;">Add Row <i class="fa fa-plus"></i></button>
-        </a>
-    </h2>
-
-    <p>This is TDS on incomes other than salary. Enter the amount from form 16A or 26AS</p>
-    <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
-        <ag-grid-angular class="ag-theme-balham" [gridOptions]="tdsOtherThanSalary26QBGridOptions"
-            (rowClicked)="tdsOtherThanSalary26QBRowClicked($event)">
-        </ag-grid-angular>
-    </div>
-    <hr> -->
-
-    <!-- <h2><span class="card__title" style="padding:10px; font-size: 20px;">TCS</span>
-        <a href="javascript:;" class="fR action_icon" title="Add" (click)="addTcs('ADD')">
-            <button type="button" class="btn" style="border: none;">Add Row <i class="fa fa-plus"></i></button>
-        </a>
-    </h2>
-
-    <p>In case of some incomes the payer of income collects TCS from you. Enter the amount
-        from form 16A or 26AS</p>
-    <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
-        <ag-grid-angular class="ag-theme-balham" [gridOptions]="tcsGridOptions" (rowClicked)="tcsRowClicked($event)">
-        </ag-grid-angular>
-    </div>
-
-    <hr> -->
-
-    <!-- <h2><span class="card__title" style="padding:10px; font-size: 20px;">Advance and self assesment tax.</span>
-        <a href="javascript:;" class="fR action_icon" title="Add" (click)="addOtherThanTdsTcs('ADD')">
-            <button type="button" class="btn" style="border: none;">Add Row <i class="fa fa-plus"></i></button>
-        </a>
-    </h2>
-
-    <p>Please enter the amount of advance tax or self assessment tax paid.</p>
-    <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
-        <ag-grid-angular class="ag-theme-balham" [gridOptions]="otherThanTdsTcsGridOptions"
-            (rowClicked)="otherThanTdsTcsRowClicked($event)">
-        </ag-grid-angular>
-    </div> -->
 </div>

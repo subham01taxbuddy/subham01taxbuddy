@@ -2,14 +2,15 @@
 <div>
     <form>
         <mat-accordion>
-            <mat-expansion-panel class="color-panel accordion-border" [expanded]="true">
+            <mat-expansion-panel class="color-panel accordion-border" [expanded]="true"
+                style="display: contents !important;">
                 <mat-expansion-panel-header>
                     <div class="card__title" style="font-size: 20px;">Business Income: {{calTotalPresumptiveIncome()}}
                         <!-- {{getSalaryTaxableIncome()}} -->
                     </div>
                 </mat-expansion-panel-header>
 
-                <div class="content vertLine" style="width: 35%;padding-right: 20px;">
+                <div class="content vertLine" style="width: 50%;padding-right: 10px;">
                     <div>
                         <span *ngFor="let docs of itrDocuments; let i=index">
                             <a href="javascript:;" (click)="getDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
@@ -35,7 +36,7 @@
                         Documents not uploaded/Selected
                     </div>
                 </div>
-                <div class="content" style="width: 65%;" *ngIf="businessMode === 'TABLE'">
+                <div class="content" style="width: 50%;" *ngIf="businessMode === 'TABLE'">
                     <div>
                         <button class="btn long-btn" style="border: none;"
                             [style.cursor]="ITR_JSON.business.presumptiveIncomes.length > 2 ?'not-allowed':'pointer'"
@@ -291,7 +292,7 @@
                     </form>
 
                 </div>
-                <div class="content" style="width: 65%;" *ngIf="businessMode === 'FORM'">
+                <div class="content" style="width: 50%;" *ngIf="businessMode === 'FORM'">
                     <div class="card__row">
                         <mat-form-field appearance="outline">
                             <mat-label>Select Type of Business</mat-label>
