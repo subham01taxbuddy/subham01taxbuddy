@@ -7,6 +7,7 @@ import { UtilsService } from 'app/services/utils.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { WhatsAppDialogComponent } from '../whats-app-dialog/whats-app-dialog.component';
+import { KommunicateDialogComponent } from '../kommunicate-dialog/kommunicate-dialog.component';
 
 @Component({
   selector: 'app-update-status',
@@ -204,7 +205,6 @@ export class UpdateStatusComponent implements OnInit {
   }
 
   openUserChat(){
-    // this.route.navigate(['/pages/chat-corner', this.ITR_JSON.contactNumber])
     let disposable = this.dialog.open(WhatsAppDialogComponent, {
       width:  '50%',
       height: 'auto',
@@ -219,6 +219,13 @@ export class UpdateStatusComponent implements OnInit {
   }
 
   kommunicateChat(){
-    
+    let disposable = this.dialog.open(KommunicateDialogComponent, {
+      width:  '50%',
+      height: 'auto'
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 }
