@@ -203,13 +203,13 @@ export class UpdateStatusComponent implements OnInit {
     })
   }
 
-  openUserChat(){
+  openUserChat() {
     // this.route.navigate(['/pages/chat-corner', this.ITR_JSON.contactNumber])
     let disposable = this.dialog.open(WhatsAppDialogComponent, {
-      width:  '50%',
+      width: '50%',
       height: 'auto',
       data: {
-       mobileNum: this.ITR_JSON.contactNumber
+        mobileNum: this.ITR_JSON.contactNumber
       }
     })
 
@@ -218,7 +218,7 @@ export class UpdateStatusComponent implements OnInit {
     });
   }
 
-  kommunicateChat(){
-    
+  kommunicateChat() {
+    this.utilsService.showSnackBar('Comming Soon!!!');
   }
 }
