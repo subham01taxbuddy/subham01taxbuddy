@@ -206,10 +206,10 @@ export class UpdateStatusComponent implements OnInit {
 
   openUserChat(){
     let disposable = this.dialog.open(WhatsAppDialogComponent, {
-      width:  '50%',
+      width: '50%',
       height: 'auto',
       data: {
-       mobileNum: this.ITR_JSON.contactNumber
+        mobileNum: this.ITR_JSON.contactNumber
       }
     })
 

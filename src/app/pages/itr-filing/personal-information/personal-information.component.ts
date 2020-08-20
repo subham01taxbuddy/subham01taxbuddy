@@ -505,7 +505,7 @@ export class PersonalInformationComponent implements OnInit {
       console.log('Immovable Form===', this.customerProfileForm);
     }
     this.ITR_JSON.family.filter(item => {
-      if (item.relationShipCode === 'SELF') {
+      if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
         this.customerProfileForm.patchValue({
           firstName: item.fName,
           middleName: item.mName,
