@@ -120,10 +120,12 @@ export class HousePropertyComponent implements OnInit {
       }
       this.Copy_ITR_JSON.houseProperties = [];
       this.Copy_ITR_JSON.houseProperties.push(hp);
+      this.Copy_ITR_JSON.systemFlags.hasHouseProperty = true;
       // this.ITR_JSON = JSON.parse(JSON.stringify(this.Copy_ITR_JSON));
       // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       this.serviceCall(this.Copy_ITR_JSON, 'SAVE');
     } else {
+      this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
       $('input.ng-invalid').first().focus();
     }
   }
@@ -131,6 +133,7 @@ export class HousePropertyComponent implements OnInit {
   deleteHpDetails() {
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON.houseProperties = [];
+    this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
     this.serviceCall(this.Copy_ITR_JSON, 'DELETE');
   }
   serviceCall(request, ref) {

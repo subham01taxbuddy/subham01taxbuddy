@@ -79,6 +79,9 @@ export class NavbarComponent implements OnInit {
           this.menu_hide_component = true;
         }, 300);
       }
+    } else {
+      console.log('route to home here')
+      this.router.navigate(['/pages/itr-filing/my-itrs']);
     }
   }
 

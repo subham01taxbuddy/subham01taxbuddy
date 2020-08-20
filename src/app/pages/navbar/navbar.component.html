@@ -3,7 +3,7 @@
 <header class="header clearfix fixed">
 
     <!-- <mat-slide-toggle >Slide me!</mat-slide-toggle>&nbsp; -->
-    
+
     <a class="header__logo" (click)="sideBar()">
         <span class="header__logo-img1"></span>
         <span class="header__logo-button" [class.header__logo-button-open]="sidebar_open"
@@ -23,7 +23,7 @@
     </div>
     <div class="header__buttons logout-btn-wrapper" style="float:right">
         <a class="btn btn-logout logout-btn" (click)="logout()" style="float:right">Logout</a>
-        <a class="btn" (click)="onClickSalesIQ()" style="float:right">Sales IQ</a>        
+        <!-- <a class="btn" (click)="onClickSalesIQ()" style="float:right">Sales IQ</a>         -->
     </div>
     <div class="header__container">
         <div class="header__buttons" *ngIf="showBtns == 'business-profile'">

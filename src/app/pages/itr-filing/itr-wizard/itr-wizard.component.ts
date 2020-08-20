@@ -52,7 +52,6 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   }
 
   tabChanged(tab) {
-
     this.tabIndex = tab.selectedIndex;
   }
 

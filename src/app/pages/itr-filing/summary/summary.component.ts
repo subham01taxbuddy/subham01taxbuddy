@@ -319,6 +319,9 @@ export class SummaryComponent implements OnInit {
       });
     }
   }
+  sendPdfToKomm() {
+    this.utilsService.showSnackBar('Comming Soon!!!');
+  }
   downloadPDF() {
     // http://uat-api.taxbuddy.com/txbdyitr/txbdyReport?userId={userId}&itrId={itrId}&assessmentYear={assessmentYear}
     this.loading = true;
@@ -343,42 +346,55 @@ export class SummaryComponent implements OnInit {
   }
   fileITR() {
     this.loading = true;
-    const param = '/api/efillingItr?itrId=' + this.ITR_JSON.itrId
-    // const param = '/api/efillingItr?userId=' + this.ITR_JSON.userId + '&itrId=' + this.ITR_JSON.itrId + '&assessmentYear=' + this.ITR_JSON.assessmentYear; // + '&action=efile'
-    this.itrMsService.getMethod(param).subscribe((result: ITR_JSON) => {
-      console.log('ITR filled result===', result);
-      this.ITR_JSON = JSON.parse(JSON.stringify(result));
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-      /* console.log('XML Result', result)
-      let fileURL = URL.createObjectURL(result);
-      window.open(fileURL); */
-
+    const validateParam = `/api/validateXML?itrId=${this.ITR_JSON.itrId}`;
+    this.itrMsService.getMethod(validateParam).subscribe((result: any) => {
+      console.log('Rsult: ', result);
       this.loading = false;
-      // Commented both routes as its currenly option is for download xml file
-      // this.router.navigate(['itr-result/success']);
-      // TODO
-      if (this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'SUCCESS') {
-        // this.router.navigate(['ack/success']);
-        // this.router.navigate(['/pages/itr-filing/acknowledgement?status=success'])
-        this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'success' } })
-      } else if (!this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'DELAY') {
-        // this.router.navigate(['ack/delay']);
-        this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'delay' } })
-      } else {
-        alert('Unexpected Error occured')
-      }
-      // this.router.navigate(['/pages/itr-filing/acknowledgement'])
     }, error => {
       console.log('ITR filled error===', error);
-      this.loading = false;
-      this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'fail' } })
+      if (error['status'] === 200) {
+        const param = '/api/efillingItr?itrId=' + this.ITR_JSON.itrId
+        // const param = '/api/efillingItr?userId=' + this.ITR_JSON.userId + '&itrId=' + this.ITR_JSON.itrId + '&assessmentYear=' + this.ITR_JSON.assessmentYear; // + '&action=efile'
+        this.itrMsService.getMethod(param).subscribe((result: ITR_JSON) => {
+          console.log('ITR filled result===', result);
+          this.ITR_JSON = JSON.parse(JSON.stringify(result));
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+          /* console.log('XML Result', result)
+          let fileURL = URL.createObjectURL(result);
+          window.open(fileURL); */
 
-      // TODO
-      /* if (error.error.status === 400 && error.error.detail === 'ERROR') {
-        this.router.navigate(['ack/failure']);
-      } else if (error.error.status === 403 && error.error.detail === 'PLAN_NOT_ACTIVATED') {
-        this.dialogForalert();
-      } */
+          this.loading = false;
+          // Commented both routes as its currenly option is for download xml file
+          // this.router.navigate(['itr-result/success']);
+          // TODO
+          if (this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'SUCCESS') {
+            // this.router.navigate(['ack/success']);
+            // this.router.navigate(['/pages/itr-filing/acknowledgement?status=success'])
+            this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'success' } })
+          } else if (!this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'DELAY') {
+            // this.router.navigate(['ack/delay']);
+            this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'delay' } })
+          } else {
+            alert('Unexpected Error occured')
+          }
+          // this.router.navigate(['/pages/itr-filing/acknowledgement'])
+        }, error => {
+          console.log('ITR filled error===', error);
+          this.loading = false;
+          this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'fail' } })
+
+          // TODO
+          /* if (error.error.status === 400 && error.error.detail === 'ERROR') {
+            this.router.navigate(['ack/failure']);
+          } else if (error.error.status === 403 && error.error.detail === 'PLAN_NOT_ACTIVATED') {
+            this.dialogForalert();
+          } */
+        });
+      } else {
+        this.utilsService.showSnackBar(error['error']['detail']);
+        this.loading = false;
+      }
     });
+
   }
 }
