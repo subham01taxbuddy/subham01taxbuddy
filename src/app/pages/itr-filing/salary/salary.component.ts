@@ -917,7 +917,7 @@ export class SalaryComponent implements OnInit {
   getItrDocuments() {
     // TODO
     const param1 =
-      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
+      `/cloud/signed-s3-urls?currentPath=4499/ITR/2019-20/Original/ITR Filing Docs`;
     this.itrMsService.getMethod(param1).subscribe((result: any) => {
       console.log('Documents ITR', result)
       this.itrDocuments = result;
@@ -942,7 +942,11 @@ export class SalaryComponent implements OnInit {
     const doc = this.itrDocuments.filter(item => item.documentTag === 'FORM_16')
     if (doc.length > 0) {
       const docType = doc[index].fileName.split('.').pop();
-      this.form16DocDetails.docUrl = doc[index].signedUrl;
+      if (doc[index].isPasswordProtected) {
+        this.form16DocDetails.docUrl = doc[index].passwordProtectedFileUrl;
+      } else {
+        this.form16DocDetails.docUrl = doc[index].signedUrl;
+      }
       this.form16DocDetails.docType = docType;
     } else {
       this.form16DocDetails.docUrl = '';

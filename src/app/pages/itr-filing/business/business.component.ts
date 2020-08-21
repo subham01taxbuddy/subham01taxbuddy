@@ -157,10 +157,13 @@ export class BusinessComponent implements OnInit {
 
 
   getDocsUrl(index) {
-
     if (this.itrDocuments.length > 0) {
       const docType = this.itrDocuments[index].fileName.split('.').pop();
-      this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
+      if (this.itrDocuments[index].isPasswordProtected) {
+        this.docDetails.docUrl = this.itrDocuments[index].passwordProtectedFileUrl;
+      } else {
+        this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
+      }
       this.docDetails.docType = docType;
     } else {
       this.docDetails.docUrl = '';

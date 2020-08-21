@@ -191,7 +191,11 @@ export class HousePropertyComponent implements OnInit {
     const doc = this.itrDocuments.filter(item => item.documentTag === 'LOAN_STATEMENT')
     if (doc.length > 0) {
       const docType = doc[index].fileName.split('.').pop();
-      this.hpDocDetails.docUrl = doc[index].signedUrl;
+      if (this.hpDocDetails[index].isPasswordProtected) {
+        this.hpDocDetails.docUrl = doc[index].passwordProtectedFileUrl;
+      } else {
+        this.hpDocDetails.docUrl = doc[index].signedUrl;
+      }
       this.hpDocDetails.docType = docType;
     } else {
       this.hpDocDetails.docUrl = '';
