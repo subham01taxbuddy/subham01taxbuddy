@@ -586,7 +586,6 @@ export class CustomerProfileComponent implements OnInit {
   getCommonDocuments() {
     const param = `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/Common`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
-      console.log('Documents', result)
       this.documents = result;
     })
   }

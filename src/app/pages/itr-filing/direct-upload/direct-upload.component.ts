@@ -6,6 +6,7 @@ import { environment } from 'environments/environment';
 import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'app/shared/constants';
 import { Router } from '@angular/router';
+import { ItrMsService } from 'app/services/itr-ms.service';
 
 @Component({
   selector: 'app-direct-upload',
@@ -32,13 +33,16 @@ export class DirectUploadComponent implements OnInit {
   successMsg: string;
   successValue: boolean = false;
   busy: boolean = false
+  itrDocuments = [];
 
   upload: boolean = false;
-  constructor(private httpClient: HttpClient, private router: Router) {
+  constructor(private httpClient: HttpClient, private router: Router, private itrMsService: ItrMsService,) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
   ngOnInit() {
+    this.getItrDocuments();
+    this.getCommonDocuments();
   }
 
   isErrorMessage: string = '';
@@ -158,5 +162,59 @@ export class DirectUploadComponent implements OnInit {
 
   tabChanged(tab) {
     this.tabIndex = tab.selectedIndex;
+  }
+  commonDocuments = []
+  getCommonDocuments() {
+    const param = `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/Common`;
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      this.commonDocuments = result;
+    })
+  }
+  getItrDocuments() {
+    const param1 =
+      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
+    this.itrMsService.getMethod(param1).subscribe((result: any) => {
+      this.itrDocuments = result;
+      this.getDocsUrl(0);
+    })
+  }
+
+  zoom: number = 1.0;
+  incrementZoom(amount: number) {
+    this.zoom += amount;
+  }
+
+  docDetails = {
+    docUrl: '',
+    docType: ''
+  };
+  getDocsUrl(index) {
+    if (this.itrDocuments.length > 0) {
+      const docType = this.itrDocuments[index].fileName.split('.').pop();
+      if (this.itrDocuments[index].isPasswordProtected) {
+        this.docDetails.docUrl = this.itrDocuments[index].passwordProtectedFileUrl;
+      } else {
+        this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
+      }
+      this.docDetails.docType = docType;
+    } else {
+      this.docDetails.docUrl = '';
+      this.docDetails.docType = '';
+    }
+  }
+
+  getCommonDocsUrl(index) {
+    if (this.commonDocuments.length > 0) {
+      const docType = this.commonDocuments[index].fileName.split('.').pop();
+      if (this.commonDocuments[index].isPasswordProtected) {
+        this.docDetails.docUrl = this.commonDocuments[index].passwordProtectedFileUrl;
+      } else {
+        this.docDetails.docUrl = this.commonDocuments[index].signedUrl;
+      }
+      this.docDetails.docType = docType;
+    } else {
+      this.docDetails.docUrl = '';
+      this.docDetails.docType = '';
+    }
   }
 }
