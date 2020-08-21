@@ -917,7 +917,7 @@ export class SalaryComponent implements OnInit {
   getItrDocuments() {
     // TODO
     const param1 =
-      `/cloud/signed-s3-urls?currentPath=4499/ITR/2019-20/Original/ITR Filing Docs`;
+      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
     this.itrMsService.getMethod(param1).subscribe((result: any) => {
       console.log('Documents ITR', result)
       this.itrDocuments = result;
