@@ -124,8 +124,7 @@
             [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'" style="background-color: orange;">
             Download XML</button><!-- *ngIf="ITR_JSON.isDefective === 'Y'" -->
         <button type="button" (click)="downloadPDF()" class="btn grBut"> Download PDF</button>
-        <button type="button" class="btn kommBut">Send PDF to Kommunicate chat</button>
-
+        <button type="button" class="btn kommBut" (click)="sendPdfToKomm()">Send PDF to Kommunicate chat</button>
     </div>
     <br>
     <h3 class="txHdLf tItX" *ngIf="show">Computation of Income and Tax</h3>

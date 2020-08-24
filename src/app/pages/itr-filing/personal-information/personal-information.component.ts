@@ -580,7 +580,11 @@ export class PersonalInformationComponent implements OnInit {
   getDocsUrl(index) {
     if (this.documents.length > 0) {
       const docType = this.documents[index].fileName.split('.').pop();
-      this.docDetails.docUrl = this.documents[index].signedUrl;
+      if (this.documents[index].isPasswordProtected) {
+        this.docDetails.docUrl = this.documents[index].passwordProtectedFileUrl;
+      } else {
+        this.docDetails.docUrl = this.documents[index].signedUrl;
+      }
       this.docDetails.docType = docType;
     } else {
       this.docDetails.docUrl = '';

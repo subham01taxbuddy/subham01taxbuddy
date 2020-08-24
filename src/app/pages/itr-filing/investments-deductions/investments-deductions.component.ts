@@ -3848,13 +3848,15 @@ export class InvestmentsDeductionsComponent implements OnInit {
             });
           } else if (item === 'us80gg') {
             this.ITR_JSON.expenses = this.ITR_JSON.expenses.filter(item => item.expenseType !== 'HOUSE_RENT_PAID')
-            this.ITR_JSON.expenses.push({
-              expenseType: 'HOUSE_RENT_PAID',
-              expenseFor: null,
-              details: null,
-              amount: Number(this.investmentDeductionForm.controls['us80gg'].value),
-              noOfMonths: 0
-            });
+            if (!this.ITR_JSON.systemFlags.hraAvailed) {
+              this.ITR_JSON.expenses.push({
+                expenseType: 'HOUSE_RENT_PAID',
+                expenseFor: null,
+                details: null,
+                amount: Number(this.investmentDeductionForm.controls['us80gg'].value),
+                noOfMonths: 0
+              });
+            }
           }
         }
       });
@@ -4224,7 +4226,11 @@ export class InvestmentsDeductionsComponent implements OnInit {
   getDocsUrl(index) {
     if (this.itrDocuments.length > 0) {
       const docType = this.itrDocuments[index].fileName.split('.').pop();
-      this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
+      if (this.itrDocuments[index].isPasswordProtected) {
+        this.docDetails.docUrl = this.itrDocuments[index].passwordProtectedFileUrl;
+      } else {
+        this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
+      }
       this.docDetails.docType = docType;
     } else {
       this.docDetails.docUrl = '';

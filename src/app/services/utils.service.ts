@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
+import { ITR_JSON } from './../shared/interfaces/itr-input.interface';
 
 @Injectable()
 
@@ -63,7 +64,7 @@ export class UtilsService {
     }
 
     createEmptyJson(profile, assessmentYear, financialYear) {
-        const ITR_JSON = {
+        const ITR_JSON: ITR_JSON = {
             ackStatus: '',
             acknowledgementReceived: false,
             userId: this.isNonEmpty(profile) ? profile.userId : null,
@@ -144,23 +145,16 @@ export class UtilsService {
                 hasSalary: false,
                 hasHouseProperty: false,
                 hasMultipleProperties: false,
-                hasPresumptiveIncome: false,
                 hasForeignAssets: false,
                 hasCapitalGain: false,
                 hasBroughtForwardLosses: false,
                 hasAgricultureIncome: false,
                 hasOtherIncome: false,
                 hasParentOverSixty: false,
+                hasBusinessProfessionIncome: false,
+                hasFutureOptionsIncome: false,
+                hasNRIIncome: false,
                 hraAvailed: false,
-
-                // Mobile Use
-                hasDisabilitySelf: false,
-                hasEducationalLoan: false,
-                hasHRA: false,
-                hasAnyOtherDonations: false,
-                hasMedicalExpense: false,
-                hasExtendedEndDate: false,
-                hasForeignBank: false,
                 directorInCompany: false,
                 haveUnlistedShares: false
             },

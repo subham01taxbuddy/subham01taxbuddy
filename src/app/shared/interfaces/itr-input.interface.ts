@@ -380,23 +380,26 @@ export interface SystemFlags {
     hasSalary: boolean;
     hasHouseProperty: boolean;
     hasMultipleProperties: boolean;
-    hasPresumptiveIncome: boolean;
     hasForeignAssets: boolean;
     hasCapitalGain: boolean;
     hasBroughtForwardLosses: boolean;
     hasAgricultureIncome: boolean;
     hasOtherIncome: boolean;
     hasParentOverSixty: boolean;
+    // hasPresumptiveIncome: boolean;
+    hasBusinessProfessionIncome: boolean;
+    hasFutureOptionsIncome: boolean;
+    hasNRIIncome: boolean;
     hraAvailed: boolean;
 
     // Mobile Use
-    hasDisabilitySelf: boolean;
-    hasEducationalLoan: boolean;
-    hasHRA: boolean;
-    hasAnyOtherDonations: boolean;
-    hasMedicalExpense: boolean;
-    hasExtendedEndDate: boolean;
-    hasForeignBank: boolean;
+    // hasDisabilitySelf: boolean;
+    // hasEducationalLoan: boolean;
+    // hasHRA: boolean;
+    // hasAnyOtherDonations: boolean;
+    // hasMedicalExpense: boolean;
+    // hasExtendedEndDate: boolean;
+    // hasForeignBank: boolean;
     directorInCompany: boolean;
     haveUnlistedShares: boolean;
 }

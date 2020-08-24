@@ -81,7 +81,9 @@ export class NavbarComponent implements OnInit {
       }
     }
   }
-
+  navigateToHome() {
+    this.router.navigate(['/pages/itr-filing/my-itrs']);
+  }
   //Http Functions
   getSingletonNavbarObj() {
     return NavbarService.getInstance(null);

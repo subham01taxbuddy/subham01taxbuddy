@@ -19,6 +19,7 @@ export class BusinessComponent implements OnInit {
   employerDetailsFormGroup: FormGroup;
   itrDocuments = [];
   ITR_JSON: ITR_JSON;
+  Copy_ITR_JSON: ITR_JSON;
   businessMode: any = '';
   mode: any = '';
   docDetails = {
@@ -53,6 +54,7 @@ export class BusinessComponent implements OnInit {
   constructor(private fb: FormBuilder, public utilsService: UtilsService,
     private itrMsService: ItrMsService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     if (this.utilsService.isNonEmpty(this.ITR_JSON.business) && this.utilsService.isNonEmpty(this.ITR_JSON.business.presumptiveIncomes) && this.ITR_JSON.business.presumptiveIncomes.length !== 0) {
       this.businessMode = 'TABLE';
     } else {
@@ -155,10 +157,13 @@ export class BusinessComponent implements OnInit {
 
 
   getDocsUrl(index) {
-
     if (this.itrDocuments.length > 0) {
       const docType = this.itrDocuments[index].fileName.split('.').pop();
-      this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
+      if (this.itrDocuments[index].isPasswordProtected) {
+        this.docDetails.docUrl = this.itrDocuments[index].passwordProtectedFileUrl;
+      } else {
+        this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
+      }
       this.docDetails.docType = docType;
     } else {
       this.docDetails.docUrl = '';
@@ -439,18 +444,21 @@ export class BusinessComponent implements OnInit {
     if (totalProfessionalIncome <= 5000000 && totalBusinessIncome <= 20000000) {
       const myPresumptiveIncome = JSON.parse(JSON.stringify(this.localPresumptiveIncome));
       if (this.mode === 'ADD') {
-        this.ITR_JSON.business.presumptiveIncomes.push(myPresumptiveIncome);
+        this.Copy_ITR_JSON.business.presumptiveIncomes.push(myPresumptiveIncome);
+        // this.ITR_JSON.business.presumptiveIncomes.push(myPresumptiveIncome);
       } else if (this.mode === 'UPDATE') {
-        this.ITR_JSON.business.presumptiveIncomes.splice(this.currentIndex, 1, myPresumptiveIncome);
+        this.Copy_ITR_JSON.business.presumptiveIncomes.splice(this.currentIndex, 1, myPresumptiveIncome);
+        // this.ITR_JSON.business.presumptiveIncomes.splice(this.currentIndex, 1, myPresumptiveIncome);
       }
-
+      this.Copy_ITR_JSON.systemFlags.hasBusinessProfessionIncome = true;
       // this.utilsService.openLoaderDialog();
       this.loading = true;
 
       // SERVICE CALL MAIN NEXT BUTTON
       const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-      this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
+      this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
         this.ITR_JSON = result;
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
         this.utilsService.smoothScrollToTop();
         this.businessMode = 'TABLE';
@@ -470,6 +478,7 @@ export class BusinessComponent implements OnInit {
 
         this.utilsService.showSnackBar('Data updated successfully.');
       }, error => {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
         this.utilsService.showSnackBar('Failed to update.');
       });
@@ -621,18 +630,38 @@ export class BusinessComponent implements OnInit {
   }
 
   deleteBusiness(index) {
-    this.ITR_JSON.business.presumptiveIncomes.splice(index, 1);
-    if (this.ITR_JSON.business.presumptiveIncomes.length === 0) {
-      this.ITR_JSON.business.financialParticulars = null;
-    }
-    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-
-    if (this.ITR_JSON.business.presumptiveIncomes.length !== 0) {
-      this.businessMode = 'TABLE';
+    this.Copy_ITR_JSON.business.presumptiveIncomes.splice(index, 1);
+    if (this.Copy_ITR_JSON.business.presumptiveIncomes.length === 0) {
+      if (this.Copy_ITR_JSON.planIdSelectedByTaxExpert === 23 || this.Copy_ITR_JSON.itrType === '4') {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.utilsService.showSnackBar('You have selected Business and Profession Plan OR ITR type 4, at least one business details is required.');
+        return;
+      }
+      this.Copy_ITR_JSON.systemFlags.hasBusinessProfessionIncome = false;
+      this.Copy_ITR_JSON.business.financialParticulars = null;
     } else {
-      this.mode = 'ADD';
-      this.businessMode = 'FORM';
+      this.Copy_ITR_JSON.systemFlags.hasBusinessProfessionIncome = true;
     }
+    this.loading = true;
+    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
+    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+      this.ITR_JSON = result;
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+      this.loading = false;
+      if (this.ITR_JSON.business.presumptiveIncomes.length !== 0) {
+        this.businessMode = 'TABLE';
+      } else {
+        this.mode = 'ADD';
+        this.businessMode = 'FORM';
+      }
+      this.utilsService.showSnackBar('Business income deleted successfully.');
+    }, error => {
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to delete business income.');
+    });
+
   }
 
   calTotalPresumptiveIncome() {

@@ -467,7 +467,6 @@ export class SalaryComponent implements OnInit {
     //   upload: [],
     //   calculators: null
     // };
-    debugger
     if (this.employerDetailsFormGroup.valid) {
       this.localEmployer.address = this.employerDetailsFormGroup.controls['address'].value
       this.localEmployer.employerName = this.employerDetailsFormGroup.controls['employerName'].value
@@ -557,6 +556,8 @@ export class SalaryComponent implements OnInit {
       this.Copy_ITR_JSON.employers.splice(this.currentIndex, 1, myEmp);
     }
 
+    this.Copy_ITR_JSON.systemFlags.hasSalary = true;
+    this.Copy_ITR_JSON = this.claimEitherHraOr80GG(this.Copy_ITR_JSON);
     // this.ITR_JSON.employers = [];
     // const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
     // this.ITR_JSON.employers.push(myEmp);
@@ -737,7 +738,24 @@ export class SalaryComponent implements OnInit {
 
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
   }
-
+  claimEitherHraOr80GG(ITR_JSON: ITR_JSON) {
+    let hraFound = false;
+    for (let i = 0; i < ITR_JSON.employers.length; i++) {
+      for (let j = 0; j < ITR_JSON.employers[i].allowance.length; j++) {
+        if (ITR_JSON.employers[i].allowance[j].allowanceType === 'HOUSE_RENT') {
+          hraFound = true;
+          break;
+        }
+      }
+    }
+    if (hraFound) {
+      ITR_JSON.systemFlags.hraAvailed = true;
+      ITR_JSON.expenses.filter(item => item.expenseType !== 'HOUSE_RENT_PAID')
+    } else {
+      ITR_JSON.systemFlags.hraAvailed = false;
+    }
+    return ITR_JSON;
+  }
   employerCallInConstructor() {
     this.employersGridOptions = <GridOptions>{
       rowData: this.employerCreateRowData(),
@@ -824,8 +842,18 @@ export class SalaryComponent implements OnInit {
     }
   }
   deleteEmployer(params) {
-    this.loading = true;
     this.Copy_ITR_JSON.employers = this.Copy_ITR_JSON.employers.filter(item => item.id !== params.data.id);
+    if (this.Copy_ITR_JSON.employers.length > 0) {
+      this.Copy_ITR_JSON.systemFlags.hasSalary = true;
+    } else {
+      if (this.Copy_ITR_JSON.planIdSelectedByTaxExpert === 22) { //here 22 is salary planId
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.utilsService.showSnackBar('You have selected Salary Income Plan, at least one employer details is required.');
+        return;
+      }
+      this.Copy_ITR_JSON.systemFlags.hraAvailed = false;
+      this.Copy_ITR_JSON.systemFlags.hasSalary = false;
+    }
     // const param = `/itremployer?docId=${id}&userId=${this.ITR_JSON.userId}&itrId=${this.ITR_JSON.itrId}&assessmentYear=${this.ITR_JSON.assessmentYear}`;
     // this.itrMsService.deleteMethod(param).subscribe((result: any) => {
     //   this.ITR_JSON = result;
@@ -840,7 +868,7 @@ export class SalaryComponent implements OnInit {
     // }, error => {
     //   this.loading = false;
     // });
-
+    this.loading = true;
     const param = '/taxitr?type=employers';
     this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
@@ -914,7 +942,11 @@ export class SalaryComponent implements OnInit {
     const doc = this.itrDocuments.filter(item => item.documentTag === 'FORM_16')
     if (doc.length > 0) {
       const docType = doc[index].fileName.split('.').pop();
-      this.form16DocDetails.docUrl = doc[index].signedUrl;
+      if (doc[index].isPasswordProtected) {
+        this.form16DocDetails.docUrl = doc[index].passwordProtectedFileUrl;
+      } else {
+        this.form16DocDetails.docUrl = doc[index].signedUrl;
+      }
       this.form16DocDetails.docType = docType;
     } else {
       this.form16DocDetails.docUrl = '';

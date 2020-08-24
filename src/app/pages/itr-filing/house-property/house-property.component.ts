@@ -120,10 +120,12 @@ export class HousePropertyComponent implements OnInit {
       }
       this.Copy_ITR_JSON.houseProperties = [];
       this.Copy_ITR_JSON.houseProperties.push(hp);
+      this.Copy_ITR_JSON.systemFlags.hasHouseProperty = true;
       // this.ITR_JSON = JSON.parse(JSON.stringify(this.Copy_ITR_JSON));
       // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       this.serviceCall(this.Copy_ITR_JSON, 'SAVE');
     } else {
+      this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
       $('input.ng-invalid').first().focus();
     }
   }
@@ -131,6 +133,7 @@ export class HousePropertyComponent implements OnInit {
   deleteHpDetails() {
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON.houseProperties = [];
+    this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
     this.serviceCall(this.Copy_ITR_JSON, 'DELETE');
   }
   serviceCall(request, ref) {
@@ -188,7 +191,11 @@ export class HousePropertyComponent implements OnInit {
     const doc = this.itrDocuments.filter(item => item.documentTag === 'LOAN_STATEMENT')
     if (doc.length > 0) {
       const docType = doc[index].fileName.split('.').pop();
-      this.hpDocDetails.docUrl = doc[index].signedUrl;
+      if (this.hpDocDetails[index].isPasswordProtected) {
+        this.hpDocDetails.docUrl = doc[index].passwordProtectedFileUrl;
+      } else {
+        this.hpDocDetails.docUrl = doc[index].signedUrl;
+      }
       this.hpDocDetails.docType = docType;
     } else {
       this.hpDocDetails.docUrl = '';
