@@ -92,7 +92,7 @@ export class CustomerProfileComponent implements OnInit {
     { value: 983, label: 'Usha Chellani' },
     { value: 23670, label: 'Ashwini Kapale' },
     { value: 23578, label: 'Aditi Ravindra Gujar' },
-    // { value: 23564, label: 'Sonali Ghanwat' },
+    // { value: 23564, label: 'Sonali Ghanwat' }, Quit
     { value: 23668, label: 'Chaitanya Prakash Masurkar' },
 
 
@@ -104,7 +104,7 @@ export class CustomerProfileComponent implements OnInit {
     { value: 26215, label: 'Deepali Nivrutti Pachangane' },
     { value: 26217, label: 'Manasi Jadhav' },
     { value: 26236, label: 'Supriya Mahindrakar' },
-    { value: 26218, label: 'Mrudula Vishvas Shivalkar' },
+    // { value: 26218, label: 'Mrudula Vishvas Shivalkar' }, Quit
     { value: 26235, label: 'Chaitrali Ranalkar' },
 
     { value: 28033, label: 'Shrikanth Elegeti' },
@@ -147,151 +147,7 @@ export class CustomerProfileComponent implements OnInit {
     { value: 'FEMALE', label: 'Female' },
   ]
 
-  // fillingMasterStatus = [
-  //   {
-  //     "createdDate": "2020-05-19T09:19:51.335Z",
-  //     "id": "5ec3a4b7d5220f2e3cd22bd3",
-  //     "statusId": 1,
-  //     "statusName": "Assisted Mode",
-  //     "sequence": 1,
-  //     "source": "BOTH",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   },
-  //   {
-  //     "createdDate": "2020-05-19T09:29:06.095Z",
-  //     "id": "5ec3a6e2d5220f375473036c",
-  //     "statusId": 2,
-  //     "statusName": "Documents Uploaded",
-  //     "sequence": 2,
-  //     "source": "USER",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   },
-  //   {
-  //     "createdDate": "2020-05-19T09:29:22.881Z",
-  //     "id": "5ec3a6f2d5220f375473036d",
-  //     "statusId": 3,
-  //     "statusName": "Document Received",
-  //     "sequence": 3,
-  //     "source": "BACK_OFFICE",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   },
-  //   {
-  //     "createdDate": "2020-05-19T09:29:37.125Z",
-  //     "id": "5ec3a701d5220f375473036e",
-  //     "statusId": 4,
-  //     "statusName": "Document Reviewed",
-  //     "sequence": 4,
-  //     "source": "BACK_OFFICE",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   },
-  //   {
-  //     "createdDate": "2020-05-19T09:29:46.983Z",
-  //     "id": "5ec3a70ad5220f375473036f",
-  //     "statusId": 5,
-  //     "statusName": "Preparing ITR",
-  //     "sequence": 5,
-  //     "source": "USER",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   },
-  //   {
-  //     "createdDate": "2020-05-19T09:30:11.260Z",
-  //     "id": "5ec3a723d5220f3754730370",
-  //     "statusId": 6,
-  //     "statusName": "ITR Work In Progress",
-  //     "sequence": 6,
-  //     "source": "BACK_OFFICE",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   },
-  //   {
-  //     "createdDate": "2020-05-19T09:30:39.172Z",
-  //     "id": "5ec3a73fd5220f3754730371",
-  //     "statusId": 7,
-  //     "statusName": "Waiting for Confirmation",
-  //     "sequence": 7,
-  //     "source": "BACK_OFFICE",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   },
-  //   {
-  //     "createdDate": "2020-05-19T10:38:41.191Z",
-  //     "id": "5ec3b731d5220f0aa8ef4bda",
-  //     "statusId": 8,
-  //     "statusName": "ITR Confirmation",
-  //     "sequence": 8,
-  //     "source": "USER",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   },
-  //   {
-  //     "createdDate": "2020-05-19T10:39:34.199Z",
-  //     "id": "5ec3b766d5220f0aa8ef4bdb",
-  //     "statusId": 9,
-  //     "statusName": "Confirmation Received",
-  //     "sequence": 9,
-  //     "source": "BACK_OFFICE",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   },
-  //   {
-  //     "createdDate": "2020-05-19T10:41:51.436Z",
-  //     "id": "5ec3b7efd5220f0aa8ef4bdc",
-  //     "statusId": 10,
-  //     "statusName": "Return Filed",
-  //     "sequence": 10,
-  //     "source": "BACK_OFFICE",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   },
-  //   {
-  //     "createdDate": "2020-05-19T10:42:12.278Z",
-  //     "id": "5ec3b804d5220f0aa8ef4bdd",
-  //     "statusId": 11,
-  //     "statusName": "ITR Filed",
-  //     "sequence": 11,
-  //     "source": "USER",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   },
-  //   {
-  //     "createdDate": "2020-05-19T10:42:28.023Z",
-  //     "id": "5ec3b814d5220f0aa8ef4bde",
-  //     "statusId": 12,
-  //     "statusName": "Payment Status",
-  //     "sequence": 12,
-  //     "source": "BACK_OFFICE",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   },
-  //   {
-  //     "createdDate": "2020-05-19T10:42:42.368Z",
-  //     "id": "5ec3b822d5220f0aa8ef4bdf",
-  //     "statusId": 13,
-  //     "statusName": "Payment Received",
-  //     "sequence": 13,
-  //     "source": "USER",
-  //     "active": true,
-  //     "message": "",
-  //     "channel": ""
-  //   }
-  // ]
+
   constructor(public fb: FormBuilder,
     public utilsService: UtilsService,
     public httpClient: HttpClient,
@@ -300,27 +156,9 @@ export class CustomerProfileComponent implements OnInit {
     private userMsService: UserMsService,
     private router: Router) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // this.ITR_JSON.seventhProviso139 = {
-    //   depAmtAggAmtExcd1CrPrYrFlg: 100,
-    //   incrExpAggAmt1LkElctrctyPrYrFlg: null,
-    //   incrExpAggAmt2LkTrvFrgnCntryFlg: null
-    // }
 
-    // this.ITR_JSON.family = [{
-    //   age: 48,
-    //   dateOfBirth: null,
-    //   fName: 'Ash',
-    //   fatherName: '',
-    //   gender: '',
-    //   lName: 'Hul',
-    //   mName: '123',
-    //   pid: null,
-    //   relationShipCode: 'SELF',
-    //   relationType: 'SELF'
-    // }]
   }
-  // s3FilePath: any;
-  // fileType = 'pdf'
+
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
     this.customerProfileForm = this.createCustomerProfileForm();
@@ -341,7 +179,10 @@ export class CustomerProfileComponent implements OnInit {
     //     // this._toastMessageService.alert("error", "Error While fetching invoice image");
     //   });
   }
-
+  zoom: number = 1.0;
+  incrementZoom(amount: number) {
+    this.zoom += amount;
+  }
   createCustomerProfileForm() {
     return this.fb.group({
       firstName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
@@ -593,6 +434,7 @@ export class CustomerProfileComponent implements OnInit {
   getDocumentUrl(documentTag) {
     const doc = this.documents.filter(item => item.documentTag === documentTag)
     if (doc.length > 0) {
+      const docType = doc[0].fileName.split('.').pop();
       if (doc[0].isPasswordProtected) {
         return doc[0].passwordProtectedFileUrl;
       } else {
@@ -601,7 +443,14 @@ export class CustomerProfileComponent implements OnInit {
     } else {
       return ''
     }
+  }
 
+  getDocumentType(documentTag) {
+    const doc = this.documents.filter(item => item.documentTag === documentTag);
+    if (doc.length > 0) {
+      return doc[0].fileName.split('.').pop();
+    }
+    return '';
   }
   previousRoute() {
     this.router.navigate(['/pages/itr-filing/users']);

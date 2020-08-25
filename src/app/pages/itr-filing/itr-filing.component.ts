@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterContentChecked } from '@angular/core';
 import { Router } from '@angular/router';
+import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 
 @Component({
     selector: 'app-itr-filing',
@@ -7,11 +8,17 @@ import { Router } from '@angular/router';
 })
 export class ItrFilingComponent implements OnInit, AfterContentChecked {
     currentUrl: string;
-    constructor(private router: Router) { }
+    loggedInUserData: any;
+    constructor(private router: Router, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService,) { }
     ngOnInit() {
+        this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
 
     }
     ngAfterContentChecked() {
         this.currentUrl = this.router.url;
+    }
+
+    isApplicable(permissionRoles) {
+        return this.roleBaseAuthGaurdService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
     }
 }
