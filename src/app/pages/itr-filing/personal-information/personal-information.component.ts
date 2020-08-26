@@ -567,12 +567,10 @@ export class PersonalInformationComponent implements OnInit {
   getCommonDocuments() {
     const param = `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/Common`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
-      console.log('Documents', result)
       this.documents = result;
     })
-
-
   }
+
   docDetails = {
     docUrl: '',
     docType: ''
@@ -591,16 +589,6 @@ export class PersonalInformationComponent implements OnInit {
       this.docDetails.docType = '';
     }
   }
-  // itrDocuments = [];
-  // getItrDocuments() {
-  //   // TODO
-  //   const param1 =
-  //     `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
-  //   this.itrMsService.getMethod(param1).subscribe((result: any) => {
-  //     console.log('Documents ITR', result)
-  //     this.itrDocuments = result;
-  //   })
-  // }
 
   getDocumentUrl(documentTag) {
     const doc = this.documents.filter(item => item.documentTag === documentTag)

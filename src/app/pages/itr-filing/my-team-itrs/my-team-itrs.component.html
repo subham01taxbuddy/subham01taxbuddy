@@ -1,12 +1,24 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
-<div class="main clearfix" style="padding-top: 0px;">
-
+<div class="main clearfix" style="padding-top: 0px;min-height: 10vh;">
     <div class="card">
         <div class="card__row">
+            <span *ngFor="let mem of myFilingTeamMembers; let i=index">
+                <a href="javascript:;" (click)="getMembersItr(mem.value)">{{mem.label}}</a> &nbsp;&nbsp;
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="main clearfix" style="padding-top: 0px;">
+    <div class="card">
+        <!-- Search for data -->
+        <div class="card__row">
+            Selected Filing Member:<b>{{selectedMember}}</b> &nbsp;&nbsp;&nbsp;
             <span style="float: right;"> Completed: <b>{{getCount(true)}}</b>&nbsp;&nbsp;&nbsp;
                 Pending: <b>{{getCount(false)}}</b>&nbsp;&nbsp;&nbsp;
                 <b>Total: {{itrDataList.length}}</b></span>
+
         </div>
         <div class="card__row">
             <ag-grid-angular class="ag-theme-balham" [gridOptions]="myItrsGridOptions"

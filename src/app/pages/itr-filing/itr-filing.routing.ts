@@ -7,6 +7,8 @@ import { ItrWizardComponent } from './itr-wizard/itr-wizard.component';
 import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
 import { DirectUploadComponent } from './direct-upload/direct-upload.component';
 import { MyAssignedItrsComponent } from './my-assigned-itrs/my-assigned-itrs.component';
+import { MyTeamItrsComponent } from './my-team-itrs/my-team-itrs.component';
+import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 
 const routes: Routes = [
     {
@@ -18,6 +20,7 @@ const routes: Routes = [
             { path: 'itr', component: ItrWizardComponent },
             { path: 'direct-upload', component: DirectUploadComponent },
             { path: 'acknowledgement', component: AcknowledgementComponent },
+            { path: 'team-itrs', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: MyTeamItrsComponent },
 
             { path: '', redirectTo: '/pages/itr-filing/users', pathMatch: 'full' }
         ]

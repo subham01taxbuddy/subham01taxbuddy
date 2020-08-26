@@ -164,11 +164,9 @@ export class HousePropertyComponent implements OnInit {
     return this.utilsService.currencyFormatter(taxable);
   }
   getItrDocuments() {
-    // TODO
     const param1 =
       `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
     this.itrMsService.getMethod(param1).subscribe((result: any) => {
-      console.log('Documents ITR', result)
       this.itrDocuments = result;
       this.getHpDocsUrl(0);
     })
