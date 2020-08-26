@@ -320,7 +320,17 @@ export class SummaryComponent implements OnInit {
     }
   }
   sendPdfToKomm() {
-    this.utilsService.showSnackBar('Comming Soon!!!');
+    // https://uat-api.taxbuddy.com/itr/summary/send?itrId=28568&channel=both 
+    this.loading = true;
+    let itrId = this.ITR_JSON.itrId;
+    let param = '/summary/send?itrId='+itrId+'&channel=kommunicate';
+    this.itrMsService.getMethod(param).subscribe((res: any)=>{
+      this.loading = false;
+        console.log('Responce of send PDF to Kommunicate:',res)
+       this.utilsService.showSnackBar(res.response)
+    },error=>{
+      this.loading = false;
+    })
   }
   downloadPDF() {
     // http://uat-api.taxbuddy.com/txbdyitr/txbdyReport?userId={userId}&itrId={itrId}&assessmentYear={assessmentYear}

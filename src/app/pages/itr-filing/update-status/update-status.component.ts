@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { WhatsAppDialogComponent } from '../whats-app-dialog/whats-app-dialog.component';
 import { KommunicateDialogComponent } from '../kommunicate-dialog/kommunicate-dialog.component';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { ToastMessageService } from 'app/services/toast-message.service';
 
 @Component({
   selector: 'app-update-status',
@@ -164,7 +166,8 @@ export class UpdateStatusComponent implements OnInit {
     }
   ]
 
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private route: Router, private dialog: MatDialog) {
+  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private route: Router, private dialog: MatDialog, 
+    private _toastMessageService: ToastMessageService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
@@ -251,16 +254,21 @@ export class UpdateStatusComponent implements OnInit {
   }
 
   kommunicateChat(){
-    let disposable = this.dialog.open(KommunicateDialogComponent, {
-      width:  '50%',
-      height: 'auto',
-      data:{
-        chatData: this.kommunicateChatData
-      }
-    })
-
-    disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
+    if(this.utilsService.isNonEmpty(this.kommunicateChatData)){
+      let disposable = this.dialog.open(KommunicateDialogComponent, {
+        width:  '50%',
+        height: 'auto',
+        data:{
+          chatData: this.kommunicateChatData
+        }
+      })
+  
+      disposable.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+      });
+    }else{
+      this._toastMessageService.alert('error','User not initialted with Kommunicate chat')
+    }
+   
   }
 }
