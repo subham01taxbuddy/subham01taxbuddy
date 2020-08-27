@@ -3,11 +3,11 @@
 <!-- <div class="main clearfix">
     <div class="content content_full">
         <div class="content__container">-->
-<div class="card__col-lg-12">
+<!-- <div class="card__col-lg-12">
     <div class="btns">
         <button class="butn" style="margin: 10px 0px" (click)="addNewUserInvoice()">Add New User Invoice</button>
     </div>
-</div>
+</div> -->
 
 <div class="card">
     <div class="card__row">
@@ -15,27 +15,27 @@
         <div class="card__col-lg-12">
             <div class="filter__col card__col-sm-4 card__col-xs-12">
                 <div class="input">
-                  <label class="input__label" for="attr">Select attribute</label>
-                  <select class="select__box ogp_select" (change)="clearValue()" #advanceSearchKey>
-                    <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
-                    <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
-                      {{drop.name}}</option>
-                  </select>
+                    <label class="input__label" for="attr">Select attribute</label>
+                    <select class="select__box ogp_select" (change)="clearValue()" #advanceSearchKey>
+                        <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
+                        <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+                            {{drop.name}}</option>
+                    </select>
                 </div>
-              </div>
-              <div class="filter__col card__col-sm-4 card__col-xs-10">
+            </div>
+            <div class="filter__col card__col-sm-4 card__col-xs-10">
                 <div class="input">
-                  <label class="input__label" for="attr">Enter value</label>
-                  <div class="input__select">
-                    <input type="text" class="select__box ogp_select" style="background-image:none" [(ngModel)]="searchVal"
-                      name="searchVal" />
-                  </div>
+                    <label class="input__label" for="attr">Enter value</label>
+                    <div class="input__select">
+                        <input type="text" class="select__box ogp_select" style="background-image:none"
+                            [(ngModel)]="searchVal" name="searchVal" />
+                    </div>
                 </div>
-              </div>
-              <div class="card__col-md-3 card__col-xs-12 pull-right">
+            </div>
+            <div class="card__col-md-3 card__col-xs-12 pull-right">
                 <a class="btn btn_stroke filter__add-link" (click)="advanceSearch(advanceSearchKey.value)"><i
-                    class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
-              </div>
+                        class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
+            </div>
         </div><br><br>
 
         <div class="card__col-lg-3" style="margin-top: 15px;">
@@ -65,7 +65,7 @@
                     <td>{{user.fName + " " + user.lName}}</td>
                     <td>
                         <a href="javascript:0" (click)="getUserInvoiceList(user.userId)"
-                        title="Generate Invoice">{{user.userId}}</a>
+                            title="Generate Invoice">{{user.userId}}</a>
                     </td>
                 </tr>
             </table>
@@ -160,13 +160,13 @@
     <form [formGroup]="invoiceForm">
         <mat-card>
             <div class="card__row">
-                <label>Initial Data:</label><br><br>    
+                <label>Initial Data:</label><br><br>
                 <pre class="initiatedInfo" *ngIf="initiatedData">
                     {{initiatedData | json}}
                 </pre>
 
-                <p style="margin: 12px; font-size: 15px; padding-left: 137px;" *ngIf="!initiatedData"> 
-                    Initial data not present for selected User. 
+                <p style="margin: 12px; font-size: 15px; padding-left: 137px;" *ngIf="!initiatedData">
+                    Initial data not present for selected User.
                 </p>
 
             </div><br>
@@ -307,7 +307,8 @@
                             autocomplete="off">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker #picker2></mat-datepicker>
-                        <mat-error *ngIf="invoiceForm.controls['paymentDate'].hasError('required')">Select Amount receipt date</mat-error>
+                        <mat-error *ngIf="invoiceForm.controls['paymentDate'].hasError('required')">Select Amount
+                            receipt date</mat-error>
                     </mat-form-field>
                 </div>
             </div>
