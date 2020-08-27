@@ -4,6 +4,8 @@ import { ItrMsService } from 'app/services/itr-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { Router } from '@angular/router';
 import { AppConstants } from 'app/shared/constants';
+import { MatDialog } from '@angular/material';
+import { FilingStatusDialogComponent } from '../filing-status-dialog/filing-status-dialog.component';
 
 @Component({
   selector: 'app-my-team-itrs',
@@ -62,7 +64,7 @@ export class MyTeamItrsComponent implements OnInit {
   ];
   myFilingTeamMembers = [];
   selectedMember: String = '';
-  constructor(private itrMsService: ItrMsService, public utilsService: UtilsService, private router: Router) {
+  constructor(private itrMsService: ItrMsService, public utilsService: UtilsService, private router: Router, private dialog: MatDialog,) {
     const loggedInUserData = JSON.parse(localStorage.getItem('UMD'))
     this.filingTeamMembers.sort((a, b) => a.label > b.label ? 1 : -1)
     var filingMemberId = loggedInUserData.USER_UNIQUE_ID;
@@ -118,6 +120,7 @@ export class MyTeamItrsComponent implements OnInit {
     for (let i = 0; i < data.length; i++) {
       newData.push({
         itrId: data[i].itrId,
+        userId: data[i].userId,
         fName: data[i].family[0].fName,
         lName: data[i].family[0].lName,
         panNumber: data[i].panNumber,
@@ -229,6 +232,25 @@ export class MyTeamItrsComponent implements OnInit {
             }
           }
         },
+      },
+      {
+        headerName: 'Status',
+        width: 50,
+        sortable: true,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;color: blueviolet">
+            <i class="fa fa-weixin" aria-hidden="true" data-action-type="filingStatus"></i>
+           </button>`;
+        },
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+          color: 'blueviolet'
+
+        },
       }
     ];
   }
@@ -238,6 +260,10 @@ export class MyTeamItrsComponent implements OnInit {
       switch (actionType) {
         case 'startFiling': {
           this.startFiling(params.data);
+          break;
+        }
+        case 'filingStatus': {
+          this.openfilingStatusDialog(params.data);
           break;
         }
       }
@@ -259,5 +285,16 @@ export class MyTeamItrsComponent implements OnInit {
     workingItr = JSON.parse(JSON.stringify(obj))
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
     this.router.navigate(['/pages/itr-filing/customer-profile'])
+  }
+
+  openfilingStatusDialog(data) {
+    let disposable = this.dialog.open(FilingStatusDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: data
+    })
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 }
