@@ -191,6 +191,26 @@ table {
   margin-bottom: 15px;
 }
 
+.whatsAppBut{
+  line-height: 24px;
+  border-radius: 0px;
+  background: #4FCE5D;
+  color: #fff;
+  text-transform: uppercase;
+  display: block;
+  font-size: 12px;
+  text-align: center;
+  margin-left: 10px;
+  border: #4FCE5D solid 1px;
+  font-weight: 500;
+  float: left;
+  outline: none;
+  font-family: Avenir Book;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  margin-bottom: 15px;
+}
+
 .prvBut {
   /* width: 85px; */
   line-height: 24px;
