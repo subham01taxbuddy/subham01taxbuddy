@@ -155,15 +155,17 @@ export class SalaryComponent implements OnInit {
       this.ITR_JSON.employers = [];
     }
     this.ITR_JSON.employers.forEach(item => {
-      item.deductions.forEach(deductions => {
-        if (deductions.deductionType === 'PROFESSIONAL_TAX') {
-          this.maxPT = this.maxPT - Number(deductions.exemptAmount);
-        }
+      if (item.deductions instanceof Array) {
+        item.deductions.forEach(deductions => {
+          if (deductions.deductionType === 'PROFESSIONAL_TAX') {
+            this.maxPT = this.maxPT - Number(deductions.exemptAmount);
+          }
 
-        if (deductions.deductionType === 'ENTERTAINMENT_ALLOW') {
-          this.maxEA = this.maxEA - Number(deductions.exemptAmount);
-        }
-      });
+          if (deductions.deductionType === 'ENTERTAINMENT_ALLOW') {
+            this.maxEA = this.maxEA - Number(deductions.exemptAmount);
+          }
+        });
+      }
     });
     this.employerDetailsFormGroup.controls['professionalTax'].setValidators(Validators.compose([Validators.max(this.maxPT), Validators.pattern(AppConstants.numericRegex)]));
     this.employerDetailsFormGroup.controls['professionalTax'].updateValueAndValidity();
@@ -175,7 +177,7 @@ export class SalaryComponent implements OnInit {
     return this.fb.group({
       employerName: [''],
       address: [''],
-      employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
+      // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
       employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
       entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
       professionalTax: [null, Validators.compose([Validators.max(5000), Validators.pattern(AppConstants.numericRegex)])],
@@ -442,6 +444,7 @@ export class SalaryComponent implements OnInit {
 
 
   saveEmployerDetails() {
+    debugger
     // this.localEmployer = {
     //   id: Math.random().toString(36).substr(2, 9),
     //   employerName: '',
@@ -709,25 +712,29 @@ export class SalaryComponent implements OnInit {
 
 
     /* Deductions Set Values */
-    for (let i = 0; i < this.localEmployer.deductions.length; i++) {
-      if (this.localEmployer.deductions[i].deductionType === 'ENTERTAINMENT_ALLOW') {
-        this.employerDetailsFormGroup.controls['entertainmentAllow'].setValue(this.localEmployer.deductions[i].exemptAmount);
-      } else if (this.localEmployer.deductions[i].deductionType === 'PROFESSIONAL_TAX') {
-        this.employerDetailsFormGroup.controls['professionalTax'].setValue(this.localEmployer.deductions[i].exemptAmount);
+    if (this.localEmployer.deductions instanceof Array) {
+      for (let i = 0; i < this.localEmployer.deductions.length; i++) {
+        if (this.localEmployer.deductions[i].deductionType === 'ENTERTAINMENT_ALLOW') {
+          this.employerDetailsFormGroup.controls['entertainmentAllow'].setValue(this.localEmployer.deductions[i].exemptAmount);
+        } else if (this.localEmployer.deductions[i].deductionType === 'PROFESSIONAL_TAX') {
+          this.employerDetailsFormGroup.controls['professionalTax'].setValue(this.localEmployer.deductions[i].exemptAmount);
+        }
       }
     }
 
     this.maxPT = 5000;
     this.maxEA = 5000;
     this.ITR_JSON.employers.forEach(item => {
-      item.deductions.forEach(deductions => {
-        if (deductions.deductionType === 'PROFESSIONAL_TAX') {
-          this.maxPT = this.maxPT - Number(deductions.exemptAmount);
-        }
-        if (deductions.deductionType === 'ENTERTAINMENT_ALLOW') {
-          this.maxEA = this.maxEA - Number(deductions.exemptAmount);
-        }
-      });
+      if (item.deductions instanceof Array) {
+        item.deductions.forEach(deductions => {
+          if (deductions.deductionType === 'PROFESSIONAL_TAX') {
+            this.maxPT = this.maxPT - Number(deductions.exemptAmount);
+          }
+          if (deductions.deductionType === 'ENTERTAINMENT_ALLOW') {
+            this.maxEA = this.maxEA - Number(deductions.exemptAmount);
+          }
+        });
+      }
     });
     this.maxPT = this.maxPT + Number(this.employerDetailsFormGroup.controls['professionalTax'].value);
     this.maxEA = this.maxEA + Number(this.employerDetailsFormGroup.controls['entertainmentAllow'].value);

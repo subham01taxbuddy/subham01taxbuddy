@@ -1,25 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA, MatStepper } from '@angular/material';
+import { environment } from 'environments/environment';
 import { UserMsService } from 'app/services/user-ms.service';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'app/shared/constants';
-import { UtilsService } from 'app/services/utils.service';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
-import { WhatsAppDialogComponent } from '../whats-app-dialog/whats-app-dialog.component';
-import { KommunicateDialogComponent } from '../kommunicate-dialog/kommunicate-dialog.component';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { ToastMessageService } from 'app/services/toast-message.service';
 
 @Component({
-  selector: 'app-update-status',
-  templateUrl: './update-status.component.html',
-  styleUrls: ['./update-status.component.css']
+  templateUrl: './filing-status-dialog.component.html',
+  styleUrls: ['./filing-status-dialog.component.css']
 })
-export class UpdateStatusComponent implements OnInit {
-  fillingStatus = new FormControl('', Validators.required);
-  // ITR_JSON: ITR_JSON;
-  @Input('userId') userId: any;
+export class FilingStatusDialogComponent implements OnInit {
+  userId: any;
+  @ViewChild('stepper', { static: true }) private stepper: MatStepper;
   fillingMasterStatus = [
     // {
     //   "createdDate": "2020-05-19T09:19:51.335Z",
@@ -166,104 +157,35 @@ export class UpdateStatusComponent implements OnInit {
     }
   ]
 
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private route: Router, private dialog: MatDialog,
-    private _toastMessageService: ToastMessageService) {
-    // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-  }
+  latestCompiltedStatus: any = [];
+  constructor(public dialogRef: MatDialogRef<FilingStatusDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
+    private userMsService: UserMsService) { }
 
   ngOnInit() {
-    this.getFilingStatus();
-    // this.getUserProfile();
+    this.userId = this.data['userId'];
+    console.log('this.data: ', this.data);
+    // this.getLatestComplitedStatus();
   }
 
-  getFilingStatus() {
+  // TODO
+  getLatestComplitedStatus() {
     const param = `/itr-status?userId=${this.userId}&assessmentYear=${AppConstants.ayYear}`;
-    this.userMsService.getMethod(param).subscribe(result => {
-      console.log('Filing status for drop down:', result);
-      if (result instanceof Array) {
-        const completedStatus = result.filter(item => item.completed === 'true' || item.completed === true)
-        const ids = completedStatus.map(status => status.statusId);
-        const sorted = ids.sort((a, b) => a - b);
-        this.fillingStatus.setValue(sorted[sorted.length - 1])
-      }
-
-    })
-  }
-
-  getUserKommunicateChat(kommunicateGroupId) {
-    let param = `/gateway/kommunicate/chat/user/${kommunicateGroupId}`;
-    this.userMsService.getMethodInfo(param).subscribe(result => {
-      console.log('User kommunicate chat data: ', result);
-      if (this.utilsService.isNonEmpty(result)) {
-        let disposable = this.dialog.open(KommunicateDialogComponent, {
-          width: '50%',
-          height: 'auto',
-          data: {
-            chatData: result
+    this.userMsService.getMethod(param).subscribe(compliteStatus => {
+      this.latestCompiltedStatus = compliteStatus;
+      console.log('Get all latest complited status: ', compliteStatus);
+      // if (key === 'fromgetAllStatus') {
+      this.stepper.reset();
+      if (compliteStatus instanceof Array && compliteStatus.length > 0) {
+        for (let i = 0; i < compliteStatus.length; i++) {
+          if (compliteStatus[i].completed) {
+            this.stepper.next();
           }
-        })
-
-        disposable.afterClosed().subscribe(result => {
-          console.log('The dialog was closed');
-        });
+          console.log("selectedIndex " + i + ' ' + this.stepper.selectedIndex)
+        }
       }
     },
       error => {
 
-      })
-  }
-
-  updateStatus() {
-    const param = '/itr-status'
-    const request = {
-      "statusId": Number(this.fillingStatus.value),
-      "userId": this.userId,
-      "assessmentYear": AppConstants.ayYear,
-      "completed": true
-    }
-
-    // this.loading = true;
-    this.userMsService.postMethod(param, request).subscribe(result => {
-      console.log(result);
-      this.utilsService.showSnackBar('Filing status updated successfully.')
-      // this.loading = false;
-    }, err => {
-      // this.loading = false;
-      this.utilsService.showSnackBar('Failed to update Filing status.')
-    })
-  }
-
-  openUserChat() {
-    let param = `/profile/${this.userId}`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('User profile data: ', result);
-      let disposable = this.dialog.open(WhatsAppDialogComponent, {
-        width: '50%',
-        height: 'auto',
-        data: {
-          mobileNum: result.mobileNumber
-        }
-      })
-      disposable.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
       });
-    }, error => { })
-
-
-
-  }
-
-  kommunicateChat() {
-    let param = `/profile/${this.userId}`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('User profile data: ', result);
-      if (this.utilsService.isNonEmpty(result['kommunicateGroupId'])) {
-        this.getUserKommunicateChat(result['kommunicateGroupId']);
-      } else {
-        this._toastMessageService.alert('error', 'User not initialted with Kommunicate chat')
-      }
-    }, error => { })
-
-
   }
 }

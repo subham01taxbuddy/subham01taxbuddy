@@ -47,7 +47,7 @@
 </div>
 <div class="content" style="width: 65%;">
     <div class="card__title" style="padding:10px; font-size: 20px;">Customer Profile</div>
-    <app-update-status></app-update-status>
+    <app-update-status [userId]="ITR_JSON.userId"></app-update-status>
     <hr>
     <form [formGroup]="customerProfileForm">
 

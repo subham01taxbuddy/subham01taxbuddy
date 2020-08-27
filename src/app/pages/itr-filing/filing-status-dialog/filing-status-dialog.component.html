@@ -1,0 +1,27 @@
+<button mat-dialog-close tabindex="-1" style="float: right; cursor: pointer;"><i class="fa fa-times"
+        aria-hidden="true"></i></button>
+<div class="chat-box">
+    <div class="chat-header">
+        Filinng Status for: {{this.data.fName +' ' +this.data.lName}}
+    </div>
+
+    <div class="card_body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+        <!-- <div class="card__row">
+            <mat-horizontal-stepper labelPosition="bottom" linear="true" #stepper>
+                <ng-template matStepperIcon="edit">
+                    <mat-icon>check</mat-icon>
+                </ng-template>
+
+                <mat-step *ngFor="let head of fillingMasterStatus; let i = index">
+                    <ng-template matStepLabel>{{ head.statusName }}
+
+                    </ng-template>
+                </mat-step>
+            </mat-horizontal-stepper>
+        </div> -->
+        <div class="card__row">
+            <app-update-status [userId]="userId"></app-update-status>
+        </div>
+
+    </div>
+</div>

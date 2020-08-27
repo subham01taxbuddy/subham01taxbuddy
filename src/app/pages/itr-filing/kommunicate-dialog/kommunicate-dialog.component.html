@@ -1,33 +1,39 @@
-<button mat-dialog-close tabindex="-1" style="float: right;"><i class="fa fa-times" aria-hidden="true"></i></button>
- <div class="chat-box">
-    <div class="chat-header">
-     Kommunikate Chat Corner:
-    </div>
-
-    <div class="card_body"  #scrollMe [scrollTop]="scrollMe.scrollHeight">  <!-- #scrollMe [scrollTop]="scrollMe.scrollHeight"-->
-     
-      <div class="card__row" *ngFor="let data of chatData">  
-        <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
-
-            <span class="sender" *ngIf="(data.webhookResponse.from === botIds[0] || data.webhookResponse.from === botIds[1] || data.webhookResponse.from === botIds[2] || data.webhookResponse.from === botIds[3] || data.webhookResponse.from === botIds[4] || data.webhookResponse.from === botIds[5] || data.webhookResponse.from === botIds[6] || data.webhookResponse.from === botIds[7] || data.webhookResponse.from === botIds[8] || data.webhookResponse.from === botIds[9]) && utilService.isNonEmpty(data.webhookResponse.message)">
-              <!-- <span class="sender" *ngIf="this.isSme(data.webhookResponse.from) && utilService.isNonEmpty(data.webhookResponse.message)"> -->
-              <!-- {{data.webhookResponse.message}} -->
-              <p [innerHTML]="data.webhookResponse.message"></p>
-            </span> 
-            <span class="sender" *ngIf="(data.webhookResponse.from === botIds[0] || data.webhookResponse.from === botIds[1] || data.webhookResponse.from === botIds[2] || data.webhookResponse.from === botIds[3] || data.webhookResponse.from === botIds[4] || data.webhookResponse.from === botIds[5] || data.webhookResponse.from === botIds[6] || data.webhookResponse.from === botIds[7] || data.webhookResponse.from === botIds[8] || data.webhookResponse.from === botIds[9]) && !utilService.isNonEmpty(data.webhookResponse.message)">
-              <img alt="Not Show" src="data.webhookResponse.file.url">
-            </span>      
-            
-            <span class="self" *ngIf="(data.webhookResponse.from !== botIds[0] && data.webhookResponse.from !== botIds[1] && data.webhookResponse.from !== botIds[2] && data.webhookResponse.from !== botIds[3] && data.webhookResponse.from !== botIds[4] && data.webhookResponse.from !== botIds[5] && data.webhookResponse.from !== botIds[6] && data.webhookResponse.from !== botIds[7] && data.webhookResponse.from !== botIds[8] && data.webhookResponse.from !== botIds[9]) && utilService.isNonEmpty(data.webhookResponse.message)">
-              <!-- <span class="sender" *ngIf="!this.isSme(data.webhookResponse.from) && utilService.isNonEmpty(data.webhookResponse.message)"> -->
-              <!-- {{data.webhookResponse.message}} -->
-              <p [innerHTML]="data.webhookResponse.message"></p>
-            </span>  
-            <span class="self" *ngIf="(data.webhookResponse.from !== botIds[0] && data.webhookResponse.from !== botIds[1] && data.webhookResponse.from !== botIds[2] && data.webhookResponse.from !== botIds[3] && data.webhookResponse.from !== botIds[4] && data.webhookResponse.from !== botIds[5] && data.webhookResponse.from !== botIds[6] && data.webhookResponse.from !== botIds[7] && data.webhookResponse.from !== botIds[8] && data.webhookResponse.from !== botIds[9]) && !utilService.isNonEmpty(data.webhookResponse.message)">
-              <img alt="Not Show" src="data.webhookResponse.file.url">
-            </span>  
-          </div>
-      </div>
-
-    </div>
+<button mat-dialog-close tabindex="-1" style="float: right; cursor: pointer;"><i class="fa fa-times"
+    aria-hidden="true"></i></button>
+<div class="chat-box">
+  <div class="chat-header">
+    Kommunikate Chat Corner:
   </div>
+
+  <div class="card_body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+    <!-- #scrollMe [scrollTop]="scrollMe.scrollHeight"-->
+
+    <div class="card__row" *ngFor="let data of chatData">
+      <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
+
+        <span class="self"
+          *ngIf="this.isSender(data.webhookResponse.from) && utilService.isNonEmpty(data.webhookResponse.message)">
+          <!-- <span class="sender" *ngIf="this.isSme(data.webhookResponse.from) && utilService.isNonEmpty(data.webhookResponse.message)"> -->
+          <!-- {{data.webhookResponse.message}} -->
+          <p [innerHTML]="data.webhookResponse.message"></p>
+        </span>
+        <span class="self"
+          *ngIf="this.isSender(data.webhookResponse.from) && !utilService.isNonEmpty(data.webhookResponse.message)">
+          <img alt="Not Show" src="data.webhookResponse.file.url">
+        </span>
+
+        <span class="sender"
+          *ngIf="!this.isSender(data.webhookResponse.from) && utilService.isNonEmpty(data.webhookResponse.message)">
+          <!-- <span class="sender" *ngIf="!this.isSme(data.webhookResponse.from) && utilService.isNonEmpty(data.webhookResponse.message)"> -->
+          <!-- {{data.webhookResponse.message}} -->
+          <p [innerHTML]="data.webhookResponse.message"></p>
+        </span>
+        <span class="sender"
+          *ngIf="!this.isSender(data.webhookResponse.from) && !utilService.isNonEmpty(data.webhookResponse.message)">
+          <img alt="Not Show" src="data.webhookResponse.file.url">
+        </span>
+      </div>
+    </div>
+
+  </div>
+</div>
