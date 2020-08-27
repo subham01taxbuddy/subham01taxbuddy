@@ -14,26 +14,26 @@ export class KommunicateDialogComponent implements OnInit {
   chatData: any;
   botIds: any = [];
   constructor(public dialogRef: MatDialogRef<KommunicateDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
-  private userService: UserMsService, public utilService: UtilsService) {
+    private userService: UserMsService, public utilService: UtilsService) {
     this.botIds = environment.botIds;
-   }
+  }
 
   ngOnInit() {
     this.chatData = this.data.chatData;
-    console.log('this.chatData ===>',this.chatData)
+    console.log('this.chatData ===>', this.chatData)
   }
 
-  isSme(from){
-    debugger
-    for(let i=0; i<= this.botIds.length; i++){
-      console.log('botIds: ',this.botIds[i])
-      if(from === this.botIds[i]){
+  isSender(from) {
+    return this.botIds.includes(from);
+    /* for (let i = 0; i <= this.botIds.length; i++) {
+      console.log('botIds: ', this.botIds[i])
+      if (from === this.botIds[i]) {
         return true;
       }
-      else{
+      else {
         return false;
       }
-    }
+    } */
   }
 
 }

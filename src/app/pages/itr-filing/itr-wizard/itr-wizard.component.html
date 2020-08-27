@@ -22,7 +22,7 @@
         <!-- <div class="tx1014">Income Details</div> -->
         <ng-template matStepLabel>Income Details</ng-template>
         <!-- <app-income (sendFormStatus)="checkFormStatus($event,'income')" *ngIf="tabIndex === 1"></app-income> -->
-        <app-update-status *ngIf="tabIndex=== 1"></app-update-status>
+        <app-update-status *ngIf="tabIndex=== 1" [userId]="ITR_JSON.userId"></app-update-status>
         <hr>
         <app-salary *ngIf="tabIndex=== 1"></app-salary>
         <app-house-property *ngIf="tabIndex=== 1"></app-house-property>

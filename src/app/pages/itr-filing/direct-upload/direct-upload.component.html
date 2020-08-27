@@ -22,7 +22,7 @@
                         <button type="submit" class="btn" style="border: none;" (click)='uploadXML()'>Upload</button>
                     </div>
                     <div class="card__col-xs-12 card__col-sm-6" style="padding: 10px 10px !important;">
-                        <app-update-status></app-update-status>
+                        <app-update-status [userId]="ITR_JSON.userId"></app-update-status>
                     </div>
                 </div>
                 <hr>

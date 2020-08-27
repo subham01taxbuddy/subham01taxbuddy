@@ -32,6 +32,7 @@ import { BusinessComponent } from './business/business.component';
 import { WhatsAppDialogComponent } from './whats-app-dialog/whats-app-dialog.component';
 import { MyTeamItrsComponent } from './my-team-itrs/my-team-itrs.component';
 import { KommunicateDialogComponent } from './kommunicate-dialog/kommunicate-dialog.component';
+import { FilingStatusDialogComponent } from './filing-status-dialog/filing-status-dialog.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -72,9 +73,10 @@ import { KommunicateDialogComponent } from './kommunicate-dialog/kommunicate-dia
         WhatsAppDialogComponent,
         MyTeamItrsComponent,
         KommunicateDialogComponent,
+        FilingStatusDialogComponent,
         // InputUploadComponent
     ],
-    entryComponents: [AddDonationDialogComponent, WhatsAppDialogComponent, KommunicateDialogComponent]
+    entryComponents: [AddDonationDialogComponent, WhatsAppDialogComponent, KommunicateDialogComponent, FilingStatusDialogComponent]
 
 })
 export class ItrFilingModule { }
