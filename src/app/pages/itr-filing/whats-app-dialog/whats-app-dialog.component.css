@@ -53,8 +53,10 @@
   
   
   .self{
-    float: right;
-                padding-left: 400px;
+                 max-width: 500px;
+                 float: right;
+                /* padding-left: 400px; */
+                padding-left: 10px;
                 padding-bottom: 10px;
                 word-break: break-all;
                 font-size: 15px;
@@ -66,7 +68,9 @@
                 padding-top: 10px;
   }
   .sender{
-    padding-right: 400px;
+                max-width: 500px;
+                /* padding-right: 400px; */
+                padding-right: 10px;
                 word-break: break-all;
                 padding-bottom: 10px;
                 float: left;
