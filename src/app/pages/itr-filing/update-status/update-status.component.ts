@@ -7,6 +7,9 @@ import { UtilsService } from 'app/services/utils.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { WhatsAppDialogComponent } from '../whats-app-dialog/whats-app-dialog.component';
+import { KommunicateDialogComponent } from '../kommunicate-dialog/kommunicate-dialog.component';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { ToastMessageService } from 'app/services/toast-message.service';
 
 @Component({
   selector: 'app-update-status',
@@ -16,6 +19,7 @@ import { WhatsAppDialogComponent } from '../whats-app-dialog/whats-app-dialog.co
 export class UpdateStatusComponent implements OnInit {
   fillingStatus = new FormControl('', Validators.required);
   ITR_JSON: ITR_JSON;
+  kommunicateChatData: any;
   fillingMasterStatus = [
     // {
     //   "createdDate": "2020-05-19T09:19:51.335Z",
@@ -162,12 +166,14 @@ export class UpdateStatusComponent implements OnInit {
     }
   ]
 
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private route: Router, private dialog: MatDialog) {
+  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private route: Router, private dialog: MatDialog, 
+    private _toastMessageService: ToastMessageService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
   ngOnInit() {
     this.getFilingStatus();
+    this.getUserProfile();
   }
 
   getFilingStatus() {
@@ -181,6 +187,36 @@ export class UpdateStatusComponent implements OnInit {
       }
 
     })
+  }
+
+  userProfile: any;
+  getUserProfile(){
+    let param = `/profile/${this.ITR_JSON.userId}`;
+    this.userMsService.getMethod(param).subscribe(result => {
+      console.log('User profile data: ',result);
+      this.userProfile = result;
+      if(this.utilsService.isNonEmpty(this.userProfile.kommunicateGroupId)){
+        this.getUserKommunicateChat(this.userProfile.kommunicateGroupId);
+      }
+      else{
+         
+      }
+    },
+    error=>{
+
+    })
+  }
+
+  getUserKommunicateChat(kommunicateGroupId){
+    //https://uat-api.taxbuddy.com/gateway/kommunicate/chat/user/45545130
+      let param = '/gateway/kommunicate/chat/user/'+kommunicateGroupId;
+      this.userMsService.getMethodInfo(param).subscribe(result => {
+        console.log('User kommunicate chat data: ',result);
+        this.kommunicateChatData = result;
+      },
+      error=>{
+        
+      })
   }
 
   updateStatus() {
@@ -203,8 +239,7 @@ export class UpdateStatusComponent implements OnInit {
     })
   }
 
-  openUserChat() {
-    // this.route.navigate(['/pages/chat-corner', this.ITR_JSON.contactNumber])
+  openUserChat(){
     let disposable = this.dialog.open(WhatsAppDialogComponent, {
       width: '50%',
       height: 'auto',
@@ -218,7 +253,22 @@ export class UpdateStatusComponent implements OnInit {
     });
   }
 
-  kommunicateChat() {
-    this.utilsService.showSnackBar('Comming Soon!!!');
+  kommunicateChat(){
+    if(this.utilsService.isNonEmpty(this.kommunicateChatData)){
+      let disposable = this.dialog.open(KommunicateDialogComponent, {
+        width:  '50%',
+        height: 'auto',
+        data:{
+          chatData: this.kommunicateChatData
+        }
+      })
+  
+      disposable.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+      });
+    }else{
+      this._toastMessageService.alert('error','User not initialted with Kommunicate chat')
+    }
+   
   }
 }

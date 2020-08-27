@@ -43,5 +43,7 @@ export const environment = {
 		oauth: {},
 		federationTarget: 'COGNITO_IDENTITY_POOLS',
 		authenticationFlowType: 'USER_PASSWORD_AUTH'
-	}
+	},
+	botIds: ["brij@ssbainnovations.com", "divya@ssbainnovations.com", "urmila@ssbainnovations.com", "divya-gnmuk", "brij-s5ilq",
+	"urmila-ij068", "sample-g7mh4", "taxbuddycustombot-68rl5", "welcome-c65qi"]
 };
