@@ -176,7 +176,7 @@ export class SalaryComponent implements OnInit {
   createEmployerDetailsFormGroup() {
     return this.fb.group({
       employerName: [''],
-      address: [''],
+      // address: [''],
       // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
       employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
       entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
@@ -471,9 +471,9 @@ export class SalaryComponent implements OnInit {
     //   calculators: null
     // };
     if (this.employerDetailsFormGroup.valid) {
-      this.localEmployer.address = this.employerDetailsFormGroup.controls['address'].value
+      // this.localEmployer.address = this.employerDetailsFormGroup.controls['address'].value
       this.localEmployer.employerName = this.employerDetailsFormGroup.controls['employerName'].value
-      this.localEmployer.employerPAN = this.employerDetailsFormGroup.controls['employerPAN'].value
+      // this.localEmployer.employerPAN = this.employerDetailsFormGroup.controls['employerPAN'].value
       this.localEmployer.employerTAN = this.employerDetailsFormGroup.controls['employerTAN'].value
       this.localEmployer.salary = [];
       this.localEmployer.perquisites = [];
