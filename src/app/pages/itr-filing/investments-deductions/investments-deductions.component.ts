@@ -966,6 +966,11 @@ export class InvestmentsDeductionsComponent implements OnInit {
     })
   }
 
+  afterUploadDocs(fileUpload){
+    if(fileUpload === 'File uploaded successfully'){
+       this.getItrDocuments();
+    }
+  }
 
   zoom: number = 1.0;
   incrementZoom(amount: number) {

@@ -172,6 +172,12 @@ export class HousePropertyComponent implements OnInit {
     })
   }
 
+  afterUploadDocs(fileUpload){
+    if(fileUpload === 'File uploaded successfully'){
+       this.getItrDocuments();
+    }
+  }
+
   getAllHpDocs(documentTag) {
     return this.itrDocuments.filter(item => item.documentTag === documentTag)
 

@@ -40,21 +40,9 @@
         </pdf-viewer>
     </div> -->
     <div *ngIf="docDetails.docUrl ===''">
+        <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+        <!-- Documents not uploaded/Selected -->
 
-        Documents not uploaded/Selected
-        <!-- <select (change)="clearDocVal()" #typeOfDoc>
-            <option selected disabled>Select option</option>
-            <option *ngFor="let doc of docType" [value]="doc.value">
-                {{doc.label}}
-            </option>
-        </select>&nbsp;
-
-        <input type="file" id="input-file-id"  #file (change)="uploadFile($event.target.files)"
-        accept=".pdf, .jpg, .jpeg, .png">   -->
-        <!--hidden-->
-        <!-- <button class="sendBtn" (click)="upload()">Upload Media File</button> &nbsp; -->
-
-        <!-- <button [disabled]="(typeOfDoc.value && uploadDoc) ? false : true" (click)="uploadDocument(typeOfDoc.value, uploadDoc)">Upload</button> -->
     </div>
 
 </div>

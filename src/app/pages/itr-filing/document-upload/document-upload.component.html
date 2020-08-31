@@ -1,0 +1,20 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<select (change)="clearDocVal()" #typeOfDoc>
+    <option value="" disabled>Select option</option>
+    <option *ngFor="let doc of docType" [value]="doc.value">
+        {{doc.label}}
+    </option>
+</select>&nbsp;
+
+<input type="file" id="input-file-id" hidden #file (change)="uploadFile($event.target.files)"
+accept=".pdf, .jpg, .jpeg, .png">  
+<button class="sendBtn" (click)="upload()">Upload Media File</button> 
+<label *ngIf="uploadDoc">{{uploadDoc.name}}</label>&nbsp;
+
+<button [disabled]="(typeOfDoc.value && uploadDoc) ? false : true" (click)="checkDocPassProtected(typeOfDoc.value, uploadDoc, filePassword)">Upload</button><br>
+
+<div *ngIf="isPassProtected" style="margin: 20px;">
+    <label><b>Enter Password :</b></label>
+    <input type="text" placeholder="Enter Password" [(ngModel)]="filePassword">
+</div>

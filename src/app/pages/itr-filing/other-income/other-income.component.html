@@ -30,7 +30,8 @@
                     </pdf-viewer>
                 </div>
                 <div *ngIf="docDetails.docUrl ===''">
-                    Documents not uploaded/Selected
+                    <!-- Documents not uploaded/Selected -->
+                    <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
                 </div>
             </div>
             <div class="content" style="width: 40%;">

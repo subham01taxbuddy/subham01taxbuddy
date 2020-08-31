@@ -32,7 +32,8 @@
                         </pdf-viewer>
                     </div>
                     <div *ngIf="hpDocDetails.docUrl ===''">
-                        House property documents not uploaded/Selected
+                        <!-- House property documents not uploaded/Selected -->
+                        <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
                     </div>
                 </div>
 

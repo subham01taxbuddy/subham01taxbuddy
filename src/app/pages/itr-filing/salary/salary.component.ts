@@ -930,6 +930,12 @@ export class SalaryComponent implements OnInit {
     })
   }
 
+  afterUploadDocs(fileUpload){
+    if(fileUpload === 'File uploaded successfully'){
+       this.getItrDocuments();
+    }
+  }
+
   getAllForm16s(documentTag) {
     return this.itrDocuments.filter(item => item.documentTag === documentTag)
 

@@ -33,6 +33,7 @@ import { WhatsAppDialogComponent } from './whats-app-dialog/whats-app-dialog.com
 import { MyTeamItrsComponent } from './my-team-itrs/my-team-itrs.component';
 import { KommunicateDialogComponent } from './kommunicate-dialog/kommunicate-dialog.component';
 import { FilingStatusDialogComponent } from './filing-status-dialog/filing-status-dialog.component';
+import { DocumentUploadComponent } from './document-upload/document-upload.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -74,6 +75,7 @@ import { FilingStatusDialogComponent } from './filing-status-dialog/filing-statu
         MyTeamItrsComponent,
         KommunicateDialogComponent,
         FilingStatusDialogComponent,
+        DocumentUploadComponent,
         // InputUploadComponent
     ],
     entryComponents: [AddDonationDialogComponent, WhatsAppDialogComponent, KommunicateDialogComponent, FilingStatusDialogComponent]
