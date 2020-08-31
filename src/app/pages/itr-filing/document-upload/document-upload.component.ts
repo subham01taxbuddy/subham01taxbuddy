@@ -12,7 +12,7 @@ import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 export class DocumentUploadComponent implements OnInit {
 
   uploadDoc: any;
-  docType: any = [{value:'FORM_16', label: 'Form 16'}, {value:'AADHAAR_FRONT', label: 'Aadhar front'}, {value:'AADHAAR_BACK', label: 'Aadhar back'}, {value:'PAN', label: 'Pan card'}, {value:'BANK_STATEMENT', label: 'Bank Statement'}, {value:'CAPITAL_GAIN_STATEMENT', label: 'Capital Gain Statement'}, {value:'SALE_AGREEMENT', label: 'Sale agreement'},{value:'PURCHASE_AGREEMENT', label: 'Purchase agreement'},{value:'FOREIGN_INCOME_STATEMENT', label: 'Foreign income statement'},{value:'LOAN_STATEMENT', label: 'Loan statement'},{value:'FORM_26_AS', label: 'Form 26'}];
+  docType: any = [{value:'FORM_16', label: 'Form 16'}, {value:'AADHAAR_FRONT', label: 'Aadhar front'}, {value:'AADHAAR_BACK', label: 'Aadhar back'}, {value:'PAN', label: 'Pan card'}, {value:'BANK_STATEMENT', label: 'Bank Statement'}, {value:'CAPITAL_GAIN_STATEMENT', label: 'Capital Gain Statement'}, {value:'SALE_AGREEMENT', label: 'Sale agreement'},{value:'PURCHASE_AGREEMENT', label: 'Purchase agreement'},{value:'FOREIGN_INCOME_STATEMENT', label: 'Foreign income statement'},{value:'LOAN_STATEMENT', label: 'Loan statement'},{value:'FORM_26_AS', label: 'Form 26'},{value: null, label: 'Miscellaneous'}];
   isPassProtected: boolean;
   filePassword: any;
   loading: boolean = false;
