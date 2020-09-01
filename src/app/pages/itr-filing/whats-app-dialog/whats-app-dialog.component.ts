@@ -311,7 +311,8 @@ export class WhatsAppDialogComponent implements OnInit {
             "success",
             "Message sent successfully."
           );
-          this.userchatData = result;
+          this.userchatData = result['chat'];
+          // this.userchatData = result;
         },
         (error) => {
           this.loading = false;

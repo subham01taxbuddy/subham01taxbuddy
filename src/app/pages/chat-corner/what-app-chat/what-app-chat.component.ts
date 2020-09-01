@@ -304,29 +304,32 @@ export class WhatAppChatComponent implements OnInit {
   }
 
   sendMsg() {
+    debugger
     if (
       this.whatsAppForm.controls["sentMessage"].value &&
       !this.whatsAppForm.controls["selectTemplate"].value
     ) {
-      this.loading = true;
+      debugger
       let mobileNo = this.selectedUser.whatsAppNumber;
       let body = {
         textMessage: this.whatsAppForm.controls["sentMessage"].value, //toUTF8String
         whatsAppNumber: mobileNo,
         source: 'BO',
         dialogueConstant: null
+        
       };
+      this.loading = true;
       let param = "/gateway/send-text-message";
       this.userService.sentChatMessage(param, body).subscribe(
-        (result) => {
-          this.loading = false;
+        (result: any) => {
           console.log(result);
           this.whatsAppForm.reset();
           this._toastMessageService.alert(
             "success",
             "Message sent successfully."
           );
-          this.userchatData = result;
+          this.userchatData = result['chat'];
+          this.loading = false;
         },
         (error) => {
           this.loading = false;
@@ -434,6 +437,7 @@ export class WhatAppChatComponent implements OnInit {
     } else {
       this._toastMessageService.alert("error", "Enter message to sent");
     }
+
   }
 
   templateAttribute: any;
