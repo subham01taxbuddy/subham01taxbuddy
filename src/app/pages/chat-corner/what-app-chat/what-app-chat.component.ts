@@ -330,6 +330,7 @@ export class WhatAppChatComponent implements OnInit {
           );
           this.userchatData = result['chat'];
           this.loading = false;
+          
         },
         (error) => {
           this.loading = false;
