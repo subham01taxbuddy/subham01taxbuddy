@@ -10,6 +10,8 @@
                 </mat-expansion-panel-header>
 
                 <div class="content vertLine" style="width: 60%; padding-right: 10px;">
+                    <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+                    <br>
                     <div>
                         <span *ngFor="let hpDocs of getAllHpDocs('LOAN_STATEMENT'); let i=index">
                             <a href="javascript:;" (click)="getHpDocsUrl(i)">{{hpDocs.fileName}}</a> &nbsp;&nbsp;
@@ -32,8 +34,7 @@
                         </pdf-viewer>
                     </div>
                     <div *ngIf="hpDocDetails.docUrl ===''">
-                        <!-- House property documents not uploaded/Selected -->
-                        <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+                        House property documents not uploaded/Selected
                     </div>
                 </div>
 

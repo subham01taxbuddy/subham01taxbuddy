@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AppConstants } from 'app/shared/constants';
 import { MatDialog } from '@angular/material';
 import { FilingStatusDialogComponent } from '../filing-status-dialog/filing-status-dialog.component';
+import { ReviseReturnDialogComponent } from '../revise-return-dialog/revise-return-dialog.component';
 
 @Component({
   selector: 'app-my-team-itrs',
@@ -201,13 +202,17 @@ export class MyTeamItrsComponent implements OnInit {
         }
       },
       {
-        headerName: 'Actions',
-        width: 100,
+        headerName: 'Start',
+        width: 50,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params) {
           if (params.data.eFillingCompleted) {
-            return `<i class="fa fa-check" title="ITR filed successfully" aria-hidden="true"></i>`;
+            return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;color: green">
+            <i class="fa fa-check" title="ITR filed successfully / Click to start revise return" 
+            aria-hidden="true" data-action-type="startRevise"></i>
+           </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: orange">
@@ -251,7 +256,26 @@ export class MyTeamItrsComponent implements OnInit {
           color: 'blueviolet'
 
         },
-      }
+      }/* ,
+      {
+        headerName: 'RR',
+        width: 50,
+        sortable: true,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Start Revise return" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;color: #0dbbc3">
+            <i class="fa fa-exchange" aria-hidden="true" data-action-type="startRevise"></i>
+           </button>`;
+        },
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+          color: '#0dbbc3'
+
+        },
+      } */
     ];
   }
   public onRowClicked(params) {
@@ -264,6 +288,10 @@ export class MyTeamItrsComponent implements OnInit {
         }
         case 'filingStatus': {
           this.openfilingStatusDialog(params.data);
+          break;
+        }
+        case 'startRevise': {
+          this.openReviseReturnDialog(params.data);
           break;
         }
       }
@@ -295,6 +323,21 @@ export class MyTeamItrsComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+    });
+  }
+
+  openReviseReturnDialog(data) {
+    console.log('Data for revise return ', data);
+    let disposable = this.dialog.open(ReviseReturnDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: data
+    })
+    disposable.afterClosed().subscribe(result => {
+      if (result === 'reviseReturn') {
+        this.router.navigate(['/pages/itr-filing/customer-profile'])
+      }
+      console.log('The dialog was closed', result);
     });
   }
 }

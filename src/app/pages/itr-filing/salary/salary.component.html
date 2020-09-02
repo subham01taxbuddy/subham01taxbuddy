@@ -9,6 +9,8 @@
                 </mat-expansion-panel-header>
 
                 <div class="content" style="width: 60%;padding-right: 10px;">
+                    <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+                    <br>
                     <div>
                         <span *ngFor="let form16 of getAllForm16s('FORM_16'); let i=index">
                             <a href="javascript:;" (click)="getForm16Url(i)">{{form16.fileName}}</a> &nbsp;&nbsp;
@@ -37,8 +39,7 @@
                         </ngx-extended-pdf-viewer> -->
                     </div>
                     <div *ngIf="form16DocDetails.docUrl ===''">
-                        <!-- Form 16 not uploaded/Selected -->
-                        <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+                        Form 16 not uploaded/Selected
                     </div>
                 </div>
                 <div class="content" style="width: 40%;" *ngIf="salaryView === 'TABLE'">
