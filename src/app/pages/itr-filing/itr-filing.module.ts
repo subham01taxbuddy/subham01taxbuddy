@@ -34,6 +34,7 @@ import { MyTeamItrsComponent } from './my-team-itrs/my-team-itrs.component';
 import { KommunicateDialogComponent } from './kommunicate-dialog/kommunicate-dialog.component';
 import { FilingStatusDialogComponent } from './filing-status-dialog/filing-status-dialog.component';
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
+import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-return-dialog.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -76,9 +77,11 @@ import { DocumentUploadComponent } from './document-upload/document-upload.compo
         KommunicateDialogComponent,
         FilingStatusDialogComponent,
         DocumentUploadComponent,
+        ReviseReturnDialogComponent,
         // InputUploadComponent
     ],
-    entryComponents: [AddDonationDialogComponent, WhatsAppDialogComponent, KommunicateDialogComponent, FilingStatusDialogComponent]
+    entryComponents: [AddDonationDialogComponent, WhatsAppDialogComponent, KommunicateDialogComponent,
+        FilingStatusDialogComponent, ReviseReturnDialogComponent]
 
 })
 export class ItrFilingModule { }

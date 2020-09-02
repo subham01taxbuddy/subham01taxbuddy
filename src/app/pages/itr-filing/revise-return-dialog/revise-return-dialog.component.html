@@ -1,0 +1,19 @@
+<button mat-dialog-close tabindex="-1" style="float: right; cursor: pointer;"><i class="fa fa-times"
+        aria-hidden="true"></i></button>
+<div class="chat-box">
+
+    <div class="card__title" style="font-size: 20px;"> Revise return for: {{this.data.fName +' ' +this.data.lName}}
+    </div>
+    <div class="card_body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+        <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-12">
+                <p style="font-size: 16px;"> Are you sure want to file revise return?</p>
+            </div>
+            <div class="pull-right">
+                <a class="btn btn-cancel" mat-dialog-close>No</a>
+                <button class="btn" style="border: none;" (click)="startReviseReturn()">Yes </button>
+            </div>
+        </div>
+
+    </div>
+</div>

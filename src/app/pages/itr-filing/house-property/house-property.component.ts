@@ -36,7 +36,7 @@ export class HousePropertyComponent implements OnInit {
 
   ngOnInit() {
     this.getItrDocuments();
-    this.getHpDocsUrl(0);
+    // this.getHpDocsUrl(0);
     this.housePropertyForm = this.createHousePropertyForm();
     if (this.utilsService.isNonEmpty(this.ITR_JSON) && this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties)
       && this.ITR_JSON.houseProperties instanceof Array && this.ITR_JSON.houseProperties.length > 0) {
@@ -172,9 +172,9 @@ export class HousePropertyComponent implements OnInit {
     })
   }
 
-  afterUploadDocs(fileUpload){
-    if(fileUpload === 'File uploaded successfully'){
-       this.getItrDocuments();
+  afterUploadDocs(fileUpload) {
+    if (fileUpload === 'File uploaded successfully') {
+      this.getItrDocuments();
     }
   }
 
@@ -195,7 +195,7 @@ export class HousePropertyComponent implements OnInit {
     const doc = this.itrDocuments.filter(item => item.documentTag === 'LOAN_STATEMENT')
     if (doc.length > 0) {
       const docType = doc[index].fileName.split('.').pop();
-      if (this.hpDocDetails[index].isPasswordProtected) {
+      if (doc[index].isPasswordProtected) {
         this.hpDocDetails.docUrl = doc[index].passwordProtectedFileUrl;
       } else {
         this.hpDocDetails.docUrl = doc[index].signedUrl;
