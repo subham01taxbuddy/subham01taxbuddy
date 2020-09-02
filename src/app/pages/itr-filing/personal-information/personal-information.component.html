@@ -1,6 +1,8 @@
 <!-- <div class="row"> -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="content" style="width: 35%; padding-right: 20px;">
+    <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+    <br>
     <div>
         <span *ngFor="let docs of documents; let i=index">
             <a href="javascript:;" (click)="getDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
@@ -40,12 +42,10 @@
         </pdf-viewer>
     </div> -->
     <div *ngIf="docDetails.docUrl ===''">
-        <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
-        <!-- Documents not uploaded/Selected -->
-
+        Documents not uploaded/Selected
     </div>
-
 </div>
+
 <div class="content" style="width: 65%;">
     <div class="card__title" style="padding:10px; font-size: 20px;">Customer Profile</div>
     <app-update-status [userId]="ITR_JSON.userId"></app-update-status>
