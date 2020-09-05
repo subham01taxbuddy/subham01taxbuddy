@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { UserMsService } from 'app/services/user-ms.service';
 import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
@@ -20,6 +20,7 @@ export class UpdateStatusComponent implements OnInit {
   fillingStatus = new FormControl('', Validators.required);
   // ITR_JSON: ITR_JSON;
   @Input('userId') userId: any;
+  @Output() sendValue = new EventEmitter<any>();
   fillingMasterStatus = [
     // {
     //   "createdDate": "2020-05-19T09:19:51.335Z",
@@ -43,7 +44,7 @@ export class UpdateStatusComponent implements OnInit {
       "message": "",
       "channel": ""
     },
-    {
+    /* {
       "createdDate": "2020-05-19T09:29:22.881Z",
       "id": "5ec3a6f2d5220f375473036d",
       "statusId": 3,
@@ -53,18 +54,18 @@ export class UpdateStatusComponent implements OnInit {
       "active": true,
       "message": "",
       "channel": ""
-    },
-    {
-      "createdDate": "2020-05-19T09:29:37.125Z",
-      "id": "5ec3a701d5220f375473036e",
-      "statusId": 4,
-      "statusName": "Document Reviewed",
-      "sequence": 4,
-      "source": "BACK_OFFICE",
-      "active": true,
-      "message": "",
-      "channel": ""
-    },
+    }, */
+    /*  {
+       "createdDate": "2020-05-19T09:29:37.125Z",
+       "id": "5ec3a701d5220f375473036e",
+       "statusId": 4,
+       "statusName": "Document Reviewed",
+       "sequence": 4,
+       "source": "BACK_OFFICE",
+       "active": true,
+       "message": "",
+       "channel": ""
+     }, */
     {
       "createdDate": "2020-05-19T09:29:46.983Z",
       "id": "5ec3a70ad5220f375473036f",
@@ -102,7 +103,7 @@ export class UpdateStatusComponent implements OnInit {
       "createdDate": "2020-05-19T10:38:41.191Z",
       "id": "5ec3b731d5220f0aa8ef4bda",
       "statusId": 8,
-      "statusName": "ITR Confirmation",
+      "statusName": "ITR Confirmation Received",
       "sequence": 8,
       "source": "USER",
       "active": true,
@@ -146,7 +147,7 @@ export class UpdateStatusComponent implements OnInit {
       "createdDate": "2020-05-19T10:42:28.023Z",
       "id": "5ec3b814d5220f0aa8ef4bde",
       "statusId": 12,
-      "statusName": "Payment Status",
+      "statusName": "Invoice Sent",
       "sequence": 12,
       "source": "BACK_OFFICE",
       "active": true,
@@ -185,6 +186,7 @@ export class UpdateStatusComponent implements OnInit {
         const ids = completedStatus.map(status => status.statusId);
         const sorted = ids.sort((a, b) => a - b);
         this.fillingStatus.setValue(sorted[sorted.length - 1])
+        this.sendValue.emit(sorted[sorted.length - 1]);
       }
 
     })
@@ -224,8 +226,9 @@ export class UpdateStatusComponent implements OnInit {
 
     // this.loading = true;
     this.userMsService.postMethod(param, request).subscribe(result => {
-      console.log(result);
+      console.log('##########################', result['statusId']);
       this.utilsService.showSnackBar('Filing status updated successfully.')
+      this.sendValue.emit(result['statusId']);
       // this.loading = false;
     }, err => {
       // this.loading = false;
