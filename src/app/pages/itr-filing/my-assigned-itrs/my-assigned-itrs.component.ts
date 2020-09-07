@@ -6,6 +6,7 @@ import { AppConstants } from 'app/shared/constants';
 import { Router } from '@angular/router';
 import { FilingStatusDialogComponent } from '../filing-status-dialog/filing-status-dialog.component';
 import { MatDialog } from '@angular/material';
+import moment = require('moment');
 
 @Component({
   selector: 'app-my-assigned-itrs',
@@ -73,7 +74,10 @@ export class MyAssignedItrsComponent implements OnInit {
         contactNumber: data[i].contactNumber,
         email: data[i].email,
         itrType: data[i].itrType,
+        ackStatus: data[i].ackStatus,
+        acknowledgementReceived: data[i].acknowledgementReceived,
         eFillingCompleted: data[i].eFillingCompleted,
+        eFillingDate: data[i].eFillingDate,
       });
     }
     return newData;
@@ -90,27 +94,6 @@ export class MyAssignedItrsComponent implements OnInit {
         width: 70,
         pinned: 'left',
       },
-      // {
-      //   headerName: 'Un Cliam',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   width: 100,
-      //   pinned: 'left',
-      //   cellRenderer: function (params) {
-      //     return `<button type="button" class="action_icon add_button" title="Un-claim client" style="border: none;
-      //     background: transparent;
-      //     font-size: 16px; cursor:pointer">
-      //     <i class="fa fa-trash" aria-hidden="true" data-action-type="unclaim"></i>
-      //    </button>`;
-      //   },
-      //   cellStyle: {
-      //     textAlign: 'center', display: 'flex',
-      //     'align-items': 'center',
-      //     'justify-content': 'center'
-      //   },
-      // },
       {
         headerName: "First Name",
         field: "fName",
@@ -132,8 +115,8 @@ export class MyAssignedItrsComponent implements OnInit {
         }
       },
       {
-        headerName: "PAN Number",
-        field: "panNumber",
+        headerName: "Mobile",
+        field: "contactNumber",
         sortable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -142,8 +125,25 @@ export class MyAssignedItrsComponent implements OnInit {
         }
       },
       {
-        headerName: "Mobile",
-        field: "contactNumber",
+        headerName: "ITR Type",
+        field: "itrType",
+        width: 70,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          defaultOption: "startsWith",
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: "Filing Date",
+        field: "eFillingDate",
+        sortable: true,
+        width: 100,
+        valueFormatter: (data) => data.value ? moment(data.value).format('DD MMM YYYY') : null,
+      },
+      {
+        headerName: "PAN Number",
+        field: "panNumber",
         sortable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -162,15 +162,6 @@ export class MyAssignedItrsComponent implements OnInit {
         }
       },
       {
-        headerName: "ITR Type",
-        field: "itrType",
-        filter: "agTextColumnFilter",
-        filterParams: {
-          defaultOption: "startsWith",
-          debounceMs: 0
-        }
-      },
-      {
         headerName: 'Actions',
         width: 100,
         sortable: true,
@@ -178,6 +169,12 @@ export class MyAssignedItrsComponent implements OnInit {
         cellRenderer: function (params) {
           if (params.data.eFillingCompleted) {
             return `<i class="fa fa-check" title="ITR filed successfully" aria-hidden="true"></i>`;
+          } else if (params.data.ackStatus === 'DELAY') {
+            return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
+            background: transparent; font-size: 16px; cursor:not-allowed;color: red">
+            <i class="fa fa-circle" title="Acknowledgement not received, Contact team lead" 
+            aria-hidden="true"></i>
+           </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: orange">

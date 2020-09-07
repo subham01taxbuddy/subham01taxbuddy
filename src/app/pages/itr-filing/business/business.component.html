@@ -320,7 +320,26 @@
                     </div>
                     <form>
                         <div class="card__row">
-                            <div class="card__col-xs-12 card__col-sm-6">
+                            <div class="card__col-xs-12 card__col-sm-6" *ngIf="businessType.value === 'BUSINESS'">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>{{natureOfBusinessPlaceholder}}</mat-label>
+                                    <input type="text" placeholder="{{natureOfBusinessPlaceholder}}"
+                                        aria-label="Assignee" matInput [formControl]="natureOfBusinessForm"
+                                        [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()" required>
+                                    <!-- <i class="material-icons align-arrow-right">arrow_drop_down</i> -->
+                                    <mat-error *ngIf="natureOfBusinessForm.invalid">
+                                        Please select value from dropdown only.
+                                    </mat-error>
+                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                        <mat-option *ngFor="let option of filteredOptions | async"
+                                            [value]="option.label">
+                                            {{option.label}}-{{option.code}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="card__col-xs-12 card__col-sm-6" *ngIf="businessType.value === 'PROFESSIONAL'">
                                 <mat-form-field appearance="outline">
                                     <mat-label>{{natureOfBusinessPlaceholder}}</mat-label>
                                     <input type="text" placeholder="{{natureOfBusinessPlaceholder}}"

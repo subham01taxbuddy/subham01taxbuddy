@@ -50,6 +50,7 @@ export class CustomerProfileComponent implements OnInit {
   loading: boolean = false;
   imageLoader: boolean = false;
   customerProfileForm: FormGroup;
+  statusId: any;
   // fillingStatus = new FormControl('', Validators.required);
   ITR_JSON: ITR_JSON;
   minDate = new Date(1900, 0, 1);
@@ -320,6 +321,7 @@ export class CustomerProfileComponent implements OnInit {
 
       this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
         this.ITR_JSON = result;
+        this.updateStatus(); // Update staus automatically
         if (isPlanChanged) {
           const planParam = '/change-plan-by-expert';
           this.ITR_JSON.planIdSelectedByTaxExpert = Number(this.customerProfileForm.controls['planIdSelectedByTaxExpert'].value)
@@ -466,6 +468,30 @@ export class CustomerProfileComponent implements OnInit {
       this.state = 'deg270';
     } else {
       this.state = 'default'
+    }
+  }
+  getStatusId(statusId) {
+    console.log('Current Status ID', statusId);
+    this.statusId = statusId;
+  }
+
+  updateStatus() {
+    // Auto update status to Preparing ITR 
+    console.error('screen Update status call in profile', this.statusId)
+    if (this.statusId < 5) {
+      const param = '/itr-status'
+      const request = {
+        "statusId": 5,
+        "userId": this.ITR_JSON.userId,
+        "assessmentYear": AppConstants.ayYear,
+        "completed": true
+      }
+      this.userMsService.postMethod(param, request).subscribe(result => {
+        console.log(result);
+        this.utilsService.showSnackBar('Filing status updated successfully.')
+      }, err => {
+        this.utilsService.showSnackBar('Failed to update Filing status.')
+      })
     }
   }
 }
