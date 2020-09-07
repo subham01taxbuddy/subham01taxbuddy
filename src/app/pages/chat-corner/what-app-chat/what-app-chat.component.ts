@@ -13,6 +13,7 @@ import { UtilsService } from "app/services/utils.service";
 import { Observable, timer } from "rxjs";
 import { take, map } from "rxjs/operators";
 import { AppConstants } from "app/shared/constants";
+import { ActivatedRoute, Params } from "@angular/router";
 //import { interval, Observable } from 'rxjs';
 
 @Component({
@@ -50,7 +51,8 @@ export class WhatAppChatComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
-    public utileService: UtilsService
+    public utileService: UtilsService,
+    private activatedRoute: ActivatedRoute
   ) {
     this.environmentPath = environment.url;
     this.smeInfo = JSON.parse(localStorage.getItem("UMD"));
@@ -68,6 +70,9 @@ export class WhatAppChatComponent implements OnInit {
     //     this.geUserChatDetail(this.selectedUser, "continues");
     //   }
     // }, 5000);
+    
+   
+  
   }
 
   ngOnInit() {
@@ -78,6 +83,12 @@ export class WhatAppChatComponent implements OnInit {
     });
     this.getUserNotify("not-continues");
     this.getTemplateInfo();
+
+    this.activatedRoute.queryParams.subscribe((params: Params)=>{
+      if(this.utileService.isNonEmpty(params['contact'])){
+        this.geUserChatDetail(params['contact'])
+      }
+    })
   }
 
   ngOnDestroy() {
@@ -241,6 +252,7 @@ export class WhatAppChatComponent implements OnInit {
     let param = "/whatsapp/chat/"+ user;
     this.userService.getUserDetail(param).subscribe(
       (res) => {
+  
         console.log(res, typeof res);
         console.log('CHECK', res.hasOwnProperty('userInfo'))
         this.startConversation = false;
