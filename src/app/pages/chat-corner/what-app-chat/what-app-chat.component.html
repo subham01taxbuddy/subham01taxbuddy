@@ -31,15 +31,16 @@
               <br>
               <div class="userList"  #chatScroll >  <!--[scrollTop]="chatScroll.scrollHeight"-->
                 <ul *ngFor="let user of filteredArray">
-                  <!-- <li [class.newUserMsg]="user.isRead === false" style="padding: 10px;"
-                    (click)="geUserChatDetail(user, 'not-continues')">
+                  <li style="padding: 10px;"
+                    (click)="geUserChatDetail(user.recipientWhatsapp)">
                     <span *ngIf="user.isRead === false">*</span>
                     <a style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user.name}}</a><br>
-                    <span style="font-size: 11px; padding-left: 30px;">{{user.whatsAppNumber}}</span>
-                  </li> -->
-                  <li style="padding: 10px;" (click)="geUserChatDetail(user)">
-                      <a style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user}}</a><br>
-                </li>
+                    <span style="font-size: 11px; padding-left: 30px;">{{user.recipientWhatsapp}}</span>
+                  </li>
+                  <!-- <li style="padding: 10px;" (click)="geUserChatDetail(user)">
+                      <a style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user}}</a><br> 
+                </li>-->
+
                 </ul>
               </div>
             </div>
