@@ -41,7 +41,7 @@ export class DocumentUploadComponent implements OnInit {
 
   clearDocVal() {
     this.uploadDoc = null;
-    this.filePassword = '';
+     this.filePassword = '';
     this.isPassProtected = false;
   }
 
@@ -106,7 +106,8 @@ export class DocumentUploadComponent implements OnInit {
       s3ObjectUrl = userId + '/ITR/2019-20/Original/ITR Filing Docs/' + document.name;
     }
 
-    let cloudFileMetaData = '{"fileName":"' + document.name + '","userId":' + userId + ',"accessRight":["' + userId + '_W"' + '],"origin":"BO", "s3ObjectUrl":"' + s3ObjectUrl + '","password":' + (password ? password : null) + '}';
+    let cloudFileMetaData = '{"fileName":"' + document.name + '","userId":' + userId + ',"accessRight":["' + userId + '_W"' + '],"origin":"BO", "s3ObjectUrl":"' + s3ObjectUrl + '","password":"' + (password ? password : null) + '"}';
+    console.log("cloudFileMetaData ===> ", cloudFileMetaData)
     const formData = new FormData();
     formData.append("file", document);
     formData.append("cloudFileMetaData", cloudFileMetaData);
