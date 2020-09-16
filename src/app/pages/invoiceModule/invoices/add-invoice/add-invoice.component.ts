@@ -111,7 +111,7 @@ export class AddInvoiceComponent implements OnInit {
       sacCode: ['998232', Validators.required],
       cin: ['U74999MH2017PT298565', Validators.required],
       modeOfPayment: ['Online', Validators.required],
-      billTo: ['', Validators.required],
+      billTo: ['', [Validators.required,Validators.pattern(AppConstants.charRegex)]],
       paymentCollectedBy: '',
       dateOfReceipt: '',
       dateOfDeposit: '',
