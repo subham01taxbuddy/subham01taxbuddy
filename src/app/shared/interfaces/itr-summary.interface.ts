@@ -7,6 +7,8 @@ export interface ITR_SUMMARY{
       financialYear: string,
       assesse: Assesse,
       taxSummary: TaxSummary,
+      capitalGainIncome: CapitalGain,
+      lossesToBeCarriedForward: [],
       medium: 'BACK OFFICE',
       us80c: string,
       us80ccc: string,
@@ -28,6 +30,12 @@ export interface ITR_SUMMARY{
       giftFromRelative: string,
       anyOtherExcemptIncome: string,
       netTaxPayable: string,
+      immovableAssetTotal: string,
+      movableAssetTotal: string,
+      totalHeadWiseIncome: string,
+      lossesSetOffDuringTheYear: string,     
+      carriedForwardToNextYear: string, 		
+      freezed: false
 }
 
 export interface Assesse{
@@ -71,7 +79,7 @@ export interface Assesse{
     capitalAssets: null,
     investments: null,
     insurances: [],
-    assetsLiabilities: null,
+    assetsLiabilities: AssetsLiabilities,
     bankDetails: [],
     donations: [],
     taxPaid: [],
@@ -169,5 +177,38 @@ export interface TaxSummary{
     taxpayable: string,			
     taxRefund: string,			
     totalTax: string,   
-    advanceTaxSelfAssessmentTax: string   
+    advanceTaxSelfAssessmentTax: string,
+    taxAtNormalRate: '',
+    taxAtSpecialRate: '',
+    rebateOnAgricultureIncome: '',
+    sec112Tax: '',
+    specialIncomeAfterAdjBaseLimit: '',
+    aggregateIncome: '',
+    agricultureIncome: '',
+    carryForwardLoss: ''
+
+}
+
+export interface AssetsLiabilities{
+    cashInHand: null,
+	loanAmount: null,
+	shareAmount: null,
+	bankAmount: null,
+	assetLiability: null,
+	insuranceAmount: null,
+	artWorkAmount: null,
+    jwelleryAmount: null,
+    vehicleAmount: null,
+    immovable: []
+}
+
+export interface CapitalGain{
+    shortTermCapitalGain: [],
+    shortTermCapitalGainAt15Percent: [],
+    longTermCapitalGainAt10Percent: [],
+    longTermCapitalGainAt20Percent: [],
+    shortTermCapitalGainTotal: string,
+	shortTermCapitalGainAt15PercentTotal: string,
+	longTermCapitalGainAt10PercentTotal: string,
+	longTermCapitalGainAt20PercentTotal: string
 }

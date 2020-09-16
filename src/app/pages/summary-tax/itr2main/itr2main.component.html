@@ -60,23 +60,23 @@
                                     <div class="card__col-lg-3" > <!--formGroupName="taxSummary"-->
                                         <label>Taxable Income</label>
                                         <input type="number" placeholder="Taxable Income"
-                                           required disabled formGroupName="taxSummary"
+                                           required disabled [value]="this.computationOfIncomeForm['controls'].totalIncomeAfterDeductionIncludeSR.value"
                                             class="disableInput">  <!-- formControlName="totalIncomeAfterDeductionIncludeSR" -->
     
                                     </div>
     
-                                    <!-- <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0">
+                                    <div class="card__col-lg-3" formGroupName="taxSummary"
+                                        *ngIf="this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0">
                                         <label>Tax Payable/ Refund</label>
-                                        <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxpayable"
+                                        <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxpayable'].value"
                                             disabled class="disableInput">
                                     </div>
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
+                                        *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0">
                                         <label>Tax Payable/ Refund</label>
-                                        <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxRefund"
+                                        <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxRefund'].value"
                                             disabled class="disableInput">
-                                    </div> -->
+                                    </div>
                                 </div>
                             </div><br><br>
     
@@ -423,7 +423,7 @@
                         </table><br><br>
     
                         <div class="tableHead">Annexures: House Properties</div>
-                        <button  style="float: right;" [disabled]="housingData.length > 0"
+                        <button  style="float: right;" [disabled]="housingData.length > 3"
                         (click)="openDialog('Add House Property','Add', null, '','House')">Add House Info</button><br>
                         <table class="verticle">  <!---->
                             <tr>
@@ -796,8 +796,8 @@
                         <div class="tableHead">Annexures: Losses To be Carried Forward</div><br>
                         <mat-card>
                              <button style="float: right;"
-                            (click)="openDialog('Add Donation(Section 80G)','Add', null,'','donationSec80G')">Add
-                            Donation Info</button><br>
+                            (click)="openDialog('Losses To be Carried Forward','Add', null,'','losses')">Add
+                            Losses To be Carried Forward Info</button><br>
                         <table>
                             <tr>
                                 <th>Sr No.</th>
@@ -806,25 +806,36 @@
                                 <th>Short Term Capital Losses</th>
                                 <th>Long Term Capital Losses</th>
                                 <th>Losses Set Off during the year</th>
+                                <th>Current year lossess 2019-2020</th>
                                 <th>Carried forward to next year</th>
+                                
+                                <th>Action</th>
                             </tr>
-                            <!-- <tr *ngFor="let donation of donationData; let i= index">
-                                <td>{{donation.donationType}}</td>
-                                <td>{{donation.name}}</td>
-                                <td>{{donation.amountInCash}}</td>
-                                <td>{{donation.amountOtherThanCash}}</td>
-                                <td>{{donation.eligibleAmount}}</td>
+                            <tr *ngFor="let losses of lossesCarriedForwarInfo; let i= index">
+                                <td>{{i+1}}</td>
+                                <td>{{losses.year}}</td>
+                                <td>{{losses.housePropertyLosses}}</td>
+                                <td>{{losses.shortTermCapitalGainLosses}}</td>
+                                <td>{{losses.longTermCapitalGainLosses}}</td>
+                                <td>{{losses.lossesSetOffDuringTheYear}}</td>
+                                <td>{{losses.currentYearLosess}}</td>
+                                <td>{{losses.carriedForwardToNextYear}}</td>
+                               
                                 <td>
                                     <button
-                                        (click)="openDialog('Edit Donation(Section 80G)','Edit', i, donationData[i],'donationSec80G')"><i
+                                        (click)="openDialog('Edit Losses To be Carried Forward','Edit', i, lossesCarriedForwarInfo[i],'losses')"><i
                                             class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                                    <button (click)="deleteData('donationSec80G',i)"><i class="fa fa-trash fa-lg"
+                                    <button (click)="deleteData('losses',i)"><i class="fa fa-trash fa-lg"
                                             aria-hidden="true"></i></button>
                                 </td>
-                            </tr> -->
+                            </tr>
                             <tr>
-                                <td colspan="6"><b>Total</b></td>
-                                <td><b>000</b></td>
+                                <td colspan="5"><b>Total</b></td>
+                                <td><b>{{totalLossesSetOfDuringYrs}}</b></td>
+                                <td></td>
+                                <td><b>{{totalCarryForwardToNxtYrs}}</b></td>
+                                
+                                <td></td>
                             </tr>
                         </table>
                         </mat-card>
@@ -921,8 +932,8 @@
                                              maxlength="8" autocomplete="off"
                                             type="number" formControlName="us80c"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -932,8 +943,7 @@
                                              maxlength="8" autocomplete="off"
                                             type="number" formControlName="us80ccc"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()"  -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" (blur)="calculateTotalDeduction()">
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -943,8 +953,7 @@
                                              maxlength="8" autocomplete="off"
                                             type="number" formControlName="us80ccc1"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()"  -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" (blur)="calculateTotalDeduction()">
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -954,8 +963,8 @@
                                              autocomplete="off"
                                             type="number" formControlName="us80ccd2"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -964,8 +973,8 @@
                                         <input matInput placeholder="Under section 80CCD (1B)" maxlength="8"
                                             autocomplete="off" type="number" formControlName="us80ccd1b"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -975,8 +984,8 @@
                                              autocomplete="off"
                                             type="number" formControlName="us80dd"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -986,8 +995,8 @@
                                              autocomplete="off"
                                             type="number" formControlName="us80ddb"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -997,8 +1006,8 @@
                                              autocomplete="off"
                                             type="number" formControlName="us80e"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -1008,8 +1017,8 @@
                                              autocomplete="off"
                                             type="number" formControlName="us80ee"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -1019,8 +1028,8 @@
                                              autocomplete="off"
                                             type="number" formControlName="us80gg"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -1030,8 +1039,8 @@
                                              autocomplete="off"
                                             type="number" formControlName="us80gga"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -1041,8 +1050,8 @@
                                              autocomplete="off"
                                             type="number" formControlName="us80ggc"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -1051,8 +1060,8 @@
                                         <input matInput placeholder="Under section 80TTA/ 80TTB" maxlength="8"
                                             autocomplete="off" type="number" formControlName="us80ttaTtb"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -1062,8 +1071,8 @@
                                              autocomplete="off"
                                             type="number" formControlName="us80u"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -1073,8 +1082,8 @@
                                              autocomplete="off"
                                             type="number" formControlName="us80g"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--(blur)="calculateTotalDeduction()"-->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <div class="card__col-lg-3">
@@ -1084,8 +1093,8 @@
                                             autocomplete="off"
                                             type="number" formControlName="us80d"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!-- (blur)="calculateTotalDeduction()" -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
                                     </mat-form-field>
                                 </div>
                                 <!-- </form> -->
@@ -1170,7 +1179,7 @@
                                         <mat-label>PPF Interest</mat-label>
                                         <input matInput placeholder="PPF Interest"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                             maxlength="8" type="number" formControlName="ppfInterset"
+                                             maxlength="8" type="number" formControlName="ppfInterest"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                             autocomplete="off" (blur)="setTotalOfExempt()">
                                     </mat-form-field>
@@ -1208,11 +1217,121 @@
                         </mat-card>
                     </form><br><br>
     
+                   
+                    <mat-card *ngIf="showAssetLiability">  
+                        <div class="tableHead">Annexures: Exempt Income</div><br>
+                        <p>Assets and Liabilities at the end of the year (applicable in a case where total income exceeds Rs.50 lakh)</p><br><br>
+
+                        <p class="subLabel">Details of immovable assets</p>
+                        <button [disabled]="immovableAssetsInfo.length > 10 ? true : false" style="float: right;" (click)="openDialog('Add immovable assets detail','Add', null,'','immovableAssets')">Add Immovable Assets</button><br>
+                        <table>
+                            <tr>
+                                <th>Sr.No.</th>
+                                <th>Description</th>
+                                <th>Address</th>
+                                <th>Rs.</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr *ngFor="let asset of immovableAssetsInfo; let i= index">
+                                <td>{{i+1}}</td>
+                                <td>{{asset.description}}</td>
+                                <td>{{asset.area}}</td>
+                                <td>{{asset.amount}}</td>
+                                <td>
+                                    <button
+                                        (click)="openDialog('Edit immovable assets detail','Edit', i, immovableAssetsInfo[i],'immovableAssets')"><i
+                                            class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                    <button (click)="deleteData('immovableAssets',i)"><i class="fa fa-trash fa-lg"
+                                            aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><b>Total</b></td>
+                                <td><b>{{this.deductionAndRemainForm.controls['immovableAssetTotal'].value}}</b></td>  <!--{{itrSummaryForm.controls['us80g'].value}}-->
+                                <td></td>
+                            </tr>
+                        </table><br><br>
+
+                        <br><br>
+
+                        <p class="subLabel">Details of movable assets</p><br>
+                        <form [formGroup]="assetsLiabilitiesForm">
+                        <table >
+                            <tr>
+                                <th>Sr.No.</th>
+                                <th>Description</th>
+                                <th>Rs.</th>
+                            </tr>
+                            <tr>
+                                <td>1.</td>
+                                <td>Jewellery, bullion etc.</td>
+                                <td><input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" formControlName="jwelleryAmount" (blur)="setMovableAssetsVal()"></td>
+                            </tr>
+                            <tr>
+                                <td>2.</td>
+                                <td>Archaeological collections, drawings, painting, sculpture or any work of art</td>
+                                <td><input type="text"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" formControlName="artWorkAmount" (blur)="setMovableAssetsVal()"></td>
+                            </tr>
+                            <tr>
+                                <td>3.</td>
+                                <td>Vehicles, yachts, boats and aircrafts</td>
+                                <td><input type="text"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" formControlName="vehicleAmount" (blur)="setMovableAssetsVal()"></td>
+                            </tr>
+                            <tr>
+                                <td>4.</td>
+                                <td>Financial assets</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>(a) Bank (including all deposits)</td>
+                                <td><input type="text"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" formControlName="bankAmount" (blur)="setMovableAssetsVal()"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>(b) Shares and securities</td>
+                                <td><input type="text"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" formControlName="shareAmount" (blur)="setMovableAssetsVal()"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>(c) Insurance policies</td>
+                                <td><input type="text"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" formControlName="insuranceAmount" (blur)="setMovableAssetsVal()"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>(d) Loans and advances given</td>
+                                <td><input type="text"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" formControlName="loanAmount" (blur)="setMovableAssetsVal()"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>(e) Cash in hand</td>
+                                <td><input type="text"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" formControlName="cashInHand" (blur)="setMovableAssetsVal()"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><b>Liabilities in relation to Assets</b></td>
+                                <td><input disabled [value]="this.deductionAndRemainForm.controls['movableAssetTotal'].value"></td>
+                            </tr>
+                          
+                        </table>
+                        </form>
+                        <br><br>
+
+                    </mat-card>
                         <!-- </div> -->
                        
 
                         <br><br><br>
                         <div class="heading">COMPUTATION OF INCOME</div><br>
+
+                        <button  (click)="getTaxDeductionAtSourceData()">Show All Table Value</button><br>
                         <div class="table-responsive">
                           <form [formGroup]="computationOfIncomeForm">
                             <table>
@@ -1246,26 +1365,26 @@
                                 <tr>
                                     <td></td>
                                     <td>Short Term Capital Gain @ slab rate (Refer Annexure)</td>
-                                    <td><input type="number" disabled maxlength="8"></td>
+                                    <td><input type="number" [value]="capital_Gain.shortTermCapitalGain" disabled maxlength="8"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Short Term Capital Gain @ 15% (Refer Annexure)</td>
-                                    <td><input type="number" disabled maxlength="8"></td> 
+                                    <td><input type="number" [value]="capital_Gain.shortTermCapitalGain15" disabled maxlength="8"></td> 
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td>Short Term Capital Gain @ 10% (Refer Annexure)</td>
-                                    <td><input type="number" disabled maxlength="8"></td>  <!--[value]="this.businessObject.presumptive44ADtotal"-->
+                                    <td>Long Term Capital Gain @ 10% (Refer Annexure)</td>
+                                    <td><input type="number" [value]="capital_Gain.longTermCapitalGain10" disabled maxlength="8"></td>  <!--[value]="this.businessObject.presumptive44ADtotal"-->
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td>Short Term Capital Gain @ 20% (Refer Annexure)</td>
-                                    <td><input type="number" disabled maxlength="8"></td>
-                                    <td><input type="number" disabled maxlength="8"></td>
+                                    <td>Long Term Capital Gain @ 20% (Refer Annexure)</td>
+                                    <td><input type="number" [value]="capital_Gain.longTermCapitalGain20" disabled maxlength="8"></td>
+                                    <td><input type="number" [value]="incomeFromCapGain" disabled maxlength="8"></td>
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td>4</td>
@@ -1318,23 +1437,23 @@
                                     <td><b>Total Head Wise Income (1+2+3+4)</b> </td>
                                     <td></td>
                                     <td> <!--formGroupName="taxSummary"-->
-                                        <b><input type="number" formControlName="grossTotalIncome" disabled  maxlength="8"></b></td>  <!---->
+                                        <b><input type="number" formControlName="totalHeadWiseIncome" disabled  maxlength="8"></b></td>  <!---->
     
                                 </tr>
                                 <tr> 
                                     <td>{{itrType.itrThree ? 7 : 6}}</td>
                                     <td>Loss of Current year Setoff</td>
                                     <td></td>
-                                    <td>
-                                        <b><input type="number"   maxlength="8"></b></td>  
+                                    <td>                               
+                                        <b><input type="number" formControlName="lossesSetOffDuringTheYear" (blur)="calGrossTotalIncome()" maxlength="8"></b></td>  
     
                                 </tr>
                                 <tr> 
                                     <td>{{itrType.itrThree ? 8 : 7}}</td>
                                     <td>Brought Forward losses setoff</td>
                                     <td></td>
-                                    <td> 
-                                        <b><input type="number"  maxlength="8"></b></td> 
+                                    <td>                           
+                                        <b><input type="number" formControlName="carriedForwardToNextYear" (blur)="calGrossTotalIncome()" maxlength="8"></b></td> 
                                 </tr>
                                 <tr> 
                                     <td>{{itrType.itrThree ? 9 : 8}} </td>
@@ -1348,7 +1467,7 @@
                                     <td>Income Chargeable to Tax at Special Rate U/S 111A, 112 etc</td>
                                     <td></td>
                                     <td> 
-                                        <b><input type="number"  maxlength="8"></b></td>  
+                                        <b><input type="number" formControlName="sec112Tax" maxlength="8"></b></td>  
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 11 : 10}}</td>
@@ -1368,25 +1487,25 @@
                                     <td>{{itrType.itrThree ? 13 : 12}}</td>
                                     <td>Income Chargeable at Special rates after adjusting BEL**</td>
                                     <td></td>
-                                    <td><b><input type="number" required disabled maxlength="8"></b></td>
+                                    <td><b><input type="number" formControlName="specialIncomeAfterAdjBaseLimit" required maxlength="8"></b></td>
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 14 : 13}}</td>
                                     <td>Net Agriculture Income</td>
                                     <td></td>
-                                    <td><b><input type="number" required disabled maxlength="8"></b></td>
+                                    <td><b><input type="number" formControlName="agricultureIncome" required  maxlength="8"></b></td>
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 15 : 14}}</td>
                                     <td>Aggregate Income</td>
                                     <td></td>
-                                    <td><b><input type="number" required disabled maxlength="8"></b></td>
+                                    <td><b><input type="number" formControlName="aggregateIncome" required maxlength="8"></b></td>
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 16 : 15}}</td>
                                     <td>Loss to be Carried Forward (Refer Annexure)</td>
                                     <td></td>
-                                    <td><b><input type="number" required disabled maxlength="8"></b></td>
+                                    <td><b><input type="number" formControlName="carryForwardLoss" disabled maxlength="8"></b></td> <!--[value]="totalCarryForwardToNxtYrs"-->
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 17 : 16}}</td>
@@ -1396,21 +1515,21 @@
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td>Tax at narmal rate- A</td>
-                                    <td><input type="number" required disabled maxlength="8"></td>
+                                    <td>Tax at normal rate- A</td>
+                                    <td><input type="number" formControlName="taxAtNormalRate" (blur)="calTotalTax()" maxlength="8"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Tax at special rate- B</td>
-                                    <td><input type="number" required disabled maxlength="8"></td>
+                                    <td><input type="number" formControlName="taxAtSpecialRate" (blur)="calTotalTax()"  maxlength="8"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Rebate on agriculture Income- C</td>
-                                    <td><input type="number" required disabled maxlength="8"></td>
-                                    <td><input type="number" required disabled maxlength="8"></td>
+                                    <td><input type="number" formControlName="rebateOnAgricultureIncome" (blur)="calTotalTax()"  maxlength="8"></td>
+                                    <td><input type="number" formControlName="taxOnTotalIncome" required disabled maxlength="8"></td>
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 18 : 17}}</td>
@@ -1418,11 +1537,11 @@
                                     <td></td>
                                     <td>  <!--formGroupName="taxSummary"-->
                                         <input formControlName="forRebate87Tax" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required
-                                            maxlength="8"></td> <!-- (blur)="calculateTaxAfterRebate()"-->
+                                            maxlength="8" (blur)="calculateTaxAfterRebate()"></td>
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 19 : 18}}</td>
-                                    <td>Tax after rebate</td>
+                                    <td>Tax after rebate {{itrType.itrThree ? ' (17 - 18)' : ' (16 - 17)'}}</td>
                                     <td></td>
                                     <td > <!--formGroupName="taxSummary"-->
                                         <input type="number" formControlName="taxAfterRebate" disabled required maxlength="8"></td> 
@@ -1431,7 +1550,7 @@
                                     <td>{{itrType.itrThree ? 20 : 19}}</td>
                                     <td>Surcharge</td>
                                     <td></td>
-                                    <td><input type="number" required disabled maxlength="8"></td>
+                                    <td><input type="number" formControlName="surcharge" (blur)="calGrossTaxLiability()" required  maxlength="8"></td>
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 21 : 20}}</td>
@@ -1443,8 +1562,8 @@
                                 <tr>
                                     <td>{{itrType.itrThree ? 22 : 21}}</td>
                                     <td>Gross Tax Liability {{itrType.itrThree ? '(19+20+21)' : '(18+19+20)'}}</td>
-                                    <td><input type="number" required disabled maxlength="8"></td>
-                                    <td><input type="number" required disabled maxlength="8"></td>
+                                    <td></td>
+                                    <td><input type="number" formControlName="grossTaxLiability" required disabled></td>
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 23 : 22}}</td>
@@ -1459,8 +1578,9 @@
                                     <td> <!--formGroupName="taxSummary"  -->
                                         <input type="number" formControlName="taxReliefUnder89"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
-                                            <!--(blur)="calculateTaxAfterRelif()"   --></td>
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" 
+                                            (blur)="calLessRelief()">
+                                           </td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -1468,7 +1588,8 @@
                                     <td>u/s 90/90A</td>
                                     <td><input type="number" formControlName="taxReliefUnder90_90A" maxlength="8"
                                          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                       onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                       onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                       (blur)="calLessRelief()"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -1476,14 +1597,15 @@
                                     <td>u/s 91</td>
                                     <td><input type="number"  formControlName="taxReliefUnder91" maxlength="8"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                      onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
-                                    <td><input type="number" disabled maxlength="8"></td>
+                                      onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                      (blur)="calLessRelief()"></td>
+                                    <td><input type="number" [value]="totalOfLessRelief" disabled maxlength="8"></td>
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 24 : 23}}</td>
                                     <td>Net Tax Liability</td>
                                     <td></td>
-                                    <td><input type="number" required disabled maxlength="8"></td>
+                                    <td><input type="number" required formControlName="netTaxLiability" maxlength="8"></td>
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 25 : 24}}</td>
@@ -1494,47 +1616,47 @@
                                 <tr>
                                     <td></td>
                                     <td>u/s 234A</td>
-                                    <td> <!--formGroupName="taxSummary"-->
+                                    <td> 
                                         <input  maxlength="8" type="number" formControlName="s234A"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!-- (blur)="calculateTotalInterestFees()"-->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" (blur)="calAggregateTaxLiability()">
+                                            <!-- -->
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>u/s 234B</td>
-                                    <td> <!--formGroupName="taxSummary"-->
+                                    <td> 
                                         <input  maxlength="8" type="number" formControlName="s234B"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!-- (blur)="calculateTotalInterestFees()"  -->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" (blur)="calAggregateTaxLiability()">
+                                            <!--   -->
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>u/s 234C</td>
-                                    <td> <!--formGroupName="taxSummary"--> 
+                                    <td> 
                                         <input  maxlength="8" type="number" formControlName="s234C"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                           <!-- (blur)="calculateTotalInterestFees()"-->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" (blur)="calAggregateTaxLiability()">
+                                           <!-- -->
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>u/s 234F</td>
-                                    <td> <!--formGroupName="taxSummary"-->
+                                    <td> 
                                         <input  maxlength="8" type="number" formControlName="s234F"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                            <!--  (blur)="calculateTotalInterestFees()"-->
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" (blur)="calAggregateTaxLiability()">
+                                            <!--  -->
                                     </td>
     
-                                    <td> <!--formGroupName="taxSummary"-->
+                                    <td> 
                                         <input type="number" formControlName="interestAndFeesPayable" disabled maxlength="8"></td>  <!--formControlName="interestAndFeesPayable"-->
                                 </tr>
                                 <tr>
@@ -1542,7 +1664,7 @@
                                     <td>Aggregate Tax Liability</td>
                                     <td></td>
                                     <td> <!--formGroupName="taxSummary"-->
-                                        <input type="number" disabled required maxlength="8">  <!--formControlName="agrigateLiability"-->
+                                        <input type="number" formControlName="agrigateLiability" disabled required maxlength="8"> 
                                     </td>
                                 </tr>
                                 <tr>
@@ -1581,28 +1703,28 @@
                                 <tr>
                                     <td></td>
                                     <td>Advance/ Self-Assessment Tax </td>
-                                    <td><input type="number" [value]="taxesPaid.advanceSelfAssTax" disabled  maxlength="8"> <!---->
+                                    <td><input type="number" [value]="taxesPaid.advanceSelfAssTax" disabled  maxlength="8"> 
                                     </td>
 
-                                    <td> <!--formGroupName="taxSummary"-->
-                                        <input type="number" formControlName="totalTaxesPaid" disabled maxlength="8"> <!--formControlName="totalTaxesPaid"-->
+                                    <td> 
+                                        <input type="number" formControlName="totalTaxesPaid" disabled maxlength="8">
                                     </td>
                                 </tr>
     
-                                <tr>  <!-- *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0"-->
+                                <tr *ngIf="this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0"> 
                                     <td>{{itrType.itrThree ? 28 : 27}}</td>
                                     <td><b>Net Tax Payable/ (Refund)</b></td>
                                     <td></td>
-                                    <td> <!--formGroupName="taxSummary"-->
-                                        <b><input type="number" formControlName="taxpayable"  disabled maxlength="8"></b> <!--formControlName="taxpayable"-->
+                                    <td> 
+                                        <b><input type="number" formControlName="taxpayable"  disabled maxlength="8"></b> 
                                     </td>
                                 </tr>
-                                <tr>  <!--*ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0"-->
+                                <tr *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0">
                                     <td>{{itrType.itrThree ? 28 : 27}}</td>
                                     <td><b>Net Tax Payable/ (Refund)</b></td>
                                     <td></td>
-                                    <td> <!--formGroupName="taxSummary"-->
-                                        <b><input type="number" formControlName="taxRefund" disabled maxlength="8"></b> <!--formControlName="taxRefund"-->
+                                    <td> 
+                                        <b><input type="number" formControlName="taxRefund" disabled maxlength="8"></b> 
                                     </td>
                                 </tr>
     
@@ -1612,9 +1734,9 @@
 
                         <div class="card__row">
                             <button class="btn" form="personalForm" (click)="saveItrSummary()">Save Summary</button> &nbsp;
-                            <span >   <!--[class.cursorNotAllow]="itrSummaryForm.value.summaryId === 0"-->
+                            <span [class.cursorNotAllow]="personalInfoForm.value.summaryId === 0">  
                                 <button class="btn" 
-                                    (click)="downloadItrSummary()">Download Summary</button>  <!--[class.disableBtn]="itrSummaryForm.value.summaryId === 0"-->
+                                    (click)="downloadItrSummary()" [class.disableBtn]="personalInfoForm.value.summaryId === 0">Download Summary</button>  <!---->
                             </span>
                         </div>
 

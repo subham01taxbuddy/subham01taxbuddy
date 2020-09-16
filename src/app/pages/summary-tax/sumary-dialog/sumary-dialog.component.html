@@ -972,6 +972,102 @@
             </div>
         <!-- </div> -->
 
+        <div class="card__col-lg-3">
+            <mat-form-field appearance="outline" formGroupName="lossesToBeCarriedForword" *ngIf="data.mode == 'losses'">
+                <mat-label><b>Select Year</b></mat-label>
+                <mat-select matInput formControlName="year" placeholder="Net House property Income"
+                    autocomplete="off">
+                    <mat-option *ngFor="let year of lossesYear" [value]="year.value">
+                        {{ year.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="card__col-lg-3">
+            <mat-form-field appearance="outline" formGroupName="lossesToBeCarriedForword" *ngIf="data.mode == 'losses'">
+                <mat-label><b>House Property Losses</b></mat-label>
+                <input matInput placeholder="House Property Losses" maxlength="8" type="number"
+                    formControlName="housePropertyLosses"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    autocomplete="off">
+            </mat-form-field>
+        </div>
+        <div class="card__col-lg-3">
+            <mat-form-field appearance="outline" formGroupName="lossesToBeCarriedForword" *ngIf="data.mode == 'losses'">
+                <mat-label><b>Short Term Capital Losses</b></mat-label>
+                <input matInput placeholder="Short Term Capital Losses" maxlength="8" type="number"
+                    formControlName="shortTermCapitalGainLosses"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    autocomplete="off">
+            </mat-form-field>
+        </div>
+        <div class="card__col-lg-3">
+            <mat-form-field appearance="outline" formGroupName="lossesToBeCarriedForword" *ngIf="data.mode == 'losses'">
+                <mat-label><b>Long Term Capital Losses</b></mat-label>
+                <input matInput placeholder="Long Term Capital Losses" maxlength="8" type="number"
+                    formControlName="longTermCapitalGainLosses"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    autocomplete="off">
+            </mat-form-field>
+        </div>
+        <div class="card__col-lg-3">
+            <mat-form-field appearance="outline" formGroupName="lossesToBeCarriedForword" *ngIf="data.mode == 'losses'">
+                <mat-label><b>Losses Set Of During Year</b></mat-label>
+                <input matInput placeholder="Losses Set Of During Year" maxlength="8" type="number"
+                    formControlName="lossesSetOffDuringTheYear"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    autocomplete="off">
+            </mat-form-field>
+        </div>
+        <div class="card__col-lg-3">
+            <mat-form-field appearance="outline" formGroupName="lossesToBeCarriedForword" *ngIf="data.mode == 'losses'">
+                <mat-label><b>Current year losses 2019-2020</b></mat-label>
+                <input matInput placeholder="Current year losses 2019-2020" maxlength="8" type="number"
+                    formControlName="currentYearLosess"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    autocomplete="off">
+            </mat-form-field>
+        </div>
+        <div class="card__col-lg-3">
+            <mat-form-field appearance="outline" formGroupName="lossesToBeCarriedForword" *ngIf="data.mode == 'losses'">
+                <mat-label><b>Carried Forward To Next Year</b></mat-label>
+                <input matInput placeholder="Carried Forward To Next Year" maxlength="8" type="number"
+                    formControlName="carriedForwardToNextYear"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    autocomplete="off">
+            </mat-form-field>
+        </div>
+        
+
+        <div class="card__col-lg-6">
+            <mat-form-field appearance="outline" formGroupName="immovableAsset" *ngIf="data.mode == 'immovableAssets'">
+                <mat-label><b>Description</b></mat-label>
+                <input matInput placeholder="Description" maxlength="50" formControlName="description"
+                    autocomplete="off">
+            </mat-form-field>
+        </div>
+        <div class="card__col-lg-6">
+            <mat-form-field appearance="outline" formGroupName="immovableAsset" *ngIf="data.mode == 'immovableAssets'">
+                <mat-label><b>Address</b></mat-label>
+                <input matInput placeholder="Address" maxlength="50" formControlName="area"
+                autocomplete="off">
+            </mat-form-field>
+        </div>
+        <div class="card__col-lg-6">
+            <mat-form-field appearance="outline" formGroupName="immovableAsset" *ngIf="data.mode == 'immovableAssets'">
+                <mat-label><b>Amount</b></mat-label>
+                <input matInput placeholder="Amount" maxlength="8" type="number"
+                    formControlName="amount"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    autocomplete="off">
+            </mat-form-field>
+        </div>
+       
+       
+
+
+
+
 
     </mat-dialog-content>
     <mat-dialog-actions align="center">
