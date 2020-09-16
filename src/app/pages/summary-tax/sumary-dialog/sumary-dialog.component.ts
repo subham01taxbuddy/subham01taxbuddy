@@ -54,6 +54,10 @@ export class SumaryDialogComponent implements OnInit {
   propertyTypeData: any = [{ label: 'Rented', value: 'LOP' }, { label: 'Self-occupied', value: 'SOP' }];
   ownerships = [{ value: 'SELF', label: 'Self' }, { value: 'MINOR', label: 'Minor' }, { value: 'SPOUSE', label: 'Spouse' }, { value: 'OTHER', label: 'Other' }]
   coOwnwerData = [{ value: 'YES', label: 'Yes' }, { value: 'NO', label: 'No' }];
+  lossesYear = [{value: '2010-2011', label:'2010-2011'},{value: '2011-2012', label:'2011-2012'},{value: '2012-2013', label:'2012-2013'},
+                {value: '2013-2014', label:'2013-2014'},{value: '2014-2015', label:'2014-2015'},{value: '2015-2016', label:'2015-2016'},
+                {value: '2016-2017', label:'2016-2017'},{value: '2017-2018', label:'2017-2018'},{value: '2018-2019', label:'2018-2019'},
+                {value: '2020-2021', label:'2020-2021'}]
 
   salObjectVal = {
     grossSalary: 0,
@@ -212,6 +216,22 @@ export class SumaryDialogComponent implements OnInit {
         loans: []
       }),
 
+      lossesToBeCarriedForword: this.fb.group({
+          year: [''],
+          housePropertyLosses: [0],
+          shortTermCapitalGainLosses:[0],
+          longTermCapitalGainLosses:[0],
+          lossesSetOffDuringTheYear:[0],
+          currentYearLosess: [0],
+          carriedForwardToNextYear:[0],
+      }),
+
+      immovableAsset : this.fb.group({
+        description: [''],
+        area: [''],
+        amount: ['']
+      }),
+
       tenantName: [null],
       tenentPanNumber: [null, Validators.pattern(AppConstants.panIndHUFRegex)],
       // name: [null],
@@ -262,6 +282,12 @@ export class SumaryDialogComponent implements OnInit {
     else if (this.data.mode === 'Salary' && this.data.submitBtn === 'Edit') {
       this.updateSalaryInfo(this.data.userObject)
     }
+    else if (this.data.mode === 'losses' && this.data.submitBtn === 'Edit') {
+      this.updateLossessInfo(this.data.userObject)
+    }
+    else if (this.data.mode === 'immovableAssets' && this.data.submitBtn === 'Edit') {
+      this.updateImmovableInfo(this.data.userObject)
+    }
 
     this.setUserProfileTo(this.data.callerObj);
   }
@@ -276,14 +302,20 @@ export class SumaryDialogComponent implements OnInit {
   }
 
   setUserProfileTo(userProfileData) {
-    console.log('userProfileData: ',userProfileData.itrSummaryForm.value.assesse.address.pinCode)
-    if (this.utilService.isNonEmpty(userProfileData.itrSummaryForm.value.assesse.address.pinCode)) {
-      this.summaryDialogForm['controls'].houseProperties['controls'].locality.setValue(userProfileData.itrSummaryForm.value.assesse.address.premisesName)
-      this.summaryDialogForm['controls'].houseProperties['controls'].pinCode.setValue(userProfileData.itrSummaryForm.value.assesse.address.pinCode)
-      this.summaryDialogForm['controls'].houseProperties['controls'].country.setValue(userProfileData.itrSummaryForm.value.assesse.address.country)
-      this.summaryDialogForm['controls'].houseProperties['controls'].state.setValue(userProfileData.itrSummaryForm.value.assesse.address.state)
-      this.summaryDialogForm['controls'].houseProperties['controls'].city.setValue(userProfileData.itrSummaryForm.value.assesse.address.city)
+    if(this.utilService.isNonEmpty(userProfileData.itrSummaryForm)){
+      console.log('userProfileData: ',userProfileData.itrSummaryForm.value.assesse.address.pinCode)
+      if (this.utilService.isNonEmpty(userProfileData.itrSummaryForm.value.assesse.address.pinCode)) {
+        this.summaryDialogForm['controls'].houseProperties['controls'].locality.setValue(userProfileData.itrSummaryForm.value.assesse.address.premisesName)
+        this.summaryDialogForm['controls'].houseProperties['controls'].pinCode.setValue(userProfileData.itrSummaryForm.value.assesse.address.pinCode)
+        this.summaryDialogForm['controls'].houseProperties['controls'].country.setValue(userProfileData.itrSummaryForm.value.assesse.address.country)
+        this.summaryDialogForm['controls'].houseProperties['controls'].state.setValue(userProfileData.itrSummaryForm.value.assesse.address.state)
+        this.summaryDialogForm['controls'].houseProperties['controls'].city.setValue(userProfileData.itrSummaryForm.value.assesse.address.city)
+      }
     }
+    // else if(this.utilService.isNonEmpty(userProfileData.itrSummaryForm)){
+
+    // }
+  
   }
 
   updateBankData(bankInfo) {
@@ -374,6 +406,15 @@ export class SumaryDialogComponent implements OnInit {
     this.summaryDialogForm.controls['entertainAllow'].setValue(salaryInfo.entertainAllow);
     this.summaryDialogForm.controls['professionalTax'].setValue(salaryInfo.professionalTax);
     this.summaryDialogForm.controls['totalSalaryDeduction'].setValue(salaryInfo.totalSalaryDeduction);
+  }
+
+  updateLossessInfo(lossesInfo){
+    console.log('lossesInfo: ', lossesInfo)
+    this.summaryDialogForm['controls'].lossesToBeCarriedForword.patchValue(lossesInfo)
+  }
+
+  updateImmovableInfo(immovableInfo){
+    this.summaryDialogForm['controls'].immovableAsset.patchValue(immovableInfo)
   }
 
 
@@ -836,6 +877,25 @@ export class SumaryDialogComponent implements OnInit {
           index: this.data.editIndex
         }
         this.dialogRef.close({ event: 'close', data: advanceSelfAssTaxObj })
+      }
+      else if (mode === 'losses') {
+        console.log('losses DIALOG data: ',this.summaryDialogForm.controls.lossesToBeCarriedForword.value)
+        let lossesCarriedForward = {
+          lossesToBeCarriedForword: this.summaryDialogForm.controls.lossesToBeCarriedForword.value,
+          type: this.data.mode,
+          action: this.data.submitBtn,
+          index: this.data.editIndex
+        }
+        this.dialogRef.close({ event: 'close', data: lossesCarriedForward })
+      }
+      else if (mode === 'immovableAssets') {
+        let immovableAssestsData = {
+          immovableInfo: this.summaryDialogForm.controls.immovableAsset.value,
+          type: this.data.mode,
+          action: this.data.submitBtn,
+          index: this.data.editIndex
+        }
+        this.dialogRef.close({ event: 'close', data: immovableAssestsData })
       }
 
     } else {
