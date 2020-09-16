@@ -322,8 +322,10 @@
                 <div class="card__col-lg-8">
                     <mat-form-field appearance="outline">
                         <mat-label>User name</mat-label>
-                        <input matInput formControlName="billTo" placeholder="User name" autocomplete="off" required>
+                        <input matInput formControlName="billTo" maxlength="50" placeholder="User name" autocomplete="off" required>
                         <mat-error *ngIf="invoiceForm.controls['billTo'].hasError('required')">Enter User
+                            name</mat-error>
+                        <mat-error *ngIf="invoiceForm.controls['billTo'].hasError('pattern')">Enter valid User
                             name</mat-error>
                     </mat-form-field>
                 </div>
