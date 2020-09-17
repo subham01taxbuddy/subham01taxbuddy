@@ -523,6 +523,7 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   saveProfile(ref) {
+    this.findAssesseeType();
     if (this.customerProfileForm.valid) {
       this.loading = true;
       const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
@@ -556,6 +557,9 @@ export class PersonalInformationComponent implements OnInit {
       });
     } else {
       $('input.ng-invalid').first().focus();
+      if (this.customerProfileForm.controls['assesseeType'].invalid) {
+        this.utilsService.showSnackBar('We are not supporting Assessee Type except Individual and HUF.')
+      }
     }
   }
   calAge(dob) {
@@ -615,11 +619,11 @@ export class PersonalInformationComponent implements OnInit {
     this.router.navigate(['/pages/itr-filing/customer-profile']);
   }
 
-  afterUploadDocs(fileUpload){
-      if(fileUpload === 'File uploaded successfully'){
-         this.getCommonDocuments();
-      }
+  afterUploadDocs(fileUpload) {
+    if (fileUpload === 'File uploaded successfully') {
+      this.getCommonDocuments();
+    }
   }
 
- 
+
 }
