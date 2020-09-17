@@ -6,46 +6,39 @@
       <div class="card">
 
         <div class="card__row">
-         <div class="card__col-xs-3 card__col-sm-3">
-          <mat-form-field appearance="outline">
-            <input matInput [formControl]="searchNumber" maxlength="10" placeholder="Search By Mobile number" autocomplete="off"
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-          </mat-form-field>
-         </div>
-         <div class="card__col-xs-2 card__col-sm-2">
-          <button class="sendBtn" [class.btnDisable]="!this.utileService.isNonEmpty(this.searchNumber.value) || !this.searchNumber.valid" style="padding-left: 15px; padding-right: 15px; margin-top: 3px;"
-          [disabled]="!this.utileService.isNonEmpty(this.searchNumber.value) || !this.searchNumber.valid" (click)="geUserChatDetail('bySearch')">Search</button>
-         </div>
-         
+          <div class="card__col-xs-3 card__col-sm-3">
+            <mat-form-field appearance="outline">
+              <input matInput [formControl]="searchNumber" maxlength="10" placeholder="Search By Mobile number"
+                autocomplete="off"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+            </mat-form-field>
+          </div>
+          <div class="card__col-xs-2 card__col-sm-2">
+            <button class="sendBtn"
+              [class.btnDisable]="!this.utileService.isNonEmpty(this.searchNumber.value) || !this.searchNumber.valid"
+              style="padding-left: 15px; padding-right: 15px; margin-top: 3px;"
+              [disabled]="!this.utileService.isNonEmpty(this.searchNumber.value) || !this.searchNumber.valid"
+              (click)="geUserChatDetail('bySearch')">Search</button>
+          </div>
+
         </div>
 
         <div class="card__row">
           <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 0px;">
-            <div class="card__col-lg-3 ">   <!--userList-->
+            <div class="card__col-lg-4" style="padding: 0px;">
+              <!--userList-->
               <!-- <mat-form-field appearance="outline">
                 <input matInput [formControl]="searchNumber" placeholder="Search User" (keyup)="searchMyNumber()"
                   autocomplete="off">
               </mat-form-field> -->
-              <button class="refreshBtn" (click)="getUserNotify()">Refresh User List</button>
-              <br>
-              <div class="userList"  #chatScroll >  <!--[scrollTop]="chatScroll.scrollHeight"-->
-                <ul *ngFor="let user of filteredArray">
-                  <li style="padding: 10px;"
-                    (click)="geUserChatDetail(user.recipientWhatsapp)">
-                    <span *ngIf="user.isRead === false">*</span>
-                    <a style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user.name}}</a><br>
-                    <span style="font-size: 11px; padding-left: 30px;">{{user.recipientWhatsapp}}</span>
-                  </li>
-                  <!-- <li style="padding: 10px;" (click)="geUserChatDetail(user)">
-                      <a style=" display: contents; font-size: 13px;" href="javascript:void(0)">{{user}}</a><br> 
-                </li>-->
-
-                </ul>
-              </div>
+              <!-- <button class="refreshBtn" (click)="getUserNotify()">Refresh User List</button>
+              <br> -->
+              <app-recent-chat-list></app-recent-chat-list>
             </div>
-            <div class="card__col-md-9">
-              <mat-accordion *ngIf="this.userchatData">  <!--selectedUser-->
+            <div class="card__col-md-8" style="padding: 0px;">
+              <mat-accordion *ngIf="this.userchatData">
+                <!--selectedUser-->
                 <mat-expansion-panel>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
@@ -100,21 +93,24 @@
 
               <div class="chat-box" *ngIf="this.userchatData">
                 <div class="chat-header">
-                  Chat Corner:
+                  <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
+                      alt="sunil"> </div> --><i class="fa fa-user-circle-o" aria-hidden="true"> </i>
+                  {{selectedUser ? selectedUser.name : selectdMobNum}}
                 </div>
 
-                <div class="card_body"  #scrollMe [scrollTop]="scrollMe.scrollHeight">  <!-- #scrollMe [scrollTop]="scrollMe.scrollHeight"-->
-                  <div class="card__row" *ngFor="let data of userchatData">
+                <!-- <div class="card_body" #scrollMe [scrollTop]="scrollMe.scrollHeight"> -->
+                <!-- #scrollMe [scrollTop]="scrollMe.scrollHeight"-->
+                <!--  <div class="card__row" *ngFor="let data of userchatData">
                     <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
 
                       <span class="self"
                         *ngIf="!data.isReceived && !data.mediaId && data.messageType !== 'media_template'">
                         <b style="float: right;">{{smeInfo.USER_F_NAME}}</b><br>
-                        <!-- {{ data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent: '')}}<br> -->
+
                         <p class="multi_lines_text"
                           [innerHTML]="data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent: '')">
                         </p><br>
-                        <!--(data.mediaId? this.showLink(data.mediaId):'')-->
+
                         <b style="float: right; padding-top:5px; font-size: 11px;" *ngIf="!data.isReceived">
                           {{data.dateLong | date:'medium':'+0530'}} </b>
                       </span>
@@ -204,11 +200,151 @@
                       </span>
                     </div>
 
+                  </div> -->
+                <div class="mesgs">
+                  <div class="msg_history">
+                    <span *ngFor="let data of userchatData">
+                      <!-- TEMPLATE SENT -->
+                      <div class="outgoing_msg"
+                        *ngIf="!data.isReceived && !data.mediaId && data.messageType !== 'media_template'">
+                        <div class="sent_msg">
+                          <p
+                            [innerHTML]="data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent: '')">
+                          </p>
+                          <span class="time_date"> {{data.dateLong | date:'medium':'+0530'}}</span><i
+                            class="fa fa-check-double"></i>
+                        </div>
+                      </div>
+                      <!-- IMAGES SENT -->
+                      <div class="outgoing_msg"
+                        *ngIf="!data.isReceived && data.mediaId && data.mimeType.includes('image')">
+                        <div class="sent_msg">
+                          <img (click)="downloadDoc(data.mediaId)" alt="Preview Not available"
+                            src="{{environmentPath}}/user/download-media-file?mediaId={{data.mediaId}}">
+                          <span class="time_date"> {{data.dateLong | date:'medium':'+0530'}}</span><i
+                            class="fa fa-check-double"></i>
+                        </div>
+                      </div>
+                      <!-- PDF SENT -->
+                      <div class="outgoing_msg"
+                        *ngIf="!data.isReceived && data.mediaId && data.mimeType.includes('pdf') && data.messageType !== 'media_template'">
+                        <div class="sent_msg">
+                          <p> <i class="fa fa-file-pdf-o fa-5x" aria-hidden="true" (click)="downloadDoc(data.mediaId)">
+                            </i><br>
+                            {{data.fileName}}</p>
+                          <span class="time_date"> {{data.dateLong | date:'medium':'+0530'}}</span><i
+                            class="fa fa-check-double"></i>
+                        </div>
+                      </div>
+                      <!-- OTHER MEDIA SENT-->
+                      <div class="outgoing_msg"
+                        *ngIf="!data.isReceived && data.mediaId && (!data.mimeType.includes('pdf') && !data.mimeType.includes('image'))">
+                        <div class="sent_msg">
+                          <p (click)="downloadDoc(data.mediaId)"><a>Click here</a> to download Media File,
+                            {{data.fileName}}
+                          </p>
+                          <span class="time_date"> {{data.dateLong | date:'medium':'+0530'}}</span><i
+                            class="fa fa-check-double"></i>
+                        </div>
+                      </div>
+                      <!-- OTHER MEDIA 2 SENT -->
+                      <div class="outgoing_msg" *ngIf="!data.isReceived && data.messageType === 'media_template'">
+                        <div class="sent_msg">
+                          <p (click)="downloadDoc(data.mediaId)"><a>Click here</a> to download Media File,
+                            {{data.templateContent}}</p>
+                          <span class="time_date"> {{data.dateLong | date:'medium':'+0530'}}</span><i
+                            class="fa fa-check-double"></i>
+                        </div>
+                      </div>
+
+
+                      <!-- TEXT REC -->
+                      <div class="incoming_msg"
+                        *ngIf="data.isReceived && !data.mediaId  && data.messageType !== 'media_template'">
+                        <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
+                            alt="sunil"> </div> -->
+                        <div class="received_msg">
+                          <div class="received_withd_msg">
+                            <p>
+                              {{data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent:(data.mediaId? this.showLink(data.mediaId):''))}}
+                            </p>
+                            <span class="time_date"> {{data.dateLong | date:'medium':'+0530'}} <i
+                                class="fa fa-check-double" style="color: red;"></i></span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- IMAGES REC -->
+                      <div class="incoming_msg"
+                        *ngIf="data.isReceived && data.mediaId && data.mimeType.includes('image')">
+                        <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
+                            alt="sunil"> </div> -->
+                        <div class="received_msg">
+                          <div class="received_withd_msg">
+                            <p><img (click)="downloadDoc(data.mediaId)" alt="Not Show"
+                                src="{{environmentPath}}/user/download-media-file?mediaId={{data.mediaId}}"></p>
+                            <span class="time_date"> {{data.dateLong | date:'medium':'+0530'}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- PDF REC -->
+                      <div class="incoming_msg"
+                        *ngIf="data.isReceived && data.mediaId && data.mimeType.includes('pdf') && data.messageType !== 'media_template'">
+                        <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
+                            alt="sunil"> </div> -->
+                        <div class="received_msg">
+                          <div class="received_withd_msg">
+                            <p> <i class="fa fa-file-pdf-o fa-5x" aria-hidden="true"
+                                (click)="downloadDoc(data.mediaId)">
+                              </i> <br>
+                              {{data.fileName}}</p>
+                            <span class="time_date"> {{data.dateLong | date:'medium':'+0530'}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- OTHER MEDIA REC-->
+                      <div class="incoming_msg"
+                        *ngIf="data.isReceived && data.mediaId && (!data.mimeType.includes('pdf') && !data.mimeType.includes('image'))">
+                        <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
+                            alt="sunil"> </div> -->
+                        <div class="received_msg">
+                          <div class="received_withd_msg">
+                            <p (click)="downloadDoc(data.mediaId)"><a>Click here</a> to download Media File,
+                              {{data.fileName}}</p>
+                            <span class="time_date"> {{data.dateLong | date:'medium':'+0530'}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- OTHER MEDIA 2 REC-->
+                      <div class="incoming_msg" *ngIf="data.isReceived && data.messageType === 'media_template'">
+                        <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
+                            alt="sunil"> </div> -->
+                        <div class="received_msg">
+                          <div class="received_withd_msg">
+                            <p (click)="downloadDoc(data.mediaId)"><a>Click here</a> to download
+                              Media File,
+                              {{data.templateContent}}</p>
+                            <span class="time_date"> {{data.dateLong | date:'medium':'+0530'}}</span>
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </span>
                   </div>
+                  <!-- <div class="type_msg">
+                      <div class="input_msg_write">
+                        <input type="text" class="write_msg" placeholder="Type a message" />
+                        <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
+                            aria-hidden="true"></i></button>
+                      </div>
+                    </div> -->
                 </div>
+                <!-- </div> -->
 
                 <div class="chat-footer msger-inputarea" *ngIf="!startConversation">
-                  <button class="sendBtn" (click)="startChat(selectedUser ? selectedUser.whatsAppNumber : selectdMobNum)">Start Conversation</button>
+                  <button class="sendBtn"
+                    (click)="startChat(selectedUser ? selectedUser.whatsAppNumber : selectdMobNum)">Start
+                    Conversation</button>
                 </div>
 
                 <div class="chat-footer msger-inputarea" *ngIf="startConversation">

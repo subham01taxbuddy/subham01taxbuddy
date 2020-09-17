@@ -45,6 +45,5 @@ export const environment = {
 		authenticationFlowType: 'USER_PASSWORD_AUTH'
 	},
 	botIds: ["vaibhav.gaikwad@ssbainnovations.com", "ashish.hulwan@ssbainnovations.com", "dev_kommunicate@ssbainnovations.com", "ashish-upylx", "kommunicate-dev-cgvmc",
-	"txbdycustomchat-kjbxd", "vaibhav-zpyuj", "welcome-6mb0j"]
+		"txbdycustomchat-kjbxd", "vaibhav-zpyuj", "welcome-6mb0j"]
 };
-
