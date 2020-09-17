@@ -544,21 +544,21 @@ export class PersonalInformationComponent implements OnInit {
       ];
       Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
       console.log('this.ITR_JSON: ', this.ITR_JSON);
-      const response = await this.verifyAllBanks();
-      console.log('Bank API response in saveProfile', ":", response);
-      if (response) {
-        const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-        this.itrMsService.putMethod(param, this.ITR_JSON).subscribe(result => {
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-          this.loading = false;
-          this.utilsService.showSnackBar('Customer profile updated successfully.');
-          this.saveAndNext.emit(true);
+      // const response = await this.verifyAllBanks();
+      // console.log('Bank API response in saveProfile', ":", response);
+      // if (response) {
+      const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
+      this.itrMsService.putMethod(param, this.ITR_JSON).subscribe(result => {
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+        this.utilsService.showSnackBar('Customer profile updated successfully.');
+        this.saveAndNext.emit(true);
 
-        }, error => {
-          this.utilsService.showSnackBar('Failed to update customer profile.');
-          this.loading = false;
-        });
-      }
+      }, error => {
+        this.utilsService.showSnackBar('Failed to update customer profile.');
+        this.loading = false;
+      });
+      // }
     } else {
       $('input.ng-invalid').first().focus();
       if (this.customerProfileForm.controls['assesseeType'].invalid) {
