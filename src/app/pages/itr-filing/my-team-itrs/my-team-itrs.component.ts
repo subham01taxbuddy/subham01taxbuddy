@@ -67,18 +67,18 @@ export class MyTeamItrsComponent implements OnInit {
   myFilingTeamMembers = [];
   selectedMember: String = '';
   constructor(private itrMsService: ItrMsService, public utilsService: UtilsService, private router: Router, private dialog: MatDialog,) {
-    const loggedInUserData = JSON.parse(localStorage.getItem('UMD'))
+    // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'))
     this.filingTeamMembers.sort((a, b) => a.label > b.label ? 1 : -1)
-    var filingMemberId = loggedInUserData.USER_UNIQUE_ID;
-    // filingMemberId = 12172
-    if (filingMemberId !== 1065 && filingMemberId !== 1067 && filingMemberId !== 21354 && filingMemberId !== 12172) {
-      if (filingMemberId === 1707) {
-        filingMemberId = 1063;
-      }
-      this.myFilingTeamMembers = this.filingTeamMembers.filter(item => item.teamLeadId === filingMemberId);
-    } else {
-      this.myFilingTeamMembers = this.filingTeamMembers;
-    }
+    this.myFilingTeamMembers = this.filingTeamMembers;
+    // var filingMemberId = loggedInUserData.USER_UNIQUE_ID;
+    // if (filingMemberId !== 1065 && filingMemberId !== 1067 && filingMemberId !== 21354 && filingMemberId !== 12172) {
+    //   if (filingMemberId === 1707) {
+    //     filingMemberId = 1063;
+    //   }
+    //   this.myFilingTeamMembers = this.filingTeamMembers.filter(item => item.teamLeadId === filingMemberId);
+    // } else {
+    //   this.myFilingTeamMembers = this.filingTeamMembers;
+    // }
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
       columnDefs: this.myItrsCreateColoumnDef(),
