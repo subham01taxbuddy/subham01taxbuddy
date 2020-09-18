@@ -463,9 +463,9 @@
                                 <td>{{house.grossAnnualRentReceived}}</td>
                                 <td>{{house.propertyTax}}</td>
                                 <td>{{house.annualValue}}</td>
-                                <td>{{house.taxableIncome}}</td>
-                                <td>{{house.interestAmount}}</td>
                                 <td>{{house.exemptIncome}}</td>
+                                <td>{{house.interestAmount}}</td>
+                                <td>{{house.taxableIncome}}</td>
                                 <td>
                                     <button (click)="openDialog('Edit House Property','Edit', i, housingData[i],'House')"><i
                                             class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
@@ -805,8 +805,8 @@
                                 <th>House Property Losses</th>
                                 <th>Short Term Capital Losses</th>
                                 <th>Long Term Capital Losses</th>
-                                <th>Losses Set Off during the year</th>
-                                <th>Current year lossess 2019-2020</th>
+                                <!-- <th>Losses Set Off during the year</th>
+                                <th>Current year lossess 2019-2020</th> -->
                                 <th>Carried forward to next year</th>
                                 
                                 <th>Action</th>
@@ -817,8 +817,8 @@
                                 <td>{{losses.housePropertyLosses}}</td>
                                 <td>{{losses.shortTermCapitalGainLosses}}</td>
                                 <td>{{losses.longTermCapitalGainLosses}}</td>
-                                <td>{{losses.lossesSetOffDuringTheYear}}</td>
-                                <td>{{losses.currentYearLosess}}</td>
+                                <!-- <td>{{losses.lossesSetOffDuringTheYear}}</td>
+                                <td>{{losses.currentYearLosess}}</td> -->
                                 <td>{{losses.carriedForwardToNextYear}}</td>
                                
                                 <td>
@@ -830,10 +830,9 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="5"><b>Total</b></td>
-                                <td><b>{{totalLossesSetOfDuringYrs}}</b></td>
+                                <td colspan="4"><b>Total</b></td>
                                 <td></td>
-                                <td><b>{{totalCarryForwardToNxtYrs}}</b></td>
+                                <td><b>{{this.computationOfIncomeForm.controls['carryForwardLoss'].value}}</b></td>
                                 
                                 <td></td>
                             </tr>
@@ -1219,7 +1218,7 @@
     
                    
                     <mat-card *ngIf="showAssetLiability">  
-                        <div class="tableHead">Annexures: Exempt Income</div><br>
+                        <div class="tableHead">Annexures: Asset & liability annexure</div><br>
                         <p>Assets and Liabilities at the end of the year (applicable in a case where total income exceeds Rs.50 lakh)</p><br><br>
 
                         <p class="subLabel">Details of immovable assets</p>
@@ -1317,7 +1316,9 @@
                             <tr>
                                 <td></td>
                                 <td><b>Liabilities in relation to Assets</b></td>
-                                <td><input disabled [value]="this.deductionAndRemainForm.controls['movableAssetTotal'].value"></td>
+                                <td><input type="text"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" formControlName="movableAssetTotal" ></td>  
+                                <!--[value]="this.deductionAndRemainForm.controls['movableAssetTotal'].value"-->
                             </tr>
                           
                         </table>
@@ -1384,7 +1385,7 @@
                                     <td></td>
                                     <td>Long Term Capital Gain @ 20% (Refer Annexure)</td>
                                     <td><input type="number" [value]="capital_Gain.longTermCapitalGain20" disabled maxlength="8"></td>
-                                    <td><input type="number" [value]="incomeFromCapGain" disabled maxlength="8"></td>
+                                    <td><input type="number" formControlName="capitalGain"  disabled maxlength="8"></td> <!--[value]="incomeFromCapGain"-->
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td>4</td>

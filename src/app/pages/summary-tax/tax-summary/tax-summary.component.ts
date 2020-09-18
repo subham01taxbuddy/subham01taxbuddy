@@ -876,12 +876,12 @@ export class TaxSummaryComponent implements OnInit {
       console.log('Housing Data: ', this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value)
 
 
-      var totalExemptIncome = 0;
+      var totalTaxableIncome = 0;
       for (let i = 0; i < this.houseArray.length; i++) {
-        totalExemptIncome = totalExemptIncome + this.houseArray[i].exemptIncome;
+        totalTaxableIncome = totalTaxableIncome + this.houseArray[i].taxableIncome;  //exemptIncome
       }
-      this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.setValue(totalExemptIncome)    //Here we add total of taxableIncome into housePropertyIncome to show in table 2nd point
-      console.log('totalExemptIncome value: ', this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.value)
+      this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.setValue(totalTaxableIncome)    //Here we add total of taxableIncome into housePropertyIncome to show in table 2nd point
+      console.log('totalTaxableIncome value: ', this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.value)
 
       this.createHouseDataObj(this.houseArray, action, null);
       this.calculateGrossTotalIncome()
@@ -892,11 +892,11 @@ export class TaxSummaryComponent implements OnInit {
       this.itrSummaryForm['controls'].assesse['controls'].houseProperties.setValue(this.houseArray);
       console.log('Housing Data: ', this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value)
 
-      var totalExemptIncome = 0;
+      var totalTaxableIncome = 0;
       for (let i = 0; i < this.houseArray.length; i++) {
-        totalExemptIncome = totalExemptIncome + this.houseArray[i].exemptIncome;
+        totalTaxableIncome = totalTaxableIncome + this.houseArray[i].taxableIncome;
       }
-      this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.setValue(totalExemptIncome)
+      this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.setValue(totalTaxableIncome)
       // this.hpStadDeduct.splice(index, 1, Number(housingData.hpStandardDeduction))
       // this.netHousePro.splice(index, 1, Number(housingData.netHousePropertyIncome))
       // this.itrSummaryForm.controls['hpStandardDeduction'].setValue(this.hpStadDeduct);
