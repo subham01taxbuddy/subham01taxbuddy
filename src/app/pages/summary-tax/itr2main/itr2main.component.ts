@@ -200,7 +200,6 @@ export class Itr2mainComponent implements OnInit {
       us80ttaTtb: [0],
       us80u: [0],
       immovableAssetTotal: [0],
-      movableAssetTotal: [0],
 
       ppfInterest: [''],
       giftFromRelative: [''],
@@ -242,7 +241,8 @@ export class Itr2mainComponent implements OnInit {
       lossesSetOffDuringTheYear: [0],  //In itr_2_summary
       carriedForwardToNextYear: [0],   //In itr_2_summary
       carryForwardLoss: [0],           //In itr_2_summary.taxSummary
-      totalTaxRelief: [0],            
+      totalTaxRelief: [0], 
+      capitalGain: [0],                //In itr_2_summary.assess
 
       sec112Tax: [0],
       specialIncomeAfterAdjBaseLimit: [0],
@@ -286,7 +286,8 @@ export class Itr2mainComponent implements OnInit {
     	insuranceAmount: [0],
     	artWorkAmount: [0],
       jwelleryAmount: [0],
-      vehicleAmount: [0]
+      vehicleAmount: [0],
+      movableAssetTotal: [0],
     })
 
 
@@ -496,6 +497,7 @@ export class Itr2mainComponent implements OnInit {
     }
 
     this.incomeFromCapGain = Number(this.capital_Gain.shortTermCapitalGain) + Number(this.capital_Gain.shortTermCapitalGain15) + Number(this.capital_Gain.longTermCapitalGain10) + Number(this.capital_Gain.longTermCapitalGain20);
+    this.computationOfIncomeForm.controls['capitalGain'].setValue(this.incomeFromCapGain);
 
 
     if (this.tdsOnSal && this.tdsOnSal.api && this.tdsOnSal.api.getRenderedNodes()) {
@@ -649,15 +651,15 @@ export class Itr2mainComponent implements OnInit {
     }
   }
 
-  totalLossesSetOfDuringYrs: any;
+ // totalLossesSetOfDuringYrs: any;
   totalCarryForwardToNxtYrs: any;
   calLossesToatal(lossesCarryForwardData){
-    this.totalLossesSetOfDuringYrs = 0;
+    //this.totalLossesSetOfDuringYrs = 0;
     this.totalCarryForwardToNxtYrs = 0;
     console.log('lossesCarryForwardData: ',lossesCarryForwardData)
     debugger
     for(let i=0; i< lossesCarryForwardData.length; i++){
-      this.totalLossesSetOfDuringYrs = this.totalLossesSetOfDuringYrs + lossesCarryForwardData[i].lossesSetOffDuringTheYear;
+     // this.totalLossesSetOfDuringYrs = this.totalLossesSetOfDuringYrs + lossesCarryForwardData[i].lossesSetOffDuringTheYear;
       this.totalCarryForwardToNxtYrs = this.totalCarryForwardToNxtYrs + lossesCarryForwardData[i].carriedForwardToNextYear;
       this.computationOfIncomeForm.controls['carryForwardLoss'].setValue(this.totalCarryForwardToNxtYrs); 
     }
@@ -691,12 +693,12 @@ export class Itr2mainComponent implements OnInit {
     if (action === 'Add') {
       console.log('Housing Data: ', housingData.house)
       this.houseArray.push(housingData.house)
-      var totalExemptIncome = 0;
+      var totalTaxableIncome = 0;
       for (let i = 0; i < this.houseArray.length; i++) {
-        totalExemptIncome = totalExemptIncome + this.houseArray[i].exemptIncome;
+        totalTaxableIncome = totalTaxableIncome + this.houseArray[i].taxableIncome;   //exemptIncome
       }
       // this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.setValue(totalExemptIncome)    //Here we add total of taxableIncome into housePropertyIncome to show in table 2nd point
-      this.computationOfIncomeForm['controls'].housePropertyIncome.setValue(totalExemptIncome)
+      this.computationOfIncomeForm['controls'].housePropertyIncome.setValue(totalTaxableIncome)
       this.createHouseDataObj(this.houseArray, action, null);
       this.calculateTotalHeadWiseIncome();
       // console.log('BEFORE SAVE SUMMARY Housing Data:=> ', this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value)
@@ -705,12 +707,12 @@ export class Itr2mainComponent implements OnInit {
       this.houseArray.splice(index, 1, housingData.house)
       //this.itrSummaryForm['controls'].assesse['controls'].houseProperties.setValue(this.houseArray);
 
-      var totalExemptIncome = 0;
+      var totalTaxableIncome = 0;
       for (let i = 0; i < this.houseArray.length; i++) {
-        totalExemptIncome = totalExemptIncome + this.houseArray[i].exemptIncome;
+        totalTaxableIncome = totalTaxableIncome + this.houseArray[i].taxableIncome;
       }
       // this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.setValue(totalExemptIncome)
-      this.computationOfIncomeForm['controls'].housePropertyIncome.setValue(totalExemptIncome)
+      this.computationOfIncomeForm['controls'].housePropertyIncome.setValue(totalTaxableIncome)
       this.createHouseDataObj(this.houseArray, action, index);
       this.calculateTotalHeadWiseIncome();
     }
@@ -719,85 +721,88 @@ export class Itr2mainComponent implements OnInit {
 
   createHouseDataObj(houseData, action, index) {
     if (action === 'Add') {
-      let flatNo = this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '';
-      let building = this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
-      let street = this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '';
-      let locality = this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '';
-      let city = this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '';
-      let country = this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '';
-      let state = this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '';
-      let address = flatNo + ' ' + building + ' ' + ' ' + street + ' ' + locality + ' ' + city + ' ' + country + ' ' + state;
-
-      console.log("houseData: ", houseData)
-      console.log('Condition: ', houseData[0].coOwners.length > 0)
-      let house = {
-        propertyType: houseData[0].propertyType,
-        address: address,
-        ownerOfProperty: houseData[0].ownerOfProperty,
-        // coOwnerName: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].name : '',
-        // coOwnerPanNumber: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].panNumber : '',
-        // coOwnerPercentage: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].percentage : '',
-        coOwners: houseData[0].coOwners,
-        otherOwnerOfProperty: houseData[0].otherOwnerOfProperty,
-        tenantName: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].name : '',
-        tenentPanNumber: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].panNumber : '',
-        grossAnnualRentReceived: houseData[0].grossAnnualRentReceived ? houseData[0].grossAnnualRentReceived : '',
-        annualValue: houseData[0].annualValue,
-        propertyTax: houseData[0].propertyTax,
-        interestAmount: (Array.isArray(houseData[0].loans) && houseData[0].loans.length > 0) ? houseData[0].loans[0].interestAmount : '',
-        taxableIncome: houseData[0].taxableIncome,
-        exemptIncome: houseData[0].exemptIncome,
-        pinCode: this.utilService.isNonEmpty(houseData[0].pinCode) ? houseData[0].pinCode : '',
-        flatNo: this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '',
-        building: this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '',
-        street: this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '',
-        locality: this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '',
-        city: this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '',
-        country: this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '',
-        state: this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '',
+      for(let i = (houseData.length - 1); i< houseData.length; i++){
+        let flatNo = this.utilService.isNonEmpty(houseData[i].flatNo) ? houseData[i].flatNo : '';
+        let building = this.utilService.isNonEmpty(houseData[i].building) ? houseData[i].building : '';
+        let street = this.utilService.isNonEmpty(houseData[i].street) ? houseData[i].street : '';
+        let locality = this.utilService.isNonEmpty(houseData[i].locality) ? houseData[i].locality : '';
+        let city = this.utilService.isNonEmpty(houseData[i].city) ? houseData[i].city : '';
+        let country = this.utilService.isNonEmpty(houseData[i].country) ? houseData[i].country : '';
+        let state = this.utilService.isNonEmpty(houseData[i].state) ? houseData[i].state : '';
+        let address = flatNo + ' ' + building + ' ' + ' ' + street + ' ' + locality + ' ' + city + ' ' + country + ' ' + state;
+  
+        console.log("houseData: ", houseData)
+        console.log('Condition: ', houseData[i].coOwners.length > i)
+        let house = {
+          propertyType: houseData[i].propertyType,
+          address: address,
+          ownerOfProperty: houseData[i].ownerOfProperty,
+          // coOwnerName: (Array.isArray(houseData[i].coOwners) && houseData[i].coOwners.length > i) ? houseData[i].coOwners[i].name : '',
+          // coOwnerPanNumber: (Array.isArray(houseData[i].coOwners) && houseData[i].coOwners.length > i) ? houseData[i].coOwners[i].panNumber : '',
+          // coOwnerPercentage: (Array.isArray(houseData[i].coOwners) && houseData[i].coOwners.length > i) ? houseData[i].coOwners[i].percentage : '',
+          coOwners: houseData[i].coOwners,
+          otherOwnerOfProperty: houseData[i].otherOwnerOfProperty,
+          tenantName: (Array.isArray(houseData[i].tenant) && houseData[i].tenant.length > i) ? houseData[i].tenant[i].name : '',
+          tenentPanNumber: (Array.isArray(houseData[i].tenant) && houseData[i].tenant.length > i) ? houseData[i].tenant[i].panNumber : '',
+          grossAnnualRentReceived: houseData[i].grossAnnualRentReceived ? houseData[i].grossAnnualRentReceived : '',
+          annualValue: houseData[i].annualValue,
+          propertyTax: houseData[i].propertyTax,
+          interestAmount: (Array.isArray(houseData[i].loans) && houseData[i].loans.length > i) ? houseData[i].loans[i].interestAmount : '',
+          taxableIncome: houseData[i].taxableIncome,
+          exemptIncome: houseData[i].exemptIncome,
+          pinCode: this.utilService.isNonEmpty(houseData[i].pinCode) ? houseData[i].pinCode : '',
+          flatNo: this.utilService.isNonEmpty(houseData[i].flatNo) ? houseData[i].flatNo : '',
+          building: this.utilService.isNonEmpty(houseData[i].building) ? houseData[i].building : '',
+          street: this.utilService.isNonEmpty(houseData[i].street) ? houseData[i].street : '',
+          locality: this.utilService.isNonEmpty(houseData[i].locality) ? houseData[i].locality : '',
+          city: this.utilService.isNonEmpty(houseData[i].city) ? houseData[i].city : '',
+          country: this.utilService.isNonEmpty(houseData[i].country) ? houseData[i].country : '',
+          state: this.utilService.isNonEmpty(houseData[i].state) ? houseData[i].state : '',
+        }
+        this.housingData.push(house)
+        console.log('Housing:--- ', this.housingData)
       }
-      this.housingData.push(house)
-      console.log('Housing:--- ', this.housingData)
+      
     }
     else if (action === 'Edit') {
-
-      let flatNo = this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '';
-      let building = this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
-      let street = this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '';
-      let locality = this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '';
-      let city = this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '';
-      let country = this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '';
-      let state = this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '';
+        console.log('Index: ',index, ' edited data: ',houseData[index])
+      let flatNo = this.utilService.isNonEmpty(houseData[index].flatNo) ? houseData[index].flatNo : '';
+      let building = this.utilService.isNonEmpty(houseData[index].building) ? houseData[index].building : '';
+      let street = this.utilService.isNonEmpty(houseData[index].street) ? houseData[index].street : '';
+      let locality = this.utilService.isNonEmpty(houseData[index].locality) ? houseData[index].locality : '';
+      let city = this.utilService.isNonEmpty(houseData[index].city) ? houseData[index].city : '';
+      let country = this.utilService.isNonEmpty(houseData[index].country) ? houseData[index].country : '';
+      let state = this.utilService.isNonEmpty(houseData[index].state) ? houseData[index].state : '';
       let address = flatNo + ' ' + building + ' ' + ' ' + street + ' ' + locality + ' ' + city + ' ' + country + ' ' + state;
 
       console.log("houseData: ", houseData)
-      console.log('Condition: ', houseData[0].coOwners.length > 0)
+      console.log('Condition: ', houseData[index].coOwners.length > 0)
       let house = {
-        propertyType: houseData[0].propertyType,
+        propertyType: houseData[index].propertyType,
         address: address,
-        ownerOfProperty: houseData[0].ownerOfProperty,
-        // coOwnerName: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].name : '',
-        // coOwnerPanNumber: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].panNumber : '',
-        // coOwnerPercentage: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].percentage : '',
+        ownerOfProperty: houseData[index].ownerOfProperty,
+        // coOwnerName: (Array.isArray(houseData[index].coOwners) && houseData[index].coOwners.length > index) ? houseData[index].coOwners[index].name : '',
+        // coOwnerPanNumber: (Array.isArray(houseData[index].coOwners) && houseData[index].coOwners.length > index) ? houseData[index].coOwners[index].panNumber : '',
+        // coOwnerPercentage: (Array.isArray(houseData[index].coOwners) && houseData[index].coOwners.length > index) ? houseData[index].coOwners[index].percentage : '',
 
-        coOwners: houseData[0].coOwners,
-        otherOwnerOfProperty: houseData[0].otherOwnerOfProperty,
-        tenantName: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].name : '',
-        tenentPanNumber: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].panNumber : '',
-        grossAnnualRentReceived: houseData[0].grossAnnualRentReceived ? houseData[0].grossAnnualRentReceived : '',
-        annualValue: houseData[0].annualValue,
-        propertyTax: houseData[0].propertyTax,
-        interestAmount: (Array.isArray(houseData[0].loans) && houseData[0].loans.length > 0) ? houseData[0].loans[0].interestAmount : '',
-        taxableIncome: houseData[0].taxableIncome,
-        exemptIncome: houseData[0].exemptIncome,
-        pinCode: this.utilService.isNonEmpty(houseData[0].pinCode) ? houseData[0].pinCode : '',
-        flatNo: this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '',
-        building: this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '',
-        street: this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '',
-        locality: this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '',
-        city: this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '',
-        country: this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '',
-        state: this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '',
+        coOwners: houseData[index].coOwners,
+        otherOwnerOfProperty: houseData[index].otherOwnerOfProperty,
+        tenantName: (Array.isArray(houseData[index].tenant) && houseData[index].tenant.length > index) ? houseData[index].tenant[index].name : '',
+        tenentPanNumber: (Array.isArray(houseData[index].tenant) && houseData[index].tenant.length > index) ? houseData[index].tenant[index].panNumber : '',
+        grossAnnualRentReceived: houseData[index].grossAnnualRentReceived ? houseData[index].grossAnnualRentReceived : '',
+        annualValue: houseData[index].annualValue,
+        propertyTax: houseData[index].propertyTax,
+        interestAmount: (Array.isArray(houseData[index].loans) && houseData[index].loans.length > index) ? houseData[index].loans[index].interestAmount : '',
+        taxableIncome: houseData[index].taxableIncome,
+        exemptIncome: houseData[index].exemptIncome,
+        pinCode: this.utilService.isNonEmpty(houseData[index].pinCode) ? houseData[index].pinCode : '',
+        flatNo: this.utilService.isNonEmpty(houseData[index].flatNo) ? houseData[index].flatNo : '',
+        building: this.utilService.isNonEmpty(houseData[index].building) ? houseData[index].building : '',
+        street: this.utilService.isNonEmpty(houseData[index].street) ? houseData[index].street : '',
+        locality: this.utilService.isNonEmpty(houseData[index].locality) ? houseData[index].locality : '',
+        city: this.utilService.isNonEmpty(houseData[index].city) ? houseData[index].city : '',
+        country: this.utilService.isNonEmpty(houseData[index].country) ? houseData[index].country : '',
+        state: this.utilService.isNonEmpty(houseData[index].state) ? houseData[index].state : '',
       }
       this.housingData.splice(index, 1, house)
       console.log('Housing:--- ', this.housingData)
@@ -2457,16 +2462,21 @@ export class Itr2mainComponent implements OnInit {
             this.itr_2_Summary.assesse.incomes = this.incomeData;
 
           // Capital Gain
+          this.shortTermSlabRateInfo = [];
+          this.shortTerm15PerInfo = [];
+          this.longTerm10PerInfo = [];
+          this.longTerm20PerInfo = [];
+
           console.log('shortTermSlabRate data: ',this.shortTermSlabRate.api.getRenderedNodes())
           if(this.shortTermSlabRate.api.getRenderedNodes().length > 0){
             for (let i = 0; i < this.shortTermSlabRate.api.getRenderedNodes().length; i++) {
               this.shortTermSlabRateInfo.push({
                 'nameOfTheAsset': this.shortTermSlabRate.api.getRenderedNodes()[i].data.nameOfAsset,
-                'netSaleValue': String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.netSaleVal),
-                'purchaseCost': String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.purchaseCost),
-                'capitalGain': String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.capitalGain),
-                'deductions': String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.deduction),
-                'netCapitalGain': String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain) 
+                'netSaleValue': this.shortTermSlabRate.api.getRenderedNodes()[i].data.netSaleVal !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.netSaleVal) : null,
+                'purchaseCost': this.shortTermSlabRate.api.getRenderedNodes()[i].data.purchaseCost !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.purchaseCost) : null,
+                'capitalGain': this.shortTermSlabRate.api.getRenderedNodes()[i].data.capitalGain !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.capitalGain) : null,
+                'deductions': this.shortTermSlabRate.api.getRenderedNodes()[i].data.deduction !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.deduction) : null,
+                'netCapitalGain': this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain) : null 
               })
             }
             this.itr_2_Summary.capitalGainIncome.shortTermCapitalGain = this.shortTermSlabRateInfo;
@@ -2477,11 +2487,11 @@ export class Itr2mainComponent implements OnInit {
             for (let i = 0; i < this.shortTerm15Per.api.getRenderedNodes().length; i++) {
               this.shortTerm15PerInfo.push({
                 'nameOfTheAsset': this.shortTerm15Per.api.getRenderedNodes()[i].data.nameOfAsset,
-                'netSaleValue': String(this.shortTerm15Per.api.getRenderedNodes()[i].data.netSaleVal),
-                'purchaseCost': String(this.shortTerm15Per.api.getRenderedNodes()[i].data.purchaseCost),
-                'capitalGain': String(this.shortTerm15Per.api.getRenderedNodes()[i].data.capitalGain),
-                'deductions': String(this.shortTerm15Per.api.getRenderedNodes()[i].data.deduction),
-                'netCapitalGain': String(this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain) 
+                'netSaleValue': this.shortTerm15Per.api.getRenderedNodes()[i].data.netSaleVal !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.netSaleVal) : null,
+                'purchaseCost': this.shortTerm15Per.api.getRenderedNodes()[i].data.purchaseCost !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.purchaseCost) : null,
+                'capitalGain': this.shortTerm15Per.api.getRenderedNodes()[i].data.capitalGain !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.capitalGain) : null,
+                'deductions': this.shortTerm15Per.api.getRenderedNodes()[i].data.deduction !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.deduction) : null,
+                'netCapitalGain': this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain) : null 
               })
             }
             this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15Percent = this.shortTerm15PerInfo;
@@ -2492,11 +2502,11 @@ export class Itr2mainComponent implements OnInit {
             for (let i = 0; i < this.longTerm10Per.api.getRenderedNodes().length; i++) {
               this.longTerm10PerInfo.push({
                 'nameOfTheAsset': this.longTerm10Per.api.getRenderedNodes()[i].data.nameOfAsset,
-                'netSaleValue': String(this.longTerm10Per.api.getRenderedNodes()[i].data.netSaleVal),
-                'purchaseCost': String(this.longTerm10Per.api.getRenderedNodes()[i].data.purchaseCost),
-                'capitalGain': String(this.longTerm10Per.api.getRenderedNodes()[i].data.capitalGain),
-                'deductions': String(this.longTerm10Per.api.getRenderedNodes()[i].data.deduction),
-                'netCapitalGain': String(this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain) 
+                'netSaleValue': this.longTerm10Per.api.getRenderedNodes()[i].data.netSaleVal !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.netSaleVal): null,
+                'purchaseCost': this.longTerm10Per.api.getRenderedNodes()[i].data.purchaseCost !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.purchaseCost): null,
+                'capitalGain': this.longTerm10Per.api.getRenderedNodes()[i].data.capitalGain !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.capitalGain): null,
+                'deductions': this.longTerm10Per.api.getRenderedNodes()[i].data.deduction !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.deduction): null,
+                'netCapitalGain': this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain): null 
               })
             }
             this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10Percent = this.longTerm10PerInfo;
@@ -2507,11 +2517,11 @@ export class Itr2mainComponent implements OnInit {
             for (let i = 0; i < this.longTerm20Per.api.getRenderedNodes().length; i++) {
               this.longTerm20PerInfo.push({
                 'nameOfTheAsset': this.longTerm20Per.api.getRenderedNodes()[i].data.nameOfAsset,
-                'netSaleValue': String(this.longTerm20Per.api.getRenderedNodes()[i].data.netSaleVal),
-                'purchaseCost': String(this.longTerm20Per.api.getRenderedNodes()[i].data.purchaseCost),
-                'capitalGain': String(this.longTerm20Per.api.getRenderedNodes()[i].data.capitalGain),
-                'deductions': String(this.longTerm20Per.api.getRenderedNodes()[i].data.deduction),
-                'netCapitalGain': String(this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain)
+                'netSaleValue': this.longTerm20Per.api.getRenderedNodes()[i].data.netSaleVal !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.netSaleVal): null,
+                'purchaseCost': this.longTerm20Per.api.getRenderedNodes()[i].data.purchaseCost !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.purchaseCost): null,
+                'capitalGain': this.longTerm20Per.api.getRenderedNodes()[i].data.capitalGain !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.capitalGain): null,
+                'deductions': this.longTerm20Per.api.getRenderedNodes()[i].data.deduction !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.deduction): null,
+                'netCapitalGain': this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain) : null
               })
             }
             this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20Percent = this.longTerm20PerInfo;
@@ -2654,19 +2664,28 @@ export class Itr2mainComponent implements OnInit {
           this.itr_2_Summary.totalHeadWiseIncome = this.computationOfIncomeForm.controls['totalHeadWiseIncome'].value;
           this.itr_2_Summary.lossesSetOffDuringTheYear = this.computationOfIncomeForm.controls['lossesSetOffDuringTheYear'].value;
           this.itr_2_Summary.carriedForwardToNextYear = this.computationOfIncomeForm.controls['carriedForwardToNextYear'].value;
+          this.itr_2_Summary.taxSummary.capitalGain = this.computationOfIncomeForm.controls['capitalGain'].value;
 
           //Exempt Income=> Movalble / Immovable assets
-          debugger
-          if(!this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.cashInHand) && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.loanAmount) && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.shareAmount) 
-          && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.bankAmount) && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.insuranceAmount) && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.artWorkAmount) 
-          && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.jwelleryAmount) && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.vehicleAmount && (this.immovableAssetsInfo.length === 0))){
+          if(this.showAssetLiability){
+            debugger
+            this.itr_2_Summary.movableAssetTotal = this.assetsLiabilitiesForm.controls['movableAssetTotal'].value;
+  
+            if(!this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.cashInHand) && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.loanAmount) && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.shareAmount) 
+            && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.bankAmount) && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.insuranceAmount) && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.artWorkAmount) 
+            && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.jwelleryAmount) && !this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.vehicleAmount && (this.immovableAssetsInfo.length === 0))){
+              this.itr_2_Summary.assesse.assetsLiabilities = null;
+            }
+            else if(( (this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.cashInHand) || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.loanAmount) || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.shareAmount) 
+            || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.bankAmount) || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.insuranceAmount) || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.artWorkAmount) 
+            || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.jwelleryAmount) || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.vehicleAmount) ) && (this.immovableAssetsInfo.length === 0))){
+              this.itr_2_Summary.assesse.assetsLiabilities.immovable = null;
+            }
+          }
+          else{
             this.itr_2_Summary.assesse.assetsLiabilities = null;
           }
-          else if((this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.cashInHand) || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.loanAmount) || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.shareAmount) 
-          || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.bankAmount) || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.insuranceAmount) || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.artWorkAmount) 
-          || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.jwelleryAmount) || this.utilService.isNonEmpty(this.itr_2_Summary.assesse.assetsLiabilities.vehicleAmount) && (this.immovableAssetsInfo.length === 0))){
-            this.itr_2_Summary.assesse.assetsLiabilities.immovable = null;
-          }
+       
 
 
           console.log('ITR 2 summary ',this.itr_2_Summary)
@@ -2681,7 +2700,7 @@ export class Itr2mainComponent implements OnInit {
             this._toastMessageService.alert("success", "Summary save succesfully.");
           }, error => {
             this.loading = false;
-            this._toastMessageService.alert("error", "There is some issue save to summary.");
+            this._toastMessageService.alert("error", "There is some issue to save summary.");
           });
 
 
@@ -2748,7 +2767,6 @@ export class Itr2mainComponent implements OnInit {
     let totalOfMovableAssets = Number(this.assetsLiabilitiesForm.controls['cashInHand'].value) +  Number(this.assetsLiabilitiesForm.controls['loanAmount'].value) +  Number(this.assetsLiabilitiesForm.controls['shareAmount'].value) +
                                Number(this.assetsLiabilitiesForm.controls['bankAmount'].value) +  Number(this.assetsLiabilitiesForm.controls['insuranceAmount'].value) +  Number(this.assetsLiabilitiesForm.controls['artWorkAmount'].value) +
                                Number(this.assetsLiabilitiesForm.controls['jwelleryAmount'].value) +  Number(this.assetsLiabilitiesForm.controls['vehicleAmount'].value);
-    this.deductionAndRemainForm.controls['movableAssetTotal'].setValue(totalOfMovableAssets);
     Object.assign(this.itr_2_Summary.assesse.assetsLiabilities, this.assetsLiabilitiesForm.value);
     console.log('assetsLiabilities values: ',this.itr_2_Summary.assesse.assetsLiabilities);
   }
@@ -2792,6 +2810,7 @@ export class Itr2mainComponent implements OnInit {
                  dateOfBirth:'',
                  fathersName:''
               }
+
            ],
            address:{
               flatNo:null,
@@ -2807,7 +2826,6 @@ export class Itr2mainComponent implements OnInit {
            itrProgress:null,
            employers:[],
            houseProperties:[],
-           capitalGain:null,
            CGBreakup:null,
            foreignIncome:null,
            foreignAssets:null,
@@ -2906,7 +2924,8 @@ export class Itr2mainComponent implements OnInit {
            specialIncomeAfterAdjBaseLimit: '',
            aggregateIncome: '',
            agricultureIncome: '',
-           carryForwardLoss: ''
+           carryForwardLoss: '',
+           capitalGain:null,
         },
         lossesToBeCarriedForward: [],
         capitalGainIncome: {
