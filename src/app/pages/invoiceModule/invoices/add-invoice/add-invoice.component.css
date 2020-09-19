@@ -1,75 +1,81 @@
-.table-responsive{
-    overflow-x: auto;
+.table-responsive {
+  overflow-x: auto;
 }
 
 table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    width: 100%;
-    border: 1px solid #ddd;
-  }
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
 
-  th{
-    text-align: left;
-    padding: 6px;
-    font-size: 13px;
-    border: 1px solid #ddd;
-    font-weight: bold;
-  }
-  td {
-    text-align: left;
-    padding: 6px;
-    font-size: 13px;
-    border: 1px solid #ddd;
-  }
-  
-  tr:nth-child(even){background-color: #f2f2f2}
+th {
+  text-align: left;
+  padding: 6px;
+  font-size: 13px;
+  border: 1px solid #ddd;
+  font-weight: bold;
+}
 
-  .heading{
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-  }
+td {
+  text-align: left;
+  padding: 6px;
+  font-size: 13px;
+  border: 1px solid #ddd;
+}
 
-  .btns{
-    float: right;
-  }
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
 
-  .butn{
-    background-color: #63B12D;
-    height: 36px;
-    width: auto;
-    border-radius: 6px;
-    color: #eee;
-  }
+.heading {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
 
-  label{
-    font-size: 15px;
-    font-weight: bold;
-  }
+.btns {
+  float: right;
+  padding: 10px;
+}
 
-  .total{
-    float: right;
-    font-size: 15px;
-  }
+.butn {
+  background-color: #63B12D;
+  height: 36px;
+  width: auto;
+  border-radius: 6px;
+  color: #eee;
+  border: none;
+  cursor: pointer;
+}
 
-  .bold{
-    font-weight: bold;
-  }
+label {
+  font-size: 15px;
+  font-weight: bold;
+}
 
-  span{
-    /* display: block; */
-    font-size: 12px;
-  }
+.total {
+  float: right;
+  font-size: 15px;
+}
 
-  .disabledBtn{
-    pointer-events: none;
-    cursor: default;
-    text-decoration: none;
-    color: black;
-  }
+.bold {
+  font-weight: bold;
+}
 
-  .initiatedInfo{
-    font-size: 14px;
-    padding-left: 100px;
-  }
+span {
+  /* display: block; */
+  font-size: 12px;
+}
+
+.disabledBtn {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+  color: black;
+}
+
+.initiatedInfo {
+  font-size: 14px;
+  padding-left: 100px;
+}
