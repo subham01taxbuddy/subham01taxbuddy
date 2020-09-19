@@ -9,10 +9,11 @@ import { InvoicesComponent } from './invoices/invoices.component';
 import { InvoicesStatusComponent } from './invoices/invoices-status/invoices-status.component';
 import { AddInvoiceComponent } from "./invoices/add-invoice/add-invoice.component";
 import { InvoiceDialogComponent } from './invoices/invoice-dialog/invoice-dialog.component';
+import { UpdateStatusComponent } from "../itr-filing/update-status/update-status.component";
 
 @NgModule({
-    declarations:[AddInvoiceComponent, InvoicesComponent, InvoicesStatusComponent, InvoiceDialogComponent],
-    imports:[
+    declarations: [AddInvoiceComponent, InvoicesComponent, InvoicesStatusComponent, InvoiceDialogComponent, UpdateStatusComponent],
+    imports: [
         invoiceRoutingModule,
         CommonModule,
         FormsModule,
@@ -23,4 +24,4 @@ import { InvoiceDialogComponent } from './invoices/invoice-dialog/invoice-dialog
     ],
     entryComponents: [InvoiceDialogComponent]
 })
-export class InvoiceModule {}
+export class InvoiceModule { }
