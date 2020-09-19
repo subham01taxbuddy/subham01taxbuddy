@@ -88,4 +88,10 @@ export class ItrMsService {
             });
     }
 
+    invoiceDownload(params) {
+        this.headers = new Headers();
+        this.headers.append('Content-Type', 'application/json');
+        return this.http.get(environment.url + this.microService + params, { headers: this.headers, responseType: ResponseContentType.Blob })
+    };
+
 }
