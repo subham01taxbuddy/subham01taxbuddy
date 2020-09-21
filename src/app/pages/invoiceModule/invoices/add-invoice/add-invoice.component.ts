@@ -563,6 +563,7 @@ export class AddInvoiceComponent implements OnInit {
     this.editInvoice = false;
     this.showInvoiceForm = true;
     this.invoiceForm = this.createInvoiceForm();
+    this.invoiceForm.controls.userId.setValue(this.selectedUserId);
     // this.invoiceInfoCalled();
     // this.clientListGridOptions.api.setRowData(this.createRowData(null))
     this.showTaxRelatedState('Maharashtra')
