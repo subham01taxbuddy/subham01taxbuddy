@@ -95,7 +95,7 @@ export class PersonalInformationComponent implements OnInit {
     "stateId": "7",
     "countryCode": "91",
     "stateName": "Chattisgarh",
-    "stateCode": "CG",
+    "stateCode": "33",
     "status": true
   }, {
     "id": "5b4599c9c15a76370a3424c9",
