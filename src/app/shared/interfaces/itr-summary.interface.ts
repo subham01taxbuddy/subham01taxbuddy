@@ -69,7 +69,6 @@ export interface Assesse{
     itrProgress: [],
     employers: [],
     houseProperties: [],
-    capitalGain: null,
     CGBreakup: null,
     foreignIncome: null,
     foreignAssets: null,
@@ -185,8 +184,8 @@ export interface TaxSummary{
     specialIncomeAfterAdjBaseLimit: '',
     aggregateIncome: '',
     agricultureIncome: '',
-    carryForwardLoss: ''
-
+    carryForwardLoss: '',
+    capitalGain: null,
 }
 
 export interface AssetsLiabilities{
