@@ -906,7 +906,7 @@
                     
                     <div *ngIf="itrType.itrFour">
                         <div class="tableHead">Annexure: Income from Business or Profession</div><br>
-                        <app-itr4part [itrType]="itrSummaryForm['controls'].assesse['controls'].value"
+                        <app-itr4part [itrType]="itrSummaryForm['controls'].assesse['controls'].itrType.value"
                             (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
                     </div>
 
