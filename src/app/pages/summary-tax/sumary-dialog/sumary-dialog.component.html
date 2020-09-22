@@ -1032,7 +1032,7 @@
             <mat-form-field appearance="outline" formGroupName="lossesToBeCarriedForword" *ngIf="data.mode == 'losses'">
                 <mat-label><b>Carried Forward To Next Year</b></mat-label>
                 <input matInput placeholder="Carried Forward To Next Year" maxlength="8" type="number"
-                    formControlName="carriedForwardToNextYear" disabled
+                    formControlName="carriedForwardToNextYear" readonly
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     autocomplete="off">
             </mat-form-field>

@@ -73,6 +73,23 @@ export class Itr2mainComponent implements OnInit {
     advanceSelfAssTax: 0
   }
 
+  sourcesOfIncome = {
+    interestFromSaving : 0,
+    interestFromDeposite : 0,
+    interestFromTaxRefund : 0,
+    other : 0,
+    agricultureIncome : 0,
+    dividendIncome: 0,
+    total : 0
+  };
+
+  sec80DobjVal = {
+    healthInsuPremiumForSelf: 0,
+    healthInsuPremiumForParent: 0,
+    preventiveHealthCheckupForFamily: 0,
+    paraentAge: ''
+  };
+
   personalInfoForm: FormGroup;
   otherSourceForm: FormGroup;
   deductionAndRemainForm: FormGroup;
@@ -1058,6 +1075,7 @@ export class Itr2mainComponent implements OnInit {
   }
 
   calculateTotalHeadWiseIncome(){
+    debugger
     let headWiseIncome  =  Number(this.computationOfIncomeForm['controls'].salary.value) + Number(this.computationOfIncomeForm['controls'].housePropertyIncome.value)
                           + this.incomeFromCapGain + Number(this.computationOfIncomeForm['controls'].otherIncome.value);
                         
@@ -2246,9 +2264,10 @@ export class Itr2mainComponent implements OnInit {
         editable: true,
         width: 235,
         suppressMovable: true,
-        cellEditor: 'numericEditor',
+        //cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
+            console.log('BSR Code ===>>> ',params.data)
               if (params.data.bsrCode.length !== 7) {
                 return true;
               }
@@ -2257,11 +2276,11 @@ export class Itr2mainComponent implements OnInit {
               }
           },
         },
-        tooltip: function (params) {
-            if (params.data.bsrCode.length !== 7) {
-              return ('Please enter 7 digit BSR code');
-            }
-        },
+        // tooltip: function (params) {
+        //     if (params.data.bsrCode.length !== 7) {
+        //       return ('Please enter 7 digit BSR code');
+        //     }
+        // },
       },
       {
         headerName: 'Date',
@@ -2324,10 +2343,358 @@ export class Itr2mainComponent implements OnInit {
 
   advanceSearch(key) {
      if (this.searchVal !== "") {
-      // this.getUerSummary(this.searchVal);
+       setTimeout(()=>{
+        this.getUerSummary(this.searchVal);
+       },1000);
      }
    }
 
+   getUerSummary(mobNum){
+    this.loading = true;
+    let param = '/itr/summary/contact-number/'+mobNum;
+    this.userService.getMethodInfo(param).subscribe((summary : any)=>{
+      this.loading = false;
+      console.log('User ITR 2/3 summary: => ',summary)
+
+      this.personalInfoForm.patchValue(summary);
+      this.personalInfoForm.patchValue(summary.assesse);
+      this.personalInfoForm.patchValue(summary.assesse.address);
+
+      this.personalInfoForm.controls['fName'].setValue(summary.assesse.family[0].fName); 
+      this.personalInfoForm.controls['mName'].setValue(summary.assesse.family[0].mName); 
+      this.personalInfoForm.controls['lName'].setValue(summary.assesse.family[0].lName); 
+      this.personalInfoForm.controls['dateOfBirth'].setValue(summary.assesse.family[0].dateOfBirth); 
+      this.personalInfoForm.controls['fathersName'].setValue(summary.assesse.family[0].fathersName);
+      console.log('personalInfoForm: ',this.personalInfoForm.value);
+
+      this.computationOfIncomeForm.patchValue(summary.taxSummary);
+      this.computationOfIncomeForm.controls['totalHeadWiseIncome'].setValue(summary.totalHeadWiseIncome);
+      this.computationOfIncomeForm.controls['lossesSetOffDuringTheYear'].setValue(summary.lossesSetOffDuringTheYear);
+      this.computationOfIncomeForm.controls['carriedForwardToNextYear'].setValue(summary.carriedForwardToNextYear);
+      this.computationOfIncomeForm.controls['capitalGain'].setValue(summary.taxSummary.capitalGain);
+      console.log('computationOfIncomeForm: ',this.computationOfIncomeForm.value);
+
+      if(this.computationOfIncomeForm['controls'].totalIncomeAfterDeductionIncludeSR.value > 5000000){
+        if(this.utilService.isNonEmpty(summary.assesse.assetsLiabilities)){
+          this.assetsLiabilitiesForm.patchValue(summary.assesse.assetsLiabilities);
+          
+          this.immovableAssetsInfo = [];
+          if(this.utilService.isNonEmpty(summary.assesse.assetsLiabilitie.immovable)){
+            this.immovableAssetsInfo = summary.assesse.assetsLiabilitie.immovable;
+            this.calImmovableToatal(this.immovableAssetsInfo);
+          }
+        }
+      }
+
+      this.bankData = [];
+      this.housingData = [];
+      this.donationData = [];
+      this.salaryItrratedData = [];
+      this.lossesCarriedForwarInfo = [];
+
+      this.bankData = summary.assesse.bankDetails.length > 0 ? summary.assesse.bankDetails : [];
+      this.housingData = summary.assesse.houseProperties.length > 0 ? summary.assesse.houseProperties: [];
+      this.donationData = summary.assesse.donations.length > 0 ? summary.assesse.donations : [];
+
+      this.updateSalatyInfo(summary.assesse.employers)
+      this.updateOtherSource(summary.assesse.incomes)
+      this.updateInuranceVal(summary.assesse.insurances, summary.assesse.systemFlags);
+      
+      this.updateCapitalGain(summary.capitalGainIncome);
+      this.deductionAndRemainForm.patchValue(summary);
+
+      this.lossesCarriedForwarInfo = summary.lossesToBeCarriedForward;
+      this.calLossesToatal(this.lossesCarriedForwarInfo);
+
+      if(this.personalInfoForm.controls['itrType'].value === "3"){
+        //this.updateItr3Info();
+      }
+      
+      
+      this.updateTaxDeductionAtSourceVal(summary.assesse.taxPaid);
+      this.setTotalOfExempt();
+      this.calculateTotalHeadWiseIncome();
+      this.getTaxDeductionAtSourceData();
+    },
+    error=>{
+      this.loading = false;
+      this._toastMessageService.alert("error", error.error);
+    })
+   }
+
+   updateSalatyInfo(salaryData){
+    console.log("salaryInfo: ",salaryData)
+    if(salaryData.length > 0){
+      for(let i=0; i < salaryData.length; i++){
+        let salObj = {
+          employerName: salaryData[i].employerName,
+          address: salaryData[i].address,
+          employerTAN: salaryData[i].employerTAN,
+          employerCategory: salaryData[i].employerCategory,
+          salAsPerSec171: salaryData[i].salary.length > 0 ? salaryData[i].salary[0].taxableAmount : 0,
+          valOfPerquisites: salaryData[i].perquisites.length > 0 ? salaryData[i].perquisites[0].taxableAmount : 0,
+          profitInLieu: salaryData[i].profitsInLieuOfSalaryType.length > 0 ? salaryData[i].profitsInLieuOfSalaryType[0].taxableAmount : 0,
+          grossSalary: salaryData[i].grossSalary,
+          houseRentAllow: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter(item => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (salaryData[i].allowance.filter(item => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
+          leaveTravelExpense: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter(item => item.allowanceType === 'LTA')).length > 0) ? (salaryData[i].allowance.filter(item => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
+          other: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter(item => item.allowanceType === 'ANY_OTHER')).length > 0) ? (salaryData[i].allowance.filter(item => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
+          totalExemptAllow: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (salaryData[i].allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
+          netSalary: salaryData[i].netSalary,
+          standardDeduction: salaryData[i].standardDeduction,
+          entertainAllow: (salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (salaryData[i].deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
+          professionalTax: (salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (salaryData[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
+          totalSalaryDeduction: (salaryData[i].standardDeduction + ((salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (salaryData[i].deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0) + ((salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (salaryData[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0)),
+          taxableIncome: salaryData[i].taxableIncome,
+  
+          pinCode: salaryData[i].pinCode,
+          country: salaryData[i].country,
+          state: salaryData[i].state,
+          city: salaryData[i].city,
+        }
+
+        this.salaryItrratedData.push(salObj)
+      }
+      console.log('this.salaryItrratedData ====>> ',this.salaryItrratedData)
+    }
+  }
+
+  updateOtherSource(otherSource){
+    console.log('otherSource: ',otherSource)
+    this.sourcesOfIncome = {
+      interestFromSaving : 0,
+      interestFromDeposite : 0,
+      interestFromTaxRefund : 0,
+      other : 0,
+      agricultureIncome : 0,
+      dividendIncome: 0,
+      total : 0
+    }
+    
+    if(otherSource.length > 0){
+      for(let i=0; i < otherSource.length; i++){
+        debugger
+        if(otherSource[i].incomeType === "SAVING_INTEREST"){
+          this.sourcesOfIncome.interestFromSaving = otherSource[i].amount;
+        }
+        else if(otherSource[i].incomeType === "FD_RD_INTEREST"){
+          this.sourcesOfIncome.interestFromDeposite = otherSource[i].amount;
+        }
+        else if(otherSource[i].incomeType === "TAX_REFUND_INTEREST"){
+          this.sourcesOfIncome.interestFromTaxRefund = otherSource[i].amount;
+        }
+        else if(otherSource[i].incomeType === "ANY_OTHER"){
+          this.sourcesOfIncome.other = otherSource[i].amount;
+        }
+        else if(otherSource[i].incomeType === "AGRICULTURE_INCOME"){
+          this.sourcesOfIncome.agricultureIncome = otherSource[i].amount;
+        }
+        else if(otherSource[i].incomeType === "DIVIDEND_INCOME"){
+          this.sourcesOfIncome.dividendIncome = otherSource[i].amount;
+        }
+
+        this.sourcesOfIncome.total = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromDeposite +
+                                              this.sourcesOfIncome.interestFromTaxRefund + this.sourcesOfIncome.other +
+                                               this.sourcesOfIncome.agricultureIncome + this.sourcesOfIncome.dividendIncome;
+        this.otherSourceForm.patchValue(this.sourcesOfIncome);
+      } 
+      console.log('sourcesOfIncome: ', this.sourcesOfIncome);
+      this.calculateOtherSourceTotal();
+    }
+  }
+
+  updateInuranceVal(insuranceVal, systemFlags){
+    console.log('insuranceVal: ',insuranceVal)
+    this.sec80DobjVal = {
+      healthInsuPremiumForSelf: 0,
+      healthInsuPremiumForParent: 0,
+      preventiveHealthCheckupForFamily: 0,
+      paraentAge: ''
+    }
+
+    if(this.utilService.isNonEmpty(insuranceVal)){
+      //var insuranceVal = insuranceInfo.value;
+      if(insuranceVal.length > 0){
+        for(let i=0; i < insuranceVal.length; i++){
+          debugger
+          if(insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].premium)){
+            debugger
+            this.sec80DobjVal.healthInsuPremiumForSelf = insuranceVal[i].premium;
+          }
+          if(insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].preventiveCheckUp)){
+            debugger
+            this.sec80DobjVal.preventiveHealthCheckupForFamily = insuranceVal[i].preventiveCheckUp;
+          }
+          if(insuranceVal[i].policyFor === "PARENTS" && this.utilService.isNonEmpty(insuranceVal[i].premium)){
+            debugger
+            this.sec80DobjVal.healthInsuPremiumForParent = insuranceVal[i].premium;
+          }
+        } 
+        console.log('sec80DobjVal: ', this.sec80DobjVal) 
+      }
+    }
+    this.deductionAndRemainForm.patchValue(this.sec80DobjVal);
+    console.log('hasParentOverSixty: ',systemFlags.hasParentOverSixty)
+    if(systemFlags.hasParentOverSixty){
+       this.sec80DobjVal.paraentAge = 'above60';
+      this.deductionAndRemainForm.controls['paraentAge'].setValue(this.sec80DobjVal.paraentAge);
+    }else{
+      this.sec80DobjVal.paraentAge = 'bellow60';
+     this.deductionAndRemainForm.controls['paraentAge'].setValue(this.sec80DobjVal.paraentAge);
+    }
+    console.log('deductionAndRemainForm Under Section 80D values: ', this.deductionAndRemainForm.value)   
+  }
+
+  updateTaxDeductionAtSourceVal(taxPaidValue){
+    console.log('taxPaidValue: ',taxPaidValue)
+    this.taxesPaid = {
+      tdsOnSalary: 0,
+      tdsOtherThanSalary: 0,
+      tdsOnSal26QB: 0,
+      tcs: 0,
+      advanceSelfAssTax: 0
+    }
+
+    if(taxPaidValue){
+      if(taxPaidValue.onSalary.length > 0){
+        // this.tdsOnSal.api.setRowData(this.setTdsRowDate(taxPaidValue.onSalary, 'onSalary'))
+        this.tdsOnSal.api.setRowData(this.setTdsOnSalRowDate(taxPaidValue.onSalary))
+      }
+      if(taxPaidValue.otherThanSalary16A.length > 0){
+        // this.tdsOtherThanSal.api.setRowData(this.setTdsRowDate(taxPaidValue.otherThanSalary16A, 'tdsOtherThanSal'))
+        this.tdsOtherThanSal.api.setRowData(this.setTdsOtherThanSalRowDate(taxPaidValue.otherThanSalary16A))
+      }
+      if(taxPaidValue.otherThanSalary26QB.length > 0){
+        // this.tdsSales26QB.api.setRowData(this.setTdsRowDate(taxPaidValue.otherThanSalary26QB, 'tdsSales26QB'));
+        this.tdsSales26QB.api.setRowData(this.setTdson26QbRowDate(taxPaidValue.otherThanSalary26QB))
+      }
+      
+      if(taxPaidValue.tcs.length > 0){
+        // this.advanceTax.api.setRowData(this.setTdsRowDate(taxPaidValue.tcs, 'taxColSource'))
+        this.taxColSource.api.setRowData(this.setTcsRowDate(taxPaidValue.tcs))
+      }
+      if(taxPaidValue.otherThanTDSTCS.length > 0){
+        // this.taxColSource.api.setRowData(this.setTdsRowDate(taxPaidValue.otherThanTDSTCS, 'advanceTax'))
+        this.advanceTax.api.setRowData(this.setOtherThanTcsRowDate(taxPaidValue.otherThanTDSTCS))
+      }
+    }
+  }
+
+  setTdsOnSalRowDate(tdsInfo){
+    var onSalData = [];
+    for (let i = 0; i < tdsInfo.length; i++) {
+      let tdsOnSal = Object.assign({}, tdsInfo[i], { tanOfEmployer: tdsInfo[i].deductorTAN, nameOfEmployer: tdsInfo[i].deductorName, grossSal: tdsInfo[i].totalAmountCredited, totalTds: tdsInfo[i].totalTdsDeposited })
+      onSalData.push(tdsOnSal)
+    }
+    console.log('user onSalData: ', onSalData);
+    return onSalData;
+  }
+
+  setTdsOtherThanSalRowDate(tdsInfo){
+    var otherThanSalData = [];
+    for (let i = 0; i < tdsInfo.length; i++) {
+      let otherThanSal = Object.assign({}, tdsInfo[i], { tanOfDeductor: tdsInfo[i].deductorTAN, nameOfDeductor: tdsInfo[i].deductorName, grossSal: tdsInfo[i].totalAmountCredited, totalTds: tdsInfo[i].totalTdsDeposited })
+      otherThanSalData.push(otherThanSal)
+    }
+    console.log('tdsOtherThanSal And tdsSales26QB : ', otherThanSalData);
+    return otherThanSalData;
+  }
+
+  setTdson26QbRowDate(tdsInfo){
+    var otherThanSalData = [];
+    for (let i = 0; i < tdsInfo.length; i++) {
+      let otherThanSal = Object.assign({}, tdsInfo[i], { tanOfDeductor: tdsInfo[i].deductorTAN, nameOfDeductor: tdsInfo[i].deductorName, grossSal: tdsInfo[i].totalAmountCredited, totalTds: tdsInfo[i].totalTdsDeposited })
+      otherThanSalData.push(otherThanSal)
+    }
+    console.log('tdsOtherThanSal And tdsSales26QB : ', otherThanSalData);
+    return otherThanSalData;
+  }
+
+  setTcsRowDate(tdsInfo){
+    var taxColSourceData = [];
+    for (let i = 0; i < tdsInfo.length; i++) {
+      let taxColSource = Object.assign({}, tdsInfo[i], { tanOfCollector: tdsInfo[i].collectorTAN, nameOfCollector: tdsInfo[i].collectorName, grossIncome: tdsInfo[i].totalAmountPaid, totalTcs: tdsInfo[i].totalTcsDeposited })
+      taxColSourceData.push(taxColSource)
+    }
+    console.log('user taxColSourceData: ', taxColSourceData);
+    return taxColSourceData;
+  }
+
+  setOtherThanTcsRowDate(tdsInfo){
+    var advanceTaxData = [];
+    for (let i = 0; i < tdsInfo.length; i++) {
+      let advanceTax = Object.assign({}, tdsInfo[i], { bsrCode: tdsInfo[i].bsrCode, date: tdsInfo[i].dateOfDeposit, challanNo: tdsInfo[i].challanNumber, taxDeposite: tdsInfo[i].totalTax })
+      advanceTaxData.push(advanceTax)
+    }
+    console.log('user advanceTax: ', advanceTaxData);
+    return advanceTaxData;
+  }
+
+  // setTdsRowDate(tdsInfo, type){
+  //   if(type === 'onSalary'){
+  //     var onSalData = [];
+  //     for (let i = 0; i < tdsInfo.length; i++) {
+  //       let tdsOnSal = Object.assign({}, tdsInfo[i], { tanOfEmployer: tdsInfo[i].deductorTAN, nameOfEmployer: tdsInfo[i].deductorName, grossSal: tdsInfo[i].totalAmountCredited, totalTds: tdsInfo[i].totalTdsDeposited })
+  //       onSalData.push(tdsOnSal)
+  //     }
+  //     console.log('user onSalData: ', onSalData);
+  //     return onSalData;
+  //   }
+  //   if(type === 'tdsOtherThanSal' || type === 'tdsSales26QB'){
+  //     var otherThanSalData = [];
+  //     for (let i = 0; i < tdsInfo.length; i++) {
+  //       let otherThanSal = Object.assign({}, tdsInfo[i], { tanOfDeductor: tdsInfo[i].deductorTAN, nameOfDeductor: tdsInfo[i].deductorName, grossSal: tdsInfo[i].totalAmountCredited, totalTds: tdsInfo[i].totalTdsDeposited })
+  //       otherThanSalData.push(otherThanSal)
+  //     }
+  //     console.log('tdsOtherThanSal And tdsSales26QB : ', otherThanSalData);
+  //     return otherThanSalData;
+  //   }
+  //   if(type === 'taxColSource'){
+  //     var taxColSourceData = [];
+  //     for (let i = 0; i < tdsInfo.length; i++) {
+  //       let taxColSource = Object.assign({}, tdsInfo[i], { tanOfCollector: tdsInfo[i].collectorTAN, nameOfCollector: tdsInfo[i].collectorName, grossIncome: tdsInfo[i].totalAmountPaid, totalTcs: tdsInfo[i].totalTcsDeposited })
+  //       taxColSourceData.push(taxColSource)
+  //     }
+  //     console.log('user taxColSourceData: ', taxColSourceData);
+  //     return taxColSourceData;
+  //   }
+  //   if(type === 'advanceTax'){
+  //     var advanceTaxData = [];
+  //     for (let i = 0; i < tdsInfo.length; i++) {
+  //       let advanceTax = Object.assign({}, tdsInfo[i], { bsrCode: tdsInfo[i].bsrCode, date: tdsInfo[i].dateOfDeposit, challanNo: tdsInfo[i].challanNumber, taxDeposite: tdsInfo[i].totalTax })
+  //       advanceTaxData.push(advanceTax)
+  //     }
+  //     console.log('user advanceTax: ', advanceTaxData);
+  //     return advanceTaxData;
+  //   }
+  // }
+
+  updateCapitalGain(caitalGainData){
+    console.log('caitalGainData: ',caitalGainData);
+      if(this.utilService.isNonEmpty(caitalGainData)){
+        if(caitalGainData.shortTermCapitalGain.length > 0){
+          this.shortTermSlabRate.api.setRowData(this.setCapitalGainRowDate(caitalGainData.shortTermCapitalGain))
+        }
+        if(caitalGainData.shortTermCapitalGainAt15Percent.length > 0){
+          this.shortTerm15Per.api.setRowData(this.setCapitalGainRowDate(caitalGainData.shortTermCapitalGainAt15Percent))
+        }
+        if(caitalGainData.longTermCapitalGainAt10Percent.length > 0){
+          this.longTerm10Per.api.setRowData(this.setCapitalGainRowDate(caitalGainData.longTermCapitalGainAt10Percent))
+        }
+        if(caitalGainData.longTermCapitalGainAt20Percent.length > 0){
+          this.longTerm20Per.api.setRowData(this.setCapitalGainRowDate(caitalGainData.longTermCapitalGainAt20Percent))
+        }
+      }
+  }
+
+  setCapitalGainRowDate(capGainINfo){
+       var capGainData = [];
+        for (let i = 0; i < capGainINfo.length; i++) {
+          let capGainInfo = Object.assign({}, capGainINfo[i], { nameOfAsset: capGainINfo[i].nameOfTheAsset, netSaleVal: capGainINfo[i].netSaleValue, purchaseCost: capGainINfo[i].purchaseCost, capitalGain: capGainINfo[i].capitalGain, deduction: capGainINfo[i].deductions, netCapitalGain: capGainINfo[i].netCapitalGain })
+          capGainData.push(capGainInfo)
+        }
+        console.log('user capGainData: ', capGainData);
+        return capGainData;
+  }
 
    incomeData: any = [];
    saveItrSummary(){
@@ -2335,7 +2702,7 @@ export class Itr2mainComponent implements OnInit {
       if(this.personalInfoForm.valid){ 
         console.log('bankData: ',this.bankData)
         
-          this.itr_2_Summary.returnType = this.personalInfoForm['controls'].summaryId.value;
+          this.itr_2_Summary.summaryId = this.personalInfoForm['controls'].summaryId.value;
           this.itr_2_Summary.returnType = this.personalInfoForm['controls'].returnType.value;
           this.itr_2_Summary.financialYear = this.personalInfoForm['controls'].financialYear.value;
       
@@ -2586,8 +2953,8 @@ export class Itr2mainComponent implements OnInit {
           if(this.tdsOnSal.api.getRenderedNodes().length > 0){
             for (let i = 0; i < this.tdsOnSal.api.getRenderedNodes().length; i++) {
               this.tdsOnSalInfo.push({
-                'deductorName': this.tdsOnSal.api.getRenderedNodes()[i].data.tanOfEmployer,
-                'deductorTAN': this.tdsOnSal.api.getRenderedNodes()[i].data.nameOfEmployer,
+                'deductorName': this.tdsOnSal.api.getRenderedNodes()[i].data.nameOfEmployer,
+                'deductorTAN': this.tdsOnSal.api.getRenderedNodes()[i].data.tanOfEmployer,
                 'totalAmountCredited': this.tdsOnSal.api.getRenderedNodes()[i].data.grossSal,
                 'totalTdsDeposited': this.tdsOnSal.api.getRenderedNodes()[i].data.totalTds
               })
@@ -2599,8 +2966,8 @@ export class Itr2mainComponent implements OnInit {
           if(this.tdsOtherThanSal.api.getRenderedNodes().length > 0){
             for (let i = 0; i < this.tdsOtherThanSal.api.getRenderedNodes().length; i++) {
               this.otherThanSalary16AInfo.push({
-                'deductorName': this.tdsOtherThanSal.api.getRenderedNodes()[i].data.tanOfDeductor,
-                'deductorTAN': this.tdsOtherThanSal.api.getRenderedNodes()[i].data.nameOfDeductor,
+                'deductorName': this.tdsOtherThanSal.api.getRenderedNodes()[i].data.nameOfDeductor,
+                'deductorTAN': this.tdsOtherThanSal.api.getRenderedNodes()[i].data.tanOfDeductor,
                 'totalAmountCredited': this.tdsOtherThanSal.api.getRenderedNodes()[i].data.grossSal,
                 'totalTdsDeposited': this.tdsOtherThanSal.api.getRenderedNodes()[i].data.totalTds
               })
@@ -2612,8 +2979,8 @@ export class Itr2mainComponent implements OnInit {
           if(this.tdsSales26QB.api.getRenderedNodes().length > 0){
             for (let i = 0; i < this.tdsSales26QB.api.getRenderedNodes().length; i++) {
               this.otherThanSalary26QBInfo.push({
-                'deductorName': this.tdsSales26QB.api.getRenderedNodes()[i].data.tanOfDeductor,
-                'deductorTAN': this.tdsSales26QB.api.getRenderedNodes()[i].data.nameOfDeductor,
+                'deductorName': this.tdsSales26QB.api.getRenderedNodes()[i].data.nameOfDeductor,
+                'deductorTAN': this.tdsSales26QB.api.getRenderedNodes()[i].data.tanOfDeductor,
                 'totalAmountCredited': this.tdsSales26QB.api.getRenderedNodes()[i].data.grossSal,
                 'totalTdsDeposited': this.tdsSales26QB.api.getRenderedNodes()[i].data.totalTds
               })
@@ -2625,8 +2992,8 @@ export class Itr2mainComponent implements OnInit {
           if(this.taxColSource.api.getRenderedNodes().length > 0){
             for (let i = 0; i < this.taxColSource.api.getRenderedNodes().length; i++) {
               this.taxCollSourcesInfo.push({
-                'collectorName': this.taxColSource.api.getRenderedNodes()[i].data.tanOfCollector,
-                'collectorTAN': this.taxColSource.api.getRenderedNodes()[i].data.nameOfCollector,
+                'collectorName': this.taxColSource.api.getRenderedNodes()[i].data.nameOfCollector,
+                'collectorTAN': this.taxColSource.api.getRenderedNodes()[i].data.tanOfCollector,
                 'totalAmountPaid': this.taxColSource.api.getRenderedNodes()[i].data.grossIncome,
                 'totalTcsDeposited': this.taxColSource.api.getRenderedNodes()[i].data.totalTcs
               })
@@ -2735,9 +3102,6 @@ export class Itr2mainComponent implements OnInit {
         this.employerArray.push(this.employersData[i].employers)
       }
       this.calculateTotalHeadWiseIncome();
-    //  this.itrSummaryForm['controls'].taxSummary['controls'].salary.setValue(totalTaxableIncome)
-    //  this.calculateGrossTotalIncome();     //Calculate point 4 (Total gross salary)
-     // this.itrSummaryForm['controls'].assesse['controls'].employers.setValue(this.employerArray)
     }
     else if (type === 'House') {
       this.houseArray.splice(index, 1)
@@ -2769,6 +3133,10 @@ export class Itr2mainComponent implements OnInit {
                                Number(this.assetsLiabilitiesForm.controls['jwelleryAmount'].value) +  Number(this.assetsLiabilitiesForm.controls['vehicleAmount'].value);
     Object.assign(this.itr_2_Summary.assesse.assetsLiabilities, this.assetsLiabilitiesForm.value);
     console.log('assetsLiabilities values: ',this.itr_2_Summary.assesse.assetsLiabilities);
+  } 
+
+  getBusinessData(){
+    
   }
 
   createItrSummaryEmptyJson(){

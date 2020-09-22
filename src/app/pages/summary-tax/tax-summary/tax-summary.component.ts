@@ -308,7 +308,7 @@ export class TaxSummaryComponent implements OnInit {
             this.housingData = [];
             this.donationData = [];
             this.salaryItrratedData = [];
-            this.setTotalOfExempt();
+            // this.setTotalOfExempt();
             this.itrSummaryForm.patchValue(summary)
             this.setItrType(this.itrSummaryForm['controls'].assesse['controls'].itrType.value)
             if(this.itrSummaryForm['controls'].assesse['controls'].itrType.value === "4"){
@@ -402,9 +402,11 @@ export class TaxSummaryComponent implements OnInit {
         else if(otherSource[i].incomeType === "ANY_OTHER"){
           this.sourcesOfIncome.interestFromOther = otherSource[i].amount;
         }
-        else if(otherSource[i].incomeType === "GIFT_NONTAXABLE"){
-          this.sourcesOfIncome.toatlIncome = otherSource[i].amount;
-        }
+        // else if(otherSource[i].incomeType === "GIFT_NONTAXABLE"){    //WRONG TOTAL WHEN UASER EDIT
+        //   this.sourcesOfIncome.toatlIncome = otherSource[i].amount;
+        // }
+        this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + 
+                                            this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther;
       } 
       console.log('sourcesOfIncome: ', this.sourcesOfIncome)   
     }
