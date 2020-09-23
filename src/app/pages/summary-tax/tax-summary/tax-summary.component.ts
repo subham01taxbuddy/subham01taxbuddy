@@ -299,32 +299,38 @@ export class TaxSummaryComponent implements OnInit {
   getUerSummary(mobNum){
     this.loading = true;
       let param = '/itr/summary/contact-number/'+mobNum;
-      this.userService.getMethodInfo(param).subscribe(summary=>{
+      this.userService.getMethodInfo(param).subscribe((summary: any)=>{
         this.loading = false;
             console.log('User summary: => ',summary)
-            this.itrSummaryForm.reset();
-           // this.sourcesOfIncome    sakjdnkasjdkja  
-            this.bankData = [];
-            this.housingData = [];
-            this.donationData = [];
-            this.salaryItrratedData = [];
-            // this.setTotalOfExempt();
-            this.itrSummaryForm.patchValue(summary)
-            this.setItrType(this.itrSummaryForm['controls'].assesse['controls'].itrType.value)
-            if(this.itrSummaryForm['controls'].assesse['controls'].itrType.value === "4"){
-              this.updateItr4Info();
+            if(summary.assesse.itrType === "1" || summary.assesse.itrType === "4"){
+              this.itrSummaryForm.reset();
+              // this.sourcesOfIncome    sakjdnkasjdkja  
+               this.bankData = [];
+               this.housingData = [];
+               this.donationData = [];
+               this.salaryItrratedData = [];
+               // this.setTotalOfExempt();
+               this.itrSummaryForm.patchValue(summary)
+               this.setItrType(this.itrSummaryForm['controls'].assesse['controls'].itrType.value)
+               if(this.itrSummaryForm['controls'].assesse['controls'].itrType.value === "4"){
+                 this.updateItr4Info();
+               }
+               this.calculateGrossTotalIncome();
+               console.log(this.itrSummaryForm.value )
+               this.bankData = this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value;
+               this.housingData = this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value;
+               //this.salaryItrratedData = this.itrSummaryForm['controls'].assesse['controls'].employers.value;
+               this.updateSalatyInfo(this.itrSummaryForm['controls'].assesse['controls'].employers)
+               this.updateOtherSource(this.itrSummaryForm['controls'].assesse['controls'].incomes)
+               this.updateInuranceVal(this.itrSummaryForm['controls'].assesse['controls'].insurances)
+               this.donationData = this.itrSummaryForm['controls'].assesse['controls'].donations.value;
+               this.updateTaxDeductionAtSourceVal(this.itrSummaryForm['controls'].assesse['controls'].taxPaid);
+               this.setTotalOfExempt();
             }
-            this.calculateGrossTotalIncome();
-            console.log(this.itrSummaryForm.value )
-            this.bankData = this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value;
-            this.housingData = this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value;
-            //this.salaryItrratedData = this.itrSummaryForm['controls'].assesse['controls'].employers.value;
-            this.updateSalatyInfo(this.itrSummaryForm['controls'].assesse['controls'].employers)
-            this.updateOtherSource(this.itrSummaryForm['controls'].assesse['controls'].incomes)
-            this.updateInuranceVal(this.itrSummaryForm['controls'].assesse['controls'].insurances)
-            this.donationData = this.itrSummaryForm['controls'].assesse['controls'].donations.value;
-            this.updateTaxDeductionAtSourceVal(this.itrSummaryForm['controls'].assesse['controls'].taxPaid);
-            this.setTotalOfExempt();
+            else{
+              this.utilService.showSnackBar('This mobile number '+mobNum +' have ITR type = '+summary.assesse.itrType)
+            }
+           
       },
       error=>{
         this.loading = false;
@@ -599,7 +605,8 @@ export class TaxSummaryComponent implements OnInit {
         editIndex: index,
         userObject: myUser,
         mode: mode,
-        callerObj: this
+        callerObj: this,
+        itrType: this.itrType.itrOne ? '1' : '4'
       }
     })
 

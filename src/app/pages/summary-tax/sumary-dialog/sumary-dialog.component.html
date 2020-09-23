@@ -1010,24 +1010,24 @@
                     autocomplete="off">
             </mat-form-field>
         </div>
-        <!-- <div class="card__col-lg-3">
+        <div class="card__col-lg-3" *ngIf="data.itrType === '3'">
             <mat-form-field appearance="outline" formGroupName="lossesToBeCarriedForword" *ngIf="data.mode == 'losses'">
-                <mat-label><b>Losses Set Of During Year</b></mat-label>
-                <input matInput placeholder="Losses Set Of During Year" maxlength="8" type="number"
-                    formControlName="lossesSetOffDuringTheYear"
+                <mat-label><b>Business/ Professional loss</b></mat-label>
+                <input matInput placeholder="Business/ Professional loss" maxlength="8" type="number"
+                    formControlName="businessProfessionalLoss" (blur)="calCarryForwardToNxtYrs()"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     autocomplete="off">
             </mat-form-field>
         </div>
-        <div class="card__col-lg-3">
+        <div class="card__col-lg-3" *ngIf="data.itrType === '3'">
             <mat-form-field appearance="outline" formGroupName="lossesToBeCarriedForword" *ngIf="data.mode == 'losses'">
-                <mat-label><b>Current year losses 2019-2020</b></mat-label>
-                <input matInput placeholder="Current year losses 2019-2020" maxlength="8" type="number"
-                    formControlName="currentYearLosess"
+                <mat-label><b>Speculative Business Loss</b></mat-label>
+                <input matInput placeholder="Speculative Business Loss" maxlength="8" type="number"
+                    formControlName="speculativeBusinessLoss" (blur)="calCarryForwardToNxtYrs()"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     autocomplete="off">
             </mat-form-field>
-        </div> -->
+        </div>
         <div class="card__col-lg-3">
             <mat-form-field appearance="outline" formGroupName="lossesToBeCarriedForword" *ngIf="data.mode == 'losses'">
                 <mat-label><b>Carried Forward To Next Year</b></mat-label>

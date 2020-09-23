@@ -26,6 +26,7 @@ export interface ITR_SUMMARY{
       us80ggc: string,
       us80ttaTtb: string,
       us80u: string,
+      us80jja: string,
       ppfInterest: string,
       giftFromRelative: string,
       anyOtherExcemptIncome: string,
@@ -34,7 +35,11 @@ export interface ITR_SUMMARY{
       movableAssetTotal: string,
       totalHeadWiseIncome: string,
       lossesSetOffDuringTheYear: string,     
-      carriedForwardToNextYear: string, 		
+      carriedForwardToNextYear: string, 
+      presumptiveBusinessIncomeUs44AD: string,
+      presumptiveBusinessIncomeUs44ADA: string,
+      speculativeBusinessIncome: string,
+      incomeFromOtherThanSpeculativeAndPresumptive: string,		
       freezed: false
 }
 
@@ -186,6 +191,7 @@ export interface TaxSummary{
     agricultureIncome: '',
     carryForwardLoss: '',
     capitalGain: null,
+    presumptiveIncome: ''
 }
 
 export interface AssetsLiabilities{
