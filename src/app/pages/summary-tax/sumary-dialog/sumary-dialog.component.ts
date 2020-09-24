@@ -221,8 +221,8 @@ export class SumaryDialogComponent implements OnInit {
           housePropertyLosses: [0],
           shortTermCapitalGainLosses:[0],
           longTermCapitalGainLosses:[0],
-          // lossesSetOffDuringTheYear:[0],
-          // currentYearLosess: [0],
+          businessProfessionalLoss:[0],
+          speculativeBusinessLoss: [0],
           carriedForwardToNextYear:[0],
       }),
 
@@ -250,6 +250,8 @@ export class SumaryDialogComponent implements OnInit {
     console.log("CALLEROBJ: ", this.data.callerObj)
     console.log('MODE:', this.data.mode)
     console.log('userObject: ==>', this.data.userObject)
+    console.log('ITR type => ',this.data.itrType);
+
     if (this.data.mode === 'Bank') {
       this.setBankRefundVal();
       this.updateBankData(this.data.userObject)
@@ -1180,7 +1182,8 @@ export class SumaryDialogComponent implements OnInit {
 
   calCarryForwardToNxtYrs(){
     let carryForwatToNxtYrs =  Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].housePropertyLosses.value) + Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].shortTermCapitalGainLosses.value)
-                               + Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].longTermCapitalGainLosses.value);
+                               + Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].longTermCapitalGainLosses.value) + Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].businessProfessionalLoss.value)
+                               + Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].speculativeBusinessLoss.value);
 
      this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].carriedForwardToNextYear.setValue(carryForwatToNxtYrs);                         
   }
@@ -1194,4 +1197,5 @@ export interface ConfirmModel {
   userObject: any;
   mode: string;
   callerObj: any;
+  itrType: string;
 }
