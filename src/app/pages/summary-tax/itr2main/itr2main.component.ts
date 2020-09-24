@@ -1146,7 +1146,6 @@ export class Itr2mainComponent implements OnInit {
   }
 
   calculateTotalHeadWiseIncome(){
-    debugger
     if(this.itrType.itrTwo){
       let headWiseIncome  =  Number(this.computationOfIncomeForm['controls'].salary.value) + Number(this.computationOfIncomeForm['controls'].housePropertyIncome.value)
                             + this.incomeFromCapGain + Number(this.computationOfIncomeForm['controls'].otherIncome.value);
@@ -3162,7 +3161,9 @@ export class Itr2mainComponent implements OnInit {
                 businessType: 'BUSINESS',
                 natureOfBusiness: this.businessObject.natureOfBusiness44AD,//profession code
                 tradeName: this.businessObject.tradeName44AD,//trade name
-                incomes: []
+                incomes: [],
+                taxableIncome: Number(this.businessObject.received44ADtaotal),
+                exemptIncome: Number(this.businessObject.presumptive44ADtotal)  
               }
               if (this.utilService.isNonEmpty(this.businessObject.recieptRecievedInBank)) {
     
@@ -3396,12 +3397,17 @@ export class Itr2mainComponent implements OnInit {
     minimumPresumptiveIncome: '',
     received44ADtaotal: 0,
     presumptive44ADtotal: 0,
+    prsumptiveIncomeTotal: 0,
 
-    prsumptiveIncomeTotal: 0
+    totalCapitalLiabilities: 0,
+    totalAssets: 0
   }
   businessFormValid: boolean;
   getBusinessData(businessInfo){
+    debugger
     console.log('businessInfo: ', businessInfo)
+    console.log('businessInfo totalCapitalLiabilities: ', businessInfo.value.totalCapitalLiabilities)
+    console.log('businessInfo totalAssets: ', businessInfo.value.totalAssets)
     if (businessInfo.valid) {
       this.businessFormValid = true;
 
@@ -3418,6 +3424,8 @@ export class Itr2mainComponent implements OnInit {
       this.computationOfIncomeForm.controls['presumptiveBusinessIncomeUs44AD'].setValue(this.businessObject.presumptive44ADtotal);
       this.computationOfIncomeForm.controls['presumptiveBusinessIncomeUs44ADA'].setValue(this.businessObject.presumptiveIncome);
       // this.calculateGrossTotalIncome();
+      this.itr_2_Summary.assesse.business.financialParticulars.totalCapitalLiabilities = this.businessObject.totalCapitalLiabilities
+      this.itr_2_Summary.assesse.business.financialParticulars.totalAssets = this.businessObject.totalAssets
       console.log('getBusinessData function called...');
       this.calTotalOfIncomeFromBusiness(); 
      }
@@ -3544,7 +3552,8 @@ export class Itr2mainComponent implements OnInit {
                  balanceWithBank:null,
                  cashInHand:null,
                  loanAndAdvances:null,
-                 otherAssets:null
+                 otherAssets:null,
+                 totalAssets: null
               }
            }
         },
