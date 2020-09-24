@@ -238,7 +238,9 @@ export class TaxSummaryComponent implements OnInit {
         taxpayable: [0],			//netTaxPayable   
         taxRefund: [0],				//netTaxPayable   
         totalTax: [0],   //totalTaxAndCess
-        advanceTaxSelfAssessmentTax: [0]   //totalAdvanceTax          ONLY SHOW
+        advanceTaxSelfAssessmentTax: [0],   //totalAdvanceTax          ONLY SHOW
+
+        presumptiveIncome: [0]
       }),
 
       medium: 'BACK OFFICE',
@@ -1306,7 +1308,7 @@ export class TaxSummaryComponent implements OnInit {
     }
     else if (this.itrType.itrFour) {
       let gti = Number(this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.value) + Number(this.itrSummaryForm['controls'].taxSummary['controls'].otherIncome.value) + Number(this.itrSummaryForm['controls'].taxSummary['controls'].salary.value)
-        + Number(this.businessObject.prsumptiveIncomeTotal);
+               + Number(this.itrSummaryForm['controls'].taxSummary['controls'].presumptiveIncome.value);
       this.itrSummaryForm['controls'].taxSummary['controls'].grossTotalIncome.setValue(gti);
       this.calculateTotalIncome();
     }
@@ -1732,7 +1734,9 @@ export class TaxSummaryComponent implements OnInit {
             businessType: 'BUSINESS',
             natureOfBusiness: this.businessObject.natureOfBusiness44AD,//profession code
             tradeName: this.businessObject.tradeName44AD,//trade name
-            incomes: []
+            incomes: [],
+            taxableIncome: Number(this.businessObject.received44ADtaotal),
+            exemptIncome: Number(this.businessObject.presumptive44ADtotal) 
           }
           if (this.utilService.isNonEmpty(this.businessObject.recieptRecievedInBank)) {
 
@@ -1942,8 +1946,11 @@ export class TaxSummaryComponent implements OnInit {
     received44ADtaotal: 0,
     presumptive44ADtotal: 0,
 
-    prsumptiveIncomeTotal: 0
+    prsumptiveIncomeTotal: 0,
+    totalCapitalLiabilities: 0,
+    totalAssets: 0
   }
+
   businessFormValid: boolean;
   getBusinessData(businessInfo) {
     console.log('businessInfo: ', businessInfo)
@@ -1955,8 +1962,10 @@ export class TaxSummaryComponent implements OnInit {
       Object.assign(this.businessObject, businessInfo.value)
       console.log('businessObject: ', this.businessObject)
 
-      let prsumptTotal = Number(this.businessObject.presumptive44ADtotal) + Number(this.businessObject.presumptiveIncome)
-      this.businessObject.prsumptiveIncomeTotal = prsumptTotal;
+      let prsumptTotal = Number(this.businessObject.presumptive44ADtotal) + Number(this.businessObject.presumptiveIncome);
+      this.itrSummaryForm['controls'].taxSummary['controls'].presumptiveIncome.setValue(prsumptTotal);
+
+      //this.businessObject.prsumptiveIncomeTotal = prsumptTotal;
       this.calculateGrossTotalIncome()
     }
     else {
