@@ -96,6 +96,8 @@ export class TaxSummaryComponent implements OnInit {
     itrFour: false
   }
 
+  updatBussinessInfo: any;
+
   get getFamilyArray() {
     return <FormArray>this.itrSummaryForm['controls'].assesse.get('family');
   }
@@ -307,16 +309,42 @@ export class TaxSummaryComponent implements OnInit {
             if(summary.assesse.itrType === "1" || summary.assesse.itrType === "4"){
               this.itrSummaryForm.reset();
               // this.sourcesOfIncome    sakjdnkasjdkja  
+              this.updatBussinessInfo = summary;
                this.bankData = [];
                this.housingData = [];
                this.donationData = [];
                this.salaryItrratedData = [];
                // this.setTotalOfExempt();
                this.itrSummaryForm.patchValue(summary)
-               this.setItrType(this.itrSummaryForm['controls'].assesse['controls'].itrType.value)
+               this.setItrType(summary.assesse.itrType)
+
                if(this.itrSummaryForm['controls'].assesse['controls'].itrType.value === "4"){
-                 this.updateItr4Info();
-               }
+
+                    var businessIncome = summary.assesse.business.presumptiveIncomes.filter(item => item.businessType === "BUSINESS");
+                    if(businessIncome.length > 0){
+                      let businessNatureCode = businessIncome[0].natureOfBusiness;
+                      let recivedInBank = businessIncome[0].incomes.filter(item => item.incomeType === "BANK");
+                      let recivedInCash = businessIncome[0].incomes.filter(item => item.incomeType === "CASH");
+    
+                      this.businessObject.tradeName44AD = businessIncome[0].tradeName;
+                      this.businessObject.received44ADtaotal = Number(recivedInBank[0].receipt) + Number(recivedInCash[0].receipts);
+                      this.businessObject.presumptive44ADtotal = Number(recivedInBank[0].presumptiveIncome) + Number(recivedInCash[0].presumptiveIncome);
+                   }
+    
+                    var presumptiveIncome = summary.assesse.business.presumptiveIncomes.filter(item => item.businessType === "PROFESSIONAL");
+                    console.log('presumptiveIncome : ',presumptiveIncome);
+                    if(presumptiveIncome.length > 0){
+                      var presumptiveNatureCode = presumptiveIncome[0].natureOfBusiness;
+                      if(presumptiveNatureCode === "00001"){
+                        presumptiveNatureCode = "Share of income from firm";
+                      }
+                      console.log('presumptiveNatureCode: ',presumptiveNatureCode);
+                      this.businessObject.tradeName44ADA = presumptiveIncome[0].tradeName;
+                      this.businessObject.grossReciept = presumptiveIncome[0].incomes[0].receipts;
+                      this.businessObject.presumptiveIncome = presumptiveIncome[0].incomes[0].presumptiveIncome;
+                    }
+              }
+
                this.calculateGrossTotalIncome();
                console.log(this.itrSummaryForm.value )
                this.bankData = this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value;
@@ -497,9 +525,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  updateItr4Info(){
-    console.log('ITR-4 info: ',this.itrSummaryForm['controls'].assesse['controls'].business['controls'].financialParticulars.value)
-  }
+  
 
   createFamilyForm(obj: { fName?: string, mName?: string, lName?: string, dateOfBirth?: number, fathersName?: string } = {}): FormGroup {
     return this.fb.group({
@@ -562,7 +588,13 @@ export class TaxSummaryComponent implements OnInit {
     else if (itrType === "4") {
       this.itrType.itrFour = true;
       this.itrType.itrOne = false;
-      this.getMastersData();
+      // if(mode === 'edit'){
+      //   this.getMastersData(mode, summary);
+      // }
+      // else{
+        this.getMastersData();
+      // }
+      
     }
   }
 
@@ -574,7 +606,9 @@ export class TaxSummaryComponent implements OnInit {
       console.log('natureOfBusinessInfo: ', natureOfBusinessInfo)
       this.natureOfBusinessDropdown44AD = natureOfBusinessInfo.filter(item => item.section === '44AD');
       this.natureOfBusinessDropdown44ADA = natureOfBusinessInfo.filter(item => item.section === '44ADA');
-      console.log(' this.natureOfBusinessDropdown44AD=> ', this.natureOfBusinessDropdown44AD)
+      console.log(' this.natureOfBusinessDropdown44AD=> ', this.natureOfBusinessDropdown44AD);
+
+    
     }, error => {
     });
 

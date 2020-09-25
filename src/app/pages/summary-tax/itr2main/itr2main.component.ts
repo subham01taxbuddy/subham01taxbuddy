@@ -151,6 +151,7 @@ export class Itr2mainComponent implements OnInit {
 
   totalOfExcempt: any;
   totalTDS: any;
+  updatBussinessInfo: any;
   filteredOptions44ADA: Observable<any[]>;
   speculativeOptions: Observable<any[]>;
   otherThanSpeculativeOptions: Observable<any[]>;
@@ -364,7 +365,8 @@ export class Itr2mainComponent implements OnInit {
   }
   
 
-  setItrType(itrType) {
+  setItrType(itrType, mode?, summary?) {
+    debugger
     if (itrType === "2") {
       this.itrType.itrTwo = true;
       this.itrType.itrThree = false;
@@ -372,11 +374,17 @@ export class Itr2mainComponent implements OnInit {
     else if (itrType === "3") {
       this.itrType.itrThree = true;
       this.itrType.itrTwo = false;
-      this.getMastersData();
+      if(mode === 'edit'){
+        this.getMastersData(mode, summary);
+      }
+      else{
+        this.getMastersData();
+      }
     }
   }
 
-  getMastersData() {
+  getMastersData(mode?, summary?) {
+    debugger
     const param = '/itr/itrmaster';
     this.userService.getMethodInfo(param).subscribe((result: any) => {
       var natureOfBusinessInfo = [];
@@ -407,6 +415,10 @@ export class Itr2mainComponent implements OnInit {
           })
         );
       console.log('speculativeOptions: ', this.speculativeOptions)
+
+      if(mode === 'edit'){
+        this.updateItr3Info(summary);
+      }
 
       this.otherThanSpeculativeOptions = this.businessIncomeForm['controls'].natureOfothertThanSpeculativeBusiness.valueChanges
         .pipe(
@@ -2435,6 +2447,7 @@ export class Itr2mainComponent implements OnInit {
       console.log('User ITR 2/3 summary: => ',summary)
       if(summary.assesse.itrType === "2" || summary.assesse.itrType === "3"){
         this.personalInfoForm.reset();
+        this.setItrType(summary.assesse.itrType, 'edit', summary);
         this.computationOfIncomeForm.reset();
         this.assetsLiabilitiesForm.reset();
         this.deductionAndRemainForm.reset();
@@ -2492,8 +2505,12 @@ export class Itr2mainComponent implements OnInit {
   
         if(this.personalInfoForm.controls['itrType'].value === "3"){
           this.itrType.itrThree = true;
-          this.calculateTotalHeadWiseIncome(); 
-          //this.updateItr3Info();
+          this.computationOfIncomeForm.patchValue(summary);
+          console.log('computationOfIncomeForm value: ',this.computationOfIncomeForm.value);
+          this.updatBussinessInfo = summary;
+          // setTimeout(()=>{
+          //   this.updateItr3Info(summary);
+          // },1000);
         }
         
         
@@ -2511,6 +2528,42 @@ export class Itr2mainComponent implements OnInit {
       this.loading = false;
       this._toastMessageService.alert("error", error.error);
     })
+   }
+
+   updateItr3Info(itr_3_info){
+     debugger
+     //SPECULATIVE part
+     console.log('itr_3_info data: ',itr_3_info.assesse.business)
+     var speculaticeIncome = itr_3_info.assesse.business.presumptiveIncomes.filter(item => item.businessType === "SPECULATIVE");
+     console.log('speculaticeIncome : ',speculaticeIncome);
+     if(speculaticeIncome.length > 0){
+      let natureCode = speculaticeIncome[0].natureOfBusiness;
+      console.log('speculativOfBusinessDropdown: ',this.speculativOfBusinessDropdown);
+      let natureLabel = this.speculativOfBusinessDropdown.filter(item => item.code === natureCode)[0].label;
+      console.log('natureLabel: ',natureLabel);
+      this.businessIncomeForm.controls['natureOfSpeculativeBusiness'].setValue(natureLabel);
+      this.businessIncomeForm.controls['tradeNameOfSpeculative'].setValue(speculaticeIncome[0].tradeName);
+      this.businessIncomeForm.controls['turnoverOfSpeculative'].setValue(speculaticeIncome[0].incomes[0].receipts);
+      this.businessIncomeForm.controls['purchaseOfSpeculative'].setValue(speculaticeIncome[0].incomes[0].presumptiveIncome);
+      this.businessIncomeForm.controls['expenceIncomeOfSpeculative'].setValue(speculaticeIncome[0].exemptIncome);
+      this.businessIncomeForm.controls['taxableIncomeOfSpeculative'].setValue(speculaticeIncome[0].taxableIncome);
+     }
+
+     //OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE part
+     var therThanSpeculaticeIncome = itr_3_info.assesse.business.presumptiveIncomes.filter(item => item.businessType === "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE");
+     console.log('therThanSpeculaticeIncome : ',therThanSpeculaticeIncome);
+     if(therThanSpeculaticeIncome.length > 0){
+      let natureCodeNotSpeculative= therThanSpeculaticeIncome[0].natureOfBusiness;
+      console.log('othserThanSpeculativOfBusinessDropdown: ',this.othserThanSpeculativOfBusinessDropdown);
+      let natureLabelNotSpeculative = this.othserThanSpeculativOfBusinessDropdown.filter(item => item.code === natureCodeNotSpeculative)[0].label;
+      console.log('natureLabelNotSpeculative: ',natureLabelNotSpeculative);
+      this.businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].setValue(natureLabelNotSpeculative);
+      this.businessIncomeForm.controls['tradeNameOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].tradeName);
+      this.businessIncomeForm.controls['turnoverOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0].receipts);
+      this.businessIncomeForm.controls['purchaseOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0].presumptiveIncome);
+      this.businessIncomeForm.controls['expenceIncomeOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].exemptIncome);
+      this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].taxableIncome);
+     }
    }
 
    updateSalatyInfo(salaryData){

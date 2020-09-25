@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 export class Itr4partComponent implements OnInit {
 
   @Input('itrType') itrType: string;
+  @Input('businessData') businessData: any;
 
   @Output() getBusinessInfo = new EventEmitter();
 
@@ -65,10 +66,49 @@ export class Itr4partComponent implements OnInit {
       otherAssets: []
     })
 
-
+   
   }
 
+  updateBusinessInfo(){
+    this.natureOfBusinessForm.patchValue(this.businessData.assesse.business.financialParticulars);
 
+    var businessIncome = this.businessData.assesse.business.presumptiveIncomes.filter(item => item.businessType === "BUSINESS");
+    console.log('businessIncome : ',businessIncome);
+    if(businessIncome.length > 0){
+      let businessNatureCode = businessIncome[0].natureOfBusiness;
+      console.log('businessNatureCode: ',businessNatureCode);
+      let natureLabel = this.natureOfBusinessDropdown44AD.filter(item => item.code === businessNatureCode)[0].label;
+      console.log('natureLabel: ',natureLabel);
+      this.natureOfBusinessForm.controls['natureOfBusiness44AD'].setValue(natureLabel);
+      this.natureOfBusinessForm.controls['tradeName44AD'].setValue(businessIncome[0].tradeName);
+  
+      let recivedInBank = businessIncome[0].incomes.filter(item => item.incomeType === "BANK");
+      let recivedInCash = businessIncome[0].incomes.filter(item => item.incomeType === "CASH");
+      this.natureOfBusinessForm.controls['recieptRecievedInBank'].setValue(recivedInBank[0].receipts);
+      this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].setValue(recivedInBank[0].presumptiveIncome);
+      this.natureOfBusinessForm.controls['recievedinCash'].setValue(recivedInCash[0].receipts);
+      this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].setValue(recivedInCash[0].minimumPresumptiveIncome);
+      this.calculateTotalAmnt();
+    }
+  
+    var presumptiveIncome = this.businessData.assesse.business.presumptiveIncomes.filter(item => item.businessType === "PROFESSIONAL");
+    console.log('presumptiveIncome : ',presumptiveIncome);
+    if(presumptiveIncome.length > 0){
+      var presumptiveNatureCode = presumptiveIncome[0].natureOfBusiness;
+      if(presumptiveNatureCode === "00001"){
+        presumptiveNatureCode = "Share of income from firm";
+      }
+      console.log('presumptiveNatureCode: ',presumptiveNatureCode);
+      let presumptiveLabel = this.natureOfBusinessDropdown44ADA.filter(item => item.code === presumptiveNatureCode)[0].label;
+      console.log('nature presumptiveLabel Label: ',presumptiveLabel);
+      this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].setValue(presumptiveLabel);
+      this.natureOfBusinessForm.controls['tradeName44ADA'].setValue(presumptiveIncome[0].tradeName);
+  
+      this.natureOfBusinessForm.controls['grossReciept'].setValue(presumptiveIncome[0].incomes[0].receipts);
+      this.natureOfBusinessForm.controls['presumptiveIncome'].setValue(presumptiveIncome[0].incomes[0].presumptiveIncome);
+    }
+
+  }
 
   getMastersData() {
     const param = '/itr/itrmaster';
@@ -82,6 +122,10 @@ export class Itr4partComponent implements OnInit {
       console.log('natureOfBusinessDropdown44ADA: ', this.natureOfBusinessDropdown44ADA)
       //sessionStorage.setItem('MASTER', JSON.stringify(result));
 
+      console.log('businessData: ===>>> ',this.businessData);   //Form here we call to updateBusinessInfo method
+      if(this.utilService.isNonEmpty(this.businessData)){
+        this.updateBusinessInfo();
+      } 
 
 
       this.filteredOptions = this.natureOfBusinessForm['controls'].natureOfBusiness44AD.valueChanges

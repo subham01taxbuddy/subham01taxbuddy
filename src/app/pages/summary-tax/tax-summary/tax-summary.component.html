@@ -472,14 +472,18 @@
                                 <td>Presumptive Income </td>
                                 <td><input type="number" [value]="this.businessObject.presumptiveIncome" disabled
                                         maxlength="8"></td>
+                              
                                 <td></td>
                             </tr>
                             <tr *ngIf="itrType.itrFour">
                                 <td></td>
                                 <td><b>Total Presumptive Income</b></td>
                                 <td></td>
-                                <td><input type="number" [value]="this.businessObject.prsumptiveIncomeTotal" disabled
-                                        maxlength="8"></td>
+                                <!-- <td><input type="number" [value]="this.businessObject.prsumptiveIncomeTotal" disabled
+                                        maxlength="8"></td> -->
+                                <td formGroupName="taxSummary">
+                                     <input type="number" disabled formControlName="presumptiveIncome">
+                                </td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 4 : 3}}</td>
@@ -907,7 +911,7 @@
                     <div *ngIf="itrType.itrFour">
                         <div class="tableHead">Annexure: Income from Business or Profession</div><br>
                         <app-itr4part [itrType]="itrSummaryForm['controls'].assesse['controls'].itrType.value"
-                            (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
+                        [businessData]="this.updatBussinessInfo"  (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
                     </div>
 
 
