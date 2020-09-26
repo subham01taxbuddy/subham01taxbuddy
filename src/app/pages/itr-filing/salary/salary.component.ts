@@ -525,6 +525,9 @@ export class SalaryComponent implements OnInit {
         });
       }
 
+      if (!this.utilsService.isNonEmpty(this.localEmployer.deductions)) {
+        this.localEmployer.deductions = [];
+      }
       this.localEmployer.deductions = this.localEmployer.deductions.filter(item => item.deductionType !== 'PROFESSIONAL_TAX');
       if (this.employerDetailsFormGroup.controls['professionalTax'].value !== null && this.employerDetailsFormGroup.controls['professionalTax'].value !== '') {
         this.localEmployer.deductions.push({
@@ -930,9 +933,9 @@ export class SalaryComponent implements OnInit {
     })
   }
 
-  afterUploadDocs(fileUpload){
-    if(fileUpload === 'File uploaded successfully'){
-       this.getItrDocuments();
+  afterUploadDocs(fileUpload) {
+    if (fileUpload === 'File uploaded successfully') {
+      this.getItrDocuments();
     }
   }
 
