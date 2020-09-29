@@ -2984,7 +2984,7 @@ export class Itr2mainComponent implements OnInit {
           if(this.shortTermSlabRate.api.getRenderedNodes().length > 0){
             for (let i = 0; i < this.shortTermSlabRate.api.getRenderedNodes().length; i++) {
               this.shortTermSlabRateInfo.push({
-                'nameOfTheAsset': this.shortTermSlabRate.api.getRenderedNodes()[i].data.nameOfAsset,
+                'nameOfTheAsset': this.shortTermSlabRate.api.getRenderedNodes()[i].data.nameOfAsset ? this.shortTermSlabRate.api.getRenderedNodes()[i].data.nameOfAsset : null,
                 'netSaleValue': this.shortTermSlabRate.api.getRenderedNodes()[i].data.netSaleVal !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.netSaleVal) : null,
                 'purchaseCost': this.shortTermSlabRate.api.getRenderedNodes()[i].data.purchaseCost !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.purchaseCost) : null,
                 'capitalGain': this.shortTermSlabRate.api.getRenderedNodes()[i].data.capitalGain !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.capitalGain) : null,
@@ -2999,7 +2999,7 @@ export class Itr2mainComponent implements OnInit {
           if(this.shortTerm15Per.api.getRenderedNodes().length > 0){
             for (let i = 0; i < this.shortTerm15Per.api.getRenderedNodes().length; i++) {
               this.shortTerm15PerInfo.push({
-                'nameOfTheAsset': this.shortTerm15Per.api.getRenderedNodes()[i].data.nameOfAsset,
+                'nameOfTheAsset': this.shortTerm15Per.api.getRenderedNodes()[i].data.nameOfAsset ? this.shortTerm15Per.api.getRenderedNodes()[i].data.nameOfAsset : null,
                 'netSaleValue': this.shortTerm15Per.api.getRenderedNodes()[i].data.netSaleVal !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.netSaleVal) : null,
                 'purchaseCost': this.shortTerm15Per.api.getRenderedNodes()[i].data.purchaseCost !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.purchaseCost) : null,
                 'capitalGain': this.shortTerm15Per.api.getRenderedNodes()[i].data.capitalGain !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.capitalGain) : null,
@@ -3014,7 +3014,7 @@ export class Itr2mainComponent implements OnInit {
           if(this.longTerm10Per.api.getRenderedNodes().length > 0){
             for (let i = 0; i < this.longTerm10Per.api.getRenderedNodes().length; i++) {
               this.longTerm10PerInfo.push({
-                'nameOfTheAsset': this.longTerm10Per.api.getRenderedNodes()[i].data.nameOfAsset,
+                'nameOfTheAsset': this.longTerm10Per.api.getRenderedNodes()[i].data.nameOfAsset ? this.longTerm10Per.api.getRenderedNodes()[i].data.nameOfAsset : null,
                 'netSaleValue': this.longTerm10Per.api.getRenderedNodes()[i].data.netSaleVal !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.netSaleVal): null,
                 'purchaseCost': this.longTerm10Per.api.getRenderedNodes()[i].data.purchaseCost !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.purchaseCost): null,
                 'capitalGain': this.longTerm10Per.api.getRenderedNodes()[i].data.capitalGain !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.capitalGain): null,
@@ -3029,7 +3029,7 @@ export class Itr2mainComponent implements OnInit {
           if(this.longTerm20Per.api.getRenderedNodes().length > 0){
             for (let i = 0; i < this.longTerm20Per.api.getRenderedNodes().length; i++) {
               this.longTerm20PerInfo.push({
-                'nameOfTheAsset': this.longTerm20Per.api.getRenderedNodes()[i].data.nameOfAsset,
+                'nameOfTheAsset': this.longTerm20Per.api.getRenderedNodes()[i].data.nameOfAsset ? this.longTerm20Per.api.getRenderedNodes()[i].data.nameOfAsset: null,
                 'netSaleValue': this.longTerm20Per.api.getRenderedNodes()[i].data.netSaleVal !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.netSaleVal): null,
                 'purchaseCost': this.longTerm20Per.api.getRenderedNodes()[i].data.purchaseCost !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.purchaseCost): null,
                 'capitalGain': this.longTerm20Per.api.getRenderedNodes()[i].data.capitalGain !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.capitalGain): null,
