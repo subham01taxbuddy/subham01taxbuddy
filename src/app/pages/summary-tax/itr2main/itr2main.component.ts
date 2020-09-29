@@ -2847,6 +2847,7 @@ export class Itr2mainComponent implements OnInit {
       if(this.personalInfoForm.valid && (this.itrType.itrThree ? this.businessFormValid : true)){ 
         console.log('bankData: ',this.bankData)
         
+          this.itr_2_Summary._id = this.personalInfoForm['controls']._id.value;
           this.itr_2_Summary.summaryId = this.personalInfoForm['controls'].summaryId.value;
           this.itr_2_Summary.returnType = this.personalInfoForm['controls'].returnType.value;
           this.itr_2_Summary.financialYear = this.personalInfoForm['controls'].financialYear.value;
@@ -3323,7 +3324,7 @@ export class Itr2mainComponent implements OnInit {
                var presumptiveOtherThanSpeculativeObj = {
                  businessType: 'OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE',
                  natureOfBusiness: natureOfOtherThanSpeculative,
-                 tradeName: this.businessIncomeForm.controls['tradeNameOfSpeculative'].value,//trade name
+                 tradeName: this.businessIncomeForm.controls['tradeNameOfothertThanSpeculative'].value,//trade name
                  incomes: [],
                  taxableIncome : null,
                  exemptIncome: null
