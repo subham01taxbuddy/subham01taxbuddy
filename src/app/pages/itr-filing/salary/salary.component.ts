@@ -930,6 +930,24 @@ export class SalaryComponent implements OnInit {
     })
   }
 
+  deleteFile(fileName){
+    let adminId = JSON.parse(localStorage.getItem("UMD"));
+    var path = '/itr/cloud/files?actionBy='+adminId.USER_UNIQUE_ID;
+    let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
+    var reqBody = [filePath];
+    console.log('URL path: ',path, ' filePath: ',filePath,' Request body: ',reqBody);
+    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any)=>{
+        console.log('Doc delete responce: ',responce); 
+        this.utilsService.showSnackBar(responce.response);
+        this.itrDocuments = this.itrDocuments.filter(item => item.fileName !== fileName);
+        console.log('itrDocuments: ',this.itrDocuments)
+    },
+    error=>{
+     console.log('Doc delete ERROR responce: ',error.responce); 
+     this.utilsService.showSnackBar(error.response);
+    })
+   }
+
   afterUploadDocs(fileUpload){
     if(fileUpload === 'File uploaded successfully'){
        this.getItrDocuments();

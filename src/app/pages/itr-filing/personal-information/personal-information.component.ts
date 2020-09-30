@@ -574,6 +574,25 @@ export class PersonalInformationComponent implements OnInit {
     })
   }
 
+  deleteFile(fileName){
+   let adminId = JSON.parse(localStorage.getItem("UMD"));
+   var path = '/itr/cloud/files?actionBy='+adminId.USER_UNIQUE_ID;
+   let filePath = `${this.ITR_JSON.userId}/Common/${fileName}`;
+   var reqBody = [filePath];
+   console.log('URL path: ',path, ' filePath: ',filePath,' Request body: ',reqBody);
+  // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
+   this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any)=>{
+       console.log('Doc delete responce: ',responce); 
+       this.utilsService.showSnackBar(responce.response);
+       this.documents = this.documents.filter(item => item.fileName !== fileName);
+       console.log('Documents: ',this.documents)
+   },
+   error=>{
+    console.log('Doc delete ERROR responce: ',error.responce); 
+    this.utilsService.showSnackBar(error.response);
+   })
+  }
+
   docDetails = {
     docUrl: '',
     docType: ''

@@ -14,7 +14,11 @@
                     <br>
                     <div>
                         <span *ngFor="let hpDocs of getAllHpDocs('LOAN_STATEMENT'); let i=index">
-                            <a href="javascript:;" (click)="getHpDocsUrl(i)">{{hpDocs.fileName}}</a> &nbsp;&nbsp;
+                            <div style="padding: 5px; display: block; text-decoration:underline;">
+                                <a href="javascript:;" (click)="getHpDocsUrl(i)">{{hpDocs.fileName}}</a> &nbsp;&nbsp;
+                                <button (click)="deleteFile(hpDocs.fileName)" style="float: right;"><i class="fa fa-trash" aria-hidden="true"></i></button><br>
+                            </div>
+                           
                         </span>
                     </div>
                     <br><br><br>

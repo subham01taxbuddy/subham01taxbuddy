@@ -13,7 +13,11 @@
                     <br>
                     <div>
                         <span *ngFor="let form16 of getAllForm16s('FORM_16'); let i=index">
-                            <a href="javascript:;" (click)="getForm16Url(i)">{{form16.fileName}}</a> &nbsp;&nbsp;
+                            <div style="padding: 5px; display: block; text-decoration:underline;">
+                                <a href="javascript:;" (click)="getForm16Url(i)">{{form16.fileName}}</a> &nbsp;&nbsp;
+                                <button (click)="deleteFile(form16.fileName)" style="float: right; margin-right: 80px;"><i class="fa fa-trash" aria-hidden="true"></i></button><br>
+                            </div>
+                           
                         </span>
                     </div>
                     <br>
