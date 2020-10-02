@@ -87,7 +87,7 @@ export class InvoicesStatusComponent implements OnInit {
     // console.log('paymentDate',this.datePipe.transform(userInvoices[0].paymentDate, 'dd/MM/yyyy'));
     var invoices = [];
     for (let i = 0; i < userInvoices.length; i++) {
-      let updateInvoice = Object.assign({}, userInvoices[i], { userId: userInvoices[i].userId, billTo: userInvoices[i].billTo, phone: userInvoices[i].phone, email: userInvoices[i].email, invoiceNo: userInvoices[i].invoiceNo, invoiceDate: userInvoices[i].invoiceDate, modeOfPayment: userInvoices[i].modeOfPayment, paymentStatus: userInvoices[i].paymentStatus, purpose: userInvoices[i].itemList[0].itemDescription, invoicePrpardBy: userInvoices[i].inovicePreparedBy, ifaLeadClient: userInvoices[i].ifaLeadClient, amntReceiptDate:userInvoices[i].paymentDate })
+      let updateInvoice = Object.assign({}, userInvoices[i], { userId: userInvoices[i].userId, billTo: userInvoices[i].billTo, phone: userInvoices[i].phone, email: userInvoices[i].email, invoiceNo: userInvoices[i].invoiceNo, invoiceDate: userInvoices[i].invoiceDate, modeOfPayment: userInvoices[i].modeOfPayment, paymentStatus: userInvoices[i].paymentStatus, purpose: userInvoices[i].itemList[0].itemDescription, invoicePrpardBy: userInvoices[i].inovicePreparedBy, ifaLeadClient: userInvoices[i].ifaLeadClient, amntReceiptDate: userInvoices[i].paymentDate })
       invoices.push(updateInvoice)
     }
     console.log('user invoices: ', invoices);
@@ -99,8 +99,32 @@ export class InvoicesStatusComponent implements OnInit {
       {
         headerName: 'User Id',
         field: 'userId',
+        width: 80,
+        suppressMovable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Invoice No',
+        field: 'invoiceNo',
         width: 150,
         suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Payment Status',
+        field: 'paymentStatus',
+        width: 80,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -110,7 +134,7 @@ export class InvoicesStatusComponent implements OnInit {
       {
         headerName: 'User Name',
         field: 'billTo',
-        width: 210,
+        width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -118,12 +142,11 @@ export class InvoicesStatusComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
-
       },
       {
-        headerName: 'Mobile num',
+        headerName: 'Mobile No',
         field: 'phone',
-        width: 210,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -131,12 +154,11 @@ export class InvoicesStatusComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
-
       },
       {
         headerName: 'Email',
         field: 'email',
-        width: 210,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -146,18 +168,7 @@ export class InvoicesStatusComponent implements OnInit {
         }
 
       },
-      {
-        headerName: 'Invoice No',
-        field: 'invoiceNo',
-        width: 190,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
+
       {
         headerName: 'Invoice Date',
         field: 'invoiceDate',
@@ -167,11 +178,9 @@ export class InvoicesStatusComponent implements OnInit {
         // valueFormatter: function (param){
         //   return moment(params.value).format('D MMM YYYY');
         // },
-        
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         }
-
       },
       {
         headerName: 'Payment Mode',
@@ -185,18 +194,7 @@ export class InvoicesStatusComponent implements OnInit {
           debounceMs: 0
         }
       },
-      {
-        headerName: 'Payment Status',
-        field: 'paymentStatus',
-        width: 150,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
+
       {
         headerName: 'Purpose',
         field: 'purpose',
@@ -235,7 +233,7 @@ export class InvoicesStatusComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         cellRenderer: (data) => {
-          if(this.utilService.isNonEmpty(data.value)){
+          if (this.utilService.isNonEmpty(data.value)) {
             return formatDate(data.value, 'dd/MM/yyyy', this.locale)
           }
         }
@@ -498,8 +496,8 @@ export class InvoicesStatusComponent implements OnInit {
   }
 
   dowloadInvoice(data) {
-   // this.loading = true;
-   // const param = '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
+    // this.loading = true;
+    // const param = '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
     location.href = environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
     // this.userService.invoiceDownloadDoc(param).subscribe((result: any) => {
     //   this.loading = false;
@@ -561,7 +559,7 @@ export class InvoicesStatusComponent implements OnInit {
     console.log('this.summartDetailForm.value: ', this.summartDetailForm)
     if (this.summartDetailForm.valid) {
       console.log(this.summartDetailForm.value)
-      
+
       // const param = '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
       let fromData = this.summartDetailForm.value.fromDate;
       let toData = this.summartDetailForm.value.toDate;
@@ -588,7 +586,7 @@ export class InvoicesStatusComponent implements OnInit {
     var deadLineDate = deadLineDate / 1000;
     time.setUTCSeconds(deadLineDate);
     var requestObject = time.toISOString().slice(0, 10);
-    console.log('date format: ',requestObject)
+    console.log('date format: ', requestObject)
     return requestObject;
 
   }

@@ -90,6 +90,7 @@ export class NavbarService {
 			USER_F_NAME: userData.firstName,
 			USER_L_NAME: userData.lastName,
 			USER_MOBILE: userData.mobile,
+			USER_EMAIL: userData.email,
 			// USER_NAME: userData.user, we dont have this value
 			USER_ROLE: userData.role,
 			USER_UNIQUE_ID: userData.userId,
@@ -368,7 +369,7 @@ export class NavbarService {
 		return new HttpHeaders({ 'Content-Type': "application/json", "Authorization": "Bearer " + this.id_token });
 	}
 
-	apiCall(apiKey: any, params: any, ): Observable<any> {
+	apiCall(apiKey: any, params: any,): Observable<any> {
 		let options: any = { headers: this.getHeaders() }
 		// if (['gst_gov_url', 'ifsc_url'].indexOf(apiKey["url_key"]) != -1) {
 		// 	options = { headers: new HttpHeaders({}) };
