@@ -9,6 +9,7 @@ import { MaterialModule } from './material.module';
 import { AgGridMaterialSelectEditorComponent } from './dropdown.component';
 import { CommonModule } from '@angular/common';
 import { MatInputComponent } from './mat-input.component';
+import { WhatsAppDialogComponent } from 'app/pages/itr-filing/whats-app-dialog/whats-app-dialog.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { MatInputComponent } from './mat-input.component';
         CustomDateComponent,
         MatSelectComponent,
         MatInputComponent,
-        AgGridMaterialSelectEditorComponent
+        AgGridMaterialSelectEditorComponent,
+        WhatsAppDialogComponent
     ],
     imports: [
         CommonModule,
@@ -38,8 +40,10 @@ import { MatInputComponent } from './mat-input.component';
         MatSelectComponent,
         AgGridModule,
         MatInputComponent,
-        AgGridMaterialSelectEditorComponent
+        AgGridMaterialSelectEditorComponent,
+        WhatsAppDialogComponent
     ],
     providers: [],
+    entryComponents: [WhatsAppDialogComponent]
 })
 export class SharedModule { }

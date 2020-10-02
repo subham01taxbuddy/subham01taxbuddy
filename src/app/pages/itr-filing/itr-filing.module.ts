@@ -29,7 +29,7 @@ import { UpdateStatusComponent } from './update-status/update-status.component';
 import { DirectUploadComponent } from './direct-upload/direct-upload.component';
 import { MyAssignedItrsComponent } from './my-assigned-itrs/my-assigned-itrs.component';
 import { BusinessComponent } from './business/business.component';
-import { WhatsAppDialogComponent } from './whats-app-dialog/whats-app-dialog.component';
+// import { WhatsAppDialogComponent } from './whats-app-dialog/whats-app-dialog.component';
 import { MyTeamItrsComponent } from './my-team-itrs/my-team-itrs.component';
 import { KommunicateDialogComponent } from './kommunicate-dialog/kommunicate-dialog.component';
 import { FilingStatusDialogComponent } from './filing-status-dialog/filing-status-dialog.component';
@@ -72,7 +72,7 @@ import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-retur
         DirectUploadComponent,
         MyAssignedItrsComponent,
         BusinessComponent,
-        WhatsAppDialogComponent,
+        // WhatsAppDialogComponent,
         MyTeamItrsComponent,
         KommunicateDialogComponent,
         FilingStatusDialogComponent,
@@ -80,7 +80,7 @@ import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-retur
         ReviseReturnDialogComponent,
         // InputUploadComponent
     ],
-    entryComponents: [AddDonationDialogComponent, WhatsAppDialogComponent, KommunicateDialogComponent,
+    entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ KommunicateDialogComponent,
         FilingStatusDialogComponent, ReviseReturnDialogComponent]
 
 })

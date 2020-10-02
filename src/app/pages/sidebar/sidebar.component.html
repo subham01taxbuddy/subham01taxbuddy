@@ -1,5 +1,18 @@
 <div class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar" [class.hideSideMenu]="hideSideBar">
     <nav class="sidebar">
+        <a class="sidebar__item" routerLink="/pages/dashboard" routerLinkActive="sidebar__item_active"
+            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM'])">
+            <span class="sidebar__ico">
+                <svg id="ico-home" class="sidebar__ico-img" data-name="home" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 416.16 440.64">
+                    <title>Dashboard</title>
+                    <path class="ico-home"
+                        d="M306,99.18A20.91,20.91,0,0,0,294.72,103L105,249.88a18.65,18.65,0,0,0-7.08,14.53v257c0,9.61,8.75,18.36,18.36,18.36H244.8c9.61,0,18.36-8.75,18.36-18.36V435.78a42.84,42.84,0,0,1,85.68,0v85.68c0,9.61,8.75,18.36,18.36,18.36H495.72c9.61,0,18.36-8.75,18.36-18.36v-257A18.7,18.7,0,0,0,507,249.88L317.28,103c-3.4-2.63-5.16-3.49-11.28-3.82Zm0,41.5L477.36,273.22V503.1h-91.8V435.78a79.56,79.56,0,1,0-159.12,0V503.1h-91.8V273.22Z"
+                        transform="translate(-97.92 -99.18)" />
+                </svg>
+            </span>
+            <span class="sidebar__name">DASHBOARD</span>
+        </a>
         <a class="sidebar__item" routerLink="/pages/home" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM'])">
             <span class="sidebar__ico">

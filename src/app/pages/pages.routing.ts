@@ -75,6 +75,7 @@ export const routes: Routes = [
 			{ path: 'reports', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './reports-module/reports.module#ReportsModule' },
 			{ path: 'ifa', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] }, loadChildren: './ifa/ifa.module#IfaModule' },
 			{ path: 'itr-filing', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './itr-filing/itr-filing.module#ItrFilingModule' },
+			{ path: 'dashboard', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './dashboard/dashboard.module#DashboardModule' },
 			{ path: '**', redirectTo: '/pages/home', pathMatch: 'full' },
 
 		]

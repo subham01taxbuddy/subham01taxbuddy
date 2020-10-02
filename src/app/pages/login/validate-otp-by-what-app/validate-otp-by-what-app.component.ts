@@ -68,7 +68,7 @@ export class ValidateOtpByWhatAppComponent implements OnInit {
   setUserDataInsession(data, jhi) {
     const userData = {
       mobile: data.attributes['phone_number'].substring(3, 13),
-      email: data.attributes['email'] ? data.attributes['email'] : '',
+      email: jhi['email'],
       firstName: data.attributes['custom:first_name'],
       lastName: data.attributes['custom:last_name'],
       id_token: data.signInUserSession.accessToken.jwtToken,
