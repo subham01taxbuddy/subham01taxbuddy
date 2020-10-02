@@ -574,7 +574,9 @@ export class PersonalInformationComponent implements OnInit {
     })
   }
 
+  
   deleteFile(fileName){
+    this.loading = true;
    let adminId = JSON.parse(localStorage.getItem("UMD"));
    var path = '/itr/cloud/files?actionBy='+adminId.USER_UNIQUE_ID;
    let filePath = `${this.ITR_JSON.userId}/Common/${fileName}`;
@@ -582,15 +584,37 @@ export class PersonalInformationComponent implements OnInit {
    console.log('URL path: ',path, ' filePath: ',filePath,' Request body: ',reqBody);
   // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any)=>{
+       this.loading = false;
        console.log('Doc delete responce: ',responce); 
        this.utilsService.showSnackBar(responce.response);
-       this.documents = this.documents.filter(item => item.fileName !== fileName);
-       console.log('Documents: ',this.documents)
+      //  this.documents = this.documents.filter(item => item.fileName !== fileName);
+      //  console.log('Documents: ',this.documents)
+      this.getCommonDocuments();
    },
    error=>{
+    this.loading = false;
     console.log('Doc delete ERROR responce: ',error.responce); 
     this.utilsService.showSnackBar(error.response);
    })
+  }
+
+   deletedFileData: any = [];
+  deletedFileInfo(cloudFileId){
+    this.deletedFileData = [];
+    this.loading = true;
+    let param = '/cloud/log?cloudFileId='+cloudFileId;
+    this.itrMsService.getMethod(param).subscribe((res: any)=>{
+      this.loading = false;
+      this.deletedFileData = res;
+      console.log('Deleted file detail info: ',this.deletedFileData);
+    },
+    error=>{
+      this.loading = false;
+    })
+  }
+
+  closeDialog(){
+    this.deletedFileData = [];
   }
 
   docDetails = {

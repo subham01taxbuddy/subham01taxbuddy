@@ -178,18 +178,35 @@ export class HousePropertyComponent implements OnInit {
     let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
     var reqBody = [filePath];
     console.log('URL path: ',path, ' filePath: ',filePath,' Request body: ',reqBody);
-   // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
     this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any)=>{
         console.log('Doc delete responce: ',responce); 
         this.utilsService.showSnackBar(responce.response);
-        this.itrDocuments = this.itrDocuments.filter(item => item.fileName !== fileName);
-        console.log('itrDocuments: ',this.itrDocuments)
+        this.getItrDocuments();
     },
     error=>{
      console.log('Doc delete ERROR responce: ',error.responce); 
      this.utilsService.showSnackBar(error.response);
     })
    }
+
+   deletedFileData: any = [];
+  deletedFileInfo(cloudFileId){
+    this.deletedFileData = [];
+    this.loading = true;
+    let param = '/cloud/log?cloudFileId='+cloudFileId;
+    this.itrMsService.getMethod(param).subscribe((res: any)=>{
+      this.loading = false;
+      this.deletedFileData = res;
+      console.log('Deleted file detail info: ',this.deletedFileData);
+    },
+    error=>{
+      this.loading = false;
+    })
+  }
+
+  closeDialog(){
+    this.deletedFileData = [];
+  }
    
 
   afterUploadDocs(fileUpload) {

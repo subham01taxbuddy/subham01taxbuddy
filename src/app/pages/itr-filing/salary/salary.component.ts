@@ -939,14 +939,32 @@ export class SalaryComponent implements OnInit {
     this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any)=>{
         console.log('Doc delete responce: ',responce); 
         this.utilsService.showSnackBar(responce.response);
-        this.itrDocuments = this.itrDocuments.filter(item => item.fileName !== fileName);
-        console.log('itrDocuments: ',this.itrDocuments)
+        this.getItrDocuments();
     },
     error=>{
      console.log('Doc delete ERROR responce: ',error.responce); 
      this.utilsService.showSnackBar(error.response);
     })
    }
+
+   deletedFileData: any = [];
+  deletedFileInfo(cloudFileId){
+    this.deletedFileData = [];
+    this.loading = true;
+    let param = '/cloud/log?cloudFileId='+cloudFileId;
+    this.itrMsService.getMethod(param).subscribe((res: any)=>{
+      this.loading = false;
+      this.deletedFileData = res;
+      console.log('Deleted file detail info: ',this.deletedFileData);
+    },
+    error=>{
+      this.loading = false;
+    })
+  }
+
+  closeDialog(){
+    this.deletedFileData = [];
+  }
 
   afterUploadDocs(fileUpload){
     if(fileUpload === 'File uploaded successfully'){
