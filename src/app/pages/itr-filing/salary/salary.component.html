@@ -13,8 +13,31 @@
                     <br>
                     <div>
                         <span *ngFor="let form16 of getAllForm16s('FORM_16'); let i=index">
-                            <a href="javascript:;" (click)="getForm16Url(i)">{{form16.fileName}}</a> &nbsp;&nbsp;
+                            <div style="padding: 5px; display: block; text-decoration:underline;">
+                                <a *ngIf="!form16.isDeleted" href="javascript:;" (click)="getForm16Url(i)">{{form16.fileName}}</a>
+                                <button *ngIf="!form16.isDeleted" (click)="deleteFile(form16.fileName)" style="float: right; margin-right: 80px;"><i class="fa fa-trash" aria-hidden="true"></i></button>   
+
+                                <a *ngIf="form16.isDeleted" >{{form16.fileName}}</a> &nbsp;&nbsp;
+                                <button *ngIf="form16.isDeleted" (click)="deletedFileInfo(form16.cloudFileId)" style="float: right;" title="Deleted file information"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                            </div>
+                           
                         </span>
+
+                        <div *ngIf="deletedFileData.length > 0" class="userInfo">
+                            <button style="float: right; margin-bottom: 3px;" (click)="closeDialog()"><i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                            <table>
+                                <tr>
+                                    <th><b>Doc Deleted By</b></th>
+                                    <th><b>Action</b></th>
+                                    <th><b>Date</b></th>
+                                </tr>
+                                <tr *ngFor="let data of deletedFileData">
+                                    <td>{{data.actionBy === ITR_JSON.userId ? 'User' : 'Tax Buddy'}}</td>
+                                    <td>{{data.action}}</td>
+                                    <td>{{data.date | date}}</td>
+                                </tr>
+                            </table>
+                        </div> 
                     </div>
                     <br>
                     <br>
