@@ -12,7 +12,7 @@ export class NewUserComponent implements OnInit {
 
   page = 1; // current page
   count = 0; // total pages
-  pageSize = 1; // number of items in each page
+  pageSize = 10; // number of items in each page
   // pageSizes = [3, 6, 9];
   agentId = '';
   agentList = [

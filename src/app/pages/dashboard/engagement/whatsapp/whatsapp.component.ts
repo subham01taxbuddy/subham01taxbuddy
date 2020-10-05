@@ -13,7 +13,7 @@ export class WhatsappComponent implements OnInit {
   kmChats = [];
   page = 1; // current page
   count = 0; // total elements
-  pageSize = 5; // number of items in each page
+  pageSize = 10; // number of items in each page
   agentId = '';
   agentList = [
     { value: 'brij@ssbainnovations.com', label: 'Brij' },
