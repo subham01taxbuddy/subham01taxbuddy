@@ -61,12 +61,12 @@
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-20"
                                         *ngIf="item.platform === 'WebSite' || item.platform === 'WEB'">
-                                        <button type="submit" class="btn" style="border: none;"
+                                        <button type="submit" class="btn" style="border: none;cursor: pointer;"
                                             (click)="startConversation(item)">Start Conversation</button>
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-20"
                                         *ngIf="item.platform !== 'WebSite' && item.platform !== 'WEB'">
-                                        <button type="submit" class="btn" style="border: none;"
+                                        <button type="submit" class="btn" style="border: none; cursor: pointer;"
                                             (click)="startPush(item)">Send Push</button>
                                     </div>
                                 </div>
