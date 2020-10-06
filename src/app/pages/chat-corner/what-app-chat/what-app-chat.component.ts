@@ -26,7 +26,7 @@ export class WhatAppChatComponent implements OnInit {
   loading: boolean;
   userDetail: any;
   intr: any;
-  userchatData: any;
+  userchatData = [];
   backUpChatData: any;
   selectedUser: any;
   smeInfo: any;
@@ -399,7 +399,7 @@ export class WhatAppChatComponent implements OnInit {
         this.loading = true;
         let param = "/user/send-template";
         this.userService.sentChatMessage(param, body).subscribe(
-          (result) => {
+          (result: any) => {
             this.loading = false;
             console.log(result);
             this.whatsAppForm.reset();
@@ -437,7 +437,7 @@ export class WhatAppChatComponent implements OnInit {
       this.loading = true;
       console.log(formData);
       this.userService.sentChatMessage(param, formData).subscribe(
-        (result) => {
+        (result: any) => {
           this.loading = false;
           console.log(result);
           this.whatsAppForm.reset();
