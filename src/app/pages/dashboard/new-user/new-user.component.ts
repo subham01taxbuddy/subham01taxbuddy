@@ -84,7 +84,7 @@ export class NewUserComponent implements OnInit {
       "imageUrl": "https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/push_Notification_100K_1024+x+512.png",
       "deepLink": "itrAssisted"
     }
-    this.userMsService.postMethod(param).subscribe((result: any) => {
+    this.userMsService.postMethod(param, request).subscribe((result: any) => {
       console.log('Push send: ', result);
       this.loading = false;
       this.utilsService.showSnackBar('Push notification send successfully.');
