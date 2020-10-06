@@ -472,14 +472,18 @@
                                 <td>Presumptive Income </td>
                                 <td><input type="number" [value]="this.businessObject.presumptiveIncome" disabled
                                         maxlength="8"></td>
+                              
                                 <td></td>
                             </tr>
                             <tr *ngIf="itrType.itrFour">
                                 <td></td>
                                 <td><b>Total Presumptive Income</b></td>
                                 <td></td>
-                                <td><input type="number" [value]="this.businessObject.prsumptiveIncomeTotal" disabled
-                                        maxlength="8"></td>
+                                <!-- <td><input type="number" [value]="this.businessObject.prsumptiveIncomeTotal" disabled
+                                        maxlength="8"></td> -->
+                                <td formGroupName="taxSummary">
+                                     <input type="number" disabled formControlName="presumptiveIncome">
+                                </td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 4 : 3}}</td>
@@ -801,9 +805,9 @@
                             <td>{{house.grossAnnualRentReceived}}</td>
                             <td>{{house.propertyTax}}</td>
                             <td>{{house.annualValue}}</td>
-                            <td>{{house.taxableIncome}}</td>
-                            <td>{{house.interestAmount}}</td>
                             <td>{{house.exemptIncome}}</td>
+                            <td>{{house.interestAmount}}</td>
+                            <td>{{house.taxableIncome}}</td>
                             <td>
                                 <button (click)="openDialog('Edit House Property','Edit', i, housingData[i],'House')"><i
                                         class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
@@ -906,8 +910,8 @@
                     
                     <div *ngIf="itrType.itrFour">
                         <div class="tableHead">Annexure: Income from Business or Profession</div><br>
-                        <app-itr4part [itrType]="itrSummaryForm['controls'].assesse['controls'].value"
-                            (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
+                        <app-itr4part [itrType]="itrSummaryForm['controls'].assesse['controls'].itrType.value"
+                        [businessData]="this.updatBussinessInfo"  (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
                     </div>
 
 

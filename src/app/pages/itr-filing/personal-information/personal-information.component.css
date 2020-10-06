@@ -1,3 +1,40 @@
 .vertLine {
   border-right: 1px #ff0000; /* line 1 pixel width, length of "Some content" */
 }
+
+.userInfo{
+  margin-top: 15px;
+  padding: 5px;
+  height: auto;
+  width: 400px;
+  border: 1px solid black;
+  border-radius: 4px;
+}
+
+.table-responsive{
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+ 
+}
+
+th{
+  text-align: left;
+  padding: 5px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+}
+td {
+  text-align: left;
+  padding: 5px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+

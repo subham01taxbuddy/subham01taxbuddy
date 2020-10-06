@@ -60,6 +60,21 @@ export class ItrMsService {
         return this.httpClient.delete<T>(environment.url + this.microService + param, { headers: this.headers });
         // .map(response => response.json())
     }
+
+    deleteMethodWithRequest(param, body) {
+        this.headers = new HttpHeaders();
+        this.headers.append('Content-Type', 'application/json');
+        const userData = JSON.parse(localStorage.getItem('UMD'));
+        const TOKEN = (userData) ? userData.id_token : null;
+        this.headers.append('Authorization', 'Bearer ' + TOKEN);
+        let reqBody = {
+            headers: this.headers,
+            body: body
+        }
+        return this.httpClient.delete(environment.url + param, reqBody);
+          //  .map(response => response.json());
+    }
+
     downloadXML(param) {
         console.log('Download XML Param', param);
         const userData = JSON.parse(localStorage.getItem('UMD'));
@@ -87,5 +102,11 @@ export class ItrMsService {
                 return new Blob([response.blob()], { type: fileType });
             });
     }
+
+    invoiceDownload(params) {
+        this.headers = new Headers();
+        this.headers.append('Content-Type', 'application/json');
+        return this.http.get(environment.url + this.microService + params, { headers: this.headers, responseType: ResponseContentType.Blob })
+    };
 
 }

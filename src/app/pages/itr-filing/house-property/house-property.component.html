@@ -14,8 +14,30 @@
                     <br>
                     <div>
                         <span *ngFor="let hpDocs of getAllHpDocs('LOAN_STATEMENT'); let i=index">
-                            <a href="javascript:;" (click)="getHpDocsUrl(i)">{{hpDocs.fileName}}</a> &nbsp;&nbsp;
+                            <div style="padding: 5px; display: block; text-decoration:underline;">
+                                <a *ngIf="!hpDocs.isDeleted" href="javascript:;" (click)="getHpDocsUrl(i)">{{hpDocs.fileName}}</a>
+                                <button *ngIf="!hpDocs.isDeleted" (click)="deleteFile(hpDocs.fileName)" style="float: right;"><i class="fa fa-trash" aria-hidden="true"></i></button>
+
+                                <a *ngIf="hpDocs.isDeleted" >{{hpDocs.fileName}}</a> &nbsp;&nbsp;
+                                <button *ngIf="hpDocs.isDeleted" (click)="deletedFileInfo(hpDocs.cloudFileId)" style="float: right;" title="Deleted file information"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                            </div>
+                           
                         </span>
+                        <div *ngIf="deletedFileData.length > 0" class="userInfo">
+                            <button style="float: right; margin-bottom: 3px;" (click)="closeDialog()"><i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                            <table>
+                                <tr>
+                                    <th><b>Doc Deleted By</b></th>
+                                    <th><b>Action</b></th>
+                                    <th><b>Date</b></th>
+                                </tr>
+                                <tr *ngFor="let data of deletedFileData">
+                                    <td>{{data.actionBy === ITR_JSON.userId ? 'User' : 'Tax Buddy'}}</td>
+                                    <td>{{data.action}}</td>
+                                    <td>{{data.date | date}}</td>
+                                </tr>
+                            </table>
+                        </div> 
                     </div>
                     <br><br><br>
                     <ngx-image-zoom *ngIf="hpDocDetails.docType !== 'pdf'" [thumbImage]="hpDocDetails.docUrl"

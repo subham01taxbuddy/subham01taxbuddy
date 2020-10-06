@@ -1,6 +1,6 @@
 <div class="main clearfix" style="min-height: 0vh; padding-top: 0px;">
     <div class="tab"
-        *ngIf="currentUrl === '/pages/itr-filing/my-itrs' || currentUrl === '/pages/itr-filing/users' || currentUrl === '/pages/itr-filing/team-itrs'">
+        *ngIf="currentUrl === '/pages/itr-filing/my-itrs' || currentUrl === '/pages/itr-filing/users' || currentUrl === '/pages/itr-filing/team-itrs' || currentUrl === '/pages/itr-filing/delay'">
         <ul class="tab__container clearfix">
             <li class="tab__item" routerLinkActive="tab__item_active">
                 <a class="tab__link" routerLink="/pages/itr-filing/my-itrs">My ITR's</a>
@@ -10,6 +10,9 @@
             </li>
             <li class="tab__item" routerLinkActive="tab__item_active">
                 <a class="tab__link" routerLink="/pages/itr-filing/users">Search User</a>
+            </li>
+            <li class="tab__item" routerLinkActive="tab__item_active">
+                <a class="tab__link" routerLink="/pages/itr-filing/delay">Delay Part</a>
             </li>
         </ul>
     </div>

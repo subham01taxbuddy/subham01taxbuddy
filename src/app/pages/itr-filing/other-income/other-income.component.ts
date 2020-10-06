@@ -19,6 +19,8 @@ export class OtherIncomeComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   itrDocuments = [];
+  deletedFileData: any = []; 
+  
   otherIncomeDropdown = [{
     "value": "SAVING_INTEREST",
     "label": "Interest from Saving Account",
@@ -205,6 +207,42 @@ export class OtherIncomeComponent implements OnInit {
       this.itrDocuments = result;
     })
   }
+
+  deleteFile(fileName){
+    let adminId = JSON.parse(localStorage.getItem("UMD"));
+    var path = '/itr/cloud/files?actionBy='+adminId.USER_UNIQUE_ID;
+    let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
+    var reqBody = [filePath];
+    console.log('URL path: ',path, ' filePath: ',filePath,' Request body: ',reqBody);
+   // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
+    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any)=>{
+        console.log('Doc delete responce: ',responce); 
+        this.utilsService.showSnackBar(responce.response);
+        this.getItrDocuments();
+    },
+    error=>{
+     console.log('Doc delete ERROR responce: ',error.responce); 
+     this.utilsService.showSnackBar(error.response);
+    })
+   }
+
+   deletedFileInfo(cloudFileId){
+     this.deletedFileData = [];
+     this.loading = true;
+     let param = '/cloud/log?cloudFileId='+cloudFileId;
+     this.itrMsService.getMethod(param).subscribe((res: any)=>{
+       this.loading = false;
+       this.deletedFileData = res;
+       console.log('Deleted file detail info: ',this.deletedFileData);
+     },
+     error=>{
+       this.loading = false;
+     })
+   }
+ 
+   closeDialog(){
+     this.deletedFileData = [];
+   }
 
   afterUploadDocs(fileUpload){
     if(fileUpload === 'File uploaded successfully'){

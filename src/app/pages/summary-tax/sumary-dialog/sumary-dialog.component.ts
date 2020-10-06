@@ -57,7 +57,7 @@ export class SumaryDialogComponent implements OnInit {
   lossesYear = [{value: '2010-2011', label:'2010-2011'},{value: '2011-2012', label:'2011-2012'},{value: '2012-2013', label:'2012-2013'},
                 {value: '2013-2014', label:'2013-2014'},{value: '2014-2015', label:'2014-2015'},{value: '2015-2016', label:'2015-2016'},
                 {value: '2016-2017', label:'2016-2017'},{value: '2017-2018', label:'2017-2018'},{value: '2018-2019', label:'2018-2019'},
-                {value: '2020-2021', label:'2020-2021'}]
+                {value: '2019-2020', label:'2019-2020'}]
 
   salObjectVal = {
     grossSalary: 0,
@@ -221,8 +221,8 @@ export class SumaryDialogComponent implements OnInit {
           housePropertyLosses: [0],
           shortTermCapitalGainLosses:[0],
           longTermCapitalGainLosses:[0],
-          lossesSetOffDuringTheYear:[0],
-          currentYearLosess: [0],
+          businessProfessionalLoss:[0],
+          speculativeBusinessLoss: [0],
           carriedForwardToNextYear:[0],
       }),
 
@@ -250,6 +250,8 @@ export class SumaryDialogComponent implements OnInit {
     console.log("CALLEROBJ: ", this.data.callerObj)
     console.log('MODE:', this.data.mode)
     console.log('userObject: ==>', this.data.userObject)
+    console.log('ITR type => ',this.data.itrType);
+
     if (this.data.mode === 'Bank') {
       this.setBankRefundVal();
       this.updateBankData(this.data.userObject)
@@ -312,9 +314,14 @@ export class SumaryDialogComponent implements OnInit {
         this.summaryDialogForm['controls'].houseProperties['controls'].city.setValue(userProfileData.itrSummaryForm.value.assesse.address.city)
       }
     }
-    // else if(this.utilService.isNonEmpty(userProfileData.itrSummaryForm)){
-
-    // }
+    else if(this.utilService.isNonEmpty(userProfileData.personalInfoForm)){
+      console.log('userProfileData for Itr2mainComponent PIN: ',userProfileData.personalInfoForm.value.pinCode)
+      this.summaryDialogForm['controls'].houseProperties['controls'].locality.setValue(userProfileData.personalInfoForm.value.premisesName)
+      this.summaryDialogForm['controls'].houseProperties['controls'].pinCode.setValue(userProfileData.personalInfoForm.value.pinCode)
+      this.summaryDialogForm['controls'].houseProperties['controls'].country.setValue(userProfileData.personalInfoForm.value.country)
+      this.summaryDialogForm['controls'].houseProperties['controls'].state.setValue(userProfileData.personalInfoForm.value.state)
+      this.summaryDialogForm['controls'].houseProperties['controls'].city.setValue(userProfileData.personalInfoForm.value.city)
+    }
   
   }
 
@@ -471,12 +478,12 @@ export class SumaryDialogComponent implements OnInit {
       this.summaryDialogForm['controls'].houseProperties['controls'].propertyTax.setValue(null)
       this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.setValue(null)
       // this.summaryDialogForm.controls['taxableIncome'].setValue(null);
-      this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.setValue(null);
+      this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.setValue(null);
       
       // this.summaryDialogForm.controls['exemptIncome'].setValue(null);
       if(key === 'fromDialog'){
         this.summaryDialogForm.controls['interestAmount'].setValue(null);
-        this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.setValue(null);
+        this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.setValue(null);
       }
       
       console.log('houseProperties value: ', this.summaryDialogForm['controls'].houseProperties['controls'].value)
@@ -509,8 +516,8 @@ export class SumaryDialogComponent implements OnInit {
 
       }
 
-      this.summaryDialogForm.controls['tenantName'].setValidators(Validators.required)
-      this.summaryDialogForm.controls['tenentPanNumber'].setValidators([Validators.required, Validators.pattern(AppConstants.panIndHUFRegex)])
+      //this.summaryDialogForm.controls['tenantName'].setValidators(Validators.required)
+      this.summaryDialogForm.controls['tenentPanNumber'].setValidators([Validators.pattern(AppConstants.panIndHUFRegex)]);  //Validators.required
       this.summaryDialogForm['controls'].houseProperties['controls'].grossAnnualRentReceived.setValidators(Validators.required)
 
     }
@@ -577,12 +584,12 @@ export class SumaryDialogComponent implements OnInit {
     if (this.utilService.isNonEmpty(this.summaryDialogForm.controls.houseProperties['controls'].annualValue.value) || this.summaryDialogForm.controls.houseProperties['controls'].annualValue.value > 0) {
       let standerdDeduct = Math.round((Number(this.summaryDialogForm.controls.houseProperties['controls'].annualValue.value) * 30) / 100);
       //this.summaryDialogForm.controls['taxableIncome'].setValue(standerdDeduct);
-      this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.setValue(standerdDeduct);
+      this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.setValue(standerdDeduct);
       console.log('standerdDeduct: ', this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome)
 
     } else {
       //this.summaryDialogForm.controls['taxableIncome'].setValue(0);
-      this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.setValue(0);
+      this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.setValue(0);
     }
     this.calNetHouseProIncome()
   }
@@ -604,16 +611,16 @@ export class SumaryDialogComponent implements OnInit {
    
     if (this.housingShow.isSOP) {
       //this.summaryDialogForm.controls['exemptIncome'].setValue(netHouseProIncome);
-      var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.value) - Number(this.summaryDialogForm['controls'].interestAmount.value);
+      var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - Number(this.summaryDialogForm['controls'].interestAmount.value);
     }
     else {
       if (Number(this.summaryDialogForm['controls'].interestAmount.value) > 200000) {
-        var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.value) - 200000;
+        var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - 200000;
       } else {
-        var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.value) - Number(this.summaryDialogForm['controls'].interestAmount.value);
+        var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - Number(this.summaryDialogForm['controls'].interestAmount.value);
       }
     }
-    this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.setValue(netHouseProIncome);
+    this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.setValue(netHouseProIncome);
 
 
   }
@@ -1173,6 +1180,13 @@ export class SumaryDialogComponent implements OnInit {
     });
   }
 
+  calCarryForwardToNxtYrs(){
+    let carryForwatToNxtYrs =  Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].housePropertyLosses.value) + Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].shortTermCapitalGainLosses.value)
+                               + Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].longTermCapitalGainLosses.value) + Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].businessProfessionalLoss.value)
+                               + Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].speculativeBusinessLoss.value);
+
+     this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].carriedForwardToNextYear.setValue(carryForwatToNxtYrs);                         
+  }
 
 }
 
@@ -1183,4 +1197,5 @@ export interface ConfirmModel {
   userObject: any;
   mode: string;
   callerObj: any;
+  itrType: string;
 }

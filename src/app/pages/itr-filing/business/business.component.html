@@ -15,8 +15,29 @@
                     <br>
                     <div>
                         <span *ngFor="let docs of itrDocuments; let i=index">
-                            <a href="javascript:;" (click)="getDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
+                            <div style="padding: 5px; display: block; text-decoration:underline;">
+                                <a *ngIf="!docs.isDeleted" href="javascript:;" (click)="getDocsUrl(i)">{{docs.fileName}}</a>
+                                <button *ngIf="!docs.isDeleted" (click)="deleteFile(docs.fileName)" style="float: right;"><i class="fa fa-trash" aria-hidden="true"></i></button>
+
+                                <a *ngIf="docs.isDeleted" >{{docs.fileName}}</a> &nbsp;&nbsp;
+                                <button *ngIf="docs.isDeleted" (click)="deletedFileInfo(docs.cloudFileId)" style="float: right;" title="Deleted file information"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                            </div>
                         </span>
+                        <div *ngIf="deletedFileData.length > 0" class="userInfo">
+                            <button style="float: right; margin-bottom: 3px;" (click)="closeDialog()"><i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                            <table>
+                                <tr>
+                                    <th><b>Doc Deleted By</b></th>
+                                    <th><b>Action</b></th>
+                                    <th><b>Date</b></th>
+                                </tr>
+                                <tr *ngFor="let data of deletedFileData">
+                                    <td>{{data.actionBy === ITR_JSON.userId ? 'User' : 'Tax Buddy'}}</td>
+                                    <td>{{data.action}}</td>
+                                    <td>{{data.date | date}}</td>
+                                </tr>
+                            </table>
+                        </div> 
                     </div>
                     <br><br><br>
                     <ngx-image-zoom *ngIf="docDetails.docType !== 'pdf'" [thumbImage]="docDetails.docUrl"
@@ -320,7 +341,26 @@
                     </div>
                     <form>
                         <div class="card__row">
-                            <div class="card__col-xs-12 card__col-sm-6">
+                            <div class="card__col-xs-12 card__col-sm-6" *ngIf="businessType.value === 'BUSINESS'">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>{{natureOfBusinessPlaceholder}}</mat-label>
+                                    <input type="text" placeholder="{{natureOfBusinessPlaceholder}}"
+                                        aria-label="Assignee" matInput [formControl]="natureOfBusinessForm"
+                                        [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()" required>
+                                    <!-- <i class="material-icons align-arrow-right">arrow_drop_down</i> -->
+                                    <mat-error *ngIf="natureOfBusinessForm.invalid">
+                                        Please select value from dropdown only.
+                                    </mat-error>
+                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                        <mat-option *ngFor="let option of filteredOptions | async"
+                                            [value]="option.label">
+                                            {{option.label}}-{{option.code}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="card__col-xs-12 card__col-sm-6" *ngIf="businessType.value === 'PROFESSIONAL'">
                                 <mat-form-field appearance="outline">
                                     <mat-label>{{natureOfBusinessPlaceholder}}</mat-label>
                                     <input type="text" placeholder="{{natureOfBusinessPlaceholder}}"

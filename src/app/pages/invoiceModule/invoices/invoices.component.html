@@ -1,12 +1,10 @@
 <!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading> -->
-<div class="main clearfix">
+<!-- <div class="main clearfix">
     <div class="card">
-        <!-- Search for data -->
-
         <mat-tab-group>
             <mat-tab label="Add Invoice">
                 <ng-template matTabContent><br><br>
-                    <app-add-invoice></app-add-invoice>  <!--(update)="editInvoice($event)"-->
+                    <app-add-invoice></app-add-invoice>
                 </ng-template>
             </mat-tab>
 
@@ -15,9 +13,21 @@
                     <app-invoices-status></app-invoices-status>
                 </ng-template>
             </mat-tab>
-
-
         </mat-tab-group>
+    </div>
+</div> -->
 
+<div class="main clearfix" style="min-height: 0vh; padding-top: 0px;">
+    <div class="tab">
+        <ul class="tab__container clearfix">
+            <li class="tab__item" routerLinkActive="tab__item_active">
+                <a class="tab__link" routerLink="/pages/invoice/generate">Generate Invoice</a>
+            </li>
+            <li class="tab__item" routerLinkActive="tab__item_active">
+                <a class="tab__link" routerLink="/pages/invoice/list">All Invoices</a>
+            </li>
+        </ul>
     </div>
 </div>
+
+<router-outlet></router-outlet>

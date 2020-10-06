@@ -36,10 +36,9 @@ export class SidebarComponent implements OnInit {
   constructor(private navbarService: NavbarService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService, private route: Router) {
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
     this.route.events.subscribe((url: any) => {
-      console.log('Path: ', route.url)
-      if(route.url === '/pages/itr-filing/itr'){
-          this.hideSideBar = true;
-      }else{
+      if (route.url === '/pages/itr-filing/itr') {
+        this.hideSideBar = true;
+      } else {
         this.hideSideBar = false;
       }
     });
@@ -61,11 +60,11 @@ export class SidebarComponent implements OnInit {
   }
 
 
-  chatCorner(){
+  chatCorner() {
     this.route.navigate(['/pages/chat-corner'])
   }
 
-  taxSummary(){
+  taxSummary() {
     alert('Ok')
     this.route.navigate(['/pages/tax-summary'])
   }

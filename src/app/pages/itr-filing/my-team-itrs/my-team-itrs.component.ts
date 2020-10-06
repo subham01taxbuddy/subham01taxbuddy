@@ -7,6 +7,7 @@ import { AppConstants } from 'app/shared/constants';
 import { MatDialog } from '@angular/material';
 import { FilingStatusDialogComponent } from '../filing-status-dialog/filing-status-dialog.component';
 import { ReviseReturnDialogComponent } from '../revise-return-dialog/revise-return-dialog.component';
+import moment = require('moment');
 
 @Component({
   selector: 'app-my-team-itrs',
@@ -66,18 +67,18 @@ export class MyTeamItrsComponent implements OnInit {
   myFilingTeamMembers = [];
   selectedMember: String = '';
   constructor(private itrMsService: ItrMsService, public utilsService: UtilsService, private router: Router, private dialog: MatDialog,) {
-    const loggedInUserData = JSON.parse(localStorage.getItem('UMD'))
+    // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'))
     this.filingTeamMembers.sort((a, b) => a.label > b.label ? 1 : -1)
-    var filingMemberId = loggedInUserData.USER_UNIQUE_ID;
-    // filingMemberId = 12172
-    if (filingMemberId !== 1065 && filingMemberId !== 1067 && filingMemberId !== 21354 && filingMemberId !== 12172) {
-      if (filingMemberId === 1707) {
-        filingMemberId = 1063;
-      }
-      this.myFilingTeamMembers = this.filingTeamMembers.filter(item => item.teamLeadId === filingMemberId);
-    } else {
-      this.myFilingTeamMembers = this.filingTeamMembers;
-    }
+    this.myFilingTeamMembers = this.filingTeamMembers;
+    // var filingMemberId = loggedInUserData.USER_UNIQUE_ID;
+    // if (filingMemberId !== 1065 && filingMemberId !== 1067 && filingMemberId !== 21354 && filingMemberId !== 12172) {
+    //   if (filingMemberId === 1707) {
+    //     filingMemberId = 1063;
+    //   }
+    //   this.myFilingTeamMembers = this.filingTeamMembers.filter(item => item.teamLeadId === filingMemberId);
+    // } else {
+    //   this.myFilingTeamMembers = this.filingTeamMembers;
+    // }
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
       columnDefs: this.myItrsCreateColoumnDef(),
@@ -128,7 +129,10 @@ export class MyTeamItrsComponent implements OnInit {
         contactNumber: data[i].contactNumber,
         email: data[i].email,
         itrType: data[i].itrType,
+        ackStatus: data[i].ackStatus,
+        acknowledgementReceived: data[i].acknowledgementReceived,
         eFillingCompleted: data[i].eFillingCompleted,
+        eFillingDate: data[i].eFillingDate,
       });
     }
     return newData;
@@ -163,8 +167,8 @@ export class MyTeamItrsComponent implements OnInit {
         }
       },
       {
-        headerName: "PAN Number",
-        field: "panNumber",
+        headerName: "Mobile",
+        field: "contactNumber",
         sortable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -173,8 +177,25 @@ export class MyTeamItrsComponent implements OnInit {
         }
       },
       {
-        headerName: "Mobile",
-        field: "contactNumber",
+        headerName: "ITR Type",
+        field: "itrType",
+        width: 70,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          defaultOption: "startsWith",
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: "Filing Date",
+        field: "eFillingDate",
+        sortable: true,
+        width: 100,
+        valueFormatter: (data) => data.value ? moment(data.value).format('DD MMM YYYY') : null,
+      },
+      {
+        headerName: "PAN Number",
+        field: "panNumber",
         sortable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -193,25 +214,22 @@ export class MyTeamItrsComponent implements OnInit {
         }
       },
       {
-        headerName: "ITR Type",
-        field: "itrType",
-        filter: "agTextColumnFilter",
-        filterParams: {
-          defaultOption: "startsWith",
-          debounceMs: 0
-        }
-      },
-      {
         headerName: 'Start',
         width: 50,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params) {
-          if (params.data.eFillingCompleted) {
-            return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
+          if (params.data.eFillingCompleted && params.data.ackStatus === 'SUCCESS') {
+            return `<button type="button" class="action_icon add_button" title="Acknowledgement not received, Contact team lead" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: green">
             <i class="fa fa-check" title="ITR filed successfully / Click to start revise return" 
             aria-hidden="true" data-action-type="startRevise"></i>
+           </button>`;
+          } else if (params.data.ackStatus === 'DELAY') {
+            return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
+            background: transparent; font-size: 16px; cursor:not-allowed;color: red">
+            <i class="fa fa-circle" title="Acknowledgement not received, Contact team lead" 
+            aria-hidden="true"></i>
            </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;

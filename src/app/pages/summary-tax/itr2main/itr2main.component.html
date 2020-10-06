@@ -65,14 +65,14 @@
     
                                     </div>
     
-                                    <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0">
+                                    <div class="card__col-lg-3"
+                                        *ngIf="this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0"> <!-- formGroupName="taxSummary"-->
                                         <label>Tax Payable/ Refund</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxpayable'].value"
                                             disabled class="disableInput">
                                     </div>
-                                    <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0">
+                                    <div class="card__col-lg-3" 
+                                        *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0"> <!--formGroupName="taxSummary"-->
                                         <label>Tax Payable/ Refund</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxRefund'].value"
                                             disabled class="disableInput">
@@ -169,7 +169,7 @@
                             <div class="card__col-lg-3" > <!--formGroupName="assesse"-->
                                 <mat-form-field appearance="outline">
                                     <mat-label>Residential Status</mat-label>
-                                    <mat-select matInput 
+                                    <mat-select matInput  formControlName="residentialStatus"
                                         placeholder="Select Residential Status" autocomplete="off" required> <!--formControlName="residentialStatus"-->
                                         <mat-option  *ngFor="let res of residentialStatus" [value]="res.value">
                                            {{ res.label }}
@@ -463,9 +463,9 @@
                                 <td>{{house.grossAnnualRentReceived}}</td>
                                 <td>{{house.propertyTax}}</td>
                                 <td>{{house.annualValue}}</td>
-                                <td>{{house.taxableIncome}}</td>
-                                <td>{{house.interestAmount}}</td>
                                 <td>{{house.exemptIncome}}</td>
+                                <td>{{house.interestAmount}}</td>
+                                <td>{{house.taxableIncome}}</td>
                                 <td>
                                     <button (click)="openDialog('Edit House Property','Edit', i, housingData[i],'House')"><i
                                             class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
@@ -593,80 +593,27 @@
                             
                         </mat-card><br><br>
 
-                        <div *ngIf="itrType.itrThree" class="tableHead">Annexures: Balance Sheet as on 31.03.2020 0f ()</div><br>
+                        
                         <mat-card *ngIf="itrType.itrThree">
-                          <form [formGroup]="itr3Form">
-                            <table style="overflow-y: scrol">
-                                <tr>
-                                    <th><b>Liabilities</b></th>
-                                    <th><b>Amount</b></th>
-                                    <th><b>Assets</b></th>
-                                    <th><b>Amount</b></th>
-                                </tr>
-                                <tr>
-                                    <td>Partner's /Members Capital</td>
-                                    <td><input type="number" formControlName="memberCapita" (blur)="totalOfLiabilities()" maxlength="8"></td>
-                                    <td>Fixed Asset</td>
-                                    <td><input type="number" formControlName="fixedAsset" (blur)="totalOfAssets()" maxlength="8"></td>
-                                </tr>
-                                <tr>
-                                    <td>Secured loans</td>
-                                    <td><input type="number" formControlName="securedLoan" (blur)="totalOfLiabilities()"  maxlength="8"></td>
-                                    <td>Inventories</td>
-                                    <td><input type="number" formControlName="inventories" (blur)="totalOfAssets()" maxlength="8"></td>
-                                </tr>
-                                <tr>
-                                    <td>Unsecured loans</td>
-                                    <td><input type="number" formControlName="unsecuredLoan" (blur)="totalOfLiabilities()"  maxlength="8"></td>
-                                    <td>Sundry debtors</td>
-                                    <td><input type="number" formControlName="sundryDebtors" (blur)="totalOfAssets()" maxlength="8"></td>
-                                </tr>
-                                <tr>
-                                    <td>Advances</td>
-                                    <td><input type="number" formControlName="advances" (blur)="totalOfLiabilities()"  maxlength="8"></td>
-                                    <td>Balance with Bank</td>
-                                    <td><input type="number" formControlName="balanceWithBank" (blur)="totalOfAssets()" maxlength="8"></td>
-                                </tr>
-                                <tr>
-                                    <td>Sundry creditors</td>
-                                    <td><input type="number" formControlName="sundryCreditors" (blur)="totalOfLiabilities()"  maxlength="8"></td>
-                                    <td>Cash in hand</td>
-                                    <td><input type="number" formControlName="cashInHand" (blur)="totalOfAssets()" maxlength="8"></td>
-                                </tr>
-                                <tr>
-                                    <td>Other Liabilities</td>
-                                    <td><input type="number" formControlName="otherLiabilies" (blur)="totalOfLiabilities()"  maxlength="8"></td>
-                                    <td>Loan and advances</td>
-                                    <td><input type="number" formControlName="loadAndAdvance" (blur)="totalOfAssets()" maxlength="8"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td>Other asset</td>
-                                    <td><input type="number" formControlName="otherAssest" (blur)="totalOfAssets()" maxlength="8"></td>
-                                </tr>
-                                <tr>
-                                    <td><b>Total</b></td>
-                                    <td><b><input type="number" formControlName="liabilitiesTotal" disabled maxlength="8"></b></td>
-                                    <td><b>Total</b></td>
-                                    <td><b><input type="number" formControlName="assetsTotal" disabled maxlength="8"></b></td>
-                                </tr>
-                            </table><br><br>
-                            <!-- <p class="subLabel">Short Term Capital Gain @ Slab Rate</p><br> -->
+                          <form [formGroup]="businessIncomeForm">
+                            <div class="tableHead">Annexure: Income from Business or Profession</div><br>
+                            <app-itr4part [itrType]="personalInfoForm.controls['itrType'].value" [businessData]="this.updatBussinessInfo"
+                                (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
 
-                            <p class="subLabel">Presumptive Business Income U/S 44ADA</p>
+                                <br>
+
+                                <div class="tableHead">Speculative Business Income</div><br>
                                 <div class="card__row">
                                     <div class="card__col-lg-6">
                                         <mat-form-field appearance="outline">
-                                            <mat-label>Nature of business</mat-label> <!-- type="text"-->
-                                            <input placeholder="Nature of business" aria-label="Assignee" matInput
-                                                formControlName="natureOfBusiness44ADA" [matAutocomplete]="auto2" (blur)="getCodeFromLabelOnBlur44ADA()">
-                                            <!-- <i class="material-icons align-arrow-right">arrow_drop_down</i>-->
-                                            <mat-error *ngIf="itr3Form['controls'].natureOfBusiness44ADA.invalid">
+                                            <mat-label>Nature of business</mat-label> 
+                                            <input type="text" placeholder="Nature of business" aria-label="Assignee" matInput
+                                                formControlName="natureOfSpeculativeBusiness" [matAutocomplete]="auto3" >  <!--(blur)="getCodeFromLabelOnBlur()"-->
+                                            <mat-error *ngIf="businessIncomeForm['controls'].natureOfSpeculativeBusiness.invalid">
                                                 Please select value from dropdown only.
                                             </mat-error>
-                                            <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">   <!--(optionSelected)="getCodeFromLabelOnBlur()"-->
-                                                <mat-option *ngFor="let option of filteredOptions44ADA | async" [value]="option.label">
+                                            <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">   
+                                                <mat-option *ngFor="let option of speculativeOptions | async" [value]="option.label">
                                                     {{option.label}}-{{option.code}}
                                                 </mat-option>
                                             </mat-autocomplete>
@@ -675,14 +622,14 @@
                                     <div class="card__col-lg-4">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Trade Name</mat-label>
-                                            <input matInput placeholder="Trade Name" disabled formControlName="tradeName44ADA" (blur)="getCodeFromLabelOnBlur44ADA()" maxlength="75" autocomplete="off">
-                                            <!-- <mat-error *ngIf="itr3Form['controls'].tradeName44ADA.hasError('pattern')">
+                                            <input matInput placeholder="Trade Name" formControlName="tradeNameOfSpeculative"  maxlength="75" autocomplete="off"><!--(blur)="getCodeFromLabelOnBlur()"-->
+                                            <!-- <mat-error *ngIf="natureOfBusinessForm['controls'].tradeName44AD.hasError('pattern')">
                                                 Name should contain character only
                                             </mat-error> -->
                                         </mat-form-field>
                                     </div>
                                 </div><br>
-
+                           
                                 <table>
                                     <tr>
                                         <th><b>Particulars</b></th>
@@ -690,29 +637,118 @@
                                         <th><b>Presumptive Income</b></th>
                                     </tr>
                                     <tr>
-                                        <td><b>Gross Receipts</b></td>
-                                        <td>  <input
-                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
-                                            formControlName="grossReciept"
-                                            (blur)="calprofessionPresumptiveIncome(itr3Form.controls['grossReciept'].value)"></td>
+                                        <td><b>Gross Turnover-</b></td>
+                                        <td><input formControlName="turnoverOfSpeculative"
+                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"></td>
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Presumptive Income at 50%</td>
+                                        <td>Purchase</td>
                                         <td></td>
                                         <td>
-                                            <input type="number" formControlName="presumptiveIncome" maxlength="8">
-                                            <div style="color: red;"  *ngIf="itr3Form.controls['presumptiveIncome'].hasError('min')">
-                                                Minimum value must be {{itr3Form.controls['minimumPresumptiveIncome'].value}}
-                                            </div>
-                                            <div style="color: red;"  *ngIf="itr3Form.controls['presumptiveIncome'].hasError('max')">
-                                                Amount can not exceed receipt.
-                                            </div>
+                                            <input formControlName="purchaseOfSpeculative" ninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                                        </td> 
+                                    </tr>
+                                    <tr>
+                                        <td><b>Expense-</b></td>
+                                        <td><input formControlName="expenceIncomeOfSpeculative"
+                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Income</td>
+                                        <td></td>
+                                        <td>
+                                            <input formControlName="taxableIncomeOfSpeculative" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" (blur)="calTotalOfIncomeFromBusiness()">
                                         </td>
                                     </tr>
-                                </table>
-                            </form>
+                                    <!-- <tr>
+                                        <td>Total</td>
+                                        <td><input type="number" disabled maxlength="8"></td>
+                                        <td><input type="number" disabled maxlength="8"></td>
+                                    </tr> -->
+                                </table><br><br>
+
+                                <div class="tableHead">Income from Other than Speculative and Presumptive</div><br>
+                                <div class="card__row">
+                                    <div class="card__col-lg-6">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Nature of business</mat-label> 
+                                            <input type="text" placeholder="Nature of business" aria-label="Assignee" matInput
+                                                formControlName="natureOfothertThanSpeculativeBusiness" [matAutocomplete]="auto3" >  <!--(blur)="getCodeFromLabelOnBlur()"-->
+                                            <mat-error *ngIf="businessIncomeForm['controls'].natureOfothertThanSpeculativeBusiness.invalid">
+                                                Please select value from dropdown only.
+                                            </mat-error>
+                                            <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">   
+                                                <mat-option *ngFor="let option of otherThanSpeculativeOptions | async" [value]="option.label">
+                                                    {{option.label}}-{{option.code}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="card__col-lg-4">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Trade Name</mat-label>
+                                            <input matInput placeholder="Trade Name" formControlName="tradeNameOfothertThanSpeculative"  maxlength="75" autocomplete="off"><!--(blur)="getCodeFromLabelOnBlur()"-->
+                                            <!-- <mat-error *ngIf="natureOfBusinessForm['controls'].tradeName44AD.hasError('pattern')">
+                                                Name should contain character only
+                                            </mat-error> -->
+                                        </mat-form-field>
+                                    </div>
+                                </div><br>
+                                <table>
+                                    <tr>
+                                        <th><b>Particulars</b></th>
+                                        <th><b>Gross Receipts</b></th>
+                                        <th><b>Presumptive Income</b></th>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Gross Turnover</b></td>
+                                        <td><input formControlName="turnoverOfothertThanSpeculative"
+                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"></td>
+                                               
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Purchase</td>
+                                        <td></td>
+                                        <td>
+                                            <input formControlName="purchaseOfothertThanSpeculative" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Expence-</b></td>
+                                        <td><input formControlName="expenceIncomeOfothertThanSpeculative"
+                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Income</td>
+                                        <td></td>
+                                        <td>
+                                            <input formControlName="taxableIncomeOfothertThanSpeculative" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" (blur)="calTotalOfIncomeFromBusiness()">
+                    
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td>Total</td>
+                                        <td><input type="number" disabled maxlength="8"></td>
+                                        <td><input type="number" disabled maxlength="8"></td>
+                                    </tr> -->
+                                </table><br><br>
+
+                            
+                          </form>
                         </mat-card><br><br>
 
     
@@ -805,8 +841,8 @@
                                 <th>House Property Losses</th>
                                 <th>Short Term Capital Losses</th>
                                 <th>Long Term Capital Losses</th>
-                                <th>Losses Set Off during the year</th>
-                                <th>Current year lossess 2019-2020</th>
+                                <th *ngIf="itrType.itrThree">Business/Professional Loss</th>
+                                <th *ngIf="itrType.itrThree">Speculative Business Loss</th>
                                 <th>Carried forward to next year</th>
                                 
                                 <th>Action</th>
@@ -817,8 +853,8 @@
                                 <td>{{losses.housePropertyLosses}}</td>
                                 <td>{{losses.shortTermCapitalGainLosses}}</td>
                                 <td>{{losses.longTermCapitalGainLosses}}</td>
-                                <td>{{losses.lossesSetOffDuringTheYear}}</td>
-                                <td>{{losses.currentYearLosess}}</td>
+                                <td *ngIf="itrType.itrThree">{{losses.businessProfessionalLoss}}</td>
+                                <td *ngIf="itrType.itrThree">{{losses.speculativeBusinessLoss}}</td>
                                 <td>{{losses.carriedForwardToNextYear}}</td>
                                
                                 <td>
@@ -830,10 +866,10 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="5"><b>Total</b></td>
-                                <td><b>{{totalLossesSetOfDuringYrs}}</b></td>
+                                <td *ngIf="itrType.itrTwo" colspan="4"><b>Total</b></td>
+                                <td *ngIf="itrType.itrThree" colspan="6"><b>Total</b></td>
                                 <td></td>
-                                <td><b>{{totalCarryForwardToNxtYrs}}</b></td>
+                                <td><b>{{this.computationOfIncomeForm.controls['carryForwardLoss'].value}}</b></td>
                                 
                                 <td></td>
                             </tr>
@@ -1097,6 +1133,18 @@
                                            
                                     </mat-form-field>
                                 </div>
+
+                                <div class="card__col-lg-3" *ngIf="this.itrType.itrThree">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Under section 80JJA</mat-label>
+                                        <input matInput placeholder="Under section 80JJA" maxlength="8"
+                                            autocomplete="off"
+                                            type="number" formControlName="us80jja"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
+                                    </mat-form-field>
+                                </div>
                                 <!-- </form> -->
                             </div>
                         </mat-card>
@@ -1219,7 +1267,7 @@
     
                    
                     <mat-card *ngIf="showAssetLiability">  
-                        <div class="tableHead">Annexures: Exempt Income</div><br>
+                        <div class="tableHead">Annexures: Asset & liability annexure</div><br>
                         <p>Assets and Liabilities at the end of the year (applicable in a case where total income exceeds Rs.50 lakh)</p><br><br>
 
                         <p class="subLabel">Details of immovable assets</p>
@@ -1317,7 +1365,9 @@
                             <tr>
                                 <td></td>
                                 <td><b>Liabilities in relation to Assets</b></td>
-                                <td><input disabled [value]="this.deductionAndRemainForm.controls['movableAssetTotal'].value"></td>
+                                <td><input type="text"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" formControlName="movableAssetTotal" ></td>  
+                                <!--[value]="this.deductionAndRemainForm.controls['movableAssetTotal'].value"-->
                             </tr>
                           
                         </table>
@@ -1384,7 +1434,7 @@
                                     <td></td>
                                     <td>Long Term Capital Gain @ 20% (Refer Annexure)</td>
                                     <td><input type="number" [value]="capital_Gain.longTermCapitalGain20" disabled maxlength="8"></td>
-                                    <td><input type="number" [value]="incomeFromCapGain" disabled maxlength="8"></td>
+                                    <td><input type="number" formControlName="capitalGain"  disabled maxlength="8"></td> <!--[value]="incomeFromCapGain"-->
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td>4</td>
@@ -1394,33 +1444,27 @@
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
-                                    <td>Trade Name: </td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr *ngIf="itrType.itrThree">
-                                    <td></td>
-                                    <td>Gross Turnover</td>
-                                    <td><input type="number" disabled maxlength="8"></td>
+                                    <td>Presumptive Business Income U/s 44 AD</td>
+                                    <td><input type="number" formControlName="presumptiveBusinessIncomeUs44AD"  disabled maxlength="8"></td>
                                     <td></td>
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
-                                    <td>Less: Purchase</td>
-                                    <td><input type="number" disabled maxlength="8"></td>
+                                    <td>Presumptive Business Income U/s 44 ADA</td>
+                                    <td><input type="number" formControlName="presumptiveBusinessIncomeUs44ADA" disabled maxlength="8"></td>
                                     <td></td>
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
-                                    <td>Less: Expenses </td>
-                                    <td><input type="number" disabled maxlength="8"></td>
+                                    <td>Speculative Business Income</td>
+                                    <td><input type="number" formControlName="speculativeBusinessIncome" disabled maxlength="8"></td>
                                     <td></td>
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
-                                    <td>Presumptive Business Income/ Loss </td>
-                                    <td></td>
-                                    <td><input type="number" disabled maxlength="8"></td>
+                                    <td>Income from Other than Speculative and Presumptive </td>
+                                    <td><input type="number" formControlName="incomeFromOtherThanSpeculativeAndPresumptive" disabled maxlength="8"></td>
+                                    <td><input type="number" formControlName="presumptiveIncome" disabled maxlength="8"></td>
                                 </tr>
 
 
