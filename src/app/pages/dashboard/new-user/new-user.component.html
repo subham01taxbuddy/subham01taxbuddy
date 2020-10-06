@@ -20,11 +20,14 @@
                             <div class="table__cell product-row__cell-unit flex-30">
                                 <a class="table__sort-link">Name</a>
                             </div>
-                            <div class="table__cell product-row__cell-unit flex-20">
+                            <div class="table__cell product-row__cell-unit flex-15">
                                 <a class="table__sort-link">Mobile</a>
                             </div>
-                            <div class="table__cell product-row__cell-unit flex-20">
+                            <div class="table__cell product-row__cell-unit flex-15">
                                 <a class="table__sort-link">Created Date</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit flex-10">
+                                <a class="table__sort-link">Platform</a>
                             </div>
 
                             <div class="table__cell product-row__cell-unit flex-20">
@@ -47,16 +50,24 @@
                                     <div class="table__cell product-row__cell-stock flex-30">
                                         {{item.name}}
                                     </div>
-                                    <div class="table__cell product-row__cell-stock flex-20">
+                                    <div class="table__cell product-row__cell-stock flex-15">
                                         {{item.mobileNumber}}
                                     </div>
-                                    <div class="table__cell product-row__cell-stock flex-20">
+                                    <div class="table__cell product-row__cell-stock flex-15">
                                         {{item.userCreatedDate | date :'dd MMM yyyy, hh:mm a'}}
                                     </div>
-
-                                    <div class="table__cell product-row__cell-stock flex-20">
+                                    <div class="table__cell product-row__cell-stock flex-10">
+                                        {{item.platform}}
+                                    </div>
+                                    <div class="table__cell product-row__cell-stock flex-20"
+                                        *ngIf="item.platform === 'WebSite' || item.platform === 'WEB'">
                                         <button type="submit" class="btn" style="border: none;"
                                             (click)="startConversation(item)">Start Conversation</button>
+                                    </div>
+                                    <div class="table__cell product-row__cell-stock flex-20"
+                                        *ngIf="item.platform !== 'WebSite' && item.platform !== 'WEB'">
+                                        <button type="submit" class="btn" style="border: none;"
+                                            (click)="startPush(item)">Send Push</button>
                                     </div>
                                 </div>
                             </div>

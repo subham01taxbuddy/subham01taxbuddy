@@ -35,7 +35,7 @@ export class NewUserComponent implements OnInit {
 
   retrieveNewUsers(page) {
     this.loading = true;
-    const param = `/user-allocation?size=1&agentId=${this.agentId}&page=${page - 1}`;
+    const param = `/user-allocation?size=${this.pageSize}&agentId=${this.agentId}&page=${page - 1}`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('New User data', result);
       this.userList = result.userAllocationDetails;
@@ -74,4 +74,23 @@ export class NewUserComponent implements OnInit {
     })
   }
 
+  startPush(user) {
+    this.loading = true;
+    const param = `/campaign/generic`;
+    const request = {
+      "userIdList": [user.userId],
+      "channelId": 1,
+      "message": "Filing I-T Return through TaxBuddy includes Free tax saving advice and tax notice management. Start filing Now.",
+      "imageUrl": "https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/push_Notification_100K_1024+x+512.png",
+      "deepLink": "itrAssisted"
+    }
+    this.userMsService.postMethod(param).subscribe((result: any) => {
+      console.log('Push send: ', result);
+      this.loading = false;
+      this.utilsService.showSnackBar('Push notification send successfully.');
+    }, error => {
+      this.utilsService.showSnackBar('Error while sending push notification.');
+      this.loading = false;
+    })
+  }
 }
