@@ -22,9 +22,7 @@ const routes: Routes = [
             { path: 'direct-upload', component: DirectUploadComponent },
             { path: 'acknowledgement', component: AcknowledgementComponent },
             { path: 'team-itrs', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: MyTeamItrsComponent },
-            { path: 'delay', component: DelayComponent },
-            
-            
+            { path: 'delay', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: DelayComponent },
             { path: '', redirectTo: '/pages/itr-filing/users', pathMatch: 'full' }
         ]
     },
