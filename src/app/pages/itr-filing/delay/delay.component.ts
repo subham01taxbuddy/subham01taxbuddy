@@ -30,15 +30,16 @@ export class DelayComponent implements OnInit {
   }
 
   getDelayedItrData(){
-    this.loading = true;
     let param = '/itrByAckStatus';
     this.itrMsService.getMethod(param).subscribe((res: any)=>{
-      this.loading = false;
         console.log('res: ',res);
         this.delayItrGridOptions.api.setRowData(this.createDelayRowData(res));
     },
     error=>{
-      this.loading = false;
+      console.log('error: ',error);
+      if(error.error.title === "Not_found"){
+        this._toastMessageService.alert("error", "Delay itr record not found.");
+      }
     })
   }
 
@@ -175,12 +176,11 @@ export class DelayComponent implements OnInit {
       this.loading = false;
         console.log('res: ',res);
         this._toastMessageService.alert("success", "ITR status change successfully.");
-        //this.delayItrGridOptions.api.setRowData(this.createDelayRowData(res));
-       // this.getDelayedItrData();
+        this.getDelayedItrData();
     },
     error=>{
       this.loading = false;
-      this._toastMessageService.alert("success", "There is some issue to change status.");
+      this._toastMessageService.alert("error", "There is some issue to change status.");
     })
  }
 
