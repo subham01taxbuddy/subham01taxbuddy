@@ -35,6 +35,7 @@ import { KommunicateDialogComponent } from './kommunicate-dialog/kommunicate-dia
 import { FilingStatusDialogComponent } from './filing-status-dialog/filing-status-dialog.component';
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-return-dialog.component';
+import { DelayComponent } from './delay/delay.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -78,6 +79,7 @@ import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-retur
         FilingStatusDialogComponent,
         DocumentUploadComponent,
         ReviseReturnDialogComponent,
+        DelayComponent,
         // InputUploadComponent
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ KommunicateDialogComponent,
