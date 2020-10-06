@@ -1,66 +1,11 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
 <div class="main clearfix" style="min-height: 0vh; padding-top: 0px;">
-    <div class="card">
-       
-        <!-- <div class="card__row" style="margin-top: 0px;">
-            <div class="tab-panel items-tab card__col-xs-12">
-              <div class="tab-panel__content tab-panel__content_visible">
-                <div class="table product__table">
-                  <div class="table__row  table__row_header ">
-                    <div class="table__cell product-row__cell-unit flex-10">
-                      <a class="table__sort-link">SR.NO</a>
-                    </div>
-                    <div class="table__cell product-row__cell-unit flex-30">
-                      <a class="table__sort-link">PAN Number</a>
-                    </div>
-                    <div class="table__cell product-row__cell-unit flex-20">
-                      <a class="table__sort-link">ACK Number</a>
-                    </div>
-                    <div class="table__cell product-row__cell-unit flex-20">
-                      <a class="table__sort-link">Email</a>
-                    </div>
-                    <div class="table__cell product-row__cell-unit flex-20">
-                      <a class="table__sort-link">Mobile</a>
-                    </div>
-                    <div class="table__cell product-row__cell-unit flex-20">
-                      <a class="table__sort-link">Update Status</a>
-                    </div>
-                  </div>
-      
-      
-                  <div >  
-                    <div class="table__row-item product-row" [class.table__row-disabled]="false">
-                      <div class="table__row product-row__main-variant"> 
-                        <div class="table__cell product-row__cell-stock flex-10">
-                        </div>
-                        <div class="table__cell product-row__cell-stock flex-30">
-                        </div>
-                        <div class="table__cell product-row__cell-stock flex-20">
-                        </div>
-                        <div class="table__cell product-row__cell-stock flex-20">
-                        </div>
-                        <div class="table__cell product-row__cell-stock flex-20">
-                        </div>
-                        <div class="table__cell product-row__cell-stock flex-20">
-                          <button type="submit" class="btn" style="border: none;">Start
-                            Filing</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
-
-          <div class="card__row">
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="delayItrGridOptions"
-             (rowClicked)="onRowClicked($event)" paginationPageSize=25 pagination=true> 
-            </ag-grid-angular>
-        </div>
-
+  <div class="card">
+    <div class="card__row">
+      <ag-grid-angular class="ag-theme-balham" [gridOptions]="delayItrGridOptions" (rowClicked)="onRowClicked($event)"
+        paginationPageSize=25 pagination=true>
+      </ag-grid-angular>
     </div>
-   
+  </div>
 </div>
-
