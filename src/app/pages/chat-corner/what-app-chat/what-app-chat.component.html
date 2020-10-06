@@ -380,6 +380,24 @@
                     </div><br>
 
                     <div class="card__col-lg-3 card__col-sm-4">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Select Quick reply</mat-label>
+                        <mat-select placeholder="Select Quick Reply" formControlName="selectQuickReplay" #selectTemp
+                          [disabled]="(this.whatsAppForm.controls['selectTemplate'].value || timeExpired ? true : false)"
+                          (selectionChange)="showQuickRplyMsg($event)">
+                          <mat-option *ngFor="let rply of quicjReplay" [value]="rply.value">
+                            {{rply.label}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="card__col-lg-6 card__col-sm-4" *ngIf="whatsAppForm.controls['selectQuickReplay'].value">
+                      <label>Clear Quick Reply:</label>&nbsp;&nbsp;
+                      <button class="closeBtn" (click)="clearQuickReply()">Clear</button>
+                    </div>
+
+                    <div class="card__col-lg-3 card__col-sm-4">
                       <input type="file" hidden id="input-file-id" #file (change)="uploadMideaFile($event.target.files)"
                         accept=".pdf, .jpg, .jpeg, .png">
                       <button class="sendBtn" (click)="upload()" [ngClass]="timeExpired ? 'btnDisable' : 'sendBtn'"
@@ -389,15 +407,17 @@
                       </button>
                     </div>
 
-                    <div class="card__col-lg-9 card__col-sm-8" *ngIf="whatsAppForm.controls['selectTemplate'].value">
+                    <div class="card__col-lg-6 card__col-sm-4" *ngIf="whatsAppForm.controls['selectTemplate'].value">
                       <label>Clear Selected template:</label>&nbsp;&nbsp;
                       <button class="closeBtn" (click)="clearTemplate()">Clear</button>
                     </div>
 
-                    <div class="card__col-lg-9 card__col-sm-8" *ngIf="whatsAppForm.controls['mediaFile'].value">
+                    <div class="card__col-lg-6 card__col-sm-4" *ngIf="whatsAppForm.controls['mediaFile'].value">
                       <label>{{whatsAppForm.controls['mediaFile'].value.name}}</label>&nbsp;&nbsp;
                       <button class="closeBtn" (click)="clearFile()">Close</button>
                     </div>
+                    
+                    
 
                     <!-- <button *ngIf="this.selectedUser" mat-raised-button color="primary"
                       (click)="geUserChatDetail(selectedUser, 'not-continues')" class="refreshBtn"
