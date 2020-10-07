@@ -1035,5 +1035,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
       this.docDetails.docUrl = '';
       this.docDetails.docType = '';
     }
+    
+  console.log('Doc URL: ',this.docDetails.docUrl)
   }
 }

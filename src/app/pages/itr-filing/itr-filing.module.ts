@@ -36,6 +36,7 @@ import { FilingStatusDialogComponent } from './filing-status-dialog/filing-statu
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-return-dialog.component';
 import { DelayComponent } from './delay/delay.component';
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -48,7 +49,8 @@ import { DelayComponent } from './delay/delay.component';
         NgxImageZoomModule.forRoot(),
         PdfViewerModule,
         SharedModule,
-        PagesModule
+        PagesModule,
+        NgxDocViewerModule
         // NgxExtendedPdfViewerModule
     ],
     declarations: [
