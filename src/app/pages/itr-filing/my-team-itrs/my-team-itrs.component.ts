@@ -60,6 +60,13 @@ export class MyTeamItrsComponent implements OnInit {
     { teamLeadId: 1064, value: 28222, label: 'Ankita Pawar' },
     { teamLeadId: 1706, value: 28763, label: 'Smita Yadav' },
 
+    { teamLeadId: 0, value: 42886, label: 'Gitanjali Kakade' },
+    { teamLeadId: 0, value: 42885, label: 'Dhanashri wadekar' },
+    { teamLeadId: 0, value: 42888, label: 'Baby Kumari Yadav' },
+    { teamLeadId: 0, value: 43406, label: 'Priyanka Shilimkar' },
+    { teamLeadId: 0, value: 42878, label: 'Supriya Waghmare' },
+    { teamLeadId: 0, value: 42931, label: 'Dhanashree Amarale' },
+
     { teamLeadId: 0, value: 1065, label: 'Urmila Warve' },
     { teamLeadId: 0, value: 1067, label: 'Divya Bhanushali' },
     { teamLeadId: 0, value: 21354, label: 'Brijmohan Lavaniya' },
