@@ -42,7 +42,7 @@
                     <br>
                     <br>
                     <br>
-                    <ngx-image-zoom *ngIf="form16DocDetails.docType !== 'pdf' || form16DocDetails.docType !== 'xls' || form16DocDetails.docType !== 'doc'" [thumbImage]="form16DocDetails.docUrl"
+                    <ngx-image-zoom *ngIf="form16DocDetails.docType !== 'pdf' || form16DocDetails.docType !== 'xls' || form16DocDetails.docType !== 'doc' || form16DocDetails.docType !== 'xlsx' || form16DocDetails.docType !== 'docx'" [thumbImage]="form16DocDetails.docUrl"
                         [fullImage]="form16DocDetails.docUrl" [magnification]="1" [enableScrollZoom]="true"
                         [enableLens]="true" [lensWidth]="200">
                     </ngx-image-zoom>
@@ -62,7 +62,7 @@
                         </ngx-extended-pdf-viewer> -->
                     </div>
 
-                    <ngx-doc-viewer *ngIf="form16DocDetails.docType === 'xls' || form16DocDetails.docType === 'doc'"
+                    <ngx-doc-viewer *ngIf="form16DocDetails.docType === 'xls' || form16DocDetails.docType === 'doc' || form16DocDetails.docType === 'xlsx' || form16DocDetails.docType === 'docx'"
                          [url]="form16DocDetails.docUrl" viewer="google"  style="width:100%;height:93vh;">
                      </ngx-doc-viewer>
 
