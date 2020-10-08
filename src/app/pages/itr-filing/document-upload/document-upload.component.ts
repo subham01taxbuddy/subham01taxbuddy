@@ -106,11 +106,20 @@ export class DocumentUploadComponent implements OnInit {
       s3ObjectUrl = userId + '/ITR/2019-20/Original/ITR Filing Docs/' + document.name;
     }
 
-    let cloudFileMetaData = '{"fileName":"' + document.name + '","userId":' + userId + ',"accessRight":["' + userId + '_W"' + '],"origin":"BO", "s3ObjectUrl":"' + s3ObjectUrl + '","password":"' + (password ? password : null) + '"}';
+    var pass;
+    //,"password":"' + (password ? password : null) + '"
+    if(password){
+      pass = '","password":"' + password + '"';
+    }
+    else{
+      pass = '"';
+    }
+    let cloudFileMetaData = '{"fileName":"' + document.name + '","userId":' + userId + ',"accessRight":["' + userId + '_W"' + '],"origin":"BO", "s3ObjectUrl":"' + s3ObjectUrl + pass+'}';
     console.log("cloudFileMetaData ===> ", cloudFileMetaData)
     const formData = new FormData();
     formData.append("file", document);
     formData.append("cloudFileMetaData", cloudFileMetaData);
+    console.log("formData ===> ", formData);
     let param = '/itr/cloud/upload'
     this.userMsService.postMethodInfo(param, formData).subscribe((res: any) => {
       this.loading = false;
