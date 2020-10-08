@@ -40,7 +40,7 @@
                         </div> 
                     </div>
                     <br><br><br>
-                    <ngx-image-zoom *ngIf="hpDocDetails.docType !== 'pdf' || hpDocDetails.docType !== 'xls' || hpDocDetails.docType !== 'doc'" [thumbImage]="hpDocDetails.docUrl"
+                    <ngx-image-zoom *ngIf="hpDocDetails.docType !== 'pdf' || hpDocDetails.docType !== 'xls' || hpDocDetails.docType !== 'doc' || hpDocDetails.docType !== 'xlsx' || hpDocDetails.docType !== 'docx'" [thumbImage]="hpDocDetails.docUrl"
                         [fullImage]="hpDocDetails.docUrl" [magnification]="1" [enableScrollZoom]="true"
                         [enableLens]="true" [lensWidth]="200">
                     </ngx-image-zoom>
@@ -56,7 +56,7 @@
                         </pdf-viewer>
                     </div>
 
-                    <ngx-doc-viewer *ngIf="hpDocDetails.docType === 'xls' || hpDocDetails.docType === 'doc'"
+                    <ngx-doc-viewer *ngIf="hpDocDetails.docType === 'xls' || hpDocDetails.docType === 'doc' || hpDocDetails.docType === 'xlsx' || hpDocDetails.docType === 'docx'"
                       [url]="hpDocDetails.docUrl" viewer="google"  style="width:100%;height:93vh;">
                    </ngx-doc-viewer>
 
