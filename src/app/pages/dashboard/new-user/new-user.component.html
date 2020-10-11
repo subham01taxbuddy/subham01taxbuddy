@@ -41,7 +41,8 @@
                   currentPage: page,
                   totalItems: count
                       }; let p=index ">
-                            <div class="table__row-item product-row" [class.table__row-disabled]="false">
+                            <div class="table__row-item product-row"
+                                [class.table__row-disabled]="item.platform === 'WhatsApp'">
                                 <div class="table__row product-row__main-variant">
                                     <!-- [style.background-color]="currentUserId === item.userId ? '#ebffe7':''" -->
                                     <div class="table__cell product-row__cell-stock flex-10">
@@ -66,8 +67,11 @@
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-20"
                                         *ngIf="item.platform !== 'WebSite' && item.platform !== 'WEB'">
-                                        <button type="submit" class="btn" style="border: none; cursor: pointer;"
-                                            (click)="startPush(item)">Send Push</button>
+                                        <button type="submit" class="btn" [disabled]="item.platform === 'WhatsApp'"
+                                            style="border: none;"
+                                            [style.cursor]="item.platform === 'WhatsApp' ? 'not-allowed':'pointer'"
+                                            (click)="startPush(item)">Send
+                                            Push</button>
                                     </div>
                                 </div>
                             </div>
