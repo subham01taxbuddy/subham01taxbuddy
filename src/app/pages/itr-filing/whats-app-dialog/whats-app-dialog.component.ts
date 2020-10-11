@@ -34,6 +34,44 @@ export class WhatsAppDialogComponent implements OnInit {
   oldAttributes: any = [];
   newAttributes: any = [];
 
+  quicjReplay = [{label:'any one', value: 'Please select any one of the options from "Select Other Plan" OR "I Agree with this Plan" to proceed further.'},
+  {label:'documents complete', value: 'Thank you for submitting your documents. Our tax expert will analyze and keep you updated with the filing process.'},
+  {label:'form 26as', value: 'Please upload your *Form 26AS* using the attachment icon\n\
+  Note- How to download Form 26AS?\n\
+  Step 1: Go to: https://www.incometaxindiaefiling.gov.in \n\
+  Step 2: Login > My Account > View Form 26 AS (Tax Credit)\n\
+  Step 3: Assessment Year and View Type (HTML or Text)\n\
+  Step 4: Click on view/Download'},
+  {label:'bank e-verifications', value: '1. Get on to the e filing website- https://portal.incometaxindiaefiling.gov.in/e-Filing/UserLogin/LoginHome.html?lang=eng\n\
+  2. Login to your account\n\
+  3. Go into my profile - prevalidate account'},
+  {label:'invoice', value: 'You must have received Invoice through email and Whatsapp- use the given link to pay'},
+  {label:'payment steps', value: 'Go to https://www.tin-nsdl.com/services/oltas/oltas-index.html\n\
+  then in Quick Links option (left Hand side)- Services\n\
+  E-payment : Pay Taxes Online\n\
+  then NON-TDS/TCS--> CHALLAN NO./ITNS 280\n\
+  0021- INCOME TAX\n\
+  300- SELF ASSESSTMENT TAX\n\
+  ASSESSMENT YEAR- 2020-21'},
+  {label:'login credentials', value: 'Please share Income Tax Login Credentials.'},
+  {label:'bank', value: 'Please share Bank Account Number and IFSC Code.'},
+  {label:'app review', value: 'Please share a review on Play Store here\n\ https://onelink.to/taxbuddy\n\ Please share a review on google here\n\ https://g.page/TaxBuddy/review '},
+
+  {label:'i agree', value: 'Please click on "I Agree with this Plan Button" to proceed further'},
+  {label:'tpa', value: 'Sir you can do your tax planning using our Tax Planning Tool, here you have to enter some details about your income and it will suggest you the best option to save your taxes - https://tpa.taxbuddy.com/login.'},
+  {label:'low refund', value: ' Based on your details provided to us of Income & investments we have prepared the tax computation & found that the refund is not as much as you expected. Plz let us know if you need any other assistance. Thanks'},
+  {label:'not relevant', value: 'We are providing income tax filing and tax compliance-related services, if you need any assistance regarding this, please let us know. Thanks'},
+  {label:'high prices', value: "Thank you very much for your time. According to you, our ITR filing charges are high but I assured you these are the reasonable cost as you can avail our hassle-free online service with assisted mode for filing returns with complimentary services of next year's tax planning and notice management. Let us know if you need any assistance in the future. Thanks"},
+  {label:'not interested', value: 'Thank you very much for your time, please feel free to contact us if you need any assistance related to tax compliance in the future.'},
+  {label:'not responded', value: "I tried calling your number but couldn't reach you, please revert here so that we shall initiate the filing process. Thanks"},
+  {label:'return filed', value: 'Congratulations! Your Income tax return has been filed successfully. You must have received the ITR acknowledgment on your email-id. if any further assistance is required then please let us know. Thanks'},
+  {label:'start', value: 'Kindly click on Start ITR filing button to initiate the process'},
+  {label:'upload docs', value: 'Please upload the documents so that we can process further.'},
+  {label:'select  income', value: 'Please select any one of the Income Sources so that we can process further.'},
+  {label:'help', value: ' If you have any query please call back us on '},
+  {label:'how', value: 'How may I assist you?'},
+]
+
   constructor(public dialogRef: MatDialogRef<WhatsAppDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
               private userService: UserMsService, private _toastMessageService: ToastMessageService, private utileService: UtilsService,
               private fb: FormBuilder) {
@@ -45,6 +83,7 @@ export class WhatsAppDialogComponent implements OnInit {
     this.whatsAppForm = this.fb.group({
       sentMessage: [""],
       selectTemplate: [""],
+      selectQuickReplay: [""],
       mediaFile: [""],
     });
     console.log('data: ',this.data)
@@ -240,6 +279,12 @@ export class WhatsAppDialogComponent implements OnInit {
     // this.whatsAppForm.controls['sentMessage'].setValue(tempInfo.templateContent)
     this.whatsAppForm.controls["sentMessage"].setValue(msg);
   }
+
+  showQuickRplyMsg(event){
+    console.log('Quick reply message: ',event.value);
+    this.whatsAppForm.controls["sentMessage"].setValue(event.value);
+  }
+
 
   getTempAttributes(tempMessage) {
     this.oldAttributes = [];
@@ -490,6 +535,10 @@ export class WhatsAppDialogComponent implements OnInit {
   }
 
   clearTemplate() {
+    this.whatsAppForm.reset();
+  }
+
+  clearQuickReply(){
     this.whatsAppForm.reset();
   }
 

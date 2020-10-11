@@ -30,7 +30,7 @@
         </div> 
     </div>
     <br><br><br>
-    <ngx-image-zoom *ngIf="docDetails.docType !== 'pdf'" [thumbImage]="docDetails.docUrl"
+    <ngx-image-zoom *ngIf="docDetails.docType !== 'pdf' || docDetails.docType !== 'xls' || docDetails.docType !== 'doc'  || docDetails.docType !== 'xlsx' || docDetails.docType !== 'docx'" [thumbImage]="docDetails.docUrl"
         [fullImage]="docDetails.docUrl" [magnification]="1" [enableScrollZoom]="true" [enableLens]="true"
         [lensWidth]="200">
     </ngx-image-zoom>
@@ -45,6 +45,11 @@
             [render-text]="true" style="display: block;height: 100%">
         </pdf-viewer>
     </div>
+
+    <ngx-doc-viewer *ngIf="docDetails.docType === 'xls' || docDetails.docType === 'doc'  || docDetails.docType === 'xlsx' || docDetails.docType === 'docx'"
+        [url]="docDetails.docUrl" viewer="google"  style="width:100%;height:93vh;">
+    </ngx-doc-viewer>
+
     <div *ngIf="docDetails.docUrl ===''">
         Documents not uploaded/Selected
     </div>

@@ -1,0 +1,37 @@
+<div class="inbox_people">
+    <div class="headind_srch">
+        <div class="recent_heading">
+            <h4>Recent</h4>
+        </div>
+        <div class="srch_bar">
+            <!-- <div class="stylish-input-group">
+                <input type="text" class="search-bar" placeholder="Search">
+                <span class="input-group-addon">
+                    <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+                </span> </div> -->
+            <button type="button" style="background: transparent; border:none; cursor: pointer;"
+                (click)="getUserNotify()" title="Click to refresh"> <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="inbox_chat">
+        <span *ngFor="let user of filteredArray; let i=index">
+            <div class="chat_list" [ngClass]="{'active_chat':user.recipientWhatsapp === this.selectedMobileNo}"
+                (click)="geUserChatDetail(user.recipientWhatsapp)">
+                <div class="chat_people">
+                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                    </div>
+                    <div class="chat_ib">
+                        <h5>{{user.name ? user.name : user.recipientWhatsapp}}
+
+                            <span class="chat_date">{{user.dateLong | date:'MMM dd'}}</span>
+                        </h5>
+                        <p>{{user.lastMessage ? user.lastMessage:'Media content'}}<small matBadge="1"
+                                matBadgeOverlap="false" matBadgeSize="small">
+                            </small></p>
+                    </div>
+                </div>
+            </div>
+        </span>
+    </div>
+</div>
