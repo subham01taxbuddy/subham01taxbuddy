@@ -603,9 +603,15 @@ export class InvoicesStatusComponent implements OnInit {
       console.log('responce: ',responce);
       if(responce.reponse === "Please create new invoice before deleting old one"){
         this._toastMessageService.alert("error", responce.reponse);
-      }else{
-        this._toastMessageService.alert("success", responce.reponse);
       }
+      else if(responce.reponse === "Selected invoice must be old invoice or create new invoice before deleting this invoice"){
+        this._toastMessageService.alert("error", responce.reponse);
+      }
+      else{
+        this._toastMessageService.alert("success", responce.reponse);
+        this.getAllInvoiceInfo();
+      }
+
 
     },
     error=>{
