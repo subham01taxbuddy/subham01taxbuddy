@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { environment } from 'environments/environment';
+import { ItrMsService } from 'app/services/itr-ms.service';
 // import { saveAs } from 'file-saver';
 
 // export const MY_FORMATS = {
@@ -47,7 +48,8 @@ export class InvoicesStatusComponent implements OnInit {
 
   constructor(private userMsService: UserMsService, private _toastMessageService: ToastMessageService,
     @Inject(LOCALE_ID) private locale: string, private userService: UserMsService, private dialog: MatDialog,
-    private utilService: UtilsService, private router: Router, private fb: FormBuilder, private datePipe: DatePipe) {
+    private utilService: UtilsService, private router: Router, private fb: FormBuilder, private datePipe: DatePipe,
+    private itrService: ItrMsService) {
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.invoicesCreateColoumnDef(),
@@ -408,6 +410,46 @@ export class InvoicesStatusComponent implements OnInit {
           }
 
         },
+      },
+      {
+        headerName: 'Delete',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          if ((params.data.modeOfPayment === 'Cash' || params.data.paymentStatus === 'Paid') || (params.data.modeOfPayment === 'Cash' && params.data.paymentStatus === 'Paid')) {
+            return `<button type="button" class="action_icon add_button" disabled title="Delete Invoice">
+            <i class="fa fa-trash" aria-hidden="true" data-action-type="delete-invoice"></i>
+           </button>`;
+          } else {
+            return `<button type="button" class="action_icon add_button" title="Delete Invoice">
+            <i class="fa fa-trash" aria-hidden="true" data-action-type="delete-invoice"></i>
+           </button>`;
+          }
+
+
+        },
+        width: 55,
+        pinned: 'right',
+        cellStyle: function (params) {
+          if ((params.data.modeOfPayment === 'Cash' || params.data.paymentStatus === 'Paid') || (params.data.modeOfPayment === 'Cash' && params.data.paymentStatus === 'Paid')) {
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              backgroundColor: '#dddddd',
+              color: '#dddddd',
+            }
+          } else {
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center'
+            }
+          }
+
+        },
       }
 
     ]
@@ -437,6 +479,10 @@ export class InvoicesStatusComponent implements OnInit {
         }
         case 'mail-reminder': {
           this.sendMailReminder(params.data);
+          break;
+        }
+        case 'delete-invoice': {
+          this.deleteReminder(params.data);
           break;
         }
       }
@@ -546,6 +592,32 @@ export class InvoicesStatusComponent implements OnInit {
       });
     }
 
+  }
+
+  deleteReminder(invoiceInfo){
+    console.log('invoiceInfo: ',invoiceInfo);
+    this.loading = true;
+    let param = '/invoice/delete?invoiceNo='+invoiceInfo.invoiceNo;
+    this.itrService.deleteMethod(param).subscribe((responce: any)=>{
+      this.loading = false;
+      console.log('responce: ',responce);
+      if(responce.reponse === "Please create new invoice before deleting old one"){
+        this._toastMessageService.alert("error", responce.reponse);
+      }
+      else if(responce.reponse === "Selected invoice must be old invoice or create new invoice before deleting this invoice"){
+        this._toastMessageService.alert("error", responce.reponse);
+      }
+      else{
+        this._toastMessageService.alert("success", responce.reponse);
+        this.getAllInvoiceInfo();
+      }
+
+
+    },
+    error=>{
+      this.loading = false;
+      this._toastMessageService.alert("error", "Faild to download invoice.");
+    })
   }
 
   setToDateValidation(FromDate) {
