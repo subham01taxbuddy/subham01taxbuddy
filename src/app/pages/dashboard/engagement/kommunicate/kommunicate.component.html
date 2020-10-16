@@ -61,8 +61,12 @@
                                     </div>
 
                                     <div class="table__cell product-row__cell-stock flex-10">
-                                        <button type="submit" class="start-btn" style="border: none;"
-                                            (click)="startChat(item.chatLink)">Start Chat</button>
+                                        <button style="border: none; cursor: pointer;background: transparent;"
+                                            (click)="startChat(item.chatLink)"><i class="fa fa-comments-o"
+                                                style="color: green; font-size: 18px;"></i></button>
+                                        | <button style="border: none; cursor: pointer;background: transparent;"
+                                            (click)="showNotes(item)" title="Click see/add notes"><i class="fa fa-book"
+                                                style="font-size: 18px;"></i></button>
                                     </div>
                                 </div>
                             </div>
