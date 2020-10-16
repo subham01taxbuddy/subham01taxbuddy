@@ -1,6 +1,8 @@
 import { UtilsService } from 'app/services/utils.service';
 import { Component, OnInit } from '@angular/core';
 import { UserMsService } from 'app/services/user-ms.service';
+import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-kommunicate',
@@ -22,7 +24,8 @@ export class KommunicateComponent implements OnInit {
     { value: 'ankita@ssbainnovations.com', label: 'Ankita' }
   ];
   loading = false;
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService) {
+  constructor(private userMsService: UserMsService, public utilsService: UtilsService,
+    private dialog: MatDialog,) {
     this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
   }
 
@@ -59,5 +62,21 @@ export class KommunicateComponent implements OnInit {
     } else {
       this.utilsService.showSnackBar('Kommunicate Chat link is not available');
     }
+  }
+
+  showNotes(client) {
+    let disposable = this.dialog.open(UserNotesComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.name
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+
   }
 }

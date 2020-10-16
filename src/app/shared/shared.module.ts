@@ -10,6 +10,7 @@ import { AgGridMaterialSelectEditorComponent } from './dropdown.component';
 import { CommonModule } from '@angular/common';
 import { MatInputComponent } from './mat-input.component';
 import { WhatsAppDialogComponent } from 'app/pages/itr-filing/whats-app-dialog/whats-app-dialog.component';
+import { UserNotesComponent } from './components/user-notes/user-notes.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { WhatsAppDialogComponent } from 'app/pages/itr-filing/whats-app-dialog/w
         MatSelectComponent,
         MatInputComponent,
         AgGridMaterialSelectEditorComponent,
-        WhatsAppDialogComponent
+        WhatsAppDialogComponent,
+        UserNotesComponent
     ],
     imports: [
         CommonModule,
@@ -41,9 +43,10 @@ import { WhatsAppDialogComponent } from 'app/pages/itr-filing/whats-app-dialog/w
         AgGridModule,
         MatInputComponent,
         AgGridMaterialSelectEditorComponent,
-        WhatsAppDialogComponent
+        WhatsAppDialogComponent,
+        UserNotesComponent
     ],
     providers: [],
-    entryComponents: [WhatsAppDialogComponent]
+    entryComponents: [WhatsAppDialogComponent, UserNotesComponent]
 })
 export class SharedModule { }

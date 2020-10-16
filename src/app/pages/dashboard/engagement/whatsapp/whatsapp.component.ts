@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material';
 import { WhatsAppDialogComponent } from 'app/pages/itr-filing/whats-app-dialog/whats-app-dialog.component';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
+import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 
 @Component({
   selector: 'app-whatsapp',
@@ -66,5 +67,21 @@ export class WhatsappComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
+
+  showNotes(client) {
+    let disposable = this.dialog.open(UserNotesComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.name
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+
   }
 }
