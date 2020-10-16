@@ -62,16 +62,25 @@
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-20"
                                         *ngIf="item.platform === 'WebSite' || item.platform === 'WEB'">
-                                        <button type="submit" class="btn" style="border: none;cursor: pointer;"
-                                            (click)="startConversation(item)">Start Conversation</button>
+                                        <button style="border: none; cursor: pointer;background: transparent;"
+                                            (click)="startConversation(item)" title="Click to start conversation"><i
+                                                class="fa fa-comments-o"
+                                                style="color: green; font-size: 18px;"></i></button>
+                                        | <button style="border: none; cursor: pointer;background: transparent;"
+                                            (click)="showNotes(item)" title="Click see/add notes"><i class="fa fa-book"
+                                                style="font-size: 18px;"></i></button>
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-20"
                                         *ngIf="item.platform !== 'WebSite' && item.platform !== 'WEB'">
-                                        <button type="submit" class="btn" [disabled]="item.platform === 'WhatsApp'"
-                                            style="border: none;"
-                                            [style.cursor]="item.platform === 'WhatsApp' ? 'not-allowed':'pointer'"
-                                            (click)="startPush(item)">Send
-                                            Push</button>
+
+                                        <button style="border: none; cursor: pointer;background: transparent;"
+                                            (click)="startPush(item)" title="Click send push notifications"><i
+                                                class="fa fa-paper-plane" aria-hidden="true"
+                                                style="color: green; font-size: 18px;"></i></button>
+
+                                        | <button style="border: none; cursor: pointer;background: transparent;"
+                                            (click)="showNotes(item)" title="Click see/add notes"><i class="fa fa-book"
+                                                style="font-size: 18px;"></i></button>
                                     </div>
                                 </div>
                             </div>

@@ -1,6 +1,8 @@
 import { UtilsService } from 'app/services/utils.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 
 @Component({
   selector: 'app-new-user',
@@ -25,7 +27,8 @@ export class NewUserComponent implements OnInit {
   ];
   loading = false;
 
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService) {
+  constructor(private userMsService: UserMsService, public utilsService: UtilsService,
+    private dialog: MatDialog) {
     this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
   }
 
@@ -92,5 +95,21 @@ export class NewUserComponent implements OnInit {
       this.utilsService.showSnackBar('Error while sending push notification.');
       this.loading = false;
     })
+  }
+
+  showNotes(client) {
+    let disposable = this.dialog.open(UserNotesComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.name
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+
   }
 }
