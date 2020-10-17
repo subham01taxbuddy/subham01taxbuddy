@@ -15,6 +15,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { environment } from 'environments/environment';
+import * as converter from 'xml-js';
 
 @Component({
   selector: 'app-itr2main',
@@ -156,6 +157,13 @@ export class Itr2mainComponent implements OnInit {
   speculativeOptions: Observable<any[]>;
   otherThanSpeculativeOptions: Observable<any[]>;
 
+  inputXml : any;
+  JSONData: any;
+
+  lossesyrs = [{value: '2010-2011', label:'2010'},{value: '2011-2012', label:'2011'},{value: '2012-2013', label:'2012'},
+                {value: '2013-2014', label:'2013'},{value: '2014-2015', label:'2014'},{value: '2015-2016', label:'2015'},
+                {value: '2016-2017', label:'2016'},{value: '2017-2018', label:'2017'},{value: '2018-2019', label:'2018'},
+                {value: '2019-2020', label:'2019'}]
 
   constructor(private utilsService: UtilsService, private fb: FormBuilder, private userService: UserMsService, private dialog: MatDialog, private utilService: UtilsService,
               private _toastMessageService: ToastMessageService) 
@@ -363,10 +371,835 @@ export class Itr2mainComponent implements OnInit {
 
     this.setItrType("2");
   }
+
+  upload() {
+    document.getElementById("input-file-id").click();
+  }
+
+  selectFile(event){
+    debugger
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      let xml = e.target.result;
+      this.inputXml = xml;
+      // console.log('Uploaded file in XML format: ',this.inputXml);
+      let result1 = converter.xml2json(xml, {compact: true, spaces: 2});
+
+      this.JSONData = JSON.parse(result1);
+      console.log('JSON formated data: ',this.JSONData);
+		}
+    reader.readAsText(event.target.files[0])
+  }
   
+  xmlJsonUpdate(xmlItrJson){
+    console.log('XML itr json: ',xmlItrJson);
+    // console.log('XML ITR2FORM:ITR2: ',xmlItrJson.elements[0]);
+    // console.log('XML Personal info: ',xmlItrJson.elements[0].elements[0].elements);
+    // var itrData = xmlItrJson.elements[0].elements[0].elements;
+
+    var itReturn = xmlItrJson['ITRETURN:ITR'];
+    var itrData;
+    console.log('itReturn => ',itReturn, typeof itReturn[0]);
+    this.personalInfoForm.reset();
+    this.computationOfIncomeForm.reset();
+    this.assetsLiabilitiesForm.reset();
+    this.deductionAndRemainForm.reset();
+    this.otherSourceForm.reset();
+    this.assetsLiabilitiesForm.reset();
+
+     if(itReturn.hasOwnProperty('ITR2FORM:ITR2')){
+        this.personalInfoForm.controls['itrType'].setValue("2");
+        this.itrType.itrTwo = true;
+        this.itrType.itrThree = false;
+        itrData = itReturn['ITR2FORM:ITR2'];
+     }
+     else if(itReturn.hasOwnProperty('ITR3FORM:ITR3')){
+        this.personalInfoForm.controls['itrType'].setValue("3");
+        this.itrType.itrThree = true;
+        this.itrType.itrTwo = false;
+        itrData = itReturn['ITR3FORM:ITR3'];
+     }
+     console.log('itrData ==> ',itrData);
+     //Personal info binding  
+     debugger
+      //let partA_GEN1Data = itrData.filter(item => item === "ITRForm:PartA_GEN1");
+      let personalInfo = itrData['ITRForm:PartA_GEN1']['ITRForm:PersonalInfo'];
+      let fatherName = itrData['ITRForm:Verification']['ITRForm:Declaration']['ITRForm:FatherName']['_text']
+      console.log('personalInfo: ',personalInfo);
+       this.personalInfoForm.controls['fName'].setValue(personalInfo['ITRForm:AssesseeName']['ITRForm:FirstName']['_text']);
+       this.personalInfoForm.controls['mName'].setValue((personalInfo['ITRForm:AssesseeName']).hasOwnProperty('ITRForm:MiddleName') ? personalInfo['ITRForm:AssesseeName']['ITRForm:MiddleName']['_text'] : '');
+       this.personalInfoForm.controls['lName'].setValue(personalInfo['ITRForm:AssesseeName']['ITRForm:SurNameOrOrgName']['_text']);
+       this.personalInfoForm.controls['fathersName'].setValue(fatherName);
+       this.personalInfoForm.controls['panNumber'].setValue(personalInfo['ITRForm:PAN']['_text']);
+       this.personalInfoForm.controls['city'].setValue(personalInfo['ITRForm:Address']['ITRForm:CityOrTownOrDistrict']['_text']);
+       this.personalInfoForm.controls['pinCode'].setValue(personalInfo['ITRForm:Address']['ITRForm:PinCode']['_text'])
+       this.getCityData(this.personalInfoForm['controls'].pinCode, 'profile');
+       this.personalInfoForm.controls['email'].setValue(personalInfo['ITRForm:Address']['ITRForm:EmailAddress']['_text']);
+       this.personalInfoForm.controls['contactNumber'].setValue(personalInfo['ITRForm:Address']['ITRForm:MobileNo']['_text'])
+       this.personalInfoForm.controls['aadharNumber'].setValue(personalInfo['ITRForm:AadhaarCardNo']['_text']);
+       this.personalInfoForm.controls['dateOfBirth'].setValue(personalInfo['ITRForm:DOB']['_text']);
+       let address = personalInfo['ITRForm:Address']['ITRForm:ResidenceNo']['_text']+', '+
+                     personalInfo['ITRForm:Address']['ITRForm:LocalityOrArea']['_text'];
+      this.personalInfoForm.controls['premisesName'].setValue(address);
+
+      this.personalInfoForm.controls['residentialStatus'].setValue(personalInfo['ITRForm:Address']['ITRForm:CountryCode']['_text'] === "91" ? 'RESIDENT' : 'NON_RESIDENT');
+   
+    this.bankData = [];
+    this.housingData = [];
+    this.donationData = [];
+    this.salaryItrratedData = [];
+    this.lossesCarriedForwarInfo = [];
+    this.immovableAssetsInfo = [];
+
+    //Bank Detail
+    let bankInfo = itrData['ITRForm:PartB_TTI']['ITRForm:Refund']['ITRForm:BankAccountDtls'];
+    console.log('bankInfo => ',bankInfo, typeof bankInfo['ITRForm:AddtnlBankDetails']);
+    if(this.utilService.isNonEmpty(bankInfo['ITRForm:AddtnlBankDetails'].length)){
+      for(let i=0; i< bankInfo['ITRForm:AddtnlBankDetails'].length; i++){
+        let bankObj = {
+          'ifsCode': bankInfo['ITRForm:AddtnlBankDetails'][i]['ITRForm:IFSCCode']['_text'],
+          'name': bankInfo['ITRForm:AddtnlBankDetails'][i]['ITRForm:BankName']['_text'],
+          'accountNumber': bankInfo['ITRForm:AddtnlBankDetails'][i]['ITRForm:BankAccountNo']['_text'],
+          'hasRefund': bankInfo['ITRForm:AddtnlBankDetails'][i]['ITRForm:UseForRefund']['_text'] === "true" ? true : false
+        }
+        this.bankData.push(bankObj);
+      }
+    }
+    else{
+      let bankObj = {
+        'ifsCode': bankInfo['ITRForm:AddtnlBankDetails']['ITRForm:IFSCCode']['_text'],
+        'name': bankInfo['ITRForm:AddtnlBankDetails']['ITRForm:BankName']['_text'],
+        'accountNumber': bankInfo['ITRForm:AddtnlBankDetails']['ITRForm:BankAccountNo']['_text'],
+        'hasRefund': bankInfo['ITRForm:AddtnlBankDetails']['ITRForm:UseForRefund']['_text'] === "true" ? true : false
+      }
+      this.bankData.push(bankObj);
+    }
+    console.log('After data pushed bankInfo => ',bankInfo);
+
+    //Housing Data
+    // if(this.utilService.isNonEmpty(itrData['ITRForm:ScheduleHP'])){
+      
+      if(itrData.hasOwnProperty('ITRForm:ScheduleHP')){ 
+       var housingData = itrData['ITRForm:ScheduleHP']['ITRForm:PropertyDetails'];
+       console.log('housingData: ',housingData);
+        if(this.utilService.isNonEmpty(housingData.length)){
+            for(let i=0; i< housingData.length; i++){
+              let address = housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:AddrDetail']['_text']+', '+housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:CityOrTownOrDistrict']['_text'];
+
+              let houceObj={
+                propertyType: housingData[i]['ITRForm:ifLetOut']['_text'] === "N" ? 'SOP' : 'LOP',
+                address: address,
+                ownerOfProperty: housingData[i]['ITRForm:ifLetOut']['_text'] === "SE"? 'SELF' : '',
+                tenantName: '',//housingData[i]['ITRForm:ifLetOut']['_text'],
+                grossAnnualRentReceived: this.isNotZero(housingData[i]['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text']) ? housingData[i]['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text'] : 0,
+                propertyTax:0,//housingData[i]['ITRForm:ifLetOut']['_text'],
+                annualValue: this.isNotZero(housingData[i]['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text']) ? housingData[i]['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text'] : 0,
+                exemptIncome: this.isNotZero(housingData[i]['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text']) ? housingData[i]['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text'] : 0,
+                interestAmount: '',//housingData[i]['ITRForm:Rentdetails']['ITRForm:IntOnBorwCap']['_text'],
+                taxableIncome: housingData[i]['ITRForm:Rentdetails']['ITRForm:IncomeOfHP']['_text']
+              }
+                this.housingData.push(houceObj);
+            }
+        }
+        else{
+          let address = housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:AddrDetail']['_text']+', '+housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:CityOrTownOrDistrict']['_text'];
+
+          let houceObj={
+            propertyType: housingData['ITRForm:ifLetOut']['_text'] === "N" ? 'SOP' : 'LOP',
+            address: address,
+            ownerOfProperty: housingData['ITRForm:ifLetOut']['_text'] === "SE"? 'SELF' : '',
+            tenantName: '',//housingData['ITRForm:ifLetOut']['_text'],
+            grossAnnualRentReceived: this.isNotZero(housingData['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text']) ? housingData['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text'] : 0,
+            propertyTax: '',//housingData['ITRForm:ifLetOut']['_text'],
+            annualValue: this.isNotZero(housingData['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text']) ? housingData['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text'] : 0,
+            exemptIncome: this.isNotZero(housingData['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text']) ? housingData['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text'] : 0,
+            interestAmount: '',//housingData['ITRForm:Rentdetails']['ITRForm:IntOnBorwCap']['_text'],
+            taxableIncome: housingData['ITRForm:Rentdetails']['ITRForm:IncomeOfHP']['_text']
+          }
+          this.housingData.push(houceObj);
+        }
+      }
+
+
+    //Annexures: Salary
+    if(itrData.hasOwnProperty('ITRForm:ScheduleS')){ 
+      var salartInfo = itrData['ITRForm:ScheduleS'];
+      console.log('salartInfo: ',salartInfo);
+      var hra = 0;
+      var lte = 0;
+      var other =0;
+      // let salExemptUs10 = salartInfo['ITRForm:AllwncExemptUs10']['_text'];
+      // console.log('salExemptUs10: ',salExemptUs10, ' type: ',typeof salExemptUs10);
+      if(salartInfo.hasOwnProperty('ITRForm:AllwncExemptUs10')){
+      //if(salExemptUs10['_text'] !== "0"){
+        if(this.utilService.isNonEmpty(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'].length)){
+          for(let i=0; i< salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'].length; i++){
+            if(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(13A)"){
+                hra = salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalOthAmount']['_text'];
+            }else{
+              hra = 0;
+            }
+  
+            if((salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0)){
+              lte = salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalOthAmount']['_text'];
+            }else{
+              lte = 0;
+            }
+  
+           /* In other part -> 10(10B) First proviso / 10(10B) Second proviso / AnyOther <- not implimented because don't know exact keyWord */
+            if((salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(7)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) ||
+                (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10A)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) ||
+                (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10AA)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10B)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) ||
+                (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10C)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10CC)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) ||
+                (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(14)(i)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(14)(ii)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) 
+                        //||(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0)
+                    )
+                {
+                  other = other + Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalOthAmount']['_text']);
+                }
+          }
+          console.log('hra: ',hra,' lte: ',lte, ' other: ',other)
+        }
+      }
+
+      if(this.utilService.isNonEmpty(salartInfo['ITRForm:Salaries'].length)){
+          for(let i=0; i< salartInfo['ITRForm:Salaries'].length; i++){
+           
+            let salaryObj= {
+              employerName: salartInfo['ITRForm:Salaries'][i]['ITRForm:NameOfEmployer']['_text'],
+              address: salartInfo['ITRForm:Salaries'][i]['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
+              employerCategory: salartInfo['ITRForm:Salaries'][i]['ITRForm:NatureOfEmployment']['_text'] === "OTH" ? 'OTHER' : '',
+              salAsPerSec171: salartInfo['ITRForm:Salaries'][i]['ITRForm:Salarys']['ITRForm:Salary']['_text'],
+              valOfPerquisites: 0,//salartInfo['ITRForm:Salaries'][i]['ITRForm:AddressDetail'],
+              profitInLieu: 0,//salartInfo['ITRForm:Salaries'][i]['ITRForm:AddressDetail'],
+              grossSalary: salartInfo['ITRForm:Salaries'][i]['ITRForm:Salarys']['ITRForm:GrossSalary']['_text'],
+
+
+              houseRentAllow: i === 0 ? hra : '',
+              leaveTravelExpense: i === 0 ? lte : '',
+              other:  i === 0 ? other : '',
+              totalExemptAllow: i === 0 ? Number(hra) + Number(lte) + Number(other) : '' ,
+              netSalary: i === 0 ? ( Number(salartInfo['ITRForm:Salaries'][i]['ITRForm:Salarys']['ITRForm:GrossSalary']['_text']) - (Number(hra) + Number(lte) + Number(other))) : '',
+              standardDeduction: i === 0 ?  salartInfo['ITRForm:DeductionUnderSection16ia']['_text'] : 0 ,
+              entertainAllow: i === 0 ? salartInfo['ITRForm:EntertainmntalwncUs16ii']['_text'] : 0,
+              professionalTax: i === 0 ? salartInfo['ITRForm:ProfessionalTaxUs16iii']['_text'] : 0,
+              totalSalaryDeduction: i === 0 ? Number(salartInfo['ITRForm:DeductionUnderSection16ia']['_text']) + Number(salartInfo['ITRForm:EntertainmntalwncUs16ii']['_text']) + Number(salartInfo['ITRForm:ProfessionalTaxUs16iii']['_text']) : 0 ,
+              taxableIncome: i === 0 ? (Number(salartInfo['ITRForm:Salaries'][i]['ITRForm:Salarys']['ITRForm:GrossSalary']['_text']) - (Number(hra) + Number(lte) + Number(other))) - (Number(salartInfo['ITRForm:DeductionUnderSection16ia']['_text']) + Number(salartInfo['ITRForm:EntertainmntalwncUs16ii']['_text']) + Number(salartInfo['ITRForm:ProfessionalTaxUs16iii']['_text'])) : Number(salartInfo['ITRForm:Salaries'][i]['ITRForm:Salarys']['ITRForm:GrossSalary']['_text'])
+            }
+            this.salaryItrratedData.push(salaryObj);
+          }
+      }
+      else{
+        let salaryObj= {
+          employerName: salartInfo['ITRForm:Salaries']['ITRForm:NameOfEmployer']['_text'],
+          address: salartInfo['ITRForm:Salaries']['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
+          employerCategory: salartInfo['ITRForm:Salaries']['ITRForm:NatureOfEmployment']['_text'] === "OTH" ? 'OTHER' : '',
+          salAsPerSec171: salartInfo['ITRForm:Salaries']['ITRForm:Salarys']['ITRForm:Salary']['_text'],
+          valOfPerquisites: 0,//salartInfo['ITRForm:Salaries']['ITRForm:AddressDetail'],
+          profitInLieu: 0,//salartInfo['ITRForm:Salaries']['ITRForm:AddressDetail'],
+          grossSalary: salartInfo['ITRForm:Salaries']['ITRForm:Salarys']['ITRForm:GrossSalary']['_text'],
+          houseRentAllow: hra,
+          leaveTravelExpense: lte,
+          other:  other,
+          totalExemptAllow: Number(hra) + Number(lte) + Number(other) ,
+          netSalary: ( Number(salartInfo['ITRForm:Salaries']['ITRForm:Salarys']['ITRForm:GrossSalary']['_text']) - (Number(hra) + Number(lte) + Number(other))) ,
+          standardDeduction:  salartInfo['ITRForm:DeductionUnderSection16ia']['_text'] ,
+          entertainAllow: salartInfo['ITRForm:EntertainmntalwncUs16ii']['_text'],
+          professionalTax: salartInfo['ITRForm:ProfessionalTaxUs16iii']['_text'],
+          totalSalaryDeduction: Number(salartInfo['ITRForm:DeductionUnderSection16ia']['_text']) + Number(salartInfo['ITRForm:EntertainmntalwncUs16ii']['_text']) + Number(salartInfo['ITRForm:ProfessionalTaxUs16iii']['_text']) ,
+          taxableIncome: (Number(salartInfo['ITRForm:Salaries']['ITRForm:Salarys']['ITRForm:GrossSalary']['_text']) - (Number(hra) + Number(lte) + Number(other))) - (Number(salartInfo['ITRForm:DeductionUnderSection16ia']['_text']) + Number(salartInfo['ITRForm:EntertainmntalwncUs16ii']['_text']) + Number(salartInfo['ITRForm:ProfessionalTaxUs16iii']['_text']))
+        }
+        this.salaryItrratedData.push(salaryObj);
+      }
+    }
+
+    
+    var taxPaid={
+      longTermCapitalGainAt10Percent : [],
+      longTermCapitalGainAt10PercentTotal: 0,
+      longTermCapitalGainAt20Percent : [],
+      longTermCapitalGainAt20PercentTotal: 0,
+      shortTermCapitalGain : [],
+      shortTermCapitalGainTotal: 0,
+      shortTermCapitalGainAt15Percent : [],
+      shortTermCapitalGainAt15PercentTotal: 0,
+
+     }
+    //CAPITAL GAIN
+    /////Short Term Capital Gain @ Slab Rate {Property/ Other Assets}
+    var shortCGslabofProperty = itrData['ITRForm:ScheduleCGFor23']['ITRForm:ShortTermCapGainFor23'];
+    console.log('shortCGslabofProperty: ',shortCGslabofProperty);
+    if(shortCGslabofProperty.hasOwnProperty('ITRForm:SaleofLandBuild')){
+     let shortTermProObj = {
+        nameOfTheAsset: 'Property',                                
+        netSaleValue: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:FullConsideration']['_text']) - Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ExpOnTrans']['_text']),
+        purchaseCost: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:AquisitCost']['_text']) + Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ImproveCost']['_text']),
+        capitalGain: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:Balance']['_text']),
+        deductions: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:DeductionUs54B']['_text']),
+        netCapitalGain: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:STCGonImmvblPrprty']['_text']),
+      }
+      taxPaid.shortTermCapitalGain.push(shortTermProObj);
+      this.updateCapitalGain(taxPaid); 
+    }
+
+    if(shortCGslabofProperty.hasOwnProperty('ITRForm:SaleOnOtherAssets')){
+      let shortTermOtherAssestsObj = {
+         nameOfTheAsset: 'Other Assets',
+         netSaleValue: Number(shortCGslabofProperty['ITRForm:SaleOnOtherAssets']['ITRForm:FullValueConsdSec50CA']['_text']) - Number(shortCGslabofProperty['ITRForm:SaleOnOtherAssets']['ITRForm:DeductSec48']['ITRForm:ExpOnTrans']['_text']),
+         purchaseCost: Number(shortCGslabofProperty['ITRForm:SaleOnOtherAssets']['ITRForm:DeductSec48']['ITRForm:AquisitCost']['_text']) + Number(shortCGslabofProperty['ITRForm:SaleOnOtherAssets']['ITRForm:DeductSec48']['ITRForm:ImproveCost']['_text']),
+         capitalGain: Number(shortCGslabofProperty['ITRForm:SaleOnOtherAssets']['ITRForm:BalanceCG']['_text']),
+         deductions: 0,
+         netCapitalGain: Number(shortCGslabofProperty['ITRForm:SaleOnOtherAssets']['ITRForm:CapgainonAssets']['_text']),
+       }
+       taxPaid.shortTermCapitalGain.push(shortTermOtherAssestsObj);
+       this.updateCapitalGain(taxPaid); 
+     }
+
+     /////Short Term Capital Gain @ 15% {Equity}
+     var shortCG15Per = itrData['ITRForm:ScheduleCGFor23']['ITRForm:ShortTermCapGainFor23'];
+     console.log('shortCG15Per: ',shortCG15Per);
+     if(shortCG15Per.hasOwnProperty('ITRForm:EquityMFonSTT')){
+      let shortTerm15PerObj = {
+         nameOfTheAsset: 'Equity/MF',
+         netSaleValue: Number(shortCG15Per['ITRForm:EquityMFonSTT']['ITRForm:EquityMFonSTTDtls']['ITRForm:FullConsideration']['_text']) - Number(shortCG15Per['ITRForm:EquityMFonSTT']['ITRForm:EquityMFonSTTDtls']['ITRForm:DeductSec48']['ITRForm:ExpOnTrans']['_text']),
+         purchaseCost: Number(shortCG15Per['ITRForm:EquityMFonSTT']['ITRForm:EquityMFonSTTDtls']['ITRForm:DeductSec48']['ITRForm:AquisitCost']['_text']) + Number(shortCG15Per['ITRForm:EquityMFonSTT']['ITRForm:EquityMFonSTTDtls']['ITRForm:DeductSec48']['ITRForm:ImproveCost']['_text']),
+         capitalGain: Number(shortCG15Per['ITRForm:EquityMFonSTT']['ITRForm:EquityMFonSTTDtls']['ITRForm:BalanceCG']['_text']),
+         deductions: 0,
+         netCapitalGain: Number(shortCG15Per['ITRForm:EquityMFonSTT']['ITRForm:EquityMFonSTTDtls']['ITRForm:CapgainonAssets']['_text']),
+       }
+       taxPaid.shortTermCapitalGainAt15Percent.push(shortTerm15PerObj);
+       this.updateCapitalGain(taxPaid); 
+     }
+
+     /////Long Term Capital Gain @ 10% {Listed Security/ Equity/MF 112A}
+     var longTeemCG10Per = itrData['ITRForm:ScheduleCGFor23']['ITRForm:LongTermCapGain23'];
+     console.log('longTeemCG10Per: ',longTeemCG10Per);
+     if(longTeemCG10Per.hasOwnProperty('ITRForm:Proviso112Applicable')){
+      let longTerm10PerObj = {
+         nameOfTheAsset: 'Listed Security',
+         netSaleValue: Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:FullConsideration']['_text']) - Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:DeductSec48']['ITRForm:ExpOnTrans']['_text']),
+         purchaseCost: Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:DeductSec48']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:DeductSec48']['ITRForm:ImproveCost']['_text']),
+         capitalGain: Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:BalanceCG']['_text']),
+         deductions: 0,
+         netCapitalGain: Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:CapgainonAssets']['_text']),
+       }
+       taxPaid.longTermCapitalGainAt10Percent.push(longTerm10PerObj);
+       this.updateCapitalGain(taxPaid); 
+     }
+    
+     if(itrData.hasOwnProperty('ITRForm:Schedule112A')){
+      var otherCalInfo = itrData['ITRForm:ScheduleCGFor23']['ITRForm:LongTermCapGain23']['ITRForm:SaleOfEquityShareUs112A'];
+      console.log('otherCalInfo of longTerm10PerEquityObj ==> ',otherCalInfo)
+      let longTerm10PerEquityObj = {
+         nameOfTheAsset: 'Equity/MF 112A',
+         netSaleValue: Number(itrData['ITRForm:Schedule112A']['ITRForm:SaleValue112A']['_text']) - Number(itrData['ITRForm:Schedule112A']['ITRForm:ExpExclCnctTransfer112A']['_text']),
+         purchaseCost: Number(itrData['ITRForm:Schedule112A']['ITRForm:CostAcqWithoutIndx112A']['_text']),
+         capitalGain: Number(itrData['ITRForm:Schedule112A']['ITRForm:Balance112A']['_text']),
+         deductions: Number(otherCalInfo['ITRForm:DeductionUs54F']['_text']),
+         netCapitalGain: Number(otherCalInfo['ITRForm:CapgainonAssets']['_text']),
+       }
+       taxPaid.longTermCapitalGainAt10Percent.push(longTerm10PerEquityObj);
+       this.updateCapitalGain(taxPaid); 
+     }
+     
+      /////Long Term Capital Gain @ 20%{Property/ Bonds/ Other Assets}
+      var longTeemCG20Per = itrData['ITRForm:ScheduleCGFor23']['ITRForm:LongTermCapGain23'];
+      console.log('longTeemCG20Per: ',longTeemCG20Per);
+      if(longTeemCG20Per.hasOwnProperty('ITRForm:SaleofLandBuild')){
+       let longTerm20PerObj = {
+          nameOfTheAsset: 'Property',
+          netSaleValue: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:FullConsideration50C']['_text']) - Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ExpOnTrans']['_text']),
+          purchaseCost: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ImproveCost']['_text']),
+          capitalGain: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:Balance']['_text']),
+          deductions: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ExemptionOrDednUs54']['ITRForm:ExemptionGrandTotal']['_text']),
+          netCapitalGain: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:LTCGonImmvblPrprty']['_text']),
+        }
+        taxPaid.longTermCapitalGainAt20Percent.push(longTerm20PerObj);
+        this.updateCapitalGain(taxPaid); 
+      }
+
+      if(longTeemCG20Per.hasOwnProperty('ITRForm:SaleofBondsDebntr')){
+        let longTerm20BondsObj = {
+           nameOfTheAsset: 'Bonds and Debenture',
+           netSaleValue: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:FullConsideration']['_text']) - Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:DeductSec48']['ITRForm:ExpOnTrans']['_text']),
+           purchaseCost: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:DeductSec48']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:DeductSec48']['ITRForm:ImproveCost']['_text']),
+           capitalGain: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:BalanceCG']['_text']),
+           deductions: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:DeductionUs54F']['_text']),
+           netCapitalGain: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:CapgainonAssets']['_text']),
+         }
+         taxPaid.longTermCapitalGainAt20Percent.push(longTerm20BondsObj);
+         this.updateCapitalGain(taxPaid); 
+       }
+
+       if(longTeemCG20Per.hasOwnProperty('ITRForm:SaleofAssetNA')){
+        let longTerm20OtherAssetsObj = {
+           nameOfTheAsset: 'Other Assests',
+           netSaleValue: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:FullConsideration']['_text']) - Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductSec48']['ITRForm:ExpOnTrans']['_text']),
+           purchaseCost: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductSec48']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductSec48']['ITRForm:ImproveCost']['_text']),
+           capitalGain: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:BalanceCG']['_text']),
+           deductions: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductionUs54F']['_text']),
+           netCapitalGain: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:CapgainonAssets']['_text']),
+         }
+         taxPaid.longTermCapitalGainAt20Percent.push(longTerm20OtherAssetsObj);
+         this.updateCapitalGain(taxPaid); 
+       }
+
+
+    // Other Sources
+    let otherSourceInfo = itrData['ITRForm:ScheduleOS']['ITRForm:IncOthThanOwnRaceHorse'];      
+    console.log('otherSourceInfo: ',otherSourceInfo)
+    this.otherSourceForm.controls['interestFromSaving'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmSavingBank']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmSavingBank']['_text'] : '');
+    this.otherSourceForm.controls['interestFromDeposite'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmTermDeposit']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmTermDeposit']['_text'] : '');
+    this.otherSourceForm.controls['interestFromTaxRefund'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmIncmTaxRefund']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmIncmTaxRefund']['_text'] : '');
+    this.otherSourceForm.controls['other'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmOthers']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmOthers']['_text'] : '');
+      this.otherSourceForm.controls['agricultureIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text']) ? otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text'] : '');
+      this.otherSourceForm.controls['dividendIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:DividendGross']['_text']) ? otherSourceInfo['ITRForm:DividendGross']['_text'] : '');
+      this.otherSourceForm.controls['total'].setValue(this.isNotZero(otherSourceInfo['ITRForm:GrossIncChrgblTaxAtAppRate']['_text']) ? otherSourceInfo['ITRForm:GrossIncChrgblTaxAtAppRate']['_text'] : '');
+
+    //Losses To be Carried Forward
+    if(itrData.hasOwnProperty('ITRForm:ScheduleCFL')){
+      let lossCarriedForwordInfo = itrData['ITRForm:ScheduleCFL'];
+      console.log('lossesToBeCarriedForwordInfo',lossCarriedForwordInfo);
+      if(this.itrType.itrTwo){
+        
+        let currentYrLossObj = {
+          year: '2020-2021',
+          housePropertyLosses: lossCarriedForwordInfo['ITRForm:CurrentAYloss']['ITRForm:LossSummaryDetail']['ITRForm:TotalHPPTILossCF']['_text'],
+          shortTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:CurrentAYloss']['ITRForm:LossSummaryDetail']['ITRForm:TotalSTCGPTILossCF']['_text'],
+          longTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:CurrentAYloss']['ITRForm:LossSummaryDetail']['ITRForm:TotalLTCGPTILossCF']['_text'],
+          carriedForwardToNextYear: lossCarriedForwordInfo['ITRForm:CurrentAYloss']['ITRForm:LossSummaryDetail']['ITRForm:TotalHPPTILossCF']['_text'],
+        }
+        this.lossesCarriedForwarInfo.push(currentYrLossObj);
+        //ITRForm:LossCFFromPrevYrToAY
+        if(lossCarriedForwordInfo.hasOwnProperty('ITRForm:LossCFFromPrev2ndYearFromAY')){
+          if(this.utilService.isNonEmpty(lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY'].length)){
+            for(let i=0; i< lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY'].length; i++){
+              let otherThanCurrYrLossObj = {
+                year: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:DateOfFiling']['_text'],
+                housePropertyLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:TotalHPPTILossCF']['_text'],
+                shortTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:TotalSTCGPTILossCF']['_text'],
+                longTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:TotalLTCGPTILossCF']['_text'],
+                carriedForwardToNextYear: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:LTCGLossCF']['_text']
+              }
+              this.lossesCarriedForwarInfo.push(otherThanCurrYrLossObj);
+            }
+          }else{
+            let otherThanCurrYrLossObj = {
+              year: this.returnYrs(lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail']['ITRForm:DateOfFiling']['_text']),
+              housePropertyLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail']['ITRForm:TotalHPPTILossCF']['_text'],
+              shortTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail']['ITRForm:TotalSTCGPTILossCF']['_text'],
+              longTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail']['ITRForm:TotalLTCGPTILossCF']['_text'],
+              carriedForwardToNextYear: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail']['ITRForm:LTCGLossCF']['_text']
+            }
+            this.lossesCarriedForwarInfo.push(otherThanCurrYrLossObj);
+          }
+        }
+
+      }
+      // this.lossesCarriedForwarInfo = summary.lossesToBeCarriedForward;
+       this.calLossesToatal(this.lossesCarriedForwarInfo);
+     
+    }
+
+    //Deduction 80D
+    let deduction80D = itrData['ITRForm:Schedule80D']['ITRForm:Sec80DSelfFamSrCtznHealth'];
+    console.log('deduction80D ==> ',deduction80D);                                                        
+       this.deductionAndRemainForm.controls['healthInsuPremiumForSelf'].setValue(deduction80D.hasOwnProperty('ITRForm:HealthInsPremSlfFam') ? (this.isNotZero(deduction80D['ITRForm:HealthInsPremSlfFam']['_text']) ? deduction80D['ITRForm:HealthInsPremSlfFam']['_text'] : 0) : 0);
+       this.deductionAndRemainForm.controls['healthInsuPremiumForParent'].setValue(deduction80D.hasOwnProperty('ITRForm:HlthInsPremParentsSrCtzn') ? (deduction80D['ITRForm:HlthInsPremParentsSrCtzn']['_text'] ? deduction80D['ITRForm:HlthInsPremParentsSrCtzn']['_text'] : 0) : 0);
+       this.deductionAndRemainForm.controls['preventiveHealthCheckupForFamily'].setValue(deduction80D.hasOwnProperty('ITRForm:MedicalExpParentsSrCtzn') ? (this.isNotZero(deduction80D['ITRForm:MedicalExpParentsSrCtzn']['_text']) ? deduction80D['ITRForm:MedicalExpParentsSrCtzn']['_text'] : 0) : 0);
+
+    this.deductionAndRemainForm.controls['paraentAge'].setValue(deduction80D.hasOwnProperty('ITRForm:SeniorCitizenFlag') ? (deduction80D['ITRForm:SeniorCitizenFlag']['_text'] === "Y" ? 'above60' : 'bellow60') : '');
+
+    //Deduction 80G Donation Table
+    if(itrData.hasOwnProperty('ITRForm:Schedule80G')){
+      var donation80G = itrData['ITRForm:Schedule80G']
+      console.log('donation80G: ',donation80G)
+      if(donation80G.length !== undefined){
+          for(let i=0; i<donation80G.length; i++){
+            let donation80GObj = {
+              donationType: 'OTHER',
+              name: '',
+              amountInCash: donation80G['ITRForm:Don100PercentApprReqd'][i]['ITRForm:DoneeWithPan']['ITRForm:DonationAmtCash']['_text'],
+              amountOtherThanCash: donation80G['ITRForm:Don100PercentApprReqd'][i]['ITRForm:DoneeWithPan']['ITRForm:DonationAmtOtherMode']['_text'],
+              eligibleAmount: donation80G['ITRForm:Don100PercentApprReqd'][i]['ITRForm:DoneeWithPan']['ITRForm:EligibleDonationAmt']['_text'],
+              address: donation80G['ITRForm:Don100PercentApprReqd'][i]['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
+              city: donation80G['ITRForm:Don100PercentApprReqd'][i]['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:CityOrTownOrDistrict']['_text'],
+              pinCode: donation80G['ITRForm:Don100PercentApprReqd'][i]['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:PinCode']['_text'],
+              state: '',
+            }
+            this.donationData.push(donation80GObj);
+          }
+      }
+      else{
+        let donation80GObj = {
+          donationType: 'OTHER',
+          name: '',
+          amountInCash: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DonationAmtCash']['_text'],
+          amountOtherThanCash: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DonationAmtOtherMode']['_text'],
+          eligibleAmount: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:EligibleDonationAmt']['_text'],
+          address: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
+          city: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:CityOrTownOrDistrict']['_text'],
+          pinCode: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:PinCode']['_text'],
+          state: '',
+        }
+        this.donationData.push(donation80GObj);
+      }
+    }
+
+    var donationTypePolicalInfo = Number(itrData['ITRForm:ScheduleVIA']['ITRForm:DeductUndChapVIA']['ITRForm:Section80GGA']['_text']);
+    if(donationTypePolicalInfo !== 0){
+      let donation80GPlioticalObj = {
+        donationType: 'POLITICAL',
+        name: '',
+        amountInCash: 0,
+        amountOtherThanCash: 0,
+        eligibleAmount: donationTypePolicalInfo,
+        address: '',
+        city: '',
+        pinCode: '',
+        state: '',
+      }
+      this.donationData.push(donation80GPlioticalObj);
+    }
+
+      var donationTypeScientificInfo = Number(itrData['ITRForm:ScheduleVIA']['ITRForm:DeductUndChapVIA']['ITRForm:Section80G']['_text']);
+      if(donationTypeScientificInfo !== 0){
+        let donation80GScientificObj = {
+          donationType: 'SCIENTIFIC',
+          name: '',
+          amountInCash: 0,
+          amountOtherThanCash: 0,
+          eligibleAmount: donationTypeScientificInfo,
+          address: '',
+          city: '',
+          pinCode: '',
+          state: '',
+        }
+        this.donationData.push(donation80GScientificObj);
+      }
+      console.log('donationData ===>>>> ',this.donationData)
+
+    //Deduction 80G
+    let deduction = itrData['ITRForm:ScheduleVIA']['ITRForm:DeductUndChapVIA'];
+    console.log('deduction ==> ',deduction);
+       this.deductionAndRemainForm.controls['us80c'].setValue(this.isNotZero(deduction['ITRForm:Section80C']['_text']) ? deduction['ITRForm:Section80C']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80ccc'].setValue(this.isNotZero(deduction['ITRForm:Section80CCC']['_text']) ? deduction['ITRForm:Section80CCC']['_text'] : 0);
+    this.deductionAndRemainForm.controls['us80ccc1'].setValue(this.isNotZero(deduction['ITRForm:Section80CCDEmployeeOrSE']['_text']) ? deduction['ITRForm:Section80CCDEmployeeOrSE']['_text'] : 0);
+    this.deductionAndRemainForm.controls['us80ccd2'].setValue(this.isNotZero(deduction['ITRForm:Section80CCDEmployer']['_text']) ? deduction['ITRForm:Section80CCDEmployer']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80ccd1b'].setValue(this.isNotZero(deduction['ITRForm:Section80CCD1B']['_text']) ? deduction['ITRForm:Section80CCD1B']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80d'].setValue(this.isNotZero(deduction['ITRForm:Section80D']['_text']) ? deduction['ITRForm:Section80D']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80dd'].setValue(this.isNotZero(deduction['ITRForm:Section80DD']['_text']) ? deduction['ITRForm:Section80DD']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80ddb'].setValue(this.isNotZero(deduction['ITRForm:Section80DDB']['_text']) ? deduction['ITRForm:Section80DDB']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80e'].setValue(this.isNotZero(deduction['ITRForm:Section80E']['_text']) ? deduction['ITRForm:Section80E']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80ee'].setValue(this.isNotZero(deduction['ITRForm:Section80EE']['_text']) ? deduction['ITRForm:Section80EE']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80g'].setValue(this.isNotZero(deduction['ITRForm:Section80G']['_text']) ? deduction['ITRForm:Section80G']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80gg'].setValue(this.isNotZero(deduction['ITRForm:Section80GG']['_text']) ? deduction['ITRForm:Section80GG']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80gga'].setValue(this.isNotZero(deduction['ITRForm:Section80GGA']['_text']) ? deduction['ITRForm:Section80GGA']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80ggc'].setValue(this.isNotZero(deduction['ITRForm:Section80GGC']['_text']) ? deduction['ITRForm:Section80GGC']['_text'] : 0);
+     this.deductionAndRemainForm.controls['us80ttaTtb'].setValue(this.isNotZero(deduction['ITRForm:Section80TTA']['_text']) ? deduction['ITRForm:Section80TTA']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80u'].setValue(this.isNotZero(deduction['ITRForm:Section80U']['_text']) ? deduction['ITRForm:Section80U']['_text'] : 0);
+
+     if(this.itrType.itrThree){
+      this.deductionAndRemainForm.controls['us80jja'].setValue(this.isNotZero(deduction['ITRForm:Section80C']['_text']) ? deduction['ITRForm:Section80C']['_text'] : 0);
+     }
+
+
+     var taxPaidInfo={
+      onSalary : [],
+      otherThanSalary16A : [],
+      otherThanSalary26QB : [],
+      tcs : [],
+      otherThanTDSTCS : []
+     }
+     //Tax Collected at Sources
+     if(itrData.hasOwnProperty('ITRForm:ScheduleTDS1')){
+       var tdsOnSalInfo = itrData['ITRForm:ScheduleTDS1']['ITRForm:TDSonSalary'];
+       console.log('tdsOnSalInfo: ',tdsOnSalInfo)
+       if(this.utilService.isNonEmpty(tdsOnSalInfo.length)){
+         for(let i=0; i<tdsOnSalInfo.length; i++){
+           let tdsOnSalObj = {
+              deductorTAN : tdsOnSalInfo[i]['ITRForm:EmployerOrDeductorOrCollectDetl']['ITRForm:TAN']['_text'], 
+              deductorName: tdsOnSalInfo[i]['ITRForm:EmployerOrDeductorOrCollectDetl']['ITRForm:EmployerOrDeductorOrCollecterName']['_text'],
+              totalAmountCredited: tdsOnSalInfo[i]['ITRForm:IncChrgSal']['_text'],
+              totalTdsDeposited: tdsOnSalInfo[i]['ITRForm:TotalTDSSal']['_text']
+           }
+
+           taxPaidInfo.onSalary.push(tdsOnSalObj);
+         }
+       }
+       else{
+          let tdsOnSalObj = {
+            deductorTAN : tdsOnSalInfo['ITRForm:EmployerOrDeductorOrCollectDetl']['ITRForm:TAN']['_text'], 
+            deductorName: tdsOnSalInfo['ITRForm:EmployerOrDeductorOrCollectDetl']['ITRForm:EmployerOrDeductorOrCollecterName']['_text'],
+            totalAmountCredited: tdsOnSalInfo['ITRForm:IncChrgSal']['_text'],
+            totalTdsDeposited: tdsOnSalInfo['ITRForm:TotalTDSSal']['_text']
+         }
+         taxPaidInfo.onSalary.push(tdsOnSalObj)
+       }
+      this.updateTaxDeductionAtSourceVal(taxPaidInfo);
+     }
+
+
+     //TDS on Other than Salary
+     if(itrData.hasOwnProperty('ITRForm:ScheduleTDS2')){
+      var tdsOtherThanSalInfo = itrData['ITRForm:ScheduleTDS2'];
+      console.log('tdsOtherThanSalInfo: ',tdsOtherThanSalInfo)
+      if(this.utilService.isNonEmpty(tdsOtherThanSalInfo.length)){
+        for(let i=0; i<tdsOtherThanSalInfo.length; i++){
+          let tdsOtherThanSalObj = {               
+             deductorTAN : tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TANOfDeductor']['_text'], 
+             deductorName: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TDSCreditName']['_text'],
+             totalAmountCredited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:GrossAmount']['_text'],
+             totalTdsDeposited: tdsOtherThanSalInfo['ITRForm:TotalTDSonOthThanSals']['_text']
+          }
+
+          taxPaidInfo.otherThanSalary16A.push(tdsOtherThanSalObj);
+        }
+      }
+      else{
+         let tdsOtherThanSalObj = {
+          deductorTAN : tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TANOfDeductor']['_text'], 
+             deductorName: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TDSCreditName']['_text'],
+             totalAmountCredited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:GrossAmount']['_text'],
+             totalTdsDeposited: tdsOtherThanSalInfo['ITRForm:TotalTDSonOthThanSals']['_text']
+        }
+        taxPaidInfo.otherThanSalary16A.push(tdsOtherThanSalObj)
+      }
+     this.updateTaxDeductionAtSourceVal(taxPaidInfo);
+    }
+
+    //TDS Sales of property 26QB
+    if(itrData.hasOwnProperty('ITRForm:ScheduleTDS3')){
+      var tdsSalesOf26QBInfo = itrData['ITRForm:ScheduleTDS3'];
+      console.log('tdsSalesOf26QBInfo: ',tdsSalesOf26QBInfo)
+      if(this.utilService.isNonEmpty(tdsSalesOf26QBInfo.length)){
+        for(let i=0; i<tdsSalesOf26QBInfo.length; i++){
+          let tdsSalesOf26QBObj = {               
+             deductorTAN : tdsSalesOf26QBInfo['ITRForm:TDS3onOthThanSalDtls'][i]['ITRForm:PANOfBuyerTenant']['_text'], 
+             deductorName: tdsSalesOf26QBInfo['ITRForm:TDS3onOthThanSalDtls'][i]['ITRForm:TDSCreditName']['_text'],
+             totalAmountCredited: tdsSalesOf26QBInfo['ITRForm:TDS3onOthThanSalDtls'][i]['ITRForm:GrossAmount']['_text'],
+             totalTdsDeposited: tdsSalesOf26QBInfo['ITRForm:TotalTDS3OnOthThanSal']['_text']
+          }
+
+          taxPaidInfo.otherThanSalary26QB.push(tdsSalesOf26QBObj);
+        }
+      }
+      else{
+         let tdsSalesOf26QBObj = {
+          deductorTAN : tdsSalesOf26QBInfo['ITRForm:TDS3onOthThanSalDtls']['ITRForm:PANOfBuyerTenant']['_text'], 
+             deductorName: tdsSalesOf26QBInfo['ITRForm:TDS3onOthThanSalDtls']['ITRForm:TDSCreditName']['_text'],
+             totalAmountCredited: tdsSalesOf26QBInfo['ITRForm:TDS3onOthThanSalDtls']['ITRForm:GrossAmount']['_text'],
+             totalTdsDeposited: tdsSalesOf26QBInfo['ITRForm:TotalTDS3OnOthThanSal']['_text']
+        }
+        taxPaidInfo.otherThanSalary26QB.push(tdsSalesOf26QBObj)
+      }
+     this.updateTaxDeductionAtSourceVal(taxPaidInfo);
+    }
+
+    //Annexure: Tax Collected at Sources
+    if(itrData.hasOwnProperty('ITRForm:ScheduleTCS')){
+      var tcsInfo = itrData['ITRForm:ScheduleTCS'];
+      console.log('tcsInfo: ',tcsInfo)
+      if(this.utilService.isNonEmpty(tcsInfo.length)){
+        for(let i=0; i<tcsInfo.length; i++){
+          let tcsObj = {               
+             collectorTAN : tcsInfo['ITRForm:TCS'][i]['ITRForm:EmployerOrDeductorOrCollectDetl']['ITRForm:TAN']['_text'], 
+             collectorName: tcsInfo['ITRForm:TCS'][i]['ITRForm:EmployerOrDeductorOrCollectDetl']['ITRForm:EmployerOrDeductorOrCollecterName']['_text'],
+             totalAmountPaid: tcsInfo['ITRForm:TCS'][i]['ITRForm:AmtTCSClaimedThisYear']['_text'],
+             totalTcsDeposited: tcsInfo['ITRForm:TotalSchTCS']['_text']
+          }
+
+          taxPaidInfo.tcs.push(tcsObj);
+        }
+      }
+      else{
+         let tcsObj = {
+              collectorTAN : tcsInfo['ITRForm:TCS']['ITRForm:EmployerOrDeductorOrCollectDetl']['ITRForm:TAN']['_text'], 
+             collectorName: tcsInfo['ITRForm:TCS']['ITRForm:EmployerOrDeductorOrCollectDetl']['ITRForm:EmployerOrDeductorOrCollecterName']['_text'],
+             totalAmountPaid: tcsInfo['ITRForm:TCS']['ITRForm:AmtTCSClaimedThisYear']['_text'],
+             totalTcsDeposited: tcsInfo['ITRForm:TotalSchTCS']['_text']
+        }
+        taxPaidInfo.tcs.push(tcsObj)
+      }
+     this.updateTaxDeductionAtSourceVal(taxPaidInfo);
+    }
+
+    //Annexures: Advance Tax/ Self-Assessment Tax
+    if(itrData.hasOwnProperty('ITRForm:ScheduleIT')){
+      var advTaxInfo = itrData['ITRForm:ScheduleIT'];
+      console.log('advTaxInfo: ',advTaxInfo)
+      if(this.utilService.isNonEmpty(advTaxInfo.length)){
+        for(let i=0; i<advTaxInfo.length; i++){
+          let advTaxObj = {               
+             bsrCode : advTaxInfo['ITRForm:TaxPayment'][i]['ITRForm:BSRCode']['_text'], 
+             dateOfDeposit: advTaxInfo['ITRForm:TaxPayment'][i]['ITRForm:DateDep']['_text'],
+             challanNumber: advTaxInfo['ITRForm:TaxPayment'][i]['ITRForm:SrlNoOfChaln']['_text'],
+             totalTax: advTaxInfo['ITRForm:TotalTaxPayments']['_text']
+          }
+
+          taxPaidInfo.otherThanTDSTCS.push(advTaxObj);
+        }
+      }
+      else{
+         let advTaxObj = {
+             bsrCode : advTaxInfo['ITRForm:TaxPayment']['ITRForm:BSRCode']['_text'], 
+             dateOfDeposit: advTaxInfo['ITRForm:TaxPayment']['ITRForm:DateDep']['_text'],
+             challanNumber: advTaxInfo['ITRForm:TaxPayment']['ITRForm:SrlNoOfChaln']['_text'],
+             totalTax: advTaxInfo['ITRForm:TotalTaxPayments']['_text']
+        }
+        taxPaidInfo.otherThanTDSTCS.push(advTaxObj)
+      }
+     this.updateTaxDeductionAtSourceVal(taxPaidInfo);
+    }
+
+    //Asset And Liabilites At The End Of The Year
+    var totalIncome = itrData['ITRForm:PartB-TI']['ITRForm:GrossTotalIncome']['_text'];
+    if(Number(totalIncome) > 5000000){
+      this.showAssetLiability = true;
+      //Details of immovable assets
+      if(itrData['ITRForm:ScheduleAL'].hasOwnProperty('ITRForm:ImmovableDetails')){
+        let immovableAssetsInfo = itrData['ITRForm:ScheduleAL']['ITRForm:ImmovableDetails'];
+        console.log('immovableAssetsInfo: ',immovableAssetsInfo);
+        //
+        var immoAdd = immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:ResidenceNo']['_text']+', '+ immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:ResidenceName']['_text']+', '+
+                      immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:LocalityOrArea']['_text']+', '+immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:CityOrTownOrDistrict']['_text'];
+        let immovableObj = {
+         description : immovableAssetsInfo['ITRForm:Description']['_text'],
+         area : immoAdd,
+         amount :  immovableAssetsInfo['ITRForm:Amount']['_text']
+        }
+        this.immovableAssetsInfo.push(immovableObj);
+        this.calImmovableToatal(this.immovableAssetsInfo)
+      }
+     
+      //Details of movable assets
+      if(itrData['ITRForm:ScheduleAL'].hasOwnProperty('ITRForm:MovableAsset')){
+        let movableAssetsInfo = itrData['ITRForm:ScheduleAL']['ITRForm:MovableAsset'];
+        console.log('movableAssetsInfo: ',movableAssetsInfo);
+  
+        this.assetsLiabilitiesForm.controls['jwelleryAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:JewelleryBullionEtc']['_text']) ? movableAssetsInfo['ITRForm:JewelleryBullionEtc']['_text'] : 0)  
+        this.assetsLiabilitiesForm.controls['artWorkAmount'].setValue  (this.isNotZero(movableAssetsInfo['ITRForm:ArchCollDrawPaintSulpArt']['_text']) ? movableAssetsInfo['ITRForm:ArchCollDrawPaintSulpArt']['_text'] : 0)    
+        this.assetsLiabilitiesForm.controls['vehicleAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:VehiclYachtsBoatsAircrafts']['_text']) ? movableAssetsInfo['ITRForm:VehiclYachtsBoatsAircrafts']['_text'] : 0)
+        this.assetsLiabilitiesForm.controls['bankAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:DepositsInBank']['_text']) ? movableAssetsInfo['ITRForm:DepositsInBank']['_text'] : 0)
+        this.assetsLiabilitiesForm.controls['shareAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:SharesAndSecurities']['_text']) ? movableAssetsInfo['ITRForm:SharesAndSecurities']['_text'] : 0)
+        this.assetsLiabilitiesForm.controls['insuranceAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:InsurancePolicies']['_text']) ? movableAssetsInfo['ITRForm:InsurancePolicies']['_text'] : 0) 
+        this.assetsLiabilitiesForm.controls['loanAmount'].setValue  (this.isNotZero(movableAssetsInfo['ITRForm:LoansAndAdvancesGiven']['_text']) ? movableAssetsInfo['ITRForm:LoansAndAdvancesGiven']['_text'] : 0)  
+        this.assetsLiabilitiesForm.controls['cashInHand'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:CashInHand']['_text']) ? movableAssetsInfo['ITRForm:CashInHand']['_text'] : 0);
+        
+        this.assetsLiabilitiesForm.controls['movableAssetTotal'].setValue(this.isNotZero(itrData['ITRForm:ScheduleAL']['ITRForm:LiabilityInRelatAssets']['_text']) ? itrData['ITRForm:ScheduleAL']['ITRForm:LiabilityInRelatAssets']['_text'] : 0) 
+      }
+      
+    }      
+    else{
+      this.showAssetLiability = false;
+    }
+
+    //Annexures: Exempt Income
+    if(itrData.hasOwnProperty('ITRForm:ScheduleEI')){
+      let otherVal = Number(itrData['ITRForm:ScheduleEI']['ITRForm:Others']['_text'])
+      this.deductionAndRemainForm.controls['anyOtherExcemptIncome'].setValue(otherVal);
+      this.setTotalOfExempt();
+    }
+
+    //COMPUTATION OF INCOME
+    var computaionIncomePartTi = itrData['ITRForm:PartB-TI'];
+    var computaionIncomePartTii = itrData['ITRForm:PartB_TTI'];
+    console.log('computaionIncomePartTi: ',computaionIncomePartTi);
+    console.log('computaionIncomePartTii: ',computaionIncomePartTii);
+
+    this.computationOfIncomeForm.controls['salary'].setValue(computaionIncomePartTi['ITRForm:Salaries']['_text'])
+    this.computationOfIncomeForm.controls['housePropertyIncome'].setValue(computaionIncomePartTi['ITRForm:IncomeFromHP']['_text'])
+
+    this.capital_Gain.shortTermCapitalGain = computaionIncomePartTi['ITRForm:CapGain']['ITRForm:ShortTerm']['ITRForm:ShortTermAppRate']['_text'];
+    this.capital_Gain.shortTermCapitalGain15 = computaionIncomePartTi['ITRForm:CapGain']['ITRForm:ShortTerm']['ITRForm:ShortTerm15Per']['_text'];
+    this.capital_Gain.longTermCapitalGain10 = computaionIncomePartTi['ITRForm:CapGain']['ITRForm:LongTerm']['ITRForm:LongTerm10Per']['_text'];
+    this.capital_Gain.longTermCapitalGain20 = computaionIncomePartTi['ITRForm:CapGain']['ITRForm:LongTerm']['ITRForm:LongTerm20Per']['_text'];
+    this.computationOfIncomeForm.controls['capitalGain'].setValue(computaionIncomePartTi['ITRForm:CapGain']['ITRForm:TotalCapGains']['_text'])
+
+    this.computationOfIncomeForm.controls['otherIncome'].setValue(computaionIncomePartTi['ITRForm:IncFromOS']['ITRForm:TotIncFromOS']['_text']);
+    this.computationOfIncomeForm.controls['totalHeadWiseIncome'].setValue(computaionIncomePartTi['ITRForm:TotalTI']['_text']);
+    this.computationOfIncomeForm.controls['lossesSetOffDuringTheYear'].setValue(computaionIncomePartTi['ITRForm:CurrentYearLoss']['_text']);
+    this.computationOfIncomeForm.controls['carriedForwardToNextYear'].setValue(computaionIncomePartTi['ITRForm:BroughtFwdLossesSetoff']['_text'])
+    this.computationOfIncomeForm.controls['grossTotalIncome'].setValue(computaionIncomePartTi['ITRForm:GrossTotalIncome']['_text']) 
+    this.computationOfIncomeForm.controls['sec112Tax'].setValue(computaionIncomePartTi['ITRForm:IncChargeTaxSplRate111A112']['_text'])
+    this.computationOfIncomeForm.controls['totalDeduction'].setValue(computaionIncomePartTi['ITRForm:DeductionsUnderScheduleVIA']['_text'])
+    this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR'].setValue(computaionIncomePartTi['ITRForm:TotalIncome']['_text'])
+    this.computationOfIncomeForm.controls['specialIncomeAfterAdjBaseLimit'].setValue(computaionIncomePartTi['ITRForm:IncChargeableTaxSplRates']['_text'])
+    this.computationOfIncomeForm.controls['agricultureIncome'].setValue(computaionIncomePartTi['ITRForm:NetAgricultureIncomeOrOtherIncomeForRate']['_text'])
+    this.computationOfIncomeForm.controls['aggregateIncome'].setValue(computaionIncomePartTi['ITRForm:AggregateIncome']['_text'])
+    this.computationOfIncomeForm.controls['carryForwardLoss'].setValue(computaionIncomePartTi['ITRForm:LossesOfCurrentYearCarriedFwd']['_text'])
+
+    this.computationOfIncomeForm.controls['taxAtNormalRate'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnTI']['ITRForm:TaxAtNormalRatesOnAggrInc']['_text']);
+    this.computationOfIncomeForm.controls['taxAtSpecialRate'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnTI']['ITRForm:TaxAtSpecialRates']['_text']);
+    this.computationOfIncomeForm.controls['rebateOnAgricultureIncome'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnTI']['ITRForm:RebateOnAgriInc']['_text']);
+    this.computationOfIncomeForm.controls['taxOnTotalIncome'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnTI']['ITRForm:TaxPayableOnTotInc']['_text']);
+
+    this.computationOfIncomeForm.controls['forRebate87Tax'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:Rebate87A']['_text'])
+    this.computationOfIncomeForm.controls['taxAfterRebate'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnRebate']['_text'])
+    this.computationOfIncomeForm.controls['surcharge'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:SurchargeOnAboveCrore']['_text'])
+    this.computationOfIncomeForm.controls['cessAmount'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:EducationCess']['_text'])
+    this.computationOfIncomeForm.controls['grossTaxLiability'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:GrossTaxLiability']['_text'])
+
+    this.computationOfIncomeForm.controls['taxReliefUnder89'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxRelief']['ITRForm:Section89']['_text'])
+    this.computationOfIncomeForm.controls['taxReliefUnder90_90A'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxRelief']['ITRForm:Section90']['_text'])
+    this.computationOfIncomeForm.controls['taxReliefUnder91'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxRelief']['ITRForm:Section91']['_text'])
+    this.computationOfIncomeForm.controls['netTaxLiability'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:NetTaxLiability']['_text'])
+
+    this.computationOfIncomeForm.controls['s234A'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:IntrstPayUs234A']['_text'])
+    this.computationOfIncomeForm.controls['s234B'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:IntrstPayUs234B']['_text'])
+    this.computationOfIncomeForm.controls['s234C'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:IntrstPayUs234C']['_text'])
+    this.computationOfIncomeForm.controls['s234F'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:LateFilingFee234F']['_text'])
+    this.computationOfIncomeForm.controls['interestAndFeesPayable'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:TotalIntrstPay']['_text'])  
+
+    this.computationOfIncomeForm.controls['agrigateLiability'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:AggregateTaxInterestLiability']['_text'])
+
+    let tdsOnSalTotal = itrData.hasOwnProperty('ITRForm:ScheduleTDS1') ? Number(itrData['ITRForm:ScheduleTDS1']['ITRForm:TotalTDSonSalaries']['_text']) : 0; 
+    let tdsOtherThanSalTotal = itrData.hasOwnProperty('ITRForm:ScheduleTDS2') ? Number(itrData['ITRForm:ScheduleTDS2']['ITRForm:TotalTDSonOthThanSals']['_text']) : 0; 
+    let tdsOnSale26QbTotal = itrData.hasOwnProperty('ITRForm:ScheduleTDS3') ? Number(itrData['ITRForm:ScheduleTDS3']['ITRForm:TotalTDS3OnOthThanSal']['_text']) : 0; 
+    let tcsTotal = Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:TCS']['_text'])
+    let advanceTaxTotal = Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:TDS']['_text'])
+    this.taxesPaid.tdsOnSalary = tdsOnSalTotal;
+    this.taxesPaid.tdsOtherThanSalary = tdsOtherThanSalTotal;
+    this.taxesPaid.tdsOnSal26QB = tdsOnSale26QbTotal;
+    this.taxesPaid.tcs = tcsTotal;
+    this.taxesPaid.advanceSelfAssTax = advanceTaxTotal;
+
+    this.computationOfIncomeForm.controls['totalTaxesPaid'].setValue(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:TotalTaxesPaid']['_text'])
+
+    let calTaxbleVal = Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:AdvanceTax']['_text']) - Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:SelfAssessmentTax']['_text']);
+    if(calTaxbleVal > 0){
+      this.computationOfIncomeForm.controls['taxpayable'].setValue(calTaxbleVal);
+      this.computationOfIncomeForm.controls['taxRefund'].setValue(0);
+    }else{
+      this.computationOfIncomeForm.controls['taxRefund'].setValue(calTaxbleVal);
+      this.computationOfIncomeForm.controls['taxpayable'].setValue(0);
+    }
+    
+
+
+    // this.computationOfIncomeForm.controls[''].setValue
+    // this.computationOfIncomeForm.controls[''].setValue
+    // this.computationOfIncomeForm.controls[''].setValue
+    
+  }
+
+  returnYrs(fillingDate){
+    console.log('fillingDate: ',fillingDate);
+    let yearOfDate = fillingDate.slice(0,4);
+    console.log('yearOfDate: ',yearOfDate);
+    let yrs = this.lossesyrs.filter(item=> item.label === yearOfDate)[0].value;
+    return yrs;
+  }
+
+  isNotZero(val){
+    if(val !== "0"){
+      return true;
+    }else{
+      return false;
+    }
+  }
 
   setItrType(itrType, mode?, summary?) {
-    debugger
     if (itrType === "2") {
       this.itrType.itrTwo = true;
       this.itrType.itrThree = false;
@@ -1077,7 +1910,7 @@ export class Itr2mainComponent implements OnInit {
 
   calculateHealthEducsCess() {      //Calculate point 20
     if (this.computationOfIncomeForm.controls['taxAfterRebate'].value > 0) {
-      let healthEduCes = Math.round((this.computationOfIncomeForm.controls['taxAfterRebate'].value * 4) / 100)
+      let healthEduCes = Math.round(((this.computationOfIncomeForm.controls['taxAfterRebate'].value + this.computationOfIncomeForm.controls['surcharge'].value) * 4) / 100)
       this.computationOfIncomeForm.controls['cessAmount'].setValue(healthEduCes);
     }
     else{
@@ -1852,7 +2685,7 @@ export class Itr2mainComponent implements OnInit {
         field: 'netSaleVal',
         editable: true,
         width: 150,
-        cellEditor: 'numericEditor',
+       // cellEditor: 'numericEditor',
         suppressMovable: true,
       },
       {
@@ -1860,7 +2693,7 @@ export class Itr2mainComponent implements OnInit {
         field: 'purchaseCost',
         editable: true,
         width: 150,
-        cellEditor: 'numericEditor',
+        //cellEditor: 'numericEditor',
         suppressMovable: true,
       },
       {
@@ -1868,7 +2701,7 @@ export class Itr2mainComponent implements OnInit {
         field: 'capitalGain',
         editable: true,
         width: 120,
-        cellEditor: 'numericEditor',
+        //cellEditor: 'numericEditor',
         suppressMovable: true,
       },
       {
@@ -1876,7 +2709,7 @@ export class Itr2mainComponent implements OnInit {
         field: 'deduction',
         editable: true,
         width: 120,
-        cellEditor: 'numericEditor',
+       // cellEditor: 'numericEditor',
         suppressMovable: true,
       },
       {
@@ -1884,7 +2717,7 @@ export class Itr2mainComponent implements OnInit {
         field: 'netCapitalGain',
         editable: true,
         width: 150,
-        cellEditor: 'numericEditor',
+        //cellEditor: 'numericEditor',
         suppressMovable: true,
       },
       {
@@ -2142,13 +2975,13 @@ export class Itr2mainComponent implements OnInit {
   createTds26QColumnDefs(){
     return [
       {
-        headerName: 'TAN of Deductor' ,
+        headerName: 'PAN of Deductor' ,
         field:'tanOfDeductor',
         editable: true,
         width: 235,
         cellClassRules: {
           'invalid-row': function (params) {
-              if (params.data.tanOfDeductor.length !== 10 || !new RegExp(AppConstants.tanNumberRegex).test(params.data.tanOfDeductor)) {
+              if (params.data.tanOfDeductor.length !== 10 || !new RegExp(AppConstants.panNumberRegex).test(params.data.tanOfDeductor)) {
                 return true;
               }
               else {
@@ -2157,8 +2990,8 @@ export class Itr2mainComponent implements OnInit {
           },
         },
         tooltip: function (params) {
-            if (params.data.tanOfDeductor.length !== 10 || !new RegExp(AppConstants.tanNumberRegex).test(params.data.tanOfDeductor)) {
-              return ('Please enter valid TAN number');
+            if (params.data.tanOfDeductor.length !== 10 || !new RegExp(AppConstants.panNumberRegex).test(params.data.tanOfDeductor)) {
+              return ('Please enter valid PAN number');
             }
         },
         suppressMovable: true,
@@ -2276,7 +3109,7 @@ export class Itr2mainComponent implements OnInit {
         suppressMovable: true,
       },
       {
-        headerName:  'Gross Income' ,
+        headerName: 'Amount Paid' ,
         field: 'grossIncome',
         editable: true,
         width: 235,

@@ -30,6 +30,15 @@
                             class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
                         </div>
                     </div>
+
+                    <br>
+                    <div class="card__col-xs-12 card__col-sm-12">
+                        <input type="file" id="input-file-id" hidden #file  (change)="selectFile($event)" 
+                        accept=".xml"/>
+                        <button class="sendBtn" style="margin: 15px;" (click)="upload()">Upload XML File</button>&nbsp; 
+
+                        <button [disabled]="!JSONData" (click)="xmlJsonUpdate(JSONData)">Parse Xml to ITR Form</button>
+                    </div>
                   </div>
             </div>
 
@@ -1549,7 +1558,7 @@
                                     <td>{{itrType.itrThree ? 16 : 15}}</td>
                                     <td>Loss to be Carried Forward (Refer Annexure)</td>
                                     <td></td>
-                                    <td><b><input type="number" formControlName="carryForwardLoss" disabled maxlength="8"></b></td> <!--[value]="totalCarryForwardToNxtYrs"-->
+                                    <td><b><input type="number" formControlName="carryForwardLoss"  maxlength="8"></b></td> <!--[value]="totalCarryForwardToNxtYrs"-->
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 17 : 16}}</td>
@@ -1594,7 +1603,7 @@
                                     <td>{{itrType.itrThree ? 20 : 19}}</td>
                                     <td>Surcharge</td>
                                     <td></td>
-                                    <td><input type="number" formControlName="surcharge" (blur)="calGrossTaxLiability()" required  maxlength="8"></td>
+                                    <td><input type="number" formControlName="surcharge" (blur)="calculateHealthEducsCess()" required  maxlength="8"></td>
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 21 : 20}}</td>
