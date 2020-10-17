@@ -614,11 +614,12 @@ export class SumaryDialogComponent implements OnInit {
       var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - Number(this.summaryDialogForm['controls'].interestAmount.value);
     }
     else {
-      if (Number(this.summaryDialogForm['controls'].interestAmount.value) > 200000) {
-        var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - 200000;
-      } else {
-        var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - Number(this.summaryDialogForm['controls'].interestAmount.value);
-      }
+      // if (Number(this.summaryDialogForm['controls'].interestAmount.value) > 200000) {
+      //   var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - 200000;
+      // } else {
+      //   var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - Number(this.summaryDialogForm['controls'].interestAmount.value);
+      // }
+      var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - Number(this.summaryDialogForm['controls'].interestAmount.value);
     }
     this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.setValue(netHouseProIncome);
 

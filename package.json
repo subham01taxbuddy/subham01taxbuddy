@@ -45,6 +45,7 @@
     "node-sass": "4.12.0",
     "process": "0.11.10",
     "rxjs": "6.5.3",
+    "xml-js": "^1.6.11",
     "zone.js": "0.10.2"
   },
   "devDependencies": {
