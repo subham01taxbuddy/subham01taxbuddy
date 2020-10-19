@@ -106,18 +106,18 @@ export class CustomerProfileComponent implements OnInit {
     // { value: 26217, label: 'Manasi Jadhav' }, Quit
     { value: 26236, label: 'Supriya Mahindrakar' },
     // { value: 26218, label: 'Mrudula Vishvas Shivalkar' }, Quit
-    { value: 26235, label: 'Chaitrali Ranalkar' },
+    // { value: 26235, label: 'Chaitrali Ranalkar' },
 
     { value: 28033, label: 'Shrikanth Elegeti' },
-    { value: 28032, label: 'Pranali Patil' },
+    // { value: 28032, label: 'Pranali Patil' },
     { value: 28040, label: 'Namrata Shringarpure' },
     { value: 28035, label: 'Rupali Onamshetty' },
     { value: 27474, label: 'Poonam Hase' },
     { value: 28044, label: 'Bhakti Khatavkar' },
     { value: 28034, label: 'Dipali Waghmode' },
     { value: 28031, label: 'Harsha Kashyap' },
-    { value: 28222, label: 'Ankita Pawar' },
-    { value: 28763, label: 'Smita Yadav' },
+    // { value: 28222, label: 'Ankita Pawar' },
+    // { value: 28763, label: 'Smita Yadav' },
 
     { value: 42886, label: 'Gitanjali Kakade' },
     { value: 42885, label: 'Dhanashri wadekar' },
