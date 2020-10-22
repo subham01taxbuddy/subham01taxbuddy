@@ -60,8 +60,8 @@
                                     <div class="table__cell product-row__cell-stock flex-10">
                                         {{item.platform}}
                                     </div>
-                                    <div class="table__cell product-row__cell-stock flex-20"
-                                        *ngIf="item.platform === 'WebSite' || item.platform === 'WEB'">
+                                    <div class="table__cell product-row__cell-stock flex-20">
+                                        <!--  *ngIf="item.platform === 'WebSite' || item.platform === 'WEB'" -->
                                         <button style="border: none; cursor: pointer;background: transparent;"
                                             (click)="startConversation(item)" title="Click to start conversation"><i
                                                 class="fa fa-comments-o"
@@ -70,18 +70,18 @@
                                             (click)="showNotes(item)" title="Click see/add notes"><i class="fa fa-book"
                                                 style="font-size: 18px;"></i></button>
                                     </div>
-                                    <div class="table__cell product-row__cell-stock flex-20"
+                                    <!-- <div class="table__cell product-row__cell-stock flex-20"
                                         *ngIf="item.platform !== 'WebSite' && item.platform !== 'WEB'">
 
                                         <button style="border: none; cursor: pointer;background: transparent;"
-                                            (click)="startPush(item)" title="Click send push notifications"><i
+                                            (click)="startConversation(item)" title="Click send push notifications"><i
                                                 class="fa fa-paper-plane" aria-hidden="true"
                                                 style="color: green; font-size: 18px;"></i></button>
 
                                         | <button style="border: none; cursor: pointer;background: transparent;"
                                             (click)="showNotes(item)" title="Click see/add notes"><i class="fa fa-book"
                                                 style="font-size: 18px;"></i></button>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

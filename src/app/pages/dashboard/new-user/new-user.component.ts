@@ -1,3 +1,4 @@
+import { environment } from 'environments/environment';
 import { UtilsService } from 'app/services/utils.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { Component, OnInit } from '@angular/core';
@@ -30,6 +31,16 @@ export class NewUserComponent implements OnInit {
   constructor(private userMsService: UserMsService, public utilsService: UtilsService,
     private dialog: MatDialog) {
     this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
+    if (!environment.production) {
+      this.agentList = [
+        { value: 'ashish.hulwan@ssbainnovations.com', label: 'Ashish' },
+        { value: 'vaibhav.gaikwad@ssbainnovations.com', label: 'Vaibhav' },
+        { value: 'dev_kommunicate@ssbainnovations.com', label: 'Dev Komm' },
+        { value: 'barakha@ssbainnovations.com', label: 'Barakha' },
+        { value: 'karan@ssbainnovations.com', label: 'Karan' },
+        { value: 'testkommunicate@ssbainnovations.com', label: 'Ajay' }
+      ];
+    }
   }
 
   ngOnInit() {
