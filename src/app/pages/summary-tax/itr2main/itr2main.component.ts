@@ -156,6 +156,7 @@ export class Itr2mainComponent implements OnInit {
   filteredOptions44ADA: Observable<any[]>;
   speculativeOptions: Observable<any[]>;
   otherThanSpeculativeOptions: Observable<any[]>;
+  otherThanSpeculativeProfesionOptions: Observable<any[]>;
 
   inputXml : any;
   JSONData: any;
@@ -283,6 +284,8 @@ export class Itr2mainComponent implements OnInit {
       presumptiveBusinessIncomeUs44ADA: [0],    
       speculativeBusinessIncome: [0],
       incomeFromOtherThanSpeculativeAndPresumptive: [0],
+      incomeFromOtherThanSpeculativeAndPresumptiveProfession: [0],
+      futureAndOption: [0],
 
       sec112Tax: [0],
       specialIncomeAfterAdjBaseLimit: [0],
@@ -346,6 +349,20 @@ export class Itr2mainComponent implements OnInit {
       purchaseOfothertThanSpeculative:[],
       taxableIncomeOfothertThanSpeculative: [],
       expenceIncomeOfothertThanSpeculative: [],
+
+      natureOfothertThanSpeculativeProfession: [],
+      tradeNameOfothertThanSpeculativeProfession: [],
+      turnoverOfothertThanSpeculativeProfession: [],
+      purchaseOfothertThanSpeculativeProfession:[],
+      taxableIncomeOfothertThanSpeculativeProfession: [],
+      expenceIncomeOfothertThanSpeculativeProfession: [],
+
+      // natureOfothertThanSpeculativeBusinessFAndO: [],
+      // tradeNameOfothertThanSpeculativeFAndO: [],
+      turnoverOfothertThanSpeculativeFAndO: [],
+      purchaseOfothertThanSpeculativeFAndO:[],
+      taxableIncomeOfothertThanSpeculativeFAndO: [],
+      expenceIncomeOfothertThanSpeculativeFAndO: [],
     })
 
 
@@ -406,7 +423,8 @@ export class Itr2mainComponent implements OnInit {
     this.deductionAndRemainForm.reset();
     this.otherSourceForm.reset();
     this.assetsLiabilitiesForm.reset();
-
+    
+    
      if(itReturn.hasOwnProperty('ITR2FORM:ITR2')){
         this.personalInfoForm.controls['itrType'].setValue("2");
         this.itrType.itrTwo = true;
@@ -418,6 +436,7 @@ export class Itr2mainComponent implements OnInit {
         this.itrType.itrThree = true;
         this.itrType.itrTwo = false;
         itrData = itReturn['ITR3FORM:ITR3'];
+        this.itr3xmlBind(itrData)
      }
      console.log('itrData ==> ',itrData);
      //Personal info binding  
@@ -628,20 +647,35 @@ export class Itr2mainComponent implements OnInit {
 
      }
     //CAPITAL GAIN
-    /////Short Term Capital Gain @ Slab Rate {Property/ Other Assets}
+    /////Short Term Capital Gain @ Slab Rate {Property/ Other Assets}     ->ITRForm:SaleofLandBuild -> ITRForm:ExemptionGrandTotal  ???
     var shortCGslabofProperty = itrData['ITRForm:ScheduleCGFor23']['ITRForm:ShortTermCapGainFor23'];
     console.log('shortCGslabofProperty: ',shortCGslabofProperty);
     if(shortCGslabofProperty.hasOwnProperty('ITRForm:SaleofLandBuild')){
-     let shortTermProObj = {
-        nameOfTheAsset: 'Property',                                
-        netSaleValue: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:FullConsideration']['_text']) - Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ExpOnTrans']['_text']),
-        purchaseCost: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:AquisitCost']['_text']) + Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ImproveCost']['_text']),
-        capitalGain: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:Balance']['_text']),
-        deductions: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:DeductionUs54B']['_text']),
-        netCapitalGain: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:STCGonImmvblPrprty']['_text']),
+      if(this.utilService.isNonEmpty(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls'].length)){
+        let shortTermProObj = {
+          nameOfTheAsset: 'Property',                                
+          netSaleValue: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls'][0]['ITRForm:FullConsideration']['_text']) - Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls'][0]['ITRForm:ExpOnTrans']['_text']),
+          purchaseCost: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls'][0]['ITRForm:AquisitCost']['_text']) + Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls'][0]['ITRForm:ImproveCost']['_text']),
+          capitalGain: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls'][0]['ITRForm:Balance']['_text']),
+          deductions: this.itrType.itrTwo ? Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls'][0]['ITRForm:DeductionUs54B']['_text']) : Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls'][0]['ITRForm:ExemptionOrDednUs54']['ITRForm:ExemptionGrandTotal']['_text']),
+          netCapitalGain: this.itrType.itrTwo ? Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls'][0]['ITRForm:STCGonImmvblPrprty']['_text']) : Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls'][0]['ITRForm:CapgainonAssets']['_text']),
+        }
+        taxPaid.shortTermCapitalGain.push(shortTermProObj);
+        this.updateCapitalGain(taxPaid); 
       }
-      taxPaid.shortTermCapitalGain.push(shortTermProObj);
-      this.updateCapitalGain(taxPaid); 
+      else{
+        let shortTermProObj = {
+          nameOfTheAsset: 'Property',                                
+          netSaleValue: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:FullConsideration']['_text']) - Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ExpOnTrans']['_text']),
+          purchaseCost: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:AquisitCost']['_text']) + Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ImproveCost']['_text']),
+          capitalGain: Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:Balance']['_text']),
+          deductions: this.itrType.itrTwo ? Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:DeductionUs54B']['_text']) : Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ExemptionOrDednUs54']['ITRForm:ExemptionGrandTotal']['_text']),
+          netCapitalGain: this.itrType.itrTwo ? Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:STCGonImmvblPrprty']['_text']) : Number(shortCGslabofProperty['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:CapgainonAssets']['_text']),
+        }
+        taxPaid.shortTermCapitalGain.push(shortTermProObj);
+        this.updateCapitalGain(taxPaid); 
+      }
+    
     }
 
     if(shortCGslabofProperty.hasOwnProperty('ITRForm:SaleOnOtherAssets')){
@@ -714,7 +748,7 @@ export class Itr2mainComponent implements OnInit {
           purchaseCost: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ImproveCost']['_text']),
           capitalGain: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:Balance']['_text']),
           deductions: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ExemptionOrDednUs54']['ITRForm:ExemptionGrandTotal']['_text']),
-          netCapitalGain: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:LTCGonImmvblPrprty']['_text']),
+         // netCapitalGain: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:LTCGonImmvblPrprty']['_text']),
         }
         taxPaid.longTermCapitalGainAt20Percent.push(longTerm20PerObj);
         this.updateCapitalGain(taxPaid); 
@@ -727,7 +761,7 @@ export class Itr2mainComponent implements OnInit {
            purchaseCost: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:DeductSec48']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:DeductSec48']['ITRForm:ImproveCost']['_text']),
            capitalGain: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:BalanceCG']['_text']),
            deductions: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:DeductionUs54F']['_text']),
-           netCapitalGain: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:CapgainonAssets']['_text']),
+          // netCapitalGain: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:CapgainonAssets']['_text']),
          }
          taxPaid.longTermCapitalGainAt20Percent.push(longTerm20BondsObj);
          this.updateCapitalGain(taxPaid); 
@@ -739,7 +773,7 @@ export class Itr2mainComponent implements OnInit {
            netSaleValue: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:FullConsideration']['_text']) - Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductSec48']['ITRForm:ExpOnTrans']['_text']),
            purchaseCost: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductSec48']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductSec48']['ITRForm:ImproveCost']['_text']),
            capitalGain: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:BalanceCG']['_text']),
-           deductions: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductionUs54F']['_text']),
+          // deductions: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductionUs54F']['_text']),
            netCapitalGain: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:CapgainonAssets']['_text']),
          }
          taxPaid.longTermCapitalGainAt20Percent.push(longTerm20OtherAssetsObj);
@@ -848,20 +882,23 @@ export class Itr2mainComponent implements OnInit {
       }
     }
 
-    var donationTypePolicalInfo = Number(itrData['ITRForm:ScheduleVIA']['ITRForm:DeductUndChapVIA']['ITRForm:Section80GGA']['_text']);
-    if(donationTypePolicalInfo !== 0){
-      let donation80GPlioticalObj = {
-        donationType: 'POLITICAL',
-        name: '',
-        amountInCash: 0,
-        amountOtherThanCash: 0,
-        eligibleAmount: donationTypePolicalInfo,
-        address: '',
-        city: '',
-        pinCode: '',
-        state: '',
-      }
-      this.donationData.push(donation80GPlioticalObj);
+    if(itrData['ITRForm:ScheduleVIA']['ITRForm:DeductUndChapVIA'].hasOwnProperty('ITRForm:Section80GGA')){
+        var donationTypePolicalInfo = Number(itrData['ITRForm:ScheduleVIA']['ITRForm:DeductUndChapVIA']['ITRForm:Section80GGA']['_text']);
+          if(donationTypePolicalInfo !== 0){
+            let donation80GPlioticalObj = {
+              donationType: 'POLITICAL',
+              name: '',
+              amountInCash: 0,
+              amountOtherThanCash: 0,
+              eligibleAmount: donationTypePolicalInfo,
+              address: '',
+              city: '',
+              pinCode: '',
+              state: '',
+            }
+            this.donationData.push(donation80GPlioticalObj);
+        }
+   
     }
 
       var donationTypeScientificInfo = Number(itrData['ITRForm:ScheduleVIA']['ITRForm:DeductUndChapVIA']['ITRForm:Section80G']['_text']);
@@ -896,7 +933,7 @@ export class Itr2mainComponent implements OnInit {
        this.deductionAndRemainForm.controls['us80ee'].setValue(this.isNotZero(deduction['ITRForm:Section80EE']['_text']) ? deduction['ITRForm:Section80EE']['_text'] : 0);
        this.deductionAndRemainForm.controls['us80g'].setValue(this.isNotZero(deduction['ITRForm:Section80G']['_text']) ? deduction['ITRForm:Section80G']['_text'] : 0);
        this.deductionAndRemainForm.controls['us80gg'].setValue(this.isNotZero(deduction['ITRForm:Section80GG']['_text']) ? deduction['ITRForm:Section80GG']['_text'] : 0);
-       this.deductionAndRemainForm.controls['us80gga'].setValue(this.isNotZero(deduction['ITRForm:Section80GGA']['_text']) ? deduction['ITRForm:Section80GGA']['_text'] : 0);
+       this.deductionAndRemainForm.controls['us80gga'].setValue(this.isNotZero(deduction['ITRForm:Section80GGA'] ? (deduction['ITRForm:Section80GGA']['_text'] ? deduction['ITRForm:Section80GGA']['_text'] : 0) : 0));
        this.deductionAndRemainForm.controls['us80ggc'].setValue(this.isNotZero(deduction['ITRForm:Section80GGC']['_text']) ? deduction['ITRForm:Section80GGC']['_text'] : 0);
      this.deductionAndRemainForm.controls['us80ttaTtb'].setValue(this.isNotZero(deduction['ITRForm:Section80TTA']['_text']) ? deduction['ITRForm:Section80TTA']['_text'] : 0);
        this.deductionAndRemainForm.controls['us80u'].setValue(this.isNotZero(deduction['ITRForm:Section80U']['_text']) ? deduction['ITRForm:Section80U']['_text'] : 0);
@@ -1127,7 +1164,7 @@ export class Itr2mainComponent implements OnInit {
     this.computationOfIncomeForm.controls['carriedForwardToNextYear'].setValue(computaionIncomePartTi['ITRForm:BroughtFwdLossesSetoff']['_text'])
     this.computationOfIncomeForm.controls['grossTotalIncome'].setValue(computaionIncomePartTi['ITRForm:GrossTotalIncome']['_text']) 
     this.computationOfIncomeForm.controls['sec112Tax'].setValue(computaionIncomePartTi['ITRForm:IncChargeTaxSplRate111A112']['_text'])
-    this.computationOfIncomeForm.controls['totalDeduction'].setValue(computaionIncomePartTi['ITRForm:DeductionsUnderScheduleVIA']['_text'])
+    //this.computationOfIncomeForm.controls['totalDeduction'].setValue(computaionIncomePartTi['ITRForm:DeductionsUnderScheduleVIA']['_text'])
     this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR'].setValue(computaionIncomePartTi['ITRForm:TotalIncome']['_text'])
     this.computationOfIncomeForm.controls['specialIncomeAfterAdjBaseLimit'].setValue(computaionIncomePartTi['ITRForm:IncChargeableTaxSplRates']['_text'])
     this.computationOfIncomeForm.controls['agricultureIncome'].setValue(computaionIncomePartTi['ITRForm:NetAgricultureIncomeOrOtherIncomeForRate']['_text'])
@@ -1186,6 +1223,244 @@ export class Itr2mainComponent implements OnInit {
     // this.computationOfIncomeForm.controls[''].setValue
     // this.computationOfIncomeForm.controls[''].setValue
     
+  }
+
+  itr3xmlBind(itr3Info){
+    var itr3Summary ={
+      assesse: {
+        business: {
+          financialParticulars:{
+            GSTRNumber: null,
+          	advances: 0,
+          	balanceWithBank: 0,
+          	cashInHand: 0,
+          	fixedAssets: 0,
+          	grossTurnOverAmount: 0,
+          	inventories: 0,
+          	loanAndAdvances: 0,
+          	membersOwnCapital: 0,
+          	otherAssets: 0,
+          	otherLiabilities: 0,
+          	securedLoans: 0,
+          	sundryCreditorsAmount: 0,
+          	sundryDebtorsAmount: 0,
+          	totalAssets: 0,
+            totalCapitalLiabilities: 0,
+            unSecuredLoans: 0
+          },
+          presumptiveIncomes: []
+        }
+      }
+    }
+    console.log('itr3Info :',itr3Info);
+    // Presumptive Business Income U/S 44AD
+    var pre44ADinfo = itr3Info['ITRForm:PARTA_PL'];
+    let preBusinessObj = {
+      businessType: "BUSINESS",
+      exemptIncome: 0,
+      natureOfBusiness: pre44ADinfo['ITRForm:NatOfBus44AD']['ITRForm:CodeAD']['_text'],
+      taxableIncome: 0,
+      tradeName: pre44ADinfo['ITRForm:NatOfBus44AD']['ITRForm:NameOfBusiness']['_text'],
+      incomes: []
+    }
+
+    let recivedInBankObj = {
+      businessType: null,
+      incomeType: "BANK",
+      minimumPresumptiveIncome: Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:PersumptiveInc44AD6Per']['_text']),			
+      ownership: null,
+      periodOfHolding: 0,
+      presumptiveIncome: Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:PersumptiveInc44AD6Per']['_text']),				    	
+      receipts: Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:GrsTrnOverBank']['_text']),				     
+      registrationNo: null,
+      tonnageCapacity: 0
+    }
+    preBusinessObj.incomes.push(recivedInBankObj);
+
+    let recivedCashObj = {
+      businessType: null,
+      incomeType: "CASH",
+      minimumPresumptiveIncome: Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:PersumptiveInc44AD8Per']['_text']),			 
+      ownership: null,
+      periodOfHolding: 0,
+      presumptiveIncome: Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:PersumptiveInc44AD8Per']['_text']),				    	
+      receipts: Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:GrsTrnOverAnyOthMode']['_text']),				     
+      registrationNo: null,
+      tonnageCapacity: 0
+    }
+    preBusinessObj.incomes.push(recivedCashObj);
+    itr3Summary.assesse.business.presumptiveIncomes.push(preBusinessObj);
+    console.log('preBusinessObj Object :',preBusinessObj);
+
+     // Presumptive Business Income U/S 44ADA
+     var pre44ADAinfo = itr3Info['ITRForm:PARTA_PL'];
+     console.log('pre44ADAinfo: ',pre44ADAinfo);
+     let preBusinessObj44ADA = {
+      businessType: "PROFESSIONAL",
+      exemptIncome: 0,
+      natureOfBusiness: pre44ADAinfo['ITRForm:NatOfBus44ADA']['ITRForm:CodeADA']['_text'],
+      taxableIncome: 0,
+      tradeName: pre44ADAinfo['ITRForm:NatOfBus44ADA']['ITRForm:NameOfBusiness']['_text'],
+      incomes: []
+    }
+
+    let grossRecipt44ADAObj = {
+      businessType: null,
+      incomeType: "PROFESSIONAL",
+      minimumPresumptiveIncome: Number(pre44ADAinfo['ITRForm:PersumptiveInc44ADA']['ITRForm:TotPersumptiveInc44ADA']['_text']),			
+      ownership: null,
+      periodOfHolding: 0,
+      presumptiveIncome: Number(pre44ADAinfo['ITRForm:PersumptiveInc44ADA']['ITRForm:TotPersumptiveInc44ADA']['_text']),				    	
+      receipts: Number(pre44ADAinfo['ITRForm:PersumptiveInc44ADA']['ITRForm:GrsReceipt']['_text']),				     
+      registrationNo: null,
+      tonnageCapacity: 0
+    }
+    preBusinessObj44ADA.incomes.push(recivedInBankObj);
+    itr3Summary.assesse.business.presumptiveIncomes.push(preBusinessObj44ADA);
+    console.log('44ADA grossRecipt44ADAObj Object :',grossRecipt44ADAObj);
+    console.log('itr3Summary total object :',itr3Summary);
+
+    //Financial Information as on 31/03/2020  
+    //Liabilities:
+    let financialInfo = itr3Info['ITRForm:PARTA_BS'];
+    console.log('financialInfo: -> ',financialInfo)
+
+    itr3Summary.assesse.business.financialParticulars.membersOwnCapital = Number(financialInfo['ITRForm:FundSrc']['ITRForm:PropFund']['ITRForm:TotPropFund']['_text']); 
+    itr3Summary.assesse.business.financialParticulars.securedLoans = Number(financialInfo['ITRForm:FundSrc']['ITRForm:LoanFunds']['ITRForm:SecrLoan']['ITRForm:TotSecrLoan']['_text']); 
+    itr3Summary.assesse.business.financialParticulars.unSecuredLoans = Number(financialInfo['ITRForm:FundSrc']['ITRForm:LoanFunds']['ITRForm:UnsecrLoan']['ITRForm:TotUnSecrLoan']['_text']); 
+    itr3Summary.assesse.business.financialParticulars.advances = 0; 
+    itr3Summary.assesse.business.financialParticulars.sundryCreditorsAmount = Number(financialInfo['ITRForm:FundApply']['ITRForm:CurrAssetLoanAdv']['ITRForm:CurrLiabilitiesProv']['ITRForm:CurrLiabilities']['ITRForm:SundryCred']['_text']); 
+    itr3Summary.assesse.business.financialParticulars.otherLiabilities = 0;
+    let liabilityTotal = itr3Summary.assesse.business.financialParticulars.membersOwnCapital + itr3Summary.assesse.business.financialParticulars.securedLoans +
+                         itr3Summary.assesse.business.financialParticulars.unSecuredLoans + itr3Summary.assesse.business.financialParticulars.advances +
+                         itr3Summary.assesse.business.financialParticulars.sundryCreditorsAmount + itr3Summary.assesse.business.financialParticulars.otherLiabilities;
+
+    itr3Summary.assesse.business.financialParticulars.totalCapitalLiabilities = liabilityTotal;
+
+    //Assets
+    itr3Summary.assesse.business.financialParticulars.fixedAssets = Number(financialInfo['ITRForm:FundApply']['ITRForm:FixedAsset']['ITRForm:TotFixedAsset']['_text']); 
+    itr3Summary.assesse.business.financialParticulars.inventories = Number(financialInfo['ITRForm:FundApply']['ITRForm:CurrAssetLoanAdv']['ITRForm:CurrAsset']['ITRForm:Inventories']['ITRForm:TotInventries']['_text']); 
+    itr3Summary.assesse.business.financialParticulars.sundryDebtorsAmount = Number(financialInfo['ITRForm:FundApply']['ITRForm:CurrAssetLoanAdv']['ITRForm:CurrAsset']['ITRForm:SndryDebtors']['_text']);      
+    itr3Summary.assesse.business.financialParticulars.balanceWithBank = Number(financialInfo['ITRForm:FundApply']['ITRForm:CurrAssetLoanAdv']['ITRForm:CurrAsset']['ITRForm:CashOrBankBal']['ITRForm:BankBal']['_text']);      
+    itr3Summary.assesse.business.financialParticulars.cashInHand = Number(financialInfo['ITRForm:FundApply']['ITRForm:CurrAssetLoanAdv']['ITRForm:CurrAsset']['ITRForm:CashOrBankBal']['ITRForm:CashinHand']['_text']);      
+    itr3Summary.assesse.business.financialParticulars.loanAndAdvances = Number(financialInfo['ITRForm:FundApply']['ITRForm:CurrAssetLoanAdv']['ITRForm:LoanAdv']['ITRForm:TotLoanAdv']['_text']);      
+    itr3Summary.assesse.business.financialParticulars.otherAssets = Number(financialInfo['ITRForm:FundApply']['ITRForm:CurrAssetLoanAdv']['ITRForm:CurrAsset']['ITRForm:OthCurrAsset']['_text']);      
+    let assetsTotal = itr3Summary.assesse.business.financialParticulars.fixedAssets + itr3Summary.assesse.business.financialParticulars.inventories +
+                      itr3Summary.assesse.business.financialParticulars.sundryDebtorsAmount + itr3Summary.assesse.business.financialParticulars.balanceWithBank +
+                      itr3Summary.assesse.business.financialParticulars.cashInHand + itr3Summary.assesse.business.financialParticulars.loanAndAdvances +
+                      itr3Summary.assesse.business.financialParticulars.otherAssets;
+
+    itr3Summary.assesse.business.financialParticulars.totalAssets = assetsTotal;
+
+    // Speculative Business Income
+    var speculativeInfo = itr3Info['ITRForm:PARTA_PL'];
+    console.log('speculativeInfo: ',speculativeInfo);
+    let speculativeObj = {
+     businessType: "SPECULATIVE",
+     exemptIncome: Number(speculativeInfo['ITRForm:Expenditure']['_text']),
+     natureOfBusiness: '',
+     taxableIncome: Number(speculativeInfo['ITRForm:NetIncomeFrmSpecActivity']['_text']),
+     tradeName:'',
+     incomes: []
+   }
+
+   let speculativeIncomePart = {
+     businessType: null,
+     incomeType: "SPECULATIVE",
+     minimumPresumptiveIncome: 0,			
+     ownership: null,
+     periodOfHolding: 0,
+     presumptiveIncome: Number(speculativeInfo['ITRForm:TurnverFrmSpecActivity']['_text']) - Number(speculativeInfo['ITRForm:GrossProfit']['_text']),				    	
+     receipts: Number(speculativeInfo['ITRForm:TurnverFrmSpecActivity']['_text']),				     
+     registrationNo: null,
+     tonnageCapacity: 0
+   }
+   speculativeObj.incomes.push(speculativeIncomePart);
+   itr3Summary.assesse.business.presumptiveIncomes.push(speculativeObj);
+
+   // Income from Other than Speculative and Presumptive
+   var othetThanSpecInfo = itr3Info['ITRForm:PARTA_PL'];
+   console.log('othetThanSpecInfo: ',othetThanSpecInfo);
+   let othetThanSpecObj = {
+    businessType: "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_BUSINESS",
+    exemptIncome: Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:Expenses']['_text']),
+    natureOfBusiness: '',
+    taxableIncome: Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfit']['_text']),
+    tradeName:'',
+    incomes: []
+  }
+
+  let othetThanSpecPart = {
+    businessType: null,
+    incomeType: "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_BUSINESS",
+    minimumPresumptiveIncome: 0,			
+    ownership: null,
+    periodOfHolding: 0,
+    presumptiveIncome: Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:GrossReceipt']['_text']) - Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:GrossProfit']['_text']),				    	
+    receipts: Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:GrossReceipt']['_text']),				     
+    registrationNo: null,
+    tonnageCapacity: 0
+  }
+  othetThanSpecObj.incomes.push(othetThanSpecPart);
+  itr3Summary.assesse.business.presumptiveIncomes.push(othetThanSpecObj);
+
+  // Income from Other than Speculative and Presumptive - Profession
+  var othetThanSpecProfessionInfo = itr3Info['ITRForm:PARTA_PL'];
+  console.log('othetThanSpecProfessionInfo: ',othetThanSpecProfessionInfo);
+  let othetThanSpecProfessionObj = {
+   businessType: "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_PROFESSION",
+   exemptIncome: Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:ExpensesPrf']['_text']),
+   natureOfBusiness: '',
+   taxableIncome: Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfitPrf']['_text']),
+   tradeName:'',
+   incomes: []
+ }
+
+ let othetThanSpecProfessionPart = {
+   businessType: null,
+   incomeType: "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_PROFESSION",
+   minimumPresumptiveIncome: 0,			
+   ownership: null,
+   periodOfHolding: 0,
+   presumptiveIncome: Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:GrossReceiptPrf']['_text']) - Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:GrossProfitPrf']['_text']),				    	
+   receipts: Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:GrossReceiptPrf']['_text']),				     
+   registrationNo: null,
+   tonnageCapacity: 0
+ }
+ othetThanSpecProfessionObj.incomes.push(othetThanSpecProfessionPart);
+ itr3Summary.assesse.business.presumptiveIncomes.push(othetThanSpecProfessionObj);
+
+ // F&O
+ var futureAndOptionInfo = itr3Info['ITRForm:TradingAccount'];
+ console.log('futureAndOptionInfo: ',futureAndOptionInfo);
+ let futureAndOptionObj = {
+  businessType: "FUTURES_AND_OPTIONS",
+  exemptIncome: 0,
+  natureOfBusiness: '',
+  taxableIncome: Number(futureAndOptionInfo['ITRForm:GrossProfitFrmBusProf']['_text']),
+  tradeName:'',
+  incomes: []
+}
+
+let futureAndOptionPart = {
+  businessType: null,
+  incomeType: "FUTURES_AND_OPTIONS",
+  minimumPresumptiveIncome: 0,			
+  ownership: null,
+  periodOfHolding: 0,
+  presumptiveIncome: Number(futureAndOptionInfo['ITRForm:DirectExpensesTotal']['_text']),				    	
+  receipts: Number(futureAndOptionInfo['ITRForm:TotRevenueFrmOperations']['_text']),				     
+  registrationNo: null,
+  tonnageCapacity: 0
+}
+ futureAndOptionObj.incomes.push(futureAndOptionPart);
+itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
+
+  console.log('Main itr3Summary: ==> ',itr3Summary);
+  this.updatBussinessInfo = itr3Summary;
+  this.setItrType("3", 'edit', itr3Summary);
+
+
   }
 
   returnYrs(fillingDate){
@@ -1266,6 +1541,17 @@ export class Itr2mainComponent implements OnInit {
           }),
           map(name => {
             return name ? this._filterOther(name) : this.othserThanSpeculativOfBusinessDropdown.slice();
+          })
+        );
+
+        this.otherThanSpeculativeProfesionOptions = this.businessIncomeForm['controls'].natureOfothertThanSpeculativeProfession.valueChanges
+        .pipe(
+          startWith(''),
+          map(value => {
+            return value;
+          }),
+          map(name => {
+            return name ? this._filterOther(name) : this.natureOfBusinessDropdown44ADA.slice();
           })
         );
 
@@ -3377,9 +3663,11 @@ export class Itr2mainComponent implements OnInit {
      if(speculaticeIncome.length > 0){
       let natureCode = speculaticeIncome[0].natureOfBusiness;
       console.log('speculativOfBusinessDropdown: ',this.speculativOfBusinessDropdown);
-      let natureLabel = this.speculativOfBusinessDropdown.filter(item => item.code === natureCode)[0].label;
+      let natureLabel = this.speculativOfBusinessDropdown.filter(item => item.code === natureCode);
       console.log('natureLabel: ',natureLabel);
-      this.businessIncomeForm.controls['natureOfSpeculativeBusiness'].setValue(natureLabel);
+      if(natureLabel.length > 0){
+        this.businessIncomeForm.controls['natureOfSpeculativeBusiness'].setValue(natureLabel[0].label);
+      }
       this.businessIncomeForm.controls['tradeNameOfSpeculative'].setValue(speculaticeIncome[0].tradeName);
       this.businessIncomeForm.controls['turnoverOfSpeculative'].setValue(speculaticeIncome[0].incomes[0].receipts);
       this.businessIncomeForm.controls['purchaseOfSpeculative'].setValue(speculaticeIncome[0].incomes[0].presumptiveIncome);
@@ -3387,21 +3675,60 @@ export class Itr2mainComponent implements OnInit {
       this.businessIncomeForm.controls['taxableIncomeOfSpeculative'].setValue(speculaticeIncome[0].taxableIncome);
      }
 
-     //OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE part
-     var therThanSpeculaticeIncome = itr_3_info.assesse.business.presumptiveIncomes.filter(item => item.businessType === "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE");
+     //OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_BUSINESS part
+     debugger
+     var therThanSpeculaticeIncome = itr_3_info.assesse.business.presumptiveIncomes.filter(item => item.businessType === "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_BUSINESS");
      console.log('therThanSpeculaticeIncome : ',therThanSpeculaticeIncome);
      if(therThanSpeculaticeIncome.length > 0){
       let natureCodeNotSpeculative= therThanSpeculaticeIncome[0].natureOfBusiness;
       console.log('othserThanSpeculativOfBusinessDropdown: ',this.othserThanSpeculativOfBusinessDropdown);
-      let natureLabelNotSpeculative = this.othserThanSpeculativOfBusinessDropdown.filter(item => item.code === natureCodeNotSpeculative)[0].label;
+      let natureLabelNotSpeculative = this.othserThanSpeculativOfBusinessDropdown.filter(item => item.code === natureCodeNotSpeculative);
       console.log('natureLabelNotSpeculative: ',natureLabelNotSpeculative);
-      this.businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].setValue(natureLabelNotSpeculative);
+      if(natureLabelNotSpeculative.length > 0){
+        this.businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].setValue(natureLabelNotSpeculative[0].label);
+      }
+      
       this.businessIncomeForm.controls['tradeNameOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].tradeName);
       this.businessIncomeForm.controls['turnoverOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0].receipts);
       this.businessIncomeForm.controls['purchaseOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0].presumptiveIncome);
       this.businessIncomeForm.controls['expenceIncomeOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].exemptIncome);
       this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].taxableIncome);
      }
+
+     //Income from Other than Speculative and Presumptive - Profession
+     debugger
+     var therThanSpeculaticeProfessionIncome = itr_3_info.assesse.business.presumptiveIncomes.filter(item => item.businessType === "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_PROFESSION");
+     console.log('therThanSpeculaticeProfessionIncome : ',therThanSpeculaticeProfessionIncome);
+     if(therThanSpeculaticeProfessionIncome.length > 0){
+      let natureCodeNotSpeculative= therThanSpeculaticeProfessionIncome[0].natureOfBusiness;
+      console.log('natureOfBusinessDropdown44ADA: ',this.natureOfBusinessDropdown44ADA);
+      let natureLabelNotSpeculative = this.natureOfBusinessDropdown44ADA.filter(item => item.code === natureCodeNotSpeculative);
+      console.log('natureLabelNotSpeculative: ',natureLabelNotSpeculative);
+      if(natureLabelNotSpeculative.length > 0){
+        this.businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].setValue(natureLabelNotSpeculative[0].label);
+      }
+      this.businessIncomeForm.controls['tradeNameOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].tradeName);
+      this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].incomes[0].receipts);
+      this.businessIncomeForm.controls['purchaseOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].incomes[0].presumptiveIncome);
+      this.businessIncomeForm.controls['expenceIncomeOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].exemptIncome);
+      this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].taxableIncome);
+     }
+
+      //F&O
+      var fAndOIncome = itr_3_info.assesse.business.presumptiveIncomes.filter(item => item.businessType === "FUTURES_AND_OPTIONS");
+      console.log('fAndOIncome : ',fAndOIncome);
+      if(fAndOIncome.length > 0){
+       let natureCodeNotSpeculative= fAndOIncome[0].natureOfBusiness;
+      //console.log('othserThanSpeculativOfBusinessDropdown: ',this.othserThanSpeculativOfBusinessDropdown);
+      //  let natureLabelNotSpeculative = this.othserThanSpeculativOfBusinessDropdown.filter(item => item.code === natureCodeNotSpeculative)[0].label;
+      //  console.log('natureLabelNotSpeculative: ',natureLabelNotSpeculative);
+      //  this.businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].setValue(natureLabelNotSpeculative);
+      //  this.businessIncomeForm.controls['tradeNameOfothertThanSpeculativeProfession'].setValue(fAndOIncome[0].tradeName);
+       this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeFAndO'].setValue(fAndOIncome[0].incomes[0].receipts);
+       this.businessIncomeForm.controls['purchaseOfothertThanSpeculativeFAndO'].setValue(fAndOIncome[0].incomes[0].presumptiveIncome);
+       this.businessIncomeForm.controls['expenceIncomeOfothertThanSpeculativeFAndO'].setValue(fAndOIncome[0].exemptIncome);
+       this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeFAndO'].setValue(fAndOIncome[0].taxableIncome);
+      }
    }
 
    updateSalatyInfo(salaryData){
@@ -4160,7 +4487,7 @@ export class Itr2mainComponent implements OnInit {
               }
               
                var presumptiveOtherThanSpeculativeObj = {
-                 businessType: 'OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE',
+                 businessType: 'OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_BUSINESS',
                  natureOfBusiness: natureOfOtherThanSpeculative,
                  tradeName: this.businessIncomeForm.controls['tradeNameOfothertThanSpeculative'].value,//trade name
                  incomes: [],
@@ -4170,7 +4497,7 @@ export class Itr2mainComponent implements OnInit {
      
                if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['turnoverOfothertThanSpeculative'].value)) {
                  let incomeObj = {
-                   incomeType: "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE",
+                   incomeType: "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_BUSINESS",
                    receipts: Number(this.businessIncomeForm.controls['turnoverOfothertThanSpeculative'].value),   
                    presumptiveIncome: Number(this.businessIncomeForm.controls['purchaseOfothertThanSpeculative'].value),  
                    periodOfHolding: 0,
@@ -4183,10 +4510,74 @@ export class Itr2mainComponent implements OnInit {
      
                presumData.push(presumptiveOtherThanSpeculativeObj)
              }
+
+             //Income from Other than Speculative and Presumptive - Profession
+             if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].value) && this.utilService.isNonEmpty(this.businessIncomeForm.controls['tradeNameOfothertThanSpeculativeProfession'].value)) {
+    
+              var natureOfOtherThanSpeculative;
+              if(this.businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].value === 'Share of income from firm'){
+                natureOfOtherThanSpeculative = '00001';
+              }
+              else{
+                natureOfOtherThanSpeculative = this.natureOfBusinessDropdown44ADA.filter(item => item.label === this.businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].value)[0].code;
+              }
+              
+               var presumptiveOtherThanSpeculativeProfesionObj = {
+                 businessType: 'OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_PROFESSION',
+                 natureOfBusiness: natureOfOtherThanSpeculative,
+                 tradeName: this.businessIncomeForm.controls['tradeNameOfothertThanSpeculativeProfession'].value,//trade name
+                 incomes: [],
+                 taxableIncome : null,
+                 exemptIncome: null
+               }
+     
+               if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeProfession'].value)) {
+                 let incomeObj = {
+                   incomeType: "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_PROFESSION",
+                   receipts: Number(this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeProfession'].value),   
+                   presumptiveIncome: Number(this.businessIncomeForm.controls['purchaseOfothertThanSpeculativeProfession'].value),  
+                   periodOfHolding: 0,
+                   minimumPresumptiveIncome: null
+                 }
+                 presumptiveOtherThanSpeculativeProfesionObj.incomes.push(incomeObj);
+                 presumptiveOtherThanSpeculativeProfesionObj.taxableIncome =  Number(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeProfession'].value);
+                 presumptiveOtherThanSpeculativeProfesionObj.exemptIncome =  Number(this.businessIncomeForm.controls['expenceIncomeOfothertThanSpeculativeProfession'].value);
+               }
+     
+               presumData.push(presumptiveOtherThanSpeculativeProfesionObj);
+
+              
+             }
+
+              //F&O
+              if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeFAndO'].value)) {
+                var presumptiveOtherThanSpeculativeFAndOObj = {
+                  businessType: 'FUTURES_AND_OPTIONS',
+                  natureOfBusiness: '',
+                  tradeName: '',
+                  incomes: [],
+                  taxableIncome : null,
+                  exemptIncome: null
+                }
+
+                let incomeObj = {
+                  incomeType: "FUTURES_AND_OPTIONS",
+                  receipts: Number(this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeFAndO'].value),   
+                  presumptiveIncome: Number(this.businessIncomeForm.controls['purchaseOfothertThanSpeculativeFAndO'].value),  
+                  periodOfHolding: 0,
+                  minimumPresumptiveIncome: null
+                }
+                presumptiveOtherThanSpeculativeFAndOObj.incomes.push(incomeObj);
+                presumptiveOtherThanSpeculativeFAndOObj.taxableIncome =  Number(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeFAndO'].value);
+                presumptiveOtherThanSpeculativeFAndOObj.exemptIncome =  Number(this.businessIncomeForm.controls['expenceIncomeOfothertThanSpeculativeFAndO'].value);
+
+                presumData.push(presumptiveOtherThanSpeculativeFAndOObj);
+              }
  
 
            // this.itrSummaryForm['controls'].assesse['controls'].business['controls'].presumptiveIncomes.setValue(presumData)
            this.itr_2_Summary.assesse.business.presumptiveIncomes = presumData;
+           console.log('this.itr_2_Summary.assesse.business.presumptiveIncomes ==> ',this.itr_2_Summary.assesse.business.presumptiveIncomes)
            Object.assign(this.itr_2_Summary, this.computationOfIncomeForm.value); 
           }
        
@@ -4331,8 +4722,12 @@ export class Itr2mainComponent implements OnInit {
     this.computationOfIncomeForm.controls['speculativeBusinessIncome'].setValue(this.businessIncomeForm.controls['taxableIncomeOfSpeculative'].value); 
     this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptive'].setValue(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].value); 
 
+    this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptiveProfession'].setValue(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeProfession'].value); 
+    this.computationOfIncomeForm.controls['futureAndOption'].setValue(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeFAndO'].value); 
+
     let totalOfIncomeFromBusiness = Number(this.computationOfIncomeForm.controls['presumptiveBusinessIncomeUs44AD'].value) + Number(this.computationOfIncomeForm.controls['presumptiveBusinessIncomeUs44ADA'].value)
-                          + Number(this.computationOfIncomeForm.controls['speculativeBusinessIncome'].value) + Number(this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptive'].value);
+                          + Number(this.computationOfIncomeForm.controls['speculativeBusinessIncome'].value) + Number(this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptive'].value)
+                          + Number(this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptiveProfession'].value) + Number(this.computationOfIncomeForm.controls['futureAndOption'].value);
   this.computationOfIncomeForm.controls['presumptiveIncome'].setValue(totalOfIncomeFromBusiness);
     
   this.calculateTotalHeadWiseIncome();  
@@ -4538,6 +4933,8 @@ export class Itr2mainComponent implements OnInit {
         presumptiveBusinessIncomeUs44ADA: '',
         speculativeBusinessIncome: '',
         incomeFromOtherThanSpeculativeAndPresumptive: '',		
+        incomeFromOtherThanSpeculativeAndPresumptiveProfession: '',
+        futureAndOption:'',
         freezed: false
      }
     return ITR_SUMMARY;
