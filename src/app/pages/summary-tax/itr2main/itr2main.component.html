@@ -336,7 +336,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Assessment Year</mat-label>
                                     <mat-select matInput  placeholder="Financial Year" formControlName="assessmentYear"
-                                        autocomplete="off" disabled required>  
+                                        autocomplete="off"  required>  
                                         <mat-option *ngFor="let year of financialYear" [value]="year.value">
                                             {{year.value}}
                                         </mat-option>
@@ -347,7 +347,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Financial Year</mat-label>
                                     <mat-select matInput  placeholder="Financial Year" formControlName="financialYear"
-                                        autocomplete="off" disabled required> 
+                                        autocomplete="off"  required> 
                                         <mat-option *ngFor="let year of financialYear" [value]="year.value">
                                             {{year.value}}
                                         </mat-option>
@@ -1787,9 +1787,9 @@
 
                         <div class="card__row">
                             <button class="btn" form="personalForm" (click)="saveItrSummary()">Save Summary</button> &nbsp;
-                            <span [class.cursorNotAllow]="personalInfoForm.value.summaryId === 0">  
+                            <span [class.cursorNotAllow]="!utilsService.isNonEmpty(personalInfoForm.value.summaryId) || personalInfoForm.value.summaryId === 0">  
                                 <button class="btn" 
-                                    (click)="downloadItrSummary()" [class.disableBtn]="personalInfoForm.value.summaryId === 0">Download Summary</button>  <!---->
+                                    (click)="downloadItrSummary()" [class.disableBtn]="!utilsService.isNonEmpty(personalInfoForm.value.summaryId) || personalInfoForm.value.summaryId === 0">Download Summary</button>  <!---->
                             </span>
                         </div>
 

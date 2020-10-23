@@ -165,7 +165,7 @@ export class Itr2mainComponent implements OnInit {
                 {value: '2016-2017', label:'2016'},{value: '2017-2018', label:'2017'},{value: '2018-2019', label:'2018'},
                 {value: '2019-2020', label:'2019'}]
 
-  constructor(private utilsService: UtilsService, private fb: FormBuilder, private userService: UserMsService, private dialog: MatDialog, private utilService: UtilsService,
+  constructor(public utilsService: UtilsService, private fb: FormBuilder, private userService: UserMsService, private dialog: MatDialog, private utilService: UtilsService,
               private _toastMessageService: ToastMessageService) 
   {
       this.itr_2_Summary = this.createItrSummaryEmptyJson();
@@ -437,7 +437,9 @@ export class Itr2mainComponent implements OnInit {
        this.personalInfoForm.controls['email'].setValue(personalInfo['ITRForm:Address']['ITRForm:EmailAddress']['_text']);
        this.personalInfoForm.controls['contactNumber'].setValue(personalInfo['ITRForm:Address']['ITRForm:MobileNo']['_text'])
        this.personalInfoForm.controls['aadharNumber'].setValue(personalInfo['ITRForm:AadhaarCardNo']['_text']);
-       this.personalInfoForm.controls['dateOfBirth'].setValue(personalInfo['ITRForm:DOB']['_text']);
+       let dob = new Date(personalInfo['ITRForm:DOB']['_text']);
+       console.log('dateOfBirth : ',dob)
+       this.personalInfoForm.controls['dateOfBirth'].setValue(dob);
        let address = personalInfo['ITRForm:Address']['ITRForm:ResidenceNo']['_text']+', '+
                      personalInfo['ITRForm:Address']['ITRForm:LocalityOrArea']['_text'];
       this.personalInfoForm.controls['premisesName'].setValue(address);
@@ -479,7 +481,7 @@ export class Itr2mainComponent implements OnInit {
     //Housing Data
     // if(this.utilService.isNonEmpty(itrData['ITRForm:ScheduleHP'])){
       
-      if(itrData.hasOwnProperty('ITRForm:ScheduleHP')){ 
+      if(itrData['ITRForm:ScheduleHP'].hasOwnProperty('ITRForm:PropertyDetails')){ 
        var housingData = itrData['ITRForm:ScheduleHP']['ITRForm:PropertyDetails'];
        console.log('housingData: ',housingData);
         if(this.utilService.isNonEmpty(housingData.length)){
@@ -944,8 +946,8 @@ export class Itr2mainComponent implements OnInit {
      if(itrData.hasOwnProperty('ITRForm:ScheduleTDS2')){
       var tdsOtherThanSalInfo = itrData['ITRForm:ScheduleTDS2'];
       console.log('tdsOtherThanSalInfo: ',tdsOtherThanSalInfo)
-      if(this.utilService.isNonEmpty(tdsOtherThanSalInfo.length)){
-        for(let i=0; i<tdsOtherThanSalInfo.length; i++){
+      if(this.utilService.isNonEmpty(tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'].length)){
+        for(let i=0; i<tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'].length; i++){
           let tdsOtherThanSalObj = {               
              deductorTAN : tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TANOfDeductor']['_text'], 
              deductorName: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TDSCreditName']['_text'],
@@ -969,11 +971,13 @@ export class Itr2mainComponent implements OnInit {
     }
 
     //TDS Sales of property 26QB
+    debugger
     if(itrData.hasOwnProperty('ITRForm:ScheduleTDS3')){
       var tdsSalesOf26QBInfo = itrData['ITRForm:ScheduleTDS3'];
       console.log('tdsSalesOf26QBInfo: ',tdsSalesOf26QBInfo)
-      if(this.utilService.isNonEmpty(tdsSalesOf26QBInfo.length)){
-        for(let i=0; i<tdsSalesOf26QBInfo.length; i++){
+      debugger
+      if(this.utilService.isNonEmpty(tdsSalesOf26QBInfo['ITRForm:TDS3onOthThanSalDtls'].length)){
+        for(let i=0; i<tdsSalesOf26QBInfo['ITRForm:TDS3onOthThanSalDtls'].length; i++){
           let tdsSalesOf26QBObj = {               
              deductorTAN : tdsSalesOf26QBInfo['ITRForm:TDS3onOthThanSalDtls'][i]['ITRForm:PANOfBuyerTenant']['_text'], 
              deductorName: tdsSalesOf26QBInfo['ITRForm:TDS3onOthThanSalDtls'][i]['ITRForm:TDSCreditName']['_text'],
@@ -991,6 +995,7 @@ export class Itr2mainComponent implements OnInit {
              totalAmountCredited: tdsSalesOf26QBInfo['ITRForm:TDS3onOthThanSalDtls']['ITRForm:GrossAmount']['_text'],
              totalTdsDeposited: tdsSalesOf26QBInfo['ITRForm:TotalTDS3OnOthThanSal']['_text']
         }
+        debugger
         taxPaidInfo.otherThanSalary26QB.push(tdsSalesOf26QBObj)
       }
      this.updateTaxDeductionAtSourceVal(taxPaidInfo);
@@ -1000,8 +1005,8 @@ export class Itr2mainComponent implements OnInit {
     if(itrData.hasOwnProperty('ITRForm:ScheduleTCS')){
       var tcsInfo = itrData['ITRForm:ScheduleTCS'];
       console.log('tcsInfo: ',tcsInfo)
-      if(this.utilService.isNonEmpty(tcsInfo.length)){
-        for(let i=0; i<tcsInfo.length; i++){
+      if(this.utilService.isNonEmpty(tcsInfo['ITRForm:TCS'].length)){
+        for(let i=0; i<tcsInfo['ITRForm:TCS'].length; i++){
           let tcsObj = {               
              collectorTAN : tcsInfo['ITRForm:TCS'][i]['ITRForm:EmployerOrDeductorOrCollectDetl']['ITRForm:TAN']['_text'], 
              collectorName: tcsInfo['ITRForm:TCS'][i]['ITRForm:EmployerOrDeductorOrCollectDetl']['ITRForm:EmployerOrDeductorOrCollecterName']['_text'],
@@ -1028,8 +1033,8 @@ export class Itr2mainComponent implements OnInit {
     if(itrData.hasOwnProperty('ITRForm:ScheduleIT')){
       var advTaxInfo = itrData['ITRForm:ScheduleIT'];
       console.log('advTaxInfo: ',advTaxInfo)
-      if(this.utilService.isNonEmpty(advTaxInfo.length)){
-        for(let i=0; i<advTaxInfo.length; i++){
+      if(this.utilService.isNonEmpty(advTaxInfo['ITRForm:TaxPayment'].length)){
+        for(let i=0; i<advTaxInfo['ITRForm:TaxPayment'].length; i++){
           let advTaxObj = {               
              bsrCode : advTaxInfo['ITRForm:TaxPayment'][i]['ITRForm:BSRCode']['_text'], 
              dateOfDeposit: advTaxInfo['ITRForm:TaxPayment'][i]['ITRForm:DateDep']['_text'],
@@ -4205,6 +4210,7 @@ export class Itr2mainComponent implements OnInit {
 
       }
       else{
+        this._toastMessageService.alert("error", "Please fill all mandatory personal info fields.");
         $('input.ng-invalid').first().focus();
         return
       }
