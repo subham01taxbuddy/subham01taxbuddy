@@ -369,8 +369,13 @@ export class WhatAppChatComponent implements OnInit {
     ) {
       debugger
       let mobileNo = this.selectedUser.whatsAppNumber;
+      let sendMsg = this.whatsAppForm.controls["sentMessage"].value;
+      console.log('Before sendMsg: ',sendMsg, typeof sendMsg);
+      sendMsg = sendMsg.replace(/"/g, '\\"');
+      console.log('After sendMsg: ',sendMsg)
+
       let body = {
-        textMessage: this.whatsAppForm.controls["sentMessage"].value, //toUTF8String
+        textMessage: this.whatsAppForm.controls["sentMessage"].value.replace(/"/g, '\\"'), //toUTF8String
         whatsAppNumber: mobileNo,
         source: 'BO',
         dialogueConstant: null
