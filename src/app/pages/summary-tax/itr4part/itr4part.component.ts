@@ -77,11 +77,13 @@ export class Itr4partComponent implements OnInit {
     if(businessIncome.length > 0){
       let businessNatureCode = businessIncome[0].natureOfBusiness;
       console.log('businessNatureCode: ',businessNatureCode);
-      let natureLabel = this.natureOfBusinessDropdown44AD.filter(item => item.code === businessNatureCode)[0].label;
-      console.log('natureLabel: ',natureLabel);
-      this.natureOfBusinessForm.controls['natureOfBusiness44AD'].setValue(natureLabel);
+      let natureLabel = this.natureOfBusinessDropdown44AD.filter(item => item.code === businessNatureCode);
+      if(natureLabel.length > 0){
+        console.log('natureLabel: ',natureLabel);
+        this.natureOfBusinessForm.controls['natureOfBusiness44AD'].setValue(natureLabel[0].label);
+      }
+    
       this.natureOfBusinessForm.controls['tradeName44AD'].setValue(businessIncome[0].tradeName);
-  
       let recivedInBank = businessIncome[0].incomes.filter(item => item.incomeType === "BANK");
       let recivedInCash = businessIncome[0].incomes.filter(item => item.incomeType === "CASH");
       this.natureOfBusinessForm.controls['recieptRecievedInBank'].setValue(recivedInBank[0].receipts);
@@ -99,9 +101,11 @@ export class Itr4partComponent implements OnInit {
         presumptiveNatureCode = "Share of income from firm";
       }
       console.log('presumptiveNatureCode: ',presumptiveNatureCode);
-      let presumptiveLabel = this.natureOfBusinessDropdown44ADA.filter(item => item.code === presumptiveNatureCode)[0].label;
+      let presumptiveLabel = this.natureOfBusinessDropdown44ADA.filter(item => item.code === presumptiveNatureCode);
+      if(presumptiveLabel.length > 0){
       console.log('nature presumptiveLabel Label: ',presumptiveLabel);
-      this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].setValue(presumptiveLabel);
+      this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].setValue(presumptiveLabel[0].label);
+      }
       this.natureOfBusinessForm.controls['tradeName44ADA'].setValue(presumptiveIncome[0].tradeName);
   
       this.natureOfBusinessForm.controls['grossReciept'].setValue(presumptiveIncome[0].incomes[0].receipts);

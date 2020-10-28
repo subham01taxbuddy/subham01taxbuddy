@@ -58,7 +58,7 @@
         <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Employer name</mat-label>
-                <input matInput placeholder="Employer name" formControlName="employerName" maxlength="40">
+                <input matInput placeholder="Employer name" formControlName="employerName" maxlength="55">
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employerName'].invalid">Enter
                     Employer name</mat-error> -->
             </mat-form-field>
@@ -92,7 +92,7 @@
         <div class="card__col-lg-3" formGroupName="employers" *ngIf="data.mode == 'Salary'">
             <mat-form-field appearance="outline">
                 <mat-label>Employer's Address</mat-label>
-                <input matInput placeholder="Employer's Address 2" formControlName="address" maxlength="50">
+                <input matInput placeholder="Employer's Address 2" formControlName="address" maxlength="200">
                 <!-- <mat-error *ngIf="summaryDialogForm.controls['employeAddress'].invalid">Enter
                             address</mat-error> -->
             </mat-form-field>
