@@ -230,7 +230,7 @@ export class WhatsAppDialogComponent implements OnInit {
   }
 
   downloadDoc(id) {
-    window.open(environment.url + "/user/download-media-file?mediaId=" + id);
+    window.open(environment.url + "/gateway/download-media-file?mediaId=" + id);
   }
 
   startChat(whatsAppNumber){
@@ -380,31 +380,47 @@ export class WhatsAppDialogComponent implements OnInit {
         );
         let body;
         console.log("Selected Template Info: ", templateMsgInfo);
+        const templateData = new FormData();
         if (templateMsgInfo.mediaId === null) {
-          body = {
-            whatsAppNumber: this.selectedUser.whatsAppNumber,
-            templateName: templateMsgInfo.templateName,
-            attributes: this.newAttributes, //this.tempArrributes
-            templateMessage: this.whatsAppForm.controls["sentMessage"].value,
-            source: 'BO'
-          };
+          templateData.append("whatsAppNumber", this.selectedUser.whatsAppNumber);
+            templateData.append("templateName", templateMsgInfo.templateName);
+            templateData.append("attributes", this.newAttributes);
+            templateData.append("templateMessage", this.whatsAppForm.controls["sentMessage"].value);
+            templateData.append("source", 'BO');
+          // body = {
+          //   whatsAppNumber: this.selectedUser.whatsAppNumber,
+          //   templateName: templateMsgInfo.templateName,
+          //   attributes: this.newAttributes, 
+          //   templateMessage: this.whatsAppForm.controls["sentMessage"].value,
+          //   source: 'BO'
+          // };
         } else {
-          body = {
-            whatsAppNumber: this.selectedUser.whatsAppNumber,
-            templateName: templateMsgInfo.templateName,
-            attributes: this.newAttributes,
-            templateMessage: this.whatsAppForm.controls["selectTemplate"].value,
-            mediaId: templateMsgInfo.mediaId,
-            fileName: templateMsgInfo.fileName,
-            isMediaTemplate: true,
-            mimeType: templateMsgInfo.mimeType,
-            source: 'BO'
-          };
+          templateData.append("whatsAppNumber", this.selectedUser.whatsAppNumber);
+          templateData.append("templateName", templateMsgInfo.templateName);
+          templateData.append("attributes", this.newAttributes);
+            //templateData.append("templateMessage", this.whatsAppForm.controls["selectTemplate"].value);
+          templateData.append("mediaId", templateMsgInfo.mediaId);
+          templateData.append("fileName", templateMsgInfo.fileName);
+          templateData.append("isMediaTemplate", 'true');
+          templateData.append("mimeType", templateMsgInfo.mimeType);
+          templateData.append("source", 'BO');
+          // body = {
+          //   whatsAppNumber: this.selectedUser.whatsAppNumber,
+          //   templateName: templateMsgInfo.templateName,
+          //   attributes: this.newAttributes,
+          //   templateMessage: this.whatsAppForm.controls["selectTemplate"].value,
+          //   mediaId: templateMsgInfo.mediaId,
+          //   fileName: templateMsgInfo.fileName,
+          //   isMediaTemplate: true,
+          //   mimeType: templateMsgInfo.mimeType,
+          //   source: 'BO'
+          // };
         }
-        console.log("body: ", body);
+        // console.log("body: ", body);
+        console.log("template formData: ", templateData);
         this.loading = true;
-        let param = "/user/send-template";
-        this.userService.sentChatMessage(param, body).subscribe(
+        let param = "/gateway/send-template";
+        this.userService.sentChatMessage(param, templateData).subscribe(
           (result) => {
             this.loading = false;
             console.log(result);
@@ -413,7 +429,7 @@ export class WhatsAppDialogComponent implements OnInit {
               "success",
               "Template sent successfully."
             );
-            this.userchatData = result;
+            this.userchatData = result['chat'];
           },
           (error) => {
             this.loading = false;
@@ -439,7 +455,7 @@ export class WhatsAppDialogComponent implements OnInit {
       formData.append("multipartFile", this.uploadedFile);
       formData.append("source", 'BO');
       console.log("formData: ", formData);
-      let param = "/user/send-media-message";
+      let param = "/gateway/send-media-message";
       this.loading = true;
       console.log(formData);
       this.userService.sentChatMessage(param, formData).subscribe(
@@ -451,7 +467,7 @@ export class WhatsAppDialogComponent implements OnInit {
             "success",
             "Media file sent successfully."
           );
-          this.userchatData = result;
+          this.userchatData = result['chat'];
         },
         (error) => {
           this.loading = false;
