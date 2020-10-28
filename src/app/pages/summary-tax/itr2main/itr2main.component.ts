@@ -473,6 +473,7 @@ export class Itr2mainComponent implements OnInit {
     this.immovableAssetsInfo = [];
 
     //Bank Detail
+   // if(itrData.hasOwnProperty())
     let bankInfo = itrData['ITRForm:PartB_TTI']['ITRForm:Refund']['ITRForm:BankAccountDtls'];
     console.log('bankInfo => ',bankInfo, typeof bankInfo['ITRForm:AddtnlBankDetails']);
     if(this.utilService.isNonEmpty(bankInfo['ITRForm:AddtnlBankDetails'].length)){
@@ -499,47 +500,49 @@ export class Itr2mainComponent implements OnInit {
 
     //Housing Data
     // if(this.utilService.isNonEmpty(itrData['ITRForm:ScheduleHP'])){
-      
+    if(itrData.hasOwnProperty('ITRForm:ScheduleHP')){
       if(itrData['ITRForm:ScheduleHP'].hasOwnProperty('ITRForm:PropertyDetails')){ 
-       var housingData = itrData['ITRForm:ScheduleHP']['ITRForm:PropertyDetails'];
-       console.log('housingData: ',housingData);
-        if(this.utilService.isNonEmpty(housingData.length)){
-            for(let i=0; i< housingData.length; i++){
-              let address = housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:AddrDetail']['_text']+', '+housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:CityOrTownOrDistrict']['_text'];
-
-              let houceObj={
-                propertyType: housingData[i]['ITRForm:ifLetOut']['_text'] === "N" ? 'SOP' : 'LOP',
-                address: address,
-                ownerOfProperty: housingData[i]['ITRForm:ifLetOut']['_text'] === "SE"? 'SELF' : '',
-                tenantName: '',//housingData[i]['ITRForm:ifLetOut']['_text'],
-                grossAnnualRentReceived: this.isNotZero(housingData[i]['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text']) ? housingData[i]['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text'] : 0,
-                propertyTax:0,//housingData[i]['ITRForm:ifLetOut']['_text'],
-                annualValue: this.isNotZero(housingData[i]['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text']) ? housingData[i]['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text'] : 0,
-                exemptIncome: this.isNotZero(housingData[i]['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text']) ? housingData[i]['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text'] : 0,
-                interestAmount: '',//housingData[i]['ITRForm:Rentdetails']['ITRForm:IntOnBorwCap']['_text'],
-                taxableIncome: housingData[i]['ITRForm:Rentdetails']['ITRForm:IncomeOfHP']['_text']
-              }
-                this.housingData.push(houceObj);
-            }
-        }
-        else{
-          let address = housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:AddrDetail']['_text']+', '+housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:CityOrTownOrDistrict']['_text'];
-
-          let houceObj={
-            propertyType: housingData['ITRForm:ifLetOut']['_text'] === "N" ? 'SOP' : 'LOP',
-            address: address,
-            ownerOfProperty: housingData['ITRForm:ifLetOut']['_text'] === "SE"? 'SELF' : '',
-            tenantName: '',//housingData['ITRForm:ifLetOut']['_text'],
-            grossAnnualRentReceived: this.isNotZero(housingData['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text']) ? housingData['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text'] : 0,
-            propertyTax: '',//housingData['ITRForm:ifLetOut']['_text'],
-            annualValue: this.isNotZero(housingData['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text']) ? housingData['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text'] : 0,
-            exemptIncome: this.isNotZero(housingData['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text']) ? housingData['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text'] : 0,
-            interestAmount: '',//housingData['ITRForm:Rentdetails']['ITRForm:IntOnBorwCap']['_text'],
-            taxableIncome: housingData['ITRForm:Rentdetails']['ITRForm:IncomeOfHP']['_text']
-          }
-          this.housingData.push(houceObj);
-        }
-      }
+        var housingData = itrData['ITRForm:ScheduleHP']['ITRForm:PropertyDetails'];
+        console.log('housingData: ',housingData);
+         if(this.utilService.isNonEmpty(housingData.length)){
+             for(let i=0; i< housingData.length; i++){
+               let address = housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:AddrDetail']['_text']+', '+housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:CityOrTownOrDistrict']['_text'];
+ 
+               let houceObj={
+                 propertyType: housingData[i]['ITRForm:ifLetOut']['_text'] === "N" ? 'SOP' : 'LOP',
+                 address: address,
+                 ownerOfProperty: housingData[i]['ITRForm:ifLetOut']['_text'] === "SE"? 'SELF' : '',
+                 tenantName: '',//housingData[i]['ITRForm:ifLetOut']['_text'],
+                 grossAnnualRentReceived: this.isNotZero(housingData[i]['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text']) ? housingData[i]['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text'] : 0,
+                 propertyTax:0,//housingData[i]['ITRForm:ifLetOut']['_text'],
+                 annualValue: this.isNotZero(housingData[i]['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text']) ? housingData[i]['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text'] : 0,
+                 exemptIncome: this.isNotZero(housingData[i]['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text']) ? housingData[i]['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text'] : 0,
+                 interestAmount: '',//housingData[i]['ITRForm:Rentdetails']['ITRForm:IntOnBorwCap']['_text'],
+                 taxableIncome: housingData[i]['ITRForm:Rentdetails']['ITRForm:IncomeOfHP']['_text']
+               }
+                 this.housingData.push(houceObj);
+             }
+         }
+         else{
+           let address = housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:AddrDetail']['_text']+', '+housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:CityOrTownOrDistrict']['_text'];
+ 
+           let houceObj={
+             propertyType: housingData['ITRForm:ifLetOut']['_text'] === "N" ? 'SOP' : 'LOP',
+             address: address,
+             ownerOfProperty: housingData['ITRForm:ifLetOut']['_text'] === "SE"? 'SELF' : '',
+             tenantName: '',//housingData['ITRForm:ifLetOut']['_text'],
+             grossAnnualRentReceived: this.isNotZero(housingData['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text']) ? housingData['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text'] : 0,
+             propertyTax: '',//housingData['ITRForm:ifLetOut']['_text'],
+             annualValue: this.isNotZero(housingData['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text']) ? housingData['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text'] : 0,
+             exemptIncome: this.isNotZero(housingData['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text']) ? housingData['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text'] : 0,
+             interestAmount: '',//housingData['ITRForm:Rentdetails']['ITRForm:IntOnBorwCap']['_text'],
+             taxableIncome: housingData['ITRForm:Rentdetails']['ITRForm:IncomeOfHP']['_text']
+           }
+           this.housingData.push(houceObj);
+         }
+       }
+    }
+      
 
 
     //Annexures: Salary
@@ -748,7 +751,7 @@ export class Itr2mainComponent implements OnInit {
           purchaseCost: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ImproveCost']['_text']),
           capitalGain: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:Balance']['_text']),
           deductions: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:ExemptionOrDednUs54']['ITRForm:ExemptionGrandTotal']['_text']),
-         // netCapitalGain: Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:LTCGonImmvblPrprty']['_text']),
+             netCapitalGain: this.itrType.itrTwo ? Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:LTCGonImmvblPrprty']['_text']) : Number(longTeemCG20Per['ITRForm:SaleofLandBuild']['ITRForm:SaleofLandBuildDtls']['ITRForm:CapgainonAssets']['_text']),
         }
         taxPaid.longTermCapitalGainAt20Percent.push(longTerm20PerObj);
         this.updateCapitalGain(taxPaid); 
@@ -761,7 +764,7 @@ export class Itr2mainComponent implements OnInit {
            purchaseCost: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:DeductSec48']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:DeductSec48']['ITRForm:ImproveCost']['_text']),
            capitalGain: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:BalanceCG']['_text']),
            deductions: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:DeductionUs54F']['_text']),
-          // netCapitalGain: Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:CapgainonAssets']['_text']),
+             netCapitalGain: this.itrType.itrTwo ? Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:CapgainonAssets']['_text']) : Number(longTeemCG20Per['ITRForm:SaleofBondsDebntr']['ITRForm:CapgainonAssets']['_text']),
          }
          taxPaid.longTermCapitalGainAt20Percent.push(longTerm20BondsObj);
          this.updateCapitalGain(taxPaid); 
@@ -773,7 +776,7 @@ export class Itr2mainComponent implements OnInit {
            netSaleValue: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:FullConsideration']['_text']) - Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductSec48']['ITRForm:ExpOnTrans']['_text']),
            purchaseCost: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductSec48']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductSec48']['ITRForm:ImproveCost']['_text']),
            capitalGain: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:BalanceCG']['_text']),
-          // deductions: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductionUs54F']['_text']),
+              deductions: this.itrType.itrTwo ? Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:DeductionUs54F']['_text']) : Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:ExemptionOrDednUs54']['ITRForm:ExemptionGrandTotal']['_text']),
            netCapitalGain: Number(longTeemCG20Per['ITRForm:SaleofAssetNA']['ITRForm:CapgainonAssets']['_text']),
          }
          taxPaid.longTermCapitalGainAt20Percent.push(longTerm20OtherAssetsObj);
@@ -782,15 +785,18 @@ export class Itr2mainComponent implements OnInit {
 
 
     // Other Sources
-    let otherSourceInfo = itrData['ITRForm:ScheduleOS']['ITRForm:IncOthThanOwnRaceHorse'];      
-    console.log('otherSourceInfo: ',otherSourceInfo)
-    this.otherSourceForm.controls['interestFromSaving'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmSavingBank']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmSavingBank']['_text'] : '');
-    this.otherSourceForm.controls['interestFromDeposite'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmTermDeposit']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmTermDeposit']['_text'] : '');
-    this.otherSourceForm.controls['interestFromTaxRefund'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmIncmTaxRefund']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmIncmTaxRefund']['_text'] : '');
-    this.otherSourceForm.controls['other'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmOthers']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmOthers']['_text'] : '');
-      this.otherSourceForm.controls['agricultureIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text']) ? otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text'] : '');
-      this.otherSourceForm.controls['dividendIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:DividendGross']['_text']) ? otherSourceInfo['ITRForm:DividendGross']['_text'] : '');
-      this.otherSourceForm.controls['total'].setValue(this.isNotZero(otherSourceInfo['ITRForm:GrossIncChrgblTaxAtAppRate']['_text']) ? otherSourceInfo['ITRForm:GrossIncChrgblTaxAtAppRate']['_text'] : '');
+    if(itrData.hasOwnProperty('ITRForm:ScheduleOS')){
+      let otherSourceInfo = itrData['ITRForm:ScheduleOS']['ITRForm:IncOthThanOwnRaceHorse'];      
+      console.log('otherSourceInfo: ',otherSourceInfo)
+      this.otherSourceForm.controls['interestFromSaving'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmSavingBank']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmSavingBank']['_text'] : '');
+      this.otherSourceForm.controls['interestFromDeposite'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmTermDeposit']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmTermDeposit']['_text'] : '');
+      this.otherSourceForm.controls['interestFromTaxRefund'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmIncmTaxRefund']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmIncmTaxRefund']['_text'] : '');
+      this.otherSourceForm.controls['other'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmOthers']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmOthers']['_text'] : '');
+        this.otherSourceForm.controls['agricultureIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text']) ? otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text'] : '');
+        this.otherSourceForm.controls['dividendIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:DividendGross']['_text']) ? otherSourceInfo['ITRForm:DividendGross']['_text'] : '');
+        this.otherSourceForm.controls['total'].setValue(this.isNotZero(otherSourceInfo['ITRForm:GrossIncChrgblTaxAtAppRate']['_text']) ? otherSourceInfo['ITRForm:GrossIncChrgblTaxAtAppRate']['_text'] : '');
+    }
+   
 
     //Losses To be Carried Forward
     if(itrData.hasOwnProperty('ITRForm:ScheduleCFL')){
@@ -1164,7 +1170,7 @@ export class Itr2mainComponent implements OnInit {
     this.computationOfIncomeForm.controls['carriedForwardToNextYear'].setValue(computaionIncomePartTi['ITRForm:BroughtFwdLossesSetoff']['_text'])
     this.computationOfIncomeForm.controls['grossTotalIncome'].setValue(computaionIncomePartTi['ITRForm:GrossTotalIncome']['_text']) 
     this.computationOfIncomeForm.controls['sec112Tax'].setValue(computaionIncomePartTi['ITRForm:IncChargeTaxSplRate111A112']['_text'])
-    //this.computationOfIncomeForm.controls['totalDeduction'].setValue(computaionIncomePartTi['ITRForm:DeductionsUnderScheduleVIA']['_text'])
+    this.computationOfIncomeForm.controls['totalDeduction'].setValue(this.itrType.itrTwo ? computaionIncomePartTi['ITRForm:DeductionsUnderScheduleVIA']['_text'] : computaionIncomePartTi['ITRForm:DeductionsUndSchVIADtl']['ITRForm:TotDeductUndSchVIA']['_text'])
     this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR'].setValue(computaionIncomePartTi['ITRForm:TotalIncome']['_text'])
     this.computationOfIncomeForm.controls['specialIncomeAfterAdjBaseLimit'].setValue(computaionIncomePartTi['ITRForm:IncChargeableTaxSplRates']['_text'])
     this.computationOfIncomeForm.controls['agricultureIncome'].setValue(computaionIncomePartTi['ITRForm:NetAgricultureIncomeOrOtherIncomeForRate']['_text'])
@@ -1176,21 +1182,21 @@ export class Itr2mainComponent implements OnInit {
     this.computationOfIncomeForm.controls['rebateOnAgricultureIncome'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnTI']['ITRForm:RebateOnAgriInc']['_text']);
     this.computationOfIncomeForm.controls['taxOnTotalIncome'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnTI']['ITRForm:TaxPayableOnTotInc']['_text']);
 
-    this.computationOfIncomeForm.controls['forRebate87Tax'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:Rebate87A']['_text'])
-    this.computationOfIncomeForm.controls['taxAfterRebate'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnRebate']['_text'])
-    this.computationOfIncomeForm.controls['surcharge'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:SurchargeOnAboveCrore']['_text'])
-    this.computationOfIncomeForm.controls['cessAmount'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:EducationCess']['_text'])
-    this.computationOfIncomeForm.controls['grossTaxLiability'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:GrossTaxLiability']['_text'])
+    this.computationOfIncomeForm.controls['forRebate87Tax'].setValue(this.itrType.itrTwo ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:Rebate87A']['_text'] : computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnTI']['ITRForm:Rebate87A']['_text'])
+    this.computationOfIncomeForm.controls['taxAfterRebate'].setValue(this.itrType.itrTwo ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnRebate']['_text'] : computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnTI']['ITRForm:TaxPayableOnRebate']['_text'])
+    this.computationOfIncomeForm.controls['surcharge'].setValue(this.itrType.itrTwo ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:SurchargeOnAboveCrore']['_text'] : computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnTI']['ITRForm:SurchargeOnAboveCrore']['_text'])
+    this.computationOfIncomeForm.controls['cessAmount'].setValue(this.itrType.itrTwo ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:EducationCess']['_text'] : computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnTI']['ITRForm:EducationCess']['_text'])
+    this.computationOfIncomeForm.controls['grossTaxLiability'].setValue(this.itrType.itrTwo ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:GrossTaxLiability']['_text'] : computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxPayableOnTI']['ITRForm:GrossTaxLiability']['_text'])
 
-    this.computationOfIncomeForm.controls['taxReliefUnder89'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxRelief']['ITRForm:Section89']['_text'])
-    this.computationOfIncomeForm.controls['taxReliefUnder90_90A'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxRelief']['ITRForm:Section90']['_text'])
-    this.computationOfIncomeForm.controls['taxReliefUnder91'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxRelief']['ITRForm:Section91']['_text'])
-    this.computationOfIncomeForm.controls['netTaxLiability'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:NetTaxLiability']['_text'])
+    this.computationOfIncomeForm.controls['taxReliefUnder89'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability'].hasOwnProperty('ITRForm:TaxRelief') ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxRelief']['ITRForm:Section89']['_text'] : 0)
+    this.computationOfIncomeForm.controls['taxReliefUnder90_90A'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability'].hasOwnProperty('ITRForm:TaxRelief') ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxRelief']['ITRForm:Section90']['_text'] : 0)
+    this.computationOfIncomeForm.controls['taxReliefUnder91'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability'].hasOwnProperty('ITRForm:TaxRelief') ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:TaxRelief']['ITRForm:Section91']['_text']: 0)
+    this.computationOfIncomeForm.controls['netTaxLiability'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability'].hasOwnProperty('ITRForm:TaxRelief') ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:NetTaxLiability']['_text'] : 0)
 
-    this.computationOfIncomeForm.controls['s234A'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:IntrstPayUs234A']['_text'])
-    this.computationOfIncomeForm.controls['s234B'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:IntrstPayUs234B']['_text'])
-    this.computationOfIncomeForm.controls['s234C'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:IntrstPayUs234C']['_text'])
-    this.computationOfIncomeForm.controls['s234F'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:LateFilingFee234F']['_text'])
+    this.computationOfIncomeForm.controls['s234A'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability'].hasOwnProperty('ITRForm:IntrstPay') ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:IntrstPayUs234A']['_text'] : 0)
+    this.computationOfIncomeForm.controls['s234B'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability'].hasOwnProperty('ITRForm:IntrstPay') ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:IntrstPayUs234B']['_text'] : 0)
+    this.computationOfIncomeForm.controls['s234C'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability'].hasOwnProperty('ITRForm:IntrstPay') ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:IntrstPayUs234C']['_text'] : 0)
+    this.computationOfIncomeForm.controls['s234F'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability'].hasOwnProperty('ITRForm:IntrstPay') ? computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:LateFilingFee234F']['_text'] : 0)
     this.computationOfIncomeForm.controls['interestAndFeesPayable'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:IntrstPay']['ITRForm:TotalIntrstPay']['_text'])  
 
     this.computationOfIncomeForm.controls['agrigateLiability'].setValue(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:AggregateTaxInterestLiability']['_text'])
@@ -1207,8 +1213,9 @@ export class Itr2mainComponent implements OnInit {
     this.taxesPaid.advanceSelfAssTax = advanceTaxTotal;
 
     this.computationOfIncomeForm.controls['totalTaxesPaid'].setValue(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:TotalTaxesPaid']['_text'])
-
-    let calTaxbleVal = Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:AdvanceTax']['_text']) - Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:SelfAssessmentTax']['_text']);
+  
+    // let calTaxbleVal = Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:AdvanceTax']['_text']) - Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:SelfAssessmentTax']['_text']);
+    let calTaxbleVal = Number(computaionIncomePartTii['ITRForm:ComputationOfTaxLiability']['ITRForm:AggregateTaxInterestLiability']['_text']) - Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:TotalTaxesPaid']['_text']);
     if(calTaxbleVal > 0){
       this.computationOfIncomeForm.controls['taxpayable'].setValue(calTaxbleVal);
       this.computationOfIncomeForm.controls['taxRefund'].setValue(0);
@@ -1216,12 +1223,6 @@ export class Itr2mainComponent implements OnInit {
       this.computationOfIncomeForm.controls['taxRefund'].setValue(calTaxbleVal);
       this.computationOfIncomeForm.controls['taxpayable'].setValue(0);
     }
-    
-
-
-    // this.computationOfIncomeForm.controls[''].setValue
-    // this.computationOfIncomeForm.controls[''].setValue
-    // this.computationOfIncomeForm.controls[''].setValue
     
   }
 
@@ -1258,20 +1259,20 @@ export class Itr2mainComponent implements OnInit {
     let preBusinessObj = {
       businessType: "BUSINESS",
       exemptIncome: 0,
-      natureOfBusiness: pre44ADinfo['ITRForm:NatOfBus44AD']['ITRForm:CodeAD']['_text'],
+      natureOfBusiness: pre44ADinfo.hasOwnProperty('ITRForm:NatOfBus44AD') ? pre44ADinfo['ITRForm:NatOfBus44AD']['ITRForm:CodeAD']['_text'] : '',
       taxableIncome: 0,
-      tradeName: pre44ADinfo['ITRForm:NatOfBus44AD']['ITRForm:NameOfBusiness']['_text'],
+      tradeName: pre44ADinfo.hasOwnProperty('ITRForm:NatOfBus44AD') ? pre44ADinfo['ITRForm:NatOfBus44AD']['ITRForm:NameOfBusiness']['_text'] : '',
       incomes: []
     }
 
     let recivedInBankObj = {
       businessType: null,
       incomeType: "BANK",
-      minimumPresumptiveIncome: Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:PersumptiveInc44AD6Per']['_text']),			
+      minimumPresumptiveIncome: pre44ADinfo['ITRForm:PersumptiveInc44AD'].hasOwnProperty('ITRForm:PersumptiveInc44AD6Per') ? Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:PersumptiveInc44AD6Per']['_text']) : 0,			
       ownership: null,
       periodOfHolding: 0,
-      presumptiveIncome: Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:PersumptiveInc44AD6Per']['_text']),				    	
-      receipts: Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:GrsTrnOverBank']['_text']),				     
+      presumptiveIncome: pre44ADinfo['ITRForm:PersumptiveInc44AD'].hasOwnProperty('ITRForm:PersumptiveInc44AD6Per') ? Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:PersumptiveInc44AD6Per']['_text']) : 0,				    	
+      receipts: pre44ADinfo['ITRForm:PersumptiveInc44AD'].hasOwnProperty('ITRForm:GrsTrnOverBank') ? Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:GrsTrnOverBank']['_text']) : 0,				     
       registrationNo: null,
       tonnageCapacity: 0
     }
@@ -1280,11 +1281,11 @@ export class Itr2mainComponent implements OnInit {
     let recivedCashObj = {
       businessType: null,
       incomeType: "CASH",
-      minimumPresumptiveIncome: Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:PersumptiveInc44AD8Per']['_text']),			 
+      minimumPresumptiveIncome: pre44ADinfo['ITRForm:PersumptiveInc44AD'].hasOwnProperty('ITRForm:PersumptiveInc44AD8Per') ? Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:PersumptiveInc44AD8Per']['_text']) : 0,			 
       ownership: null,
       periodOfHolding: 0,
-      presumptiveIncome: Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:PersumptiveInc44AD8Per']['_text']),				    	
-      receipts: Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:GrsTrnOverAnyOthMode']['_text']),				     
+      presumptiveIncome: pre44ADinfo['ITRForm:PersumptiveInc44AD'].hasOwnProperty('ITRForm:PersumptiveInc44AD8Per') ? Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:PersumptiveInc44AD8Per']['_text']) : 0,				    	
+      receipts: pre44ADinfo['ITRForm:PersumptiveInc44AD'].hasOwnProperty('ITRForm:GrsTrnOverAnyOthMode') ? Number(pre44ADinfo['ITRForm:PersumptiveInc44AD']['ITRForm:GrsTrnOverAnyOthMode']['_text']) : 0,				     
       registrationNo: null,
       tonnageCapacity: 0
     }
@@ -1298,9 +1299,9 @@ export class Itr2mainComponent implements OnInit {
      let preBusinessObj44ADA = {
       businessType: "PROFESSIONAL",
       exemptIncome: 0,
-      natureOfBusiness: pre44ADAinfo['ITRForm:NatOfBus44ADA']['ITRForm:CodeADA']['_text'],
+      natureOfBusiness: pre44ADAinfo.hasOwnProperty('ITRForm:NatOfBus44ADA') ? pre44ADAinfo['ITRForm:NatOfBus44ADA']['ITRForm:CodeADA']['_text'] : '',
       taxableIncome: 0,
-      tradeName: pre44ADAinfo['ITRForm:NatOfBus44ADA']['ITRForm:NameOfBusiness']['_text'],
+      tradeName: pre44ADAinfo.hasOwnProperty('ITRForm:NatOfBus44ADA') ? pre44ADAinfo['ITRForm:NatOfBus44ADA']['ITRForm:NameOfBusiness']['_text'] : '',
       incomes: []
     }
 
@@ -1357,9 +1358,9 @@ export class Itr2mainComponent implements OnInit {
     console.log('speculativeInfo: ',speculativeInfo);
     let speculativeObj = {
      businessType: "SPECULATIVE",
-     exemptIncome: Number(speculativeInfo['ITRForm:Expenditure']['_text']),
+     exemptIncome: speculativeInfo.hasOwnProperty('ITRForm:Expenditure') ? Number(speculativeInfo['ITRForm:Expenditure']['_text']) : 0,
      natureOfBusiness: '',
-     taxableIncome: Number(speculativeInfo['ITRForm:NetIncomeFrmSpecActivity']['_text']),
+     taxableIncome: speculativeInfo.hasOwnProperty('ITRForm:NetIncomeFrmSpecActivity') ? Number(speculativeInfo['ITRForm:NetIncomeFrmSpecActivity']['_text']) : 0,
      tradeName:'',
      incomes: []
    }
@@ -1370,8 +1371,8 @@ export class Itr2mainComponent implements OnInit {
      minimumPresumptiveIncome: 0,			
      ownership: null,
      periodOfHolding: 0,
-     presumptiveIncome: Number(speculativeInfo['ITRForm:TurnverFrmSpecActivity']['_text']) - Number(speculativeInfo['ITRForm:GrossProfit']['_text']),				    	
-     receipts: Number(speculativeInfo['ITRForm:TurnverFrmSpecActivity']['_text']),				     
+     presumptiveIncome: (speculativeInfo.hasOwnProperty('ITRForm:TurnverFrmSpecActivity') ? Number(speculativeInfo['ITRForm:TurnverFrmSpecActivity']['_text']) : 0) - (speculativeInfo.hasOwnProperty('ITRForm:GrossProfit') ? Number(speculativeInfo['ITRForm:GrossProfit']['_text']) : 0),				    	
+     receipts: speculativeInfo.hasOwnProperty('ITRForm:TurnverFrmSpecActivity') ? Number(speculativeInfo['ITRForm:TurnverFrmSpecActivity']['_text']) : 0,				     
      registrationNo: null,
      tonnageCapacity: 0
    }
@@ -2111,7 +2112,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
         entertainAllow: (emplyersData.employers.deductions.length > 0 && (emplyersData.employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (emplyersData.employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
         professionalTax: (emplyersData.employers.deductions.length > 0 && (emplyersData.employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (emplyersData.employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
         totalSalaryDeduction: emplyersData.totalSalaryDeduction,
-        taxableSalary: emplyersData.taxableSalary,
+        taxableIncome: emplyersData.employers.taxableIncome,
 
         pinCode: emplyersData.employers.pinCode,
         country: emplyersData.employers.country,
@@ -3600,8 +3601,8 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
             this.assetsLiabilitiesForm.patchValue(summary.assesse.assetsLiabilities);
             
             this.immovableAssetsInfo = [];
-            if(this.utilService.isNonEmpty(summary.assesse.assetsLiabilitie.immovable)){
-              this.immovableAssetsInfo = summary.assesse.assetsLiabilitie.immovable;
+            if(this.utilService.isNonEmpty(summary.assesse.assetsLiabilities.immovable)){
+              this.immovableAssetsInfo = summary.assesse.assetsLiabilities.immovable;
               this.calImmovableToatal(this.immovableAssetsInfo);
             }
           }
