@@ -40,6 +40,8 @@ export interface ITR_SUMMARY{
       presumptiveBusinessIncomeUs44ADA: string,
       speculativeBusinessIncome: string,
       incomeFromOtherThanSpeculativeAndPresumptive: string,		
+      incomeFromOtherThanSpeculativeAndPresumptiveProfession:  string,
+      futureAndOption: string
       freezed: false
 }
 

@@ -961,7 +961,8 @@ export class SumaryDialogComponent implements OnInit {
   }
 
   calNetSalary() {
-    this.salObjectVal.netSalary = this.salObjectVal.grossSalary - this.salObjectVal.totalExcemptAllowance;
+    // this.salObjectVal.netSalary = this.salObjectVal.grossSalary - this.salObjectVal.totalExcemptAllowance;
+    this.salObjectVal.netSalary = Number(this.summaryDialogForm['controls'].employers['controls'].grossSalary.value) - Number(this.summaryDialogForm.controls['totalExemptAllow'].value);
     if (this.salObjectVal.netSalary > 0) {
       // this.summaryDialogForm.controls['netSalary'].setValue(this.salObjectVal.netSalary);
       this.summaryDialogForm['controls'].employers['controls'].netSalary.setValue(this.salObjectVal.netSalary);

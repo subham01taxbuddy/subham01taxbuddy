@@ -683,7 +683,7 @@
                                     </tr> -->
                                 </table><br><br>
 
-                                <div class="tableHead">Income from Other than Speculative and Presumptive</div><br>
+                                <div class="tableHead">Income from Other than Speculative and Presumptive - Business</div><br>
                                 <div class="card__row">
                                     <div class="card__col-lg-6">
                                         <mat-form-field appearance="outline">
@@ -745,6 +745,150 @@
                                         <td></td>
                                         <td>
                                             <input formControlName="taxableIncomeOfothertThanSpeculative" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" (blur)="calTotalOfIncomeFromBusiness()">
+                    
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td>Total</td>
+                                        <td><input type="number" disabled maxlength="8"></td>
+                                        <td><input type="number" disabled maxlength="8"></td>
+                                    </tr> -->
+                                </table><br><br>
+
+                                <div class="tableHead">Income from Other than Speculative and Presumptive - Profession</div><br>
+                                <div class="card__row">
+                                    <div class="card__col-lg-6">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Nature of business</mat-label> 
+                                            <input type="text" placeholder="Nature of business" aria-label="Assignee" matInput
+                                                formControlName="natureOfothertThanSpeculativeProfession" [matAutocomplete]="auto3" >  <!--(blur)="getCodeFromLabelOnBlur()"-->
+                                            <mat-error *ngIf="businessIncomeForm['controls'].natureOfothertThanSpeculativeProfession.invalid">
+                                                Please select value from dropdown only.
+                                            </mat-error>
+                                            <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">   
+                                                <mat-option *ngFor="let option of otherThanSpeculativeProfesionOptions | async" [value]="option.label">
+                                                    {{option.label}}-{{option.code}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="card__col-lg-4">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Trade Name</mat-label>
+                                            <input matInput placeholder="Trade Name" formControlName="tradeNameOfothertThanSpeculativeProfession"  maxlength="75" autocomplete="off"><!--(blur)="getCodeFromLabelOnBlur()"-->
+                                            <!-- <mat-error *ngIf="natureOfBusinessForm['controls'].tradeName44AD.hasError('pattern')">
+                                                Name should contain character only
+                                            </mat-error> -->
+                                        </mat-form-field>
+                                    </div>
+                                </div><br>
+                                <table>
+                                    <tr>
+                                        <th><b>Particulars</b></th>
+                                        <th><b>Gross Receipts</b></th>
+                                        <th><b>Presumptive Income</b></th>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Gross Turnover</b></td>
+                                        <td><input formControlName="turnoverOfothertThanSpeculativeProfession"
+                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"></td>
+                                               
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Purchase</td>
+                                        <td></td>
+                                        <td>
+                                            <input formControlName="purchaseOfothertThanSpeculativeProfession" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Expence-</b></td>
+                                        <td><input formControlName="expenceIncomeOfothertThanSpeculativeProfession"
+                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Income</td>
+                                        <td></td>
+                                        <td>
+                                            <input formControlName="taxableIncomeOfothertThanSpeculativeProfession" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" (blur)="calTotalOfIncomeFromBusiness()">
+                    
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td>Total</td>
+                                        <td><input type="number" disabled maxlength="8"></td>
+                                        <td><input type="number" disabled maxlength="8"></td>
+                                    </tr> -->
+                                </table><br><br>
+
+                                <div class="tableHead">F&O</div><br>
+                                <!-- <div class="card__row">
+                                    <div class="card__col-lg-6">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Nature of business</mat-label> 
+                                            <input type="text" placeholder="Nature of business" aria-label="Assignee" matInput
+                                                formControlName="natureOfothertThanSpeculativeBusiness" [matAutocomplete]="auto3" >
+                                            <mat-error *ngIf="businessIncomeForm['controls'].natureOfothertThanSpeculativeBusiness.invalid">
+                                                Please select value from dropdown only.
+                                            </mat-error>
+                                            <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">   
+                                                <mat-option *ngFor="let option of otherThanSpeculativeOptions | async" [value]="option.label">
+                                                    {{option.label}}-{{option.code}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="card__col-lg-4">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Trade Name</mat-label>
+                                            <input matInput placeholder="Trade Name" formControlName="tradeNameOfothertThanSpeculative"  maxlength="75" autocomplete="off">
+                                        </mat-form-field>
+                                    </div>
+                                </div> -->
+                                <br>
+                                <table>
+                                    <tr>
+                                        <th><b>Particulars</b></th>
+                                        <th><b>Gross Receipts</b></th>
+                                        <th><b>Presumptive Income</b></th>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Gross Turnover</b></td>
+                                        <td><input formControlName="turnoverOfothertThanSpeculativeFAndO"
+                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"></td>
+                                               
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Purchase</td>
+                                        <td></td>
+                                        <td>
+                                            <input formControlName="purchaseOfothertThanSpeculativeFAndO" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Expence-</b></td>
+                                        <td><input formControlName="expenceIncomeOfothertThanSpeculativeFAndO"
+                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Income</td>
+                                        <td></td>
+                                        <td>
+                                            <input formControlName="taxableIncomeOfothertThanSpeculativeFAndO" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" (blur)="calTotalOfIncomeFromBusiness()">
                     
                                         </td>
@@ -1471,8 +1615,20 @@
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
-                                    <td>Income from Other than Speculative and Presumptive </td>
+                                    <td>Income from Other than Speculative and Presumptive - Business</td>
                                     <td><input type="number" formControlName="incomeFromOtherThanSpeculativeAndPresumptive" disabled maxlength="8"></td>
+                                    <td></td>
+                                </tr>
+                                <tr *ngIf="itrType.itrThree">
+                                    <td></td>
+                                    <td>Income from Other than Speculative and Presumptive - Profession</td>
+                                    <td><input type="number" formControlName="incomeFromOtherThanSpeculativeAndPresumptiveProfession" disabled maxlength="8"></td>
+                                    <td></td>
+                                </tr>
+                                <tr *ngIf="itrType.itrThree">
+                                    <td></td>
+                                    <td>F&O</td>
+                                    <td><input type="number" formControlName="futureAndOption" disabled maxlength="8"></td>
                                     <td><input type="number" formControlName="presumptiveIncome" disabled maxlength="8"></td>
                                 </tr>
 

@@ -37,11 +37,12 @@
             </tr>
             <tr>
                 <td><b>Gross Receipts-</b> Recived in Bank</td>
-                <td><input
+                <td><input type="number"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
+                        maxlength="8"
                         formControlName="recieptRecievedInBank"
-                        (blur)="calBankPresumptiveIncome(natureOfBusinessForm.controls['recieptRecievedInBank'].value)"></td>
+                        (blur)="calBankPresumptiveIncome(natureOfBusinessForm.controls['recieptRecievedInBank'].value)"></td> <!-- oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"-->
                        
                 <td></td>
             </tr>
@@ -183,7 +184,7 @@
             <div class="card__col-lg-3">
                 <mat-form-field appearance="outline">
                     <!--formGroupName="deduction"-->
-                    <mat-label>Unsecured loab</mat-label>
+                    <mat-label>Unsecured loan</mat-label>
                     <input matInput placeholder="Unsecured loan" formControlName="unSecuredLoans"
                        maxlength="8" autocomplete="off"
                         type="number" (blur)="calTotalLiabilities()"

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { MatDialog } from '@angular/material';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-kommunicate',
@@ -27,6 +28,16 @@ export class KommunicateComponent implements OnInit {
   constructor(private userMsService: UserMsService, public utilsService: UtilsService,
     private dialog: MatDialog,) {
     this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
+    if (!environment.production) {
+      this.agentList = [
+        { value: 'ashish.hulwan@ssbainnovations.com', label: 'Ashish' },
+        { value: 'vaibhav.gaikwad@ssbainnovations.com', label: 'Vaibhav' },
+        { value: 'dev_kommunicate@ssbainnovations.com', label: 'Dev Komm' },
+        { value: 'barakha@ssbainnovations.com', label: 'Barakha' },
+        { value: 'karan@ssbainnovations.com', label: 'Karan' },
+        { value: 'testkommunicate@ssbainnovations.com', label: 'Ajay' }
+      ];
+    }
   }
 
   ngOnInit() {
