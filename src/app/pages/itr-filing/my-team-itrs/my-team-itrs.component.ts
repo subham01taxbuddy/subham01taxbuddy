@@ -66,6 +66,7 @@ export class MyTeamItrsComponent implements OnInit {
   ];
   myFilingTeamMembers = [];
   selectedMember: String = '';
+  selectedMemberId: any;
   constructor(private itrMsService: ItrMsService, public utilsService: UtilsService, private router: Router, private dialog: MatDialog,) {
     // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'))
     this.filingTeamMembers.sort((a, b) => a.label > b.label ? 1 : -1)
@@ -99,6 +100,7 @@ export class MyTeamItrsComponent implements OnInit {
   getMembersItr(id) {
 
     this.loading = true;
+    this.selectedMemberId = id;
     return new Promise((resolve, reject) => {
       this.selectedMember = this.filingTeamMembers.filter(item => item.value === id)[0].label;
       // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
@@ -227,9 +229,9 @@ export class MyTeamItrsComponent implements OnInit {
            </button>`;
           } else if (params.data.ackStatus === 'DELAY') {
             return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
-            background: transparent; font-size: 16px; cursor:not-allowed;color: red">
+            background: transparent; font-size: 16px; color: red">
             <i class="fa fa-circle" title="Acknowledgement not received, Contact team lead" 
-            aria-hidden="true"></i>
+            aria-hidden="true" data-action-type="ackDetails"></i>
            </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
@@ -312,6 +314,10 @@ export class MyTeamItrsComponent implements OnInit {
           this.openReviseReturnDialog(params.data);
           break;
         }
+        case 'ackDetails': {
+          this.getAcknowledgeDetail(params.data);
+          break;
+        }
       }
     }
   }
@@ -357,5 +363,21 @@ export class MyTeamItrsComponent implements OnInit {
       }
       console.log('The dialog was closed', result);
     });
+  }
+
+  getAcknowledgeDetail(data){
+    console.log('Data for acknowlegement status', data);
+    this.loading = true;
+    const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
+      this.itrMsService.getMethod(param).subscribe((res: any) => {
+        this.utilsService.showSnackBar(res.status)
+        this.loading = false;
+        setTimeout(()=>{
+          this.getMembersItr(this.selectedMemberId);
+        }, 5000);
+       
+      }, error => {
+        this.loading = false;
+      })
   }
 }

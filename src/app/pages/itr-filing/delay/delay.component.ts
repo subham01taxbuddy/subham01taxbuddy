@@ -148,6 +148,25 @@ export class DelayComponent implements OnInit {
           color: 'blueviolet'
 
         },
+      },
+      {
+        headerName: 'Ack Status',
+        width: 80,
+        sortable: true,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Change Acknowlegement status" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-user" aria-hidden="true" data-action-type="ackStatus"></i>
+           </button>`;
+        },
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+          color: 'blueviolet'
+
+        },
       }
 
     ];
@@ -162,6 +181,10 @@ export class DelayComponent implements OnInit {
           this.changeStatus(params.data);
           break;
 
+        }
+        case 'ackStatus': {
+          this.getAcknowledgeDetail(params.data);
+          break;
         }
       }
     }
@@ -180,6 +203,21 @@ export class DelayComponent implements OnInit {
       error => {
         this.loading = false;
         this._toastMessageService.alert("error", "Error while unblocking, please try again");
+      })
+  }
+
+  getAcknowledgeDetail(data){
+    console.log('Data for acknowlegement status', data);
+    this.loading = true;
+    const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
+      this.itrMsService.getMethod(param).subscribe((res: any) => {
+        this.utilsService.showSnackBar(res.status)
+        this.loading = false;
+        setTimeout(()=>{
+          this.getDelayedItrData();
+        }, 5000)
+      }, error => {
+        this.loading = false;
       })
   }
 
