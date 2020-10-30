@@ -50,6 +50,7 @@ export class HousePropertyComponent implements OnInit {
         this.housePropertyForm.controls['isEligibleFor80EE'].setValue('')
       }
     }
+    console.log('HOUSING deletedFileData LENGTH ---> ',this.deletedFileData.length)
   }
 
   checkEligibility() {

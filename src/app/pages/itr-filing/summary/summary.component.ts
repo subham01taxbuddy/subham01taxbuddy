@@ -97,10 +97,16 @@ export class SummaryComponent implements OnInit {
     });
   }
 
-  getUserName() {
+  getUserName(type) {
     const self = this.ITR_JSON.family.filter(item => item.relationShipCode === 'SELF');
     if (self instanceof Array && self.length > 0) {
-      return self[0].fName + ' ' + (this.utilsService.isNonEmpty(self[0].mName) ? self[0].mName : '') + ' ' + self[0].lName;
+      if(type === 'personal'){
+        return self[0].fName + ' ' + (this.utilsService.isNonEmpty(self[0].mName) ? self[0].mName : '') + ' ' + self[0].lName;
+      }
+      else if(type === 'download'){
+        return self[0].fName + ''+ self[0].lName;
+      }
+     
     }
   }
   totalGross(emp) {
@@ -301,14 +307,17 @@ export class SummaryComponent implements OnInit {
       const param = `/api/downloadXml?itrId=${this.ITR_JSON.itrId}`;
       this.itrMsService.downloadXML(param).subscribe(result => {
         console.log('XML Result', result);
+        var FileSaver = require('file-saver');
+        //const fileURL = URL.createObjectURL(result);
         const fileURL = URL.createObjectURL(result);
         window.open(fileURL);
+        let fileName = this.getUserName('download')+''+'.xml';
+        console.log('fileName: ',fileName)
+        FileSaver.saveAs(fileURL, fileName);
         this.loading = false;
-        // Commented both routes as its currenly option is for download xml file
-        // this.router.navigate(['itr-result/success']);
-        // this.router.navigate(['ack/success']);
       }, error => {
         this.loading = false;
+        this.utilsService.showSnackBar('Failed to download XML file, please try again.');
         if (error.status === 403) {
           // this.dialogForalert();
           alert(403)
