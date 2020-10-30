@@ -44,6 +44,7 @@ export class OtherIncomeComponent implements OnInit {
     this.setOtherIncomeValues();
     this.getItrDocuments();
 
+    console.log('OTHERE deletedFileData LENGTH ---> ',this.deletedFileData.length)
   }
 
   // Salary Grid Start

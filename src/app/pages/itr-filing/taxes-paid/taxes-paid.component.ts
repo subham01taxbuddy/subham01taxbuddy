@@ -79,6 +79,8 @@ export class TaxesPaidComponent implements OnInit {
     this.tcsGridOptions.rowData = this.ITR_JSON.taxPaid.tcs;
     this.otherThanTdsTcsCallInConstructor();
     this.otherThanTdsTcsGridOptions.rowData = this.ITR_JSON.taxPaid.otherThanTDSTCS;
+
+    console.log('TAX_PAID deletedFileData LENGTH ---> ',this.deletedFileData.length)
   }
 
   onSalaryCallInConstructor() {

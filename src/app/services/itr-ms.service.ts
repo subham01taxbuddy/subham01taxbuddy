@@ -84,7 +84,7 @@ export class ItrMsService {
         console.log('Headers for get method=', this.headers);
         return this.http.get(environment.url + this.microService + param, { headers: this.headers, responseType: ResponseContentType.Blob })
             .map((response) => {
-                return new Blob([response.blob()], { type: 'application/xhtml+xml' });
+                return new Blob([response.blob()], { type: 'application/xhtml+xml' });  //text/json; charset=utf-8
             });
     }
 
