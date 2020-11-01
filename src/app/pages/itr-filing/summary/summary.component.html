@@ -9,7 +9,7 @@
                 <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
                     <!-- Name -->
                     <div class="txBt">
-                        <span class="txLf">Name:</span> <span class="txMuLf">{{getUserName()}}</span></div>
+                        <span class="txLf">Name:</span> <span class="txMuLf">{{getUserName('personal')}}</span></div>
                     <!-- Gender -->
                     <!--  <div class="txBt">
               <span class="txLf">Gender:</span> <span class="txMuLf">{{selfObj.gender | titlecase}}</span>
@@ -120,9 +120,8 @@
             [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"
             style="background-color: red;"> File
             ITR</button>
-        <button type="button" (click)="downloadXML()" class="btn grBut" [disabled]="taxable && taxable > 0"
-            [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'" style="background-color: orange;">
-            Download XML</button><!-- *ngIf="ITR_JSON.isDefective === 'Y'" -->
+        <button type="button" (click)="downloadXML()" class="btn grBut"  style="background-color: orange;">
+            Download XML</button><!--  [disabled]="taxable && taxable > 0"  [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"  *ngIf="ITR_JSON.isDefective === 'Y'" -->
         <button type="button" (click)="downloadPDF()" class="btn grBut"> Download PDF</button>
         <button type="button" class="btn kommBut" (click)="sendPdf('kommunicate')">Send PDF to Kommunicate chat</button>
 

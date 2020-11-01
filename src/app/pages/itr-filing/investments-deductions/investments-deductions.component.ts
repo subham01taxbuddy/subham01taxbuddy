@@ -28,6 +28,8 @@ export class InvestmentsDeductionsComponent implements OnInit {
   api: GridApi;
   userAge: number = 0;
   itrDocuments = [];
+  deletedFileData: any = [];
+
   otherDonationToDropdown = [{
     "id": null,
     "donationType": "OTHER",
@@ -568,6 +570,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
 
     // this.DonationGridOptions.api.setRowData(this.createRowData('OTHER'));
     // this.DonationGridOptions.api.setColumnDefs(this.donationCreateColoumnDef(this.otherDonationToDropdown, this.stateDropdown));
+    console.log('Investments-DEDUCTION deletedFileData LENGTH ---> ',this.deletedFileData.length)
   }
   max5000Limit(val) {
     if (val === 'SELF' && this.investmentDeductionForm.controls['selfPreventiveCheckUp'].valid &&
@@ -987,8 +990,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
      this.utilsService.showSnackBar(error.response);
     })
    }
-
-   deletedFileData: any = [];
+  
    deletedFileInfo(cloudFileId){
      this.deletedFileData = [];
      this.loading = true;
