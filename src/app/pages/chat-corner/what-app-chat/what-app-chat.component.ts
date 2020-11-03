@@ -46,6 +46,17 @@ export class WhatAppChatComponent implements OnInit {
   startConversation: boolean;
   selectdMobNum: any;
 
+  agentList = [
+    { value: 'brij@ssbainnovations.com', label: 'Brij' },
+    { value: 'divya@ssbainnovations.com', label: 'Divya' },
+    { value: 'urmila@ssbainnovations.com', label: 'Urmila' },
+    { value: 'kavita@ssbainnovations.com', label: 'Kavita' },
+    { value: 'amrita@ssbainnovations.com', label: 'Amrita' },
+    { value: 'ankita@ssbainnovations.com', label: 'Ankita' },
+    { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
+    { value: 'damini@ssbainnovations.com', label: 'Damini' }
+  ];
+
   quicjReplay = [{label:'any one', value: 'Please select any one of the options from "Select Other Plan" OR "I Agree with this Plan" to proceed further.'},
       {label:'documents complete', value: 'Thank you for submitting your documents. Our tax expert will analyze and keep you updated with the filing process.'},
       {label:'form 26as', value: 'Please upload your *Form 26AS* using the attachment icon\n\
@@ -133,6 +144,11 @@ export class WhatAppChatComponent implements OnInit {
         this.geUserChatDetail(params['contact'])
       }
     })
+  }
+
+  getUnreadListByAgentId(agentId){
+    
+    this.utileService.sendMessage(agentId);
   }
 
   ngOnDestroy() {
