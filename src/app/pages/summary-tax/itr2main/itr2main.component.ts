@@ -510,8 +510,16 @@ export class Itr2mainComponent implements OnInit {
  
                let houceObj={
                  propertyType: housingData[i]['ITRForm:ifLetOut']['_text'] === "N" ? 'SOP' : 'LOP',
-                 address: address,
-                 ownerOfProperty: housingData[i]['ITRForm:ifLetOut']['_text'] === "SE"? 'SELF' : '',
+                 //address: address,
+                 flatNo: '',
+                 building: '',
+                 locality: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:AddrDetail']['_text'],
+                 street: '',
+                 pinCode: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:PinCode']['_text'],
+                 country: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:CountryCode']['_text'] === "91" ? 'India' : '',
+                 state: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:StateCode'],
+                 city: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:CityOrTownOrDistrict']['_text'],
+                 ownerOfProperty: housingData[i]['ITRForm:PropertyOwner']['_text'] === "SE"? 'SELF' : '',
                  tenantName: '',//housingData[i]['ITRForm:ifLetOut']['_text'],
                  grossAnnualRentReceived: this.isNotZero(housingData[i]['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text']) ? housingData[i]['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text'] : 0,
                  propertyTax:0,//housingData[i]['ITRForm:ifLetOut']['_text'],
@@ -528,8 +536,17 @@ export class Itr2mainComponent implements OnInit {
  
            let houceObj={
              propertyType: housingData['ITRForm:ifLetOut']['_text'] === "N" ? 'SOP' : 'LOP',
-             address: address,
-             ownerOfProperty: housingData['ITRForm:ifLetOut']['_text'] === "SE"? 'SELF' : '',
+             //address: address,
+             flatNo: '',
+             building: '',
+             locality: housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:AddrDetail']['_text'],
+             street: '',
+             pinCode: housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:PinCode']['_text'],
+             country: housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:CountryCode']['_text'],
+             state: housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:StateCode']['_text'],
+             city: housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:CityOrTownOrDistrict']['_text'],
+
+             ownerOfProperty: housingData['ITRForm:PropertyOwner']['_text'] === "SE"? 'SELF' : '',
              tenantName: '',//housingData['ITRForm:ifLetOut']['_text'],
              grossAnnualRentReceived: this.isNotZero(housingData['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text']) ? housingData['ITRForm:Rentdetails']['ITRForm:BalanceALV']['_text'] : 0,
              propertyTax: '',//housingData['ITRForm:ifLetOut']['_text'],
@@ -1960,7 +1977,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
         console.log('Condition: ', houseData[i].coOwners.length > i)
         let house = {
           propertyType: houseData[i].propertyType,
-          address: address,
+         // address: address,
           ownerOfProperty: houseData[i].ownerOfProperty,
           // coOwnerName: (Array.isArray(houseData[i].coOwners) && houseData[i].coOwners.length > i) ? houseData[i].coOwners[i].name : '',
           // coOwnerPanNumber: (Array.isArray(houseData[i].coOwners) && houseData[i].coOwners.length > i) ? houseData[i].coOwners[i].panNumber : '',
@@ -2102,12 +2119,12 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
         salAsPerSec171: emplyersData.employers.salary.length > 0 ? emplyersData.employers.salary[0].taxableAmount : 0,
         valOfPerquisites: emplyersData.employers.perquisites.length > 0 ? emplyersData.employers.perquisites[0].taxableAmount : 0,
         profitInLieu: emplyersData.employers.profitsInLieuOfSalaryType.length > 0 ? emplyersData.employers.profitsInLieuOfSalaryType[0].taxableAmount : 0,
-        grossSalary: emplyersData.grossSalary,
+        grossSalary: emplyersData.employers.grossSalary,
         houseRentAllow: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
         leaveTravelExpense: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'LTA')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
         other: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
         totalExemptAllow: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
-        netSalary: emplyersData.netSalary,
+        netSalary: emplyersData.employers.netSalary,
         standardDeduction: emplyersData.employers.standardDeduction,
         entertainAllow: (emplyersData.employers.deductions.length > 0 && (emplyersData.employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (emplyersData.employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
         professionalTax: (emplyersData.employers.deductions.length > 0 && (emplyersData.employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (emplyersData.employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
@@ -3615,9 +3632,10 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
         this.lossesCarriedForwarInfo = [];
   
         this.bankData = summary.assesse.bankDetails.length > 0 ? summary.assesse.bankDetails : [];
-        this.housingData = summary.assesse.houseProperties.length > 0 ? summary.assesse.houseProperties: [];
-        this.donationData = summary.assesse.donations.length > 0 ? summary.assesse.donations : [];
-  
+        // this.housingData = summary.assesse.houseProperties.length > 0 ? summary.assesse.houseProperties: [];
+         this.donationData = summary.assesse.donations.length > 0 ? summary.assesse.donations : [];
+        console.log('housingData: ',this.housingData)
+        this.updateHousingData(summary);
         this.updateSalatyInfo(summary.assesse.employers)
         this.updateOtherSource(summary.assesse.incomes)
         this.updateInuranceVal(summary.assesse.insurances, summary.assesse.systemFlags);
@@ -3766,6 +3784,46 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
       }
       console.log('this.salaryItrratedData ====>> ',this.salaryItrratedData)
     }
+  }
+
+  updateHousingData(summaryInfo){
+    debugger
+    console.log('summaryInfo => ',summaryInfo)
+    this.housingData = [];
+    var houceObj ={
+      propertyType : '',
+      flatNo: '',
+      building: '',
+      locality: '',
+      street: '',
+      pinCode: '',
+      country: '',
+      state: '',
+      city: '',
+      ownerOfProerty: '',
+      tenantName: '',
+      grossAnnualRetReceived : '',
+      propertyTax : 0,
+      annualValue : 0,
+      exemptIncome : 0,
+      interestAmount : 0,
+      taxableIncome : 0
+     };
+
+    if(summaryInfo.assesse.houseProperties.length > 0){
+      for(let i=0; i < summaryInfo.assesse.houseProperties.length; i++){
+        debugger
+        Object.assign(houceObj, summaryInfo.assesse.houseProperties[i]);
+        console.log('houceObj ==> ',houceObj)
+        houceObj.interestAmount = summaryInfo.assesse.houseProperties[i].loans[0].interestAmount;
+        this.housingData.push(houceObj) 
+      }
+    } 
+    else{
+      this.housingData =  [];
+    }
+
+    console.log('this.housingData -> ',this.housingData)
   }
 
   updateOtherSource(otherSource){
