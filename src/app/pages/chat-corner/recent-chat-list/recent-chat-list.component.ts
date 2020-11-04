@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserMsService } from 'app/services/user-ms.service';
 import { Router } from '@angular/router';
+import { UtilsService } from 'app/services/utils.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: "app-recent-chat-list",
@@ -11,10 +13,20 @@ export class RecentChatListComponent implements OnInit {
   filteredArray: any;
   selectedMobileNo: any;
   userTimer: any;
-  constructor(private userService: UserMsService, private router: Router) { }
+  subscription: Subscription;
+  
+  constructor(private userService: UserMsService, private router: Router, private utilService: UtilsService) {
+
+    this.subscription = this.utilService.onMessage().subscribe(agentId => {
+      console.log('Selected agent id: ',agentId)
+      if (agentId) {
+        this.getUserNotify(agentId.text);
+      }
+    });
+   }
 
   ngOnInit() {
-    this.getUserNotify();
+   // this.getUserNotify();
 
     // setInterval(() => {
     //   this.getUserNotify();
@@ -22,10 +34,10 @@ export class RecentChatListComponent implements OnInit {
     // }, 5000);
   }
 
-  getUserNotify() {
+  getUserNotify(agentId) {
     // let userChatData = JSON.parse(sessionStorage.getItem('userChatNotifications'))
-    // this.loading = true;
-    let param = '/whatsapp/unread';
+    // this.loading = true;   
+    let param = '/whatsapp/unread?assigneeId='+agentId;
     this.userService.getUserDetail(param).subscribe((res) => {
       // this.userDetail = res;
       this.filteredArray = res;
@@ -40,6 +52,10 @@ export class RecentChatListComponent implements OnInit {
 
     // this.userDetail = userChatData;
     // this.filteredArray = userChatData;
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   geUserChatDetail(mobileNo) {

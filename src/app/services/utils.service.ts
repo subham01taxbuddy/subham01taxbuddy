@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
+import { Observable, Subject } from 'rxjs';
 import { ITR_JSON } from './../shared/interfaces/itr-input.interface';
 
 @Injectable()
 
 export class UtilsService {
+    
+    private subject = new Subject<any>();
     constructor(private snackBar: MatSnackBar,) { }
     /**
     * @function isNonEmpty()
@@ -175,5 +178,17 @@ export class UtilsService {
         };
 
         return ITR_JSON;
+    }
+
+    sendMessage(message: string) {
+        this.subject.next({ text: message });
+    }
+
+    clearMessages() {
+        this.subject.next();
+    }
+
+    onMessage(): Observable<any> {
+        return this.subject.asObservable();
     }
 }
