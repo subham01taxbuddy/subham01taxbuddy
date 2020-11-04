@@ -45,6 +45,7 @@ export class WhatAppChatComponent implements OnInit {
   searchNumber = new FormControl('', [Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex)]);
   startConversation: boolean;
   selectdMobNum: any;
+  showChatUi: boolean = false;
 
   agentList = [
     { value: 'brij@ssbainnovations.com', label: 'Brij' },
@@ -147,7 +148,7 @@ export class WhatAppChatComponent implements OnInit {
   }
 
   getUnreadListByAgentId(agentId){
-    
+    this.showChatUi = true;
     this.utileService.sendMessage(agentId);
   }
 

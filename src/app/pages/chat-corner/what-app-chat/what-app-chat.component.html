@@ -5,14 +5,14 @@
     <div class="content__container">
       <div class="card">
 
-        <div class="card__row">
-          <label>Selected Agent: </label> &nbsp;&nbsp;
+        <div class="card__row" >
+          <label><b>Selected Agent: </b></label> &nbsp;&nbsp;
           <span *ngFor="let agent of agentList; let i=index">
               <a href="javascript:;" (click)="getUnreadListByAgentId(agent.value)">{{agent.label}}</a> &nbsp;&nbsp;
           </span>
         </div>
 
-        <div class="card__row">
+        <div class="card__row" *ngIf="showChatUi">
           <div class="card__col-xs-3 card__col-sm-3">
             <mat-form-field appearance="outline">
               <input matInput [formControl]="searchNumber" maxlength="10" placeholder="Search By Mobile number"
@@ -31,7 +31,7 @@
 
         </div>
 
-        <div class="card__row">
+        <div class="card__row" *ngIf="showChatUi">
           <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 0px;">
             <div class="card__col-lg-4" style="padding: 0px;">
               <!--userList-->
