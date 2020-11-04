@@ -11,6 +11,9 @@ import { CommonModule } from '@angular/common';
 import { MatInputComponent } from './mat-input.component';
 import { WhatsAppDialogComponent } from 'app/pages/itr-filing/whats-app-dialog/whats-app-dialog.component';
 import { UserNotesComponent } from './components/user-notes/user-notes.component';
+import { AddCallLogComponent } from './components/add-call-log/add-call-log.component';
+import { OwlDateTimeModule } from 'ng-pick-datetime/date-time/date-time.module';
+import { OwlNativeDateTimeModule } from 'ng-pick-datetime/date-time/adapter/native-date-time.module';
 
 
 @NgModule({
@@ -23,14 +26,17 @@ import { UserNotesComponent } from './components/user-notes/user-notes.component
         MatInputComponent,
         AgGridMaterialSelectEditorComponent,
         WhatsAppDialogComponent,
-        UserNotesComponent
+        UserNotesComponent,
+        AddCallLogComponent
     ],
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
-        AgGridModule.withComponents([NumericEditor, CustomDateComponent, AgGridMaterialSelectEditorComponent, MatInputComponent]),  //MatSelectComponent
+        AgGridModule.withComponents([NumericEditor, CustomDateComponent, AgGridMaterialSelectEditorComponent, MatInputComponent]),  //MatSelectComponent,
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule,
     ],
     exports: [
         CommonModule,
@@ -44,9 +50,10 @@ import { UserNotesComponent } from './components/user-notes/user-notes.component
         MatInputComponent,
         AgGridMaterialSelectEditorComponent,
         WhatsAppDialogComponent,
-        UserNotesComponent
+        UserNotesComponent,
+        AddCallLogComponent
     ],
     providers: [],
-    entryComponents: [WhatsAppDialogComponent, UserNotesComponent]
+    entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent]
 })
 export class SharedModule { }

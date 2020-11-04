@@ -1,3 +1,5 @@
+import { TodaysCallsComponent } from './calling-board/todays-calls/todays-calls.component';
+import { CallingBoardComponent } from './calling-board/calling-board.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
@@ -17,6 +19,13 @@ const routes: Routes = [
                     { path: 'kommunicate', component: KommunicateComponent },
                     { path: 'whatsapp', component: WhatsappComponent },
                     { path: '', redirectTo: 'kommunicate', pathMatch: 'full' }
+                ]
+            },
+            {
+                path: 'calling', component: CallingBoardComponent,
+                children: [
+                    { path: 'todays-call', component: TodaysCallsComponent },
+                    { path: '', redirectTo: 'todays-call', pathMatch: 'full' }
                 ]
             },
             { path: '', redirectTo: 'new-user', pathMatch: 'full' }
