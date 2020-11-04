@@ -1,0 +1,71 @@
+<label style="font-size: 18px;
+font-weight: bold;">Add call log for {{data.userName}}</label><button mat-dialog-close tabindex="-1"
+    style="float: right; cursor: pointer;"><i class="fa fa-times" aria-hidden="true"></i></button>
+
+<form [formGroup]="callLogForm">
+    <div class="card__row">
+
+        <!--  <div class="card__col-xs-12 card__col-sm-4">
+            <mat-form-field appearance="outline">
+                <mat-label>Client Mobile</mat-label>
+                <input matInput placeholder="Client mobile" name="userMobile" formControlName="userMobile"
+                    class="input-field" maxlength="10">
+            </mat-form-field>
+        </div> -->
+        <div class="card__col-xs-12 card__col-sm-6">
+            <mat-form-field appearance="outline">
+                <mat-label>Status</mat-label>
+                <mat-select placeholder="Select Status" name="statusId" formControlName="statusId" required>
+                    <mat-option *ngFor="let dropdown of statusMaster" [value]="dropdown.value">
+                        {{ dropdown.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-6">
+            <mat-form-field appearance="outline">
+                <mat-label>Client Email</mat-label>
+                <input matInput placeholder="Client Email" name="userEmail" formControlName="userEmail"
+                    class="input-field" maxlength="50">
+                <mat-error *ngIf="callLogForm.controls['userEmail'].hasError('pattern')">
+                    Please enter valid email</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-12">
+            <mat-form-field appearance="outline">
+                <mat-label>Description</mat-label>
+                <textarea matInput placeholder="Please add call details" name="description"
+                    formControlName="description" class="input-field" cdkTextareaAutosize cdkAutosizeMinRows="2"
+                    cdkAutosizeMaxRows="12" required></textarea>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="card__row" *ngIf="callLogForm.controls['statusId'].value === 17">
+        <div class="card__col-xs-12 card__col-sm-6">
+            <mat-form-field appearance="outline">
+                <mat-label>Schedule call Date & Time</mat-label>
+                <input matInput formControlName="scheduleCallTime" [owlDateTimeTrigger]="dtPicker2"
+                    [owlDateTime]="dtPicker2" [required]="callLogForm.controls['statusId'].value === 17">
+                <owl-date-time #dtPicker2></owl-date-time>
+            </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-6">
+            <mat-form-field appearance="outline">
+                <mat-label>Calling Person</mat-label>
+                <mat-select placeholder="Select calling person" name="scheduleCallEmail"
+                    formControlName="scheduleCallEmail" [required]="callLogForm.controls['statusId'].value === 17">
+                    <mat-option *ngFor="let dropdown of smeList" [value]="dropdown.email">
+                        {{ dropdown.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-3" style="padding-top: 10px;">
+            <button type="submit" class="btn" style="border: none;" (click)="addCallLog()">Add</button>
+        </div>
+    </div>
+</form>

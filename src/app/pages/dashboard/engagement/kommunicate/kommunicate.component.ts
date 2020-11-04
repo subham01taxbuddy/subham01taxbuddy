@@ -4,6 +4,7 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { MatDialog } from '@angular/material';
 import { environment } from 'environments/environment';
+import { AddCallLogComponent } from 'app/shared/components/add-call-log/add-call-log.component';
 
 @Component({
   selector: 'app-kommunicate',
@@ -87,6 +88,23 @@ export class KommunicateComponent implements OnInit {
       }
     })
 
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+
+  }
+
+  addCallLogs(client) {
+    let disposable = this.dialog.open(AddCallLogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        userName: client.name,
+        userMobile: client.mobileNumber,
+        userEmail: client['email'],
+      }
+    })
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
