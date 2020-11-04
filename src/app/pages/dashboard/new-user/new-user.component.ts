@@ -24,7 +24,9 @@ export class NewUserComponent implements OnInit {
     { value: 'urmila@ssbainnovations.com', label: 'Urmila' },
     { value: 'kavita@ssbainnovations.com', label: 'Kavita' },
     { value: 'amrita@ssbainnovations.com', label: 'Amrita' },
-    { value: 'ankita@ssbainnovations.com', label: 'Ankita' }
+    { value: 'ankita@ssbainnovations.com', label: 'Ankita' },
+    { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
+    { value: 'damini@ssbainnovations.com', label: 'Damini' }
   ];
   loading = false;
 
