@@ -437,7 +437,7 @@
                         <table class="verticle">  <!---->
                             <tr>
                                 <th>Property Type</th>
-                                <th>Address</th>
+                                <th colspan="8" style="text-align: center;"><b>Address</b></th>
                                 <th>Ownership</th>
                                 <th>Tenat name</th>
                                 <th>Gross Rent Recived</th>
@@ -449,8 +449,38 @@
     
                                 <th>Action</th>
                             </tr>
+
+                            <tr > 
+                                <td></td>
+                                <td>Flat No</td>
+                                <td>Building</td>
+                                <td>Location</td>
+                                <td>Street</td>
+                                <td>Pin Code</td>
+                                <td>Country</td>
+                                <td>State</td>
+                                <td>City</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+    
+                            </tr>
     
                             <tr *ngIf="housingData.length === 0"> 
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -466,7 +496,15 @@
                             </tr>
                             <tr *ngFor="let house of housingData; let i = index">
                                 <td>{{house.propertyType}}</td>
-                                <td>{{house.address}}</td>
+                                <td>{{house.flatNo}}</td>
+                                <td>{{house.building}}</td>
+                                <td>{{house.locality}}</td>
+                                <td>{{house.street}}</td>
+                                <td>{{house.pinCode}}</td>
+                                <td>{{house.country}}</td>
+                                <td>{{house.state}}</td>
+                                <td>{{house.city}}</td>
+
                                 <td>{{house.ownerOfProperty}}</td>
                                 <td>{{house.tenantName}}</td>
                                 <td>{{house.grossAnnualRentReceived}}</td>
