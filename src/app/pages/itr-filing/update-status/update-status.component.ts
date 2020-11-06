@@ -164,6 +164,16 @@ export class UpdateStatusComponent implements OnInit {
       "active": true,
       "message": "",
       "channel": ""
+    },
+    {
+      "id": "5f968b119c06cc000101b9a8",
+      "statusId": 14,
+      "statusName": "Backed Out",
+      "sequence": 14,
+      "source": "BACK_OFFICE",
+      "active": true,
+      "message": "",
+      "channel": "",
     }
   ]
 

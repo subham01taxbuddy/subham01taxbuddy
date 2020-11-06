@@ -1,3 +1,4 @@
+import { AddCallLogComponent } from './../../../shared/components/add-call-log/add-call-log.component';
 import { environment } from 'environments/environment';
 import { UtilsService } from 'app/services/utils.service';
 import { UserMsService } from 'app/services/user-ms.service';
@@ -120,6 +121,23 @@ export class NewUserComponent implements OnInit {
       }
     })
 
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+
+  }
+
+  addCallLogs(client) {
+    let disposable = this.dialog.open(AddCallLogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        userName: client.name,
+        userMobile: client.mobileNumber,
+        userEmail: client['email'],
+      }
+    })
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
