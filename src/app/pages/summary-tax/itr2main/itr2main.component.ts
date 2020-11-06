@@ -873,36 +873,153 @@ export class Itr2mainComponent implements OnInit {
     if(itrData.hasOwnProperty('ITRForm:Schedule80G')){
       var donation80G = itrData['ITRForm:Schedule80G']
       console.log('donation80G: ',donation80G)
-      if(donation80G.length !== undefined){
-          for(let i=0; i<donation80G.length; i++){
+
+      //Donation entity for 100% deduction
+      if(donation80G.hasOwnProperty('ITRForm:Don100Percent')){
+        if(donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan'].length !== undefined){
+          for(let i=0; i<donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan'].length; i++){
             let donation80GObj = {
               donationType: 'OTHER',
-              name: '',
-              amountInCash: donation80G['ITRForm:Don100PercentApprReqd'][i]['ITRForm:DoneeWithPan']['ITRForm:DonationAmtCash']['_text'],
-              amountOtherThanCash: donation80G['ITRForm:Don100PercentApprReqd'][i]['ITRForm:DoneeWithPan']['ITRForm:DonationAmtOtherMode']['_text'],
-              eligibleAmount: donation80G['ITRForm:Don100PercentApprReqd'][i]['ITRForm:DoneeWithPan']['ITRForm:EligibleDonationAmt']['_text'],
-              address: donation80G['ITRForm:Don100PercentApprReqd'][i]['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
-              city: donation80G['ITRForm:Don100PercentApprReqd'][i]['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:CityOrTownOrDistrict']['_text'],
-              pinCode: donation80G['ITRForm:Don100PercentApprReqd'][i]['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:PinCode']['_text'],
+              panNumber: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan'][i]['ITRForm:DoneePAN']['_text'],
+              name: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan'][i]['ITRForm:DoneeWithPanName']['_text'],                                                                      
+              amountInCash: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan'][i]['ITRForm:DonationAmtCash']['_text'],
+              amountOtherThanCash: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan'][i]['ITRForm:DonationAmtOtherMode']['_text'],
+              eligibleAmount: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan'][i]['ITRForm:EligibleDonationAmt']['_text'],
+              address: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan'][i]['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
+              city: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan'][i]['ITRForm:AddressDetail']['ITRForm:CityOrTownOrDistrict']['_text'],
+              pinCode: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan'][i]['ITRForm:AddressDetail']['ITRForm:PinCode']['_text'],
               state: '',
             }
             this.donationData.push(donation80GObj);
           }
-      }
-      else{
-        let donation80GObj = {
-          donationType: 'OTHER',
-          name: '',
-          amountInCash: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DonationAmtCash']['_text'],
-          amountOtherThanCash: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DonationAmtOtherMode']['_text'],
-          eligibleAmount: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:EligibleDonationAmt']['_text'],
-          address: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
-          city: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:CityOrTownOrDistrict']['_text'],
-          pinCode: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:PinCode']['_text'],
-          state: '',
         }
-        this.donationData.push(donation80GObj);
+        else{
+          let donation80GObj = {
+            donationType: 'OTHER',
+            panNumber: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan']['ITRForm:DoneePAN']['_text'],
+            name: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan']['ITRForm:DoneeWithPanName']['_text'],
+            amountInCash: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan']['ITRForm:DonationAmtCash']['_text'],
+            amountOtherThanCash: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan']['ITRForm:DonationAmtOtherMode']['_text'],
+            eligibleAmount: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan']['ITRForm:EligibleDonationAmt']['_text'],
+            address: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
+            city: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:CityOrTownOrDistrict']['_text'],
+            pinCode: donation80G['ITRForm:Don100Percent']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:PinCode']['_text'],
+            state: '',
+          }
+          this.donationData.push(donation80GObj);
+        }
       }
+
+
+       //Donation entity for 50% deduction
+       if(donation80G.hasOwnProperty('ITRForm:Don50PercentApprReqd')){
+        if(donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan'].length !== undefined){
+          for(let i=0; i<donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan'].length; i++){
+            let donation80GObj = {
+              donationType: 'OTHER',
+              panNumber: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:DoneePAN']['_text'],
+              name: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:DoneeWithPanName']['_text'],                                                                      
+              amountInCash: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:DonationAmtCash']['_text'],
+              amountOtherThanCash: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:DonationAmtOtherMode']['_text'],
+              eligibleAmount: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:EligibleDonationAmt']['_text'],
+              address: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
+              city: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:AddressDetail']['ITRForm:CityOrTownOrDistrict']['_text'],
+              pinCode: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:AddressDetail']['ITRForm:PinCode']['_text'],
+              state: '',
+            }
+            this.donationData.push(donation80GObj);
+          }
+        }
+        else{
+          let donation80GObj = {
+            donationType: 'OTHER',
+            panNumber: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DoneePAN']['_text'],
+            name: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DoneeWithPanName']['_text'],
+            amountInCash: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DonationAmtCash']['_text'],
+            amountOtherThanCash: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DonationAmtOtherMode']['_text'],
+            eligibleAmount: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:EligibleDonationAmt']['_text'],
+            address: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
+            city: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:CityOrTownOrDistrict']['_text'],
+            pinCode: donation80G['ITRForm:Don50PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:PinCode']['_text'],
+            state: '',
+          }
+          this.donationData.push(donation80GObj);
+        }
+      }
+
+       //Donation entity for 50% deduction
+       if(donation80G.hasOwnProperty('ITRForm:Don50PercentNoApprReqd')){
+        if(donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan'].length !== undefined){
+          for(let i=0; i<donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan'].length; i++){
+            let donation80GObj = {
+              donationType: 'OTHER',
+              panNumber: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:DoneePAN']['_text'],
+              name: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:DoneeWithPanName']['_text'],                                                                      
+              amountInCash: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:DonationAmtCash']['_text'],
+              amountOtherThanCash: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:DonationAmtOtherMode']['_text'],
+              eligibleAmount: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:EligibleDonationAmt']['_text'],
+              address: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
+              city: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:AddressDetail']['ITRForm:CityOrTownOrDistrict']['_text'],
+              pinCode: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:AddressDetail']['ITRForm:PinCode']['_text'],
+              state: '',
+            }
+            this.donationData.push(donation80GObj);
+          }
+        }
+        else{
+          let donation80GObj = {
+            donationType: 'OTHER',
+            panNumber: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DoneePAN']['_text'],
+            name: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DoneeWithPanName']['_text'],
+            amountInCash: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DonationAmtCash']['_text'],
+            amountOtherThanCash: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DonationAmtOtherMode']['_text'],
+            eligibleAmount: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan']['ITRForm:EligibleDonationAmt']['_text'],
+            address: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
+            city: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:CityOrTownOrDistrict']['_text'],
+            pinCode: donation80G['ITRForm:Don50PercentNoApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:PinCode']['_text'],
+            state: '',
+          }
+          this.donationData.push(donation80GObj);
+        }
+      }
+
+       //Donation entity for 100% deduction
+       if(donation80G.hasOwnProperty('ITRForm:Don100PercentApprReqd')){
+        if(donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan'].length !== undefined){
+          for(let i=0; i<donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan'].length; i++){
+            let donation80GObj = {
+              donationType: 'OTHER',
+              panNumber: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:DoneePAN']['_text'],
+              name: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:DoneeWithPanName']['_text'],                                                                        
+              amountInCash: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:DonationAmtCash']['_text'],
+              amountOtherThanCash: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:DonationAmtOtherMode']['_text'],
+              eligibleAmount: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:EligibleDonationAmt']['_text'],
+              address: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
+              city: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:AddressDetail']['ITRForm:CityOrTownOrDistrict']['_text'],
+              pinCode: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan'][i]['ITRForm:AddressDetail']['ITRForm:PinCode']['_text'],
+              state: '',
+            }
+            this.donationData.push(donation80GObj);
+          }
+        }
+        else{
+          let donation80GObj = {
+            donationType: 'OTHER',
+            panNumber: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DoneePAN']['_text'],
+            name: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DoneeWithPanName']['_text'],                                                                  
+            amountInCash: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DonationAmtCash']['_text'],
+            amountOtherThanCash: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:DonationAmtOtherMode']['_text'],
+            eligibleAmount: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:EligibleDonationAmt']['_text'],
+            address: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
+            city: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:CityOrTownOrDistrict']['_text'],
+            pinCode: donation80G['ITRForm:Don100PercentApprReqd']['ITRForm:DoneeWithPan']['ITRForm:AddressDetail']['ITRForm:PinCode']['_text'],
+            state: '',
+          }
+          this.donationData.push(donation80GObj);
+        }
+      }
+
+
     }
 
     if(itrData['ITRForm:ScheduleVIA']['ITRForm:DeductUndChapVIA'].hasOwnProperty('ITRForm:Section80GGA')){
@@ -956,7 +1073,7 @@ export class Itr2mainComponent implements OnInit {
        this.deductionAndRemainForm.controls['us80ee'].setValue(this.isNotZero(deduction['ITRForm:Section80EE']['_text']) ? deduction['ITRForm:Section80EE']['_text'] : 0);
        this.deductionAndRemainForm.controls['us80g'].setValue(this.isNotZero(deduction['ITRForm:Section80G']['_text']) ? deduction['ITRForm:Section80G']['_text'] : 0);
        this.deductionAndRemainForm.controls['us80gg'].setValue(this.isNotZero(deduction['ITRForm:Section80GG']['_text']) ? deduction['ITRForm:Section80GG']['_text'] : 0);
-       this.deductionAndRemainForm.controls['us80gga'].setValue(this.isNotZero(deduction['ITRForm:Section80GGA'] ? (deduction['ITRForm:Section80GGA']['_text'] ? deduction['ITRForm:Section80GGA']['_text'] : 0) : 0));
+       this.deductionAndRemainForm.controls['us80gga'].setValue(this.isNotZero(deduction['ITRForm:Section80GGA']['_text']) ? deduction['ITRForm:Section80GGA']['_text'] : 0);
        this.deductionAndRemainForm.controls['us80ggc'].setValue(this.isNotZero(deduction['ITRForm:Section80GGC']['_text']) ? deduction['ITRForm:Section80GGC']['_text'] : 0);
      this.deductionAndRemainForm.controls['us80ttaTtb'].setValue(this.isNotZero(deduction['ITRForm:Section80TTA']['_text']) ? deduction['ITRForm:Section80TTA']['_text'] : 0);
        this.deductionAndRemainForm.controls['us80u'].setValue(this.isNotZero(deduction['ITRForm:Section80U']['_text']) ? deduction['ITRForm:Section80U']['_text'] : 0);
@@ -1708,7 +1825,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
    this.taxesPaid.tdsOnSal26QB = 0;
    this.taxesPaid.tcs = 0;
    this.taxesPaid.advanceSelfAssTax = 0;
-
+    debugger
     if (this.shortTermSlabRate && this.shortTermSlabRate.api && this.shortTermSlabRate.api.getRenderedNodes()) {
       for (let i = 0; i < this.shortTermSlabRate.api.getRenderedNodes().length; i++) {
         this.capital_Gain.shortTermCapitalGain = this.capital_Gain.shortTermCapitalGain + this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain;
@@ -2994,7 +3111,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
         field: 'netSaleVal',
         editable: true,
         width: 150,
-       // cellEditor: 'numericEditor',
+        cellEditor: 'numericEditor',
         suppressMovable: true,
       },
       {
@@ -3002,7 +3119,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
         field: 'purchaseCost',
         editable: true,
         width: 150,
-        //cellEditor: 'numericEditor',
+        cellEditor: 'numericEditor',
         suppressMovable: true,
       },
       {
@@ -3010,7 +3127,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
         field: 'capitalGain',
         editable: true,
         width: 120,
-        //cellEditor: 'numericEditor',
+        cellEditor: 'numericEditor',
         suppressMovable: true,
       },
       {
@@ -3018,7 +3135,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
         field: 'deduction',
         editable: true,
         width: 120,
-       // cellEditor: 'numericEditor',
+        cellEditor: 'numericEditor',
         suppressMovable: true,
       },
       {
@@ -3026,7 +3143,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
         field: 'netCapitalGain',
         editable: true,
         width: 150,
-        //cellEditor: 'numericEditor',
+        cellEditor: 'numericEditor',
         suppressMovable: true,
       },
       {
