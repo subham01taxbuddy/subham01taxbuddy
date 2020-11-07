@@ -517,7 +517,7 @@ export class Itr2mainComponent implements OnInit {
                  street: '',
                  pinCode: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:PinCode']['_text'],
                  country: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:CountryCode']['_text'] === "91" ? 'India' : '',
-                 state: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:StateCode'],
+                 state: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:StateCode']['_text'],
                  city: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:CityOrTownOrDistrict']['_text'],
                  ownerOfProperty: housingData[i]['ITRForm:PropertyOwner']['_text'] === "SE"? 'SELF' : '',
                  tenantName: '',//housingData[i]['ITRForm:ifLetOut']['_text'],
