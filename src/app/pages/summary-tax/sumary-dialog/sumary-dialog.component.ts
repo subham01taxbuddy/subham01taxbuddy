@@ -209,7 +209,7 @@ export class SumaryDialogComponent implements OnInit {
         taxableIncome: [0],       //hpStandardDeduction
         exemptIncome: [0],        //netHousePropertyIncome
         isEligibleFor80EE: [null],
-        ownerOfProperty: ['SELF'],
+        ownerOfProperty: ['SELF'], 
         otherOwnerOfProperty: ['NO'],
         tenant: [],
         coOwners: this.fb.array([]),
@@ -361,7 +361,7 @@ export class SumaryDialogComponent implements OnInit {
     this.summaryDialogForm.controls['interestAmount'].setValue(houseInfo.interestAmount)
     // this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.setValue(houseInfo.taxableIncome)
     // this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.setValue(houseInfo.exemptIncome)
-
+    console.log('summaryDialogForm: ',this.summaryDialogForm.value)
     console.log('houseProperties: ', this.summaryDialogForm['controls'].houseProperties)
     console.log('interestAmount: ',this.summaryDialogForm.controls['interestAmount'].value)
     if (houseInfo.coOwners instanceof Array) {
@@ -605,21 +605,24 @@ export class SumaryDialogComponent implements OnInit {
   }
 
   calNetHouseProIncome() {
+    debugger
     console.log("interestAmount: ", this.summaryDialogForm.controls['interestAmount'])
 
     console.log('annualValue: ', this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value)
    
     if (this.housingShow.isSOP) {
+      debugger
       //this.summaryDialogForm.controls['exemptIncome'].setValue(netHouseProIncome);
       var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - Number(this.summaryDialogForm['controls'].interestAmount.value);
     }
     else {
+      debugger
       // if (Number(this.summaryDialogForm['controls'].interestAmount.value) > 200000) {
       //   var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - 200000;
       // } else {
       //   var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - Number(this.summaryDialogForm['controls'].interestAmount.value);
       // }
-      var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - Number(this.summaryDialogForm['controls'].interestAmount.value);
+      var netHouseProIncome = Number(this.summaryDialogForm['controls'].houseProperties['controls'].annualValue.value) - Number(this.summaryDialogForm['controls'].houseProperties['controls'].exemptIncome.value) - Number(this.summaryDialogForm.controls['interestAmount'].value);//Number(this.summaryDialogForm['controls'].interestAmount.value);
     }
     this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.setValue(netHouseProIncome);
 
