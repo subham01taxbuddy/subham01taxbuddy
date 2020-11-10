@@ -1,37 +1,34 @@
-import { UtilsService } from 'app/services/utils.service';
-import { UserMsService } from 'app/services/user-ms.service';
 import { Component, OnInit } from '@angular/core';
-import { AddCallLogComponent } from 'app/shared/components/add-call-log/add-call-log.component';
 import { MatDialog } from '@angular/material';
+import { UserMsService } from 'app/services/user-ms.service';
+import { UtilsService } from 'app/services/utils.service';
+import { AddCallLogComponent } from 'app/shared/components/add-call-log/add-call-log.component';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
-import { FormControl, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-todays-calls',
-  templateUrl: './todays-calls.component.html',
-  styleUrls: ['./todays-calls.component.css']
+  selector: 'app-interested-clients',
+  templateUrl: './interested-clients.component.html',
+  styleUrls: ['./interested-clients.component.css']
 })
-export class TodaysCallsComponent implements OnInit {
-  callLogs = [];
+export class InterestedClientsComponent implements OnInit {
+  interestedClients = [];
   loading = false;
-  callingDate = new FormControl(new Date(), Validators.required);
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService) { }
 
   ngOnInit() {
-    this.getMyTodaysCalls();
+    this.getInterestedClients();
   }
-  getMyTodaysCalls() {
+
+  getInterestedClients() {
     const loggedInSme = JSON.parse(localStorage.getItem('UMD'));
     this.loading = true;
-    var date = new Date(this.callingDate.value).getTime() - (new Date().getTimezoneOffset() * 60 * 1000)
-    const param = `/call-status?date=${new Date(date).toISOString()}&scheduleCallEmail=${loggedInSme['USER_EMAIL']}&statusId=17`;
-    console.log(date)
+    const param = `/call-status?statusId=16`;
+    console.log(new Date().toISOString())
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('Call details', result);
       if (result instanceof Array && result.length > 0) {
-        this.callLogs = result;
+        this.interestedClients = result;
       } else {
-        this.callLogs = [];
         this.utilsService.showSnackBar('You dont have any calls today');
       }
       this.loading = false;
