@@ -2,29 +2,12 @@
 
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
-        <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>Select Date</mat-label>
-                    <input matInput [matDatepicker]="picker" class="input-field" placeholder="Select Calling Date"
-                        name="callingDate" [formControl]="callingDate" required>
-                    <mat-hint>Format: DD/MM/YYYY</mat-hint>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4">
-                <button style="border: none; cursor: pointer;background: transparent;" (click)="getMyTodaysCalls()"><i
-                        class="fa fa-search fa-2x" style="color: green;"></i></button>
-            </div>
-        </div>
-
         <div class="card__row" style="margin-top: 0px;">
             <div class="tab-panel items-tab card__col-xs-12">
                 <div class="tab-panel__content tab-panel__content_visible">
                     <div class="table product__table">
                         <div class="table__row  table__row_header ">
-                            <div class="table__cell product-row__cell-unit flex-15">
+                            <div class="table__cell product-row__cell-unit flex-10">
                                 <a class="table__sort-link">Client Name</a>
                             </div>
                             <div class="table__cell product-row__cell-unit flex-10">
@@ -33,8 +16,11 @@
                             <div class="table__cell product-row__cell-unit flex-50">
                                 <a class="table__sort-link">Last Call details</a>
                             </div>
-                            <div class="table__cell product-row__cell-unit flex-15">
-                                <a class="table__sort-link">Call At</a>
+                            <div class="table__cell product-row__cell-unit flex-10">
+                                <a class="table__sort-link">Called By</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit flex-10">
+                                <a class="table__sort-link">Called At</a>
                             </div>
 
                             <div class="table__cell product-row__cell-unit flex-10">
@@ -43,11 +29,11 @@
                         </div>
 
 
-                        <div *ngFor="let item of callLogs; let p=index">
+                        <div *ngFor="let item of interestedClients; let p=index">
                             <div class="table__row-item product-row" [class.table__row-disabled]="false">
                                 <div class="table__row product-row__main-variant">
                                     <!-- [style.background-color]="currentUserId === item.userId ? '#ebffe7':''" -->
-                                    <div class="table__cell product-row__cell-stock flex-15">
+                                    <div class="table__cell product-row__cell-stock flex-10">
                                         {{item.userName}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-10">
@@ -56,8 +42,11 @@
                                     <div class="table__cell product-row__cell-stock flex-50">
                                         {{item.description}}
                                     </div>
-                                    <div class="table__cell product-row__cell-stock flex-15">
-                                        {{item.scheduleCallTime | date :'dd MMM yyyy, hh:mm a'}}
+                                    <div class="table__cell product-row__cell-stock flex-10">
+                                        {{item.createdByName}}
+                                    </div>
+                                    <div class="table__cell product-row__cell-stock flex-10">
+                                        {{item.createdDate | date :'dd MMM yyyy, hh:mm a'}}
                                     </div>
 
                                     <div class="table__cell product-row__cell-stock flex-10">
