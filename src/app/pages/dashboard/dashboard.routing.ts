@@ -7,6 +7,7 @@ import { NewUserComponent } from './new-user/new-user.component';
 import { EngagementComponent } from './engagement/engagement.component';
 import { KommunicateComponent } from './engagement/kommunicate/kommunicate.component';
 import { WhatsappComponent } from './engagement/whatsapp/whatsapp.component';
+import { InterestedClientsComponent } from './interested-clients/interested-clients.component';
 
 const routes: Routes = [
     {
@@ -28,6 +29,7 @@ const routes: Routes = [
                     { path: '', redirectTo: 'todays-call', pathMatch: 'full' }
                 ]
             },
+            { path: 'interested-clients', component: InterestedClientsComponent },
             { path: '', redirectTo: 'new-user', pathMatch: 'full' }
         ]
     },

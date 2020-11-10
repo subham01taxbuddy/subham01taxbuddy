@@ -15,9 +15,10 @@ import { WhatsappComponent } from './engagement/whatsapp/whatsapp.component';
 import { SharedModule } from 'app/shared/shared.module';
 import { CallingBoardComponent } from './calling-board/calling-board.component';
 import { TodaysCallsComponent } from './calling-board/todays-calls/todays-calls.component';
+import { InterestedClientsComponent } from './interested-clients/interested-clients.component';
 
 @NgModule({
-    declarations: [DashboardComponent, NewUserComponent, EngagementComponent, KommunicateComponent, WhatsappComponent, CallingBoardComponent, TodaysCallsComponent],
+    declarations: [DashboardComponent, NewUserComponent, EngagementComponent, KommunicateComponent, WhatsappComponent, CallingBoardComponent, TodaysCallsComponent, InterestedClientsComponent],
     imports: [
         CommonModule,
         FormsModule,
