@@ -26,13 +26,13 @@ export class MailExceptionComponent implements OnInit {
   constructor(private userService: UserMsService, private route: Router, private utilService: ItrMsService) { }
 
   ngOnInit() {
-    //this.getMailExceptionUserByAgentId();
+    this.getMailExceptionUserByAgentId();
   }
 
-  getMailExceptionUserByAgentId(agentId){
+  getMailExceptionUserByAgentId(){
     this.showExceptionUser = true;
     this.loading = true;
-    let param = '/email-channel?assigneeId='+agentId;
+    let param = '/email-channel-exception';
     this.userService.getUserDetail(param).subscribe(responce=>{
       this.loading = false;
        console.log('responce ==> ',responce);
