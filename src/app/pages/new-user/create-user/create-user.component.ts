@@ -15,6 +15,9 @@ import { UtilsService } from "app/services/utils.service";
 export class CreateUserComponent implements OnInit {
   loading: boolean;
   signUpForm: FormGroup;
+  exceptionalUser: boolean = false;
+  exceptionalInfo: any;
+
   constructor(
     private fb: FormBuilder,
     private utilSerive: UtilsService,
@@ -32,13 +35,14 @@ export class CreateUserComponent implements OnInit {
       username: new FormControl("", Validators.required),
     });
 
-    var exceptionalInfo = JSON.parse(sessionStorage.getItem("exceptionalUser"));
-    console.log("exceptionalInfo: ", exceptionalInfo);
-    if (this.utilSerive.isNonEmpty(exceptionalInfo)) {
+    this.exceptionalInfo = JSON.parse(sessionStorage.getItem("exceptionalUser"));
+    console.log("exceptionalInfo: ", this.exceptionalInfo);
+    if (this.utilSerive.isNonEmpty(this.exceptionalInfo)) {
       this.signUpForm.controls["first_name"].setValue('');
       this.signUpForm.controls["last_name"].setValue('');
-      this.signUpForm.controls["email"].setValue(exceptionalInfo.email);
+      this.signUpForm.controls["email"].setValue(this.exceptionalInfo.email);
       this.signUpForm.controls["username"].setValue('');
+
     }
   }
 
@@ -60,8 +64,12 @@ export class CreateUserComponent implements OnInit {
       this.userService.postMethod(param, data).subscribe(
         (responce) => {
           console.log("create user responce: ", responce);
+          if(this.utilSerive.isNonEmpty(this.exceptionalInfo)) {
+            this.exceptionalUser = true;
+          }else{
+            this.exceptionalUser = false;
+          }
           this.loading = false;
-          this.signUpForm.reset();
           this.utilSerive.showSnackBar("User create succesfully.");
         },
         (error) => {
@@ -71,6 +79,23 @@ export class CreateUserComponent implements OnInit {
         }
       );
     }
+  }
+
+  uploadUserDocs(){
+    //https://uat-api.taxbuddy.com/gateway/kommunicate/upload-files?email={email}
+    this.loading = true;
+    let param = '/kommunicate/upload-files?email='+this.exceptionalInfo.email;
+    this.userService.getUserDetail(param).subscribe(responce=>{
+      console.log('Document upload responce: ',responce);
+      this.loading = false;
+      this.utilSerive.showSnackBar("Document upload successfully.");
+      this.exceptionalUser = false;
+    },
+    error=>{
+      console.log('Error :',error)
+      this.loading = false;
+      this.utilSerive.showSnackBar("Fail to upload document.");
+    })
   }
 
   ngOnDestroy(): void {
