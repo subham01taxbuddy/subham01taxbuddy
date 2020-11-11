@@ -43,7 +43,7 @@
                           {{item._id}}
                         </div>
                         <div class="table__cell product-row__cell-stock flex-20">
-                          {{item.groupId}}
+                          <a href="javascript:" (click)="redirectToKommunicate(item.groupId)">{{item.groupId}}</a>
                         </div>
                         <div class="table__cell product-row__cell-stock flex-30">
                           {{item.email}}
