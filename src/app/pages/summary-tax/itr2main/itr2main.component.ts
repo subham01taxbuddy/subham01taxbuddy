@@ -619,6 +619,7 @@ export class Itr2mainComponent implements OnInit {
 
     //Annexures: Salary
     if(itrData.hasOwnProperty('ITRForm:ScheduleS')){ 
+      debugger
       var salartInfo = itrData['ITRForm:ScheduleS'];
       console.log('salartInfo: ',salartInfo);
       var hra = 0;
@@ -627,19 +628,20 @@ export class Itr2mainComponent implements OnInit {
       // let salExemptUs10 = salartInfo['ITRForm:AllwncExemptUs10']['_text'];
       // console.log('salExemptUs10: ',salExemptUs10, ' type: ',typeof salExemptUs10);
       if(salartInfo.hasOwnProperty('ITRForm:AllwncExemptUs10')){
+        debugger
       //if(salExemptUs10['_text'] !== "0"){
         if(this.utilService.isNonEmpty(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'].length)){
           for(let i=0; i< salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'].length; i++){
             if(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(13A)"){
                 hra = salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalOthAmount']['_text'];
-            }else{
-              hra = 0;
             }
   
-            if((salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0)){
+            if((salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(5)")){  //? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0)
               lte = salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalOthAmount']['_text'];
-            }else{
-              lte = 0;
+            }
+
+            if((salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "OTH")){  //? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0)
+              other = salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalOthAmount']['_text'];
             }
   
            /* In other part -> 10(10B) First proviso / 10(10B) Second proviso / AnyOther <- not implimented because don't know exact keyWord */
@@ -647,14 +649,30 @@ export class Itr2mainComponent implements OnInit {
                 (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10A)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) ||
                 (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10AA)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10B)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) ||
                 (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10C)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10CC)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) ||
-                (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(14)(i)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(14)(ii)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) 
-                        //||(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0)
-                    )
+                (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(14)(i)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(14)(ii)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0))    //||(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0)
+                
                 {
                   other = other + Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalOthAmount']['_text']);
                 }
           }
           console.log('hra: ',hra,' lte: ',lte, ' other: ',other)
+        }
+        else{
+          if(salartInfo['ITRForm:AllwncExemptUs10'].hasOwnProperty('ITRForm:AllwncExemptUs10Dtls')){
+            if(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalNatureDesc']['_text'] === "10(13A)"){
+              hra = salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalOthAmount']['_text'];
+            }
+
+            if((salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalNatureDesc']['_text'] === "10(5)")){  //? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalNatureDesc']['_text']) : 0)
+            lte = salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalOthAmount']['_text'];
+            }
+
+           if(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalNatureDesc']['_text'] === "OTH" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalNatureDesc']['_text']) : 0) {
+              other = other + Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalOthAmount']['_text']);
+            }
+          }
+
+          console.log('ELSE PATH -> hra: ',hra,' lte: ',lte, ' other: ',other)
         }
       }
 
@@ -1787,7 +1805,7 @@ export class Itr2mainComponent implements OnInit {
  console.log('futureAndOptionInfo: ',futureAndOptionInfo);
  let futureAndOptionObj = {
   businessType: "FUTURES_AND_OPTIONS",
-  exemptIncome: 0,
+  exemptIncome: Number(futureAndOptionInfo['ITRForm:DirectExpensesTotal']['_text']),
   natureOfBusiness: '',
   taxableIncome: Number(futureAndOptionInfo['ITRForm:GrossProfitFrmBusProf']['_text']),
   tradeName:'',
@@ -1800,7 +1818,7 @@ let futureAndOptionPart = {
   minimumPresumptiveIncome: 0,			
   ownership: null,
   periodOfHolding: 0,
-  presumptiveIncome: Number(futureAndOptionInfo['ITRForm:DirectExpensesTotal']['_text']),				    	
+  presumptiveIncome: futureAndOptionInfo.hasOwnProperty('ITRForm:Purchases') ? Number(futureAndOptionInfo['ITRForm:Purchases']['_text']) : 0,				    	
   receipts: Number(futureAndOptionInfo['ITRForm:TotRevenueFrmOperations']['_text']),				     
   registrationNo: null,
   tonnageCapacity: 0
