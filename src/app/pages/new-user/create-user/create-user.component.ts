@@ -68,6 +68,15 @@ export class CreateUserComponent implements OnInit {
             this.exceptionalUser = true;
           }else{
             this.exceptionalUser = false;
+            this.signUpForm.reset();
+            this.signUpForm.controls["first_name"].clearValidators();
+            this.signUpForm.controls["first_name"].updateValueAndValidity();
+            this.signUpForm.controls["last_name"].clearValidators();
+            this.signUpForm.controls["last_name"].updateValueAndValidity();
+            this.signUpForm.controls["email"].clearValidators();
+            this.signUpForm.controls["email"].updateValueAndValidity();
+            this.signUpForm.controls["username"].clearValidators();
+            this.signUpForm.controls["username"].updateValueAndValidity();
           }
           this.loading = false;
           this.utilSerive.showSnackBar("User create succesfully.");
@@ -90,6 +99,15 @@ export class CreateUserComponent implements OnInit {
       this.loading = false;
       this.utilSerive.showSnackBar("Document upload successfully.");
       this.exceptionalUser = false;
+      this.signUpForm.reset();
+      this.signUpForm.controls["first_name"].clearValidators();
+      this.signUpForm.controls["first_name"].updateValueAndValidity();
+      this.signUpForm.controls["last_name"].clearValidators();
+      this.signUpForm.controls["last_name"].updateValueAndValidity();
+      this.signUpForm.controls["email"].clearValidators();
+      this.signUpForm.controls["email"].updateValueAndValidity();
+      this.signUpForm.controls["username"].clearValidators();
+      this.signUpForm.controls["username"].updateValueAndValidity();
     },
     error=>{
       console.log('Error :',error)

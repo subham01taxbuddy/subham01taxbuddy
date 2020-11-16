@@ -365,7 +365,12 @@ export class Itr2mainComponent implements OnInit {
       expenceIncomeOfothertThanSpeculativeFAndO: [],
     })
 
+    this.initaliseGridTable();
 
+    this.setItrType("2");          //Default set Summary itr type 2
+  }
+
+  initaliseGridTable(){
     this.shortTermCapGainSlabInConstructor();
     this.shortTermSlabRate.rowData = [];
     this.shortTermCapGain15PerConstructor();
@@ -385,8 +390,6 @@ export class Itr2mainComponent implements OnInit {
     this.taxColSource.rowData = [];
     this.otherThanTdsTcsCallInConstructor();
     this.advanceTax.rowData = [];
-
-    this.setItrType("2");
   }
 
   upload() {
@@ -423,6 +426,27 @@ export class Itr2mainComponent implements OnInit {
     this.deductionAndRemainForm.reset();
     this.otherSourceForm.reset();
     this.assetsLiabilitiesForm.reset();
+  //  // this.shortTermCapGainSlabInConstructor();
+  //   this.shortTermSlabRate.rowData = [];
+  //   // this.shortTermCapGain15PerConstructor();
+  //   this.shortTerm15Per.rowData = [];
+  //   // this.longTerCapGain10PerInConstructor();
+  //   this.longTerm10Per.rowData = [];
+  //   // this.longTerCapGain20PerInConstructor();
+  //   this.longTerm20Per.rowData = [];
+
+  //   // this.onSalaryCallInConstructor();
+  //   this.tdsOnSal.rowData = [];
+  //   // this.tdsOtherThanSalary16ACallInConstructor();
+  //   this.tdsOtherThanSal.rowData = [];
+  //   // this.tdsOtherThanSalary26QBCallInConstructor();
+  //   this.tdsSales26QB.rowData = [];
+  //   // this.tcsCallInConstructor();
+  //   this.taxColSource.rowData = [];
+  //   // this.otherThanTdsTcsCallInConstructor();
+  //   this.advanceTax.rowData = [];
+
+    //this.initaliseGridTable();
     
     
      if(itReturn.hasOwnProperty('ITR2FORM:ITR2')){
@@ -619,6 +643,7 @@ export class Itr2mainComponent implements OnInit {
 
     //Annexures: Salary
     if(itrData.hasOwnProperty('ITRForm:ScheduleS')){ 
+      debugger
       var salartInfo = itrData['ITRForm:ScheduleS'];
       console.log('salartInfo: ',salartInfo);
       var hra = 0;
@@ -627,19 +652,20 @@ export class Itr2mainComponent implements OnInit {
       // let salExemptUs10 = salartInfo['ITRForm:AllwncExemptUs10']['_text'];
       // console.log('salExemptUs10: ',salExemptUs10, ' type: ',typeof salExemptUs10);
       if(salartInfo.hasOwnProperty('ITRForm:AllwncExemptUs10')){
+        debugger
       //if(salExemptUs10['_text'] !== "0"){
         if(this.utilService.isNonEmpty(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'].length)){
           for(let i=0; i< salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'].length; i++){
             if(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(13A)"){
                 hra = salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalOthAmount']['_text'];
-            }else{
-              hra = 0;
             }
   
-            if((salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0)){
+            if((salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(5)")){  //? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0)
               lte = salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalOthAmount']['_text'];
-            }else{
-              lte = 0;
+            }
+
+            if((salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "OTH")){  //? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0)
+              other = salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalOthAmount']['_text'];
             }
   
            /* In other part -> 10(10B) First proviso / 10(10B) Second proviso / AnyOther <- not implimented because don't know exact keyWord */
@@ -647,14 +673,30 @@ export class Itr2mainComponent implements OnInit {
                 (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10A)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) ||
                 (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10AA)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10B)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) ||
                 (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10C)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(10CC)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) ||
-                (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(14)(i)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(14)(ii)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) 
-                        //||(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0)
-                    )
+                (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(14)(i)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(14)(ii)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0))    //||(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0) || (salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text'] === "10(6)" ? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalNatureDesc']['_text']) : 0)
+                
                 {
                   other = other + Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls'][i]['ITRForm:SalOthAmount']['_text']);
                 }
           }
           console.log('hra: ',hra,' lte: ',lte, ' other: ',other)
+        }
+        else{
+          if(salartInfo['ITRForm:AllwncExemptUs10'].hasOwnProperty('ITRForm:AllwncExemptUs10Dtls')){
+            if(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalNatureDesc']['_text'] === "10(13A)"){
+              hra = salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalOthAmount']['_text'];
+            }
+
+            if((salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalNatureDesc']['_text'] === "10(5)")){  //? Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalNatureDesc']['_text']) : 0)
+            lte = salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalOthAmount']['_text'];
+            }
+
+           if(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalNatureDesc']['_text'] === "OTH") {
+              other = other + Number(salartInfo['ITRForm:AllwncExemptUs10']['ITRForm:AllwncExemptUs10Dtls']['ITRForm:SalOthAmount']['_text']);
+            }
+          }
+
+          console.log('ELSE PATH -> hra: ',hra,' lte: ',lte, ' other: ',other)
         }
       }
 
@@ -904,6 +946,7 @@ export class Itr2mainComponent implements OnInit {
        this.updateCapitalGain(taxPaid); 
      }
 
+     debugger
      /////Short Term Capital Gain @ 15% {Equity}
      var shortCG15Per = itrData['ITRForm:ScheduleCGFor23']['ITRForm:ShortTermCapGainFor23'];
      console.log('shortCG15Per: ',shortCG15Per);
@@ -992,6 +1035,11 @@ export class Itr2mainComponent implements OnInit {
          taxPaid.longTermCapitalGainAt20Percent.push(longTerm20OtherAssetsObj);
          this.updateCapitalGain(taxPaid); 
        }
+       debugger
+
+       this.updateCapitalGain(taxPaid);
+      console.log('taxPaid ===> ',taxPaid)
+
 
 
     // Other Sources
@@ -1318,6 +1366,7 @@ export class Itr2mainComponent implements OnInit {
        }
       this.updateTaxDeductionAtSourceVal(taxPaidInfo);
      }
+     
 
 
      //TDS on Other than Salary
@@ -1330,7 +1379,7 @@ export class Itr2mainComponent implements OnInit {
              deductorTAN : tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TANOfDeductor']['_text'], 
              deductorName: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TDSCreditName']['_text'],
              totalAmountCredited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:GrossAmount']['_text'],
-             totalTdsDeposited: tdsOtherThanSalInfo['ITRForm:TotalTDSonOthThanSals']['_text']
+             totalTdsDeposited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TaxDeductCreditDtls']['ITRForm:TaxDeductedOwnHands']['_text']
           }
 
           taxPaidInfo.otherThanSalary16A.push(tdsOtherThanSalObj);
@@ -1341,7 +1390,7 @@ export class Itr2mainComponent implements OnInit {
           deductorTAN : tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TANOfDeductor']['_text'], 
              deductorName: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TDSCreditName']['_text'],
              totalAmountCredited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:GrossAmount']['_text'],
-             totalTdsDeposited: tdsOtherThanSalInfo['ITRForm:TotalTDSonOthThanSals']['_text']
+             totalTdsDeposited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TaxDeductCreditDtls']['ITRForm:TaxDeductedOwnHands']['_text']
         }
         taxPaidInfo.otherThanSalary16A.push(tdsOtherThanSalObj)
       }
@@ -1434,6 +1483,8 @@ export class Itr2mainComponent implements OnInit {
       }
      this.updateTaxDeductionAtSourceVal(taxPaidInfo);
     }
+    this.updateTaxDeductionAtSourceVal(taxPaidInfo);
+    console.log('taxPaidInfo == > ',taxPaidInfo)
 
     //Asset And Liabilites At The End Of The Year
     var totalIncome = itrData['ITRForm:PartB-TI']['ITRForm:GrossTotalIncome']['_text'];
@@ -1787,7 +1838,7 @@ export class Itr2mainComponent implements OnInit {
  console.log('futureAndOptionInfo: ',futureAndOptionInfo);
  let futureAndOptionObj = {
   businessType: "FUTURES_AND_OPTIONS",
-  exemptIncome: 0,
+  exemptIncome: Number(futureAndOptionInfo['ITRForm:DirectExpensesTotal']['_text']),
   natureOfBusiness: '',
   taxableIncome: Number(futureAndOptionInfo['ITRForm:GrossProfitFrmBusProf']['_text']),
   tradeName:'',
@@ -1800,7 +1851,7 @@ let futureAndOptionPart = {
   minimumPresumptiveIncome: 0,			
   ownership: null,
   periodOfHolding: 0,
-  presumptiveIncome: Number(futureAndOptionInfo['ITRForm:DirectExpensesTotal']['_text']),				    	
+  presumptiveIncome: futureAndOptionInfo.hasOwnProperty('ITRForm:Purchases') ? Number(futureAndOptionInfo['ITRForm:Purchases']['_text']) : 0,				    	
   receipts: Number(futureAndOptionInfo['ITRForm:TotRevenueFrmOperations']['_text']),				     
   registrationNo: null,
   tonnageCapacity: 0
@@ -4260,23 +4311,42 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
       if(taxPaidValue.onSalary.length > 0){
         // this.tdsOnSal.api.setRowData(this.setTdsRowDate(taxPaidValue.onSalary, 'onSalary'))
         this.tdsOnSal.api.setRowData(this.setTdsOnSalRowDate(taxPaidValue.onSalary))
+      }else{
+        let tdsInfo = [];
+        this.tdsOnSal.api.setRowData(tdsInfo);
       }
+
       if(taxPaidValue.otherThanSalary16A.length > 0){
         // this.tdsOtherThanSal.api.setRowData(this.setTdsRowDate(taxPaidValue.otherThanSalary16A, 'tdsOtherThanSal'))
         this.tdsOtherThanSal.api.setRowData(this.setTdsOtherThanSalRowDate(taxPaidValue.otherThanSalary16A))
+      }else{
+        let otherSal16=[];
+        this.tdsOtherThanSal.api.setRowData(otherSal16);
       }
+
       if(taxPaidValue.otherThanSalary26QB.length > 0){
         // this.tdsSales26QB.api.setRowData(this.setTdsRowDate(taxPaidValue.otherThanSalary26QB, 'tdsSales26QB'));
         this.tdsSales26QB.api.setRowData(this.setTdson26QbRowDate(taxPaidValue.otherThanSalary26QB))
+      }else{
+        let otherSal26 = [];
+        this.tdsSales26QB.api.setRowData(otherSal26);
       }
       
       if(taxPaidValue.tcs.length > 0){
         // this.advanceTax.api.setRowData(this.setTdsRowDate(taxPaidValue.tcs, 'taxColSource'))
         this.taxColSource.api.setRowData(this.setTcsRowDate(taxPaidValue.tcs))
+      }else{
+        let tcsInfo = []
+        this.taxColSource.api.setRowData(tcsInfo)
       }
+
       if(taxPaidValue.otherThanTDSTCS.length > 0){
         // this.taxColSource.api.setRowData(this.setTdsRowDate(taxPaidValue.otherThanTDSTCS, 'advanceTax'))
         this.advanceTax.api.setRowData(this.setOtherThanTcsRowDate(taxPaidValue.otherThanTDSTCS))
+      }
+      else{
+        let advanceInfo = [];
+        this.advanceTax.api.setRowData(advanceInfo);
       }
     }
   }
@@ -4370,20 +4440,37 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
   //   }
   // }
 
+  
   updateCapitalGain(caitalGainData){
     console.log('caitalGainData: ',caitalGainData);
       if(this.utilService.isNonEmpty(caitalGainData)){
         if(caitalGainData.shortTermCapitalGain.length > 0){
           this.shortTermSlabRate.api.setRowData(this.setCapitalGainRowDate(caitalGainData.shortTermCapitalGain))
         }
+        else{
+          let rowData = [];
+          this.shortTermSlabRate.api.setRowData(rowData)
+        }
         if(caitalGainData.shortTermCapitalGainAt15Percent.length > 0){
           this.shortTerm15Per.api.setRowData(this.setCapitalGainRowDate(caitalGainData.shortTermCapitalGainAt15Percent))
+        }
+        else{
+         let rowData = [];
+         this.shortTerm15Per.api.setRowData(rowData);
         }
         if(caitalGainData.longTermCapitalGainAt10Percent.length > 0){
           this.longTerm10Per.api.setRowData(this.setCapitalGainRowDate(caitalGainData.longTermCapitalGainAt10Percent))
         }
+        else{
+         let rowData = [];
+         this.longTerm10Per.api.setRowData(rowData);
+        }
         if(caitalGainData.longTermCapitalGainAt20Percent.length > 0){
           this.longTerm20Per.api.setRowData(this.setCapitalGainRowDate(caitalGainData.longTermCapitalGainAt20Percent))
+        }
+        else{
+          let rowData = [];
+          this.longTerm20Per.api.setRowData(rowData);
         }
       }
   }
