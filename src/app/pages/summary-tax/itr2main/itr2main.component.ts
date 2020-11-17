@@ -426,27 +426,6 @@ export class Itr2mainComponent implements OnInit {
     this.deductionAndRemainForm.reset();
     this.otherSourceForm.reset();
     this.assetsLiabilitiesForm.reset();
-  //  // this.shortTermCapGainSlabInConstructor();
-  //   this.shortTermSlabRate.rowData = [];
-  //   // this.shortTermCapGain15PerConstructor();
-  //   this.shortTerm15Per.rowData = [];
-  //   // this.longTerCapGain10PerInConstructor();
-  //   this.longTerm10Per.rowData = [];
-  //   // this.longTerCapGain20PerInConstructor();
-  //   this.longTerm20Per.rowData = [];
-
-  //   // this.onSalaryCallInConstructor();
-  //   this.tdsOnSal.rowData = [];
-  //   // this.tdsOtherThanSalary16ACallInConstructor();
-  //   this.tdsOtherThanSal.rowData = [];
-  //   // this.tdsOtherThanSalary26QBCallInConstructor();
-  //   this.tdsSales26QB.rowData = [];
-  //   // this.tcsCallInConstructor();
-  //   this.taxColSource.rowData = [];
-  //   // this.otherThanTdsTcsCallInConstructor();
-  //   this.advanceTax.rowData = [];
-
-    //this.initaliseGridTable();
     
     
      if(itReturn.hasOwnProperty('ITR2FORM:ITR2')){
@@ -583,60 +562,60 @@ export class Itr2mainComponent implements OnInit {
          }
        }
 
-      //  var houceObj = {
-      //   annualOfPropOwned: 0,
-      //   annualValue: 0,
-      //   annualValueXml: 0,
-      //   building: '',
-      //   city: "",
-      //   coOwners: [],
-      //   country: "",
-      //   exemptIncome: 0,
-      //   flatNo: "",
-      //   grossAnnualRentReceived: 0,
-      //   grossAnnualRentReceivedXml: 0,
-      //   isEligibleFor80EE: null,
-      //   loans: [],
-      //   locality: "",
-      //   otherOwnerOfProperty: "",
-      //   ownerOfProperty: "",
-      //   pinCode: '',
-      //   propertyTax: 0,
-      //   propertyTaxXml: 0,
-      //   propertyType: "",
-      //   state: "",
-      //   street: "",
-      //   taxableIncome: 0,
-      //   tenant: []
-      //  }
-      //   for(let i=0; i< this.housingData.length; i++){
-      //     houceObj.coOwners = [];
-      //     houceObj.loans = [];
-      //     houceObj.tenant = [];
-      //     Object.assign(houceObj, this.housingData[i]);
-      //     if(this.utilService.isNonEmpty(this.housingData[i].interestAmount)){
-      //       let loanObj ={
-      //         interestAmount: this.housingData[i].interestAmount,
-      //         loanType: "HOUSING",
-      //         principalAmount: 0
-      //       }
-      //       houceObj.loans.push(loanObj);
-      //     }
+       var houceObj = {
+        annualOfPropOwned: 0,
+        annualValue: 0,
+        annualValueXml: 0,
+        building: '',
+        city: "",
+        coOwners: [],
+        country: "",
+        exemptIncome: 0,
+        flatNo: "",
+        grossAnnualRentReceived: 0,
+        grossAnnualRentReceivedXml: 0,
+        isEligibleFor80EE: null,
+        loans: [],
+        locality: "",
+        otherOwnerOfProperty: "",
+        ownerOfProperty: "",
+        pinCode: '',
+        propertyTax: 0,
+        propertyTaxXml: 0,
+        propertyType: "",
+        state: "",
+        street: "",
+        taxableIncome: 0,
+        tenant: []
+       }
+        for(let i=0; i< this.housingData.length; i++){
+          houceObj.coOwners = [];
+          houceObj.loans = [];
+          houceObj.tenant = [];
+          Object.assign(houceObj, this.housingData[i]);
+          if(this.utilService.isNonEmpty(this.housingData[i].interestAmount)){
+            let loanObj ={
+              interestAmount: this.housingData[i].interestAmount,
+              loanType: "HOUSING",
+              principalAmount: 0
+            }
+            houceObj.loans.push(loanObj);
+          }
   
-      //     if(this.utilService.isNonEmpty(this.housingData[i].tenantName) && this.utilService.isNonEmpty(this.housingData[i].tenentPanNumber)){
-      //       let tenantObj ={
-      //         name: this.housingData[i].tenantName,
-      //         panNumber: this.housingData[i].tenentPanNumber
-      //       }
-      //       houceObj.tenant.push(tenantObj);
-      //     }
+          if(this.utilService.isNonEmpty(this.housingData[i].tenantName) && this.utilService.isNonEmpty(this.housingData[i].tenentPanNumber)){
+            let tenantObj ={
+              name: this.housingData[i].tenantName,
+              panNumber: this.housingData[i].tenentPanNumber
+            }
+            houceObj.tenant.push(tenantObj);
+          }
 
-      //    // this.houseArray.push(houceObj);
-      //    this.houseArray.splice(i, 0, houceObj);
-      //    console.log('After push houce obj => ',this.houseArray)
-      //   }
+         // this.houseArray.push(houceObj);
+         this.houseArray.splice(i, 0, houceObj);
+         console.log('After push houce obj => ',this.houseArray)
+        }
 
-      //   console.log('After xml parsing houseArray => ',this.houseArray);
+        console.log('After xml parsing houseArray => ',this.houseArray);
     }
       
 
@@ -751,140 +730,140 @@ export class Itr2mainComponent implements OnInit {
       }
       
 //SAGAR
-      // var employerObj={
-      //   address: "",
-      //   allowance: [],
-      //   city: "",
-      //   country: '',
-      //   deductions: [],
-      //   employerCategory: "",
-      //   employerName: "",
-      //   employerPAN: '',
-      //   employerTAN: "",
-      //   grossSalary: 0,
-      //   id: '',
-      //   netSalary: 0,
-      //   periodFrom: null,
-      //   periodTo: null,
-      //   perquisites: [],
-      //   pinCode: "",
-      //   profitsInLieuOfSalaryType: [],
-      //   salary: [],
-      //   standardDeduction: 0,
-      //   state: "",
-      //   taxRelief: 0,
-      //   taxableIncome: 0
-      // }
+      var employerObj={
+        address: "",
+        allowance: [],
+        city: "",
+        country: '',
+        deductions: [],
+        employerCategory: "",
+        employerName: "",
+        employerPAN: '',
+        employerTAN: "",
+        grossSalary: 0,
+        id: '',
+        netSalary: 0,
+        periodFrom: null,
+        periodTo: null,
+        perquisites: [],
+        pinCode: "",
+        profitsInLieuOfSalaryType: [],
+        salary: [],
+        standardDeduction: 0,
+        state: "",
+        taxRelief: 0,
+        taxableIncome: 0
+      }
 
-      // this.employerArray = [];
-      // for(let i=0; i< this.salaryItrratedData.length; i++){
-      //   debugger
-      //   console.log('employerArray : ',this.employerArray);
-      //   employerObj.allowance = [];
-      //   employerObj.deductions = [];
-      //   employerObj.perquisites = [];
-      //   employerObj.profitsInLieuOfSalaryType = [];
-      //   employerObj.salary = [];
-      //   console.log('salaryItrratedData : ',this.salaryItrratedData);
-      //   console.log('salaryItrratedData '+i+' position: ',this.salaryItrratedData[i]);
-      //   Object.assign(employerObj, this.salaryItrratedData[i]);
-      //   console.log('employerObj after salaryItrared basic binding : ',employerObj);
+      this.employerArray = [];
+      for(let i=0; i< this.salaryItrratedData.length; i++){
+        debugger
+        console.log('employerArray : ',this.employerArray);
+        employerObj.allowance = [];
+        employerObj.deductions = [];
+        employerObj.perquisites = [];
+        employerObj.profitsInLieuOfSalaryType = [];
+        employerObj.salary = [];
+        console.log('salaryItrratedData : ',this.salaryItrratedData);
+        console.log('salaryItrratedData '+i+' position: ',this.salaryItrratedData[i]);
+        Object.assign(employerObj, this.salaryItrratedData[i]);
+        console.log('employerObj after salaryItrared basic binding : ',employerObj);
 
-      //   console.log('employerArray : ',this.employerArray);
-      //   //allowance
-      //   if(this.utilService.isNonEmpty(this.salaryItrratedData[i].houseRentAllow) && this.salaryItrratedData[i].houseRentAllow !== 0){
-      //     let houceAllowObj = {
-      //       allowanceType: "HOUSE_RENT",
-      //       description: null,
-      //       exemptAmount: Number(this.salaryItrratedData[i].houseRentAllow),
-      //       taxableAmount: 0
-      //     }
-      //     employerObj.allowance.push(houceAllowObj)
-      //   }
-      //   if(this.utilService.isNonEmpty(this.salaryItrratedData[i].leaveTravelExpense) && this.salaryItrratedData[i].leaveTravelExpense !== 0){
-      //     let ltaAllowObj = {
-      //       allowanceType: "LTA",
-      //       description: null,
-      //       exemptAmount: Number(this.salaryItrratedData[i].leaveTravelExpense),
-      //       taxableAmount: 0
-      //     }
-      //     employerObj.allowance.push(ltaAllowObj)
-      //   }
-      //   if(this.utilService.isNonEmpty(this.salaryItrratedData[i].other) && this.salaryItrratedData[i].other !== 0){
-      //     let otherAllowObj = {
-      //       allowanceType: "ANY_OTHER",
-      //       description: null,
-      //       exemptAmount: Number(this.salaryItrratedData[i].other),
-      //       taxableAmount: 0
-      //     }
-      //     employerObj.allowance.push(otherAllowObj)
-      //   }
-      //   if(this.utilService.isNonEmpty(this.salaryItrratedData[i].totalExemptAllow) && this.salaryItrratedData[i].totalExemptAllow !== 0){
-      //     let totalExeAllowObj = {
-      //       allowanceType: "ALL_ALLOWANCES",
-      //       description: null,
-      //       exemptAmount: Number(this.salaryItrratedData[i].totalExemptAllow),
-      //       taxableAmount: 0
-      //     }
-      //     employerObj.allowance.push(totalExeAllowObj)
-      //   }
+        console.log('employerArray : ',this.employerArray);
+        //allowance
+        if(this.utilService.isNonEmpty(this.salaryItrratedData[i].houseRentAllow) && this.salaryItrratedData[i].houseRentAllow !== 0){
+          let houceAllowObj = {
+            allowanceType: "HOUSE_RENT",
+            description: null,
+            exemptAmount: Number(this.salaryItrratedData[i].houseRentAllow),
+            taxableAmount: 0
+          }
+          employerObj.allowance.push(houceAllowObj)
+        }
+        if(this.utilService.isNonEmpty(this.salaryItrratedData[i].leaveTravelExpense) && this.salaryItrratedData[i].leaveTravelExpense !== 0){
+          let ltaAllowObj = {
+            allowanceType: "LTA",
+            description: null,
+            exemptAmount: Number(this.salaryItrratedData[i].leaveTravelExpense),
+            taxableAmount: 0
+          }
+          employerObj.allowance.push(ltaAllowObj)
+        }
+        if(this.utilService.isNonEmpty(this.salaryItrratedData[i].other) && this.salaryItrratedData[i].other !== 0){
+          let otherAllowObj = {
+            allowanceType: "ANY_OTHER",
+            description: null,
+            exemptAmount: Number(this.salaryItrratedData[i].other),
+            taxableAmount: 0
+          }
+          employerObj.allowance.push(otherAllowObj)
+        }
+        if(this.utilService.isNonEmpty(this.salaryItrratedData[i].totalExemptAllow) && this.salaryItrratedData[i].totalExemptAllow !== 0){
+          let totalExeAllowObj = {
+            allowanceType: "ALL_ALLOWANCES",
+            description: null,
+            exemptAmount: Number(this.salaryItrratedData[i].totalExemptAllow),
+            taxableAmount: 0
+          }
+          employerObj.allowance.push(totalExeAllowObj)
+        }
        
-      //   //deduction
-      //   if(this.utilService.isNonEmpty(this.salaryItrratedData[i].entertainAllow) && this.salaryItrratedData[i].entertainAllow !== 0){
-      //     let entertainAllowObj = {
-      //       deductionType: "ENTERTAINMENT_ALLOW",
-      //       description: null,
-      //       exemptAmount: Number(this.salaryItrratedData[i].entertainAllow),
-      //       taxableAmount: 0
-      //     }
-      //     employerObj.deductions.push(entertainAllowObj)
-      //   }
-      //   if(this.utilService.isNonEmpty(this.salaryItrratedData[i].professionalTax) && this.salaryItrratedData[i].professionalTax !== 0){
-      //     let professionalTaxObj = {
-      //       deductionType: "PROFESSIONAL_TAX",
-      //       description: null,
-      //       exemptAmount: Number(this.salaryItrratedData[i].professionalTax),
-      //       taxableAmount: 0
-      //     }
-      //     employerObj.deductions.push(professionalTaxObj)
-      //   }
+        //deduction
+        if(this.utilService.isNonEmpty(this.salaryItrratedData[i].entertainAllow) && this.salaryItrratedData[i].entertainAllow !== 0){
+          let entertainAllowObj = {
+            deductionType: "ENTERTAINMENT_ALLOW",
+            description: null,
+            exemptAmount: Number(this.salaryItrratedData[i].entertainAllow),
+            taxableAmount: 0
+          }
+          employerObj.deductions.push(entertainAllowObj)
+        }
+        if(this.utilService.isNonEmpty(this.salaryItrratedData[i].professionalTax) && this.salaryItrratedData[i].professionalTax !== 0){
+          let professionalTaxObj = {
+            deductionType: "PROFESSIONAL_TAX",
+            description: null,
+            exemptAmount: Number(this.salaryItrratedData[i].professionalTax),
+            taxableAmount: 0
+          }
+          employerObj.deductions.push(professionalTaxObj)
+        }
 
-      //   //Salary( as per sec 17(1)) 
-      //   if(this.utilService.isNonEmpty(this.salaryItrratedData[i].salAsPerSec171) && this.salaryItrratedData[i].salAsPerSec171 !== 0){
-      //     let sal17Obj = {
-      //       description: null,
-      //       exemptAmount: 0,
-      //       salaryType: "SEC17_1",
-      //       taxableAmount: Number(this.salaryItrratedData[i].salAsPerSec171)
-      //     }
-      //     employerObj.salary.push(sal17Obj)
-      //   }
-      //   //Perquist val( as per sec 17(2)) 
-      //   if(this.utilService.isNonEmpty(this.salaryItrratedData[i].valOfPerquisites) && this.salaryItrratedData[i].valOfPerquisites !== 0){
-      //     let valOfPerqu17Obj = {
-      //       description: null,
-      //       exemptAmount: 0,
-      //       salaryType: "SEC17_2",
-      //       taxableAmount: Number(this.salaryItrratedData[i].valOfPerquisites)
-      //     }
-      //     employerObj.perquisites.push(valOfPerqu17Obj)
-      //   }
-      //   //Profit in ilu( as per sec 17(3)) 
-      //   if(this.utilService.isNonEmpty(this.salaryItrratedData[i].profitInLieu) && this.salaryItrratedData[i].profitInLieu !== 0){
-      //     let profitsInLieuObj = {
-      //       description: null,
-      //       exemptAmount: 0,
-      //       salaryType: "SEC17_3",
-      //       taxableAmount: Number(this.salaryItrratedData[i].profitInLieu)
-      //     }
-      //     employerObj.profitsInLieuOfSalaryType.push(profitsInLieuObj)
-      //   }
-      //   debugger
-      //   console.log('employerArray ',this.employerArray)
-      //   this.employerArray.splice(i, 0, employerObj)
-      //   console.log('employerArray '+i+' position => ',this.employerArray)
-      // }
-      // console.log('After binding SALARY data in employerArray => ',this.employerArray)
+        //Salary( as per sec 17(1)) 
+        if(this.utilService.isNonEmpty(this.salaryItrratedData[i].salAsPerSec171) && this.salaryItrratedData[i].salAsPerSec171 !== 0){
+          let sal17Obj = {
+            description: null,
+            exemptAmount: 0,
+            salaryType: "SEC17_1",
+            taxableAmount: Number(this.salaryItrratedData[i].salAsPerSec171)
+          }
+          employerObj.salary.push(sal17Obj)
+        }
+        //Perquist val( as per sec 17(2)) 
+        if(this.utilService.isNonEmpty(this.salaryItrratedData[i].valOfPerquisites) && this.salaryItrratedData[i].valOfPerquisites !== 0){
+          let valOfPerqu17Obj = {
+            description: null,
+            exemptAmount: 0,
+            salaryType: "SEC17_2",
+            taxableAmount: Number(this.salaryItrratedData[i].valOfPerquisites)
+          }
+          employerObj.perquisites.push(valOfPerqu17Obj)
+        }
+        //Profit in ilu( as per sec 17(3)) 
+        if(this.utilService.isNonEmpty(this.salaryItrratedData[i].profitInLieu) && this.salaryItrratedData[i].profitInLieu !== 0){
+          let profitsInLieuObj = {
+            description: null,
+            exemptAmount: 0,
+            salaryType: "SEC17_3",
+            taxableAmount: Number(this.salaryItrratedData[i].profitInLieu)
+          }
+          employerObj.profitsInLieuOfSalaryType.push(profitsInLieuObj)
+        }
+        debugger
+        console.log('employerArray ',this.employerArray)
+        this.employerArray.splice(i, 0, employerObj)
+        console.log('employerArray '+i+' position => ',this.employerArray)
+      }
+      console.log('After binding SALARY data in employerArray => ',this.employerArray)
     }
 
 
