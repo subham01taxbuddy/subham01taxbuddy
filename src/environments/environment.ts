@@ -26,6 +26,16 @@ export const environment = {
 		authenticationFlowType: 'USER_PASSWORD_AUTH'
 	},
 	botIds: ["vaibhav.gaikwad@ssbainnovations.com", "ashish.hulwan@ssbainnovations.com", "dev_kommunicate@ssbainnovations.com", "ashish-upylx", "kommunicate-dev-cgvmc",
-		"txbdycustomchat-kjbxd", "vaibhav-zpyuj", "welcome-6mb0j"]
-};
+		"txbdycustomchat-kjbxd", "vaibhav-zpyuj", "welcome-6mb0j"],
 
+	agentId: [ 	{"label" : "ashish", "value" : "ashish.hulwan@ssbainnovations.com"},
+				{"label" : "vaibhav", "value" : "vaibhav.gaikwad@ssbainnovations.com"},
+				{"label" : "dev_kommunicate", "value" : "dev_kommunicate@ssbainnovations.com"},
+				{"label" : "testkommunicate", "value" : "testkommunicate@ssbainnovations.com"},
+				{"label" : "barakha", "value" : "barakha@ssbainnovations.com"},
+				{"label" : "karan", "value" : "karan@ssbainnovations.com"},
+				{"label" : "uat.agent1", "value" : "uat.agent1@taxbuddy.com"},
+				{"label" : "uatagent2", "value" : "uatagent2@taxbuddy.com"},
+				{"label" : "uatagent3", "value" : "uatagent3@taxbuddy.com"}
+			]
+};

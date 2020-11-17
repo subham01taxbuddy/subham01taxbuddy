@@ -1,0 +1,75 @@
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+
+<div class="main clearfix" style="padding-top: 0px">
+  <div class="card">
+      
+    <!-- <div class="card__row">
+        <label>Selected Agent for exception email user: </label> &nbsp;&nbsp;
+        <span *ngFor="let agent of agentList; let i=index">
+            <a href="javascript:;" (click)="getMailExceptionUserByAgentId(agent.value)">{{agent.label}}</a> &nbsp;&nbsp;
+        </span>
+    </div> 
+    <br><br>-->
+
+    <div *ngIf="showExceptionUser" class="card__row" style="margin-top: 0px;">
+      <div class="tab-panel items-tab card__col-xs-12">
+        <div class="tab-panel__content tab-panel__content_visible">
+          <div class="table product__table">
+            <div class="table__row  table__row_header ">
+             
+              <div class="table__cell product-row__cell-unit flex-30">
+                <a class="table__sort-link">Id</a>
+              </div>
+              <div class="table__cell product-row__cell-unit flex-20">
+                <a class="table__sort-link">Group id</a>
+              </div>
+              <div class="table__cell product-row__cell-unit flex-30">
+                <a class="table__sort-link">Email</a>
+              </div>
+              <div class="table__cell product-row__cell-unit flex-20">
+                <a class="table__sort-link">Action</a>
+              </div>
+            </div>
+
+
+            <div *ngIf="mailExceptionUser.length > 0">
+                <div *ngFor="let item of mailExceptionUser; let i=index ">
+                    <div class="table__row-item product-row" [class.table__row-disabled]="false">
+                      <div class="table__row product-row__main-variant">
+                        <div class="table__cell product-row__cell-stock flex-30">
+                          {{item._id}}
+                        </div>
+                        <div class="table__cell product-row__cell-stock flex-20">
+                          <a href="javascript:" (click)="redirectToKommunicate(item.groupId)">{{item.groupId}}</a>
+                        </div>
+                        <div class="table__cell product-row__cell-stock flex-30">
+                          {{item.email}}
+                        </div>
+                        <div class="table__cell product-row__cell-stock flex-20">
+                         <button class="btn" (click)="createNewUser(mailExceptionUser[i])">Create User</button>  <!--<i class="fa fa-user" aria-hidden="true"></i>-->
+                        </div>
+                        
+                        <!-- <div class="table__cell product-row__cell-stock flex-20">
+                          <button type="submit" class="btn" style="border: none;" (click)="startFiling(item)">Start
+                            Filing</button>
+                        </div> -->
+                      </div>
+                    </div>
+                  </div>
+            </div>
+            
+            <br><br>
+            <div *ngIf="mailExceptionUser.length === 0">
+                <label style="font-size: 15px; margin-left: 350px;">No records available for selected agent</label>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

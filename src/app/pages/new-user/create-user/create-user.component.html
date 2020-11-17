@@ -1,0 +1,143 @@
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+
+<div class="main clearfix" style="padding-top: 0px">
+  <!-- <div class="card__col-xs-6 card__col-sm-6"> -->
+    <div class="card">
+      <h3 class="form-header">Enter User Details To Sign-up</h3>
+      <form [formGroup]="signUpForm">
+        <div class="card__row">
+          <div class="card__col-xs-12 card__col-sm-7">
+            <mat-form-field appearance="outline">
+              <mat-label>First Name</mat-label>
+              <input
+                autofocus="true"
+                matInput
+                type="text"
+                placeholder="Enter first name"
+                formControlName="first_name"
+                name="firstName"
+                required
+                maxLength="50"
+                pattern="\s*[a-zA-Z]*\s*$"
+              />
+
+              <mat-error
+                class="error-msg"
+                *ngIf="signUpForm.controls['first_name'].hasError('required')"
+                >First name is required</mat-error
+              >
+              <mat-error
+                class="error-msg"
+                *ngIf="signUpForm.controls['first_name'].hasError('pattern')"
+                >Please enter a valid first name</mat-error
+              >
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Last Name</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Enter last name"
+                formControlName="last_name"
+                name="lastName"
+                required
+                maxLength="50"
+                pattern="\s*[a-zA-Z]*\s*$"
+              />
+
+              <mat-error
+                class="error-msg"
+                *ngIf="signUpForm.controls['last_name'].hasError('required')"
+                >Last name is required</mat-error
+              >
+              <mat-error
+                class="error-msg"
+                *ngIf="signUpForm.controls['last_name'].hasError('pattern')"
+                >Please enter a valid last name</mat-error
+              >
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Mobile Number</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Enter mobile number"
+                formControlName="username"
+                name="mobile"
+                pattern="[0-9]{10}"
+                maxLength="10"
+                required
+              />
+
+              <mat-error
+                class="error-msg"
+                *ngIf="signUpForm.controls['username'].hasError('required')"
+                >Mobile number is required</mat-error
+              >
+              <mat-error
+                class="error-msg"
+                *ngIf="signUpForm.controls['username'].hasError('pattern')"
+                >Please enter a valid mobile no.</mat-error
+              >
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Email Address</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Enter email address"
+                formControlName="email"
+                name="mobile"
+                pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+                maxLength="50"
+                required
+              />
+
+              <mat-error
+                class="error-msg"
+                *ngIf="signUpForm.controls['email'].hasError('required')"
+                >Email address is required</mat-error
+              >
+              <mat-error
+                class="error-msg"
+                *ngIf="signUpForm.controls['email'].hasError('pattern')"
+                >Please enter a valid email address.</mat-error
+              >
+            </mat-form-field>
+
+            <br /><br />
+            <button class="btn" style="border: none" (click)="userSignUp()">
+              User Sign-up
+            </button>&nbsp;&nbsp;&nbsp;
+
+            <button *ngIf="exceptionalUser"  class="btn" style="border: none" (click)="uploadUserDocs()">
+              Upload Email Exception user Document
+           </button>
+          </div>
+        </div>
+      </form>
+
+      <br /><br />
+      
+    <!-- </div> -->
+  </div>
+
+  <!-- <div class="card__col-xs-6 card__col-sm-6">
+    <div class="card">
+      <h3 class="form-header">New USer Details</h3>
+
+
+
+      <br /><br />
+        <button class="btn" style="border: none" (click)="uploadUserDocs()">
+           Upload Email Exception user Document
+        </button>
+    </div>
+  </div> -->
+</div>
