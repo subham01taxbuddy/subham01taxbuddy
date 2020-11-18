@@ -80,6 +80,7 @@ export class CreateUserComponent implements OnInit {
           }
           this.loading = false;
           this.utilSerive.showSnackBar("User create succesfully.");
+          this.clearFromExceptionList(data.email);
         },
         (error) => {
           this.loading = false;
@@ -88,6 +89,18 @@ export class CreateUserComponent implements OnInit {
         }
       );
     }
+  }
+
+  clearFromExceptionList(mail){
+    console.log('Mail -> ',mail);
+    //https://uat-api.taxbuddy.com/gateway/email-channel/exception/delete?email={email}
+    let param = '/gateway/email-channel/exception/delete?email='+mail;
+    this.userService.deleteMethod(param).subscribe(responce=>{
+      console.log('Responce : ',responce);
+      
+    },error=>{
+        console.log('Error while clear email from exmail exception list: ',error.error);
+    })
   }
 
   uploadUserDocs(){
