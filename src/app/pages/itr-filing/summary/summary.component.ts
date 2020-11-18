@@ -302,7 +302,7 @@ export class SummaryComponent implements OnInit {
     }
   }
   downloadXML() {
-    if (this.taxable === 0) {
+    //if (this.taxable === 0) {
       this.loading = true;
       const param = `/api/downloadXml?itrId=${this.ITR_JSON.itrId}`;
       this.itrMsService.downloadXML(param).subscribe(result => {
@@ -326,7 +326,7 @@ export class SummaryComponent implements OnInit {
           // this.router.navigate(['ack/failure']);
         }
       });
-    }
+    //}
   }
 
   sendPdf(channel) {
