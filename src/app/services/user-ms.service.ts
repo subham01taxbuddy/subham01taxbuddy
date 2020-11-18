@@ -105,4 +105,16 @@ export class UserMsService {
     console.log('Post Param', param);
     return this.httpClient.post<T>(`${environment.url}${this.microService}${param[0]}`, param[1], { headers: this.headers });
   }
+
+  deleteMethod(...param){
+      this.headers = new HttpHeaders();
+      this.headers.append('Content-Type', 'application/json');
+      const userData = JSON.parse(localStorage.getItem('UMD'));
+      const TOKEN = (userData) ? userData.id_token : null;
+      this.headers.append('Authorization', 'Bearer ' + TOKEN);
+      
+      return this.httpClient.delete(environment.url + param[0], this.headers);
+        //  .map(response => response.json());
+  
+  }
 }
