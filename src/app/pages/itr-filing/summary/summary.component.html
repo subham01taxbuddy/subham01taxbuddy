@@ -1924,8 +1924,8 @@
             [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"
             style="background-color: red;"> File
             ITR</button>
-        <button type="button" (click)="downloadXML()" class="btn grBut" [disabled]="taxable && taxable > 0"
-             style="background-color: orange;">  <!--[style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"-->
+        <button type="button" (click)="downloadXML()" class="btn grBut"
+             style="background-color: orange;">  <!--  [disabled]="taxable && taxable > 0" [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"-->
             Download XML</button><!-- *ngIf="ITR_JSON.isDefective === 'Y'" -->
         <button type="button" (click)="downloadPDF()" class="btn grBut"> Download PDF</button>
 
