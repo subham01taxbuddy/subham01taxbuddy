@@ -13,9 +13,9 @@ import { AddCallLogComponent } from 'app/shared/components/add-call-log/add-call
 })
 export class KommunicateComponent implements OnInit {
   kmChats = [];
-  page = 1; // current page
+  page = 0; // current page
   count = 0; // total elements
-  pageSize = 10; // number of items in each page
+  pageSize = 20; // number of items in each page
   agentId = '';
   agentList = [
     { value: 'brij@ssbainnovations.com', label: 'Brij' },
@@ -48,11 +48,12 @@ export class KommunicateComponent implements OnInit {
   }
   retrieveKommunicateChat(page) {
     this.loading = true;
-    const param = `/user-engagment-km?size=${this.pageSize}&agentId=${this.agentId}&page=${page - 1}`;
+    // const param = `/user-engagment-km?size=${this.pageSize}&agentId=${this.agentId}&page=${page - 1}`;
+    const param = `/user-engagment-km-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('KM Engagement data', result);
-      this.kmChats = result.content;
-      this.count = result.totalElements;
+      this.kmChats = result;
+      // this.count = result.totalElements;
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -67,6 +68,7 @@ export class KommunicateComponent implements OnInit {
   }
   selectAgent(agentName) {
     this.agentId = agentName;
+    this.page = 0;
     this.retrieveKommunicateChat(0);
   }
 
@@ -84,7 +86,7 @@ export class KommunicateComponent implements OnInit {
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.name
+        clientName: client.FirstName + ' ' + client.LastName
       }
     })
 
@@ -100,9 +102,9 @@ export class KommunicateComponent implements OnInit {
       height: 'auto',
       data: {
         userId: client.userId,
-        userName: client.name,
-        userMobile: client.mobileNumber,
-        userEmail: client['email'],
+        clientName: client.FirstName + ' ' + client.LastName,
+        userMobile: client.Phone,
+        userEmail: client['Email'],
       }
     })
     disposable.afterClosed().subscribe(result => {
@@ -110,4 +112,14 @@ export class KommunicateComponent implements OnInit {
     });
 
   }
+
+  previous() {
+    this.page = (this.page - 1) * this.pageSize;
+    this.retrieveKommunicateChat(this.page);
+  }
+  next() {
+    this.page = (this.page + 1) * this.pageSize;
+    this.retrieveKommunicateChat(this.page);
+  }
+
 }
