@@ -88,6 +88,7 @@ export class AddCallLogComponent implements OnInit {
       statusName: ['', Validators.required],
       scheduleCallTime: [''],
       scheduleCallEmail: [(loggedInSme && loggedInSme['USER_EMAIL']) || ''],
+      scheduleCallName: [''],
       description: ['', Validators.compose([Validators.required])],
       reason: [''],
       createdByName: [(loggedInSme && (loggedInSme['USER_F_NAME'] + ' ' + loggedInSme['USER_L_NAME'])) || '']
@@ -97,10 +98,15 @@ export class AddCallLogComponent implements OnInit {
   addCallLog() {
     this.callLogForm.controls['statusName'].setValue(this.statusMaster.filter(item => item.value === this.callLogForm.controls['statusId'].value)[0].label);
     if (this.callLogForm.controls['statusId'].value !== 17) {
+      this.callLogForm.controls['scheduleCallName'].setValue('');
       this.callLogForm.controls['scheduleCallEmail'].setValue('');
     }
     console.log(this.callLogForm.value);
     if (this.callLogForm.valid) {
+      const callerDetails = this.smeList.filter(item => item.email === this.callLogForm.controls['scheduleCallEmail'].value)
+      if (callerDetails.length > 0) {
+        this.callLogForm.controls['scheduleCallName'].setValue(callerDetails[0].name);
+      }
       this.loading = true;
       const param = "/call-status";
       this.userMsService.postMethod(param, this.callLogForm.value).subscribe((res: any) => {
