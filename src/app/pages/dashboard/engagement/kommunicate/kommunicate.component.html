@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
@@ -7,16 +7,12 @@
             <span *ngFor="let agent of agentList; let i=index">
                 <a href="javascript:;" (click)="selectAgent(agent.value)">{{agent.label}}</a> &nbsp;&nbsp;
             </span>
-            <!-- <span style="float: right;">Total Chats: {{count}}</span> -->
         </div>
         <div class="card__row" style="margin-top: 0px;">
             <div class="tab-panel items-tab card__col-xs-12">
                 <div class="tab-panel__content tab-panel__content_visible">
                     <div class="table product__table">
                         <div class="table__row  table__row_header ">
-                            <!--  <div class="table__cell product-row__cell-unit flex-5">
-                                <a class="table__sort-link">User Id</a>
-                            </div> -->
                             <div class="table__cell product-row__cell-unit flex-15">
                                 <a class="table__sort-link">Name</a>
                             </div>
@@ -37,17 +33,8 @@
 
 
                         <div *ngFor="let item of kmChats; let p=index ">
-                            <!--  | paginate : {
-                        itemsPerPage: pageSize,
-                  currentPage: page,
-                  totalItems: count
-                      } -->
                             <div class="table__row-item product-row" [class.table__row-disabled]="false">
                                 <div class="table__row product-row__main-variant">
-                                    <!-- [style.background-color]="currentUserId === item.userId ? '#ebffe7':''" -->
-                                    <!--  <div class="table__cell product-row__cell-stock flex-5">
-                                        {{item.userId}}
-                                    </div> -->
                                     <div class="table__cell product-row__cell-stock flex-15">
                                         {{item.sourceAsMap.FirstName + ' '+item.sourceAsMap.LastName}}
                                     </div>
@@ -81,8 +68,93 @@
                                 [style.cursor]="this.page === 0 ? 'not-allowed':'pointer'" [disabled]="this.page === 0"
                                 (click)="previous()">Previous</button>
                             <button class="btn" style="border: none; cursor: pointer;" (click)="next()">Next</button>
-                            <!-- <pagination-controls previousLabel="Prev" nextLabel="Next" responsive="true"
-                                (pageChange)="handlePageChange($event)"></pagination-controls> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="main clearfix" style="padding-top: 0px;">
+    <div class="card">
+        <div class="card__row">
+            <label>Selected Agent: {{agentId}}</label> &nbsp;&nbsp;
+            <span *ngFor="let agent of agentList; let i=index">
+                <a href="javascript:;" (click)="selectAgent(agent.value)">{{agent.label}}</a> &nbsp;&nbsp;
+            </span>
+            <span style="float: right;">Total Chats: {{count}}</span>
+        </div>
+        <div class="card__row" style="margin-top: 0px;">
+            <div class="tab-panel items-tab card__col-xs-12">
+                <div class="tab-panel__content tab-panel__content_visible">
+                    <div class="table product__table">
+                        <div class="table__row  table__row_header ">
+                            <!--  <div class="table__cell product-row__cell-unit flex-5">
+                                <a class="table__sort-link">User Id</a>
+                            </div> -->
+                            <div class="table__cell product-row__cell-unit flex-15">
+                                <a class="table__sort-link">Name</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit flex-10">
+                                <a class="table__sort-link">Mobile</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit flex-45">
+                                <a class="table__sort-link">Last Message</a>
+                            </div>
+                            <div class="table__cell product-row__cell-unit flex-15">
+                                <a class="table__sort-link">Time date</a>
+                            </div>
+
+                            <div class="table__cell product-row__cell-unit flex-15">
+                                <a class="table__sort-link">Action</a>
+                            </div>
+                        </div>
+
+
+                        <div *ngFor="let item of kmChats | paginate : {
+                        itemsPerPage: pageSize,
+                  currentPage: page,
+                  totalItems: count
+                      }; let p=index ">
+                            <div class="table__row-item product-row" [class.table__row-disabled]="false">
+                                <div class="table__row product-row__main-variant">
+                                    <!-- [style.background-color]="currentUserId === item.userId ? '#ebffe7':''" -->
+                                    <!--  <div class="table__cell product-row__cell-stock flex-5">
+                                        {{item.userId}}
+                                    </div> -->
+                                    <div class="table__cell product-row__cell-stock flex-15">
+                                        {{item.name}}
+                                    </div>
+                                    <div class="table__cell product-row__cell-stock flex-10">
+                                        {{item.mobileNumber}}
+                                    </div>
+                                    <div class="table__cell product-row__cell-stock flex-45">
+                                        {{item.lastMessage}}
+                                    </div>
+                                    <div class="table__cell product-row__cell-stock flex-15">
+                                        {{item.lastMessageDate | date :'dd MMM yyyy, hh:mm a'}}
+                                    </div>
+
+                                    <div class="table__cell product-row__cell-stock flex-15">
+                                        <button style="border: none; cursor: pointer;background: transparent;"
+                                            (click)="startChat(item.chatLink)"><i class="fa fa-comments-o"
+                                                style="color: green; font-size: 18px;"></i></button>
+                                        | <button style="border: none; cursor: pointer;background: transparent;"
+                                            (click)="showNotes(item)" title="Click see/add notes"><i class="fa fa-book"
+                                                style="font-size: 18px;"></i></button>
+                                        | <button style="border: none; cursor: pointer;background: transparent;"
+                                            (click)="addCallLogs(item)" title="Add call logs"><i class="fa fa-phone"
+                                                style="font-size: 18px;"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <pagination-controls previousLabel="Prev" nextLabel="Next" responsive="true"
+                                (pageChange)="handlePageChange($event)"></pagination-controls>
                         </div>
                     </div>
                 </div>
