@@ -14,9 +14,9 @@ import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.
 export class NewUserComponent implements OnInit {
   userList = [];
 
-  page = 1; // current page
+  page = 0; // current page
   count = 0; // total pages
-  pageSize = 10; // number of items in each page
+  pageSize = 20; // number of items in each page
   // pageSizes = [3, 6, 9];
   agentId = '';
   agentList = [
@@ -34,16 +34,16 @@ export class NewUserComponent implements OnInit {
   constructor(private userMsService: UserMsService, public utilsService: UtilsService,
     private dialog: MatDialog) {
     this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
-    if (!environment.production) {
-      this.agentList = [
-        { value: 'ashish.hulwan@ssbainnovations.com', label: 'Ashish' },
-        { value: 'vaibhav.gaikwad@ssbainnovations.com', label: 'Vaibhav' },
-        { value: 'dev_kommunicate@ssbainnovations.com', label: 'Dev Komm' },
-        { value: 'barakha@ssbainnovations.com', label: 'Barakha' },
-        { value: 'karan@ssbainnovations.com', label: 'Karan' },
-        { value: 'testkommunicate@ssbainnovations.com', label: 'Ajay' }
-      ];
-    }
+    // if (!environment.production) {
+    //   this.agentList = [
+    //     { value: 'ashish.hulwan@ssbainnovations.com', label: 'Ashish' },
+    //     { value: 'vaibhav.gaikwad@ssbainnovations.com', label: 'Vaibhav' },
+    //     { value: 'dev_kommunicate@ssbainnovations.com', label: 'Dev Komm' },
+    //     { value: 'barakha@ssbainnovations.com', label: 'Barakha' },
+    //     { value: 'karan@ssbainnovations.com', label: 'Karan' },
+    //     { value: 'testkommunicate@ssbainnovations.com', label: 'Ajay' }
+    //   ];
+    // }
   }
 
   ngOnInit() {
@@ -52,11 +52,12 @@ export class NewUserComponent implements OnInit {
 
   retrieveNewUsers(page) {
     this.loading = true;
-    const param = `/user-allocation?size=${this.pageSize}&agentId=${this.agentId}&page=${page - 1}`;
+    // const param = `/user-allocation?size=${this.pageSize}&agentId=${this.agentId}&page=${page - 1}`;
+    const param = `/user-allocation-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('New User data', result);
-      this.userList = result.userAllocationDetails;
-      this.count = result.totalElements;
+      this.userList = result;
+      // this.count = result.totalElements;
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -71,12 +72,20 @@ export class NewUserComponent implements OnInit {
   }
   selectAgent(agentName) {
     this.agentId = agentName;
+    this.page = 0;
     this.retrieveNewUsers(0);
   }
-
+  previous() {
+    this.page = (this.page - 1) * this.pageSize;
+    this.retrieveNewUsers(this.page);
+  }
+  next() {
+    this.page = (this.page + 1) * this.pageSize;
+    this.retrieveNewUsers(this.page);
+  }
   startConversation(user) {
     this.loading = true;
-    const param = `/create-km-groupid?userId=${user.userId}&agentId=${user.kmAssigneeId}`;
+    const param = `/create-km-groupid?userId=${user.userId}&agentId=${user.KommunicateAssigneeId}`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('Chat Created Result: ', result);
       this.loading = false;
@@ -117,7 +126,7 @@ export class NewUserComponent implements OnInit {
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.name
+        clientName: client.FirstName + ' ' + client.LastName
       }
     })
 
@@ -133,9 +142,9 @@ export class NewUserComponent implements OnInit {
       height: 'auto',
       data: {
         userId: client.userId,
-        userName: client.name,
-        userMobile: client.mobileNumber,
-        userEmail: client['email'],
+        userName: client.FirstName + ' ' + client.LastName,
+        userMobile: client.Phone,
+        userEmail: client['Email'],
       }
     })
     disposable.afterClosed().subscribe(result => {
