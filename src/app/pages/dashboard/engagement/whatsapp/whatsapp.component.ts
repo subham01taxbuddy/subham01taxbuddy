@@ -48,11 +48,12 @@ export class WhatsappComponent implements OnInit {
   }
   retrieveKommunicateChat(page) {
     this.loading = true;
-    const param = `/user-engagment-wa?size=${this.pageSize}&agentId=${this.agentId}&page=${page - 1}`;
+    // const param = `/user-engagment-wa?size=${this.pageSize}&agentId=${this.agentId}&page=${page - 1}`;
+    const param = `/user-engagment-wa-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('KM Engagement data', result);
-      this.kmChats = result.content;
-      this.count = result.totalElements;
+      this.kmChats = result;
+      // this.count = result.totalElements;
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -67,6 +68,7 @@ export class WhatsappComponent implements OnInit {
   }
   selectAgent(agentName) {
     this.agentId = agentName;
+    this.page = 0;
     this.retrieveKommunicateChat(0);
   }
 
@@ -89,7 +91,7 @@ export class WhatsappComponent implements OnInit {
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.name
+        clientName: client.FirstName + ' ' + client.LastName
       }
     })
 
@@ -104,13 +106,22 @@ export class WhatsappComponent implements OnInit {
       height: 'auto',
       data: {
         userId: client.userId,
-        userName: client.name,
-        userMobile: client.mobileNumber,
-        userEmail: client['email'],
+        clientName: client.FirstName + ' ' + client.LastName,
+        userMobile: client.Phone,
+        userEmail: client['Email'],
       }
     })
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
+
+  previous() {
+    this.page = (this.page - 1) * this.pageSize;
+    this.retrieveKommunicateChat(this.page);
+  }
+  next() {
+    this.page = (this.page + 1) * this.pageSize;
+    this.retrieveKommunicateChat(this.page);
   }
 }
