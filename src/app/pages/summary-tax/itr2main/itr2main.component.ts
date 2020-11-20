@@ -1242,7 +1242,9 @@ export class Itr2mainComponent implements OnInit {
 
     }
 
-    if(itrData['ITRForm:ScheduleVIA']['ITRForm:DeductUndChapVIA'].hasOwnProperty('ITRForm:Section80GGA')){
+    if(itrData.hasOwnProperty('ITRForm:ScheduleVIA')){
+      if(itrData['ITRForm:ScheduleVIA']['ITRForm:DeductUndChapVIA'].hasOwnProperty('ITRForm:Section80GGA')){
+
         var donationTypePolicalInfo = Number(itrData['ITRForm:ScheduleVIA']['ITRForm:DeductUndChapVIA']['ITRForm:Section80GGA']['_text']);
           if(donationTypePolicalInfo !== 0){
             let donation80GPlioticalObj = {
@@ -1309,6 +1311,8 @@ export class Itr2mainComponent implements OnInit {
      if(this.itrType.itrThree){
       this.deductionAndRemainForm.controls['us80jja'].setValue(this.isNotZero(deduction['ITRForm:Section80C']['_text']) ? deduction['ITRForm:Section80C']['_text'] : 0);
      }
+    }
+    
 
 
      var taxPaidInfo={

@@ -7,7 +7,7 @@
             <span *ngFor="let agent of agentList; let i=index">
                 <a href="javascript:;" (click)="selectAgent(agent.value)">{{agent.label}}</a> &nbsp;&nbsp;
             </span>
-            <span style="float: right;">Total Chats: {{count}}</span>
+            <!-- <span style="float: right;">Total Chats: {{count}}</span> -->
         </div>
         <div class="card__row" style="margin-top: 0px;">
             <div class="tab-panel items-tab card__col-xs-12">
@@ -36,11 +36,12 @@
                         </div>
 
 
-                        <div *ngFor="let item of kmChats | paginate : {
+                        <div *ngFor="let item of kmChats; let p=index ">
+                            <!--  | paginate : {
                         itemsPerPage: pageSize,
                   currentPage: page,
                   totalItems: count
-                      }; let p=index ">
+                      } -->
                             <div class="table__row-item product-row" [class.table__row-disabled]="false">
                                 <div class="table__row product-row__main-variant">
                                     <!-- [style.background-color]="currentUserId === item.userId ? '#ebffe7':''" -->
@@ -48,35 +49,40 @@
                                         {{item.userId}}
                                     </div> -->
                                     <div class="table__cell product-row__cell-stock flex-15">
-                                        {{item.name}}
+                                        {{item.sourceAsMap.FirstName + ' '+item.sourceAsMap.LastName}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-10">
-                                        {{item.mobileNumber}}
+                                        {{item.sourceAsMap.Phone}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-45">
-                                        {{item.lastMessage}}
+                                        {{item.sourceAsMap.Kommunicate.webhookResponse.message}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-15">
-                                        {{item.lastMessageDate | date :'dd MMM yyyy, hh:mm a'}}
+                                        {{item.sourceAsMap.Kommunicate.webhookResponse.timeStamp | date :'dd MMM yyyy, hh:mm a'}}
                                     </div>
 
                                     <div class="table__cell product-row__cell-stock flex-15">
                                         <button style="border: none; cursor: pointer;background: transparent;"
-                                            (click)="startChat(item.chatLink)"><i class="fa fa-comments-o"
+                                            (click)="startChat(item.sourceAsMap.KommunicateURL)"><i
+                                                class="fa fa-comments-o"
                                                 style="color: green; font-size: 18px;"></i></button>
                                         | <button style="border: none; cursor: pointer;background: transparent;"
-                                            (click)="showNotes(item)" title="Click see/add notes"><i class="fa fa-book"
-                                                style="font-size: 18px;"></i></button>
+                                            (click)="showNotes(item.sourceAsMap)" title="Click see/add notes"><i
+                                                class="fa fa-book" style="font-size: 18px;"></i></button>
                                         | <button style="border: none; cursor: pointer;background: transparent;"
-                                            (click)="addCallLogs(item)" title="Add call logs"><i class="fa fa-phone"
-                                                style="font-size: 18px;"></i></button>
+                                            (click)="addCallLogs(item.sourceAsMap)" title="Add call logs"><i
+                                                class="fa fa-phone" style="font-size: 18px;"></i></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <pagination-controls previousLabel="Prev" nextLabel="Next" responsive="true"
-                                (pageChange)="handlePageChange($event)"></pagination-controls>
+                            <button class="btn" style="border: none;"
+                                [style.cursor]="this.page === 0 ? 'not-allowed':'pointer'" [disabled]="this.page === 0"
+                                (click)="previous()">Previous</button>
+                            <button class="btn" style="border: none; cursor: pointer;" (click)="next()">Next</button>
+                            <!-- <pagination-controls previousLabel="Prev" nextLabel="Next" responsive="true"
+                                (pageChange)="handlePageChange($event)"></pagination-controls> -->
                         </div>
                     </div>
                 </div>

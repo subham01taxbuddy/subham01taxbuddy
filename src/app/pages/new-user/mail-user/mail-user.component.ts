@@ -14,7 +14,7 @@ export class MailUserComponent implements OnInit {
   agentList = environment.agentId;
 
   mailUser: any = [];
-
+  public displayedColumns = ['Name', 'Mobile Number', 'Email', 'Assign Id', 'Date'];
   constructor(private userService: UserMsService) { }
 
   ngOnInit() {
