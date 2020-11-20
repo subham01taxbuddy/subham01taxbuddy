@@ -4726,7 +4726,13 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
 
           Object.assign(this.itr_2_Summary, this.deductionAndRemainForm.value)
 
-        // Tax deducted at Sources
+        // Tax deducted at Sources 
+        this.tdsOnSalInfo = [];
+        this.otherThanSalary16AInfo = [];
+        this.otherThanSalary26QBInfo = [];
+        this.taxCollSourcesInfo = [];
+        this.advanceSelfAssTaxInfo = [];
+
           console.log('tdsOnSal data: ',this.tdsOnSal.api.getRenderedNodes())
           if(this.tdsOnSal.api.getRenderedNodes().length > 0){
             for (let i = 0; i < this.tdsOnSal.api.getRenderedNodes().length; i++) {
