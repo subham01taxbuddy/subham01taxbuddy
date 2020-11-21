@@ -458,7 +458,10 @@ export class Itr2mainComponent implements OnInit {
        this.getCityData(this.personalInfoForm['controls'].pinCode, 'profile');
        this.personalInfoForm.controls['email'].setValue(personalInfo['ITRForm:Address']['ITRForm:EmailAddress']['_text']);
        this.personalInfoForm.controls['contactNumber'].setValue(personalInfo['ITRForm:Address']['ITRForm:MobileNo']['_text'])
-       this.personalInfoForm.controls['aadharNumber'].setValue(personalInfo['ITRForm:AadhaarCardNo']['_text']);
+       if(personalInfo.hasOwnProperty('ITRForm:AadhaarCardNo')){
+        this.personalInfoForm.controls['aadharNumber'].setValue(personalInfo['ITRForm:AadhaarCardNo']['_text']);
+       }
+       
        let dob = new Date(personalInfo['ITRForm:DOB']['_text']);
        console.log('dateOfBirth : ',dob)
        this.personalInfoForm.controls['dateOfBirth'].setValue(dob);
