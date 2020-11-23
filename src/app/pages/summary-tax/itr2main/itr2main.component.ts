@@ -1452,7 +1452,7 @@ export class Itr2mainComponent implements OnInit {
              bsrCode : advTaxInfo['ITRForm:TaxPayment'][i]['ITRForm:BSRCode']['_text'], 
              dateOfDeposit: advTaxInfo['ITRForm:TaxPayment'][i]['ITRForm:DateDep']['_text'],
              challanNumber: advTaxInfo['ITRForm:TaxPayment'][i]['ITRForm:SrlNoOfChaln']['_text'],
-             totalTax: advTaxInfo['ITRForm:TotalTaxPayments']['_text']
+             totalTax: advTaxInfo['ITRForm:TaxPayment'][i]['ITRForm:Amt']['_text']
           }
 
           taxPaidInfo.otherThanTDSTCS.push(advTaxObj);
@@ -1463,7 +1463,7 @@ export class Itr2mainComponent implements OnInit {
              bsrCode : advTaxInfo['ITRForm:TaxPayment']['ITRForm:BSRCode']['_text'], 
              dateOfDeposit: advTaxInfo['ITRForm:TaxPayment']['ITRForm:DateDep']['_text'],
              challanNumber: advTaxInfo['ITRForm:TaxPayment']['ITRForm:SrlNoOfChaln']['_text'],
-             totalTax: advTaxInfo['ITRForm:TotalTaxPayments']['_text']
+             totalTax: advTaxInfo['ITRForm:TaxPayment']['ITRForm:Amt']['_text']
         }
         taxPaidInfo.otherThanTDSTCS.push(advTaxObj)
       }
