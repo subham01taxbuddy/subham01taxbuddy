@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
-<!-- <div class="main clearfix" style="padding-top: 0px;">
+<div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
         <div class="card__row">
             <label>Selected Agent: {{agentId}}</label> &nbsp;&nbsp;
@@ -80,9 +80,9 @@
             </div>
         </div>
     </div>
-</div> -->
+</div>
 
-<div class="main clearfix" style="padding-top: 0px;">
+<!-- <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
         <div class="card__row">
             <label>Selected Agent: {{agentId}}</label> &nbsp;&nbsp;
@@ -126,7 +126,6 @@
                             <div class="table__row-item product-row"
                                 [class.table__row-disabled]="item.platform === 'WhatsApp'">
                                 <div class="table__row product-row__main-variant">
-                                    <!-- [style.background-color]="currentUserId === item.userId ? '#ebffe7':''" -->
                                     <div class="table__cell product-row__cell-stock flex-10">
                                         {{item.userId}}
                                     </div>
@@ -143,7 +142,6 @@
                                         {{item.platform}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-20">
-                                        <!--  *ngIf="item.platform === 'WebSite' || item.platform === 'WEB'" -->
                                         <button style="border: none; cursor: pointer;background: transparent;"
                                             (click)="startConversation(item)" title="Click to start conversation"><i
                                                 class="fa fa-comments-o"
@@ -155,18 +153,6 @@
                                             (click)="addCallLogs(item)" title="Add call logs"><i class="fa fa-phone"
                                                 style="font-size: 18px;"></i></button>
                                     </div>
-                                    <!-- <div class="table__cell product-row__cell-stock flex-20"
-                                        *ngIf="item.platform !== 'WebSite' && item.platform !== 'WEB'">
-
-                                        <button style="border: none; cursor: pointer;background: transparent;"
-                                            (click)="startConversation(item)" title="Click send push notifications"><i
-                                                class="fa fa-paper-plane" aria-hidden="true"
-                                                style="color: green; font-size: 18px;"></i></button>
-
-                                        | <button style="border: none; cursor: pointer;background: transparent;"
-                                            (click)="showNotes(item)" title="Click see/add notes"><i class="fa fa-book"
-                                                style="font-size: 18px;"></i></button>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -179,4 +165,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
