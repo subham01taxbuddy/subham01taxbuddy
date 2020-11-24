@@ -990,7 +990,7 @@
                                             <!--[value]="sourcesOfIncome.interestFromOther"   (blur)="setOtherSourceIncomeValue($event.target.value,'other')"-->
                                     </mat-form-field>
                                 </div>
-                                <div class="card__col-lg-3">
+                                <!-- <div class="card__col-lg-3">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Agriculture income</mat-label>
                                         <input matInput placeholder="Agriculture income" maxlength="8" autocomplete="off"
@@ -1007,7 +1007,7 @@
                                              (blur)="calculateOtherSourceTotal()"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                     </mat-form-field>
-                                </div>
+                                </div> -->
                                 <div class="card__col-lg-3">
                                     <mat-form-field appearance="outline">
                                         <mat-label><b>Total Income from Other sources</b></mat-label>
@@ -1413,7 +1413,7 @@
                         <mat-card>
                             <!-- <form [formGroup]="exemptIncomeForm"> -->
                             <div class="card__row">
-                                <div class="card__col-lg-3">
+                                <div class="card__col-lg-2">
                                     <mat-form-field appearance="outline">
                                         <mat-label>PPF Interest</mat-label>
                                         <input matInput placeholder="PPF Interest"
@@ -1423,7 +1423,7 @@
                                             autocomplete="off" (blur)="setTotalOfExempt()">
                                     </mat-form-field>
                                 </div>
-                                <div class="card__col-lg-3">
+                                <div class="card__col-lg-2">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Gift from relative</mat-label>
                                         <input matInput placeholder="Gift from relative"
@@ -1433,7 +1433,7 @@
                                             autocomplete="off" (blur)="setTotalOfExempt()">
                                     </mat-form-field>
                                 </div>
-                                <div class="card__col-lg-3">
+                                <div class="card__col-lg-2">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Any other</mat-label>
                                         <input matInput placeholder="Any other" maxlength="8" type="number"
@@ -1443,13 +1443,32 @@
                                             autocomplete="off" (blur)="setTotalOfExempt()">
                                     </mat-form-field>
                                 </div>
-                                <div class="card__col-lg-3">
+                                <div class="card__col-lg-2">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Agriculture income</mat-label>
+                                        <input matInput placeholder="Agriculture income" maxlength="8" autocomplete="off"
+                                             formControlName="agricultureIncome"
+                                             (blur)="setTotalOfExempt()"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-lg-2">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Dividend Income</mat-label>
+                                        <input matInput placeholder="Dividend Income" maxlength="8" autocomplete="off"
+                                              formControlName="dividendIncome"
+                                             (blur)="setTotalOfExempt()"  
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"> <!--calculateOtherSourceTotal-->
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-lg-2">
                                     <mat-form-field appearance="outline">
                                         <mat-label><b>Total</b></mat-label>
                                         <input matInput placeholder="Total" maxlength="8" readonly autocomplete="off"
                                          [value]="totalOfExcempt">
                                     </mat-form-field> 
                                 </div>
+                                
                                 <!-- </form> -->
                             </div>
                            
