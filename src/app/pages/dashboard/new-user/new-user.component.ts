@@ -73,11 +73,12 @@ export class NewUserComponent implements OnInit {
     this.retrieveNewUsers(0);
   }
   previous() {
-    this.page = (this.page - 1) * this.pageSize;
+    this.page = this.page - this.pageSize;
     this.retrieveNewUsers(this.page);
   }
   next() {
-    this.page = (this.page + 1) * this.pageSize;
+    this.page = this.page + this.pageSize;
+    console.log('clicked on next:', this.page)
     this.retrieveNewUsers(this.page);
   }
   startConversation(user) {

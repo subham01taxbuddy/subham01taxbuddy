@@ -117,11 +117,11 @@ export class WhatsappComponent implements OnInit {
   }
 
   previous() {
-    this.page = (this.page - 1) * this.pageSize;
+    this.page = this.page - this.pageSize;
     this.retrieveKommunicateChat(this.page);
   }
   next() {
-    this.page = (this.page + 1) * this.pageSize;
+    this.page = this.page + this.pageSize;
     this.retrieveKommunicateChat(this.page);
   }
 }
