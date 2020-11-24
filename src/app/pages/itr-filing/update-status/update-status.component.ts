@@ -18,6 +18,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 })
 export class UpdateStatusComponent implements OnInit {
   fillingStatus = new FormControl('', Validators.required);
+  currentUrl: any = '';
   // ITR_JSON: ITR_JSON;
   @Input('userId') userId: any;
   @Output() sendValue = new EventEmitter<any>();
@@ -178,15 +179,20 @@ export class UpdateStatusComponent implements OnInit {
   ]
 
   constructor(private userMsService: UserMsService, public utilsService: UtilsService, private route: Router, private dialog: MatDialog,
-    private _toastMessageService: ToastMessageService) {
+    private _toastMessageService: ToastMessageService, private router: Router) {
     // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
   ngOnInit() {
-    this.getFilingStatus();
+    if (this.currentUrl === '/pages/itr-filing/customer-profile') {
+      this.getFilingStatus();
+    }
     // this.getUserProfile();
   }
-
+  ngAfterContentChecked() {
+    this.currentUrl = this.router.url;
+    console.log('My Current url in update status:', this.currentUrl)
+  }
   getFilingStatus() {
     const param = `/itr-status?userId=${this.userId}&assessmentYear=${AppConstants.ayYear}`;
     this.userMsService.getMethod(param).subscribe(result => {
