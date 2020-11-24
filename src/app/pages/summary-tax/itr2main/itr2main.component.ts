@@ -79,8 +79,8 @@ export class Itr2mainComponent implements OnInit {
     interestFromDeposite : 0,
     interestFromTaxRefund : 0,
     other : 0,
-    agricultureIncome : 0,
-    dividendIncome: 0,
+    // agricultureIncome : 0,
+    // dividendIncome: 0,
     total : 0
   };
 
@@ -207,8 +207,8 @@ export class Itr2mainComponent implements OnInit {
       interestFromDeposite: [''],
       interestFromTaxRefund: [''],
       other: [''],
-      agricultureIncome: [''],
-      dividendIncome: [''],
+      // agricultureIncome: [''],
+      // dividendIncome: [''],
       total: ['']
     })
 
@@ -238,7 +238,9 @@ export class Itr2mainComponent implements OnInit {
 
       ppfInterest: [''],
       giftFromRelative: [''],
-      anyOtherExcemptIncome: ['']
+      anyOtherExcemptIncome: [''],
+      agricultureIncome: [''],
+      dividendIncome: ['']
     });
 
     // this.deductionAndRemainForm = this.fb.group({
@@ -912,7 +914,6 @@ export class Itr2mainComponent implements OnInit {
         taxPaid.shortTermCapitalGain.push(shortTermProObj);
         this.updateCapitalGain(taxPaid); 
       }
-    
     }
 
     if(shortCGslabofProperty.hasOwnProperty('ITRForm:SaleOnOtherAssets')){
@@ -1032,8 +1033,8 @@ export class Itr2mainComponent implements OnInit {
       this.otherSourceForm.controls['interestFromDeposite'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmTermDeposit']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmTermDeposit']['_text'] : '');
       this.otherSourceForm.controls['interestFromTaxRefund'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmIncmTaxRefund']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmIncmTaxRefund']['_text'] : '');
       this.otherSourceForm.controls['other'].setValue(this.isNotZero(otherSourceInfo['ITRForm:IntrstFrmOthers']['_text']) ? otherSourceInfo['ITRForm:IntrstFrmOthers']['_text'] : '');
-        this.otherSourceForm.controls['agricultureIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text']) ? otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text'] : '');
-        this.otherSourceForm.controls['dividendIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:DividendGross']['_text']) ? otherSourceInfo['ITRForm:DividendGross']['_text'] : '');
+        // this.otherSourceForm.controls['agricultureIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text']) ? otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text'] : '');
+        // this.otherSourceForm.controls['dividendIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:DividendGross']['_text']) ? otherSourceInfo['ITRForm:DividendGross']['_text'] : '');
         this.otherSourceForm.controls['total'].setValue(this.isNotZero(otherSourceInfo['ITRForm:GrossIncChrgblTaxAtAppRate']['_text']) ? otherSourceInfo['ITRForm:GrossIncChrgblTaxAtAppRate']['_text'] : '');
     }
    
@@ -1531,6 +1532,14 @@ export class Itr2mainComponent implements OnInit {
     }
 
     //Annexures: Exempt Income
+    if(itrData.hasOwnProperty('ITRForm:ScheduleOS')){
+      let otherSourceInfo = itrData['ITRForm:ScheduleOS']['ITRForm:IncOthThanOwnRaceHorse'];      
+      console.log('For except Income: ',otherSourceInfo);
+      this.deductionAndRemainForm.controls['agricultureIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text']) ? otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text'] : '');
+      this.deductionAndRemainForm.controls['dividendIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:DividendGross']['_text']) ? otherSourceInfo['ITRForm:DividendGross']['_text'] : '');
+      this.setTotalOfExempt();
+    }
+    
     if(itrData.hasOwnProperty('ITRForm:ScheduleEI')){
       let otherVal = Number(itrData['ITRForm:ScheduleEI']['ITRForm:Others']['_text'])
       this.deductionAndRemainForm.controls['anyOtherExcemptIncome'].setValue(otherVal);
@@ -1849,6 +1858,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
   this.updatBussinessInfo = itr3Summary;
   this.setItrType("3", 'edit', itr3Summary);
 
+ // this.calTotalOfIncomeFromBusiness();
 
   }
 
@@ -1869,6 +1879,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
   }
 
   setItrType(itrType, mode?, summary?) {
+    debugger
     if (itrType === "2") {
       this.itrType.itrTwo = true;
       this.itrType.itrThree = false;
@@ -1919,6 +1930,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
       console.log('speculativeOptions: ', this.speculativeOptions)
 
       if(mode === 'edit'){
+        debugger
         this.updateItr3Info(summary);
       }
 
@@ -2110,7 +2122,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
 
     this.incomeFromCapGain = Number(this.capital_Gain.shortTermCapitalGain) + Number(this.capital_Gain.shortTermCapitalGain15) + Number(this.capital_Gain.longTermCapitalGain10) + Number(this.capital_Gain.longTermCapitalGain20);
     this.computationOfIncomeForm.controls['capitalGain'].setValue(this.incomeFromCapGain);
-
+    console.log('Capital gain total part: ',this.itr_2_Summary.capitalGainIncome)
 
     if (this.tdsOnSal && this.tdsOnSal.api && this.tdsOnSal.api.getRenderedNodes()) {
       for (let i = 0; i < this.tdsOnSal.api.getRenderedNodes().length; i++) {
@@ -2650,7 +2662,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
   calculateOtherSourceTotal(){
     console.log('interestFromSaving: ',this.otherSourceForm, this.otherSourceForm['controls'].interestFromSaving.value)
    let total = Number(this.otherSourceForm['controls'].interestFromSaving.value) + Number(this.otherSourceForm['controls'].interestFromDeposite.value) +Number(this.otherSourceForm['controls'].interestFromTaxRefund.value)
-           + Number(this.otherSourceForm['controls'].other.value) + Number(this.otherSourceForm['controls'].agricultureIncome.value) + Number(this.otherSourceForm['controls'].dividendIncome.value);
+           + Number(this.otherSourceForm['controls'].other.value);    //+ Number(this.otherSourceForm['controls'].agricultureIncome.value) + Number(this.otherSourceForm['controls'].dividendIncome.value);
    this.otherSourceForm['controls'].total.setValue(total);
    this.computationOfIncomeForm['controls'].otherIncome.setValue(total);
    this.calculateTotalHeadWiseIncome()
@@ -2666,7 +2678,8 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
 
   setTotalOfExempt(){
     this.totalOfExcempt = Number(this.deductionAndRemainForm['controls'].ppfInterest.value) + Number(this.deductionAndRemainForm['controls'].giftFromRelative.value)
-                        + Number(this.deductionAndRemainForm['controls'].anyOtherExcemptIncome.value);
+                        + Number(this.deductionAndRemainForm['controls'].anyOtherExcemptIncome.value) + Number(this.deductionAndRemainForm['controls'].agricultureIncome.value)
+                        + Number(this.deductionAndRemainForm['controls'].dividendIncome.value);
     //this.deductionAndRemainForm['controls'].total.setValue(totalExemptAmnt);
   }
 
@@ -4029,6 +4042,22 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
         
         
         this.updateTaxDeductionAtSourceVal(summary.assesse.taxPaid);
+        //SaGar
+        
+        var incomePart = summary.assesse.incomes;
+        if(incomePart.length > 0){
+          for(let i=0; i < incomePart.length; i++){
+            if(incomePart[i].incomeType === "AGRICULTURE_INCOME"){
+              // this.sourcesOfIncome.agricultureIncome = incomePart[i].amount;
+              this.deductionAndRemainForm['controls'].agricultureIncome.setValue(incomePart[i].amount);
+            }
+            else if(incomePart[i].incomeType === "DIVIDEND_INCOME"){
+              // this.sourcesOfIncome.dividendIncome = incomePart[i].amount;
+              this.deductionAndRemainForm['controls'].dividendIncome.setValue(incomePart[i].amount);
+            }
+          }
+       }
+
         this.setTotalOfExempt();
         this.calculateTotalHeadWiseIncome();
         this.getTaxDeductionAtSourceData();
@@ -4119,6 +4148,9 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
        this.businessIncomeForm.controls['expenceIncomeOfothertThanSpeculativeFAndO'].setValue(fAndOIncome[0].exemptIncome);
        this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeFAndO'].setValue(fAndOIncome[0].taxableIncome);
       }
+
+      //this.getBusinessData();
+      this.calTotalOfIncomeFromBusiness();
    }
 
    updateSalatyInfo(salaryData){
@@ -4204,8 +4236,8 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
       interestFromDeposite : 0,
       interestFromTaxRefund : 0,
       other : 0,
-      agricultureIncome : 0,
-      dividendIncome: 0,
+      // agricultureIncome : 0,
+      // dividendIncome: 0,
       total : 0
     }
     
@@ -4224,16 +4256,16 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
         else if(otherSource[i].incomeType === "ANY_OTHER"){
           this.sourcesOfIncome.other = otherSource[i].amount;
         }
-        else if(otherSource[i].incomeType === "AGRICULTURE_INCOME"){
-          this.sourcesOfIncome.agricultureIncome = otherSource[i].amount;
-        }
-        else if(otherSource[i].incomeType === "DIVIDEND_INCOME"){
-          this.sourcesOfIncome.dividendIncome = otherSource[i].amount;
-        }
+        // else if(otherSource[i].incomeType === "AGRICULTURE_INCOME"){
+        //   this.sourcesOfIncome.agricultureIncome = otherSource[i].amount;
+        // }
+        // else if(otherSource[i].incomeType === "DIVIDEND_INCOME"){
+        //   this.sourcesOfIncome.dividendIncome = otherSource[i].amount;
+        // }
 
         this.sourcesOfIncome.total = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromDeposite +
-                                              this.sourcesOfIncome.interestFromTaxRefund + this.sourcesOfIncome.other +
-                                               this.sourcesOfIncome.agricultureIncome + this.sourcesOfIncome.dividendIncome;
+                                              this.sourcesOfIncome.interestFromTaxRefund + this.sourcesOfIncome.other;
+                                              //  this.sourcesOfIncome.agricultureIncome + this.sourcesOfIncome.dividendIncome;
         this.otherSourceForm.patchValue(this.sourcesOfIncome);
       } 
       console.log('sourcesOfIncome: ', this.sourcesOfIncome);
@@ -4459,6 +4491,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
           this.longTerm20Per.api.setRowData(rowData);
         }
       }
+      this.getTaxDeductionAtSourceData();
   }
 
   setCapitalGainRowDate(capGainINfo){
@@ -4571,10 +4604,10 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
               };
               this.incomeData.push(obj)
             }
-            if (this.utilService.isNonEmpty(this.otherSourceForm['controls'].agricultureIncome.value)) {
+            if (this.utilService.isNonEmpty(this.deductionAndRemainForm['controls'].agricultureIncome.value)) {   //Privious val bind in otherSourceForm form
               let obj = {
                 expenses: 0,
-                amount: this.otherSourceForm['controls'].agricultureIncome.value,
+                amount: this.deductionAndRemainForm['controls'].agricultureIncome.value,
                 taxableAmount: 0,
                 exemptAmount: 0,
                 incomeType: 'AGRICULTURE_INCOME',
@@ -4582,10 +4615,10 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
               };
               this.incomeData.push(obj)
             }
-            if (this.utilService.isNonEmpty(this.otherSourceForm['controls'].dividendIncome.value)) {
+            if (this.utilService.isNonEmpty(this.deductionAndRemainForm['controls'].dividendIncome.value)) {
               let obj = {
                 expenses: 0,
-                amount: this.otherSourceForm['controls'].dividendIncome.value,
+                amount: this.deductionAndRemainForm['controls'].dividendIncome.value,
                 taxableAmount: 0,
                 exemptAmount: 0,
                 incomeType: 'DIVIDEND_INCOME',
@@ -4620,11 +4653,11 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
             for (let i = 0; i < this.shortTermSlabRate.api.getRenderedNodes().length; i++) {
               this.shortTermSlabRateInfo.push({
                 'nameOfTheAsset': this.shortTermSlabRate.api.getRenderedNodes()[i].data.nameOfAsset ? this.shortTermSlabRate.api.getRenderedNodes()[i].data.nameOfAsset : null,
-                'netSaleValue': this.shortTermSlabRate.api.getRenderedNodes()[i].data.netSaleVal !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.netSaleVal) : null,
-                'purchaseCost': this.shortTermSlabRate.api.getRenderedNodes()[i].data.purchaseCost !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.purchaseCost) : null,
-                'capitalGain': this.shortTermSlabRate.api.getRenderedNodes()[i].data.capitalGain !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.capitalGain) : null,
-                'deductions': this.shortTermSlabRate.api.getRenderedNodes()[i].data.deduction !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.deduction) : null,
-                'netCapitalGain': this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain !== null ? String(this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain) : null 
+                'netSaleValue': this.shortTermSlabRate.api.getRenderedNodes()[i].data.netSaleVal !== null ? Number(this.shortTermSlabRate.api.getRenderedNodes()[i].data.netSaleVal) : null,
+                'purchaseCost': this.shortTermSlabRate.api.getRenderedNodes()[i].data.purchaseCost !== null ? Number(this.shortTermSlabRate.api.getRenderedNodes()[i].data.purchaseCost) : null,
+                'capitalGain': this.shortTermSlabRate.api.getRenderedNodes()[i].data.capitalGain !== null ? Number(this.shortTermSlabRate.api.getRenderedNodes()[i].data.capitalGain) : null,
+                'deductions': this.shortTermSlabRate.api.getRenderedNodes()[i].data.deduction !== null ? Number(this.shortTermSlabRate.api.getRenderedNodes()[i].data.deduction) : null,
+                'netCapitalGain': this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain !== null ? Number(this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain) : null 
               })
             }
             this.itr_2_Summary.capitalGainIncome.shortTermCapitalGain = this.shortTermSlabRateInfo;
@@ -4635,11 +4668,11 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
             for (let i = 0; i < this.shortTerm15Per.api.getRenderedNodes().length; i++) {
               this.shortTerm15PerInfo.push({
                 'nameOfTheAsset': this.shortTerm15Per.api.getRenderedNodes()[i].data.nameOfAsset ? this.shortTerm15Per.api.getRenderedNodes()[i].data.nameOfAsset : null,
-                'netSaleValue': this.shortTerm15Per.api.getRenderedNodes()[i].data.netSaleVal !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.netSaleVal) : null,
-                'purchaseCost': this.shortTerm15Per.api.getRenderedNodes()[i].data.purchaseCost !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.purchaseCost) : null,
-                'capitalGain': this.shortTerm15Per.api.getRenderedNodes()[i].data.capitalGain !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.capitalGain) : null,
-                'deductions': this.shortTerm15Per.api.getRenderedNodes()[i].data.deduction !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.deduction) : null,
-                'netCapitalGain': this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain !== null ? String(this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain) : null 
+                'netSaleValue': this.shortTerm15Per.api.getRenderedNodes()[i].data.netSaleVal !== null ? Number(this.shortTerm15Per.api.getRenderedNodes()[i].data.netSaleVal) : null,
+                'purchaseCost': this.shortTerm15Per.api.getRenderedNodes()[i].data.purchaseCost !== null ? Number(this.shortTerm15Per.api.getRenderedNodes()[i].data.purchaseCost) : null,
+                'capitalGain': this.shortTerm15Per.api.getRenderedNodes()[i].data.capitalGain !== null ? Number(this.shortTerm15Per.api.getRenderedNodes()[i].data.capitalGain) : null,
+                'deductions': this.shortTerm15Per.api.getRenderedNodes()[i].data.deduction !== null ? Number(this.shortTerm15Per.api.getRenderedNodes()[i].data.deduction) : null,
+                'netCapitalGain': this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain !== null ? Number(this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain) : null 
               })
             }
             this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15Percent = this.shortTerm15PerInfo;
@@ -4650,11 +4683,11 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
             for (let i = 0; i < this.longTerm10Per.api.getRenderedNodes().length; i++) {
               this.longTerm10PerInfo.push({
                 'nameOfTheAsset': this.longTerm10Per.api.getRenderedNodes()[i].data.nameOfAsset ? this.longTerm10Per.api.getRenderedNodes()[i].data.nameOfAsset : null,
-                'netSaleValue': this.longTerm10Per.api.getRenderedNodes()[i].data.netSaleVal !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.netSaleVal): null,
-                'purchaseCost': this.longTerm10Per.api.getRenderedNodes()[i].data.purchaseCost !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.purchaseCost): null,
-                'capitalGain': this.longTerm10Per.api.getRenderedNodes()[i].data.capitalGain !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.capitalGain): null,
-                'deductions': this.longTerm10Per.api.getRenderedNodes()[i].data.deduction !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.deduction): null,
-                'netCapitalGain': this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain !== null ? String(this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain): null 
+                'netSaleValue': this.longTerm10Per.api.getRenderedNodes()[i].data.netSaleVal !== null ? Number(this.longTerm10Per.api.getRenderedNodes()[i].data.netSaleVal): null,
+                'purchaseCost': this.longTerm10Per.api.getRenderedNodes()[i].data.purchaseCost !== null ? Number(this.longTerm10Per.api.getRenderedNodes()[i].data.purchaseCost): null,
+                'capitalGain': this.longTerm10Per.api.getRenderedNodes()[i].data.capitalGain !== null ? Number(this.longTerm10Per.api.getRenderedNodes()[i].data.capitalGain): null,
+                'deductions': this.longTerm10Per.api.getRenderedNodes()[i].data.deduction !== null ? Number(this.longTerm10Per.api.getRenderedNodes()[i].data.deduction): null,
+                'netCapitalGain': this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain !== null ? Number(this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain): null 
               })
             }
             this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10Percent = this.longTerm10PerInfo;
@@ -4665,11 +4698,11 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
             for (let i = 0; i < this.longTerm20Per.api.getRenderedNodes().length; i++) {
               this.longTerm20PerInfo.push({
                 'nameOfTheAsset': this.longTerm20Per.api.getRenderedNodes()[i].data.nameOfAsset ? this.longTerm20Per.api.getRenderedNodes()[i].data.nameOfAsset: null,
-                'netSaleValue': this.longTerm20Per.api.getRenderedNodes()[i].data.netSaleVal !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.netSaleVal): null,
-                'purchaseCost': this.longTerm20Per.api.getRenderedNodes()[i].data.purchaseCost !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.purchaseCost): null,
-                'capitalGain': this.longTerm20Per.api.getRenderedNodes()[i].data.capitalGain !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.capitalGain): null,
-                'deductions': this.longTerm20Per.api.getRenderedNodes()[i].data.deduction !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.deduction): null,
-                'netCapitalGain': this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain !== null ? String(this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain) : null
+                'netSaleValue': this.longTerm20Per.api.getRenderedNodes()[i].data.netSaleVal !== null ? Number(this.longTerm20Per.api.getRenderedNodes()[i].data.netSaleVal): null,
+                'purchaseCost': this.longTerm20Per.api.getRenderedNodes()[i].data.purchaseCost !== null ? Number(this.longTerm20Per.api.getRenderedNodes()[i].data.purchaseCost): null,
+                'capitalGain': this.longTerm20Per.api.getRenderedNodes()[i].data.capitalGain !== null ? Number(this.longTerm20Per.api.getRenderedNodes()[i].data.capitalGain): null,
+                'deductions': this.longTerm20Per.api.getRenderedNodes()[i].data.deduction !== null ? Number(this.longTerm20Per.api.getRenderedNodes()[i].data.deduction): null,
+                'netCapitalGain': this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain !== null ? Number(this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain) : null
               })
             }
             this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20Percent = this.longTerm20PerInfo;
@@ -5164,6 +5197,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
   }
   businessFormValid: boolean;
   getBusinessData(businessInfo){
+   // alert('Business 3 part initaited')
     debugger
     console.log('businessInfo: ', businessInfo)
     console.log('businessInfo totalCapitalLiabilities: ', businessInfo.value.totalCapitalLiabilities)
@@ -5195,6 +5229,8 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
   }
 
   calTotalOfIncomeFromBusiness(){
+    console.log('businessIncomeForm values',this.businessIncomeForm.controls.value)
+    debugger
     this.computationOfIncomeForm.controls['speculativeBusinessIncome'].setValue(this.businessIncomeForm.controls['taxableIncomeOfSpeculative'].value); 
     this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptive'].setValue(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].value); 
 
