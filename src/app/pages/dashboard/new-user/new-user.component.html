@@ -36,23 +36,22 @@
 
 
                         <div *ngFor="let item of userList ; let p=index ">
-                            <div class="table__row-item product-row"
-                                [class.table__row-disabled]="item.sourceAsMap.InitialData.Platform === 'WhatsApp'">
+                            <div class="table__row-item product-row">
                                 <div class="table__row product-row__main-variant">
                                     <div class="table__cell product-row__cell-stock flex-10">
-                                        {{item.sourceAsMap.userId}}
+                                        {{item.sourceAsMap['userId']}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-30">
-                                        {{item.sourceAsMap.FirstName +' '+ item.sourceAsMap.LastName}}
+                                        {{item.sourceAsMap['FirstName'] +' '+ item.sourceAsMap['LastName']}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-15">
-                                        {{item.sourceAsMap.Phone}}
+                                        {{item.sourceAsMap['Phone']}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-15">
-                                        {{item.sourceAsMap.CreatedDate | date :'dd MMM yyyy, hh:mm a'}}
+                                        {{item.sourceAsMap['CreatedDate'] | date :'dd MMM yyyy, hh:mm a'}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-10">
-                                        {{item.sourceAsMap.InitialData.Platform}}
+                                        {{item.sourceAsMap['InitialData'] ? item.sourceAsMap['InitialData']['Platform']:''}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-20">
                                         <button style="border: none; cursor: pointer;background: transparent;"
