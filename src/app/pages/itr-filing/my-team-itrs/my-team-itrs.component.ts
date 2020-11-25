@@ -53,7 +53,7 @@ export class MyTeamItrsComponent implements OnInit {
     // { teamLeadId: 1064, value: 28032, label: 'Pranali Patil' },
     { teamLeadId: 1064, value: 28040, label: 'Namrata Shringarpure' },
     { teamLeadId: 1064, value: 28035, label: 'Rupali Onamshetty' },
-    { teamLeadId: 1064, value: 27474, label: 'Poonam Hase' },
+    // { teamLeadId: 1064, value: 27474, label: 'Poonam Hase' },
     { teamLeadId: 1064, value: 28044, label: 'Bhakti Khatavkar' },
     { teamLeadId: 1064, value: 28034, label: 'Dipali Waghmode' },
     { teamLeadId: 1064, value: 28031, label: 'Harsha Kashyap' },
@@ -372,19 +372,19 @@ export class MyTeamItrsComponent implements OnInit {
     });
   }
 
-  getAcknowledgeDetail(data){
+  getAcknowledgeDetail(data) {
     console.log('Data for acknowlegement status', data);
     this.loading = true;
     const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
-      this.itrMsService.getMethod(param).subscribe((res: any) => {
-        this.utilsService.showSnackBar(res.status)
-        this.loading = false;
-        setTimeout(()=>{
-          this.getMembersItr(this.selectedMemberId);
-        }, 5000);
-       
-      }, error => {
-        this.loading = false;
-      })
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      this.utilsService.showSnackBar(res.status)
+      this.loading = false;
+      setTimeout(() => {
+        this.getMembersItr(this.selectedMemberId);
+      }, 5000);
+
+    }, error => {
+      this.loading = false;
+    })
   }
 }
