@@ -1285,6 +1285,7 @@ export class Itr2mainComponent implements OnInit {
       console.log('donationData ===>>>> ',this.donationData)
 
     //Deduction 80G
+    debugger
     let deduction = itrData['ITRForm:ScheduleVIA']['ITRForm:DeductUndChapVIA'];
     console.log('deduction ==> ',deduction);
        this.deductionAndRemainForm.controls['us80c'].setValue(this.isNotZero(deduction['ITRForm:Section80C']['_text']) ? deduction['ITRForm:Section80C']['_text'] : 0);
@@ -1304,7 +1305,9 @@ export class Itr2mainComponent implements OnInit {
      this.deductionAndRemainForm.controls['us80ttaTtb'].setValue(this.isNotZero(deduction['ITRForm:Section80TTA']['_text']) ? deduction['ITRForm:Section80TTA']['_text'] : 0);
        this.deductionAndRemainForm.controls['us80u'].setValue(this.isNotZero(deduction['ITRForm:Section80U']['_text']) ? deduction['ITRForm:Section80U']['_text'] : 0);
 
+       debugger
      if(deduction.hasOwnProperty('ITRForm:Section80GGA')){
+      debugger
       this.deductionAndRemainForm.controls['us80gga'].setValue(this.isNotZero(deduction['ITRForm:Section80GGA']['_text']) ? deduction['ITRForm:Section80GGA']['_text'] : 0);
      }
      else{
@@ -1313,7 +1316,7 @@ export class Itr2mainComponent implements OnInit {
        
 
      if(this.itrType.itrThree){
-      this.deductionAndRemainForm.controls['us80jja'].setValue(this.isNotZero(deduction['ITRForm:Section80C']['_text']) ? deduction['ITRForm:Section80C']['_text'] : 0);
+      this.deductionAndRemainForm.controls['us80jja'].setValue(this.isNotZero(deduction['ITRForm:Section80JJA']['_text']) ? deduction['ITRForm:Section80JJA']['_text'] : 0);
      }
     }
     
