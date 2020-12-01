@@ -28,7 +28,7 @@
         </a>
 
         <a class="sidebar__item" routerLink="/pages/newUser" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN'])">
+            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM'])">
             <span class="sidebar__ico">
                 <svg id="ico-list" data-name="list" class="sidebar__ico-img" enable-background="new 0 0 24 24"
                     height="24px" id="Layer_1" version="1.1" viewBox="0 0 24 24" width="24px" xml:space="preserve"
