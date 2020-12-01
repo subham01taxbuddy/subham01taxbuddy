@@ -191,4 +191,26 @@ export class UtilsService {
     onMessage(): Observable<any> {
         return this.subject.asObservable();
     }
+
+    
+    showErrorMsg(errorCode){
+        var errorMessage = '';
+        if(errorCode === 400){
+            errorMessage = 'Bad request, invalid input request.';
+        }
+        else if(errorCode === 401){
+            errorMessage = 'Unauthorized user.';
+        }
+        else if(errorCode === 403){
+            errorMessage = 'You do not have access of this part.';
+        }
+        else if(errorCode === 404){
+            errorMessage = 'Data not found in system.';
+        }
+        else if(errorCode === 500){
+            errorMessage = 'Internal server error.';
+        }
+        return errorMessage;
+    }
+
 }
