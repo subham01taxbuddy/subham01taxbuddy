@@ -21,10 +21,10 @@
               <div class="table__cell product-row__cell-unit flex-30">
                 <a class="table__sort-link">Email</a>
               </div>
-              <div class="table__cell product-row__cell-unit flex-20">
+              <div class="table__cell product-row__cell-unit flex-10">
                 <a class="table__sort-link">Date</a>
               </div>
-              <div class="table__cell product-row__cell-unit flex-10">
+              <div class="table__cell product-row__cell-unit flex-20">
                 <a class="table__sort-link">Action</a>
               </div>
             </div>
@@ -43,11 +43,12 @@
                         <div class="table__cell product-row__cell-stock flex-30">
                           {{item.email}}
                         </div>
-                        <div class="table__cell product-row__cell-stock flex-20">
+                        <div class="table__cell product-row__cell-stock flex-10">
                           {{item.createdDate | date : 'dd/MM/yyyy'}}
                         </div>
-                        <div class="table__cell product-row__cell-stock flex-10">
-                         <button class="btn" (click)="createNewUser(mailExceptionUser[i])">Create User</button>  <!--<i class="fa fa-user" aria-hidden="true"></i>-->
+                        <div class="table__cell product-row__cell-stock flex-20">
+                         <button class="butn" (click)="createNewUser(mailExceptionUser[i])">Create User</button>&nbsp;  <!--<i class="fa fa-user" aria-hidden="true"></i>-->
+                         <button class="butn" (click)="assignUser(mailExceptionUser[i])">Assign User</button>
                         </div>
                         
                         <!-- <div class="table__cell product-row__cell-stock flex-20">

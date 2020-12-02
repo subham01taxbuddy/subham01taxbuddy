@@ -173,6 +173,12 @@ export class MailExceptionComponent implements OnInit {
       this.route.navigate(['/pages/newUser/createUser']);
   }
 
+  assignUser(userInfo){
+    console.log('userInfo for Assign user: ',userInfo);
+    sessionStorage.setItem('assignUser', JSON.stringify(userInfo));
+    this.route.navigate(['/pages/newUser/editUser']);
+  }
+
   redirectToKommunicate(id){
     let path = 'https://dashboard.kommunicate.io/conversations/'+id;
     window.open(path)
