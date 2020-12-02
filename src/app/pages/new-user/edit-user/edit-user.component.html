@@ -146,7 +146,11 @@
             <br /><br />
             <button class="btn" style="border: none" (click)="editUser()">
               Edit User
-            </button>
+            </button>&nbsp;&nbsp;&nbsp;
+
+            <button *ngIf="assignUser"  class="btn" style="border: none" (click)="uploadUserDocs()">
+              Upload Email Exception user Document
+           </button>
           </div>
         </div>
       </form>

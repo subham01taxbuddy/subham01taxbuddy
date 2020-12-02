@@ -18,6 +18,9 @@ export class EditUserComponent implements OnInit {
   loading: boolean;
   signUpForm: FormGroup;
   userData: any;
+  assignUserInfo: any;
+  assignUserEmail: any = '';
+  assignUser: boolean;
   searchMenus = [{
     value: 'emailAddress', name: 'Email Id'
   }, {
@@ -28,7 +31,7 @@ export class EditUserComponent implements OnInit {
     value: 'userId', name: 'User Id'
   }];
   constructor(private fb: FormBuilder, private http: HttpClient, NavbarService: NavbarService, private _toastMessageService: ToastMessageService,
-              private utilService: UtilsService, private userService: UserMsService) { }
+              private utilService: UtilsService, private userService: UserMsService, private utilSerive: UtilsService) { }
 
   ngOnInit() {
     this.signUpForm = this.fb.group({
@@ -38,6 +41,14 @@ export class EditUserComponent implements OnInit {
       username: new FormControl("", Validators.required),
     });
 
+    this.assignUserInfo = JSON.parse(sessionStorage.getItem("assignUser"));
+    console.log("assignUser: ", this.assignUserInfo);
+    if (this.utilSerive.isNonEmpty(this.assignUserInfo)) {
+       this.assignUserEmail = this.assignUserInfo.email;
+    }
+    else{
+      this.assignUserEmail = '';
+    }
   }
 
   clearValue() {
@@ -59,11 +70,20 @@ export class EditUserComponent implements OnInit {
        this.userData = res;
        this.loading = false;
       if(this.utilService.isNonEmpty(this.userData)){
-        console.log("Search result userData :", this.userData)
-        this.signUpForm['controls'].first_name.setValue(this.userData.records[0].fName);
-        this.signUpForm['controls'].last_name.setValue(this.userData.records[0].lName);
-        this.signUpForm['controls'].email.setValue(this.userData.records[0].emailAddress);
-        this.signUpForm['controls'].username.setValue(this.userData.records[0].mobileNumber);
+        console.log("Search result userData :", this.userData);
+        if(this.utilSerive.isNonEmpty(this.assignUserEmail)){
+          this.signUpForm['controls'].first_name.setValue(this.userData.records[0].fName);
+          this.signUpForm['controls'].last_name.setValue(this.userData.records[0].lName);
+          this.signUpForm['controls'].email.setValue(this.assignUserEmail);
+          this.signUpForm['controls'].username.setValue(this.userData.records[0].mobileNumber);
+        }
+        else{
+          this.signUpForm['controls'].first_name.setValue(this.userData.records[0].fName);
+          this.signUpForm['controls'].last_name.setValue(this.userData.records[0].lName);
+          this.signUpForm['controls'].email.setValue(this.userData.records[0].emailAddress);
+          this.signUpForm['controls'].username.setValue(this.userData.records[0].mobileNumber);
+        }
+        
       }
     }, err => {
       console.log('Error: ',err)
@@ -84,17 +104,24 @@ export class EditUserComponent implements OnInit {
       let path = '/profile';
       this.userService.putMethod(path, this.userData.records[0]).subscribe(responce => {
           console.log('responce: ',responce);
-          this._toastMessageService.alert("success", "User information update successfully.");
-          this.signUpForm.reset();
-          this.signUpForm['controls'].first_name.clearValidators(); 
-          this.signUpForm['controls'].first_name.updateValueAndValidity()
-          this.signUpForm['controls'].last_name.clearValidators();
-          this.signUpForm['controls'].last_name.updateValueAndValidity()
-          this.signUpForm['controls'].email.clearValidators();
-          this.signUpForm['controls'].email.updateValueAndValidity()
-          this.signUpForm['controls'].username.clearValidators();
-          this.signUpForm['controls'].username.updateValueAndValidity()
           this.loading = false;
+          this._toastMessageService.alert("success", "User information update successfully.");
+          if(this.utilService.isNonEmpty(this.assignUserInfo)){
+              this.assignUser = true;
+          }
+          else{
+            this.signUpForm.reset();
+            this.signUpForm['controls'].first_name.clearValidators(); 
+            this.signUpForm['controls'].first_name.updateValueAndValidity()
+            this.signUpForm['controls'].last_name.clearValidators();
+            this.signUpForm['controls'].last_name.updateValueAndValidity()
+            this.signUpForm['controls'].email.clearValidators();
+            this.signUpForm['controls'].email.updateValueAndValidity()
+            this.signUpForm['controls'].username.clearValidators();
+            this.signUpForm['controls'].username.updateValueAndValidity()
+            this.assignUser = false;
+          }
+         
       },
       error=>{
         this.loading = false;
@@ -106,6 +133,36 @@ export class EditUserComponent implements OnInit {
         }
       })
     }
+  }
+
+  uploadUserDocs(){
+    this.loading = true;
+    let param = '/kommunicate/upload-files?email='+this.signUpForm['controls'].email.value;
+    this.userService.getUserDetail(param).subscribe(responce=>{
+      console.log('Document upload responce: ',responce);
+      this.loading = false;
+      this.utilSerive.showSnackBar("Document upload successfully.");
+      this.assignUser = false;
+      this.signUpForm.reset();
+      this.signUpForm.controls["first_name"].clearValidators();
+      this.signUpForm.controls["first_name"].updateValueAndValidity();
+      this.signUpForm.controls["last_name"].clearValidators();
+      this.signUpForm.controls["last_name"].updateValueAndValidity();
+      this.signUpForm.controls["email"].clearValidators();
+      this.signUpForm.controls["email"].updateValueAndValidity();
+      this.signUpForm.controls["username"].clearValidators();
+      this.signUpForm.controls["username"].updateValueAndValidity();
+    },
+    error=>{
+      console.log('Error :',error)
+      this.loading = false;
+      this.utilSerive.showSnackBar("Fail to upload document.");
+    })
+  }
+
+
+  ngOnDestroy(): void {
+    sessionStorage.setItem("assignUser", null);
   }
 
 }
