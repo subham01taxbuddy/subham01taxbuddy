@@ -49,8 +49,7 @@
                 <mat-expansion-panel>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
-                      <b> {{selectedUser ? selectedUser.name : 'User Not available in our system'}}</b>
-                    </mat-panel-title>
+                      <b> {{selectedUser ? selectedUser.name : 'User Not available in our system'}}</b></mat-panel-title>
                     <!-- <mat-panel-description>
                         Type your name and age
                       </mat-panel-description> -->
@@ -352,6 +351,8 @@
                   <button class="sendBtn"
                     (click)="startChat(selectedUser ? selectedUser.whatsAppNumber : selectdMobNum)">Start
                     Conversation</button>
+
+                    <button *ngIf="selectedUser" class="sendBtn" style="float: right; padding: 0px 10px;" (click)="blockChatUser(selectedUser.whatsAppNumber)">Block</button>
                 </div>
 
                 <div class="chat-footer msger-inputarea" *ngIf="startConversation">
