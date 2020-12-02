@@ -809,4 +809,23 @@ export class WhatAppChatComponent implements OnInit {
         })
     }
   }
+
+  blockChatUser(mobNum){
+      this.loading = true;
+      let param = '/gateway/whatsapp/block/'+mobNum;
+      this.userService.getMethodInfo(param).subscribe(responce=>{
+          console.log('responce: ',responce);
+          this.loading = false;
+          this._toastMessageService.alert(
+            "success",
+            "User block successfully."
+          );
+      },
+      error=>{
+        this.loading = false;
+        console.log('Error :', error)
+        this._toastMessageService.alert("error",this.utileService.showErrorMsg(error.error.status));
+      })
+
+  }
 }

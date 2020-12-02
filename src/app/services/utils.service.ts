@@ -192,7 +192,6 @@ export class UtilsService {
         return this.subject.asObservable();
     }
 
-    
     showErrorMsg(errorCode){
         var errorMessage = '';
         if(errorCode === 400){
@@ -212,5 +211,4 @@ export class UtilsService {
         }
         return errorMessage;
     }
-
 }
