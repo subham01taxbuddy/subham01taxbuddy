@@ -121,7 +121,7 @@ export class EditUserComponent implements OnInit {
             this.signUpForm['controls'].username.updateValueAndValidity()
             this.assignUser = false;
           }
-         
+          this.clearFromExceptionList(this.signUpForm['controls'].email.value);
       },
       error=>{
         this.loading = false;
@@ -133,6 +133,17 @@ export class EditUserComponent implements OnInit {
         }
       })
     }
+  }
+
+  clearFromExceptionList(mail){
+    console.log('Mail -> ',mail);
+    let param = '/gateway/email-channel/exception/delete?email='+mail;
+    this.userService.deleteMethod(param).subscribe(responce=>{
+      console.log('Responce : ',responce);
+      
+    },error=>{
+        console.log('Error while clear email from exmail exception list: ',error.error);
+    })
   }
 
   uploadUserDocs(){
