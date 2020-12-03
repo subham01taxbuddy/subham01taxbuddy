@@ -1555,8 +1555,14 @@ export class Itr2mainComponent implements OnInit {
     console.log('computaionIncomePartTi: ',computaionIncomePartTi);
     console.log('computaionIncomePartTii: ',computaionIncomePartTii);
 
-    this.computationOfIncomeForm.controls['salary'].setValue(computaionIncomePartTi['ITRForm:Salaries']['_text'])
-    this.computationOfIncomeForm.controls['housePropertyIncome'].setValue(computaionIncomePartTi['ITRForm:IncomeFromHP']['_text'])
+    this.computationOfIncomeForm.controls['salary'].setValue(computaionIncomePartTi['ITRForm:Salaries']['_text']);
+
+    if(Number(computaionIncomePartTi['ITRForm:IncomeFromHP']['_text']) > 0){
+      this.computationOfIncomeForm.controls['housePropertyIncome'].setValue(computaionIncomePartTi['ITRForm:IncomeFromHP']['_text'])
+    }
+    else{
+      this.computationOfIncomeForm.controls['housePropertyIncome'].setValue(0);
+    }
 
     this.capital_Gain.shortTermCapitalGain = computaionIncomePartTi['ITRForm:CapGain']['ITRForm:ShortTerm']['ITRForm:ShortTermAppRate']['_text'];
     this.capital_Gain.shortTermCapitalGain15 = computaionIncomePartTi['ITRForm:CapGain']['ITRForm:ShortTerm']['ITRForm:ShortTerm15Per']['_text'];
@@ -1760,7 +1766,7 @@ export class Itr2mainComponent implements OnInit {
      businessType: "SPECULATIVE",
      exemptIncome: speculativeInfo.hasOwnProperty('ITRForm:Expenditure') ? Number(speculativeInfo['ITRForm:Expenditure']['_text']) : 0,
      natureOfBusiness: '',
-     taxableIncome: speculativeInfo.hasOwnProperty('ITRForm:NetIncomeFrmSpecActivity') ? Number(speculativeInfo['ITRForm:NetIncomeFrmSpecActivity']['_text']) : 0,
+     taxableIncome: speculativeInfo.hasOwnProperty('ITRForm:NetIncomeFrmSpecActivity') ? (Number(speculativeInfo['ITRForm:NetIncomeFrmSpecActivity']['_text']) > 0 ? Number(speculativeInfo['ITRForm:NetIncomeFrmSpecActivity']['_text']) : 0) : 0,
      tradeName:'',
      incomes: []
    }
@@ -1786,7 +1792,7 @@ export class Itr2mainComponent implements OnInit {
     businessType: "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_BUSINESS",
     exemptIncome: Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:Expenses']['_text']),
     natureOfBusiness: '',
-    taxableIncome: Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfit']['_text']),
+    taxableIncome: (Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfit']['_text']) > 0 ? Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfit']['_text']) : 0),
     tradeName:'',
     incomes: []
   }
@@ -1812,7 +1818,7 @@ export class Itr2mainComponent implements OnInit {
    businessType: "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_PROFESSION",
    exemptIncome: Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:ExpensesPrf']['_text']),
    natureOfBusiness: '',
-   taxableIncome: Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfitPrf']['_text']),
+   taxableIncome: Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfitPrf']['_text']) > 0 ? Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfitPrf']['_text']) : 0,
    tradeName:'',
    incomes: []
  }
@@ -1838,7 +1844,7 @@ export class Itr2mainComponent implements OnInit {
   businessType: "FUTURES_AND_OPTIONS",
   exemptIncome: Number(futureAndOptionInfo['ITRForm:DirectExpensesTotal']['_text']),
   natureOfBusiness: '',
-  taxableIncome: Number(futureAndOptionInfo['ITRForm:GrossProfitFrmBusProf']['_text']),
+  taxableIncome: Number(futureAndOptionInfo['ITRForm:GrossProfitFrmBusProf']['_text']) > 0 ? Number(futureAndOptionInfo['ITRForm:GrossProfitFrmBusProf']['_text']) : 0,
   tradeName:'',
   incomes: []
 }
@@ -2098,28 +2104,28 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
     if (this.shortTermSlabRate && this.shortTermSlabRate.api && this.shortTermSlabRate.api.getRenderedNodes()) {
       for (let i = 0; i < this.shortTermSlabRate.api.getRenderedNodes().length; i++) {
         this.capital_Gain.shortTermCapitalGain = this.capital_Gain.shortTermCapitalGain + this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain;
-        this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = this.capital_Gain.shortTermCapitalGain;
+        this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = Number(this.capital_Gain.shortTermCapitalGain) > 0 ? this.capital_Gain.shortTermCapitalGain : 0;
       }
     }
 
     if (this.shortTerm15Per && this.shortTerm15Per.api && this.shortTerm15Per.api.getRenderedNodes()) {
       for (let i = 0; i < this.shortTerm15Per.api.getRenderedNodes().length; i++) {
         this.capital_Gain.shortTermCapitalGain15 = this.capital_Gain.shortTermCapitalGain15 + this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain;
-        this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = this.capital_Gain.shortTermCapitalGain15;
+        this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = Number(this.capital_Gain.shortTermCapitalGain15) > 0 ? this.capital_Gain.shortTermCapitalGain15 : 0; 
       }
     }
 
     if (this.longTerm10Per && this.longTerm10Per.api && this.longTerm10Per.api.getRenderedNodes()) {
       for (let i = 0; i < this.longTerm10Per.api.getRenderedNodes().length; i++) {
         this.capital_Gain.longTermCapitalGain10 = this.capital_Gain.longTermCapitalGain10 + this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain;
-        this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = this.capital_Gain.longTermCapitalGain10;
+        this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = Number(this.capital_Gain.longTermCapitalGain10) > 0 ? this.capital_Gain.longTermCapitalGain10 : 0;
       }
     }
 
     if (this.longTerm20Per && this.longTerm20Per.api && this.longTerm20Per.api.getRenderedNodes()) {
       for (let i = 0; i < this.longTerm20Per.api.getRenderedNodes().length; i++) {
         this.capital_Gain.longTermCapitalGain20 = this.capital_Gain.longTermCapitalGain20 + this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain;
-        this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = this.capital_Gain.longTermCapitalGain20;
+        this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = Number(this.capital_Gain.longTermCapitalGain20) > 0 ? this.capital_Gain.longTermCapitalGain20 : 0;
       }
     }
 
