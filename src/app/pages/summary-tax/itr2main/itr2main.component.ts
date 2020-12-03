@@ -450,7 +450,8 @@ export class Itr2mainComponent implements OnInit {
       let personalInfo = itrData['ITRForm:PartA_GEN1']['ITRForm:PersonalInfo'];
       let fatherName = itrData['ITRForm:Verification']['ITRForm:Declaration']['ITRForm:FatherName']['_text']
       console.log('personalInfo: ',personalInfo);
-       this.personalInfoForm.controls['fName'].setValue(personalInfo['ITRForm:AssesseeName']['ITRForm:FirstName']['_text']);
+      
+       this.personalInfoForm.controls['fName'].setValue((personalInfo['ITRForm:AssesseeName']).hasOwnProperty('ITRForm:FirstName') ? personalInfo['ITRForm:AssesseeName']['ITRForm:FirstName']['_text'] : '');
        this.personalInfoForm.controls['mName'].setValue((personalInfo['ITRForm:AssesseeName']).hasOwnProperty('ITRForm:MiddleName') ? personalInfo['ITRForm:AssesseeName']['ITRForm:MiddleName']['_text'] : '');
        this.personalInfoForm.controls['lName'].setValue(personalInfo['ITRForm:AssesseeName']['ITRForm:SurNameOrOrgName']['_text']);
        this.personalInfoForm.controls['fathersName'].setValue(fatherName);
@@ -593,6 +594,7 @@ export class Itr2mainComponent implements OnInit {
         taxableIncome: 0,
         tenant: []
        }
+       this.houseArray = [];
         for(let i=0; i< this.housingData.length; i++){
           houceObj.coOwners = [];
           houceObj.loans = [];
@@ -692,8 +694,8 @@ export class Itr2mainComponent implements OnInit {
               address: salartInfo['ITRForm:Salaries'][i]['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
               employerCategory: salartInfo['ITRForm:Salaries'][i]['ITRForm:NatureOfEmployment']['_text'] === "OTH" ? 'OTHER' : '',
               salAsPerSec171: salartInfo['ITRForm:Salaries'][i]['ITRForm:Salarys']['ITRForm:Salary']['_text'],
-              valOfPerquisites: 0,//salartInfo['ITRForm:Salaries'][i]['ITRForm:AddressDetail'],
-              profitInLieu: 0,//salartInfo['ITRForm:Salaries'][i]['ITRForm:AddressDetail'],
+              valOfPerquisites: salartInfo['ITRForm:Salaries'][i]['ITRForm:Salarys']['ITRForm:ValueOfPerquisites']['_text'],//salartInfo['ITRForm:Salaries'][i]['ITRForm:AddressDetail'],
+              profitInLieu: salartInfo['ITRForm:Salaries'][i]['ITRForm:Salarys']['ITRForm:ProfitsinLieuOfSalary']['_text'],//salartInfo['ITRForm:Salaries'][i]['ITRForm:AddressDetail'],
               grossSalary: salartInfo['ITRForm:Salaries'][i]['ITRForm:Salarys']['ITRForm:GrossSalary']['_text'],
 
 
@@ -717,8 +719,8 @@ export class Itr2mainComponent implements OnInit {
           address: salartInfo['ITRForm:Salaries']['ITRForm:AddressDetail']['ITRForm:AddrDetail']['_text'],
           employerCategory: salartInfo['ITRForm:Salaries']['ITRForm:NatureOfEmployment']['_text'] === "OTH" ? 'OTHER' : '',
           salAsPerSec171: salartInfo['ITRForm:Salaries']['ITRForm:Salarys']['ITRForm:Salary']['_text'],
-          valOfPerquisites: 0,//salartInfo['ITRForm:Salaries']['ITRForm:AddressDetail'],
-          profitInLieu: 0,//salartInfo['ITRForm:Salaries']['ITRForm:AddressDetail'],
+          valOfPerquisites: salartInfo['ITRForm:Salaries']['ITRForm:Salarys']['ITRForm:ValueOfPerquisites']['_text'],
+          profitInLieu: salartInfo['ITRForm:Salaries']['ITRForm:Salarys']['ITRForm:ProfitsinLieuOfSalary']['_text'],
           grossSalary: salartInfo['ITRForm:Salaries']['ITRForm:Salarys']['ITRForm:GrossSalary']['_text'],
           houseRentAllow: hra,
           leaveTravelExpense: lte,
