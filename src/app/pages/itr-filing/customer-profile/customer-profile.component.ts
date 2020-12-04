@@ -125,6 +125,9 @@ export class CustomerProfileComponent implements OnInit {
     { value: 43406, label: 'Priyanka Shilimkar' },
     { value: 42878, label: 'Supriya Waghmare' },
     { value: 42931, label: 'Dhanashree Amarale' },
+    { value: 67523, label: 'Supriya Kumbhar' },
+    { value: 67522, label: 'Nikita Chilveri' },
+    { value: 67558, label: 'Sunita Sharma' },
 
     { value: 1065, label: 'Urmila Warve' },
     { value: 1067, label: 'Divya Bhanushali' },
