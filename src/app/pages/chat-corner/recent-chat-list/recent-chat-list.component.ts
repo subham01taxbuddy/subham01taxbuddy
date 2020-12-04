@@ -14,12 +14,14 @@ export class RecentChatListComponent implements OnInit {
   selectedMobileNo: any;
   userTimer: any;
   subscription: Subscription;
+  selectdAgentId: any;
   
   constructor(private userService: UserMsService, private router: Router, private utilService: UtilsService) {
 
     this.subscription = this.utilService.onMessage().subscribe(agentId => {
       console.log('Selected agent id: ',agentId)
       if (agentId) {
+        this.selectdAgentId = agentId.text;
         this.getUserNotify(agentId.text);
       }
     });
