@@ -385,7 +385,7 @@ export class WhatAppChatComponent implements OnInit {
       !this.whatsAppForm.controls["selectTemplate"].value
     ) {
       debugger
-      let mobileNo = this.selectedUser.whatsAppNumber;
+      let mobileNo = this.utileService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : '91'+this.searchNumber.value;
       let sendMsg = this.whatsAppForm.controls["sentMessage"].value;
       console.log('Before sendMsg: ',sendMsg, typeof sendMsg);
       sendMsg = sendMsg.replace(/"/g, '\\"');
@@ -436,7 +436,7 @@ export class WhatAppChatComponent implements OnInit {
         console.log("Selected Template Info: ", templateMsgInfo);
         const templateData = new FormData();
         if (templateMsgInfo.mediaId === null) {
-            templateData.append("whatsAppNumber", this.selectedUser.whatsAppNumber);
+            templateData.append("whatsAppNumber", this.utileService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : '91'+this.searchNumber.value);
             templateData.append("templateName", templateMsgInfo.templateName);
             templateData.append("attributes", this.newAttributes);
             templateData.append("templateMessage", this.whatsAppForm.controls["sentMessage"].value);
@@ -449,7 +449,7 @@ export class WhatAppChatComponent implements OnInit {
             // source: 'BO'
           // };
         } else {
-            templateData.append("whatsAppNumber", this.selectedUser.whatsAppNumber);
+            templateData.append("whatsAppNumber", this.utileService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : this.searchNumber.value);
             templateData.append("templateName", templateMsgInfo.templateName);
             templateData.append("attributes", this.newAttributes);
               //templateData.append("templateMessage", this.whatsAppForm.controls["selectTemplate"].value);
@@ -508,7 +508,7 @@ export class WhatAppChatComponent implements OnInit {
       );
       console.log("this.uploadedFile: ", this.uploadedFile);
       const formData = new FormData();
-      formData.append("whatsAppNumber", this.selectedUser.whatsAppNumber);
+      formData.append("whatsAppNumber", this.utileService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : '91'+this.searchNumber.value);
       formData.append("multipartFile", this.uploadedFile);
       formData.append("source", 'BO');
       console.log("formData: ", formData);
