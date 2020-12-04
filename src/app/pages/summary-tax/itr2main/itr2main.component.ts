@@ -568,37 +568,40 @@ export class Itr2mainComponent implements OnInit {
          }
        }
 
-       var houceObj = {
-        annualOfPropOwned: 0,
-        annualValue: 0,
-        annualValueXml: 0,
-        building: '',
-        city: "",
-        coOwners: [],
-        country: "",
-        exemptIncome: 0,
-        flatNo: "",
-        grossAnnualRentReceived: 0,
-        grossAnnualRentReceivedXml: 0,
-        isEligibleFor80EE: null,
-        loans: [],
-        locality: "",
-        otherOwnerOfProperty: "",
-        ownerOfProperty: "",
-        pinCode: '',
-        propertyTax: 0,
-        propertyTaxXml: 0,
-        propertyType: "",
-        state: "",
-        street: "",
-        taxableIncome: 0,
-        tenant: []
-       }
+      
        this.houseArray = [];
         for(let i=0; i< this.housingData.length; i++){
-          houceObj.coOwners = [];
-          houceObj.loans = [];
-          houceObj.tenant = [];
+          
+          let houceObj = {
+            annualOfPropOwned: 0,
+            annualValue: 0,
+            annualValueXml: 0,
+            building: '',
+            city: "",
+            coOwners: [],
+            country: "",
+            exemptIncome: 0,
+            flatNo: "",
+            grossAnnualRentReceived: 0,
+            grossAnnualRentReceivedXml: 0,
+            isEligibleFor80EE: null,
+            loans: [],
+            locality: "",
+            otherOwnerOfProperty: "",
+            ownerOfProperty: "",
+            pinCode: '',
+            propertyTax: 0,
+            propertyTaxXml: 0,
+            propertyType: "",
+            state: "",
+            street: "",
+            taxableIncome: 0,
+            tenant: []
+           }
+
+          // houceObj.coOwners = [];
+          // houceObj.loans = [];
+          // houceObj.tenant = [];
           Object.assign(houceObj, this.housingData[i]);
           if(this.utilService.isNonEmpty(this.housingData[i].interestAmount)){
             let loanObj ={
@@ -618,7 +621,7 @@ export class Itr2mainComponent implements OnInit {
           }
 
          // this.houseArray.push(houceObj);
-         this.houseArray.splice(i, 0, houceObj);
+         this.houseArray.push(houceObj);
          console.log('After push houce obj => ',this.houseArray)
         }
 
@@ -737,40 +740,43 @@ export class Itr2mainComponent implements OnInit {
       }
       
 //SAGAR
-      var employerObj={
-        address: "",
-        allowance: [],
-        city: "",
-        country: '',
-        deductions: [],
-        employerCategory: "",
-        employerName: "",
-        employerPAN: '',
-        employerTAN: "",
-        grossSalary: 0,
-        id: '',
-        netSalary: 0,
-        periodFrom: null,
-        periodTo: null,
-        perquisites: [],
-        pinCode: "",
-        profitsInLieuOfSalaryType: [],
-        salary: [],
-        standardDeduction: 0,
-        state: "",
-        taxRelief: 0,
-        taxableIncome: 0
-      }
-
+    
       this.employerArray = [];
       for(let i=0; i< this.salaryItrratedData.length; i++){
         debugger
         console.log('employerArray : ',this.employerArray);
-        employerObj.allowance = [];
-        employerObj.deductions = [];
-        employerObj.perquisites = [];
-        employerObj.profitsInLieuOfSalaryType = [];
-        employerObj.salary = [];
+
+        let employerObj={
+          address: "",
+          allowance: [],
+          city: "",
+          country: '',
+          deductions: [],
+          employerCategory: "",
+          employerName: "",
+          employerPAN: '',
+          employerTAN: "",
+          grossSalary: 0,
+          id: '',
+          netSalary: 0,
+          periodFrom: null,
+          periodTo: null,
+          perquisites: [],
+          pinCode: "",
+          profitsInLieuOfSalaryType: [],
+          salary: [],
+          standardDeduction: 0,
+          state: "",
+          taxRelief: 0,
+          taxableIncome: 0
+        }
+  
+
+        // employerObj.allowance = [];
+        // employerObj.deductions = [];
+        // employerObj.perquisites = [];
+        // employerObj.profitsInLieuOfSalaryType = [];
+        // employerObj.salary = [];
         console.log('salaryItrratedData : ',this.salaryItrratedData);
         console.log('salaryItrratedData '+i+' position: ',this.salaryItrratedData[i]);
         Object.assign(employerObj, this.salaryItrratedData[i]);
