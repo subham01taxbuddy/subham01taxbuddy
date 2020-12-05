@@ -42,10 +42,10 @@
                                         {{item.sourceAsMap.Phone}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-45">
-                                        {{item.sourceAsMap.Kommunicate.webhookResponse.message}}
+                                        {{item.sourceAsMap.Kommunicate ? item.sourceAsMap.Kommunicate.webhookResponse.message : ''}}
                                     </div>
                                     <div class="table__cell product-row__cell-stock flex-15">
-                                        {{item.sourceAsMap.Kommunicate.webhookResponse.timeStamp | date :'dd MMM yyyy, hh:mm a'}}
+                                        {{item.sourceAsMap.Kommunicate ? (item.sourceAsMap.Kommunicate.webhookResponse.timeStamp | date :'dd MMM yyyy, hh:mm a') : ''}}
                                     </div>
 
                                     <div class="table__cell product-row__cell-stock flex-15">
