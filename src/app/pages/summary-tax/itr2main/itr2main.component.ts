@@ -1709,13 +1709,34 @@ export class Itr2mainComponent implements OnInit {
 
      // Presumptive Business Income U/S 44ADA
      var pre44ADAinfo = itr3Info['ITRForm:PARTA_PL'];
+
+     var business44AdaInfo = {
+       natureOfBusiness: '',
+       tradeName: ''
+     } 
+     
+     console.log('ITRForm:NatOfBus44ADA ==> ',pre44ADAinfo['ITRForm:NatOfBus44ADA'])
+    if(pre44ADAinfo.hasOwnProperty('ITRForm:NatOfBus44ADA')){
+      debugger
+      var nat444Ada = pre44ADAinfo['ITRForm:NatOfBus44ADA'];
+      if(this.utilService.isNonEmpty(nat444Ada.length)){
+        business44AdaInfo.natureOfBusiness = nat444Ada[0]['ITRForm:CodeADA']['_text'];
+        business44AdaInfo.tradeName = nat444Ada[0]['ITRForm:NameOfBusiness']['_text'];
+      }
+      else{ 
+        //var nat444Ada = pre44ADAinfo.hasOwnProperty('ITRForm:NatOfBus44ADA');
+        business44AdaInfo.natureOfBusiness = nat444Ada['ITRForm:CodeADA']['_text'];
+        business44AdaInfo.tradeName = nat444Ada['ITRForm:NameOfBusiness']['_text'];
+      }
+    }
+
      console.log('pre44ADAinfo: ',pre44ADAinfo);
      let preBusinessObj44ADA = {
       businessType: "PROFESSIONAL",
       exemptIncome: 0,
-      natureOfBusiness: pre44ADAinfo.hasOwnProperty('ITRForm:NatOfBus44ADA') ? pre44ADAinfo['ITRForm:NatOfBus44ADA']['ITRForm:CodeADA']['_text'] : '',
+      natureOfBusiness: business44AdaInfo.natureOfBusiness,//pre44ADAinfo.hasOwnProperty('ITRForm:NatOfBus44ADA') ? pre44ADAinfo['ITRForm:NatOfBus44ADA']['ITRForm:CodeADA']['_text'] : '',
       taxableIncome: 0,
-      tradeName: pre44ADAinfo.hasOwnProperty('ITRForm:NatOfBus44ADA') ? pre44ADAinfo['ITRForm:NatOfBus44ADA']['ITRForm:NameOfBusiness']['_text'] : '',
+      tradeName: business44AdaInfo.tradeName,//pre44ADAinfo.hasOwnProperty('ITRForm:NatOfBus44ADA') ? pre44ADAinfo['ITRForm:NatOfBus44ADA']['ITRForm:NameOfBusiness']['_text'] : '',
       incomes: []
     }
 
