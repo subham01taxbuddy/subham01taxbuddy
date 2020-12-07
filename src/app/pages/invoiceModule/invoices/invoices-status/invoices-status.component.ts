@@ -202,7 +202,12 @@ export class InvoicesStatusComponent implements OnInit {
         field: 'purpose',
         width: 150,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' }
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
       },
       {
         headerName: 'Invoice Prepared by',
