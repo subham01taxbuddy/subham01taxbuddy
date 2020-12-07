@@ -25,7 +25,9 @@ export class KommunicateComponent implements OnInit {
     { value: 'amrita@ssbainnovations.com', label: 'Amrita' },
     { value: 'ankita@ssbainnovations.com', label: 'Ankita' },
     { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
-    { value: 'damini@ssbainnovations.com', label: 'Damini' }
+    { value: 'damini@ssbainnovations.com', label: 'Damini' },
+    { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
+    { value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
   ];
   loading = false;
   constructor(private userMsService: UserMsService, public utilsService: UtilsService,
