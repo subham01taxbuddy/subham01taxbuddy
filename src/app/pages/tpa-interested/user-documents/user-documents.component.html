@@ -2,7 +2,7 @@
 <div class="main clearfix">
     <div class="card" style="padding: 0 !important;">
         <div class="card__title" style="padding: 20px;">Document List </div>
-        <div><span *ngFor="let docs of commonDocuments; let i=index">
+        <div style="padding-left: 30px;"><span *ngFor="let docs of commonDocuments; let i=index">
                 <a href="javascript:;" (click)="getCommonDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
             </span> &nbsp;
             <span *ngFor="let docs of itrDocuments; let i=index">
@@ -14,7 +14,7 @@
             [fullImage]="docDetails.docUrl" [magnification]="1" [enableScrollZoom]="true" [enableLens]="true"
             [lensWidth]="200">
         </ngx-image-zoom>
-        <div *ngIf="docDetails.docType === 'pdf'">
+        <div *ngIf="docDetails.docType === 'pdf'" style="padding-left: 30px;">
             <button ion-button (click)="incrementZoom(-0.1)">
                 -
             </button>&nbsp;
