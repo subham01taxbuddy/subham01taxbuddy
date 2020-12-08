@@ -457,7 +457,11 @@ export class Itr2mainComponent implements OnInit {
        this.personalInfoForm.controls['fathersName'].setValue(fatherName);
        this.personalInfoForm.controls['panNumber'].setValue(personalInfo['ITRForm:PAN']['_text']);
        this.personalInfoForm.controls['city'].setValue(personalInfo['ITRForm:Address']['ITRForm:CityOrTownOrDistrict']['_text']);
-       this.personalInfoForm.controls['pinCode'].setValue(personalInfo['ITRForm:Address']['ITRForm:PinCode']['_text'])
+
+       if(personalInfo['ITRForm:Address'].hasOwnProperty('ITRForm:PinCode')){
+        this.personalInfoForm.controls['pinCode'].setValue(personalInfo['ITRForm:Address']['ITRForm:PinCode']['_text'])
+       }
+      
        this.getCityData(this.personalInfoForm['controls'].pinCode, 'profile');
        this.personalInfoForm.controls['email'].setValue(personalInfo['ITRForm:Address']['ITRForm:EmailAddress']['_text']);
        this.personalInfoForm.controls['contactNumber'].setValue(personalInfo['ITRForm:Address']['ITRForm:MobileNo']['_text'])
@@ -524,7 +528,7 @@ export class Itr2mainComponent implements OnInit {
                  building: '',
                  locality: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:AddrDetail']['_text'],
                  street: '',
-                 pinCode: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:PinCode']['_text'],
+                 pinCode: housingData[i]['ITRForm:AddressDetailWithZipCode'].hasOwnProperty('ITRForm:PinCode') ? housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:PinCode']['_text'] : '',
                  country: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:CountryCode']['_text'] === "91" ? 'India' : '',
                  state: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:StateCode']['_text'],
                  city: housingData[i]['ITRForm:AddressDetailWithZipCode']['ITRForm:CityOrTownOrDistrict']['_text'],
@@ -550,7 +554,7 @@ export class Itr2mainComponent implements OnInit {
              building: '',
              locality: housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:AddrDetail']['_text'],
              street: '',
-             pinCode: housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:PinCode']['_text'],
+             pinCode: housingData['ITRForm:AddressDetailWithZipCode'].hasOwnProperty('ITRForm:PinCode') ? housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:PinCode']['_text'] : '',
              country: housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:CountryCode']['_text'],
              state: housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:StateCode']['_text'],
              city: housingData['ITRForm:AddressDetailWithZipCode']['ITRForm:CityOrTownOrDistrict']['_text'],
