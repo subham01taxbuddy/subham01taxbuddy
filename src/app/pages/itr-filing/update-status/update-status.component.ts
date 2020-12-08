@@ -217,7 +217,8 @@ export class UpdateStatusComponent implements OnInit {
           width: '50%',
           height: 'auto',
           data: {
-            chatData: result
+            chatData: result,
+            kommunicateGroupId: kommunicateGroupId
           }
         })
 

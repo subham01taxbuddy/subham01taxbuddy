@@ -1,3 +1,4 @@
+import { KommunicateDialogComponent } from './../pages/itr-filing/kommunicate-dialog/kommunicate-dialog.component';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpperCaseDirective, InputDataMaskDirective, /* converToLowerCaseDirective */ } from './input-data-mask.directive';
@@ -32,8 +33,8 @@ import { UpdateStatusComponent } from 'app/pages/itr-filing/update-status/update
         UserNotesComponent,
         AddCallLogComponent,
         FilingStatusDialogComponent,
-        UpdateStatusComponent
-        // CheckboxRenderer
+        UpdateStatusComponent,
+        KommunicateDialogComponent
     ],
     imports: [
         CommonModule,
@@ -60,9 +61,11 @@ import { UpdateStatusComponent } from 'app/pages/itr-filing/update-status/update
         UserNotesComponent,
         AddCallLogComponent,
         FilingStatusDialogComponent,
-        UpdateStatusComponent
+        UpdateStatusComponent,
+        KommunicateDialogComponent
     ],
     providers: [],
-    entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent]
+    entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,
+        KommunicateDialogComponent]
 })
 export class SharedModule { }

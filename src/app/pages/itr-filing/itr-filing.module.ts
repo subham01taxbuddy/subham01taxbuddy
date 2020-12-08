@@ -31,7 +31,7 @@ import { MyAssignedItrsComponent } from './my-assigned-itrs/my-assigned-itrs.com
 import { BusinessComponent } from './business/business.component';
 // import { WhatsAppDialogComponent } from './whats-app-dialog/whats-app-dialog.component';
 import { MyTeamItrsComponent } from './my-team-itrs/my-team-itrs.component';
-import { KommunicateDialogComponent } from './kommunicate-dialog/kommunicate-dialog.component';
+// import { KommunicateDialogComponent } from './kommunicate-dialog/kommunicate-dialog.component';
 // import { FilingStatusDialogComponent } from './filing-status-dialog/filing-status-dialog.component';
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-return-dialog.component';
@@ -77,14 +77,14 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
         BusinessComponent,
         // WhatsAppDialogComponent,
         MyTeamItrsComponent,
-        KommunicateDialogComponent,
+        // KommunicateDialogComponent,
         // FilingStatusDialogComponent,
         DocumentUploadComponent,
         ReviseReturnDialogComponent,
         DelayComponent,
         // InputUploadComponent
     ],
-    entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ KommunicateDialogComponent,
+    entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
         /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent]
 
 })
