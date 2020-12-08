@@ -1538,7 +1538,9 @@ export class Itr2mainComponent implements OnInit {
         this.assetsLiabilitiesForm.controls['loanAmount'].setValue  (this.isNotZero(movableAssetsInfo['ITRForm:LoansAndAdvancesGiven']['_text']) ? movableAssetsInfo['ITRForm:LoansAndAdvancesGiven']['_text'] : 0)  
         this.assetsLiabilitiesForm.controls['cashInHand'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:CashInHand']['_text']) ? movableAssetsInfo['ITRForm:CashInHand']['_text'] : 0);
         
-        this.assetsLiabilitiesForm.controls['movableAssetTotal'].setValue(this.isNotZero(itrData['ITRForm:ScheduleAL']['ITRForm:LiabilityInRelatAssets']['_text']) ? itrData['ITRForm:ScheduleAL']['ITRForm:LiabilityInRelatAssets']['_text'] : 0) 
+        this.assetsLiabilitiesForm.controls['movableAssetTotal'].setValue(this.isNotZero(itrData['ITRForm:ScheduleAL']['ITRForm:LiabilityInRelatAssets']['_text']) ? itrData['ITRForm:ScheduleAL']['ITRForm:LiabilityInRelatAssets']['_text'] : 0);
+        
+        Object.assign(this.itr_2_Summary.assesse.assetsLiabilities, this.assetsLiabilitiesForm.value);
       }
       
     }      
@@ -2346,11 +2348,15 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
   }
 
   calImmovableToatal(immovableArrayData){
+    debugger
     var totalOfImmovale = 0;
     for(let i=0; i< immovableArrayData.length; i++){
       totalOfImmovale = totalOfImmovale + Number(immovableArrayData[i].amount);
     }
+    debugger
     this.itr_2_Summary.assesse.assetsLiabilities.immovable = this.immovableAssetsInfo;
+    console.log('immovableAssetsInfo: ',this.immovableAssetsInfo);
+    console.log('After IMOVABLE part bind: ',this.itr_2_Summary.assesse.assetsLiabilities.immovable);
     this.deductionAndRemainForm.controls['immovableAssetTotal'].setValue(totalOfImmovale);
   }
 
@@ -4897,6 +4903,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
 
           //Exempt Income=> Movalble / Immovable assets
           if(this.showAssetLiability){
+            console.log('this.itr_2_Summary.assesse.assetsLiabilities ===> ', this.itr_2_Summary.assesse.assetsLiabilities)
             debugger
             this.itr_2_Summary.movableAssetTotal = this.assetsLiabilitiesForm.controls['movableAssetTotal'].value;
   
@@ -4915,6 +4922,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
             this.itr_2_Summary.assesse.assetsLiabilities = null;
           }
 
+          console.log('Befor save data in save summary:--> ',this.itr_2_Summary.assesse.assetsLiabilities)
 
           //ITR-3 Business income part
           if (this.businessFormValid) {
