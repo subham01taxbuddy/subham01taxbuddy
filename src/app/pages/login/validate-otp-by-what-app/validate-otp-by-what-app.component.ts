@@ -83,8 +83,10 @@ export class ValidateOtpByWhatAppComponent implements OnInit {
       this.router.navigate(['pages/home']);
     } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
       this.router.navigate(['pages/home']);
-    /* } else if (jhi.role.indexOf("ROLE_IFA") !== -1) {
-      this.router.navigate(['/pages/ifa/claim-client']); */
+    } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
+      this.router.navigate(['pages/tpa-interested/list']);
+      /* } else if (jhi.role.indexOf("ROLE_IFA") !== -1) {
+        this.router.navigate(['/pages/ifa/claim-client']); */
     } else {
       if (jhi.role.length > 0)
         this._toastMessageService.alert("error", "Access Denied.");
@@ -94,10 +96,10 @@ export class ValidateOtpByWhatAppComponent implements OnInit {
   getUserByCognitoId(data) {
     NavbarService.getInstance(this.http).getUserByCognitoId(`${data.attributes.sub}`).subscribe(res => {
       console.log('By CognitoId data:', res)
-      console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", /* "ROLE_IFA", */ 'ROLE_FILING_TEAM']))
+      console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", /* "ROLE_IFA", */ 'ROLE_FILING_TEAM', 'ROLE_TPA_SME']))
       if (res && data.signInUserSession.accessToken.jwtToken) {
         this.setUserDataInsession(data, res);
-      } else if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", /* "ROLE_IFA", */ 'ROLE_FILING_TEAM']))) {
+      } else if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", /* "ROLE_IFA", */ 'ROLE_FILING_TEAM', 'ROLE_TPA_SME']))) {
         this._toastMessageService.alert("error", "Access Denied.");
       } else {
         this._toastMessageService.alert("error", "The Mobile/Email address or Password entered, is not correct. Please check and try again");

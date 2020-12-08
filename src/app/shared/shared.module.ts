@@ -14,6 +14,9 @@ import { UserNotesComponent } from './components/user-notes/user-notes.component
 import { AddCallLogComponent } from './components/add-call-log/add-call-log.component';
 import { OwlDateTimeModule } from 'ng-pick-datetime/date-time/date-time.module';
 import { OwlNativeDateTimeModule } from 'ng-pick-datetime/date-time/adapter/native-date-time.module';
+import { FilingStatusDialogComponent } from 'app/pages/itr-filing/filing-status-dialog/filing-status-dialog.component';
+import { UpdateStatusComponent } from 'app/pages/itr-filing/update-status/update-status.component';
+// import { CheckboxRenderer } from './checkbox-renderer.component';
 
 
 @NgModule({
@@ -27,14 +30,18 @@ import { OwlNativeDateTimeModule } from 'ng-pick-datetime/date-time/adapter/nati
         AgGridMaterialSelectEditorComponent,
         WhatsAppDialogComponent,
         UserNotesComponent,
-        AddCallLogComponent
+        AddCallLogComponent,
+        FilingStatusDialogComponent,
+        UpdateStatusComponent
+        // CheckboxRenderer
     ],
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
-        AgGridModule.withComponents([NumericEditor, CustomDateComponent, AgGridMaterialSelectEditorComponent, MatInputComponent]),  //MatSelectComponent,
+        AgGridModule.withComponents([NumericEditor, CustomDateComponent, AgGridMaterialSelectEditorComponent, MatInputComponent,
+            /* CheckboxRenderer */]),  //MatSelectComponent,
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
     ],
@@ -51,9 +58,11 @@ import { OwlNativeDateTimeModule } from 'ng-pick-datetime/date-time/adapter/nati
         AgGridMaterialSelectEditorComponent,
         WhatsAppDialogComponent,
         UserNotesComponent,
-        AddCallLogComponent
+        AddCallLogComponent,
+        FilingStatusDialogComponent,
+        UpdateStatusComponent
     ],
     providers: [],
-    entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent]
+    entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent]
 })
 export class SharedModule { }
