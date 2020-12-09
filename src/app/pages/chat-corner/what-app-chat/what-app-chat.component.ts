@@ -299,6 +299,7 @@ export class WhatAppChatComponent implements OnInit {
     //   this.loading = false;
     // }
 
+    this.showChatUi = true;
     if (user === 'bySearch') {
       if (this.utileService.isNonEmpty(this.searchNumber.value) && this.searchNumber.valid) {
         user = '91' + this.searchNumber.value;
