@@ -5005,17 +5005,22 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
             console.log('Main presumptiveIncomeObj ===> ', presumData);
 
             debugger
-            if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['natureOfSpeculativeBusiness'].value) && this.utilService.isNonEmpty(this.businessIncomeForm.controls['tradeNameOfSpeculative'].value)) {
+            var presumptiveSpeculativeObj = {
+              businessType: 'SPECULATIVE',
+              natureOfBusiness: '',
+              tradeName: '',//trade name
+              incomes: [],
+              taxableIncome : null,
+              exemptIncome: null
+            }
+           
+           if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['natureOfSpeculativeBusiness'].value) && this.utilService.isNonEmpty(this.businessIncomeForm.controls['tradeNameOfSpeculative'].value)) {
     
              let natureOfSpeculative = this.speculativOfBusinessDropdown.filter(item => item.label === this.businessIncomeForm.controls['natureOfSpeculativeBusiness'].value)[0].code;
-              var presumptiveSpeculativeObj = {
-                businessType: 'SPECULATIVE',
-                natureOfBusiness: natureOfSpeculative,
-                tradeName: this.businessIncomeForm.controls['tradeNameOfSpeculative'].value,//trade name
-                incomes: [],
-                taxableIncome : null,
-                exemptIncome: null
-              }
+             presumptiveSpeculativeObj.natureOfBusiness = natureOfSpeculative;
+             presumptiveSpeculativeObj.tradeName = this.businessIncomeForm.controls['tradeNameOfSpeculative'].value;
+
+            }
     
               if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['turnoverOfSpeculative'].value)) {
                 let incomeObj = {
@@ -5032,10 +5037,19 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
               }
     
               presumData.push(presumptiveSpeculativeObj)
-            }
+            // }
 
             debugger
-            if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].value) && this.utilService.isNonEmpty(this.businessIncomeForm.controls['tradeNameOfothertThanSpeculative'].value)) {
+
+            var presumptiveOtherThanSpeculativeObj = {
+              businessType: 'OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_BUSINESS',
+              natureOfBusiness: '',
+              tradeName: '',//trade name
+              incomes: [],
+              taxableIncome : null,
+              exemptIncome: null
+            }
+          if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].value) && this.utilService.isNonEmpty(this.businessIncomeForm.controls['tradeNameOfothertThanSpeculative'].value)) {
     
               var natureOfOtherThanSpeculative;
               if(this.businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].value === 'Share of income from firm'){
@@ -5044,15 +5058,10 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
               else{
                 natureOfOtherThanSpeculative = this.othserThanSpeculativOfBusinessDropdown.filter(item => item.label === this.businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].value)[0].code;
               }
-              
-               var presumptiveOtherThanSpeculativeObj = {
-                 businessType: 'OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_BUSINESS',
-                 natureOfBusiness: natureOfOtherThanSpeculative,
-                 tradeName: this.businessIncomeForm.controls['tradeNameOfothertThanSpeculative'].value,//trade name
-                 incomes: [],
-                 taxableIncome : null,
-                 exemptIncome: null
-               }
+              presumptiveOtherThanSpeculativeObj.natureOfBusiness = natureOfOtherThanSpeculative;
+              presumptiveOtherThanSpeculativeObj.tradeName = this.businessIncomeForm.controls['tradeNameOfothertThanSpeculative'].value;
+             
+            }
      
                if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['turnoverOfothertThanSpeculative'].value)) {
                  let incomeObj = {
@@ -5068,10 +5077,18 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
                }
      
                presumData.push(presumptiveOtherThanSpeculativeObj)
-             }
+             //}
 
              //Income from Other than Speculative and Presumptive - Profession
-             if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].value) && this.utilService.isNonEmpty(this.businessIncomeForm.controls['tradeNameOfothertThanSpeculativeProfession'].value)) {
+             var presumptiveOtherThanSpeculativeProfesionObj = {
+              businessType: 'OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_PROFESSION',
+              natureOfBusiness: '',
+              tradeName: '',//trade name
+              incomes: [],
+              taxableIncome : null,
+              exemptIncome: null
+            }
+            if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].value) && this.utilService.isNonEmpty(this.businessIncomeForm.controls['tradeNameOfothertThanSpeculativeProfession'].value)) {
     
               var natureOfOtherThanSpeculative;
               if(this.businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].value === 'Share of income from firm'){
@@ -5080,15 +5097,10 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
               else{
                 natureOfOtherThanSpeculative = this.natureOfBusinessDropdown44ADA.filter(item => item.label === this.businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].value)[0].code;
               }
+              presumptiveOtherThanSpeculativeProfesionObj.natureOfBusiness = natureOfOtherThanSpeculative;
+              presumptiveOtherThanSpeculativeProfesionObj.tradeName = this.businessIncomeForm.controls['tradeNameOfothertThanSpeculativeProfession'].value;
               
-               var presumptiveOtherThanSpeculativeProfesionObj = {
-                 businessType: 'OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_PROFESSION',
-                 natureOfBusiness: natureOfOtherThanSpeculative,
-                 tradeName: this.businessIncomeForm.controls['tradeNameOfothertThanSpeculativeProfession'].value,//trade name
-                 incomes: [],
-                 taxableIncome : null,
-                 exemptIncome: null
-               }
+            }
      
                if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeProfession'].value)) {
                  let incomeObj = {
@@ -5106,7 +5118,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
                presumData.push(presumptiveOtherThanSpeculativeProfesionObj);
 
               
-             }
+            // }
 
               //F&O
               if (this.utilService.isNonEmpty(this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeFAndO'].value)) {
@@ -5133,6 +5145,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
                 presumData.push(presumptiveOtherThanSpeculativeFAndOObj);
               }
  
+            console.log('presumptiveIncomes ==> ', presumData)
 
            // this.itrSummaryForm['controls'].assesse['controls'].business['controls'].presumptiveIncomes.setValue(presumData)
            this.itr_2_Summary.assesse.business.presumptiveIncomes = presumData;
