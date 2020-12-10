@@ -1757,7 +1757,8 @@ export class Itr2mainComponent implements OnInit {
       registrationNo: null,
       tonnageCapacity: 0
     }
-    preBusinessObj44ADA.incomes.push(recivedInBankObj);
+    // preBusinessObj44ADA.incomes.push(recivedInBankObj);
+    preBusinessObj44ADA.incomes.push(grossRecipt44ADAObj);
     itr3Summary.assesse.business.presumptiveIncomes.push(preBusinessObj44ADA);
     console.log('44ADA grossRecipt44ADAObj Object :',grossRecipt44ADAObj);
     console.log('itr3Summary total object :',itr3Summary);
