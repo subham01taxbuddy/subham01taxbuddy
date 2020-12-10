@@ -628,7 +628,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
           typeOfPolicy: null,
           policyFor: 'DEPENDANT',
           premium: Number(this.investmentDeductionForm.controls['selfPremium'].value),
-          medicalExpenditure: this.userAge > 60 ? Number(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value) : 0,
+          medicalExpenditure: this.userAge >= 60 ? Number(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value) : 0,
           preventiveCheckUp: Number(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value),
           sumAssured: null,
           healthCover: null
