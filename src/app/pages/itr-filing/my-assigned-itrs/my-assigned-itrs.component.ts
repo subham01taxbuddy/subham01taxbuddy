@@ -79,6 +79,7 @@ export class MyAssignedItrsComponent implements OnInit {
         acknowledgementReceived: data[i].acknowledgementReceived,
         eFillingCompleted: data[i].eFillingCompleted,
         eFillingDate: data[i].eFillingDate,
+        nextYearTpa: data[i].nextYearTpa,
       });
     }
     return newData;

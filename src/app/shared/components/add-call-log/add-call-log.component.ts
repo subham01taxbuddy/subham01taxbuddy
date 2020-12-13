@@ -64,6 +64,10 @@ export class AddCallLogComponent implements OnInit {
     { userId: 67523, name: 'Supriya Kumbhar', email: 'supriya.kumbhar@taxbuddy.com', teamLeadEmail: 'amrita@ssbainnovations.com' },
     { userId: 67522, name: 'Nikita Chilveri', email: 'nikita.chilveri@taxbuddy.com', teamLeadEmail: 'amrita@ssbainnovations.com' },
     { userId: 67558, name: 'Sunita Sharma', email: 'sunita.sharma@taxbuddy.com', teamLeadEmail: 'amrita@ssbainnovations.com' },
+    { userId: 71150, name: 'Deep Trivedi', email: 'deep.trivedi@taxbuddy.com', teamLeadEmail: 'amrita@ssbainnovations.com' },
+    { userId: 71148, name: 'Riddhi Solanki', email: 'Riddhi.Solanki@taxbuddy.com', teamLeadEmail: 'amrita@ssbainnovations.com' },
+    { userId: 71159, name: 'Ajay Kandhway', email: 'ajay.kandhway@taxbuddy.com', teamLeadEmail: 'amrita@ssbainnovations.com' },
+    { userId: 71168, name: 'Ganesh Jaiswal', email: 'ganesh.jaiswal@taxbuddy.com', teamLeadEmail: 'amrita@ssbainnovations.com' },
 
 
   ];
