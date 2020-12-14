@@ -654,6 +654,7 @@ export class PersonalInformationComponent implements OnInit {
   };
   getDocsUrl(index) {
     if (this.documents.length > 0) {
+      debugger
       const docType = this.documents[index].fileName.split('.').pop();
       if (this.documents[index].isPasswordProtected) {
         this.docDetails.docUrl = this.documents[index].passwordProtectedFileUrl;
@@ -665,6 +666,7 @@ export class PersonalInformationComponent implements OnInit {
       this.docDetails.docUrl = '';
       this.docDetails.docType = '';
     }
+    console.log('docDetails ===> ',this.docDetails)
   }
 
   getDocumentUrl(documentTag) {
