@@ -538,9 +538,9 @@ export class Itr2mainComponent implements OnInit {
                  propertyTax:0,//housingData[i]['ITRForm:ifLetOut']['_text'],
                  annualValue: this.isNotZero(housingData[i]['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text']) ? housingData[i]['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text'] : 0,
                  exemptIncome: this.isNotZero(housingData[i]['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text']) ? housingData[i]['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text'] : 0,
-                 interestAmount: '',//housingData[i]['ITRForm:Rentdetails']['ITRForm:IntOnBorwCap']['_text'],
+                 interestAmount: housingData[i]['ITRForm:Rentdetails'].hasOwnProperty('ITRForm:IntOnBorwCap') ? housingData[i]['ITRForm:Rentdetails']['ITRForm:IntOnBorwCap']['_text'] : '',
                  taxableIncome: housingData[i]['ITRForm:Rentdetails']['ITRForm:IncomeOfHP']['_text']
-               }
+               } 
                  this.housingData.push(houceObj);
              }
          }
@@ -565,7 +565,7 @@ export class Itr2mainComponent implements OnInit {
              propertyTax: '',//housingData['ITRForm:ifLetOut']['_text'],
              annualValue: this.isNotZero(housingData['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text']) ? housingData['ITRForm:Rentdetails']['ITRForm:AnnualOfPropOwned']['_text'] : 0,
              exemptIncome: this.isNotZero(housingData['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text']) ? housingData['ITRForm:Rentdetails']['ITRForm:TotalDeduct']['_text'] : 0,
-             interestAmount: '',//housingData['ITRForm:Rentdetails']['ITRForm:IntOnBorwCap']['_text'],
+             interestAmount: housingData['ITRForm:Rentdetails'].hasOwnProperty('ITRForm:IntOnBorwCap') ? housingData['ITRForm:Rentdetails']['ITRForm:IntOnBorwCap']['_text'] : '',
              taxableIncome: housingData['ITRForm:Rentdetails']['ITRForm:IncomeOfHP']['_text']
            }
            this.housingData.push(houceObj);
