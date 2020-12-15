@@ -78,10 +78,6 @@
                       {{selectedUser ? (selectedUser.isUserOpted ? 'Opt-in' : 'Opt-out') : ' -'}}
                     </div>
                     <div class="card__col-lg-3">
-                      <label><b>Ticket Owner: </b></label>
-                      {{smeInfo.USER_MOBILE !== "0014082016"? smeInfo.USER_F_NAME : 'NA'}}
-                    </div>
-                    <div class="card__col-lg-3">
                       <label><b>Chat Window Timer: </b></label>
                       {{selectedUser ? (timeExpired ? '00:00:00' : (countDown | async)) : ' -'}}
                       <!-- {{(Math.floor(countDown / (60 * 60))) | async}}:{{(countDown / (60) ) | async}} : {{(countDown % (60) ) | async}} -->
@@ -90,6 +86,11 @@
                     <div class="card__col-lg-3">
                       <label><b>Conversation Status: </b></label>
                       Not applicable
+                    </div>
+                    <div class="card__col-lg-3">
+                      <label><b>Agent Id: </b></label>
+                      <!-- {{smeInfo.USER_MOBILE !== "0014082016"? smeInfo.USER_F_NAME : 'NA'}} -->
+                      {{selectedUser.smeName ? selectedUser.smeName : 'NA'}}
                     </div>
                   </div>
 
