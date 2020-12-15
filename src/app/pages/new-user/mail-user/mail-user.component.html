@@ -23,7 +23,7 @@
                 <div class="table__cell product-row__cell-unit flex-20">
                   <a class="table__sort-link">User Name</a>
                 </div>
-                <div class="table__cell product-row__cell-unit flex-20">
+                <div class="table__cell product-row__cell-unit flex-15">
                   <a class="table__sort-link">Mobile Number</a>
                 </div>
                 <div class="table__cell product-row__cell-unit flex-20">
@@ -32,8 +32,11 @@
                 <div class="table__cell product-row__cell-unit flex-20">
                   <a class="table__sort-link">Assign Id</a>
                 </div>
-                <div class="table__cell product-row__cell-unit flex-20">
+                <div class="table__cell product-row__cell-unit flex-10">
                   <a class="table__sort-link">Date</a>
+                </div>
+                <div class="table__cell product-row__cell-unit flex-15">
+                  <a class="table__sort-link">Action</a>
                 </div>
               </div>
   
@@ -44,7 +47,7 @@
                       <div class="table__cell product-row__cell-stock flex-20">
                         {{item.name}}
                       </div>
-                      <div class="table__cell product-row__cell-stock flex-20">
+                      <div class="table__cell product-row__cell-stock flex-15">
                         {{item.mobileNumber}}
                       </div>
                       <div class="table__cell product-row__cell-stock flex-20">
@@ -53,8 +56,11 @@
                       <div class="table__cell product-row__cell-stock flex-20">
                         {{item.assigneeId}}
                       </div>
-                      <div class="table__cell product-row__cell-stock flex-20">
+                      <div class="table__cell product-row__cell-stock flex-10">
                         {{item.createdDate | date: 'dd/MM/yyyy'}}
+                      </div>
+                      <div class="table__cell product-row__cell-stock flex-15">
+                        <button class="butn" (click)="showUserHistry(item.email)">User Histroy</button>
                       </div>
                       <!-- <div class="table__cell product-row__cell-stock flex-20">
                         <button type="submit" class="btn" style="border: none;" (click)="startFiling(item)">Start
