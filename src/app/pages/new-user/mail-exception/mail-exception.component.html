@@ -15,7 +15,7 @@
               <div class="table__cell product-row__cell-unit flex-20">
                 <a class="table__sort-link">Id</a>
               </div>
-              <div class="table__cell product-row__cell-unit flex-20">
+              <div class="table__cell product-row__cell-unit flex-10">
                 <a class="table__sort-link">Group id</a>
               </div>
               <div class="table__cell product-row__cell-unit flex-30">
@@ -24,7 +24,7 @@
               <div class="table__cell product-row__cell-unit flex-10">
                 <a class="table__sort-link">Date</a>
               </div>
-              <div class="table__cell product-row__cell-unit flex-20">
+              <div class="table__cell product-row__cell-unit flex-30">
                 <a class="table__sort-link">Action</a>
               </div>
             </div>
@@ -37,7 +37,7 @@
                         <div class="table__cell product-row__cell-stock flex-20">
                           {{item._id}}
                         </div>
-                        <div class="table__cell product-row__cell-stock flex-20">
+                        <div class="table__cell product-row__cell-stock flex-10">
                           <a href="javascript:" (click)="redirectToKommunicate(item.groupId)">{{item.groupId}}</a>
                         </div>
                         <div class="table__cell product-row__cell-stock flex-30">
@@ -46,9 +46,10 @@
                         <div class="table__cell product-row__cell-stock flex-10">
                           {{item.createdDate | date : 'dd/MM/yyyy'}}
                         </div>
-                        <div class="table__cell product-row__cell-stock flex-20">
+                        <div class="table__cell product-row__cell-stock flex-30">
                          <button class="butn" (click)="createNewUser(mailExceptionUser[i])">Create User</button>&nbsp;  <!--<i class="fa fa-user" aria-hidden="true"></i>-->
-                         <button class="butn" (click)="assignUser(mailExceptionUser[i])">Assign User</button>
+                         <button class="butn" (click)="assignUser(mailExceptionUser[i])">Assign User</button>&nbsp;
+                         <button class="butn" (click)="showUserHistry(item.email)">User Histroy</button>
                         </div>
                         
                         <!-- <div class="table__cell product-row__cell-stock flex-20">

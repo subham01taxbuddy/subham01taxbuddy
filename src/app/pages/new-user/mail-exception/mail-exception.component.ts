@@ -1,9 +1,11 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { UserMsService } from 'app/services/user-ms.service';
+import { UserHistryComponent } from '../user-histry/user-histry.component';
 
 @Component({
   selector: 'app-mail-exception',
@@ -17,7 +19,8 @@ export class MailExceptionComponent implements OnInit {
   mailExceptionUser: any =[];
   exceptionListtGridOptions: GridOptions;
   
-  constructor(private userService: UserMsService, private route: Router, private utilService: ItrMsService,  @Inject(LOCALE_ID) private locale: string) {
+  constructor(private userService: UserMsService, private route: Router, private utilService: ItrMsService,  @Inject(LOCALE_ID) private locale: string,
+              private dialog: MatDialog) {
 
     this.exceptionListtGridOptions = <GridOptions>{
       rowData: [],
@@ -182,6 +185,16 @@ export class MailExceptionComponent implements OnInit {
   redirectToKommunicate(id){
     let path = 'https://dashboard.kommunicate.io/conversations/'+id;
     window.open(path)
+  }
+
+  showUserHistry(mail){
+    let disposable = this.dialog.open(UserHistryComponent, {
+      width: '60%',
+      height: 'auto',
+      data: {
+        email: mail
+      }
+    })
   }
 
 }

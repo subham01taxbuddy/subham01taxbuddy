@@ -10,9 +10,10 @@ import { NewUserWizardComponent } from './new-user-wizard/new-user-wizard.compon
 import { MailUserComponent } from './mail-user/mail-user.component';
 import { MailExceptionComponent } from './mail-exception/mail-exception.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
+import { UserHistryComponent } from "./user-histry/user-histry.component";
 
 @NgModule({
-    declarations: [CreateUserComponent, NewUserWizardComponent, MailUserComponent, MailExceptionComponent, EditUserComponent],
+    declarations: [CreateUserComponent, NewUserWizardComponent, MailUserComponent, MailExceptionComponent, EditUserComponent, UserHistryComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -21,6 +22,7 @@ import { EditUserComponent } from './edit-user/edit-user.component';
         PagesModule,
         NgxPaginationModule,
         SharedModule
-    ]
+    ],
+    entryComponents: [UserHistryComponent]
 })
 export class NewUserModule {}
