@@ -57,7 +57,7 @@ export class FilingTasksComponent implements OnInit {
         comment: data[i].comment,
         itrType: data[i].itrType,
         estimatedDateTime: data[i].estimatedDateTime,
-        markAsDone: data[i].markAsDone
+        isMarkAsDone: data[i].isMarkAsDone
       });
     }
     console.log('Return data: ', newData)
@@ -133,13 +133,14 @@ export class FilingTasksComponent implements OnInit {
         }
       },
       {
-        headerName: "Completed",
-        field: "markAsDone",
-        // filter: "agTextColumnFilter",
+        headerName: "Filed",
+        field: "isMarkAsDone",
+        valueGetter: function (params) {
+            return params.data.isMarkAsDone ? 'Yes':'No';
+        },
         width: 80,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         pinned: 'right',
-        
       },
 
     //   {

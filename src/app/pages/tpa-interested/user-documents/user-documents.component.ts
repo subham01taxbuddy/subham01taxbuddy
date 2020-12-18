@@ -16,12 +16,12 @@ export class UserDocumentsComponent implements OnInit {
   ngOnInit() {
     const temp = this.activatedRoute.params.subscribe(params => {
       console.log("99999999999999999:", params)
-      this.getItrDocuments(params['userId']);
+      // this.getItrDocuments(params['userId']);
       this.getCommonDocuments(params['userId']);
     });
   }
   getCommonDocuments(userId) {
-    const param = `/cloud/signed-s3-urls?currentPath=${userId}/Common`;
+    const param = `/cloud/signed-s3-urls?currentPath=${userId}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.commonDocuments = result;
     })
