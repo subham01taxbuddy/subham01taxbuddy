@@ -1046,7 +1046,7 @@ export class Itr2mainComponent implements OnInit {
       console.log('taxPaid ===> ',taxPaid)
 
 
-
+  
     // Other Sources
     if(itrData.hasOwnProperty('ITRForm:ScheduleOS')){
       let otherSourceInfo = itrData['ITRForm:ScheduleOS']['ITRForm:IncOthThanOwnRaceHorse'];      
@@ -2744,15 +2744,16 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
 
   calculateTotalHeadWiseIncome(){
     if(this.itrType.itrTwo){
-      let headWiseIncome  =  Number(this.computationOfIncomeForm['controls'].salary.value) + Number(this.computationOfIncomeForm['controls'].housePropertyIncome.value)
-                            + this.incomeFromCapGain + Number(this.computationOfIncomeForm['controls'].otherIncome.value);
+      let headWiseIncome  =  Number(this.computationOfIncomeForm['controls'].salary.value) + (Number(this.computationOfIncomeForm['controls'].housePropertyIncome.value) > 0 ? Number(this.computationOfIncomeForm['controls'].housePropertyIncome.value) : 0)
+                            + (this.incomeFromCapGain > 0 ? this.incomeFromCapGain : 0) + (Number(this.computationOfIncomeForm['controls'].otherIncome.value) > 0 ? Number(this.computationOfIncomeForm['controls'].otherIncome.value) : 0);
     
       this.computationOfIncomeForm['controls'].totalHeadWiseIncome.setValue(headWiseIncome);
       this.calGrossTotalIncome();
     }
     else {
-      let headWiseIncome  =  Number(this.computationOfIncomeForm['controls'].salary.value) + Number(this.computationOfIncomeForm['controls'].housePropertyIncome.value)
-               + this.incomeFromCapGain + Number(this.computationOfIncomeForm['controls'].otherIncome.value) + Number(this.computationOfIncomeForm.controls['presumptiveIncome'].value);
+      let headWiseIncome  =  Number(this.computationOfIncomeForm['controls'].salary.value) + (Number(this.computationOfIncomeForm['controls'].housePropertyIncome.value) > 0 ? Number(this.computationOfIncomeForm['controls'].housePropertyIncome.value) : 0)
+               + (this.incomeFromCapGain > 0 ? this.incomeFromCapGain : 0) + (Number(this.computationOfIncomeForm['controls'].otherIncome.value) > 0 ? Number(this.computationOfIncomeForm['controls'].otherIncome.value) : 0) 
+               + (Number(this.computationOfIncomeForm.controls['presumptiveIncome'].value) > 0 ? Number(this.computationOfIncomeForm.controls['presumptiveIncome'].value): 0);
     
         this.computationOfIncomeForm['controls'].totalHeadWiseIncome.setValue(headWiseIncome);
         this.calGrossTotalIncome();
