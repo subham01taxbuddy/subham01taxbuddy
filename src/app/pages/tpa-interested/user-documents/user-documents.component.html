@@ -5,9 +5,6 @@
         <div style="padding-left: 30px;"><span *ngFor="let docs of commonDocuments; let i=index">
                 <a href="javascript:;" (click)="getCommonDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
             </span> &nbsp;
-            <span *ngFor="let docs of itrDocuments; let i=index">
-                <a href="javascript:;" (click)="getDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
-            </span>
         </div>
         <br><br><br>
         <ngx-image-zoom *ngIf="docDetails.docType !== 'pdf'" [thumbImage]="docDetails.docUrl"
