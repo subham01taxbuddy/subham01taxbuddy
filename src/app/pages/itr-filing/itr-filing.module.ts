@@ -37,6 +37,7 @@ import { DocumentUploadComponent } from './document-upload/document-upload.compo
 import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-return-dialog.component';
 import { DelayComponent } from './delay/delay.component';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -82,6 +83,7 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
         DocumentUploadComponent,
         ReviseReturnDialogComponent,
         DelayComponent,
+        FilingTasksComponent
         // InputUploadComponent
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ KommunicateDialogComponent,

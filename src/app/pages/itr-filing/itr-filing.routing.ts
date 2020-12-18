@@ -10,6 +10,7 @@ import { MyAssignedItrsComponent } from './my-assigned-itrs/my-assigned-itrs.com
 import { MyTeamItrsComponent } from './my-team-itrs/my-team-itrs.component';
 import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 import { DelayComponent } from './delay/delay.component';
+import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
 
 const routes: Routes = [
     {
@@ -23,6 +24,7 @@ const routes: Routes = [
             { path: 'acknowledgement', component: AcknowledgementComponent },
             { path: 'team-itrs', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: MyTeamItrsComponent },
             { path: 'delay', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: DelayComponent },
+            { path: 'tasks', component: FilingTasksComponent },
             { path: '', redirectTo: '/pages/itr-filing/users', pathMatch: 'full' }
         ]
     },
