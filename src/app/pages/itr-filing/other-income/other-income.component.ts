@@ -262,7 +262,9 @@ export class OtherIncomeComponent implements OnInit {
   };
   getDocsUrl(index) {
 
+debugger
     if (this.itrDocuments.length > 0) {
+      debugger
       const docType = this.itrDocuments[index].fileName.split('.').pop();
       if (this.itrDocuments[index].isPasswordProtected) {
         this.docDetails.docUrl = this.itrDocuments[index].passwordProtectedFileUrl;
@@ -274,5 +276,7 @@ export class OtherIncomeComponent implements OnInit {
       this.docDetails.docUrl = '';
       this.docDetails.docType = '';
     }
+
+    console.log('docDetails => ',this.docDetails)
   }
 }

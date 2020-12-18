@@ -82,8 +82,8 @@ export class UsersComponent implements OnInit {
         }
         return resolve(true)
       }, err => {
-        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-        this._toastMessageService.alert("error", "admin list - " + errorMessage);
+        //let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
         return resolve(false)
       });
     });

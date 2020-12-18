@@ -80,6 +80,18 @@ export class AddInvoiceComponent implements OnInit {
     value: 'userId', name: 'User Id'
   }];
 
+  itrTypes = [
+    { value: '1', label: 'ITR-1' },
+    { value: '4', label: 'ITR-4' },
+    { value: '2', label: 'ITR-2' },
+    { value: '3', label: 'ITR-3' },
+    { value: '5', label: 'ITR-5' },
+    { value: '6', label: 'ITR-6' },
+    { value: '7', label: 'ITR-7' },
+  ];
+
+  isItrComplite: boolean = false;
+
   constructor(public utilsService: UtilsService, private _toastMessageService: ToastMessageService,
     private fb: FormBuilder, private userService: UserMsService, private router: Router, public http: HttpClient,
     private itrMsService: ItrMsService) {
@@ -144,7 +156,11 @@ export class AddInvoiceComponent implements OnInit {
       amountInWords: '',
       inovicePreparedBy: '',
       ifaLeadClient: '',
-      paymentDate: ''
+      paymentDate: '',
+
+      estimateDateTime: [''],
+      itrType: [''],
+      comment: ['']
     })
   }
   /* setInitiatedData() {
@@ -214,8 +230,8 @@ export class AddInvoiceComponent implements OnInit {
         }
         return resolve(true)
       }, err => {
-        let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-        this._toastMessageService.alert("error", "admin list - " + errorMessage);
+        //let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", "admin list - " + this.utilsService.showErrorMsg(err.error.status));
         return resolve(false)
       });
     });
@@ -294,6 +310,8 @@ export class AddInvoiceComponent implements OnInit {
       if (this.userInvoices instanceof Array && this.userInvoices.length === 0) {
         this.getFiledItrDetails(userId);
       }
+
+      this.checkUserItrStatus(userId);
     } else {
       this.utilsService.showSnackBar('Please select user first.')
     }
@@ -388,6 +406,53 @@ export class AddInvoiceComponent implements OnInit {
     //   }]
     //   this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))    //use for clear invoice table fields
     //   this.showTaxRelatedState('Maharashtra');        //for defalt show cgst & sgst tax in table
+    // }
+  }
+
+  checkUserItrStatus(userId){
+    this.invoiceForm = this.createInvoiceForm();
+    https://api.taxbuddy.com/user/itr-status-name/{userId}?assessmentYear={assessmentYear}
+    let param = '/user/itr-status-name/'+userId+'?assessmentYear=2020-2021';
+    this.userService.getMethodInfo(param).subscribe(responce=>{
+        console.log('User ITR status: ', responce);
+        var userItrStatus = responce;
+        if(Object.keys(userItrStatus).length !== 0){
+          debugger
+          for (let [key, value] of Object.entries(userItrStatus)) {
+              if(key === 'ITR Filed'){
+                this.isItrComplite = false;
+                break;
+              }
+              else{
+                this.isItrComplite = true;
+                this.invoiceForm.controls['estimateDateTime'].setValidators([Validators.required]);
+                this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();
+                this.invoiceForm.controls['itrType'].setValidators([Validators.required]);
+                this.invoiceForm.controls['itrType'].updateValueAndValidity();
+              }
+          }
+        }
+        else{
+          this.isItrComplite = false;
+        }
+    },
+    error=>{
+      this.isItrComplite = false;
+        console.log('Error -> ', error)
+    })
+
+    // debugger
+    // if(this.isItrComplite){
+    //   this.invoiceForm.controls['estimateDateTime'].setValidators([Validators.required]);
+    //   this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();
+    //   this.invoiceForm.controls['itrType'].setValidators([Validators.required]);
+    //   this.invoiceForm.controls['itrType'].updateValueAndValidity();
+    // }
+    // else{
+    //   this.invoiceForm.controls['estimateDateTime'].setValidators(null);
+    //   this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();
+    //   this.invoiceForm.controls['itrType'].setValidators(null);
+    //   this.invoiceForm.controls['itrType'].updateValueAndValidity();
     // }
   }
 
@@ -948,18 +1013,45 @@ export class AddInvoiceComponent implements OnInit {
       }
       this.invoiceForm.controls['itemList'].setValue(invoiceItemList)
       if (this.invoiceForm.valid) {
-
         console.log('Invoice Form: ', this.invoiceForm)
+        let smeInfo = JSON.parse(localStorage.getItem('UMD'));
+
+        if(this.isItrComplite){
+          var filingEstimateObj ={
+            "userId":  this.invoiceForm.controls['userId'].value,
+            "clientName":this.invoiceForm.controls['ifaLeadClient'].value,
+            "clientEmail":this.invoiceForm.controls['email'].value,
+            "clientMobile":this.invoiceForm.controls['phone'].value,
+            "smeEmail":smeInfo.USER_EMAIL,
+            "smeName":smeInfo.USER_F_NAME,
+            "smeMobile":smeInfo.USER_MOBILE,
+            "estimatedDateTime":this.invoiceForm.controls['estimateDateTime'].value,
+            "itrType":this.invoiceForm.controls['itrType'].value,
+            "comment":this.invoiceForm.controls['comment'].value,
+            "markAsDone": true,
+          }
+        }
+        
+        console.log('filingEstimateObj info -> ',filingEstimateObj)
+
         this.loading = true;
         const param = '/invoice';
         const request = this.invoiceForm.getRawValue();
         this.itrMsService.postMethod(param, request).subscribe(async (result: any) => {
-          this.loading = false;
+         // this.loading = false;
+
           this.editInvoice = false;
           this.showInvoiceForm = false;
           console.log("result: ", result)
           this.utilsService.smoothScrollToTop();
+          if(this.isItrComplite){
+            this.saveFillingEstimate(filingEstimateObj)
+          }
+          else{
+            this.loading = false;
+          }
           // this.showInvoices = true;
+          
           this._toastMessageService.alert("success", "Invoice saved succesfully.");
           // this.invoiceTableInfo =[];
           // this.selectUser.reset();
@@ -980,6 +1072,20 @@ export class AddInvoiceComponent implements OnInit {
     } else {
       this._toastMessageService.alert("error", "Please enter all invoice item details.");
     }
+  }
+
+  saveFillingEstimate(estimateInfo){
+    console.log('estimateInfo: ',estimateInfo);
+    //https://uat-api.taxbuddy.com/itr/sme-task
+    let param = '/sme-task'
+    this.itrMsService.postMethod(param, estimateInfo).subscribe(responce=>{
+        this.loading = false;
+        console.log('Filling Estimate save responce => ',responce);
+    },
+    error=>{
+      console.log('Error occure during save Filling Estimate info => ',error);
+      this.loading = false;
+    })
   }
 
   isInvoiceDetailsValid() {

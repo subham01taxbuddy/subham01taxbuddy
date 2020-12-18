@@ -42,11 +42,11 @@
                     <br>
                     <br>
                     <br>
-                    <ngx-image-zoom *ngIf="form16DocDetails.docType !== 'pdf' || form16DocDetails.docType !== 'xls' || form16DocDetails.docType !== 'doc' || form16DocDetails.docType !== 'xlsx' || form16DocDetails.docType !== 'docx'" [thumbImage]="form16DocDetails.docUrl"
+                    <ngx-image-zoom *ngIf="form16DocDetails.docType !== 'pdf' || form16DocDetails.docType !== 'Pdf' || form16DocDetails.docType !== 'xls' || form16DocDetails.docType !== 'doc' || form16DocDetails.docType !== 'xlsx' || form16DocDetails.docType !== 'docx'" [thumbImage]="form16DocDetails.docUrl"
                         [fullImage]="form16DocDetails.docUrl" [magnification]="1" [enableScrollZoom]="true"
                         [enableLens]="true" [lensWidth]="200">
                     </ngx-image-zoom>
-                    <div *ngIf="form16DocDetails.docType === 'pdf'">
+                    <!-- <div *ngIf="form16DocDetails.docType === 'pdf' || form16DocDetails.docType === 'Pdf'">
                         <button ion-button (click)="incrementZoom(-0.1)">
                             -
                         </button>&nbsp;
@@ -56,13 +56,9 @@
                         <pdf-viewer [src]="form16DocDetails.docUrl" [zoom]="zoom" [original-size]="true"
                             [autoresize]="true" [render-text]="true" style="display: block;height: 100%">
                         </pdf-viewer>
-                        <!-- <ngx-extended-pdf-viewer
-                            [src]="'https://s3.ap-south-1.amazonaws.com/uploads.taxbuddy.com/27192/ITR/2019-20/Original/ITR%20Filing%20Docs/Form16.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200812T162551Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Credential=AKIA2LS2FCUFDB2UWKO7%2F20200812%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=b1ea09712af377df210278887b41c8021e4175c09a78568c67418e4c934fdf32'"
-                            useBrowserLocale="true" [password]="'02-01-1990'">
-                        </ngx-extended-pdf-viewer> -->
-                    </div>
+                    </div> -->
 
-                    <ngx-doc-viewer *ngIf="form16DocDetails.docType === 'xls' || form16DocDetails.docType === 'doc' || form16DocDetails.docType === 'xlsx' || form16DocDetails.docType === 'docx'"
+                    <ngx-doc-viewer *ngIf="form16DocDetails.docType === 'pdf' || form16DocDetails.docType === 'Pdf' || form16DocDetails.docType === 'xls' || form16DocDetails.docType !== 'Pdf' || form16DocDetails.docType === 'doc' || form16DocDetails.docType === 'xlsx' || form16DocDetails.docType === 'docx'"
                          [url]="form16DocDetails.docUrl" viewer="google"  style="width:100%;height:93vh;">
                      </ngx-doc-viewer>
 

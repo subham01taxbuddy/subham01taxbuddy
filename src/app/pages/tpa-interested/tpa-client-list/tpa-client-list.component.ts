@@ -1,25 +1,21 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
+import { FilingStatusDialogComponent } from 'app/pages/itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { UtilsService } from 'app/services/utils.service';
-import { Router } from '@angular/router';
-import { AppConstants } from 'app/shared/constants';
-import { MatDialog } from '@angular/material';
-import { FilingStatusDialogComponent } from '../filing-status-dialog/filing-status-dialog.component';
-import { ReviseReturnDialogComponent } from '../revise-return-dialog/revise-return-dialog.component';
 import moment = require('moment');
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 
 @Component({
-  selector: 'app-my-team-itrs',
-  templateUrl: './my-team-itrs.component.html',
-  styleUrls: ['./my-team-itrs.component.css']
+  selector: 'app-tpa-client-list',
+  templateUrl: './tpa-client-list.component.html',
+  styleUrls: ['./tpa-client-list.component.css']
 })
-
-export class MyTeamItrsComponent implements OnInit {
+export class TpaClientListComponent implements OnInit {
   loading: boolean = false;
-  myItrsGridOptions: GridOptions;
-  itrDataList = [];
+  tpaGridOptions: GridOptions;
+  tpaList = [];
   filingTeamMembers = [
     { teamLeadId: 1063, value: 1063, label: 'Amrita Thakur' },
     { teamLeadId: 1064, value: 1064, label: 'Ankita Murkute' },
@@ -79,25 +75,11 @@ export class MyTeamItrsComponent implements OnInit {
     { teamLeadId: 0, value: 1067, label: 'Divya Bhanushali' },
     { teamLeadId: 0, value: 21354, label: 'Brijmohan Lavaniya' },
   ];
-  myFilingTeamMembers = [];
-  selectedMember: String = '';
-  selectedMemberId: any;
-  constructor(private itrMsService: ItrMsService, public utilsService: UtilsService, private router: Router, private dialog: MatDialog,) {
-    // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'))
-    this.filingTeamMembers.sort((a, b) => a.label > b.label ? 1 : -1)
-    this.myFilingTeamMembers = this.filingTeamMembers;
-    // var filingMemberId = loggedInUserData.USER_UNIQUE_ID;
-    // if (filingMemberId !== 1065 && filingMemberId !== 1067 && filingMemberId !== 21354 && filingMemberId !== 12172) {
-    //   if (filingMemberId === 1707) {
-    //     filingMemberId = 1063;
-    //   }
-    //   this.myFilingTeamMembers = this.filingTeamMembers.filter(item => item.teamLeadId === filingMemberId);
-    // } else {
-    //   this.myFilingTeamMembers = this.filingTeamMembers;
-    // }
-    this.myItrsGridOptions = <GridOptions>{
-      rowData: this.createOnSalaryRowData([]),
-      columnDefs: this.myItrsCreateColoumnDef(),
+  constructor(private itrMsService: ItrMsService, public utilsService: UtilsService, private router: Router,
+    private dialog: MatDialog) {
+    this.tpaGridOptions = <GridOptions>{
+      rowData: this.createTpaRowData([]),
+      columnDefs: this.createTpaColoumnDef(),
       enableCellChangeFlash: true,
       onGridReady: params => {
         // params.api.sizeColumnsToFit();
@@ -109,20 +91,17 @@ export class MyTeamItrsComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.getTpaList();
   }
-
-  getMembersItr(id) {
-
+  getTpaList() {
     this.loading = true;
-    this.selectedMemberId = id;
     return new Promise((resolve, reject) => {
-      this.selectedMember = this.filingTeamMembers.filter(item => item.value === id)[0].label;
       // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
-      const param = `/itr-by-filingTeamMemberId?filingTeamMemberId=${id}`;
+      const param = `/itr/tpa?nextYearTpa=INTERESTED`;/* ${loggedInUserData.USER_UNIQUE_ID} */
       this.itrMsService.getMethod(param).subscribe((res: any) => {
-        this.itrDataList = res;
-        this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res));
+        console.log('filingTeamMemberId: ', res);
+        this.tpaList = res;
+        this.tpaGridOptions.api.setRowData(this.createTpaRowData(res));
         this.loading = false;
         return resolve(true)
       }, error => {
@@ -130,13 +109,26 @@ export class MyTeamItrsComponent implements OnInit {
         return resolve(false)
       })
     });
+
+    // this.loading = true;
+    // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
+    // const param = `/itr-by-filingTeamMemberId?filingTeamMemberId=1063`;/* ${loggedInUserData.USER_UNIQUE_ID} */
+    // this.itrMsService.getMethod(param).subscribe((res: any) => {
+    //   console.log('filingTeamMemberId: ', res);
+    //   this.tpaGridOptions.api.setRowData(res);
+    //   this.loading = false;
+    // }, error => {
+    //   this.loading = false;
+    // })
   }
-  getCount(val) {
-    return this.itrDataList.filter(item => item.eFillingCompleted === val).length
-  }
-  createOnSalaryRowData(data) {
+  createTpaRowData(data) {
     const newData = [];
     for (let i = 0; i < data.length; i++) {
+      const filerDetails = this.filingTeamMembers.filter(item => item.value === data[i].filingTeamMemberId);
+      let filerName = 'NA';
+      if (filerDetails.length > 0) {
+        filerName = filerDetails[0].label
+      }
       newData.push({
         itrId: data[i].itrId,
         userId: data[i].userId,
@@ -150,12 +142,15 @@ export class MyTeamItrsComponent implements OnInit {
         acknowledgementReceived: data[i].acknowledgementReceived,
         eFillingCompleted: data[i].eFillingCompleted,
         eFillingDate: data[i].eFillingDate,
-        nextYearTpa: data[i].nextYearTpa,
+        filingTeamMemberId: filerName,
       });
     }
     return newData;
   }
-  myItrsCreateColoumnDef() {
+  getCount(val) {
+    return this.tpaList.filter(item => item.eFillingCompleted === val).length
+  }
+  createTpaColoumnDef() {
     return [
       {
         headerName: 'ITR ID',
@@ -227,27 +222,33 @@ export class MyTeamItrsComponent implements OnInit {
         sortable: true,
         filter: "agTextColumnFilter",
         filterParams: {
-          defaultOption: "startsWith",
+          defaultOption: "contains",
           debounceMs: 0
         }
       },
       {
-        headerName: 'Start',
-        width: 50,
+        headerName: "Filer Name",
+        field: "filingTeamMemberId",
+        sortable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          defaultOption: "contains",
+          debounceMs: 0
+        }
+      },
+      /* {
+        headerName: 'Actions',
+        width: 100,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params) {
-          if (params.data.eFillingCompleted && params.data.ackStatus === 'SUCCESS') {
-            return `<button type="button" class="action_icon add_button" title="Acknowledgement not received, Contact team lead" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;color: green">
-            <i class="fa fa-check" title="ITR filed successfully / Click to start revise return" 
-            aria-hidden="true" data-action-type="startRevise"></i>
-           </button>`;
+          if (params.data.eFillingCompleted) {
+            return `<i class="fa fa-check" title="ITR filed successfully" aria-hidden="true"></i>`;
           } else if (params.data.ackStatus === 'DELAY') {
             return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
-            background: transparent; font-size: 16px; color: red">
+            background: transparent; font-size: 16px; cursor:not-allowed;color: red">
             <i class="fa fa-circle" title="Acknowledgement not received, Contact team lead" 
-            aria-hidden="true" data-action-type="ackDetails"></i>
+            aria-hidden="true"></i>
            </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
@@ -273,16 +274,16 @@ export class MyTeamItrsComponent implements OnInit {
             }
           }
         },
-      },
+      }, */
       {
-        headerName: 'Status',
+        headerName: 'Chat',
         width: 50,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Show Kommunicate/Whats app chat" style="border: none;
+          return `<button type="button" class="action_icon add_button" title="Click to see chat" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: blueviolet">
-            <i class="fa fa-weixin" aria-hidden="true" data-action-type="filingStatus"></i>
+            <i class="fa fa-weixin" aria-hidden="true" data-action-type="chatLinks"></i>
            </button>`;
         },
         cellStyle: {
@@ -294,6 +295,24 @@ export class MyTeamItrsComponent implements OnInit {
         },
       },
       {
+        headerName: 'Documents',
+        width: 50,
+        sortable: true,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="View Documents" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;color: black">
+            <i class="fa fa-eye" aria-hidden="true" data-action-type="viewDocuments"></i>
+           </button>`;
+        },
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+          color: 'black'
+        },
+      },
+      /* {
         headerName: "TPA",
         field: "nextYearTpa",
         width: 50,
@@ -305,71 +324,28 @@ export class MyTeamItrsComponent implements OnInit {
           return (params.data.nextYearTpa === 'INTERESTED' || !params.data.eFillingCompleted) ? { 'pointer-events': 'none', opacity: '0.4' }
             : '';
         }
-      },/* ,
-      {
-        headerName: 'RR',
-        width: 50,
-        sortable: true,
-        pinned: 'right',
-        cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Start Revise return" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;color: #0dbbc3">
-            <i class="fa fa-exchange" aria-hidden="true" data-action-type="startRevise"></i>
-           </button>`;
-        },
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center',
-          color: '#0dbbc3'
-
-        },
-      } */
+      }, */
     ];
   }
   public onRowClicked(params) {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
-        case 'startFiling': {
-          this.startFiling(params.data);
+        case 'viewDocuments': {
+          this.router.navigate(['/pages/tpa-interested/list/' + params.data.userId]);
+          // this.startFiling(params.data);
           break;
         }
-        case 'filingStatus': {
+        case 'chatLinks': {
           this.openfilingStatusDialog(params.data);
           break;
         }
-        case 'startRevise': {
-          this.openReviseReturnDialog(params.data);
-          break;
-        }
-        case 'ackDetails': {
-          this.getAcknowledgeDetail(params.data);
-          break;
-        }
         case 'isTpa': {
-          this.interestedForNextYearTpa(params.data);
+          // this.interestedForNextYearTpa(params.data);
           break;
         }
       }
     }
-  }
-
-  startFiling(data) {
-    var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
-    console.log('data: ', workingItr);
-    Object.entries(workingItr).forEach((key, value) => {
-      console.log(key, value)
-      if (key[1] === null) {
-        delete workingItr[key[0]];
-      }
-    });
-    let obj = this.utilsService.createEmptyJson(null, AppConstants.ayYear, AppConstants.fyYear)
-    Object.assign(obj, workingItr)
-    console.log('obj:', obj)
-    workingItr = JSON.parse(JSON.stringify(obj))
-    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-    this.router.navigate(['/pages/itr-filing/customer-profile'])
   }
 
   openfilingStatusDialog(data) {
@@ -380,50 +356,6 @@ export class MyTeamItrsComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-    });
-  }
-
-  openReviseReturnDialog(data) {
-    console.log('Data for revise return ', data);
-    let disposable = this.dialog.open(ReviseReturnDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: data
-    })
-    disposable.afterClosed().subscribe(result => {
-      if (result === 'reviseReturn') {
-        this.router.navigate(['/pages/itr-filing/customer-profile'])
-      }
-      console.log('The dialog was closed', result);
-    });
-  }
-
-  getAcknowledgeDetail(data) {
-    console.log('Data for acknowlegement status', data);
-    this.loading = true;
-    const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
-      this.utilsService.showSnackBar(res.status)
-      this.loading = false;
-      setTimeout(() => {
-        this.getMembersItr(this.selectedMemberId);
-      }, 5000);
-
-    }, error => {
-      this.loading = false;
-    })
-  }
-
-  interestedForNextYearTpa(data) {
-    this.loading = true;
-    var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0];
-    workingItr['nextYearTpa'] = 'INTERESTED';
-    console.log(workingItr);
-    const param = '/itr/' + workingItr['userId'] + '/' + workingItr['itrId'] + '/' + workingItr['assessmentYear'];
-    this.itrMsService.putMethod(param, workingItr).subscribe((result: ITR_JSON) => {
-      this.getMembersItr(this.selectedMemberId);
-    }, error => {
-      this.getMembersItr(this.selectedMemberId);
     });
   }
 }

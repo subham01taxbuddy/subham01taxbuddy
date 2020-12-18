@@ -9,6 +9,8 @@ import { InvoicesComponent } from './invoices/invoices.component';
 import { InvoicesStatusComponent } from './invoices/invoices-status/invoices-status.component';
 import { AddInvoiceComponent } from "./invoices/add-invoice/add-invoice.component";
 import { InvoiceDialogComponent } from './invoices/invoice-dialog/invoice-dialog.component';
+import { OwlDateTimeModule } from "ng-pick-datetime/date-time/date-time.module";
+import { OwlNativeDateTimeModule } from "ng-pick-datetime/date-time/adapter/native-date-time.module";
 // import { UpdateStatusComponent } from "../itr-filing/update-status/update-status.component";
 
 @NgModule({
@@ -21,6 +23,8 @@ import { InvoiceDialogComponent } from './invoices/invoice-dialog/invoice-dialog
         HttpClientModule,
         SharedModule,
         NgxLoadingModule.forRoot({}),
+        OwlDateTimeModule, 
+        OwlNativeDateTimeModule
     ],
     entryComponents: [InvoiceDialogComponent]
 })

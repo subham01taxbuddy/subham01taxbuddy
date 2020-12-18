@@ -299,6 +299,7 @@ export class WhatAppChatComponent implements OnInit {
     //   this.loading = false;
     // }
 
+    this.showChatUi = true;
     if (user === 'bySearch') {
       if (this.utileService.isNonEmpty(this.searchNumber.value) && this.searchNumber.valid) {
         user = '91' + this.searchNumber.value;
@@ -387,7 +388,7 @@ export class WhatAppChatComponent implements OnInit {
       !this.whatsAppForm.controls["selectTemplate"].value
     ) {
       debugger
-      let mobileNo = this.selectedUser.whatsAppNumber;
+      let mobileNo = this.utileService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : '91'+this.searchNumber.value;
       let sendMsg = this.whatsAppForm.controls["sentMessage"].value;
       console.log('Before sendMsg: ',sendMsg, typeof sendMsg);
       sendMsg = sendMsg.replace(/"/g, '\\"');
@@ -438,7 +439,7 @@ export class WhatAppChatComponent implements OnInit {
         console.log("Selected Template Info: ", templateMsgInfo);
         const templateData = new FormData();
         if (templateMsgInfo.mediaId === null) {
-            templateData.append("whatsAppNumber", this.selectedUser.whatsAppNumber);
+            templateData.append("whatsAppNumber", this.utileService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : '91'+this.searchNumber.value);
             templateData.append("templateName", templateMsgInfo.templateName);
             templateData.append("attributes", this.newAttributes);
             templateData.append("templateMessage", this.whatsAppForm.controls["sentMessage"].value);
@@ -451,7 +452,7 @@ export class WhatAppChatComponent implements OnInit {
             // source: 'BO'
           // };
         } else {
-            templateData.append("whatsAppNumber", this.selectedUser.whatsAppNumber);
+            templateData.append("whatsAppNumber", this.utileService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : this.searchNumber.value);
             templateData.append("templateName", templateMsgInfo.templateName);
             templateData.append("attributes", this.newAttributes);
               //templateData.append("templateMessage", this.whatsAppForm.controls["selectTemplate"].value);
@@ -510,7 +511,7 @@ export class WhatAppChatComponent implements OnInit {
       );
       console.log("this.uploadedFile: ", this.uploadedFile);
       const formData = new FormData();
-      formData.append("whatsAppNumber", this.selectedUser.whatsAppNumber);
+      formData.append("whatsAppNumber", this.utileService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : '91'+this.searchNumber.value);
       formData.append("multipartFile", this.uploadedFile);
       formData.append("source", 'BO');
       console.log("formData: ", formData);
@@ -810,5 +811,24 @@ export class WhatAppChatComponent implements OnInit {
           console.log('THere is Error for User number remove form Unread Message')
         })
     }
+  }
+
+  blockChatUser(mobNum){
+      this.loading = true;
+      let param = '/gateway/whatsapp/block/'+mobNum;
+      this.userService.getMethodInfo(param).subscribe(responce=>{
+          console.log('responce: ',responce);
+          this.loading = false;
+          this._toastMessageService.alert(
+            "success",
+            "User block successfully."
+          );
+      },
+      error=>{
+        this.loading = false;
+        console.log('Error :', error)
+        this._toastMessageService.alert("error",this.utileService.showErrorMsg(error.error.status));
+      })
+
   }
 }

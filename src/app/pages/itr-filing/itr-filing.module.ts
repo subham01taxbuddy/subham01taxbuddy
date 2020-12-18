@@ -25,14 +25,14 @@ import { TaxesPaidComponent } from './taxes-paid/taxes-paid.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
 import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
-import { UpdateStatusComponent } from './update-status/update-status.component';
+// import { UpdateStatusComponent } from './update-status/update-status.component';
 import { DirectUploadComponent } from './direct-upload/direct-upload.component';
 import { MyAssignedItrsComponent } from './my-assigned-itrs/my-assigned-itrs.component';
 import { BusinessComponent } from './business/business.component';
 // import { WhatsAppDialogComponent } from './whats-app-dialog/whats-app-dialog.component';
 import { MyTeamItrsComponent } from './my-team-itrs/my-team-itrs.component';
-import { KommunicateDialogComponent } from './kommunicate-dialog/kommunicate-dialog.component';
-import { FilingStatusDialogComponent } from './filing-status-dialog/filing-status-dialog.component';
+// import { KommunicateDialogComponent } from './kommunicate-dialog/kommunicate-dialog.component';
+// import { FilingStatusDialogComponent } from './filing-status-dialog/filing-status-dialog.component';
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-return-dialog.component';
 import { DelayComponent } from './delay/delay.component';
@@ -72,22 +72,22 @@ import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
         AckSuccessComponent,
         AckDelayComponent,
         AckFailureComponent,
-        UpdateStatusComponent,
+        // UpdateStatusComponent,
         DirectUploadComponent,
         MyAssignedItrsComponent,
         BusinessComponent,
         // WhatsAppDialogComponent,
         MyTeamItrsComponent,
-        KommunicateDialogComponent,
-        FilingStatusDialogComponent,
+        // KommunicateDialogComponent,
+        // FilingStatusDialogComponent,
         DocumentUploadComponent,
         ReviseReturnDialogComponent,
         DelayComponent,
         FilingTasksComponent
         // InputUploadComponent
     ],
-    entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ KommunicateDialogComponent,
-        FilingStatusDialogComponent, ReviseReturnDialogComponent]
+    entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
+        /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent]
 
 })
 export class ItrFilingModule { }

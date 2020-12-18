@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { FilingStatusDialogComponent } from '../filing-status-dialog/filing-status-dialog.component';
 import { MatDialog } from '@angular/material';
 import moment = require('moment');
+import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 
 @Component({
   selector: 'app-my-assigned-itrs',
@@ -78,6 +79,7 @@ export class MyAssignedItrsComponent implements OnInit {
         acknowledgementReceived: data[i].acknowledgementReceived,
         eFillingCompleted: data[i].eFillingCompleted,
         eFillingDate: data[i].eFillingDate,
+        nextYearTpa: data[i].nextYearTpa,
       });
     }
     return newData;
@@ -218,7 +220,20 @@ export class MyAssignedItrsComponent implements OnInit {
           color: 'blueviolet'
 
         },
-      }
+      },
+      {
+        headerName: "TPA",
+        field: "nextYearTpa",
+        width: 50,
+        pinned: 'right',
+        cellRenderer: params => {
+          return `<input type='checkbox' data-action-type="isTpa" ${params.data.nextYearTpa === 'INTERESTED' ? 'checked' : ''} />`;
+        },
+        cellStyle: params => {
+          return (params.data.nextYearTpa === 'INTERESTED' || !params.data.eFillingCompleted) ? { 'pointer-events': 'none', opacity: '0.4' }
+            : '';
+        }
+      },
     ];
   }
   public onRowClicked(params) {
@@ -231,6 +246,10 @@ export class MyAssignedItrsComponent implements OnInit {
         }
         case 'filingStatus': {
           this.openfilingStatusDialog(params.data);
+          break;
+        }
+        case 'isTpa': {
+          this.interestedForNextYearTpa(params.data);
           break;
         }
       }
@@ -262,6 +281,18 @@ export class MyAssignedItrsComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+    });
+  }
+  interestedForNextYearTpa(data) {
+    this.loading = true;
+    var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0];
+    workingItr['nextYearTpa'] = 'INTERESTED';
+    console.log(workingItr);
+    const param = '/itr/' + workingItr['userId'] + '/' + workingItr['itrId'] + '/' + workingItr['assessmentYear'];
+    this.itrMsService.putMethod(param, workingItr).subscribe((result: ITR_JSON) => {
+      this.myItrsList();
+    }, error => {
+      this.myItrsList();
     });
   }
 }

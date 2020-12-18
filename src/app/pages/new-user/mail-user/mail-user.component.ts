@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { UserMsService } from 'app/services/user-ms.service';
 import { environment } from 'environments/environment';
+import { UserHistryComponent } from '../user-histry/user-histry.component';
 
 @Component({
   selector: 'app-mail-user',
@@ -14,8 +16,8 @@ export class MailUserComponent implements OnInit {
   agentList = environment.agentId;
 
   mailUser: any = [];
-
-  constructor(private userService: UserMsService) { }
+  public displayedColumns = ['Name', 'Mobile Number', 'Email', 'Assign Id', 'Date'];
+  constructor(private userService: UserMsService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.getMailUserByAgentId();
@@ -39,6 +41,17 @@ export class MailUserComponent implements OnInit {
       this.loading = false;
       console.log('Error while getting email User data ==> ',error);
     })
+  }
+
+  showUserHistry(mail){
+    let disposable = this.dialog.open(UserHistryComponent, {
+      width: '60%',
+      height: 'auto',
+      data: {
+        email: mail
+      }
+    })
+      
   }
 
 }

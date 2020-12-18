@@ -161,6 +161,22 @@ export class TaxesPaidComponent implements OnInit {
         editable: true,
         suppressMovable: true,
         cellEditor: 'numericEditor',
+        cellClassRules: {
+          'invalid-row': function (params) {
+            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          },
+           tooltip: function (params) {
+            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+              return ('Total amount credited is should be greater then Total tax deduction.');
+            }
+          }
+        },
+       
         tooltip: function (params) {
           return ('Total amount credited should be numeric, no decimal, upto 14 digit.');
         },
@@ -171,8 +187,24 @@ export class TaxesPaidComponent implements OnInit {
         editable: true,
         suppressMovable: true,
         cellEditor: 'numericEditor',
+        cellClassRules: {
+          'invalid-row': function (params) {
+            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          },
+          tooltip: function (params) {
+            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+              return ('Total amount credited is should be greater then Total tax deduction.');
+            }
+          }
+        },
+        
         tooltip: function (params) {
-          return ('Total tax deducted should be numeric, no decimal, upto 14 digit.');
+            return ('Total tax deducted should be numeric, no decimal, upto 14 digit.');
         },
       },
       {
@@ -356,6 +388,21 @@ export class TaxesPaidComponent implements OnInit {
         editable: true,
         suppressMovable: true,
         cellEditor: 'numericEditor',
+        cellClassRules: {
+          'invalid-row': function (params) {
+            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          },
+           tooltip: function (params) {
+            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+              return ('Total amount credited is should be greater then Total tax deduction.');
+            }
+          }
+        },
         tooltip: function (params) {
           return ('Total amount credited should be numeric, no decimal, upto 14 digit.');
         },
@@ -366,6 +413,21 @@ export class TaxesPaidComponent implements OnInit {
         editable: true,
         suppressMovable: true,
         cellEditor: 'numericEditor',
+        cellClassRules: {
+          'invalid-row': function (params) {
+            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          },
+           tooltip: function (params) {
+            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+              return ('Total amount credited is should be greater then Total tax deduction.');
+            }
+          }
+        },
         tooltip: function (params) {
           return ('Total tax deducted should be numeric, no decimal, upto 14 digit.');
         },
@@ -559,6 +621,21 @@ export class TaxesPaidComponent implements OnInit {
         editable: true,
         suppressMovable: true,
         cellEditor: 'numericEditor',
+        cellClassRules: {
+          'invalid-row': function (params) {
+            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          },
+           tooltip: function (params) {
+            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+              return ('Total amount credited is should be greater then Total tax deduction.');
+            }
+          }
+        },
         tooltip: function (params) {
           return ('Total amount credited should be numeric, no decimal, upto 14 digit.');
         },
@@ -569,6 +646,21 @@ export class TaxesPaidComponent implements OnInit {
         editable: true,
         suppressMovable: true,
         cellEditor: 'numericEditor',
+        cellClassRules: {
+          'invalid-row': function (params) {
+            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          },
+           tooltip: function (params) {
+            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+              return ('Total amount credited is should be greater then Total tax deduction.');
+            }
+          }
+        },
         tooltip: function (params) {
           return ('Total tax deducted should be numeric, no decimal, upto 14 digit.');
         },
