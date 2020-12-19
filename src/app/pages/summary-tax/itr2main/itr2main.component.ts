@@ -972,16 +972,34 @@ export class Itr2mainComponent implements OnInit {
      var longTeemCG10Per = itrData['ITRForm:ScheduleCGFor23']['ITRForm:LongTermCapGain23'];
      console.log('longTeemCG10Per: ',longTeemCG10Per);
      if(longTeemCG10Per.hasOwnProperty('ITRForm:Proviso112Applicable')){
-      let longTerm10PerObj = {
-         nameOfTheAsset: 'Listed Security',
-         netSaleValue: Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:FullConsideration']['_text']) - Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:DeductSec48']['ITRForm:ExpOnTrans']['_text']),
-         purchaseCost: Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:DeductSec48']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:DeductSec48']['ITRForm:ImproveCost']['_text']),
-         capitalGain: Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:BalanceCG']['_text']),
-         deductions: 0,
-         netCapitalGain: Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:CapgainonAssets']['_text']),
-       }
-       taxPaid.longTermCapitalGainAt10Percent.push(longTerm10PerObj);
-       this.updateCapitalGain(taxPaid); 
+
+      if(this.utilsService.isNonEmpty(longTeemCG10Per['ITRForm:Proviso112Applicable'].length)){
+        for(let i=0; i< longTeemCG10Per['ITRForm:Proviso112Applicable'].length; i++){
+          let longTerm10PerObj = {
+            nameOfTheAsset: 'Listed Security',
+            netSaleValue: Number(longTeemCG10Per['ITRForm:Proviso112Applicable'][i]['ITRForm:Proviso112Applicabledtls']['ITRForm:FullConsideration']['_text']) - Number(longTeemCG10Per['ITRForm:Proviso112Applicable'][i]['ITRForm:Proviso112Applicabledtls']['ITRForm:DeductSec48']['ITRForm:ExpOnTrans']['_text']),
+            purchaseCost: Number(longTeemCG10Per['ITRForm:Proviso112Applicable'][i]['ITRForm:Proviso112Applicabledtls']['ITRForm:DeductSec48']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG10Per['ITRForm:Proviso112Applicable'][i]['ITRForm:Proviso112Applicabledtls']['ITRForm:DeductSec48']['ITRForm:ImproveCost']['_text']),
+            capitalGain: Number(longTeemCG10Per['ITRForm:Proviso112Applicable'][i]['ITRForm:Proviso112Applicabledtls']['ITRForm:BalanceCG']['_text']),
+            deductions: 0,
+            netCapitalGain: Number(longTeemCG10Per['ITRForm:Proviso112Applicable'][i]['ITRForm:Proviso112Applicabledtls']['ITRForm:CapgainonAssets']['_text']),
+          }
+          taxPaid.longTermCapitalGainAt10Percent.push(longTerm10PerObj);
+          this.updateCapitalGain(taxPaid); 
+        }
+      }
+      else{
+        let longTerm10PerObj = {
+          nameOfTheAsset: 'Listed Security',
+          netSaleValue: Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:FullConsideration']['_text']) - Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:DeductSec48']['ITRForm:ExpOnTrans']['_text']),
+          purchaseCost: Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:DeductSec48']['ITRForm:AquisitCost']['_text']) + Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:DeductSec48']['ITRForm:ImproveCost']['_text']),
+          capitalGain: Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:BalanceCG']['_text']),
+          deductions: 0,
+          netCapitalGain: Number(longTeemCG10Per['ITRForm:Proviso112Applicable']['ITRForm:Proviso112Applicabledtls']['ITRForm:CapgainonAssets']['_text']),
+        }
+        taxPaid.longTermCapitalGainAt10Percent.push(longTerm10PerObj);
+        this.updateCapitalGain(taxPaid); 
+      }
+      
      }
     
      if(itrData.hasOwnProperty('ITRForm:Schedule112A')){
