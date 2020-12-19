@@ -311,7 +311,7 @@ export class AddInvoiceComponent implements OnInit {
         this.getFiledItrDetails(userId);
       }
 
-      this.checkUserItrStatus(userId);
+     // this.checkUserItrStatus(userId);      //estimate filling part commited by SAGAR
     } else {
       this.utilsService.showSnackBar('Please select user first.')
     }
