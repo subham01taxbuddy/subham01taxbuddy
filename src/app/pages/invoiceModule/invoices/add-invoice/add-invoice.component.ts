@@ -90,7 +90,7 @@ export class AddInvoiceComponent implements OnInit {
     { value: '7', label: 'ITR-7' },
   ];
 
-  isItrComplite: boolean = false;
+  isItrFiled: boolean = false;
 
   constructor(public utilsService: UtilsService, private _toastMessageService: ToastMessageService,
     private fb: FormBuilder, private userService: UserMsService, private router: Router, public http: HttpClient,
@@ -409,40 +409,37 @@ export class AddInvoiceComponent implements OnInit {
     // }
   }
 
-  checkUserItrStatus(userId){
+  checkUserItrStatus(userId) {
     this.invoiceForm = this.createInvoiceForm();
     https://api.taxbuddy.com/user/itr-status-name/{userId}?assessmentYear={assessmentYear}
-    let param = '/user/itr-status-name/'+userId+'?assessmentYear=2020-2021';
-    this.userService.getMethodInfo(param).subscribe(responce=>{
-        console.log('User ITR status: ', responce);
-        var userItrStatus = responce;
-        if(Object.keys(userItrStatus).length !== 0){
-          debugger
-          for (let [key, value] of Object.entries(userItrStatus)) {
-              if(key === 'ITR Filed'){
-                this.isItrComplite = false;
-                break;
-              }
-              else{
-                this.isItrComplite = true;
-                this.invoiceForm.controls['estimateDateTime'].setValidators([Validators.required]);
-                this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();
-                this.invoiceForm.controls['itrType'].setValidators([Validators.required]);
-                this.invoiceForm.controls['itrType'].updateValueAndValidity();
-              }
+    let param = '/user/itr-status-name/' + userId + '?assessmentYear=2020-2021';
+    this.userService.getMethodInfo(param).subscribe(responce => {
+      console.log('User ITR status: ', responce);
+      var userItrStatus = responce;
+      if (Object.keys(userItrStatus).length !== 0) {
+        debugger
+        for (let [key, value] of Object.entries(userItrStatus)) {
+          if (key === 'ITR Filed' /* || key === 'Invoice Sent' || key === 'Payment Received' */) {
+            this.isItrFiled = true;
+            return;
           }
         }
-        else{
-          this.isItrComplite = false;
-        }
-    },
-    error=>{
-      this.isItrComplite = false;
-        console.log('Error -> ', error)
+        this.isItrFiled = false;
+        this.invoiceForm.controls['estimateDateTime'].setValidators([Validators.required]);
+        this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();
+        this.invoiceForm.controls['itrType'].setValidators([Validators.required]);
+        this.invoiceForm.controls['itrType'].updateValueAndValidity();
+      }
+      else {
+        this.isItrFiled = false;
+      }
+    }, error => {
+      this.isItrFiled = false;
+      console.log('Error -> ', error)
     })
 
     // debugger
-    // if(this.isItrComplite){
+    // if(this.isItrFiled){
     //   this.invoiceForm.controls['estimateDateTime'].setValidators([Validators.required]);
     //   this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();
     //   this.invoiceForm.controls['itrType'].setValidators([Validators.required]);
@@ -1016,42 +1013,40 @@ export class AddInvoiceComponent implements OnInit {
         console.log('Invoice Form: ', this.invoiceForm)
         let smeInfo = JSON.parse(localStorage.getItem('UMD'));
 
-        if(this.isItrComplite){
-          var filingEstimateObj ={
-            "userId":  this.invoiceForm.controls['userId'].value,
-            "clientName":this.invoiceForm.controls['ifaLeadClient'].value,
-            "clientEmail":this.invoiceForm.controls['email'].value,
-            "clientMobile":this.invoiceForm.controls['phone'].value,
-            "smeEmail":smeInfo.USER_EMAIL,
-            "smeName":smeInfo.USER_F_NAME,
-            "smeMobile":smeInfo.USER_MOBILE,
-            "estimatedDateTime":this.invoiceForm.controls['estimateDateTime'].value,
-            "itrType":this.invoiceForm.controls['itrType'].value,
-            "comment":this.invoiceForm.controls['comment'].value,
-            "markAsDone": true,
+        if (!this.isItrFiled) {
+          var filingEstimateObj = {
+            "userId": this.invoiceForm.controls['userId'].value,
+            "clientName": this.invoiceForm.controls['billTo'].value,
+            "clientEmail": this.invoiceForm.controls['email'].value,
+            "clientMobile": this.invoiceForm.controls['phone'].value,
+            "smeEmail": smeInfo.USER_EMAIL,
+            "smeName": smeInfo.USER_F_NAME,
+            "smeMobile": smeInfo.USER_MOBILE,
+            "estimatedDateTime": this.invoiceForm.controls['estimateDateTime'].value,
+            "itrType": this.invoiceForm.controls['itrType'].value,
+            "comment": this.invoiceForm.controls['comment'].value,
+            "isMarkAsDone": false,
           }
         }
-        
-        console.log('filingEstimateObj info -> ',filingEstimateObj)
-
+        console.log('filingEstimateObj info -> ', filingEstimateObj)
         this.loading = true;
         const param = '/invoice';
         const request = this.invoiceForm.getRawValue();
         this.itrMsService.postMethod(param, request).subscribe(async (result: any) => {
-         // this.loading = false;
+          // this.loading = false;
 
           this.editInvoice = false;
           this.showInvoiceForm = false;
           console.log("result: ", result)
           this.utilsService.smoothScrollToTop();
-          if(this.isItrComplite){
+          if (!this.isItrFiled) {
             this.saveFillingEstimate(filingEstimateObj)
           }
-          else{
+          else {
             this.loading = false;
           }
           // this.showInvoices = true;
-          
+
           this._toastMessageService.alert("success", "Invoice saved succesfully.");
           // this.invoiceTableInfo =[];
           // this.selectUser.reset();
@@ -1074,18 +1069,18 @@ export class AddInvoiceComponent implements OnInit {
     }
   }
 
-  saveFillingEstimate(estimateInfo){
-    console.log('estimateInfo: ',estimateInfo);
+  saveFillingEstimate(estimateInfo) {
+    console.log('estimateInfo: ', estimateInfo);
     //https://uat-api.taxbuddy.com/itr/sme-task
     let param = '/sme-task'
-    this.itrMsService.postMethod(param, estimateInfo).subscribe(responce=>{
-        this.loading = false;
-        console.log('Filling Estimate save responce => ',responce);
-    },
-    error=>{
-      console.log('Error occure during save Filling Estimate info => ',error);
+    this.itrMsService.postMethod(param, estimateInfo).subscribe(responce => {
       this.loading = false;
-    })
+      console.log('Filling Estimate save responce => ', responce);
+    },
+      error => {
+        console.log('Error occure during save Filling Estimate info => ', error);
+        this.loading = false;
+      })
   }
 
   isInvoiceDetailsValid() {
