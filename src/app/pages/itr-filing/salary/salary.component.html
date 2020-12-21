@@ -42,11 +42,11 @@
                     <br>
                     <br>
                     <br>
-                    <ngx-image-zoom *ngIf="form16DocDetails.docType !== 'pdf' || form16DocDetails.docType !== 'Pdf' || form16DocDetails.docType !== 'xls' || form16DocDetails.docType !== 'doc' || form16DocDetails.docType !== 'xlsx' || form16DocDetails.docType !== 'docx'" [thumbImage]="form16DocDetails.docUrl"
+                    <ngx-image-zoom *ngIf="form16DocDetails.docType.toLowerCase() !== 'pdf' || form16DocDetails.docType.toLowerCase() !== 'xls' || form16DocDetails.docType.toLowerCase() !== 'doc' || form16DocDetails.docType.toLowerCase() !== 'xlsx' || form16DocDetails.docType.toLowerCase() !== 'docx'" [thumbImage]="form16DocDetails.docUrl"
                         [fullImage]="form16DocDetails.docUrl" [magnification]="1" [enableScrollZoom]="true"
                         [enableLens]="true" [lensWidth]="200">
                     </ngx-image-zoom>
-                    <!-- <div *ngIf="form16DocDetails.docType === 'pdf' || form16DocDetails.docType === 'Pdf'">
+                    <!-- <div *ngIf="form16DocDetails.docType.toLowerCase() === 'pdf' || form16DocDetails.docType.toLowerCase() === 'Pdf'">
                         <button ion-button (click)="incrementZoom(-0.1)">
                             -
                         </button>&nbsp;
@@ -58,7 +58,7 @@
                         </pdf-viewer>
                     </div> -->
 
-                    <ngx-doc-viewer *ngIf="form16DocDetails.docType === 'pdf' || form16DocDetails.docType === 'Pdf' || form16DocDetails.docType === 'xls' || form16DocDetails.docType !== 'Pdf' || form16DocDetails.docType === 'doc' || form16DocDetails.docType === 'xlsx' || form16DocDetails.docType === 'docx'"
+                    <ngx-doc-viewer *ngIf="form16DocDetails.docType.toLowerCase() === 'pdf' ||  form16DocDetails.docType.toLowerCase() === 'xls' || form16DocDetails.docType.toLowerCase() !== 'Pdf' || form16DocDetails.docType.toLowerCase() === 'doc' || form16DocDetails.docType.toLowerCase() === 'xlsx' || form16DocDetails.docType.toLowerCase() === 'docx'"
                          [url]="form16DocDetails.docUrl" viewer="google"  style="width:100%;height:93vh;">
                      </ngx-doc-viewer>
 

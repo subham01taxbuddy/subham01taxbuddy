@@ -463,7 +463,6 @@
                                 <mat-label>Itr type</mat-label>
                                 <mat-select formControlName="itrType" matInput placeholder="Itr type" autocomplete="off" [required]="!isItrFiled">
                                     <mat-option *ngFor="let itr of itrTypes" [value]="itr.value">
-                                        <!--stateCode-->
                                         {{itr.label}}
                                     </mat-option>
                                 </mat-select>
