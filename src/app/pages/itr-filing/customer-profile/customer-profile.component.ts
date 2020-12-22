@@ -130,8 +130,9 @@ export class CustomerProfileComponent implements OnInit {
     { value: 67558, label: 'Sunita Sharma' },
     { value: 71150, label: 'Deep Trivedi', },
     { value: 71148, label: 'Riddhi Solanki', },
-    { value: 71159, label: 'Ajay Kandhway', },
-    { value: 71168, label: 'Ganesh Jaiswal', },
+    { value: 71159, label: 'Ajay Kandhway' },
+    { value: 71168, label: 'Ganesh Jaiswal' },
+    { value: 75925, label: 'Nikita Shah' },
 
     { value: 1065, label: 'Urmila Warve' },
     { value: 1067, label: 'Divya Bhanushali' },

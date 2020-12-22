@@ -68,8 +68,7 @@ export class AddCallLogComponent implements OnInit {
     { userId: 71148, name: 'Riddhi Solanki', email: 'Riddhi.Solanki@taxbuddy.com', teamLeadEmail: 'amrita@ssbainnovations.com' },
     { userId: 71159, name: 'Ajay Kandhway', email: 'ajay.kandhway@taxbuddy.com', teamLeadEmail: 'amrita@ssbainnovations.com' },
     { userId: 71168, name: 'Ganesh Jaiswal', email: 'ganesh.jaiswal@taxbuddy.com', teamLeadEmail: 'amrita@ssbainnovations.com' },
-
-
+    { userId: 75925, name: 'Nikita Shah', email: 'shah.nikita@taxbudyy.com', teamLeadEmail: 'amrita@ssbainnovations.com' },
   ];
   constructor(public dialogRef: MatDialogRef<AddCallLogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder,

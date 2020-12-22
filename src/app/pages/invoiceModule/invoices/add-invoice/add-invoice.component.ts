@@ -311,7 +311,7 @@ export class AddInvoiceComponent implements OnInit {
         this.getFiledItrDetails(userId);
       }
 
-     // this.checkUserItrStatus(userId);      //estimate filling part commited by SAGAR
+      this.checkUserItrStatus(userId);      //estimate filling part commited by SAGAR
     } else {
       this.utilsService.showSnackBar('Please select user first.')
     }
@@ -417,7 +417,6 @@ export class AddInvoiceComponent implements OnInit {
       console.log('User ITR status: ', responce);
       var userItrStatus = responce;
       if (Object.keys(userItrStatus).length !== 0) {
-        debugger
         for (let [key, value] of Object.entries(userItrStatus)) {
           if (key === 'ITR Filed' /* || key === 'Invoice Sent' || key === 'Payment Received' */) {
             this.isItrFiled = true;
@@ -438,7 +437,6 @@ export class AddInvoiceComponent implements OnInit {
       console.log('Error -> ', error)
     })
 
-    // debugger
     // if(this.isItrFiled){
     //   this.invoiceForm.controls['estimateDateTime'].setValidators([Validators.required]);
     //   this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();

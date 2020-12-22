@@ -24,7 +24,7 @@ export class MyTeamItrsComponent implements OnInit {
     { teamLeadId: 1063, value: 1063, label: 'Amrita Thakur' },
     { teamLeadId: 1064, value: 1064, label: 'Ankita Murkute' },
     { teamLeadId: 1062, value: 1062, label: 'Damini Patil' },
-    { teamLeadId: 1063, value: 1707, label: 'Kavita Singh' },
+    { teamLeadId: 1707, value: 1707, label: 'Kavita Singh' },
     { teamLeadId: 1706, value: 1706, label: 'Nimisha Panda' },
     { teamLeadId: 1063, value: 24346, label: 'Tushar Shilimkar' },
     { teamLeadId: 1062, value: 19529, label: 'Kirti Gorad' },
@@ -74,6 +74,7 @@ export class MyTeamItrsComponent implements OnInit {
     { teamLeadId: 1063, value: 71148, label: 'Riddhi Solanki', },
     { teamLeadId: 1063, value: 71159, label: 'Ajay Kandhway', },
     { teamLeadId: 1063, value: 71168, label: 'Ganesh Jaiswal', },
+    { teamLeadId: 1707, value: 75925, label: 'Nikita Shah', },
 
     { teamLeadId: 0, value: 1065, label: 'Urmila Warve' },
     { teamLeadId: 0, value: 1067, label: 'Divya Bhanushali' },
