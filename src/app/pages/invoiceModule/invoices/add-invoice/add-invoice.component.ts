@@ -411,7 +411,6 @@ export class AddInvoiceComponent implements OnInit {
 
   checkUserItrStatus(userId) {
     this.invoiceForm = this.createInvoiceForm();
-    https://api.taxbuddy.com/user/itr-status-name/{userId}?assessmentYear={assessmentYear}
     let param = '/user/itr-status-name/' + userId + '?assessmentYear=2020-2021';
     this.userService.getMethodInfo(param).subscribe(responce => {
       console.log('User ITR status: ', responce);
@@ -420,6 +419,10 @@ export class AddInvoiceComponent implements OnInit {
         for (let [key, value] of Object.entries(userItrStatus)) {
           if (key === 'ITR Filed' /* || key === 'Invoice Sent' || key === 'Payment Received' */) {
             this.isItrFiled = true;
+            this.invoiceForm.controls['estimateDateTime'].setValidators(null);
+            this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();
+            this.invoiceForm.controls['itrType'].setValidators(null);
+            this.invoiceForm.controls['itrType'].updateValueAndValidity();
             return;
           }
         }
@@ -964,20 +967,6 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   saveInvoice() {
-    // console.log('clientListGridOptions => ', this.clientListGridOptions, this.clientListGridOptions.api, this.clientListGridOptions.api.getRenderedNodes(), this.clientListGridOptions.api.getRenderedNodes()[0].data.itemDescription)
-
-
-    // if (this.isMaharashtraState) {
-    //   let subTotal = this.invoiceData.invoiceTotal - (this.invoiceData.invoiceCGST + this.invoiceData.invoiceSGST)
-    //   this.invoiceForm.controls['subTotal'].setValue(subTotal)
-    // }
-    // else {
-    //   let subTotal = this.invoiceData.invoiceTotal - this.invoiceData.invoiceIGST;
-    //   this.invoiceForm.controls['subTotal'].setValue(subTotal)
-
-    // }
-
-    // console.log('invoiceTableInfo ', this.invoiceTableInfo)
     if (this.clientListGridOptions && this.clientListGridOptions.api &&
       this.clientListGridOptions.api.getRenderedNodes() && this.isInvoiceDetailsValid()) {
       this.invoiceForm.controls['userId'].setValue(this.utilsService.isNonEmpty(this.invoiceForm.controls['userId'].value) ? this.invoiceForm.controls['userId'].value : null)
