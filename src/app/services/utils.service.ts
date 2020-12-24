@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
+import { AppConstants } from 'app/shared/constants';
 import { Observable, Subject } from 'rxjs';
 import { ITR_JSON } from './../shared/interfaces/itr-input.interface';
+import { ItrMsService } from './itr-ms.service';
 
 @Injectable()
 
 export class UtilsService {
-    
+    ITR_JSON: ITR_JSON;
+    loading: boolean = false;
     private subject = new Subject<any>();
-    constructor(private snackBar: MatSnackBar,) { }
+    constructor(private snackBar: MatSnackBar, private itrMsService: ItrMsService,
+        private router: Router) { }
     /**
     * @function isNonEmpty()
     * @param param
@@ -63,6 +68,110 @@ export class UtilsService {
             verticalPosition: 'top',
             horizontalPosition: 'center',
             duration: 3000
+        });
+    }
+
+    getITRByUserIdAndAssesmentYear(profile) {
+        // this.isLoggedIn = this.encrDecrService.get(AppConstants.IS_USER_LOGGED_IN);
+        const param = '/itr?userId=' + profile.userId + '&assessmentYear=' + AppConstants.ayYear;
+        this.itrMsService.getMethod(param).subscribe((result: any) => {
+            console.log('My ITR by user Id and Assesment Years=', result);
+            if (result.length !== 0) {
+                let isWIP_ITRFound = true;
+                for (let i = 0; i < result.length; i++) {
+                    let currentFiledITR = result.filter(item => (item.assessmentYear === AppConstants.ayYear && item.eFillingCompleted));
+                    if (result[i].eFillingCompleted || result[i].ackStatus === 'SUCCESS' || result[i].ackStatus === 'DELAY') {
+                        //   return "REVIEW"
+                    } else {
+                        //   return "CONTINUE"
+                        isWIP_ITRFound = false;
+                        this.ITR_JSON = result[i];
+                        if (currentFiledITR.length > 0) {
+                            currentFiledITR = currentFiledITR.filter(item => item.isRevised === 'N');
+                            if (currentFiledITR.length > 0) {
+                                this.ITR_JSON.orgITRAckNum = currentFiledITR[0].ackNumber;
+                                this.ITR_JSON.orgITRDate = currentFiledITR[0].eFillingDate;
+                            }
+                        }
+                        console.log('this.ITR_JSON JUST before saving:', this.ITR_JSON)
+                        Object.entries(this.ITR_JSON).forEach((key, value) => {
+                            console.log(key, value)
+                            if (key[1] === null) {
+                                delete this.ITR_JSON[key[0]];
+                            }
+                            // if(key )
+                            // delete this.ITR_JSON[key];
+                        });
+                        console.log('this.ITR_JSON after deleted keys:', this.ITR_JSON)
+
+                        break;
+                    }
+                }
+
+                if (!isWIP_ITRFound) {
+                    this.loading = false;
+                    let obj = this.createEmptyJson(profile, AppConstants.ayYear, AppConstants.fyYear)
+                    Object.assign(obj, this.ITR_JSON)
+                    console.log('obj:', obj)
+                    this.ITR_JSON = JSON.parse(JSON.stringify(obj))
+                    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+                    this.router.navigate(['/pages/itr-filing/customer-profile'])
+                    /* if (this.utilsService.isNonEmpty(profile.panNumber)) {
+                      if (this.utilsService.isNonEmpty(this.ITR_JSON.panNumber) ? (this.ITR_JSON.panNumber !== profile.panNumber) : false) {
+                        this.openConformationDialog(this.ITR_JSON, profile, assessmentYear, financialYear);
+                      } else {
+                        if (this.utilsService.isNonEmpty(this.ITR_JSON.lastVisitedURL)) {
+                          this.lastVisitedDialog();
+                        } else {
+                          //this.router.navigate(['/revisereturn']);
+                          this.router.navigate(['/assited']);
+                        }
+                      }
+                    } else {
+                      if (this.utilsService.isNonEmpty(this.ITR_JSON.lastVisitedURL)) {
+                        this.lastVisitedDialog();
+                      } else {
+                        // this.router.navigate(['/revisereturn']);
+                        this.router.navigate(['/assited']);
+                      }
+                    } */
+                } else {
+                    this.loading = false;
+                    alert('ITR Fillied/Acknowledgement not received');
+                }
+
+            } else {
+                this.ITR_JSON = this.createEmptyJson(profile, AppConstants.ayYear, AppConstants.fyYear);
+
+                const param = '/itr';
+                this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
+                    console.log('My iTR Json successfully created-==', result);
+                    this.ITR_JSON = result;
+                    this.loading = false;
+                    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+                    this.router.navigate(['/pages/itr-filing/customer-profile'])
+                }, error => {
+                    this.loading = false;
+                });
+            }
+
+        }, error => {
+            if (error.status === 404) {
+                this.ITR_JSON = this.createEmptyJson(profile, AppConstants.ayYear, AppConstants.fyYear);
+                const param = '/itr';
+                this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
+                    console.log('My iTR Json successfully created-==', result);
+                    this.loading = false;
+                    this.ITR_JSON = result;
+                    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+                    this.router.navigate(['/pages/itr-filing/customer-profile'])
+                }, error => {
+                    this.loading = false;
+                });
+            } else {
+                // Handle another error conditions like 500 etc.
+                this.loading = false;
+            }
         });
     }
 
@@ -192,21 +301,21 @@ export class UtilsService {
         return this.subject.asObservable();
     }
 
-    showErrorMsg(errorCode){
+    showErrorMsg(errorCode) {
         var errorMessage = '';
-        if(errorCode === 400){
+        if (errorCode === 400) {
             errorMessage = 'Bad request, invalid input request.';
         }
-        else if(errorCode === 401){
+        else if (errorCode === 401) {
             errorMessage = 'Unauthorized user.';
         }
-        else if(errorCode === 403){
+        else if (errorCode === 403) {
             errorMessage = 'You do not have access of this part.';
         }
-        else if(errorCode === 404){
+        else if (errorCode === 404) {
             errorMessage = 'Data not found in system.';
         }
-        else if(errorCode === 500){
+        else if (errorCode === 500) {
             errorMessage = 'Internal server error.';
         }
         return errorMessage;

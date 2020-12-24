@@ -191,7 +191,6 @@ export class UpdateStatusComponent implements OnInit {
   }
   ngAfterContentChecked() {
     this.currentUrl = this.router.url;
-    console.log('My Current url in update status:', this.currentUrl)
   }
   getFilingStatus() {
     const param = `/itr-status?userId=${this.userId}&assessmentYear=${AppConstants.ayYear}`;
