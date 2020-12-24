@@ -10,11 +10,15 @@ import { SharedModule } from 'app/shared/shared.module';
 import { ServiceBoardComponent } from './service-board.component';
 import { ServiceBoardRoutingModule } from './service-board.routing';
 import { DocUploadedComponent } from './doc-uploaded/doc-uploaded.component';
+import { PreparingItrComponent } from './preparing-itr/preparing-itr.component';
+import { AwatingConfirmationComponent } from './awating-confirmation/awating-confirmation.component';
 
 @NgModule({
     declarations: [
         ServiceBoardComponent,
         DocUploadedComponent,
+        PreparingItrComponent,
+        AwatingConfirmationComponent,
     ],
     imports: [
         CommonModule,
