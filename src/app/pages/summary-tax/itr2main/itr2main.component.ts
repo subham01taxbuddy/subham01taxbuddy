@@ -1408,7 +1408,7 @@ export class Itr2mainComponent implements OnInit {
           let tdsOtherThanSalObj = {               
              deductorTAN : tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TANOfDeductor']['_text'], 
              deductorName: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TDSCreditName']['_text'],
-             totalAmountCredited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:GrossAmount']['_text'],
+             totalAmountCredited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i].hasOwnProperty('ITRForm:GrossAmount') ? tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:GrossAmount']['_text'] : 0,
              totalTdsDeposited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TaxDeductCreditDtls']['ITRForm:TaxDeductedOwnHands']['_text']
           }
 
@@ -1419,7 +1419,7 @@ export class Itr2mainComponent implements OnInit {
          let tdsOtherThanSalObj = {
           deductorTAN : tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TANOfDeductor']['_text'], 
              deductorName: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TDSCreditName']['_text'],
-             totalAmountCredited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:GrossAmount']['_text'],
+             totalAmountCredited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'].hasOwnProperty('ITRForm:GrossAmount') ? tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:GrossAmount']['_text'] : 0,
              totalTdsDeposited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TaxDeductCreditDtls']['ITRForm:TaxDeductedOwnHands']['_text']
         }
         taxPaidInfo.otherThanSalary16A.push(tdsOtherThanSalObj)
