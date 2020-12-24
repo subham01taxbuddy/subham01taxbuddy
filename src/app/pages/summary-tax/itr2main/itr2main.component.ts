@@ -1830,7 +1830,7 @@ export class Itr2mainComponent implements OnInit {
      businessType: "SPECULATIVE",
      exemptIncome: speculativeInfo.hasOwnProperty('ITRForm:Expenditure') ? Number(speculativeInfo['ITRForm:Expenditure']['_text']) : 0,
      natureOfBusiness: '',
-     taxableIncome: speculativeInfo.hasOwnProperty('ITRForm:NetIncomeFrmSpecActivity') ? (Number(speculativeInfo['ITRForm:NetIncomeFrmSpecActivity']['_text']) > 0 ? Number(speculativeInfo['ITRForm:NetIncomeFrmSpecActivity']['_text']) : 0) : 0,
+     taxableIncome: speculativeInfo.hasOwnProperty('ITRForm:NetIncomeFrmSpecActivity') ? Number(speculativeInfo['ITRForm:NetIncomeFrmSpecActivity']['_text']) : 0,
      tradeName:'',
      incomes: []
    }
@@ -1856,7 +1856,7 @@ export class Itr2mainComponent implements OnInit {
     businessType: "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_BUSINESS",
     exemptIncome: Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:Expenses']['_text']),
     natureOfBusiness: '',
-    taxableIncome: (Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfit']['_text']) > 0 ? Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfit']['_text']) : 0),
+    taxableIncome: Number(othetThanSpecInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfit']['_text']),
     tradeName:'',
     incomes: []
   }
@@ -1882,7 +1882,7 @@ export class Itr2mainComponent implements OnInit {
    businessType: "OTHER_THAN_SPECULATIVE_AND_PRESUMPTIVE_PROFESSION",
    exemptIncome: Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:ExpensesPrf']['_text']),
    natureOfBusiness: '',
-   taxableIncome: Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfitPrf']['_text']) > 0 ? Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfitPrf']['_text']) : 0,
+   taxableIncome: Number(othetThanSpecProfessionInfo['ITRForm:NoBooksOfAccPL']['ITRForm:NetProfitPrf']['_text']),
    tradeName:'',
    incomes: []
  }
@@ -1908,7 +1908,7 @@ export class Itr2mainComponent implements OnInit {
   businessType: "FUTURES_AND_OPTIONS",
   exemptIncome: Number(futureAndOptionInfo['ITRForm:DirectExpensesTotal']['_text']),
   natureOfBusiness: '',
-  taxableIncome: Number(futureAndOptionInfo['ITRForm:GrossProfitFrmBusProf']['_text']) > 0 ? Number(futureAndOptionInfo['ITRForm:GrossProfitFrmBusProf']['_text']) : 0,
+  taxableIncome: Number(futureAndOptionInfo['ITRForm:GrossProfitFrmBusProf']['_text']),
   tradeName:'',
   incomes: []
 }
@@ -4221,6 +4221,8 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
       //  console.log('natureLabelNotSpeculative: ',natureLabelNotSpeculative);
       //  this.businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].setValue(natureLabelNotSpeculative);
       //  this.businessIncomeForm.controls['tradeNameOfothertThanSpeculativeProfession'].setValue(fAndOIncome[0].tradeName);
+
+      
        this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeFAndO'].setValue(fAndOIncome[0].incomes[0].receipts);
        this.businessIncomeForm.controls['purchaseOfothertThanSpeculativeFAndO'].setValue(fAndOIncome[0].incomes[0].presumptiveIncome);
        this.businessIncomeForm.controls['expenceIncomeOfothertThanSpeculativeFAndO'].setValue(fAndOIncome[0].exemptIncome);
@@ -5324,11 +5326,11 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
   calTotalOfIncomeFromBusiness(){
     console.log('businessIncomeForm values',this.businessIncomeForm.controls.value)
     debugger
-    this.computationOfIncomeForm.controls['speculativeBusinessIncome'].setValue(this.businessIncomeForm.controls['taxableIncomeOfSpeculative'].value); 
-    this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptive'].setValue(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].value); 
+    this.computationOfIncomeForm.controls['speculativeBusinessIncome'].setValue(Number(this.businessIncomeForm.controls['taxableIncomeOfSpeculative'].value) > 0 ? this.businessIncomeForm.controls['taxableIncomeOfSpeculative'].value : 0); 
+    this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptive'].setValue(Number(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].value) > 0 ? this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].value : 0); 
 
-    this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptiveProfession'].setValue(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeProfession'].value); 
-    this.computationOfIncomeForm.controls['futureAndOption'].setValue(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeFAndO'].value); 
+    this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptiveProfession'].setValue(Number(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeProfession'].value) > 0 ? this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeProfession'].value : 0); 
+    this.computationOfIncomeForm.controls['futureAndOption'].setValue(Number(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeFAndO'].value) > 0 ? this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeFAndO'].value : 0); 
 
     let totalOfIncomeFromBusiness = Number(this.computationOfIncomeForm.controls['presumptiveBusinessIncomeUs44AD'].value) + Number(this.computationOfIncomeForm.controls['presumptiveBusinessIncomeUs44ADA'].value)
                           + Number(this.computationOfIncomeForm.controls['speculativeBusinessIncome'].value) + Number(this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptive'].value)
