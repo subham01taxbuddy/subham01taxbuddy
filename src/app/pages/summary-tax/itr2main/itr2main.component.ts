@@ -1409,7 +1409,7 @@ export class Itr2mainComponent implements OnInit {
              deductorTAN : tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TANOfDeductor']['_text'], 
              deductorName: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TDSCreditName']['_text'],
              totalAmountCredited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i].hasOwnProperty('ITRForm:GrossAmount') ? tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:GrossAmount']['_text'] : 0,
-             totalTdsDeposited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TaxDeductCreditDtls']['ITRForm:TaxDeductedOwnHands']['_text']
+             totalTdsDeposited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TaxDeductCreditDtls'].hasOwnProperty('ITRForm:TaxDeductedOwnHands') ? tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'][i]['ITRForm:TaxDeductCreditDtls']['ITRForm:TaxDeductedOwnHands']['_text'] : 0
           }
 
           taxPaidInfo.otherThanSalary16A.push(tdsOtherThanSalObj);
@@ -1420,7 +1420,7 @@ export class Itr2mainComponent implements OnInit {
           deductorTAN : tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TANOfDeductor']['_text'], 
              deductorName: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TDSCreditName']['_text'],
              totalAmountCredited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls'].hasOwnProperty('ITRForm:GrossAmount') ? tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:GrossAmount']['_text'] : 0,
-             totalTdsDeposited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TaxDeductCreditDtls']['ITRForm:TaxDeductedOwnHands']['_text']
+             totalTdsDeposited: tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TaxDeductCreditDtls'].hasOwnProperty('ITRForm:TaxDeductedOwnHands') ? tdsOtherThanSalInfo['ITRForm:TDSOthThanSalaryDtls']['ITRForm:TaxDeductCreditDtls']['ITRForm:TaxDeductedOwnHands']['_text'] : 0
         }
         taxPaidInfo.otherThanSalary16A.push(tdsOtherThanSalObj)
       }
@@ -1521,54 +1521,59 @@ export class Itr2mainComponent implements OnInit {
     if(Number(totalIncome) > 5000000){
       this.showAssetLiability = true;
       //Details of immovable assets
-      if(itrData['ITRForm:ScheduleAL'].hasOwnProperty('ITRForm:ImmovableDetails')){
-        let immovableAssetsInfo = itrData['ITRForm:ScheduleAL']['ITRForm:ImmovableDetails'];
-        console.log('immovableAssetsInfo: ',immovableAssetsInfo);
-        
-        if(this.utilService.isNonEmpty(immovableAssetsInfo.length)){
-          for(let i=0; i < immovableAssetsInfo.length; i++){
-            var immoAdd = immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:ResidenceNo']['_text']+', '+ immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:ResidenceName']['_text']+', '+
-               immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:LocalityOrArea']['_text']+', '+immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:CityOrTownOrDistrict']['_text'];
-                let immovableObj = {
-                  description : immovableAssetsInfo[i]['ITRForm:Description']['_text'],
-                  area : immoAdd,
-                  amount :  immovableAssetsInfo[i]['ITRForm:Amount']['_text']
-                }
-              this.immovableAssetsInfo.push(immovableObj);
+      if(itrData.hasOwnProperty('ITRForm:ScheduleAL')){
+        if(itrData['ITRForm:ScheduleAL'].hasOwnProperty('ITRForm:ImmovableDetails')){
+          let immovableAssetsInfo = itrData['ITRForm:ScheduleAL']['ITRForm:ImmovableDetails'];
+          console.log('immovableAssetsInfo: ',immovableAssetsInfo);
+          
+          if(this.utilService.isNonEmpty(immovableAssetsInfo.length)){
+            for(let i=0; i < immovableAssetsInfo.length; i++){
+              var immoAdd = immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:ResidenceNo']['_text']+', '+ immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:ResidenceName']['_text']+', '+
+                 immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:LocalityOrArea']['_text']+', '+immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:CityOrTownOrDistrict']['_text'];
+                  let immovableObj = {
+                    description : immovableAssetsInfo[i]['ITRForm:Description']['_text'],
+                    area : immoAdd,
+                    amount :  immovableAssetsInfo[i]['ITRForm:Amount']['_text']
+                  }
+                this.immovableAssetsInfo.push(immovableObj);
+            }
           }
+          else{
+            var immoAdd = immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:ResidenceNo']['_text']+', '+ immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:ResidenceName']['_text']+', '+
+            immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:LocalityOrArea']['_text']+', '+immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:CityOrTownOrDistrict']['_text'];
+             let immovableObj = {
+               description : immovableAssetsInfo['ITRForm:Description']['_text'],
+               area : immoAdd,
+               amount :  immovableAssetsInfo['ITRForm:Amount']['_text']
+             }
+           this.immovableAssetsInfo.push(immovableObj);
+          }
+          
+         
+          this.calImmovableToatal(this.immovableAssetsInfo)
         }
-        else{
-          var immoAdd = immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:ResidenceNo']['_text']+', '+ immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:ResidenceName']['_text']+', '+
-          immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:LocalityOrArea']['_text']+', '+immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:CityOrTownOrDistrict']['_text'];
-           let immovableObj = {
-             description : immovableAssetsInfo['ITRForm:Description']['_text'],
-             area : immoAdd,
-             amount :  immovableAssetsInfo['ITRForm:Amount']['_text']
-           }
-         this.immovableAssetsInfo.push(immovableObj);
-        }
-        
-       
-        this.calImmovableToatal(this.immovableAssetsInfo)
       }
+      
      
       //Details of movable assets
-      if(itrData['ITRForm:ScheduleAL'].hasOwnProperty('ITRForm:MovableAsset')){
-        let movableAssetsInfo = itrData['ITRForm:ScheduleAL']['ITRForm:MovableAsset'];
-        console.log('movableAssetsInfo: ',movableAssetsInfo);
-  
-        this.assetsLiabilitiesForm.controls['jwelleryAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:JewelleryBullionEtc']['_text']) ? movableAssetsInfo['ITRForm:JewelleryBullionEtc']['_text'] : 0)  
-        this.assetsLiabilitiesForm.controls['artWorkAmount'].setValue  (this.isNotZero(movableAssetsInfo['ITRForm:ArchCollDrawPaintSulpArt']['_text']) ? movableAssetsInfo['ITRForm:ArchCollDrawPaintSulpArt']['_text'] : 0)    
-        this.assetsLiabilitiesForm.controls['vehicleAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:VehiclYachtsBoatsAircrafts']['_text']) ? movableAssetsInfo['ITRForm:VehiclYachtsBoatsAircrafts']['_text'] : 0)
-        this.assetsLiabilitiesForm.controls['bankAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:DepositsInBank']['_text']) ? movableAssetsInfo['ITRForm:DepositsInBank']['_text'] : 0)
-        this.assetsLiabilitiesForm.controls['shareAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:SharesAndSecurities']['_text']) ? movableAssetsInfo['ITRForm:SharesAndSecurities']['_text'] : 0)
-        this.assetsLiabilitiesForm.controls['insuranceAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:InsurancePolicies']['_text']) ? movableAssetsInfo['ITRForm:InsurancePolicies']['_text'] : 0) 
-        this.assetsLiabilitiesForm.controls['loanAmount'].setValue  (this.isNotZero(movableAssetsInfo['ITRForm:LoansAndAdvancesGiven']['_text']) ? movableAssetsInfo['ITRForm:LoansAndAdvancesGiven']['_text'] : 0)  
-        this.assetsLiabilitiesForm.controls['cashInHand'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:CashInHand']['_text']) ? movableAssetsInfo['ITRForm:CashInHand']['_text'] : 0);
-        
-        this.assetsLiabilitiesForm.controls['movableAssetTotal'].setValue(this.isNotZero(itrData['ITRForm:ScheduleAL']['ITRForm:LiabilityInRelatAssets']['_text']) ? itrData['ITRForm:ScheduleAL']['ITRForm:LiabilityInRelatAssets']['_text'] : 0);
-        
-        Object.assign(this.itr_2_Summary.assesse.assetsLiabilities, this.assetsLiabilitiesForm.value);
+      if(itrData.hasOwnProperty('ITRForm:ScheduleAL')){
+        if(itrData['ITRForm:ScheduleAL'].hasOwnProperty('ITRForm:MovableAsset')){
+          let movableAssetsInfo = itrData['ITRForm:ScheduleAL']['ITRForm:MovableAsset'];
+          console.log('movableAssetsInfo: ',movableAssetsInfo);
+    
+          this.assetsLiabilitiesForm.controls['jwelleryAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:JewelleryBullionEtc']['_text']) ? movableAssetsInfo['ITRForm:JewelleryBullionEtc']['_text'] : 0)  
+          this.assetsLiabilitiesForm.controls['artWorkAmount'].setValue  (this.isNotZero(movableAssetsInfo['ITRForm:ArchCollDrawPaintSulpArt']['_text']) ? movableAssetsInfo['ITRForm:ArchCollDrawPaintSulpArt']['_text'] : 0)    
+          this.assetsLiabilitiesForm.controls['vehicleAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:VehiclYachtsBoatsAircrafts']['_text']) ? movableAssetsInfo['ITRForm:VehiclYachtsBoatsAircrafts']['_text'] : 0)
+          this.assetsLiabilitiesForm.controls['bankAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:DepositsInBank']['_text']) ? movableAssetsInfo['ITRForm:DepositsInBank']['_text'] : 0)
+          this.assetsLiabilitiesForm.controls['shareAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:SharesAndSecurities']['_text']) ? movableAssetsInfo['ITRForm:SharesAndSecurities']['_text'] : 0)
+          this.assetsLiabilitiesForm.controls['insuranceAmount'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:InsurancePolicies']['_text']) ? movableAssetsInfo['ITRForm:InsurancePolicies']['_text'] : 0) 
+          this.assetsLiabilitiesForm.controls['loanAmount'].setValue  (this.isNotZero(movableAssetsInfo['ITRForm:LoansAndAdvancesGiven']['_text']) ? movableAssetsInfo['ITRForm:LoansAndAdvancesGiven']['_text'] : 0)  
+          this.assetsLiabilitiesForm.controls['cashInHand'].setValue(this.isNotZero(movableAssetsInfo['ITRForm:CashInHand']['_text']) ? movableAssetsInfo['ITRForm:CashInHand']['_text'] : 0);
+          
+          this.assetsLiabilitiesForm.controls['movableAssetTotal'].setValue(this.isNotZero(itrData['ITRForm:ScheduleAL']['ITRForm:LiabilityInRelatAssets']['_text']) ? itrData['ITRForm:ScheduleAL']['ITRForm:LiabilityInRelatAssets']['_text'] : 0);
+          
+          Object.assign(this.itr_2_Summary.assesse.assetsLiabilities, this.assetsLiabilitiesForm.value);
+        }
       }
       
     }      
