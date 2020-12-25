@@ -1528,8 +1528,10 @@ export class Itr2mainComponent implements OnInit {
           
           if(this.utilService.isNonEmpty(immovableAssetsInfo.length)){
             for(let i=0; i < immovableAssetsInfo.length; i++){
-              var immoAdd = immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:ResidenceNo']['_text']+', '+ immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:ResidenceName']['_text']+', '+
-                 immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:LocalityOrArea']['_text']+', '+immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:CityOrTownOrDistrict']['_text'];
+              var immoAdd = (immovableAssetsInfo[i]['ITRForm:AddressAL'].hasOwnProperty('ITRForm:ResidenceNo') ? immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:ResidenceNo']['_text'] : '')+
+                  ', '+ (immovableAssetsInfo[i]['ITRForm:AddressAL'].hasOwnProperty('ITRForm:ResidenceName') ? immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:ResidenceName']['_text'] : '')+
+                  ', '+ (immovableAssetsInfo[i]['ITRForm:AddressAL'].hasOwnProperty('ITRForm:LocalityOrArea') ? immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:LocalityOrArea']['_text'] : '') 
+                  +', '+(immovableAssetsInfo[i]['ITRForm:AddressAL'].hasOwnProperty('ITRForm:CityOrTownOrDistrict') ? immovableAssetsInfo[i]['ITRForm:AddressAL']['ITRForm:CityOrTownOrDistrict']['_text'] : '');
                   let immovableObj = {
                     description : immovableAssetsInfo[i]['ITRForm:Description']['_text'],
                     area : immoAdd,
@@ -1541,6 +1543,11 @@ export class Itr2mainComponent implements OnInit {
           else{
             var immoAdd = immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:ResidenceNo']['_text']+', '+ immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:ResidenceName']['_text']+', '+
             immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:LocalityOrArea']['_text']+', '+immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:CityOrTownOrDistrict']['_text'];
+
+            var immoAdd = (immovableAssetsInfo['ITRForm:AddressAL'].hasOwnProperty('ITRForm:ResidenceNo') ? immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:ResidenceNo']['_text'] : '')+
+            ', '+ (immovableAssetsInfo['ITRForm:AddressAL'].hasOwnProperty('ITRForm:ResidenceName') ? immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:ResidenceName']['_text'] : '')+
+            ', '+ (immovableAssetsInfo['ITRForm:AddressAL'].hasOwnProperty('ITRForm:LocalityOrArea') ? immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:LocalityOrArea']['_text'] : '') 
+            +', '+(immovableAssetsInfo['ITRForm:AddressAL'].hasOwnProperty('ITRForm:CityOrTownOrDistrict') ? immovableAssetsInfo['ITRForm:AddressAL']['ITRForm:CityOrTownOrDistrict']['_text'] : '');
              let immovableObj = {
                description : immovableAssetsInfo['ITRForm:Description']['_text'],
                area : immoAdd,
