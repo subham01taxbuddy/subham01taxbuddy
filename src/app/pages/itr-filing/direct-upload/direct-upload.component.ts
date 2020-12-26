@@ -1,3 +1,4 @@
+import { UtilsService } from 'app/services/utils.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material';
@@ -31,17 +32,14 @@ export class DirectUploadComponent implements OnInit {
   errorMessage: string;
   // uploadXMLForm: FormGroup;
   successMsg: string;
-  successValue: boolean = false;
-  busy: boolean = false
   itrDocuments = [];
 
   upload: boolean = false;
-  constructor(private httpClient: HttpClient, private router: Router, private itrMsService: ItrMsService,) {
+  constructor(private httpClient: HttpClient, private router: Router, private itrMsService: ItrMsService, private utilsService: UtilsService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
   ngOnInit() {
-    this.getItrDocuments();
     this.getCommonDocuments();
   }
 
@@ -57,15 +55,10 @@ export class DirectUploadComponent implements OnInit {
     this.fileName = fileList[0].name;
   }
   uploadXML() {
-    debugger
+
     this.loading = true;
     this.showError = false;
-    this.successValue = false;
     let param = `/itr/api/directFilling?itrId=${this.ITR_JSON.itrId}`
-    // if (this.uploadXMLForm.valid) {
-    /* if (this.uploadXMLForm.controls['caId'].value !== null && this.uploadXMLForm.controls['caId'].value !== undefined && this.uploadXMLForm.controls['caId'].value !== "") {
-      param = "api/directFilling?caId=" + this.uploadXMLForm.controls['caId'].value
-    } */
     if (this.file !== undefined && this.file !== null) {
       let myfile: File = this.file[0];
       let formData: FormData = new FormData();
@@ -80,9 +73,7 @@ export class DirectUploadComponent implements OnInit {
       };
       const url = environment.url + param;
       const req = new HttpRequest('POST', url, formData, httpOptions);
-      this.busy = true;
       this.httpClient.request(req).subscribe((event: HttpEvent<any>) => {
-        // this.busy = false
         switch (event.type) {
           case HttpEventType.Sent:
             console.log('Request sent!');
@@ -104,17 +95,11 @@ export class DirectUploadComponent implements OnInit {
             sessionStorage.setItem('DIRECT_UPLOAD_RES', JSON.stringify(HttpEventType.Response))
             this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'success' } })
 
-            this.busy = false;
             this.showProgress = false;
             // this.ITR_JSON = event.body;
             // this.encrDecrService.set(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-            this.successValue = true
             this.successMsg = "Successfully uploaded XML file."
-            setTimeout(() => {
-              this.successValue = false;
-              // this.result = true;
-              // this.close();
-            }, 4000)
+
           // this.callerObj.getXml();
           case HttpEventType.User:
             console.log('Done!', HttpEventType.User);
@@ -122,11 +107,8 @@ export class DirectUploadComponent implements OnInit {
 
       }, error => {
         this.loading = false;
-
-        this.successValue = false;
         this.showError = true;
         this.showProgress = false;
-        this.busy = false
         console.log("File upload Error", error)
         console.log("File upload Error status", error.error.message)
         if (error.error.status === 400 && error.error.detail === "ERROR") {
@@ -140,10 +122,7 @@ export class DirectUploadComponent implements OnInit {
     } else {
       this.loading = false;
       this.showError = true;
-      this.errorMessage = "Please select the file";
-      setTimeout(() => {
-        this.showError = false;
-      }, 3000)
+      this.utilsService.showSnackBar
     }
     // }
   }
@@ -165,19 +144,12 @@ export class DirectUploadComponent implements OnInit {
   }
   commonDocuments = []
   getCommonDocuments() {
-    const param = `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/Common`;
+    const param = `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.commonDocuments = result;
     })
   }
-  getItrDocuments() {
-    const param1 =
-      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
-    this.itrMsService.getMethod(param1).subscribe((result: any) => {
-      this.itrDocuments = result;
-      this.getDocsUrl(0);
-    })
-  }
+
 
   zoom: number = 1.0;
   incrementZoom(amount: number) {
@@ -188,20 +160,6 @@ export class DirectUploadComponent implements OnInit {
     docUrl: '',
     docType: ''
   };
-  getDocsUrl(index) {
-    if (this.itrDocuments.length > 0) {
-      const docType = this.itrDocuments[index].fileName.split('.').pop();
-      if (this.itrDocuments[index].isPasswordProtected) {
-        this.docDetails.docUrl = this.itrDocuments[index].passwordProtectedFileUrl;
-      } else {
-        this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
-      }
-      this.docDetails.docType = docType;
-    } else {
-      this.docDetails.docUrl = '';
-      this.docDetails.docType = '';
-    }
-  }
 
   getCommonDocsUrl(index) {
     if (this.commonDocuments.length > 0) {
@@ -216,5 +174,65 @@ export class DirectUploadComponent implements OnInit {
       this.docDetails.docUrl = '';
       this.docDetails.docType = '';
     }
+  }
+
+  uploadSummary() {
+    this.loading = true;
+    this.showError = false;
+    let param = `/itr/summary/upload-and-send`
+    if (this.file !== undefined && this.file !== null) {
+      let myfile: File = this.file[0];
+      let formData: FormData = new FormData();
+      formData.append('file', myfile);
+      formData.append('userId', this.ITR_JSON.userId.toString());
+      // const user = JSON.parse(sessionStorage.getItem('user_object'));
+      const user = JSON.parse(localStorage.getItem('UMD'));
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Authorization': `Bearer ${user.id_token}`
+        }),
+        reportProgress: true
+      };
+      const url = environment.url + param;
+      const req = new HttpRequest('POST', url, formData, httpOptions);
+      this.httpClient.request(req).subscribe((event: HttpEvent<any>) => {
+        switch (event.type) {
+          case HttpEventType.Sent:
+            console.log('Request sent!');
+            console.log('HttpEventType.Sent ', HttpEventType.Sent);
+            break;
+          case HttpEventType.ResponseHeader:
+            console.log('Response header received!');
+            break;
+          case HttpEventType.UploadProgress:
+            this.showProgress = true;
+            this.filesize = Math.round((event.total / 1024)).toString();
+            this.loaded = Math.round((event.loaded / 1024)).toString();
+            this.uploaded = Math.round(event.loaded * 100 / event.total);
+            console.log(`Download in progress! ${this.uploaded} % loaded`);
+            break;
+          case HttpEventType.Response:
+            console.log('Done!', event.body);
+            this.loading = false;
+            this.utilsService.showSnackBar(event.body['response']);
+            this.showProgress = false;
+          case HttpEventType.User:
+            this.file = null;
+            console.log('Done!', HttpEventType.User);
+            this.getCommonDocuments();
+        }
+
+      }, error => {
+        this.loading = false;
+        this.showProgress = false;
+        console.log("File upload Error", error)
+        this.utilsService.showSnackBar('Error while uploading Summary.');
+
+      })
+    } else {
+      this.loading = false;
+      this.utilsService.showSnackBar('Please select file!')
+    }
+    // }
   }
 }
