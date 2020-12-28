@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { FilingStatusDialogComponent } from 'app/pages/itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { UtilsService } from 'app/services/utils.service';
+import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 import moment = require('moment');
 
 @Component({
@@ -13,6 +14,9 @@ import moment = require('moment');
   styleUrls: ['./tpa-client-list.component.css']
 })
 export class TpaClientListComponent implements OnInit {
+  @Input('listFor') listFor: any;
+  @Output() sendValue = new EventEmitter<any>();
+
   loading: boolean = false;
   tpaGridOptions: GridOptions;
   tpaList = [];
@@ -92,18 +96,25 @@ export class TpaClientListComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log("listForlistForlistForlistFor:", this.listFor);
     this.getTpaList();
   }
   getTpaList() {
     this.loading = true;
     return new Promise((resolve, reject) => {
       // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
-      const param = `/itr/tpa?nextYearTpa=INTERESTED`;/* ${loggedInUserData.USER_UNIQUE_ID} */
+      const param = `/itr/tpa?nextYearTpa=${this.listFor}`;/* ${loggedInUserData.USER_UNIQUE_ID} */
       this.itrMsService.getMethod(param).subscribe((res: any) => {
         console.log('filingTeamMemberId: ', res);
         this.tpaList = res;
         this.tpaGridOptions.api.setRowData(this.createTpaRowData(res));
         this.loading = false;
+        if (this.listFor === "COMPLETED") {
+          this.tpaGridOptions.columnApi.setColumnsVisible(['nextYearTpa'], false)
+        } else {
+          this.tpaGridOptions.columnApi.setColumnsVisible(['nextYearTpa'], true)
+        }
+        this.sendValue.emit(this.tpaList.length);
         return resolve(true)
       }, error => {
         this.loading = false;
@@ -313,6 +324,20 @@ export class TpaClientListComponent implements OnInit {
           color: 'black'
         },
       },
+      {
+        headerName: "Mark",
+        field: "nextYearTpa",
+        width: 50,
+        pinned: 'right',
+        // visible: this.listFor === "INTERESTED" ? true : false,
+        cellRenderer: params => {
+          return `<input type='checkbox' data-action-type="isTpaCompleted" ${params.data.nextYearTpa === 'COMPLETED' ? 'checked' : ''} />`;
+        },
+        cellStyle: params => {
+          return params.data.nextYearTpa === 'COMPLETED' ? { 'pointer-events': 'none', opacity: '0.4' }
+            : '';
+        }
+      }
       /* {
         headerName: "TPA",
         field: "nextYearTpa",
@@ -341,8 +366,9 @@ export class TpaClientListComponent implements OnInit {
           this.openfilingStatusDialog(params.data);
           break;
         }
-        case 'isTpa': {
-          // this.interestedForNextYearTpa(params.data);
+        case 'isTpaCompleted': {
+          if (this.listFor === "INTERESTED")
+            this.markAsTpaCompleted(params.data);
           break;
         }
       }
@@ -357,6 +383,19 @@ export class TpaClientListComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+    });
+  }
+
+  markAsTpaCompleted(data) {
+    this.loading = true;
+    var workingItr = this.tpaList.filter(item => item.itrId === data.itrId)[0];
+    workingItr['nextYearTpa'] = 'COMPLETED';
+    console.log(workingItr);
+    const param = '/itr/' + workingItr['userId'] + '/' + workingItr['itrId'] + '/' + workingItr['assessmentYear'];
+    this.itrMsService.putMethod(param, workingItr).subscribe((result: ITR_JSON) => {
+      this.getTpaList()
+    }, error => {
+      this.getTpaList()
     });
   }
 }
