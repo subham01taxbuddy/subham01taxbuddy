@@ -300,10 +300,10 @@ export class MyTeamItrsComponent implements OnInit {
         width: 50,
         pinned: 'right',
         cellRenderer: params => {
-          return `<input type='checkbox' data-action-type="isTpa" ${params.data.nextYearTpa === 'INTERESTED' ? 'checked' : ''} />`;
+          return `<input type='checkbox' data-action-type="isTpa" ${params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === "COMPLETED" ? 'checked' : ''} />`;
         },
         cellStyle: params => {
-          return (params.data.nextYearTpa === 'INTERESTED' || !params.data.eFillingCompleted) ? { 'pointer-events': 'none', opacity: '0.4' }
+          return (params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === 'COMPLETED' || !params.data.eFillingCompleted) ? { 'pointer-events': 'none', opacity: '0.4' }
             : '';
         }
       },/* ,
