@@ -133,7 +133,7 @@ export class LoginComponent implements OnInit {
     } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
       this.router.navigate(['/pages/itr-filing/my-itrs']);
     } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
-      this.router.navigate(['pages/tpa-interested/list']);
+      this.router.navigate(['pages/tpa-interested']);
       /*  } else if (jhi.role.indexOf("ROLE_IFA") !== -1) {
          this.router.navigate(['/pages/ifa/claim-client']); */
     } else {
