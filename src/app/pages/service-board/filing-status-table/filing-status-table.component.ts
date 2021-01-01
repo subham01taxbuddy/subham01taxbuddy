@@ -1,13 +1,15 @@
+import { Router } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
-import { UserMsService } from './../../../services/user-ms.service';
-import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-doc-uploaded',
-  templateUrl: './doc-uploaded.component.html',
-  styleUrls: ['./doc-uploaded.component.css']
+  selector: 'app-filing-status-table',
+  templateUrl: './filing-status-table.component.html',
+  styleUrls: ['./filing-status-table.component.css']
 })
-export class DocUploadedComponent implements OnInit {
+export class FilingStatusTableComponent implements OnInit {
+  @Input('statusId') statusId: any;
   docUploadedList = [];
   page = 0; // current page
   count = 0; // total pages
@@ -88,14 +90,14 @@ export class DocUploadedComponent implements OnInit {
     { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
   loading = false;
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService) { }
+  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private router: Router) { }
 
   ngOnInit() {
     this.retrieveDocUploaded(0);
   }
   retrieveDocUploaded(page) {
     this.loading = true;
-    const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=11`;
+    const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=${this.statusId}`;
     // /user-details-by-status-es?from=0&to=20&agentId=aditya.singh@taxbuddy.com&statusId=2
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('New User data', result);
@@ -147,4 +149,12 @@ export class DocUploadedComponent implements OnInit {
       window.open(data['KommunicateURL'], '_blank')
     }
   }
+  routeAction(data) {
+    if (this.statusId == 11) {
+      this.router.navigate(['/pages/invoice/generate']);
+    } else if (this.statusId == 12) {
+      this.router.navigate(['/pages/invoice/list']);
+    }
+  }
 }
+

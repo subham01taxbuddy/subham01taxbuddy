@@ -12,6 +12,9 @@ import { ServiceBoardRoutingModule } from './service-board.routing';
 import { DocUploadedComponent } from './doc-uploaded/doc-uploaded.component';
 import { PreparingItrComponent } from './preparing-itr/preparing-itr.component';
 import { AwatingConfirmationComponent } from './awating-confirmation/awating-confirmation.component';
+import { InvoiceToBeGenerateComponent } from './invoice-to-be-generate/invoice-to-be-generate.component';
+import { FilingStatusTableComponent } from './filing-status-table/filing-status-table.component';
+import { UnpaidInvoicesComponent } from './unpaid-invoices/unpaid-invoices.component';
 
 @NgModule({
     declarations: [
@@ -19,6 +22,9 @@ import { AwatingConfirmationComponent } from './awating-confirmation/awating-con
         DocUploadedComponent,
         PreparingItrComponent,
         AwatingConfirmationComponent,
+        InvoiceToBeGenerateComponent,
+        FilingStatusTableComponent,
+        UnpaidInvoicesComponent,
     ],
     imports: [
         CommonModule,
