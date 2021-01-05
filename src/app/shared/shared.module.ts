@@ -17,6 +17,7 @@ import { OwlDateTimeModule } from 'ng-pick-datetime/date-time/date-time.module';
 import { OwlNativeDateTimeModule } from 'ng-pick-datetime/date-time/adapter/native-date-time.module';
 import { FilingStatusDialogComponent } from 'app/pages/itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { UpdateStatusComponent } from 'app/pages/itr-filing/update-status/update-status.component';
+import { ItrActionsComponent } from './components/itr-actions/itr-actions.component';
 // import { CheckboxRenderer } from './checkbox-renderer.component';
 
 
@@ -34,7 +35,8 @@ import { UpdateStatusComponent } from 'app/pages/itr-filing/update-status/update
         AddCallLogComponent,
         FilingStatusDialogComponent,
         UpdateStatusComponent,
-        KommunicateDialogComponent
+        KommunicateDialogComponent,
+        ItrActionsComponent
     ],
     imports: [
         CommonModule,
@@ -62,10 +64,11 @@ import { UpdateStatusComponent } from 'app/pages/itr-filing/update-status/update
         AddCallLogComponent,
         FilingStatusDialogComponent,
         UpdateStatusComponent,
-        KommunicateDialogComponent
+        KommunicateDialogComponent,
+        ItrActionsComponent
     ],
     providers: [],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,
-        KommunicateDialogComponent]
+        KommunicateDialogComponent, ItrActionsComponent]
 })
 export class SharedModule { }

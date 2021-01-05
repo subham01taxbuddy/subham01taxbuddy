@@ -82,6 +82,7 @@ export class DocUploadedComponent implements OnInit {
     { value: 71159, label: 'Ajay Kandhway' },
     { value: 71168, label: 'Ganesh Jaiswal' },
     { value: 75925, label: 'Nikita Shah' },
+    { value: 81402, label: 'Vatsa Bhanushali' },
 
     { value: 1065, label: 'Urmila Warve' },
     { value: 1067, label: 'Divya Bhanushali' },
