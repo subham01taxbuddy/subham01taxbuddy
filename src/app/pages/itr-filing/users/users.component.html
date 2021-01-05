@@ -39,20 +39,23 @@
               <div class="table__cell product-row__cell-unit flex-10">
                 <a class="table__sort-link">User Id</a>
               </div>
-              <div class="table__cell product-row__cell-unit flex-30">
+              <div class="table__cell product-row__cell-unit flex-20">
                 <a class="table__sort-link">Name</a>
               </div>
-              <div class="table__cell product-row__cell-unit flex-20">
+              <div class="table__cell product-row__cell-unit flex-10">
                 <a class="table__sort-link">Mobile</a>
               </div>
-              <div class="table__cell product-row__cell-unit flex-20">
+              <div class="table__cell product-row__cell-unit flex-15">
                 <a class="table__sort-link">Email</a>
               </div>
-              <div class="table__cell product-row__cell-unit flex-20">
+              <div class="table__cell product-row__cell-unit flex-10">
                 <a class="table__sort-link">PAN Number</a>
               </div>
               <div class="table__cell product-row__cell-unit flex-20">
                 <a class="table__sort-link">Action</a>
+              </div>
+              <div class="table__cell product-row__cell-unit flex-15">
+                <a class="table__sort-link">ITR</a>
               </div>
             </div>
 
@@ -64,21 +67,25 @@
                   <div class="table__cell product-row__cell-stock flex-10">
                     {{item.userId}}
                   </div>
-                  <div class="table__cell product-row__cell-stock flex-30">
+                  <div class="table__cell product-row__cell-stock flex-20">
                     {{item.fName + " " + item.lName}}
                   </div>
-                  <div class="table__cell product-row__cell-stock flex-20">
+                  <div class="table__cell product-row__cell-stock flex-10">
                     {{item.mobileNumber}}
                   </div>
-                  <div class="table__cell product-row__cell-stock flex-20">
+                  <div class="table__cell product-row__cell-stock flex-15">
                     {{item.emailAddress}}
                   </div>
-                  <div class="table__cell product-row__cell-stock flex-20">
+                  <div class="table__cell product-row__cell-stock flex-10">
                     {{item.panNumber}}
                   </div>
                   <div class="table__cell product-row__cell-stock flex-20">
                     <button type="submit" class="btn" style="border: none;" (click)="startFiling(item)">Start
                       Filing</button>
+                  </div>
+                  <div class="table__cell product-row__cell-stock flex-15">
+                    <button type="submit" class="btn" style="border: none;" (click)="itrActions(item)">ITR
+                      Action</button>
                   </div>
                 </div>
               </div>

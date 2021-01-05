@@ -1,9 +1,4 @@
-import { AppConstants } from 'app/shared/constants';
 import { ItrMsService } from './../../../services/itr-ms.service';
-/**
-* @Component UsersComponent
-* @author Ashish Hulwan
-*/
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -11,7 +6,6 @@ import { DatePipe } from '@angular/common';
 import { UtilsService } from 'app/services/utils.service';
 import { NavbarService } from 'app/services/navbar.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
-import { environment } from 'environments/environment';
 import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 
 @Component({
@@ -73,6 +67,7 @@ export class UsersComponent implements OnInit {
   }
 
   getUserSearchList(key, searchValue) {
+    this.loading = true;
     return new Promise((resolve, reject) => {
       this.user_data = [];
       NavbarService.getInstance(this.http).getUserSearchList(key, searchValue).subscribe(res => {
@@ -80,17 +75,23 @@ export class UsersComponent implements OnInit {
         if (Array.isArray(res.records)) {
           this.user_data = res.records
         }
+        this.loading = false;
         return resolve(true)
       }, err => {
         //let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
         this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
+        this.loading = false;
         return resolve(false)
       });
     });
   }
+
   startFiling(userDetails) {
-    this.loading = true;
     this.utilsService.getITRByUserIdAndAssesmentYear(userDetails);
+  }
+
+  itrActions(userDetails) {
+    this.utilsService.getITRByUserIdAndAssesmentYear(userDetails, 'ITR');
   }
 
   // getITRByUserIdAndAssesmentYear(profile) {
