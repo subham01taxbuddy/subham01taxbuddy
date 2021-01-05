@@ -1,5 +1,6 @@
+import { ItrActionsComponent } from './../shared/components/itr-actions/itr-actions.component';
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { AppConstants } from 'app/shared/constants';
 import { Observable, Subject } from 'rxjs';
@@ -13,7 +14,7 @@ export class UtilsService {
     loading: boolean = false;
     private subject = new Subject<any>();
     constructor(private snackBar: MatSnackBar, private itrMsService: ItrMsService,
-        private router: Router) { }
+        private router: Router, private dialog: MatDialog,) { }
     /**
     * @function isNonEmpty()
     * @param param
@@ -71,7 +72,8 @@ export class UtilsService {
         });
     }
 
-    getITRByUserIdAndAssesmentYear(profile) {
+    getITRByUserIdAndAssesmentYear(profile, ref?: any) {
+        this.loading = true;
         // this.isLoggedIn = this.encrDecrService.get(AppConstants.IS_USER_LOGGED_IN);
         const param = '/itr?userId=' + profile.userId + '&assessmentYear=' + AppConstants.ayYear;
         this.itrMsService.getMethod(param).subscribe((result: any) => {
@@ -137,6 +139,19 @@ export class UtilsService {
                     } */
                 } else {
                     this.loading = false;
+                    if (ref === "ITR") {
+                        let disposable = this.dialog.open(ItrActionsComponent, {
+                            width: '50%',
+                            height: 'auto',
+                            data: {
+                                itrObjects: result,
+                            }
+                        })
+                        disposable.afterClosed().subscribe(result => {
+                            console.log('The dialog was closed');
+                        });
+                        return;
+                    }
                     alert('ITR Fillied/Acknowledgement not received');
                 }
 
