@@ -169,11 +169,6 @@ export class TaxesPaidComponent implements OnInit {
             else {
               return false;
             }
-          },
-           tooltip: function (params) {
-            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
-              return ('Total amount credited is should be greater then Total tax deduction.');
-            }
           }
         },
        
@@ -194,11 +189,6 @@ export class TaxesPaidComponent implements OnInit {
             }
             else {
               return false;
-            }
-          },
-          tooltip: function (params) {
-            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
-              return ('Total amount credited is should be greater then Total tax deduction.');
             }
           }
         },
@@ -263,6 +253,13 @@ export class TaxesPaidComponent implements OnInit {
             isDataValid = true;
           } else {
             return this.utilsService.showSnackBar('Please enter valid TAN Number');
+          }
+
+          if(temp[i].data.totalAmountCredited > temp[i].data.totalTdsDeposited){
+            isDataValid = true;
+          }
+          else{
+            return this.utilsService.showSnackBar('Total amount credited is should be greater then Total tax deduction in TDS on salary table.');  //SAGAR
           }
         } else {
           isDataValid = false;
@@ -396,15 +393,10 @@ export class TaxesPaidComponent implements OnInit {
             else {
               return false;
             }
-          },
-           tooltip: function (params) {
-            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
-              return ('Total amount credited is should be greater then Total tax deduction.');
-            }
           }
         },
         tooltip: function (params) {
-          return ('Total amount credited should be numeric, no decimal, upto 14 digit.');
+            return ('Total amount credited should be numeric, no decimal, upto 14 digit.');
         },
       },
       {
@@ -420,11 +412,6 @@ export class TaxesPaidComponent implements OnInit {
             }
             else {
               return false;
-            }
-          },
-           tooltip: function (params) {
-            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
-              return ('Total amount credited is should be greater then Total tax deduction.');
             }
           }
         },
@@ -496,6 +483,14 @@ export class TaxesPaidComponent implements OnInit {
           } else {
             return this.utilsService.showSnackBar('Please enter valid TAN Number');
           }
+
+          if(temp[i].data.totalAmountCredited > temp[i].data.totalTdsDeposited){
+            isDataValid = true;
+          }
+          else{
+            return this.utilsService.showSnackBar('Total amount credited is should be greater then Total tax deduction in TDS other than salary table.');
+          }
+
         } else {
           isDataValid = false;
           break;
@@ -629,11 +624,6 @@ export class TaxesPaidComponent implements OnInit {
             else {
               return false;
             }
-          },
-           tooltip: function (params) {
-            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
-              return ('Total amount credited is should be greater then Total tax deduction.');
-            }
           }
         },
         tooltip: function (params) {
@@ -654,12 +644,10 @@ export class TaxesPaidComponent implements OnInit {
             else {
               return false;
             }
-          },
-           tooltip: function (params) {
-            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
-              return ('Total amount credited is should be greater then Total tax deduction.');
-            }
           }
+        },
+        onKeyDown: function(event: KeyboardEvent, param){
+            console.log('Event: ',event)
         },
         tooltip: function (params) {
           return ('Total tax deducted should be numeric, no decimal, upto 14 digit.');
@@ -726,6 +714,14 @@ export class TaxesPaidComponent implements OnInit {
           } else {
             return this.utilsService.showSnackBar('Please enter valid PAN Number');
           }
+
+          if(temp[i].data.totalAmountCredited > temp[i].data.totalTdsDeposited){
+            isDataValid = true;
+          }
+          else{
+            return this.utilsService.showSnackBar('Total amount credited is should be greater then Total tax deduction in TDS other than salary 26QB table.');  //SAGAR
+          }
+
         } else {
           isDataValid = false;
           break;
