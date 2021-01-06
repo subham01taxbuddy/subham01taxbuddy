@@ -149,7 +149,7 @@ export class ItrActionsComponent implements OnInit {
   createReviseReturn(currentYearItrs) {
     const param = '/copyitr';
     const copy = {
-      userId: this.data['userId'],
+      userId: currentYearItrs[currentYearItrs.length - 1].userId,
       itrId: currentYearItrs[currentYearItrs.length - 1].itrId,
       assessmentYear: AppConstants.ayYear
     };
@@ -163,6 +163,7 @@ export class ItrActionsComponent implements OnInit {
           this.ITR_JSON.orgITRAckNum = currentYearItrs[0].ackNumber;
           this.ITR_JSON.orgITRDate = currentYearItrs[0].eFillingDate;
         }
+        alert('Revise return created successfully.')
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
         this.dialogRef.close('reviseReturn');
       }, error => {
