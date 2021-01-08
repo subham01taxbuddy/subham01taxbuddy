@@ -42,7 +42,17 @@ export interface ITR_SUMMARY{
       incomeFromOtherThanSpeculativeAndPresumptive: string,		
       incomeFromOtherThanSpeculativeAndPresumptiveProfession:  string,
       futureAndOption: string
-      freezed: false
+      freezed: false,
+      housePropertyLossesToBeCarriedForward: string,
+      shortTermCapitalGainLossesToBeCarriedForward: string,
+      longTermCapitalGainLossesToBeCarriedForward: string,
+      businessProfessionalLossesToBeCarriedForward: string,
+      speculativeBusinessLossesToBeCarriedForward: string,
+      housePropertyLossesSetOffDuringTheYear: string,
+      shortTermCapitalGainLossesSetOffDuringTheYear: string,
+      longTermCapitalGainLossesSetOffDuringTheYear: string,
+      businessProfessionalLossesSetOffDuringTheYear: string,
+      speculativeBusinessLossesSetOffDuringTheYear: string,
 }
 
 export interface Assesse{
