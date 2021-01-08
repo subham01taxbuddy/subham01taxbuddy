@@ -1034,7 +1034,7 @@
                                 <th>Long Term Capital Losses</th>
                                 <th *ngIf="itrType.itrThree">Business/Professional Loss</th>
                                 <th *ngIf="itrType.itrThree">Speculative Business Loss</th>
-                                <th>Carried forward to next year</th>
+                                <!-- <th>Carried forward to next year</th> -->
                                 
                                 <th>Action</th>
                             </tr>
@@ -1046,7 +1046,7 @@
                                 <td>{{losses.longTermCapitalGainLosses}}</td>
                                 <td *ngIf="itrType.itrThree">{{losses.businessProfessionalLoss}}</td>
                                 <td *ngIf="itrType.itrThree">{{losses.speculativeBusinessLoss}}</td>
-                                <td>{{losses.carriedForwardToNextYear}}</td>
+                                <!-- <td>{{losses.carriedForwardToNextYear}}</td> -->
                                
                                 <td>
                                     <button
@@ -1056,9 +1056,42 @@
                                             aria-hidden="true"></i></button>
                                 </td>
                             </tr>
+
                             <tr>
-                                <td *ngIf="itrType.itrTwo" colspan="4"><b>Total</b></td>
-                                <td *ngIf="itrType.itrThree" colspan="6"><b>Total</b></td>
+                                <td colspan="2"><b>Losses set off during the Year</b></td>
+                                <td><input type="number" style="max-width: 90px;" [(ngModel)]="lossesSetOfDuringYrar.housePropertyLossesSetOffDuringTheYear"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" (blur)="calLossesSetDuringYear('houseProLoss')"  ></td>
+                                <td><input type="number" style="max-width: 90px;" [(ngModel)]="lossesSetOfDuringYrar.shortTermCapitalGainLossesSetOffDuringTheYear"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" (blur)="calLossesSetDuringYear('shortTermCalLoss')"  ></td>
+                                <td><input type="number" style="max-width: 90px;" [(ngModel)]="lossesSetOfDuringYrar.longTermCapitalGainLossesSetOffDuringTheYear"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" (blur)="calLossesSetDuringYear('longTermCapLoss')"  ></td>
+
+                                <td *ngIf="itrType.itrThree"><input type="number" style="max-width: 90px;" [(ngModel)]="lossesSetOfDuringYrar.businessProfessionalLossesSetOffDuringTheYear"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" (blur)="calLossesSetDuringYear('businessLoss')"  ></td>
+                                <td *ngIf="itrType.itrThree"><input type="number" style="max-width: 90px;" [(ngModel)]="lossesSetOfDuringYrar.speculativeBusinessLossesSetOffDuringTheYear"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" (blur)="calLossesSetDuringYear('specBusinessLoss')"  ></td>
+
+                                <td> - </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2"><b>Carried Forward to next Year</b></td>
+                                <td><b>{{carryForwardToNxtYrs.housePropertyLossesToBeCarriedForward}}</b></td>
+                                <td><b>{{carryForwardToNxtYrs.shortTermCapitalGainLossesToBeCarriedForward}}</b></td>
+                                <td><b>{{carryForwardToNxtYrs.longTermCapitalGainLossesToBeCarriedForward}}</b></td>
+                                <td  *ngIf="itrType.itrThree"><b>{{carryForwardToNxtYrs.businessProfessionalLossesToBeCarriedForward}}</b></td>
+                                <td  *ngIf="itrType.itrThree"><b>{{carryForwardToNxtYrs.speculativeBusinessLossesToBeCarriedForward}}</b></td>
+                                <td> - </td>
+                            </tr>
+
+                            <tr>
+                                <td *ngIf="itrType.itrTwo" colspan="3"><b>Total</b></td>
+                                <td *ngIf="itrType.itrThree" colspan="5"><b>Total</b></td>
                                 <td></td>
                                 <td><b>{{this.computationOfIncomeForm.controls['carryForwardLoss'].value}}</b></td>
                                 
