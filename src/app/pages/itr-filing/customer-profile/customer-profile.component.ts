@@ -269,7 +269,7 @@ export class CustomerProfileComponent implements OnInit {
       } else if (pan.substring(4, 3) === 'H') {
         this.customerProfileForm.controls['assesseeType'].setValue('HUF');
       } else {
-        this.customerProfileForm.controls['assesseeType'].setValue('');
+        this.customerProfileForm.controls['assesseeType'].setValue('INDIVIDUAL');
       }
     }
   }
