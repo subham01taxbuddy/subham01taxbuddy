@@ -54,7 +54,8 @@ export class CustomerProfileComponent implements OnInit {
   // fillingStatus = new FormControl('', Validators.required);
   ITR_JSON: ITR_JSON;
   minDate = new Date(1900, 0, 1);
-  maxDate = new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate());
+  // maxDate = new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate());
+  maxDate = new Date();
   maxDateRevise = new Date();
   residentialStatus = [
     { value: 'RESIDENT', label: 'Resident' },
@@ -210,7 +211,7 @@ export class CustomerProfileComponent implements OnInit {
       gender: ['', Validators.required],
       contactNumber: ['', Validators.compose([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required])],
       email: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.emailRegex)])],
-      panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panIndHUFRegex)])],
+      panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex)])],
       aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
