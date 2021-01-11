@@ -303,7 +303,8 @@ export class CustomerProfileComponent implements OnInit {
   }
   saveProfile(ref) {
     console.log('customerProfileForm: ', this.customerProfileForm);
-    this.findAssesseeType()
+    this.findAssesseeType();
+    this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
       this.loading = true;
       const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
