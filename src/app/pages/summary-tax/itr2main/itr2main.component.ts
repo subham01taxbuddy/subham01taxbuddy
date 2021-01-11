@@ -1803,13 +1803,14 @@ export class Itr2mainComponent implements OnInit {
     //Annexures: Exempt Income
     if(itrData.hasOwnProperty('ITRForm:ScheduleOS')){
       let otherSourceInfo = itrData['ITRForm:ScheduleOS']['ITRForm:IncOthThanOwnRaceHorse'];      
-      console.log('For except Income: ',otherSourceInfo);
-      this.deductionAndRemainForm.controls['agricultureIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text']) ? otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text'] : '');
+      console.log('For except Income: ',otherSourceInfo);     
+      // this.deductionAndRemainForm.controls['agricultureIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text']) ? otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text'] : '');
       this.deductionAndRemainForm.controls['dividendIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:DividendGross']['_text']) ? otherSourceInfo['ITRForm:DividendGross']['_text'] : '');
       this.setTotalOfExempt();
     }
     
     if(itrData.hasOwnProperty('ITRForm:ScheduleEI')){
+      this.deductionAndRemainForm.controls['agricultureIncome'].setValue(this.isNotZero(itrData['ITRForm:ScheduleEI']['ITRForm:NetAgriIncOrOthrIncRule7']['_text']) ? Number(itrData['ITRForm:ScheduleEI']['ITRForm:NetAgriIncOrOthrIncRule7']['_text']) : '');
       let otherVal = Number(itrData['ITRForm:ScheduleEI']['ITRForm:Others']['_text'])
       this.deductionAndRemainForm.controls['anyOtherExcemptIncome'].setValue(otherVal);
       this.setTotalOfExempt();
@@ -2670,6 +2671,7 @@ itr3Summary.assesse.business.presumptiveIncomes.push(futureAndOptionObj);
       totalOfImmovale = totalOfImmovale + Number(immovableArrayData[i].amount);
     }
     debugger
+    console.log('immovableAssetsInfo: ',this.immovableAssetsInfo);
     this.itr_2_Summary.assesse.assetsLiabilities.immovable = this.immovableAssetsInfo;
     console.log('immovableAssetsInfo: ',this.immovableAssetsInfo);
     console.log('After IMOVABLE part bind: ',this.itr_2_Summary.assesse.assetsLiabilities.immovable);
