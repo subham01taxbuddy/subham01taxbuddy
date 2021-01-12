@@ -112,11 +112,21 @@ export class AddInvoiceComponent implements OnInit {
     this.changeCountry('INDIA');
     this.invoiceInfoCalled();
 
+    var invoiceNotGeneratedUserId = sessionStorage.getItem('invoiceNotgeneratedUserId');
+    console.log('invoiceNotGeneratedUserId: ',invoiceNotGeneratedUserId);
+    if(this.utilsService.isNonEmpty(invoiceNotGeneratedUserId)){
+     this.getUserDetails(invoiceNotGeneratedUserId);  //5007
+    }
+
     // this.setInitiatedData()
 
     // this.isMaharashtraState = true;                      //For default cgst & sgst taxes show in table
     // this.showTaxRelatedState('Maharashtra')
   }
+ngOnDestroy() {
+  sessionStorage.setItem('invoiceNotGeneratedUserId', null)
+}
+  
 
   createInvoiceForm() {
     return this.fb.group({
