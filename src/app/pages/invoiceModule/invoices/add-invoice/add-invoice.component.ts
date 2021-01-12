@@ -1,5 +1,5 @@
 import { ITR_JSON } from './../../../../shared/interfaces/itr-input.interface';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { UtilsService } from 'app/services/utils.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
@@ -39,7 +39,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   ]
 })
-export class AddInvoiceComponent implements OnInit {
+export class AddInvoiceComponent implements OnInit, OnDestroy {
 
   // filteredOptions: Observable<any[]>;
   // available_merchant_list: any = [];
@@ -123,8 +123,12 @@ export class AddInvoiceComponent implements OnInit {
     // this.isMaharashtraState = true;                      //For default cgst & sgst taxes show in table
     // this.showTaxRelatedState('Maharashtra')
   }
+
+
 ngOnDestroy() {
+  sessionStorage.clear();
   sessionStorage.setItem('invoiceNotGeneratedUserId', null)
+  
 }
   
 
