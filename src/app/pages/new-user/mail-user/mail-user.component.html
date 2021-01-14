@@ -14,7 +14,7 @@
     <br><br>
 
   
-      <div *ngIf="showMailUser" class="card__row" style="margin-top: 0px;">
+      <!-- <div *ngIf="showMailUser" class="card__row" style="margin-top: 0px;">
         <div class="tab-panel items-tab card__col-xs-12">
           <div class="tab-panel__content tab-panel__content_visible">
             <div class="table product__table">
@@ -62,10 +62,6 @@
                       <div class="table__cell product-row__cell-stock flex-15">
                         <button class="butn" (click)="showUserHistry(item.email)">User Histroy</button>
                       </div>
-                      <!-- <div class="table__cell product-row__cell-stock flex-20">
-                        <button type="submit" class="btn" style="border: none;" (click)="startFiling(item)">Start
-                          Filing</button>
-                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -79,7 +75,13 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
+
+      <div class="card__row">
+        <ag-grid-angular class="ag-theme-balham" [gridOptions]="mailUserListGridOptions"
+        (rowClicked)="mailUserRowClicked($event)" paginationPageSize=15 pagination=true>   
+        </ag-grid-angular>
+    </div>
       
   </div>
 </div>

@@ -43,7 +43,7 @@ export class MailExceptionComponent implements OnInit {
       {
         headerName: 'Id',
         field: '_id',
-        //width: 80,
+        width: 230,
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -54,7 +54,7 @@ export class MailExceptionComponent implements OnInit {
       {
         headerName: 'Group Id',
         field: 'groupId',
-        //width: 150,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -66,7 +66,7 @@ export class MailExceptionComponent implements OnInit {
       {
         headerName: 'Email',
         field: 'email',
-       // width: 80,
+        width: 270,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -78,46 +78,52 @@ export class MailExceptionComponent implements OnInit {
       {
         headerName: 'Date',
         field: 'createdDate',
-       // width: 150,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
-        },
-        // filterParams: {
-        //   filterOptions: ["contains", "notContains"],
-        //   debounceMs: 0
-        // }
-        filter: 'agDateColumnFilter',
-
-        // add extra parameters for the date filter
-        filterParams: {
-            // provide comparator function
-            comparator: function(filterLocalDateAtMidnight, cellValue) {
-                var dateAsString = cellValue;
-    
-                if (dateAsString == null) {
-                    return 0;
-                }
-    
-                // In the example application, dates are stored as dd/mm/yyyy
-                // We create a Date object for comparison against the filter date
-                var dateParts = dateAsString.split('/');
-                var day = Number(dateParts[2]);
-                var month = Number(dateParts[1]) - 1;
-                var year = Number(dateParts[0]);
-                var cellDate = new Date(year, month, day);
-    
-                // Now that both parameters are Date objects, we can compare
-                if (cellDate < filterLocalDateAtMidnight) {
-                    return -1;
-                } else if (cellDate > filterLocalDateAtMidnight) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
         }
+      },
+      {
+        headerName: 'Agent Id Chat',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button"  title="Open Agent Id Kommunicate chat">
+                <i class="fa fa-comments-o" aria-hidden="true" data-action-type="openAgentIdKommChat"></i>
+          </button>`;  
+
+        },
+        width: 90,
+        pinned: 'right',
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
+        }
+
+      },
+      {
+        headerName: 'User Histroy',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button"  title="User Histroy">
+            <i class="fa fa-history" aria-hidden="true" data-action-type="user-histroy"></i>
+          </button>`; 
+        },
+        width: 90,
+        pinned: 'right',
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
+        },
       },
       {
         headerName: 'Create User',
@@ -126,21 +132,39 @@ export class MailExceptionComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-          `<button type="button" class="action_icon add_button" title="Edit" >
-            <span><i class="fa fa-pencil-square" aria-hidden="true" data-action-type="edit"></i></span>
-           </button>`;
+          return `<button type="button" class="action_icon add_button" title="Create User">
+         <i class="fa fa-user-plus" aria-hidden="true" data-action-type="create_user"></i>
+        </button>`
+
         },
-       // width: 55,
+        width: 90,
         pinned: 'right',
-      //   cellStyle: function (params) {
-      //       return {
-      //         textAlign: 'center',
-      //         display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center'
-      //       }
-      //   },
-       }
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
+        },
+      },
+      {
+        headerName: 'Assign User',
+        editable: false,
+        suppressMenu  : true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Assign User">
+         <i class="fa fa-user" aria-hidden="true" data-action-type="assign_user"></i>
+        </button>`
+
+        },
+        width: 90,
+        pinned: 'right',
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
+        },
+      }
     ];
   }
 
@@ -195,6 +219,31 @@ export class MailExceptionComponent implements OnInit {
         email: mail
       }
     })
+  }
+
+  public exceptionRowClicked(params) {
+    console.log(params)
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'openAgentIdKommChat': {
+          this.redirectToKommunicate(params.data.groupId)
+          break;
+        }
+        case 'user-histroy': {
+          this.showUserHistry(params.data.email)
+          break;
+        }
+        case 'create_user': {
+          this.createNewUser(params.data)
+          break;
+        }
+        case 'assign_user': {
+          this.assignUser(params.data)
+          break;
+        }
+      }
+    }
   }
 
 }

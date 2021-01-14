@@ -6,7 +6,7 @@
 <div class="main clearfix" style="padding-top: 0px">
   <div class="card">
     
-    <div *ngIf="showExceptionUser" class="card__row" style="margin-top: 0px;">
+    <!-- <div *ngIf="showExceptionUser" class="card__row" style="margin-top: 0px;">
       <div class="tab-panel items-tab card__col-xs-12">
         <div class="tab-panel__content tab-panel__content_visible">
           <div class="table product__table">
@@ -47,15 +47,11 @@
                           {{item.createdDate | date : 'dd/MM/yyyy'}}
                         </div>
                         <div class="table__cell product-row__cell-stock flex-30">
-                         <button class="butn" (click)="createNewUser(mailExceptionUser[i])">Create User</button>&nbsp;  <!--<i class="fa fa-user" aria-hidden="true"></i>-->
+                         <button class="butn" (click)="createNewUser(mailExceptionUser[i])">Create User</button>&nbsp; 
                          <button class="butn" (click)="assignUser(mailExceptionUser[i])">Assign User</button>&nbsp;
                          <button class="butn" (click)="showUserHistry(item.email)">User Histroy</button>
                         </div>
                         
-                        <!-- <div class="table__cell product-row__cell-stock flex-20">
-                          <button type="submit" class="btn" style="border: none;" (click)="startFiling(item)">Start
-                            Filing</button>
-                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -71,11 +67,18 @@
       </div>
     </div>
 
-  </div>
+  </div> -->
 
   <!-- <div class="card__row">
     <ag-grid-angular class="ag-theme-balham" [gridOptions]="exceptionListtGridOptions">  
     </ag-grid-angular>
   </div> -->
   <!--(rowClicked)="onInvoiceRowClicked($event)" paginationPageSize=15 pagination=true-->
+
+  <div class="card__row">
+    <ag-grid-angular class="ag-theme-balham" [gridOptions]="exceptionListtGridOptions"
+        (rowClicked)="exceptionRowClicked($event)" paginationPageSize=15 pagination=true>  
+    </ag-grid-angular>
+</div>
+
 </div>
