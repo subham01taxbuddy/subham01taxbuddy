@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { GridOptions } from 'ag-grid-community';
 import { UserMsService } from 'app/services/user-ms.service';
 import { environment } from 'environments/environment';
 import { UserHistryComponent } from '../user-histry/user-histry.component';
@@ -14,10 +16,21 @@ export class MailUserComponent implements OnInit {
   loading: boolean;
   showMailUser: boolean;
   agentList = environment.agentId;
+  mailUserListGridOptions: GridOptions;
 
   mailUser: any = [];
   public displayedColumns = ['Name', 'Mobile Number', 'Email', 'Assign Id', 'Date'];
-  constructor(private userService: UserMsService, private dialog: MatDialog) { }
+  constructor(private userService: UserMsService, private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string) {
+    this.mailUserListGridOptions = <GridOptions>{
+      rowData: [],
+      columnDefs: this.mailUserCreateColoumnDef(),
+      enableCellChangeFlash: true,
+      onGridReady: params => {
+        // params.api.sizeColumnsToFit();
+      },
+      sortable: true,
+    };
+   }
 
   ngOnInit() {
     this.getMailUserByAgentId();
@@ -36,7 +49,7 @@ export class MailUserComponent implements OnInit {
       this.loading = false;
        console.log('Email user ==> ',responce);
        this.mailUser = responce;
-
+      this.mailUserListGridOptions.api.setRowData(this.createRowData(this.mailUser))
     },error=>{
       this.loading = false;
       console.log('Error while getting email User data ==> ',error);
@@ -51,7 +64,111 @@ export class MailUserComponent implements OnInit {
         email: mail
       }
     })
-      
+  }
+
+  createRowData(mailUserData){
+    var mailUser = [];
+    for (let i = 0; i < mailUserData.length; i++) {
+      let updateMailUSerList = Object.assign({}, mailUserData[i], { userName: mailUserData[i].name, mobNumber: mailUserData[i].mobileNumber, email: mailUserData[i].email, assignId: mailUserData[i].assigneeId, date: mailUserData[i].createdDate})
+      mailUser.push(updateMailUSerList)
+    }
+    console.log('user mailUser: ', mailUser);
+    return mailUser;
+  }
+
+  mailUserCreateColoumnDef(){
+      return [
+        {
+          headerName: 'User Name',
+          field: 'userName',
+          width: 180,
+          suppressMovable: true,
+          filter: "agTextColumnFilter",
+          filterParams: {
+            filterOptions: ["contains", "notContains"],
+            debounceMs: 0
+          }
+        },
+        {
+          headerName: 'Mobile Number',
+          field: 'mobNumber',
+          width: 130,
+          suppressMovable: true,
+          cellStyle: { textAlign: 'center' },
+          filter: "agTextColumnFilter",
+          filterParams: {
+            filterOptions: ["contains", "notContains"],
+            debounceMs: 0
+          }
+        },
+        {
+          headerName: 'Email',
+          field: 'email',
+          width: 230,
+          suppressMovable: true,
+          cellStyle: { textAlign: 'center' },
+          filter: "agTextColumnFilter",
+          filterParams: {
+            filterOptions: ["contains", "notContains"],
+            debounceMs: 0
+          }
+  
+        },
+        {
+          headerName: 'Assign ID',
+          field: 'assignId',
+          width: 250,
+          suppressMovable: true,
+          cellStyle: { textAlign: 'center' },
+          filter: "agTextColumnFilter",
+          filterParams: {
+            filterOptions: ["contains", "notContains"],
+            debounceMs: 0
+          }
+        },
+        {
+          headerName: 'Date',
+          field: 'date',
+          width: 130,
+          suppressMovable: true,
+          cellStyle: { textAlign: 'center' },
+          cellRenderer: (data) => {
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+          }
+         },
+        {
+          headerName: 'Action',
+          editable: false,
+          suppressMenu: true,
+          sortable: true,
+          suppressMovable: true,
+          cellRenderer: function (params) {
+            return `<button type="button" class="action_icon add_button" data-action-type="user-histroy" title="User Histroy">User Histroy</button>`;  //fa fa-info-circle  
+            // <i class="fa fa-envelope" aria-hidden="true" data-action-type="send-Mail-Notification"></i>
+  
+          },
+          width: 140,
+          pinned: 'right',
+          cellStyle: {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          },
+        },
+      ]
+  }
+
+  public mailUserRowClicked(params) {
+    console.log(params)
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'user-histroy': {
+          this.showUserHistry(params.data.email)
+          break;
+        }
+      }
+    }
   }
 
 }
