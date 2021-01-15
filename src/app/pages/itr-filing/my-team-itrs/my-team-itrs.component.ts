@@ -153,6 +153,8 @@ export class MyTeamItrsComponent implements OnInit {
         eFillingCompleted: data[i].eFillingCompleted,
         eFillingDate: data[i].eFillingDate,
         nextYearTpa: data[i].nextYearTpa,
+        isEverified: data[i].isEverified,
+        isRevised: data[i].isRevised,
       });
     }
     return newData;
@@ -167,16 +169,19 @@ export class MyTeamItrsComponent implements OnInit {
         pinned: 'left',
       },
       {
-        headerName: "First Name",
-        field: "fName",
+        headerName: "Client Name",
+        // field: "fName",
         sortable: true,
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        valueGetter: function (params) {
+          return params.data.fName + ' ' + params.data.lName;
+        },
       },
-      {
+      /* {
         headerName: "Last Name",
         field: "lName",
         sortable: true,
@@ -185,7 +190,7 @@ export class MyTeamItrsComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
-      },
+      }, */
       {
         headerName: "Mobile",
         field: "contactNumber",
@@ -224,7 +229,7 @@ export class MyTeamItrsComponent implements OnInit {
         }
       },
       {
-        headerName: "EmailAddress",
+        headerName: "Email Address",
         field: "email",
         sortable: true,
         filter: "agTextColumnFilter",
@@ -232,6 +237,22 @@ export class MyTeamItrsComponent implements OnInit {
           defaultOption: "startsWith",
           debounceMs: 0
         }
+      },
+      {
+        headerName: "Return Type",
+        field: "isRevised",
+        sortable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          defaultOption: "startsWith",
+          debounceMs: 0
+        },
+        valueGetter: function (params) {
+          if (params.data.isRevised === 'Y') {
+            return 'Revised';
+          }
+          return 'Original'
+        },
       },
       {
         headerName: 'Start',
@@ -307,7 +328,46 @@ export class MyTeamItrsComponent implements OnInit {
           return (params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === 'COMPLETED' || !params.data.eFillingCompleted) ? { 'pointer-events': 'none', opacity: '0.4' }
             : '';
         }
-      },/* ,
+      },
+      {
+        headerName: 'E-Verify',
+        width: 50,
+        sortable: true,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          if (params.data.isEverified) {
+            return `<button type="button" class="action_icon add_button" title="Acknowledgement not received, Contact team lead" style="border: none;
+            background: transparent; font-size: 16px; color: green">
+            <i class="fa fa-circle" title="E-Verification is done" 
+            aria-hidden="true"></i>
+           </button>`;
+          } else {
+            return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;color: orange">
+            <i class="fa fa-circle" title="Click to check the latest E-verification status" 
+            aria-hidden="true" data-action-type="ackDetails"></i>
+           </button>`;
+          }
+        },
+        cellStyle: function (params) {
+          if (params.data.eFillingCompleted) {
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              color: 'green'
+            }
+          } else {
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              color: 'orange'
+            }
+          }
+        },
+      },
+      /* ,
       {
         headerName: 'RR',
         width: 50,

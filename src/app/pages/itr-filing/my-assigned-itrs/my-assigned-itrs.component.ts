@@ -80,6 +80,8 @@ export class MyAssignedItrsComponent implements OnInit {
         eFillingCompleted: data[i].eFillingCompleted,
         eFillingDate: data[i].eFillingDate,
         nextYearTpa: data[i].nextYearTpa,
+        isEverified: data[i].isEverified,
+        isRevised: data[i].isRevised,
       });
     }
     return newData;
@@ -97,16 +99,19 @@ export class MyAssignedItrsComponent implements OnInit {
         pinned: 'left',
       },
       {
-        headerName: "First Name",
-        field: "fName",
+        headerName: "Client Name",
+        // field: "fName",
         sortable: true,
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        valueGetter: function (params) {
+          return params.data.fName + ' ' + params.data.lName;
+        },
       },
-      {
+      /* {
         headerName: "Last Name",
         field: "lName",
         sortable: true,
@@ -115,7 +120,7 @@ export class MyAssignedItrsComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
-      },
+      }, */
       {
         headerName: "Mobile",
         field: "contactNumber",
@@ -154,7 +159,7 @@ export class MyAssignedItrsComponent implements OnInit {
         }
       },
       {
-        headerName: "EmailAddress",
+        headerName: "Email Address",
         field: "email",
         sortable: true,
         filter: "agTextColumnFilter",
@@ -162,6 +167,22 @@ export class MyAssignedItrsComponent implements OnInit {
           defaultOption: "startsWith",
           debounceMs: 0
         }
+      },
+      {
+        headerName: "Return Type",
+        field: "isRevised",
+        sortable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          defaultOption: "startsWith",
+          debounceMs: 0
+        },
+        valueGetter: function (params) {
+          if (params.data.isRevised === 'Y') {
+            return 'Revised';
+          }
+          return 'Original'
+        },
       },
       {
         headerName: 'Actions',
@@ -234,6 +255,44 @@ export class MyAssignedItrsComponent implements OnInit {
             : '';
         }
       },
+      {
+        headerName: 'E-Verify',
+        width: 50,
+        sortable: true,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          if (params.data.isEverified) {
+            return `<button type="button" class="action_icon add_button" title="Acknowledgement not received, Contact team lead" style="border: none;
+            background: transparent; font-size: 16px; color: green">
+            <i class="fa fa-circle" title="E-Verification is done" 
+            aria-hidden="true"></i>
+           </button>`;
+          } else {
+            return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;color: orange">
+            <i class="fa fa-circle" title="Click to check the latest E-verification status" 
+            aria-hidden="true" data-action-type="ackDetails"></i>
+           </button>`;
+          }
+        },
+        cellStyle: function (params) {
+          if (params.data.eFillingCompleted) {
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              color: 'green'
+            }
+          } else {
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              color: 'orange'
+            }
+          }
+        },
+      },
     ];
   }
   public onRowClicked(params) {
@@ -246,6 +305,10 @@ export class MyAssignedItrsComponent implements OnInit {
         }
         case 'filingStatus': {
           this.openfilingStatusDialog(params.data);
+          break;
+        }
+        case 'ackDetails': {
+          this.getAcknowledgeDetail(params.data);
           break;
         }
         case 'isTpa': {
@@ -282,6 +345,21 @@ export class MyAssignedItrsComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
+  getAcknowledgeDetail(data) {
+    console.log('Data for acknowlegement status', data);
+    this.loading = true;
+    const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      this.utilsService.showSnackBar(res.status)
+      this.loading = false;
+      setTimeout(() => {
+        this.myItrsList();
+      }, 5000);
+
+    }, error => {
+      this.loading = false;
+    })
   }
   interestedForNextYearTpa(data) {
     this.loading = true;
