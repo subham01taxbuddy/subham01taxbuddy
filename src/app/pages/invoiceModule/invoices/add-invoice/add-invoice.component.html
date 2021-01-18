@@ -452,7 +452,7 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Schedule call Date & Time</mat-label>
                             <input matInput formControlName="estimateDateTime" [owlDateTimeTrigger]="dtPicker2"
-                                [owlDateTime]="dtPicker2" [required]="!isItrFiled"> 
+                                [owlDateTime]="dtPicker2" >  <!--[required]="!isItrFiled"--> 
                             <owl-date-time #dtPicker2></owl-date-time>
                             <mat-error *ngIf="invoiceForm.controls['estimateDateTime'].hasError('required')">Select schedule date and time.
                             </mat-error>
@@ -461,7 +461,7 @@
                     <div class="card__col-lg-6">
                             <mat-form-field appearance="outline">
                                 <mat-label>Itr type</mat-label>
-                                <mat-select formControlName="itrType" matInput placeholder="Itr type" autocomplete="off" [required]="!isItrFiled">
+                                <mat-select formControlName="itrType" matInput placeholder="Itr type" autocomplete="off" > <!--[required]="!isItrFiled"-->
                                     <mat-option *ngFor="let itr of itrTypes" [value]="itr.value">
                                         {{itr.label}}
                                     </mat-option>
