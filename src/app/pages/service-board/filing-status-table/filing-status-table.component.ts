@@ -94,8 +94,17 @@ export class FilingStatusTableComponent implements OnInit {
   constructor(private userMsService: UserMsService, public utilsService: UtilsService, private router: Router) { }
 
   ngOnInit() {
-    this.retrieveDocUploaded(0);
+    console.log('selectedAgentId -> ',localStorage.getItem('selectedAgentId'));
+    let agentId = localStorage.getItem('selectedAgentId');
+    if(this.utilsService.isNonEmpty(agentId)){
+      this.agentId = agentId;
+      this.retrieveDocUploaded(0);
+    }
+    else{
+      this.retrieveDocUploaded(0);
+    }
   }
+  
   retrieveDocUploaded(page) {
     this.loading = true;
     const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=${this.statusId}`;
@@ -111,6 +120,7 @@ export class FilingStatusTableComponent implements OnInit {
   }
   selectAgent(agentName) {
     this.agentId = agentName;
+    localStorage.setItem('selectedAgentId', this.agentId);
     this.page = 0;
     this.retrieveDocUploaded(0);
   }

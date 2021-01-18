@@ -3,6 +3,7 @@ import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { GridOptions } from 'ag-grid-community';
 import { UserMsService } from 'app/services/user-ms.service';
+import { UtilsService } from 'app/services/utils.service';
 import { environment } from 'environments/environment';
 import { UserHistryComponent } from '../user-histry/user-histry.component';
 
@@ -20,7 +21,7 @@ export class MailUserComponent implements OnInit {
 
   mailUser: any = [];
   public displayedColumns = ['Name', 'Mobile Number', 'Email', 'Assign Id', 'Date'];
-  constructor(private userService: UserMsService, private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string) {
+  constructor(private userService: UserMsService, private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string, private utilsService: UtilsService) {
     this.mailUserListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.mailUserCreateColoumnDef(),
@@ -33,7 +34,14 @@ export class MailUserComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.getMailUserByAgentId();
+    console.log('selectedAgentId -> ',localStorage.getItem('selectedAgentId'));
+    var agentId = localStorage.getItem('selectedAgentId');
+    if(this.utilsService.isNonEmpty(agentId)){
+      this.getMailUserByAgentId(agentId);
+    }
+    else{
+      this.getMailUserByAgentId(0);
+    }
   }
 
   getMailUserByAgentId(agentId?){
@@ -41,6 +49,7 @@ export class MailUserComponent implements OnInit {
     this.loading = true;
     if(agentId){
       var param = '/email-channel?assigneeId='+agentId;
+      localStorage.setItem('selectedAgentId', agentId);
     }else{
       var param = '/email-channel?assigneeId=';
     }

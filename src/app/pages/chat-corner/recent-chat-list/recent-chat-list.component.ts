@@ -16,7 +16,7 @@ export class RecentChatListComponent implements OnInit {
   subscription: Subscription;
   selectdAgentId: any;
   
-  constructor(private userService: UserMsService, private router: Router, private utilService: UtilsService) {
+  constructor(private userService: UserMsService, private router: Router, private utilService: UtilsService, private utilsService: UtilsService) {
 
     this.subscription = this.utilService.onMessage().subscribe(agentId => {
       console.log('Selected agent id: ',agentId)
@@ -28,12 +28,11 @@ export class RecentChatListComponent implements OnInit {
    }
 
   ngOnInit() {
-   // this.getUserNotify();
-
-    // setInterval(() => {
-    //   this.getUserNotify();
-    //   console.log('Call after 5 sec')
-    // }, 5000);
+    console.log('selectedAgentId -> ',localStorage.getItem('selectedAgentId'));
+    var agentId = localStorage.getItem('selectedAgentId');
+    if(this.utilsService.isNonEmpty(agentId)){
+      this.getUserNotify(agentId);
+    }
   }
 
   getUserNotify(agentId) {

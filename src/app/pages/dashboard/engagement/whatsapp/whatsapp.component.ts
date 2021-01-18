@@ -46,7 +46,15 @@ export class WhatsappComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.retrieveKommunicateChat(0);
+    console.log('selectedAgentId -> ',localStorage.getItem('selectedAgentId'));
+    let agentId = localStorage.getItem('selectedAgentId');
+    if(this.utilsService.isNonEmpty(agentId)){
+      this.agentId = agentId;
+      this.retrieveKommunicateChat(0);
+    }
+    else{
+      this.retrieveKommunicateChat(0);
+    }
   }
   retrieveKommunicateChat(page) {
     this.loading = true;
@@ -70,6 +78,7 @@ export class WhatsappComponent implements OnInit {
   }
   selectAgent(agentName) {
     this.agentId = agentName;
+    localStorage.setItem('selectedAgentId', this.agentId);
     this.page = 0;
     this.retrieveKommunicateChat(0);
   }
