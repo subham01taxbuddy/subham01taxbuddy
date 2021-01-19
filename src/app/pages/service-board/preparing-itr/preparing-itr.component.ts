@@ -79,7 +79,15 @@ export class PreparingItrComponent implements OnInit {
   constructor(private userMsService: UserMsService, public utilsService: UtilsService) { }
 
   ngOnInit() {
-    this.retrieveData(0)
+    console.log('selectedAgentId -> ',localStorage.getItem('selectedAgentId'));
+    let agentId = localStorage.getItem('selectedAgentId');
+    if(this.utilsService.isNonEmpty(agentId)){
+      this.agentId = agentId;
+      this.retrieveData(0)
+    }
+    else{
+      this.retrieveData(0)
+    }
   }
   retrieveData(page) {
     this.loading = true;
@@ -96,6 +104,7 @@ export class PreparingItrComponent implements OnInit {
   }
   selectAgent(agentName) {
     this.agentId = agentName;
+    localStorage.setItem('selectedAgentId', this.agentId);
     this.page = 0;
     this.retrieveData(0);
   }
@@ -111,6 +120,8 @@ export class PreparingItrComponent implements OnInit {
 
   getFilerName(itr) {
     if (this.utilsService.isNonEmpty(itr) && this.utilsService.isNonEmpty(itr['FilingTeamMemberId']) && itr['FilingTeamMemberId'] !== 0) {
+      console.log('FilingTeamMemberId : -> ', itr['FilingTeamMemberId']);
+      console.log('Mail id : -> ', this.filingTeamMembers.filter(item => item.value === itr['FilingTeamMemberId'])[0].label)
       return this.filingTeamMembers.filter(item => item.value === itr['FilingTeamMemberId'])[0].label;
     }
     return 'Not Assigned';

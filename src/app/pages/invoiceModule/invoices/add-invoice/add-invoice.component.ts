@@ -441,9 +441,9 @@ ngOnDestroy() {
           }
         }
         this.isItrFiled = false;
-        this.invoiceForm.controls['estimateDateTime'].setValidators([Validators.required]);
+        this.invoiceForm.controls['estimateDateTime'].setValidators(null);     //[Validators.required]
         this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();
-        this.invoiceForm.controls['itrType'].setValidators([Validators.required]);
+        this.invoiceForm.controls['itrType'].setValidators(null);
         this.invoiceForm.controls['itrType'].updateValueAndValidity();
       }
       else {
