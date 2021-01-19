@@ -349,8 +349,9 @@ export class MyAssignedItrsComponent implements OnInit {
   getAcknowledgeDetail(data) {
     console.log('Data for acknowlegement status', data);
     this.loading = true;
-    const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
+    // const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
+    const param = `/itr-verify-status/${data.itrId}`;
+    this.itrMsService.putMethod(param).subscribe((res: any) => {
       this.utilsService.showSnackBar(res.status)
       this.loading = false;
       setTimeout(() => {
