@@ -293,6 +293,22 @@ export class MyAssignedItrsComponent implements OnInit {
           }
         },
       },
+      {
+        headerName: "Doc",
+        field: "showDocument",
+        width: 50,
+        pinned: 'right',
+        cellRenderer: params => {
+          return `<button type="button" class="action_icon add_button" title="Show User Documents" style="border: none;
+                  background: transparent; font-size: 16px; color: yellow">
+                  <i class="fa fa-file" data-action-type="showDocs" title="Show User Documents" aria-hidden="true"></i>
+                   </button>`;
+        },
+        // cellStyle: params => {
+        //   return (params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === 'COMPLETED' || !params.data.eFillingCompleted) ? { 'pointer-events': 'none', opacity: '0.4' }
+        //     : '';
+        // }
+      }
     ];
   }
   public onRowClicked(params) {
@@ -313,6 +329,10 @@ export class MyAssignedItrsComponent implements OnInit {
         }
         case 'isTpa': {
           this.interestedForNextYearTpa(params.data);
+          break;
+        }
+        case 'showDocs': {
+          this.showUserDoucuments(params.data);
           break;
         }
       }
@@ -373,5 +393,10 @@ export class MyAssignedItrsComponent implements OnInit {
     }, error => {
       this.myItrsList();
     });
+  }
+
+  showUserDoucuments(data){
+      console.log(data);
+      this.router.navigate(['/pages/itr-filing/user-docs/' + data.userId]);
   }
 }

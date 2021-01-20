@@ -387,6 +387,19 @@ export class MyTeamItrsComponent implements OnInit {
 
         },
       } */
+
+      {
+        headerName: "Doc",
+        field: "showDocument",
+        width: 50,
+        pinned: 'right',
+        cellRenderer: params => {
+          return `<button type="button" class="action_icon add_button" title="Show User Documents" style="border: none;
+                  background: transparent; font-size: 16px; color: yellow">
+                  <i class="fa fa-file" data-action-type="showDocs" title="Show User Documents" aria-hidden="true"></i>
+                   </button>`;
+        },
+      }
     ];
   }
   public onRowClicked(params) {
@@ -411,6 +424,10 @@ export class MyTeamItrsComponent implements OnInit {
         }
         case 'isTpa': {
           this.interestedForNextYearTpa(params.data);
+          break;
+        }
+        case 'showDocs': {
+          this.showUserDocuments(params.data);
           break;
         }
       }
@@ -488,5 +505,10 @@ export class MyTeamItrsComponent implements OnInit {
     }, error => {
       this.getMembersItr(this.selectedMemberId);
     });
+  }
+
+  showUserDocuments(data){
+    console.log(data)
+    this.router.navigate(['/pages/itr-filing/user-docs/' + data.userId]);
   }
 }
