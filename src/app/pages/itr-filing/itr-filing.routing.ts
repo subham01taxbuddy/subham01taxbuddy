@@ -11,6 +11,7 @@ import { MyTeamItrsComponent } from './my-team-itrs/my-team-itrs.component';
 import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 import { DelayComponent } from './delay/delay.component';
 import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
+import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-documnets.component';
 
 const routes: Routes = [
     {
@@ -25,6 +26,7 @@ const routes: Routes = [
             { path: 'team-itrs', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: MyTeamItrsComponent },
             { path: 'delay', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, component: DelayComponent },
             { path: 'tasks', component: FilingTasksComponent },
+            { path: 'user-docs/:userId', component: ShowUserDocumnetsComponent },
             { path: '', redirectTo: '/pages/itr-filing/users', pathMatch: 'full' }
         ]
     },
