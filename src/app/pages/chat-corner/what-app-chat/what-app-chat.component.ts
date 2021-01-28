@@ -117,11 +117,11 @@ export class WhatAppChatComponent implements OnInit {
     // }, 10000);   
 
 
-    // this.userFetchChatTimer = setInterval(() => {
-    //   if (this.selectedUser) {
-    //     this.geUserChatDetail(this.selectedUser, "continues");
-    //   }
-    // }, 5000);
+    this.userFetchChatTimer = setInterval(() => {
+      if (this.selectdMobNum) {
+        this.geUserChatDetail(this.selectdMobNum, "continuesCall");
+      }
+    }, 5000);
 
 
 
@@ -274,7 +274,7 @@ export class WhatAppChatComponent implements OnInit {
     );
   }
 
-  geUserChatDetail(user) {
+  geUserChatDetail(user, key?) {
     console.log('MOBILE NO Selected:', user)
     // this.router.navigate(['/pages/chat-corner/mobile', { no: user }]);
     // if (apicall !== "continues") {
@@ -299,78 +299,116 @@ export class WhatAppChatComponent implements OnInit {
     //   this.loading = false;
     // }
 
-    this.showChatUi = true;
-    if (user === 'bySearch') {
-      if (this.utileService.isNonEmpty(this.searchNumber.value) && this.searchNumber.valid) {
-        user = '91' + this.searchNumber.value;
-      }
-      else {
-        this._toastMessageService.alert("error", "Enter valid mobile number.");
+    if(key === "continuesCall"){
+      console.log('user chat data: ',this.userchatData, this.userchatData.length)
+      if(this.userchatData.length > 0){
+          debugger
+          this.selectdMobNum = user;
+          this.selectedUser = '';
+          this.serviceAvailedInfo = '';
+          let lastIndex = this.userchatData.length - 1;
+          let lastMsgTime = this.userchatData[lastIndex].dateLong;
+         let param = "/whatsapp/latest?dateLong="+lastMsgTime+"&whatsAppNumber="+this.selectdMobNum;
+          this.userService.getUserDetail(param).subscribe(
+            (res: any) => {
+                var latestChat = res;
+                console.log('Continues chat responce: ',latestChat)
+                if(latestChat.length > 0){
+                  for(let i=0; i< latestChat.length; i++){
+                    this.userchatData.push(latestChat[i]);
+                  } 
+
+                  var scrollDiv = document.getElementById("scroll");
+                  scrollDiv.scrollTop = scrollDiv.scrollHeight;
+                }
+            },
+            error=>{
+              console.log('Error during continues api call: ',error)
+        });
       }
     }
-
-    this.loading = true;
-    this.selectdMobNum = user;
-    this.selectedUser = '';
-    this.serviceAvailedInfo = '';
-    console.log("Here we getting selected user chat details");
-    let mNO = 918299224792  //919545428497
-    let param = "/whatsapp/chat/" + user;
-    this.userService.getUserDetail(param).subscribe(
-      (res) => {
-
-        console.log(res, typeof res);
-        console.log('CHECK', res.hasOwnProperty('userInfo'))
-        this.startConversation = false;
-
-        if (res.hasOwnProperty('userInfo')) {
-          this.getServicesAvailed(res['userInfo'].userId);
-          this.selectedUser = res['userInfo'];
-          this.timeExpired = false;
-          this.countDown = 0;
-          this.getTiemCount(res['chat']);
-          this.userchatData = res['chat'];
-          this.loading = false;
+    else{
+      this.showChatUi = true;
+        if (user === 'bySearch') {
+          if (this.utileService.isNonEmpty(this.searchNumber.value) && this.searchNumber.valid) {
+            user = '91' + this.searchNumber.value;
+          }
+          else {
+            this._toastMessageService.alert("error", "Enter valid mobile number.");
+          }
         }
-        else {
-          this.userchatData = res['chat'];
-          this.loading = false;
-        }
+    
+        this.loading = true;
+        this.selectdMobNum = user;
+        this.selectedUser = '';
+        this.serviceAvailedInfo = '';
+        console.log("Here we getting selected user chat details");
+        let mNO = 918299224792  //919545428497
+        let param = "/whatsapp/chat/" + user;
+        this.userService.getUserDetail(param).subscribe(
+          (res) => {
+    
+            console.log(res, typeof res);
+            console.log('CHECK', res.hasOwnProperty('userInfo'))
+            this.startConversation = false;
+    
+            if (res.hasOwnProperty('userInfo')) {
+              this.getServicesAvailed(res['userInfo'].userId);
+              this.selectedUser = res['userInfo'];
+              this.timeExpired = false;
+              this.countDown = 0;
+              this.getTiemCount(res['chat']);
+              this.userchatData = res['chat'];
+              this.loading = false;
 
+              var scrollDiv = document.getElementById("scroll");
+              scrollDiv.scrollTop = scrollDiv.scrollHeight;
+            }
+            else {
+              this.userchatData = res['chat'];
+              this.loading = false;
 
-        // if (Object.entries(res).length > 0) {
-        //   this.loading = false;
+              var scrollDiv = document.getElementById("scroll");
+              scrollDiv.scrollTop = scrollDiv.scrollHeight;
+            }
+    
+    
+            // if (Object.entries(res).length > 0) {
+            //   this.loading = false;
+    
+            //   if (this.backUpChatData) {
+            //     console.log("checkFetchInfoSame ", this.checkFetchInfoSame(res));
+            //     if (this.checkFetchInfoSame(res)) {
+            //       this.getTiemCount(res);
+            //     } else {
+            //       this.userchatData = res;
+            //       this.backUpChatData = this.userchatData;
+            //       this.getUserNotify("not-continues");
+            //       this.getTiemCount(res);
+            //     }
+            //   } else {
+            //     this.userchatData = res;
+            //     this.backUpChatData = this.userchatData;
+            //     this.getUserNotify("not-continues");
+            //     this.getTiemCount(res); //Show Timer Counter
+            //   }
+            // } else {
+            //   if (apicall !== "continues") {
+            //     this.loading = false;
+            //     this.userchatData = [];
+            //     this._toastMessageService.alert("error", "There is no chat data.");
+            //   } else {
+            //   }
+            // }
+          },
+          (error) => {
+            this.loading = false;
+            this._toastMessageService.alert("error", "Failed to fetch chat data.");
+          }
+        );
+    }
 
-        //   if (this.backUpChatData) {
-        //     console.log("checkFetchInfoSame ", this.checkFetchInfoSame(res));
-        //     if (this.checkFetchInfoSame(res)) {
-        //       this.getTiemCount(res);
-        //     } else {
-        //       this.userchatData = res;
-        //       this.backUpChatData = this.userchatData;
-        //       this.getUserNotify("not-continues");
-        //       this.getTiemCount(res);
-        //     }
-        //   } else {
-        //     this.userchatData = res;
-        //     this.backUpChatData = this.userchatData;
-        //     this.getUserNotify("not-continues");
-        //     this.getTiemCount(res); //Show Timer Counter
-        //   }
-        // } else {
-        //   if (apicall !== "continues") {
-        //     this.loading = false;
-        //     this.userchatData = [];
-        //     this._toastMessageService.alert("error", "There is no chat data.");
-        //   } else {
-        //   }
-        // }
-      },
-      (error) => {
-        this.loading = false;
-        this._toastMessageService.alert("error", "Failed to fetch chat data.");
-      }
-    );
+    
   }
 
   checkFetchInfoSame(fetchedInfo) {
