@@ -317,9 +317,6 @@ export class WhatAppChatComponent implements OnInit {
                   for(let i=0; i< latestChat.length; i++){
                     this.userchatData.push(latestChat[i]);
                   } 
-
-                  var scrollDiv = document.getElementById("scroll");
-                  scrollDiv.scrollTop = scrollDiv.scrollHeight;
                 }
             },
             error=>{
@@ -360,16 +357,10 @@ export class WhatAppChatComponent implements OnInit {
               this.getTiemCount(res['chat']);
               this.userchatData = res['chat'];
               this.loading = false;
-
-              var scrollDiv = document.getElementById("scroll");
-              scrollDiv.scrollTop = scrollDiv.scrollHeight;
             }
             else {
               this.userchatData = res['chat'];
               this.loading = false;
-
-              var scrollDiv = document.getElementById("scroll");
-              scrollDiv.scrollTop = scrollDiv.scrollHeight;
             }
     
     
