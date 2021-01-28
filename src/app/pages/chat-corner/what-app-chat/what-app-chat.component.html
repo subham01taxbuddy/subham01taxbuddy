@@ -208,8 +208,8 @@
                     </div>
 
                   </div> -->
-                <div class="mesgs" id="scroll">
-                  <div class="msg_history">
+                <div class="mesgs" >
+                  <div class="msg_history" #scrollMe [scrollTop]="scrollMe.scrollHeight">
                     <span *ngFor="let data of userchatData">
                       <!-- TEMPLATE SENT -->
                       <div class="outgoing_msg"
