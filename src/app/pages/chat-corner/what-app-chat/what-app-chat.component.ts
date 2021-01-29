@@ -46,6 +46,7 @@ export class WhatAppChatComponent implements OnInit {
   startConversation: boolean;
   selectdMobNum: any;
   showChatUi: boolean = false;
+  selectedAgent: any = '';
 
   agentList = [
     { value: 'brij@ssbainnovations.com', label: 'Brij' },
@@ -123,7 +124,13 @@ export class WhatAppChatComponent implements OnInit {
       }
     }, 5000);
 
-
+    var agentId = localStorage.getItem('selectedAgentId');
+    if(this.utileService.isNonEmpty(agentId)){
+      this.selectedAgent = agentId;
+    }
+    else{
+      this.selectedAgent = '';
+    }
 
   }
 
@@ -151,6 +158,7 @@ export class WhatAppChatComponent implements OnInit {
 
   getUnreadListByAgentId(agentId){
     this.showChatUi = true;
+    this.selectedAgent = agentId;
     this.utileService.sendMessage(agentId);
   }
 
@@ -359,6 +367,9 @@ export class WhatAppChatComponent implements OnInit {
               this.loading = false;
             }
             else {
+              this.timeExpired = false;
+              this.countDown = 0;
+              this.getTiemCount(res['chat']);
               this.userchatData = res['chat'];
               this.loading = false;
             }
@@ -784,6 +795,7 @@ export class WhatAppChatComponent implements OnInit {
     this.userLastMsgTime = "";
     debugger
     let userChatInfo = chatDetail.filter((item) => item.isReceived === true);
+    console.log('userChatInfo: ',userChatInfo)
     if (userChatInfo.length === 0) {
       this.timeExpired = true;
     } else {

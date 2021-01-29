@@ -6,7 +6,7 @@
       <div class="card">
 
         <div class="card__row" >
-          <label><b>Selected Agent: </b></label> &nbsp;&nbsp;
+          <label><b>Selected Agent: </b></label> &nbsp; {{selectedAgent}} &nbsp;&nbsp;
           <span *ngFor="let agent of agentList; let i=index">
               <a href="javascript:;" (click)="getUnreadListByAgentId(agent.value)">{{agent.label}}</a> &nbsp;&nbsp;
           </span>
@@ -375,9 +375,9 @@
                     <div class="card__col-lg-7 card__col-sm-4">
                       <!--*ngIf="this.whatsAppForm.controls['selectTemplate'].value"-->
                       <mat-form-field appearance="outline">
-                        <textarea matInput formControlName="sentMessage" cdkTextareaAutosize cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="9" [class.disableTestArea]="timeExpired" [readOnly]="timeExpired"
-                          name="sentMsg" placeholder="Enter your message..."></textarea>
+                        <textarea matInput id="sentMsgId" formControlName="sentMessage" cdkTextareaAutosize cdkAutosizeMinRows="1"
+                          cdkAutosizeMaxRows="9" [class.disableTestArea]="timeExpired" [readonly]="timeExpired"
+                          name="sentMsg" placeholder="Enter your message..."></textarea> 
                         <mat-error *ngIf="this.whatsAppForm.controls['sentMessage'].hasError('fillmandate')">
                           Please fill all attributes values.
                         </mat-error>
@@ -385,7 +385,7 @@
                     </div>
 
                     <div class="card__col-lg-2 card__col-sm-4">
-                      <button class="sendBtn" (click)="sendMsg()">Send</button>
+                      <button class="sendBtn" (click)="sendMsg()" >Send</button>
                     </div><br>
 
                     <div class="card__col-lg-3 card__col-sm-4">

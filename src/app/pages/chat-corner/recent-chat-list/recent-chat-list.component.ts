@@ -22,6 +22,7 @@ export class RecentChatListComponent implements OnInit {
       console.log('Selected agent id: ',agentId)
       if (agentId) {
         this.selectdAgentId = agentId.text;
+        localStorage.setItem('selectedAgentId', this.selectdAgentId);
         this.getUserNotify(agentId.text);
       }
     });
