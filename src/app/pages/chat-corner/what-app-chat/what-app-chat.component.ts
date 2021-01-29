@@ -304,8 +304,8 @@ export class WhatAppChatComponent implements OnInit {
       if(this.userchatData.length > 0){
           debugger
           this.selectdMobNum = user;
-          this.selectedUser = '';
-          this.serviceAvailedInfo = '';
+          //this.selectedUser = '';
+          //this.serviceAvailedInfo = '';
           let lastIndex = this.userchatData.length - 1;
           let lastMsgTime = this.userchatData[lastIndex].dateLong;
          let param = "/whatsapp/latest?dateLong="+lastMsgTime+"&whatsAppNumber="+this.selectdMobNum;

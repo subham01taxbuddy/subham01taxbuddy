@@ -36,6 +36,7 @@ export class RecentChatListComponent implements OnInit {
   }
 
   getUserNotify(agentId) {
+    console.log('filteredArray: ',this.filteredArray)
     // let userChatData = JSON.parse(sessionStorage.getItem('userChatNotifications'))
     // this.loading = true;   
     let param = '/whatsapp/unread?assigneeId='+agentId+'&days='+7;
