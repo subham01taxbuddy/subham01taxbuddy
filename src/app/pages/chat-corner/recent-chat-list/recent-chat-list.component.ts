@@ -40,7 +40,7 @@ export class RecentChatListComponent implements OnInit {
     console.log('filteredArray: ',this.filteredArray)
     // let userChatData = JSON.parse(sessionStorage.getItem('userChatNotifications'))
     // this.loading = true;   
-    let param = '/whatsapp/unread?assigneeId='+agentId+'&days='+7;
+    let param = '/whatsapp/unread?assigneeId='+agentId;  //+'&days='+7
     this.userService.getUserDetail(param).subscribe((res) => {
       // this.userDetail = res;
       this.filteredArray = res;
