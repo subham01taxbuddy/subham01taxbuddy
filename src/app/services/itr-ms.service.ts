@@ -104,8 +104,11 @@ export class ItrMsService {
     }
 
     invoiceDownload(params) {
+        const userData = JSON.parse(localStorage.getItem('UMD'));
+        const TOKEN = (userData) ? userData.id_token : null;
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
+        this.headers.append('Authorization', 'Bearer ' + TOKEN);
         return this.http.get(environment.url + this.microService + params, { headers: this.headers, responseType: ResponseContentType.Blob })
     };
 
