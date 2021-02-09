@@ -79,6 +79,7 @@ export const routes: Routes = [
 			{ path: 'dashboard', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './dashboard/dashboard.module#DashboardModule' },
 			{ path: 'tpa-interested', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_TPA_SME'] }, loadChildren: './tpa-interested/tpa-interested.module#TpaInterestedModule' },
 			{ path: 'service-board', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './service-board/service-board.module#ServiceBoardModule' },
+			{ path: 'leads', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './leads/leads.module#LeadsModule' },
 			{ path: '**', redirectTo: '/pages/home', pathMatch: 'full' },
 
 		]
