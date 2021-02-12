@@ -1,0 +1,66 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<h1 mat-dialog-title>{{data.title}}</h1>
+
+<mat-dialog-content *ngIf="showTable">
+    <table *ngIf="leadSourceInfo.length > 0">
+        <tr>
+            <th><b>Source Name</b></th>
+            <th><b>Created Date</b></th>
+        </tr>
+        <tr *ngFor="let source of leadSourceInfo">
+            <td>{{source.name}}</td>
+            <td>{{source.createdDate | date: 'dd/MM/yyyy, hh:mm a'}}</td>
+        </tr>
+    </table>
+
+    <table *ngIf="leadStatusInfo.length > 0">
+        <tr>
+            <th><b>Status</b></th>
+            <th><b>Created Date</b></th>
+            <th><b>Follow Up Date</b></th>
+        </tr>
+        <tr *ngFor="let status of leadStatusInfo">
+            <td>{{status.status}}</td>
+            <td>{{status.createdDate | date: 'dd/MM/yyyy, hh:mm a'}}</td>
+            <td>{{status.followUpDate | date: 'dd/MM/yyyy, hh:mm a'}}</td>
+        </tr>
+    </table>
+
+</mat-dialog-content>
+<mat-dialog-actions align="center" *ngIf="showTable">
+    <!-- <button mat-raised-button color="primary"  (click)="updateLeadStatus()" tabindex="1">Update Status</button> -->
+    <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
+</mat-dialog-actions>
+
+<form [formGroup]="leadForm" *ngIf="!showTable">
+    <mat-dialog-content>
+        <div class="card__col-xs-4 card__col-sm-14">
+            <mat-form-field appearance="outline" >
+                <mat-label>Select Status</mat-label>
+                <mat-select placeholder="Select Status" name="leadStatus" formControlName="leadStatus">
+                    <mat-option *ngFor="let status of fillingStatus" [value]="status.key">
+                        {{ status.value }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="leadForm.controls['leadStatus'].hasError('required')">Select status.</mat-error>
+            </mat-form-field>
+        </div>
+       
+         <div class="card__col-xs-4 card__col-sm-14">
+            <mat-form-field appearance="outline">
+                <mat-label>Schedule Call Date & Time</mat-label> 
+                <input matInput formControlName="callSheduleDate" [owlDateTimeTrigger]="dtPicker2" [min]="minDate" 
+                    [owlDateTime]="dtPicker2" [required]="leadForm.controls['leadStatus'].value === 'interest'">  <!--[required]="callLogForm.controls['statusId'].value === 17"-->
+                <owl-date-time #dtPicker2></owl-date-time>
+                <mat-error *ngIf="leadForm.controls['callSheduleDate'].hasError('required')">Select Schedule Date & Time.</mat-error>
+            </mat-form-field>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="center">
+        <button mat-raised-button color="primary"  (click)="updateLeadStatus()" tabindex="1">Update Status</button>
+
+        <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
+    </mat-dialog-actions>
+</form>
