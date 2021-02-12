@@ -1,7 +1,8 @@
 import { DatePipe, formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { DateAdapter, MatDialog, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
@@ -9,11 +10,26 @@ import moment = require('moment');
 import { LeadDialogComponent } from '../lead-dialog/lead-dialog.component';
 // import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
 @Component({
   selector: 'app-leads-info',
   templateUrl: './leads-info.component.html',
   styleUrls: ['./leads-info.component.css'],
-  providers: [DatePipe]
+  providers: [ DatePipe,
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
+  ]
 })
 export class LeadsInfoComponent implements OnInit {
 
@@ -344,7 +360,7 @@ export class LeadsInfoComponent implements OnInit {
        }
        console.log('statusInfo ',statusInfo);
 
-      let updatedLeads = Object.assign({}, leadsArray[i], {id: leadsInfo[i].id, name:leadsInfo[i].name, createdDate: leadsInfo[i].createdDate, mobileNumber: leadsInfo[i].mobileNumber, emailAddress: leadsInfo[i].emailAddress, city: leadsInfo[i].otherData.City, channel: leadsInfo[i].channel, service: services, assignedTo: leadsInfo[i].assignedTo, source: sourcesInfo, status: statusInfo, followUpDate: leadsInfo[i].status.followUpDate })  //leadsInfo[i].source[0].name, leadsInfo[i].service
+      let updatedLeads = Object.assign({}, leadsArray[i], {id: leadsInfo[i].id, name:leadsInfo[i].name, createdDate: leadsInfo[i].createdDate, mobileNumber: leadsInfo[i].mobileNumber, emailAddress: leadsInfo[i].emailAddress, city: leadsInfo[i].city, channel: leadsInfo[i].channel, service: services, assignedTo: leadsInfo[i].assignedTo, source: sourcesInfo, status: statusInfo, followUpDate: leadsInfo[i].status.followUpDate })  //leadsInfo[i].source[0].name, leadsInfo[i].service
       leadsArray.push(updatedLeads)
     }
     console.log('leadsArray -> ',leadsArray)
@@ -423,7 +439,7 @@ export class LeadsInfoComponent implements OnInit {
           statusFollwUpDate = this.datePipe.transform(this.leadInfo[i].status[this.leadInfo[i].status.length - 1].followUpDate, 'dd/MM/yyyy, hh:mm a');
         //  }
          console.log('statusInfo ',status+' '+statusCreatedDate+' '+statusFollwUpDate);
-         let leadData = [this.leadInfo[i].name, this.leadInfo[i].mobileNumber,this.leadInfo[i].emailAddress,this.leadInfo[i].otherData.City, this.datePipe.transform(this.leadInfo[i].createdDate, 'dd/MM/yyyy, hh:mm a') ,this.leadInfo[i].channel, services,
+         let leadData = [this.leadInfo[i].name, this.leadInfo[i].mobileNumber,this.leadInfo[i].emailAddress,this.leadInfo[i].city, this.datePipe.transform(this.leadInfo[i].createdDate, 'dd/MM/yyyy, hh:mm a') ,this.leadInfo[i].channel, services,
          sources, status, statusCreatedDate, statusFollwUpDate]; //this.leadInfo[i].services
          leadIterableArray.push(leadData);
       }
