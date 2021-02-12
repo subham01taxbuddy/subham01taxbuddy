@@ -138,7 +138,7 @@ export class LeadsInfoComponent implements OnInit {
       {
         headerName: 'Service',
         field: 'service',
-        width: 100,
+        width: 400,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -317,6 +317,19 @@ export class LeadsInfoComponent implements OnInit {
     console.log('leadsInfo ->> ',leadsInfo);
     var leadsArray = [];
     for(let i=0; i< leadsInfo.length; i++){
+      var services = "";
+        if(leadsInfo[i].services !== null){
+           for(let s=0; s<leadsInfo[i].services.length; s++){
+             if(s === 0){
+              services = leadsInfo[i].services[s];
+             }
+             else if(s > 0){
+              services = services + ", "+leadsInfo[i].services[s];
+             }
+           }
+        }
+        console.log('services -> ',services)
+
       var sourcesInfo = [];
        for(let j=0; j<leadsInfo[i].source.length; j++){
         sourcesInfo.push(leadsInfo[i].source[j]);
@@ -331,7 +344,7 @@ export class LeadsInfoComponent implements OnInit {
        }
        console.log('statusInfo ',statusInfo);
 
-      let updatedLeads = Object.assign({}, leadsArray[i], {id: leadsInfo[i].id, name:leadsInfo[i].name, createdDate: leadsInfo[i].createdDate, mobileNumber: leadsInfo[i].mobileNumber, emailAddress: leadsInfo[i].emailAddress, city: leadsInfo[i].otherData.City, channel: leadsInfo[i].channel, service: leadsInfo[i].service, assignedTo: leadsInfo[i].assignedTo, source: sourcesInfo, status: statusInfo, followUpDate: leadsInfo[i].status.followUpDate })  //leadsInfo[i].source[0].name
+      let updatedLeads = Object.assign({}, leadsArray[i], {id: leadsInfo[i].id, name:leadsInfo[i].name, createdDate: leadsInfo[i].createdDate, mobileNumber: leadsInfo[i].mobileNumber, emailAddress: leadsInfo[i].emailAddress, city: leadsInfo[i].otherData.City, channel: leadsInfo[i].channel, service: services, assignedTo: leadsInfo[i].assignedTo, source: sourcesInfo, status: statusInfo, followUpDate: leadsInfo[i].status.followUpDate })  //leadsInfo[i].source[0].name, leadsInfo[i].service
       leadsArray.push(updatedLeads)
     }
     console.log('leadsArray -> ',leadsArray)
@@ -382,6 +395,19 @@ export class LeadsInfoComponent implements OnInit {
       console.log('leadsInfo ->> ',this.leadInfo);
       var leadsArray = [];
       for(let i=0; i< this.leadInfo.length; i++){
+        var services = "";
+        if(this.leadInfo[i].services !== null){
+           for(let s=0; s<this.leadInfo[i].services.length; s++){
+             if(s === 0){
+              services = this.leadInfo[i].services[s];
+             }
+             else if(s > 0){
+              services = services + ", "+this.leadInfo[i].services[s];
+             }
+           }
+        }
+        console.log('services -> ',services)
+
         var sources = '';
         // for(let j=0; j<this.leadInfo[i].source.length; j++){
           sources = this.leadInfo[i].source[this.leadInfo[i].source.length - 1].name+' '+this.datePipe.transform(this.leadInfo[i].source[this.leadInfo[i].source.length - 1].createdDate, 'dd/MM/yyyy, hh:mm a'); 
@@ -397,8 +423,8 @@ export class LeadsInfoComponent implements OnInit {
           statusFollwUpDate = this.datePipe.transform(this.leadInfo[i].status[this.leadInfo[i].status.length - 1].followUpDate, 'dd/MM/yyyy, hh:mm a');
         //  }
          console.log('statusInfo ',status+' '+statusCreatedDate+' '+statusFollwUpDate);
-         let leadData = [this.leadInfo[i].name, this.leadInfo[i].mobileNumber,this.leadInfo[i].emailAddress,this.leadInfo[i].otherData.City, this.datePipe.transform(this.leadInfo[i].createdDate, 'dd/MM/yyyy, hh:mm a') ,this.leadInfo[i].channel,this.leadInfo[i].services,
-         sources, status, statusCreatedDate, statusFollwUpDate]
+         let leadData = [this.leadInfo[i].name, this.leadInfo[i].mobileNumber,this.leadInfo[i].emailAddress,this.leadInfo[i].otherData.City, this.datePipe.transform(this.leadInfo[i].createdDate, 'dd/MM/yyyy, hh:mm a') ,this.leadInfo[i].channel, services,
+         sources, status, statusCreatedDate, statusFollwUpDate]; //this.leadInfo[i].services
          leadIterableArray.push(leadData);
       }
       console.log('leadIterableArray -> ',leadIterableArray);
