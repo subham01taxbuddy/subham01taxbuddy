@@ -40,6 +40,7 @@ export class LeadsInfoComponent implements OnInit {
   leadsListGridOptions: GridOptions;
   leadInfo: any = [];
 
+
   constructor(private fb: FormBuilder, private userService: UserMsService, @Inject(LOCALE_ID) private locale: string, private dialog: MatDialog,
               private _toastMessageService: ToastMessageService, private datePipe: DatePipe)
    { 
@@ -64,17 +65,18 @@ export class LeadsInfoComponent implements OnInit {
 
   leadsreateColoumnDef(){
     return [
-      // {
-      //   headerName: 'Id',
-      //   field: 'id',
-      //   width: 120,
-      //   suppressMovable: true,
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
+       {
+        headerName: 'Source',
+        field: 'mainSource',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
       {
         headerName: 'Name',
         field: 'name',
@@ -164,6 +166,18 @@ export class LeadsInfoComponent implements OnInit {
         }
       },
       {
+        headerName: 'GST Sub Service',
+        field: 'subService',
+        width: 170,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
         headerName: 'Assigned To',
         field: 'assignedTo',
         width: 180,
@@ -175,18 +189,6 @@ export class LeadsInfoComponent implements OnInit {
           debounceMs: 0
         }
       },
-      // {
-      //   headerName: 'Source',
-      //   field: 'source',
-      //   width: 200,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
       // {
       //   headerName: 'Status',
       //   field: 'status',
@@ -223,6 +225,27 @@ export class LeadsInfoComponent implements OnInit {
            </button>`;
         },
         width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center'
+            }
+        },
+      },
+      {
+        headerName: 'Update Agent Id',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+            return `<button type="button" class="action_icon add_button" title="Update Agent Id">
+            <i class="fa fa-envelope" aria-hidden="true" data-action-type="agentId"></i>
+           </button>`;
+        },
+        width: 80,
         pinned: 'right',
         cellStyle: function (params) {
             return {
@@ -302,15 +325,34 @@ export class LeadsInfoComponent implements OnInit {
     this.toDateMin = FromDate;
   }
 
-  showLeadsInfo(){
+  showLeadsInfo(from?){
+    if(from === "leadAdded"){
+      this.leadsForm.controls['fromDate'].setValidators(null);
+      this.leadsForm.controls['toDate'].setValidators(null);
+      this.leadsForm.controls['fromDate'].updateValueAndValidity();
+      this.leadsForm.controls['toDate'].updateValueAndValidity();
+    }
+
     if(this.leadsForm.valid){
       let oneDayAddedEndData = new Date(this.leadsForm['controls'].toDate.value);
       oneDayAddedEndData.setDate(oneDayAddedEndData.getDate() + 1);
       console.log('oneDayAddedEndData: ',oneDayAddedEndData)
-
-      let startDate = (moment(this.leadsForm['controls'].fromDate.value).add(330, 'm').toDate()).toISOString();  //this.leadsForm.value.fromDate;
-      // let endDate = (moment(this.leadsForm['controls'].toDate.value).add(330, 'm').toDate()).toISOString();    //this.leadsForm.value.toDate;
-      let endDate = (moment(oneDayAddedEndData).add(330, 'm').toDate()).toISOString();   
+    
+      var startDate;
+      var endDate;
+      if(from !== "leadAdded"){
+        startDate = (moment(this.leadsForm['controls'].fromDate.value).add(330, 'm').toDate()).toISOString();  //this.leadsForm.value.fromDate;
+        // let endDate = (moment(this.leadsForm['controls'].toDate.value).add(330, 'm').toDate()).toISOString();    //this.leadsForm.value.toDate;
+        endDate = (moment(oneDayAddedEndData).add(330, 'm').toDate()).toISOString(); 
+      }
+      
+     if(from === "leadAdded"){                
+        const today = new Date()
+        const yesterday = new Date(today)
+        yesterday.setDate(yesterday.getDate() - 1)
+        startDate = yesterday.toISOString();
+        endDate = new Date().toISOString();
+     }
 
       console.log('startDate: ',startDate, ' endDate: ',endDate);
       this.loading = true;
@@ -334,33 +376,36 @@ export class LeadsInfoComponent implements OnInit {
     var leadsArray = [];
     for(let i=0; i< leadsInfo.length; i++){
       var services = "";
+      var gstSubService = '';
         if(leadsInfo[i].services !== null){
-           for(let s=0; s<leadsInfo[i].services.length; s++){
-             if(s === 0){
-              services = leadsInfo[i].services[s];
-             }
-             else if(s > 0){
-              services = services + ", "+leadsInfo[i].services[s];
-             }
-           }
-        }
-        console.log('services -> ',services)
+          for(let s=0; s<leadsInfo[i].services.length; s++){
+            if(s === 0){
+             services = leadsInfo[i].services[s];
+            }
+            else if(s > 0){
+             services = services + ", "+leadsInfo[i].services[s];
+            }
+            gstSubService = leadsInfo[i].subServiceType;
+          }
+         }
+         console.log('services -> ',services)
+         console.log('gstSubService -> ',gstSubService);
 
       var sourcesInfo = [];
        for(let j=0; j<leadsInfo[i].source.length; j++){
         sourcesInfo.push(leadsInfo[i].source[j]);
         console.log('sourcesInfo '+j+'-> ',sourcesInfo[j]);
        }
-       console.log('sourcesInfo ',sourcesInfo);
+        console.log('sourcesInfo ',sourcesInfo);
 
        var statusInfo = [];
        for(let k=0; k<leadsInfo[i].status.length; k++){
         statusInfo.push(leadsInfo[i].status[k]);
-        console.log('statusInfo '+k+'-> ',statusInfo[k]);
+         console.log('statusInfo '+k+'-> ',statusInfo[k]);
        }
-       console.log('statusInfo ',statusInfo);
+      console.log('statusInfo ',statusInfo);
 
-      let updatedLeads = Object.assign({}, leadsArray[i], {id: leadsInfo[i].id, name:leadsInfo[i].name, createdDate: leadsInfo[i].createdDate, mobileNumber: leadsInfo[i].mobileNumber, emailAddress: leadsInfo[i].emailAddress, city: leadsInfo[i].city, channel: leadsInfo[i].channel, service: services, assignedTo: leadsInfo[i].assignedTo, source: sourcesInfo, status: statusInfo, followUpDate: leadsInfo[i].status.followUpDate })  //leadsInfo[i].source[0].name, leadsInfo[i].service
+      let updatedLeads = Object.assign({}, leadsArray[i], {id: leadsInfo[i].id, mainSource:leadsInfo[i].source[0].name, subService: gstSubService,  name:leadsInfo[i].name, createdDate: leadsInfo[i].createdDate, mobileNumber: leadsInfo[i].mobileNumber, emailAddress: leadsInfo[i].emailAddress, city: leadsInfo[i].city, channel: leadsInfo[i].channel, service: services, assignedTo: leadsInfo[i].assignedTo, source: sourcesInfo, status: statusInfo, followUpDate: leadsInfo[i].status.followUpDate })  //leadsInfo[i].source[0].name, leadsInfo[i].service
       leadsArray.push(updatedLeads)
     }
     console.log('leadsArray -> ',leadsArray)
@@ -384,6 +429,10 @@ export class LeadsInfoComponent implements OnInit {
           this.openDialog('Update Status','update-status', params.data)
           break;
         }
+        case 'agentId': {
+          this.openDialog('Update Agent Id','update-aginId', params.data)
+          break;
+        }
       }
     }
   }
@@ -391,7 +440,7 @@ export class LeadsInfoComponent implements OnInit {
   openDialog(titile, key, data){
       console.log('key-> ',key+' data-> ',data);
       let disposable = this.dialog.open(LeadDialogComponent, {
-        width: '60%',
+        width: '65%',
         height: 'auto',
         data: {
           title: titile,
@@ -400,33 +449,49 @@ export class LeadsInfoComponent implements OnInit {
           mode: key
         }
       })
+
+      disposable.afterClosed().subscribe(result=>{
+        if(result){
+          debugger
+          console.log('Afetr dialog close -> ',result);
+          if(result.data === "AgentIdUpdated"){
+              this.showLeadsInfo();
+          }
+          else if(result.data === "leadAdded"){
+
+            this.showLeadsInfo('leadAdded');
+          }
+        }
+      })
   }
 
   downloadInfo(){
     if(this.leadsForm.valid){
       var leadIterableArray = [];
 
-      let tableHeader = ['Name', 'Mobile No', 'Email','City','Created Date', 'Channel', 'Service', 'Source', 'Status', 'Status Created Date', 'Status Follow Up Date']; 
+      let tableHeader = ['Source', 'Name', 'Mobile No', 'Email','City','Created Date', 'Channel', 'Service', 'GST Sub Service', 'Source', 'Status', 'Status Created Date', 'Status Follow Up Date']; 
       leadIterableArray.push(tableHeader);
       console.log('leadsInfo ->> ',this.leadInfo);
       var leadsArray = [];
       for(let i=0; i< this.leadInfo.length; i++){
         var services = "";
+        var subService = "";
         if(this.leadInfo[i].services !== null){
            for(let s=0; s<this.leadInfo[i].services.length; s++){
              if(s === 0){
               services = this.leadInfo[i].services[s];
              }
              else if(s > 0){
-              services = services + ", "+this.leadInfo[i].services[s];
+              services = services + "/ "+this.leadInfo[i].services[s];
              }
+             subService = this.leadInfo[i].subServiceType !== null ?  this.leadInfo[i].subServiceType[0] : '';
            }
         }
         console.log('services -> ',services)
 
         var sources = '';
         // for(let j=0; j<this.leadInfo[i].source.length; j++){
-          sources = this.leadInfo[i].source[this.leadInfo[i].source.length - 1].name+' '+this.datePipe.transform(this.leadInfo[i].source[this.leadInfo[i].source.length - 1].createdDate, 'dd/MM/yyyy, hh:mm a'); 
+          sources = this.leadInfo[i].source[this.leadInfo[i].source.length - 1].name+' '+this.datePipe.transform(this.leadInfo[i].source[this.leadInfo[i].source.length - 1].createdDate, 'dd/MM/yyyy');  //, hh:mm a 
          //}
          console.log('sources ',sources);
   
@@ -435,12 +500,12 @@ export class LeadsInfoComponent implements OnInit {
          var statusFollwUpDate = '';
         //  for(let k=0; k<this.leadInfo[i].status.length; k++){
           status = this.leadInfo[i].status[this.leadInfo[i].status.length - 1].status;
-          statusCreatedDate = this.datePipe.transform(this.leadInfo[i].status[this.leadInfo[i].status.length - 1].createdDate, 'dd/MM/yyyy, hh:mm a') ;
-          statusFollwUpDate = this.datePipe.transform(this.leadInfo[i].status[this.leadInfo[i].status.length - 1].followUpDate, 'dd/MM/yyyy, hh:mm a');
+          statusCreatedDate = this.datePipe.transform(this.leadInfo[i].status[this.leadInfo[i].status.length - 1].createdDate, 'dd/MM/yyyy');  //, hh:mm a
+          statusFollwUpDate = this.datePipe.transform(this.leadInfo[i].status[this.leadInfo[i].status.length - 1].followUpDate, 'dd/MM/yyyy');
         //  }
          console.log('statusInfo ',status+' '+statusCreatedDate+' '+statusFollwUpDate);
-         let leadData = [this.leadInfo[i].name, this.leadInfo[i].mobileNumber,this.leadInfo[i].emailAddress,this.leadInfo[i].city, this.datePipe.transform(this.leadInfo[i].createdDate, 'dd/MM/yyyy, hh:mm a') ,this.leadInfo[i].channel, services,
-         sources, status, statusCreatedDate, statusFollwUpDate]; //this.leadInfo[i].services
+         let leadData = [this.leadInfo[i].source[0].name, this.leadInfo[i].name, this.leadInfo[i].mobileNumber,this.leadInfo[i].emailAddress,this.leadInfo[i].city, this.datePipe.transform(this.leadInfo[i].createdDate, 'dd/MM/yyyy') ,this.leadInfo[i].channel, services, 
+         subService, sources, status, statusCreatedDate, statusFollwUpDate]; //this.leadInfo[i].services
          leadIterableArray.push(leadData);
       }
       console.log('leadIterableArray -> ',leadIterableArray);

@@ -6,6 +6,16 @@
       <div class="card">
 
         <div class="card__row">
+            <div class="card__col-lg-8">
+                <button class="btn" style="border: none; cursor: pointer;"
+                  (click)="openDialog('Add Partner Lead','partnerLead', '')">Add Partnership Lead</button> &nbsp;
+
+                <button class="btn" style="border: none; cursor: pointer;"
+                (click)="openDialog('Add GST Lead','gstLead', '')">Add GST Lead</button>
+            </div>
+        </div>
+
+        <div class="card__row">
             <form [formGroup]="leadsForm">
                 <!-- <div class="card__col-lg-3">
                     <p class="head-label">Download Invoice:</p>
