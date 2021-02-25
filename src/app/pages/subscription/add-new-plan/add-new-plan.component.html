@@ -1,0 +1,210 @@
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+
+<div class="main clearfix" style="padding-top: 0px">
+  <div class="card" style="margin-top: 50px;">
+    <div class="card__row">
+      <div class="card__col-lg-6">
+        <mat-card  style="height: 305px;">
+          <b style="font-size: 18px;">User Added Plan: </b><br>
+          <div class="card__row" style="margin-top: 75px;">
+
+            <div class="card__col-lg-5">
+              <span class="head">Plan Name:</span><br>
+              <!-- <span class="head">Desciption:</span><br> -->
+              <span class="head">Validation For Days:</span><br>
+              <span class="head">Base Price:</span><br>
+              <span class="head">cgst:</span><br>
+              <span class="head">sgst:</span><br>
+              <span class="head">igst:</span><br>
+              <span class="head">Total Tax:</span><br>
+              <span class="head">Total Amount:</span>
+            </div>
+            <div class="card__col-lg-7" *ngIf="userSelectedPlan">
+              <span class="head">{{userSelectedPlan.name}}</span><br>
+              <!-- <span class="head">{{userSelectedPlan.shortDescription}}</span><br> -->
+              <span class="head">{{userSelectedPlan.validForDays}}</span><br>
+              <span class="head">{{userSelectedPlan.basePrice | currency:'INR'}}</span><br>
+              <span class="head">{{userSelectedPlan.cgst | currency:'INR'}}</span><br>
+              <span class="head">{{userSelectedPlan.sgst | currency:'INR'}}</span><br>
+              <span class="head">{{userSelectedPlan.igst | currency:'INR'}}</span><br>
+              <span class="head">{{userSelectedPlan.totalTax | currency:'INR'}}</span><br>
+              <span class="head">{{userSelectedPlan.totalAmount | currency:'INR'}}</span>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <div class="card__col-lg-6">
+        <mat-card style="height: 305px;">
+          <b style="font-size: 18px;">SME Selcted Plan: </b><br>
+          <div class="card__row">
+            <div class="card__col-lg-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Select Plan</mat-label>
+                <mat-select matInput  placeholder="Select Plan" (selectionChange)="showSmeSelctedPlan($event)" autocomplete="off" >
+                    <mat-option *ngFor="let plan of allPlans" [value]="plan.id">
+                        {{ plan.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error>Select ITR type</mat-error>
+              </mat-form-field>
+          </div>
+        </div>
+
+        <div class="card__row">
+          <div class="card__col-lg-5">
+            <span class="head">Plan Name:</span><br>
+            <!-- <span class="head">Desciption:</span><br> -->
+            <span class="head">Validation For Days:</span><br>
+            <span class="head">Base Price:</span><br>
+            <span class="head">cgst:</span><br>
+            <span class="head">sgst:</span><br>
+            <span class="head">igst:</span><br>
+            <span class="head">Total Tax:</span><br>
+            <span class="head">Total Amount:</span>
+          </div>
+          <div class="card__col-lg-7" *ngIf="smeSelectedPlan">
+            <span class="head">{{smeSelectedPlan.name}}</span><br>
+            <!-- <span class="head">{{smeSelectedPlan.shortDescription}}</span><br> -->
+            <span class="head">{{smeSelectedPlan.validForDays}}</span><br>
+            <span class="head">{{smeSelectedPlan.basePrice | currency:'INR'}}</span><br>
+            <span class="head">{{smeSelectedPlan.cgst | currency:'INR'}}</span><br>
+            <span class="head">{{smeSelectedPlan.sgst | currency:'INR'}}</span><br>
+            <span class="head">{{smeSelectedPlan.igst | currency:'INR'}}</span><br>
+            <span class="head">{{smeSelectedPlan.totalTax | currency:'INR'}}</span><br>
+            <span class="head">{{smeSelectedPlan.totalAmount | currency:'INR'}}</span>
+          </div>
+        </div>
+
+        
+        </mat-card>
+    </div>
+    </div>
+
+    <div class="card__row">
+      <mat-card>
+        <div class="card__row" >
+          <div class="card__col-lg-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Start Date</mat-label>
+              <input matInput  placeholder="Start Date" [(ngModel)]="startDate"
+                  [min]="startMinDate" (dateChange)="applyEndDateValidation($event.value)"
+                  [matDatepicker]="picker" autocomplete="off" required>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <!-- <mat-error
+                  *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['dateOfBirth'].hasError('required')">
+                  Select Date of
+                  Birth</mat-error> -->
+          </mat-form-field>
+          </div>
+
+          <div class="card__col-lg-6">
+            <mat-form-field appearance="outline">
+              <mat-label>End Date</mat-label>
+              <input matInput  placeholder="End Date"
+                  [min]="endMinDate" [(ngModel)]="endDate"
+                  [matDatepicker]="picker2" autocomplete="off" required>  <!--[max]="EmaxDate"-->
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+              <!-- <mat-error
+                  *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['dateOfBirth'].hasError('required')">
+                  Select Date of
+                  Birth</mat-error> -->
+          </mat-form-field>
+          </div>
+      </div>
+      </mat-card>
+    </div>
+
+    <div class="card__row">
+      <div class="card__col-lg-6">
+          <div class="promo">
+            <form [formGroup]="promoForm">
+            <b style="font-size: 18px;">Promo Code: </b><br>
+            <div class="card__row">
+              <div class="card__col-lg-6">
+                <mat-form-field appearance="outline">
+                  <mat-label>Select Promo Code</mat-label>
+                  <mat-select matInput  placeholder="Select Promo Code" formControlName="promoLabel" (selectionChange)="showPromoCode($event.value)" autocomplete="off" >
+                      <mat-option *ngFor="let plan of allPromoCodes" [value]="plan.id">
+                          {{ plan.title }}
+                      </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="promoForm['controls'].promoLabel.hasError('required')">Select Promo Code</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-lg-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Promo Code</mat-label>
+                <input matInput placeholder="Promo Code" formControlName="promoCode" readonly>
+              </mat-form-field>
+          </div>
+
+          <div class="card__col-lg-12">
+            <b style="font-size: 14px;">Promo code Information: </b><br>
+            <div class="card__row">
+              <div class="card__col-lg-5">
+                <span class="promo-head">Discount Type:</span><br>
+                <span class="promo-head">Start Date:</span><br>
+                <span class="promo-head">End Date:</span>
+              </div>
+              <div class="card__col-lg-7" *ngIf="promoCodeInfo">
+                <span class="promo-head">{{promoCodeInfo.discountType}}</span><br>
+                <span class="promo-head">{{promoCodeInfo.startDate | date:'dd MMM yyyy'}}</span><br>
+                <span class="promo-head">{{promoCodeInfo.endDate | date:'dd MMM yyyy'}}</span>
+              </div>
+            </div>
+          </div><br><br>
+
+          </div>
+          <div style="align-items: center; margin-top: 17px;">
+            <button (click)="applyPromo()">Apply</button> &nbsp;
+            <button (click)="clearPromoField()" type="reset">Clear</button>
+          </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card__col-lg-6">
+        <mat-card >
+          <b style="font-size: 18px;">Plan Pricing: </b><br>
+         
+        <div class="card__row">
+          <div class="card__col-lg-5">
+           
+            <span class="head">Base Price:</span><br>
+            <span class="head">cgst:</span><br>
+            <span class="head">sgst:</span><br>
+            <span class="head">igst:</span><br><br>
+            <span class="head"><b>Promo code Discount:</b></span><br><br>
+            <span class="head">Total Tax:</span><br><br>
+            <span class="head"><b>Total Amount:</b></span>
+          </div>
+          <div class="card__col-lg-7" *ngIf="finalPlanJson">
+            
+            <span class="head">{{this.finalPlanJson.planDetails[0].plan['basePrice'] | currency:'INR'}}</span><br>
+            <span class="head">{{this.finalPlanJson.planDetails[0].plan['cgst'] | currency:'INR'}}</span><br>
+            <span class="head">{{this.finalPlanJson.planDetails[0].plan['sgst'] | currency:'INR'}}</span><br>
+            <span class="head">{{this.finalPlanJson.planDetails[0].plan['igst'] | currency:'INR'}}</span><br><br>
+            <span class="head"><b>{{this.finalPlanJson.planDetails[0].plan['igst'] | currency:'INR'}}</b></span><br><br>
+
+            <span class="head">{{this.finalPlanJson.planDetails[0].plan['totalTax'] | currency:'INR'}}</span><br><br>
+            <span class="head"><b>{{this.finalPlanJson.planDetails[0].plan['totalAmount'] | currency:'INR'}}</b></span>
+          </div>
+        </div>
+
+        </mat-card>
+
+      </div>
+    </div>
+
+    <div>
+      <button class="btn act-btn" (click)="activatePlan()">Activate Plan</button>
+    </div>
+  </div>
+</div>

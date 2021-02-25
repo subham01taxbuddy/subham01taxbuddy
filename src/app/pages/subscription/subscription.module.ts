@@ -7,9 +7,10 @@ import { SharedModule } from "app/shared/shared.module";
 import { NgxLoadingModule } from "ngx-loading";
 import { SubscriptionDetailComponent } from './subscription-detail/subscription-detail.component';
 import { SubscriptionRoutingModule } from "./subscription-routing.module";
+import { AddNewPlanComponent } from './add-new-plan/add-new-plan.component';
 
 @NgModule({
-    declarations: [SubscriptionDetailComponent],
+    declarations: [SubscriptionDetailComponent, AddNewPlanComponent],
     imports:[
         SubscriptionRoutingModule,
         CommonModule,
