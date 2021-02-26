@@ -7,36 +7,38 @@
     <div class="card">
         <div class="card__row">
             <div class="card__col-lg-12">
-                <div class="filter__col card__col-sm-4 card__col-xs-12">
+                <!--  <div class="filter__col card__col-sm-4 card__col-xs-12">
                     <div class="input">
                         <label class="input__label" for="attr">Select attribute</label>
-                        <!-- <select class="select__box ogp_select" (change)="clearValue()" #advanceSearchKey>
+                        <select class="select__box ogp_select" (change)="clearValue()" #advanceSearchKey>
                             <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
                                 {{drop.name}}</option>
-                        </select> -->
+                        </select>
                     </div>
-                </div>
+                </div> -->
                 <div class="filter__col card__col-sm-4 card__col-xs-10">
                     <div class="input">
                         <label class="input__label" for="attr">Enter mobile number</label>
                         <div class="input__select">
                             <input type="number" class="select__box ogp_select" style="background-image:none"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                                [(ngModel)]="searchVal" maxlength="10" name="searchVal" />
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" [(ngModel)]="searchVal"
+                                maxlength="10" name="searchVal" />
                         </div>
                     </div>
                 </div>
                 <div class="card__col-md-3 card__col-xs-12 pull-right">
-                    <a class="btn btn_stroke filter__add-link" (click)="advanceSearch()"><i
-                            class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
+                    <a class="btn btn_stroke filter__add-link" (click)="advanceSearch()"><i class="fa fa-search"
+                            aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
                 </div>
             </div><br><br>
-        </div>
-
+        </div><br><br>
+        <label>Showing results for: {{this.utilService.isNonEmpty(this.searchVal) ? this.searchVal : 'All
+            Users'}}</label>
         <div class="card__row">
             <ag-grid-angular class="ag-theme-balham" [gridOptions]="subscriptionListGridOptions"
-            (rowClicked)="onSubscriptionRowClicked($event)" >    <!--   paginationPageSize=15 pagination=true -->
+                (rowClicked)="onSubscriptionRowClicked($event)">
+                <!--   paginationPageSize=15 pagination=true -->
             </ag-grid-angular>
         </div>
     </div>
