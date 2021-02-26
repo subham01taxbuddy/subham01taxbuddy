@@ -76,7 +76,7 @@ export class AddNewPlanComponent implements OnInit {
         this.maxEndDate = new Date(myDate);
         console.log('this.maxEndDate:', this.maxEndDate);
       } else if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
-        myDate.setDate(new Date().getDate() + this.userSubscription.smeSelectedPlan.validForDays - 1)
+        myDate.setDate(new Date().getDate() + this.userSubscription.userSelectedPlan.validForDays - 1)
         this.maxEndDate = new Date(myDate);
       }
       this.subStartDate.setValue(this.userSubscription.startDate);
