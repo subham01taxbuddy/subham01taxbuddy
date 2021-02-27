@@ -46,13 +46,25 @@
             </mat-form-field>
         </div>
        
-         <div class="card__col-xs-4 card__col-sm-14">
+         <div class="card__col-xs-4 card__col-sm-14" *ngIf="leadStatusForm.controls['leadStatus'].value === 'FOLLOWUP'">
             <mat-form-field appearance="outline">
                 <mat-label>Schedule Call Date & Time</mat-label> 
                 <input matInput formControlName="callSheduleDate" [owlDateTimeTrigger]="dtPicker2" [min]="minDate" 
                     [owlDateTime]="dtPicker2" [required]="leadStatusForm.controls['leadStatus'].value === 'FOLLOWUP'">  <!--[required]="callLogForm.controls['statusId'].value === 17"-->
                 <owl-date-time #dtPicker2></owl-date-time>
                 <mat-error *ngIf="leadStatusForm.controls['callSheduleDate'].hasError('required')">Select Schedule Date & Time.</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-4 card__col-sm-14" *ngIf="leadStatusForm.controls['leadStatus'].value === 'AUTO_FOLLOWUP'">
+            <mat-form-field appearance="outline" >
+                <mat-label>Select Status</mat-label>
+                <mat-select placeholder="Select Source" formControlName="source" [required]="leadStatusForm.controls['leadStatus'].value === 'AUTO_FOLLOWUP'">
+                    <mat-option *ngFor="let source of sourceInfo"  [value]="source.name">
+                        {{ source.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="leadStatusForm.controls['source'].hasError('required')">Select source.</mat-error>
             </mat-form-field>
         </div>
 

@@ -40,6 +40,8 @@ export class LeadDialogComponent implements OnInit {
                         {key: 'Auto Follow Up', value: 'AUTO_FOLLOWUP', disable: false},
                         {key: 'Not Interseted', value: 'BACKED_OUT', disable: false},
                         {key: 'Converted', value: 'CONVERTED', disable: true}];
+  sourceInfo: any = [{name: 'Partnership program'},
+                     {name: 'Gst landing'}]
   minDate = (new Date()).toISOString();
   leadForm: FormGroup;
   leadStatusForm: FormGroup;
@@ -383,7 +385,8 @@ export class LeadDialogComponent implements OnInit {
 
     this.leadStatusForm = this.fb.group({
         leadStatus: ['', Validators.required],
-        callSheduleDate: ['']
+        callSheduleDate: [''],
+        source: ['']
     })
 
     this.agentIdForm = this.fb.group({
@@ -420,7 +423,8 @@ export class LeadDialogComponent implements OnInit {
       let body = {
         "status": this.leadStatusForm['controls'].leadStatus.value, 
         "mobileNumber": this.data['leadData'].mobileNumber,
-        "followUpDate": selectedData
+        "followUpDate": selectedData,
+        "source": this.leadStatusForm['controls'].source.value
       }
       this.userService.putMethod(param, body).subscribe(responce=>{
         this.loading = false;
