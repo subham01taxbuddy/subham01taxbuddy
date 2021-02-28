@@ -58,7 +58,7 @@
 
         <div class="card__col-xs-4 card__col-sm-14" *ngIf="leadStatusForm.controls['leadStatus'].value === 'AUTO_FOLLOWUP'">
             <mat-form-field appearance="outline" >
-                <mat-label>Select Status</mat-label>
+                <mat-label>Select Source</mat-label>
                 <mat-select placeholder="Select Source" formControlName="source" [required]="leadStatusForm.controls['leadStatus'].value === 'AUTO_FOLLOWUP'">
                     <mat-option *ngFor="let source of sourceInfo"  [value]="source.name">
                         {{ source.name }}
