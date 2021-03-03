@@ -19,6 +19,7 @@ export class SubscriptionDetailComponent implements OnInit {
   loading: boolean;
   searchVal: any;
   subscriptionListGridOptions: GridOptions;
+  selectedUserName: any = '';
 
   constructor(private _toastMessageService: ToastMessageService, public utilService: UtilsService, private itrService: ItrMsService, @Inject(LOCALE_ID) private locale: string,
     private userService: UserMsService, private utileService: UtilsService, private router: Router) {
@@ -245,11 +246,13 @@ export class SubscriptionDetailComponent implements OnInit {
       this.loading = false;
       console.log('Get user id by mobile number responce: ', res);
       if (res && res.records instanceof Array) {
+        this.selectedUserName = res.records[0].family[0].fName+' '+res.records[0].family[0].lName;
         this.getUserSubscriptionInfo(res.records[0].userId);
       }
     },
       error => {
         this.loading = false;
+        this.selectedUserName = '';
         console.log('Error -> ', error);
         this._toastMessageService.alert("error", this.utileService.showErrorMsg(error.error.status));
       })
@@ -262,6 +265,7 @@ export class SubscriptionDetailComponent implements OnInit {
       param = '/subscription?userId=' + userId;
     }
     else {
+      this.selectedUserName = '';
       param = '/subscription';
     }
     this.itrService.getMethod(param).subscribe((response: any) => {
@@ -276,7 +280,7 @@ export class SubscriptionDetailComponent implements OnInit {
           this._toastMessageService.alert("error", "Data not found.");
         }
       } else {
-        if (response instanceof Array) {
+        if (response instanceof Array && response.length > 0) {
           this.subscriptionListGridOptions.api.setRowData(this.createRowData(response));
         } else {
           this.subscriptionListGridOptions.api.setRowData(this.createRowData([]));
