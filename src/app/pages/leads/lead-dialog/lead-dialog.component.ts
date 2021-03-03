@@ -395,9 +395,9 @@ export class LeadDialogComponent implements OnInit {
 
     this.leadForm = this.fb.group({
       name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
+      email: ['', [Validators.pattern(AppConstants.emailRegex)]],
       mobileNo: ['', [Validators.required,Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],
-      city: ['', Validators.required],
+      city: [''],
       hearAboutUs: [''],
       website: [''],
       interestArea : new FormArray([]),
