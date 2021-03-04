@@ -2,6 +2,38 @@
 
 <div class="main clearfix" style="padding-top: 0px">
   <div class="card" style="margin-top: 50px;">
+    
+      <mat-card *ngIf="this.utilService.isNonEmpty(selectedUserInfo)">
+        <b style="font-size: 18px;">User Information: </b><br><br>
+
+        <div class="card__row" >
+          <div class="card__col-lg-4">
+              <label style=" font-size: 15px;"><b>Name :</b></label> <span style="margin-left: 35px;" class="user-info">{{selectedUserInfo.fName+' '+selectedUserInfo.lName}}</span>
+          </div>
+          <div class="card__col-lg-4">
+              <label style=" font-size: 15px;"><b>Email :</b></label> <span style="margin-left: 10px;" class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.emailAddress) ? selectedUserInfo.emailAddress: 'NA' }}</span>
+          </div>
+          <div class="card__col-lg-4">
+              <label style=" font-size: 15px;"><b>Mobile Number : </b></label> <span class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.mobileNumber) ? selectedUserInfo.mobileNumber: 'NA' }}</span>
+          </div>
+        </div>
+        <div class="card__row">
+          <div class="card__col-lg-4">
+            <label style=" font-size: 15px;"><b>Birth Date :</b></label> <span style="margin-left: 10px;" class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.dateOfBirth) ? (selectedUserInfo.dateOfBirth | date) : 'NA' }}</span>
+          </div>
+          <div class="card__col-lg-4">
+            <label style=" font-size: 15px;"><b>Gender: </b></label> <span class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.gender) ? selectedUserInfo.gender: 'NA' }}</span>
+          </div>
+          <div class="card__col-lg-4">
+            <label style=" font-size: 15px;"><b>PAN :</b></label> <span style="margin-left: 40px;" class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.panNumber) ? selectedUserInfo.panNumber: 'NA' }}</span>
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-card *ngIf="!this.utilService.isNonEmpty(selectedUserInfo)">
+        <p style="font-size: 15px; text-align: center; font-weight: 590;">User infomamation Not Found. </p><br>
+      </mat-card><br>
+
     <div class="card__row">
       <div class="card__col-lg-6">
         <mat-card style="height: 305px;">
@@ -49,6 +81,10 @@
                 </mat-select>
                 <mat-error>Select ITR type</mat-error>
               </mat-form-field>
+            </div>
+            
+            <div class="card__col-lg-6">
+              <button class="btn" (click)="updateSubscription('CLEAR_PLAN')">Clear SME Selected Plan</button>
             </div>
           </div>
 
@@ -188,10 +224,8 @@
                 required>
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
-              <!-- <mat-error
-                      *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['dateOfBirth'].hasError('required')">
-                      Select Date of
-                      Birth</mat-error> -->
+              <!-- <mat-error *ngIf="subStartDate.errors.required === true">
+                      Select Start Date</mat-error> -->
             </mat-form-field>
           </div>
 

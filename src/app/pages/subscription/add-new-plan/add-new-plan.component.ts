@@ -5,6 +5,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
+import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import moment = require('moment');
 
@@ -38,6 +39,7 @@ export class AddNewPlanComponent implements OnInit {
   smeSelectedPlan: any;
   maxEndDate: any;
   minEndDate: any;
+  selectedUserInfo: any;
   // startDate: any;
   // endDate: any;
   promoCodeInfo: any;
@@ -46,7 +48,7 @@ export class AddNewPlanComponent implements OnInit {
   subStartDate = new FormControl(new Date(), [Validators.required]);
   subEndDate = new FormControl('', [Validators.required]);
   constructor(private activatedRoute: ActivatedRoute, private itrService: ItrMsService, private fb: FormBuilder, public utilService: UtilsService, private toastMessage: ToastMessageService,
-    private router: Router) { }
+    private router: Router, private userService: UserMsService) { }
 
   ngOnInit() {
     const temp = this.activatedRoute.params.subscribe(params => {
@@ -69,6 +71,7 @@ export class AddNewPlanComponent implements OnInit {
     let param = '/subscription/' + id;
     this.itrService.getMethod(param).subscribe((subscription: any) => {
       this.userSubscription = subscription;
+      this.gstUserInfoByUserId(subscription.userId);
       this.loading = false;
       let myDate = new Date();
       if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
@@ -116,6 +119,20 @@ export class AddNewPlanComponent implements OnInit {
         console.log('Error during: ', error);
       })
   }
+
+  gstUserInfoByUserId(userId){
+    let param = '/search/userprofile/query?userId=' + userId;
+    this.userService.getMethod(param).subscribe((res: any) => {
+      console.log('Get user info by userId: ', res);
+      if(res && res.records instanceof Array) {
+            this.selectedUserInfo = res.records[0];
+      }
+    },
+      error => {
+        console.log('Error -> ', error);
+      })
+  }
+
   setFinalPricing() {
     this.selectedPromoCode = this.userSubscription.promoCode;
     if (this.utilService.isNonEmpty(this.selectedPromoCode) && this.utilService.isNonEmpty(this.allPromoCodes)) {
@@ -126,7 +143,7 @@ export class AddNewPlanComponent implements OnInit {
     }
 
 
-
+    debugger
     if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.promoApplied)) {
       Object.assign(this.finalPricing, this.userSubscription.promoApplied);
     } else if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
@@ -299,12 +316,22 @@ export class AddNewPlanComponent implements OnInit {
       if (value === 'ACTIVATE') {
         this.userSubscription.isActive = true;
       }
+      if (value === 'CLEAR_PLAN') {
+        this.userSubscription.smeSelectedPlan = null;
+      }
+      console.log('Subscription;', this.userSubscription);
       this.loading = true;
       const param = "/subscription";
       this.itrService.putMethod(param, this.userSubscription).subscribe((response: any) => {
         console.log('Subscription Updated Successfully:', response);
         this.utilService.showSnackBar('Subscription updated successfully!');
-        this.router.navigate(['/pages/subscription']);
+        if (value !== 'CLEAR_PLAN') {
+          this.router.navigate(['/pages/subscription']);
+        }
+        else{
+        this.smeSelectedPlanId = '';
+        this.setFinalPricing();
+        }
         this.loading = false;
       }, error => {
         this.utilService.showSnackBar('Failed to update subscription!');
