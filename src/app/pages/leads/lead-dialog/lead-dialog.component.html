@@ -110,7 +110,7 @@
         <div class="card__col-xs-4 card__col-sm-14">
             <mat-form-field appearance="outline" >
                 <mat-label>Email Address</mat-label>
-                <input matInput  placeholder="Enter Email Id" formControlName="email" maxlength="50" required>
+                <input matInput  placeholder="Enter Email Id" formControlName="email" maxlength="50">
                 <mat-error *ngIf="leadForm.controls['email'].hasError('required')">Enter email.</mat-error>
                 <mat-error *ngIf="leadForm.controls['email'].hasError('pattern')">Enter valid email.</mat-error>
             </mat-form-field>
@@ -130,7 +130,7 @@
         <div class="card__col-xs-4 card__col-sm-14">
             <mat-form-field appearance="outline" >
                 <mat-label>City in India</mat-label>
-                <mat-select placeholder="Select city" formControlName="city"  required>
+                <mat-select placeholder="Select city" formControlName="city">
                     <mat-option *ngFor="let city of indianCity" [value]="city.name">
                         {{ city.name }}
                     </mat-option>

@@ -395,9 +395,9 @@ export class LeadDialogComponent implements OnInit {
 
     this.leadForm = this.fb.group({
       name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
+      email: ['', [Validators.pattern(AppConstants.emailRegex)]],
       mobileNo: ['', [Validators.required,Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],
-      city: ['', Validators.required],
+      city: [''],
       hearAboutUs: [''],
       website: [''],
       interestArea : new FormArray([]),
@@ -515,10 +515,18 @@ export class LeadDialogComponent implements OnInit {
         this.userService.postMethod(param, passObj).subscribe((res: any)=>{
             console.log('responce after lead created -> ',res);
             this.loading = false;
+            console.log('Responce hadle: ',res, res.hasOwnProperty('Message'))
+            if(res.hasOwnProperty('Message')){
+              this._toastMessageService.alert("success", res.Message)
+            }
+            else{
+              this._toastMessageService.alert("success", "Lead data added successfully.")
+            }
+
             setTimeout(() => {
               this.dialogRef.close({ event: 'close', data: 'leadAdded'})
-            }, 3000)
-            this._toastMessageService.alert("success", "Lead data added successfully.")
+            }, 6000)
+           
 
         },error=>{
           this.loading = false;
