@@ -515,10 +515,18 @@ export class LeadDialogComponent implements OnInit {
         this.userService.postMethod(param, passObj).subscribe((res: any)=>{
             console.log('responce after lead created -> ',res);
             this.loading = false;
+            console.log('Responce hadle: ',res, res.hasOwnProperty('Message'))
+            if(res.hasOwnProperty('Message')){
+              this._toastMessageService.alert("success", res.Message)
+            }
+            else{
+              this._toastMessageService.alert("success", "Lead data added successfully.")
+            }
+
             setTimeout(() => {
               this.dialogRef.close({ event: 'close', data: 'leadAdded'})
-            }, 3000)
-            this._toastMessageService.alert("success", "Lead data added successfully.")
+            }, 6000)
+           
 
         },error=>{
           this.loading = false;
