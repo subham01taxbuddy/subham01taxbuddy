@@ -37,8 +37,7 @@
         <label>User Name: {{this.utilService.isNonEmpty(this.selectedUserName) ? selectedUserName : ''}}</label>
         <div class="card__row">
             <ag-grid-angular class="ag-theme-balham" [gridOptions]="subscriptionListGridOptions"
-                (rowClicked)="onSubscriptionRowClicked($event)">
-                <!--   paginationPageSize=15 pagination=true -->
+                (rowClicked)="onSubscriptionRowClicked($event)" paginationPageSize=15 pagination=true>
             </ag-grid-angular>
         </div>
     </div>
