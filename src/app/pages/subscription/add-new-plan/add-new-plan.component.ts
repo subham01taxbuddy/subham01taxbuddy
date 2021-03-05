@@ -55,7 +55,7 @@ export class AddNewPlanComponent implements OnInit {
       console.log("99999999999999999:", params)
       this.getUserPlanInfo(params['subscriptionId']);
     });
-    this.getAllPlanInfo();
+    // this.getAllPlanInfo();
     this.getAllPromoCode();
   }
   finalPricing = {
@@ -77,10 +77,12 @@ export class AddNewPlanComponent implements OnInit {
       if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
         myDate.setDate(new Date().getDate() + this.userSubscription.smeSelectedPlan.validForDays - 1)
         this.maxEndDate = new Date(myDate);
+        this.getAllPlanInfo();
         console.log('this.maxEndDate:', this.maxEndDate);
       } else if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
         myDate.setDate(new Date().getDate() + this.userSubscription.userSelectedPlan.validForDays - 1)
         this.maxEndDate = new Date(myDate);
+        this.getAllPlanInfo(this.userSubscription.userSelectedPlan.servicesType);
       }
       this.subStartDate.setValue(this.userSubscription.startDate);
       this.subEndDate.setValue(this.userSubscription.endDate);
@@ -153,13 +155,25 @@ export class AddNewPlanComponent implements OnInit {
     }
 
   }
-  getAllPlanInfo() {
+  getAllPlanInfo(serviceType?) {
     //https://uat-api.taxbuddy.com/itr/plans-master 
     let param = '/plans-master';
     this.itrService.getMethod(param).subscribe(plans => {
       console.log('Plans -> ', plans);
-      this.allPlans = plans['content'];
-      console.log('appPlans --> ', this.allPlans);
+      if(serviceType === "ITR"){
+        let itrPlans = plans['content'].filter(item=> item.servicesType === "ITR");
+        console.log('itrPlans: ',itrPlans);
+        this.allPlans = itrPlans;
+      }
+      else if(serviceType === "GST"){
+        let gstPlans = plans['content'].filter(item=> item.servicesType === "GST");
+        console.log('gstPlans: ',gstPlans);
+        this.allPlans = gstPlans;
+      }
+      else{
+        this.allPlans = plans['content'];
+        console.log('appPlans --> ', this.allPlans);
+      }
     },
       error => {
         console.log('Error during getting all plans: ', error)
@@ -196,13 +210,14 @@ export class AddNewPlanComponent implements OnInit {
     "isActive": false
   }
   applySmeSelctedPlan(selectedPlan) {
-    this.smeSelectedPlanId = selectedPlan.value;
+    // this.smeSelectedPlanId = selectedPlan.value;
+    this.smeSelectedPlanId = selectedPlan;
     // this.smeSelectedPlan = this.allPlans.filter(item => item.planId === selectedPlan.value)[0];
     // console.log('selectedPlan id -> ', this.smeSelectedPlan);
     const param = '/subscription';
     const request = {
       userId: this.userSubscription.userId,
-      planId: selectedPlan.value,
+      planId: selectedPlan,   //selectedPlan.value
       selectedBy: 'SME',
       smeUserId: 111
     }
@@ -310,6 +325,7 @@ export class AddNewPlanComponent implements OnInit {
   }
 
   updateSubscription(value) {
+    console.log('subStartDate validation -> ',this.subStartDate.valid, this.subStartDate)
     if (this.subStartDate.valid && this.subEndDate.valid) {
       this.userSubscription.startDate = this.subStartDate.value;
       this.userSubscription.endDate = this.subEndDate.value;
@@ -339,6 +355,9 @@ export class AddNewPlanComponent implements OnInit {
         console.log('Subscription Updated error=>:', error);
       })
       console.log('Update Final Subscription;', this.userSubscription);
+    }
+    else{
+      this.toastMessage.alert("error", "Select Start date and End date")
     }
     console.log('Update Final Subscription;', this.userSubscription);
   }

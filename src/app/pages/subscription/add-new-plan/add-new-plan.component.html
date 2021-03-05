@@ -70,11 +70,11 @@
         <mat-card style="height: 305px;">
           <b style="font-size: 18px;">SME Selcted Plan: </b><br>
           <div class="card__row">
-            <div class="card__col-lg-6">
+            <div class="card__col-lg-5">
               <mat-form-field appearance="outline">
                 <mat-label>Select Plan</mat-label>
                 <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId"
-                  (selectionChange)="applySmeSelctedPlan($event)" autocomplete="off">
+                   autocomplete="off">  <!--(selectionChange)="applySmeSelctedPlan($event)"-->
                   <mat-option *ngFor="let plan of allPlans" [value]="plan.planId">
                     {{ plan.name }}
                   </mat-option>
@@ -83,8 +83,10 @@
               </mat-form-field>
             </div>
             
-            <div class="card__col-lg-6">
-              <button class="btn" (click)="updateSubscription('CLEAR_PLAN')">Clear SME Selected Plan</button>
+            <div class="card__col-lg-7" *ngIf="smeSelectedPlanId">
+              <button class="plan-btn"  (click)="applySmeSelctedPlan(smeSelectedPlanId)">Apply</button>  &nbsp;&nbsp;
+
+              <button class="plan-btn"  (click)="updateSubscription('CLEAR_PLAN')">Clear Plan</button>  <!--[disabled]="this.utilService.isNonEmpty(smeSelectedPlanId) ? false : true"  [class.disableBtn]="this.utilService.isNonEmpty(smeSelectedPlanId) ? false : true"-->
             </div>
           </div>
 
@@ -224,8 +226,8 @@
                 required>
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
-              <!-- <mat-error *ngIf="subStartDate.errors.required === true">
-                      Select Start Date</mat-error> -->
+              <mat-error *ngIf="subStartDate.hasError('required')">
+                      Select Start Date</mat-error>
             </mat-form-field>
           </div>
 
@@ -237,18 +239,19 @@
               <!--[max]="EmaxDate"-->
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
-              <!-- <mat-error
-                      *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['dateOfBirth'].hasError('required')">
-                      Select Date of
-                      Birth</mat-error> -->
+              <mat-error *ngIf="subEndDate.hasError('required')">Select End Date</mat-error>
             </mat-form-field>
           </div>
         </div>
       </mat-card>
     </div>
     <div>
-      <button class="btn act-btn" (click)="updateSubscription('')">Save</button>
-      <button class="btn act-btn" (click)="updateSubscription('ACTIVATE')">Save & Activate</button>
+      <div class="card__row">
+        <button class="btn act-btn" style="margin-left: 180px;" (click)="updateSubscription('')">Save</button>
+        <button class="btn act-btn" (click)="updateSubscription('ACTIVATE')">Save & Activate</button>
+        <button class="btn act-btn" [routerLink]="['/pages/subscription']">Cancel</button>
+      </div>
+
     </div>
   </div>
 </div>
