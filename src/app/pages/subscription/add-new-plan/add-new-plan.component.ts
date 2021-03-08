@@ -214,12 +214,13 @@ export class AddNewPlanComponent implements OnInit {
     this.smeSelectedPlanId = selectedPlan;
     // this.smeSelectedPlan = this.allPlans.filter(item => item.planId === selectedPlan.value)[0];
     // console.log('selectedPlan id -> ', this.smeSelectedPlan);
+    const smeInfo = JSON.parse(localStorage.getItem('UMD'));
     const param = '/subscription';
     const request = {
       userId: this.userSubscription.userId,
       planId: selectedPlan,   //selectedPlan.value
       selectedBy: 'SME',
-      smeUserId: 111
+      smeUserId: smeInfo.USER_UNIQUE_ID
     }
     this.loading = true;
     this.itrService.postMethod(param, request).subscribe((response: any) => {

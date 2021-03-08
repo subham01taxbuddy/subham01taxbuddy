@@ -22,6 +22,7 @@ export class SubscriptionDetailComponent implements OnInit {
   searchVal: any;
   subscriptionListGridOptions: GridOptions;
   selectedUserName: any = '';
+  userId: any;
 
   constructor(private _toastMessageService: ToastMessageService, public utilService: UtilsService, private itrService: ItrMsService, @Inject(LOCALE_ID) private locale: string,
     private userService: UserMsService, private utileService: UtilsService, private router: Router, private dialog: MatDialog) {
@@ -249,6 +250,7 @@ export class SubscriptionDetailComponent implements OnInit {
       console.log('Get user id by mobile number responce: ', res);
       if (res && res.records instanceof Array) {
         this.selectedUserName = res.records[0].family[0].fName+' '+res.records[0].family[0].lName;
+        this.userId = res.records[0].userId;
         this.getUserSubscriptionInfo(res.records[0].userId);
       }
     },
@@ -366,12 +368,20 @@ export class SubscriptionDetailComponent implements OnInit {
   addSubscriptionPlan(){
     let disposable = this.dialog.open(AddSubscriptionComponent, {
       width: '65%',
-      height: 'auto'
-      // data: {
-      //   title: titile,
-      //   leadData: data,
-      //   mode: key
-      // }
+      height: 'auto',
+      data: {
+        userId: this.userId
+      }
+    })
+
+    disposable.afterClosed().subscribe(result=>{
+      if(result){
+        debugger
+        console.log('Afetr dialog close -> ',result);
+        if(result.data === "planAdded"){
+            this.getUserSubscriptionInfo();
+        }
+      }
     })
   }
 }

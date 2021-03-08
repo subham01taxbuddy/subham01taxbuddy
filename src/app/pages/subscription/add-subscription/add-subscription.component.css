@@ -15,13 +15,25 @@
     width: 150px;
     border-radius: 7px;
     height: 120px;
-    display: table-cell;
+    display: block;
   }
 
   .plan:active{
     color: white;
     background-color: green;
+    display: block;
   }
+
+  span{
+    text-align: center;
+    font-size: 14px;
+  }
+
+  /* .activePlan{
+    color: white;
+    background-color: green;
+  } */
+
 
   .plan-head{
     text-align: center;
