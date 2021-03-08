@@ -145,7 +145,6 @@ export class AddNewPlanComponent implements OnInit {
     }
 
 
-    debugger
     if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.promoApplied)) {
       Object.assign(this.finalPricing, this.userSubscription.promoApplied);
     } else if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {

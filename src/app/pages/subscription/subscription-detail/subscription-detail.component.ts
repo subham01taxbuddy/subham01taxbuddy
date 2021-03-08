@@ -358,8 +358,8 @@ export class SubscriptionDetailComponent implements OnInit {
   }
 
   addNewPlan(plan) {
-    if (plan.isActive) {
-      this.utilService.showSnackBar('This Subscription is Active');
+    if (this.utilService.isNonEmpty(plan.txbdyInvoiceId)) {
+      this.utilService.showSnackBar('This subscriptions invoice is created.');
       return;
     }
     console.log('Plan -> ', plan);
