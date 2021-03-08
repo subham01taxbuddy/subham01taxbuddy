@@ -1,0 +1,33 @@
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+<h1 mat-dialog-title>Add Subscription Plan</h1>
+
+<form>
+ 
+  <mat-dialog-content>
+
+    <div *ngFor="let plan of allPlans">
+            <div class="card__col-lg-2 plan">
+                 <h1 class="plan-head"><b>₹ {{plan.totalAmount}}</b></h1><br>
+                 <p class="plan-info">{{plan.name}}</p><br>
+                 <b><p class="plan-info" style="vertical-align: bottom;">{{plan.servicesType}}</p></b>
+            </div>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="center">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="addSubscriptionPlan()"
+      tabindex="1"
+    >
+      Add Plan
+    </button>
+
+    <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
+  </mat-dialog-actions>
+</form>
