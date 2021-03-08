@@ -1,5 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
@@ -8,6 +9,7 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { AppConstants } from 'app/shared/constants';
 import moment = require('moment');
+import { AddSubscriptionComponent } from '../add-subscription/add-subscription.component';
 
 @Component({
   selector: 'app-subscription-detail',
@@ -20,9 +22,10 @@ export class SubscriptionDetailComponent implements OnInit {
   searchVal: any;
   subscriptionListGridOptions: GridOptions;
   selectedUserName: any = '';
+  userId: any;
 
   constructor(private _toastMessageService: ToastMessageService, public utilService: UtilsService, private itrService: ItrMsService, @Inject(LOCALE_ID) private locale: string,
-    private userService: UserMsService, private utileService: UtilsService, private router: Router) {
+    private userService: UserMsService, private utileService: UtilsService, private router: Router, private dialog: MatDialog) {
     this.subscriptionListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.subscriptionColoumnDef(),
@@ -247,6 +250,7 @@ export class SubscriptionDetailComponent implements OnInit {
       console.log('Get user id by mobile number responce: ', res);
       if (res && res.records instanceof Array) {
         this.selectedUserName = res.records[0].family[0].fName+' '+res.records[0].family[0].lName;
+        this.userId = res.records[0].userId;
         this.getUserSubscriptionInfo(res.records[0].userId);
       }
     },
@@ -359,5 +363,25 @@ export class SubscriptionDetailComponent implements OnInit {
     }
     console.log('Plan -> ', plan);
     this.router.navigate(['/pages/subscription/sub/' + plan.subscriptionId])   //'/pages/subscription/'+212'
+  }
+
+  addSubscriptionPlan(){
+    let disposable = this.dialog.open(AddSubscriptionComponent, {
+      width: '65%',
+      height: 'auto',
+      data: {
+        userId: this.userId
+      }
+    })
+
+    disposable.afterClosed().subscribe(result=>{
+      if(result){
+        debugger
+        console.log('Afetr dialog close -> ',result);
+        if(result.data === "planAdded"){
+            this.getUserSubscriptionInfo();
+        }
+      }
+    })
   }
 }

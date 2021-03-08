@@ -8,9 +8,10 @@ import { NgxLoadingModule } from "ngx-loading";
 import { SubscriptionDetailComponent } from './subscription-detail/subscription-detail.component';
 import { SubscriptionRoutingModule } from "./subscription-routing.module";
 import { AddNewPlanComponent } from './add-new-plan/add-new-plan.component';
+import { AddSubscriptionComponent } from './add-subscription/add-subscription.component';
 
 @NgModule({
-    declarations: [SubscriptionDetailComponent, AddNewPlanComponent],
+    declarations: [SubscriptionDetailComponent, AddNewPlanComponent, AddSubscriptionComponent],
     imports:[
         SubscriptionRoutingModule,
         CommonModule,
@@ -21,7 +22,7 @@ import { AddNewPlanComponent } from './add-new-plan/add-new-plan.component';
         MaterialModule,
         NgxLoadingModule.forRoot({}),
     ],
-
+    entryComponents:[AddSubscriptionComponent]
 })
 
 export class SubscriptionModule{}
