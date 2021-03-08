@@ -277,8 +277,9 @@ export class SubscriptionDetailComponent implements OnInit {
       // console.log('subscription responce: ', responce, ' type of: ', typeof responce);
       // console.log('Object type: ', Object.keys(responce), ' length: ', Object.keys(responce).length);
       if (!this.utilService.isNonEmpty(userId)) {
-        if (response.content.length > 0) {
-          this.subscriptionListGridOptions.api.setRowData(this.createRowData(response.content));
+        if (response.length > 0) {     //if (response.content.length > 0)     
+          // this.subscriptionListGridOptions.api.setRowData(this.createRowData(response.content));
+          this.subscriptionListGridOptions.api.setRowData(this.createRowData(response));
         }
         else {
           this._toastMessageService.alert("error", "Data not found.");
