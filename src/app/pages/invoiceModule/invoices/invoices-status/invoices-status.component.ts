@@ -89,7 +89,7 @@ export class InvoicesStatusComponent implements OnInit {
     // console.log('paymentDate',this.datePipe.transform(userInvoices[0].paymentDate, 'dd/MM/yyyy'));
     var invoices = [];
     for (let i = 0; i < userInvoices.length; i++) {
-      let updateInvoice = Object.assign({}, userInvoices[i], { userId: userInvoices[i].userId, billTo: userInvoices[i].billTo, phone: userInvoices[i].phone, email: userInvoices[i].email, invoiceNo: userInvoices[i].invoiceNo, invoiceDate: userInvoices[i].invoiceDate, modeOfPayment: userInvoices[i].modeOfPayment, paymentStatus: userInvoices[i].paymentStatus, purpose: userInvoices[i].itemList[0].itemDescription, invoicePrpardBy: userInvoices[i].inovicePreparedBy, ifaLeadClient: userInvoices[i].ifaLeadClient, amntReceiptDate: userInvoices[i].paymentDate })
+      let updateInvoice = Object.assign({}, userInvoices[i], { userId: userInvoices[i].userId, billTo: userInvoices[i].billTo, phone: userInvoices[i].phone, email: userInvoices[i].email, invoiceNo: userInvoices[i].invoiceNo, invoiceDate: userInvoices[i].invoiceDate, modeOfPayment: userInvoices[i].modeOfPayment, paymentStatus: userInvoices[i].paymentStatus, purpose: userInvoices[i].itemList[0].itemDescription, invoicePrpardBy: userInvoices[i].inovicePreparedBy, ifaLeadClient: userInvoices[i].ifaLeadClient, amntReceiptDate: userInvoices[i].paymentDate, amount: userInvoices[i].total })
       invoices.push(updateInvoice)
     }
     console.log('user invoices: ', invoices);
@@ -249,6 +249,18 @@ export class InvoicesStatusComponent implements OnInit {
         //   filterOptions: ["contains", "notContains"],
         //   debounceMs: 0
         // }
+      },
+      {
+        headerName: 'Amount ',
+        field: 'amount',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
       },
       {
         headerName: 'Edit',
