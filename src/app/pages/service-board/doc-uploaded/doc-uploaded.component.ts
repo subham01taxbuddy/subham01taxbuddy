@@ -83,6 +83,7 @@ export class DocUploadedComponent implements OnInit {
     { value: 71168, label: 'Ganesh Jaiswal' },
     { value: 75925, label: 'Nikita Shah' },
     { value: 81402, label: 'Vatsa Bhanushali' },
+    { value: 87321, label: 'Chetan Kori' },
 
     { value: 1065, label: 'Urmila Warve' },
     { value: 1067, label: 'Divya Bhanushali' },
@@ -92,13 +93,13 @@ export class DocUploadedComponent implements OnInit {
   constructor(private userMsService: UserMsService, public utilsService: UtilsService) { }
 
   ngOnInit() {
-    console.log('selectedAgentId -> ',localStorage.getItem('selectedAgentId'));
+    console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
     let agentId = localStorage.getItem('selectedAgentId');
-    if(this.utilsService.isNonEmpty(agentId)){
+    if (this.utilsService.isNonEmpty(agentId)) {
       this.agentId = agentId;
       this.retrieveDocUploaded(0);
     }
-    else{
+    else {
       this.retrieveDocUploaded(0);
     }
   }
