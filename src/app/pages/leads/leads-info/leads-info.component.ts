@@ -166,7 +166,7 @@ export class LeadsInfoComponent implements OnInit {
         }
       },
       {
-        headerName: 'GST Sub Service',
+        headerName: 'Sub Service',
         field: 'subService',
         width: 170,
         suppressMovable: true,
@@ -189,18 +189,18 @@ export class LeadsInfoComponent implements OnInit {
           debounceMs: 0
         }
       },
-      // {
-      //   headerName: 'Status',
-      //   field: 'status',
-      //   width: 120,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
+      {
+        headerName: 'Status',
+        field: 'latestStatus',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
       // {
       //   headerName: 'Follow Up Date',
       //   field: 'followUpDate',
@@ -376,20 +376,26 @@ export class LeadsInfoComponent implements OnInit {
     var leadsArray = [];
     for(let i=0; i< leadsInfo.length; i++){
       var services = "";
-      var gstSubService = '';
+      var subService = '';
         if(leadsInfo[i].services !== null){
-          for(let s=0; s<leadsInfo[i].services.length; s++){
-            if(s === 0){
-             services = leadsInfo[i].services[s];
+          for(var s=0; s<leadsInfo[i].services.length; s++){
+            if(leadsInfo[i].services[0] === "GST"){
+              services = leadsInfo[i].services[0];
+              subService = leadsInfo[i].subServiceType;
             }
-            else if(s > 0){
-             services = services + ", "+leadsInfo[i].services[s];
+            else{
+              services = "ITR";
+              if(s === 0){
+                subService = leadsInfo[i].services[s];
+               }
+               else if(s > 0){
+                subService = services + ", "+leadsInfo[i].services[s];
+               }
             }
-            gstSubService = leadsInfo[i].subServiceType;
           }
          }
          console.log('services -> ',services)
-         console.log('gstSubService -> ',gstSubService);
+         console.log('subService -> ',subService);
 
       var sourcesInfo = [];
        for(let j=0; j<leadsInfo[i].source.length; j++){
@@ -405,7 +411,8 @@ export class LeadsInfoComponent implements OnInit {
        }
       console.log('statusInfo ',statusInfo);
 
-      let updatedLeads = Object.assign({}, leadsArray[i], {id: leadsInfo[i].id, mainSource:leadsInfo[i].source[0].name, subService: gstSubService,  name:leadsInfo[i].name, createdDate: leadsInfo[i].createdDate, mobileNumber: leadsInfo[i].mobileNumber, emailAddress: leadsInfo[i].emailAddress, city: leadsInfo[i].city, channel: leadsInfo[i].channel, service: services, assignedTo: leadsInfo[i].assignedTo, source: sourcesInfo, status: statusInfo, followUpDate: leadsInfo[i].status.followUpDate })  //leadsInfo[i].source[0].name, leadsInfo[i].service
+      let updatedLeads = Object.assign({}, leadsArray[i], {id: leadsInfo[i].id, mainSource:leadsInfo[i].source[0].name, subService: subService,  name:leadsInfo[i].name, createdDate: leadsInfo[i].createdDate, mobileNumber: leadsInfo[i].mobileNumber, emailAddress: leadsInfo[i].emailAddress, city: leadsInfo[i].city, channel: leadsInfo[i].channel, service: services, assignedTo: leadsInfo[i].assignedTo, source: sourcesInfo,
+                     status: statusInfo, followUpDate: leadsInfo[i].status.followUpDate, latestStatus:leadsInfo[i].status[leadsInfo[i].status.length - 1].status   })  //leadsInfo[i].source[0].name, leadsInfo[i].service
       leadsArray.push(updatedLeads)
     }
     console.log('leadsArray -> ',leadsArray)

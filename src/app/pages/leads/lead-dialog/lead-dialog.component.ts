@@ -402,7 +402,8 @@ export class LeadDialogComponent implements OnInit {
       website: [''],
       interestArea : new FormArray([]),
       otherInfo: [''],
-      gstSubSurvice: ['']
+      gstSubSurvice: [''],
+      channel: ['']
     })
   }
 
@@ -487,7 +488,7 @@ export class LeadDialogComponent implements OnInit {
 
         var passObj = {
           "name": this.leadForm.value.name,
-          "channel": "Admin",
+          "channel": this.leadForm.value.channel,
           "emailAddress": this.leadForm.value.email,
           "mobileNumber": this.leadForm.value.mobileNo,
           "services":  this.data.mode === "partnerLead" ? this.leadForm.value.interestArea : ['GST'],
