@@ -6,6 +6,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
+import { UtilsService } from 'app/services/utils.service';
 import moment = require('moment');
 import { LeadDialogComponent } from '../lead-dialog/lead-dialog.component';
 // import { Angular2Csv } from 'angular2-csv/Angular2-csv';
@@ -42,7 +43,7 @@ export class LeadsInfoComponent implements OnInit {
 
 
   constructor(private fb: FormBuilder, private userService: UserMsService, @Inject(LOCALE_ID) private locale: string, private dialog: MatDialog,
-              private _toastMessageService: ToastMessageService, private datePipe: DatePipe)
+              private _toastMessageService: ToastMessageService, private datePipe: DatePipe, private utilService: UtilsService)
    { 
     this.leadsListGridOptions = <GridOptions>{
       rowData: [],
@@ -156,7 +157,7 @@ export class LeadsInfoComponent implements OnInit {
       {
         headerName: 'Service',
         field: 'service',
-        width: 400,
+        width: 170,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -168,7 +169,7 @@ export class LeadsInfoComponent implements OnInit {
       {
         headerName: 'Sub Service',
         field: 'subService',
-        width: 170,
+        width: 400,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -378,21 +379,35 @@ export class LeadsInfoComponent implements OnInit {
       var services = "";
       var subService = '';
         if(leadsInfo[i].services !== null){
-          for(var s=0; s<leadsInfo[i].services.length; s++){
-            if(leadsInfo[i].services[0] === "GST"){
-              services = leadsInfo[i].services[0];
-              subService = leadsInfo[i].subServiceType;
+          if(leadsInfo[i].services[0] === "GST"){
+            services = leadsInfo[i].services[0];
+            subService = leadsInfo[i].subServiceType;
+          }
+          else{
+            if(this.utilService.isNonEmpty(leadsInfo[i].subServiceType) && leadsInfo[i].subServiceType.length !== 0){
+              for(var s=0; s<leadsInfo[i].subServiceType.length; s++){
+                services = leadsInfo[i].services[0];
+                if(s === 0){
+                  subService = leadsInfo[i].subServiceType[s];
+                 }
+                 else if(s > 0){
+                  subService = subService + ", "+leadsInfo[i].subServiceType[s];
+                 }
+              }
             }
             else{
-              services = "ITR";
-              if(s === 0){
-                subService = leadsInfo[i].services[s];
-               }
-               else if(s > 0){
-                subService = services + ", "+leadsInfo[i].services[s];
-               }
+              for(var s=0; s<leadsInfo[i].services.length; s++){       //this part added for old value binding handled -> 
+                services = "Partnership Program";
+                if(s === 0){
+                  subService = leadsInfo[i].services[s];
+                 }
+                 else if(s > 0){
+                  subService = subService + ", "+leadsInfo[i].services[s];
+                 }
+              }
             }
           }
+          
          }
          console.log('services -> ',services)
          console.log('subService -> ',subService);
@@ -484,21 +499,35 @@ export class LeadsInfoComponent implements OnInit {
         var services = "";
         var subService = "";
         if(this.leadInfo[i].services !== null){
-           for(let s=0; s<this.leadInfo[i].services.length; s++){
               if(this.leadInfo[i].services[0] === "GST"){
                 services = this.leadInfo[i].services[0];
                 subService = this.leadInfo[i].subServiceType !== null ? this.leadInfo[i].subServiceType : '';
               }
               else{
-                services = "ITR";
-                if(s === 0){
-                  subService = this.leadInfo[i].services[s];
-                 }
-                 else if(s > 0){
-                  subService = services + "/ "+this.leadInfo[i].services[s];
-                 }
+                if(this.utilService.isNonEmpty(this.leadInfo[i].subServiceType) && this.leadInfo[i].subServiceType.length !== 0){
+                  for(let s=0; s<this.leadInfo[i].subServiceType.length; s++){
+                    services = this.leadInfo[i].services[0];;
+                    if(s === 0){
+                      subService = this.leadInfo[i].subServiceType[s];
+                     }
+                     else if(s > 0){
+                      subService = subService + "/ "+this.leadInfo[i].subServiceType[s];
+                     }
+                  }
+                }
+                else{
+                  for(let s=0; s<this.leadInfo[i].services.length; s++){
+                    services = "Partnership Program";
+                    if(s === 0){
+                      subService = this.leadInfo[i].services[s];
+                     }
+                     else if(s > 0){
+                      subService = subService + "/ "+this.leadInfo[i].services[s];
+                     }
+                  }
+                }
+                
               }
-           }
         }
         console.log('services -> ',services)
 
@@ -513,7 +542,7 @@ export class LeadsInfoComponent implements OnInit {
           statusCreatedDate = this.datePipe.transform(this.leadInfo[i].status[this.leadInfo[i].status.length - 1].createdDate, 'dd/MM/yyyy');  //, hh:mm a
           statusFollwUpDate = this.datePipe.transform(this.leadInfo[i].status[this.leadInfo[i].status.length - 1].followUpDate, 'dd/MM/yyyy');
          console.log('statusInfo ',status+' '+statusCreatedDate+' '+statusFollwUpDate);
-         
+
          let leadData = [this.leadInfo[i].source[0].name, this.leadInfo[i].name, this.leadInfo[i].mobileNumber,this.leadInfo[i].emailAddress,this.leadInfo[i].city, this.datePipe.transform(this.leadInfo[i].createdDate, 'dd/MM/yyyy') ,this.leadInfo[i].channel, services, 
          subService, sources, status, statusCreatedDate, statusFollwUpDate]; //this.leadInfo[i].services
          leadIterableArray.push(leadData);

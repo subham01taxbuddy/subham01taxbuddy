@@ -491,8 +491,8 @@ export class LeadDialogComponent implements OnInit {
           "channel": this.leadForm.value.channel,
           "emailAddress": this.leadForm.value.email,
           "mobileNumber": this.leadForm.value.mobileNo,
-          "services":  this.data.mode === "partnerLead" ? this.leadForm.value.interestArea : ['GST'],
-          "subServiceType": this.data.mode === "partnerLead" ? [] : [this.leadForm.value.gstSubSurvice],
+          "services":  this.data.mode === "partnerLead" ? ['Partnership Program'] : ['GST'],  //this.leadForm.value.interestArea
+          "subServiceType": this.data.mode === "partnerLead" ? this.leadForm.value.interestArea : [this.leadForm.value.gstSubSurvice],
           "assignedTo":'',
           "otherData": {
               "data": this.data.mode === "partnerLead" ? this.leadForm.value.otherInfo : '',
@@ -500,7 +500,7 @@ export class LeadDialogComponent implements OnInit {
               "urlData": null
             },
           "source": [{
-            "name": this.data.mode === "partnerLead" ? "Partnership program" : "Gst landing",
+            "name": "Admin",
           }],
           "status":[{
             "status": "OPEN",
