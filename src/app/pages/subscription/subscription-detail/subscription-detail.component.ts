@@ -47,7 +47,7 @@ export class SubscriptionDetailComponent implements OnInit {
       {
         headerName: 'User Id',
         field: 'userId',
-        width: 100,
+        width: 80,
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -121,6 +121,25 @@ export class SubscriptionDetailComponent implements OnInit {
         field: 'promoCode',
         width: 100,
         suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Is Active',
+        field: 'isActive',
+        width: 80,
+        suppressMovable: true,
+        valueGetter: function (params) {
+          if (params.data.isActive) {
+            return 'Yes';
+          } else {
+            return 'No'
+          }
+        },
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -222,16 +241,16 @@ export class SubscriptionDetailComponent implements OnInit {
         },
       },
       {
-        headerName: "Mark",
-        field: "nextYearTpa",
+        headerName: "Served",
+        field: "served",
         width: 50,
         pinned: 'right',
         // visible: this.listFor === "INTERESTED" ? true : false,
         cellRenderer: params => {
-          return `<input type='checkbox' data-action-type="serveComment" ${params.data.serveComment === true ? 'checked' : ''} />`;
+          return `<input type='checkbox' data-action-type="served" ${params.data.served === true ? 'checked' : ''} />`;
         },
         cellStyle: params => {
-          return params.data.serveComment === true ? { 'pointer-events': 'none', opacity: '0.4' }
+          return (!params.data.isActive) ? { 'pointer-events': 'none', opacity: '0.4' }
             : '';
         }
       }
@@ -263,7 +282,7 @@ export class SubscriptionDetailComponent implements OnInit {
       this.loading = false;
       console.log('Get user id by mobile number responce: ', res);
       if (res && res.records instanceof Array) {
-        this.selectedUserName = res.records[0].family[0].fName+' '+res.records[0].family[0].lName;
+        this.selectedUserName = res.records[0].family[0].fName + ' ' + res.records[0].family[0].lName;
         this.userId = res.records[0].userId;
         this.getUserSubscriptionInfo(res.records[0].userId);
       }
@@ -276,7 +295,7 @@ export class SubscriptionDetailComponent implements OnInit {
       })
   }
 
-
+  allSubscriptions = [];
   getUserSubscriptionInfo(userId?) {
     var param = '';   //;
     if (userId) {
@@ -289,6 +308,7 @@ export class SubscriptionDetailComponent implements OnInit {
     this.loading = true;
     this.itrService.getMethod(param).subscribe((response: any) => {
       console.log(response);
+      this.allSubscriptions = response;
       this.loading = false;
       // console.log('subscription responce: ', responce, ' type of: ', typeof responce);
       // console.log('Object type: ', Object.keys(responce), ' length: ', Object.keys(responce).length);
@@ -328,6 +348,7 @@ export class SubscriptionDetailComponent implements OnInit {
         endDate: subscriptionData[i].endDate,
         txbdyInvoiceId: subscriptionData[i].txbdyInvoiceId,
         isActive: subscriptionData[i].isActive,
+        served: subscriptionData[i].served,
         promoCode: this.utilService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : 'NA',
       });
     }
@@ -366,9 +387,8 @@ export class SubscriptionDetailComponent implements OnInit {
           this.addNewPlan(params.data);
           break;
         }
-        case 'serveComment': {
-          alert('call..')
-          // this.generateIncoice(params.data);
+        case 'served': {
+          this.updateSubscription(params.data);
           break;
         }
       }
@@ -377,7 +397,7 @@ export class SubscriptionDetailComponent implements OnInit {
 
   generateIncoice(data) {
     // this.router.navigate(['/pages/invoice/generate'], {queryParams :{ userId: data.userId}});
-    this.router.navigate(['/pages/subscription/addInvoice'], {queryParams :{ userId: data.userId}});
+    this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: data.subscriptionId } });
   }
 
   addNewPlan(plan) {
@@ -389,7 +409,7 @@ export class SubscriptionDetailComponent implements OnInit {
     this.router.navigate(['/pages/subscription/sub/' + plan.subscriptionId])   //'/pages/subscription/'+212'
   }
 
-  addSubscriptionPlan(){
+  addSubscriptionPlan() {
     let disposable = this.dialog.open(AddSubscriptionComponent, {
       width: '65%',
       height: 'auto',
@@ -398,14 +418,36 @@ export class SubscriptionDetailComponent implements OnInit {
       }
     })
 
-    disposable.afterClosed().subscribe(result=>{
-      if(result){
-        debugger
-        console.log('Afetr dialog close -> ',result);
-        if(result.data === "planAdded"){
-            this.getUserSubscriptionInfo();
-        }
+    disposable.afterClosed().subscribe(result => {
+      if (result && result.data) {
+        console.log('Afetr dialog close -> ', result);
+        this.router.navigate(['/pages/subscription/sub/' + result.data['subscriptionId']]);
       }
+    })
+  }
+
+  updateSubscription(value) {
+    console.log('Subscription;', value);
+    this.loading = true;
+    let temp = this.allSubscriptions.filter(item => item.subscriptionId === value.subscriptionId)
+    let request;
+    if (temp instanceof Array && temp.length > 0) {
+      request = temp[0];
+      request.served = !value.served;
+    } else {
+      return;
+    }
+    console.log('Updated Request for served', request);
+    const param = "/subscription";
+    this.itrService.putMethod(param, request).subscribe((response: any) => {
+      console.log('Subscription Updated Successfully:', response);
+      this.utilService.showSnackBar('Subscription updated successfully!');
+      this.loading = false;
+    }, error => {
+      this.getUserSubscriptionInfo();
+      this.utilService.showSnackBar('Failed to update subscription!');
+      this.loading = false;
+      console.log('Subscription Updated error=>:', error);
     })
   }
 }

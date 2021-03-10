@@ -122,12 +122,12 @@ export class AddNewPlanComponent implements OnInit {
       })
   }
 
-  gstUserInfoByUserId(userId){
+  gstUserInfoByUserId(userId) {
     let param = '/search/userprofile/query?userId=' + userId;
     this.userService.getMethod(param).subscribe((res: any) => {
       console.log('Get user info by userId: ', res);
-      if(res && res.records instanceof Array) {
-            this.selectedUserInfo = res.records[0];
+      if (res && res.records instanceof Array) {
+        this.selectedUserInfo = res.records[0];
       }
     },
       error => {
@@ -159,17 +159,17 @@ export class AddNewPlanComponent implements OnInit {
     let param = '/plans-master';
     this.itrService.getMethod(param).subscribe(plans => {
       console.log('Plans -> ', plans);
-      if(serviceType === "ITR"){
-        let itrPlans = plans['content'].filter(item=> item.servicesType === "ITR");
-        console.log('itrPlans: ',itrPlans);
+      if (serviceType === "ITR") {
+        let itrPlans = plans['content'].filter(item => item.servicesType === "ITR");
+        console.log('itrPlans: ', itrPlans);
         this.allPlans = itrPlans;
       }
-      else if(serviceType === "GST"){
-        let gstPlans = plans['content'].filter(item=> item.servicesType === "GST");
-        console.log('gstPlans: ',gstPlans);
+      else if (serviceType === "GST") {
+        let gstPlans = plans['content'].filter(item => item.servicesType === "GST");
+        console.log('gstPlans: ', gstPlans);
         this.allPlans = gstPlans;
       }
-      else{
+      else {
         this.allPlans = plans['content'];
         console.log('appPlans --> ', this.allPlans);
       }
@@ -325,40 +325,52 @@ export class AddNewPlanComponent implements OnInit {
   }
 
   updateSubscription(value) {
-    console.log('subStartDate validation -> ',this.subStartDate.valid, this.subStartDate)
+    console.log('Subscription;', this.userSubscription);
+    this.loading = true;
+    const param = "/subscription";
+    this.itrService.putMethod(param, this.userSubscription).subscribe((response: any) => {
+      console.log('Subscription Updated Successfully:', response);
+      this.utilService.showSnackBar('Subscription updated successfully!');
+      if (value !== 'CLEAR_PLAN') {
+        this.router.navigate(['/pages/subscription']);
+      } else {
+        this.setFinalPricing();
+      }
+      this.loading = false;
+    }, error => {
+      this.utilService.showSnackBar('Failed to update subscription!');
+      this.loading = false;
+      console.log('Subscription Updated error=>:', error);
+    })
+  }
+
+  clearSmePlan() {
+    if (!this.utilService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
+      this.utilService.showSnackBar('User has not selected any plan, You can only change the plan and apply again you can not clear plan');
+      return;
+    }
+    this.userSubscription.smeSelectedPlan = null;
+    this.updateSubscription('CLEAR_PLAN');
+  }
+
+  activateSubscription() {
     if (this.subStartDate.valid && this.subEndDate.valid) {
       this.userSubscription.startDate = this.subStartDate.value;
       this.userSubscription.endDate = this.subEndDate.value;
-      if (value === 'ACTIVATE') {
-        this.userSubscription.isActive = true;
-      }
-      if (value === 'CLEAR_PLAN') {
-        this.userSubscription.smeSelectedPlan = null;
-      }
-      console.log('Subscription;', this.userSubscription);
-      this.loading = true;
-      const param = "/subscription";
-      this.itrService.putMethod(param, this.userSubscription).subscribe((response: any) => {
-        console.log('Subscription Updated Successfully:', response);
-        this.utilService.showSnackBar('Subscription updated successfully!');
-        if (value !== 'CLEAR_PLAN') {
-          this.router.navigate(['/pages/subscription']);
-        }
-        else{
-        this.smeSelectedPlanId = '';
-        this.setFinalPricing();
-        }
-        this.loading = false;
-      }, error => {
-        this.utilService.showSnackBar('Failed to update subscription!');
-        this.loading = false;
-        console.log('Subscription Updated error=>:', error);
-      })
-      console.log('Update Final Subscription;', this.userSubscription);
-    }
-    else{
+      this.userSubscription.isActive = true;
+      this.updateSubscription('');
+    } else {
       this.toastMessage.alert("error", "Select Start date and End date")
     }
-    console.log('Update Final Subscription;', this.userSubscription);
+  }
+
+  saveSubscription() {
+    if (this.subStartDate.valid && this.subEndDate.valid) {
+      this.userSubscription.startDate = this.subStartDate.value;
+      this.userSubscription.endDate = this.subEndDate.value;
+      this.updateSubscription('');
+    } else {
+      this.toastMessage.alert("error", "Select Start date and End date")
+    }
   }
 }

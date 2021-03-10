@@ -17,6 +17,7 @@ import { ActivatedRoute, Router, RoutesRecognized } from '@angular/router';
 import { NavbarService } from 'app/services/navbar.service';
 import { HttpClient } from '@angular/common/http';
 import { ItrMsService } from 'app/services/itr-ms.service';
+// import { createHmac } from "crypto";
 
 export const MY_FORMATS = {
   parse: {
@@ -40,45 +41,17 @@ export const MY_FORMATS = {
   ]
 })
 export class AddInvoiceComponent implements OnInit, OnDestroy {
-
-  // filteredOptions: Observable<any[]>;
-  // available_merchant_list: any = [];
-  // selectUser: FormGroup;
-
   loading: boolean;
-  // userInfo: any;
   clientListGridOptions: GridOptions;
   invoiceForm: FormGroup;
-  // natureCode: any;
   stateDropdown: any;
-  // showInvoices: boolean;
-  // invoiceTableInfo: any = [];
   editInvoice: boolean = false;
-  // addNewUser: boolean;
   isMaharashtraState: boolean = true;
   countryDropdown: any = [{ "countryId": 1, "countryName": "INDIA", "countryCode": "91" }];
   paymentMode: any = [{ value: 'Online' }, { value: 'Cash' }];
   paymentStatus: any = [{ value: 'Paid', label: 'Paid' }, { value: 'Failed', label: 'Failed' }, { value: 'Unpaid', label: 'Unpaid' }]
   maxDate = new Date();
-  selectedUserId: any;
   initialData: any;
-
-  searchVal: string = "";
-  currentUserId: number = 0;
-  user_data: any = [];
-  searchMenus = [{
-    value: 'fName', name: 'First Name'
-  }, {
-    value: 'lName', name: 'Last Name'
-  }, {
-    value: 'emailAddress', name: 'Email Id'
-  }, {
-    value: 'mobileNumber', name: 'Mobile Number'
-  }, {
-    value: 'panNumber', name: 'PAN Number'
-  }, {
-    value: 'userId', name: 'User Id'
-  }];
 
   itrTypes = [
     { value: '1', label: 'ITR-1' },
@@ -93,49 +66,47 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
   isItrFiled: boolean = false;
 
   constructor(public utilsService: UtilsService, private _toastMessageService: ToastMessageService,
-    private fb: FormBuilder, private userService: UserMsService, private router: Router, public http: HttpClient,
+    private fb: FormBuilder, private userMsService: UserMsService, private router: Router, public http: HttpClient,
     private itrMsService: ItrMsService, private activeRoute: ActivatedRoute) {
-
     this.invoiceInfoCalled();
-
-    //  this.getUserList();
-
-    // this.selectUser = this.fb.group({
-    //   user: ['', Validators.required]
-    // })
-
-
   }
 
   ngOnInit() {
-
+    this.invoiceForm = this.createInvoiceForm();
     this.changeCountry('INDIA');
     this.invoiceInfoCalled();
-
     var invoiceNotGeneratedUserId = sessionStorage.getItem('invoiceNotgeneratedUserId');
-    console.log('invoiceNotGeneratedUserId: ',invoiceNotGeneratedUserId);
-    if(this.utilsService.isNonEmpty(invoiceNotGeneratedUserId)){
-     this.getUserDetails(invoiceNotGeneratedUserId);  //5007
+    console.log('invoiceNotGeneratedUserId: ', invoiceNotGeneratedUserId);
+    if (this.utilsService.isNonEmpty(invoiceNotGeneratedUserId)) {
+      this.getUserDetails(invoiceNotGeneratedUserId);  //5007
     }
 
-    const temp = this.activeRoute.queryParams.subscribe(params => {
+    this.activeRoute.queryParams.subscribe(params => {
       console.log("Subscription user info:", params, params['userId'])
-      this.getUserSearchList('userId', params['userId']);
+      this.getSubscriptionDetails(params['subscriptionId']);
     });
-
-    // this.setInitiatedData()
-
-    // this.isMaharashtraState = true;                      //For default cgst & sgst taxes show in table
-    // this.showTaxRelatedState('Maharashtra')
+    // const payload = '{\"promoCode\":\"BIKAYI\",\"servicesType\":\"GST\"}'
+    // const signature = createHmac('SHA256', 'F4FE4DF1BDCB4725BE853CA3B25FB25D588880E3E66A42')
+    //   .update('101B9232A8384D549EFD195D0BDB95E6E7998BA7F4E740' + '|' + Buffer.from(JSON.stringify(payload)).toString('base64'))
+    //   .digest('hex')
+    //   .toString();
+    // console.log('signaturesignature: ', signature)
   }
 
+  getSubscriptionDetails(id) {
+    const param = `/subscription/${id}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      console.log('Subscription by Id: ', res);
+      this.getUserDetails(res.userId);
+    }, error => {
+      console.log('Subscription by Id error: ', error);
+    })
+  }
 
-ngOnDestroy() {
-  sessionStorage.clear();
-  sessionStorage.setItem('invoiceNotGeneratedUserId', null)
-  
-}
-  
+  ngOnDestroy() {
+    sessionStorage.clear();
+    sessionStorage.setItem('invoiceNotGeneratedUserId', null)
+  }
 
   createInvoiceForm() {
     return this.fb.group({
@@ -176,94 +147,10 @@ ngOnDestroy() {
       inovicePreparedBy: '',
       ifaLeadClient: '',
       paymentDate: '',
-
       estimateDateTime: [''],
       itrType: [''],
       comment: ['']
     })
-  }
-  /* setInitiatedData() {
-    this.invoiceForm = this.fb.group({
-      _id: [null],
-      userId: [null],
-      invoiceNo: [null],
-      invoiceDate: [(new Date()), Validators.required],
-      terms: ['Due on Receipt', Validators.required],
-      dueDate: [(new Date()), Validators.required],
-      sacCode: ['998232', Validators.required],
-      cin: ['U74999MH2017PT298565', Validators.required],
-      modeOfPayment: ['Online', Validators.required],
-      billTo: ['', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
-      paymentCollectedBy: '',
-      dateOfReceipt: '',
-      dateOfDeposit: '',
-      paymentStatus: ['Unpaid'],
-      addressLine1: ['', Validators.required],
-      addressLine2: [''],
-      pincode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode), Validators.required]],
-      state: ['', Validators.required],
-      city: ['', Validators.required],
-      country: ['', Validators.required],
-      gstin: ['', [Validators.pattern(AppConstants.GSTNRegex)]],
-      phone: ['', [Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex), Validators.required]],
-      email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
-      subTotal: ['', Validators.required],
-      cgstTotal: [''],
-      sgstTotal: [''],
-      igstTotal: [''],
-      total: ['', Validators.required],
-      balanceDue: ['', Validators.required],
-      itemList: ['', Validators.required],
-      paymentLink: null,
-      invoiceId: null,
-      isLinkInvalid: false,
-      amountInWords: '',
-      inovicePreparedBy: '',
-      ifaLeadClient: '',
-      paymentDate: ''
-    })
-  } */
-
-  clearValue() {
-    this.searchVal = "";
-    this.currentUserId = 0;
-  }
-
-  advanceSearch(key) {
-    this.user_data = [];
-    if (this.searchVal !== "") {
-      this.getUserSearchList(key, this.searchVal);
-    }
-  }
-
-  getUserSearchList(key, searchValue) {
-    return new Promise((resolve, reject) => {
-      this.user_data = [];
-      NavbarService.getInstance(this.http).getUserSearchList(key, searchValue).subscribe(res => {
-        console.log("Search result:", res)
-        if (Array.isArray(res.records)) {
-          //this.user_data = res.records;
-          console.log('res.records -> ',res.records)
-          debugger
-          if(res.records[0] !== null){
-           // this.user_data = res.records;
-            this.getUserDetails(res.records[0].userId)
-          }
-          else{
-            this._toastMessageService.alert("error","Data not found.")
-          }
-
-          // this.getUserDetails(this.user_data[0].userId);
-          // this.getUserDetails(3012);
-
-        }
-        return resolve(true)
-      }, err => {
-        //let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-        this._toastMessageService.alert("error", "admin list - " + this.utilsService.showErrorMsg(err.error.status));
-        return resolve(false)
-      });
-    });
   }
 
   setFormControl(payMode) {
@@ -289,203 +176,23 @@ ngOnDestroy() {
     this.minDepositInBank = reciptDate;
   }
 
-  // getUserList() {
-  //   this.loading = true;
-  //   let param = '/itr/getGSTDetail';
-  //   this.userMsService.getMethodInfo(param).subscribe((res: any) => {
-  //     console.log('User list: ', res)
-  //     if (Array.isArray(res)) {
-  //       res.forEach(bData => {
-  //         let tName = bData.fName + " " + bData.lName;
-  //         if (bData.mobileNumber) {
-  //           tName += " (" + bData.mobileNumber + ")"
-  //         } else if (bData.emailAddress) {
-  //           tName += " (" + bData.emailAddress + ")"
-  //         }
-  //         this.available_merchant_list.push({ userId: bData.userId, name: tName });
-  //         this.filteredOptions = this.selectUser.controls['user'].valueChanges
-  //           .pipe(
-  //             startWith(''),
-  //             map(userId => {
-  //               return userId;
-  //             }),
-  //             map(name => {
-  //               return name ? this._filter(name) : this.available_merchant_list.slice();
-  //             })
-  //           );
-  //       });
-  //     }
-  //     this.loading = false;
-  //   }, err => {
-  //     let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-  //     this._toastMessageService.alert("error", "business list - " + errorMessage);
-  //     this.loading = false;
-  //   });
-  // }
-
-  // _filter(name) {
-  //   const filterValue = name.toLowerCase();
-  //   return this.available_merchant_list.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
-  // }
-
-  // invoiceDetail: any;
   userInvoices: any;
+  userProfile: any;
   showInvoiceForm: boolean = false;
-  async getUserDetails(userId?) {
-    if (this.utilsService.isNonEmpty(userId)) {
-      this.selectedUserId = userId;
-      this.getInitialData();
-      this.userInvoices = await this.getUsersInvoices();
-      if (this.userInvoices instanceof Array && this.userInvoices.length === 0) {
-        this.getFiledItrDetails(userId);
-      }
-
-      this.checkUserItrStatus(userId);      //estimate filling part commited by SAGAR
-    } else {
-      this.utilsService.showSnackBar('Please select user first.')
-    }
-
-
-
-    // if (!this.utilsService.isNonEmpty(userId)) {
-    //   this.selectedUserId = '';
-    // }
-    // // if (this.selectUser.controls['user'].valid) {
-    // if (this.utilsService.isNonEmpty(userId)) {
-    //   // this.editInvoice = false;
-    //   // this.addNewUser = false;
-    //   this.setInitiatedData()
-    //   this.selectedUserId = userId;
-
-    //   this.loading = true;
-    //   const param = '/itr/invoice/' + this.selectedUserId;
-    //   this.userService.getMethodInfo(param).subscribe((result: any) => {
-    //     this.loading = false;
-    //     console.log('this.invoiceForm', this.invoiceForm)
-
-    //     this.invoiceForm.controls['paymentCollectedBy'].setValidators(null);
-    //     this.invoiceForm.controls['paymentCollectedBy'].updateValueAndValidity();
-    //     this.invoiceForm.controls['dateOfReceipt'].setValidators(null);
-    //     this.invoiceForm.controls['dateOfReceipt'].updateValueAndValidity();
-    //     this.invoiceForm.controls['dateOfDeposit'].setValidators(null);
-    //     this.invoiceForm.controls['dateOfDeposit'].updateValueAndValidity();
-
-
-    //     console.log('User Detail: ', result)
-    //     this.invoiceDetail = result;
-
-    //     // this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
-    //     this.invoiceForm.controls['userId'].setValue(this.selectedUserId);
-
-    //     let blankTableRow = [{
-    //       itemDescription: '',
-    //       quantity: '',
-    //       rate: '',
-    //       cgstPercent: '9',
-    //       cgstAmnt: '',
-    //       sgstPercent: '9',
-    //       sgstAmnt: '',
-    //       igstPercent: '18',
-    //       igstAmnt: '',
-    //       amnt: ''
-    //     }]
-
-    //     setTimeout(() => {
-    //       console.log('clientListGridOptions Data: ', this.clientListGridOptions.api.getRenderedNodes())
-    //       if ((this.clientListGridOptions.api.getRenderedNodes()).length > 0) {
-    //         this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))    //use for clear invoice table fields
-    //       }
-    //     }, 300)
-
-    //     this.setUserAddressInfo();
-
-    //   }, error => {
-    //     this.loading = false;
-    //     this._toastMessageService.alert("error", "There is some issue to fetch user invoice data.");
-    //   });
-    //   // }
-    //   console.log('invoiceForm: ', this.invoiceForm)
-    // }
-    // else {
-    //   // this.selectUser.controls['user'].setValidators(null);
-    //   // this.selectUser.controls['user'].updateValueAndValidity();
-
-    //   this.invoiceForm.controls['invoiceDate'].setValue(new Date());
-    //   this.invoiceForm.controls['terms'].setValue('Due on Receipt');
-    //   this.invoiceForm.controls['dueDate'].setValue(new Date());
-    //   this.invoiceForm.controls['sacCode'].setValue('998232');
-    //   this.invoiceForm.controls['cin'].setValue('U74999MH2017PT298565');
-    //   this.invoiceForm.controls['modeOfPayment'].setValue('Online');
-
-    //   this.setInitiatedData()
-    //   let smeInfo = JSON.parse(localStorage.getItem('UMD'));
-    //   this.invoiceForm.controls['inovicePreparedBy'].setValue(smeInfo.USER_UNIQUE_ID)
-
-    //   let blankTableRow = [{
-    //     itemDescription: '',
-    //     quantity: '',
-    //     rate: '',
-    //     cgstPercent: '9',
-    //     cgstAmnt: '',
-    //     sgstPercent: '9',
-    //     sgstAmnt: '',
-    //     igstPercent: '18',
-    //     igstAmnt: '',
-    //     amnt: ''
-    //   }]
-    //   this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))    //use for clear invoice table fields
-    //   this.showTaxRelatedState('Maharashtra');        //for defalt show cgst & sgst tax in table
-    // }
+  async getUserDetails(userId) {
+    this.getInitialData(userId);
+    this.userInvoices = await this.getUsersInvoices(userId);
+    console.log('userInvoices:', this.userInvoices);
+    this.userProfile = await this.getUsersProfile(userId).catch(error => {
+      console.log(error);
+      this.utilsService.showSnackBar(error.error.detail);
+    });
+    console.log('userProfile:', this.userProfile);
   }
 
-  checkUserItrStatus(userId) {
-    this.invoiceForm = this.createInvoiceForm();
-    let param = '/user/itr-status-name/' + userId + '?assessmentYear=2020-2021';
-    this.userService.getMethodInfo(param).subscribe(responce => {
-      console.log('User ITR status: ', responce);
-      var userItrStatus = responce;
-      if (Object.keys(userItrStatus).length !== 0) {
-        for (let [key, value] of Object.entries(userItrStatus)) {
-          if (key === 'ITR Filed' /* || key === 'Invoice Sent' || key === 'Payment Received' */) {
-            this.isItrFiled = true;
-            this.invoiceForm.controls['estimateDateTime'].setValidators(null);
-            this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();
-            this.invoiceForm.controls['itrType'].setValidators(null);
-            this.invoiceForm.controls['itrType'].updateValueAndValidity();
-            return;
-          }
-        }
-        this.isItrFiled = false;
-        this.invoiceForm.controls['estimateDateTime'].setValidators(null);     //[Validators.required]
-        this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();
-        this.invoiceForm.controls['itrType'].setValidators(null);
-        this.invoiceForm.controls['itrType'].updateValueAndValidity();
-      }
-      else {
-        this.isItrFiled = false;
-      }
-    }, error => {
-      this.isItrFiled = false;
-      console.log('Error -> ', error)
-    })
-
-    // if(this.isItrFiled){
-    //   this.invoiceForm.controls['estimateDateTime'].setValidators([Validators.required]);
-    //   this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();
-    //   this.invoiceForm.controls['itrType'].setValidators([Validators.required]);
-    //   this.invoiceForm.controls['itrType'].updateValueAndValidity();
-    // }
-    // else{
-    //   this.invoiceForm.controls['estimateDateTime'].setValidators(null);
-    //   this.invoiceForm.controls['estimateDateTime'].updateValueAndValidity();
-    //   this.invoiceForm.controls['itrType'].setValidators(null);
-    //   this.invoiceForm.controls['itrType'].updateValueAndValidity();
-    // }
-  }
-
-  getInitialData() {
-    const param = '/user/initial-data?userId=' + this.selectedUserId;  //4429
-    this.userService.getMethodInfo(param).subscribe((result: any) => {
+  getInitialData(userId) {
+    const param = `/user/initial-data?userId=${userId}`;
+    this.userMsService.getMethodInfo(param).subscribe((result: any) => {
       console.log('Initiated data: ', result)
       if (result) {
         this.initialData = result;
@@ -495,65 +202,14 @@ ngOnDestroy() {
     })
   }
 
-  async getUsersInvoices() {
-    const param = '/invoice/' + this.selectedUserId;
-    return await this.itrMsService.getMethod(param).toPromise(); /* subscribe((result: any) => {
-      return result;
-      console.log('this.invoiceForm', this.invoiceForm)
-
-      this.invoiceForm.controls['paymentCollectedBy'].setValidators(null);
-      this.invoiceForm.controls['paymentCollectedBy'].updateValueAndValidity();
-      this.invoiceForm.controls['dateOfReceipt'].setValidators(null);
-      this.invoiceForm.controls['dateOfReceipt'].updateValueAndValidity();
-      this.invoiceForm.controls['dateOfDeposit'].setValidators(null);
-      this.invoiceForm.controls['dateOfDeposit'].updateValueAndValidity();
-
-
-      console.log('User Detail: ', result)
-      this.invoiceDetail = result;
-
-      // this.invoiceForm.controls['userId'].setValue(this.userInfo[0].userId);
-      this.invoiceForm.controls['userId'].setValue(this.selectedUserId);
-
-      let blankTableRow = [{
-        itemDescription: '',
-        quantity: '',
-        rate: '',
-        cgstPercent: '9',
-        cgstAmnt: '',
-        sgstPercent: '9',
-        sgstAmnt: '',
-        igstPercent: '18',
-        igstAmnt: '',
-        amnt: ''
-      }]
-
-      setTimeout(() => {
-        console.log('clientListGridOptions Data: ', this.clientListGridOptions.api.getRenderedNodes())
-        if ((this.clientListGridOptions.api.getRenderedNodes()).length > 0) {
-          this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))    //use for clear invoice table fields
-        }
-      }, 300)
-
-      this.setUserAddressInfo();
-
-    }, error => {
-
-      this._toastMessageService.alert("error", "There is some issue to fetch user invoice data.");
-      return [];
-    }); */
+  async getUsersInvoices(userId) {
+    const param = `/invoice/${userId}`;
+    return await this.itrMsService.getMethod(param).toPromise();
   }
 
-  getFiledItrDetails(userId) {
-    this.showInvoiceForm = true;
-    this.invoiceForm = this.createInvoiceForm();
-    const param = `/itr?userId=${userId}&assessmentYear=${AppConstants.ayYear}`;
-    this.itrMsService.getMethod(param).subscribe((result: any) => {
-      console.log('My ITR by user Id and Assesment Years=', result);
-      if (result.length !== 0) {
-        this.setBasicDetailsFromItr(result[0]);
-      }
-    });
+  async getUsersProfile(userId) {
+    const param = `/profile/${userId}`;
+    return await this.userMsService.getMethod(param).toPromise();
   }
 
   setBasicDetailsFromItr(ITR_JSON: ITR_JSON) {
@@ -578,63 +234,20 @@ ngOnDestroy() {
       var newInvoice = { paymentStatus: event.target.value };
       this.loading = true;
       const param = '/itr/invoice';
-      let body = invoice;                                                  //Object.assign(invoice, newInvoice);  
+      let body = invoice;
       console.log('After payment status change: ', body)
-      this.userService.postMethodDownloadDoc(param, body).subscribe((result: any) => {
+      this.userMsService.postMethodDownloadDoc(param, body).subscribe((result: any) => {
         this.loading = false;
         console.log("result: ", result)
         this.utilsService.smoothScrollToTop();
-        // this.showInvoices = true;
         this._toastMessageService.alert("success", "Payment status update succesfully.");
-        // this.invoiceDetail = '';
-        this.getUserDetails(this.user_data.userId);  //'not-select'
+        this.getUserDetails(invoice.userId);
       }, error => {
         this.loading = false;
         this._toastMessageService.alert("error", "There is some issue to update payment status.");
       });
     }
   }
-
-  // setUserAddressInfo() {
-
-  //   if (this.invoiceDetail.length > 0) {
-  //     console.log('InvoiceDetail: ', this.invoiceDetail[0])
-  //     //this.invoiceForm.patchValue(this.invoiceDetail[0])
-  //     this.invoiceForm.controls['billTo'].setValue(this.invoiceDetail[0].billTo);
-  //     this.invoiceForm.controls['addressLine1'].setValue(this.invoiceDetail[0].addressLine1);
-  //     this.invoiceForm.controls['addressLine2'].setValue(this.invoiceDetail[0].addressLine2);
-  //     this.invoiceForm.controls['pincode'].setValue(this.invoiceDetail[0].pincode);
-  //     this.invoiceForm.controls['city'].setValue(this.invoiceDetail[0].city);
-  //     this.invoiceForm.controls['state'].setValue(this.invoiceDetail[0].state);
-  //     this.invoiceForm.controls['country'].setValue(this.invoiceDetail[0].country);
-  //     this.invoiceForm.controls['gstin'].setValue(this.invoiceDetail[0].gstin);
-  //     this.invoiceForm.controls['phone'].setValue(this.invoiceDetail[0].phone);
-  //     this.invoiceForm.controls['email'].setValue(this.invoiceDetail[0].email);
-  //     this.invoiceForm.controls['ifaLeadClient'].setValue(this.invoiceDetail[0].ifaLeadClient);
-  //     console.log('Invoice Form: ', this.invoiceForm)
-  //   } else {
-  //     // this.setAddressInformationFromITR()
-  //   }
-  //   let smeInfo = JSON.parse(localStorage.getItem('UMD'));
-  //   this.invoiceForm.controls['inovicePreparedBy'].setValue(smeInfo.USER_UNIQUE_ID)
-  //   console.log('Invoice inovicePreparedBy: ', this.invoiceForm.controls['inovicePreparedBy'].value)
-
-  //   console.log('invoiceForm: ', this.invoiceForm)
-  //   this.showTaxRelatedState(this.invoiceForm.controls['state'].value);
-  // }
-
-  // createInvoice(): FormGroup {
-  //   return this.fb.group({
-  //     itemDescription: ['', Validators.required],
-  //     quantity: ['', Validators.required],
-  //     rate: ['', Validators.required],
-  //     cgstPercent: ['', Validators.required],
-  //     cgstAmnt: ['', Validators.required],
-  //     sgstPercent: ['', Validators.required],
-  //     sgstAmnt: ['', Validators.required],
-  //     amnt: ['', Validators.required]
-  //   })
-  // }
 
   setInvoiceRowData() {
     return {
@@ -649,16 +262,6 @@ ngOnDestroy() {
       igstAmnt: '',
       amnt: ''
     }
-  }
-
-  addNewInvoice() {
-    this.editInvoice = false;
-    this.showInvoiceForm = true;
-    this.invoiceForm = this.createInvoiceForm();
-    this.invoiceForm.controls.userId.setValue(this.selectedUserId);
-    // this.invoiceInfoCalled();
-    // this.clientListGridOptions.api.setRowData(this.createRowData(null))
-    this.showTaxRelatedState('Maharashtra')
   }
 
   invoiceInfoCalled() {
@@ -782,13 +385,11 @@ ngOnDestroy() {
         field: 'igst',
         // hide: this.isMaharashtraState ? true : false,
         cellStyle: { textAlign: 'center' },
-        //field: 'ifaId',
         children: [
           {
             headerName: "18%",
             field: "igstPercent",
             width: 140,
-            // hide: this.isMaharashtraState ? true : false,
             valueGetter: function (params) {
               if (params.data.rate) {
                 return params.data.igstPercent + '%';
@@ -800,7 +401,6 @@ ngOnDestroy() {
             headerName: "Amt",
             field: "igstAmnt",
             width: 220,
-            // hide: this.isMaharashtraState ? true : false,
             valueGetter: function (params) {
               if (params.data.quantity && params.data.rate && params.data.igstPercent) {
                 return Math.round((params.data.rate * params.data.igstPercent / 118) * params.data.quantity)
@@ -860,12 +460,6 @@ ngOnDestroy() {
         if (this.utilsService.isNonEmpty(temp[i].data.itemDescription) &&
           this.utilsService.isNonEmpty(temp[i].data.quantity) &&
           this.utilsService.isNonEmpty(temp[i].data.rate)
-          //&&
-          // this.utilsService.isNonEmpty(temp[i].data.cgstPercent) &&
-          // this.utilsService.isNonEmpty(temp[i].data.cgstAmnt) &&
-          // this.utilsService.isNonEmpty(temp[i].data.sgstPercent) &&
-          // this.utilsService.isNonEmpty(temp[i].data.sgstAmnt) &&
-          // this.utilsService.isNonEmpty(temp[i].data.amnt)
         ) {
           isDataValid = true;
         } else {
@@ -879,7 +473,6 @@ ngOnDestroy() {
 
     if (isDataValid) {
       this.clientListGridOptions.api.updateRowData({ add: [data] })
-      // this.clientListGridOptions.api.setFocusedCell(this.clientListGridOptions.api.getRenderedNodes().length - 1, 'itemDescription', null);
     } else {
       this._toastMessageService.alert("error", "Please fill previous row first.");
     }
@@ -891,7 +484,7 @@ ngOnDestroy() {
     if (country === 'INDIA') {
       let country = '91';
       const param = '/fnbmaster/statebycountrycode?countryCode=' + country;
-      this.userService.getMethod(param).subscribe((result: any) => {
+      this.userMsService.getMethod(param).subscribe((result: any) => {
         this.stateDropdown = result;
       }, error => {
       });
@@ -906,7 +499,7 @@ ngOnDestroy() {
     if (pinCode.valid) {
       this.changeCountry('INDIA');   //91
       const param = '/pincode/' + pinCode.value;
-      this.userService.getMethod(param).subscribe((result: any) => {
+      this.userMsService.getMethod(param).subscribe((result: any) => {
         this.invoiceForm.controls['country'].setValue('INDIA');   //91
         this.invoiceForm.controls['city'].setValue(result.taluka);
         this.invoiceForm.controls['state'].setValue(result.stateName);  //stateCode
@@ -953,23 +546,10 @@ ngOnDestroy() {
     }]
   }
 
-  /* setDueDate(invoiceDate) {
-    this.invoiceForm.controls['dueDate'].setValue(invoiceDate);
-  } */
-
   displayFn(name) {
     return name ? name : undefined;
   }
 
-  /* getRoundAmount(val) {
-    if (this.utilsService.isNonEmpty(val)) {
-      return Math.round(val);
-    } else {
-      return val;
-    }
-  } */
-
-  // invoiceData: any;
   getInvoiceTotal() {
     let invoiceData = {
       subTotal: 0,
@@ -1007,7 +587,6 @@ ngOnDestroy() {
       this.invoiceForm.controls['total'].setValue(invoiceData.invoiceTotal)
       this.invoiceForm.controls['balanceDue'].setValue(invoiceData.invoiceTotal)
       this.invoiceForm.controls['paymentStatus'].setValue(this.invoiceForm.controls['modeOfPayment'].value === 'Cash' ? 'Paid' : 'Unpaid')
-      // this.invoiceTableInfo = [];
       var invoiceItemList = [];
       const gridData = this.clientListGridOptions.api.getRenderedNodes();
       for (let i = 0; i < gridData.length; i++) {
@@ -1049,8 +628,6 @@ ngOnDestroy() {
         const param = '/invoice';
         const request = this.invoiceForm.getRawValue();
         this.itrMsService.postMethod(param, request).subscribe(async (result: any) => {
-          // this.loading = false;
-
           this.editInvoice = false;
           this.showInvoiceForm = false;
           console.log("result: ", result)
@@ -1061,16 +638,10 @@ ngOnDestroy() {
           else {
             this.loading = false;
           }
-          // this.showInvoices = true;
-
           this._toastMessageService.alert("success", "Invoice saved succesfully.");
-          // this.invoiceTableInfo =[];
-          // this.selectUser.reset();
+          this.userInvoices = await this.getUsersInvoices(this.invoiceForm.value.userId);
           this.invoiceForm.reset();
           console.log('InvoiceForm: ', this.invoiceForm)
-          // this.invoiceDetail = '';
-          // this.getUserDetails(this.selectedUserId);  //'not-select'
-          this.userInvoices = await this.getUsersInvoices();
         }, error => {
           this.loading = false;
           this._toastMessageService.alert("error", "Error while creating invoice, please try again.");
@@ -1078,7 +649,6 @@ ngOnDestroy() {
 
       } else {
         $('input.ng-invalid').first().focus();
-        // this._toastMessageService.alert("error", "Fill all mandatory form fields.");
       }
     } else {
       this._toastMessageService.alert("error", "Please enter all invoice item details.");
@@ -1087,7 +657,6 @@ ngOnDestroy() {
 
   saveFillingEstimate(estimateInfo) {
     console.log('estimateInfo: ', estimateInfo);
-    //https://uat-api.taxbuddy.com/itr/sme-task
     let param = '/sme-task'
     this.itrMsService.postMethod(param, estimateInfo).subscribe(responce => {
       this.loading = false;
@@ -1100,7 +669,6 @@ ngOnDestroy() {
   }
 
   isInvoiceDetailsValid() {
-    // const data = this.setInvoiceRowData()
     const temp = this.clientListGridOptions.api.getRenderedNodes();
     let isDataValid = false;
     if (temp.length !== 0) {
@@ -1148,9 +716,7 @@ ngOnDestroy() {
     const param = `/invoice/send-invoice?invoiceNo=${invoiceInfo.invoiceNo}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
-      // console.log('Email sent responce: ', result)
       this._toastMessageService.alert("success", "Invoice sent on entered email successfully.");
-      // this.getUserDetails(this.user_data.userId);  //'not-select'
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Faild to send invoice on email.");
@@ -1161,45 +727,11 @@ ngOnDestroy() {
     this.showInvoiceForm = true;
     this.invoiceForm = this.createInvoiceForm();
     this.invoiceForm.patchValue(invoiceInfo)
-    // const data = this.createRowData(invoiceInfo.itemList, 'EDIT');
     console.log('Grid data for edit', invoiceInfo.itemList);
-    // this.showTaxRelatedState(this.invoiceForm.controls['state'].value);
-    // for (let i = 0; i < invoiceInfo.itemList.length; i++)
-    // this.clientListGridOptions.rowData.push(invoiceInfo.itemList[i]);
     this.clientListGridOptions.rowData = invoiceInfo.itemList;
-    // this.clientListGridOptions.api.setRowData(this.setCreateRowDate(this.invoiceForm.value.itemList))
-    // this.showTaxRelatedState(this.invoiceForm.controls['state'].value);
     this.getCityData(this.invoiceForm.controls['pincode'])
-    // this.clientListGridOptions.api.updateRowData({ add: data })
     this.editInvoice = true;
-    // this.loading = true;
-    // const param = '/itr/invoice?invoiceNo=' + invoiceInfo.invoiceNo;
-    // this.userService.getMethodInfo(param).subscribe((result: any) => {
-    //   this.loading = false;
-
-    //   console.log('User Profile: ', result)
-
-    //   this.invoiceForm.patchValue(result)
-    //   console.log('Updated Form: ', this.invoiceForm)
-    //   this.clientListGridOptions.api.setRowData(this.setCreateRowDate(this.invoiceForm.value.itemList))
-    //   this.showTaxRelatedState(this.invoiceForm.controls['state'])
-    //   // this._toastMessageService.alert("success", "Invoice download successfully.");
-    // }, error => {
-    //   this.loading = false;
-    //   //this._toastMessageService.alert("error", "Faild to generate Invoice.");
-    // });
   }
-
-  // setCreateRowDate(userInvoiceData) {
-  //   console.log('userInvoiceData: ', userInvoiceData)
-  //   var invoices = [];
-  //   for (let i = 0; i < userInvoiceData.length; i++) {
-  //     let updateInvoice = Object.assign({}, userInvoiceData[i], { itemDescription: userInvoiceData[i].itemDescription, quantity: userInvoiceData[i].quantity, rate: userInvoiceData[i].rate, cgstPercent: userInvoiceData[i].cgstPercent, cgstAmnt: userInvoiceData[i].cgstAmount, sgstPercent: userInvoiceData[i].sgstPercent, sgstAmnt: userInvoiceData[i].sgstAmnt, igstPercent: userInvoiceData[i].igstPercent, igstAmnt: userInvoiceData[i].igstAmnt, amnt: userInvoiceData[i].amount })
-  //     invoices.push(updateInvoice)
-  //   }
-  //   console.log('user invoices: ', invoices);
-  //   return invoices;
-  // }
 
   sendMailNotification(invoiceInfo) {
     this.loading = true;
@@ -1208,7 +740,6 @@ ngOnDestroy() {
       this.loading = false;
       console.log('Email sent responce: ', result)
       this._toastMessageService.alert("success", "Mail Reminder sent successfully.");
-      // this.getUserDetails(this.user_data.userId);   //'not-select'
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Faild to send Mail Reminder.");
@@ -1216,21 +747,13 @@ ngOnDestroy() {
   }
 
   sendWhatAppNotification(invoice) {
-    // alert('WhatApp notification inprogress')
     console.log('Whatsapp reminder: ', invoice)
     this.loading = true;
     const param = `/invoice/send-invoice-whatsapp?invoiceNo=${invoice.invoiceNo}`;
     let body = this.invoiceForm.value;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
-      // console.log("result: ", res)
       this._toastMessageService.alert("success", "Whatsapp reminder send succesfully.");
-      // this.invoiceTableInfo =[];
-      // this.selectUser.reset();
-      // this.invoiceForm.reset();
-      // console.log('InvoiceForm: ', this.invoiceForm)
-      // this.invoiceDetail = '';
-      // this.getUserDetails(this.user_data.userId);  //'not-select'
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Failed to send Whatsapp reminder.");
@@ -1238,34 +761,15 @@ ngOnDestroy() {
 
   }
 
-  // addNewUserInvoice() {
-  //   this.currentUserId = 0;
-  //   this.user_data = [];
-  //   this.searchVal = "";
-  //   this.invoiceDetail = '';
-
-  //   this.addNewUser = true;
-  //   this.invoiceInfoCalled();
-  //   this.getUserDetails();
-  // }
-
-
   showTaxRelatedState(state) {
     if (state === 'Maharashtra') {
       this.isMaharashtraState = true;
-      // alert(this.isMaharashtraState)  
-      //   this.clientListGridOptions.api.setRowData(this.setCreateRowDate(blankTableRow))     
       this.clientListGridOptions.columnApi.setColumnsVisible(['cgst', 'cgstPercent', 'cgstAmnt', 'sgst', 'sgstPercent', 'sgstAmnt'], true)
       this.clientListGridOptions.columnApi.setColumnsVisible(['igst', 'igstPercent', 'igstAmnt'], false)
-      // this.invoiceInfoCalled();
-
     } else {
       this.isMaharashtraState = false;
-      //   alert(this.isMaharashtraState)
       this.clientListGridOptions.columnApi.setColumnsVisible(['cgst', 'cgstPercent', 'cgstAmnt', 'sgst', 'sgstPercent', 'sgstAmnt'], false)
       this.clientListGridOptions.columnApi.setColumnsVisible(['igst', 'igstPercent', 'igstAmnt'], true)
-      //  this.invoiceInfoCalled();
     }
   }
-
 }

@@ -6,15 +6,17 @@ import { InvoicesStatusComponent } from "./invoices-status/invoices-status.compo
 import { SubscriptionDetailComponent } from "./subscription-detail/subscription-detail.component";
 import { SubscriptionHeadComponent } from "./subscription-head/subscription-head.component";
 
-const routes : Routes = [
+const routes: Routes = [
     // {path:'', component: SubscriptionDetailComponent},
     // {path:'sub/:subscriptionId', component: AddNewPlanComponent}  
-    {path:'', component: SubscriptionHeadComponent,
-        children:[
-            {path:'', component: SubscriptionDetailComponent},
-            {path:'invoices', component: InvoicesStatusComponent},
-            {path:'sub/:subscriptionId', component: AddNewPlanComponent},
-            {path:'addInvoice', component: AddInvoiceComponent}
+    {
+        path: '', component: SubscriptionHeadComponent,
+        children: [
+            { path: 'sub', component: SubscriptionDetailComponent },
+            { path: 'invoices', component: InvoicesStatusComponent },
+            { path: 'sub/:subscriptionId', component: AddNewPlanComponent },
+            { path: 'add-invoice', component: AddInvoiceComponent },
+            { path: '', redirectTo: '/pages/subscription/sub', pathMatch: 'full' }
         ]
     }
 ]
@@ -23,4 +25,4 @@ const routes : Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class SubscriptionRoutingModule{}
+export class SubscriptionRoutingModule { }

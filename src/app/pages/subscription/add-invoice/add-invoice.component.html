@@ -132,7 +132,7 @@
 
     </div>
 
-    <div class="card" *ngIf="showInvoiceForm">
+    <div class="card">
         <!-- || addNewUser -->
         <form [formGroup]="invoiceForm">
             <mat-card>
@@ -311,9 +311,6 @@
                     </div>
                 </div>
             </mat-card><br><br>
-            
-          
-
             <mat-card>
                 <div class="card__row">
                     <label>Address Information:</label><br><br>
@@ -426,35 +423,31 @@
                 </div>
             </mat-card><br><br>
 
-            <mat-card *ngIf="!isItrFiled">
+            <mat-card>
                 <div class="card__row">
                     <label>Filling Estimation</label><br><br>
                     <div class="card__col-lg-6">
                         <mat-form-field appearance="outline">
                             <mat-label>Schedule call Date & Time</mat-label>
                             <input matInput formControlName="estimateDateTime" [owlDateTimeTrigger]="dtPicker2"
-                                [owlDateTime]="dtPicker2" >  <!--[required]="!isItrFiled"--> 
+                                [owlDateTime]="dtPicker2">
                             <owl-date-time #dtPicker2></owl-date-time>
-                            <mat-error *ngIf="invoiceForm.controls['estimateDateTime'].hasError('required')">Select schedule date and time.
-                            </mat-error>
                         </mat-form-field>
                     </div>
                     <div class="card__col-lg-6">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Itr type</mat-label>
-                                <mat-select formControlName="itrType" matInput placeholder="Itr type" autocomplete="off" > <!--[required]="!isItrFiled"-->
-                                    <mat-option *ngFor="let itr of itrTypes" [value]="itr.value">
-                                        {{itr.label}}
-                                    </mat-option>
-                                </mat-select>
-                                <mat-error *ngIf="invoiceForm.controls['itrType'].hasError('required')">Select Itr type
-                                </mat-error>
-                            </mat-form-field>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Itr type</mat-label>
+                            <mat-select formControlName="itrType" matInput placeholder="Itr type" autocomplete="off">
+                                <mat-option *ngFor="let itr of itrTypes" [value]="itr.value">
+                                    {{itr.label}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
                     </div>
                     <div class="card__col-lg-12">
                         <mat-form-field appearance="outline">
                             <mat-label>Comment</mat-label>
-                            <textarea matInput formControlName="comment"  maxlength="300"></textarea>
+                            <textarea matInput formControlName="comment" maxlength="300"></textarea>
                         </mat-form-field>
                     </div>
                 </div>
