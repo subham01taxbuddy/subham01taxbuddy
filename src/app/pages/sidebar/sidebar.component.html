@@ -337,9 +337,8 @@
             <span class="sidebar__name">Tax Summary</span>
         </a>
 
-        <a class="sidebar__item" routerLink="/pages/invoice" routerLinkActive="sidebar__item_active"
+        <!-- <a class="sidebar__item" routerLink="/pages/invoice" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_IFA','ROLE_FILING_TEAM'])">
-            <!--routerLink="/pages/tax-summary" -->
             <span class="sidebar__ico">
                 <svg id="ico-business" data-name="business" class="sidebar__ico-img" xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 561.03 413.38">
@@ -362,7 +361,8 @@
                 </svg>
             </span>
             <span class="sidebar__name">Invoice</span>
-        </a>
+        </a> -->
+        
         <a class="sidebar__item" routerLink="/pages/tpa-interested" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN','ROLE_TPA_SME'])">
             <span class="sidebar__ico">
@@ -394,7 +394,7 @@
         <span class="sidebar__ico">
             <svg id="ico-business" data-name="business" class="sidebar__ico-img" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 561.03 413.38">
-                <title>Subscription</title>
+                <title>Subscription & Invoice</title>
                 <path
                     d="M83.1,371.56H64a38.15,38.15,0,0,0-38.15,38.15v75.93A38.15,38.15,0,0,0,64,523.79H83.1a38.15,38.15,0,0,0,38.15-38.15h0V409.71A38.15,38.15,0,0,0,83.1,371.56Zm9.54,114.08a9.55,9.55,0,0,1-9.54,9.54H64a9.55,9.55,0,0,1-9.54-9.54V409.71A9.55,9.55,0,0,1,64,400.17H83.1a9.55,9.55,0,0,1,9.54,9.54Z"
                     transform="translate(-25.88 -110.42)" />
@@ -412,7 +412,7 @@
                     transform="translate(-25.88 -110.42)" />
             </svg>
         </span>
-        <span class="sidebar__name">Subscription</span>
+        <span class="sidebar__name">Subscription & Invoice</span>
     </a>
     </nav>
 </div>

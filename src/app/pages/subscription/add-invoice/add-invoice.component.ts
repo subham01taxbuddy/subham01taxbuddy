@@ -1,4 +1,4 @@
-import { ITR_JSON } from './../../../../shared/interfaces/itr-input.interface';
+import { ITR_JSON } from './../../../shared/interfaces/itr-input.interface';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { UtilsService } from 'app/services/utils.service';
@@ -243,10 +243,11 @@ ngOnDestroy() {
         console.log("Search result:", res)
         if (Array.isArray(res.records)) {
           //this.user_data = res.records;
-          console.log('res.records[0] -> ',res.records[0])
+          console.log('res.records -> ',res.records)
           debugger
           if(res.records[0] !== null){
-            this.user_data = res.records;
+           // this.user_data = res.records;
+            this.getUserDetails(res.records[0].userId)
           }
           else{
             this._toastMessageService.alert("error","Data not found.")

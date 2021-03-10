@@ -220,6 +220,20 @@ export class SubscriptionDetailComponent implements OnInit {
             'justify-content': 'center'
           }
         },
+      },
+      {
+        headerName: "Mark",
+        field: "nextYearTpa",
+        width: 50,
+        pinned: 'right',
+        // visible: this.listFor === "INTERESTED" ? true : false,
+        cellRenderer: params => {
+          return `<input type='checkbox' data-action-type="serveComment" ${params.data.serveComment === true ? 'checked' : ''} />`;
+        },
+        cellStyle: params => {
+          return params.data.serveComment === true ? { 'pointer-events': 'none', opacity: '0.4' }
+            : '';
+        }
       }
 
     ]
@@ -272,8 +286,10 @@ export class SubscriptionDetailComponent implements OnInit {
       this.selectedUserName = '';
       param = '/subscription';
     }
+    this.loading = true;
     this.itrService.getMethod(param).subscribe((response: any) => {
       console.log(response);
+      this.loading = false;
       // console.log('subscription responce: ', responce, ' type of: ', typeof responce);
       // console.log('Object type: ', Object.keys(responce), ' length: ', Object.keys(responce).length);
       if (!this.utilService.isNonEmpty(userId)) {
@@ -294,6 +310,7 @@ export class SubscriptionDetailComponent implements OnInit {
       }
     },
       error => {
+        this.loading = false;
         console.log('error during getting subscription info: ', error)
       })
   }
@@ -349,12 +366,18 @@ export class SubscriptionDetailComponent implements OnInit {
           this.addNewPlan(params.data);
           break;
         }
+        case 'serveComment': {
+          alert('call..')
+          // this.generateIncoice(params.data);
+          break;
+        }
       }
     }
   }
 
   generateIncoice(data) {
-    alert('Invoice..')
+    // this.router.navigate(['/pages/invoice/generate'], {queryParams :{ userId: data.userId}});
+    this.router.navigate(['/pages/subscription/addInvoice'], {queryParams :{ userId: data.userId}});
   }
 
   addNewPlan(plan) {

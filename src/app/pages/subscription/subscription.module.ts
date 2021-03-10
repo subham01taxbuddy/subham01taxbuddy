@@ -9,9 +9,16 @@ import { SubscriptionDetailComponent } from './subscription-detail/subscription-
 import { SubscriptionRoutingModule } from "./subscription-routing.module";
 import { AddNewPlanComponent } from './add-new-plan/add-new-plan.component';
 import { AddSubscriptionComponent } from './add-subscription/add-subscription.component';
+import { SubscriptionHeadComponent } from './subscription-head/subscription-head.component';
+import { AddInvoiceComponent } from "./add-invoice/add-invoice.component";
+import { InvoicesStatusComponent } from "./invoices-status/invoices-status.component";
+import { InvoiceDialogComponent } from "./invoice-dialog/invoice-dialog.component";
+import { OwlDateTimeModule } from "ng-pick-datetime/date-time/date-time.module";
+import { OwlNativeDateTimeModule } from "ng-pick-datetime/date-time/adapter/native-date-time.module";
 
 @NgModule({
-    declarations: [SubscriptionDetailComponent, AddNewPlanComponent, AddSubscriptionComponent],
+    declarations: [SubscriptionDetailComponent, AddNewPlanComponent, AddSubscriptionComponent, SubscriptionHeadComponent,
+        AddInvoiceComponent, InvoicesStatusComponent, InvoiceDialogComponent],
     imports:[
         SubscriptionRoutingModule,
         CommonModule,
@@ -21,8 +28,10 @@ import { AddSubscriptionComponent } from './add-subscription/add-subscription.co
         SharedModule,
         MaterialModule,
         NgxLoadingModule.forRoot({}),
+        OwlDateTimeModule, 
+        OwlNativeDateTimeModule
     ],
-    entryComponents:[AddSubscriptionComponent]
+    entryComponents:[AddSubscriptionComponent, InvoiceDialogComponent]
 })
 
 export class SubscriptionModule{}

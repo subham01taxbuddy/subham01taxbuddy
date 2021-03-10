@@ -1,7 +1,8 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div class="main clearfix" style="padding-top: 0px">
-  <div class="card" style="margin-top: 50px;">
+  <div class="card" >
+    <h1 style="font-size: 22px;"><b><u>Update Subscription: </u></b></h1><br><br>
     
       <mat-card *ngIf="this.utilService.isNonEmpty(selectedUserInfo)">
         <b style="font-size: 18px;">User Information: </b><br><br>
