@@ -6,6 +6,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
+import { UtilsService } from 'app/services/utils.service';
 import moment = require('moment');
 import { LeadDialogComponent } from '../lead-dialog/lead-dialog.component';
 // import { Angular2Csv } from 'angular2-csv/Angular2-csv';
@@ -42,7 +43,7 @@ export class LeadsInfoComponent implements OnInit {
 
 
   constructor(private fb: FormBuilder, private userService: UserMsService, @Inject(LOCALE_ID) private locale: string, private dialog: MatDialog,
-              private _toastMessageService: ToastMessageService, private datePipe: DatePipe)
+              private _toastMessageService: ToastMessageService, private datePipe: DatePipe, private utilService: UtilsService)
    { 
     this.leadsListGridOptions = <GridOptions>{
       rowData: [],
@@ -156,7 +157,7 @@ export class LeadsInfoComponent implements OnInit {
       {
         headerName: 'Service',
         field: 'service',
-        width: 400,
+        width: 170,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -166,9 +167,9 @@ export class LeadsInfoComponent implements OnInit {
         }
       },
       {
-        headerName: 'GST Sub Service',
+        headerName: 'Sub Service',
         field: 'subService',
-        width: 170,
+        width: 400,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -189,18 +190,18 @@ export class LeadsInfoComponent implements OnInit {
           debounceMs: 0
         }
       },
-      // {
-      //   headerName: 'Status',
-      //   field: 'status',
-      //   width: 120,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
+      {
+        headerName: 'Status',
+        field: 'latestStatus',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
       // {
       //   headerName: 'Follow Up Date',
       //   field: 'followUpDate',
@@ -376,20 +377,40 @@ export class LeadsInfoComponent implements OnInit {
     var leadsArray = [];
     for(let i=0; i< leadsInfo.length; i++){
       var services = "";
-      var gstSubService = '';
+      var subService = '';
         if(leadsInfo[i].services !== null){
-          for(let s=0; s<leadsInfo[i].services.length; s++){
-            if(s === 0){
-             services = leadsInfo[i].services[s];
-            }
-            else if(s > 0){
-             services = services + ", "+leadsInfo[i].services[s];
-            }
-            gstSubService = leadsInfo[i].subServiceType;
+          if(leadsInfo[i].services[0] === "GST"){
+            services = leadsInfo[i].services[0];
+            subService = leadsInfo[i].subServiceType;
           }
+          else{
+            if(this.utilService.isNonEmpty(leadsInfo[i].subServiceType) && leadsInfo[i].subServiceType.length !== 0){
+              for(var s=0; s<leadsInfo[i].subServiceType.length; s++){
+                services = leadsInfo[i].services[0];
+                if(s === 0){
+                  subService = leadsInfo[i].subServiceType[s];
+                 }
+                 else if(s > 0){
+                  subService = subService + ", "+leadsInfo[i].subServiceType[s];
+                 }
+              }
+            }
+            else{
+              for(var s=0; s<leadsInfo[i].services.length; s++){       //this part added for old value binding handled -> 
+                services = "Partnership Program";
+                if(s === 0){
+                  subService = leadsInfo[i].services[s];
+                 }
+                 else if(s > 0){
+                  subService = subService + ", "+leadsInfo[i].services[s];
+                 }
+              }
+            }
+          }
+          
          }
          console.log('services -> ',services)
-         console.log('gstSubService -> ',gstSubService);
+         console.log('subService -> ',subService);
 
       var sourcesInfo = [];
        for(let j=0; j<leadsInfo[i].source.length; j++){
@@ -405,7 +426,8 @@ export class LeadsInfoComponent implements OnInit {
        }
       console.log('statusInfo ',statusInfo);
 
-      let updatedLeads = Object.assign({}, leadsArray[i], {id: leadsInfo[i].id, mainSource:leadsInfo[i].source[0].name, subService: gstSubService,  name:leadsInfo[i].name, createdDate: leadsInfo[i].createdDate, mobileNumber: leadsInfo[i].mobileNumber, emailAddress: leadsInfo[i].emailAddress, city: leadsInfo[i].city, channel: leadsInfo[i].channel, service: services, assignedTo: leadsInfo[i].assignedTo, source: sourcesInfo, status: statusInfo, followUpDate: leadsInfo[i].status.followUpDate })  //leadsInfo[i].source[0].name, leadsInfo[i].service
+      let updatedLeads = Object.assign({}, leadsArray[i], {id: leadsInfo[i].id, mainSource:leadsInfo[i].source[0].name, subService: subService,  name:leadsInfo[i].name, createdDate: leadsInfo[i].createdDate, mobileNumber: leadsInfo[i].mobileNumber, emailAddress: leadsInfo[i].emailAddress, city: leadsInfo[i].city, channel: leadsInfo[i].channel, service: services, assignedTo: leadsInfo[i].assignedTo, source: sourcesInfo,
+                     status: statusInfo, followUpDate: leadsInfo[i].status.followUpDate, latestStatus:leadsInfo[i].status[leadsInfo[i].status.length - 1].status   })  //leadsInfo[i].source[0].name, leadsInfo[i].service
       leadsArray.push(updatedLeads)
     }
     console.log('leadsArray -> ',leadsArray)
@@ -469,7 +491,7 @@ export class LeadsInfoComponent implements OnInit {
     if(this.leadsForm.valid){
       var leadIterableArray = [];
 
-      let tableHeader = ['Source', 'Name', 'Mobile No', 'Email','City','Created Date', 'Channel', 'Service', 'GST Sub Service', 'Source', 'Status', 'Status Created Date', 'Status Follow Up Date']; 
+      let tableHeader = ['Source', 'Name', 'Mobile No', 'Email','City','Created Date', 'Channel', 'Service', 'Sub Service', 'Source', 'Status', 'Status Created Date', 'Status Follow Up Date']; 
       leadIterableArray.push(tableHeader);
       console.log('leadsInfo ->> ',this.leadInfo);
       var leadsArray = [];
@@ -477,33 +499,50 @@ export class LeadsInfoComponent implements OnInit {
         var services = "";
         var subService = "";
         if(this.leadInfo[i].services !== null){
-           for(let s=0; s<this.leadInfo[i].services.length; s++){
-             if(s === 0){
-              services = this.leadInfo[i].services[s];
-             }
-             else if(s > 0){
-              services = services + "/ "+this.leadInfo[i].services[s];
-             }
-             subService = this.leadInfo[i].subServiceType !== null ?  this.leadInfo[i].subServiceType[0] : '';
-           }
+              if(this.leadInfo[i].services[0] === "GST"){
+                services = this.leadInfo[i].services[0];
+                subService = this.leadInfo[i].subServiceType !== null ? this.leadInfo[i].subServiceType : '';
+              }
+              else{
+                if(this.utilService.isNonEmpty(this.leadInfo[i].subServiceType) && this.leadInfo[i].subServiceType.length !== 0){
+                  for(let s=0; s<this.leadInfo[i].subServiceType.length; s++){
+                    services = this.leadInfo[i].services[0];;
+                    if(s === 0){
+                      subService = this.leadInfo[i].subServiceType[s];
+                     }
+                     else if(s > 0){
+                      subService = subService + "/ "+this.leadInfo[i].subServiceType[s];
+                     }
+                  }
+                }
+                else{
+                  for(let s=0; s<this.leadInfo[i].services.length; s++){
+                    services = "Partnership Program";
+                    if(s === 0){
+                      subService = this.leadInfo[i].services[s];
+                     }
+                     else if(s > 0){
+                      subService = subService + "/ "+this.leadInfo[i].services[s];
+                     }
+                  }
+                }
+                
+              }
         }
         console.log('services -> ',services)
 
         var sources = '';
-        // for(let j=0; j<this.leadInfo[i].source.length; j++){
           sources = this.leadInfo[i].source[this.leadInfo[i].source.length - 1].name+' '+this.datePipe.transform(this.leadInfo[i].source[this.leadInfo[i].source.length - 1].createdDate, 'dd/MM/yyyy');  //, hh:mm a 
-         //}
          console.log('sources ',sources);
   
          var status = '';
          var statusCreatedDate = '';
          var statusFollwUpDate = '';
-        //  for(let k=0; k<this.leadInfo[i].status.length; k++){
           status = this.leadInfo[i].status[this.leadInfo[i].status.length - 1].status;
           statusCreatedDate = this.datePipe.transform(this.leadInfo[i].status[this.leadInfo[i].status.length - 1].createdDate, 'dd/MM/yyyy');  //, hh:mm a
           statusFollwUpDate = this.datePipe.transform(this.leadInfo[i].status[this.leadInfo[i].status.length - 1].followUpDate, 'dd/MM/yyyy');
-        //  }
          console.log('statusInfo ',status+' '+statusCreatedDate+' '+statusFollwUpDate);
+
          let leadData = [this.leadInfo[i].source[0].name, this.leadInfo[i].name, this.leadInfo[i].mobileNumber,this.leadInfo[i].emailAddress,this.leadInfo[i].city, this.datePipe.transform(this.leadInfo[i].createdDate, 'dd/MM/yyyy') ,this.leadInfo[i].channel, services, 
          subService, sources, status, statusCreatedDate, statusFollwUpDate]; //this.leadInfo[i].services
          leadIterableArray.push(leadData);
