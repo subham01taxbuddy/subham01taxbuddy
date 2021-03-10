@@ -1,21 +1,12 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
 <div class="main clearfix" style="padding-top: 0px;">
-    <h1 style="font-size: 24px;"><b>Subscription Detail</b></h1>
-    <br><br>
+    <!-- <h1 style="font-size: 24px;"><b>Subscription Detail</b></h1>
+    <br><br> -->
 
     <div class="card">
         <div class="card__row">
             <div class="card__col-lg-12">
-                <!--  <div class="filter__col card__col-sm-4 card__col-xs-12">
-                    <div class="input">
-                        <label class="input__label" for="attr">Select attribute</label>
-                        <select class="select__box ogp_select" (change)="clearValue()" #advanceSearchKey>
-                            <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
-                                {{drop.name}}</option>
-                        </select>
-                    </div>
-                </div> -->
                 <div class="filter__col card__col-sm-4 card__col-xs-10">
                     <div class="input">
                         <label class="input__label" for="attr">Enter mobile number</label>
@@ -30,15 +21,14 @@
                 <div class="card__col-md-3 card__col-xs-12">
                     <a class="btn btn_stroke filter__add-link" (click)="advanceSearch()"><i class="fa fa-search"
                             aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
-
-                    <!-- <button class="btn" (click)="addSubscriptionPlan()">Add Subscription Plan</button> -->
                 </div>
                 <div class="card__col-md-3 card__col-xs-12 pull-right" *ngIf="selectedUserName">
-                    <button class="btn" (click)="addSubscriptionPlan()">Add Subscription Plan</button>
+                    <button class="btn" (click)="addSubscriptionPlan()">Create subscription</button>
                 </div>
             </div><br><br>
         </div><br><br>
-        <label>Showing results for: {{this.utilService.isNonEmpty(this.searchVal) ? this.searchVal : 'All Users'}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label>Showing results for: {{this.utilService.isNonEmpty(this.searchVal) ? this.searchVal : 'All
+            Users'}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <label>User Name: {{this.utilService.isNonEmpty(this.selectedUserName) ? selectedUserName : ''}}</label>
         <div class="card__row">
             <ag-grid-angular class="ag-theme-balham" [gridOptions]="subscriptionListGridOptions"

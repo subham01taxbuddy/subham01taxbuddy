@@ -20,8 +20,8 @@ export class AddSubscriptionComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<AddSubscriptionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private itrService: ItrMsService, private utilService: UtilsService, private toastMessage: ToastMessageService) {
-      this.getAllPlanInfo();
-     }
+    this.getAllPlanInfo();
+  }
 
   ngOnInit() {
     console.log('data -> ', this.data)
@@ -43,8 +43,8 @@ export class AddSubscriptionComponent implements OnInit {
       //   this.allPlans = gstPlans;
       // }
       // else{
-        this.allPlans = plans['content'];
-        console.log('appPlans --> ', this.allPlans);
+      this.allPlans = plans['content'];
+      console.log('appPlans --> ', this.allPlans);
       // }
     },
       error => {
@@ -52,9 +52,9 @@ export class AddSubscriptionComponent implements OnInit {
       })
   }
 
-  selectPlan(plan){
+  selectPlan(plan) {
     this.selectedPlanInfo = plan;
-    console.log('selectedPlanInfo -> ',this.selectedPlanInfo);
+    console.log('selectedPlanInfo -> ', this.selectedPlanInfo);
     // var current = document.getElementsByClassName("activePlan");
     // current[0].className = current[0].className.replace(" activePlan", "");
     // this.className += " activePlan";
@@ -64,31 +64,28 @@ export class AddSubscriptionComponent implements OnInit {
   }
 
 
-  addSubscriptionPlan(){
-    if(this.utilService.isNonEmpty(this.selectedPlanInfo)){
-      console.log('selectedPlanInfo -> ',this.selectedPlanInfo);
+  createSubscription() {
+    if (this.utilService.isNonEmpty(this.selectedPlanInfo)) {
+      console.log('selectedPlanInfo -> ', this.selectedPlanInfo);
       let param = '/subscription';
       const smeInfo = JSON.parse(localStorage.getItem('UMD'));
       let reqBody = {
-        userId : this.data.userId,
-        planId : this.selectedPlanInfo.planId,
+        userId: this.data.userId,
+        planId: this.selectedPlanInfo.planId,
         selectedBy: "SME", // USER or SME
         smeUserId: smeInfo.USER_UNIQUE_ID
       }
-      console.log('Req Body: ',reqBody)
-      this.itrService.postMethod(param, reqBody).subscribe((res: any)=>{
-          console.log('After subscription plan added res:',res);
-          setTimeout(() => {
-            this.dialogRef.close({ event: 'close', data: 'planAdded'})
-          }, 4000)
-          this.toastMessage.alert("success","Plan added successfully.")
-      },
-      error=>{
-          console.log('error -> ',error);
-          this.toastMessage.alert("error", this.utilService.showErrorMsg(error.error.status))
+      console.log('Req Body: ', reqBody)
+      this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
+        console.log('After subscription plan added res:', res);
+        this.dialogRef.close({ event: 'close', data: res })
+        this.toastMessage.alert("success", "Subscription created successfully.")
+      }, error => {
+        console.log('error -> ', error);
+        this.toastMessage.alert("error", this.utilService.showErrorMsg(error.error.status))
       })
     }
-    else{
+    else {
       this.toastMessage.alert("error", "Select Plan.")
     }
   }
