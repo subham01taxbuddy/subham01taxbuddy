@@ -476,7 +476,7 @@ export class LeadsInfoComponent implements OnInit {
     if(this.leadsForm.valid){
       var leadIterableArray = [];
 
-      let tableHeader = ['Source', 'Name', 'Mobile No', 'Email','City','Created Date', 'Channel', 'Service', 'GST Sub Service', 'Source', 'Status', 'Status Created Date', 'Status Follow Up Date']; 
+      let tableHeader = ['Source', 'Name', 'Mobile No', 'Email','City','Created Date', 'Channel', 'Service', 'Sub Service', 'Source', 'Status', 'Status Created Date', 'Status Follow Up Date']; 
       leadIterableArray.push(tableHeader);
       console.log('leadsInfo ->> ',this.leadInfo);
       var leadsArray = [];
@@ -485,32 +485,35 @@ export class LeadsInfoComponent implements OnInit {
         var subService = "";
         if(this.leadInfo[i].services !== null){
            for(let s=0; s<this.leadInfo[i].services.length; s++){
-             if(s === 0){
-              services = this.leadInfo[i].services[s];
-             }
-             else if(s > 0){
-              services = services + "/ "+this.leadInfo[i].services[s];
-             }
-             subService = this.leadInfo[i].subServiceType !== null ?  this.leadInfo[i].subServiceType[0] : '';
+              if(this.leadInfo[i].services[0] === "GST"){
+                services = this.leadInfo[i].services[0];
+                subService = this.leadInfo[i].subServiceType !== null ? this.leadInfo[i].subServiceType : '';
+              }
+              else{
+                services = "ITR";
+                if(s === 0){
+                  subService = this.leadInfo[i].services[s];
+                 }
+                 else if(s > 0){
+                  subService = services + "/ "+this.leadInfo[i].services[s];
+                 }
+              }
            }
         }
         console.log('services -> ',services)
 
         var sources = '';
-        // for(let j=0; j<this.leadInfo[i].source.length; j++){
           sources = this.leadInfo[i].source[this.leadInfo[i].source.length - 1].name+' '+this.datePipe.transform(this.leadInfo[i].source[this.leadInfo[i].source.length - 1].createdDate, 'dd/MM/yyyy');  //, hh:mm a 
-         //}
          console.log('sources ',sources);
   
          var status = '';
          var statusCreatedDate = '';
          var statusFollwUpDate = '';
-        //  for(let k=0; k<this.leadInfo[i].status.length; k++){
           status = this.leadInfo[i].status[this.leadInfo[i].status.length - 1].status;
           statusCreatedDate = this.datePipe.transform(this.leadInfo[i].status[this.leadInfo[i].status.length - 1].createdDate, 'dd/MM/yyyy');  //, hh:mm a
           statusFollwUpDate = this.datePipe.transform(this.leadInfo[i].status[this.leadInfo[i].status.length - 1].followUpDate, 'dd/MM/yyyy');
-        //  }
          console.log('statusInfo ',status+' '+statusCreatedDate+' '+statusFollwUpDate);
+         
          let leadData = [this.leadInfo[i].source[0].name, this.leadInfo[i].name, this.leadInfo[i].mobileNumber,this.leadInfo[i].emailAddress,this.leadInfo[i].city, this.datePipe.transform(this.leadInfo[i].createdDate, 'dd/MM/yyyy') ,this.leadInfo[i].channel, services, 
          subService, sources, status, statusCreatedDate, statusFollwUpDate]; //this.leadInfo[i].services
          leadIterableArray.push(leadData);
