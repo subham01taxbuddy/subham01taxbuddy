@@ -52,6 +52,7 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
   paymentStatus: any = [{ value: 'Paid', label: 'Paid' }, { value: 'Failed', label: 'Failed' }, { value: 'Unpaid', label: 'Unpaid' }]
   maxDate = new Date();
   initialData: any;
+  userSubscription: any;
 
   itrTypes = [
     { value: '1', label: 'ITR-1' },
@@ -97,6 +98,8 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     const param = `/subscription/${id}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log('Subscription by Id: ', res);
+      this.userSubscription = res;
+      this.invoiceForm.controls.subscriptionId.setValue(res.id);
       this.getUserDetails(res.userId);
     }, error => {
       console.log('Subscription by Id error: ', error);
@@ -149,7 +152,8 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
       paymentDate: '',
       estimateDateTime: [''],
       itrType: [''],
-      comment: ['']
+      comment: [''],
+      subscriptionId: ['']
     })
   }
 
@@ -188,6 +192,23 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
       this.utilsService.showSnackBar(error.error.detail);
     });
     console.log('userProfile:', this.userProfile);
+    if(this.utilsService.isNonEmpty(this.userProfile)){
+        this.invoiceForm.controls.email.setValue(this.userProfile.emailAddress)
+        this.invoiceForm.controls.phone.setValue(this.userProfile.mobileNumber);
+        let userName = this.userProfile.fName+' '+this.userProfile.lName; 
+        this.invoiceForm.controls.billTo.setValue(userName);
+
+        if(this.utilsService.isNonEmpty(this.userProfile.address)){
+          let address = this.userProfile.address[0].flatNo+', '+this.userProfile.address[0].premisesName+', '+this.userProfile.address[0].area;
+          this.invoiceForm.controls.addressLine1.setValue(address)
+          this.invoiceForm.controls.pincode.setValue(this.userProfile.address[0].pinCode)
+          this.invoiceForm.controls.country.setValue(this.userProfile.address[0].country === "91" ? "INDIA" : "");
+          this.invoiceForm.controls.city.setValue(this.userProfile.address[0].city);
+          
+          let stateName = this.stateDropdown.filter(item=> item.stateCode === this.userProfile.address[0].state)[0].stateName;
+          this.invoiceForm.controls.state.setValue(stateName)
+        }
+    }
   }
 
   getInitialData(userId) {
