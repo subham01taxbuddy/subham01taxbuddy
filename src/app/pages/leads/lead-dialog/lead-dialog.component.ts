@@ -46,6 +46,7 @@ export class LeadDialogComponent implements OnInit {
   leadForm: FormGroup;
   leadStatusForm: FormGroup;
   agentIdForm: FormGroup;
+  maxDate = new Date();
 
   intersetAreaArray = [{key: 'Income Tax', value: 'incomeTax'},
                         {key: 'Statutory Audit', value: 'statutoryAudit'},
@@ -403,7 +404,8 @@ export class LeadDialogComponent implements OnInit {
       interestArea : new FormArray([]),
       otherInfo: [''],
       gstSubSurvice: [''],
-      channel: ['']
+      channel: [''],
+      leadCreatedDate: ['']
     })
   }
 
@@ -507,7 +509,8 @@ export class LeadDialogComponent implements OnInit {
             "followUpDate": ''
           }],
           "city": this.leadForm.value.city,
-          "website": this.data.mode === "partnerLead" ? this.leadForm.value.website : ""
+          "website": this.data.mode === "partnerLead" ? this.leadForm.value.website : "",
+          "createdDate": (moment(this.leadForm.value.leadCreatedDate).add(330, 'm').toDate()).toISOString() 
         }
   
         console.log('passObj -> ',passObj);
