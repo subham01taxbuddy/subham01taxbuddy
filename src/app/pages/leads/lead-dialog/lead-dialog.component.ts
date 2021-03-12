@@ -46,6 +46,7 @@ export class LeadDialogComponent implements OnInit {
   leadForm: FormGroup;
   leadStatusForm: FormGroup;
   agentIdForm: FormGroup;
+  maxDate = new Date();
 
   intersetAreaArray = [{key: 'Income Tax', value: 'incomeTax'},
                         {key: 'Statutory Audit', value: 'statutoryAudit'},
@@ -402,7 +403,9 @@ export class LeadDialogComponent implements OnInit {
       website: [''],
       interestArea : new FormArray([]),
       otherInfo: [''],
-      gstSubSurvice: ['']
+      gstSubSurvice: [''],
+      channel: [''],
+      leadCreatedDate: ['']
     })
   }
 
@@ -487,11 +490,11 @@ export class LeadDialogComponent implements OnInit {
 
         var passObj = {
           "name": this.leadForm.value.name,
-          "channel": "Admin",
+          "channel": this.leadForm.value.channel,
           "emailAddress": this.leadForm.value.email,
           "mobileNumber": this.leadForm.value.mobileNo,
-          "services":  this.data.mode === "partnerLead" ? this.leadForm.value.interestArea : ['GST'],
-          "subServiceType": this.data.mode === "partnerLead" ? [] : [this.leadForm.value.gstSubSurvice],
+          "services":  this.data.mode === "partnerLead" ? ['Partnership Program'] : ['GST'],  //this.leadForm.value.interestArea
+          "subServiceType": this.data.mode === "partnerLead" ? this.leadForm.value.interestArea : [this.leadForm.value.gstSubSurvice],
           "assignedTo":'',
           "otherData": {
               "data": this.data.mode === "partnerLead" ? this.leadForm.value.otherInfo : '',
@@ -499,14 +502,15 @@ export class LeadDialogComponent implements OnInit {
               "urlData": null
             },
           "source": [{
-            "name": this.data.mode === "partnerLead" ? "Partnership program" : "Gst landing",
+            "name": "Admin",
           }],
           "status":[{
             "status": "OPEN",
             "followUpDate": ''
           }],
           "city": this.leadForm.value.city,
-          "website": this.data.mode === "partnerLead" ? this.leadForm.value.website : ""
+          "website": this.data.mode === "partnerLead" ? this.leadForm.value.website : "",
+          "createdDate": (moment(this.leadForm.value.leadCreatedDate).add(330, 'm').toDate()).toISOString() 
         }
   
         console.log('passObj -> ',passObj);

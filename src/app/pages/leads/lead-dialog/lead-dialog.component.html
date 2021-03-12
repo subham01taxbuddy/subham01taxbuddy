@@ -157,6 +157,26 @@
             </mat-form-field>
         </div>
 
+        <div class="card__col-xs-4 card__col-sm-14" >
+            <mat-form-field appearance="outline" >
+                <mat-label>Channel</mat-label>
+                <input matInput formControlName="channel" placeholder="Enter Channel">
+                <!-- <mat-error *ngIf="agentIdForm.controls['agentId'].hasError('required')">Enter Agent Id.</mat-error> -->
+            </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-4 card__col-sm-14" >
+            <mat-form-field appearance="outline">
+                <mat-label>Lead Created Date</mat-label>
+                <input matInput formControlName="leadCreatedDate" [matDatepicker]="picker1" [max]="maxDate"
+                    autocomplete="off" >
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <!-- <mat-error *ngIf="leadsForm.controls['fromDate'].hasError('required')">Select From
+                    date</mat-error> -->
+            </mat-form-field>
+        </div>
+
         <div class="card__col-xs-12 card__col-sm-14" *ngIf="data.mode == 'gstLead'">
                 <label><b>I am here for: </b></label>  <span style="color: red;"> *</span><br>
                 <mat-radio-group aria-label="I am here for" formControlName="gstSubSurvice" [required]="data.mode == 'gstLead'">
