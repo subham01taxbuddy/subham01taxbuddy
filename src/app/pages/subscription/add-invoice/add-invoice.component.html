@@ -456,20 +456,55 @@
             <mat-card>
                 <label>Invoice table:</label><br><br>
                 <div class="card__row" style="margin-top: 0px;">
-                    <ag-grid-angular class="ag-theme-balham" [gridOptions]="clientListGridOptions"
+                    <!-- <ag-grid-angular class="ag-theme-balham" [gridOptions]="clientListGridOptions"
                         (rowClicked)="onInvoiceRowClicked($event)">
-                    </ag-grid-angular>
+                    </ag-grid-angular> -->
+                    <table>
+                        <tr>
+                            <th>Item & Description</th>
+                            <th>Qty</th>
+                            <th *ngIf="isMaharashtraState" colspan="2">CGST</th>
+                            <th *ngIf="isMaharashtraState" colspan="2">SGST</th>
+                            <th *ngIf="!isMaharashtraState" colspan="2">IGST</th>
+                            <th>Discount</th>
+                            <th>Amount</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th *ngIf="isMaharashtraState">%</th>
+                            <th *ngIf="isMaharashtraState">Amount</th>
+                            <th *ngIf="isMaharashtraState">%</th>
+                            <th *ngIf="isMaharashtraState">Amount</th>
+                            <th *ngIf="!isMaharashtraState">%</th>
+                            <th *ngIf="!isMaharashtraState">Amount</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr *ngIf="userSubscription">
+                            <td>{{userSubscription.name}}</td>
+                            <td>1</td>
+                            <td *ngIf="isMaharashtraState">9</td>
+                            <td *ngIf="isMaharashtraState">{{userSubscription.sgst}}</td>
+                            <td *ngIf="isMaharashtraState">9</td>
+                            <td *ngIf="isMaharashtraState">{{userSubscription.cgst}}</td>
+                            <td *ngIf="!isMaharashtraState">18</td>
+                            <td *ngIf="!isMaharashtraState">{{userSubscription.igst}}</td>
+                            <td>{{ '-' }}</td>
+                            <td>{{userSubscription.totalAmount}}</td>
+                        </tr>
+                    </table>
                 </div> <br>
                 <div class="card__row">
                     <div class="card__col-lg-4">
-                        <button class="butn" (click)="addNewRow()">Add Row</button>
+                        <!-- <button class="butn" (click)="addNewRow()">Add Row</button> -->
                     </div>
                     <div class="card__col-lg-4 total">
                         <div class="card__col-lg-7">Sub Total
                             <span>(Tax Exclusive)</span>
                         </div>
                         <div style="float: right;" class="card__col-lg-5">₹
-                            {{this.utilsService.currencyFormatter( getInvoiceTotal().subTotal)}}
+                           {{userSubscription.totalAmount}}   <!--{{this.utilsService.currencyFormatter( getInvoiceTotal().subTotal)}} -->
                         </div>
 
                         <!--  <div *ngIf="!isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
@@ -478,29 +513,29 @@
 
                         <div *ngIf="isMaharashtraState" class="card__col-lg-7">CGST (9%)</div>
                         <div *ngIf="isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.utilsService.currencyFormatter(getInvoiceTotal().cgstTotal)}}
+                            {{userSubscription.cgst}}   <!--this.utilsService.currencyFormatter(getInvoiceTotal().cgstTotal-->
 
                         </div>
 
                         <div *ngIf="isMaharashtraState" class="card__col-lg-7">SGST (9%)</div>
                         <div *ngIf="isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{(getInvoiceTotal().sgstTotal)}}
+                            {{userSubscription.sgst}}   <!--(getInvoiceTotal().sgstTotal)-->
 
                         </div>
 
                         <div *ngIf="!isMaharashtraState" class="card__col-lg-7">IGST (18%)</div>
                         <div *ngIf="!isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.utilsService.currencyFormatter(getInvoiceTotal().igstTotal)}}
+                            {{userSubscription.igst}}   <!--this.utilsService.currencyFormatter(getInvoiceTotal().igstTotal)-->
 
                         </div>
 
                         <div class="card__col-lg-7 bold">Total</div>
                         <div style="float: right;" class="card__col-lg-5 bold">₹
-                            {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceTotal)}}</div>
+                            {{userSubscription.totalAmount}}</div>   <!--this.utilsService.currencyFormatter(getInvoiceTotal().invoiceTotal)-->
 
                         <div class="card__col-lg-7 bold">Balance Due</div>
                         <div style="float: right;" class="card__col-lg-5 bold">₹
-                            {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceTotal)}}</div>
+                            {{userSubscription.totalAmount}}</div>    <!--this.utilsService.currencyFormatter(getInvoiceTotal().invoiceTotal)-->
                     </div>
 
                 </div>

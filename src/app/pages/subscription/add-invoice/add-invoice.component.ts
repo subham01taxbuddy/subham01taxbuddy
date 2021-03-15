@@ -65,11 +65,13 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
   ];
 
   isItrFiled: boolean = false;
+  allPlans: any;
 
   constructor(public utilsService: UtilsService, private _toastMessageService: ToastMessageService,
     private fb: FormBuilder, private userMsService: UserMsService, private router: Router, public http: HttpClient,
-    private itrMsService: ItrMsService, private activeRoute: ActivatedRoute) {
+    private itrMsService: ItrMsService, private activeRoute: ActivatedRoute, private itrService: ItrMsService) {
     this.invoiceInfoCalled();
+    // this.getAllPlanInfo();
   }
 
   ngOnInit() {
@@ -94,22 +96,75 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     // console.log('signaturesignature: ', signature)
   }
 
-  getSubscriptionDetails(id) {
+  async getSubscriptionDetails(id){
+    this.getSubscriptionInfo(id);
+    var plansInfo = await this.getAllPlanInfo().catch(error => {
+      console.log(error);
+      this.utilsService.showSnackBar(error.error.detail);
+    });
+    this.allPlans = plansInfo['content'];
+    console.log('All plans: ',plansInfo)
+    console.log('allPlans --->> ',this.allPlans);
+    console.log('userSubscription :-> ',this.userSubscription)
+    var dueDateVal;
+    // if(this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)){
+    //   console.log('due date : ',this.allPlans.filter(item=> item.planId === this.userSubscription.smeSelectedPlan.planId));
+    //   dueDateVal = this.allPlans.filter(item=> item.planId === this.userSubscription.smeSelectedPlan.planId)[0].dueDays;
+    // }
+    // else if(this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan) && !this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)){
+    //   dueDateVal = this.allPlans.filter(item=> item.planId === this.userSubscription.smeSelectedPlan.planId)[0].dueDays;
+    // }
+    // else if(!this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)){
+    //   dueDateVal = this.allPlans.filter(item=> item.planId === this.userSubscription.userSelectedPlan.planId)[0].dueDays;
+    // }
+    dueDateVal = this.allPlans.filter(item=> item.planId === this.userSubscription.planId)[0].dueDays;
+    console.log('dueDateVal :-> ',dueDateVal)
+    if(dueDateVal){
+      let date =( new Date()).getDate() + dueDateVal;
+      this.invoiceForm.controls.dueDate.setValue(date);
+    }
+    else{
+      this.invoiceForm.controls.dueDate.setValue(new Date());
+    }
+    console.log('due date val: ',this.invoiceForm.controls.dueDate)
+  }
+
+  getSubscriptionInfo(id) {
     const param = `/subscription/${id}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log('Subscription by Id: ', res);
       this.userSubscription = res;
-      this.invoiceForm.controls.subscriptionId.setValue(res.id);
+      if(this.utilsService.isNonEmpty(res.smeSelectedPlan) && this.utilsService.isNonEmpty(res.userSelectedPlan)){
+        this.userSubscription = res.smeSelectedPlan;
+      }
+      else if(this.utilsService.isNonEmpty(res.smeSelectedPlan) && !this.utilsService.isNonEmpty(res.userSelectedPlan)){
+        this.userSubscription = res.smeSelectedPlan;
+      }
+      else if(!this.utilsService.isNonEmpty(res.smeSelectedPlan) && this.utilsService.isNonEmpty(res.userSelectedPlan)){
+        this.userSubscription = res.userSelectedPlan;
+      }
+
+      console.log('Main userSubscription :-) ',this.userSubscription);
+      this.invoiceForm.controls.subscriptionId.setValue(id);
+      console.log('subscriptionId val & type -> ',this.invoiceForm.controls.subscriptionId.value, typeof this.invoiceForm.controls.subscriptionId.value)
+      console.log('Invoice Form -> ',this.invoiceForm.controls)
       this.getUserDetails(res.userId);
     }, error => {
       console.log('Subscription by Id error: ', error);
     })
   }
 
+
+  
   ngOnDestroy() {
     sessionStorage.clear();
     sessionStorage.setItem('invoiceNotGeneratedUserId', null)
   }
+
+  async getAllPlanInfo(){
+    let param = '/plans-master';
+     return await this.itrService.getMethod(param).toPromise();
+  }  
 
   createInvoiceForm() {
     return this.fb.group({
@@ -118,10 +173,10 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
       invoiceNo: [null],
       invoiceDate: [(new Date()), Validators.required],
       terms: ['Due on Receipt', Validators.required],
-      dueDate: [(new Date()), Validators.required],
+      dueDate: ['', Validators.required],
       sacCode: ['998232', Validators.required],
       cin: ['U74999MH2017PT298565', Validators.required],
-      modeOfPayment: ['Online', Validators.required],
+      modeOfPayment: ['', Validators.required],
       billTo: ['', [Validators.required, Validators.pattern(AppConstants.charAndNoRegex)]],
       paymentCollectedBy: '',
       dateOfReceipt: '',
@@ -193,10 +248,12 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     });
     console.log('userProfile:', this.userProfile);
     if(this.utilsService.isNonEmpty(this.userProfile)){
-        this.invoiceForm.controls.email.setValue(this.userProfile.emailAddress)
+        this.invoiceForm.controls.userId.setValue(this.userProfile.userId);
+        this.invoiceForm.controls.email.setValue(this.userProfile.emailAddress);
         this.invoiceForm.controls.phone.setValue(this.userProfile.mobileNumber);
         let userName = this.userProfile.fName+' '+this.userProfile.lName; 
         this.invoiceForm.controls.billTo.setValue(userName);
+        // this.invoiceForm.controls.gstin.setValue(this.userProfile.mobileNumber);
 
         if(this.utilsService.isNonEmpty(this.userProfile.address)){
           let address = this.userProfile.address[0].flatNo+', '+this.userProfile.address[0].premisesName+', '+this.userProfile.address[0].area;
@@ -206,6 +263,9 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
           this.invoiceForm.controls.city.setValue(this.userProfile.address[0].city);
           
           let stateName = this.stateDropdown.filter(item=> item.stateCode === this.userProfile.address[0].state)[0].stateName;
+          if(this.userProfile.address[0].state === "19"){
+            this.isMaharashtraState = true;
+          }
           this.invoiceForm.controls.state.setValue(stateName)
         }
     }
@@ -597,37 +657,60 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
   }
 
   saveInvoice() {
-    if (this.clientListGridOptions && this.clientListGridOptions.api &&
-      this.clientListGridOptions.api.getRenderedNodes() && this.isInvoiceDetailsValid()) {
+    // if (this.clientListGridOptions && this.clientListGridOptions.api &&
+    //   this.clientListGridOptions.api.getRenderedNodes() && this.isInvoiceDetailsValid()) {
       this.invoiceForm.controls['userId'].setValue(this.utilsService.isNonEmpty(this.invoiceForm.controls['userId'].value) ? this.invoiceForm.controls['userId'].value : null)
-      const invoiceData = this.getInvoiceTotal()
-      this.invoiceForm.controls['cgstTotal'].setValue(invoiceData.cgstTotal)
-      this.invoiceForm.controls['sgstTotal'].setValue(invoiceData.sgstTotal)
-      this.invoiceForm.controls['igstTotal'].setValue(invoiceData.igstTotal)
-      this.invoiceForm.controls['subTotal'].setValue(invoiceData.subTotal)
-      this.invoiceForm.controls['total'].setValue(invoiceData.invoiceTotal)
-      this.invoiceForm.controls['balanceDue'].setValue(invoiceData.invoiceTotal)
+      // const invoiceData = this.getInvoiceTotal()
+      // this.invoiceForm.controls['cgstTotal'].setValue(invoiceData.cgstTotal)
+      // this.invoiceForm.controls['sgstTotal'].setValue(invoiceData.sgstTotal)
+      // this.invoiceForm.controls['igstTotal'].setValue(invoiceData.igstTotal)
+      // this.invoiceForm.controls['subTotal'].setValue(invoiceData.subTotal)
+      // this.invoiceForm.controls['total'].setValue(invoiceData.invoiceTotal)
+      // this.invoiceForm.controls['balanceDue'].setValue(invoiceData.invoiceTotal)
+
+      this.invoiceForm.controls['cgstTotal'].setValue(this.userSubscription.cgst)
+      this.invoiceForm.controls['sgstTotal'].setValue(this.userSubscription.sgst)
+      this.invoiceForm.controls['igstTotal'].setValue(this.userSubscription.igst)
+      this.invoiceForm.controls['subTotal'].setValue(this.userSubscription.totalAmount)
+      this.invoiceForm.controls['total'].setValue(this.userSubscription.totalAmount)
+      this.invoiceForm.controls['balanceDue'].setValue(this.userSubscription.totalAmount)
+     
       this.invoiceForm.controls['paymentStatus'].setValue(this.invoiceForm.controls['modeOfPayment'].value === 'Cash' ? 'Paid' : 'Unpaid')
       var invoiceItemList = [];
-      const gridData = this.clientListGridOptions.api.getRenderedNodes();
-      for (let i = 0; i < gridData.length; i++) {
+      // const gridData = this.clientListGridOptions.api.getRenderedNodes();
+      // for (let i = 0; i < gridData.length; i++) {
+      //   invoiceItemList.push({
+      //     'itemDescription': gridData[i].data.itemDescription,
+      //     'quantity': gridData[i].data.quantity,
+      //     'rate': gridData[i].data.rate,
+      //     'cgstPercent': gridData[i].data.cgstPercent,
+      //     'cgstAmount': this.isMaharashtraState ? Math.round((gridData[i].data.rate * gridData[i].data.cgstPercent / 118) * gridData[i].data.quantity) : 0,
+      //     'sgstPercent': gridData[i].data.sgstPercent,
+      //     'sgstAmount': this.isMaharashtraState ? Math.round((gridData[i].data.rate * gridData[i].data.sgstPercent / 118) * gridData[i].data.quantity) : 0,
+      //     'igstPercent': gridData[i].data.igstPercent,
+      //     'igstAmount': !this.isMaharashtraState ? Math.round((gridData[i].data.rate * gridData[i].data.igstPercent / 118) * gridData[i].data.quantity) : 0,
+      //     'amount': gridData[i].data.rate * gridData[i].data.quantity
+      //   })
+      // }
+
         invoiceItemList.push({
-          'itemDescription': gridData[i].data.itemDescription,
-          'quantity': gridData[i].data.quantity,
-          'rate': gridData[i].data.rate,
-          'cgstPercent': gridData[i].data.cgstPercent,
-          'cgstAmount': this.isMaharashtraState ? Math.round((gridData[i].data.rate * gridData[i].data.cgstPercent / 118) * gridData[i].data.quantity) : 0,
-          'sgstPercent': gridData[i].data.sgstPercent,
-          'sgstAmount': this.isMaharashtraState ? Math.round((gridData[i].data.rate * gridData[i].data.sgstPercent / 118) * gridData[i].data.quantity) : 0,
-          'igstPercent': gridData[i].data.igstPercent,
-          'igstAmount': !this.isMaharashtraState ? Math.round((gridData[i].data.rate * gridData[i].data.igstPercent / 118) * gridData[i].data.quantity) : 0,
-          'amount': gridData[i].data.rate * gridData[i].data.quantity
+          'itemDescription': this.userSubscription.name,
+          'quantity': 1,
+          'rate': this.userSubscription.totalAmount,
+          'cgstPercent': 9,
+          'cgstAmount': this.isMaharashtraState ? this.userSubscription.cgst : 0,
+          'sgstPercent': 9,
+          'sgstAmount': this.isMaharashtraState ? this.userSubscription.sgst : 0,
+          'igstPercent': 18,
+          'igstAmount': !this.isMaharashtraState ? this.userSubscription.igst : 0,
+          'amount': this.userSubscription.totalAmount
         })
-      }
+
       this.invoiceForm.controls['itemList'].setValue(invoiceItemList)
       if (this.invoiceForm.valid) {
         console.log('Invoice Form: ', this.invoiceForm)
         let smeInfo = JSON.parse(localStorage.getItem('UMD'));
+        this.invoiceForm.controls.inovicePreparedBy.setValue(smeInfo.USER_UNIQUE_ID)
 
         if (!this.isItrFiled) {
           var filingEstimateObj = {
@@ -671,9 +754,9 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
       } else {
         $('input.ng-invalid').first().focus();
       }
-    } else {
-      this._toastMessageService.alert("error", "Please enter all invoice item details.");
-    }
+    // } else {
+    //   this._toastMessageService.alert("error", "Please enter all invoice item details.");
+    // }
   }
 
   saveFillingEstimate(estimateInfo) {
