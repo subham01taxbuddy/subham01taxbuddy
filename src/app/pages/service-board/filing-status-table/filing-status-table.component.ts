@@ -164,7 +164,7 @@ export class FilingStatusTableComponent implements OnInit {
   routeAction(data) {
     if (this.statusId == 11) {
       console.log('user data : ', data, data.sourceAsMap['userId'])
-      sessionStorage.setItem('invoiceNotgeneratedUserId', data.sourceAsMap['userId']);  //sourceAsMap['Phone']s
+      sessionStorage.setItem('invoiceNotgeneratedUserId', data.sourceAsMap['userId']);  //sourceAsMap['Phone']s //TODO removed relevent code from subscription module
       this.router.navigate(['/pages/invoice/generate']);
     } else if (this.statusId == 12) {
       this.router.navigate(['/pages/invoice/list']);
