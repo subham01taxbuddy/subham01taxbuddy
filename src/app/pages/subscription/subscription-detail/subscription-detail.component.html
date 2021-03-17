@@ -27,9 +27,9 @@
                 </div>
             </div><br><br>
         </div><br><br>
-        <label>Showing results for: {{this.utilService.isNonEmpty(this.searchVal) ? this.searchVal : 'All
+        <label>Showing results for: {{this.utilsService.isNonEmpty(this.searchVal) ? this.searchVal : 'All
             Users'}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <label>User Name: {{this.utilService.isNonEmpty(this.selectedUserName) ? selectedUserName : ''}}</label>
+        <label>User Name: {{this.utilsService.isNonEmpty(this.selectedUserName) ? selectedUserName : ''}}</label>
         <div class="card__row">
             <ag-grid-angular class="ag-theme-balham" [gridOptions]="subscriptionListGridOptions"
                 (rowClicked)="onSubscriptionRowClicked($event)" paginationPageSize=15 pagination=true>

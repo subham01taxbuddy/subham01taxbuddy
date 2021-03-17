@@ -10,6 +10,7 @@
                     Phone: {{invoiceEditForm.value.phone}}<br>
                     Email: {{invoiceEditForm.value.email}}<br>
                     Due Date: {{invoiceEditForm.value.dueDate | date:'mediumDate'}}<br>
+                    Invoice No: {{invoiceEditForm.value.invoiceNo}}<br>
                 </mat-card>
             </div>
             <div class="card__col-lg-6">
@@ -45,12 +46,12 @@
             <mat-form-field appearance="outline">
                 <mat-label>Mode of Payment</mat-label>
                 <mat-select formControlName="modeOfPayment" matInput placeholder="Select Mode of Payment"
-                    autocomplete="off" required>
-                    <mat-option value="Bank Transfer">Bank Transfer</mat-option>
-                    <mat-option value="Google Pay">Google Pay</mat-option>
-                    <mat-option value="Phone Pay">Phone Pay</mat-option>
-                    <mat-option value="Paytm">Paytm</mat-option>
-                    <mat-option value="Cash">Cash</mat-option>
+                    autocomplete="off" (selectionChange)="changeModeOfPayment()" required>
+                    <mat-option value="BANK_TRANSFER">Bank Transfer</mat-option>
+                    <mat-option value="GOOGLE_PAY">Google Pay</mat-option>
+                    <mat-option value="PHONE_PAY">Phone Pay</mat-option>
+                    <mat-option value="PAYTM">Paytm</mat-option>
+                    <mat-option value="CASH">Cash</mat-option>
                 </mat-select>
                 <mat-error *ngIf="invoiceEditForm.controls['modeOfPayment'].hasError('required')">Select
                     Mode of Payment
@@ -58,22 +59,22 @@
             </mat-form-field>
         </div>
 
-        <div class="card__col-xs-4 card__col-sm-4" *ngIf="invoiceEditForm.controls['modeOfPayment'].value === 'Cash'">
+        <div class="card__col-xs-4 card__col-sm-4" *ngIf="invoiceEditForm.controls['modeOfPayment'].value === 'CASH'">
             <mat-form-field appearance="outline">
                 <mat-label>Payment Collected By</mat-label>
                 <input matInput formControlName="paymentCollectedBy" placeholder="Payment Collected By"
                     autocomplete="off" maxlength="15"
-                    [required]="invoiceEditForm.controls['modeOfPayment'].value === 'Cash'">
+                    [required]="invoiceEditForm.controls['modeOfPayment'].value === 'CASH'">
                 <mat-error *ngIf="invoiceEditForm.controls['paymentCollectedBy'].hasError('required')">Enter
                     payment collected by
                 </mat-error>
             </mat-form-field>
         </div>
-        <div class="card__col-xs-4 card__col-sm-4" *ngIf="invoiceEditForm.controls['modeOfPayment'].value !== 'Cash'">
+        <div class="card__col-xs-4 card__col-sm-4" *ngIf="invoiceEditForm.controls['modeOfPayment'].value !== 'CASH'">
             <mat-form-field appearance="outline">
                 <mat-label>Transaction Id</mat-label>
                 <input matInput formControlName="transactionId" placeholder="Transaction Id" autocomplete="off"
-                    maxlength="15" [required]="invoiceEditForm.controls['modeOfPayment'].value !== 'Cash'">
+                    maxlength="15" [required]="invoiceEditForm.controls['modeOfPayment'].value !== 'CASH'">
                 <mat-error *ngIf="invoiceEditForm.controls['transactionId'].hasError('required')">Enter
                     Transaction Id
                 </mat-error>
@@ -81,17 +82,17 @@
         </div>
         <div class="card__col-xs-4 card__col-sm-4">
             <mat-form-field appearance="outline">
-                <mat-label>Date of receipt</mat-label>
-                <input matInput formControlName="dateOfReceipt" [matDatepicker]="picker3" required [max]="maxDate"
-                    (dateChange)="setDepositInBankValidation(invoiceEditForm.controls['dateOfReceipt'].value)"
+                <mat-label>Date of payment</mat-label>
+                <input matInput formControlName="paymentDate" [matDatepicker]="picker3" required [max]="maxDate"
+                    (dateChange)="setDepositInBankValidation(invoiceEditForm.controls['paymentDate'].value)"
                     autocomplete="off">
                 <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                 <mat-datepicker #picker3></mat-datepicker>
-                <mat-error *ngIf="invoiceEditForm.controls['dateOfReceipt'].hasError('required')">Select
-                    date of receipt</mat-error>
+                <mat-error *ngIf="invoiceEditForm.controls['paymentDate'].hasError('required')">Select
+                    date of payment</mat-error>
             </mat-form-field>
         </div>
-        <div class="card__col-xs-4 card__col-sm-4">
+        <!-- <div class="card__col-xs-4 card__col-sm-4">
             <mat-form-field appearance="outline">
                 <mat-label>Date of deposite</mat-label>
                 <input matInput formControlName="dateOfDeposit" [matDatepicker]="picker4" [min]="minDepositInBank"
@@ -101,7 +102,7 @@
                 <mat-error *ngIf="invoiceEditForm.controls['dateOfDeposit'].hasError('required')">
                     Select date of deposite</mat-error>
             </mat-form-field>
-        </div>
+        </div> -->
     </mat-dialog-content>
     <mat-dialog-actions align="center">
         <button mat-raised-button color="primary" (click)="updateInvoice()" tabindex="1">{{data.submitBtn}}</button>

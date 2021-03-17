@@ -1,3 +1,4 @@
+import { style } from '@angular/animations';
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
@@ -7,7 +8,6 @@ import { ItrMsService } from 'app/services/itr-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
 import moment = require('moment');
 import { AddSubscriptionComponent } from '../add-subscription/add-subscription.component';
 
@@ -24,16 +24,14 @@ export class SubscriptionDetailComponent implements OnInit {
   selectedUserName: any = '';
   userId: any;
 
-  constructor(private _toastMessageService: ToastMessageService, public utilService: UtilsService, private itrService: ItrMsService, @Inject(LOCALE_ID) private locale: string,
-    private userService: UserMsService, private utileService: UtilsService, private router: Router, private dialog: MatDialog) {
+  constructor(private _toastMessageService: ToastMessageService, public utilsService: UtilsService, private itrService: ItrMsService, @Inject(LOCALE_ID) private locale: string,
+    private userService: UserMsService, private router: Router, private dialog: MatDialog) {
     this.subscriptionListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.subscriptionColoumnDef(),
       enableCellChangeFlash: true,
       onGridReady: params => {
-        // params.api.sizeColumnsToFit();
       },
-
       sortable: true,
     };
   }
@@ -77,33 +75,23 @@ export class SubscriptionDetailComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
-
+        },
+        cellRenderer: function (params) {
+          if (params.data.smeSelected !== 'NA') {
+            if (params.data.planAgreedByUserOn !== null && params.data.planAgreedByUserOn !== '') {
+              return `<button type="button" class="action_icon add_button" title="User Accepted changed amount"
+          style="border: none; background: transparent; font-size: 8px; cursor:pointer">
+            <i class="fa fa-circle" style="color:green" aria-hidden="true"></i>
+           </button>`+ params.data.smeSelected;
+            }
+            return `<button type="button" class="action_icon add_button" title="User has not accepted plan change request yet."
+          style="border: none; background: transparent; font-size: 8px; cursor:pointer">
+            <i class="fa fa-circle" style="color:red" aria-hidden="true"></i>
+           </button>`+ params.data.smeSelected;
+          }
+          return params.data.smeSelected
+        },
       },
-      // {
-      //   headerName: 'Total Tax',
-      //   field: 'totalTax',
-      //   width: 120,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
-      // {
-      //   headerName: 'Total Amount',
-      //   field: 'totalAmount',
-      //   width: 120,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
       {
         headerName: 'Service Type',
         field: 'servicesType',
@@ -129,6 +117,13 @@ export class SubscriptionDetailComponent implements OnInit {
         }
       },
       {
+        headerName: 'Invoice Amount',
+        field: 'invoiceAmount',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+      },
+      {
         headerName: 'Is Active',
         field: 'isActive',
         width: 80,
@@ -147,18 +142,6 @@ export class SubscriptionDetailComponent implements OnInit {
           debounceMs: 0
         }
       },
-      /* {
-        headerName: 'Valid for Days',
-        field: 'validFordays',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      }, */
       {
         headerName: 'Start Date',
         field: 'startDate',
@@ -177,8 +160,54 @@ export class SubscriptionDetailComponent implements OnInit {
         field: 'endDate',
         width: 120,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
         valueFormatter: (data) => data.value ? moment(data.value).format('DD MMM YYYY') : null,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        tooltip: function (params) {
+          let currentDate = new Date();
+          let dateSent = new Date(params.data.endDate);
+          let diff = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate())) / (1000 * 60 * 60 * 24));
+          if (diff > 0 && !params.data.served) {
+            return 'Subscription is ended you have not served client yet.';
+          } else if (diff > -8 && !params.data.served) {
+            return 'Subscription will be end in next 7 days.';
+          }
+        },
+        cellStyle: function (params) {
+          let currentDate = new Date();
+          let dateSent = new Date(params.data.endDate);
+          let diff = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate())) / (1000 * 60 * 60 * 24));
+          console.log('____________________', diff, '______', dateSent)
+          if (diff > 0 && !params.data.served) {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              color: 'red',
+            }
+          } else if (diff > -7 && !params.data.served) {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              color: 'orange',
+            }
+          } else {
+            return { textAlign: 'center' }
+          }
+        },
+      },
+      {
+        headerName: 'Invoice Id',
+        field: 'txbdyInvoiceId',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -186,8 +215,8 @@ export class SubscriptionDetailComponent implements OnInit {
         }
       },
       {
-        headerName: 'Invoice Id',
-        field: 'txbdyInvoiceId',
+        headerName: 'Filer Id',
+        field: 'subscriptionAssigneeId',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -234,13 +263,12 @@ export class SubscriptionDetailComponent implements OnInit {
             <i class="fa fa-files-o" aria-hidden="true" data-action-type="generateInvoice"></i>
            </button>`;
           } else {
-            return `<button type="button" class="action_icon add_button" title="Invoice Generated"
+            return `<button type="button" class="action_icon add_button" title="Delete Invoice" 
             style="border: none;
-            background: transparent; font-size: 16px; cursor:not-allowed;color: green">
-            <i class="fa fa-check" aria-hidden="true" data-action-type="updateInvoice"></i>
+            background: transparent; font-size: 16px; cursor:pointer">
+            <i class="fa fa-trash" aria-hidden="true" data-action-type="delete-invoice"></i>
            </button>`;
           }
-
         },
         width: 60,
         pinned: 'right',
@@ -257,7 +285,6 @@ export class SubscriptionDetailComponent implements OnInit {
         field: "served",
         width: 50,
         pinned: 'right',
-        // visible: this.listFor === "INTERESTED" ? true : false,
         cellRenderer: params => {
           return `<input type='checkbox' style="border: none;
              cursor:pointer;" data-action-type="served" ${params.data.served === true ? 'checked' : ''} />`;
@@ -267,14 +294,12 @@ export class SubscriptionDetailComponent implements OnInit {
             : '';
         }
       }
-
     ]
   }
 
   advanceSearch() {
     console.log('this.searchVal -> ', this.searchVal)
-    if (this.utilService.isNonEmpty(this.searchVal)) {
-      // var patt = new RegExp(this.searchVal)
+    if (this.utilsService.isNonEmpty(this.searchVal)) {
       if (this.searchVal.toString().length === 10) {
         this.getUserIdByMobileNum(this.searchVal)
       } else {
@@ -283,8 +308,7 @@ export class SubscriptionDetailComponent implements OnInit {
     }
     else {
       this.getUserSubscriptionInfo();
-      // this._toastMessageService.alert("error", "Enter mobile number.");
-      this.utilService.showSnackBar('You are fetching all records.')
+      this.utilsService.showSnackBar('You are fetching all records.')
     }
   }
 
@@ -304,13 +328,13 @@ export class SubscriptionDetailComponent implements OnInit {
         this.loading = false;
         this.selectedUserName = '';
         console.log('Error -> ', error);
-        this._toastMessageService.alert("error", this.utileService.showErrorMsg(error.error.status));
+        this._toastMessageService.alert("error", this.utilsService.showErrorMsg(error.error.status));
       })
   }
 
   allSubscriptions = [];
   getUserSubscriptionInfo(userId?) {
-    var param = '';   //;
+    var param = '';
     if (userId) {
       param = '/subscription?userId=' + userId;
     }
@@ -323,14 +347,10 @@ export class SubscriptionDetailComponent implements OnInit {
       console.log(response);
       this.allSubscriptions = response;
       this.loading = false;
-      // console.log('subscription responce: ', responce, ' type of: ', typeof responce);
-      // console.log('Object type: ', Object.keys(responce), ' length: ', Object.keys(responce).length);
-      if (!this.utilService.isNonEmpty(userId)) {
-        if (response.length > 0) {     //if (response.content.length > 0)     
-          // this.subscriptionListGridOptions.api.setRowData(this.createRowData(response.content));
+      if (!this.utilsService.isNonEmpty(userId)) {
+        if (response.length > 0) {
           this.subscriptionListGridOptions.api.setRowData(this.createRowData(response));
-        }
-        else {
+        } else {
           this._toastMessageService.alert("error", "Data not found.");
         }
       } else {
@@ -338,7 +358,7 @@ export class SubscriptionDetailComponent implements OnInit {
           this.subscriptionListGridOptions.api.setRowData(this.createRowData(response));
         } else {
           this.subscriptionListGridOptions.api.setRowData(this.createRowData([]));
-          this.utilService.showSnackBar('There is no records of subscription against this user.')
+          this.utilsService.showSnackBar('There is no records of subscription against this user.')
         }
       }
     },
@@ -354,37 +374,21 @@ export class SubscriptionDetailComponent implements OnInit {
       newData.push({
         subscriptionId: subscriptionData[i].subscriptionId,
         userId: subscriptionData[i].userId,
-        userSelected: this.utilService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.name : 'NA',
-        smeSelected: this.utilService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.name : 'NA',
-        servicesType: this.utilService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.servicesType : (this.utilService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.servicesType : 'NA'),
+        userSelected: this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.name : 'NA',
+        smeSelected: this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.name : 'NA',
+        planAgreedByUserOn: subscriptionData[i].planAgreedByUserOn,
+        servicesType: this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.servicesType : (this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.servicesType : '-'),
         startDate: subscriptionData[i].startDate,
         endDate: subscriptionData[i].endDate,
         txbdyInvoiceId: subscriptionData[i].txbdyInvoiceId,
+        subscriptionAssigneeId: subscriptionData[i].subscriptionAssigneeId !== 0 ? subscriptionData[i].subscriptionAssigneeId : 'NA',
         isActive: subscriptionData[i].isActive,
         served: subscriptionData[i].served,
-        promoCode: this.utilService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : 'NA',
+        promoCode: this.utilsService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : '-',
+        invoiceAmount: this.utilsService.isNonEmpty(subscriptionData[i].promoApplied) ? subscriptionData[i].promoApplied.totalAmount : (this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.totalAmount : (this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.totalAmount : '0')),
       });
     }
     return newData;
-
-    /*  console.log('subscriptionData -> ', subscriptionData);
-     var subscriptionInfo = [];
-     if (userId) {
-       for (let i = 0; i < subscriptionData.length; i++) {
-         console.log('subscriptionData[' + i + '] -> ', subscriptionData[i]);
-         let updatedData = Object.assign({}, subscriptionInfo[i], { userId: subscriptionData[i].userId, planSelectedBy: subscriptionData[i].planDetails[0].selectionDetails.selectedBy, planName: subscriptionData[i].planDetails[0].plan.name, shortDescription: subscriptionData[i].planDetails[0].plan.shortDescription, basePrice: subscriptionData[i].planDetails[0].plan.basePrice, cgst: subscriptionData[i].planDetails[0].plan.cgst, sgst: subscriptionData[i].planDetails[0].plan.sgst, totalTax: subscriptionData[i].planDetails[0].plan.totalTax, igst: subscriptionData[i].planDetails[0].plan.igst, totalAmount: subscriptionData[i].planDetails[0].plan.totalAmount, serviceType: subscriptionData[i].planDetails[0].plan.servicesType, validFordays: subscriptionData[i].planDetails[0].plan.validForDays, startDate: subscriptionData[i].startDate, endDateDate: subscriptionData[i].endDate, taxByInvoiceId: subscriptionData[i].txbdyInvoiceId, isActive: subscriptionData[i].isActive, subscriptionId: subscriptionData[i].subscriptionId });
-         subscriptionInfo.push(updatedData)
-       }
-       return subscriptionInfo;
-     }
-     else {
-       for (let i = 0; i < subscriptionData.content.length; i++) {
-         console.log('subscriptionData[' + i + '] -> ', subscriptionData.content[i]);
-         let updatedData = Object.assign({}, subscriptionInfo[i], { userId: subscriptionData.content[i].userId, planSelectedBy: subscriptionData.content[i].planDetails[0].selectionDetails.selectedBy, planName: subscriptionData.content[i].planDetails[0].plan.name, shortDescription: subscriptionData.content[i].planDetails[0].plan.shortDescription, basePrice: subscriptionData.content[i].planDetails[0].plan.basePrice, cgst: subscriptionData.content[i].planDetails[0].plan.cgst, sgst: subscriptionData.content[i].planDetails[0].plan.sgst, totalTax: subscriptionData.content[i].planDetails[0].plan.totalTax, igst: subscriptionData.content[i].planDetails[0].plan.igst, totalAmount: subscriptionData.content[i].planDetails[0].plan.totalAmount, serviceType: subscriptionData.content[i].planDetails[0].plan.servicesType, validFordays: subscriptionData.content[i].planDetails[0].plan.validForDays, startDate: subscriptionData.content[i].startDate, endDateDate: subscriptionData.content[i].endDate, taxByInvoiceId: subscriptionData.content[i].txbdyInvoiceId, isActive: subscriptionData.content[i].isActive, subscriptionId: subscriptionData.content[i].subscriptionId });
-         subscriptionInfo.push(updatedData)
-       }
-       return subscriptionInfo;
-     } */
   }
 
   public onSubscriptionRowClicked(params) {
@@ -393,12 +397,11 @@ export class SubscriptionDetailComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'generateInvoice': {
-          this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
-          break;
-        }
-        case 'updateInvoice': {
-          console.log('params.data update Invoice:', params.data);
-          // this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { txbdyInvoiceId: params.data.txbdyInvoiceId } });
+          if (params.data.isActive) {
+            this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
+          } else {
+            this.utilsService.showSnackBar('Please activate the subscription first.')
+          }
           break;
         }
         case 'subscription': {
@@ -409,17 +412,21 @@ export class SubscriptionDetailComponent implements OnInit {
           this.updateSubscription(params.data);
           break;
         }
+        case 'delete-invoice': {
+          this.deleteInvoice(params.data);
+          break;
+        }
       }
     }
   }
 
   addNewPlan(plan) {
-    if (this.utilService.isNonZero(plan.txbdyInvoiceId)) {
-      this.utilService.showSnackBar('This subscriptions invoice is created.');
+    if (this.utilsService.isNonZero(plan.txbdyInvoiceId)) {
+      this.utilsService.showSnackBar('This subscriptions invoice is created.');
       return;
     }
     console.log('Plan -> ', plan);
-    this.router.navigate(['/pages/subscription/sub/' + plan.subscriptionId])   //'/pages/subscription/'+212'
+    this.router.navigate(['/pages/subscription/sub/' + plan.subscriptionId]);
   }
 
   addSubscriptionPlan() {
@@ -454,13 +461,30 @@ export class SubscriptionDetailComponent implements OnInit {
     const param = "/subscription";
     this.itrService.putMethod(param, request).subscribe((response: any) => {
       console.log('Subscription Updated Successfully:', response);
-      this.utilService.showSnackBar('Subscription updated successfully!');
+      this.utilsService.showSnackBar('Subscription updated successfully!');
+      this.getUserSubscriptionInfo();
       this.loading = false;
     }, error => {
       this.getUserSubscriptionInfo();
-      this.utilService.showSnackBar('Failed to update subscription!');
+      this.utilsService.showSnackBar('Failed to update subscription!');
       this.loading = false;
       console.log('Subscription Updated error=>:', error);
+    })
+  }
+
+  deleteInvoice(invoiceInfo) {
+    console.log('invoiceInfo: ', invoiceInfo);
+    this.loading = true;
+    let param = `/invoice/delete?txbdyInvoiceId=${invoiceInfo.txbdyInvoiceId}`;
+    this.itrService.deleteMethod(param).subscribe((responce: any) => {
+      this.loading = false;
+      console.log('responce: ', responce);
+      this._toastMessageService.alert("success", responce.reponse);
+      if (responce.reponse !== 'You cannot delete invoice with Paid status')
+        this.getUserSubscriptionInfo();
+    }, error => {
+      this.loading = false;
+      this._toastMessageService.alert("error", "Faild to delete invoice.");
     })
   }
 }
