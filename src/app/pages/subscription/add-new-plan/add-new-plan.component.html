@@ -57,9 +57,9 @@
               <!-- <span class="head">Desciption:</span><br> -->
               <span class="head">Validation For Days:</span><br>
               <span class="head">Base Price:</span><br>
-              <span class="head">cgst:</span><br>
-              <span class="head">sgst:</span><br>
-              <span class="head">igst:</span><br>
+              <span class="head">CGST:</span><br>
+              <span class="head">SGST:</span><br>
+              <span class="head">IGST:</span><br>
               <span class="head">Total Tax:</span><br>
               <span class="head">Total Amount:</span>
             </div>
@@ -111,9 +111,9 @@
               <!-- <span class="head">Desciption:</span><br> -->
               <span class="head">Validation For Days:</span><br>
               <span class="head">Base Price:</span><br>
-              <span class="head">cgst:</span><br>
-              <span class="head">sgst:</span><br>
-              <span class="head">igst:</span><br>
+              <span class="head">CGST:</span><br>
+              <span class="head">SGST:</span><br>
+              <span class="head">IGST:</span><br>
               <span class="head">Total Tax:</span><br>
               <span class="head">Total Amount:</span>
             </div>
@@ -160,26 +160,24 @@
             <div class="card__col-lg-12" *ngIf="promoCodeInfo">
               <b style="font-size: 14px;">Promo code Information: </b><br>
               <div class="card__row">
-                <div class="card__col-lg-5">
+                <div class="card__col-lg-7">
                   <span class="promo-head">Discount Type:</span><br>
-                  <span class="promo-head" *ngIf="promoCodeInfo.discountType === 'AMOUNT'">Discount:</span><br>
-                  <span class="promo-head" *ngIf="promoCodeInfo.discountType === 'AMOUNT'">Min Order:</span><br>
-                  <span class="promo-head" *ngIf="promoCodeInfo.discountType === 'PERCENTAGE'">Percentage:</span><br>
-                  <span class="promo-head" *ngIf="promoCodeInfo.discountType === 'PERCENTAGE'">Max Discount:</span><br>
+                  <span class="promo-head" *ngIf="promoCodeInfo.discountType === 'AMOUNT'">Discount:<br>
+                    <span class="promo-head">Min Order:<br></span></span>
+                  <span class="promo-head" *ngIf="promoCodeInfo.discountType === 'PERCENTAGE'">Percentage:<br>
+                    <span class="promo-head">Max Discount:<br></span></span>
                   <span class="promo-head" *ngIf="promoCodeInfo.discountType === 'FIXED'">
                     <p *ngFor="let plan of promoCodeInfo.discountDetails">{{plan.name}}:</p>
                   </span>
                 </div>
-                <div class="card__col-lg-7" *ngIf="promoCodeInfo">
+                <div class="card__col-lg-5" *ngIf="promoCodeInfo">
                   <span class="promo-head">{{promoCodeInfo.discountType}}</span><br>
                   <span class="promo-head"
-                    *ngIf="promoCodeInfo.discountType === 'AMOUNT'">{{promoCodeInfo.discountAmount}}</span><br>
+                    *ngIf="promoCodeInfo.discountType === 'AMOUNT'">{{promoCodeInfo.discountAmount}}<br>
+                    <span class="promo-head">{{promoCodeInfo.minOrderAmount}}<br></span></span>
                   <span class="promo-head"
-                    *ngIf="promoCodeInfo.discountType === 'AMOUNT'">{{promoCodeInfo.minOrderAmount}}</span><br>
-                  <span class="promo-head"
-                    *ngIf="promoCodeInfo.discountType === 'PERCENTAGE'">{{promoCodeInfo.discountPercent}}</span><br>
-                  <span class="promo-head"
-                    *ngIf="promoCodeInfo.discountType === 'PERCENTAGE'">{{promoCodeInfo.maxDiscountAmount}}</span><br>
+                    *ngIf="promoCodeInfo.discountType === 'PERCENTAGE'">{{promoCodeInfo.discountPercent + ' %'}}<br>
+                    <span class="promo-head">{{promoCodeInfo.maxDiscountAmount}}<br></span></span>
                   <span class="promo-head" *ngIf="promoCodeInfo.discountType === 'FIXED'">
                     <p *ngFor="let plan of promoCodeInfo.discountDetails">{{plan.totalAmount}}</p>
                   </span>
@@ -201,26 +199,25 @@
 
           <div class="card__row">
             <div class="card__col-lg-5">
-
               <span class="head">Base Price:</span><br>
-              <span class="head">cgst:</span><br>
-              <span class="head">sgst:</span><br>
-              <span class="head">igst:</span><br><br>
+              <span class="head">CGST:</span><br>
+              <span class="head">SGST:</span><br>
+              <span class="head">IGST:</span><br>
               <span class="head" *ngIf="this.userSubscription && this.userSubscription.promoCode"><b>Promo code
-                  Discount:</b></span><br><br>
-              <span class="head">Total Tax:</span><br><br>
+                  Discount:</b><br><br></span>
+              <span class="head">Total Tax:</span><br>
               <span class="head"><b>Total Amount:</b></span>
             </div>
             <div class="card__col-lg-7">
               <span class="head">{{this.finalPricing['basePrice'] | currency:'INR'}}</span><br>
               <span class="head">{{this.finalPricing['cgst'] | currency:'INR'}}</span><br>
               <span class="head">{{this.finalPricing['sgst'] | currency:'INR'}}</span><br>
-              <span class="head">{{this.finalPricing['igst'] | currency:'INR'}}</span><br><br>
+              <span class="head">{{this.finalPricing['igst'] | currency:'INR'}}</span><br>
               <span class="head" *ngIf="this.userSubscription && this.userSubscription.promoCode"><b>
                   {{getExactPromoDiscount() |
                   currency:'INR'}}
-                </b></span><br><br>
-              <span class="head">{{this.finalPricing['totalTax'] | currency:'INR'}}</span><br><br>
+                </b><br><br></span>
+              <span class="head">{{this.finalPricing['totalTax'] | currency:'INR'}}</span><br>
               <span class="head"><b>{{this.finalPricing['totalAmount'] |
                   currency:'INR'}}</b></span>
             </div>
@@ -258,12 +255,11 @@
           <div class="card__col-lg-4">
             <mat-form-field appearance="outline">
               <mat-label>Select SME</mat-label>
-              <mat-select matInput placeholder="Select Plan" [formControl]="subscriptionAssigneeId" autocomplete="off">
-                <mat-option *ngFor="let plan of allPlans" [value]="plan.planId">
-                  {{ plan.name }}
+              <mat-select matInput placeholder="Select Filer" [formControl]="subscriptionAssigneeId" autocomplete="off">
+                <mat-option *ngFor="let sme of smeList" [value]="sme.value">
+                  {{ sme.label }}
                 </mat-option>
               </mat-select>
-              <mat-error>Select Plan</mat-error>
             </mat-form-field>
           </div>
         </div>

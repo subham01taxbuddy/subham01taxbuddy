@@ -1,6 +1,4 @@
-import { ITR_JSON } from './../../../shared/interfaces/itr-input.interface';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GridOptions } from 'ag-grid-community';
+import { Component, OnInit } from '@angular/core';
 import { UtilsService } from 'app/services/utils.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -34,16 +32,11 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   ]
 })
-export class AddInvoiceComponent implements OnInit, OnDestroy {
+export class AddInvoiceComponent implements OnInit {
   loading: boolean;
-  // clientListGridOptions: GridOptions;
   invoiceForm: FormGroup;
   stateDropdown: any;
-  editInvoice: boolean = false;
   isMaharashtraState: boolean = true;
-  countryDropdown: any = [{ "countryId": 1, "countryName": "INDIA", "countryCode": "91" }];
-  // paymentMode: any = [{ value: 'Online' }, { value: 'Cash' }];
-  paymentStatus: any = [{ value: 'Paid', label: 'Paid' }, { value: 'Failed', label: 'Failed' }, { value: 'Unpaid', label: 'Unpaid' }]
   maxDate = new Date();
   initialData: any;
   userSubscription: any;
@@ -59,9 +52,6 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
   ];
 
   serviceDetails = [];
-  // isItrFiled: boolean = false;
-  // allPlans: any;
-
   service: string;
   serviceDetail: string = '';
   description: string = '';
@@ -76,20 +66,12 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     private itrMsService: ItrMsService, private activeRoute: ActivatedRoute,
     private router: Router
   ) {
-    // this.invoiceInfoCalled();
   }
 
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
     this.invoiceForm = this.createInvoiceForm();
     this.changeCountry('INDIA');
-    // this.invoiceInfoCalled();
-    // var invoiceNotGeneratedUserId = sessionStorage.getItem('invoiceNotgeneratedUserId');
-    // console.log('invoiceNotGeneratedUserId: ', invoiceNotGeneratedUserId);
-    // if (this.utilsService.isNonEmpty(invoiceNotGeneratedUserId)) {
-    //   this.getUserDetails(invoiceNotGeneratedUserId);  //5007
-    // }
-
     this.activeRoute.queryParams.subscribe(params => {
       this.loading = true;
       console.log("Subscription user info:", params, params['userId'])
@@ -108,7 +90,6 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log('Subscription by Id: ', res);
       this.userSubscription = res;
-      let dueDays;
       let applicableService;
       if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
         this.dueDays = this.userSubscription.smeSelectedPlan.dueDays;
@@ -153,7 +134,7 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
   }
   setItemList(userSubscription) {
     this.itemList = [{
-      itemDescription: /* this.utilsService.isNonEmpty(userSubscription.smeSelectedPlan) ? userSubscription.smeSelectedPlan.name : this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan) ? this.userSubscription.userSelectedPlan.name :  */'',
+      itemDescription: '',
       quantity: 1,
       rate: this.utilsService.isNonEmpty(userSubscription.smeSelectedPlan) ? userSubscription.smeSelectedPlan.basePrice : this.userSubscription.userSelectedPlan.basePrice,
       cgstPercent: 9,
@@ -166,7 +147,6 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     }]
 
     if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.promoApplied)) {
-      // this.invoiceForm.controls.subTotal.setValue(this.userSubscription.promoApplied.basePrice);
       this.invoiceForm.controls.cgstTotal.setValue(this.userSubscription.promoApplied.cgst);
       this.invoiceForm.controls.sgstTotal.setValue(this.userSubscription.promoApplied.sgst);
       this.invoiceForm.controls.igstTotal.setValue(this.userSubscription.promoApplied.igst);
@@ -195,27 +175,16 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     }
   }
 
-
-  ngOnDestroy() {
-    // sessionStorage.clear();
-    // sessionStorage.setItem('invoiceNotGeneratedUserId', null)
-  }
-
   createInvoiceForm() {
     return this.fb.group({
       _id: [null],
       userId: [null],
-      // invoiceNo: [null],
       invoiceDate: [(new Date()), Validators.required],
       terms: ['Due on Receipt', Validators.required],
       dueDate: [{ value: new Date(), disabled: true }, Validators.required],
       sacCode: ['998232', Validators.required],
       cin: ['U74999MH2017PT298565', Validators.required],
-      // modeOfPayment: ['', Validators.required],
       billTo: ['', [Validators.required, Validators.pattern(AppConstants.charAndNoRegex)]],
-      // paymentCollectedBy: '',
-      // dateOfReceipt: '',
-      // dateOfDeposit: '',
       paymentStatus: ['Unpaid'],
       addressLine1: ['', Validators.required],
       addressLine2: [''],
@@ -234,43 +203,14 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
       total: ['', Validators.required],
       balanceDue: ['', Validators.required],
       itemList: ['', Validators.required],
-      // paymentLink: null,
-      // invoiceId: null,
-      // isLinkInvalid: false,
-      // amountInWords: '',
       inovicePreparedBy: '',
       ifaLeadClient: '',
-      // paymentDate: '',
       estimatedDateTime: [''],
       itrType: [''],
       comment: [''],
       subscriptionId: ['', Validators.required]
     })
   }
-
-  // setFormControl(payMode) {
-  //   console.log(payMode)
-  //   if (payMode === 'Cash') {
-  //     this.invoiceForm.controls['paymentCollectedBy'].setValidators([Validators.required]);
-  //     this.invoiceForm.controls['dateOfReceipt'].setValidators([Validators.required]);
-  //     this.invoiceForm.controls['dateOfDeposit'].setValidators([Validators.required]);
-  //   } else if (payMode === 'Online') {
-  //     this.invoiceForm.controls['paymentCollectedBy'].setValidators(null);
-  //     this.invoiceForm.controls['paymentCollectedBy'].updateValueAndValidity();
-  //     this.invoiceForm.controls['dateOfReceipt'].setValidators(null);
-  //     this.invoiceForm.controls['dateOfReceipt'].updateValueAndValidity();
-  //     this.invoiceForm.controls['dateOfDeposit'].setValidators(null);
-  //     this.invoiceForm.controls['dateOfDeposit'].updateValueAndValidity();
-  //   }
-  //   console.log('this.invoiceForm: ', this.invoiceForm)
-  // }
-
-
-  // minDepositInBank: any;
-  // setDepositInBankValidation(reciptDate) {
-  //   this.minDepositInBank = reciptDate;
-  // }
-
 
   async getUserDetails(userId) {
     this.getInitialData(userId);
@@ -334,44 +274,6 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     return await this.userMsService.getMethod(param).toPromise();
   }
 
-  // setBasicDetailsFromItr(ITR_JSON: ITR_JSON) {
-  //   this.invoiceForm.controls.userId.setValue(ITR_JSON.userId); this.invoiceForm.controls.billTo.setValue(ITR_JSON.family[0].fName + ' ' + ITR_JSON.family[0].lName);
-  //   this.invoiceForm.controls.addressLine1.setValue(ITR_JSON.address.flatNo);
-  //   this.invoiceForm.controls.addressLine2.setValue(this.utilsService.isNonEmpty(ITR_JSON.address.premisesName)
-  //     ? ITR_JSON.address.premisesName + ' ' : '' + ITR_JSON.address.area);
-  //   this.invoiceForm.controls.pincode.setValue(ITR_JSON.address.pinCode);
-  //   this.getCityData(this.invoiceForm.controls.pincode);
-  //   this.invoiceForm.controls.phone.setValue(ITR_JSON.contactNumber);
-  //   this.invoiceForm.controls.email.setValue(ITR_JSON.email);
-
-  //   const data = this.createRowData(ITR_JSON);
-  //   this.clientListGridOptions.api.updateRowData({ add: data })
-
-  // }
-
-  // TODO give this option on pop up only
-  changePayStatus(event, invoice) {
-    if (event) {
-      console.log('Selected pay status', event.target.value)
-      console.log('invoice: ', invoice)
-      var newInvoice = { paymentStatus: event.target.value };
-      this.loading = true;
-      const param = '/itr/invoice';
-      let body = invoice;
-      console.log('After payment status change: ', body)
-      this.userMsService.postMethodDownloadDoc(param, body).subscribe((result: any) => {
-        this.loading = false;
-        console.log("result: ", result)
-        this.utilsService.smoothScrollToTop();
-        this._toastMessageService.alert("success", "Payment status update succesfully.");
-        this.getUserDetails(invoice.userId);
-      }, error => {
-        this.loading = false;
-        this._toastMessageService.alert("error", "There is some issue to update payment status.");
-      });
-    }
-  }
-
   changeCountry(country) {
     if (country === 'INDIA') {
       let country = '91';
@@ -405,104 +307,7 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     console.log('invoiceForm control value: ', this.invoiceForm.value)
   }
 
-  // planMaster = [
-  //   { planId: 22, amount: 399 },
-  //   { planId: 23, amount: 1499 },
-  //   { planId: 24, amount: 1999 },
-  //   { planId: 25, amount: 2499 },
-  //   { planId: 26, amount: 2499 },
-  //   { planId: 28, amount: 2499 },
-  //   { planId: 29, amount: 350 },
-  //   { planId: 30, amount: 1499 },
-  // ];
-
-  // createRowData(input) {
-  //   var rate = 0
-  //   if (this.utilsService.isNonEmpty(input) && this.utilsService.isNonEmpty(input.planIdSelectedByTaxExpert) && input.planIdSelectedByTaxExpert !== 0) {
-  //     rate = this.planMaster.filter(item => item.planId === input.planIdSelectedByTaxExpert)[0].amount;
-  //   } else if (this.utilsService.isNonEmpty(input) && this.utilsService.isNonEmpty(input.planIdSelectedByUser) && input.planIdSelectedByUser !== 0) {
-  //     rate = this.planMaster.filter(item => item.planId === input.planIdSelectedByUser)[0].amount;
-  //   }
-
-  //   return [{
-  //     itemDescription: this.utilsService.isNonEmpty(input) ? `ITR Filing FY ${input.financialYear} (AY ${input.assessmentYear})` : '',
-  //     quantity: '1',
-  //     rate: rate,
-  //     cgstPercent: '9',
-  //     cgstAmnt: '',
-  //     sgstPercent: '9',
-  //     sgstAmnt: '',
-  //     igstPercent: '18',
-  //     igstAmnt: '',
-  //     amnt: ''
-  //   }]
-  // }
-
-  // displayFn(name) {
-  //   return name ? name : undefined;
-  // }
-
-  // getInvoiceTotal() {
-  //   let invoiceData = {
-  //     subTotal: 0,
-  //     cgstTotal: 0,
-  //     sgstTotal: 0,
-  //     igstTotal: 0,
-  //     invoiceTotal: 0,
-  //   }
-  //   if (this.clientListGridOptions && this.clientListGridOptions.api && this.clientListGridOptions.api.getRenderedNodes()) {
-  //     for (let i = 0; i < this.clientListGridOptions.api.getRenderedNodes().length; i++) {
-  //       const data = this.clientListGridOptions.api.getRenderedNodes()[i].data;
-  //       invoiceData.invoiceTotal = invoiceData.invoiceTotal + Math.round(data.rate * data.quantity)
-  //       invoiceData.cgstTotal = invoiceData.cgstTotal + Math.round((data.rate * data.cgstPercent / 118) * data.quantity);
-  //       invoiceData.sgstTotal = invoiceData.sgstTotal + Math.round((data.rate * data.sgstPercent / 118) * data.quantity);
-  //       invoiceData.igstTotal = invoiceData.igstTotal + Math.round((data.rate * data.igstPercent / 118) * data.quantity);
-  //     }
-  //   }
-  //   if (this.isMaharashtraState) {
-  //     invoiceData.subTotal = Math.round(invoiceData.invoiceTotal - (invoiceData.cgstTotal + invoiceData.sgstTotal));
-  //   } else {
-  //     invoiceData.subTotal = Math.round(invoiceData.invoiceTotal - invoiceData.igstTotal);
-  //   }
-  //   return invoiceData;
-  // }
-
   saveInvoice() {
-    // if (this.clientListGridOptions && this.clientListGridOptions.api &&
-    //   this.clientListGridOptions.api.getRenderedNodes() && this.isInvoiceDetailsValid()) {
-    // this.invoiceForm.controls['userId'].setValue(this.utilsService.isNonEmpty(this.invoiceForm.controls['userId'].value) ? this.invoiceForm.controls['userId'].value : null)
-    // const invoiceData = this.getInvoiceTotal()
-    // this.invoiceForm.controls['cgstTotal'].setValue(invoiceData.cgstTotal)
-    // this.invoiceForm.controls['sgstTotal'].setValue(invoiceData.sgstTotal)
-    // this.invoiceForm.controls['igstTotal'].setValue(invoiceData.igstTotal)
-    // this.invoiceForm.controls['subTotal'].setValue(invoiceData.subTotal)
-    // this.invoiceForm.controls['total'].setValue(invoiceData.invoiceTotal)
-    // this.invoiceForm.controls['balanceDue'].setValue(invoiceData.invoiceTotal)
-
-    // this.invoiceForm.controls['cgstTotal'].setValue(this.userSubscription.cgst)
-    // this.invoiceForm.controls['sgstTotal'].setValue(this.userSubscription.sgst)
-    // this.invoiceForm.controls['igstTotal'].setValue(this.userSubscription.igst)
-    // this.invoiceForm.controls['subTotal'].setValue(this.userSubscription.totalAmount)
-    // this.invoiceForm.controls['total'].setValue(this.userSubscription.totalAmount)
-    // this.invoiceForm.controls['balanceDue'].setValue(this.userSubscription.totalAmount)
-
-    // this.invoiceForm.controls['paymentStatus'].setValue(this.invoiceForm.controls['modeOfPayment'].value === 'Cash' ? 'Paid' : 'Unpaid')
-    // var invoiceItemList = [];
-
-    // invoiceItemList.push({
-    //   'itemDescription': this.userSubscription.name,
-    //   'quantity': 1,
-    //   'rate': this.userSubscription.totalAmount,
-    //   'cgstPercent': 9,
-    //   'cgstAmount': this.isMaharashtraState ? this.userSubscription.cgst : 0,
-    //   'sgstPercent': 9,
-    //   'sgstAmount': this.isMaharashtraState ? this.userSubscription.sgst : 0,
-    //   'igstPercent': 18,
-    //   'igstAmount': !this.isMaharashtraState ? this.userSubscription.igst : 0,
-    //   'amount': this.userSubscription.totalAmount
-    // })
-
-    // this.invoiceForm.controls['itemList'].setValue(invoiceItemList)
     let smeInfo = JSON.parse(localStorage.getItem('UMD'));
     this.invoiceForm.controls.inovicePreparedBy.setValue(smeInfo.USER_UNIQUE_ID);
     if (!this.utilsService.isNonEmpty(this.serviceDetail)) {
@@ -535,7 +340,6 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
       const request = this.invoiceForm.getRawValue();
       console.log('Invoice values:', request);
       this.itrMsService.postMethod(param, request).subscribe(async (result: any) => {
-        this.editInvoice = false;
         this.showInvoiceForm = false;
         console.log("result: ", result)
         this.utilsService.smoothScrollToTop();
@@ -549,9 +353,6 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
         }
         this._toastMessageService.alert("success", "Invoice saved succesfully.");
         this.router.navigate(['/pages/subscription/sub']);
-        // this.userInvoices = await this.getUsersInvoices(this.invoiceForm.value.userId);
-        // this.invoiceForm.reset();
-        // console.log('InvoiceForm: ', this.invoiceForm)
       }, error => {
         this.loading = false;
         this._toastMessageService.alert("error", "Error while creating invoice, please try again.");
@@ -560,9 +361,6 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     } else {
       $('input.ng-invalid').first().focus();
     }
-    // } else {
-    //   this._toastMessageService.alert("error", "Please enter all invoice item details.");
-    // }
   }
 
   updateAddressInProfile() {
@@ -613,39 +411,11 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     })
   }
 
-  // isInvoiceDetailsValid() {
-  //   const temp = this.clientListGridOptions.api.getRenderedNodes();
-  //   let isDataValid = false;
-  //   if (temp.length !== 0) {
-  //     for (let i = 0; i < temp.length; i++) {
-  //       if (this.utilsService.isNonEmpty(temp[i].data.itemDescription) &&
-  //         this.utilsService.isNonEmpty(temp[i].data.quantity) &&
-  //         this.utilsService.isNonEmpty(temp[i].data.rate)
-  //       ) {
-  //         isDataValid = true;
-  //       } else {
-  //         isDataValid = false;
-  //         break;
-  //       }
-  //     }
-  //   } else if (temp.length === 0) {
-  //     isDataValid = true;
-  //   }
-
-  //   if (isDataValid) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
   downloadInvoice(invoiceInfo) {
-    // console.log('invoiceInfo: ', invoiceInfo)
     this.loading = true;
     const param = `/invoice/download?invoiceNo=${invoiceInfo.invoiceNo}`;
     this.itrMsService.invoiceDownload(param).subscribe((result: any) => {
       this.loading = false;
-      // console.log('User Detail: ', result)
       var fileURL = new Blob([result.blob()], { type: 'application/pdf' })
       window.open(URL.createObjectURL(fileURL))
       this._toastMessageService.alert("success", "Invoice download successfully.");
@@ -656,7 +426,6 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
   }
 
   sendMail(invoiceInfo) {
-    // https://uat-api.taxbuddy.com/itr/invoice/sendInvoice?invoiceNo=
     this.loading = true;
     const param = `/invoice/send-invoice?invoiceNo=${invoiceInfo.invoiceNo}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
@@ -673,9 +442,7 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     this.invoiceForm = this.createInvoiceForm();
     this.invoiceForm.patchValue(invoiceInfo)
     console.log('Grid data for edit', invoiceInfo.itemList);
-    // this.clientListGridOptions.rowData = invoiceInfo.itemList;
     this.getCityData(this.invoiceForm.controls['pincode'])
-    this.editInvoice = true;
   }
 
   sendMailNotification(invoiceInfo) {
@@ -709,12 +476,8 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
   showTaxRelatedState(state) {
     if (state === 'Maharashtra') {
       this.isMaharashtraState = true;
-      // this.clientListGridOptions.columnApi.setColumnsVisible(['cgst', 'cgstPercent', 'cgstAmnt', 'sgst', 'sgstPercent', 'sgstAmnt'], true)
-      // this.clientListGridOptions.columnApi.setColumnsVisible(['igst', 'igstPercent', 'igstAmnt'], false)
     } else {
       this.isMaharashtraState = false;
-      // this.clientListGridOptions.columnApi.setColumnsVisible(['cgst', 'cgstPercent', 'cgstAmnt', 'sgst', 'sgstPercent', 'sgstAmnt'], false)
-      // this.clientListGridOptions.columnApi.setColumnsVisible(['igst', 'igstPercent', 'igstAmnt'], true)
     }
   }
 
@@ -760,8 +523,6 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     { service: 'Other Services', details: 'PT filing' },
     { service: 'Other Services', details: 'PF Registration' },
     { service: 'Other Services', details: 'TAN Registration' }];
-    console.log(this.service);
     this.serviceDetails = serviceArray.filter(item => item.service === this.service);
-    console.log(this.serviceDetails);
   }
 }
