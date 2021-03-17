@@ -205,7 +205,9 @@ export class SubscriptionDetailComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Add Subscription plan">
+          return `<button type="button" class="action_icon add_button" title="Add Subscription plan"
+          style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer">
             <i class="fa fa-inr" aria-hidden="true" data-action-type="subscription"></i>
            </button>`;
         },
@@ -226,9 +228,19 @@ export class SubscriptionDetailComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Generate Invoice">
-            <i class="fa fa-files-o" aria-hidden="true" data-action-type="invoice"></i>
+          if (params.data.txbdyInvoiceId == 0) {
+            return `<button type="button" class="action_icon add_button" title="Generate Invoice" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-files-o" aria-hidden="true" data-action-type="generateInvoice"></i>
            </button>`;
+          } else {
+            return `<button type="button" class="action_icon add_button" title="Invoice Generated"
+            style="border: none;
+            background: transparent; font-size: 16px; cursor:not-allowed;color: green">
+            <i class="fa fa-check" aria-hidden="true" data-action-type="updateInvoice"></i>
+           </button>`;
+          }
+
         },
         width: 60,
         pinned: 'right',
@@ -247,7 +259,8 @@ export class SubscriptionDetailComponent implements OnInit {
         pinned: 'right',
         // visible: this.listFor === "INTERESTED" ? true : false,
         cellRenderer: params => {
-          return `<input type='checkbox' data-action-type="served" ${params.data.served === true ? 'checked' : ''} />`;
+          return `<input type='checkbox' style="border: none;
+             cursor:pointer;" data-action-type="served" ${params.data.served === true ? 'checked' : ''} />`;
         },
         cellStyle: params => {
           return (!params.data.isActive) ? { 'pointer-events': 'none', opacity: '0.4' }
@@ -379,8 +392,13 @@ export class SubscriptionDetailComponent implements OnInit {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
-        case 'invoice': {
-          this.generateIncoice(params.data);
+        case 'generateInvoice': {
+          this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
+          break;
+        }
+        case 'updateInvoice': {
+          console.log('params.data update Invoice:', params.data);
+          // this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { txbdyInvoiceId: params.data.txbdyInvoiceId } });
           break;
         }
         case 'subscription': {
@@ -395,13 +413,8 @@ export class SubscriptionDetailComponent implements OnInit {
     }
   }
 
-  generateIncoice(data) {
-    // this.router.navigate(['/pages/invoice/generate'], {queryParams :{ userId: data.userId}});
-    this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: data.subscriptionId } });
-  }
-
   addNewPlan(plan) {
-    if (this.utilService.isNonEmpty(plan.txbdyInvoiceId)) {
+    if (this.utilService.isNonZero(plan.txbdyInvoiceId)) {
       this.utilService.showSnackBar('This subscriptions invoice is created.');
       return;
     }

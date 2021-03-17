@@ -94,17 +94,17 @@ export class FilingStatusTableComponent implements OnInit {
   constructor(private userMsService: UserMsService, public utilsService: UtilsService, private router: Router) { }
 
   ngOnInit() {
-    console.log('selectedAgentId -> ',localStorage.getItem('selectedAgentId'));
+    console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
     let agentId = localStorage.getItem('selectedAgentId');
-    if(this.utilsService.isNonEmpty(agentId)){
+    if (this.utilsService.isNonEmpty(agentId)) {
       this.agentId = agentId;
       this.retrieveDocUploaded(0);
     }
-    else{
+    else {
       this.retrieveDocUploaded(0);
     }
   }
-  
+
   retrieveDocUploaded(page) {
     this.loading = true;
     const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=${this.statusId}`;
@@ -162,9 +162,9 @@ export class FilingStatusTableComponent implements OnInit {
   }
   routeAction(data) {
     if (this.statusId == 11) {
-      console.log('user data : ',data, data.sourceAsMap['userId'])
-      sessionStorage.setItem('invoiceNotgeneratedUserId', data.sourceAsMap['userId']);  //sourceAsMap['Phone']s
-      this.router.navigate(['/pages/invoice/generate']);  
+      console.log('user data : ', data, data.sourceAsMap['userId'])
+      sessionStorage.setItem('invoiceNotgeneratedUserId', data.sourceAsMap['userId']);  //sourceAsMap['Phone']s //TODO removed relevent code from subscription module
+      this.router.navigate(['/pages/invoice/generate']);
     } else if (this.statusId == 12) {
       this.router.navigate(['/pages/invoice/list']);
     }

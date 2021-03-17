@@ -231,7 +231,7 @@
     <div class="card__row">
       <mat-card>
         <div class="card__row">
-          <div class="card__col-lg-6">
+          <div class="card__col-lg-4">
             <mat-form-field appearance="outline">
               <mat-label>Start Date</mat-label>
               <input matInput placeholder="Start Date" [formControl]="subStartDate"
@@ -244,7 +244,7 @@
             </mat-form-field>
           </div>
 
-          <div class="card__col-lg-6">
+          <div class="card__col-lg-4">
             <mat-form-field appearance="outline">
               <mat-label>End Date</mat-label>
               <input matInput placeholder="End Date" [max]="maxEndDate" [min]="minEndDate" [formControl]="subEndDate"
@@ -253,6 +253,17 @@
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
               <mat-error *ngIf="subEndDate.hasError('required')">Select End Date</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="card__col-lg-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Select SME</mat-label>
+              <mat-select matInput placeholder="Select Plan" [formControl]="subscriptionAssigneeId" autocomplete="off">
+                <mat-option *ngFor="let plan of allPlans" [value]="plan.planId">
+                  {{ plan.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Select Plan</mat-error>
             </mat-form-field>
           </div>
         </div>

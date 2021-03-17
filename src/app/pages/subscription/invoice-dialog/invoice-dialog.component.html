@@ -3,60 +3,54 @@
 
 <form [formGroup]="invoiceEditForm">
     <mat-dialog-content>
-        <div class="card__col-xs-4 card__col-sm-14">
-            <mat-form-field appearance="outline">
-                <mat-label>Invoice Date</mat-label>
-                <input matInput formControlName="invoiceDate" [matDatepicker]="picker" [max]="maxDate"
-                    autocomplete="off">
-                <!--(dateChange)="setDueDate(this.invoiceForm.controls['invoiceDate'].value)"-->
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-                <mat-error *ngIf="invoiceEditForm.controls['invoiceDate'].hasError('required')">Select
-                    Invoice date</mat-error>
-            </mat-form-field>
+        <div class="card__row">
+            <div class="card__col-lg-6">
+                <mat-card style="min-height: 130px; font-size: 16px;line-height: 20px;">
+                    Bill To: {{invoiceEditForm.value.billTo}}<br>
+                    Phone: {{invoiceEditForm.value.phone}}<br>
+                    Email: {{invoiceEditForm.value.email}}<br>
+                    Due Date: {{invoiceEditForm.value.dueDate | date:'mediumDate'}}<br>
+                </mat-card>
+            </div>
+            <div class="card__col-lg-6">
+                <mat-card style="min-height: 130px; font-size: 16px;line-height: 20px;">
+                    Sub Total: {{invoiceEditForm.value.subTotal}}<br>
+                    <span *ngIf="invoiceEditForm.value.discountTotal">Discount Applied:
+                        {{invoiceEditForm.value.discountTotal}}<br></span>
+                    <span *ngIf="invoiceEditForm.value.state === 'Maharashtra'"> CGST:
+                        {{invoiceEditForm.value.cgstTotal}}<br></span>
+                    <span *ngIf="invoiceEditForm.value.state === 'Maharashtra'">SGST:
+                        {{invoiceEditForm.value.sgstTotal}}<br></span>
+                    <span *ngIf="invoiceEditForm.value.state !== 'Maharashtra'">IGST:
+                        {{invoiceEditForm.value.igstTotal}}<br></span>
+                    Total: {{invoiceEditForm.value.total}}<br>
+                </mat-card>
+            </div>
         </div>
-        <div class=" card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>Terms: </mat-label>
-                <input matInput type="text" placeholder="Terms" formControlName="terms" readonly required>
-            </mat-form-field>
-        </div>
+        <br>
+        <br>
+
         <div class="card__col-xs-4 card__col-sm-4">
             <mat-form-field appearance="outline">
-                <mat-label>Due Date</mat-label>
-                <input matInput formControlName="dueDate" [matDatepicker]="picker1" [max]="maxDate" autocomplete="off">
-                <!--(dateChange)="setDueDate(this.invoiceForm.controls['invoiceDate'].value)"-->
-                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                <mat-datepicker #picker1></mat-datepicker>
-                <mat-error *ngIf="invoiceEditForm.controls['dueDate'].hasError('required')">Select
-                    Due date</mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class=" card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>SAC Code: </mat-label>
-                <input matInput type="text" placeholder="SAC code" formControlName="sacCode" readonly required>
-            </mat-form-field>
-        </div>
-        <div class=" card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>CIN: </mat-label>
-                <input matInput placeholder="CIN" formControlName="cin" readonly required>
+                <mat-label>Payment Status</mat-label>
+                <mat-select formControlName="paymentStatus" matInput placeholder="Select Payment Status"
+                    autocomplete="off" required>
+                    <mat-option value="Paid">Paid</mat-option>
+                    <mat-option value="Failed">Failed</mat-option>
+                    <mat-option value="Unpaid">Unpaid</mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
         <div class="card__col-xs-4 card__col-sm-4">
             <mat-form-field appearance="outline">
                 <mat-label>Mode of Payment</mat-label>
-                <!-- <input matInput formControlName="modeOfPayment" placeholder="Mode of Payment"
-                    readonly autocomplete="off"> -->
                 <mat-select formControlName="modeOfPayment" matInput placeholder="Select Mode of Payment"
-                    autocomplete="off"
-                    (selectionChange)="setFormControl(invoiceEditForm.controls['modeOfPayment'].value)" required>
-                    <mat-option *ngFor="let payment of paymentMode" [value]="payment.value">
-                        <!--stateCode-->
-                        {{payment.value}}
-                    </mat-option>
+                    autocomplete="off" required>
+                    <mat-option value="Bank Transfer">Bank Transfer</mat-option>
+                    <mat-option value="Google Pay">Google Pay</mat-option>
+                    <mat-option value="Phone Pay">Phone Pay</mat-option>
+                    <mat-option value="Paytm">Paytm</mat-option>
+                    <mat-option value="Cash">Cash</mat-option>
                 </mat-select>
                 <mat-error *ngIf="invoiceEditForm.controls['modeOfPayment'].hasError('required')">Select
                     Mode of Payment
@@ -65,252 +59,52 @@
         </div>
 
         <div class="card__col-xs-4 card__col-sm-4" *ngIf="invoiceEditForm.controls['modeOfPayment'].value === 'Cash'">
-            <!-- <label><b>SAC Code: </b></label> -->
             <mat-form-field appearance="outline">
                 <mat-label>Payment Collected By</mat-label>
                 <input matInput formControlName="paymentCollectedBy" placeholder="Payment Collected By"
-                    autocomplete="off" maxlength="15" required>
+                    autocomplete="off" maxlength="15"
+                    [required]="invoiceEditForm.controls['modeOfPayment'].value === 'Cash'">
                 <mat-error *ngIf="invoiceEditForm.controls['paymentCollectedBy'].hasError('required')">Enter
                     payment collected by
                 </mat-error>
             </mat-form-field>
         </div>
-        <div class="card__col-xs-4 card__col-sm-4" *ngIf="invoiceEditForm.controls['modeOfPayment'].value === 'Cash'">
+        <div class="card__col-xs-4 card__col-sm-4" *ngIf="invoiceEditForm.controls['modeOfPayment'].value !== 'Cash'">
+            <mat-form-field appearance="outline">
+                <mat-label>Transaction Id</mat-label>
+                <input matInput formControlName="transactionId" placeholder="Transaction Id" autocomplete="off"
+                    maxlength="15" [required]="invoiceEditForm.controls['modeOfPayment'].value !== 'Cash'">
+                <mat-error *ngIf="invoiceEditForm.controls['transactionId'].hasError('required')">Enter
+                    Transaction Id
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="card__col-xs-4 card__col-sm-4">
             <mat-form-field appearance="outline">
                 <mat-label>Date of receipt</mat-label>
                 <input matInput formControlName="dateOfReceipt" [matDatepicker]="picker3" required [max]="maxDate"
                     (dateChange)="setDepositInBankValidation(invoiceEditForm.controls['dateOfReceipt'].value)"
                     autocomplete="off">
-                <!--(dateChange)="setDueDate(this.invoiceEditForm.controls['invoiceDate'].value)"-->
                 <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                 <mat-datepicker #picker3></mat-datepicker>
                 <mat-error *ngIf="invoiceEditForm.controls['dateOfReceipt'].hasError('required')">Select
-                    Invoice date</mat-error>
+                    date of receipt</mat-error>
             </mat-form-field>
         </div>
-        <div class="card__col-xs-4 card__col-sm-4" *ngIf="invoiceEditForm.controls['modeOfPayment'].value === 'Cash'">
+        <div class="card__col-xs-4 card__col-sm-4">
             <mat-form-field appearance="outline">
-                <mat-label>Deposite in Bank</mat-label>
+                <mat-label>Date of deposite</mat-label>
                 <input matInput formControlName="dateOfDeposit" [matDatepicker]="picker4" [min]="minDepositInBank"
                     [max]="maxDate" autocomplete="off" required>
-                <!--(dateChange)="setDueDate(this.invoiceEditForm.controls['invoiceDate'].value)"-->
                 <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                 <mat-datepicker #picker4></mat-datepicker>
                 <mat-error *ngIf="invoiceEditForm.controls['dateOfDeposit'].hasError('required')">
-                    Select
-                    Invoice date</mat-error>
+                    Select date of deposite</mat-error>
             </mat-form-field>
         </div>
-
-        <div class="card__col-lg-4">
-            <!-- <label><b>SAC Code: </b></label> -->
-            <mat-form-field appearance="outline">
-                <mat-label>IFA / Lead client</mat-label>
-                <input matInput formControlName="ifaLeadClient" placeholder="IFA / Lead client"
-                    autocomplete="off" maxlength="30" required>
-                <mat-error *ngIf="invoiceEditForm.controls['ifaLeadClient'].hasError('required')">Enter
-                    IFA / Lead client info
-                </mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>Bill to</mat-label>
-                <input matInput formControlName="billTo" maxlength="50" placeholder="Bill to(User name)" autocomplete="off" required>
-                <mat-error *ngIf="invoiceEditForm.controls['billTo'].hasError('required')">Enter User
-                    name</mat-error>
-                <mat-error *ngIf="invoiceEditForm.controls['billTo'].hasError('pattern')">Enter valid User
-                    name</mat-error>
-            </mat-form-field>
-        </div>
-
-
-        <div class="card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>Address Line 1: </mat-label>
-                <input formControlName="addressLine1" maxlength="50" matInput placeholder="Address Line 1: "
-                    autocomplete="off" required>
-                <mat-error *ngIf="invoiceEditForm.controls['addressLine1'].hasError('required')">Enter
-                    Address line 1</mat-error>
-            </mat-form-field>
-        </div>
-        <div class="card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>Address Line 2: </mat-label>
-                <input formControlName="addressLine2" maxlength="50" matInput placeholder="Address Line 2: "
-                    autocomplete="off">
-            </mat-form-field>
-        </div>
-        <div class="card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>PIN Code</mat-label>
-                <input formControlName="pincode" maxlength="6"
-                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput placeholder="PIN Code"
-                    autocomplete="off" (blur)="getCityData(this.invoiceEditForm.controls['pincode'])" required>
-                <mat-error *ngIf="invoiceEditForm.controls['pincode'].hasError('required')">Enter pin
-                </mat-error>
-                <mat-error *ngIf="invoiceEditForm.controls['pincode'].hasError('pattern')">Enter valid
-                    pin
-                </mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>Country</mat-label>
-                <mat-select formControlName="country" matInput placeholder="Country" autocomplete="off"
-                    (selectionChange)="changeCountry(invoiceEditForm.controls['country'].value)" required>
-                    <mat-option *ngFor="let country of countryDropdown" [value]="country.countryName">
-                        <!--countryCode-->
-                        {{country.countryName | titlecase}}
-                    </mat-option>
-                </mat-select>
-                <mat-error *ngIf="invoiceEditForm.controls['country'].hasError('required')">Select
-                    country</mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>State</mat-label>
-                <mat-select formControlName="state" matInput placeholder="State" autocomplete="off" required
-                    (selectionChange)="this.showTaxRelatedState(this.invoiceEditForm.controls['state'].value)">
-                    <mat-option *ngFor="let state of stateDropdown" [value]="state.stateName">
-                        <!--stateCode-->
-                        {{state.stateName | titlecase}}
-                    </mat-option>
-                </mat-select>
-                <mat-error *ngIf="invoiceEditForm.controls['state'].hasError('required')">Select state
-                </mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>City:</mat-label>
-                <input formControlName="city" maxlength="50" matInput placeholder="city" autocomplete="off" required>
-                <mat-error *ngIf="invoiceEditForm.controls['city'].hasError('required')">Enter city name
-                </mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>GSTIN:</mat-label>
-                <input formControlName="gstin" maxlength="15" matInput placeholder="GSTIN" autocomplete="off">
-                <mat-error *ngIf="invoiceEditForm.controls['gstin'].hasError('required')">Enter GSTIN
-                    number</mat-error>
-                <mat-error *ngIf="invoiceEditForm.controls['gstin'].hasError('pattern')">Enter valid
-                    GSTIN</mat-error>
-            </mat-form-field>
-        </div>
-        <div class="card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>Phone</mat-label>
-                <input formControlName="phone" onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
-                    placeholder="Phone" maxlength="10" autocomplete="off" required>
-                <mat-error *ngIf="invoiceEditForm.controls['phone'].hasError('required')">Enter phone
-                    number</mat-error>
-                <mat-error *ngIf="invoiceEditForm.controls['phone'].hasError('pattern')">Enter valid
-                    phone number</mat-error>
-            </mat-form-field>
-        </div>
-        <div class="card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>Email</mat-label>
-                <input formControlName="email" matInput placeholder="Email" autocomplete="off" required>
-                <mat-error *ngIf="invoiceEditForm.controls['email'].hasError('required')">Enter email
-                    address</mat-error>
-                <mat-error *ngIf="invoiceEditForm.controls['email'].hasError('pattern')">Enter valid
-                    email address</mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="card__col-xs-4 card__col-sm-4">
-            <mat-form-field appearance="outline">
-                <mat-label>Payment Status</mat-label>
-                <mat-select formControlName="paymentStatus" matInput placeholder="Payment status" autocomplete="off"
-                    required (selectionChange)="setAmntRecivedValidator($event.value)">
-                    <mat-option *ngFor="let pay of paymentStatus" [value]="pay.value">
-                        <!--stateCode-->
-                        {{pay.label}}
-                    </mat-option>
-                </mat-select>
-                <mat-error *ngIf="invoiceEditForm.controls['paymentStatus'].hasError('required')">Select payment status
-                </mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="card__col-lg-4" *ngIf="invoiceEditForm.controls['paymentStatus'].value === 'Paid'">
-            <mat-form-field appearance="outline">
-                <mat-label>Amount receipt with Date</mat-label>
-                <input matInput formControlName="paymentDate" [matDatepicker]="picker2" [max]="maxDate"
-                    autocomplete="off">
-                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                <mat-datepicker #picker2></mat-datepicker>
-                <mat-error *ngIf="invoiceEditForm.controls['paymentDate'].hasError('required')">Select Amount receipt date</mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="card__col-xs-12 card__col-sm-12">
-            <mat-card>
-                <label>Invoice table:</label><br><br>
-                <div class="card__row" style="margin-top: 0px;">
-                    <ag-grid-angular class="ag-theme-balham" [gridOptions]="clientListGridOptions"
-                        (rowClicked)="onInvoiceRowClicked($event)">
-                    </ag-grid-angular>
-                </div> <br>
-                <div class="card__row">
-                    <div class="card__col-lg-4">
-                        <button class="btn" (click)="addNewRow()">Add Row</button>
-                    </div>
-                    <div class="card__col-lg-4 total">
-                        <div class="card__col-lg-7">Sub Total
-                            <span>(Tax Exclusive)</span>
-                        </div>
-
-                        <div *ngIf="isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.utilsService.currencyFormatter( getInvoiceTotal().invoiceTotal - (getInvoiceTotal().invoiceCGST + getInvoiceTotal().invoiceSGST))}}</div>
-
-                        <div *ngIf="!isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.utilsService.currencyFormatter( getInvoiceTotal().invoiceTotal - getInvoiceTotal().invoiceIGST )}}</div>
-
-                        <div *ngIf="isMaharashtraState" class="card__col-lg-7">CGST (9%)</div>
-                        <div *ngIf="isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceCGST)}}
-                        </div>
-
-                        <div *ngIf="isMaharashtraState" class="card__col-lg-7">SGST (9%)</div>
-                        <div *ngIf="isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceSGST)}}
-                        </div>
-
-                        <div *ngIf="!isMaharashtraState" class="card__col-lg-7">IGST (18%)</div>
-                        <div *ngIf="!isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceIGST)}}
-                            <!--getRoundAmount()-->
-                        </div>
-
-                        <div class="card__col-lg-7 bold">Total</div>
-                        <div style="float: right;" class="card__col-lg-5 bold">₹
-                            {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceTotal)}}</div>
-                        <div class="card__col-lg-7 bold">Balance Due</div>
-                        <div style="float: right;" class="card__col-lg-5 bold">₹
-                            {{this.utilsService.currencyFormatter(getInvoiceTotal().invoiceTotal)}}</div>
-                    </div>
-
-                </div>
-            </mat-card>
-        </div>
-
-
     </mat-dialog-content>
     <mat-dialog-actions align="center">
-        <!-- <label *ngIf="successValue" class="text-success">{{successMsg}}</label> -->
         <button mat-raised-button color="primary" (click)="updateInvoice()" tabindex="1">{{data.submitBtn}}</button>
-        <!-- (click)="confirm()" -->
         <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
     </mat-dialog-actions>
 </form>
