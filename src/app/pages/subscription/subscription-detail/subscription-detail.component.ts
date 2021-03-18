@@ -79,15 +79,9 @@ export class SubscriptionDetailComponent implements OnInit {
         cellRenderer: function (params) {
           if (params.data.smeSelected !== 'NA') {
             if (params.data.planAgreedByUserOn !== null && params.data.planAgreedByUserOn !== '') {
-              return `<button type="button" class="action_icon add_button" title="User Accepted changed amount"
-          style="border: none; background: transparent; font-size: 8px; cursor:pointer">
-            <i class="fa fa-circle" style="color:green" aria-hidden="true"></i>
-           </button>`+ params.data.smeSelected;
+              return `<i class="fa fa-circle" style="color: green; font-size: 8px;" title="User Accepted changed amount" aria-hidden="true"></i> ` + params.data.smeSelected;
             }
-            return `<button type="button" class="action_icon add_button" title="User has not accepted plan change request yet."
-          style="border: none; background: transparent; font-size: 8px; cursor:pointer">
-            <i class="fa fa-circle" style="color:red" aria-hidden="true"></i>
-           </button>`+ params.data.smeSelected;
+            return ` <i class="fa fa-circle" style="color: red; font-size: 8px;" title="User has not accepted plan change request yet." aria-hidden="true"></i> ` + params.data.smeSelected;
           }
           return params.data.smeSelected
         },
