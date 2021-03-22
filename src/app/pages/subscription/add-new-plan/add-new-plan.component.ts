@@ -1,12 +1,14 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
+import { filter, pairwise } from 'rxjs/operators';
 
 export const MY_FORMATS = {
   parse: {
@@ -116,9 +118,13 @@ export class AddNewPlanComponent implements OnInit {
     totalTax: null,
     totalAmount: null
   };
+  previousUrl: string;
 
   constructor(private activatedRoute: ActivatedRoute, private itrService: ItrMsService, public utilService: UtilsService, private toastMessage: ToastMessageService,
-    private router: Router, private userService: UserMsService) { }
+    private router: Router, private userService: UserMsService, private location: Location) { 
+     this.previousUrl = localStorage.getItem('previousPath');
+     console.log('previousUrl -> ',this.previousUrl)
+    }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {

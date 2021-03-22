@@ -1,0 +1,15 @@
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+
+    <div [class.mySubscription]="this.from === 'mySubscription' ? true : false">
+      <ag-grid-angular
+        class="ag-theme-balham"
+        [gridOptions]="subscriptionListGridOptions"
+        (rowClicked)="onSubscriptionRowClicked($event)"
+        paginationPageSize="15"
+        pagination="true"
+      >
+      </ag-grid-angular>
+    </div>

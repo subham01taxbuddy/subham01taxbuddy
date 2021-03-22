@@ -15,10 +15,12 @@ import { InvoicesStatusComponent } from "./invoices-status/invoices-status.compo
 import { InvoiceDialogComponent } from "./invoice-dialog/invoice-dialog.component";
 import { OwlDateTimeModule } from "ng-pick-datetime/date-time/date-time.module";
 import { OwlNativeDateTimeModule } from "ng-pick-datetime/date-time/adapter/native-date-time.module";
+import { MySubscriptionComponent } from './my-subscription/my-subscription.component';
+import { MainSubsciptionComponent } from './main-subsciption/main-subsciption.component';
 
 @NgModule({
     declarations: [SubscriptionDetailComponent, AddNewPlanComponent, AddSubscriptionComponent, SubscriptionHeadComponent,
-        AddInvoiceComponent, InvoicesStatusComponent, InvoiceDialogComponent],
+        AddInvoiceComponent, InvoicesStatusComponent, InvoiceDialogComponent, MySubscriptionComponent, MainSubsciptionComponent],
     imports:[
         SubscriptionRoutingModule,
         CommonModule,

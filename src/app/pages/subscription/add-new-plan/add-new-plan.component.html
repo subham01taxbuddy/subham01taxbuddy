@@ -269,7 +269,7 @@
       <div class="card__row">
         <button class="btn act-btn" style="margin-left: 180px;" (click)="saveSubscription()">Save</button>
         <button class="btn act-btn" (click)="activateSubscription()">Save & Activate</button>
-        <button class="btn act-btn" [routerLink]="['/pages/subscription']">Cancel</button>
+        <button class="btn act-btn" [routerLink]="previousUrl=== 'allSubscription' ? ['/pages/subscription'] : ['/pages/subscription/mySubscription']">Cancel</button>
       </div>
 
     </div>

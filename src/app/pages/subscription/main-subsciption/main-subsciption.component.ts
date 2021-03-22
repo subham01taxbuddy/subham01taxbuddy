@@ -1,32 +1,25 @@
-import { style } from '@angular/animations';
-import { formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { AfterContentChecked, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import moment = require('moment');
-import { AddSubscriptionComponent } from '../add-subscription/add-subscription.component';
 
 @Component({
-  selector: 'app-subscription-detail',
-  templateUrl: './subscription-detail.component.html',
-  styleUrls: ['./subscription-detail.component.css']
+  selector: 'app-main-subsciption',
+  templateUrl: './main-subsciption.component.html',
+  styleUrls: ['./main-subsciption.component.css']
 })
-export class SubscriptionDetailComponent implements OnInit {
-
+export class MainSubsciptionComponent implements OnInit, OnDestroy {
+  @Input('from') from: any;
   loading: boolean;
-  searchVal: any;
   subscriptionListGridOptions: GridOptions;
-  selectedUserName: any = '';
+  subscription: any;
   userId: any;
-  from: string = "allSubscription";
 
-  constructor(private _toastMessageService: ToastMessageService,  private itrService: ItrMsService, @Inject(LOCALE_ID) private locale: string,
-    private userService: UserMsService, private router: Router, private dialog: MatDialog, public utileService: UtilsService) {
+  constructor(private itrService: ItrMsService, private utileService: UtilsService, private _toastMessageService: ToastMessageService, private router: Router) { 
     this.subscriptionListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.subscriptionColoumnDef(),
@@ -35,10 +28,53 @@ export class SubscriptionDetailComponent implements OnInit {
       },
       sortable: true,
     };
+
+    this.subscription = this.utileService.onMessage().subscribe(agentId => {
+      console.log('Agent id :--> ',agentId)
+      if (agentId) {
+        this.getUserSubscriptionInfo(agentId.text);
+        this.userId = agentId.text;
+      }
+      else{
+        this.getUserSubscriptionInfo();
+      }
+    });
   }
 
   ngOnInit() {
-    // this.getUserSubscriptionInfo();
+    console.log('FROM :-)> ',this.from)
+    if(this.from === "allSubscription"){
+      this.getUserSubscriptionInfo();
+    }
+    else if(this.from === "mySubscription"){
+      this.getMySubscriptionInfo();
+    }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  getMySubscriptionInfo(){
+    const loggedInUser = JSON.parse(localStorage.getItem('UMD'));
+    // let param = '/subscription?subscriptionAssigneeId='+loggedInUser.USER_UNIQUE_ID;    //1063
+    let param = '/subscription?subscriptionAssigneeId=1063';    //
+    this.loading = true;
+    this.itrService.getMethod(param).subscribe((response: any) => {
+      console.log(response);
+      this.allSubscriptions = response;
+      this.loading = false;
+        if (response instanceof Array && response.length > 0) {
+          this.subscriptionListGridOptions.api.setRowData(this.createRowData(response));
+        } else {
+          this.subscriptionListGridOptions.api.setRowData(this.createRowData([]));
+          this.utileService.showSnackBar('There is no records of My Subscription against this logged user.')
+        }
+    },
+      error => {
+        this.loading = false;
+        console.log('error during getting subscription info: ', error)
+      })
   }
 
   subscriptionColoumnDef() {
@@ -219,7 +255,8 @@ export class SubscriptionDetailComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        hide: this.from === 'mySubscription' ? true : false
       },
 
       {
@@ -291,44 +328,7 @@ export class SubscriptionDetailComponent implements OnInit {
       }
     ]
   }
-
-  advanceSearch() {
-    console.log('this.searchVal -> ', this.searchVal)
-    if (this.utileService.isNonEmpty(this.searchVal)) {
-      if (this.searchVal.toString().length === 10) {
-        this.getUserIdByMobileNum(this.searchVal)
-      } else {
-        this._toastMessageService.alert("error", "Enter valid mobile number.");
-      }
-    }
-    else {
-      // this.getUserSubscriptionInfo();
-      this.utileService.sendMessage('');
-      this.utileService.showSnackBar('You are fetching all records.')
-    }
-  }
-
-  getUserIdByMobileNum(mobileNumber) {
-    this.loading = true;
-    let param = '/search/userprofile/query?mobileNumber=' + mobileNumber;
-    this.userService.getMethod(param).subscribe((res: any) => {
-      this.loading = false;
-      console.log('Get user id by mobile number responce: ', res);
-      if (res && res.records instanceof Array) {
-        this.selectedUserName = res.records[0].family[0].fName + ' ' + res.records[0].family[0].lName;
-        this.userId = res.records[0].userId;
-        //this.getUserSubscriptionInfo(res.records[0].userId);
-        this.utileService.sendMessage(res.records[0].userId);
-      }
-    },
-      error => {
-        this.loading = false;
-        this.selectedUserName = '';
-        console.log('Error -> ', error);
-        this._toastMessageService.alert("error", this.utileService.showErrorMsg(error.error.status));
-      })
-  }
-
+  
   allSubscriptions = [];
   getUserSubscriptionInfo(userId?) {
     var param = '';
@@ -336,7 +336,7 @@ export class SubscriptionDetailComponent implements OnInit {
       param = '/subscription?userId=' + userId;
     }
     else {
-      this.selectedUserName = '';
+      // this.selectedUserName = '';
       param = '/subscription';
     }
     this.loading = true;
@@ -388,100 +388,85 @@ export class SubscriptionDetailComponent implements OnInit {
     return newData;
   }
 
-  // public onSubscriptionRowClicked(params) {
-  //   console.log(params)
-  //   if (params.event.target !== undefined) {
-  //     const actionType = params.event.target.getAttribute('data-action-type');
-  //     switch (actionType) {
-  //       case 'generateInvoice': {
-  //         if (params.data.isActive) {
-  //           this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
-  //         } else {
-  //           this.utileService.showSnackBar('Please activate the subscription first.')
-  //         }
-  //         break;
-  //       }
-  //       case 'subscription': {
-  //         this.addNewPlan(params.data);
-  //         break;
-  //       }
-  //       case 'served': {
-  //         this.updateSubscription(params.data);
-  //         break;
-  //       }
-  //       case 'delete-invoice': {
-  //         this.deleteInvoice(params.data);
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // addNewPlan(plan) {
-  //   if (this.utileService.isNonZero(plan.txbdyInvoiceId)) {
-  //     this.utileService.showSnackBar('This subscriptions invoice is created.');
-  //     return;
-  //   }
-  //   console.log('Plan -> ', plan);
-  //   this.router.navigate(['/pages/subscription/sub/' + plan.subscriptionId]);
-  // }
-
-  addSubscriptionPlan() {
-    let disposable = this.dialog.open(AddSubscriptionComponent, {
-      width: '65%',
-      height: 'auto',
-      data: {
-        userId: this.userId
+  public onSubscriptionRowClicked(params) {
+    console.log(params)
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'generateInvoice': {
+          if (params.data.isActive) {
+            this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
+          } else {
+            this.utileService.showSnackBar('Please activate the subscription first.')
+          }
+          break;
+        }
+        case 'subscription': {
+          this.addNewPlan(params.data);
+          break;
+        }
+        case 'served': {
+          this.updateSubscription(params.data);
+          break;
+        }
+        case 'delete-invoice': {
+          this.deleteInvoice(params.data);
+          break;
+        }
       }
-    })
+    }
+  }
 
-    disposable.afterClosed().subscribe(result => {
-      if (result && result.data) {
-        console.log('Afetr dialog close -> ', result);
-        this.router.navigate(['/pages/subscription/sub/' + result.data['subscriptionId']]);
-      }
+  addNewPlan(plan) {
+    if (this.utileService.isNonZero(plan.txbdyInvoiceId)) {
+      this.utileService.showSnackBar('This subscriptions invoice is created.');
+      return;
+    }
+    console.log('Plan -> ', plan);
+    localStorage.setItem('previousPath', this.from)
+    this.router.navigate(['/pages/subscription/sub/' + plan.subscriptionId]);
+  }
+
+  updateSubscription(value) {
+    console.log('Subscription;', value);
+    this.loading = true;
+    let temp = this.allSubscriptions.filter(item => item.subscriptionId === value.subscriptionId)
+    let request;
+    if (temp instanceof Array && temp.length > 0) {
+      request = temp[0];
+      request.served = !value.served;
+    } else {
+      return;
+    }
+    console.log('Updated Request for served', request);
+    const param = "/subscription";
+    this.itrService.putMethod(param, request).subscribe((response: any) => {
+      console.log('Subscription Updated Successfully:', response);
+      this.utileService.showSnackBar('Subscription updated successfully!');
+      this.getUserSubscriptionInfo();
+      this.loading = false;
+    }, error => {
+      this.getUserSubscriptionInfo();
+      this.utileService.showSnackBar('Failed to update subscription!');
+      this.loading = false;
+      console.log('Subscription Updated error=>:', error);
     })
   }
 
-  // updateSubscription(value) {
-  //   console.log('Subscription;', value);
-  //   this.loading = true;
-  //   let temp = this.allSubscriptions.filter(item => item.subscriptionId === value.subscriptionId)
-  //   let request;
-  //   if (temp instanceof Array && temp.length > 0) {
-  //     request = temp[0];
-  //     request.served = !value.served;
-  //   } else {
-  //     return;
-  //   }
-  //   console.log('Updated Request for served', request);
-  //   const param = "/subscription";
-  //   this.itrService.putMethod(param, request).subscribe((response: any) => {
-  //     console.log('Subscription Updated Successfully:', response);
-  //     this.utileService.showSnackBar('Subscription updated successfully!');
-  //     this.getUserSubscriptionInfo();
-  //     this.loading = false;
-  //   }, error => {
-  //     this.getUserSubscriptionInfo();
-  //     this.utileService.showSnackBar('Failed to update subscription!');
-  //     this.loading = false;
-  //     console.log('Subscription Updated error=>:', error);
-  //   })
-  // }
+  deleteInvoice(invoiceInfo) {
+    console.log('invoiceInfo: ', invoiceInfo);
+    this.loading = true;
+    let param = `/invoice/delete?txbdyInvoiceId=${invoiceInfo.txbdyInvoiceId}`;
+    this.itrService.deleteMethod(param).subscribe((responce: any) => {
+      this.loading = false;
+      console.log('responce: ', responce);
+      this._toastMessageService.alert("success", responce.reponse);
+      if (responce.reponse !== 'You cannot delete invoice with Paid status')
+        this.getUserSubscriptionInfo();
+    }, error => {
+      this.loading = false;
+      this._toastMessageService.alert("error", "Faild to delete invoice.");
+    })
+  }
 
-  // deleteInvoice(invoiceInfo) {
-  //   console.log('invoiceInfo: ', invoiceInfo);
-  //   this.loading = true;
-  //   let param = `/invoice/delete?txbdyInvoiceId=${invoiceInfo.txbdyInvoiceId}`;
-  //   this.itrService.deleteMethod(param).subscribe((responce: any) => {
-  //     this.loading = false;
-  //     console.log('responce: ', responce);
-  //     this._toastMessageService.alert("success", responce.reponse);
-  //     if (responce.reponse !== 'You cannot delete invoice with Paid status')
-  //       this.getUserSubscriptionInfo();
-  //   }, error => {
-  //     this.loading = false;
-  //     this._toastMessageService.alert("error", "Faild to delete invoice.");
-  //   })
-  // }
 }

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { AddInvoiceComponent } from "./add-invoice/add-invoice.component";
 import { AddNewPlanComponent } from "./add-new-plan/add-new-plan.component";
 import { InvoicesStatusComponent } from "./invoices-status/invoices-status.component";
+import { MySubscriptionComponent } from "./my-subscription/my-subscription.component";
 import { SubscriptionDetailComponent } from "./subscription-detail/subscription-detail.component";
 import { SubscriptionHeadComponent } from "./subscription-head/subscription-head.component";
 
@@ -16,6 +17,7 @@ const routes: Routes = [
             { path: 'invoices', component: InvoicesStatusComponent },
             { path: 'sub/:subscriptionId', component: AddNewPlanComponent },
             { path: 'add-invoice', component: AddInvoiceComponent },
+            { path: 'mySubscription', component: MySubscriptionComponent},
             { path: '', redirectTo: '/pages/subscription/sub', pathMatch: 'full' }
         ]
     }
