@@ -2,7 +2,7 @@ import { style } from '@angular/animations';
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
@@ -25,7 +25,7 @@ export class SubscriptionDetailComponent implements OnInit {
   userId: any;
 
   constructor(private _toastMessageService: ToastMessageService, public utilsService: UtilsService, private itrService: ItrMsService, @Inject(LOCALE_ID) private locale: string,
-    private userService: UserMsService, private router: Router, private dialog: MatDialog) {
+    private userService: UserMsService, private router: Router, private dialog: MatDialog, private activatedRoute: ActivatedRoute) {
     this.subscriptionListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.subscriptionColoumnDef(),
@@ -37,6 +37,14 @@ export class SubscriptionDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      console.log("99999999999999999:", params)
+      if(this.utilsService.isNonEmpty(params['userMobNo']) && params['userMobNo'] !== '-'){
+        this.searchVal = params['userMobNo'];
+        this.advanceSearch();
+      }
+    });
+
     this.getUserSubscriptionInfo();
   }
 

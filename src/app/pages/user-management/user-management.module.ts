@@ -5,12 +5,13 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule } from "app/shared/material.module";
 import { SharedModule } from "app/shared/shared.module";
 import { NgxLoadingModule } from "ngx-loading";
-import { UserManagementComponent } from "./user-management.component";
 import { UserManagementRoutingModule } from "./user-management.routing";
-import { UsersListComponent } from "./users-list/users-list.component";
+import { UserListComponent } from './user-list/user-list.component';
+import { UserManagementComponent } from "./user-management/user-management.component";
+import { NgxPaginationModule } from "ngx-pagination";
 
 @NgModule({
-    declarations: [UserManagementComponent, UsersListComponent],
+    declarations: [UserManagementComponent , UserListComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -19,7 +20,8 @@ import { UsersListComponent } from "./users-list/users-list.component";
         SharedModule,
         MaterialModule,
         NgxLoadingModule.forRoot({}),
-        UserManagementRoutingModule
+        UserManagementRoutingModule,
+        NgxPaginationModule
     ],
 })
 
