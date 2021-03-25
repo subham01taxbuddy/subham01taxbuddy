@@ -17,7 +17,7 @@ const routes: Routes = [
             { path: 'invoices', component: InvoicesStatusComponent },
             { path: 'sub/:subscriptionId', component: AddNewPlanComponent },
             { path: 'add-invoice', component: AddInvoiceComponent },
-            { path: 'mySubscription', component: MySubscriptionComponent},
+            { path: 'my-sub', component: MySubscriptionComponent },
             { path: '', redirectTo: '/pages/subscription/sub', pathMatch: 'full' }
         ]
     }

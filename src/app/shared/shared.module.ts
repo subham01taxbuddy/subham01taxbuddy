@@ -18,6 +18,7 @@ import { OwlNativeDateTimeModule } from 'ng-pick-datetime/date-time/adapter/nati
 import { FilingStatusDialogComponent } from 'app/pages/itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { UpdateStatusComponent } from 'app/pages/itr-filing/update-status/update-status.component';
 import { ItrActionsComponent } from './components/itr-actions/itr-actions.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 // import { CheckboxRenderer } from './checkbox-renderer.component';
 
 
@@ -47,6 +48,7 @@ import { ItrActionsComponent } from './components/itr-actions/itr-actions.compon
             /* CheckboxRenderer */]),  //MatSelectComponent,
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
+        NgxPaginationModule
     ],
     exports: [
         CommonModule,

@@ -75,7 +75,8 @@ export class TpaClientListComponent implements OnInit {
     { teamLeadId: 1063, value: 71159, label: 'Ajay Kandhway', },
     { teamLeadId: 1707, value: 71168, label: 'Ganesh Jaiswal', },
     { teamLeadId: 1063, value: 75925, label: 'Nikita Shah', },
-    { teamLeadId: 1707, label: 'Vatsa Bhanushali' },
+    { teamLeadId: 1707, value: 81402, label: 'Vatsa Bhanushali' },
+    { teamLeadId: 1064, value: 87321, label: 'Chetan Kori' },
 
     { teamLeadId: 0, value: 1065, label: 'Urmila Warve' },
     { teamLeadId: 0, value: 1067, label: 'Divya Bhanushali' },

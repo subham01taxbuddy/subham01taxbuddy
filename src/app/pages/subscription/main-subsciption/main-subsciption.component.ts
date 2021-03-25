@@ -1,9 +1,9 @@
-import { AfterContentChecked, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
+import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import moment = require('moment');
 
@@ -13,71 +13,39 @@ import moment = require('moment');
   styleUrls: ['./main-subsciption.component.css']
 })
 export class MainSubsciptionComponent implements OnInit, OnDestroy {
+  @Input('queryParam') queryParam: any;
   @Input('from') from: any;
   loading: boolean;
   subscriptionListGridOptions: GridOptions;
   subscription: any;
   userId: any;
 
-  constructor(private itrService: ItrMsService, private utileService: UtilsService, private _toastMessageService: ToastMessageService, private router: Router) { 
+  constructor(private itrService: ItrMsService, private utilsService: UtilsService, private _toastMessageService: ToastMessageService, private router: Router,
+    private userMsService: UserMsService,) {
+    this.subscription = this.utilsService.onMessage().subscribe(res => {
+      console.log('Agent id :--> ', res)
+      this.queryParam = res.text;
+      this.getUserSubscriptionInfo();
+    });
+  }
+
+  ngOnInit() {
     this.subscriptionListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.subscriptionColoumnDef(),
+      columnDefs: this.subscriptionColoumnDef(this.from),
       enableCellChangeFlash: true,
       onGridReady: params => {
       },
       sortable: true,
     };
-
-    this.subscription = this.utileService.onMessage().subscribe(agentId => {
-      console.log('Agent id :--> ',agentId)
-      if (agentId) {
-        this.getUserSubscriptionInfo(agentId.text);
-        this.userId = agentId.text;
-      }
-      else{
-        this.getUserSubscriptionInfo();
-      }
-    });
-  }
-
-  ngOnInit() {
-    console.log('FROM :-)> ',this.from)
-    if(this.from === "allSubscription"){
-      this.getUserSubscriptionInfo();
-    }
-    else if(this.from === "mySubscription"){
-      this.getMySubscriptionInfo();
-    }
+    this.getUserSubscriptionInfo();
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
-  getMySubscriptionInfo(){
-    const loggedInUser = JSON.parse(localStorage.getItem('UMD'));
-    // let param = '/subscription?subscriptionAssigneeId='+loggedInUser.USER_UNIQUE_ID;    //1063
-    let param = '/subscription?subscriptionAssigneeId=1063';    //
-    this.loading = true;
-    this.itrService.getMethod(param).subscribe((response: any) => {
-      console.log(response);
-      this.allSubscriptions = response;
-      this.loading = false;
-        if (response instanceof Array && response.length > 0) {
-          this.subscriptionListGridOptions.api.setRowData(this.createRowData(response));
-        } else {
-          this.subscriptionListGridOptions.api.setRowData(this.createRowData([]));
-          this.utileService.showSnackBar('There is no records of My Subscription against this logged user.')
-        }
-    },
-      error => {
-        this.loading = false;
-        console.log('error during getting subscription info: ', error)
-      })
-  }
-
-  subscriptionColoumnDef() {
+  subscriptionColoumnDef(from) {
     return [
       {
         headerName: 'User Id',
@@ -211,7 +179,6 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy {
           let currentDate = new Date();
           let dateSent = new Date(params.data.endDate);
           let diff = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate())) / (1000 * 60 * 60 * 24));
-          console.log('____________________', diff, '______', dateSent)
           if (diff > 0 && !params.data.served) {
             return {
               textAlign: 'center',
@@ -256,9 +223,8 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        hide: this.from === 'mySubscription' ? true : false
+        hide: from === 'MY_SUB' ? true : false
       },
-
       {
         headerName: 'Add Plan',
         editable: false,
@@ -325,38 +291,51 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy {
           return (!params.data.isActive) ? { 'pointer-events': 'none', opacity: '0.4' }
             : '';
         }
-      }
+      },
+      {
+        headerName: 'File',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Start Filing" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-files-o" aria-hidden="true" data-action-type="start-filing"></i>
+           </button>`;
+
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
     ]
   }
-  
+
   allSubscriptions = [];
-  getUserSubscriptionInfo(userId?) {
-    var param = '';
-    if (userId) {
-      param = '/subscription?userId=' + userId;
-    }
-    else {
-      // this.selectedUserName = '';
-      param = '/subscription';
-    }
+  getUserSubscriptionInfo() {
+    console.log('this.queryParam:', this.queryParam);
+    var param = `/subscription${this.queryParam}`;
     this.loading = true;
     this.itrService.getMethod(param).subscribe((response: any) => {
       console.log(response);
       this.allSubscriptions = response;
       this.loading = false;
-      if (!this.utileService.isNonEmpty(userId)) {
-        if (response.length > 0) {
-          this.subscriptionListGridOptions.api.setRowData(this.createRowData(response));
-        } else {
-          this._toastMessageService.alert("error", "Data not found.");
-        }
+      if (response instanceof Array && response.length > 0) {
+        this.subscriptionListGridOptions.api.setRowData(this.createRowData(response));
       } else {
-        if (response instanceof Array && response.length > 0) {
-          this.subscriptionListGridOptions.api.setRowData(this.createRowData(response));
-        } else {
-          this.subscriptionListGridOptions.api.setRowData(this.createRowData([]));
-          this.utileService.showSnackBar('There is no records of subscription against this user.')
+        this.subscriptionListGridOptions.api.setRowData(this.createRowData([]));
+        let msg = 'There is no records of subscription against this user';
+        if (this.from === 'MY_SUB') {
+          msg = 'You dont have any assigned subscriptions';
         }
+        this.utilsService.showSnackBar(msg)
       }
     },
       error => {
@@ -371,18 +350,18 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy {
       newData.push({
         subscriptionId: subscriptionData[i].subscriptionId,
         userId: subscriptionData[i].userId,
-        userSelected: this.utileService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.name : 'NA',
-        smeSelected: this.utileService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.name : 'NA',
+        userSelected: this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.name : 'NA',
+        smeSelected: this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.name : 'NA',
         planAgreedByUserOn: subscriptionData[i].planAgreedByUserOn,
-        servicesType: this.utileService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.servicesType : (this.utileService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.servicesType : '-'),
+        servicesType: this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.servicesType : (this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.servicesType : '-'),
         startDate: subscriptionData[i].startDate,
         endDate: subscriptionData[i].endDate,
         txbdyInvoiceId: subscriptionData[i].txbdyInvoiceId,
         subscriptionAssigneeId: subscriptionData[i].subscriptionAssigneeId !== 0 ? subscriptionData[i].subscriptionAssigneeId : 'NA',
         isActive: subscriptionData[i].isActive,
         served: subscriptionData[i].served,
-        promoCode: this.utileService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : '-',
-        invoiceAmount: this.utileService.isNonEmpty(subscriptionData[i].promoApplied) ? subscriptionData[i].promoApplied.totalAmount : (this.utileService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.totalAmount : (this.utileService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.totalAmount : '0')),
+        promoCode: this.utilsService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : '-',
+        invoiceAmount: this.utilsService.isNonEmpty(subscriptionData[i].promoApplied) ? subscriptionData[i].promoApplied.totalAmount : (this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.totalAmount : (this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.totalAmount : '0')),
       });
     }
     return newData;
@@ -397,7 +376,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy {
           if (params.data.isActive) {
             this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
           } else {
-            this.utileService.showSnackBar('Please activate the subscription first.')
+            this.utilsService.showSnackBar('Please activate the subscription first.')
           }
           break;
         }
@@ -413,17 +392,19 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy {
           this.deleteInvoice(params.data);
           break;
         }
+        case 'start-filing': {
+          this.startFiling(params.data);
+          break;
+        }
       }
     }
   }
 
   addNewPlan(plan) {
-    if (this.utileService.isNonZero(plan.txbdyInvoiceId)) {
-      this.utileService.showSnackBar('This subscriptions invoice is created.');
+    if (this.utilsService.isNonZero(plan.txbdyInvoiceId)) {
+      this.utilsService.showSnackBar('This subscriptions invoice is created.');
       return;
     }
-    console.log('Plan -> ', plan);
-    localStorage.setItem('previousPath', this.from)
     this.router.navigate(['/pages/subscription/sub/' + plan.subscriptionId]);
   }
 
@@ -442,12 +423,12 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy {
     const param = "/subscription";
     this.itrService.putMethod(param, request).subscribe((response: any) => {
       console.log('Subscription Updated Successfully:', response);
-      this.utileService.showSnackBar('Subscription updated successfully!');
+      this.utilsService.showSnackBar('Subscription updated successfully!');
       this.getUserSubscriptionInfo();
       this.loading = false;
     }, error => {
       this.getUserSubscriptionInfo();
-      this.utileService.showSnackBar('Failed to update subscription!');
+      this.utilsService.showSnackBar('Failed to update subscription!');
       this.loading = false;
       console.log('Subscription Updated error=>:', error);
     })
@@ -467,6 +448,27 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy {
       this.loading = false;
       this._toastMessageService.alert("error", "Faild to delete invoice.");
     })
+  }
+
+  async getUserProfile(userId) {
+    const param = `/profile/${userId}`;
+    return await this.userMsService.getMethod(param).toPromise();
+  }
+
+  async startFiling(subscription) {
+    console.log('subscription: ', subscription);
+    if (subscription.servicesType === 'ITR') {
+      this.loading = true;
+      let profile = await this.getUserProfile(subscription.userId).catch(error => {
+        this.loading = false;
+        console.log(error);
+        this.utilsService.showSnackBar(error.error.detail);
+        return;
+      });
+      this.utilsService.getITRByUserIdAndAssesmentYear(profile);
+    } else {
+      this.utilsService.showSnackBar('Filing Path Yet to decide');
+    }
   }
 
 }

@@ -118,13 +118,13 @@ export class AddNewPlanComponent implements OnInit {
     totalTax: null,
     totalAmount: null
   };
-  previousUrl: string;
+  // previousUrl: string;
 
   constructor(private activatedRoute: ActivatedRoute, private itrService: ItrMsService, public utilService: UtilsService, private toastMessage: ToastMessageService,
-    private router: Router, private userService: UserMsService, private location: Location) { 
-     this.previousUrl = localStorage.getItem('previousPath');
-     console.log('previousUrl -> ',this.previousUrl)
-    }
+    private router: Router, private userService: UserMsService, private location: Location) {
+    //  this.previousUrl = localStorage.getItem('previousPath');
+    //  console.log('previousUrl -> ',this.previousUrl)
+  }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {

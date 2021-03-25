@@ -27,12 +27,13 @@
                 </div>
             </div><br><br>
         </div><br><br>
-        <label>Showing results for: {{this.utileService.isNonEmpty(this.searchVal) ? this.searchVal : 'All
-            Users'}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <label>User Name: {{this.utileService.isNonEmpty(this.selectedUserName) ? selectedUserName : ''}}</label>
-        
+        <!--   <label>Showing results for: {{this.utilsService.isNonEmpty(this.searchVal) ? this.searchVal :
+            'All Users'}} </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+        <label>Showing results for: {{this.utilsService.isNonEmpty(this.selectedUserName) ? selectedUserName :
+            'All Users'}}</label>
+
         <div class="card__row">
-            <app-main-subsciption [from]="from"></app-main-subsciption>
+            <app-main-subsciption [queryParam]="queryParam" from="ALL_SUB"></app-main-subsciption>
         </div>
     </div>
 </div>

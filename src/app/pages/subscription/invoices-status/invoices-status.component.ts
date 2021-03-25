@@ -9,6 +9,7 @@ import { UtilsService } from 'app/services/utils.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { environment } from 'environments/environment';
 import { ItrMsService } from 'app/services/itr-ms.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-invoices-status',
   templateUrl: './invoices-status.component.html',
@@ -21,22 +22,45 @@ export class InvoicesStatusComponent implements OnInit {
   maxDate: any = new Date();
   toDateMin: any;
   summartDetailForm: FormGroup;
-
+  userId: any;
   constructor(private userMsService: UserMsService, private _toastMessageService: ToastMessageService,
     @Inject(LOCALE_ID) private locale: string, private userService: UserMsService, private dialog: MatDialog,
-    private utilService: UtilsService, private fb: FormBuilder,
+    private utilService: UtilsService, private fb: FormBuilder, private activatedRoute: ActivatedRoute,
     private itrService: ItrMsService) {
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.invoicesCreateColoumnDef(),
       enableCellChangeFlash: true,
       onGridReady: params => {
+        // setTimeout(() => {
+        //   var filterComponent = params.api.getFilterInstance("isActive");
+        //   filterComponent.setModel({
+        //     type: "greaterThan",
+        //     filter: 0
+        //   });
+        //   filterComponent.onFilterChanged();
+        // }, 150)
       },
       sortable: true,
     };
   }
-
+  onFirstDataRendered(params) {
+    if (this.utilService.isNonEmpty(this.userId)) {
+      var filterComponent = params.api.getFilterInstance("userId");
+      filterComponent.setModel({
+        type: "contains",
+        filter: this.userId
+      });
+      filterComponent.onFilterChanged();
+    }
+  }
   ngOnInit() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      console.log("99999999999999999:", params)
+      this.userId = params['userId'];
+      // this.advanceSearch();
+    });
+
     this.getAllInvoiceInfo();
     this.summartDetailForm = this.fb.group({
       fromDate: ['', Validators.required],

@@ -7,10 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MySubscriptionComponent implements OnInit {
 
-  from: string = "mySubscription";
+  queryParam: string = "";
   constructor() { }
 
   ngOnInit() {
+    const loggedInUser = JSON.parse(localStorage.getItem('UMD'));
+    this.queryParam = `?subscriptionAssigneeId=${loggedInUser.USER_UNIQUE_ID}`;
   }
 
 }

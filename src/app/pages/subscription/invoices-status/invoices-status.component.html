@@ -42,7 +42,8 @@
         </div>
         <div class="card__row">
             <ag-grid-angular class="ag-theme-balham" [gridOptions]="invoiceListGridOptions"
-                (rowClicked)="onInvoiceRowClicked($event)" paginationPageSize=15 pagination=true>
+                (firstDataRendered)="onFirstDataRendered($event)" (rowClicked)="onInvoiceRowClicked($event)"
+                paginationPageSize=15 pagination=true>
             </ag-grid-angular>
         </div>
     </div>

@@ -110,7 +110,7 @@
         <div class="card__col-xs-4 card__col-sm-14">
             <mat-form-field appearance="outline" >
                 <mat-label>Email Address</mat-label>
-                <input matInput  placeholder="Enter Email Id" formControlName="email" maxlength="50" required>
+                <input matInput  placeholder="Enter Email Id" formControlName="email" maxlength="50">
                 <mat-error *ngIf="leadForm.controls['email'].hasError('required')">Enter email.</mat-error>
                 <mat-error *ngIf="leadForm.controls['email'].hasError('pattern')">Enter valid email.</mat-error>
             </mat-form-field>
@@ -130,7 +130,7 @@
         <div class="card__col-xs-4 card__col-sm-14">
             <mat-form-field appearance="outline" >
                 <mat-label>City in India</mat-label>
-                <mat-select placeholder="Select city" formControlName="city"  required>
+                <mat-select placeholder="Select city" formControlName="city">
                     <mat-option *ngFor="let city of indianCity" [value]="city.name">
                         {{ city.name }}
                     </mat-option>
@@ -154,6 +154,26 @@
                 <mat-label>Website</mat-label>
                 <input matInput formControlName="website" placeholder="http://www.example.com">
                 <!-- <mat-error *ngIf="agentIdForm.controls['agentId'].hasError('required')">Enter Agent Id.</mat-error> -->
+            </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-4 card__col-sm-14" >
+            <mat-form-field appearance="outline" >
+                <mat-label>Channel</mat-label>
+                <input matInput formControlName="channel" placeholder="Enter Channel">
+                <!-- <mat-error *ngIf="agentIdForm.controls['agentId'].hasError('required')">Enter Agent Id.</mat-error> -->
+            </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-4 card__col-sm-14" >
+            <mat-form-field appearance="outline">
+                <mat-label>Lead Created Date</mat-label>
+                <input matInput formControlName="leadCreatedDate" [matDatepicker]="picker1" [max]="maxDate"
+                    autocomplete="off" >
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <!-- <mat-error *ngIf="leadsForm.controls['fromDate'].hasError('required')">Select From
+                    date</mat-error> -->
             </mat-form-field>
         </div>
 
