@@ -1,0 +1,363 @@
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+
+<div class="main clearfix">
+  <div class="content content_full">
+    
+    <div class="content__container">
+
+    <form [formGroup]="userProfileForm">
+        <div class="card">
+            <mat-card *ngIf="userInfo">
+                <h2 style="font-size: 17px;"><b><u>User Profile: </u></b></h2><br>
+                <div class="card__row">
+
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                             <mat-label>PAN Number</mat-label>
+                             <input placeholder="PAN" formControlName="panNumber" autocomplete="off"
+                             (blur)="getUserInfoByPan(userProfileForm['controls'].panNumber)"
+                             type="text" maxlength="10" minlength="10"  upperCase matInput>
+                         </mat-form-field>
+                     </div>
+
+                    <div class="card__col-lg-4">
+                       <mat-form-field appearance="outline">
+                            <mat-label>First name</mat-label>
+                            <input placeholder="User First Name" formControlName="fName"  matInput>
+                        </mat-form-field>
+                    </div>
+                    
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Last Name</mat-label>
+                            <input placeholder="User Last Name" formControlName="lName" matInput>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="card__row">
+                    <div class="card__col-lg-4">
+                       <mat-form-field appearance="outline">
+                            <mat-label>Father Name</mat-label>
+                            <input placeholder="Father Name" maxlength="50" formControlName="fatherName" matInput>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Middle Name</mat-label>
+                            <input placeholder="User Middle Name" formControlName="mName" matInput>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                             <mat-label>Email Address</mat-label>
+                             <input placeholder="Email Address" maxlength="50" formControlName="emailAddress" matInput>
+                         </mat-form-field>
+                     </div>
+                </div>
+
+
+                <div class="card__row">
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                             <mat-label>Mobile Number</mat-label>
+                             <input placeholder="Mobile Number" maxlength="50" formControlName="mobileNumber" matInput>
+                         </mat-form-field>
+                     </div>
+
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Gender</mat-label>
+                            <mat-select placeholder="Select Gender" formControlName="gender" >  
+                                <mat-option *ngFor="let type of genderData" [value]="type.value">
+                                  {{type.label}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Date Of Birth</mat-label>
+                            <input matInput formControlName="dateOfBirth" placeholder="Date of Birth"
+                            [matDatepicker]="picker" autocomplete="off" >  <!--[min]="minDate" [max]="maxDate"-->
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                            <mat-error
+                                *ngIf="userProfileForm.controls['dateOfBirth'].hasError('required')">
+                                Select Date of
+                                Birth</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="card__row">
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Marrital Status</mat-label>
+                            <mat-select placeholder="Marrital Status" formControlName="maritalStatus" >  
+                                <mat-option *ngFor="let type of marritalStatusData" [value]="type.value">
+                                  {{type.label}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                             <mat-label>Adhar Number</mat-label>
+                             <input placeholder="Aadhaar Number" formControlName="aadharNumber"
+                             maxlength="12" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                             autocomplete="off" matInput>
+                         </mat-form-field>
+                     </div>
+
+                     <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Residential Status</mat-label>
+                            <mat-select matInput formControlName="residentialStatus"
+                                placeholder="Select Residential Status" autocomplete="off" >
+                                <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
+                                    {{ res.label }}
+                                </mat-option>
+                            </mat-select>
+                            <!-- <mat-error
+                                *ngIf="itrSummaryForm['controls'].assesse['controls'].residentialStatus.hasError('required')">
+                                Select Residential Status</mat-error> -->
+                         </mat-form-field>
+                     </div>
+                </div>
+
+               
+            </mat-card>
+            <br><br><br>   
+
+      <!-- </div>
+      <div class="card"> -->
+
+        <mat-card *ngIf="userInfo">
+            <h2 style="font-size: 17px;"><b><u>Address Information: </u></b></h2><br>
+            <div class="card__row" >
+              <div formArrayName="address">   
+               <div *ngFor="let address of getAddressArray.controls; let i=index" [formGroupName]="i">
+                <div class="card__col-lg-4" >
+                    <mat-form-field appearance="outline">
+                        <mat-label>Address Type</mat-label>
+                        <mat-select placeholder="Address Type" formControlName="addressType" name="address[i]"> 
+                            <mat-option *ngFor="let add of addressTypeData" [value]="add.value">
+                                {{add.label}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="card__col-lg-2" >
+                    <mat-form-field appearance="outline">
+                         <mat-label>Flat No</mat-label>
+                         <input placeholder="Flat Number" maxlength="10" name="address[i]" formControlName="flatNo" matInput>
+                     </mat-form-field>
+                 </div>
+
+                <div class="card__col-lg-6" >
+                   <mat-form-field appearance="outline">
+                        <mat-label>Address</mat-label>
+                        <input placeholder="Business Address" maxlength="50" name="address[i]" formControlName="premisesName" matInput>
+                    </mat-form-field>
+                </div>
+
+                <div class="card__col-lg-4" >
+                    <mat-form-field appearance="outline">
+                         <mat-label>Area</mat-label>
+                         <input placeholder="Area" maxlength="50" name="address[i]" formControlName="area" matInput>
+                     </mat-form-field>
+                 </div>
+
+                 <div class="card__col-lg-4" >
+                    <mat-form-field appearance="outline">
+                        <mat-label>Pincode</mat-label>
+                        <input placeholder="Pincode" formControlName="pinCode" maxlength="6" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="address[i]" type="number" matInput
+                        (blur)="getCityData(userProfileForm['controls'].address.controls[i].controls['pinCode'])">
+                        <!-- <mat-error
+                        *ngIf="userProfileForm['controls'].pinCode.hasError('pattern')">
+                        Enter valid
+                        pin
+                    </mat-error> -->
+                    </mat-form-field>
+                </div>
+
+                <div class="card__col-lg-4" >
+                    <mat-form-field appearance="outline">
+                         <mat-label>Country</mat-label>
+                         <input placeholder="Country" maxlength="50" name="address[i]" formControlName="country" matInput>
+                     </mat-form-field>
+                 </div>
+               
+                <div class="card__col-lg-4" >
+                    <mat-form-field appearance="outline">
+                        <mat-label>Select State</mat-label>
+                        <mat-select placeholder="Select State" formControlName="state" name="address[i]"> 
+                            <mat-option *ngFor="let type of state_list" [value]="type.stateMasterCode">
+                                {{type.stateMasterName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="card__col-lg-4" >
+                    <mat-form-field appearance="outline">
+                         <mat-label>City</mat-label>
+                         <input placeholder="City" maxlength="50" name="address[i]" formControlName="city" matInput>
+                     </mat-form-field>
+                 </div>
+
+                
+               </div>
+              </div>
+               </div>
+
+        </mat-card>
+        <br><br><br>
+
+      <!-- </div>
+      <div class="card"> -->
+
+        <mat-card *ngIf="userInfo">
+            <h2 style="font-size: 17px;"><b><u>Bank Information: </u></b></h2><br>
+            <div class="card__row">
+
+                <button style="float: right;"
+                (click)="openDialog('Add Bank Info','Add', null,'','Bank')">Add Bank Info</button>
+                <br> <br>
+                <table>
+                    <tr>
+                        <th>IFSC Code</th>
+                        <th>Bank</th>
+                        <th>Account Number</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr *ngIf="bankData && bankData.length === 0">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr *ngFor="let bank of bankData; let i=index">
+                        <td>{{bank.ifsCode}}</td>
+                        <td>{{bank.name}}</td>
+                        <td>{{bank.accountNumber}}</td>
+                        <td>
+                            <!-- <button (click)="openDialog('Edit Bank Info','Edit', i, bankData[i],'Bank')"><i
+                                class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp; -->
+                        <button (click)="deleteBankData('Bank',i)"><i class="fa fa-trash fa-lg"
+                                aria-hidden="true"></i></button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </mat-card>
+        <br><br><br>
+        </div>
+    </form>
+
+        <div class="card">
+          <form [formGroup]="gstForm">
+            <mat-card *ngIf="userInfo">
+                <h2 style="font-size: 17px;"><b><u>User GST Information: </u></b></h2><br>
+              
+                <div class="card__row">
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>GST Portal User Name</mat-label>
+                            <input placeholder="GST Portal User Name" formControlName="gstPortalUserName" maxlength="50" matInput>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-4">
+                      <mat-form-field appearance="outline">
+                            <mat-label>GST Portal Password</mat-label>
+                            <input placeholder="GST Portal Password" formControlName="gstPortalPassword" maxlength="50" matInput>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>GSTIN Number</mat-label>
+                            <input placeholder="GSTIN Number"  maxlength="15" type="text" formControlName="gstinNumber"  (blur)="getPartyInfoByGSTIN($event)" matInput>  
+                            <mat-error *ngIf="gstForm['controls'].gstinNumber.hasError('pattern')">
+                                Please enter valid GSTN.
+                              </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="card__row">
+                    <div class="card__col-lg-4">
+                       <mat-form-field appearance="outline">
+                            <mat-label>Trade Name</mat-label>
+                            <input placeholder="Trade Name" maxlength="50" formControlName="tradeName" matInput>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Legal Name</mat-label>
+                            <input placeholder="Legal Name" maxlength="50" formControlName="legalName" matInput>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>GSTIN Registered Mobile Number</mat-label>
+                            <input placeholder="GSTIN Registered Mobile Number" formControlName="gstinRegisteredMobileNumber"
+                            matInput maxlength="10"
+                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <mat-error *ngIf="gstForm['controls'].gstinRegisteredMobileNumber.hasError('pattern')">
+                                Please enter valid mobile no.</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="card__row">
+                    <div class="card__col-lg-4">
+                       <mat-form-field appearance="outline">
+                            <mat-label>Sales Invoice Prefix</mat-label>
+                            <input placeholder="E.g. SSBA /2018-2019/" maxlength="50" formControlName="salesInvoicePrefix" matInput>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>GSTR1</mat-label>
+                            <mat-select placeholder="GSTR1" formControlName="gstr1Type">
+                              <mat-option *ngFor="let type of gstr1List" [value]="type.value">
+                                {{type.label}}
+                              </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>GST Type</mat-label>
+                            <mat-select placeholder="GST Type" formControlName="gstType">  
+                                <mat-option *ngFor="let type of gstType" [value]="type.value">
+                                  {{type.label}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-card>
+            </form>
+      </div>
+
+    <div class="card__row">
+        <button class="btn" (click)="updateUserProfile()">Update</button>
+        <button class="btn" [routerLink]="['/pages/user-management/users']">Cancel</button>
+    </div>      
+
+    </div>
+  </div>
+</div>

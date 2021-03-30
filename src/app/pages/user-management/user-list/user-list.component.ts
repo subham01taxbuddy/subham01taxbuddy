@@ -233,6 +233,27 @@ export class UserListComponent implements OnInit {
               'justify-content': 'center'
             }
         },
+      },
+      {
+        headerName: 'User Profile',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+            return `<button type="button" class="action_icon add_button" title="User Profile">
+            <i class="fa fa-user" aria-hidden="true" data-action-type="profile"></i>
+           </button>`;
+        },
+        width: 80,
+        pinned: 'right',
+        cellStyle: function (params) {
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center'
+            }
+        },
       }
     ]
   }
@@ -269,6 +290,10 @@ export class UserListComponent implements OnInit {
         }
         case 'subscription': {
           this.redirectTowardSubscription(params.data)
+          break;
+        }
+        case 'profile': {
+          this.router.navigate(['pages/user-management/profile/'+ params.data.userId])
           break;
         }
       }

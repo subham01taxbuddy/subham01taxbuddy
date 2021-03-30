@@ -9,9 +9,11 @@ import { UserManagementRoutingModule } from "./user-management.routing";
 import { UserListComponent } from './user-list/user-list.component';
 import { UserManagementComponent } from "./user-management/user-management.component";
 import { NgxPaginationModule } from "ngx-pagination";
+import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ProfileDialogComponent } from './profile-dialog/profile-dialog.component';
 
 @NgModule({
-    declarations: [UserManagementComponent , UserListComponent],
+    declarations: [UserManagementComponent , UserListComponent, UserProfileComponent, ProfileDialogComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -23,6 +25,7 @@ import { NgxPaginationModule } from "ngx-pagination";
         UserManagementRoutingModule,
         NgxPaginationModule
     ],
+    entryComponents: [ProfileDialogComponent]
 })
 
 export class UserManagementModule { }
