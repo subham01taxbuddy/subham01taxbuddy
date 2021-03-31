@@ -349,6 +349,23 @@
                         </mat-form-field>
                     </div>
                 </div>
+
+                <div class="card__row">
+                    <div class="card__col-lg-4">
+                        <label><b>Business Logo: </b></label><br><br>
+                        <input type="file" (change)="uploadBusinessLogo($event.target.files)" >
+                    </div>
+
+                    <div class="card__col-lg-4">
+                        <label><b>Business Signature: </b></label><br><br>
+                        <input type="file" (change)="uploadBusinessSignature($event.target.files)">
+                    </div>
+
+                    <div class="card__col-lg-4">
+                        <label><b>GST Certificate: </b></label><br><br>
+                        <input type="file" (change)="uploadGstCertificate($event.target.files)">
+                    </div>
+                </div>
             </mat-card>
             </form>
       </div>

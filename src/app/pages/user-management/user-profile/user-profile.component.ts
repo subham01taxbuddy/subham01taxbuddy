@@ -12,6 +12,7 @@ import { promises } from 'dns';
 import { reject } from 'lodash';
 import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.component';
 import { TitleCasePipe } from '@angular/common';
+import Storage from '@aws-amplify/storage';
 
 @Component({
   selector: 'app-user-profile',
@@ -81,6 +82,10 @@ export class UserProfileComponent implements OnInit {
       salesInvoicePrefix: [''],
       gstr1Type: [''],
       gstType: [''],
+      s3BusinessLogo: [''],
+      s3BusinessSignature: [''],
+      s3GstCertificate: [''],
+
       // businessAddress: this.fb.group({
       //   address: [''],
       //   pincode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)]],
@@ -275,6 +280,103 @@ export class UserProfileComponent implements OnInit {
     this.gstType.find(item => item.label == gstCode).label
   }
 
+  uploadBusinessLogo(files){
+    console.log('Business logo file : ',files[0])
+    if (files && files[0]) {
+      this.loading = true;
+      let extention = ".png";
+      if (files[0].name) {
+        let splitData = files[0].name.split(".");
+        extention = "." + splitData[splitData.length - 1];
+      }
+      Storage.put('business-signature/bsignature_' + this.userInfo.userId + "_" + new Date().getTime() + extention, files[0], {
+        contentType: files[0].type
+      })
+        .then((result: any) => {
+          if (result && result.key) {
+            this.userInfo.gstDetails.businessLogo = result.key;
+            this.getS3Image(this.userInfo.gstDetails.businessLogo).then(s3Image => {
+              // this.userInfo.gstDetails.s3BusinessSignature = s3Image;
+              this.gstForm.controls.s3BusinessLogo.setValue(s3Image);
+              this.loading = false;
+              console.log('After Business Loho upload -> ',this.userInfo)
+            });
+          } else {
+            this.loading = false;
+            this._toastMessageService.alert("error", "Error While uploading business sig image");
+          }
+        })
+        .catch(err => {
+          this.loading = false;
+          this._toastMessageService.alert("error", "Error While uploading business sig image" + JSON.stringify(err));
+        });
+    }
+  }
+
+  uploadBusinessSignature(files){
+    if (files && files[0]) {
+      this.loading = true;
+      let extention = ".png";
+      if (files[0].name) {
+        let splitData = files[0].name.split(".");
+        extention = "." + splitData[splitData.length - 1];
+      }
+      Storage.put('business-signature/bsignature_' + this.userInfo.userId + "_" + new Date().getTime() + extention, files[0], {
+        contentType: files[0].type
+      })
+        .then((result: any) => {
+          if (result && result.key) {
+            this.userInfo.gstDetails.businessSignature = result.key;
+            this.getS3Image(this.userInfo.gstDetails.businessSignature).then(s3Image => {
+              // this.userInfo.gstDetails.s3BusinessSignature = s3Image;
+              this.gstForm.controls.s3BusinessSignature.setValue(s3Image);
+              this.loading = false;
+              console.log('After Business Signature upload -> ',this.userInfo)
+            });
+          } else {
+            this.loading = false;
+            this._toastMessageService.alert("error", "Error While uploading business sig image");
+          }
+        })
+        .catch(err => {
+          this.loading = false;
+          this._toastMessageService.alert("error", "Error While uploading business sig image" + JSON.stringify(err));
+        });
+    }
+  }
+
+  uploadGstCertificate(files){
+    if(files && files[0]){
+      this.loading = true;
+      let extention = ".png";
+      if (files[0].name) {
+        let splitData = files[0].name.split(".");
+        extention = "." + splitData[splitData.length - 1];
+      }
+      Storage.put('gst-certificate/bcertificate_' + this.userInfo.userId + "_" + new Date().getTime() + extention, files[0], {
+        contentType: files[0].type
+      })
+        .then((result: any) => {
+          if (result && result.key) {
+            this.userInfo.gstDetails.gstCertificate = result.key;
+            this.getS3Image(this.userInfo.gstDetails.gstCertificate).then(s3Image => {
+              // this.userInfo.gstDetails.s3GstCertificate = s3Image;
+              this.gstForm.controls.s3GstCertificate.setValue(s3Image);
+              this.loading = false;
+              console.log('After GST Certificate upload -> ',this.userInfo)
+            });
+          } else {
+            this.loading = false;
+            this._toastMessageService.alert("error", "Error While uploading business cert image");
+          }
+        })
+        .catch(err => {
+          this.loading = false;
+          this._toastMessageService.alert("error", "Error While uploading business cert image" + JSON.stringify(err));
+        });
+    }
+  }
+
   updateUserProfile(){
     console.log('user profile valid -> ',this.userProfileForm.valid, ' GST valid -> ',this.gstForm.valid)
     console.log('user profile form -> ',this.userProfileForm, ' GST form -> ',this.gstForm)
@@ -299,6 +401,22 @@ export class UserProfileComponent implements OnInit {
       $('input.ng-invalid').first().focus();
       return
     }
+  }
+
+  getS3Image(imagePath) {
+    return new Promise((resolve, reject) => {
+      if (imagePath) {
+        Storage.get(imagePath)
+          .then(result => {
+            return resolve(result);
+          })
+          .catch(err => {
+            return resolve("");
+          });
+      } else {
+        return resolve("");
+      }
+    });
   }
 
 }
