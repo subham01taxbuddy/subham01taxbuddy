@@ -93,7 +93,7 @@
             <span class="sidebar__name">New User</span>
         </a>
 
-        <a class="sidebar__item" routerLink="/pages/list" routerLinkActive="sidebar__item_active"
+        <!-- <a class="sidebar__item" routerLink="/pages/list" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN'])">
             <span class="sidebar__ico">
                 <svg id="ico-list" data-name="list" class="sidebar__ico-img" enable-background="new 0 0 24 24"
@@ -116,7 +116,7 @@
                 </svg>
             </span>
             <span class="sidebar__name">LIST</span>
-        </a>
+        </a> -->
 
         <a class="sidebar__item" routerLink="/pages/itr-filing" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM'])">
@@ -143,12 +143,12 @@
             </span>
             <span class="sidebar__name">ITR FILING</span>
         </a>
-        <a class="sidebar__item" routerLink="/pages/business" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN'])">
+        <a class="sidebar__item" routerLink="/pages/gst-filing" routerLinkActive="sidebar__item_active"
+            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM'])">
             <span class="sidebar__ico">
                 <svg id="ico-business" data-name="business" class="sidebar__ico-img" xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 561.03 413.38">
-                    <title>business</title>
+                    <title>GST Filing</title>
                     <path
                         d="M83.1,371.56H64a38.15,38.15,0,0,0-38.15,38.15v75.93A38.15,38.15,0,0,0,64,523.79H83.1a38.15,38.15,0,0,0,38.15-38.15h0V409.71A38.15,38.15,0,0,0,83.1,371.56Zm9.54,114.08a9.55,9.55,0,0,1-9.54,9.54H64a9.55,9.55,0,0,1-9.54-9.54V409.71A9.55,9.55,0,0,1,64,400.17H83.1a9.55,9.55,0,0,1,9.54,9.54Z"
                         transform="translate(-25.88 -110.42)" />
@@ -166,9 +166,9 @@
                         transform="translate(-25.88 -110.42)" />
                 </svg>
             </span>
-            <span class="sidebar__name">BUSINESS</span>
+            <span class="sidebar__name">GST Filing</span>
         </a>
-        <a class="sidebar__item" routerLink="/pages/activate-package" routerLinkActive="sidebar__item_active"
+        <!-- <a class="sidebar__item" routerLink="/pages/activate-package" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM'])">
             <span class="sidebar__ico">
                 <svg id="ico-business" data-name="business" class="sidebar__ico-img" xmlns="http://www.w3.org/2000/svg"
@@ -192,7 +192,7 @@
                 </svg>
             </span>
             <span class="sidebar__name">ACTIVATE PACKAGE</span>
-        </a>
+        </a> -->
         <!-- <a class="sidebar__item" routerLink="/pages/reports" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN'])">
             <span class="sidebar__ico">
@@ -218,7 +218,7 @@
             </span>
             <span class="sidebar__name">Reports</span>
         </a> -->
-        <a class="sidebar__item" routerLink="/pages/ifa" routerLinkActive="sidebar__item_active"
+        <!-- <a class="sidebar__item" routerLink="/pages/ifa" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_IFA'])">
             <span class="sidebar__ico">
                 <svg id="ico-business" data-name="business" class="sidebar__ico-img" xmlns="http://www.w3.org/2000/svg"
@@ -242,7 +242,7 @@
                 </svg>
             </span>
             <span class="sidebar__name">IFA Module</span>
-        </a>
+        </a> -->
 
         <!-- <a class="sidebar__item" routerLink="/pages/user-info" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_IFA'])">
@@ -270,7 +270,7 @@
             <span class="sidebar__name">Users</span>
         </a> -->
 
-        <a class="sidebar__item" routerLink="/pages/assign" routerLinkActive="sidebar__item_active"
+        <!-- <a class="sidebar__item" routerLink="/pages/assign" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_IFA'])">
             <span class="sidebar__ico">
                 <svg id="ico-business" data-name="business" class="sidebar__ico-img" xmlns="http://www.w3.org/2000/svg"
@@ -295,7 +295,7 @@
             </span>
             <span class="sidebar__name">Assign</span>
         </a>
-
+ -->
 
 
         <a class="sidebar__item" (click)="chatCorner()" routerLinkActive="sidebar__item_active" (click)="closeSideBar()"

@@ -466,6 +466,8 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy {
         return;
       });
       this.utilsService.getITRByUserIdAndAssesmentYear(profile);
+    } else if (subscription.servicesType === 'GST') {
+      this.router.navigate(['/pages/gst-filing/cloud'], { queryParams: { userId: subscription.userId } })
     } else {
       this.utilsService.showSnackBar('Filing Path Yet to decide');
     }

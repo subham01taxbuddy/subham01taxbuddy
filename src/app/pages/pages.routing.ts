@@ -82,6 +82,7 @@ export const routes: Routes = [
 			{ path: 'leads', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './leads/leads.module#LeadsModule' },
 			{ path: 'subscription', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './subscription/subscription.module#SubscriptionModule' },
 			{ path: 'user-management', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './user-management/user-management.module#UserManagementModule' },
+			{ path: 'gst-filing', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './gst-filing/gst-filing.module#GstFilingModule' },
 			{ path: '**', redirectTo: '/pages/home', pathMatch: 'full' },
 
 		]
