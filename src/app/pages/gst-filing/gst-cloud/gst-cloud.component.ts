@@ -74,7 +74,7 @@ export class GstCloudComponent implements OnInit {
       });
       console.log('User Profile', this.userProfile)
       if (this.utilsService.isNonEmpty(this.userProfile)) {
-        const param = `/cloud/file-count?cloudPath=-5/GST/${this.searchForm.value.financialYear}/${this.searchForm.value.month}/Invoice`;
+        const param = `/cloud/file-count?cloudPath=${this.userProfile.userId}/GST/${this.searchForm.value.financialYear}/${this.searchForm.value.month}/Invoice`;
         this.itrMsService.getMethod(param).subscribe((res: any) => {
           console.log('Invoices Result', res);
           this.summarisedInvoices = res;
@@ -131,7 +131,7 @@ export class GstCloudComponent implements OnInit {
   getInvoicesByBillType(type) {
     this.selectedBillType = type;
     this.loading = true;
-    const param = `/cloud/files?currentPath=-5/GST/${this.searchForm.value.financialYear}/${this.searchForm.value.month}/Invoice/${type}`;
+    const param = `/cloud/files?currentPath=${this.userProfile.userId}/GST/${this.searchForm.value.financialYear}/${this.searchForm.value.month}/Invoice/${type}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log('Invoices Result', res);
       this.selected_invoices_list = res;
@@ -162,7 +162,7 @@ export class GstCloudComponent implements OnInit {
     } else {
       this.viewer = 'IMG';
     }
-    const param = `/cloud/signed-s3-url?filePath=-5/GST/${this.searchForm.value.financialYear}/${this.searchForm.value.month}/Invoice/${this.selectedBillType}/${invoice.fileName}`;
+    const param = `/cloud/signed-s3-url?filePath=${this.userProfile.userId}/GST/${this.searchForm.value.financialYear}/${this.searchForm.value.month}/Invoice/${this.selectedBillType}/${invoice.fileName}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log(res);
       this.cloudView = 'VIEW_INVOICE';
