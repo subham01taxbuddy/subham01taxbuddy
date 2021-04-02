@@ -56,8 +56,8 @@
                     <thead class="report-table__head">
                         <tr class="report-table__row report-table__row_head">
                             <th class="report-table__cell report-table__cell_name text-pull-left">Bill Type</th>
-                            <!-- <th class="report-table__cell report-table__cell_name text-pull-right">No. Of Bills Uploaded</th>
-                        <th class="report-table__cell report-table__cell_name text-pull-right">No. Of Bills Processed</th> -->
+                            <!-- <th class="report-table__cell report-table__cell_name text-pull-right">Upload Computation Doc</th>
+                            <th class="report-table__cell report-table__cell_name text-pull-right">Upload GST Doc</th> -->
                             <th class="report-table__cell report-table__cell_name text-pull-right">Pending Bills for
                                 Processing
                             </th>
@@ -68,22 +68,47 @@
                             <td class="report-table__cell report-table__cell_day text-pull-left"><a
                                     (click)="getInvoicesByBillType('Sales')"><b>Sales
                                         Bills</b></a></td>
-                            <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
-                            {{summarised_invoice.sales.uploaded_count}}</td>
+
+                        <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
+                           <input type="file" (click)="getInvoicesByBillType('Sales')">
+                        </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            {{summarised_invoice.sales.processed_count}}</td> -->
+                            <input type="file" (click)="getInvoicesByBillType('Sales')">
+                        </td> -->
+
+                            <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{this.summarisedInvoices ? summarisedInvoices['Sales']:0}}</td>
+                        </tr>
+
+                        <!-- <tr class="report-table__row">
+                            <td class="report-table__cell report-table__cell_day text-pull-left">
+                                <input type="file" (click)="getInvoicesByBillType('Sales')"><b>Computation</b></td>
+                                
                             <td class="report-table__cell report-table__cell_day text-pull-right">
                                 {{this.summarisedInvoices ? summarisedInvoices['Sales']:0}}</td>
                         </tr>
                         <tr class="report-table__row">
+                            <td class="report-table__cell report-table__cell_day text-pull-left">
+                                <input type="file" (click)="getInvoicesByBillType('Sales')"><b>GST fil</b></td>
+                           
+                            <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{this.summarisedInvoices ? summarisedInvoices['Sales']:0}}</td>
+                        </tr> -->
+
+                        <tr class="report-table__row">
                             <td class="report-table__cell report-table__cell_day text-pull-left"><a
                                     (click)="getInvoicesByBillType('Purchase')"><b>Purchase /
                                         Expense Bills</b></a></td>
-                            <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
-                            {{summarised_invoice.purchase.uploaded_count}}</td>
+                        
+                        <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
+                           <input type="file" (click)="getInvoicesByBillType('Sales')">
+                        </td>
+
                         <td class="report-table__cell report-table__cell_day text-pull-right">
-                            {{summarised_invoice.purchase.processed_count}}</td> -->
-                            <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <input type="file" (click)="getInvoicesByBillType('Sales')">|
+                        </td> -->
+
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
                                 {{this.summarisedInvoices ? summarisedInvoices['Purchase']:0}}</td>
                         </tr>
                         <!-- <tr class="report-table__row">
@@ -108,6 +133,21 @@
                         </tr> -->
                     </tbody>
                 </table>
+
+                <br>
+                <div class="card" *ngIf="userProfile">
+                    <div class="card__row">
+                        <div class="card__col-sm-6">
+                          <label><b>Computation: </b></label>  <input type="file" (change)="uploadFile($event.target.files)">
+                          <button [disabled]="utilsService.isNonEmpty(uploadDoc) ? false : true" (click)="uploadDocumnet()">Upload</button>
+                        </div>
+                        <div class="card__col-sm-6">
+                          <label><b>Acknowledgement: </b></label>   <input type="file" (change)="uploadFile($event.target.files)">
+                          <button [disabled]="utilsService.isNonEmpty(uploadDoc) ? false : true" (click)="uploadDocumnet()">Upload</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="card" style="margin-top: 10px;" *ngIf="cloudView === 'INVOICE_LIST'">
@@ -172,6 +212,7 @@
                         </table>
                     </div>
                 </div>
+
             </ng-template>
             <ng-template [ngIf]="!selected_invoices_list || selected_invoices_list.length==0">
                 <div class="card__row">

@@ -20,6 +20,8 @@ export class GstCloudComponent implements OnInit {
   selected_invoices_list = [];
   viewer = 'DOC';
   docUrl = '';
+  uploadDoc: any;
+
   fyDropDown = [
     { value: '2017-18', displayName: '2017-18' },
     { value: '2018-19', displayName: '2018-19' },
@@ -168,5 +170,39 @@ export class GstCloudComponent implements OnInit {
 
   onCancelBtnClicked() {
     this.cloudView = 'INVOICE_LIST';
+  }
+
+  uploadFile(file: FileList){
+    console.log('File: ',file)
+    if(file.length > 0){
+      this.uploadDoc = file.item(0);
+      console.log('uploadDoc -> ',this.uploadDoc)
+    }
+  }
+
+  uploadDocumnet(){
+    this.loading = true;
+    let s3ObjectUrl = this.userProfile.userId + '/GST/'+this.searchForm.value.financialYear +'/'+this.searchForm.value.month+'/Document/'+ this.uploadDoc.name;
+    let cloudFileMetaData = '{"fileName":"' + this.uploadDoc.name + '","userId":' + this.userProfile.userId + ',"accessRight":["' + this.userProfile.userId + '_W"' + '],"origin":"BO", "s3ObjectUrl":"' + s3ObjectUrl + '"'+'}';
+    const formData = new FormData();
+    formData.append("file", this.uploadDoc);
+    formData.append("cloudFileMetaData", cloudFileMetaData);
+    console.log("formData ===> ", formData);
+    let param = '/itr/cloud/upload'
+    this.userMsService.postMethodInfo(param, formData).subscribe((res: any) => {
+      this.loading = false;
+      this.uploadDoc = '';
+      console.log('uploadDocument responce =>', res)
+      if (res.Failed === 'Failed to uploade file!') {
+        this.utilsService.showSnackBar(res.Failed)
+      }
+      else if (res.Success === 'File successfully uploaded!') {
+        this.utilsService.showSnackBar(res.Success);
+       // this.onUploadDoucument.emit('File uploaded successfully')
+      }
+    },
+      error => {
+        this.loading = false;
+      })
   }
 }
