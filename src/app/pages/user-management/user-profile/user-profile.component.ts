@@ -26,29 +26,29 @@ export class UserProfileComponent implements OnInit {
   userInfo: any;
   userProfileForm: FormGroup;
   gstForm: FormGroup;
-  gstType: any = [{ label: 'Regular', value: 'Regular' }, { label: 'Composite', value: 'Composite' }, { label: 'Input Service Distributor (ISD)', value: 'Input Service Distributor (ISD)' }]
+  gstType: any = [{ label: 'Regular', value: 'REGULAR' }, { label: 'Composite', value: 'COMPOSITE' }, { label: 'Input Service Distributor (ISD)', value: 'Input Service Distributor (ISD)' }]
   state_list: any = [];
-  gstr1List: any = [{ label: 'Monthly', value: 'Monthly' }, { label: 'Quarterly', value: 'Quarterly' }];
-  genderData: any = [{ label: 'Male', value: 'MALE' },{ label: 'Female', value: 'FEMALE' }]
-  marritalStatusData: any = [{ label: 'Sigle', value: 'SINGLE'}, { label: 'Married', value: 'MARRIED'}];
+  gstr1List: any = [{ label: 'Monthly', value: 'MONTHLY' }, { label: 'Quarterly', value: 'QUARTERLY' }];
+  genderData: any = [{ label: 'Male', value: 'MALE' }, { label: 'Female', value: 'FEMALE' }]
+  marritalStatusData: any = [{ label: 'Single', value: 'SINGLE' }, { label: 'Married', value: 'MARRIED' }];
   residentialStatus = [
     { value: 'RESIDENT', label: 'Resident' },
     { value: 'NON_RESIDENT', label: 'Non Resident' },
     // { value: 'NON_ORDINARY', label: 'Non Ordinary Resident' }
   ];
-  bankData: any =[];
-  addressTypeData: any=[{ label: 'Home', value: 'HOME'}, { label: 'Office', value: 'OFFICE'}]
+  bankData: any = [];
+  addressTypeData: any = [{ label: 'Home', value: 'HOME' }, { label: 'Office', value: 'OFFICE' }]
 
   get getAddressArray() {
     return <FormArray>this.userProfileForm.get('address');
   }
 
   constructor(private activatedRoute: ActivatedRoute, private userService: UserMsService, public utilsService: UtilsService, private fb: FormBuilder,
-              private gstService: GstMsService, private _toastMessageService: ToastMessageService, private thirdPartyService: ThirdPartyService,
-              private dialog: MatDialog, private titleCasePipe: TitleCasePipe ) { }
+    private gstService: GstMsService, private _toastMessageService: ToastMessageService, private thirdPartyService: ThirdPartyService,
+    private dialog: MatDialog, private titleCasePipe: TitleCasePipe) { }
 
   ngOnInit() {
-    this.getStateInfo().then(res =>{
+    this.getStateInfo().then(res => {
       this.activatedRoute.params.subscribe(params => {
         console.log("99999999999999999:", params)
         this.getUserInfo(params['id']);
@@ -56,18 +56,18 @@ export class UserProfileComponent implements OnInit {
     })
 
     this.userProfileForm = this.fb.group({
-      fName : [''],
-      mName :[''],
-      lName : [''],
-      fatherName :[''],
-      gender : [''],
-      dateOfBirth : [''],
-      maritalStatus : [''],
-      emailAddress : ['', Validators.pattern(AppConstants.emailRegex)],
-      aadharNumber : ['', [Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)]],
-      panNumber : ['', Validators.pattern(AppConstants.panNumberRegex)],
-      mobileNumber :['', [Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],
-      residentialStatus : ['RESIDENT'],
+      fName: [''],
+      mName: [''],
+      lName: [''],
+      fatherName: [''],
+      gender: [''],
+      dateOfBirth: [''],
+      maritalStatus: [''],
+      emailAddress: ['', Validators.pattern(AppConstants.emailRegex)],
+      aadharNumber: ['', [Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)]],
+      panNumber: ['', Validators.pattern(AppConstants.panNumberRegex)],
+      mobileNumber: ['', [Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],
+      residentialStatus: ['RESIDENT'],
       address: this.fb.array([]),
       bankDetails: []
     })
@@ -103,128 +103,128 @@ export class UserProfileComponent implements OnInit {
     familyData.push(this.createAddressForm())
   }
 
-  createAddressForm(obj: { premisesName?: string, state?: string, pinCode?: number, addressType? : string, flatNo?: any, road?: any, area?:any, city?:any, country?: any} = {}): FormGroup {
+  createAddressForm(obj: { premisesName?: string, state?: string, pinCode?: number, addressType?: string, flatNo?: any, road?: any, area?: any, city?: any, country?: any } = {}): FormGroup {
     return this.fb.group({
       premisesName: [obj.premisesName || ''],
       state: [obj.state || ''],
       pinCode: [obj.pinCode || ''],
-      addressType : [obj.addressType || ''],
-      flatNo : [obj.flatNo || ''],
-      road : null,
-      area : [obj.area || ''],
-      city : [obj.city || ''],
-      country : [obj.country || '']
+      addressType: [obj.addressType || ''],
+      flatNo: [obj.flatNo || ''],
+      road: null,
+      area: [obj.area || ''],
+      city: [obj.city || ''],
+      country: [obj.country || '']
     });
   }
 
-  getUserInfoByPan(pan){
-    if(pan.valid){
+  getUserInfoByPan(pan) {
+    if (pan.valid) {
       const param = '/itr/api/getPanDetail?panNumber=' + pan.value;
       this.userService.getMethodInfo(param).subscribe((result: any) => {
         console.log('userData from PAN: ', result)
-        this.userProfileForm.controls['fName'].setValue(result.firstName ? result.firstName : '');   
+        this.userProfileForm.controls['fName'].setValue(result.firstName ? result.firstName : '');
         this.userProfileForm.controls['mName'].setValue(result.middleName ? result.middleName : '');
-        this.userProfileForm.controls['lName'].setValue(result.lastName ? result.lastName : '');  
+        this.userProfileForm.controls['lName'].setValue(result.lastName ? result.lastName : '');
         this.userProfileForm.controls['fatherName'].setValue(result.middleName ? result.middleName : '');
       },
-      error =>{
-        console.log('Error during fetching data using PAN number: ',error)
-      })
+        error => {
+          console.log('Error during fetching data using PAN number: ', error)
+        })
     }
   }
 
-  getCityData(pinCode){
-    if(pinCode.valid){
+  getCityData(pinCode) {
+    if (pinCode.valid) {
       const param = '/pincode/' + pinCode.value;
-        this.userService.getMethod(param).subscribe((result: any) => {
-          const addressData = <FormArray>this.userProfileForm.get('address');
-          addressData.insert(0, this.updateAddressForm(result))
-          addressData.removeAt(1)
-          // this.userProfileForm.controls['country'].setValue('INDIA');   //91
-          // this.userProfileForm.controls['city'].setValue(result.taluka);
-          // this.userProfileForm.controls['state'].setValue(result.stateName);  //stateCode
-          //  this.setProfileAddressValToHouse()
-        }, error => {
-          if (error.status === 404) {
-            //this.itrSummaryForm['controls'].assesse['controls'].address['controls'].city.setValue(null);
-          }
-        });
+      this.userService.getMethod(param).subscribe((result: any) => {
+        const addressData = <FormArray>this.userProfileForm.get('address');
+        addressData.insert(0, this.updateAddressForm(result))
+        addressData.removeAt(1)
+        // this.userProfileForm.controls['country'].setValue('INDIA');   //91
+        // this.userProfileForm.controls['city'].setValue(result.taluka);
+        // this.userProfileForm.controls['state'].setValue(result.stateName);  //stateCode
+        //  this.setProfileAddressValToHouse()
+      }, error => {
+        if (error.status === 404) {
+          //this.itrSummaryForm['controls'].assesse['controls'].address['controls'].city.setValue(null);
+        }
+      });
     }
   }
 
-  updateAddressForm(obj){
+  updateAddressForm(obj) {
     return this.fb.group({
       state: [obj.stateName || ''],
-      city : [obj.taluka || ''],
-      country : ['INDIA' || ''],
+      city: [obj.taluka || ''],
+      country: ['INDIA' || ''],
 
       premisesName: [(this.userProfileForm['controls'].address['controls'][0].controls['premisesName'].value) || ''],
       pinCode: [(this.userProfileForm['controls'].address['controls'][0].controls['pinCode'].value) || ''],
-      addressType : [(this.userProfileForm['controls'].address['controls'][0].controls['addressType'].value) || ''],
-      flatNo : [(this.userProfileForm['controls'].address['controls'][0].controls['flatNo'].value) || ''],
-      road : null,
-      area : [(this.userProfileForm['controls'].address['controls'][0].controls['area'].value) || '']
+      addressType: [(this.userProfileForm['controls'].address['controls'][0].controls['addressType'].value) || ''],
+      flatNo: [(this.userProfileForm['controls'].address['controls'][0].controls['flatNo'].value) || ''],
+      road: null,
+      area: [(this.userProfileForm['controls'].address['controls'][0].controls['area'].value) || '']
     })
   }
 
-  getStateInfo(){
-    return new Promise((resolve, reject)=>{
-         this.state_list = [];
-         let param = '/state-masters'
-        this.gstService.getMethod(param).subscribe(res => {
-            if(Array.isArray(res)){
-              res.forEach(sData => { sData.name = sData.stateMasterName });
-              this.state_list = res;
-            }
-            resolve(true)
-        }, 
-        error =>{
+  getStateInfo() {
+    return new Promise((resolve, reject) => {
+      this.state_list = [];
+      let param = '/state-masters'
+      this.gstService.getMethod(param).subscribe(res => {
+        if (Array.isArray(res)) {
+          res.forEach(sData => { sData.name = sData.stateMasterName });
+          this.state_list = res;
+        }
+        resolve(true)
+      },
+        error => {
           let errorMessage = (error.error && error.error.message) ? error.error.message : "Internal server error.";
           this._toastMessageService.alert("error", "state list - " + errorMessage);
           resolve(false);
-        })         
+        })
     })
   }
 
-  getUserInfo(userId){ 
+  getUserInfo(userId) {
     this.loading = true;
-    let param = '/profile/'+userId;
-    this.userService.getMethod(param).subscribe((res: any) =>{
+    let param = '/profile/' + userId;
+    this.userService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
-      console.log('user data -> ',res);
+      console.log('user data -> ', res);
       this.userInfo = res;
-      if(this.utilsService.isNonEmpty(this.userInfo.bankDetails) && this.utilsService.isNonEmpty(this.userInfo.address)){
+      if (this.utilsService.isNonEmpty(this.userInfo.bankDetails) && this.utilsService.isNonEmpty(this.userInfo.address)) {
         this.userProfileForm.patchValue(this.userInfo);
       }
-      else if(!this.utilsService.isNonEmpty(this.userInfo.bankDetails) && this.utilsService.isNonEmpty(this.userInfo.address)){
+      else if (!this.utilsService.isNonEmpty(this.userInfo.bankDetails) && this.utilsService.isNonEmpty(this.userInfo.address)) {
         this.userInfo.bankDetails = [];
         this.userProfileForm.patchValue(this.userInfo);
       }
-      else if(this.utilsService.isNonEmpty(this.userInfo.bankDetails) && !this.utilsService.isNonEmpty(this.userInfo.address)){
+      else if (this.utilsService.isNonEmpty(this.userInfo.bankDetails) && !this.utilsService.isNonEmpty(this.userInfo.address)) {
         this.userInfo.address = [];
         this.userProfileForm.patchValue(this.userInfo);
       }
-      else if(!this.utilsService.isNonEmpty(this.userInfo.bankDetails) && !this.utilsService.isNonEmpty(this.userInfo.address)){
+      else if (!this.utilsService.isNonEmpty(this.userInfo.bankDetails) && !this.utilsService.isNonEmpty(this.userInfo.address)) {
         this.userInfo.bankDetails = [];
         this.userInfo.address = [];
         this.userProfileForm.patchValue(this.userInfo);
       }
-  
-      if(this.utilsService.isNonEmpty(this.userInfo.gstDetails)){
+
+      if (this.utilsService.isNonEmpty(this.userInfo.gstDetails)) {
         this.gstForm.patchValue(this.userInfo.gstDetails)
       }
       console.log('Bank -> ', this.userProfileForm.controls.bankDetails, this.userProfileForm.controls.bankDetails.value)
       this.bankData = this.userProfileForm.controls.bankDetails.value;
-      console.log('userInfo :-> ',this.userInfo)
+      console.log('userInfo :-> ', this.userInfo)
     },
-    error=>{
-      this.loading = false;
-      console.log('Error -> ',error)
-    })
+      error => {
+        this.loading = false;
+        console.log('Error -> ', error)
+      })
   }
 
 
-  openDialog(windowTitle: string, windowBtn: string, index: any, myUser: any, mode: string){
+  openDialog(windowTitle: string, windowBtn: string, index: any, myUser: any, mode: string) {
     let disposable = this.dialog.open(ProfileDialogComponent, {
       width: '60%',
       height: 'auto',
@@ -241,28 +241,28 @@ export class UserProfileComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result) {
-        console.log('result -> ',result.data);
+        console.log('result -> ', result.data);
         this.bankData.push(result.data);
         this.userProfileForm.controls.bankDetails.setValue(this.bankData);
-        console.log('After Add bank info -> ',this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value )
+        console.log('After Add bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
       }
     })
 
   }
 
-  deleteBankData(type, index){
+  deleteBankData(type, index) {
     this.bankData.splice(index, 1);
     this.userProfileForm.controls.bankDetails.setValue(this.bankData);
-    console.log('After Delete bank info -> ',this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value )
+    console.log('After Delete bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
   }
 
-  getPartyInfoByGSTIN(event){
-      ///gst/api/partiesByGstin
+  getPartyInfoByGSTIN(event) {
+    ///gst/api/partiesByGstin
     let gstinNo = event.target.value;
-    let param = '/partiesByGstin?gstin='+gstinNo;
-    this.gstService.getMethod(param).subscribe(res =>{
-      console.log('Party Info by GSTIN -> ',res);
-      if(res){
+    let param = '/partiesByGstin?gstin=' + gstinNo;
+    this.gstService.getMethod(param).subscribe(res => {
+      console.log('Party Info by GSTIN -> ', res);
+      if (res) {
         this.gstForm.patchValue(res);
         this.gstForm.controls.gstType.setValue(this.getGstType(res['gstnType']));
         // this.merchantData.gstDetails.businessAddress.state = this.getStateName(partyInfo.stateName);
@@ -271,17 +271,17 @@ export class UserProfileComponent implements OnInit {
         //this.gstForm.controls.gstr1Type.setValue(this.titleCasePipe.transform(res['gstDetails']['gstr1Type'])); 
       }
     },
-    error=>{
-      console.log('Error during getting Party Info by GSTIN -> ',error);
-    })
+      error => {
+        console.log('Error during getting Party Info by GSTIN -> ', error);
+      })
   }
 
-  getGstType(gstCode){
+  getGstType(gstCode) {
     this.gstType.find(item => item.label == gstCode).label
   }
 
-  uploadBusinessLogo(files){
-    console.log('Business logo file : ',files[0])
+  uploadBusinessLogo(files) {
+    console.log('Business logo file : ', files[0])
     if (files && files[0]) {
       this.loading = true;
       let extention = ".png";
@@ -299,7 +299,7 @@ export class UserProfileComponent implements OnInit {
               // this.userInfo.gstDetails.s3BusinessSignature = s3Image;
               this.gstForm.controls.s3BusinessLogo.setValue(s3Image);
               this.loading = false;
-              console.log('After Business Loho upload -> ',this.userInfo)
+              console.log('After Business Loho upload -> ', this.userInfo)
             });
           } else {
             this.loading = false;
@@ -313,7 +313,7 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  uploadBusinessSignature(files){
+  uploadBusinessSignature(files) {
     if (files && files[0]) {
       this.loading = true;
       let extention = ".png";
@@ -331,7 +331,7 @@ export class UserProfileComponent implements OnInit {
               // this.userInfo.gstDetails.s3BusinessSignature = s3Image;
               this.gstForm.controls.s3BusinessSignature.setValue(s3Image);
               this.loading = false;
-              console.log('After Business Signature upload -> ',this.userInfo)
+              console.log('After Business Signature upload -> ', this.userInfo)
             });
           } else {
             this.loading = false;
@@ -345,8 +345,8 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  uploadGstCertificate(files){
-    if(files && files[0]){
+  uploadGstCertificate(files) {
+    if (files && files[0]) {
       this.loading = true;
       let extention = ".png";
       if (files[0].name) {
@@ -363,7 +363,7 @@ export class UserProfileComponent implements OnInit {
               // this.userInfo.gstDetails.s3GstCertificate = s3Image;
               this.gstForm.controls.s3GstCertificate.setValue(s3Image);
               this.loading = false;
-              console.log('After GST Certificate upload -> ',this.userInfo)
+              console.log('After GST Certificate upload -> ', this.userInfo)
             });
           } else {
             this.loading = false;
@@ -377,27 +377,27 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  updateUserProfile(){
-    console.log('user profile valid -> ',this.userProfileForm.valid, ' GST valid -> ',this.gstForm.valid)
-    console.log('user profile form -> ',this.userProfileForm, ' GST form -> ',this.gstForm)
-    if(this.userProfileForm.valid && this.gstForm.valid){
-      console.log('Before User Info : -> ',this.userInfo);
+  updateUserProfile() {
+    console.log('user profile valid -> ', this.userProfileForm.valid, ' GST valid -> ', this.gstForm.valid)
+    console.log('user profile form -> ', this.userProfileForm, ' GST form -> ', this.gstForm)
+    if (this.userProfileForm.valid && this.gstForm.valid) {
+      console.log('Before User Info : -> ', this.userInfo);
 
       Object.assign(this.userInfo, this.userProfileForm.value);
       this.userInfo.gstDetails = this.gstForm.value;
-      console.log('After User Info : -> ',this.userInfo);
+      console.log('After User Info : -> ', this.userInfo);
       this.loading = true;
-      let param = '/profile/'+this.userInfo.userId;
+      let param = '/profile/' + this.userInfo.userId;
       this.userService.putMethod(param, this.userInfo).subscribe(res => {
         this._toastMessageService.alert("success", this.userInfo.fName + "'s profile updated successfully.");
         this.loading = false;
-      },error =>{
+      }, error => {
         let errorMessage = (error.error && error.error.message) ? error.error.message : "Internal server error.";
         this._toastMessageService.alert("error", "merchant detail - " + errorMessage);
         this.loading = false;
       })
     }
-    else{
+    else {
       $('input.ng-invalid').first().focus();
       return
     }

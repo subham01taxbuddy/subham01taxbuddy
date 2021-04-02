@@ -14,11 +14,11 @@ import { UtilsService } from 'app/services/utils.service';
 export class UserListComponent implements OnInit {
 
   loading: boolean;
-  usersGridOptions : GridOptions;
+  usersGridOptions: GridOptions;
   config: any;
-  userInfo : any =[];
+  userInfo: any = [];
 
-  constructor(private userService: UserMsService, private _toastMessageService: ToastMessageService, private utileService: UtilsService, private router: Router) { 
+  constructor(private userService: UserMsService, private _toastMessageService: ToastMessageService, private utileService: UtilsService, private router: Router) {
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColoumnDef(),
@@ -41,30 +41,30 @@ export class UserListComponent implements OnInit {
     this.getUserData(0);
   }
 
-  pageChanged(event){
+  pageChanged(event) {
     this.config.currentPage = event;
     this.getUserData(event - 1);
   }
 
-  getUserData(pageNo){
+  getUserData(pageNo) {
     this.loading = true;
-    let param = '/profile?page='+pageNo+'&pageSize=15'
-    this.userService.getMethod(param).subscribe((result: any)=>{
-      console.log('result -> ',result);
+    let param = '/profile?page=' + pageNo + '&pageSize=15'
+    this.userService.getMethod(param).subscribe((result: any) => {
+      console.log('result -> ', result);
       this.loading = false;
-       this.usersGridOptions.api.setRowData(this.createRowData(result['content']));
-       this.userInfo = result['content'];
-       this.config.totalItems = result.totalElements;
+      this.usersGridOptions.api.setRowData(this.createRowData(result['content']));
+      this.userInfo = result['content'];
+      this.config.totalItems = result.totalElements;
       // this.leadInfo = result;
-    }, 
-    error=>{
-      this.loading = false;
-      this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-      console.log('Error during getting Leads data. -> ', error)
-    })
+    },
+      error => {
+        this.loading = false;
+        this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
+        console.log('Error during getting Leads data. -> ', error)
+      })
   }
 
-  usersCreateColoumnDef(){
+  usersCreateColoumnDef() {
     return [
       {
         headerName: 'User Id',
@@ -90,31 +90,6 @@ export class UserListComponent implements OnInit {
         }
       },
       {
-        headerName: 'Gender',
-        field: 'gender',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Marrital Status',
-        field: 'maritalStatus',
-        width: 140,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-
-      {
         headerName: 'Mobile No',
         field: 'mobileNumber',
         width: 100,
@@ -137,7 +112,6 @@ export class UserListComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
-
       },
       {
         headerName: 'PAN Number',
@@ -152,22 +126,64 @@ export class UserListComponent implements OnInit {
         }
       },
       {
-        headerName: 'City',
-        field: 'city',
-        width: 120,
+        headerName: 'Gender',
+        field: 'gender',
+        width: 100,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
+        valueGetter: function (params) {
+          if (params.data.gender === 'MALE') {
+            return 'Male';
+          } else if (params.data.gender === 'FEMALE') {
+            return 'Female'
+          } else {
+            params.data.gender
+          }
+        },
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
       },
+      // {
+      //   headerName: 'Marrital Status',
+      //   field: 'maritalStatus',
+      //   width: 140,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   }
+      // },
+      // {
+      //   headerName: 'City',
+      //   field: 'city',
+      //   width: 120,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   }
+      // },
       {
         headerName: 'Residential Status',
         field: 'resident',
         width: 120,
         suppressMovable: true,
+        valueGetter: function (params) {
+          if (params.data.resident === 'RESIDENT') {
+            return 'Resident';
+          } else if (params.data.resident === 'NON_RESIDENT') {
+            return 'NRI'
+          } else {
+            params.data.resident
+          }
+        },
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -190,8 +206,8 @@ export class UserListComponent implements OnInit {
       //     debounceMs: 0
       //   }
       // },
-      
-      
+
+
       {
         headerName: 'Invoice',
         editable: false,
@@ -199,18 +215,18 @@ export class UserListComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-            return `<button type="button" class="action_icon add_button" title="Rediredt toward Invoice">
+          return `<button type="button" class="action_icon add_button" title="Rediredt toward Invoice">
             <i class="fa fa-files-o" aria-hidden="true" data-action-type="invoice"></i>
            </button>`;
         },
         width: 60,
         pinned: 'right',
         cellStyle: function (params) {
-            return {
-              textAlign: 'center', display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center'
-            }
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
         },
       },
       {
@@ -220,18 +236,18 @@ export class UserListComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-            return `<button type="button" class="action_icon add_button" title="Redirect toward Subscription">
+          return `<button type="button" class="action_icon add_button" title="Redirect toward Subscription">
             <i class="fa fa-list-alt" aria-hidden="true" data-action-type="subscription"></i>
            </button>`;
         },
         width: 80,
         pinned: 'right',
         cellStyle: function (params) {
-            return {
-              textAlign: 'center', display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center'
-            }
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
         },
       },
       {
@@ -241,51 +257,51 @@ export class UserListComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-            return `<button type="button" class="action_icon add_button" title="User Profile">
+          return `<button type="button" class="action_icon add_button" title="User Profile">
             <i class="fa fa-user" aria-hidden="true" data-action-type="profile"></i>
            </button>`;
         },
         width: 80,
         pinned: 'right',
         cellStyle: function (params) {
-            return {
-              textAlign: 'center', display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center'
-            }
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
         },
       }
     ]
   }
 
-  createRowData(userData){
-    console.log('userData -> ',userData);
+  createRowData(userData) {
+    console.log('userData -> ', userData);
     var userArray = [];
-    for(let i=0; i< userData.length; i++){
-      let userInfo = Object.assign({}, userArray[i],{
-            userId: userData[i].userId,
-            name: userData[i].fName+' '+userData[i].lName,
-            mobileNumber: this.utileService.isNonEmpty(userData[i].mobileNumber) ? userData[i].mobileNumber : '-' ,
-            emailAddress: this.utileService.isNonEmpty(userData[i].emailAddress) ? userData[i].emailAddress : '-' ,
-            city: this.utileService.isNonEmpty(userData[i].city) ? userData[i].city : '-',
-            gender: this.utileService.isNonEmpty(userData[i].gender) ? userData[i].gender : '-',
-            maritalStatus: this.utileService.isNonEmpty(userData[i].maritalStatus) ? userData[i].maritalStatus : '-',
-            pan: this.utileService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
-            resident: this.utileService.isNonEmpty(userData[i].residentialStatus) ? userData[i].residentialStatus : '-'
+    for (let i = 0; i < userData.length; i++) {
+      let userInfo = Object.assign({}, userArray[i], {
+        userId: userData[i].userId,
+        name: userData[i].fName + ' ' + userData[i].lName,
+        mobileNumber: this.utileService.isNonEmpty(userData[i].mobileNumber) ? userData[i].mobileNumber : '-',
+        emailAddress: this.utileService.isNonEmpty(userData[i].emailAddress) ? userData[i].emailAddress : '-',
+        city: this.utileService.isNonEmpty(userData[i].city) ? userData[i].city : '-',
+        gender: this.utileService.isNonEmpty(userData[i].gender) ? userData[i].gender : '-',
+        maritalStatus: this.utileService.isNonEmpty(userData[i].maritalStatus) ? userData[i].maritalStatus : '-',
+        pan: this.utileService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
+        resident: this.utileService.isNonEmpty(userData[i].residentialStatus) ? userData[i].residentialStatus : '-'
       })
       userArray.push(userInfo);
     }
-    console.log('userArray-> ',userArray)
+    console.log('userArray-> ', userArray)
     return userArray;
   }
 
-  onUsersRowClicked(params){
+  onUsersRowClicked(params) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'invoice': {
-         this.redirectTowardInvoice(params.data);
+          this.redirectTowardInvoice(params.data);
           break;
         }
         case 'subscription': {
@@ -293,21 +309,21 @@ export class UserListComponent implements OnInit {
           break;
         }
         case 'profile': {
-          this.router.navigate(['pages/user-management/profile/'+ params.data.userId])
+          this.router.navigate(['pages/user-management/profile/' + params.data.userId])
           break;
         }
       }
     }
   }
 
-  redirectTowardInvoice(userInfo){
-    console.log('userInfo for subscription -> ',userInfo);
-    this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId : userInfo.userId }});
+  redirectTowardInvoice(userInfo) {
+    console.log('userInfo for subscription -> ', userInfo);
+    this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: userInfo.userId } });
   }
 
-  redirectTowardSubscription(userInfo){
-    console.log('userInfo for subscription -> ',userInfo);
-    this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo : userInfo.mobileNumber }});
+  redirectTowardSubscription(userInfo) {
+    console.log('userInfo for subscription -> ', userInfo);
+    this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: userInfo.mobileNumber } });
   }
 
 
