@@ -116,10 +116,15 @@
                 class="fas fa-download"></i> Download XML</button> -->
         <!-- TODO -->
         <button *ngIf="!ITR_JSON.eFillingCompleted && ITR_JSON.isDefective !== 'Y'" type="button" (click)="fileITR()"
+            class="btn grBut pull-right" [disabled]="true"
+            [style.cursor]="true ? 'not-allowed':'pointer'"
+            style="background-color: red;"> File
+            ITR</button>
+        <!-- <button *ngIf="!ITR_JSON.eFillingCompleted && ITR_JSON.isDefective !== 'Y'" type="button" (click)="fileITR()"
             class="btn grBut pull-right" [disabled]="(taxable && taxable > 0) || isPreviousAvailable()"
             [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"
             style="background-color: red;"> File
-            ITR</button>
+            ITR</button> -->
         <button type="button" (click)="downloadXML()" class="btn grBut"  style="background-color: orange;">
             Download XML</button><!--  [disabled]="taxable && taxable > 0"  [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"  *ngIf="ITR_JSON.isDefective === 'Y'" -->
         <button type="button" (click)="downloadPDF()" class="btn grBut"> Download PDF</button>
@@ -1920,8 +1925,8 @@
     <!-- </div> -->
     <div class="sub_btn lwBtDn" *ngIf="show">
         <button *ngIf="!ITR_JSON.eFillingCompleted && ITR_JSON.isDefective !== 'Y'" type="button" (click)="fileITR()"
-            class="btn grBut pull-right" [disabled]="(taxable && taxable > 0) || isPreviousAvailable()"
-            [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"
+            class="btn grBut pull-right" [disabled]="true"
+            [style.cursor]="true ? 'not-allowed':'pointer'"
             style="background-color: red;"> File
             ITR</button>
         <button type="button" (click)="downloadXML()" class="btn grBut"
