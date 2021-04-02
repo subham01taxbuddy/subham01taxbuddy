@@ -1,4 +1,3 @@
-import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -24,7 +23,6 @@ export class UserListComponent implements OnInit {
       columnDefs: this.usersCreateColoumnDef(),
       enableCellChangeFlash: true,
       onGridReady: params => {
-        // params.api.sizeColumnsToFit();
       },
 
       sortable: true,
@@ -55,7 +53,6 @@ export class UserListComponent implements OnInit {
       this.usersGridOptions.api.setRowData(this.createRowData(result['content']));
       this.userInfo = result['content'];
       this.config.totalItems = result.totalElements;
-      // this.leadInfo = result;
     },
       error => {
         this.loading = false;
@@ -146,30 +143,6 @@ export class UserListComponent implements OnInit {
           debounceMs: 0
         }
       },
-      // {
-      //   headerName: 'Marrital Status',
-      //   field: 'maritalStatus',
-      //   width: 140,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
-      // {
-      //   headerName: 'City',
-      //   field: 'city',
-      //   width: 120,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
       {
         headerName: 'Residential Status',
         field: 'resident',
@@ -191,23 +164,6 @@ export class UserListComponent implements OnInit {
           debounceMs: 0
         }
       },
-      // {
-      //   headerName: 'Created Date',
-      //   field: 'createdDate',
-      //   width: 120,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   cellRenderer: (data) => {
-      //     return formatDate(data.value, 'dd/MM/yyyy', this.locale)
-      //   },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
-
-
       {
         headerName: 'Invoice',
         editable: false,

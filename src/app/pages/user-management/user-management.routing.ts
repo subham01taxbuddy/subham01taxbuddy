@@ -10,9 +10,6 @@ const routes: Routes = [
         children: [
             { path: 'users', component: UserListComponent },
             { path: 'profile/:id', component: UserProfileComponent },
-            // { path: 'invoices', component: InvoicesStatusComponent },
-            // { path: 'sub/:subscriptionId', component: AddNewPlanComponent },
-            // { path: 'add-invoice', component: AddInvoiceComponent },
             { path: '', redirectTo: '/pages/user-management/users', pathMatch: 'full' }
         ]
     }

@@ -19,12 +19,12 @@ export class ProfileDialogComponent implements OnInit {
   ngOnInit() {
     this.bankForm = this.fb.group({
       ifsCode: ['', [Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]],
-        countryName: null,
-        accountNumber: [''],
-        bankType: '',
-        name: [''],
-        hasRefund: [false],
-        swiftcode: null
+      countryName: null,
+      accountNumber: [''],
+      bankType: '',
+      name: [''],
+      hasRefund: [false],
+      swiftcode: null
     })
   }
 
@@ -48,8 +48,8 @@ export class ProfileDialogComponent implements OnInit {
 
   }
 
-  addBankInfo(){
-    if(this.bankForm.valid){
+  addBankInfo() {
+    if (this.bankForm.valid) {
       this.dialogRef.close({ event: 'close', data: this.bankForm.value })
     }
   }

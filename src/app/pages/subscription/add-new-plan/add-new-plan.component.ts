@@ -36,69 +36,7 @@ export class AddNewPlanComponent implements OnInit {
   loading: boolean;
   userSelectedPlan: any;
   allPlans: any;
-  smeList = [
-    { value: 1063, label: 'Amrita Thakur' },
-    { value: 1064, label: 'Ankita Murkute' },
-    { value: 1062, label: 'Damini Patil' },
-    { value: 1707, label: 'Kavita Singh' },
-    { value: 1706, label: 'Nimisha Panda' },
-    { value: 24346, label: 'Tushar Shilimkar' },
-    { value: 19529, label: 'Kirti Gorad' },
-    { value: 24348, label: 'Geetanjali Panchal' },
-    { value: 23553, label: 'Renuka Kalekar' },
-    { value: 23550, label: 'Bhavana Patil' },
-    { value: 23567, label: 'Sneha Suresh Utekar' },
-    { value: 23552, label: 'Roshan Vilas Kakade' },
-    { value: 23551, label: 'Pradnya Tambade' },
-    { value: 983, label: 'Usha Chellani' },
-    { value: 23670, label: 'Ashwini Kapale' },
-    { value: 23578, label: 'Aditi Ravindra Gujar' },
-    // { value: 23564, label: 'Sonali Ghanwat' }, Quit
-    { value: 23668, label: 'Chaitanya Prakash Masurkar' },
-
-
-    { value: 25942, label: 'Vaibhav M. Nilkanth' },
-    { value: 26220, label: 'Pratiksha Shivaji Jagtap' },
-    { value: 177, label: 'Aditya U.Singh' },
-    { value: 26195, label: 'Tejaswi Suraj Bodke' },
-    { value: 23505, label: 'Tejshri Hanumant Bansode' },
-    { value: 26215, label: 'Deepali Nivrutti Pachangane' },
-    // { value: 26217, label: 'Manasi Jadhav' }, Quit
-    { value: 26236, label: 'Supriya Mahindrakar' },
-    // { value: 26218, label: 'Mrudula Vishvas Shivalkar' }, Quit
-    // { value: 26235, label: 'Chaitrali Ranalkar' },
-
-    { value: 28033, label: 'Shrikanth Elegeti' },
-    // { value: 28032, label: 'Pranali Patil' },
-    { value: 28040, label: 'Namrata Shringarpure' },
-    { value: 28035, label: 'Rupali Onamshetty' },
-    { value: 27474, label: 'Poonam Hase' },
-    { value: 28044, label: 'Bhakti Khatavkar' },
-    { value: 28034, label: 'Dipali Waghmode' },
-    { value: 28031, label: 'Harsha Kashyap' },
-    { value: 28222, label: 'Ankita Pawar' },
-    { value: 28763, label: 'Smita Yadav' },
-
-    { value: 42886, label: 'Gitanjali Kakade' },
-    { value: 42885, label: 'Dhanashri wadekar' },
-    { value: 42888, label: 'Baby Kumari Yadav' },
-    { value: 43406, label: 'Priyanka Shilimkar' },
-    { value: 42878, label: 'Supriya Waghmare' },
-    { value: 42931, label: 'Dhanashree Amarale' },
-    { value: 67523, label: 'Supriya Kumbhar' },
-    { value: 67522, label: 'Nikita Chilveri' },
-    { value: 67558, label: 'Sunita Sharma' },
-    { value: 71150, label: 'Deep Trivedi', },
-    { value: 71148, label: 'Riddhi Solanki', },
-    { value: 71159, label: 'Ajay Kandhway' },
-    { value: 71168, label: 'Ganesh Jaiswal' },
-    { value: 75925, label: 'Nikita Shah' },
-    { value: 81402, label: 'Vatsa Bhanushali' },
-
-    { value: 1065, label: 'Urmila Warve' },
-    { value: 1067, label: 'Divya Bhanushali' },
-    { value: 21354, label: 'Brijmohan Lavaniya' },
-  ];
+  smeList = [];
   allPromoCodes: any;
   smeSelectedPlan: any;
   maxEndDate: any;
@@ -118,17 +56,13 @@ export class AddNewPlanComponent implements OnInit {
     totalTax: null,
     totalAmount: null
   };
-  // previousUrl: string;
 
   constructor(private activatedRoute: ActivatedRoute, private itrService: ItrMsService, public utilService: UtilsService, private toastMessage: ToastMessageService,
-    private router: Router, private userService: UserMsService, private location: Location) {
-    //  this.previousUrl = localStorage.getItem('previousPath');
-    //  console.log('previousUrl -> ',this.previousUrl)
+    private router: Router, private userService: UserMsService, public location: Location) {
   }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
-      console.log("99999999999999999:", params)
       this.getUserPlanInfo(params['subscriptionId']);
     });
     this.getAllPromoCode();
@@ -225,10 +159,10 @@ export class AddNewPlanComponent implements OnInit {
   }
 
   getSmeList() {
-    let param = '/agent-details';
+    let param = '/sme-details';
     this.userService.getMethod(param).subscribe((res: any) => {
-      console.log('SME List -> ', res);
-      // this.smeList = res;
+      if (res && res instanceof Array)
+        this.smeList = res;
     }, error => {
       console.log('Error during getting all PromoCodes: ', error)
     })

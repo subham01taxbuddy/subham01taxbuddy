@@ -2,10 +2,10 @@
 
 <div class="main clearfix" style="padding-top: 0px;min-height: 10vh;">
     <div class="card">
-        <span>Selected Team Member: {{teamMember ? teamMember.label :''}}</span>
+        <span>Selected Team Member: {{teamMember ? teamMember.name :''}}</span>
         <div class="card__row">
-            <span *ngFor="let mem of filingTeamMembers; let i=index">
-                <a href="javascript:;" (click)="getMembersSubscriptions(mem)">{{mem.label}}</a> &nbsp;&nbsp;
+            <span *ngFor="let mem of smeList; let i=index">
+                <a href="javascript:;" (click)="getMembersSubscriptions(mem)">{{mem.name}}</a> &nbsp;&nbsp;
             </span>
         </div>
     </div>

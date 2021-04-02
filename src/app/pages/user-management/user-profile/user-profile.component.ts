@@ -49,7 +49,6 @@ export class UserProfileComponent implements OnInit {
   residentialStatus = [
     { value: 'RESIDENT', label: 'Resident' },
     { value: 'NON_RESIDENT', label: 'Non Resident' },
-    // { value: 'NON_ORDINARY', label: 'Non Ordinary Resident' }
   ];
   bankData: any = [];
   addressTypeData: any = [{ label: 'Home', value: 'HOME' }, { label: 'Office', value: 'OFFICE' }];
@@ -324,10 +323,10 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit() {
     // this.getStateInfo().then(res => {
-      this.activatedRoute.params.subscribe(params => {
-        console.log("99999999999999999:", params)
-        this.getUserInfo(params['id']);
-      });
+    this.activatedRoute.params.subscribe(params => {
+      console.log("99999999999999999:", params)
+      this.getUserInfo(params['id']);
+    });
     // })
 
     this.userProfileForm = this.fb.group({
@@ -413,7 +412,7 @@ export class UserProfileComponent implements OnInit {
       const param = '/pincode/' + pinCode.value;
       this.userService.getMethod(param).subscribe((result: any) => {
         const addressData = <FormArray>this.userProfileForm.get('address');
-        console.log('After pinCode add -> ',this.updateAddressForm(result))
+        console.log('After pinCode add -> ', this.updateAddressForm(result))
         addressData.insert(0, this.updateAddressForm(result))
         addressData.removeAt(1)
         // this.userProfileForm.controls['country'].setValue('INDIA');   //91

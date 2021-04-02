@@ -256,8 +256,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Select SME</mat-label>
               <mat-select matInput placeholder="Select Filer" [formControl]="subscriptionAssigneeId" autocomplete="off">
-                <mat-option *ngFor="let sme of smeList" [value]="sme.value">
-                  {{ sme.label }}
+                <mat-option *ngFor="let sme of smeList" [value]="sme.userId">
+                  {{ sme.name }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -269,9 +269,8 @@
       <div class="card__row">
         <button class="btn act-btn" style="margin-left: 180px;" (click)="saveSubscription()">Save</button>
         <button class="btn act-btn" (click)="activateSubscription()">Save & Activate</button>
-        <button class="btn act-btn" [routerLink]="previousUrl=== 'allSubscription' ? ['/pages/subscription'] : ['/pages/subscription/mySubscription']">Cancel</button>
+        <button class="btn act-btn" (click)="this.location.back()">Cancel</button>
       </div>
-
     </div>
   </div>
 </div>
