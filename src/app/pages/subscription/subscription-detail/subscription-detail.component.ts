@@ -67,7 +67,7 @@ export class SubscriptionDetailComponent implements OnInit {
       this.loading = false;
       console.log('Get user id by mobile number responce: ', res);
       if (res && res.records instanceof Array) {
-        this.selectedUserName = res.records[0].family[0].fName + ' ' + res.records[0].family[0].lName;
+        this.selectedUserName = res.records[0].fName + ' ' + res.records[0].lName;
         this.userId = res.records[0].userId;
         this.queryParam = `?userId=${this.userId}`;
         this.utilsService.sendMessage(this.queryParam);

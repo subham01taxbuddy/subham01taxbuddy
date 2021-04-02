@@ -58,8 +58,7 @@
                             <th class="report-table__cell report-table__cell_name text-pull-left">Bill Type</th>
                             <!-- <th class="report-table__cell report-table__cell_name text-pull-right">Upload Computation Doc</th>
                             <th class="report-table__cell report-table__cell_name text-pull-right">Upload GST Doc</th> -->
-                            <th class="report-table__cell report-table__cell_name text-pull-right">Pending Bills for
-                                Processing
+                            <th class="report-table__cell report-table__cell_name text-pull-right">Total No. of Invoices
                             </th>
                         </tr>
                     </thead>
@@ -69,7 +68,7 @@
                                     (click)="getInvoicesByBillType('Sales')"><b>Sales
                                         Bills</b></a></td>
 
-                        <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
                            <input type="file" (click)="getInvoicesByBillType('Sales')">
                         </td>
                         <td class="report-table__cell report-table__cell_day text-pull-right">
@@ -99,8 +98,8 @@
                             <td class="report-table__cell report-table__cell_day text-pull-left"><a
                                     (click)="getInvoicesByBillType('Purchase')"><b>Purchase /
                                         Expense Bills</b></a></td>
-                        
-                        <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
+
+                            <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
                            <input type="file" (click)="getInvoicesByBillType('Sales')">
                         </td>
 
@@ -108,29 +107,29 @@
                             <input type="file" (click)="getInvoicesByBillType('Sales')">|
                         </td> -->
 
-                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <td class="report-table__cell report-table__cell_day text-pull-right">
                                 {{this.summarisedInvoices ? summarisedInvoices['Purchase']:0}}</td>
-                        </tr>
-                        <!-- <tr class="report-table__row">
-                            <td class="report-table__cell report-table__cell_day text-pull-left"><a
-                                    (click)="showBillTypeInvoices('credit-note')"><b>Credit Note Bill</b></a></td>
-                            <td class="report-table__cell report-table__cell_day text-pull-right">
-                                {{summarised_invoice.credit_note.uploaded_count}}</td>
-                            <td class="report-table__cell report-table__cell_day text-pull-right">
-                                {{summarised_invoice.credit_note.processed_count}}</td>
-                            <td class="report-table__cell report-table__cell_day text-pull-right">
-                                {{summarised_invoice.credit_note.processing_count}}</td>
                         </tr>
                         <tr class="report-table__row">
                             <td class="report-table__cell report-table__cell_day text-pull-left"><a
-                                    (click)="showBillTypeInvoices('debit-note')"><b>Debit Note Bill</b></a></td>
+                                    (click)="getInvoicesByBillType('Credit Note')"><b>Credit Note Bill</b></a></td>
+                            <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{summarised_invoice.credit_note.uploaded_count}}</td>
                             <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{summarised_invoice.credit_note.processed_count}}</td> -->
+                            <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{this.summarisedInvoices ? summarisedInvoices['Credit Note']:0}}</td>
+                        </tr>
+                        <tr class="report-table__row">
+                            <td class="report-table__cell report-table__cell_day text-pull-left"><a
+                                    (click)="getInvoicesByBillType('Debit Note')"><b>Debit Note Bill</b></a></td>
+                            <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
                                 {{summarised_invoice.debit_note.uploaded_count}}</td>
                             <td class="report-table__cell report-table__cell_day text-pull-right">
-                                {{summarised_invoice.debit_note.processed_count}}</td>
+                                {{summarised_invoice.debit_note.processed_count}}</td> -->
                             <td class="report-table__cell report-table__cell_day text-pull-right">
-                                {{summarised_invoice.debit_note.processing_count}}</td>
-                        </tr> -->
+                                {{this.summarisedInvoices ? summarisedInvoices['Debit Note']:0}}</td>
+                        </tr>
                     </tbody>
                 </table>
 
@@ -138,12 +137,16 @@
                 <div class="card" *ngIf="userProfile">
                     <div class="card__row">
                         <div class="card__col-sm-6">
-                          <label><b>Computation: </b></label>  <input type="file" (change)="uploadFile($event.target.files)">
-                          <button [disabled]="utilsService.isNonEmpty(uploadDoc) ? false : true" (click)="uploadDocumnet()">Upload</button>
+                            <label><b>Computation: </b></label> <input type="file"
+                                (change)="uploadFile($event.target.files)">
+                            <button [disabled]="utilsService.isNonEmpty(uploadDoc) ? false : true"
+                                (click)="uploadDocumnet()">Upload</button>
                         </div>
                         <div class="card__col-sm-6">
-                          <label><b>Acknowledgement: </b></label>   <input type="file" (change)="uploadFile($event.target.files)">
-                          <button [disabled]="utilsService.isNonEmpty(uploadDoc) ? false : true" (click)="uploadDocumnet()">Upload</button>
+                            <label><b>Acknowledgement: </b></label> <input type="file"
+                                (change)="uploadFile($event.target.files)">
+                            <button [disabled]="utilsService.isNonEmpty(uploadDoc) ? false : true"
+                                (click)="uploadDocumnet()">Upload</button>
                         </div>
                     </div>
                 </div>
@@ -227,6 +230,9 @@
             <div class="card__row">
                 <div class="card__col-xs-6">
                     <div class="back-btn-container" (click)="onCancelBtnClicked()"></div>
+                </div>
+                <div class="card__col-xs-6">
+                    <button type="button" (click)="downloadFile()" class="btn grBut"> Download File</button>
                 </div>
             </div>
 

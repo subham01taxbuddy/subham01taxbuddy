@@ -27,6 +27,7 @@ export class GstCloudComponent implements OnInit {
     { value: '2018-19', displayName: '2018-19' },
     { value: '2019-20', displayName: '2019-20' },
     { value: '2020-21', displayName: '2020-21' },
+    { value: '2021-22', displayName: '2021-22' },
   ];
 
   monthDropDown = [
@@ -73,7 +74,7 @@ export class GstCloudComponent implements OnInit {
       });
       console.log('User Profile', this.userProfile)
       if (this.utilsService.isNonEmpty(this.userProfile)) {
-        const param = `/cloud/file-count?cloudPath=${this.userProfile.userId}/GST/${this.searchForm.value.financialYear}/${this.searchForm.value.month}/Invoice`;
+        const param = `/cloud/file-count?cloudPath=-5/GST/${this.searchForm.value.financialYear}/${this.searchForm.value.month}/Invoice`;
         this.itrMsService.getMethod(param).subscribe((res: any) => {
           console.log('Invoices Result', res);
           this.summarisedInvoices = res;
@@ -130,7 +131,7 @@ export class GstCloudComponent implements OnInit {
   getInvoicesByBillType(type) {
     this.selectedBillType = type;
     this.loading = true;
-    const param = `/cloud/files?currentPath=${this.userProfile.userId}/GST/${this.searchForm.value.financialYear}/${this.searchForm.value.month}/Invoice/${type}`;
+    const param = `/cloud/files?currentPath=-5/GST/${this.searchForm.value.financialYear}/${this.searchForm.value.month}/Invoice/${type}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log('Invoices Result', res);
       this.selected_invoices_list = res;
@@ -153,6 +154,7 @@ export class GstCloudComponent implements OnInit {
 
   viewInvoice(invoice) {
     console.log('invoice selected', invoice);
+    this.loading = true;
     const ext = invoice.fileName.split('.').pop();
     console.log('this.viewer', this.viewer);
     if (ext.toLowerCase() === 'pdf' || ext.toLowerCase() === 'xls' || ext.toLowerCase() === 'doc' || ext.toLowerCase() === 'xlsx' || ext.toLowerCase() === 'docx') {
@@ -160,11 +162,14 @@ export class GstCloudComponent implements OnInit {
     } else {
       this.viewer = 'IMG';
     }
-    const param = `/cloud/signed-s3-url?filePath=${this.userProfile.userId}/GST/${this.searchForm.value.financialYear}/${this.searchForm.value.month}/Invoice/${this.selectedBillType}/${invoice.fileName}`;
+    const param = `/cloud/signed-s3-url?filePath=-5/GST/${this.searchForm.value.financialYear}/${this.searchForm.value.month}/Invoice/${this.selectedBillType}/${invoice.fileName}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log(res);
       this.cloudView = 'VIEW_INVOICE';
       this.docUrl = res['signedUrl'];
+      this.loading = false;
+    }, error => {
+      this.loading = false;
     })
   }
 
@@ -172,18 +177,18 @@ export class GstCloudComponent implements OnInit {
     this.cloudView = 'INVOICE_LIST';
   }
 
-  uploadFile(file: FileList){
-    console.log('File: ',file)
-    if(file.length > 0){
+  uploadFile(file: FileList) {
+    console.log('File: ', file)
+    if (file.length > 0) {
       this.uploadDoc = file.item(0);
-      console.log('uploadDoc -> ',this.uploadDoc)
+      console.log('uploadDoc -> ', this.uploadDoc)
     }
   }
 
-  uploadDocumnet(){
+  uploadDocumnet() {
     this.loading = true;
-    let s3ObjectUrl = this.userProfile.userId + '/GST/'+this.searchForm.value.financialYear +'/'+this.searchForm.value.month+'/Document/'+ this.uploadDoc.name;
-    let cloudFileMetaData = '{"fileName":"' + this.uploadDoc.name + '","userId":' + this.userProfile.userId + ',"accessRight":["' + this.userProfile.userId + '_W"' + '],"origin":"BO", "s3ObjectUrl":"' + s3ObjectUrl + '"'+'}';
+    let s3ObjectUrl = this.userProfile.userId + '/GST/' + this.searchForm.value.financialYear + '/' + this.searchForm.value.month + '/Document/' + this.uploadDoc.name;
+    let cloudFileMetaData = '{"fileName":"' + this.uploadDoc.name + '","userId":' + this.userProfile.userId + ',"accessRight":["' + this.userProfile.userId + '_W"' + '],"origin":"BO", "s3ObjectUrl":"' + s3ObjectUrl + '"' + '}';
     const formData = new FormData();
     formData.append("file", this.uploadDoc);
     formData.append("cloudFileMetaData", cloudFileMetaData);
@@ -198,11 +203,14 @@ export class GstCloudComponent implements OnInit {
       }
       else if (res.Success === 'File successfully uploaded!') {
         this.utilsService.showSnackBar(res.Success);
-       // this.onUploadDoucument.emit('File uploaded successfully')
+        // this.onUploadDoucument.emit('File uploaded successfully')
       }
-    },
-      error => {
-        this.loading = false;
-      })
+    }, error => {
+      this.loading = false;
+    })
+  }
+
+  downloadFile() {
+    window.open(this.docUrl)
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
@@ -12,7 +12,7 @@ import moment = require('moment');
   templateUrl: './main-subsciption.component.html',
   styleUrls: ['./main-subsciption.component.css']
 })
-export class MainSubsciptionComponent implements OnInit, OnDestroy {
+export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   @Input('queryParam') queryParam: any;
   @Input('from') from: any;
   loading: boolean;
@@ -38,13 +38,15 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy {
       },
       sortable: true,
     };
-    this.getUserSubscriptionInfo();
+    // this.getUserSubscriptionInfo();
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-
+  ngOnChanges() {
+    this.getUserSubscriptionInfo();
+  }
   subscriptionColoumnDef(from) {
     return [
       {

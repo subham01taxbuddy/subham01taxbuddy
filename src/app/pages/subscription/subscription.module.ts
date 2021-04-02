@@ -17,10 +17,11 @@ import { OwlDateTimeModule } from "ng-pick-datetime/date-time/date-time.module";
 import { OwlNativeDateTimeModule } from "ng-pick-datetime/date-time/adapter/native-date-time.module";
 import { MySubscriptionComponent } from './my-subscription/my-subscription.component';
 import { MainSubsciptionComponent } from './main-subsciption/main-subsciption.component';
+import { TeamSubscriptionsComponent } from './team-subscriptions/team-subscriptions.component';
 
 @NgModule({
     declarations: [SubscriptionDetailComponent, AddNewPlanComponent, AddSubscriptionComponent, SubscriptionHeadComponent,
-        AddInvoiceComponent, InvoicesStatusComponent, InvoiceDialogComponent, MySubscriptionComponent, MainSubsciptionComponent],
+        AddInvoiceComponent, InvoicesStatusComponent, InvoiceDialogComponent, MySubscriptionComponent, MainSubsciptionComponent, TeamSubscriptionsComponent],
     imports:[
         SubscriptionRoutingModule,
         CommonModule,

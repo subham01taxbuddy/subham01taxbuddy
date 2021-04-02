@@ -1,3 +1,4 @@
+import { TeamSubscriptionsComponent } from './team-subscriptions/team-subscriptions.component';
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AddInvoiceComponent } from "./add-invoice/add-invoice.component";
@@ -8,8 +9,6 @@ import { SubscriptionDetailComponent } from "./subscription-detail/subscription-
 import { SubscriptionHeadComponent } from "./subscription-head/subscription-head.component";
 
 const routes: Routes = [
-    // {path:'', component: SubscriptionDetailComponent},
-    // {path:'sub/:subscriptionId', component: AddNewPlanComponent}  
     {
         path: '', component: SubscriptionHeadComponent,
         children: [
@@ -18,6 +17,7 @@ const routes: Routes = [
             { path: 'sub/:subscriptionId', component: AddNewPlanComponent },
             { path: 'add-invoice', component: AddInvoiceComponent },
             { path: 'my-sub', component: MySubscriptionComponent },
+            { path: 'team-sub', component: TeamSubscriptionsComponent },
             { path: '', redirectTo: '/pages/subscription/sub', pathMatch: 'full' }
         ]
     }
