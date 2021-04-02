@@ -113,9 +113,9 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     this.invoiceInfoCalled();
 
     var invoiceNotGeneratedUserId = sessionStorage.getItem('invoiceNotgeneratedUserId');
-    console.log('invoiceNotGeneratedUserId: ',invoiceNotGeneratedUserId);
-    if(this.utilsService.isNonEmpty(invoiceNotGeneratedUserId)){
-     this.getUserDetails(invoiceNotGeneratedUserId);  //5007
+    console.log('invoiceNotGeneratedUserId: ', invoiceNotGeneratedUserId);
+    if (this.utilsService.isNonEmpty(invoiceNotGeneratedUserId)) {
+      this.getUserDetails(invoiceNotGeneratedUserId);  //5007
     }
 
     // this.setInitiatedData()
@@ -125,12 +125,12 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
   }
 
 
-ngOnDestroy() {
-  sessionStorage.clear();
-  sessionStorage.setItem('invoiceNotGeneratedUserId', null)
-  
-}
-  
+  ngOnDestroy() {
+    sessionStorage.clear();
+    sessionStorage.setItem('invoiceNotGeneratedUserId', null)
+
+  }
+
 
   createInvoiceForm() {
     return this.fb.group({
@@ -624,6 +624,7 @@ ngOnDestroy() {
   setInvoiceRowData() {
     return {
       itemDescription: '',
+      hsnCode: '',
       quantity: '',
       rate: '',
       cgstPercent: '9',
@@ -668,6 +669,13 @@ ngOnDestroy() {
         field: 'itemDescription',
         editable: true,
         width: 250,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'HSN Code',
+        field: 'hsnCode',
+        editable: true,
+        width: 100,
         suppressMovable: true,
       },
       {
@@ -842,7 +850,7 @@ ngOnDestroy() {
     console.log('temp = ', temp);
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
-        if (this.utilsService.isNonEmpty(temp[i].data.itemDescription) &&
+        if (this.utilsService.isNonEmpty(temp[i].data.itemDescription) && this.utilsService.isNonEmpty(temp[i].data.hsnCode) &&
           this.utilsService.isNonEmpty(temp[i].data.quantity) &&
           this.utilsService.isNonEmpty(temp[i].data.rate)
           //&&
@@ -926,6 +934,7 @@ ngOnDestroy() {
 
     return [{
       itemDescription: this.utilsService.isNonEmpty(input) ? `ITR Filing FY ${input.financialYear} (AY ${input.assessmentYear})` : '',
+      hsnCode: '',
       quantity: '1',
       rate: rate,
       cgstPercent: '9',
@@ -998,6 +1007,7 @@ ngOnDestroy() {
       for (let i = 0; i < gridData.length; i++) {
         invoiceItemList.push({
           'itemDescription': gridData[i].data.itemDescription,
+          'hsnCode': gridData[i].data.hsnCode,
           'quantity': gridData[i].data.quantity,
           'rate': gridData[i].data.rate,
           'cgstPercent': gridData[i].data.cgstPercent,
@@ -1090,7 +1100,7 @@ ngOnDestroy() {
     let isDataValid = false;
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
-        if (this.utilsService.isNonEmpty(temp[i].data.itemDescription) &&
+        if (this.utilsService.isNonEmpty(temp[i].data.itemDescription) && this.utilsService.isNonEmpty(temp[i].data.hsnCode) &&
           this.utilsService.isNonEmpty(temp[i].data.quantity) &&
           this.utilsService.isNonEmpty(temp[i].data.rate)
         ) {
