@@ -90,31 +90,6 @@ export class UserListComponent implements OnInit {
         }
       },
       {
-        headerName: 'Gender',
-        field: 'gender',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Marrital Status',
-        field: 'maritalStatus',
-        width: 140,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-
-      {
         headerName: 'Mobile No',
         field: 'mobileNumber',
         width: 100,
@@ -137,7 +112,6 @@ export class UserListComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
-
       },
       {
         headerName: 'PAN Number',
@@ -152,22 +126,64 @@ export class UserListComponent implements OnInit {
         }
       },
       {
-        headerName: 'City',
-        field: 'city',
-        width: 120,
+        headerName: 'Gender',
+        field: 'gender',
+        width: 100,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
+        valueGetter: function (params) {
+          if (params.data.gender === 'MALE') {
+            return 'Male';
+          } else if (params.data.gender === 'FEMALE') {
+            return 'Female'
+          } else {
+            params.data.gender
+          }
+        },
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
       },
+      // {
+      //   headerName: 'Marrital Status',
+      //   field: 'maritalStatus',
+      //   width: 140,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   }
+      // },
+      // {
+      //   headerName: 'City',
+      //   field: 'city',
+      //   width: 120,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   }
+      // },
       {
         headerName: 'Residential Status',
         field: 'resident',
         width: 120,
         suppressMovable: true,
+        valueGetter: function (params) {
+          if (params.data.resident === 'RESIDENT') {
+            return 'Resident';
+          } else if (params.data.resident === 'NON_RESIDENT') {
+            return 'NRI'
+          } else {
+            params.data.resident
+          }
+        },
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -241,18 +257,18 @@ export class UserListComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-            return `<button type="button" class="action_icon add_button" title="User Profile">
+          return `<button type="button" class="action_icon add_button" title="User Profile">
             <i class="fa fa-user" aria-hidden="true" data-action-type="profile"></i>
            </button>`;
         },
         width: 80,
         pinned: 'right',
         cellStyle: function (params) {
-            return {
-              textAlign: 'center', display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center'
-            }
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
         },
       }
     ]
@@ -293,7 +309,7 @@ export class UserListComponent implements OnInit {
           break;
         }
         case 'profile': {
-          this.router.navigate(['pages/user-management/profile/'+ params.data.userId])
+          this.router.navigate(['pages/user-management/profile/' + params.data.userId])
           break;
         }
       }
@@ -307,8 +323,6 @@ export class UserListComponent implements OnInit {
 
   redirectTowardSubscription(userInfo) {
     console.log('userInfo for subscription -> ', userInfo);
-    this.router.navigate(['/pages/subscription/sub'], { queryParams: { userId: userInfo.userId } });
+    this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: userInfo.mobileNumber } });
   }
-
-
 }

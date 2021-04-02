@@ -202,8 +202,8 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Select State</mat-label>
                         <mat-select placeholder="Select State" formControlName="state" name="address[i]"> 
-                            <mat-option *ngFor="let type of state_list" [value]="type.stateMasterCode">
-                                {{type.stateMasterName}}
+                            <mat-option *ngFor="let type of state_list" [value]="type.stateCode">
+                                {{type.stateName}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
