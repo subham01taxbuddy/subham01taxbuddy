@@ -1,6 +1,9 @@
+import { formatDate } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
+import { NavbarService } from 'app/services/navbar.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
@@ -16,8 +19,24 @@ export class UserListComponent implements OnInit {
   usersGridOptions: GridOptions;
   config: any;
   userInfo: any = [];
+  searchMenus = [{
+    value: 'fName', name: 'First Name'
+  }, {
+    value: 'lName', name: 'Last Name'
+  }, {
+    value: 'emailAddress', name: 'Email Id'
+  }, {
+    value: 'mobileNumber', name: 'Mobile Number'
+  }, {
+    value: 'panNumber', name: 'PAN Number'
+  }, {
+    value: 'userId', name: 'User Id'
+  }];
+  searchVal: string = "";
+  currentUserId: number = 0;
+  user_data: any = [];
 
-  constructor(private userService: UserMsService, private _toastMessageService: ToastMessageService, private utileService: UtilsService, private router: Router) {
+  constructor(private userService: UserMsService, private _toastMessageService: ToastMessageService, private utileService: UtilsService, private router: Router, private http: HttpClient) {
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColoumnDef(),
@@ -38,6 +57,43 @@ export class UserListComponent implements OnInit {
   ngOnInit() {
     this.getUserData(0);
   }
+
+  clearValue() {
+    this.searchVal = "";
+    this.currentUserId = 0;
+  }
+
+  advanceSearch(key) {
+    this.user_data = [];
+    if (this.searchVal !== "") {
+      this.getUserSearchList(key, this.searchVal);
+    }
+  }
+
+  getUserSearchList(key, searchValue) {
+    this.loading = true;
+    return new Promise((resolve, reject) => {
+      this.user_data = [];
+      NavbarService.getInstance(this.http).getUserSearchList(key, searchValue).subscribe(res => {
+        console.log("Search result:", res)
+        if (Array.isArray(res.records)) {
+          this.user_data = res.records;
+          console.log('user_data -> ',this.user_data);
+          this.usersGridOptions.api.setRowData(this.createRowData(this.user_data));
+          this.userInfo = this.user_data;
+          this.config.totalItems = this.user_data.length;
+        }
+        this.loading = false;
+        return resolve(true)
+      }, err => {
+        //let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
+        this._toastMessageService.alert("error", this.utileService.showErrorMsg(err.error.status));
+        this.loading = false;
+        return resolve(false)
+      });
+    });
+  }
+
 
   pageChanged(event) {
     this.config.currentPage = event;
