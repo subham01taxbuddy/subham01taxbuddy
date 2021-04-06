@@ -552,6 +552,7 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     this.invoiceForm.controls.email.setValue(ITR_JSON.email);
 
     const data = this.createRowData(ITR_JSON);
+    console.log('Grid bind data -> ',data)
     this.clientListGridOptions.api.updateRowData({ add: data })
 
   }
@@ -624,7 +625,7 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
   setInvoiceRowData() {
     return {
       itemDescription: '',
-      hsnCode: '',
+      sacCode: '',
       quantity: '',
       rate: '',
       cgstPercent: '9',
@@ -672,8 +673,8 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
         suppressMovable: true,
       },
       {
-        headerName: 'HSN Code',
-        field: 'hsnCode',
+        headerName: 'SAC Code',
+        field: 'sacCode',
         editable: true,
         width: 100,
         suppressMovable: true,
@@ -850,7 +851,7 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     console.log('temp = ', temp);
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
-        if (this.utilsService.isNonEmpty(temp[i].data.itemDescription) && this.utilsService.isNonEmpty(temp[i].data.hsnCode) &&
+        if (this.utilsService.isNonEmpty(temp[i].data.itemDescription) && this.utilsService.isNonEmpty(temp[i].data.sacCode) &&
           this.utilsService.isNonEmpty(temp[i].data.quantity) &&
           this.utilsService.isNonEmpty(temp[i].data.rate)
           //&&
@@ -934,7 +935,7 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
 
     return [{
       itemDescription: this.utilsService.isNonEmpty(input) ? `ITR Filing FY ${input.financialYear} (AY ${input.assessmentYear})` : '',
-      hsnCode: '',
+      sacCode: '',
       quantity: '1',
       rate: rate,
       cgstPercent: '9',
@@ -1007,7 +1008,7 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
       for (let i = 0; i < gridData.length; i++) {
         invoiceItemList.push({
           'itemDescription': gridData[i].data.itemDescription,
-          'hsnCode': gridData[i].data.hsnCode,
+          'sacCode': gridData[i].data.sacCode,
           'quantity': gridData[i].data.quantity,
           'rate': gridData[i].data.rate,
           'cgstPercent': gridData[i].data.cgstPercent,
@@ -1100,7 +1101,7 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     let isDataValid = false;
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
-        if (this.utilsService.isNonEmpty(temp[i].data.itemDescription) && this.utilsService.isNonEmpty(temp[i].data.hsnCode) &&
+        if (this.utilsService.isNonEmpty(temp[i].data.itemDescription) && this.utilsService.isNonEmpty(temp[i].data.sacCode) &&
           this.utilsService.isNonEmpty(temp[i].data.quantity) &&
           this.utilsService.isNonEmpty(temp[i].data.rate)
         ) {
