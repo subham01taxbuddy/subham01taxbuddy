@@ -43,7 +43,7 @@ export class AddSubscriptionComponent implements OnInit {
       //   this.allPlans = gstPlans;
       // }
       // else{
-      this.allPlans = plans['content'];
+      this.allPlans = plans['content'].filter(item=> item.isActive === true);
       console.log('appPlans --> ', this.allPlans);
       // }
     },
