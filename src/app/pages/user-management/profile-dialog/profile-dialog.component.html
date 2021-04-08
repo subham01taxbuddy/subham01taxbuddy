@@ -1,0 +1,50 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+
+<form [formGroup]="bankForm">
+    <mat-dialog-content>
+        <div class="row">
+            <div class=" card__col-xs-12 card__col-sm-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>IFSC code: </mat-label>
+                    <input matInput type="text" placeholder="IFSC code" formControlName="ifsCode" trim upperCase
+                        maxlength="11" (blur)="getBankInfoFromIfsc(bankForm['controls'].ifsCode)" required>
+                    <mat-error *ngIf="bankForm['controls'].ifsCode.hasError('required')">
+                        Enter valid IFSC code.</mat-error>
+                    <mat-error *ngIf="bankForm['controls'].ifsCode.hasError('pattern')">
+                        Enter valid IFSC code.</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class=" card__col-xs-12 card__col-sm-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Bank name: </mat-label>
+                    <input matInput type="text" placeholder="Enter bank name" formControlName="name" maxlength="35"
+                        required>
+                    <mat-error *ngIf="bankForm['controls'].name.hasError('required')">
+                        Bank name is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class=" card__col-xs-12 card__col-sm-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Account Number: </mat-label>
+                    <input matInput placeholder="Account number" formControlName="accountNumber"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" minlength="3" maxlength="18"
+                        required>
+                    <mat-error *ngIf="bankForm['controls'].accountNumber.hasError('required')">
+                        Enter
+                        account number.</mat-error>
+                    <mat-error *ngIf="bankForm['controls'].accountNumber.hasError('minlength')">
+                        Account number should be minimum 3 digit</mat-error>
+                </mat-form-field>
+            </div>
+
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="center">
+        <button mat-raised-button color="primary" (click)="addBankInfo()" tabindex="1">{{data.submitBtn}}</button>
+        <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
+    </mat-dialog-actions>
+</form>

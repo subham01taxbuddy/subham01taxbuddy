@@ -13,7 +13,7 @@ import { startWith, map, filter, pairwise } from 'rxjs/operators';
 import { GstMsService } from 'app/services/gst-ms.service';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { Router, RoutesRecognized } from '@angular/router';
+import { ActivatedRoute, Router, RoutesRecognized } from '@angular/router';
 import { NavbarService } from 'app/services/navbar.service';
 import { HttpClient } from '@angular/common/http';
 import { ItrMsService } from 'app/services/itr-ms.service';
@@ -94,7 +94,7 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
 
   constructor(public utilsService: UtilsService, private _toastMessageService: ToastMessageService,
     private fb: FormBuilder, private userService: UserMsService, private router: Router, public http: HttpClient,
-    private itrMsService: ItrMsService) {
+    private itrMsService: ItrMsService, private activeRoute: ActivatedRoute) {
 
     this.invoiceInfoCalled();
 
@@ -117,6 +117,11 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
     if (this.utilsService.isNonEmpty(invoiceNotGeneratedUserId)) {
       this.getUserDetails(invoiceNotGeneratedUserId);  //5007
     }
+
+    const temp = this.activeRoute.queryParams.subscribe(params => {
+      console.log("Subscription user info:", params, params['userId'])
+      this.getUserSearchList('userId', params['userId']);
+    });
 
     // this.setInitiatedData()
 
@@ -237,7 +242,16 @@ export class AddInvoiceComponent implements OnInit, OnDestroy {
       NavbarService.getInstance(this.http).getUserSearchList(key, searchValue).subscribe(res => {
         console.log("Search result:", res)
         if (Array.isArray(res.records)) {
-          this.user_data = res.records;
+          //this.user_data = res.records;
+          console.log('res.records[0] -> ',res.records[0])
+          debugger
+          if(res.records[0] !== null){
+            this.user_data = res.records;
+          }
+          else{
+            this._toastMessageService.alert("error","Data not found.")
+          }
+
           // this.getUserDetails(this.user_data[0].userId);
           // this.getUserDetails(3012);
 

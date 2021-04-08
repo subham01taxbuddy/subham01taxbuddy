@@ -18,6 +18,10 @@ import { OwlNativeDateTimeModule } from 'ng-pick-datetime/date-time/adapter/nati
 import { FilingStatusDialogComponent } from 'app/pages/itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { UpdateStatusComponent } from 'app/pages/itr-filing/update-status/update-status.component';
 import { ItrActionsComponent } from './components/itr-actions/itr-actions.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { DocumentViewerComponent } from './components/document-viewer/document-viewer.component';
+import { NgxImageZoomModule } from 'ngx-image-zoom';
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
 // import { CheckboxRenderer } from './checkbox-renderer.component';
 
 
@@ -36,7 +40,8 @@ import { ItrActionsComponent } from './components/itr-actions/itr-actions.compon
         FilingStatusDialogComponent,
         UpdateStatusComponent,
         KommunicateDialogComponent,
-        ItrActionsComponent
+        ItrActionsComponent,
+        DocumentViewerComponent
     ],
     imports: [
         CommonModule,
@@ -47,6 +52,9 @@ import { ItrActionsComponent } from './components/itr-actions/itr-actions.compon
             /* CheckboxRenderer */]),  //MatSelectComponent,
         OwlDateTimeModule,
         OwlNativeDateTimeModule,
+        NgxPaginationModule,
+        NgxImageZoomModule.forRoot(),
+        NgxDocViewerModule
     ],
     exports: [
         CommonModule,
@@ -65,7 +73,8 @@ import { ItrActionsComponent } from './components/itr-actions/itr-actions.compon
         FilingStatusDialogComponent,
         UpdateStatusComponent,
         KommunicateDialogComponent,
-        ItrActionsComponent
+        ItrActionsComponent,
+        DocumentViewerComponent
     ],
     providers: [],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,

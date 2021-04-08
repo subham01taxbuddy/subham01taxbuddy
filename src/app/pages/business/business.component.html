@@ -1,48 +1,67 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
 <div class="main clearfix">
-    
-    <div class="card__row" style="margin: 0px;">
+
+    <!-- <div class="card__row" style="margin: 0px;">
         <div class="card__col-xs-12 card__col-sm-4">
-            <app-input-select-object [label]="'Select User'" [type]="'text'" [value]="selected_merchant" [type]="'text'" [name]="'selected_merchant'" [filter_items]="available_merchant_list" (sendValue)="onSelectMerchant($event)">
+            <app-input-select-object [label]="'Select User'" [type]="'text'" [value]="selected_merchant" [type]="'text'"
+                [name]="'selected_merchant'" [filter_items]="available_merchant_list"
+                (sendValue)="onSelectMerchant($event)">
             </app-input-select-object>
-        </div>   
-        <div class="card__col-xs-12 card__col-sm-4" *ngIf="currentUrl == '/pages/business/party-list'">
-            <app-input-select-object [label]="'Select Party Type'" [type]="'text'" [value]="selected_party_role" [type]="'text'" [name]="'selected_party_role'" [filter_items]="invoice_party_roles" (sendValue)="onSelectPartyRole($event)">
-            </app-input-select-object>
-        </div> 
-        <div class="card__col-xs-12 card__col-sm-4" *ngIf="currentUrl == '/pages/business/gst-3b-computation' || currentUrl == '/pages/business/business-documents'">
-            <app-input-select-object [label]="'Select Return Date'" [type]="'text'" [value]="selected_gst_return_calendars_data" [type]="'text'" [name]="'selected_gst_return_calendars_data'" [filter_items]="gst_return_calendars_data" (sendValue)="onSelectGSTReturnCalendar($event)">
-            </app-input-select-object>
-        </div> 
-        <div class="card__col-xs-12 card__col-sm-4" *ngIf="currentUrl == '/pages/business/business-documents'">
-            <app-input-select-object [label]="'Document Type'" [type]="'text'" [value]="selected_gst_return_type" [type]="'text'" [name]="'selected_gst_return_type'" [filter_items]="gst_documents_types" (sendValue)="onSelectGSTReturnType($event)">
-            </app-input-select-object>
-        </div> 
-        <div class="card__col-xs-12 card__col-sm-4" *ngIf="currentUrl == '/pages/business/business-documents'" style="margin-top: 15px;">
-            <app-input-select-object [label]="'Return Type'" [type]="'text'" [value]="selected_gst_filling_type" [type]="'text'" [name]="'selected_gst_filling_type'" [filter_items]="gst_filling_types" (sendValue)="onSelectGSTFillingType($event)">
-            </app-input-select-object>
-        </div>         
-        <div class="card__col-xs-12 card__col-sm-4" *ngIf="['/pages/business/gst-cloud'].indexOf(currentUrl) != -1">
-          <app-calendar [format]="'All'" [isCompareDateShow]="false" [label]="'All'" [type]="'text'" [name]="'from_to_date'" [value]="(selected_dates.from_date | backTipsDate) +' to '+ (selected_dates.to_date | backTipsDate)" (sendBeginDate)="selected_dates.from_date = $event;onSeletedDateChange();" (sendEndDate)="selected_dates.to_date = $event;onSeletedDateChange();"></app-calendar>
-        </div>        
-        <div class="card__col-xs-12 card__col-sm-4" *ngIf="['/pages/business/party-list','/pages/business/business-documents','/pages/business/gst-cloud','/pages/business/gst-3b-computation'].indexOf(currentUrl) != -1" [style.margin-top]="currentUrl =='/pages/business/business-documents' ? '15px' : '0px'">
-          <a class="btn long-btn" (click)="onApply();">Apply</a>          
         </div>
-    </div>
+        <div class="card__col-xs-12 card__col-sm-4" *ngIf="currentUrl == '/pages/business/party-list'">
+            <app-input-select-object [label]="'Select Party Type'" [type]="'text'" [value]="selected_party_role"
+                [type]="'text'" [name]="'selected_party_role'" [filter_items]="invoice_party_roles"
+                (sendValue)="onSelectPartyRole($event)">
+            </app-input-select-object>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4"
+            *ngIf="currentUrl == '/pages/business/gst-3b-computation' || currentUrl == '/pages/business/business-documents'">
+            <app-input-select-object [label]="'Select Return Date'" [type]="'text'"
+                [value]="selected_gst_return_calendars_data" [type]="'text'"
+                [name]="'selected_gst_return_calendars_data'" [filter_items]="gst_return_calendars_data"
+                (sendValue)="onSelectGSTReturnCalendar($event)">
+            </app-input-select-object>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4" *ngIf="currentUrl == '/pages/business/business-documents'">
+            <app-input-select-object [label]="'Document Type'" [type]="'text'" [value]="selected_gst_return_type"
+                [type]="'text'" [name]="'selected_gst_return_type'" [filter_items]="gst_documents_types"
+                (sendValue)="onSelectGSTReturnType($event)">
+            </app-input-select-object>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4" *ngIf="currentUrl == '/pages/business/business-documents'"
+            style="margin-top: 15px;">
+            <app-input-select-object [label]="'Return Type'" [type]="'text'" [value]="selected_gst_filling_type"
+                [type]="'text'" [name]="'selected_gst_filling_type'" [filter_items]="gst_filling_types"
+                (sendValue)="onSelectGSTFillingType($event)">
+            </app-input-select-object>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4" *ngIf="['/pages/business/gst-cloud'].indexOf(currentUrl) != -1">
+            <app-calendar [format]="'All'" [isCompareDateShow]="false" [label]="'All'" [type]="'text'"
+                [name]="'from_to_date'"
+                [value]="(selected_dates.from_date | backTipsDate) +' to '+ (selected_dates.to_date | backTipsDate)"
+                (sendBeginDate)="selected_dates.from_date = $event;onSeletedDateChange();"
+                (sendEndDate)="selected_dates.to_date = $event;onSeletedDateChange();"></app-calendar>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4"
+            *ngIf="['/pages/business/party-list','/pages/business/business-documents','/pages/business/gst-cloud','/pages/business/gst-3b-computation'].indexOf(currentUrl) != -1"
+            [style.margin-top]="currentUrl =='/pages/business/business-documents' ? '15px' : '0px'">
+            <a class="btn long-btn" (click)="onApply();">Apply</a>
+        </div>
+    </div> -->
 
     <div class="tab">
-        <ul class="tab__container clearfix">            
-            <li class="tab__item" routerLinkActive="tab__item_active">
+        <ul class="tab__container clearfix">
+            <!--  <li class="tab__item" routerLinkActive="tab__item_active">
                 <a class="tab__link" routerLink="/pages/business/business-profile">Business Profile</a>
-            </li>
+            </li> -->
             <li class="tab__item" routerLinkActive="tab__item_active">
                 <a class="tab__link" routerLink="/pages/business/gst-cloud">GST cloud</a>
             </li>
             <li class="tab__item" routerLinkActive="tab__item_active">
                 <a class="tab__link" routerLink="/pages/business/gst-3b-computation">GST 3B Computation</a>
             </li>
-            <li class="tab__item" routerLinkActive="tab__item_active">
+            <!--  <li class="tab__item" routerLinkActive="tab__item_active">
                 <a class="tab__link" routerLink="/pages/business/business-documents">Documents</a>
             </li>
             <li class="tab__item" routerLinkActive="tab__item_active">
@@ -50,7 +69,7 @@
             </li>
             <li class="tab__item" routerLinkActive="tab__item_active">
                 <a class="tab__link" routerLink="/pages/business/import-party-list">Import Party</a>
-            </li>            
+            </li>   -->
         </ul>
     </div>
     <!-- .tab -->

@@ -1,0 +1,241 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="main clearfix" style="padding-top: 0px;">
+
+    <div class="card">
+        <div class="card__row">
+            <form [formGroup]="searchForm">
+
+                <div class="card__col-lg-12">
+                    <div class="card__col-xs-12 card__col-sm-4 card__col-md-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Mobile Number</mat-label>
+                            <input type="text" trim matInput placeholder="Mobile Number" name="mobileNumber"
+                                formControlName="mobileNumber" class="input-field" maxlength="50" required>
+                            <mat-error *ngIf="searchForm.controls['mobileNumber'].hasError('pattern')">
+                                Enter valid mobile number.</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4 card__col-md-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Financial Year</mat-label>
+                            <mat-select placeholder="Select Financial Year" name="financialYear"
+                                formControlName="financialYear" required>
+                                <mat-option *ngFor="let fy of fyDropDown" [value]="fy.value">
+                                    {{ fy.displayName}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4 card__col-md-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Select Month</mat-label>
+                            <mat-select placeholder="Select month" name="month" formControlName="month" required>
+                                <mat-option *ngFor="let month of monthDropDown" [value]="month.value">
+                                    {{ month.displayName}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="card__col-md-3 card__col-xs-12">
+                        <a class="btn btn_stroke filter__add-link" style=" margin-top: 5px;"
+                            (click)="advanceSearch()"><i class="fa fa-search" aria-hidden="true"
+                                style="color: #2ed13b;"></i>&nbsp;Search</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <span>
+            Showing Results For: <b>{{this.userProfile ? (this.userProfile['fName'] + ' ' +
+                this.userProfile['lName']):''}}</b>
+        </span>
+        <div class="card__row" *ngIf="cloudView === 'BILLS'">
+            <div class="report-table-wrapper">
+                <table class="report-table" style="min-width: unset;">
+                    <thead class="report-table__head">
+                        <tr class="report-table__row report-table__row_head">
+                            <th class="report-table__cell report-table__cell_name text-pull-left">Bill Type</th>
+                            <!-- <th class="report-table__cell report-table__cell_name text-pull-right">Upload Computation Doc</th>
+                            <th class="report-table__cell report-table__cell_name text-pull-right">Upload GST Doc</th> -->
+                            <th class="report-table__cell report-table__cell_name text-pull-right">Total No. of Invoices
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="report-table__body">
+                        <tr class="report-table__row">
+                            <td class="report-table__cell report-table__cell_day text-pull-left"><a
+                                    (click)="getInvoicesByBillType('Sales')"><b>Sales
+                                        Bills</b></a></td>
+
+                            <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
+                           <input type="file" (click)="getInvoicesByBillType('Sales')">
+                        </td>
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <input type="file" (click)="getInvoicesByBillType('Sales')">
+                        </td> -->
+
+                            <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{this.summarisedInvoices ? summarisedInvoices['Sales']:0}}</td>
+                        </tr>
+
+                        <!-- <tr class="report-table__row">
+                            <td class="report-table__cell report-table__cell_day text-pull-left">
+                                <input type="file" (click)="getInvoicesByBillType('Sales')"><b>Computation</b></td>
+                                
+                            <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{this.summarisedInvoices ? summarisedInvoices['Sales']:0}}</td>
+                        </tr>
+                        <tr class="report-table__row">
+                            <td class="report-table__cell report-table__cell_day text-pull-left">
+                                <input type="file" (click)="getInvoicesByBillType('Sales')"><b>GST fil</b></td>
+                           
+                            <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{this.summarisedInvoices ? summarisedInvoices['Sales']:0}}</td>
+                        </tr> -->
+
+                        <tr class="report-table__row">
+                            <td class="report-table__cell report-table__cell_day text-pull-left"><a
+                                    (click)="getInvoicesByBillType('Purchase')"><b>Purchase /
+                                        Expense Bills</b></a></td>
+
+                            <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
+                           <input type="file" (click)="getInvoicesByBillType('Sales')">
+                        </td>
+
+                        <td class="report-table__cell report-table__cell_day text-pull-right">
+                            <input type="file" (click)="getInvoicesByBillType('Sales')">|
+                        </td> -->
+
+                            <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{this.summarisedInvoices ? summarisedInvoices['Purchase']:0}}</td>
+                        </tr>
+                        <tr class="report-table__row">
+                            <td class="report-table__cell report-table__cell_day text-pull-left"><a
+                                    (click)="getInvoicesByBillType('Credit Note')"><b>Credit Note Bill</b></a></td>
+                            <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{summarised_invoice.credit_note.uploaded_count}}</td>
+                            <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{summarised_invoice.credit_note.processed_count}}</td> -->
+                            <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{this.summarisedInvoices ? summarisedInvoices['Credit Note']:0}}</td>
+                        </tr>
+                        <tr class="report-table__row">
+                            <td class="report-table__cell report-table__cell_day text-pull-left"><a
+                                    (click)="getInvoicesByBillType('Debit Note')"><b>Debit Note Bill</b></a></td>
+                            <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{summarised_invoice.debit_note.uploaded_count}}</td>
+                            <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{summarised_invoice.debit_note.processed_count}}</td> -->
+                            <td class="report-table__cell report-table__cell_day text-pull-right">
+                                {{this.summarisedInvoices ? summarisedInvoices['Debit Note']:0}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <br>
+                <div class="card" *ngIf="userProfile">
+                    <div class="card__row">
+                        <div class="card__col-sm-6">
+                            <label><b>Computation: </b></label> <input type="file"
+                                (change)="uploadFile($event.target.files)">
+                            <button [disabled]="utilsService.isNonEmpty(uploadDoc) ? false : true"
+                                (click)="uploadDocumnet()">Upload</button>
+                        </div>
+                        <div class="card__col-sm-6">
+                            <label><b>Acknowledgement: </b></label> <input type="file"
+                                (change)="uploadFile($event.target.files)">
+                            <button [disabled]="utilsService.isNonEmpty(uploadDoc) ? false : true"
+                                (click)="uploadDocumnet()">Upload</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="card" style="margin-top: 10px;" *ngIf="cloudView === 'INVOICE_LIST'">
+            <div class="card__row">
+                <div class="card__col-xs-6">
+                    <div class="back-btn-container" (click)="cancelInvoiceList()"></div>
+                </div>
+                <!-- <div class="card__col-xs-6" style="text-align: right;">
+                    <div class="add-invoice-btn-container" (click)="uploadBill(true)"></div>
+                </div> -->
+            </div>
+
+            <div class="card__title">{{selectedBillType +' Bills Invoices'}}</div>
+            <ng-template [ngIf]="selected_invoices_list && selected_invoices_list.length>0">
+                <!--  <div class="card__row">
+                    <div class="card__col-xs-12 card__col-sm-12">
+                        <app-attributes-filter [selectItems]="filters_list" (sendValue)="onChangeAttrFilter($event)">
+                        </app-attributes-filter>
+                    </div>
+                </div> -->
+
+                <div class="card__row">
+                    <div class="report-table-wrapper">
+                        <table class="report-table" style="min-width: unset;">
+                            <thead class="report-table__head">
+                                <tr class="report-table__row report-table__row_head">
+                                    <th class="report-table__cell report-table__cell_name text-pull-left">#</th>
+                                    <th class="report-table__cell report-table__cell_name text-pull-right">Invoice #
+                                    </th>
+                                    <th class="report-table__cell report-table__cell_name text-pull-right">Upload Date
+                                    </th>
+                                    <!--  <th class="report-table__cell report-table__cell_name text-pull-right">Processed
+                                        Date</th>
+                                    <th class="report-table__cell report-table__cell_name text-pull-right">Processed By
+                                    </th> -->
+                                    <th class="report-table__cell report-table__cell_name text-pull-right"></th>
+                                    <!-- <th class="report-table__cell report-table__cell_name text-pull-right"></th> -->
+                                </tr>
+                            </thead>
+                            <tbody class="report-table__body"
+                                *ngFor="let invoice of selected_invoices_list; let i=index; ">
+                                <tr class="report-table__row">
+                                    <td class="report-table__cell report-table__cell_day text-pull-left">{{i+1}}</td>
+                                    <td class="report-table__cell report-table__cell_day text-pull-right">
+                                        {{invoice.fileName}}
+                                    </td>
+                                    <td class="report-table__cell report-table__cell_day text-pull-right">
+                                        {{invoice.uploadedDate | backTipsDate:'full datetime'}}</td>
+                                    <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
+                                        {{tab.invoiceUpdatedAt | backTipsDate:'full datetime'}}</td> -->
+                                    <!--  <td class="report-table__cell report-table__cell_day text-pull-right">
+                                        {{getAdminName(tab.invoiceAssignedTo) | capitalizeFirst}}</td> -->
+                                    <td class="report-table__cell report-table__cell_day text-pull-right">
+                                        <div class="fa-icon-wrapper" (click)="viewInvoice(invoice)"><i
+                                                class="fa fa-edit" tooltip="Edit"></i></div>
+                                    </td>
+                                    <!-- <td class="report-table__cell report-table__cell_day text-pull-right">
+                                        <div class="combobox__clear" (click)="onClickDeleteInvoice(tab,i)"></div>
+                                    </td> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </ng-template>
+            <ng-template [ngIf]="!selected_invoices_list || selected_invoices_list.length==0">
+                <div class="card__row">
+                    <div class="card__col-xs-12" style="font-size: 20px;text-align: center;">
+                        No Data Available.
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+        <div class="card" style="margin-top: 10px;" *ngIf="cloudView === 'VIEW_INVOICE'">
+            <app-document-viewer [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer>
+            <div class="card__row">
+                <div class="card__col-xs-6">
+                    <div class="back-btn-container" (click)="onCancelBtnClicked()"></div>
+                </div>
+                <div class="card__col-xs-6">
+                    <button type="button" (click)="downloadFile()" class="btn grBut"> Download File</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

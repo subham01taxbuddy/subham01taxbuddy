@@ -1,0 +1,276 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+<div class="main clearfix" style="padding-top: 0px">
+  <div class="card">
+    <h1 style="font-size: 22px;"><b><u>Update Subscription: </u></b></h1><br><br>
+
+    <mat-card *ngIf="this.utilService.isNonEmpty(selectedUserInfo)">
+      <b style="font-size: 18px;">User Information: </b><br><br>
+
+      <div class="card__row">
+        <div class="card__col-lg-4">
+          <label style=" font-size: 15px;"><b>Name :</b></label> <span style="margin-left: 35px;"
+            class="user-info">{{selectedUserInfo.fName+' '+selectedUserInfo.lName}}</span>
+        </div>
+        <div class="card__col-lg-4">
+          <label style=" font-size: 15px;"><b>Email :</b></label> <span style="margin-left: 10px;"
+            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.emailAddress) ?
+            selectedUserInfo.emailAddress: 'NA' }}</span>
+        </div>
+        <div class="card__col-lg-4">
+          <label style=" font-size: 15px;"><b>Mobile Number : </b></label> <span
+            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.mobileNumber) ?
+            selectedUserInfo.mobileNumber: 'NA' }}</span>
+        </div>
+      </div>
+      <div class="card__row">
+        <div class="card__col-lg-4">
+          <label style=" font-size: 15px;"><b>Birth Date :</b></label> <span style="margin-left: 10px;"
+            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.dateOfBirth) ?
+            (selectedUserInfo.dateOfBirth | date) : 'NA' }}</span>
+        </div>
+        <div class="card__col-lg-4">
+          <label style=" font-size: 15px;"><b>Gender: </b></label> <span
+            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.gender) ? selectedUserInfo.gender: 'NA'
+            }}</span>
+        </div>
+        <div class="card__col-lg-4">
+          <label style=" font-size: 15px;"><b>PAN :</b></label> <span style="margin-left: 40px;"
+            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.panNumber) ? selectedUserInfo.panNumber:
+            'NA' }}</span>
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card *ngIf="!this.utilService.isNonEmpty(selectedUserInfo)">
+      <p style="font-size: 15px; text-align: center; font-weight: 590;">User infomamation Not Found. </p><br>
+    </mat-card><br>
+
+    <div class="card__row">
+      <div class="card__col-lg-6">
+        <mat-card style="height: 305px;">
+          <b style="font-size: 18px;">User Selected Plan: </b><br>
+          <div class="card__row" style="margin-top: 75px;">
+
+            <div class="card__col-lg-5">
+              <span class="head">Plan Name:</span><br>
+              <!-- <span class="head">Desciption:</span><br> -->
+              <span class="head">Validation For Days:</span><br>
+              <span class="head">Base Price:</span><br>
+              <span class="head">CGST:</span><br>
+              <span class="head">SGST:</span><br>
+              <span class="head">IGST:</span><br>
+              <span class="head">Total Tax:</span><br>
+              <span class="head">Total Amount:</span>
+            </div>
+            <div class="card__col-lg-7"
+              *ngIf="this.utilService.isNonEmpty(userSubscription) && this.utilService.isNonEmpty(userSubscription.userSelectedPlan)">
+              <span class="head">{{userSubscription.userSelectedPlan.name}}</span><br>
+              <span class="head">{{userSubscription.userSelectedPlan.validForDays}}</span><br>
+              <span class="head">{{userSubscription.userSelectedPlan.basePrice | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription.userSelectedPlan.cgst | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription.userSelectedPlan.sgst | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription.userSelectedPlan.igst | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription.userSelectedPlan.totalTax | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription.userSelectedPlan.totalAmount | currency:'INR'}}</span>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <div class="card__col-lg-6">
+        <mat-card>
+          <b style="font-size: 18px;">SME Selcted Plan: </b><br>
+          <div class="card__row">
+            <div class="card__col-lg-5">
+              <mat-form-field appearance="outline">
+                <mat-label>Select Plan</mat-label>
+                <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId" autocomplete="off">
+                  <!--(selectionChange)="applySmeSelctedPlan($event)"-->
+                  <mat-option *ngFor="let plan of allPlans" [value]="plan.planId">
+                    {{ plan.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error>Select Plan</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="card__col-lg-7" *ngIf="smeSelectedPlanId">
+              <button class="plan-btn" (click)="applySmeSelctedPlan(smeSelectedPlanId)">Apply</button> &nbsp;&nbsp;
+
+              <button class="plan-btn" (click)="clearSmePlan()">Clear Plan</button>
+              <!--[disabled]="this.utilService.isNonEmpty(smeSelectedPlanId) ? false : true"  [class.disableBtn]="this.utilService.isNonEmpty(smeSelectedPlanId) ? false : true"-->
+            </div>
+          </div>
+          <span *ngIf="smeSelectedPlanId !== userSubscription?.smeSelectedPlan?.planId"><i><b>Note:</b> You have
+              selected
+              different plan but not applied yet, Please click to apply.</i></span>
+          <div class="card__row">
+            <div class="card__col-lg-5">
+              <span class="head">Plan Name:</span><br>
+              <!-- <span class="head">Desciption:</span><br> -->
+              <span class="head">Validation For Days:</span><br>
+              <span class="head">Base Price:</span><br>
+              <span class="head">CGST:</span><br>
+              <span class="head">SGST:</span><br>
+              <span class="head">IGST:</span><br>
+              <span class="head">Total Tax:</span><br>
+              <span class="head">Total Amount:</span>
+            </div>
+            <div class="card__col-lg-7"
+              *ngIf="this.utilService.isNonEmpty(userSubscription) && this.utilService.isNonEmpty(userSubscription.smeSelectedPlan)">
+              <span class="head">{{userSubscription.smeSelectedPlan.name}}</span><br>
+              <span class="head">{{userSubscription.smeSelectedPlan.validForDays}}</span><br>
+              <span class="head">{{userSubscription.smeSelectedPlan.basePrice | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription.smeSelectedPlan.cgst | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription.smeSelectedPlan.sgst | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription.smeSelectedPlan.igst | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription.smeSelectedPlan.totalTax | currency:'INR'}}</span><br>
+              <span class="head">{{userSubscription.smeSelectedPlan.totalAmount | currency:'INR'}}</span>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="card__row">
+      <div class="card__col-lg-6">
+        <div class="promo">
+          <b style="font-size: 18px;">Promo Code: </b><br>
+          <div class="card__row">
+            <div class="card__col-lg-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Select Promo Code</mat-label>
+                <mat-select matInput placeholder="Select Promo Code" [(ngModel)]="selectedPromoCode"
+                  (selectionChange)="showPromoCode($event.value)" autocomplete="off">
+                  <mat-option *ngFor="let plan of allPromoCodes" [value]="plan.code">
+                    {{ plan.title }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="card__col-lg-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Promo Code</mat-label>
+                <input matInput placeholder="Promo Code" [(ngModel)]="selectedPromoCode" readonly>
+              </mat-form-field>
+            </div>
+
+            <div class="card__col-lg-12" *ngIf="promoCodeInfo">
+              <b style="font-size: 14px;">Promo code Information: </b><br>
+              <div class="card__row">
+                <div class="card__col-lg-7">
+                  <span class="promo-head">Discount Type:</span><br>
+                  <span class="promo-head" *ngIf="promoCodeInfo.discountType === 'AMOUNT'">Discount:<br>
+                    <span class="promo-head">Min Order:<br></span></span>
+                  <span class="promo-head" *ngIf="promoCodeInfo.discountType === 'PERCENTAGE'">Percentage:<br>
+                    <span class="promo-head">Max Discount:<br></span></span>
+                  <span class="promo-head" *ngIf="promoCodeInfo.discountType === 'FIXED'">
+                    <p *ngFor="let plan of promoCodeInfo.discountDetails">{{plan.name}}:</p>
+                  </span>
+                </div>
+                <div class="card__col-lg-5" *ngIf="promoCodeInfo">
+                  <span class="promo-head">{{promoCodeInfo.discountType}}</span><br>
+                  <span class="promo-head"
+                    *ngIf="promoCodeInfo.discountType === 'AMOUNT'">{{promoCodeInfo.discountAmount}}<br>
+                    <span class="promo-head">{{promoCodeInfo.minOrderAmount}}<br></span></span>
+                  <span class="promo-head"
+                    *ngIf="promoCodeInfo.discountType === 'PERCENTAGE'">{{promoCodeInfo.discountPercent + ' %'}}<br>
+                    <span class="promo-head">{{promoCodeInfo.maxDiscountAmount}}<br></span></span>
+                  <span class="promo-head" *ngIf="promoCodeInfo.discountType === 'FIXED'">
+                    <p *ngFor="let plan of promoCodeInfo.discountDetails">{{plan.totalAmount}}</p>
+                  </span>
+                </div>
+              </div>
+            </div><br><br>
+
+          </div>
+          <div style="align-items: center; margin-top: 17px;">
+            <button (click)="applyPromo()">Apply</button> &nbsp;
+            <button (click)="removePromoCode()" type="reset">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card__col-lg-6">
+        <mat-card>
+          <b style="font-size: 18px;">Final Plan Pricing: </b><br>
+
+          <div class="card__row">
+            <div class="card__col-lg-5">
+              <span class="head">Base Price:</span><br>
+              <span class="head">CGST:</span><br>
+              <span class="head">SGST:</span><br>
+              <span class="head">IGST:</span><br>
+              <span class="head" *ngIf="this.userSubscription && this.userSubscription.promoCode"><b>Promo code
+                  Discount:</b><br><br></span>
+              <span class="head">Total Tax:</span><br>
+              <span class="head"><b>Total Amount:</b></span>
+            </div>
+            <div class="card__col-lg-7">
+              <span class="head">{{this.finalPricing['basePrice'] | currency:'INR'}}</span><br>
+              <span class="head">{{this.finalPricing['cgst'] | currency:'INR'}}</span><br>
+              <span class="head">{{this.finalPricing['sgst'] | currency:'INR'}}</span><br>
+              <span class="head">{{this.finalPricing['igst'] | currency:'INR'}}</span><br>
+              <span class="head" *ngIf="this.userSubscription && this.userSubscription.promoCode"><b>
+                  {{getExactPromoDiscount() |
+                  currency:'INR'}}
+                </b><br><br></span>
+              <span class="head">{{this.finalPricing['totalTax'] | currency:'INR'}}</span><br>
+              <span class="head"><b>{{this.finalPricing['totalAmount'] |
+                  currency:'INR'}}</b></span>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <div class="card__row">
+      <mat-card>
+        <div class="card__row">
+          <div class="card__col-lg-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Start Date</mat-label>
+              <input matInput placeholder="Start Date" [formControl]="subStartDate"
+                (dateChange)="applyEndDateValidation($event.value)" [matDatepicker]="picker" autocomplete="off"
+                required>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="subStartDate.hasError('required')">
+                Select Start Date</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="card__col-lg-4">
+            <mat-form-field appearance="outline">
+              <mat-label>End Date</mat-label>
+              <input matInput placeholder="End Date" [max]="maxEndDate" [min]="minEndDate" [formControl]="subEndDate"
+                [matDatepicker]="picker2" autocomplete="off" required>
+              <!--[max]="EmaxDate"-->
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+              <mat-error *ngIf="subEndDate.hasError('required')">Select End Date</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="card__col-lg-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Select SME</mat-label>
+              <mat-select matInput placeholder="Select Filer" [formControl]="subscriptionAssigneeId" autocomplete="off">
+                <mat-option *ngFor="let sme of smeList" [value]="sme.userId">
+                  {{ sme.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div>
+      <div class="card__row">
+        <button class="btn act-btn" style="margin-left: 180px;" (click)="saveSubscription()">Save</button>
+        <button class="btn act-btn" (click)="activateSubscription()">Save & Activate</button>
+        <button class="btn act-btn" (click)="this.location.back()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

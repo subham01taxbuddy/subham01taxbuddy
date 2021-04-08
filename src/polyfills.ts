@@ -60,7 +60,7 @@ window['process'] = process;
 // aws-sdk requires global to exist
 (window as any).global = window;
 
-
+// global.Buffer = global.Buffer || require('buffer').Buffer;
 
 /***************************************************************************************************
  * APPLICATION IMPORTS
