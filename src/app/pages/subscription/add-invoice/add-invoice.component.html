@@ -112,13 +112,13 @@
                                 date</mat-error>
                         </mat-form-field>
                     </div>
-                    <div class="card__col-lg-4">
+                    <!-- <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>SAC Code</mat-label>
                             <input matInput formControlName="sacCode" readonly placeholder="SAC Code"
                                 autocomplete="off">
                         </mat-form-field>
-                    </div>
+                    </div> -->
                     <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>CIN</mat-label>
@@ -351,6 +351,7 @@
                     <table>
                         <tr>
                             <th>Item & Description</th>
+                            <th style="width: 50px;">SAC Code</th>
                             <th>Qty</th>
                             <th>Rate</th>
                             <th *ngIf="isMaharashtraState" colspan="2">CGST</th>
@@ -360,6 +361,7 @@
                         </tr>
                         <tr>
                             <th></th>
+                            <th style="width: 50px;"></th>
                             <th></th>
                             <th></th>
                             <th *ngIf="isMaharashtraState">%</th>
@@ -372,6 +374,10 @@
                         </tr>
                         <tr *ngFor="let item of itemList">
                             <td>{{serviceDetail + ' ' + description}}</td>
+                            <td style="width: 50px;">
+                                <input [(ngModel)]="sacCode" [ngModelOptions]="{standalone: true}" (blur)="setSacCode(sacCode)" 
+                                placeholder="SAC Code" autocomplete="off">
+                            </td>
                             <td>1</td>
                             <td>{{item.rate}}</td>
                             <td *ngIf="isMaharashtraState">9</td>

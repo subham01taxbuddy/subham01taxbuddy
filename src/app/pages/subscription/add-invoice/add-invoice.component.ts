@@ -60,6 +60,7 @@ export class AddInvoiceComponent implements OnInit {
   userProfile: any;
   showInvoiceForm: boolean = false;
   dueDays: any;
+  sacCode: any;
 
   constructor(public utilsService: UtilsService, private _toastMessageService: ToastMessageService,
     private fb: FormBuilder, private userMsService: UserMsService, public http: HttpClient,
@@ -135,6 +136,7 @@ export class AddInvoiceComponent implements OnInit {
   setItemList(userSubscription) {
     this.itemList = [{
       itemDescription: '',
+      sacCode: '',
       quantity: 1,
       rate: this.utilsService.isNonEmpty(userSubscription.smeSelectedPlan) ? userSubscription.smeSelectedPlan.basePrice : this.userSubscription.userSelectedPlan.basePrice,
       cgstPercent: 9,
@@ -182,7 +184,7 @@ export class AddInvoiceComponent implements OnInit {
       invoiceDate: [(new Date()), Validators.required],
       terms: ['Due on Receipt', Validators.required],
       dueDate: [{ value: new Date(), disabled: true }, Validators.required],
-      sacCode: ['998232', Validators.required],
+      // sacCode: ['998232', Validators.required],
       cin: ['U74999MH2017PT298565', Validators.required],
       billTo: ['', [Validators.required, Validators.pattern(AppConstants.charAndNoRegex)]],
       paymentStatus: ['Unpaid'],
@@ -216,6 +218,15 @@ export class AddInvoiceComponent implements OnInit {
     this.getInitialData(userId);
     this.userInvoices = await this.getUsersInvoices(userId);
     console.log('userInvoices:', this.userInvoices);
+    if(this.userInvoices.length > 0){
+      this.itemList[0].sacCode = this.userInvoices[0].itemList[0].sacCode;
+      this.sacCode = this.itemList[0].sacCode;
+    }
+    else{
+      this.itemList[0].sacCode = '';
+      this.sacCode = this.itemList[0].sacCode;
+    }
+   
     this.userProfile = await this.getUserProfile(userId).catch(error => {
       this.loading = false;
       console.log(error);
@@ -524,5 +535,10 @@ export class AddInvoiceComponent implements OnInit {
     { service: 'Other Services', details: 'PF Registration' },
     { service: 'Other Services', details: 'TAN Registration' }];
     this.serviceDetails = serviceArray.filter(item => item.service === this.service);
+  }
+
+  setSacCode(code){
+    this.itemList[0].sacCode = code;
+    this.sacCode = this.itemList[0].sacCode;
   }
 }
