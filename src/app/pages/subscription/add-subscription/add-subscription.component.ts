@@ -27,11 +27,12 @@ export class AddSubscriptionComponent implements OnInit {
     console.log('data -> ', this.data)
   }
 
+  // plansInfo: any = [];
   getAllPlanInfo() {
-    //https://uat-api.taxbuddy.com/itr/plans-master 
     let param = '/plans-master';
-    this.itrService.getMethod(param).subscribe(plans => {
+    this.itrService.getMethod(param).subscribe((plans: any) => {
       console.log('Plans -> ', plans);
+      this.allPlans = [];
       // if(serviceType === "ITR"){
       //   let itrPlans = plans['content'].filter(item=> item.servicesType === "ITR");
       //   console.log('itrPlans: ',itrPlans);
@@ -43,7 +44,10 @@ export class AddSubscriptionComponent implements OnInit {
       //   this.allPlans = gstPlans;
       // }
       // else{
-      this.allPlans = plans['content'].filter(item=> item.isActive === true);
+       
+      this.allPlans = plans;
+      console.log('all plans -> ',this.allPlans, this.allPlans.length)
+      this.allPlans = this.allPlans.filter(item=> item.isActive === true);
       console.log('appPlans --> ', this.allPlans);
       // }
     },

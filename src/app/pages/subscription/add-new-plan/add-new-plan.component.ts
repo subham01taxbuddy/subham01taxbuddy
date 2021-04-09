@@ -133,13 +133,14 @@ export class AddNewPlanComponent implements OnInit {
   }
   getAllPlanInfo(serviceType) {
     let param = '/plans-master';
-    this.itrService.getMethod(param).subscribe(plans => {
+    this.itrService.getMethod(param).subscribe((plans:any) => {
       console.log('Plans -> ', plans);
-      if (plans['content'] instanceof Array) {
-        this.allPlans = plans['content'].filter(item => item.servicesType === serviceType);
-      } else {
-        this.allPlans = plans['content'];
-      }
+      // if (plans['content'] instanceof Array) {
+      //   this.allPlans = plans['content'].filter(item => item.servicesType === serviceType);
+      // } else {
+      //   this.allPlans = plans['content'];
+      // }
+      this.allPlans = plans;
     },
       error => {
         console.log('Error during getting all plans: ', error)
