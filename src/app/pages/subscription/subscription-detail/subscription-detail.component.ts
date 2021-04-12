@@ -35,10 +35,11 @@ export class SubscriptionDetailComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
       console.log("99999999999999999:", params)
-      if (this.utilsService.isNonEmpty(params['userId']) && params['userId'] !== '-') {
-        this.userId = params['userId'];
+      if (this.utilsService.isNonEmpty(params['userMobNo']) && params['userMobNo'] !== '-') {
+        this.userId = params['userMobNo'];
         this.selectedUserName = this.userId
         this.queryParam = `?userId=${this.userId}`;
+        console.log('this.queryParam --> ',this.queryParam)
       }
     });
   }
