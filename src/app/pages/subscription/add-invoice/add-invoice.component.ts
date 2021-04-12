@@ -493,15 +493,16 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   changeService() {
-    const serviceArray = [{ service: 'ITR Filing', details: 'ITR-1 filing (FY 19-20)/ (FY 20-21)' },
-    { service: 'ITR Filing', details: 'ITR-2 filing (FY 19-20)/ (FY 20-21)' },
-    { service: 'ITR Filing', details: 'ITR-3 filing (FY 19-20)/ (FY 20-21)' },
-    { service: 'ITR Filing', details: 'ITR-4 filing (FY 19-20)/ (FY 20-21)' },
-    { service: 'ITR Filing', details: 'ITR-5 filing (FY 19-20)/ (FY 20-21)' },
+    const serviceArray = [{ service: 'ITR Filing', details: 'ITR-1 filing (FY 20-21)/ (FY 2021-22)' },
+    { service: 'ITR Filing', details: 'ITR-2 filing (FY 20-21)/ (FY 2021-22)' },
+    { service: 'ITR Filing', details: 'ITR-3 filing (FY 20-21)/ (FY 2021-22)' },
+    { service: 'ITR Filing', details: 'ITR-4 filing (FY 20-21)/ (FY 2021-22)' },
+    { service: 'ITR Filing', details: 'ITR-5 filing (FY 20-21)/ (FY 2021-22)' },
+    { service: 'ITR Filing', details: 'ITR Filing' },
     { service: 'GST Filing', details: 'GST Registration' },
     { service: 'GST Filing', details: 'GST Annual Subscription' },
-    { service: 'GST Filing', details: 'GSTR 3B filing' },
-    { service: 'GST Filing', details: 'GSTR 3B Nil filing' },
+    { service: 'GST Filing', details: 'GSTR Snnual return' },
+    { service: 'GST Filing', details: 'GSTR Filing' },
     { service: 'GST Filing', details: 'GST Notice' },
     { service: 'GST Filing', details: 'Any other services' },
     { service: 'Notice response', details: 'Notice response u/s 139 (9) FY' },
