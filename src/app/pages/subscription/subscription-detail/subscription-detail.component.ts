@@ -38,8 +38,10 @@ export class SubscriptionDetailComponent implements OnInit {
       if (this.utilsService.isNonEmpty(params['userMobNo']) && params['userMobNo'] !== '-') {
         this.userId = params['userMobNo'];
         this.selectedUserName = this.userId
+        this.searchVal = params['userMobNo'];
         this.queryParam = `?userId=${this.userId}`;
-        console.log('this.queryParam --> ',this.queryParam)
+        this.advanceSearch();
+        // console.log('this.queryParam --> ',this.queryParam)
       }
     });
   }
@@ -71,7 +73,10 @@ export class SubscriptionDetailComponent implements OnInit {
         this.selectedUserName = res.records[0].fName + ' ' + res.records[0].lName;
         this.userId = res.records[0].userId;
         this.queryParam = `?userId=${this.userId}`;
-        this.utilsService.sendMessage(this.queryParam);
+        // if(from === 'anotherPage'){
+        //   this.utilsService.sendMessage(this.queryParam)
+        // }
+         this.utilsService.sendMessage(this.queryParam);
       }
     },
       error => {

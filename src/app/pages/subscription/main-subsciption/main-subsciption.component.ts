@@ -46,6 +46,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   }
   ngOnChanges() {
     this.getUserSubscriptionInfo();
+    
   }
   subscriptionColoumnDef(from) {
     return [
@@ -323,6 +324,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   allSubscriptions = [];
   getUserSubscriptionInfo() {
     console.log('this.queryParam:', this.queryParam);
+    // alert(this.queryParam)
     var param = `/subscription${this.queryParam}`;
     this.loading = true;
     this.itrService.getMethod(param).subscribe((response: any) => {
