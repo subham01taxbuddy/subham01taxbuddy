@@ -85,12 +85,12 @@ export class InvoiceDialogComponent implements OnInit {
     if (this.invoiceEditForm.value.modeOfPayment === 'CASH') {
       this.invoiceEditForm.controls['paymentCollectedBy'].setValidators([Validators.required]);
       this.invoiceEditForm.controls['paymentCollectedBy'].updateValueAndValidity();
-      this.invoiceEditForm.controls['transactionId'].setValidators(null);
-      this.invoiceEditForm.controls['transactionId'].setValue(null);
-      this.invoiceEditForm.controls['transactionId'].updateValueAndValidity();
+      // this.invoiceEditForm.controls['transactionId'].setValidators(null);
+      // this.invoiceEditForm.controls['transactionId'].setValue(null);
+      // this.invoiceEditForm.controls['transactionId'].updateValueAndValidity();
     } else {
-      this.invoiceEditForm.controls['transactionId'].setValidators([Validators.required]);
-      this.invoiceEditForm.controls['transactionId'].updateValueAndValidity();
+      // this.invoiceEditForm.controls['transactionId'].setValidators([Validators.required]);
+      // this.invoiceEditForm.controls['transactionId'].updateValueAndValidity();
       this.invoiceEditForm.controls['paymentCollectedBy'].setValidators(null);
       this.invoiceEditForm.controls['paymentCollectedBy'].setValue(null);
       this.invoiceEditForm.controls['paymentCollectedBy'].updateValueAndValidity();

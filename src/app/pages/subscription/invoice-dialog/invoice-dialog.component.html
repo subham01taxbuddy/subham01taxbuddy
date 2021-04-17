@@ -74,7 +74,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>Transaction Id</mat-label>
                 <input matInput formControlName="transactionId" placeholder="Transaction Id" autocomplete="off"
-                    maxlength="15" [required]="invoiceEditForm.controls['modeOfPayment'].value !== 'CASH'">
+                    maxlength="15" >
                 <mat-error *ngIf="invoiceEditForm.controls['transactionId'].hasError('required')">Enter
                     Transaction Id
                 </mat-error>
