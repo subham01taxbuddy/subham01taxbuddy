@@ -321,7 +321,7 @@
                             <mat-select [(ngModel)]="service" [ngModelOptions]="{standalone: true}" matInput
                                 placeholder="Select Service" autocomplete="off" (selectionChange)="changeService()">
                                 <mat-option value="ITR Filing"> ITR Filing </mat-option>
-                                <mat-option value="GST Filing"> GST Filing </mat-option>
+                                <mat-option value="GST Filing"> GST </mat-option>
                                 <mat-option value="Notice response"> Notice response </mat-option>
                                 <mat-option value="TDS filing"> TDS filing </mat-option>
                                 <mat-option value="Other Services"> Other Services </mat-option>
@@ -375,8 +375,8 @@
                         <tr *ngFor="let item of itemList">
                             <td>{{serviceDetail + ' ' + description}}</td>
                             <td style="width: 50px;">
-                                <input [(ngModel)]="sacCode" [ngModelOptions]="{standalone: true}" (blur)="setSacCode(sacCode)" 
-                                placeholder="SAC Code" autocomplete="off">
+                                <input [(ngModel)]="sacCode" [ngModelOptions]="{standalone: true}"
+                                    (blur)="setSacCode(sacCode)" placeholder="SAC Code" autocomplete="off">
                             </td>
                             <td>1</td>
                             <td>{{item.rate}}</td>

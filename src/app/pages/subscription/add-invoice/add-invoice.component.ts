@@ -218,15 +218,15 @@ export class AddInvoiceComponent implements OnInit {
     this.getInitialData(userId);
     this.userInvoices = await this.getUsersInvoices(userId);
     console.log('userInvoices:', this.userInvoices);
-    if(this.userInvoices.length > 0){
+    if (this.userInvoices.length > 0) {
       this.itemList[0].sacCode = this.userInvoices[0].itemList[0].sacCode;
       this.sacCode = this.itemList[0].sacCode;
     }
-    else{
+    else {
       this.itemList[0].sacCode = '';
       this.sacCode = this.itemList[0].sacCode;
     }
-   
+
     this.userProfile = await this.getUserProfile(userId).catch(error => {
       this.loading = false;
       console.log(error);
@@ -493,24 +493,25 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   changeService() {
-    const serviceArray = [{ service: 'ITR Filing', details: 'ITR-1 filing (FY 19-20)/ (FY 20-21)' },
-    { service: 'ITR Filing', details: 'ITR-2 filing (FY 19-20)/ (FY 20-21)' },
-    { service: 'ITR Filing', details: 'ITR-3 filing (FY 19-20)/ (FY 20-21)' },
-    { service: 'ITR Filing', details: 'ITR-4 filing (FY 19-20)/ (FY 20-21)' },
-    { service: 'ITR Filing', details: 'ITR-5 filing (FY 19-20)/ (FY 20-21)' },
+    const serviceArray = [{ service: 'ITR Filing', details: 'ITR-1 filing (FY 20-21)/ (FY 2021-22)' },
+    { service: 'ITR Filing', details: 'ITR-2 filing (FY 20-21)/ (FY 2021-22)' },
+    { service: 'ITR Filing', details: 'ITR-3 filing (FY 20-21)/ (FY 2021-22)' },
+    { service: 'ITR Filing', details: 'ITR-4 filing (FY 20-21)/ (FY 2021-22)' },
+    { service: 'ITR Filing', details: 'ITR-5 filing (FY 20-21)/ (FY 2021-22)' },
+    { service: 'ITR Filing', details: 'ITR Filing' },
     { service: 'GST Filing', details: 'GST Registration' },
     { service: 'GST Filing', details: 'GST Annual Subscription' },
-    { service: 'GST Filing', details: 'GSTR 3B filing' },
-    { service: 'GST Filing', details: 'GSTR 3B Nil filing' },
+    { service: 'GST Filing', details: 'GSTR Annual return' },
+    { service: 'GST Filing', details: 'GSTR Filing' },
     { service: 'GST Filing', details: 'GST Notice' },
     { service: 'GST Filing', details: 'Any other services' },
-    { service: 'Notice response', details: 'Notice response u/s 139 (9) FY' },
-    { service: 'Notice response', details: 'Notice response u/s 143 (1) FY' },
-    { service: 'Notice response', details: 'Notice response u/s 142 (1) FY' },
-    { service: 'Notice response', details: 'Notice response u/s 148  FY' },
-    { service: 'Notice response', details: 'Notice response u/s 156  FY' },
-    { service: 'Notice response', details: 'Notice response u/s 143 (3)  FY' },
-    { service: 'Notice response', details: 'Notice response u/s 245  FY' },
+    { service: 'Notice response', details: 'Defective Notice response u/s 139 (9)' },
+    { service: 'Notice response', details: 'Notice response and rectification  u/s 143 (1)' },
+    { service: 'Notice response', details: 'Notice response u/s 142 (1)' },
+    { service: 'Notice response', details: 'Notice response u/s 148' },
+    { service: 'Notice response', details: 'Notice e-proceeding response' },
+    { service: 'Notice response', details: 'Notice response u/s 143 (3)' },
+    { service: 'Notice response', details: 'Notice response to outstanding demand u/s 245' },
     { service: 'Notice response', details: 'Any Other Notice' },
     { service: 'TDS filing', details: 'TDS (26Q ) filing' },
     { service: 'TDS filing', details: 'TDS (24Q ) filing' },
@@ -537,7 +538,7 @@ export class AddInvoiceComponent implements OnInit {
     this.serviceDetails = serviceArray.filter(item => item.service === this.service);
   }
 
-  setSacCode(code){
+  setSacCode(code) {
     this.itemList[0].sacCode = code;
     this.sacCode = this.itemList[0].sacCode;
   }
