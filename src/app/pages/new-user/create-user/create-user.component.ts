@@ -17,6 +17,7 @@ export class CreateUserComponent implements OnInit {
   signUpForm: FormGroup;
   exceptionalUser: boolean = false;
   exceptionalInfo: any;
+  services = [{value:'ITR'}, {value:'GST'}, {value:'TPA'}];
 
   constructor(
     private fb: FormBuilder,
@@ -33,6 +34,7 @@ export class CreateUserComponent implements OnInit {
       last_name: new FormControl("", Validators.required),
       email: new FormControl("", Validators.required),
       username: new FormControl("", Validators.required),
+      serviceType: new FormControl("", Validators.required)
     });
 
     this.exceptionalInfo = JSON.parse(sessionStorage.getItem("exceptionalUser"));
@@ -42,7 +44,7 @@ export class CreateUserComponent implements OnInit {
       this.signUpForm.controls["last_name"].setValue('');
       this.signUpForm.controls["email"].setValue(this.exceptionalInfo.email);
       this.signUpForm.controls["username"].setValue('');
-
+      this.signUpForm.controls["serviceType"].setValue('');
     }
   }
 
@@ -53,6 +55,7 @@ export class CreateUserComponent implements OnInit {
         lastName: this.signUpForm.controls["last_name"].value,
         email: this.signUpForm.controls["email"].value,
         mobile: this.signUpForm.controls["username"].value,
+        serviceType: this.signUpForm.controls["serviceType"].value,
         langKey: "en",
         authorities: ["ROLE_USER"],
         source: "BACK_OFFICE",
@@ -77,6 +80,8 @@ export class CreateUserComponent implements OnInit {
             this.signUpForm.controls["email"].updateValueAndValidity();
             this.signUpForm.controls["username"].clearValidators();
             this.signUpForm.controls["username"].updateValueAndValidity();
+            this.signUpForm.controls["serviceType"].clearValidators();
+            this.signUpForm.controls["serviceType"].updateValueAndValidity();
           }
           this.loading = false;
           this.utilSerive.showSnackBar("User create succesfully.");
@@ -121,6 +126,8 @@ export class CreateUserComponent implements OnInit {
       this.signUpForm.controls["email"].updateValueAndValidity();
       this.signUpForm.controls["username"].clearValidators();
       this.signUpForm.controls["username"].updateValueAndValidity();
+      this.signUpForm.controls["serviceType"].clearValidators();
+      this.signUpForm.controls["serviceType"].updateValueAndValidity();
     },
     error=>{
       console.log('Error :',error)

@@ -111,6 +111,17 @@
               >
             </mat-form-field>
 
+            <mat-form-field appearance="outline">
+              <mat-label>Select Service Type</mat-label>
+              <mat-select placeholder="Select Service Type" formControlName="serviceType" required>
+                  <mat-option *ngFor="let info of services" [value]="info.value">
+                      {{info.value}}
+                  </mat-option>
+              </mat-select>
+              <mat-error *ngIf="signUpForm.controls['serviceType'].hasError('required')">Select
+                 Service type </mat-error>
+          </mat-form-field>
+
             <br /><br />
             <button class="btn" style="border: none" (click)="userSignUp()">
               User Sign-up
