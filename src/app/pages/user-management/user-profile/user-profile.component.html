@@ -137,7 +137,8 @@
                     <mat-card *ngIf="userInfo">
                         <h2 style="font-size: 17px;"><b><u>Address Information: </u></b></h2><br>
                         <div class="card__row">
-                            <div formArrayName="address">
+
+                            <!-- <div formArrayName="address">
                                 <div *ngFor="let address of getAddressArray.controls; let i=index" [formGroupName]="i">
                                     <div class="card__col-lg-4">
                                         <mat-form-field appearance="outline">
@@ -216,7 +217,55 @@
 
 
                                 </div>
-                            </div>
+                            </div> -->
+
+                            <button style="float: right;"
+                                (click)="openDialog('Add Address','Add', null,'','Address')">Add Address</button>
+                            <br> <br>
+                            <table>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Address Type</th>
+                                    <th>Flat No</th>
+                                    <th>Address</th>
+                                    <th>Area</th>
+                                    <th>PIN Code</th>
+                                    <th>Country</th>
+                                    <th>State</th>
+                                    <th>City</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr *ngIf="addressData && addressData.length === 0">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr *ngFor="let add of addressData; let i=index">
+                                    <td>{{add.id}}</td>
+                                    <td>{{add.addressType}}</td>
+                                    <td>{{add.flatNo}}</td>
+                                    <td>{{add.premisesName}}</td>
+                                    <td>{{add.area}}</td>
+                                    <td>{{add.pinCode}}</td>
+                                    <td>{{add.country}}</td>
+                                    <td>{{add.state}}</td>
+                                    <td>{{add.city}}</td>
+                                    <td>
+                                        <button (click)="openDialog('Edit Bank Info','Edit', i, bankData[i],'Bank')"><i
+                                class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
+                                        <button (click)="deleteData('Address',i)"><i class="fa fa-trash fa-lg"
+                                                aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                            </table>
+
                         </div>
 
                     </mat-card>
@@ -252,7 +301,7 @@
                                     <td>
                                         <!-- <button (click)="openDialog('Edit Bank Info','Edit', i, bankData[i],'Bank')"><i
                                 class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp; -->
-                                        <button (click)="deleteBankData('Bank',i)"><i class="fa fa-trash fa-lg"
+                                        <button (click)="deleteData('Bank',i)"><i class="fa fa-trash fa-lg"
                                                 aria-hidden="true"></i></button>
                                     </td>
                                 </tr>
