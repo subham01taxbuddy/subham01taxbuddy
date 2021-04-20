@@ -17,7 +17,7 @@ export class CreateUserComponent implements OnInit {
   signUpForm: FormGroup;
   exceptionalUser: boolean = false;
   exceptionalInfo: any;
-  services = [{value:'ITR'}, {value:'GST'}, {value:'TPA'}];
+  services = [{value:'ITR'}, {value:'GST'}, {value:'TPA'}, {value:'NOTICE'}];
 
   constructor(
     private fb: FormBuilder,
