@@ -9,7 +9,7 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { AppConstants } from 'app/shared/constants';
 import { promises } from 'dns';
-import { reject } from 'lodash';
+import { add, reject } from 'lodash';
 import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.component';
 import { TitleCasePipe } from '@angular/common';
 import Storage from '@aws-amplify/storage';
@@ -51,7 +51,7 @@ export class UserProfileComponent implements OnInit {
     { value: 'NON_RESIDENT', label: 'Non Resident' },
   ];
   bankData: any = [];
-  addressTypeData: any = [{ label: 'Home', value: 'HOME' }, { label: 'Office', value: 'OFFICE' }];
+  addressData: any = [];
   state_list = [{
     "id": "5b4599c9c15a76370a3424c2",
     "stateId": "1",
@@ -313,9 +313,9 @@ export class UserProfileComponent implements OnInit {
     "status": true
   }]
 
-  get getAddressArray() {
-    return <FormArray>this.userProfileForm.get('address');
-  }
+  // get getAddressArray() {
+  //   return <FormArray>this.userProfileForm.get('address');
+  // }
 
   constructor(private activatedRoute: ActivatedRoute, private userService: UserMsService, public utilsService: UtilsService, private fb: FormBuilder,
     private gstService: GstMsService, private _toastMessageService: ToastMessageService, private thirdPartyService: ThirdPartyService,
@@ -342,7 +342,7 @@ export class UserProfileComponent implements OnInit {
       panNumber: ['', Validators.pattern(AppConstants.panNumberRegex)],
       mobileNumber: ['', [Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],
       residentialStatus: ['RESIDENT'],
-      address: this.fb.array([]),
+      address: [],   //this.fb.array([]),
       bankDetails: []
     })
 
@@ -373,8 +373,8 @@ export class UserProfileComponent implements OnInit {
       // })
     })
 
-    const familyData = <FormArray>this.userProfileForm.get('address');
-    familyData.push(this.createAddressForm())
+    // const familyData = <FormArray>this.userProfileForm.get('address');
+    // familyData.push(this.createAddressForm())
   }
 
   createAddressForm(obj: { premisesName?: string, state?: string, pinCode?: number, addressType?: string, flatNo?: any, road?: any, area?: any, city?: any, country?: any } = {}): FormGroup {
@@ -407,25 +407,25 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  getCityData(pinCode) {
-    if (pinCode.valid) {
-      const param = '/pincode/' + pinCode.value;
-      this.userService.getMethod(param).subscribe((result: any) => {
-        const addressData = <FormArray>this.userProfileForm.get('address');
-        console.log('After pinCode add -> ', this.updateAddressForm(result))
-        addressData.insert(0, this.updateAddressForm(result))
-        addressData.removeAt(1)
-        // this.userProfileForm.controls['country'].setValue('INDIA');   //91
-        // this.userProfileForm.controls['city'].setValue(result.taluka);
-        // this.userProfileForm.controls['state'].setValue(result.stateName);  //stateCode
-        //  this.setProfileAddressValToHouse()
-      }, error => {
-        if (error.status === 404) {
-          //this.itrSummaryForm['controls'].assesse['controls'].address['controls'].city.setValue(null);
-        }
-      });
-    }
-  }
+  // getCityData(pinCode) {
+  //   if (pinCode.valid) {
+  //     const param = '/pincode/' + pinCode.value;
+  //     this.userService.getMethod(param).subscribe((result: any) => {
+  //       const addressData = <FormArray>this.userProfileForm.get('address');
+  //       console.log('After pinCode add -> ', this.updateAddressForm(result))
+  //       addressData.insert(0, this.updateAddressForm(result))
+  //       addressData.removeAt(1)
+  //       // this.userProfileForm.controls['country'].setValue('INDIA');   //91
+  //       // this.userProfileForm.controls['city'].setValue(result.taluka);
+  //       // this.userProfileForm.controls['state'].setValue(result.stateName);  //stateCode
+  //       //  this.setProfileAddressValToHouse()
+  //     }, error => {
+  //       if (error.status === 404) {
+  //         //this.itrSummaryForm['controls'].assesse['controls'].address['controls'].city.setValue(null);
+  //       }
+  //     });
+  //   }
+  // }
 
   updateAddressForm(obj) {
     return this.fb.group({
@@ -488,6 +488,14 @@ export class UserProfileComponent implements OnInit {
       if (this.utilsService.isNonEmpty(this.userInfo.gstDetails)) {
         this.gstForm.patchValue(this.userInfo.gstDetails)
       }
+
+      console.log('this.userProfileForm -> ',this.userProfileForm.value)
+      if(this.userProfileForm.value.address.length !== 0){
+        this.addressData = this.userProfileForm.value.address;
+      }
+      else{
+        this.addressData = [];
+      }
       console.log('Bank -> ', this.userProfileForm.controls.bankDetails, this.userProfileForm.controls.bankDetails.value)
       this.bankData = this.userProfileForm.controls.bankDetails.value;
       console.log('userInfo :-> ', this.userInfo)
@@ -501,7 +509,7 @@ export class UserProfileComponent implements OnInit {
 
   openDialog(windowTitle: string, windowBtn: string, index: any, myUser: any, mode: string) {
     let disposable = this.dialog.open(ProfileDialogComponent, {
-      width: '60%',
+      width: mode === 'Bank' ? '60%' : '70%',
       height: 'auto',
       data: {
         title: windowTitle,
@@ -516,19 +524,58 @@ export class UserProfileComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result) {
-        console.log('result -> ', result.data);
-        this.bankData.push(result.data);
-        this.userProfileForm.controls.bankDetails.setValue(this.bankData);
-        console.log('After Add bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
+        console.log('result -> ', result, result.data);
+        if(result.data.from === 'Bank'){
+          this.bankData.push(result.data.formValue);
+          this.userProfileForm.controls.bankDetails.setValue(this.bankData);
+          console.log('After Add bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
+        }
+        else if(result.data.from === 'Address'){
+          if(result.data.action === 'Add'){
+            console.log('result formValue-> ', result.data.formValue);
+            debugger
+            this.addressData.push(result.data.formValue);
+            this.userInfo.address.push(result.data.formValue);
+            console.log('uaerInfo after Add -> ',this.userInfo.address)
+            this.userProfileForm.controls.address.setValue(this.userInfo.address);
+            //Object.assign(this.userInfo, this.userProfileForm.value);           
+            console.log('userProfileForm after Add -> ',this.userProfileForm.controls.address.value)
+            console.log('After Add Address info -> ', this.userProfileForm.value, this.userProfileForm.controls.address.value)
+          }
+          else if(result.data.action === 'Edit'){
+            console.log('result formValue-> ', result.data.formValue);
+            debugger
+            this.addressData.splice(result.data.index, 1, result.data.formValue);
+            this.userInfo.address.splice(result.data.index, 1, result.data.formValue);
+            console.log('uaerInfo after Edit -> ',this.userInfo.address)
+            this.userProfileForm.controls.address.setValue(this.userInfo.address);
+            // this.userProfileForm.controls.address.setValue(this.addressData);
+            console.log('userProfileForm after Edit -> ',this.userProfileForm.controls.address.value)
+            console.log('After Edit Address info -> ', this.userProfileForm.value, this.userProfileForm.controls.address.value)
+          }
+          
+        }
+        
       }
     })
-
   }
 
-  deleteBankData(type, index) {
-    this.bankData.splice(index, 1);
-    this.userProfileForm.controls.bankDetails.setValue(this.bankData);
-    console.log('After Delete bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
+  getStateName(stateCode){
+      let stateName = this.state_list.filter(item => item.stateCode === stateCode)[0].stateName;
+      return stateName;
+  }
+
+  deleteData(type, index) {
+    if(type === 'Bank'){
+      this.bankData.splice(index, 1);
+      this.userProfileForm.controls.bankDetails.setValue(this.bankData);
+      console.log('After Delete bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
+    }
+    else if(type === 'Address'){
+      this.addressData.splice(index, 1);
+      this.userProfileForm.controls.address.setValue(this.addressData);
+      console.log('After Delete bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
+    }
   }
 
   getPartyInfoByGSTIN(event) {
@@ -686,7 +733,7 @@ export class UserProfileComponent implements OnInit {
             return resolve(result);
           })
           .catch(err => {
-            return resolve("");
+            return resolve("",);
           });
       } else {
         return resolve("");
