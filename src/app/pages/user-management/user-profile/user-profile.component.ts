@@ -9,7 +9,7 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { AppConstants } from 'app/shared/constants';
 import { promises } from 'dns';
-import { reject } from 'lodash';
+import { add, reject } from 'lodash';
 import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.component';
 import { TitleCasePipe } from '@angular/common';
 import Storage from '@aws-amplify/storage';
@@ -52,6 +52,266 @@ export class UserProfileComponent implements OnInit {
   ];
   bankData: any = [];
   addressData: any = [];
+  state_list = [{
+    "id": "5b4599c9c15a76370a3424c2",
+    "stateId": "1",
+    "countryCode": "91",
+    "stateName": "Andaman and Nicobar Islands",
+    "stateCode": "01",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424c3",
+    "stateId": "2",
+    "countryCode": "91",
+    "stateName": "Andhra Pradesh",
+    "stateCode": "02",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424c4",
+    "stateId": "3",
+    "countryCode": "91",
+    "stateName": "Arunachal Pradesh",
+    "stateCode": "03",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424c5",
+    "stateId": "4",
+    "countryCode": "91",
+    "stateName": "Assam",
+    "stateCode": "04",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424c6",
+    "stateId": "5",
+    "countryCode": "91",
+    "stateName": "Bihar",
+    "stateCode": "05",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424c7",
+    "stateId": "6",
+    "countryCode": "91",
+    "stateName": "Chandigarh",
+    "stateCode": "06",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424c8",
+    "stateId": "7",
+    "countryCode": "91",
+    "stateName": "Chattisgarh",
+    "stateCode": "33",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424c9",
+    "stateId": "8",
+    "countryCode": "91",
+    "stateName": "Dadra Nagar and Haveli",
+    "stateCode": "07",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424ca",
+    "stateId": "9",
+    "countryCode": "91",
+    "stateName": "Daman and Diu",
+    "stateCode": "08",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424cb",
+    "stateId": "10",
+    "countryCode": "91",
+    "stateName": "Delhi",
+    "stateCode": "09",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424cc",
+    "stateId": "11",
+    "countryCode": "91",
+    "stateName": "Goa",
+    "stateCode": "10",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424cd",
+    "stateId": "12",
+    "countryCode": "91",
+    "stateName": "Gujarat",
+    "stateCode": "11",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424ce",
+    "stateId": "13",
+    "countryCode": "91",
+    "stateName": "Haryana",
+    "stateCode": "12",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424cf",
+    "stateId": "14",
+    "countryCode": "91",
+    "stateName": "Himachal Pradesh",
+    "stateCode": "13",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424d0",
+    "stateId": "15",
+    "countryCode": "91",
+    "stateName": "Jammu and Kashmir",
+    "stateCode": "14",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424d1",
+    "stateId": "16",
+    "countryCode": "91",
+    "stateName": "Jharkhand",
+    "stateCode": "35",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424d2",
+    "stateId": "17",
+    "countryCode": "91",
+    "stateName": "Karnataka",
+    "stateCode": "15",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424d3",
+    "stateId": "18",
+    "countryCode": "91",
+    "stateName": "Kerala",
+    "stateCode": "16",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424d4",
+    "stateId": "19",
+    "countryCode": "91",
+    "stateName": "Lakshadweep",
+    "stateCode": "17",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424d5",
+    "stateId": "20",
+    "countryCode": "91",
+    "stateName": "Madhya Pradesh",
+    "stateCode": "18",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424d6",
+    "stateId": "21",
+    "countryCode": "91",
+    "stateName": "Maharashtra",
+    "stateCode": "19",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424d7",
+    "stateId": "22",
+    "countryCode": "91",
+    "stateName": "Manipur",
+    "stateCode": "20",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424d8",
+    "stateId": "23",
+    "countryCode": "91",
+    "stateName": "Meghalaya",
+    "stateCode": "21",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424d9",
+    "stateId": "24",
+    "countryCode": "91",
+    "stateName": "Mizoram",
+    "stateCode": "22",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424da",
+    "stateId": "25",
+    "countryCode": "91",
+    "stateName": "Nagaland",
+    "stateCode": "23",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424db",
+    "stateId": "26",
+    "countryCode": "91",
+    "stateName": "Orissa",
+    "stateCode": "24",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424dc",
+    "stateId": "27",
+    "countryCode": "91",
+    "stateName": "Pondicherry",
+    "stateCode": "25",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424dd",
+    "stateId": "28",
+    "countryCode": "91",
+    "stateName": "Punjab",
+    "stateCode": "26",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424de",
+    "stateId": "29",
+    "countryCode": "91",
+    "stateName": "Rajasthan",
+    "stateCode": "27",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424df",
+    "stateId": "30",
+    "countryCode": "91",
+    "stateName": "Sikkim",
+    "stateCode": "28",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424e0",
+    "stateId": "31",
+    "countryCode": "91",
+    "stateName": "Tamil Nadu",
+    "stateCode": "29",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424e1",
+    "stateId": "32",
+    "countryCode": "91",
+    "stateName": "Telangana",
+    "stateCode": "36",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424e2",
+    "stateId": "33",
+    "countryCode": "91",
+    "stateName": "Tripura",
+    "stateCode": "30",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424e3",
+    "stateId": "34",
+    "countryCode": "91",
+    "stateName": "Uttar Pradesh",
+    "stateCode": "31",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424e4",
+    "stateId": "35",
+    "countryCode": "91",
+    "stateName": "Uttarakhand",
+    "stateCode": "34",
+    "status": true
+  }, {
+    "id": "5b4599c9c15a76370a3424e5",
+    "stateId": "36",
+    "countryCode": "91",
+    "stateName": "West Bengal",
+    "stateCode": "32",
+    "status": true
+  }, {
+    "id": "5dc24c9779332f0ddccb7aa4",
+    "stateId": "37",
+    "countryCode": "91",
+    "stateName": "Ladakh",
+    "stateCode": "37",
+    "status": true
+  }]
 
   // get getAddressArray() {
   //   return <FormArray>this.userProfileForm.get('address');
@@ -230,6 +490,12 @@ export class UserProfileComponent implements OnInit {
       }
 
       console.log('this.userProfileForm -> ',this.userProfileForm.value)
+      if(this.userProfileForm.value.address.length !== 0){
+        this.addressData = this.userProfileForm.value.address;
+      }
+      else{
+        this.addressData = [];
+      }
       console.log('Bank -> ', this.userProfileForm.controls.bankDetails, this.userProfileForm.controls.bankDetails.value)
       this.bankData = this.userProfileForm.controls.bankDetails.value;
       console.log('userInfo :-> ', this.userInfo)
@@ -265,14 +531,38 @@ export class UserProfileComponent implements OnInit {
           console.log('After Add bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
         }
         else if(result.data.from === 'Address'){
-          this.addressData.push(result.data.formValue);
-          this.userProfileForm.controls.address.setValue(this.addressData);
-          console.log('After Add bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.address.value)
+          if(result.data.action === 'Add'){
+            console.log('result formValue-> ', result.data.formValue);
+            debugger
+            this.addressData.push(result.data.formValue);
+            this.userInfo.address.push(result.data.formValue);
+            console.log('uaerInfo after Add -> ',this.userInfo.address)
+            this.userProfileForm.controls.address.setValue(this.userInfo.address);
+            //Object.assign(this.userInfo, this.userProfileForm.value);           
+            console.log('userProfileForm after Add -> ',this.userProfileForm.controls.address.value)
+            console.log('After Add Address info -> ', this.userProfileForm.value, this.userProfileForm.controls.address.value)
+          }
+          else if(result.data.action === 'Edit'){
+            console.log('result formValue-> ', result.data.formValue);
+            debugger
+            this.addressData.splice(result.data.index, 1, result.data.formValue);
+            this.userInfo.address.splice(result.data.index, 1, result.data.formValue);
+            console.log('uaerInfo after Edit -> ',this.userInfo.address)
+            this.userProfileForm.controls.address.setValue(this.userInfo.address);
+            // this.userProfileForm.controls.address.setValue(this.addressData);
+            console.log('userProfileForm after Edit -> ',this.userProfileForm.controls.address.value)
+            console.log('After Edit Address info -> ', this.userProfileForm.value, this.userProfileForm.controls.address.value)
+          }
+          
         }
         
       }
     })
+  }
 
+  getStateName(stateCode){
+      let stateName = this.state_list.filter(item => item.stateCode === stateCode)[0].stateName;
+      return stateName;
   }
 
   deleteData(type, index) {
@@ -443,7 +733,7 @@ export class UserProfileComponent implements OnInit {
             return resolve(result);
           })
           .catch(err => {
-            return resolve("");
+            return resolve("",);
           });
       } else {
         return resolve("");

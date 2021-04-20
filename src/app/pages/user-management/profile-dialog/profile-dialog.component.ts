@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ThirdPartyService } from 'app/services/third-party.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
+import { UtilsService } from 'app/services/utils.service';
 import { AppConstants } from 'app/shared/constants';
 
 @Component({
@@ -15,7 +16,7 @@ export class ProfileDialogComponent implements OnInit {
 
   bankForm: FormGroup;
   addressForm: FormGroup;
-  addressTypeData: any = [{ label: 'Home', value: 'HOME' }, { label: 'Office', value: 'OFFICE' }];
+  addressTypeData: any = [{ label: 'Home', value: 'HOME' }, { label: 'Business', value: 'BUSINESS' }];
   state_list = [{
     "id": "5b4599c9c15a76370a3424c2",
     "stateId": "1",
@@ -278,7 +279,7 @@ export class ProfileDialogComponent implements OnInit {
   }]
   constructor(public dialogRef: MatDialogRef<ProfileDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder, private thirdPartyService: ThirdPartyService, private _toastMessageService: ToastMessageService, 
-    private userService: UserMsService) { }
+    private userService: UserMsService, private utilService: UtilsService) { }
 
   ngOnInit() {
     this.bankForm = this.fb.group({
@@ -304,6 +305,15 @@ export class ProfileDialogComponent implements OnInit {
       area: ['']
     })
 
+    console.log('this.data -> ',this.data);
+    if(this.data.submitBtn === "Edit" && this.data.mode === "Address"){
+      this.addressForm.patchValue(this.data.userObject)
+      // let stateCode = this.state_list.filter(item => item.stateName === this.data.userObject.state)[0].stateCode;
+      // if(this.utilService.isNonEmpty(stateCode)){
+      //   this.addressForm.controls.state.setValue(stateCode);
+      // }
+       console.log('this.addressForm.value -> ',this.addressForm.value)
+    }
   }
 
   getCityData(pinCode) {
@@ -353,14 +363,39 @@ export class ProfileDialogComponent implements OnInit {
   }
 
   addAddressInfo(){
+    console.log('this.addressForm -> ',this.addressForm.value)
+    console.log('state -> ',this.addressForm.value.state)
     if(this.addressForm.valid){
-      let randomId = Math.floor(100000 + Math.random() * 900000);
-      this.addressForm.controls.id.setValue(randomId);
-      let body = {
-        from: this.data.mode,
-        formValue: this.addressForm.value
+      // let stateCode = this.state_list.filter(item => item.stateName === this.addressForm.value.state)[0].stateCode;
+      // if(this.utilService.isNonEmpty(stateCode)){
+      //   this.addressForm.controls.state.setValue(stateCode);
+      // }
+      
+      if(this.data.submitBtn === "Add"){
+        console.log('this.addressForm -> ',this.addressForm.value)
+        let randomId = Math.floor(100000 + Math.random() * 900000);
+        this.addressForm.controls.id.setValue(randomId.toString());
+        let body = {
+          from: this.data.mode,
+          formValue: this.addressForm.value,
+          action: this.data.submitBtn,
+          index: ''
+        }
+        console.log('Add body :-> ',body)
+        this.dialogRef.close({ event: 'close', data: body})
       }
-      this.dialogRef.close({ event: 'close', data: body})
+      else if(this.data.submitBtn === "Edit"){
+        console.log('this.addressForm -> ',this.addressForm.value)
+        let body = {
+          from: this.data.mode,
+          formValue: this.addressForm.value,
+          action: this.data.submitBtn,
+          index: this.data.editIndex
+        }
+        console.log('Edit body :-> ',body)
+        this.dialogRef.close({ event: 'close', data: body})
+      }
+     
     }
 
   }

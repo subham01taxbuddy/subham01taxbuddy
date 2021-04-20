@@ -254,11 +254,11 @@
                                     <td>{{add.premisesName}}</td>
                                     <td>{{add.area}}</td>
                                     <td>{{add.pinCode}}</td>
-                                    <td>{{add.country}}</td>
-                                    <td>{{add.state}}</td>
+                                    <td>{{add.country === "91" ? 'INDIA' : add.country}}</td>
+                                    <td>{{this.getStateName(add.state)}}</td>
                                     <td>{{add.city}}</td>
                                     <td>
-                                        <button (click)="openDialog('Edit Bank Info','Edit', i, bankData[i],'Bank')"><i
+                                        <button (click)="openDialog('Edit Address Info','Edit', i, addressData[i],'Address')"><i
                                 class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
                                         <button (click)="deleteData('Address',i)"><i class="fa fa-trash fa-lg"
                                                 aria-hidden="true"></i></button>
