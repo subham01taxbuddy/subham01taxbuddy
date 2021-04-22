@@ -80,7 +80,7 @@ export const routes: Routes = [
 			{ path: 'tpa-interested', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_TPA_SME'] }, loadChildren: './tpa-interested/tpa-interested.module#TpaInterestedModule' },
 			{ path: 'service-board', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './service-board/service-board.module#ServiceBoardModule' },
 			{ path: 'leads', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './leads/leads.module#LeadsModule' },
-			{ path: 'subscription', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './subscription/subscription.module#SubscriptionModule' },
+			{ path: 'subscription', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_TPA_SME', 'ROLE_FILING_TEAM'] }, loadChildren: './subscription/subscription.module#SubscriptionModule' },
 			{ path: 'user-management', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './user-management/user-management.module#UserManagementModule' },
 			{ path: 'gst-filing', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, loadChildren: './gst-filing/gst-filing.module#GstFilingModule' },
 			{ path: '**', redirectTo: '/pages/home', pathMatch: 'full' },
