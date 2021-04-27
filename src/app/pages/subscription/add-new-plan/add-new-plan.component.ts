@@ -1,14 +1,14 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
+import { DateAdapter, MatDialog, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
-import { filter, pairwise } from 'rxjs/operators';
+import { FilingCalendarComponent } from '../filing-calendar/filing-calendar.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -45,8 +45,14 @@ export class AddNewPlanComponent implements OnInit {
   promoCodeInfo: any;
   smeSelectedPlanId: any;
   selectedPromoCode = '';
+  serviceType = '';
   subStartDate = new FormControl(new Date(), [Validators.required]);
   subEndDate = new FormControl('', [Validators.required]);
+  gstType = new FormControl('', []);
+  frequency = new FormControl('', []);
+  startMonth = new FormControl('', []);
+  startYear = new FormControl('', []);
+  noOfMonths = new FormControl('', []);
   subscriptionAssigneeId = new FormControl('');
   finalPricing = {
     basePrice: null,
@@ -56,17 +62,37 @@ export class AddNewPlanComponent implements OnInit {
     totalTax: null,
     totalAmount: null
   };
+  gstTypesMaster: any = [{ label: 'Regular', value: 'REGULAR' }, { label: 'Composite', value: 'COMPOSITE' }, { label: 'Input Service Distributor (ISD)', value: 'Input Service Distributor (ISD)' }]
+  frequencyTypesMaster: any = [{ label: 'Monthly', value: 'MONTHLY' }, { label: 'Quarterly', value: 'QUARTERLY' }];
+  monthsMaster: any = [{ label: 'Jan', value: 0 },
+  { label: 'Feb', value: 1 },
+  { label: 'Mar', value: 2 },
+  { label: 'Apr', value: 3 },
+  { label: 'May', value: 4 },
+  { label: 'Jun', value: 5 },
+  { label: 'Jul', value: 6 },
+  { label: 'Aug', value: 7 },
+  { label: 'Sep', value: 8 },
+  { label: 'Oct', value: 9 },
+  { label: 'Nov', value: 10 },
+  { label: 'Dec', value: 11 }
+  ];
 
   constructor(private activatedRoute: ActivatedRoute, private itrService: ItrMsService, public utilService: UtilsService, private toastMessage: ToastMessageService,
-    private router: Router, private userService: UserMsService, public location: Location) {
+    private router: Router, private userService: UserMsService, public location: Location, private dialog: MatDialog,) {
   }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
       this.getUserPlanInfo(params['subscriptionId']);
+      this.getSubscriptionFilingsCalender(params['subscriptionId']);
     });
     this.getAllPromoCode();
     this.getSmeList();
+    var today = new Date();
+    console.log(today.getMonth(), '............', today.getFullYear());
+    this.startYear.setValue(today.getFullYear().toString());
+    this.startMonth.setValue(this.monthsMaster[today.getMonth()].value);
   }
 
   getUserPlanInfo(id) {
@@ -80,11 +106,15 @@ export class AddNewPlanComponent implements OnInit {
       if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
         myDate.setDate(new Date().getDate() + this.userSubscription.smeSelectedPlan.validForDays - 1)
         this.maxEndDate = new Date(myDate);
+        this.serviceType = this.userSubscription.smeSelectedPlan.servicesType;
+        this.noOfMonths.setValue(Math.round(this.userSubscription.smeSelectedPlan.validForDays / 30));
         this.getAllPlanInfo(this.userSubscription.smeSelectedPlan.servicesType);
         console.log('this.maxEndDate:', this.maxEndDate);
       } else if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
         myDate.setDate(new Date().getDate() + this.userSubscription.userSelectedPlan.validForDays - 1)
         this.maxEndDate = new Date(myDate);
+        this.serviceType = this.userSubscription.userSelectedPlan.servicesType;
+        this.noOfMonths.setValue(Math.round(this.userSubscription.userSelectedPlan.validForDays / 30));
         this.getAllPlanInfo(this.userSubscription.userSelectedPlan.servicesType);
       }
       this.subStartDate.setValue(this.userSubscription.startDate);
@@ -99,12 +129,34 @@ export class AddNewPlanComponent implements OnInit {
       })
   }
 
+  filingCalendar = [];
+  getSubscriptionFilingsCalender(subscriptionId) {
+    const param = `/subscription/filings-calender?subscriptionId=${subscriptionId}`;
+    this.itrService.getMethod(param).subscribe(res => {
+      console.log('Subscription Filings Calender: ', res);
+      if (res['filingCalendar'] instanceof Array) {
+        this.filingCalendar = res['filingCalendar'];
+      }
+    }, error => {
+      console.log('Subscription Filings Calender Error: ', error);
+    })
+  }
   gstUserInfoByUserId(userId) {
     let param = '/search/userprofile/query?userId=' + userId;
     this.userService.getMethod(param).subscribe((res: any) => {
       console.log('Get user info by userId: ', res);
       if (res && res.records instanceof Array) {
         this.selectedUserInfo = res.records[0];
+        console.log('this.selectedUserInfo:', this.selectedUserInfo);
+        if (this.utilService.isNonEmpty(this.selectedUserInfo) && this.utilService.isNonEmpty(this.selectedUserInfo.gstDetails)) {
+          this.gstType.setValue(this.selectedUserInfo.gstDetails.gstType)
+          if (this.utilService.isNonEmpty(this.selectedUserInfo.gstDetails.gstType) && this.selectedUserInfo.gstDetails.gstType === 'REGULAR') {
+            this.frequency.setValue(this.selectedUserInfo.gstDetails.gstr1Type)
+          } else {
+            this.frequencyTypesMaster = [{ label: 'Quarterly', value: 'QUARTERLY' }];
+            this.frequency.setValue('QUARTERLY');
+          }
+        }
       }
     },
       error => {
@@ -296,5 +348,50 @@ export class AddNewPlanComponent implements OnInit {
     } else {
       this.toastMessage.alert("error", "Select Start date and End date")
     }
+  }
+
+  selectionChangeGstType(gstType: String) {
+    if (gstType === 'REGULAR') {
+      this.frequency.setValue(this.selectedUserInfo.gstDetails.gstr1Type)
+      this.frequencyTypesMaster = [{ label: 'Monthly', value: 'MONTHLY' }, { label: 'Quarterly', value: 'QUARTERLY' }];
+    } else {
+      this.frequency.setValue('QUARTERLY');
+      this.frequencyTypesMaster = [{ label: 'Quarterly', value: 'QUARTERLY' }];
+    }
+  }
+  selectionChangeGstr1Type(gstr1Type: String) {
+    console.log('selected GStr1 Type: ', gstr1Type)
+  }
+
+  generateFilingCalendar(mode) {
+    if (this.serviceType === 'TPA' || this.serviceType === 'NOTICE') {
+      this.utilService.showSnackBar('We have not decided what will be calender structure in case of TPA and NOTICE.')
+      return;
+    }
+    let disposable = this.dialog.open(FilingCalendarComponent, {
+      width: '80%',
+      height: 'auto',
+      data: {
+        startMonth: this.serviceType === 'GST' ? this.startMonth.value : null,
+        startYear: this.serviceType === 'GST' ? parseInt(this.startYear.value) : null,
+        serviceType: this.serviceType,
+        gstType: this.serviceType === 'GST' ? this.gstType.value : '',
+        frequency: this.serviceType === 'GST' ? this.frequency.value : 'YEARLY',
+        noOfMonths: this.serviceType === 'GST' ? this.noOfMonths.value : 12,
+        userId: this.userSubscription.userId,
+        subscriptionId: this.userSubscription.subscriptionId,
+        smeAssigneeId: this.subscriptionAssigneeId.value,
+        filingCalendar: this.filingCalendar,
+        mode: mode
+      }
+    })
+
+    disposable.afterClosed().subscribe(res => {
+      console.log('The dialog was closed');
+      if (res && this.utilService.isNonEmpty(res) && res.result === 'SUCCESS') {
+        console.log(res.data);
+        this.filingCalendar = res.data.filingCalendar
+      }
+    });
   }
 }

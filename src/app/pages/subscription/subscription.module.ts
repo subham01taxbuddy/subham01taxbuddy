@@ -18,11 +18,12 @@ import { OwlNativeDateTimeModule } from "ng-pick-datetime/date-time/adapter/nati
 import { MySubscriptionComponent } from './my-subscription/my-subscription.component';
 import { MainSubsciptionComponent } from './main-subsciption/main-subsciption.component';
 import { TeamSubscriptionsComponent } from './team-subscriptions/team-subscriptions.component';
+import { FilingCalendarComponent } from './filing-calendar/filing-calendar.component';
 
 @NgModule({
     declarations: [SubscriptionDetailComponent, AddNewPlanComponent, AddSubscriptionComponent, SubscriptionHeadComponent,
-        AddInvoiceComponent, InvoicesStatusComponent, InvoiceDialogComponent, MySubscriptionComponent, MainSubsciptionComponent, TeamSubscriptionsComponent],
-    imports:[
+        AddInvoiceComponent, InvoicesStatusComponent, InvoiceDialogComponent, MySubscriptionComponent, MainSubsciptionComponent, TeamSubscriptionsComponent, FilingCalendarComponent],
+    imports: [
         SubscriptionRoutingModule,
         CommonModule,
         FormsModule,
@@ -31,10 +32,10 @@ import { TeamSubscriptionsComponent } from './team-subscriptions/team-subscripti
         SharedModule,
         MaterialModule,
         NgxLoadingModule.forRoot({}),
-        OwlDateTimeModule, 
+        OwlDateTimeModule,
         OwlNativeDateTimeModule
     ],
-    entryComponents:[AddSubscriptionComponent, InvoiceDialogComponent]
+    entryComponents: [AddSubscriptionComponent, InvoiceDialogComponent, FilingCalendarComponent]
 })
 
-export class SubscriptionModule{}
+export class SubscriptionModule { }

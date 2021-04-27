@@ -43,7 +43,8 @@
     </mat-card>
 
     <mat-card *ngIf="!this.utilService.isNonEmpty(selectedUserInfo)">
-      <p style="font-size: 15px; text-align: center; font-weight: 590;">User infomamation Not Found. </p><br>
+      <p style="font-size: 15px; text-align: center; font-weight: 590;">Looks like user is not present in system
+        please contact admin. </p><br>
     </mat-card><br>
 
     <div class="card__row">
@@ -264,6 +265,148 @@
           </div>
         </div>
       </mat-card>
+    </div>
+    <div class="card__row">
+      <div class="card__col-lg-12">
+        <div class="promo" *ngIf="this.utilService.isNonEmpty(selectedUserInfo)">
+          <b style="font-size: 18px;">Filing Calender Details: </b><br>
+          Note: In case of Composite delear we are only supporting quartely filing as return type CMP08, In case of
+          regular delear we are
+          only asking GSTR1 filing frequency as we assumed there will be GST3B Monthly filing.
+          <div class="card__row" *ngIf="filingCalendar.length === 0">
+            <div class="card__col-lg-3" *ngIf="serviceType === 'GST'">
+              <mat-form-field appearance="outline">
+                <mat-label>Select GST Type</mat-label>
+                <mat-select matInput placeholder="Select GST Type" [formControl]="gstType"
+                  (selectionChange)="selectionChangeGstType($event.value)" autocomplete="off">
+                  <mat-option *ngFor="let gstType of gstTypesMaster" [value]="gstType.value">
+                    {{ gstType.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="card__col-lg-2" *ngIf="serviceType === 'GST'">
+              <mat-form-field appearance="outline">
+                <mat-label>{{this.gstType.value === 'REGULAR' ? 'GSTR1 Type':'Filing Frequency'}}</mat-label>
+                <mat-select matInput
+                  placeholder="{{this.gstType.value === 'REGULAR' ? 'GSTR1 Type':'Filing Frequency'}}"
+                  [formControl]="frequency" (selectionChange)="selectionChangeGstr1Type($event.value)"
+                  autocomplete="off">
+                  <mat-option *ngFor="let frequency of frequencyTypesMaster" [value]="frequency.value">
+                    {{ frequency.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="card__col-lg-2" *ngIf="serviceType === 'GST'">
+              <mat-form-field appearance="outline">
+                <mat-label>Start Month</mat-label>
+                <mat-select matInput placeholder="Start Month" [formControl]="startMonth" autocomplete="off">
+                  <mat-option *ngFor="let month of monthsMaster" [value]="month.value">
+                    {{ month.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="card__col-lg-2" *ngIf="serviceType === 'GST'">
+              <mat-form-field appearance="outline">
+                <mat-label>Start Year</mat-label>
+                <mat-select matInput placeholder="Start Year" [formControl]="startYear" autocomplete="off">
+                  <mat-option value=2021>2021</mat-option>
+                  <mat-option value=2022>2022</mat-option>
+                  <mat-option value=2023>2023</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="card__col-lg-1" *ngIf="serviceType === 'GST'">
+              <mat-form-field appearance="outline">
+                <mat-label>Appx Months</mat-label>
+                <mat-select matInput placeholder="Start Year" [formControl]="noOfMonths" autocomplete="off">
+                  <mat-option *ngFor="let number of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="number">{{number}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="card__col-lg-2">
+              <button class="btn" style="border: none;margin-top: 5px;border-radius: 10px;"
+                (click)="generateFilingCalendar('CREATE')">Generate <i class="fa fa-calendar"
+                  aria-hidden="true"></i></button>
+            </div>
+          </div>
+          <div class="card__row" *ngIf="filingCalendar.length > 0">
+            <div class="card__col-lg-12">
+              <b>Upcomming filing</b>
+            </div>
+            <div class="tab-panel items-tab card__col-lg-9">
+              <div class="tab-panel__content tab-panel__content_visible">
+                <div class="table product__table">
+                  <div class="table__row  table__row_header ">
+                    <div class="table__cell product-row__cell-unit flex-15">
+                      <a class="table__sort-link">Financial Year</a>
+                    </div>
+                    <div class="table__cell product-row__cell-unit flex-10" *ngIf="this.serviceType === 'GST'">
+                      <a class="table__sort-link">Month</a>
+                    </div>
+                    <div class="table__cell product-row__cell-unit flex-10" *ngIf="this.serviceType === 'GST'">
+                      <a class="table__sort-link">Year</a>
+                    </div>
+                    <div class="table__cell product-row__cell-unit flex-10">
+                      <a class="table__sort-link">Return</a>
+                    </div>
+                    <div class="table__cell product-row__cell-unit flex-10">
+                      <a class="table__sort-link">Frequency</a>
+                    </div>
+                    <div class="table__cell product-row__cell-unit flex-25">
+                      <a class="table__sort-link">Due Date</a>
+                    </div>
+                    <div class="table__cell product-row__cell-unit flex-20">
+                      <a class="table__sort-link">Filing Date</a>
+                    </div>
+                  </div>
+
+
+                  <div *ngFor="let cal of filingCalendar; let p=index ">
+                    <div class="table__row-item product-row">
+                      <div class="table__row product-row__main-variant">
+                        <div class="table__cell product-row__cell-stock flex-15">
+                          {{cal.financialYear}}
+                        </div>
+                        <div class="table__cell product-row__cell-stock flex-10" *ngIf="this.serviceType === 'GST'">
+                          {{cal.month}}
+                        </div>
+                        <div class="table__cell product-row__cell-stock flex-10" *ngIf="this.serviceType === 'GST'">
+                          {{cal.year}}
+                        </div>
+                        <div class="table__cell product-row__cell-stock flex-10">
+                          {{cal.returnType}}
+                        </div>
+                        <div class="table__cell product-row__cell-stock flex-10">
+                          {{cal.frequency}}
+                        </div>
+                        <div class="table__cell product-row__cell-stock flex-25">
+                          {{cal.dueDate | date :'dd MMM yyyy'}}
+                        </div>
+                        <div class="table__cell product-row__cell-stock flex-20">
+                          {{cal.filingDate | date :'dd MMM yyyy'}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="card__col-lg-3">
+              <button class="btn" style="border: none;margin-top: 5px;border-radius: 10px;"
+                (click)="generateFilingCalendar('UPDATE')">View/Update Details</button>
+            </div>
+          </div>
+        </div>
+        <div class="promo" *ngIf="!this.utilService.isNonEmpty(selectedUserInfo)">
+          <p style="font-size: 15px; text-align: center; font-weight: 590;">Looks like user is not present in system
+            please contact admin. </p><br>
+        </div>
+      </div>
     </div>
     <div>
       <div class="card__row">

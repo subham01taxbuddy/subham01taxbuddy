@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, OnDestroy, OnChanges } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
@@ -6,6 +7,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import moment = require('moment');
+import { FilingCalendarComponent } from '../filing-calendar/filing-calendar.component';
 
 @Component({
   selector: 'app-main-subsciption',
@@ -21,7 +23,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   userId: any;
 
   constructor(private itrService: ItrMsService, private utilsService: UtilsService, private _toastMessageService: ToastMessageService, private router: Router,
-    private userMsService: UserMsService,) {
+    private userMsService: UserMsService, private dialog: MatDialog) {
     this.subscription = this.utilsService.onMessage().subscribe(res => {
       console.log('Agent id :--> ', res)
       this.queryParam = res.text;
@@ -46,7 +48,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   }
   ngOnChanges() {
     this.getUserSubscriptionInfo();
-    
+
   }
   subscriptionColoumnDef(from) {
     return [
@@ -318,6 +320,29 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           }
         },
       },
+      {
+        headerName: 'Calendar',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="View Filing Calendar" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-calendar" aria-hidden="true" data-action-type="view-filing-calendar"></i>
+           </button>`;
+
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
     ]
   }
 
@@ -400,6 +425,10 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           this.startFiling(params.data);
           break;
         }
+        case 'view-filing-calendar': {
+          this.viewFilingCalendar(params.data);
+          break;
+        }
       }
     }
   }
@@ -477,4 +506,44 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  async viewFilingCalendar(subscription) {
+    console.log('subscription: ', subscription);
+    this.loading = true;
+    const param = `/subscription/filings-calender?subscriptionId=${subscription.subscriptionId}`;
+    this.itrService.getMethod(param).subscribe((res: any) => {
+      this.loading = false;
+      console.log('Subscription Filings Calender: ', res);
+      if (res['filingCalendar'] instanceof Array) {
+        let disposable = this.dialog.open(FilingCalendarComponent, {
+          width: '80%',
+          height: 'auto',
+          data: {
+            startMonth: null,
+            startYear: null,
+            serviceType: res.serviceType,
+            gstType: '',
+            frequency: '',
+            noOfMonths: null,
+            userId: res.userId,
+            subscriptionId: res.subscriptionId,
+            smeAssigneeId: null,
+            filingCalendar: res['filingCalendar'],
+            mode: 'UPDATE'
+          }
+        })
+
+        disposable.afterClosed().subscribe(res => {
+          console.log('The dialog was closed');
+          if (res && this.utilsService.isNonEmpty(res) && res.result === 'SUCCESS') {
+            console.log(res.data);
+            this.utilsService.showSnackBar('Filing Calendar updated successfully.')
+          }
+        });
+      }
+    }, error => {
+      this.loading = false;
+      console.log('Subscription Filings Calender Error: ', error);
+      this.utilsService.showSnackBar('Calendar is not created.')
+    })
+  }
 }
