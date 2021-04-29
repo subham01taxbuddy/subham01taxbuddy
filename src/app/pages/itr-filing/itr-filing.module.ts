@@ -85,7 +85,7 @@ import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-docu
         ReviseReturnDialogComponent,
         DelayComponent,
         FilingTasksComponent,
-        ShowUserDocumnetsComponent
+        ShowUserDocumnetsComponent,
         // InputUploadComponent
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */

@@ -8,23 +8,27 @@
                     <div class="card__title" style="font-size: 20px;">Salary Income: {{getSalaryTaxableIncome()}}</div>
                 </mat-expansion-panel-header>
 
-                <div class="content" style="width: 60%;padding-right: 10px;">
+                <!--  <div class="content" style="width: 60%;padding-right: 10px;">
                     <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
                     <br>
                     <div>
-                        <span *ngFor="let form16 of getAllForm16s('FORM_16'); let i=index">
+                        <span *ngFor="let docs of documents; let i=index">
                             <div style="padding: 5px; display: block; text-decoration:underline;">
-                                <a *ngIf="!form16.isDeleted" href="javascript:;" (click)="getForm16Url(i)">{{form16.fileName}}</a>
-                                <button *ngIf="!form16.isDeleted" (click)="deleteFile(form16.fileName)" style="float: right; margin-right: 80px;"><i class="fa fa-trash" aria-hidden="true"></i></button>   
+                                <a *ngIf="!docs.isDeleted" href="javascript:;"
+                                    (click)="getSignedUrl(docs)">{{docs.fileName}}</a>
+                                <button *ngIf="!docs.isDeleted" (click)="deleteFile(docs.filePath)"
+                                    style="float: right;"><i class="fa fa-trash" aria-hidden="true"></i></button>
 
-                                <a *ngIf="form16.isDeleted" >{{form16.fileName}}</a> &nbsp;&nbsp;
-                                <button *ngIf="form16.isDeleted" (click)="deletedFileInfo(form16.cloudFileId)" style="float: right;" title="Deleted file information"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                                <a *ngIf="docs.isDeleted">{{docs.fileName}}</a> &nbsp;&nbsp;
+                                <button *ngIf="docs.isDeleted" (click)="deletedFileInfo(docs.cloudFileId)"
+                                    style="float: right;" title="Deleted file information"><i class="fa fa-info-circle"
+                                        aria-hidden="true"></i></button>
                             </div>
-                           
-                        </span>
 
+                        </span>
                         <div *ngIf="deletedFileData.length > 0" class="userInfo">
-                            <button style="float: right; margin-bottom: 3px;" (click)="closeDialog()"><i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                            <button style="float: right; margin-bottom: 3px;" (click)="closeDialog()"><i
+                                    class="fa fa-times-circle" aria-hidden="true"></i></button>
                             <table>
                                 <tr>
                                     <th><b>Doc Deleted By</b></th>
@@ -37,36 +41,11 @@
                                     <td>{{data.date | date}}</td>
                                 </tr>
                             </table>
-                        </div> 
+                        </div>
                     </div>
-                    <br>
-                    <br>
-                    <br>
-                    <ngx-image-zoom *ngIf="form16DocDetails.docType.toLowerCase() !== 'pdf' || form16DocDetails.docType.toLowerCase() !== 'xls' || form16DocDetails.docType.toLowerCase() !== 'doc' || form16DocDetails.docType.toLowerCase() !== 'xlsx' || form16DocDetails.docType.toLowerCase() !== 'docx'" [thumbImage]="form16DocDetails.docUrl"
-                        [fullImage]="form16DocDetails.docUrl" [magnification]="1" [enableScrollZoom]="true"
-                        [enableLens]="true" [lensWidth]="200">
-                    </ngx-image-zoom>
-                    <!-- <div *ngIf="form16DocDetails.docType.toLowerCase() === 'pdf' || form16DocDetails.docType.toLowerCase() === 'Pdf'">
-                        <button ion-button (click)="incrementZoom(-0.1)">
-                            -
-                        </button>&nbsp;
-                        <button ion-button (click)="incrementZoom(0.1)">
-                            +
-                        </button>
-                        <pdf-viewer [src]="form16DocDetails.docUrl" [zoom]="zoom" [original-size]="true"
-                            [autoresize]="true" [render-text]="true" style="display: block;height: 100%">
-                        </pdf-viewer>
-                    </div> -->
-
-                    <ngx-doc-viewer *ngIf="form16DocDetails.docType.toLowerCase() === 'pdf' ||  form16DocDetails.docType.toLowerCase() === 'xls' || form16DocDetails.docType.toLowerCase() !== 'Pdf' || form16DocDetails.docType.toLowerCase() === 'doc' || form16DocDetails.docType.toLowerCase() === 'xlsx' || form16DocDetails.docType.toLowerCase() === 'docx'"
-                         [url]="form16DocDetails.docUrl" viewer="google"  style="width:100%;height:93vh;">
-                     </ngx-doc-viewer>
-
-                    <div *ngIf="form16DocDetails.docUrl ===''">
-                        Form 16 not uploaded/Selected
-                    </div>
-                </div>
-                <div class="content" style="width: 40%;" *ngIf="salaryView === 'TABLE'">
+                    <app-document-viewer [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer>
+                </div> -->
+                <div *ngIf="salaryView === 'TABLE'">
                     <div>
                         <button class="btn long-btn" style="border: none;" (click)=" addEmployer(null)">Add Employer
                         </button>
@@ -77,7 +56,7 @@
                         </ag-grid-angular>
                     </div>
                 </div>
-                <div class="content" style="width: 40%;" *ngIf="salaryView === 'FORM'">
+                <div *ngIf="salaryView === 'FORM'">
                     <div class="card__title" style="padding:10px; font-size: 20px;">Employer Details</div>
                     <div class="card__row">
                         <div class="card__col-xs-12 card__col-sm-8">

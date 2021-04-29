@@ -97,13 +97,12 @@ export class DocumentUploadComponent implements OnInit {
 
   uploadDocument(type, document, password?) {
     this.loading = true;
-    let userId = this.ITR_JSON.userId;
     var s3ObjectUrl;
     if (type === 'PAN' || type === 'AADHAAR_BACK' || type === 'AADHAAR_FRONT') {
-      s3ObjectUrl = userId + '/Common/' + document.name;
+      s3ObjectUrl = `${this.ITR_JSON.userId}/Common/${document.name}`;
     }
     else {
-      s3ObjectUrl = userId + '/ITR/2019-20/Original/ITR Filing Docs/' + document.name;
+      s3ObjectUrl = `${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs/${document.name}`;
     }
 
     var pass;
@@ -114,7 +113,7 @@ export class DocumentUploadComponent implements OnInit {
     else{
       pass = '"';
     }
-    let cloudFileMetaData = '{"fileName":"' + document.name + '","userId":' + userId + ',"accessRight":["' + userId + '_W"' + '],"origin":"BO", "s3ObjectUrl":"' + s3ObjectUrl + pass+'}';
+    let cloudFileMetaData = '{"fileName":"' + document.name + '","userId":' + this.ITR_JSON.userId + ',"accessRight":["' + this.ITR_JSON.userId + '_W"' + '],"origin":"BO", "s3ObjectUrl":"' + s3ObjectUrl + pass+'}';
     console.log("cloudFileMetaData ===> ", cloudFileMetaData)
     const formData = new FormData();
     formData.append("file", document);

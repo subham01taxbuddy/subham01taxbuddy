@@ -335,4 +335,11 @@ export class UtilsService {
         }
         return errorMessage;
     }
+
+    getCloudFy(financialYear) {
+        let startFy = financialYear.slice(0, 5);
+        let endFy = financialYear.slice(7, 9);
+        return startFy + endFy;
+        // return '2020-21';
+    }
 }

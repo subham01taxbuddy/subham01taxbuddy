@@ -53,6 +53,9 @@ export class CustomerProfileComponent implements OnInit {
   statusId: any;
   // fillingStatus = new FormControl('', Validators.required);
   ITR_JSON: ITR_JSON;
+  viewer = 'DOC';
+  docUrl = '';
+  deletedFileData: any = [];
   minDate = new Date(1900, 0, 1);
   // maxDate = new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate());
   maxDate = new Date();
@@ -175,7 +178,6 @@ export class CustomerProfileComponent implements OnInit {
     private userMsService: UserMsService,
     private router: Router) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-
   }
 
   ngOnInit() {
@@ -183,20 +185,8 @@ export class CustomerProfileComponent implements OnInit {
     this.customerProfileForm = this.createCustomerProfileForm();
     this.setCustomerProfileValues();
     this.changeReviseForm();
-    // this.getFilingStatus();
-    this.getCommonDocuments();
-    // this.rotateImage180('left');
-    // this.s3FilePath = "https://dev-uploads.taxbuddy.com.s3.ap-south-1.amazonaws.com/4314/Common/images.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200724T135952Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Credential=AKIA2LS2FCUFDB2UWKO7%2F20200724%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=13422d714888136a354fd1c94d1de60e55b70b645dcc0aeb0e980b2b379b4980"
-    // Storage.get('sales-invoice/inv_2263_1595577807982.bmp')
-    //   .then(result => {
-    //     // this.invoiceData.invoiceDTO.s3InvoiceImageUrl = result;
-    //     // this.imageLoader = false;
-    //     this.s3FilePath = result;
-    //     console.log('FILE result=>', result)
-    //   })
-    //   .catch(err => {
-    //     // this._toastMessageService.alert("error", "Error While fetching invoice image");
-    //   });
+    this.getDocuments();
+
   }
   zoom: number = 1.0;
   incrementZoom(amount: number) {
@@ -445,34 +435,55 @@ export class CustomerProfileComponent implements OnInit {
   // }
 
   documents = []
-  getCommonDocuments() {
-    const param = `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/Common`;
+  getDocuments() {
+    const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/Common`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.documents = result;
     })
   }
 
-  getDocumentUrl(documentTag) {
-    const doc = this.documents.filter(item => item.documentTag === documentTag)
-    if (doc.length > 0) {
-      const docType = doc[0].fileName.split('.').pop();
-      if (doc[0].isPasswordProtected) {
-        return doc[0].passwordProtectedFileUrl;
-      } else {
-        return doc[0].signedUrl;
-      }
+  getSignedUrl(document) {
+    console.log('document selected', document);
+    this.loading = true;
+    const ext = document.fileName.split('.').pop();
+    console.log('this.viewer', this.viewer);
+    if (ext.toLowerCase() === 'pdf' || ext.toLowerCase() === 'xls' || ext.toLowerCase() === 'doc' || ext.toLowerCase() === 'xlsx' || ext.toLowerCase() === 'docx') {
+      this.viewer = 'DOC';
     } else {
-      return ''
+      this.viewer = 'IMG';
     }
+    if (document.isPasswordProtected) {
+      this.docUrl = document.passwordProtectedFileUrl;
+      return;
+    }
+    const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      console.log(res);
+      this.docUrl = res['signedUrl'];
+      this.loading = false;
+    }, error => {
+      this.loading = false;
+    })
   }
 
-  getDocumentType(documentTag) {
-    const doc = this.documents.filter(item => item.documentTag === documentTag);
-    if (doc.length > 0) {
-      return doc[0].fileName.split('.').pop();
-    }
-    return '';
+
+
+  deleteFile(filePath) {
+    let adminId = JSON.parse(localStorage.getItem("UMD"));
+    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
+    var reqBody = [filePath];
+    console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
+    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
+      console.log('Doc delete responce: ', responce);
+      this.utilsService.showSnackBar(responce.response);
+      this.getDocuments();
+    },
+      error => {
+        console.log('Doc delete ERROR responce: ', error.responce);
+        this.utilsService.showSnackBar(error.response);
+      })
   }
+
   previousRoute() {
     this.router.navigate(['/pages/itr-filing/users']);
   }
@@ -512,5 +523,22 @@ export class CustomerProfileComponent implements OnInit {
         this.utilsService.showSnackBar('Failed to update Filing status.')
       })
     }
+  }
+
+  deletedFileInfo(cloudFileId) {
+    this.deletedFileData = [];
+    this.loading = true;
+    let param = '/cloud/log?cloudFileId=' + cloudFileId;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      this.loading = false;
+      this.deletedFileData = res;
+      console.log('Deleted file detail info: ', this.deletedFileData);
+    },
+      error => {
+        this.loading = false;
+      })
+  }
+  closeDialog() {
+    this.deletedFileData = [];
   }
 }

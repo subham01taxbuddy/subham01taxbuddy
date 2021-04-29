@@ -12,6 +12,7 @@ export class DocumentViewerComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log('viewer:', this.viewer, '........... Signed URL:', this.docUrl)
   }
 
 }

@@ -6,63 +6,7 @@
             <mat-expansion-panel-header>
                 <div class="card__title" style="font-size: 20px;">Other Income</div>
             </mat-expansion-panel-header>
-
-            <div class="content" style="width: 60%; padding-right: 10px;">
-                <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
-                <br>
-                <div>
-                    <span *ngFor="let docs of itrDocuments; let i=index">
-                        <div style="padding: 5px; display: block; text-decoration:underline;">
-                            <a *ngIf="!docs.isDeleted" href="javascript:;" (click)="getDocsUrl(i)">{{docs.fileName}}</a>
-                            <button *ngIf="!docs.isDeleted" (click)="deleteFile(docs.fileName)" style="float: right;"><i class="fa fa-trash" aria-hidden="true"></i></button>
-
-                            <a *ngIf="docs.isDeleted" >{{docs.fileName}}</a> &nbsp;&nbsp;
-                            <button *ngIf="docs.isDeleted" (click)="deletedFileInfo(docs.cloudFileId)" style="float: right;" title="Deleted file information"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
-                        </div>
-                       
-                    </span>
-                    <div *ngIf="deletedFileData.length > 0" class="userInfo">
-                        <button style="float: right; margin-bottom: 3px;" (click)="closeDialog()"><i class="fa fa-times-circle" aria-hidden="true"></i></button>
-                        <table>
-                            <tr>
-                                <th><b>Doc Deleted By</b></th>
-                                <th><b>Action</b></th>
-                                <th><b>Date</b></th>
-                            </tr>
-                            <tr *ngFor="let data of deletedFileData">
-                                <td>{{data.actionBy === ITR_JSON.userId ? 'User' : 'Tax Buddy'}}</td>
-                                <td>{{data.action}}</td>
-                                <td>{{data.date | date}}</td>
-                            </tr>
-                        </table>
-                    </div> 
-                </div>
-                <br><br><br>
-                <ngx-image-zoom *ngIf="docDetails.docType.toLowerCase() !== 'pdf' || docDetails.docType.toLowerCase() !== 'xls' || docDetails.docType.toLowerCase() !== 'doc' || docDetails.docType.toLowerCase() !== 'xlsx' || docDetails.docType.toLowerCase() !== 'docx'" [thumbImage]="docDetails.docUrl"
-                    [fullImage]="docDetails.docUrl" [magnification]="1" [enableScrollZoom]="true" [enableLens]="true"
-                    [lensWidth]="200">
-                </ngx-image-zoom>
-                <!-- <div *ngIf="docDetails.docType.toLowerCase() === 'pdf' || docDetails.docType.toLowerCase() === 'Pdf'">
-                    <button ion-button (click)="incrementZoom(-0.1)">
-                        -
-                    </button>&nbsp;
-                    <button ion-button (click)="incrementZoom(0.1)">
-                        +
-                    </button>
-                    <pdf-viewer [src]="docDetails.docUrl" [zoom]="zoom" [original-size]="true" [autoresize]="true"
-                        [render-text]="true" style="display: block;height: 100%">
-                    </pdf-viewer>
-                </div> -->
-
-                <ngx-doc-viewer *ngIf="docDetails.docType.toLowerCase() === 'pdf' || docDetails.docType.toLowerCase() === 'xls' || docDetails.docType.toLowerCase() === 'xlsx' || docDetails.docType.toLowerCase() === 'docx' || docDetails.docType.toLowerCase() === 'doc'"
-                    [url]="docDetails.docUrl" viewer="google"  style="width:100%;height:93vh;">
-                </ngx-doc-viewer>
-
-                <div *ngIf="docDetails.docUrl ===''">
-                    Documents not uploaded/Selected
-                </div>
-            </div>
-            <div class="content" style="width: 40%;">
+            <div>
                 <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
                     <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
                         [gridOptions]="otherIncomeGridOptions" (rowClicked)="onOtherIncomeRowClicked($event)">

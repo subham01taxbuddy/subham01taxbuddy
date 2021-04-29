@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="main clearfix" style="padding-left: 0px;">
   <div class="card" style="padding: 0 !important;">
     <!-- <div class="col-md-12 col-sm-12 col-12"> -->
@@ -19,36 +20,139 @@
       </mat-step>
 
       <mat-step [stepControl]="incomeForm">
-        <!-- <div class="tx1014">Income Details</div> -->
+
         <ng-template matStepLabel>Income Details</ng-template>
-        <!-- <app-income (sendFormStatus)="checkFormStatus($event,'income')" *ngIf="tabIndex === 1"></app-income> -->
-        <app-update-status *ngIf="tabIndex=== 1" [userId]="ITR_JSON.userId"></app-update-status>
-        <hr>
-        <app-salary *ngIf="tabIndex=== 1"></app-salary>
-        <app-house-property *ngIf="tabIndex=== 1"></app-house-property>
-        <app-business *ngIf="tabIndex === 1 && ITR_JSON.itrType === '4'"></app-business>
-        <app-other-income (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-other-income>
-        <!--  <div class="rightBt">
-            <button class="backBt" mat-button (click)="previousTab('personal')" matStepperPrevious>Back</button>
-            <button class="nextBt" mat-button matStepperNext>Next</button>
-          </div> -->
+
+        <div class="content" style="width: 60%;padding-right: 10px;">
+          <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+          <br>
+          <div>
+            <span *ngFor="let docs of documents; let i=index">
+              <div style="padding: 5px; display: block; text-decoration:underline;">
+                <a *ngIf="!docs.isDeleted" href="javascript:;" (click)="getSignedUrl(docs)">{{docs.fileName}}</a>
+                <button *ngIf="!docs.isDeleted" (click)="deleteFile(docs.filePath)" style="float: right;"><i
+                    class="fa fa-trash" aria-hidden="true"></i></button>
+
+                <a *ngIf="docs.isDeleted">{{docs.fileName}}</a> &nbsp;&nbsp;
+                <button *ngIf="docs.isDeleted" (click)="deletedFileInfo(docs.cloudFileId)" style="float: right;"
+                  title="Deleted file information"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+              </div>
+
+            </span>
+            <div *ngIf="deletedFileData.length > 0" class="userInfo">
+              <button style="float: right; margin-bottom: 3px;" (click)="closeDialog()"><i class="fa fa-times-circle"
+                  aria-hidden="true"></i></button>
+              <table>
+                <tr>
+                  <th><b>Doc Deleted By</b></th>
+                  <th><b>Action</b></th>
+                  <th><b>Date</b></th>
+                </tr>
+                <tr *ngFor="let data of deletedFileData">
+                  <td>{{data.actionBy === ITR_JSON.userId ? 'User' : 'Tax Buddy'}}</td>
+                  <td>{{data.action}}</td>
+                  <td>{{data.date | date}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <app-document-viewer [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer>
+        </div>
+
+        <div class="content" style="width: 40%;">
+          <app-update-status *ngIf="tabIndex=== 1" [userId]="ITR_JSON.userId"></app-update-status>
+          <hr>
+          <app-salary *ngIf="tabIndex=== 1"></app-salary>
+          <app-house-property *ngIf="tabIndex=== 1"></app-house-property>
+          <app-business *ngIf="tabIndex === 1 && ITR_JSON.itrType === '4'"></app-business>
+          <app-other-income (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-other-income>
+        </div>
       </mat-step>
 
       <mat-step [stepControl]="taxSavingForm">
         <ng-template matStepLabel>Investments/Deductions</ng-template>
-        <app-investments-deductions (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 2">
-        </app-investments-deductions>
-        <!--  <hr>
-          <div class="rightBt">
-            <button class="backBt" mat-button (click)="previousTab('income')" matStepperPrevious>Back</button>
-            <button class="nextBt" mat-button matStepperNext>Next</button>
-          </div> -->
+        <div class="content" style="width: 60%;padding-right: 10px;">
+          <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+          <br>
+          <div>
+            <span *ngFor="let docs of documents; let i=index">
+              <div style="padding: 5px; display: block; text-decoration:underline;">
+                <a *ngIf="!docs.isDeleted" href="javascript:;" (click)="getSignedUrl(docs)">{{docs.fileName}}</a>
+                <button *ngIf="!docs.isDeleted" (click)="deleteFile(docs.filePath)" style="float: right;"><i
+                    class="fa fa-trash" aria-hidden="true"></i></button>
+
+                <a *ngIf="docs.isDeleted">{{docs.fileName}}</a> &nbsp;&nbsp;
+                <button *ngIf="docs.isDeleted" (click)="deletedFileInfo(docs.cloudFileId)" style="float: right;"
+                  title="Deleted file information"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+              </div>
+
+            </span>
+            <div *ngIf="deletedFileData.length > 0" class="userInfo">
+              <button style="float: right; margin-bottom: 3px;" (click)="closeDialog()"><i class="fa fa-times-circle"
+                  aria-hidden="true"></i></button>
+              <table>
+                <tr>
+                  <th><b>Doc Deleted By</b></th>
+                  <th><b>Action</b></th>
+                  <th><b>Date</b></th>
+                </tr>
+                <tr *ngFor="let data of deletedFileData">
+                  <td>{{data.actionBy === ITR_JSON.userId ? 'User' : 'Tax Buddy'}}</td>
+                  <td>{{data.action}}</td>
+                  <td>{{data.date | date}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <app-document-viewer [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer>
+        </div>
+        <div class="content" style="width: 40%;">
+          <app-investments-deductions (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 2">
+          </app-investments-deductions>
+        </div>
       </mat-step>
 
       <mat-step [stepControl]="tdsTcsForm">
         <ng-template matStepLabel>Taxes Paid</ng-template>
-        <app-taxes-paid (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 3">
-        </app-taxes-paid>
+        <div class="content" style="width: 60%;padding-right: 10px;">
+          <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+          <br>
+          <div>
+            <span *ngFor="let docs of documents; let i=index">
+              <div style="padding: 5px; display: block; text-decoration:underline;">
+                <a *ngIf="!docs.isDeleted" href="javascript:;" (click)="getSignedUrl(docs)">{{docs.fileName}}</a>
+                <button *ngIf="!docs.isDeleted" (click)="deleteFile(docs.filePath)" style="float: right;"><i
+                    class="fa fa-trash" aria-hidden="true"></i></button>
+
+                <a *ngIf="docs.isDeleted">{{docs.fileName}}</a> &nbsp;&nbsp;
+                <button *ngIf="docs.isDeleted" (click)="deletedFileInfo(docs.cloudFileId)" style="float: right;"
+                  title="Deleted file information"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+              </div>
+
+            </span>
+            <div *ngIf="deletedFileData.length > 0" class="userInfo">
+              <button style="float: right; margin-bottom: 3px;" (click)="closeDialog()"><i class="fa fa-times-circle"
+                  aria-hidden="true"></i></button>
+              <table>
+                <tr>
+                  <th><b>Doc Deleted By</b></th>
+                  <th><b>Action</b></th>
+                  <th><b>Date</b></th>
+                </tr>
+                <tr *ngFor="let data of deletedFileData">
+                  <td>{{data.actionBy === ITR_JSON.userId ? 'User' : 'Tax Buddy'}}</td>
+                  <td>{{data.action}}</td>
+                  <td>{{data.date | date}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <app-document-viewer [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer>
+        </div>
+        <div class="content" style="width: 40%;">
+          <app-taxes-paid (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 3">
+          </app-taxes-paid>
+        </div>
       </mat-step>
 
       <mat-step [stepControl]="declarationForm">

@@ -62,7 +62,7 @@ export class AddNewPlanComponent implements OnInit {
     totalTax: null,
     totalAmount: null
   };
-  gstTypesMaster: any = [{ label: 'Regular', value: 'REGULAR' }, { label: 'Composite', value: 'COMPOSITE' }, { label: 'Input Service Distributor (ISD)', value: 'Input Service Distributor (ISD)' }]
+  gstTypesMaster: any = [{ label: 'Regular', value: 'REGULAR' }, { label: 'Composite', value: 'COMPOSITE' }/* , { label: 'Input Service Distributor (ISD)', value: 'Input Service Distributor (ISD)' } */]
   frequencyTypesMaster: any = [{ label: 'Monthly', value: 'MONTHLY' }, { label: 'Quarterly', value: 'QUARTERLY' }];
   monthsMaster: any = [{ label: 'Jan', value: 0 },
   { label: 'Feb', value: 1 },
@@ -141,6 +141,7 @@ export class AddNewPlanComponent implements OnInit {
       console.log('Subscription Filings Calender Error: ', error);
     })
   }
+
   gstUserInfoByUserId(userId) {
     let param = '/search/userprofile/query?userId=' + userId;
     this.userService.getMethod(param).subscribe((res: any) => {
@@ -352,7 +353,9 @@ export class AddNewPlanComponent implements OnInit {
 
   selectionChangeGstType(gstType: String) {
     if (gstType === 'REGULAR') {
-      this.frequency.setValue(this.selectedUserInfo.gstDetails.gstr1Type)
+      if (this.utilService.isNonEmpty(this.selectedUserInfo) && this.utilService.isNonEmpty(this.selectedUserInfo.gstDetails)) {
+        this.frequency.setValue(this.selectedUserInfo.gstDetails.gstr1Type)
+      }
       this.frequencyTypesMaster = [{ label: 'Monthly', value: 'MONTHLY' }, { label: 'Quarterly', value: 'QUARTERLY' }];
     } else {
       this.frequency.setValue('QUARTERLY');

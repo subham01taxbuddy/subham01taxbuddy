@@ -2,47 +2,39 @@
 <div class="main clearfix">
     <div class="content" style="width: 35%">
         <div class="card card_main" style="position: relative;">
-            <!-- <button (click)="rotate()">Press me to rotate</button> -->
-            <!-- <div [@rotatedState]='state'> -->
-            <ngx-image-zoom *ngIf="getDocumentType('PAN') !== 'pdf'" [thumbImage]="getDocumentUrl('PAN')"
-                [fullImage]="getDocumentUrl('PAN')" [magnification]="1" [enableScrollZoom]="true" [enableLens]="true"
-                [lensWidth]="200">
-            </ngx-image-zoom>
-            <div *ngIf="getDocumentType('PAN') === 'pdf'">
-                <button ion-button (click)="incrementZoom(-0.1)">
-                    -
-                </button>&nbsp;
-                <button ion-button (click)="incrementZoom(0.1)">
-                    +
-                </button>
-                <pdf-viewer [src]="getDocumentUrl('PAN')" [zoom]="zoom" [original-size]="true" [autoresize]="true"
-                    [render-text]="true" style="display: block;height: 100%">
-                </pdf-viewer>
+            <div>
+                <span *ngFor="let docs of documents; let i=index">
+                    <div style="padding: 5px; display: block; text-decoration:underline;">
+                        <a *ngIf="!docs.isDeleted" href="javascript:;"
+                            (click)="getSignedUrl(docs)">{{docs.fileName}}</a>
+                        <button *ngIf="!docs.isDeleted" (click)="deleteFile(docs.filePath)" style="float: right;"><i
+                                class="fa fa-trash" aria-hidden="true"></i></button>
+
+                        <a *ngIf="docs.isDeleted">{{docs.fileName}}</a> &nbsp;&nbsp;
+                        <button *ngIf="docs.isDeleted" (click)="deletedFileInfo(docs.cloudFileId)" style="float: right;"
+                            title="Deleted file information"><i class="fa fa-info-circle"
+                                aria-hidden="true"></i></button>
+                    </div>
+
+                </span>
+                <div *ngIf="deletedFileData.length > 0" class="userInfo">
+                    <button style="float: right; margin-bottom: 3px;" (click)="closeDialog()"><i
+                            class="fa fa-times-circle" aria-hidden="true"></i></button>
+                    <table>
+                        <tr>
+                            <th><b>Doc Deleted By</b></th>
+                            <th><b>Action</b></th>
+                            <th><b>Date</b></th>
+                        </tr>
+                        <tr *ngFor="let data of deletedFileData">
+                            <td>{{data.actionBy === ITR_JSON.userId ? 'User' : 'Tax Buddy'}}</td>
+                            <td>{{data.action}}</td>
+                            <td>{{data.date | date}}</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-            <div *ngIf="getDocumentUrl('PAN') ===''">
-                PAN Card not uploaded
-            </div>
-            <br>
-            <hr>
-            <br>
-            <ngx-image-zoom *ngIf="getDocumentType('AADHAAR_FRONT') !== 'pdf'"
-                [thumbImage]="getDocumentUrl('AADHAAR_FRONT')" [fullImage]="getDocumentUrl('AADHAAR_FRONT')"
-                [magnification]="1" [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
-            </ngx-image-zoom>
-            <div *ngIf="getDocumentType('AADHAAR_FRONT') === 'pdf'">
-                <button ion-button (click)="incrementZoom(-0.1)">
-                    -
-                </button>&nbsp;
-                <button ion-button (click)="incrementZoom(0.1)">
-                    +
-                </button>
-                <pdf-viewer [src]="getDocumentUrl('AADHAAR_FRONT')" [zoom]="zoom" [original-size]="true"
-                    [autoresize]="true" [render-text]="true" style="display: block;height: 100%">
-                </pdf-viewer>
-            </div>
-            <div *ngIf="getDocumentUrl('AADHAAR_FRONT') ===''">
-                Aadhaar Card front not uploaded
-            </div>
+            <app-document-viewer [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer>
         </div>
     </div>
 

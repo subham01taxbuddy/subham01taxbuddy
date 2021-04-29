@@ -10,48 +10,52 @@ import { UtilsService } from 'app/services/utils.service';
 })
 export class UserDocumentsComponent implements OnInit {
   loading: boolean = false;
-  commonDocuments = []
+  commonDocuments = [];
+  viewer = 'DOC';
+  docUrl = '';
+
   constructor(private itrMsService: ItrMsService, private activatedRoute: ActivatedRoute, private utilsService: UtilsService) { }
 
   ngOnInit() {
     const temp = this.activatedRoute.params.subscribe(params => {
       console.log("99999999999999999:", params)
-      this.getCommonDocuments(params['userId']);
+      this.getDocuments(params['userId']);
     });
   }
-  getCommonDocuments(userId) {
-    const param = `/cloud/signed-s3-urls?currentPath=${userId}`;
+  getDocuments(userId) {
+    const param = `/cloud/file-info?currentPath=${userId}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.commonDocuments = result;
     })
   }
 
-  zoom: number = 1.0;
-  incrementZoom(amount: number) {
-    this.zoom += amount;
-  }
 
-  docDetails = {
-    docUrl: '',
-    docType: ''
-  };
-
-  getCommonDocsUrl(index) {
-    if (this.commonDocuments.length > 0) {
-      const docType = this.commonDocuments[index].fileName.split('.').pop();
-      if (this.commonDocuments[index].isDeleted) {
-        this.utilsService.showSnackBar('This file is deleted by ' + this.commonDocuments[index].deletedBy)
-        return;
-      }
-      if (this.commonDocuments[index].isPasswordProtected) {
-        this.docDetails.docUrl = this.commonDocuments[index].passwordProtectedFileUrl;
-      } else {
-        this.docDetails.docUrl = this.commonDocuments[index].signedUrl;
-      }
-      this.docDetails.docType = docType;
-    } else {
-      this.docDetails.docUrl = '';
-      this.docDetails.docType = '';
+  getSignedUrl(document) {
+    if (document.isDeleted) {
+      this.utilsService.showSnackBar('This file is deleted by ' + document.deletedBy)
+      return;
     }
+    console.log('document selected', document);
+    const ext = document.fileName.split('.').pop();
+    console.log('this.viewer', this.viewer);
+    if (ext.toLowerCase() === 'pdf' || ext.toLowerCase() === 'xls' || ext.toLowerCase() === 'doc' || ext.toLowerCase() === 'xlsx' || ext.toLowerCase() === 'docx') {
+      this.viewer = 'DOC';
+    } else {
+      this.viewer = 'IMG';
+    }
+    if (document.isPasswordProtected) {
+      this.docUrl = document.passwordProtectedFileUrl;
+      return;
+    }
+
+    this.loading = true;
+    const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      console.log(res);
+      this.docUrl = res['signedUrl'];
+      this.loading = false;
+    }, error => {
+      this.loading = false;
+    })
   }
 }

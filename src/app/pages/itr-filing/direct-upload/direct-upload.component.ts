@@ -26,11 +26,10 @@ export class DirectUploadComponent implements OnInit {
   tdsTcsForm: FormGroup;
   declarationForm: FormGroup;
   tabIndex = 0;
-
-  // callerObj: StatisticItrComponent;
+  viewer = 'DOC';
+  docUrl = '';
   showError: boolean;
   errorMessage: string;
-  // uploadXMLForm: FormGroup;
   successMsg: string;
   itrDocuments = [];
 
@@ -40,7 +39,7 @@ export class DirectUploadComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getCommonDocuments();
+    this.getDocuments();
   }
 
   isErrorMessage: string = '';
@@ -142,38 +141,13 @@ export class DirectUploadComponent implements OnInit {
   tabChanged(tab) {
     this.tabIndex = tab.selectedIndex;
   }
+
   commonDocuments = []
-  getCommonDocuments() {
-    const param = `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}`;
+  getDocuments() {
+    const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.commonDocuments = result;
     })
-  }
-
-
-  zoom: number = 1.0;
-  incrementZoom(amount: number) {
-    this.zoom += amount;
-  }
-
-  docDetails = {
-    docUrl: '',
-    docType: ''
-  };
-
-  getCommonDocsUrl(index) {
-    if (this.commonDocuments.length > 0) {
-      const docType = this.commonDocuments[index].fileName.split('.').pop();
-      if (this.commonDocuments[index].isPasswordProtected) {
-        this.docDetails.docUrl = this.commonDocuments[index].passwordProtectedFileUrl;
-      } else {
-        this.docDetails.docUrl = this.commonDocuments[index].signedUrl;
-      }
-      this.docDetails.docType = docType;
-    } else {
-      this.docDetails.docUrl = '';
-      this.docDetails.docType = '';
-    }
   }
 
   uploadSummary() {
@@ -219,7 +193,7 @@ export class DirectUploadComponent implements OnInit {
           case HttpEventType.User:
             this.file = null;
             console.log('Done!', HttpEventType.User);
-            this.getCommonDocuments();
+            this.getDocuments();
         }
 
       }, error => {
@@ -234,5 +208,30 @@ export class DirectUploadComponent implements OnInit {
       this.utilsService.showSnackBar('Please select file!')
     }
     // }
+  }
+
+  getSignedUrl(document) {
+    console.log('document selected', document);
+    const ext = document.fileName.split('.').pop();
+    console.log('this.viewer', this.viewer);
+    if (ext.toLowerCase() === 'pdf' || ext.toLowerCase() === 'xls' || ext.toLowerCase() === 'doc' || ext.toLowerCase() === 'xlsx' || ext.toLowerCase() === 'docx') {
+      this.viewer = 'DOC';
+    } else {
+      this.viewer = 'IMG';
+    }
+    if (document.isPasswordProtected) {
+      this.docUrl = document.passwordProtectedFileUrl;
+      return;
+    }
+
+    this.loading = true;
+    const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      console.log(res);
+      this.docUrl = res['signedUrl'];
+      this.loading = false;
+    }, error => {
+      this.loading = false;
+    })
   }
 }

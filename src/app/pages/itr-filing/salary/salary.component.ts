@@ -30,7 +30,8 @@ export class SalaryComponent implements OnInit {
   currentIndex: number = null;
   itrDocuments = [];
   deletedFileData: any = [];
-
+  viewer = 'DOC';
+  docUrl = '';
   salaryDropdown = [{
     "value": "SEC17_1",
     "label": "Salary as per section 17(1)",
@@ -141,9 +142,7 @@ export class SalaryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getItrDocuments();
-    this.getForm16Url(0);
-
+    this.getDocuments();
     this.utilsService.smoothScrollToTop();
     this.employerDetailsFormGroup = this.createEmployerDetailsFormGroup();
     this.salaryCallInConstructor(this.salaryDropdown);
@@ -925,57 +924,52 @@ export class SalaryComponent implements OnInit {
     return data;
   }
 
-  getItrDocuments() {
-    const param1 =
-      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
-    this.itrMsService.getMethod(param1).subscribe((result: any) => {
-      this.itrDocuments = result;
-      this.getForm16Url(0);
+  documents = []
+  getDocuments() {
+    const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      this.documents = result;
     })
   }
 
-  // afterUploadDocs(fileUpload) {
-  //   if (fileUpload === 'File uploaded successfully') {
-  //     this.getItrDocuments();
-  
-  deleteFile(fileName){
+  deleteFile(fileName) {
     let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy='+adminId.USER_UNIQUE_ID;
-    let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
+    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
+    let filePath = `${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs/${fileName}`;
     var reqBody = [filePath];
-    console.log('URL path: ',path, ' filePath: ',filePath,' Request body: ',reqBody);
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any)=>{
-        console.log('Doc delete responce: ',responce); 
-        this.utilsService.showSnackBar(responce.response);
-        this.getItrDocuments();
+    console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
+    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
+      console.log('Doc delete responce: ', responce);
+      this.utilsService.showSnackBar(responce.response);
+      this.getDocuments();
     },
-    error=>{
-     console.log('Doc delete ERROR responce: ',error.responce); 
-     this.utilsService.showSnackBar(error.response);
-    })
-   }
+      error => {
+        console.log('Doc delete ERROR responce: ', error.responce);
+        this.utilsService.showSnackBar(error.response);
+      })
+  }
 
-  deletedFileInfo(cloudFileId){
+  deletedFileInfo(cloudFileId) {
     this.deletedFileData = [];
     this.loading = true;
-    let param = '/cloud/log?cloudFileId='+cloudFileId;
-    this.itrMsService.getMethod(param).subscribe((res: any)=>{
+    let param = '/cloud/log?cloudFileId=' + cloudFileId;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
       this.deletedFileData = res;
-      console.log('Deleted file detail info: ',this.deletedFileData);
+      console.log('Deleted file detail info: ', this.deletedFileData);
     },
-    error=>{
-      this.loading = false;
-    })
+      error => {
+        this.loading = false;
+      })
   }
 
-  closeDialog(){
+  closeDialog() {
     this.deletedFileData = [];
   }
 
-  afterUploadDocs(fileUpload){
-    if(fileUpload === 'File uploaded successfully'){
-       this.getItrDocuments();
+  afterUploadDocs(fileUpload) {
+    if (fileUpload === 'File uploaded successfully') {
+      this.getDocuments();
     }
   }
 
@@ -983,28 +977,29 @@ export class SalaryComponent implements OnInit {
     return this.itrDocuments.filter(item => item.documentTag === documentTag)
 
   }
-  zoom: number = 1.0;
-  incrementZoom(amount: number) {
-    this.zoom += amount;
-  }
 
-  form16DocDetails = {
-    docUrl: '',
-    docType: ''
-  };
-  getForm16Url(index) {
-    const doc = this.itrDocuments.filter(item => item.documentTag === 'FORM_16')
-    if (doc.length > 0) {
-      const docType = doc[index].fileName.split('.').pop();
-      if (doc[index].isPasswordProtected) {
-        this.form16DocDetails.docUrl = doc[index].passwordProtectedFileUrl;
-      } else {
-        this.form16DocDetails.docUrl = doc[index].signedUrl;
-      }
-      this.form16DocDetails.docType = docType;
+  getSignedUrl(document) {
+    console.log('document selected', document);
+    const ext = document.fileName.split('.').pop();
+    console.log('this.viewer', this.viewer);
+    if (ext.toLowerCase() === 'pdf' || ext.toLowerCase() === 'xls' || ext.toLowerCase() === 'doc' || ext.toLowerCase() === 'xlsx' || ext.toLowerCase() === 'docx') {
+      this.viewer = 'DOC';
     } else {
-      this.form16DocDetails.docUrl = '';
-      this.form16DocDetails.docType = '';
+      this.viewer = 'IMG';
     }
+    if (document.isPasswordProtected) {
+      this.docUrl = document.passwordProtectedFileUrl;
+      return;
+    }
+
+    this.loading = true;
+    const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      console.log(res);
+      this.docUrl = res['signedUrl'];
+      this.loading = false;
+    }, error => {
+      this.loading = false;
+    })
   }
 }
