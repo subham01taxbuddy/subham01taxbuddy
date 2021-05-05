@@ -560,21 +560,22 @@ export class InvoicesStatusComponent implements OnInit {
           break;
         }
         case 'delete-invoice': {
-          this.deleteInvoice(params.data);
+          // this.deleteInvoice(params.data);
+          this.updateInvoice('Reason For Invoice Deletion', 'Delete', params.data, 'DELETE');
           break;
         }
       }
     }
   }
 
-  updateInvoice(windowTitle: string, windowBtn: string, myUser: any, mode: string) {
+  updateInvoice(windowTitle: string, windowBtn: string, data: any, mode: string) {
     let disposable = this.dialog.open(InvoiceDialogComponent, {
       width: '60%',
       height: 'auto',
       data: {
         title: windowTitle,
         submitBtn: windowBtn,
-        userObject: myUser,
+        userObject: data,
         mode: mode,
         callerObj: this
       }
@@ -582,7 +583,7 @@ export class InvoicesStatusComponent implements OnInit {
 
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      if (result && this.utilService.isNonEmpty(result) && result.msg === 'Update') {
+      if (result && this.utilService.isNonEmpty(result) && result.msg === 'success') {
         this.getAllInvoiceInfo();
       }
     });

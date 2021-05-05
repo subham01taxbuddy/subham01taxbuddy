@@ -242,7 +242,8 @@
                         <mat-form-field appearance="outline">
                             <mat-label>GSTIN:</mat-label>
                             <input formControlName="gstin" maxlength="15" matInput placeholder="GSTIN"
-                                autocomplete="off">
+                                autocomplete="off"
+                                [required]="this.invoiceForm.controls['serviceType'].value === 'GST'">
                             <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('required')">Enter GSTIN
                                 number</mat-error>
                             <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('pattern')">Enter valid

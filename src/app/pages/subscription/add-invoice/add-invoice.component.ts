@@ -118,6 +118,7 @@ export class AddInvoiceComponent implements OnInit {
         }
       }
       this.invoiceForm.controls.subscriptionId.setValue(id);
+      this.invoiceForm.controls.serviceType.setValue(applicableService);
       this.setItemList(this.userSubscription);
       this.getUserDetails(res.userId);
     }, error => {
@@ -210,7 +211,8 @@ export class AddInvoiceComponent implements OnInit {
       estimatedDateTime: [''],
       itrType: [''],
       comment: [''],
-      subscriptionId: ['', Validators.required]
+      subscriptionId: ['', Validators.required],
+      serviceType: ['']
     })
   }
 

@@ -1,7 +1,7 @@
 import { ItrMsService } from './../../../services/itr-ms.service';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserMsService } from 'app/services/user-ms.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ToastMessageService } from 'app/services/toast-message.service';
@@ -34,6 +34,7 @@ export class InvoiceDialogComponent implements OnInit {
   invoiceEditForm: FormGroup;
   maxDate: any = new Date();
   loading: boolean;
+  reasonForDeletion = new FormControl('', [Validators.required]);
 
   constructor(public dialogRef: MatDialogRef<InvoiceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder, private userService: UserMsService,
@@ -41,6 +42,8 @@ export class InvoiceDialogComponent implements OnInit {
     public utilsService: UtilsService, private itrMsService: ItrMsService) { }
 
   ngOnInit() {
+    console.log(this.data)
+    return;
     this.getUserInvoiceData(this.data.userObject);
     this.invoiceEditForm = this.fb.group({
       invoiceNo: [''],
@@ -112,7 +115,7 @@ export class InvoiceDialogComponent implements OnInit {
         console.log(res);
         this.loading = false;
         this._toastMessageService.alert("success", "Payment details updated successfully.");
-        this.dialogRef.close({ event: 'close', msg: 'Update' })
+        this.dialogRef.close({ event: 'close', msg: 'success' })
       }, error => {
         this.loading = false;
         this._toastMessageService.alert("error", "Error while updating payment details.");
@@ -120,6 +123,28 @@ export class InvoiceDialogComponent implements OnInit {
       })
     } else {
       $('input.ng-invalid').first().focus();
+    }
+  }
+
+  deleteInvoice() {
+    if (this.reasonForDeletion.valid) {
+      this.loading = true;
+      let param = `/invoice/delete?invoiceNo=${this.data.userObject.invoiceNo}&reasonForDeletion=${this.reasonForDeletion.value}`;
+      this.itrMsService.deleteMethod(param).subscribe((responce: any) => {
+        this.loading = false;
+        console.log('responce: ', responce);
+        if (responce.reponse === "Please create new invoice before deleting old one") {
+          this._toastMessageService.alert("error", responce.reponse);
+        } else if (responce.reponse === "Selected invoice must be old invoice or create new invoice before deleting this invoice") {
+          this._toastMessageService.alert("error", responce.reponse);
+        } else {
+          this._toastMessageService.alert("success", responce.reponse);
+          this.dialogRef.close({ event: 'close', msg: 'success' })
+        }
+      }, error => {
+        this.loading = false;
+        this._toastMessageService.alert("error", "Faild to delete invoice.");
+      })
     }
   }
 }
