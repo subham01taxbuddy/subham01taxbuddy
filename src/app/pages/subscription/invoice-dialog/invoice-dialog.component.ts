@@ -43,7 +43,9 @@ export class InvoiceDialogComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.data)
-    return;
+    if (this.data.mode === 'DELETE') {
+      return;
+    }
     this.getUserInvoiceData(this.data.userObject);
     this.invoiceEditForm = this.fb.group({
       invoiceNo: [''],
@@ -59,6 +61,7 @@ export class InvoiceDialogComponent implements OnInit {
       email: [''],
       subTotal: [''],
       cgstTotal: [''],
+      igstTotal: [''],
       sgstTotal: [''],
       discountTotal: [''],
       total: ['', Validators.required],
