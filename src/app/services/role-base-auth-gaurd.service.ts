@@ -14,6 +14,7 @@ export class RoleBaseAuthGaurdService implements CanActivate {
     let permissionRoles = route.data.roles as Array<string>;
     let loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
     console.log("My roles in RoleBaseAuthGaurdService: ", permissionRoles, loggedInUserData);
+    return true; // made this because brij wanted everything will be visible to evryone.
     if (loggedInUserData.USER_ROLE instanceof Array && permissionRoles instanceof Array) {
       return this.checkHasPermission(loggedInUserData.USER_ROLE, permissionRoles);
     } else {

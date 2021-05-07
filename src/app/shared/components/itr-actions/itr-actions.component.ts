@@ -31,7 +31,7 @@ export class ItrActionsComponent implements OnInit {
     { value: 983, label: 'Usha Chellani' },
     { value: 23670, label: 'Ashwini Kapale' },
     { value: 23578, label: 'Aditi Ravindra Gujar' },
-    // { value: 23564, label: 'Sonali Ghanwat' }, Quit
+    { value: 23564, label: 'Sonali Ghanwat' }, //Quit
     { value: 23668, label: 'Chaitanya Prakash Masurkar' },
 
 
@@ -41,9 +41,9 @@ export class ItrActionsComponent implements OnInit {
     { value: 26195, label: 'Tejaswi Suraj Bodke' },
     { value: 23505, label: 'Tejshri Hanumant Bansode' },
     { value: 26215, label: 'Deepali Nivrutti Pachangane' },
-    // { value: 26217, label: 'Manasi Jadhav' }, Quit
+    { value: 26217, label: 'Manasi Jadhav' }, //Quit
     { value: 26236, label: 'Supriya Mahindrakar' },
-    // { value: 26218, label: 'Mrudula Vishvas Shivalkar' }, Quit
+    { value: 26218, label: 'Mrudula Vishvas Shivalkar' },// Quit
     { value: 26235, label: 'Chaitrali Ranalkar' },
 
     { value: 28033, label: 'Shrikanth Elegeti' },

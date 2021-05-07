@@ -1,17 +1,18 @@
 <div class="main clearfix" style="min-height: 0vh; padding-top: 0px;">
-    <div class="tab"
-        >
+    <div class="tab">
         <ul class="tab__container clearfix">
             <li class="tab__item" routerLinkActive="tab__item_active">
                 <a class="tab__link" routerLink="/pages/itr-filing/my-itrs">My ITR's</a>
             </li>
-            <li class="tab__item" routerLinkActive="tab__item_active" *ngIf="isApplicable(['ROLE_ADMIN'])">
+            <li class="tab__item" routerLinkActive="tab__item_active">
                 <a class="tab__link" routerLink="/pages/itr-filing/team-itrs">My Team</a>
             </li>
             <li class="tab__item" routerLinkActive="tab__item_active">
                 <a class="tab__link" routerLink="/pages/itr-filing/users">Search User</a>
             </li>
-            <li class="tab__item" routerLinkActive="tab__item_active" *ngIf="isApplicable(['ROLE_ADMIN'])">
+            <li class="tab__item" routerLinkActive="tab__item_active">
+                <!-- *ngIf="isApplicable(['ROLE_ADMIN'])"
+*ngIf="isApplicable(['ROLE_ADMIN'])" -->
                 <a class="tab__link" routerLink="/pages/itr-filing/delay">Delayed ITR</a>
             </li>
             <li class="tab__item" routerLinkActive="tab__item_active">
