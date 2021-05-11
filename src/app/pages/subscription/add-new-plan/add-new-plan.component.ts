@@ -103,6 +103,7 @@ export class AddNewPlanComponent implements OnInit {
       this.gstUserInfoByUserId(subscription.userId);
       this.loading = false;
       let myDate = new Date();
+      console.log(myDate.getMonth(), myDate.getDate(), myDate.getFullYear())
       if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
         myDate.setDate(new Date().getDate() + this.userSubscription.smeSelectedPlan.validForDays - 1)
         this.maxEndDate = new Date(myDate);
@@ -117,8 +118,14 @@ export class AddNewPlanComponent implements OnInit {
         this.noOfMonths.setValue(Math.round(this.userSubscription.userSelectedPlan.validForDays / 30));
         this.getAllPlanInfo(this.userSubscription.userSelectedPlan.servicesType);
       }
+      if (this.serviceType !== 'GST') {
+        this.maxEndDate = new Date(myDate.getMonth() <= 2 ? myDate.getFullYear() : myDate.getFullYear() + 1, 2, 31);
+      }
       this.subStartDate.setValue(this.userSubscription.startDate);
       this.subEndDate.setValue(this.userSubscription.endDate);
+      if (this.utilService.isNonEmpty(this.subEndDate.value)) {
+        this.subEndDate.setValue(this.maxEndDate);
+      }
       this.subscriptionAssigneeId.setValue(this.userSubscription.subscriptionAssigneeId);
 
       this.setFinalPricing();

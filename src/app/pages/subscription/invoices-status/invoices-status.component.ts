@@ -92,6 +92,7 @@ export class InvoicesStatusComponent implements OnInit {
           phone: userInvoices[i].phone,
           email: userInvoices[i].email,
           invoiceNo: userInvoices[i].invoiceNo,
+          txbdyInvoiceId: userInvoices[i].txbdyInvoiceId,
           invoiceDate: userInvoices[i].invoiceDate,
           dueDate: userInvoices[i].dueDate,
           modeOfPayment: userInvoices[i].modeOfPayment,
@@ -575,6 +576,7 @@ export class InvoicesStatusComponent implements OnInit {
       data: {
         title: windowTitle,
         submitBtn: windowBtn,
+        txbdyInvoiceId: data.txbdyInvoiceId,
         userObject: data,
         mode: mode,
         callerObj: this
@@ -633,26 +635,26 @@ export class InvoicesStatusComponent implements OnInit {
     });
   }
 
-  deleteInvoice(invoiceInfo) {
-    console.log('invoiceInfo: ', invoiceInfo);
-    this.loading = true;
-    let param = '/invoice/delete?invoiceNo=' + invoiceInfo.invoiceNo;
-    this.itrService.deleteMethod(param).subscribe((responce: any) => {
-      this.loading = false;
-      console.log('responce: ', responce);
-      if (responce.reponse === "Please create new invoice before deleting old one") {
-        this._toastMessageService.alert("error", responce.reponse);
-      } else if (responce.reponse === "Selected invoice must be old invoice or create new invoice before deleting this invoice") {
-        this._toastMessageService.alert("error", responce.reponse);
-      } else {
-        this._toastMessageService.alert("success", responce.reponse);
-        this.getAllInvoiceInfo();
-      }
-    }, error => {
-      this.loading = false;
-      this._toastMessageService.alert("error", "Faild to delete invoice.");
-    })
-  }
+  // deleteInvoice(invoiceInfo) {
+  //   console.log('invoiceInfo: ', invoiceInfo);
+  //   this.loading = true;
+  //   let param = '/invoice/delete?invoiceNo=' + invoiceInfo.invoiceNo;
+  //   this.itrService.deleteMethod(param).subscribe((responce: any) => {
+  //     this.loading = false;
+  //     console.log('responce: ', responce);
+  //     if (responce.reponse === "Please create new invoice before deleting old one") {
+  //       this._toastMessageService.alert("error", responce.reponse);
+  //     } else if (responce.reponse === "Selected invoice must be old invoice or create new invoice before deleting this invoice") {
+  //       this._toastMessageService.alert("error", responce.reponse);
+  //     } else {
+  //       this._toastMessageService.alert("success", responce.reponse);
+  //       this.getAllInvoiceInfo();
+  //     }
+  //   }, error => {
+  //     this.loading = false;
+  //     this._toastMessageService.alert("error", "Faild to delete invoice.");
+  //   })
+  // }
 
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate)

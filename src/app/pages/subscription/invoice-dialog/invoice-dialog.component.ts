@@ -6,6 +6,7 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UtilsService } from 'app/services/utils.service';
+import { Router } from '@angular/router';
 declare let $: any;
 
 export const MY_FORMATS = {
@@ -38,10 +39,11 @@ export class InvoiceDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<InvoiceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder, private userService: UserMsService,
-    private _toastMessageService: ToastMessageService,
+    private _toastMessageService: ToastMessageService, private router: Router,
     public utilsService: UtilsService, private itrMsService: ItrMsService) { }
 
   ngOnInit() {
+
     console.log(this.data)
     if (this.data.mode === 'DELETE') {
       return;
@@ -71,6 +73,7 @@ export class InvoiceDialogComponent implements OnInit {
   }
 
   getUserInvoiceData(invoiceInfo) {
+
     console.log('invoiceInfo: ', invoiceInfo)
     this.loading = true;
     const param = '/itr/invoice?invoiceNo=' + invoiceInfo.invoiceNo;
@@ -109,6 +112,7 @@ export class InvoiceDialogComponent implements OnInit {
   }
 
   updateInvoice() {
+
     if (this.invoiceEditForm.valid) {
       this.loading = true;
       const param = '/invoice';
@@ -130,13 +134,24 @@ export class InvoiceDialogComponent implements OnInit {
   }
 
   deleteInvoice() {
+
     if (this.reasonForDeletion.valid) {
       this.loading = true;
-      let param = `/invoice/delete?invoiceNo=${this.data.userObject.invoiceNo}&reasonForDeletion=${this.reasonForDeletion.value}`;
+      const loggedInUser = JSON.parse(localStorage.getItem("UMD")) || {};
+      if (!this.utilsService.isNonEmpty(loggedInUser)) {
+        this._toastMessageService.alert('error', 'Please login again.');
+        this.dialogRef.close({ event: 'close', msg: 'error' });
+        this.router.navigate(['/login']);
+        return;
+      }
+      let param = `/invoice/delete?txbdyInvoiceId=${this.data.txbdyInvoiceId}&reasonForDeletion=${this.reasonForDeletion.value}&deletedBy=${loggedInUser.USER_UNIQUE_ID}`;
       this.itrMsService.deleteMethod(param).subscribe((responce: any) => {
         this.loading = false;
         console.log('responce: ', responce);
-        if (responce.reponse === "Please create new invoice before deleting old one") {
+        if (responce.reponse === 'You cannot delete invoice with Paid status') {
+          this._toastMessageService.alert("success", responce.reponse);
+          this.dialogRef.close({ event: 'close', msg: 'error' })
+        } else if (responce.reponse === "Please create new invoice before deleting old one") {
           this._toastMessageService.alert("error", responce.reponse);
         } else if (responce.reponse === "Selected invoice must be old invoice or create new invoice before deleting this invoice") {
           this._toastMessageService.alert("error", responce.reponse);
@@ -156,6 +171,7 @@ export interface ConfirmModel {
   title: string;
   submitBtn: string;
   userObject: any;
+  txbdyInvoiceId: any;
   mode: string;
   callerObj: any;
 }

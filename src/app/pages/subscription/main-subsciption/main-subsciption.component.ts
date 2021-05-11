@@ -8,6 +8,7 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import moment = require('moment');
 import { FilingCalendarComponent } from '../filing-calendar/filing-calendar.component';
+import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.component';
 
 @Component({
   selector: 'app-main-subsciption',
@@ -418,7 +419,8 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           break;
         }
         case 'delete-invoice': {
-          this.deleteInvoice(params.data);
+          // this.deleteInvoice(params.data);
+          this.updateInvoice('Reason For Invoice Deletion', 'Delete', params.data, 'DELETE');
           break;
         }
         case 'start-filing': {
@@ -545,5 +547,26 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       console.log('Subscription Filings Calender Error: ', error);
       this.utilsService.showSnackBar('Calendar is not created.')
     })
+  }
+
+  updateInvoice(windowTitle: string, windowBtn: string, data: any, mode: string) {
+    let disposable = this.dialog.open(InvoiceDialogComponent, {
+      width: '60%',
+      height: 'auto',
+      data: {
+        title: windowTitle,
+        submitBtn: windowBtn,
+        txbdyInvoiceId: data.txbdyInvoiceId,
+        mode: mode,
+        callerObj: this
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if (result && this.utilsService.isNonEmpty(result) && result.msg === 'success') {
+        this.getUserSubscriptionInfo();
+      }
+    });
   }
 }
