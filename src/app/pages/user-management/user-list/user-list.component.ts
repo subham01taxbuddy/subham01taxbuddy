@@ -78,7 +78,7 @@ export class UserListComponent implements OnInit {
         console.log("Search result:", res)
         if (Array.isArray(res.records)) {
           this.user_data = res.records;
-          console.log('user_data -> ',this.user_data);
+          console.log('user_data -> ', this.user_data);
           this.usersGridOptions.api.setRowData(this.createRowData(this.user_data));
           this.userInfo = this.user_data;
           this.config.totalItems = this.user_data.length;
@@ -221,17 +221,18 @@ export class UserListComponent implements OnInit {
         }
       },
       {
-        headerName: 'Invoice',
+        headerName: 'Inv',
         editable: false,
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Rediredt toward Invoice">
+          return `<button type="button" class="action_icon add_button" title="Rediredt toward Invoice"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-files-o" aria-hidden="true" data-action-type="invoice"></i>
            </button>`;
         },
-        width: 60,
+        width: 50,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -242,17 +243,18 @@ export class UserListComponent implements OnInit {
         },
       },
       {
-        headerName: 'Subscription',
+        headerName: 'Sub',
         editable: false,
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Redirect toward Subscription">
+          return `<button type="button" class="action_icon add_button" title="Redirect toward Subscription"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-list-alt" aria-hidden="true" data-action-type="subscription"></i>
            </button>`;
         },
-        width: 80,
+        width: 50,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -269,11 +271,35 @@ export class UserListComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="User Profile">
+          return ` 
+           <button type="button" class="action_icon add_button" title="User Profile" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="profile"></i>
            </button>`;
         },
-        width: 80,
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'FNB',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Link To Finbingo" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-link" aria-hidden="true" data-action-type="link-to-finbingo"></i>
+           </button>`;
+        },
+        width: 50,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -324,6 +350,10 @@ export class UserListComponent implements OnInit {
           this.router.navigate(['pages/user-management/profile/' + params.data.userId])
           break;
         }
+        case 'link-to-finbingo': {
+          this.linkToFinbingo(params.data.userId);
+          break;
+        }
       }
     }
   }
@@ -336,5 +366,22 @@ export class UserListComponent implements OnInit {
   redirectTowardSubscription(userInfo) {
     console.log('userInfo for subscription -> ', userInfo);
     this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: userInfo.mobileNumber } });
+  }
+
+  linkToFinbingo(userId) {
+    const param = `/partner/create-user`;
+    const request = {
+      userId: userId
+    }
+    this.loading = true;
+    this.userService.postMethod(param, request).subscribe((res: any) => {
+      console.log('Link To Finbingo Response: ', res);
+      this.loading = false;
+      if (res.success) {
+        res.data.isUserPresent ? this.utileService.showSnackBar('User already linked / created in FinBingo.') : this.utileService.showSnackBar('User linked successfully in FinBingo.')
+      }
+    }, error => {
+      this.loading = false;
+    })
   }
 }
