@@ -378,7 +378,15 @@ export class UserListComponent implements OnInit {
       console.log('Link To Finbingo Response: ', res);
       this.loading = false;
       if (res.success) {
-        res.data.isUserPresent ? this.utileService.showSnackBar('User already linked / created in FinBingo.') : this.utileService.showSnackBar('User linked successfully in FinBingo.')
+        if (res.data.isFnbVirtualUser) {
+          this.utileService.showSnackBar('User is already linked with FinBingo partner, please check under virtual users.');
+        } else if (res.data.isFnbUser) {
+          this.utileService.showSnackBar('This user is already FinBingo user, please check under FinBingo users.');
+        } else {
+          this.utileService.showSnackBar('User successfully linked with FinBingo partner, please check under virtual users.');
+        }
+      } else {
+        this.utileService.showSnackBar(res.message)
       }
     }, error => {
       this.loading = false;
