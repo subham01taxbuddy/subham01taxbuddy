@@ -43,7 +43,6 @@ export class InvoiceDialogComponent implements OnInit {
     public utilsService: UtilsService, private itrMsService: ItrMsService) { }
 
   ngOnInit() {
-
     console.log(this.data)
     if (this.data.mode === 'DELETE') {
       return;
@@ -134,7 +133,6 @@ export class InvoiceDialogComponent implements OnInit {
   }
 
   deleteInvoice() {
-
     if (this.reasonForDeletion.valid) {
       this.loading = true;
       const loggedInUser = JSON.parse(localStorage.getItem("UMD")) || {};
@@ -144,7 +142,12 @@ export class InvoiceDialogComponent implements OnInit {
         this.router.navigate(['/login']);
         return;
       }
-      let param = `/invoice/delete?txbdyInvoiceId=${this.data.txbdyInvoiceId}&reasonForDeletion=${this.reasonForDeletion.value}&deletedBy=${loggedInUser.USER_UNIQUE_ID}`;
+      let param = `/invoice/delete?reasonForDeletion=${this.reasonForDeletion.value}&deletedBy=${loggedInUser.USER_UNIQUE_ID}`;
+      if(this.data.txbdyInvoiceId !== 0){
+        param = `${param}&txbdyInvoiceId=${this.data.txbdyInvoiceId}`
+      }else{
+        param = `${param}&invoiceNo=${this.data.userObject.invoiceNo}`
+      }
       this.itrMsService.deleteMethod(param).subscribe((responce: any) => {
         this.loading = false;
         console.log('responce: ', responce);
