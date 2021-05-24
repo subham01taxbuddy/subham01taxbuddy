@@ -54,7 +54,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>Payment Status</mat-label>
                 <mat-select formControlName="paymentStatus" matInput placeholder="Select Payment Status"
-                    autocomplete="off" required>
+                    autocomplete="off" (selectionChange)="changePaymentStatus()" required>
                     <mat-option value="Paid">Paid</mat-option>
                     <mat-option value="Failed">Failed</mat-option>
                     <mat-option value="Unpaid">Unpaid</mat-option>
@@ -65,7 +65,8 @@
             <mat-form-field appearance="outline">
                 <mat-label>Mode of Payment</mat-label>
                 <mat-select formControlName="modeOfPayment" matInput placeholder="Select Mode of Payment"
-                    autocomplete="off" (selectionChange)="changeModeOfPayment()" required>
+                    autocomplete="off" (selectionChange)="changeModeOfPayment()"
+                    [required]="invoiceEditForm.controls['paymentStatus'].value === 'Paid'">
                     <mat-option value="BANK_TRANSFER">Bank Transfer</mat-option>
                     <mat-option value="GOOGLE_PAY">Google Pay</mat-option>
                     <mat-option value="PHONE_PAY">Phone Pay</mat-option>
@@ -102,9 +103,9 @@
         <div class="card__col-xs-4 card__col-sm-4">
             <mat-form-field appearance="outline">
                 <mat-label>Date of payment</mat-label>
-                <input matInput formControlName="paymentDate" [matDatepicker]="picker3" required [max]="maxDate"
+                <input matInput formControlName="paymentDate" [matDatepicker]="picker3" [max]="maxDate"
                     (dateChange)="setDepositInBankValidation(invoiceEditForm.controls['paymentDate'].value)"
-                    autocomplete="off">
+                    autocomplete="off" [required]="invoiceEditForm.controls['paymentStatus'].value === 'Paid'">
                 <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                 <mat-datepicker #picker3></mat-datepicker>
                 <mat-error *ngIf="invoiceEditForm.controls['paymentDate'].hasError('required')">Select

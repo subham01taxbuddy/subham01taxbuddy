@@ -51,10 +51,10 @@ export class InvoiceDialogComponent implements OnInit {
     this.invoiceEditForm = this.fb.group({
       invoiceNo: [''],
       dueDate: [''],
-      modeOfPayment: ['', Validators.required],
+      modeOfPayment: [''],
       billTo: [''],
       paymentCollectedBy: [''],
-      paymentDate: ['', Validators.required],
+      paymentDate: [''],
       // dateOfDeposit: [''],
       paymentStatus: ['Paid', Validators.required],
       state: [''],
@@ -105,6 +105,22 @@ export class InvoiceDialogComponent implements OnInit {
     }
   }
 
+  changePaymentStatus() {
+    if (this.invoiceEditForm.value.paymentStatus === 'Paid') {
+      this.invoiceEditForm.controls['paymentDate'].setValidators([Validators.required]);
+      this.invoiceEditForm.controls['paymentDate'].updateValueAndValidity();
+      this.invoiceEditForm.controls['modeOfPayment'].setValidators([Validators.required]);
+      this.invoiceEditForm.controls['modeOfPayment'].updateValueAndValidity();
+    } else {
+      this.invoiceEditForm.controls['paymentDate'].setValidators(null);
+      this.invoiceEditForm.controls['paymentDate'].setValue(null);
+      this.invoiceEditForm.controls['paymentDate'].updateValueAndValidity();
+      this.invoiceEditForm.controls['modeOfPayment'].setValidators(null);
+      this.invoiceEditForm.controls['modeOfPayment'].setValue(null);
+      this.invoiceEditForm.controls['modeOfPayment'].updateValueAndValidity();
+    }
+  }
+
   minDepositInBank: any;
   setDepositInBankValidation(reciptDate) {
     this.minDepositInBank = reciptDate;
@@ -143,9 +159,9 @@ export class InvoiceDialogComponent implements OnInit {
         return;
       }
       let param = `/invoice/delete?reasonForDeletion=${this.reasonForDeletion.value}&deletedBy=${loggedInUser.USER_UNIQUE_ID}`;
-      if(this.data.txbdyInvoiceId !== 0){
+      if (this.data.txbdyInvoiceId !== 0) {
         param = `${param}&txbdyInvoiceId=${this.data.txbdyInvoiceId}`
-      }else{
+      } else {
         param = `${param}&invoiceNo=${this.data.userObject.invoiceNo}`
       }
       this.itrMsService.deleteMethod(param).subscribe((responce: any) => {

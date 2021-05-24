@@ -13,13 +13,11 @@
             class="user-info">{{selectedUserInfo.fName+' '+selectedUserInfo.lName}}</span>
         </div>
         <div class="card__col-lg-4">
-          <label style=" font-size: 15px;"><b>Email :</b></label> <span style="margin-left: 10px;"
-            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.emailAddress) ?
+          <label style=" font-size: 15px;"><b>Email :</b></label> <span style="margin-left: 10px;" class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.emailAddress) ?
             selectedUserInfo.emailAddress: 'NA' }}</span>
         </div>
         <div class="card__col-lg-4">
-          <label style=" font-size: 15px;"><b>Mobile Number : </b></label> <span
-            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.mobileNumber) ?
+          <label style=" font-size: 15px;"><b>Mobile Number : </b></label> <span class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.mobileNumber) ?
             selectedUserInfo.mobileNumber: 'NA' }}</span>
         </div>
       </div>
@@ -30,13 +28,11 @@
             (selectedUserInfo.dateOfBirth | date) : 'NA' }}</span>
         </div>
         <div class="card__col-lg-4">
-          <label style=" font-size: 15px;"><b>Gender: </b></label> <span
-            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.gender) ? selectedUserInfo.gender: 'NA'
+          <label style=" font-size: 15px;"><b>Gender: </b></label> <span class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.gender) ? selectedUserInfo.gender: 'NA'
             }}</span>
         </div>
         <div class="card__col-lg-4">
-          <label style=" font-size: 15px;"><b>PAN :</b></label> <span style="margin-left: 40px;"
-            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.panNumber) ? selectedUserInfo.panNumber:
+          <label style=" font-size: 15px;"><b>PAN :</b></label> <span style="margin-left: 40px;" class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.panNumber) ? selectedUserInfo.panNumber:
             'NA' }}</span>
         </div>
       </div>
@@ -199,7 +195,7 @@
           <b style="font-size: 18px;">Final Plan Pricing: </b><br>
 
           <div class="card__row">
-            <div class="card__col-lg-5">
+            <div class="card__col-lg-6">
               <span class="head">Base Price:</span><br>
               <span class="head">CGST:</span><br>
               <span class="head">SGST:</span><br>
@@ -209,7 +205,7 @@
               <span class="head">Total Tax:</span><br>
               <span class="head"><b>Total Amount:</b></span>
             </div>
-            <div class="card__col-lg-7">
+            <div class="card__col-lg-6">
               <span class="head">{{this.finalPricing['basePrice'] | currency:'INR'}}</span><br>
               <span class="head">{{this.finalPricing['cgst'] | currency:'INR'}}</span><br>
               <span class="head">{{this.finalPricing['sgst'] | currency:'INR'}}</span><br>
