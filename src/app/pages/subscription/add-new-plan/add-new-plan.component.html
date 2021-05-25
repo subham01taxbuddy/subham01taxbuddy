@@ -201,7 +201,7 @@
               <span class="head">SGST:</span><br>
               <span class="head">IGST:</span><br>
               <span class="head" *ngIf="this.userSubscription && this.userSubscription.promoCode"><b>Promo code
-                  Discount:</b><br><br></span>
+                  Discount:</b><br></span><br>
               <span class="head">Total Tax:</span><br>
               <span class="head"><b>Total Amount:</b></span>
             </div>
@@ -213,7 +213,7 @@
               <span class="head" *ngIf="this.userSubscription && this.userSubscription.promoCode"><b>
                   {{getExactPromoDiscount() |
                   currency:'INR'}}
-                </b><br><br></span>
+                </b><br></span><br>
               <span class="head">{{this.finalPricing['totalTax'] | currency:'INR'}}</span><br>
               <span class="head"><b>{{this.finalPricing['totalAmount'] |
                   currency:'INR'}}</b></span>

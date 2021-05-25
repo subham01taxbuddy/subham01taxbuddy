@@ -139,7 +139,7 @@ export class AddInvoiceComponent implements OnInit {
       itemDescription: '',
       sacCode: '',
       quantity: 1,
-      rate: this.utilsService.isNonEmpty(userSubscription.smeSelectedPlan) ? userSubscription.smeSelectedPlan.basePrice : this.userSubscription.userSelectedPlan.basePrice,
+      rate: this.utilsService.isNonEmpty(userSubscription.smeSelectedPlan) ? userSubscription.smeSelectedPlan.totalAmount : this.userSubscription.userSelectedPlan.totalAmount,   // this.utilsService.isNonEmpty(userSubscription.smeSelectedPlan) ? userSubscription.smeSelectedPlan.basePrice : this.userSubscription.userSelectedPlan.basePrice,
       cgstPercent: 9,
       cgstAmount: this.utilsService.isNonEmpty(userSubscription.smeSelectedPlan) ? userSubscription.smeSelectedPlan.cgst : this.userSubscription.userSelectedPlan.cgst,
       sgstPercent: 9,
@@ -168,13 +168,21 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.controls.total.setValue(this.userSubscription.userSelectedPlan.totalAmount);
       this.invoiceForm.controls.balanceDue.setValue(this.userSubscription.userSelectedPlan.totalAmount);
     }
-    if (this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan))
-      this.invoiceForm.controls.subTotal.setValue(this.userSubscription.smeSelectedPlan.basePrice);
-    else
-      this.invoiceForm.controls.subTotal.setValue(this.userSubscription.userSelectedPlan.basePrice);
+
+    // if (this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan))
+    //   this.invoiceForm.controls.subTotal.setValue(this.userSubscription.smeSelectedPlan.basePrice);
+    // else
+    //   this.invoiceForm.controls.subTotal.setValue(this.userSubscription.userSelectedPlan.basePrice);
+
+    if(this.utilsService.isNonEmpty(this.userSubscription.promoApplied)){
+      this.invoiceForm.controls.subTotal.setValue(this.userSubscription.promoApplied.basePrice)
+    }else{
+      this.invoiceForm.controls.subTotal.setValue(this.getTaxableValue());
+    }
 
     if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.promoApplied)) {
-      this.invoiceForm.controls.discountTotal.setValue(this.invoiceForm.controls.subTotal.value - this.userSubscription.promoApplied.basePrice)
+     // this.invoiceForm.controls.discountTotal.setValue(this.invoiceForm.controls.subTotal.value - this.userSubscription.promoApplied.basePrice)
+      this.invoiceForm.controls.discountTotal.setValue(this.getExactPromoDiscount());
     }
   }
 
@@ -538,6 +546,26 @@ export class AddInvoiceComponent implements OnInit {
     { service: 'Other Services', details: 'PF Registration' },
     { service: 'Other Services', details: 'TAN Registration' }];
     this.serviceDetails = serviceArray.filter(item => item.service === this.service);
+  }
+
+  getExactPromoDiscount() {
+    if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
+      return this.userSubscription.smeSelectedPlan.totalAmount - this.invoiceForm.controls.total.value;
+    } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
+      return this.userSubscription.userSelectedPlan.totalAmount - this.invoiceForm.controls.total.value;
+    } else {
+      return 'NA'
+    }
+  }
+
+  getTaxableValue(){
+    if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
+      return this.userSubscription.smeSelectedPlan.basePrice;
+    } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
+      return this.userSubscription.userSelectedPlan.basePrice;
+    } else {
+      return 'NA'
+    }
   }
 
   setSacCode(code) {
