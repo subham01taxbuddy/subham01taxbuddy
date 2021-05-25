@@ -100,7 +100,7 @@
                 </mat-error>
             </mat-form-field>
         </div>
-        <div class="card__col-xs-4 card__col-sm-4">
+        <div class="card__col-xs-4 card__col-sm-4" *ngIf="invoiceEditForm.controls['paymentStatus'].value !== 'Unpaid'">
             <mat-form-field appearance="outline">
                 <mat-label>Date of payment</mat-label>
                 <input matInput formControlName="paymentDate" [matDatepicker]="picker3" [max]="maxDate"
