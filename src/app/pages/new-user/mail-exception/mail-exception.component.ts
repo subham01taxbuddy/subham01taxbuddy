@@ -145,26 +145,26 @@ export class MailExceptionComponent implements OnInit {
           'justify-content': 'center'
         },
       },
-      {
-        headerName: 'Assign User',
-        editable: false,
-        suppressMenu  : true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Assign User">
-         <i class="fa fa-user" aria-hidden="true" data-action-type="assign_user"></i>
-        </button>`
+      // {
+      //   headerName: 'Assign User',
+      //   editable: false,
+      //   suppressMenu  : true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params) {
+      //     return `<button type="button" class="action_icon add_button" title="Assign User">
+      //    <i class="fa fa-user" aria-hidden="true" data-action-type="assign_user"></i>
+      //   </button>`
 
-        },
-        width: 90,
-        pinned: 'right',
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-      }
+      //   },
+      //   width: 90,
+      //   pinned: 'right',
+      //   cellStyle: {
+      //     textAlign: 'center', display: 'flex',
+      //     'align-items': 'center',
+      //     'justify-content': 'center'
+      //   },
+      // }
     ];
   }
 
@@ -197,14 +197,15 @@ export class MailExceptionComponent implements OnInit {
   createNewUser(userInfo){
       console.log('userInfo: ',userInfo);
       sessionStorage.setItem('exceptionalUser', JSON.stringify(userInfo));
-      this.route.navigate(['/pages/newUser/createUser']);
+      // this.route.navigate(['/pages/newUser/createUser']);   
+      this.route.navigate(['/pages/user-management/create-user']);
   }
 
-  assignUser(userInfo){
-    console.log('userInfo for Assign user: ',userInfo);
-    sessionStorage.setItem('assignUser', JSON.stringify(userInfo));
-    this.route.navigate(['/pages/newUser/editUser']);
-  }
+  // assignUser(userInfo){
+  //   console.log('userInfo for Assign user: ',userInfo);
+  //   sessionStorage.setItem('assignUser', JSON.stringify(userInfo));
+  //   this.route.navigate(['/pages/newUser/editUser']);
+  // }
 
   redirectToKommunicate(id){
     let path = 'https://dashboard.kommunicate.io/conversations/'+id;
@@ -239,7 +240,7 @@ export class MailExceptionComponent implements OnInit {
           break;
         }
         case 'assign_user': {
-          this.assignUser(params.data)
+          // this.assignUser(params.data)
           break;
         }
       }

@@ -44,3 +44,21 @@
     text-align: center;
     font-size: 14px;
   }
+
+  .serviceBtn{
+    margin-left: 60px;
+    border: 1px solid black;
+    padding: 7px 17px;
+    border-radius: 3px;
+  }
+
+  a.serviceBtn{
+    text-align: center;
+    /* padding: 16px; */
+    text-decoration: none;
+  }
+
+  .btnHeghlight{
+    color: white;
+    background-color: black;
+  }

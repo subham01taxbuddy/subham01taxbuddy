@@ -15,8 +15,12 @@ export class AddSubscriptionComponent implements OnInit {
 
   loading: boolean;
   allPlans: any = [];
+  filteredPlans: any = [];
+  selectedBtn: any = '';
+  servicesType: any = [{value :'ITR'}, {value: 'NOTICE'}, {value: 'GST'}, {value:'TPA'}, {value:'ALL'}];
   subscriptionPlan = new FormControl('', Validators.required);
   selectedPlanInfo: any;
+  serviceTypeSelected: boolean;
 
   constructor(public dialogRef: MatDialogRef<AddSubscriptionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private itrService: ItrMsService, private utilService: UtilsService, private toastMessage: ToastMessageService) {
@@ -93,6 +97,30 @@ export class AddSubscriptionComponent implements OnInit {
       this.toastMessage.alert("error", "Select Plan.")
     }
   }
+
+
+  showSelectedServicePlans(serviceType){
+    this.serviceTypeSelected = true;
+    console.log('allPlans : ',this.allPlans)
+    this.selectedBtn = serviceType;
+      if(serviceType === 'ITR'){
+        this.filteredPlans = this.allPlans.filter(item => item.servicesType === 'ITR');
+      }
+      else if(serviceType === 'GST'){
+        this.filteredPlans = this.allPlans.filter(item => item.servicesType === 'GST');
+      }
+      else if(serviceType === 'TPA'){
+        this.filteredPlans = this.allPlans.filter(item => item.servicesType === 'TPA');
+      }
+      else if(serviceType === 'NOTICE'){
+        this.filteredPlans = this.allPlans.filter(item => item.servicesType === 'NOTICE');
+      }
+      else if(serviceType === 'ALL'){
+        this.filteredPlans = this.allPlans;
+      }
+
+      console.log('LAST filteredPlans : ',this.filteredPlans)
+    }  
 
 }
 

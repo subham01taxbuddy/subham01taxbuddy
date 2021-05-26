@@ -11,9 +11,10 @@ import { UserManagementComponent } from "./user-management/user-management.compo
 import { NgxPaginationModule } from "ngx-pagination";
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ProfileDialogComponent } from './profile-dialog/profile-dialog.component';
+import { CreateNewUserComponent } from './create-new-user/create-new-user.component';
 
 @NgModule({
-    declarations: [UserManagementComponent , UserListComponent, UserProfileComponent, ProfileDialogComponent],
+    declarations: [UserManagementComponent , UserListComponent, UserProfileComponent, ProfileDialogComponent, CreateNewUserComponent],
     imports: [
         CommonModule,
         FormsModule,

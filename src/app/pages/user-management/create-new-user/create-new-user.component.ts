@@ -1,18 +1,15 @@
-import { Component, OnInit } from "@angular/core";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
-import { UserMsService } from "app/services/user-ms.service";
-import { UtilsService } from "app/services/utils.service";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UserMsService } from 'app/services/user-ms.service';
+import { UtilsService } from 'app/services/utils.service';
+
 @Component({
-  selector: "app-create-user",
-  templateUrl: "./create-user.component.html",
-  styleUrls: ["./create-user.component.css"],
+  selector: 'app-create-new-user',
+  templateUrl: './create-new-user.component.html',
+  styleUrls: ['./create-new-user.component.css']
 })
-export class CreateUserComponent implements OnInit {
+export class CreateNewUserComponent implements OnInit {
+
   loading: boolean;
   signUpForm: FormGroup;
   exceptionalUser: boolean = false;
@@ -23,12 +20,9 @@ export class CreateUserComponent implements OnInit {
     private fb: FormBuilder,
     private utilSerive: UtilsService,
     private userService: UserMsService
-  ) {}
+  ) { }
 
   ngOnInit() {
-    //console.log('user Info: ', this.activeRoute.snapshot.queryParamMap.get('user'))
-    //console.log('user Info: ', this.activeRoute.snapshot.paramMap.get('user'))
-
     this.signUpForm = this.fb.group({
       first_name: new FormControl("", Validators.required),
       last_name: new FormControl("", Validators.required),
@@ -139,4 +133,5 @@ export class CreateUserComponent implements OnInit {
   ngOnDestroy(): void {
     sessionStorage.setItem("exceptionalUser", null);
   }
+
 }

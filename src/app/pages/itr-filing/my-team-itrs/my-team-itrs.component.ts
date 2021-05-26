@@ -317,19 +317,19 @@ export class MyTeamItrsComponent implements OnInit {
 
         },
       },
-      {
-        headerName: "TPA",
-        field: "nextYearTpa",
-        width: 50,
-        pinned: 'right',
-        cellRenderer: params => {
-          return `<input type='checkbox' data-action-type="isTpa" ${params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === "COMPLETED" ? 'checked' : ''} />`;
-        },
-        cellStyle: params => {
-          return (params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === 'COMPLETED' || !params.data.eFillingCompleted) ? { 'pointer-events': 'none', opacity: '0.4' }
-            : '';
-        }
-      },
+      // {
+      //   headerName: "TPA",
+      //   field: "nextYearTpa",
+      //   width: 50,
+      //   pinned: 'right',
+      //   cellRenderer: params => {
+      //     return `<input type='checkbox' data-action-type="isTpa" ${params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === "COMPLETED" ? 'checked' : ''} />`;
+      //   },
+      //   cellStyle: params => {
+      //     return (params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === 'COMPLETED' || !params.data.eFillingCompleted) ? { 'pointer-events': 'none', opacity: '0.4' }
+      //       : '';
+      //   }
+      // },
       {
         headerName: 'E-Verify',
         width: 50,
@@ -423,10 +423,10 @@ export class MyTeamItrsComponent implements OnInit {
           this.getAcknowledgeDetail(params.data);
           break;
         }
-        case 'isTpa': {
-          this.interestedForNextYearTpa(params.data);
-          break;
-        }
+        // case 'isTpa': {
+        //   this.interestedForNextYearTpa(params.data);
+        //   break;
+        // }
         case 'showDocs': {
           this.showUserDocuments(params.data);
           break;
@@ -495,18 +495,18 @@ export class MyTeamItrsComponent implements OnInit {
     })
   }
 
-  interestedForNextYearTpa(data) {
-    this.loading = true;
-    var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0];
-    workingItr['nextYearTpa'] = 'INTERESTED';
-    console.log(workingItr);
-    const param = '/itr/' + workingItr['userId'] + '/' + workingItr['itrId'] + '/' + workingItr['assessmentYear'];
-    this.itrMsService.putMethod(param, workingItr).subscribe((result: ITR_JSON) => {
-      this.getMembersItr(this.selectedMemberId);
-    }, error => {
-      this.getMembersItr(this.selectedMemberId);
-    });
-  }
+  // interestedForNextYearTpa(data) {
+  //   this.loading = true;
+  //   var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0];
+  //   workingItr['nextYearTpa'] = 'INTERESTED';
+  //   console.log(workingItr);
+  //   const param = '/itr/' + workingItr['userId'] + '/' + workingItr['itrId'] + '/' + workingItr['assessmentYear'];
+  //   this.itrMsService.putMethod(param, workingItr).subscribe((result: ITR_JSON) => {
+  //     this.getMembersItr(this.selectedMemberId);
+  //   }, error => {
+  //     this.getMembersItr(this.selectedMemberId);
+  //   });
+  // }
 
   showUserDocuments(data) {
     console.log(data)
