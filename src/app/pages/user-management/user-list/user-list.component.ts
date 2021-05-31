@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { NavbarService } from 'app/services/navbar.service';
@@ -36,7 +36,8 @@ export class UserListComponent implements OnInit {
   currentUserId: number = 0;
   user_data: any = [];
 
-  constructor(private userService: UserMsService, private _toastMessageService: ToastMessageService, private utileService: UtilsService, private router: Router, private http: HttpClient) {
+  constructor(private userService: UserMsService, private _toastMessageService: ToastMessageService, private utileService: UtilsService, private router: Router, private http: HttpClient,
+              @Inject(LOCALE_ID) private locale: string) {
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColoumnDef(),
@@ -125,6 +126,21 @@ export class UserListComponent implements OnInit {
         width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Created Date',
+        field: 'createdDate',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellRenderer: (data) => {
+          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+        },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -318,6 +334,7 @@ export class UserListComponent implements OnInit {
     for (let i = 0; i < userData.length; i++) {
       let userInfo = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
+        createdDate: this.utileService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
         name: userData[i].fName + ' ' + userData[i].lName,
         mobileNumber: this.utileService.isNonEmpty(userData[i].mobileNumber) ? userData[i].mobileNumber : '-',
         emailAddress: this.utileService.isNonEmpty(userData[i].emailAddress) ? userData[i].emailAddress : '-',
