@@ -29,4 +29,34 @@ export class AppConstants {
     public static TAX_SUM = environment.production ? 'TAX_SUM' : 'TAX_SUM';
     public static NAME = environment.production ? 'name' : 'name';
     public static ITR_DOCS = environment.production ? 'ITR_DOCS' : 'ITR_DOCS';
+    // public static financialYearList = [{
+    //     "id": 1,
+    //     "fincialYear": "2019-2020",
+    //     "assessmentYear": "2020-2021",
+    //     "filingDueDate": "10-01-2021",
+    //     "lateFilingDueDate": "31-05-2021",
+    //     "isFilingActive": "false"
+    // }, {
+    //     "id": 2,
+    //     "fincialYear": "2018-2019",
+    //     "assessmentYear": "2019-2020",
+    //     "filingDueDate": "31-07-2021",
+    //     "lateFilingDueDate": "31-12-2021",
+    //     "isFilingActive": "false"
+    // }, {
+    //     "id": 3,
+    //     "fincialYear": "2017-2018",
+    //     "assessmentYear": "2018-2019",
+    //     "filingDueDate": "31-07-2021",
+    //     "lateFilingDueDate": "31-12-2021",
+    //     "isFilingActive": "false"
+    // }, {
+    //     "id": 4,
+    //     "fincialYear": "2020-2021",
+    //     "assessmentYear": "2021-2022",
+    //     "filingDueDate": "31-07-2021",
+    //     "lateFilingDueDate": "31-12-2021",
+    //     "isFilingActive": "true"
+    // }];
+
 }
