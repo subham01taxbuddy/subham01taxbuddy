@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
+import { AppConstants } from 'app/shared/constants';
 
 @Component({
   selector: 'app-awating-confirmation',
@@ -77,13 +79,21 @@ export class AwatingConfirmationComponent implements OnInit {
     { value: 1067, label: 'Divya Bhanushali' },
     { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService) { }
+  financialYear: any = AppConstants.financialYearList;
+  searchForm : FormGroup;
+
+  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private fb: FormBuilder) { }
 
   ngOnInit() {
+    this.searchForm = this.fb.group({
+      selectedAgentId: ['', Validators.required],
+      selectedFyYear: ['', Validators.required]
+    })
     console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
     let agentId = localStorage.getItem('selectedAgentId');
     if (this.utilsService.isNonEmpty(agentId)) {
       this.agentId = agentId;
+      this.searchForm.controls.selectedAgentId.setValue(this.agentId)
       this.retrieveData(0)
     }
     else {
@@ -92,8 +102,8 @@ export class AwatingConfirmationComponent implements OnInit {
   }
   retrieveData(page) {
     this.loading = true;
-    const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=7`;
-    // /user-details-by-status-es?from=0&to=20&agentId=aditya.singh@taxbuddy.com&statusId=2
+    // const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=7`;
+    const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&fy=${this.searchForm.controls.selectedFyYear.value}&statusId=7`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('New User data', result);
       this.dataList = result;
@@ -104,11 +114,19 @@ export class AwatingConfirmationComponent implements OnInit {
     })
   }
   selectAgent(agentName) {
-    this.agentId = agentName;
+    // this.agentId = agentName;
+    // localStorage.setItem('selectedAgentId', this.agentId);
+    // this.page = 0;
+    // this.retrieveData(0);
+  }
+
+  showAwatingConfirmation(){
+    this.agentId = this.searchForm.controls.selectedAgentId.value;;
     localStorage.setItem('selectedAgentId', this.agentId);
     this.page = 0;
     this.retrieveData(0);
   }
+
   previous() {
     this.page = this.page - this.pageSize;
     this.retrieveData(this.page);

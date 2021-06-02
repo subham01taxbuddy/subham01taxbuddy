@@ -1,6 +1,8 @@
 import { UtilsService } from 'app/services/utils.service';
 import { UserMsService } from './../../../services/user-ms.service';
 import { Component, OnInit } from '@angular/core';
+import { AppConstants } from 'app/shared/constants';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-doc-uploaded',
@@ -90,13 +92,22 @@ export class DocUploadedComponent implements OnInit {
     { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
   loading = false;
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService) { }
+  financialYear: any = AppConstants.financialYearList;
+  searchForm : FormGroup;
+
+  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private fb: FormBuilder) { }
 
   ngOnInit() {
+
+    this.searchForm = this.fb.group({
+      selectedAgentId: ['', Validators.required],
+      selectedFyYear: ['', Validators.required]
+    })
     console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
     let agentId = localStorage.getItem('selectedAgentId');
     if (this.utilsService.isNonEmpty(agentId)) {
       this.agentId = agentId;
+      this.searchForm.controls.selectedAgentId.setValue(this.agentId)
       this.retrieveDocUploaded(0);
     }
     else {
@@ -105,8 +116,8 @@ export class DocUploadedComponent implements OnInit {
   }
   retrieveDocUploaded(page) {
     this.loading = true;
-    const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=11`;
-    // /user-details-by-status-es?from=0&to=20&agentId=aditya.singh@taxbuddy.com&statusId=2
+    // const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=11`;
+    const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&fy=${this.searchForm.controls.selectedFyYear.value}&statusId=11`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('New User data', result);
       this.docUploadedList = result;
@@ -116,12 +127,24 @@ export class DocUploadedComponent implements OnInit {
       console.log(error);
     })
   }
+
   selectAgent(agentName) {
-    this.agentId = agentName;
-    localStorage.setItem('selectedAgentId', this.agentId);
-    this.page = 0;
-    this.retrieveDocUploaded(0);
+    // this.agentId = agentName;
+    // localStorage.setItem('selectedAgentId', this.agentId);
+    // this.page = 0;
+    // this.retrieveDocUploaded(0);
   }
+
+  showDocUplodList(){
+    if(this.searchForm.valid){
+        console.log('searchForm: ',this.searchForm) 
+        this.agentId = this.searchForm.controls.selectedAgentId.value;
+        localStorage.setItem('selectedAgentId', this.agentId);
+        this.page = 0;
+        this.retrieveDocUploaded(0);
+    }
+  }
+
   previous() {
     this.page = this.page - this.pageSize;
     this.retrieveDocUploaded(this.page);
