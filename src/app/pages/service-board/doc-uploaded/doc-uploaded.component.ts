@@ -90,7 +90,15 @@ export class DocUploadedComponent implements OnInit {
     { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
   loading = false;
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService) { }
+  config: any;
+
+  constructor(private userMsService: UserMsService, public utilsService: UtilsService) {
+    this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: 80
+    };
+   }
 
   ngOnInit() {
     console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
@@ -110,6 +118,7 @@ export class DocUploadedComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('New User data', result);
       this.docUploadedList = result;
+      this.utilsService.sendMessage(this.docUploadedList);
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -157,5 +166,10 @@ export class DocUploadedComponent implements OnInit {
     if (this.utilsService.isNonEmpty(data['KommunicateURL'])) {
       window.open(data['KommunicateURL'], '_blank')
     }
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+    this.retrieveDocUploaded(event - 1);
   }
 }

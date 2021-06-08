@@ -14,6 +14,7 @@ export class PreparingItrComponent implements OnInit {
   count = 0; // total pages
   pageSize = 20; // number of items in each page
   agentId = '';
+  config: any;
   agentList = [
     { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
     { value: 'damini@ssbainnovations.com', label: 'Damini' },
@@ -77,7 +78,13 @@ export class PreparingItrComponent implements OnInit {
     { value: 1067, label: 'Divya Bhanushali' },
     { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService) { }
+  constructor(private userMsService: UserMsService, public utilsService: UtilsService) {
+    this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: 80
+    };
+   }
 
   ngOnInit() {
     console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
@@ -97,6 +104,7 @@ export class PreparingItrComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('New User data', result);
       this.dataList = result;
+      this.utilsService.sendMessage(this.dataList);
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -142,5 +150,10 @@ export class PreparingItrComponent implements OnInit {
     if (this.utilsService.isNonEmpty(data['KommunicateURL'])) {
       window.open(data['KommunicateURL'], '_blank')
     }
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+    this.retrieveData(event - 1);
   }
 }
