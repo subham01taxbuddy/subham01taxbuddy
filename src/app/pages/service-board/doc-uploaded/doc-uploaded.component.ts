@@ -1,3 +1,4 @@
+import { ItrMsService } from 'app/services/itr-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { UserMsService } from './../../../services/user-ms.service';
 import { Component, OnInit } from '@angular/core';
@@ -27,6 +28,7 @@ export class DocUploadedComponent implements OnInit {
     { value: 'divya@ssbainnovations.com', label: 'Divya' },
     { value: 'brij@ssbainnovations.com', label: 'Brij' },
   ];
+
   filingTeamMembers = [
     { value: 1063, label: 'Amrita Thakur' },
     { value: 1064, label: 'Ankita Murkute' },
@@ -92,10 +94,13 @@ export class DocUploadedComponent implements OnInit {
     { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
   loading = false;
-  financialYear: any = AppConstants.financialYearList;
-  searchForm : FormGroup;
+  financialYear = [];
+  searchForm: FormGroup;
 
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private fb: FormBuilder) { }
+  constructor(private itrMsService: ItrMsService,
+    private userMsService: UserMsService,
+    public utilsService: UtilsService,
+    private fb: FormBuilder) { }
 
   ngOnInit() {
 
@@ -112,6 +117,24 @@ export class DocUploadedComponent implements OnInit {
     }
     else {
       this.retrieveDocUploaded(0);
+    }
+
+    const fyList = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST));
+    console.log('fyList', fyList);
+    if (this.utilsService.isNonEmpty(fyList) && fyList instanceof Array) {
+      this.financialYear = fyList;
+      const currentFy = this.financialYear.filter(item => item.isFilingActive);
+      this.searchForm.controls['selectedFyYear'].setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
+    } else {
+      let param = '/filing-dates';
+      this.itrMsService.getMethod(param).subscribe((res: any) => {
+        if (res && res.success && res.data instanceof Array) {
+          sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
+          this.financialYear = res.data;
+        }
+      }, error => {
+        console.log('Error during getting all PromoCodes: ', error)
+      })
     }
   }
   retrieveDocUploaded(page) {
@@ -135,13 +158,13 @@ export class DocUploadedComponent implements OnInit {
     // this.retrieveDocUploaded(0);
   }
 
-  showDocUplodList(){
-    if(this.searchForm.valid){
-        console.log('searchForm: ',this.searchForm) 
-        this.agentId = this.searchForm.controls.selectedAgentId.value;
-        localStorage.setItem('selectedAgentId', this.agentId);
-        this.page = 0;
-        this.retrieveDocUploaded(0);
+  showDocUplodList() {
+    if (this.searchForm.valid) {
+      console.log('searchForm: ', this.searchForm)
+      this.agentId = this.searchForm.controls.selectedAgentId.value;
+      localStorage.setItem('selectedAgentId', this.agentId);
+      this.page = 0;
+      this.retrieveDocUploaded(0);
     }
   }
 

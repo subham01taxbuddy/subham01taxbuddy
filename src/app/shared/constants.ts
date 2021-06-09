@@ -29,6 +29,9 @@ export class AppConstants {
     public static TAX_SUM = environment.production ? 'TAX_SUM' : 'TAX_SUM';
     public static NAME = environment.production ? 'name' : 'name';
     public static ITR_DOCS = environment.production ? 'ITR_DOCS' : 'ITR_DOCS';
+    public static SME_LIST = environment.production ? 'SME_LIST' : 'SME_LIST';
+    public static FY_LIST = environment.production ? 'FY_LIST' : 'FY_LIST';
+    public static SELECTED_AGENT = environment.production ? 'SELECTED_AGENT' : 'SELECTED_AGENT';
     public static financialYearList = [{
         "id": 1,
         "fincialYear": "2019-2020",

@@ -2,11 +2,9 @@
 
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
-        <div class="card__row">
-            <!-- <label>Selected Agent: {{agentId}}</label> &nbsp;&nbsp;
-            <span *ngFor="let agent of agentList; let i=index">
-                <a href="javascript:;" (click)="selectAgent(agent.value)">{{agent.label}}</a> &nbsp;&nbsp;
-            </span> -->
+        <app-service-board-search></app-service-board-search>
+        <!-- <div class="card__row">
+           
             <form [formGroup]="searchForm">
                 <div class="card__col-xs-4">
                     <mat-form-field appearance="outline">
@@ -36,7 +34,7 @@
                       <button mat-raised-button color="primary" (click)="showPreparingItrList()">Search</button>
                 </div>
             </form>
-        </div>
+        </div> -->
         <div class="card__row" style="margin-top: 0px;">
             <div class="tab-panel items-tab card__col-xs-12">
                 <div class="tab-panel__content tab-panel__content_visible">

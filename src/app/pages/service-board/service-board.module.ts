@@ -15,6 +15,7 @@ import { AwatingConfirmationComponent } from './awating-confirmation/awating-con
 import { InvoiceToBeGenerateComponent } from './invoice-to-be-generate/invoice-to-be-generate.component';
 import { FilingStatusTableComponent } from './filing-status-table/filing-status-table.component';
 import { UnpaidInvoicesComponent } from './unpaid-invoices/unpaid-invoices.component';
+import { ServiceBoardSearchComponent } from './service-board-search/service-board-search.component';
 
 @NgModule({
     declarations: [
@@ -25,6 +26,7 @@ import { UnpaidInvoicesComponent } from './unpaid-invoices/unpaid-invoices.compo
         InvoiceToBeGenerateComponent,
         FilingStatusTableComponent,
         UnpaidInvoicesComponent,
+        ServiceBoardSearchComponent
     ],
     imports: [
         CommonModule,

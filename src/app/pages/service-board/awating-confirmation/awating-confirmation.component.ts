@@ -1,3 +1,4 @@
+import { ItrMsService } from 'app/services/itr-ms.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserMsService } from 'app/services/user-ms.service';
@@ -15,9 +16,9 @@ export class AwatingConfirmationComponent implements OnInit {
   page = 0; // current page
   count = 0; // total pages
   pageSize = 20; // number of items in each page
-  agentId = '';
+  // agentId = '';
   agentList = [
-    { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
+    /* { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
     { value: 'damini@ssbainnovations.com', label: 'Damini' },
     { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
     { value: 'aditya.singh@taxbuddy.com', label: 'Aditya' },
@@ -26,7 +27,7 @@ export class AwatingConfirmationComponent implements OnInit {
     { value: 'kavita@ssbainnovations.com', label: 'Kavita' },
     { value: 'urmila@ssbainnovations.com', label: 'Urmila' },
     { value: 'divya@ssbainnovations.com', label: 'Divya' },
-    { value: 'brij@ssbainnovations.com', label: 'Brij' },
+    { value: 'brij@ssbainnovations.com', label: 'Brij' }, */
   ];
   filingTeamMembers = [
     { value: 1063, label: 'Amrita Thakur' },
@@ -79,31 +80,70 @@ export class AwatingConfirmationComponent implements OnInit {
     { value: 1067, label: 'Divya Bhanushali' },
     { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
-  financialYear: any = AppConstants.financialYearList;
-  searchForm : FormGroup;
+  financialYear = [];
+  searchParams: any;
 
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private fb: FormBuilder) { }
+  constructor(private itrMsService: ItrMsService,
+    private userMsService: UserMsService,
+    public utilsService: UtilsService,
+    private fb: FormBuilder) {
+
+  }
 
   ngOnInit() {
-    this.searchForm = this.fb.group({
-      selectedAgentId: ['', Validators.required],
-      selectedFyYear: ['', Validators.required]
-    })
-    console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
-    let agentId = localStorage.getItem('selectedAgentId');
-    if (this.utilsService.isNonEmpty(agentId)) {
-      this.agentId = agentId;
-      this.searchForm.controls.selectedAgentId.setValue(this.agentId)
-      this.retrieveData(0)
-    }
-    else {
-      this.retrieveData(0)
-    }
+    // this.searchForm = this.fb.group({
+    //   selectedAgentId: ['', Validators.required],
+    //   selectedFyYear: ['', Validators.required]
+    // })
+    // console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
+    // let agentId = localStorage.getItem('selectedAgentId');
+    // if (this.utilsService.isNonEmpty(agentId)) {
+    //   this.agentId = agentId;
+    //   this.searchForm.controls.selectedAgentId.setValue(this.agentId)
+    //   this.retrieveData(0)
+    // }
+    // else {
+    //   this.retrieveData(0)
+    // }
+
+    // const fyList = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST));
+    // console.log('fyList', fyList);
+    // if (this.utilsService.isNonEmpty(fyList) && fyList instanceof Array) {
+    //   this.financialYear = fyList;
+    //   const currentFy = this.financialYear.filter(item => item.isFilingActive);
+    //   this.searchForm.controls['selectedFyYear'].setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
+    // } else {
+    //   let param = '/filing-dates';
+    //   this.itrMsService.getMethod(param).subscribe((res: any) => {
+    //     if (res && res.success && res.data instanceof Array) {
+    //       sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
+    //       this.financialYear = res.data;
+    //     }
+    //   }, error => {
+    //     console.log('Error during getting all PromoCodes: ', error)
+    //   })
+    // }
+
+    // const agents = JSON.parse(sessionStorage.getItem(AppConstants.SME_LIST));
+    // console.log('agents', agents);
+    // if (this.utilsService.isNonEmpty(agents) && agents instanceof Array) {
+    //   this.agentList = agents;
+    // } else {
+    //   // let param = '/filing-dates';
+    //   // this.itrMsService.getMethod(param).subscribe((res: any) => {
+    //   //   if (res && res.success && res.data instanceof Array) {
+    //   //     sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
+    //   //     this.financialYear = res.data;
+    //   //   }
+    //   // }, error => {
+    //   //   console.log('Error during getting all PromoCodes: ', error)
+    //   // })
+    // }
   }
   retrieveData(page) {
     this.loading = true;
     // const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=7`;
-    const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&fy=${this.searchForm.controls.selectedFyYear.value}&statusId=7`;
+    const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.searchParams['selectedAgentId']}&fy=${this.searchParams['selectedFyYear']}&statusId=7`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('New User data', result);
       this.dataList = result;
@@ -113,19 +153,19 @@ export class AwatingConfirmationComponent implements OnInit {
       console.log(error);
     })
   }
-  selectAgent(agentName) {
-    // this.agentId = agentName;
-    // localStorage.setItem('selectedAgentId', this.agentId);
-    // this.page = 0;
-    // this.retrieveData(0);
-  }
+  // selectAgent(agentName) {
+  //   this.agentId = agentName;
+  //   localStorage.setItem('selectedAgentId', this.agentId);
+  //   this.page = 0;
+  //   this.retrieveData(0);
+  // }
 
-  showAwatingConfirmation(){
-    this.agentId = this.searchForm.controls.selectedAgentId.value;;
-    localStorage.setItem('selectedAgentId', this.agentId);
-    this.page = 0;
-    this.retrieveData(0);
-  }
+  // showAwatingConfirmation() {
+  //   this.agentId = this.searchForm.controls.selectedAgentId.value;;
+  //   localStorage.setItem('selectedAgentId', this.agentId);
+  //   this.page = 0;
+  //   this.retrieveData(0);
+  // }
 
   previous() {
     this.page = this.page - this.pageSize;
@@ -158,5 +198,11 @@ export class AwatingConfirmationComponent implements OnInit {
     if (this.utilsService.isNonEmpty(data['KommunicateURL'])) {
       window.open(data['KommunicateURL'], '_blank')
     }
+  }
+
+  fromSearchParams(event) {
+    this.searchParams = event;
+    localStorage.setItem(AppConstants.SELECTED_AGENT, event['selectedAgentId']);
+    this.retrieveData(0);
   }
 }

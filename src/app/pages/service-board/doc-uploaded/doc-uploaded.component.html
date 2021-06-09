@@ -2,41 +2,38 @@
 
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
-        <div class="card__row">
-            <!-- <label>Selected Agent: {{agentId}}</label> &nbsp;&nbsp;
-            <span *ngFor="let agent of agentList; let i=index">
-                <a href="javascript:;" (click)="selectAgent(agent.value)">{{agent.label}}</a> &nbsp;&nbsp;
-            </span> -->
+        <app-service-board-search></app-service-board-search>
+        <!-- <div class="card__row">
             <form [formGroup]="searchForm">
-            <div class="card__col-xs-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>Select Agent Id</mat-label>
-                    <mat-select placeholder="Select Agent Id" formControlName="selectedAgentId" required>
-                        <mat-option *ngFor="let agent of agentList" [value]="agent.value">
-                            {{agent.label}}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="searchForm['controls'].selectedAgentId.hasError('required')">Select
-                        Agent Id</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="card__col-xs-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>Select Financial Year</mat-label>
-                    <mat-select placeholder="Select Financial Year" formControlName="selectedFyYear" required>
-                        <mat-option *ngFor="let year of financialYear" [value]="year.fincialYear">
-                            {{year.fincialYear}}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="searchForm['controls'].selectedFyYear.hasError('required')">Select Financial 
-                        Year</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="card__col-xs-4">
-                  <button mat-raised-button color="primary" (click)="showDocUplodList()">Search</button>
-            </div>
+                <div class="card__col-xs-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Select Agent Id</mat-label>
+                        <mat-select placeholder="Select Agent Id" formControlName="selectedAgentId" required>
+                            <mat-option *ngFor="let agent of agentList" [value]="agent.value">
+                                {{agent.label}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="searchForm['controls'].selectedAgentId.hasError('required')">Select
+                            Agent Id</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-xs-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Select Financial Year</mat-label>
+                        <mat-select placeholder="Select Financial Year" formControlName="selectedFyYear" required>
+                            <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                                {{year.financialYear}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="searchForm['controls'].selectedFyYear.hasError('required')">Select Financial
+                            Year</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-xs-4">
+                    <button mat-raised-button color="primary" (click)="showDocUplodList()">Search</button>
+                </div>
             </form>
-        </div>
+        </div> -->
         <div class="card__row" style="margin-top: 0px;">
             <div class="tab-panel items-tab card__col-xs-12">
                 <div class="tab-panel__content tab-panel__content_visible">
