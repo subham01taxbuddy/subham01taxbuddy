@@ -95,10 +95,13 @@ export class AddInvoiceComponent implements OnInit {
       if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
         this.dueDays = this.userSubscription.smeSelectedPlan.dueDays;
         applicableService = this.userSubscription.smeSelectedPlan.servicesType;
+        this.getSacCode(this.userSubscription.smeSelectedPlan.planId)
       } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
         this.dueDays = this.userSubscription.userSelectedPlan.dueDays;
         applicableService = this.userSubscription.userSelectedPlan.servicesType;
+        this.getSacCode(this.userSubscription.userSelectedPlan.planId)
       }
+      
       this.updateDueDate(new Date());
       switch (applicableService) {
         case 'ITR': {
@@ -228,14 +231,14 @@ export class AddInvoiceComponent implements OnInit {
     this.getInitialData(userId);
     this.userInvoices = await this.getUsersInvoices(userId);
     console.log('userInvoices:', this.userInvoices);
-    if (this.userInvoices.length > 0) {
-      this.itemList[0].sacCode = this.userInvoices[0].itemList[0].sacCode;
-      this.sacCode = this.itemList[0].sacCode;
-    }
-    else {
-      this.itemList[0].sacCode = '';
-      this.sacCode = this.itemList[0].sacCode;
-    }
+    // if (this.userInvoices.length > 0) {
+    //   this.itemList[0].sacCode = this.userInvoices[0].itemList[0].sacCode;
+    //   this.sacCode = this.itemList[0].sacCode;
+    // }
+    // else {
+    //   this.itemList[0].sacCode = '';
+    //   this.sacCode = this.itemList[0].sacCode;
+    // }
 
     this.userProfile = await this.getUserProfile(userId).catch(error => {
       this.loading = false;
@@ -568,9 +571,23 @@ export class AddInvoiceComponent implements OnInit {
     }
   }
 
+  getSacCode(planId){
+    const param = `/plans-master/${planId}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+        console.log('Plan detail of plan -> ', res);
+        if(this.utilsService.isNonEmpty(res.sacCode)){
+          this.setSacCode(res.sacCode)
+        }
+    },
+    error =>{
+      console.log('Error occure during getting SacCode by userId -> ', error)
+    })
+  }
+
   setSacCode(code) {
     this.itemList[0].sacCode = code;
     this.sacCode = this.itemList[0].sacCode;
+    console.log('sacCode: ',this.sacCode)
   }
 
   checkSacCode(){
