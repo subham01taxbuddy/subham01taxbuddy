@@ -1,5 +1,6 @@
+import { FormControl, Validators } from '@angular/forms';
 import { UtilsService } from 'app/services/utils.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, AfterContentChecked } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { AppConstants } from 'app/shared/constants';
@@ -8,17 +9,24 @@ import { FilingStatusDialogComponent } from '../filing-status-dialog/filing-stat
 import { MatDialog } from '@angular/material';
 import moment = require('moment');
 import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
+import { ApiEndpoints } from 'app/shared/api-endpoint';
 
 @Component({
   selector: 'app-my-assigned-itrs',
   templateUrl: './my-assigned-itrs.component.html',
   styleUrls: ['./my-assigned-itrs.component.css']
 })
-export class MyAssignedItrsComponent implements OnInit {
+export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   loading: boolean = false;
   myItrsGridOptions: GridOptions;
   itrDataList = [];
-  constructor(private itrMsService: ItrMsService, public utilsService: UtilsService, private router: Router, private dialog: MatDialog,) {
+  // financialYear = [];
+  selectedFyYear = '';
+  constructor(private itrMsService: ItrMsService,
+    public utilsService: UtilsService,
+    private router: Router,
+    private dialog: MatDialog,
+    private cdRef: ChangeDetectorRef) {
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
       columnDefs: this.myItrsCreateColoumnDef(),
@@ -33,13 +41,41 @@ export class MyAssignedItrsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.myItrsList();
+    // this.setFyDropDown();
   }
-  myItrsList() {
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
+  }
+
+  // setFyDropDown() {
+  //   const fyList = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST));
+  //   console.log('fyList', fyList);
+  //   if (this.utilsService.isNonEmpty(fyList) && fyList instanceof Array) {
+  //     this.financialYear = fyList;
+  //     const currentFy = this.financialYear.filter(item => item.isFilingActive);
+  //     this.selectedFyYear.setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
+  //     this.myItrsList(this.selectedFyYear.value);
+  //   } else {
+  //     const param = `${ApiEndpoints.itrMs.filingDates}`;
+  //     this.itrMsService.getMethod(param).subscribe((res: any) => {
+  //       if (res && res.success && res.data instanceof Array) {
+  //         sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
+  //         this.financialYear = res.data;
+  //       }
+  //     }, error => {
+  //       console.log('Error during getting all PromoCodes: ', error)
+  //     })
+  //   }
+  // }
+
+  myItrsList(fy: String) {
     this.loading = true;
     return new Promise((resolve, reject) => {
       const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
-      const param = `/itr-by-filingTeamMemberId?filingTeamMemberId=${loggedInUserData.USER_UNIQUE_ID}`;/* ${loggedInUserData.USER_UNIQUE_ID} */
+      let param = `${ApiEndpoints.itrMs.itrByFilingTeamMemberId}?filingTeamMemberId=${loggedInUserData.USER_UNIQUE_ID}`;/* ${loggedInUserData.USER_UNIQUE_ID} */
+      if (fy !== '') {
+        param = `${param}&fy=${fy}`;
+      }
       this.itrMsService.getMethod(param).subscribe((res: any) => {
         console.log('filingTeamMemberId: ', res);
         this.itrDataList = res;
@@ -51,18 +87,18 @@ export class MyAssignedItrsComponent implements OnInit {
         return resolve(false)
       })
     });
-
-    // this.loading = true;
-    // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
-    // const param = `/itr-by-filingTeamMemberId?filingTeamMemberId=1063`;/* ${loggedInUserData.USER_UNIQUE_ID} */
-    // this.itrMsService.getMethod(param).subscribe((res: any) => {
-    //   console.log('filingTeamMemberId: ', res);
-    //   this.myItrsGridOptions.api.setRowData(res);
-    //   this.loading = false;
-    // }, error => {
-    //   this.loading = false;
-    // })
   }
+  fromFy(event) {
+    // this.searchParams = event;
+    this.selectedFyYear = event;
+    console.log(event);
+    this.myItrsList(event);
+  }
+
+  // changeFy(fy: String) {
+  //   this.myItrsList(fy);
+  // }
+
   createOnSalaryRowData(data) {
     const newData = [];
     for (let i = 0; i < data.length; i++) {
@@ -369,13 +405,12 @@ export class MyAssignedItrsComponent implements OnInit {
   getAcknowledgeDetail(data) {
     console.log('Data for acknowlegement status', data);
     this.loading = true;
-    // const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
-    const param = `/itr-verify-status/${data.itrId}`;
+    const param = `${ApiEndpoints.itrMs.itrVerifyStatus}/${data.itrId}`;
     this.itrMsService.putMethod(param).subscribe((res: any) => {
       this.utilsService.showSnackBar(res.status)
       this.loading = false;
       setTimeout(() => {
-        this.myItrsList();
+        this.myItrsList(this.selectedFyYear);
       }, 5000);
 
     }, error => {
@@ -387,16 +422,17 @@ export class MyAssignedItrsComponent implements OnInit {
     var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0];
     workingItr['nextYearTpa'] = 'INTERESTED';
     console.log(workingItr);
+
     const param = '/itr/' + workingItr['userId'] + '/' + workingItr['itrId'] + '/' + workingItr['assessmentYear'];
     this.itrMsService.putMethod(param, workingItr).subscribe((result: ITR_JSON) => {
-      this.myItrsList();
+      this.myItrsList(this.selectedFyYear);
     }, error => {
-      this.myItrsList();
+      this.myItrsList(this.selectedFyYear);
     });
   }
 
-  showUserDoucuments(data){
-      console.log(data);
-      this.router.navigate(['/pages/itr-filing/user-docs/' + data.userId]);
+  showUserDoucuments(data) {
+    console.log(data);
+    this.router.navigate(['/pages/itr-filing/user-docs/' + data.userId]);
   }
 }

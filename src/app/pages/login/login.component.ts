@@ -1,3 +1,5 @@
+import { AppConstants } from 'app/shared/constants';
+import { ItrMsService } from 'app/services/itr-ms.service';
 import { Component, OnInit } from '@angular/core';
 import { NavbarService } from '../../services/navbar.service';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
@@ -29,7 +31,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private navbarService: NavbarService, public http: HttpClient,
     public router: Router, private _toastMessageService: ToastMessageService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService,
-    private userMsService: UserMsService, private dialog: MatDialog) {
+    private userMsService: UserMsService, private dialog: MatDialog,
+    private itrMsService: ItrMsService) {
     NavbarService.getInstance(null).component_link = this.component_link;
   }
 
@@ -126,7 +129,8 @@ export class LoginComponent implements OnInit {
       role: jhi.role
     };
     NavbarService.getInstance(null).setUserData(userData);
-
+    this.getSmeList();
+    this.getFyList();
 
     if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
       this.router.navigate(['/pages/itr-filing/my-itrs']);
@@ -157,6 +161,27 @@ export class LoginComponent implements OnInit {
       // window.open('https://wa.me/919321908755?text=OTP%20WEB')
     })
 
+  }
+
+  getSmeList() {
+    let param = '/sme-details';
+    this.userMsService.getMethod(param).subscribe((res: any) => {
+      if (res && res instanceof Array)
+        sessionStorage.setItem(AppConstants.SME_LIST, JSON.stringify(res));
+    }, error => {
+      console.log('Error during getting all PromoCodes: ', error)
+    })
+  }
+
+  getFyList() {
+    let param = '/filing-dates';
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      if (res && res.success && res.data instanceof Array) {
+        sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
+      }
+    }, error => {
+      console.log('Error during getting all PromoCodes: ', error)
+    })
   }
 
   mode: string = 'SIGN_IN';

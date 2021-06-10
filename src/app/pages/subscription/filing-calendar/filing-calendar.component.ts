@@ -1,3 +1,4 @@
+import { AppConstants } from 'app/shared/constants';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
@@ -27,9 +28,11 @@ export const MY_FORMATS = {
 export class FilingCalendarComponent implements OnInit {
   loading: boolean = false;
   filingCalenderForm: FormGroup;
-  gstTypesMaster: any = [{ label: 'Regular', value: 'REGULAR' }, { label: 'Composite', value: 'COMPOSITE' }, { label: 'Input Service Distributor (ISD)', value: 'Input Service Distributor (ISD)' }]
-  frequencyTypesMaster = [{ label: 'Monthly', value: 'MONTHLY' }, { label: 'Quarterly', value: 'QUARTERLY' }, { label: 'Yearly', value: 'YEARLY' }];
-  returnTypeMaster = [{ label: 'CMP08', value: 'CMP08' }, { label: 'GSTR-3B', value: 'GSTR-3B' }, { label: 'GSTR1', value: 'GSTR1' }, { label: 'Original', value: 'ORIGINAL' }, { label: 'Revised', value: 'REVISED' }];
+  financialYear = AppConstants.subscriptionFyList;
+  gstTypesMaster = AppConstants.gstTypesMaster;
+  frequencyTypesMaster = AppConstants.frequencyTypesMaster;
+  returnTypeMaster = AppConstants.returnTypeMaster;
+
   monthsMaster: any = [{ label: 'Jan', value: 'JAN' },
   { label: 'Feb', value: 'FEB' },
   { label: 'Mar', value: 'MAR' },

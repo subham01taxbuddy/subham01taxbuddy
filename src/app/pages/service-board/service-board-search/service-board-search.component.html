@@ -1,0 +1,31 @@
+<div class="card__row">
+  <form [formGroup]="searchForm">
+    <div class="card__col-xs-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Select Agent Id</mat-label>
+        <mat-select placeholder="Select Agent Id" formControlName="selectedAgentId" required>
+          <mat-option *ngFor="let agent of agentList" [value]="agent.email">
+            {{agent.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="searchForm['controls'].selectedAgentId.hasError('required')">Select
+          Agent Id</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="card__col-xs-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Select Financial Year</mat-label>
+        <mat-select placeholder="Select Financial Year" formControlName="selectedFyYear" required>
+          <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+            {{year.financialYear}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="searchForm['controls'].selectedFyYear.hasError('required')">Select Financial
+          Year</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="card__col-xs-4">
+      <button mat-raised-button color="primary" (click)="searchParams()">Search</button>
+    </div>
+  </form>
+</div>
