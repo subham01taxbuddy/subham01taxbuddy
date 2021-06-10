@@ -17,7 +17,8 @@
                         </mat-form-field>
                     </div>
                     <div class="card__col-xs-12 card__col-sm-4 card__col-md-3">
-                        <mat-form-field appearance="outline">
+                        <app-fy-drop-down serviceType='GST' (sendFy)="fromFy($event)"></app-fy-drop-down>
+                        <!-- <mat-form-field appearance="outline">
                             <mat-label>Financial Year</mat-label>
                             <mat-select placeholder="Select Financial Year" name="financialYear"
                                 formControlName="financialYear" required>
@@ -25,7 +26,7 @@
                                     {{ fy.displayName}}
                                 </mat-option>
                             </mat-select>
-                        </mat-form-field>
+                        </mat-form-field> -->
                     </div>
                     <div class="card__col-xs-12 card__col-sm-4 card__col-md-3">
                         <mat-form-field appearance="outline">

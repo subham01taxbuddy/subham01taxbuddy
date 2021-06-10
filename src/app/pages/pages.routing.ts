@@ -48,7 +48,7 @@ export const routes: Routes = [
 	{
 		path: 'pages', canActivate: [AuthGuard], component: PagesComponent,
 		children: [
-			{ path: 'home', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ component: HomeComponent },
+			// { path: 'home', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ component: HomeComponent },
 			{ path: 'list', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN'] }, */ component: ListComponent },
 			{
 				path: 'business', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN'] }, */ component: BusinessComponent,
@@ -66,7 +66,7 @@ export const routes: Routes = [
 			{ path: 'assign', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN'] }, */ component: AssignComponent },
 			{ path: 'chat-corner', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './chat-corner/chat-corner.module#ChatCornerModule' },
 			{ path: 'tax-summary', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './summary-tax/summary.module#SummaryModule' },
-			{ path: 'invoice', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './invoiceModule/invoice.module#InvoiceModule' },
+			// { path: 'invoice', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './invoiceModule/invoice.module#InvoiceModule' },
 			// {
 			// 	path: 'user-info',
 			// 	canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] },
@@ -83,11 +83,11 @@ export const routes: Routes = [
 			{ path: 'subscription', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_TPA_SME', 'ROLE_FILING_TEAM'] }, */ loadChildren: './subscription/subscription.module#SubscriptionModule' },
 			{ path: 'user-management', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './user-management/user-management.module#UserManagementModule' },
 			{ path: 'gst-filing', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './gst-filing/gst-filing.module#GstFilingModule' },
-			{ path: '**', redirectTo: '/pages/home', pathMatch: 'full' },
+			{ path: '**', redirectTo: '/pages/itr-filing/my-itrs', pathMatch: 'full' },
 
 		]
 	},
 
 	{ path: '', redirectTo: 'login', pathMatch: 'full' },
-	{ path: '**', redirectTo: '/pages/home' }
+	{ path: '**', redirectTo: '/pages/itr-filing/my-itrs' }
 ];

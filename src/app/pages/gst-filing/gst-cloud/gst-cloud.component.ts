@@ -1,3 +1,4 @@
+import { AppConstants } from 'app/shared/constants';
 import { ItrMsService } from './../../../services/itr-ms.service';
 import { UtilsService } from './../../../services/utils.service';
 import { Component, OnInit } from '@angular/core';
@@ -22,28 +23,7 @@ export class GstCloudComponent implements OnInit {
   docUrl = '';
   uploadDoc: any;
 
-  fyDropDown = [
-    { value: '2017-18', displayName: '2017-18' },
-    { value: '2018-19', displayName: '2018-19' },
-    { value: '2019-20', displayName: '2019-20' },
-    { value: '2020-21', displayName: '2020-21' },
-    { value: '2021-22', displayName: '2021-22' },
-  ];
-
-  monthDropDown = [
-    { value: 'Jan', displayName: 'Jan' },
-    { value: 'Feb', displayName: 'Feb' },
-    { value: 'Mar', displayName: 'Mar' },
-    { value: 'Apr', displayName: 'Apr' },
-    { value: 'May', displayName: 'May' },
-    { value: 'Jun', displayName: 'Jun' },
-    { value: 'Jul', displayName: 'Jul' },
-    { value: 'Aug', displayName: 'Aug' },
-    { value: 'Sep', displayName: 'Sep' },
-    { value: 'Oct', displayName: 'Oct' },
-    { value: 'Nov', displayName: 'Nov' },
-    { value: 'Dec', displayName: 'Dec' },
-  ];
+  monthDropDown = AppConstants.gstMonthList;
   summarisedInvoices: any;
   constructor(private fb: FormBuilder, private userMsService: UserMsService,
     public utilsService: UtilsService, private itrMsService: ItrMsService,
@@ -61,6 +41,11 @@ export class GstCloudComponent implements OnInit {
         this.getProfile(params['userId']);
       }
     });
+  }
+
+  fromFy(event) {
+    console.log(event);
+    this.searchForm.controls['financialYear'].setValue(event);
   }
 
   async advanceSearch() {

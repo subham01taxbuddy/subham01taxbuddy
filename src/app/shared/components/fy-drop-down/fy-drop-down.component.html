@@ -1,0 +1,11 @@
+<mat-form-field appearance="outline">
+  <mat-label>Select Financial Year</mat-label>
+  <mat-select placeholder="Select Financial Year" [formControl]="selectedFyYear"
+    (selectionChange)="changeFy(selectedFyYear.value)" required>
+    <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+      {{year.financialYear}}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="selectedFyYear.hasError('required')">Select Financial
+    Year</mat-error>
+</mat-form-field>
