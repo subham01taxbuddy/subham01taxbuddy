@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AfterContentChecked, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { AppConstants } from 'app/shared/constants';
@@ -7,27 +6,17 @@ import { AppConstants } from 'app/shared/constants';
 @Component({
   selector: 'app-preparing-itr',
   templateUrl: './preparing-itr.component.html',
-  styleUrls: ['./preparing-itr.component.css']
+  styleUrls: ['./preparing-itr.component.css'],
 })
-export class PreparingItrComponent implements OnInit {
+export class PreparingItrComponent implements OnInit, AfterContentChecked {
   loading = false;
   dataList = [];
   page = 0; // current page
   count = 0; // total pages
   pageSize = 20; // number of items in each page
-  agentId = '';
-  agentList = [
-    { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
-    { value: 'damini@ssbainnovations.com', label: 'Damini' },
-    { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
-    { value: 'aditya.singh@taxbuddy.com', label: 'Aditya' },
-    { value: 'ankita@ssbainnovations.com', label: 'Ankita' },
-    { value: 'amrita@ssbainnovations.com', label: 'Amrita' },
-    { value: 'kavita@ssbainnovations.com', label: 'Kavita' },
-    { value: 'urmila@ssbainnovations.com', label: 'Urmila' },
-    { value: 'divya@ssbainnovations.com', label: 'Divya' },
-    { value: 'brij@ssbainnovations.com', label: 'Brij' },
-  ];
+  config: any;
+  agentList = [];
+  searchParams: any;
   filingTeamMembers = [
     { value: 1063, label: 'Amrita Thakur' },
     { value: 1064, label: 'Ankita Murkute' },
@@ -79,58 +68,38 @@ export class PreparingItrComponent implements OnInit {
     { value: 1067, label: 'Divya Bhanushali' },
     { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
-  financialYear: any = AppConstants.financialYearList;
-  searchForm : FormGroup;
 
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private fb: FormBuilder) { }
+  constructor(private userMsService: UserMsService,
+    public utilsService: UtilsService,
+    private cdRef: ChangeDetectorRef) {
+    this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: 80
+    };
+  }
 
   ngOnInit() {
-    this.searchForm = this.fb.group({
-      selectedAgentId: ['', Validators.required],
-      selectedFyYear: ['', Validators.required]
-    })
 
-    console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
-    let agentId = localStorage.getItem('selectedAgentId');
-    if (this.utilsService.isNonEmpty(agentId)) {
-      this.agentId = agentId;
-      this.searchForm.controls.selectedAgentId.setValue(this.agentId)
-      this.retrieveData(0)
-    }
-    else {
-      this.retrieveData(0)
-    }
+  }
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
   }
   retrieveData(page) {
     this.loading = true;
     // const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=5`;
-    const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&fy=${this.searchForm.controls.selectedFyYear.value}&statusId=5`;
+    const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.searchParams['selectedAgentId']}&fy=${this.searchParams['selectedFyYear']}&statusId=5`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('New User data', result);
-      this.dataList = result;
       this.loading = false;
+      this.dataList = result;
+      this.utilsService.sendMessage(this.dataList);
     }, error => {
       this.loading = false;
       console.log(error);
     })
   }
-  selectAgent(agentName) {
-    // this.agentId = agentName;
-    // localStorage.setItem('selectedAgentId', this.agentId);
-    // this.page = 0;
-    // this.retrieveData(0);
-  }
 
-  showPreparingItrList(){
-    console.log('searchForm: ',this.searchForm) 
-    if(this.searchForm.valid){
-      console.log('searchForm: ',this.searchForm) 
-      this.agentId = this.searchForm.controls.selectedAgentId.value;
-      localStorage.setItem('selectedAgentId', this.agentId);
-      this.page = 0;
-      this.retrieveData(0);
-    }
-  }
 
   previous() {
     this.page = this.page - this.pageSize;
@@ -165,5 +134,16 @@ export class PreparingItrComponent implements OnInit {
     if (this.utilsService.isNonEmpty(data['KommunicateURL'])) {
       window.open(data['KommunicateURL'], '_blank')
     }
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+    this.retrieveData(event - 1);
+  }
+
+  fromSearchParams(event) {
+    this.searchParams = event;
+    localStorage.setItem(AppConstants.SELECTED_AGENT, event['selectedAgentId']);
+    this.retrieveData(0);
   }
 }

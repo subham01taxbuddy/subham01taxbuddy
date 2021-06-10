@@ -336,7 +336,7 @@ export class AddInvoiceComponent implements OnInit {
     }
     this.itemList[0].itemDescription = this.serviceDetail + ' ' + this.description;
     this.invoiceForm.controls.itemList.setValue(this.itemList);
-    if (this.invoiceForm.valid) {
+    if (this.invoiceForm.valid && this.checkSacCode()) {
       console.log('Invoice Form: ', this.invoiceForm)
       if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
         this.utilsService.isNonEmpty(this.invoiceForm.controls['itrType'].value) ||
@@ -571,5 +571,15 @@ export class AddInvoiceComponent implements OnInit {
   setSacCode(code) {
     this.itemList[0].sacCode = code;
     this.sacCode = this.itemList[0].sacCode;
+  }
+
+  checkSacCode(){
+    if(this.utilsService.isNonEmpty(this.sacCode)){
+      return true;
+    }
+    else{
+      this._toastMessageService.alert("error", "Enter SAC code.");
+      return false;
+    }
   }
 }

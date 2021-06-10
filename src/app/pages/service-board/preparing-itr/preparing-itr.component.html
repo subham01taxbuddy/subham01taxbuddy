@@ -2,7 +2,7 @@
 
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
-        <app-service-board-search></app-service-board-search>
+        <app-service-board-search (sendSearchParams)="fromSearchParams($event)"></app-service-board-search>
         <!-- <div class="card__row">
            
             <form [formGroup]="searchForm">
@@ -38,11 +38,9 @@
         <div class="card__row" style="margin-top: 0px;">
             <div class="tab-panel items-tab card__col-xs-12">
                 <div class="tab-panel__content tab-panel__content_visible">
-                    <div class="table product__table">
+
+                    <!-- <div class="table product__table">
                         <div class="table__row  table__row_header ">
-                            <!--  <div class="table__cell product-row__cell-unit flex-10">
-                                <a class="table__sort-link">User Id</a>
-                            </div> -->
                             <div class="table__cell product-row__cell-unit flex-15">
                                 <a class="table__sort-link">Client Name</a>
                             </div>
@@ -107,9 +105,7 @@
                                             (click)="goToKommunicate(item.sourceAsMap)"
                                             title="Click open kommunicate chat"><i class="fa fa-comments-o"
                                                 style="color: green; font-size: 18px;"></i></button>
-                                        <!--  | <button style="border: none; cursor: pointer;background: transparent;"
-                                            (click)="addCallLogs(item.sourceAsMap)" title="Add call logs"><i
-                                                class="fa fa-phone" style="font-size: 18px;"></i></button> -->
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +116,26 @@
                                 (click)="previous()">Previous</button>
                             <button class="btn" style="border: none; cursor: pointer;" (click)="next()">Next</button>
                         </div>
+                    </div> -->
+
+                    <!--  | <button style="border: none; cursor: pointer;background: transparent;"
+                        (click)="addCallLogs(item.sourceAsMap)" title="Add call logs"><i
+                            class="fa fa-phone" style="font-size: 18px;"></i></button> -->
+
+
+                    <div class="card__row">
+                        <table>
+                            <tr *ngFor="let item of dataList | paginate:config"></tr>
+                        </table>
+                        <div *ngIf="dataList.length > 0">
+                            <app-service-grid-table [gridRowData]="dataList"></app-service-grid-table>
+                        </div>
+                        <p style="text-align: center; font-size: 15px; margin-top: 20px" *ngIf="dataList.length === 0">
+                            <b>No data available.</b></p>
                     </div>
+                    <pagination-controls *ngIf="dataList.length > 0" (pageChange)="pageChanged($event)">
+                    </pagination-controls>
+
                 </div>
             </div>
         </div>

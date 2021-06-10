@@ -1,5 +1,5 @@
 import { ItrMsService } from 'app/services/itr-ms.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
@@ -8,7 +8,7 @@ import { AppConstants } from 'app/shared/constants';
 @Component({
   selector: 'app-awating-confirmation',
   templateUrl: './awating-confirmation.component.html',
-  styleUrls: ['./awating-confirmation.component.css']
+  styleUrls: ['./awating-confirmation.component.css'],
 })
 export class AwatingConfirmationComponent implements OnInit {
   loading = false;
@@ -80,14 +80,19 @@ export class AwatingConfirmationComponent implements OnInit {
     { value: 1067, label: 'Divya Bhanushali' },
     { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
-  financialYear = [];
+  // financialYear = [];
   searchParams: any;
-
+  config: any;
   constructor(private itrMsService: ItrMsService,
     private userMsService: UserMsService,
     public utilsService: UtilsService,
-    private fb: FormBuilder) {
-
+    private fb: FormBuilder,
+    private cdRef: ChangeDetectorRef) {
+    this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: 80
+    };
   }
 
   ngOnInit() {
@@ -140,6 +145,9 @@ export class AwatingConfirmationComponent implements OnInit {
     //   // })
     // }
   }
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
+  }
   retrieveData(page) {
     this.loading = true;
     // const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=7`;
@@ -147,6 +155,7 @@ export class AwatingConfirmationComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('New User data', result);
       this.dataList = result;
+      this.utilsService.sendMessage(this.dataList);
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -204,5 +213,9 @@ export class AwatingConfirmationComponent implements OnInit {
     this.searchParams = event;
     localStorage.setItem(AppConstants.SELECTED_AGENT, event['selectedAgentId']);
     this.retrieveData(0);
+  }
+  pageChanged(event) {
+    this.config.currentPage = event;
+    this.retrieveData(event - 1);
   }
 }

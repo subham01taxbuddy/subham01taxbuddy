@@ -16,6 +16,7 @@ import { InvoiceToBeGenerateComponent } from './invoice-to-be-generate/invoice-t
 import { FilingStatusTableComponent } from './filing-status-table/filing-status-table.component';
 import { UnpaidInvoicesComponent } from './unpaid-invoices/unpaid-invoices.component';
 import { ServiceBoardSearchComponent } from './service-board-search/service-board-search.component';
+import { ServiceGridTableComponent } from './service-grid-table/service-grid-table.component';
 
 @NgModule({
     declarations: [
@@ -26,7 +27,8 @@ import { ServiceBoardSearchComponent } from './service-board-search/service-boar
         InvoiceToBeGenerateComponent,
         FilingStatusTableComponent,
         UnpaidInvoicesComponent,
-        ServiceBoardSearchComponent
+        ServiceBoardSearchComponent,
+        ServiceGridTableComponent,
     ],
     imports: [
         CommonModule,

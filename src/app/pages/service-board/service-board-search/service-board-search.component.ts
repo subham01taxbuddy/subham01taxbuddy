@@ -44,6 +44,7 @@ export class ServiceBoardSearchComponent implements OnInit {
       this.financialYear = fyList;
       const currentFy = this.financialYear.filter(item => item.isFilingActive);
       this.searchForm.controls['selectedFyYear'].setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
+      this.searchParams();
     } else {
       let param = '/filing-dates';
       this.itrMsService.getMethod(param).subscribe((res: any) => {

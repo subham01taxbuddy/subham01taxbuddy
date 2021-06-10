@@ -304,7 +304,8 @@ export class UtilsService {
         return ITR_JSON;
     }
 
-    sendMessage(message: string) {
+    sendMessage(message: any) {
+        console.log('get message: ',message)
         this.subject.next({ text: message });
     }
 
