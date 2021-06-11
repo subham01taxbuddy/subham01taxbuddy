@@ -101,6 +101,7 @@ export class AddInvoiceComponent implements OnInit {
         applicableService = this.userSubscription.userSelectedPlan.servicesType;
         this.getSacCode(this.userSubscription.userSelectedPlan.planId)
       }
+      
       this.updateDueDate(new Date());
       switch (applicableService) {
         case 'ITR': {
