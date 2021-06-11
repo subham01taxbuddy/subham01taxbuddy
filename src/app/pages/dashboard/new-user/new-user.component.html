@@ -9,7 +9,8 @@
             </span>
         </div>
         <div class="card__row" style="margin-top: 0px;">
-            <div class="tab-panel items-tab card__col-xs-12">
+
+            <!-- <div class="tab-panel items-tab card__col-xs-12">
                 <div class="tab-panel__content tab-panel__content_visible">
                     <div class="table product__table">
                         <div class="table__row  table__row_header ">
@@ -76,7 +77,23 @@
                         </div>
                     </div>
                 </div>
+            </div> -->
+            <br><br>
+            <div class="card__row">
+                <table>
+                    <tr *ngFor="let item of userList | paginate:config"></tr>
+                </table>
+                <!-- <div *ngIf="userList.length > 0"> -->
+                    <ag-grid-angular class="ag-theme-balham" [gridOptions]="newUsersGridOptions"
+                    (rowClicked)="onNewUserRowClicked($event)">    <!--    -->
+                    </ag-grid-angular>
+                <!-- </div> -->
+                <p style="text-align: center; font-size: 15px; margin-top: 20px" *ngIf="userList.length === 0"><b>No data available.</b></p>
             </div>
+            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>    
+           
+
+
         </div>
     </div>
 </div>

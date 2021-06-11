@@ -4,7 +4,8 @@
     <div class="card">
         <div class="card__row" style="margin-top: 0px;">
             <div class="tab-panel items-tab card__col-xs-12">
-                <div class="tab-panel__content tab-panel__content_visible">
+
+                <!-- <div class="tab-panel__content tab-panel__content_visible">
                     <div class="table product__table">
                         <div class="table__row  table__row_header ">
                             <div class="table__cell product-row__cell-unit flex-10">
@@ -32,7 +33,6 @@
                         <div *ngFor="let item of interestedClients; let p=index">
                             <div class="table__row-item product-row" [class.table__row-disabled]="false">
                                 <div class="table__row product-row__main-variant">
-                                    <!-- [style.background-color]="currentUserId === item.userId ? '#ebffe7':''" -->
                                     <div class="table__cell product-row__cell-stock flex-10">
                                         {{item.userName}}
                                     </div>
@@ -61,7 +61,13 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
+
+                <ag-grid-angular class="ag-theme-balham" [gridOptions]="interestedClientsGridOption"
+                (rowClicked)="onInterestedClientsClicked($event)"> 
+                </ag-grid-angular>
+                 <p style="text-align: center; font-size: 15px; margin-top: 20px" *ngIf="interestedClients.length === 0"><b>No data available.</b></p>
+                
             </div>
         </div>
     </div>
