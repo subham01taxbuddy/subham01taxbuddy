@@ -47,10 +47,21 @@ export class DelayComponent implements OnInit {
 
   // TODO
   getDelayedItrData(fy) {
-    let param = `${ApiEndpoints.itrMs.itrByAckStatus}`;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
+    const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
+    // let param = `${ApiEndpoints.itrMs.itrByAckStatus}`;
+    let reqBody = {
+      'financialYear' : fy,
+      'filingTeamMemberId': loggedInUserData.USER_UNIQUE_ID
+    }
+    // this.itrMsService.getMethod(param).subscribe((res: any) => {
+    let param = '/itr-search?page=0&size=20';
+    let param2 = reqBody;
+    this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
       console.log('res: ', res);
-      this.delayItrGridOptions.api.setRowData(this.createDelayRowData(res));
+      if(res && res.success){
+        this.delayItrGridOptions.api.setRowData(this.createDelayRowData(res.data));
+      }
+      
     }, error => {
       console.log('error: ', error);
       if (error.error.title === "Not_found") {
@@ -60,6 +71,7 @@ export class DelayComponent implements OnInit {
   }
 
   createDelayRowData(data) {
+    console.log("delay data -> ", data)
     const newData = [];
     for (let i = 0; i < data.length; i++) {
       newData.push({
