@@ -72,14 +72,25 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
     this.loading = true;
     return new Promise((resolve, reject) => {
       const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
-      let param = `${ApiEndpoints.itrMs.itrByFilingTeamMemberId}?filingTeamMemberId=${loggedInUserData.USER_UNIQUE_ID}`;/* ${loggedInUserData.USER_UNIQUE_ID} */
-      if (fy !== '') {
-        param = `${param}&fy=${fy}`;
+      let reqBody = {
+        'financialYear' : fy,
+        'filingTeamMemberId': loggedInUserData.USER_UNIQUE_ID
       }
-      this.itrMsService.getMethod(param).subscribe((res: any) => {
+      //https://uat-api.taxbuddy.com/itr/itr-search?page=0&size=20
+      //let param = `${ApiEndpoints.itrMs.itrByFilingTeamMemberId}?filingTeamMemberId=${loggedInUserData.USER_UNIQUE_ID}`;/* ${loggedInUserData.USER_UNIQUE_ID} */
+      // if (fy !== '') {
+      //   param = `${param}&fy=${fy}`;
+      // }
+      
+      let param = '/itr-search?page=0&size=20';
+      let param2 = reqBody;
+      // this.itrMsService.getMethod(param).subscribe((res: any) => {
+     this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
         console.log('filingTeamMemberId: ', res);
-        this.itrDataList = res;
-        this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res));
+        if(res && res.success){
+          this.itrDataList = res.data;
+          this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res.data));
+        }
         this.loading = false;
         return resolve(true)
       }, error => {
@@ -100,13 +111,14 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   // }
 
   createOnSalaryRowData(data) {
+    console.log('data: -> ',data)
     const newData = [];
     for (let i = 0; i < data.length; i++) {
-      newData.push({
+      newData.push({  
         itrId: data[i].itrId,
         userId: data[i].userId,
-        fName: data[i].family[0].fName,
-        lName: data[i].family[0].lName,
+        fName: (this.utilsService.isNonEmpty(data[i].family) && data[i].family instanceof Array && data[i].family.length > 0) ? (data[i].family[0].fName ) : '',
+        lName: (this.utilsService.isNonEmpty(data[i].family) && data[i].family instanceof Array && data[i].family.length > 0) ? (data[i].family[0].lName ) : '',
         panNumber: data[i].panNumber,
         contactNumber: data[i].contactNumber,
         email: data[i].email,
