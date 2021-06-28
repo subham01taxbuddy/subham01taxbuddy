@@ -1,5 +1,5 @@
 <div class="card__row">
-    <div class="card__col-xs-12 card__col-sm-6">
+    <div class="card__col-xs-12 card__col-sm-5">
         <mat-form-field appearance="outline" *ngIf="currentUrl === '/pages/itr-filing/customer-profile'">
             <mat-label>Filling Status</mat-label>
             <mat-select placeholder="Filling Status" name="fillingStatus" [formControl]="fillingStatus">
@@ -9,7 +9,7 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div class="card__col-xs-12 card__col-sm-6" style="padding-top: 10px;">
+    <div class="card__col-xs-12 card__col-sm-7" style="padding-top: 10px;">
         <button class="btn" style="border: none;" (click)="getFilingStatus()" title="Click to Get latest Status"
             *ngIf="currentUrl === '/pages/itr-filing/customer-profile'">Get</button>
         <button style="border: none; cursor: pointer;background: transparent;" (click)="updateStatus()"
@@ -21,6 +21,10 @@
         <button (click)="openUserChat()" style="border: none; cursor: pointer;float: right;
         background: transparent; padding-right: 15px;" title="Chat conversion on whats app with user"><i
                 class="fa fa-whatsapp fa-2x" aria-hidden="true" style="color: green;"></i></button>
+
+        <button (click)="showNotes()" style="border: none; cursor: pointer;float: right;
+        background: transparent; padding-right: 15px;" title="Users notes."><i
+                class="fa fa-sticky-note-o fa-2x" aria-hidden="true" style="color: green;"></i></button>
 
     </div>
 </div>

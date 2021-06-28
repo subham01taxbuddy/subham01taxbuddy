@@ -61,6 +61,7 @@ export class UsersComponent implements OnInit {
 
   advanceSearch(key) {
     this.user_data = [];
+    sessionStorage.setItem('SearchItrUser', JSON.stringify(this.user_data))
     if (this.searchVal !== "") {
       this.getUserSearchList(key, this.searchVal);
     }
@@ -73,7 +74,8 @@ export class UsersComponent implements OnInit {
       NavbarService.getInstance(this.http).getUserSearchList(key, searchValue).subscribe(res => {
         console.log("Search result:", res)
         if (Array.isArray(res.records)) {
-          this.user_data = res.records
+          this.user_data = res.records;
+          sessionStorage.setItem('SearchItrUser', JSON.stringify(this.user_data))
         }
         this.loading = false;
         return resolve(true)
