@@ -26,8 +26,8 @@
                             <mat-label>Financial Year</mat-label>
                             <mat-select matInput placeholder="" name="ten[i]" formControlName="financialYear"
                                 autocomplete="off">
-                                <mat-option value="2020-2021"> 2020-2021</mat-option>
-                                <mat-option value="2021-2022"> 2021-2022</mat-option>
+                                <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                                    {{year.financialYear}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </td>

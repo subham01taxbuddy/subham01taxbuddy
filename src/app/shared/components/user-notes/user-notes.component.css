@@ -4,3 +4,22 @@
 .flex-15 {
     flex-basis: 15% !important;
 }
+
+.notes{
+    /* max-height: 80%;
+    overflow-y: scroll; */
+    overflow: auto;
+}
+
+.tableFixHead    {
+    overflow: auto;
+    height: 400px;
+    margin: 20px 5px;
+    font-size: 14px;
+    }
+.tableFixHead th { position: sticky; top: 0; }
+
+/* Just common table stuff. */
+table  { border-collapse: collapse; width: 100%; }
+th, td { padding: 8px 16px; }
+th     { background:#eee; }

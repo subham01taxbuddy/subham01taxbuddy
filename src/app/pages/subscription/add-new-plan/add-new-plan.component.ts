@@ -1,3 +1,4 @@
+import { AppConstants } from './../../../shared/constants';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
@@ -62,7 +63,7 @@ export class AddNewPlanComponent implements OnInit {
     totalTax: null,
     totalAmount: null
   };
-  gstTypesMaster: any = [{ label: 'Regular', value: 'REGULAR' }, { label: 'Composite', value: 'COMPOSITE' }/* , { label: 'Input Service Distributor (ISD)', value: 'Input Service Distributor (ISD)' } */]
+  gstTypesMaster = AppConstants.gstTypesMaster;
   frequencyTypesMaster: any = [{ label: 'Monthly', value: 'MONTHLY' }, { label: 'Quarterly', value: 'QUARTERLY' }];
   monthsMaster: any = [{ label: 'Jan', value: 0 },
   { label: 'Feb', value: 1 },

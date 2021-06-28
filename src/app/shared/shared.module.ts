@@ -22,6 +22,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { DocumentViewerComponent } from './components/document-viewer/document-viewer.component';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { FyDropDownComponent } from './components/fy-drop-down/fy-drop-down.component';
 // import { CheckboxRenderer } from './checkbox-renderer.component';
 
 
@@ -41,7 +42,8 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
         UpdateStatusComponent,
         KommunicateDialogComponent,
         ItrActionsComponent,
-        DocumentViewerComponent
+        DocumentViewerComponent,
+        FyDropDownComponent
     ],
     imports: [
         CommonModule,
@@ -74,7 +76,8 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
         UpdateStatusComponent,
         KommunicateDialogComponent,
         ItrActionsComponent,
-        DocumentViewerComponent
+        DocumentViewerComponent,
+        FyDropDownComponent
     ],
     providers: [],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,

@@ -1,31 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterContentChecked, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
+import { AppConstants } from 'app/shared/constants';
 
 @Component({
   selector: 'app-preparing-itr',
   templateUrl: './preparing-itr.component.html',
-  styleUrls: ['./preparing-itr.component.css']
+  styleUrls: ['./preparing-itr.component.css'],
 })
-export class PreparingItrComponent implements OnInit {
+export class PreparingItrComponent implements OnInit, AfterContentChecked {
   loading = false;
   dataList = [];
   page = 0; // current page
   count = 0; // total pages
   pageSize = 20; // number of items in each page
-  agentId = '';
-  agentList = [
-    { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
-    { value: 'damini@ssbainnovations.com', label: 'Damini' },
-    { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
-    { value: 'aditya.singh@taxbuddy.com', label: 'Aditya' },
-    { value: 'ankita@ssbainnovations.com', label: 'Ankita' },
-    { value: 'amrita@ssbainnovations.com', label: 'Amrita' },
-    { value: 'kavita@ssbainnovations.com', label: 'Kavita' },
-    { value: 'urmila@ssbainnovations.com', label: 'Urmila' },
-    { value: 'divya@ssbainnovations.com', label: 'Divya' },
-    { value: 'brij@ssbainnovations.com', label: 'Brij' },
-  ];
+  config: any;
+  agentList = [];
+  searchParams: any;
   filingTeamMembers = [
     { value: 1063, label: 'Amrita Thakur' },
     { value: 1064, label: 'Ankita Murkute' },
@@ -77,38 +68,39 @@ export class PreparingItrComponent implements OnInit {
     { value: 1067, label: 'Divya Bhanushali' },
     { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService) { }
+
+  constructor(private userMsService: UserMsService,
+    public utilsService: UtilsService,
+    private cdRef: ChangeDetectorRef) {
+    this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: 80
+    };
+  }
 
   ngOnInit() {
-    console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
-    let agentId = localStorage.getItem('selectedAgentId');
-    if (this.utilsService.isNonEmpty(agentId)) {
-      this.agentId = agentId;
-      this.retrieveData(0)
-    }
-    else {
-      this.retrieveData(0)
-    }
+
+  }
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
   }
   retrieveData(page) {
     this.loading = true;
-    const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=5`;
-    // /user-details-by-status-es?from=0&to=20&agentId=aditya.singh@taxbuddy.com&statusId=2
+    // const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=5`;
+    const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.searchParams['selectedAgentId']}&fy=${this.searchParams['selectedFyYear']}&statusId=5`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('New User data', result);
-      this.dataList = result;
       this.loading = false;
+      this.dataList = result;
+      this.utilsService.sendMessage(this.dataList);
     }, error => {
       this.loading = false;
       console.log(error);
     })
   }
-  selectAgent(agentName) {
-    this.agentId = agentName;
-    localStorage.setItem('selectedAgentId', this.agentId);
-    this.page = 0;
-    this.retrieveData(0);
-  }
+
+
   previous() {
     this.page = this.page - this.pageSize;
     this.retrieveData(this.page);
@@ -142,5 +134,16 @@ export class PreparingItrComponent implements OnInit {
     if (this.utilsService.isNonEmpty(data['KommunicateURL'])) {
       window.open(data['KommunicateURL'], '_blank')
     }
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+    this.retrieveData(event - 1);
+  }
+
+  fromSearchParams(event) {
+    this.searchParams = event;
+    localStorage.setItem(AppConstants.SELECTED_AGENT, event['selectedAgentId']);
+    this.retrieveData(0);
   }
 }

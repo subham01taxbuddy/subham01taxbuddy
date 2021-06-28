@@ -3,6 +3,11 @@
 <div class="main clearfix" style="min-height: 0vh; padding-top: 0px;">
   <div class="card">
     <div class="card__row">
+      <div class="card__col-xs-4">
+        <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
+      </div>
+    </div>
+    <div class="card__row">
       <ag-grid-angular class="ag-theme-balham" [gridOptions]="delayItrGridOptions" (rowClicked)="onRowClicked($event)"
         paginationPageSize=25 pagination=true>
       </ag-grid-angular>

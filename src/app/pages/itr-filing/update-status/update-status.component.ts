@@ -10,6 +10,7 @@ import { WhatsAppDialogComponent } from '../whats-app-dialog/whats-app-dialog.co
 import { KommunicateDialogComponent } from '../kommunicate-dialog/kommunicate-dialog.component';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ToastMessageService } from 'app/services/toast-message.service';
+import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 
 @Component({
   selector: 'app-update-status',
@@ -284,5 +285,22 @@ export class UpdateStatusComponent implements OnInit {
     }, error => { })
 
 
+  }
+
+  showNotes(){
+    var userInfo = JSON.parse(sessionStorage.getItem('SearchItrUser'));
+    console.log('SearchItrUser: ',userInfo)
+    let disposable = this.dialog.open(UserNotesComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: userInfo[0].userId,
+        clientName: userInfo[0].fName+' '+userInfo[0].lName 
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 }

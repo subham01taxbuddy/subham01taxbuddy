@@ -1,5 +1,7 @@
+import { AppConstants } from 'app/shared/constants';
+import { ApiEndpoints } from 'app/shared/api-endpoint';
 import { UtilsService } from 'app/services/utils.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
@@ -14,7 +16,11 @@ export class DelayComponent implements OnInit {
   loading: boolean;
   delayItrGridOptions: GridOptions;
   delayedInfo: any = [];
-  constructor(private itrMsService: ItrMsService, private _toastMessageService: ToastMessageService, public utilsService: UtilsService) {
+  selectedFyYear = '';
+  constructor(private itrMsService: ItrMsService,
+    private _toastMessageService: ToastMessageService,
+    public utilsService: UtilsService,
+    private cdRef: ChangeDetectorRef) {
 
     this.delayItrGridOptions = <GridOptions>{
       rowData: this.createDelayRowData([]),
@@ -27,24 +33,45 @@ export class DelayComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getDelayedItrData();
   }
 
-  getDelayedItrData() {
-    let param = '/itrByAckStatus';
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
+  fromFy(event) {
+    this.selectedFyYear = event;
+    console.log(event);
+    this.getDelayedItrData(event);
+  }
+
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
+  }
+
+  // TODO
+  getDelayedItrData(fy) {
+    const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
+    // let param = `${ApiEndpoints.itrMs.itrByAckStatus}`;
+    let reqBody = {
+      'financialYear' : fy,
+      'filingTeamMemberId': loggedInUserData.USER_UNIQUE_ID
+    }
+    // this.itrMsService.getMethod(param).subscribe((res: any) => {
+    let param = '/itr-search?page=0&size=20';
+    let param2 = reqBody;
+    this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
       console.log('res: ', res);
-      this.delayItrGridOptions.api.setRowData(this.createDelayRowData(res));
-    },
-      error => {
-        console.log('error: ', error);
-        if (error.error.title === "Not_found") {
-          this._toastMessageService.alert("error", "Delay itr record not found.");
-        }
-      })
+      if(res && res.success){
+        this.delayItrGridOptions.api.setRowData(this.createDelayRowData(res.data));
+      }
+      
+    }, error => {
+      console.log('error: ', error);
+      if (error.error.title === "Not_found") {
+        this._toastMessageService.alert("error", "Delay itr record not found.");
+      }
+    })
   }
 
   createDelayRowData(data) {
+    console.log("delay data -> ", data)
     const newData = [];
     for (let i = 0; i < data.length; i++) {
       newData.push({
@@ -193,12 +220,12 @@ export class DelayComponent implements OnInit {
   changeStatus(itrData) {
     console.log('change itr data: ', itrData);
     this.loading = true;
-    let param = '/enableItrFilling/' + itrData.userId + '/' + itrData.itrId + '/' + itrData.assessmentYear;
+    let param = `${ApiEndpoints.itrMs.enableItrFilling}/${itrData.userId}/${itrData.itrId}/${itrData.assessmentYear}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
       console.log('res: ', res);
       this._toastMessageService.alert("success", "User unblocked successfully.");
-      this.getDelayedItrData();
+      this.getDelayedItrData(this.selectedFyYear);
     },
       error => {
         this.loading = false;
@@ -206,19 +233,21 @@ export class DelayComponent implements OnInit {
       })
   }
 
-  getAcknowledgeDetail(data){
+  getAcknowledgeDetail(data) {
     console.log('Data for acknowlegement status', data);
     this.loading = true;
-    const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
-      this.itrMsService.getMethod(param).subscribe((res: any) => {
-        this.utilsService.showSnackBar(res.status)
-        this.loading = false;
-        setTimeout(()=>{
-          this.getDelayedItrData();
-        }, 5000)
-      }, error => {
-        this.loading = false;
-      })
+    const fyDetails = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST));
+    const selectedAy = fyDetails.filter(item => item.financialYear)[0].assessmentYear
+    const param = `${ApiEndpoints.itrMs.itrAckDetails}?panNumber=${data.panNumber}&assessmentYear=${selectedAy}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      this.utilsService.showSnackBar(res.status)
+      this.loading = false;
+      setTimeout(() => {
+        this.getDelayedItrData(this.selectedFyYear);
+      }, 5000)
+    }, error => {
+      this.loading = false;
+    })
   }
 
 }

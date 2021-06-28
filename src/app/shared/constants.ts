@@ -29,4 +29,70 @@ export class AppConstants {
     public static TAX_SUM = environment.production ? 'TAX_SUM' : 'TAX_SUM';
     public static NAME = environment.production ? 'name' : 'name';
     public static ITR_DOCS = environment.production ? 'ITR_DOCS' : 'ITR_DOCS';
+    public static SME_LIST = environment.production ? 'SME_LIST' : 'SME_LIST';
+    public static FY_LIST = environment.production ? 'FY_LIST' : 'FY_LIST';
+    public static SELECTED_AGENT = environment.production ? 'SELECTED_AGENT' : 'SELECTED_AGENT';
+    public static gstFyList = [
+        { financialYear: '2021-22' },
+        { financialYear: '2020-21' },
+        { financialYear: '2019-20' },
+        { financialYear: '2018-19' },
+        { financialYear: '2017-18' },
+    ];
+    public static subscriptionFyList = [
+        { financialYear: '2021-2022' },
+        { financialYear: '2020-2021' },
+    ];
+
+    public static gstMonthList = [
+        { value: 'Jan', displayName: 'Jan' },
+        { value: 'Feb', displayName: 'Feb' },
+        { value: 'Mar', displayName: 'Mar' },
+        { value: 'Apr', displayName: 'Apr' },
+        { value: 'May', displayName: 'May' },
+        { value: 'Jun', displayName: 'Jun' },
+        { value: 'Jul', displayName: 'Jul' },
+        { value: 'Aug', displayName: 'Aug' },
+        { value: 'Sep', displayName: 'Sep' },
+        { value: 'Oct', displayName: 'Oct' },
+        { value: 'Nov', displayName: 'Nov' },
+        { value: 'Dec', displayName: 'Dec' },
+    ];
+    public static gstTypesMaster = [{ label: 'Regular', value: 'REGULAR' },
+    { label: 'Composite', value: 'COMPOSITE' },
+    { label: 'Input Service Distributor (ISD)', value: 'Input Service Distributor (ISD)' }];
+    public static frequencyTypesMaster = [{ label: 'Monthly', value: 'MONTHLY' },
+    { label: 'Quarterly', value: 'QUARTERLY' },
+    { label: 'Yearly', value: 'YEARLY' }];
+    public static returnTypeMaster = [{ label: 'CMP08', value: 'CMP08' }, { label: 'GSTR-3B', value: 'GSTR-3B' }, { label: 'GSTR1', value: 'GSTR1' }, { label: 'Original', value: 'ORIGINAL' }, { label: 'Revised', value: 'REVISED' }];
+    /* public static financialYearList = [{
+        "id": 1,
+        "fincialYear": "2019-2020",
+        "assessmentYear": "2020-2021",
+        "filingDueDate": "10-01-2021",
+        "lateFilingDueDate": "31-05-2021",
+        "isFilingActive": "false"
+    }, {
+        "id": 2,
+        "fincialYear": "2018-2019",
+        "assessmentYear": "2019-2020",
+        "filingDueDate": "31-07-2021",
+        "lateFilingDueDate": "31-12-2021",
+        "isFilingActive": "false"
+    }, {
+        "id": 3,
+        "fincialYear": "2017-2018",
+        "assessmentYear": "2018-2019",
+        "filingDueDate": "31-07-2021",
+        "lateFilingDueDate": "31-12-2021",
+        "isFilingActive": "false"
+    }, {
+        "id": 4,
+        "fincialYear": "2020-2021",
+        "assessmentYear": "2021-2022",
+        "filingDueDate": "31-07-2021",
+        "lateFilingDueDate": "31-12-2021",
+        "isFilingActive": "true"
+    }]; */
+
 }
