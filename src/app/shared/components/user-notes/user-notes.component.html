@@ -1,34 +1,37 @@
 <label style="font-size: 18px;
 font-weight: bold;">Notes for {{data.clientName}}</label><button mat-dialog-close tabindex="-1"
     style="float: right; cursor: pointer;"><i class="fa fa-times" aria-hidden="true"></i></button>
-<div class="card__row" style="margin-top: 0px;" *ngIf="notes.length > 0">
-    <div class="tab-panel items-tab card__col-xs-12">
-        <div class="tab-panel__content tab-panel__content_visible">
-            <div class="table product__table">
-                <div class="table__row  table__row_header ">
-                    <div class="table__cell product-row__cell-unit flex-70">
-                        <a class="table__sort-link">Note</a>
-                    </div>
-                    <div class="table__cell product-row__cell-unit flex-15">
-                        <a class="table__sort-link">By</a>
-                    </div>
-                    <div class="table__cell product-row__cell-unit flex-15">
-                        <a class="table__sort-link">Date</a>
-                    </div>
-                </div>
 
-
-                <div *ngFor="let item of notes; let p=index ">
-                    <div class="table__row-item product-row">
-                        <div class="table__row product-row__main-variant">
-                            <div class="table__cell product-row__cell-stock flex-70">
-                                {{item.note}}
-                            </div>
-                            <div class="table__cell product-row__cell-stock flex-15">
-                                {{item.createdByName}}
-                            </div>
-                            <div class="table__cell product-row__cell-stock flex-15">
-                                {{item.dateAndTime | date :'dd MMM yyyy, hh:mm a'}}
+   <!-- <div class="notes">
+    <div class="card__row" style="margin-top: 0px;" *ngIf="notes.length > 0">
+        <div class="tab-panel items-tab card__col-xs-12">
+            <div class="tab-panel__content tab-panel__content_visible">
+                <div class="table product__table">
+                    <div class="table__row  table__row_header ">
+                        <div class="table__cell product-row__cell-unit flex-70">
+                            <a class="table__sort-link">Note</a>
+                        </div>
+                        <div class="table__cell product-row__cell-unit flex-15">
+                            <a class="table__sort-link">By</a>
+                        </div>
+                        <div class="table__cell product-row__cell-unit flex-15">
+                            <a class="table__sort-link">Date</a>
+                        </div>
+                    </div>
+    
+    
+                    <div *ngFor="let item of notes; let p=index ">
+                        <div class="table__row-item product-row">
+                            <div class="table__row product-row__main-variant">
+                                <div class="table__cell product-row__cell-stock flex-70">
+                                    {{item.note}}
+                                </div>
+                                <div class="table__cell product-row__cell-stock flex-15">
+                                    {{item.createdByName}}
+                                </div>
+                                <div class="table__cell product-row__cell-stock flex-15">
+                                    {{item.dateAndTime | date :'dd MMM yyyy, hh:mm a'}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -36,7 +39,27 @@ font-weight: bold;">Notes for {{data.clientName}}</label><button mat-dialog-clos
             </div>
         </div>
     </div>
-</div>
+   </div>  -->
+
+   <div class="tableFixHead">
+    <table>
+      <thead>
+        <tr>
+            <th><b>Notes</b></th>
+            <th><b>By</b></th>
+            <th><b>Date</b></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of notes; let p=index ">
+            <td>{{item.note}}</td>
+            <td>{{item.createdByName}}</td>
+            <td>{{item.dateAndTime | date :'dd MMM yyyy, hh:mm a'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 
 <div class="card__row">
     <div class="card__col-xs-12 card__col-sm-9">
