@@ -76,7 +76,7 @@ export class SubscriptionDetailComponent implements OnInit {
         // if(from === 'anotherPage'){
         //   this.utilsService.sendMessage(this.queryParam)
         // }
-         this.utilsService.sendMessage(this.queryParam);
+        this.utilsService.sendMessage(this.queryParam);
       }
     },
       error => {

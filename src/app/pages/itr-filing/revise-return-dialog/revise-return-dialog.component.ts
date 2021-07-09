@@ -24,14 +24,20 @@ export class ReviseReturnDialogComponent implements OnInit {
   }
 
   ITR_JSON: ITR_JSON;
-  getITRByUserIdAndAssesmentYear(userId) {
-    const param = `/itr?userId=${userId}&assessmentYear=${AppConstants.ayYear}`;
+  async getITRByUserIdAndAssesmentYear(userId) {
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
+    }
+    const param = `/itr?userId=${userId}&assessmentYear=${currentFyDetails[0].assessmentYear}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       console.log('My ITR by user Id and Assesment Years=', result);
       if (result.length !== 0) {
         let isWIP_ITRFound = true;
         for (let i = 0; i < result.length; i++) {
-          let currentFiledITR = result.filter(item => (item.assessmentYear === AppConstants.ayYear && item.eFillingCompleted));
+          let currentFiledITR = result.filter(item => (item.assessmentYear === currentFyDetails[0].assessmentYear && item.eFillingCompleted));
           if (result[i].eFillingCompleted || result[i].ackStatus === 'SUCCESS' || result[i].ackStatus === 'DELAY') {
             //   return "REVIEW"
           } else {
@@ -78,12 +84,18 @@ export class ReviseReturnDialogComponent implements OnInit {
       this.utilsService.showSnackBar('Failed to create revise return data, please try again')
     });
   }
-  createReviseReturn(currentYearItrs) {
+  async createReviseReturn(currentYearItrs) {
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
+    }
     const param = '/copyitr';
     const copy = {
       userId: this.data['userId'],
       itrId: currentYearItrs[currentYearItrs.length - 1].itrId,
-      assessmentYear: AppConstants.ayYear
+      assessmentYear: currentFyDetails[0].assessmentYear
     };
 
     this.itrMsService.postMethod(param, copy).subscribe(

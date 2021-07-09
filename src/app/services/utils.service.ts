@@ -6,6 +6,8 @@ import { AppConstants } from 'app/shared/constants';
 import { Observable, Subject } from 'rxjs';
 import { ITR_JSON } from './../shared/interfaces/itr-input.interface';
 import { ItrMsService } from './itr-ms.service';
+import { ApiEndpoints } from 'app/shared/api-endpoint';
+import { UserMsService } from './user-ms.service';
 
 @Injectable()
 
@@ -14,7 +16,8 @@ export class UtilsService {
     loading: boolean = false;
     private subject = new Subject<any>();
     constructor(private snackBar: MatSnackBar, private itrMsService: ItrMsService,
-        private router: Router, private dialog: MatDialog,) { }
+        private router: Router, private dialog: MatDialog,
+        private userMsService: UserMsService,) { }
     /**
     * @function isNonEmpty()
     * @param param
@@ -72,16 +75,26 @@ export class UtilsService {
         });
     }
 
-    getITRByUserIdAndAssesmentYear(profile, ref?: any) {
+    async getITRByUserIdAndAssesmentYear(profile, ref?: any, filingTeamMemberId?: any) {
+        console.log('filingTeamMemberId====', filingTeamMemberId);
         this.loading = true;
         // this.isLoggedIn = this.encrDecrService.get(AppConstants.IS_USER_LOGGED_IN);
-        const param = '/itr?userId=' + profile.userId + '&assessmentYear=' + AppConstants.ayYear;
+        // let list = []
+        const fyList = await this.getStoredFyList();
+        const currentFyDetails = fyList.filter(item => item.isFilingActive);
+        if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+            this.showSnackBar('There is no any active filing year available')
+            return;
+        }
+        // const currentAy = (currentFyDetails.length > 0 ? currentFyDetails[0].assessmentYear : AppConstants.ayYear)
+        // const currentFy = (currentFyDetails.length > 0 ? currentFyDetails[0].financialYear : AppConstants.ayYear)
+        const param = `/itr?userId=${profile.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}`;
         this.itrMsService.getMethod(param).subscribe((result: any) => {
             console.log('My ITR by user Id and Assesment Years=', result);
             if (result.length !== 0) {
                 let isWIP_ITRFound = true;
                 for (let i = 0; i < result.length; i++) {
-                    let currentFiledITR = result.filter(item => (item.assessmentYear === AppConstants.ayYear && item.eFillingCompleted));
+                    let currentFiledITR = result.filter(item => (item.assessmentYear === currentFyDetails[0].assessmentYear && item.eFillingCompleted));
                     if (result[i].eFillingCompleted || result[i].ackStatus === 'SUCCESS' || result[i].ackStatus === 'DELAY') {
                         //   return "REVIEW"
                     } else {
@@ -112,10 +125,12 @@ export class UtilsService {
 
                 if (!isWIP_ITRFound) {
                     this.loading = false;
-                    let obj = this.createEmptyJson(profile, AppConstants.ayYear, AppConstants.fyYear)
+                    let obj = this.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear)
                     Object.assign(obj, this.ITR_JSON)
                     console.log('obj:', obj)
                     this.ITR_JSON = JSON.parse(JSON.stringify(obj))
+                    this.ITR_JSON.filingTeamMemberId = filingTeamMemberId;
+                    console.log('this.ITR_JSONthis.ITR_JSONthis.ITR_JSON', this.ITR_JSON);
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
                     this.router.navigate(['/pages/itr-filing/customer-profile'])
                     /* if (this.utilsService.isNonEmpty(profile.panNumber)) {
@@ -156,8 +171,8 @@ export class UtilsService {
                 }
 
             } else {
-                this.ITR_JSON = this.createEmptyJson(profile, AppConstants.ayYear, AppConstants.fyYear);
-
+                this.ITR_JSON = this.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+                this.ITR_JSON.filingTeamMemberId = filingTeamMemberId;
                 const param = '/itr';
                 this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
                     console.log('My iTR Json successfully created-==', result);
@@ -172,7 +187,8 @@ export class UtilsService {
 
         }, error => {
             if (error.status === 404) {
-                this.ITR_JSON = this.createEmptyJson(profile, AppConstants.ayYear, AppConstants.fyYear);
+                this.ITR_JSON = this.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+                this.ITR_JSON.filingTeamMemberId = filingTeamMemberId;
                 const param = '/itr';
                 this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
                     console.log('My iTR Json successfully created-==', result);
@@ -305,7 +321,7 @@ export class UtilsService {
     }
 
     sendMessage(message: any) {
-        console.log('get message: ',message)
+        console.log('get message: ', message)
         this.subject.next({ text: message });
     }
 
@@ -342,5 +358,52 @@ export class UtilsService {
         let endFy = financialYear.slice(7, 9);
         return startFy + endFy;
         // return '2020-21';
+    }
+
+    async getStoredFyList() {
+        const fyList = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST));
+        console.log('fyList', fyList);
+        if (this.isNonEmpty(fyList) && fyList instanceof Array) {
+            return fyList;
+        } else {
+            let res: any = await this.getFyList().catch(error => {
+                this.loading = false;
+                console.log(error);
+                this.showSnackBar('Error While getting financial year list.');
+                return [];
+            });
+            if (res && res.success && res.data instanceof Array) {
+                sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
+                return res.data;
+            }
+        }
+    }
+
+    async getFyList() {
+        const param = `${ApiEndpoints.itrMs.filingDates}`;
+        return await this.itrMsService.getMethod(param).toPromise();
+    }
+
+    async getStoredSmeList() {
+        const smeList = JSON.parse(sessionStorage.getItem(AppConstants.SME_LIST));
+        // console.log('fyList', fyList);
+        if (this.isNonEmpty(smeList) && smeList instanceof Array) {
+            return smeList;
+        } else {
+            let res: any = await this.getSmeList().catch(error => {
+                this.loading = false;
+                console.log(error);
+                this.showSnackBar('Error While getting SME list.');
+                return [];
+            });
+            if (res && res instanceof Array) {
+                sessionStorage.setItem(AppConstants.SME_LIST, JSON.stringify(res));
+                return res;
+            }
+        }
+    }
+    async getSmeList() {
+        const param = `${ApiEndpoints.userMs.smeDetails}`;
+        return await this.userMsService.getMethod(param).toPromise();
     }
 }

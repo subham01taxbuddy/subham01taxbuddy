@@ -500,7 +500,8 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         this.utilsService.showSnackBar(error.error.detail);
         return;
       });
-      this.utilsService.getITRByUserIdAndAssesmentYear(profile);
+      this.loading = false;
+      this.utilsService.getITRByUserIdAndAssesmentYear(profile, '', subscription.subscriptionAssigneeId);
     } else if (subscription.servicesType === 'GST') {
       this.router.navigate(['/pages/gst-filing/cloud'], { queryParams: { userId: subscription.userId } })
     } else {
