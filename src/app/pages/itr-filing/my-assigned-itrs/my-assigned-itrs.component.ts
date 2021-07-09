@@ -22,6 +22,8 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   itrDataList = [];
   // financialYear = [];
   selectedFyYear = '';
+  config: any;
+  selectedPageNo = 0;
   constructor(private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     private router: Router,
@@ -42,6 +44,11 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
 
   ngOnInit() {
     // this.setFyDropDown();
+    this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: 80
+    };
   }
   ngAfterContentChecked() {
     this.cdRef.detectChanges();
@@ -68,7 +75,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   //   }
   // }
 
-  myItrsList(fy: String) {
+  myItrsList(fy: String, pageNo) {
     this.loading = true;
     return new Promise((resolve, reject) => {
       const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
@@ -82,11 +89,12 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       //   param = `${param}&fy=${fy}`;
       // }
 
-      let param = '/itr-search?page=0&size=20';
+      let param = `/itr-search?page=${pageNo}&size=20`;
       let param2 = reqBody;
       // this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
         console.log('filingTeamMemberId: ', res);
+        // TODO Need to update the api here to get the proper data like user management
         if (res && res.success) {
           this.itrDataList = res.data;
           this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res.data));
@@ -106,7 +114,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
     // this.searchParams = event;
     this.selectedFyYear = event;
     console.log(event);
-    this.myItrsList(event);
+    this.myItrsList(event, this.selectedPageNo);
   }
 
   // changeFy(fy: String) {
@@ -431,7 +439,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       this.utilsService.showSnackBar(res.status)
       this.loading = false;
       setTimeout(() => {
-        this.myItrsList(this.selectedFyYear);
+        this.myItrsList(this.selectedFyYear, this.selectedPageNo);
       }, 5000);
 
     }, error => {
@@ -446,14 +454,20 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
 
     const param = '/itr/' + workingItr['userId'] + '/' + workingItr['itrId'] + '/' + workingItr['assessmentYear'];
     this.itrMsService.putMethod(param, workingItr).subscribe((result: ITR_JSON) => {
-      this.myItrsList(this.selectedFyYear);
+      this.myItrsList(this.selectedFyYear, this.selectedPageNo);
     }, error => {
-      this.myItrsList(this.selectedFyYear);
+      this.myItrsList(this.selectedFyYear, this.selectedPageNo);
     });
   }
 
   showUserDoucuments(data) {
     console.log(data);
     this.router.navigate(['/pages/itr-filing/user-docs/' + data.userId]);
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+    this.selectedPageNo = event - 1;
+    this.myItrsList(this.selectedFyYear, this.selectedPageNo);
   }
 }

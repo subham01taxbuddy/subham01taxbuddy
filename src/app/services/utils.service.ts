@@ -7,6 +7,7 @@ import { Observable, Subject } from 'rxjs';
 import { ITR_JSON } from './../shared/interfaces/itr-input.interface';
 import { ItrMsService } from './itr-ms.service';
 import { ApiEndpoints } from 'app/shared/api-endpoint';
+import { UserMsService } from './user-ms.service';
 
 @Injectable()
 
@@ -15,7 +16,8 @@ export class UtilsService {
     loading: boolean = false;
     private subject = new Subject<any>();
     constructor(private snackBar: MatSnackBar, private itrMsService: ItrMsService,
-        private router: Router, private dialog: MatDialog,) { }
+        private router: Router, private dialog: MatDialog,
+        private userMsService: UserMsService,) { }
     /**
     * @function isNonEmpty()
     * @param param
@@ -358,7 +360,7 @@ export class UtilsService {
         // return '2020-21';
     }
 
-    async getStoredFyList<Array>() {
+    async getStoredFyList() {
         const fyList = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST));
         console.log('fyList', fyList);
         if (this.isNonEmpty(fyList) && fyList instanceof Array) {
@@ -380,5 +382,28 @@ export class UtilsService {
     async getFyList() {
         const param = `${ApiEndpoints.itrMs.filingDates}`;
         return await this.itrMsService.getMethod(param).toPromise();
+    }
+
+    async getStoredSmeList() {
+        const smeList = JSON.parse(sessionStorage.getItem(AppConstants.SME_LIST));
+        // console.log('fyList', fyList);
+        if (this.isNonEmpty(smeList) && smeList instanceof Array) {
+            return smeList;
+        } else {
+            let res: any = await this.getSmeList().catch(error => {
+                this.loading = false;
+                console.log(error);
+                this.showSnackBar('Error While getting SME list.');
+                return [];
+            });
+            if (res && res instanceof Array) {
+                sessionStorage.setItem(AppConstants.SME_LIST, JSON.stringify(res));
+                return res;
+            }
+        }
+    }
+    async getSmeList() {
+        const param = `${ApiEndpoints.userMs.smeDetails}`;
+        return await this.userMsService.getMethod(param).toPromise();
     }
 }

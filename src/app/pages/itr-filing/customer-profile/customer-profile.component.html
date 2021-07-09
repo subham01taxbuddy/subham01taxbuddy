@@ -218,13 +218,24 @@
                                 <mat-label>Filing Team</mat-label>
                                 <mat-select placeholder="Filing Team Member Id" name="filingTeamMemberId"
                                     formControlName="filingTeamMemberId">
-                                    <mat-option *ngFor="let member of filingTeamMembers" [value]="member.value">
-                                        {{ member.label }}
+                                    <mat-option *ngFor="let member of filingTeamMembers" [value]="member.userId">
+                                        {{ member.name }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
                         <div class="card__col-xs-12 card__col-sm-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Return Type</mat-label>
+                                <mat-select placeholder="Return Type" name="isRevised" formControlName="isRevised"
+                                    (selectionChange)="changeReviseForm()" required>
+                                    <mat-option *ngFor="let type of returnTypes" [value]="type.value">
+                                        {{ type.label }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <!-- <div class="card__col-xs-12 card__col-sm-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>Package Selected by User</mat-label>
                                 <mat-select placeholder="Package Selected by User" name="planIdSelectedByUser"
@@ -247,20 +258,9 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Return Type</mat-label>
-                                <mat-select placeholder="Return Type" name="isRevised" formControlName="isRevised"
-                                    (selectionChange)="changeReviseForm()" required>
-                                    <mat-option *ngFor="let type of returnTypes" [value]="type.value">
-                                        {{ type.label }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
                         <div class="card__col-xs-12 card__col-sm-4"
                             *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
                             <mat-form-field appearance="outline">
@@ -329,11 +329,13 @@
 
                     </div>
                     <div class="footer__buttons clearfix" style="margin-top: 40px;">
-                        <button class="btn long-btn" style="border: none;" (click)="previousRoute()">Back</button>
+                        <button class="btn long-btn" style="border: none;" (click)="this.location.back()">Back</button>
                         <button class="btn long-btn" style="border: none;" (click)="saveProfile('SAVE')">Save
                             Profile</button>
                         <button class="btn long-btn" style="border: none;" (click)="saveProfile('CONTINUE')">Continue
                             Filing</button>
+                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('MANUALLY')">Manually
+                            Filed</button>
                         <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT')">Direct
                             Upload</button>
                     </div>

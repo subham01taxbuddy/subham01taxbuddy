@@ -39,6 +39,8 @@ import { DelayComponent } from './delay/delay.component';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
 import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-documnets.component';
+import { UpdateManualFilingComponent } from './update-manual-filing/update-manual-filing.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -52,7 +54,8 @@ import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-docu
         PdfViewerModule,
         SharedModule,
         PagesModule,
-        NgxDocViewerModule
+        NgxDocViewerModule,
+        NgxPaginationModule
         // NgxExtendedPdfViewerModule
     ],
     declarations: [
@@ -86,10 +89,11 @@ import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-docu
         DelayComponent,
         FilingTasksComponent,
         ShowUserDocumnetsComponent,
+        UpdateManualFilingComponent,
         // InputUploadComponent
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
-        /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent]
+        /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent]
 
 })
 export class ItrFilingModule { }

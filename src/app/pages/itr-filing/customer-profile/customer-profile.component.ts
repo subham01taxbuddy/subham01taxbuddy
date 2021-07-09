@@ -1,17 +1,18 @@
+import { UpdateManualFilingComponent } from './../update-manual-filing/update-manual-filing.component';
 import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { UtilsService } from './../../../services/utils.service';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AppConstants } from 'app/shared/constants';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { TitleCasePipe } from '@angular/common';
-import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, DateAdapter } from '@angular/material';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, DateAdapter, MatDialog } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { UserMsService } from 'app/services/user-ms.service';
-import Storage from '@aws-amplify/storage';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 declare let $: any;
@@ -81,68 +82,68 @@ export class CustomerProfileComponent implements OnInit {
 
   // TODO
   filingTeamMembers = [
-    { value: 1063, label: 'Amrita Thakur' },
-    { value: 1064, label: 'Ankita Murkute' },
-    { value: 1062, label: 'Damini Patil' },
-    { value: 1707, label: 'Kavita Singh' },
-    { value: 1706, label: 'Nimisha Panda' },
-    { value: 24346, label: 'Tushar Shilimkar' },
-    { value: 19529, label: 'Kirti Gorad' },
-    { value: 24348, label: 'Geetanjali Panchal' },
-    { value: 23553, label: 'Renuka Kalekar' },
-    { value: 23550, label: 'Bhavana Patil' },
-    { value: 23567, label: 'Sneha Suresh Utekar' },
-    { value: 23552, label: 'Roshan Vilas Kakade' },
-    { value: 23551, label: 'Pradnya Tambade' },
-    { value: 983, label: 'Usha Chellani' },
-    { value: 23670, label: 'Ashwini Kapale' },
-    { value: 23578, label: 'Aditi Ravindra Gujar' },
-    { value: 23564, label: 'Sonali Ghanwat' }, //Quit
-    { value: 23668, label: 'Chaitanya Prakash Masurkar' },
+    // { value: 1063, label: 'Amrita Thakur' },
+    // { value: 1064, label: 'Ankita Murkute' },
+    // { value: 1062, label: 'Damini Patil' },
+    // { value: 1707, label: 'Kavita Singh' },
+    // { value: 1706, label: 'Nimisha Panda' },
+    // { value: 24346, label: 'Tushar Shilimkar' },
+    // { value: 19529, label: 'Kirti Gorad' },
+    // { value: 24348, label: 'Geetanjali Panchal' },
+    // { value: 23553, label: 'Renuka Kalekar' },
+    // { value: 23550, label: 'Bhavana Patil' },
+    // { value: 23567, label: 'Sneha Suresh Utekar' },
+    // { value: 23552, label: 'Roshan Vilas Kakade' },
+    // { value: 23551, label: 'Pradnya Tambade' },
+    // { value: 983, label: 'Usha Chellani' },
+    // { value: 23670, label: 'Ashwini Kapale' },
+    // { value: 23578, label: 'Aditi Ravindra Gujar' },
+    // { value: 23564, label: 'Sonali Ghanwat' }, //Quit
+    // { value: 23668, label: 'Chaitanya Prakash Masurkar' },
 
 
-    { value: 25942, label: 'Vaibhav M. Nilkanth' },
-    { value: 26220, label: 'Pratiksha Shivaji Jagtap' },
-    { value: 177, label: 'Aditya U.Singh' },
-    { value: 26195, label: 'Tejaswi Suraj Bodke' },
-    { value: 23505, label: 'Tejshri Hanumant Bansode' },
-    { value: 26215, label: 'Deepali Nivrutti Pachangane' },
-    { value: 26217, label: 'Manasi Jadhav' },// Quit
-    { value: 26236, label: 'Supriya Mahindrakar' },
-    { value: 26218, label: 'Mrudula Vishvas Shivalkar' },// Quit
-    { value: 26235, label: 'Chaitrali Ranalkar' },
+    // { value: 25942, label: 'Vaibhav M. Nilkanth' },
+    // { value: 26220, label: 'Pratiksha Shivaji Jagtap' },
+    // { value: 177, label: 'Aditya U.Singh' },
+    // { value: 26195, label: 'Tejaswi Suraj Bodke' },
+    // { value: 23505, label: 'Tejshri Hanumant Bansode' },
+    // { value: 26215, label: 'Deepali Nivrutti Pachangane' },
+    // { value: 26217, label: 'Manasi Jadhav' },// Quit
+    // { value: 26236, label: 'Supriya Mahindrakar' },
+    // { value: 26218, label: 'Mrudula Vishvas Shivalkar' },// Quit
+    // { value: 26235, label: 'Chaitrali Ranalkar' },
 
-    { value: 28033, label: 'Shrikanth Elegeti' },
-    { value: 28032, label: 'Pranali Patil' },
-    { value: 28040, label: 'Namrata Shringarpure' },
-    { value: 28035, label: 'Rupali Onamshetty' },
-    { value: 27474, label: 'Poonam Hase' },
-    { value: 28044, label: 'Bhakti Khatavkar' },
-    { value: 28034, label: 'Dipali Waghmode' },
-    { value: 28031, label: 'Harsha Kashyap' },
-    { value: 28222, label: 'Ankita Pawar' },
-    { value: 28763, label: 'Smita Yadav' },
+    // { value: 28033, label: 'Shrikanth Elegeti' },
+    // { value: 28032, label: 'Pranali Patil' },
+    // { value: 28040, label: 'Namrata Shringarpure' },
+    // { value: 28035, label: 'Rupali Onamshetty' },
+    // { value: 27474, label: 'Poonam Hase' },
+    // { value: 28044, label: 'Bhakti Khatavkar' },
+    // { value: 28034, label: 'Dipali Waghmode' },
+    // { value: 28031, label: 'Harsha Kashyap' },
+    // { value: 28222, label: 'Ankita Pawar' },
+    // { value: 28763, label: 'Smita Yadav' },
 
-    { value: 42886, label: 'Gitanjali Kakade' },
-    { value: 42885, label: 'Dhanashri wadekar' },
-    { value: 42888, label: 'Baby Kumari Yadav' },
-    { value: 43406, label: 'Priyanka Shilimkar' },
-    { value: 42878, label: 'Supriya Waghmare' },
-    { value: 42931, label: 'Dhanashree Amarale' },
-    { value: 67523, label: 'Supriya Kumbhar' },
-    { value: 67522, label: 'Nikita Chilveri' },
-    { value: 67558, label: 'Sunita Sharma' },
-    { value: 71150, label: 'Deep Trivedi', },
-    { value: 71148, label: 'Riddhi Solanki', },
-    { value: 71159, label: 'Ajay Kandhway' },
-    { value: 71168, label: 'Ganesh Jaiswal' },
-    { value: 75925, label: 'Nikita Shah' },
-    { value: 81402, label: 'Vatsa Bhanushali' },
-    { value: 87321, label: 'Chetan Kori' },
+    // { value: 42886, label: 'Gitanjali Kakade' },
+    // { value: 42885, label: 'Dhanashri wadekar' },
+    // { value: 42888, label: 'Baby Kumari Yadav' },
+    // { value: 43406, label: 'Priyanka Shilimkar' },
+    // { value: 42878, label: 'Supriya Waghmare' },
+    // { value: 42931, label: 'Dhanashree Amarale' },
+    // { value: 67523, label: 'Supriya Kumbhar' },
+    // { value: 67522, label: 'Nikita Chilveri' },
+    // { value: 67558, label: 'Sunita Sharma' },
+    // { value: 71150, label: 'Deep Trivedi', },
+    // { value: 71148, label: 'Riddhi Solanki', },
+    // { value: 71159, label: 'Ajay Kandhway' },
+    // { value: 71168, label: 'Ganesh Jaiswal' },
+    // { value: 75925, label: 'Nikita Shah' },
+    // { value: 81402, label: 'Vatsa Bhanushali' },
+    // { value: 87321, label: 'Chetan Kori' },
 
-    { value: 1065, label: 'Urmila Warve' },
-    { value: 1067, label: 'Divya Bhanushali' },
-    { value: 21354, label: 'Brijmohan Lavaniya' },
+    // { value: 1065, label: 'Urmila Warve' },
+    // { value: 1067, label: 'Divya Bhanushali' },
+    // { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
   // TODO
   planMaster = [
@@ -176,7 +177,9 @@ export class CustomerProfileComponent implements OnInit {
     private titlecasePipe: TitleCasePipe,
     private itrMsService: ItrMsService,
     private userMsService: UserMsService,
-    private router: Router) {
+    private router: Router,
+    private dialog: MatDialog,
+    public location: Location,) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
@@ -186,6 +189,7 @@ export class CustomerProfileComponent implements OnInit {
     this.setCustomerProfileValues();
     this.changeReviseForm();
     this.getDocuments();
+    this.getSmeList();
 
   }
   zoom: number = 1.0;
@@ -212,8 +216,8 @@ export class CustomerProfileComponent implements OnInit {
       orgITRAckNum: [''],
       orgITRDate: [null],
       filingTeamMemberId: [''], // TODO
-      planIdSelectedByUser: [null],
-      planIdSelectedByTaxExpert: [null],
+      // planIdSelectedByUser: [null],
+      // planIdSelectedByTaxExpert: [null],
       seventhProviso139: this.fb.group({
         depAmtAggAmtExcd1CrPrYrFlg: [null],
         incrExpAggAmt2LkTrvFrgnCntryFlg: [null],
@@ -231,10 +235,10 @@ export class CustomerProfileComponent implements OnInit {
       }
     }
     this.customerProfileForm.patchValue(this.ITR_JSON);
-    this.customerProfileForm.controls['planIdSelectedByUser'].disable();
-    if (this.customerProfileForm.controls['planIdSelectedByTaxExpert'].value === 0) {
-      this.customerProfileForm.controls['planIdSelectedByTaxExpert'].setValue(null);
-    }
+    // this.customerProfileForm.controls['planIdSelectedByUser'].disable();
+    // if (this.customerProfileForm.controls['planIdSelectedByTaxExpert'].value === 0) {
+    //   this.customerProfileForm.controls['planIdSelectedByTaxExpert'].setValue(null);
+    // }
     if (this.utilsService.isNonEmpty(this.ITR_JSON.family) && this.ITR_JSON.family instanceof Array) {
       this.ITR_JSON.family.filter(item => {
         if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
@@ -295,7 +299,7 @@ export class CustomerProfileComponent implements OnInit {
   saveProfile(ref) {
     console.log('customerProfileForm: ', this.customerProfileForm);
     this.findAssesseeType();
-    this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
+    // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
       this.loading = true;
       const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
@@ -319,54 +323,56 @@ export class CustomerProfileComponent implements OnInit {
       } else {
         param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
       }
-      let isPlanChanged = false;
-      if (this.ITR_JSON.planIdSelectedByTaxExpert !== Number(this.customerProfileForm.controls['planIdSelectedByTaxExpert'].value)) {
-        isPlanChanged = true;
-      }
+      // let isPlanChanged = false;
+      // if (this.ITR_JSON.planIdSelectedByTaxExpert !== Number(this.customerProfileForm.controls['planIdSelectedByTaxExpert'].value)) {
+      //   isPlanChanged = true;
+      // }
       Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
-      if (isPlanChanged) {
-        this.ITR_JSON.planIdSelectedByTaxExpert = null
-      }
+      // if (isPlanChanged) {
+      //   this.ITR_JSON.planIdSelectedByTaxExpert = null
+      // }
 
       this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
         this.ITR_JSON = result;
         this.updateStatus(); // Update staus automatically
-        if (isPlanChanged) {
-          const planParam = '/change-plan-by-expert';
-          this.ITR_JSON.planIdSelectedByTaxExpert = Number(this.customerProfileForm.controls['planIdSelectedByTaxExpert'].value)
-          this.itrMsService.putMethod(planParam, this.ITR_JSON).subscribe((result: any) => {
-            this.ITR_JSON = result;
-            console.log('Plan changed successfully by tax expert', result);
-            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-            this.loading = false;
-            this.utilsService.showSnackBar('Customer profile updated successfully.');
-            if (ref === "CONTINUE") {
-              if (this.customerProfileForm.controls['itrType'].value === '1'
-                || this.customerProfileForm.controls['itrType'].value === '4')
-                this.router.navigate(['/pages/itr-filing/itr']);
-              else
-                this.router.navigate(['/pages/itr-filing/direct-upload']);
-            } else if (ref === "DIRECT") {
-              this.router.navigate(['/pages/itr-filing/direct-upload']);
-            }
-          }, error => {
-            this.utilsService.showSnackBar('Fialed to update customer profile.');
-            this.loading = false;
-          });
-        } else {
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-          this.loading = false;
-          this.utilsService.showSnackBar('Customer profile updated successfully.');
-          if (ref === "CONTINUE") {
-            if (this.customerProfileForm.controls['itrType'].value === '1'
-              || this.customerProfileForm.controls['itrType'].value === '4')
-              this.router.navigate(['/pages/itr-filing/itr']);
-            else
-              this.router.navigate(['/pages/itr-filing/direct-upload']);
-          } else if (ref === "DIRECT") {
+        // if (isPlanChanged) {
+        //   const planParam = '/change-plan-by-expert';
+        //   this.ITR_JSON.planIdSelectedByTaxExpert = Number(this.customerProfileForm.controls['planIdSelectedByTaxExpert'].value)
+        //   this.itrMsService.putMethod(planParam, this.ITR_JSON).subscribe((result: any) => {
+        //     this.ITR_JSON = result;
+        //     console.log('Plan changed successfully by tax expert', result);
+        //     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+        //     this.loading = false;
+        //     this.utilsService.showSnackBar('Customer profile updated successfully.');
+        //     if (ref === "CONTINUE") {
+        //       if (this.customerProfileForm.controls['itrType'].value === '1'
+        //         || this.customerProfileForm.controls['itrType'].value === '4')
+        //         this.router.navigate(['/pages/itr-filing/itr']);
+        //       else
+        //         this.router.navigate(['/pages/itr-filing/direct-upload']);
+        //     } else if (ref === "DIRECT") {
+        //       this.router.navigate(['/pages/itr-filing/direct-upload']);
+        //     }
+        //   }, error => {
+        //     this.utilsService.showSnackBar('Fialed to update customer profile.');
+        //     this.loading = false;
+        //   });
+        // } else {
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+        this.utilsService.showSnackBar('Customer profile updated successfully.');
+        if (ref === "CONTINUE") {
+          if (this.customerProfileForm.controls['itrType'].value === '1'
+            || this.customerProfileForm.controls['itrType'].value === '4')
+            this.router.navigate(['/pages/itr-filing/itr']);
+          else
             this.router.navigate(['/pages/itr-filing/direct-upload']);
-          }
+        } else if (ref === "DIRECT") {
+          this.router.navigate(['/pages/itr-filing/direct-upload']);
+        } else if (ref === "MANUALLY") {
+          this.updateManualFiling();
         }
+        // }
       }, error => {
         this.utilsService.showSnackBar('Fialed to update customer profile.');
         this.loading = false;
@@ -484,9 +490,6 @@ export class CustomerProfileComponent implements OnInit {
       })
   }
 
-  previousRoute() {
-    this.router.navigate(['/pages/itr-filing/users']);
-  }
   state: string = 'default';
 
   rotate() {
@@ -546,5 +549,41 @@ export class CustomerProfileComponent implements OnInit {
   }
   closeDialog() {
     this.deletedFileData = [];
+  }
+
+  updateManualFiling() {
+    let manulFiling = {
+      "userId": this.ITR_JSON.userId,
+      "itrId": this.ITR_JSON.itrId,
+      "email": this.customerProfileForm.controls['email'].value,
+      "contactNumber": this.customerProfileForm.controls['contactNumber'].value,
+      "panNumber": this.customerProfileForm.controls['panNumber'].value,
+      "aadharNumber": this.customerProfileForm.controls['aadharNumber'].value,
+      "assesseeType": this.customerProfileForm.controls['assesseeType'].value,
+      "assessmentYear": this.ITR_JSON.assessmentYear,
+      "financialYear": this.ITR_JSON.financialYear,
+      "isRevised": this.customerProfileForm.controls['isRevised'].value,
+      "eFillingCompleted": true,
+      "eFillingDate": "",
+      "ackNumber": "",
+      "itrType": this.customerProfileForm.controls['itrType'].value,
+      "itrTokenNumber": "",
+      "filingTeamMemberId": this.customerProfileForm.controls['filingTeamMemberId'].value,
+      "filingSource": "MANUALLY"
+    }
+
+    let disposable = this.dialog.open(UpdateManualFilingComponent, {
+      width: '50%',
+      height: 'auto',
+      data: manulFiling
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+  async getSmeList() {
+    this.filingTeamMembers = await this.utilsService.getStoredSmeList();
   }
 }

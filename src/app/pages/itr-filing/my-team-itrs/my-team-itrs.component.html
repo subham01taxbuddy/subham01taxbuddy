@@ -7,8 +7,8 @@
                 <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
             </div>
             <div class="card__col-xs-9 card__col-sm-9 card__col-md-9">
-                <span *ngFor="let mem of myFilingTeamMembers; let i=index">
-                    <a href="javascript:;" (click)="getMembersItr(mem.value, this.selectedFyYear)">{{mem.label}}</a>
+                <span *ngFor="let mem of filingTeamMembers; let i=index">
+                    <a href="javascript:;" (click)="getMembersItr(mem.userId, this.selectedFyYear)">{{mem.name}}</a>
                     &nbsp;&nbsp;
                 </span>
             </div>
