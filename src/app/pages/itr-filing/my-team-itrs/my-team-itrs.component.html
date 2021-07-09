@@ -3,9 +3,15 @@
 <div class="main clearfix" style="padding-top: 0px;min-height: 10vh;">
     <div class="card">
         <div class="card__row">
-            <span *ngFor="let mem of myFilingTeamMembers; let i=index">
-                <a href="javascript:;" (click)="getMembersItr(mem.value)">{{mem.label}}</a> &nbsp;&nbsp;
-            </span>
+            <div class="card__col-xs-3 card__col-sm-3 card__col-md-3">
+                <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
+            </div>
+            <div class="card__col-xs-9 card__col-sm-9 card__col-md-9">
+                <span *ngFor="let mem of myFilingTeamMembers; let i=index">
+                    <a href="javascript:;" (click)="getMembersItr(mem.value, this.selectedFyYear)">{{mem.label}}</a>
+                    &nbsp;&nbsp;
+                </span>
+            </div>
         </div>
     </div>
 </div>

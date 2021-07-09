@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatStepper } from '@angular/material';
 import { environment } from 'environments/environment';
 import { UserMsService } from 'app/services/user-ms.service';
 import { AppConstants } from 'app/shared/constants';
+import { UtilsService } from 'app/services/utils.service';
 
 @Component({
   templateUrl: './filing-status-dialog.component.html',
@@ -159,7 +160,7 @@ export class FilingStatusDialogComponent implements OnInit {
 
   latestCompiltedStatus: any = [];
   constructor(public dialogRef: MatDialogRef<FilingStatusDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
-    private userMsService: UserMsService) { }
+    private userMsService: UserMsService, public utilsService: UtilsService) { }
 
   ngOnInit() {
     this.userId = this.data['userId'];
@@ -168,8 +169,14 @@ export class FilingStatusDialogComponent implements OnInit {
   }
 
   // TODO
-  getLatestComplitedStatus() {
-    const param = `/itr-status?userId=${this.userId}&assessmentYear=${AppConstants.ayYear}`;
+  async getLatestComplitedStatus() {
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
+    }
+    const param = `/itr-status?userId=${this.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}`;
     this.userMsService.getMethod(param).subscribe(compliteStatus => {
       this.latestCompiltedStatus = compliteStatus;
       console.log('Get all latest complited status: ', compliteStatus);

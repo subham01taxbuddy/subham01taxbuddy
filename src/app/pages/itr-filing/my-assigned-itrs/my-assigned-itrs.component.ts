@@ -73,7 +73,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
     return new Promise((resolve, reject) => {
       const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
       let reqBody = {
-        'financialYear' : fy,
+        'financialYear': fy,
         'filingTeamMemberId': loggedInUserData.USER_UNIQUE_ID
       }
       //https://uat-api.taxbuddy.com/itr/itr-search?page=0&size=20
@@ -81,15 +81,18 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       // if (fy !== '') {
       //   param = `${param}&fy=${fy}`;
       // }
-      
+
       let param = '/itr-search?page=0&size=20';
       let param2 = reqBody;
       // this.itrMsService.getMethod(param).subscribe((res: any) => {
-     this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
+      this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
         console.log('filingTeamMemberId: ', res);
-        if(res && res.success){
+        if (res && res.success) {
           this.itrDataList = res.data;
           this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res.data));
+        } else {
+          this.itrDataList = [];
+          this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData([]));
         }
         this.loading = false;
         return resolve(true)
@@ -111,14 +114,14 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   // }
 
   createOnSalaryRowData(data) {
-    console.log('data: -> ',data)
+    console.log('data: -> ', data)
     const newData = [];
     for (let i = 0; i < data.length; i++) {
-      newData.push({  
+      newData.push({
         itrId: data[i].itrId,
         userId: data[i].userId,
-        fName: (this.utilsService.isNonEmpty(data[i].family) && data[i].family instanceof Array && data[i].family.length > 0) ? (data[i].family[0].fName ) : '',
-        lName: (this.utilsService.isNonEmpty(data[i].family) && data[i].family instanceof Array && data[i].family.length > 0) ? (data[i].family[0].lName ) : '',
+        fName: (this.utilsService.isNonEmpty(data[i].family) && data[i].family instanceof Array && data[i].family.length > 0) ? (data[i].family[0].fName) : '',
+        lName: (this.utilsService.isNonEmpty(data[i].family) && data[i].family instanceof Array && data[i].family.length > 0) ? (data[i].family[0].lName) : '',
         panNumber: data[i].panNumber,
         contactNumber: data[i].contactNumber,
         email: data[i].email,
@@ -387,7 +390,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
     }
   }
 
-  startFiling(data) {
+  async startFiling(data) {
     var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
     console.log('data: ', workingItr);
     Object.entries(workingItr).forEach((key, value) => {
@@ -396,7 +399,13 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         delete workingItr[key[0]];
       }
     });
-    let obj = this.utilsService.createEmptyJson(null, AppConstants.ayYear, AppConstants.fyYear)
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
+    }
+    let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear)
     Object.assign(obj, workingItr)
     console.log('obj:', obj)
     workingItr = JSON.parse(JSON.stringify(obj))

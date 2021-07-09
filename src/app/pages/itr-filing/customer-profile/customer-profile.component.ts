@@ -505,15 +505,21 @@ export class CustomerProfileComponent implements OnInit {
     this.statusId = statusId;
   }
 
-  updateStatus() {
+  async updateStatus() {
     // Auto update status to Preparing ITR 
     console.error('screen Update status call in profile', this.statusId)
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
+    }
     if (this.statusId < 5) {
       const param = '/itr-status'
       const request = {
         "statusId": 5,
         "userId": this.ITR_JSON.userId,
-        "assessmentYear": AppConstants.ayYear,
+        "assessmentYear": currentFyDetails[0].assessmentYear,
         "completed": true
       }
       this.userMsService.postMethod(param, request).subscribe(result => {

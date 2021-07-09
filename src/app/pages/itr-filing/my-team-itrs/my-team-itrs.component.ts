@@ -20,6 +20,7 @@ export class MyTeamItrsComponent implements OnInit {
   loading: boolean = false;
   myItrsGridOptions: GridOptions;
   itrDataList = [];
+  selectedFyYear = '';
   filingTeamMembers = [
     { teamLeadId: 1063, value: 1063, label: 'Amrita Thakur' },
     { teamLeadId: 1064, value: 1064, label: 'Ankita Murkute' },
@@ -115,17 +116,37 @@ export class MyTeamItrsComponent implements OnInit {
 
   }
 
-  getMembersItr(id) {
+  fromFy(event) {
+    // this.searchParams = event;
+    this.selectedFyYear = event;
+    console.log(event);
+    if (this.selectedMemberId !== null)
+      this.getMembersItr(this.selectedMemberId, event);
+  }
 
+  getMembersItr(id, fy) {
     this.loading = true;
     this.selectedMemberId = id;
     return new Promise((resolve, reject) => {
-      this.selectedMember = this.filingTeamMembers.filter(item => item.value === id)[0].label;
+      if (this.utilsService.isNonEmpty(this.selectedMemberId)) {
+        this.selectedMember = this.filingTeamMembers.filter(item => item.value === id)[0].label;
+      }
+      let reqBody = {
+        'financialYear': fy,
+        'filingTeamMemberId': id
+      }
       // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
-      const param = `/itr-by-filingTeamMemberId?filingTeamMemberId=${id}`;
-      this.itrMsService.getMethod(param).subscribe((res: any) => {
-        this.itrDataList = res;
-        this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res));
+      // const param = `/itr-by-filingTeamMemberId?filingTeamMemberId=${id}`;
+      let param = '/itr-search?page=0&size=20';
+      let param2 = reqBody;
+      this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
+        if (res && res.success) {
+          this.itrDataList = res.data;
+          this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res.data));
+        } else {
+          this.itrDataList = [];
+          this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData([]));
+        }
         this.loading = false;
         return resolve(true)
       }, error => {
@@ -143,8 +164,8 @@ export class MyTeamItrsComponent implements OnInit {
       newData.push({
         itrId: data[i].itrId,
         userId: data[i].userId,
-        fName: data[i].family[0].fName,
-        lName: data[i].family[0].lName,
+        fName: data[i].family !== null ? data[i].family[0].fName : '',
+        lName: data[i].family !== null ? data[i].family[0].lName : '',
         panNumber: data[i].panNumber,
         contactNumber: data[i].contactNumber,
         email: data[i].email,
@@ -435,7 +456,7 @@ export class MyTeamItrsComponent implements OnInit {
     }
   }
 
-  startFiling(data) {
+  async startFiling(data) {
     var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
     console.log('data: ', workingItr);
     Object.entries(workingItr).forEach((key, value) => {
@@ -444,7 +465,13 @@ export class MyTeamItrsComponent implements OnInit {
         delete workingItr[key[0]];
       }
     });
-    let obj = this.utilsService.createEmptyJson(null, AppConstants.ayYear, AppConstants.fyYear)
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
+    }
+    let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear)
     Object.assign(obj, workingItr)
     console.log('obj:', obj)
     workingItr = JSON.parse(JSON.stringify(obj))
@@ -487,7 +514,7 @@ export class MyTeamItrsComponent implements OnInit {
       this.utilsService.showSnackBar(res.status)
       this.loading = false;
       setTimeout(() => {
-        this.getMembersItr(this.selectedMemberId);
+        this.getMembersItr(this.selectedMemberId, this.selectedFyYear);
       }, 5000);
 
     }, error => {

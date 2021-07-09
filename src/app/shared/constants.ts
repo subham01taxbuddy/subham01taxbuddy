@@ -19,8 +19,8 @@ export class AppConstants {
     public static amountWithDecimal = /^\s*-?\d+(\.\d{1,2})?\s*$/;
     public static indianCurrencySymbol = '₹ ';
     public static PINCode = '[1-9]{1}[0-9]{5}';
-    public static ayYear = '2020-2021';
-    public static fyYear = '2019-2020';
+    // public static ayYear = '2020-2021';
+    // public static fyYear = '2019-2020';
 
     public static USER_OBJ = environment.production ? 'USER_OBJ' : 'USER_OBJ';
     public static TOKEN = environment.production ? 'TOKEN' : 'TOKEN';
