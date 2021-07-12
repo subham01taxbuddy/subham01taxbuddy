@@ -22,6 +22,8 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   itrDataList = [];
   // financialYear = [];
   selectedFyYear = '';
+  config: any;
+  selectedPageNo = 0;
   constructor(private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     private router: Router,
@@ -42,6 +44,11 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
 
   ngOnInit() {
     // this.setFyDropDown();
+    this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: 80
+    };
   }
   ngAfterContentChecked() {
     this.cdRef.detectChanges();
@@ -68,12 +75,12 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   //   }
   // }
 
-  myItrsList(fy: String) {
+  myItrsList(fy: String, pageNo) {
     this.loading = true;
     return new Promise((resolve, reject) => {
       const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
       let reqBody = {
-        'financialYear' : fy,
+        'financialYear': fy,
         'filingTeamMemberId': loggedInUserData.USER_UNIQUE_ID
       }
       //https://uat-api.taxbuddy.com/itr/itr-search?page=0&size=20
@@ -81,15 +88,19 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       // if (fy !== '') {
       //   param = `${param}&fy=${fy}`;
       // }
-      
-      let param = '/itr-search?page=0&size=20';
+
+      let param = `/itr-search?page=${pageNo}&size=20`;
       let param2 = reqBody;
       // this.itrMsService.getMethod(param).subscribe((res: any) => {
-     this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
+      this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
         console.log('filingTeamMemberId: ', res);
-        if(res && res.success){
+        // TODO Need to update the api here to get the proper data like user management
+        if (res && res.success) {
           this.itrDataList = res.data;
           this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res.data));
+        } else {
+          this.itrDataList = [];
+          this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData([]));
         }
         this.loading = false;
         return resolve(true)
@@ -103,7 +114,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
     // this.searchParams = event;
     this.selectedFyYear = event;
     console.log(event);
-    this.myItrsList(event);
+    this.myItrsList(event, this.selectedPageNo);
   }
 
   // changeFy(fy: String) {
@@ -111,14 +122,14 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   // }
 
   createOnSalaryRowData(data) {
-    console.log('data: -> ',data)
+    console.log('data: -> ', data)
     const newData = [];
     for (let i = 0; i < data.length; i++) {
-      newData.push({  
+      newData.push({
         itrId: data[i].itrId,
         userId: data[i].userId,
-        fName: (this.utilsService.isNonEmpty(data[i].family) && data[i].family instanceof Array && data[i].family.length > 0) ? (data[i].family[0].fName ) : '',
-        lName: (this.utilsService.isNonEmpty(data[i].family) && data[i].family instanceof Array && data[i].family.length > 0) ? (data[i].family[0].lName ) : '',
+        fName: (this.utilsService.isNonEmpty(data[i].family) && data[i].family instanceof Array && data[i].family.length > 0) ? (data[i].family[0].fName) : '',
+        lName: (this.utilsService.isNonEmpty(data[i].family) && data[i].family instanceof Array && data[i].family.length > 0) ? (data[i].family[0].lName) : '',
         panNumber: data[i].panNumber,
         contactNumber: data[i].contactNumber,
         email: data[i].email,
@@ -387,7 +398,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
     }
   }
 
-  startFiling(data) {
+  async startFiling(data) {
     var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
     console.log('data: ', workingItr);
     Object.entries(workingItr).forEach((key, value) => {
@@ -396,7 +407,13 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         delete workingItr[key[0]];
       }
     });
-    let obj = this.utilsService.createEmptyJson(null, AppConstants.ayYear, AppConstants.fyYear)
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
+    }
+    let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear)
     Object.assign(obj, workingItr)
     console.log('obj:', obj)
     workingItr = JSON.parse(JSON.stringify(obj))
@@ -422,7 +439,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       this.utilsService.showSnackBar(res.status)
       this.loading = false;
       setTimeout(() => {
-        this.myItrsList(this.selectedFyYear);
+        this.myItrsList(this.selectedFyYear, this.selectedPageNo);
       }, 5000);
 
     }, error => {
@@ -437,14 +454,20 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
 
     const param = '/itr/' + workingItr['userId'] + '/' + workingItr['itrId'] + '/' + workingItr['assessmentYear'];
     this.itrMsService.putMethod(param, workingItr).subscribe((result: ITR_JSON) => {
-      this.myItrsList(this.selectedFyYear);
+      this.myItrsList(this.selectedFyYear, this.selectedPageNo);
     }, error => {
-      this.myItrsList(this.selectedFyYear);
+      this.myItrsList(this.selectedFyYear, this.selectedPageNo);
     });
   }
 
   showUserDoucuments(data) {
     console.log(data);
     this.router.navigate(['/pages/itr-filing/user-docs/' + data.userId]);
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+    this.selectedPageNo = event - 1;
+    this.myItrsList(this.selectedFyYear, this.selectedPageNo);
   }
 }

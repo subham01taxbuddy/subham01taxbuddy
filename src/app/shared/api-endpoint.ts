@@ -6,5 +6,10 @@ export class ApiEndpoints {
         itrByAckStatus: '/itrByAckStatus',
         enableItrFilling: '/enableItrFilling',
         itrAckDetails: '/api/itr-Ack-details',
+        itrManuallyData: '/itr-manually-data',
+    };
+    public static userMs = {
+        smeDetails: 'sme-details',
+
     };
 }

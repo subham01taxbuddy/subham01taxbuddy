@@ -13,11 +13,13 @@
             class="user-info">{{selectedUserInfo.fName+' '+selectedUserInfo.lName}}</span>
         </div>
         <div class="card__col-lg-4">
-          <label style=" font-size: 15px;"><b>Email :</b></label> <span style="margin-left: 10px;" class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.emailAddress) ?
+          <label style=" font-size: 15px;"><b>Email :</b></label> <span style="margin-left: 10px;"
+            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.emailAddress) ?
             selectedUserInfo.emailAddress: 'NA' }}</span>
         </div>
         <div class="card__col-lg-4">
-          <label style=" font-size: 15px;"><b>Mobile Number : </b></label> <span class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.mobileNumber) ?
+          <label style=" font-size: 15px;"><b>Mobile Number : </b></label> <span
+            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.mobileNumber) ?
             selectedUserInfo.mobileNumber: 'NA' }}</span>
         </div>
       </div>
@@ -28,11 +30,13 @@
             (selectedUserInfo.dateOfBirth | date) : 'NA' }}</span>
         </div>
         <div class="card__col-lg-4">
-          <label style=" font-size: 15px;"><b>Gender: </b></label> <span class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.gender) ? selectedUserInfo.gender: 'NA'
+          <label style=" font-size: 15px;"><b>Gender: </b></label> <span
+            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.gender) ? selectedUserInfo.gender: 'NA'
             }}</span>
         </div>
         <div class="card__col-lg-4">
-          <label style=" font-size: 15px;"><b>PAN :</b></label> <span style="margin-left: 40px;" class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.panNumber) ? selectedUserInfo.panNumber:
+          <label style=" font-size: 15px;"><b>PAN :</b></label> <span style="margin-left: 40px;"
+            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.panNumber) ? selectedUserInfo.panNumber:
             'NA' }}</span>
         </div>
       </div>

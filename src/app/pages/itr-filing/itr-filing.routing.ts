@@ -17,7 +17,7 @@ const routes: Routes = [
     {
         path: '', component: ItrFilingComponent,
         children: [
-            { path: 'users', component: UsersComponent },
+            // { path: 'users', component: UsersComponent },
             { path: 'my-itrs', component: MyAssignedItrsComponent },
             { path: 'customer-profile', component: CustomerProfileComponent },
             { path: 'itr', component: ItrWizardComponent },
@@ -27,7 +27,7 @@ const routes: Routes = [
             { path: 'delay', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN'] }, */ component: DelayComponent },
             { path: 'tasks', component: FilingTasksComponent },
             { path: 'user-docs/:userId', component: ShowUserDocumnetsComponent },
-            { path: '', redirectTo: '/pages/itr-filing/users', pathMatch: 'full' }
+            { path: '', redirectTo: '/pages/itr-filing/my-itrs', pathMatch: 'full' }
         ]
     },
 ];

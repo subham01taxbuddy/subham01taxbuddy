@@ -18,7 +18,7 @@ export class UserNotesComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<UserNotesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
     private itrMsService: ItrMsService,
-    private utileService: UtilsService,
+    private utilsService: UtilsService,
   ) {
     console.log('Selected UserID for notes',
       this.data.userId);
@@ -32,13 +32,19 @@ export class UserNotesComponent implements OnInit {
     this.getNotes();
   }
 
-  addNote() {
+  async addNote() {
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
+    }
     const request = {
       "userId": this.data.userId,
       "notes": [
         {
           "createdBy": this.loggedInUserDetails['USER_UNIQUE_ID'],
-          "assessmentYear": AppConstants.ayYear,
+          "assessmentYear": currentFyDetails[0].assessmentYear,
           "note": this.noteDetails.value
         }
       ]
@@ -49,10 +55,10 @@ export class UserNotesComponent implements OnInit {
       console.log(result);
       this.getNotes();
       this.noteDetails.reset();
-      this.utileService.showSnackBar('Note added successfully.')
+      this.utilsService.showSnackBar('Note added successfully.')
     }, error => {
       console.warn(error);
-      this.utileService.showSnackBar('Error while adding note, please try again.')
+      this.utilsService.showSnackBar('Error while adding note, please try again.')
     })
   }
 
@@ -60,7 +66,7 @@ export class UserNotesComponent implements OnInit {
     const param = `/note/${this.data.userId}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       console.log(result);
-      if (this.utileService.isNonEmpty(result) && result.notes instanceof Array) {
+      if (this.utilsService.isNonEmpty(result) && result.notes instanceof Array) {
         this.notes = result.notes;
       }
     }, error => {

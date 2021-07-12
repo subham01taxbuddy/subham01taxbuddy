@@ -2,9 +2,11 @@ import { AddCallLogComponent } from './../../../shared/components/add-call-log/a
 import { environment } from 'environments/environment';
 import { UtilsService } from 'app/services/utils.service';
 import { UserMsService } from 'app/services/user-ms.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
+import { GridOptions } from 'ag-grid-community';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-new-user',
@@ -13,6 +15,7 @@ import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.
 })
 export class NewUserComponent implements OnInit {
   userList = [];
+  newUsersGridOptions: GridOptions;
 
   page = 0; // current page
   count = 0; // total pages
@@ -31,9 +34,25 @@ export class NewUserComponent implements OnInit {
     { value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
   ];
   loading = false;
+  config: any;
 
   constructor(private userMsService: UserMsService, public utilsService: UtilsService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string) {
+      this.config = {
+        itemsPerPage: 20,
+        currentPage: 1,
+        totalItems: 80
+      };
+
+      this.newUsersGridOptions = <GridOptions>{
+        rowData: [],
+        columnDefs: this.usersCreateColoumnDef(),
+        enableCellChangeFlash: true,
+        onGridReady: params => {
+        },
+        sortable: true,
+      };
+
     this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
     if (!environment.production) {
       this.agentList = [
@@ -59,6 +78,159 @@ export class NewUserComponent implements OnInit {
     }
   }
 
+  usersCreateColoumnDef(){
+    return [
+      {
+        headerName:'User Id',
+        field: 'userId',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Name',
+        field: 'name',
+        width: 220,
+        suppressMovable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Mobile',
+        field: 'Phone',
+        width: 150,
+        suppressMovable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Created Date',
+        field: 'createdDate',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellRenderer: (data) => {
+          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+        },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Platform',
+        field: 'platform',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Start Conversation',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Click to start conversation"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-comments-o" aria-hidden="true" data-action-type="startConversation"></i>
+           </button>`;
+        },
+        width: 80,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'See/Add Notes',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Click see/add notes"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+           </button>`;
+        },
+        width: 80,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Add Call Logs',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Add call logs"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-phone" aria-hidden="true" data-action-type="addCallLogs"></i>
+           </button>`;
+        },
+        width: 80,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      }
+    ]
+  }
+
+  onNewUserRowClicked(params){
+    console.log(params)
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'startConversation': {
+          this.startConversation(params.data);
+          break;
+        }
+        case 'addNotes': {
+          this.showNotes(params.data)
+          break;
+        }
+        case 'addCallLogs': {
+          this.addCallLogs(params.data)
+          break;
+        }
+      }
+    }
+  }
+
   retrieveNewUsers(page) {
     this.loading = true;
     const param = `/user-allocation-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}`;
@@ -66,10 +238,32 @@ export class NewUserComponent implements OnInit {
       console.log('New User data', result);
       this.userList = result;
       this.loading = false;
+      this.newUsersGridOptions.api.setRowData(this.createRowData(this.userList));
     }, error => {
       this.loading = false;
       console.log(error);
     })
+  }
+
+  createRowData(userDate) {
+    console.log('userDate -> ', userDate);
+    var userArray = [];
+    for (let i = 0; i < userDate.length; i++) {
+      let userInfo = Object.assign({}, userArray[i], {
+        userId:  userDate[i].sourceAsMap['userId'],
+        name:   userDate[i].sourceAsMap['FirstName']+' '+userDate[i].sourceAsMap['LastName'],
+        Phone: userDate[i].sourceAsMap['Phone'],
+        createdDate: userDate[i].sourceAsMap['CreatedDate'],
+        platform: userDate[i].sourceAsMap['InitialData'] ? userDate[i].sourceAsMap['InitialData']['Platform'] : '',
+        KommunicateAssigneeId: userDate[i].sourceAsMap['KommunicateAssigneeId'],
+        FirstName: userDate[i].sourceAsMap['FirstName'],
+        LastName: userDate[i].sourceAsMap['LastName'],
+        Email: userDate[i].sourceAsMap['Email']
+      })
+      userArray.push(userInfo);
+    }
+    console.log('userArray-> ', userArray)
+     return userArray;
   }
 
   handlePageChange(event) {
@@ -93,6 +287,7 @@ export class NewUserComponent implements OnInit {
     this.retrieveNewUsers(this.page);
   }
   startConversation(user) {
+    console.log('user: ',user)
     this.loading = true;
     const param = `/create-km-groupid?userId=${user.userId}&agentId=${user.KommunicateAssigneeId}`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
@@ -143,6 +338,11 @@ export class NewUserComponent implements OnInit {
       console.log('The dialog was closed');
     });
 
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+    this.retrieveNewUsers(event - 1);
   }
 
   addCallLogs(client) {

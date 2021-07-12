@@ -193,8 +193,14 @@ export class UpdateStatusComponent implements OnInit {
   ngAfterContentChecked() {
     this.currentUrl = this.router.url;
   }
-  getFilingStatus() {
-    const param = `/itr-status?userId=${this.userId}&assessmentYear=${AppConstants.ayYear}`;
+  async getFilingStatus() {
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
+    }
+    const param = `/itr-status?userId=${this.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}`;
     this.userMsService.getMethod(param).subscribe(result => {
       console.log('Filing status for drop down:', result);
       if (result instanceof Array) {
@@ -232,12 +238,18 @@ export class UpdateStatusComponent implements OnInit {
       })
   }
 
-  updateStatus() {
+  async updateStatus() {
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
+    }
     const param = '/itr-status'
     const request = {
       "statusId": Number(this.fillingStatus.value),
       "userId": this.userId,
-      "assessmentYear": AppConstants.ayYear,
+      "assessmentYear": currentFyDetails[0].assessmentYear,
       "completed": true
     }
 
@@ -287,15 +299,13 @@ export class UpdateStatusComponent implements OnInit {
 
   }
 
-  showNotes(){
-    var userInfo = JSON.parse(sessionStorage.getItem('SearchItrUser'));
-    console.log('SearchItrUser: ',userInfo)
+  showNotes() {
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
       data: {
-        userId: userInfo[0].userId,
-        clientName: userInfo[0].fName+' '+userInfo[0].lName 
+        userId: this.userId,
+        clientName: 'Dummy'
       }
     })
 

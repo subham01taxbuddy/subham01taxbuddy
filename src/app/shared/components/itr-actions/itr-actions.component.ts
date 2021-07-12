@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ReviseReturnDialogComponent } from 'app/pages/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { AppConstants } from 'app/shared/constants';
+import { UtilsService } from 'app/services/utils.service';
 
 @Component({
   selector: 'app-itr-actions',
@@ -78,7 +79,8 @@ export class ItrActionsComponent implements OnInit {
     { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
   constructor(public dialogRef: MatDialogRef<ItrActionsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private router: Router, private itrMsService: ItrMsService) { }
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private router: Router, private itrMsService: ItrMsService,
+    public utilsService: UtilsService) { }
 
   ngOnInit() {
     console.log('ITR_JSON', this.data);
@@ -94,14 +96,20 @@ export class ItrActionsComponent implements OnInit {
     this.getITRByUserIdAndAssesmentYear(data.userId)
   }
 
-  getITRByUserIdAndAssesmentYear(userId) {
-    const param = `/itr?userId=${userId}&assessmentYear=${AppConstants.ayYear}`;
+  async getITRByUserIdAndAssesmentYear(userId) {
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
+    }
+    const param = `/itr?userId=${userId}&assessmentYear=${currentFyDetails[0].assessmentYear}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       console.log('My ITR by user Id and Assesment Years=', result);
       if (result.length !== 0) {
         let isWIP_ITRFound = true;
         for (let i = 0; i < result.length; i++) {
-          let currentFiledITR = result.filter(item => (item.assessmentYear === AppConstants.ayYear && item.eFillingCompleted));
+          let currentFiledITR = result.filter(item => (item.assessmentYear === currentFyDetails[0].assessmentYear && item.eFillingCompleted));
           if (result[i].eFillingCompleted || result[i].ackStatus === 'SUCCESS' || result[i].ackStatus === 'DELAY') {
             //   return "REVIEW"
           } else {
@@ -146,12 +154,18 @@ export class ItrActionsComponent implements OnInit {
       alert('Failed to create revise return data, please try again')
     });
   }
-  createReviseReturn(currentYearItrs) {
+  async createReviseReturn(currentYearItrs) {
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
+    }
     const param = '/copyitr';
     const copy = {
       userId: currentYearItrs[currentYearItrs.length - 1].userId,
       itrId: currentYearItrs[currentYearItrs.length - 1].itrId,
-      assessmentYear: AppConstants.ayYear
+      assessmentYear: currentFyDetails[0].assessmentYear
     };
 
     this.itrMsService.postMethod(param, copy).subscribe(
