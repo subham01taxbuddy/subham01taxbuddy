@@ -2,11 +2,37 @@
 <div class="main clearfix">
     <div class="card" style="padding: 0 !important;">
         <div class="card__title" style="padding: 20px;">Document List </div>
-        <div style="padding-left: 30px;"><span *ngFor="let docs of commonDocuments; let i=index">
+        <!-- <div style="padding-left: 30px;"><span *ngFor="let docs of commonDocuments; let i=index">
                 <a href="javascript:;" (click)="getCommonDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
             </span> &nbsp;
-        </div>
+        </div> -->
+        <ul class="breadcrumb breadTx" style="overflow: hidden;">
+            <li *ngFor="let breadcrumb of breadcrumbsPart; let i=index" class="breadcrumb-item" style="display:inline-block">
+              <a href="javascript:;" (click)="getCloudFilePath(breadcrumb, 'fromBreadcrum')">
+                {{breadcrumb}}
+              </a>&nbsp;&nbsp;&nbsp;&nbsp;
+            </li>
+          </ul>
+
+          <div class="card__col-xs-12 tpSpc">
+            <div class="inlinBx" *ngFor="let folder of folders; let k=index;">                      
+              <a *ngIf="!isFile" class="gryBx" (click)="getCloudFilePath(folder)"><i class="fas fa-folder fldrActv" aria-hidden="true"></i><div class="txCld">{{folder}}</div></a>
+             
+                <div class="listVw"> 
+                    <a class="txtLf" *ngIf="isFile" href="javascript:void(0)" (click)="getCommonDocsUrl(k)"> {{folder.fileName}}</a>
+                    <p class="txtRt" *ngIf="isFile && folder.isDeleted">Deleted By {{folder.deletedBy === "USER" ? 'You' : 'Tax Buddy'}} on {{folder.date | date}}</p>
+                      
+                    <!-- <button class="deLdBtn" *ngIf="isFile && !folder.isDeleted" (click)="deleteFile(folder.fileName)"><i class="far fa-trash-alt"></i> Delete</button> -->
+                    <button class="dwLdBtn" *ngIf="isFile && !folder.isDeleted" (click)="downloadFile(folder.fileName)"><i class="fal fa-arrow-alt-to-bottom"></i> Download</button>                         
+                </div>  
+            </div>                                            
+          </div>
+                    
+
+        <h3 *ngIf="breadcrumbsPart.length === 0">No document available</h3>
         <br><br><br>
+
+
         <ngx-image-zoom *ngIf="docDetails.docType !== 'pdf'" [thumbImage]="docDetails.docUrl"
             [fullImage]="docDetails.docUrl" [magnification]="1" [enableScrollZoom]="true" [enableLens]="true"
             [lensWidth]="200">
@@ -22,7 +48,7 @@
                 [render-text]="true" style="display: block;height: 100%">
             </pdf-viewer>
         </div>
-        <div *ngIf="docDetails.docUrl ===''" style="text-align: center;padding: 20px;">
+        <div *ngIf="breadcrumbsPart.length > 0 && docDetails.docUrl ===''" style="text-align: center;padding: 20px;">
             Documents not uploaded/Selected
         </div>
     </div>
