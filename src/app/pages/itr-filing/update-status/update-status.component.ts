@@ -188,7 +188,7 @@ export class UpdateStatusComponent implements OnInit {
     if (this.currentUrl === '/pages/itr-filing/customer-profile') {
       this.getFilingStatus();
     }
-    // this.getUserProfile();
+    this.getUserName();
   }
   ngAfterContentChecked() {
     this.currentUrl = this.router.url;
@@ -299,13 +299,33 @@ export class UpdateStatusComponent implements OnInit {
 
   }
 
+  userName: any;
+  getUserName(){
+    let param = `/search/userprofile/query?userId=${this.userId}`;
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('User data: ', result);
+      if (Array.isArray(result.records)) {
+        var userInfo = result.records;
+        this.userName = userInfo[0].fName+' '+userInfo[0].lName;
+      }
+      else{
+        this.userName = '';
+      }
+
+      console.log('this.userName : ',this.userName)
+    }, error => {
+      console.log(error, 'There is issue during fetching user info.')
+     })
+
+  }
+
   showNotes() {
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
       data: {
         userId: this.userId,
-        clientName: 'Dummy'
+        clientName: this.utilsService.isNonEmpty(this.userName) ? this.userName : 'Dummy'
       }
     })
 
