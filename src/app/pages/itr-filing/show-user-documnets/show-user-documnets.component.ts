@@ -18,7 +18,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
   filePath: any = '';
   userId: any;
 
-  constructor(private itrMsService: ItrMsService, private activatedRoute: ActivatedRoute, private utilsService: UtilsService) { }
+  constructor(private itrMsService: ItrMsService, private activatedRoute: ActivatedRoute, public utilsService: UtilsService) { }
 
   ngOnInit() {
     const temp = this.activatedRoute.params.subscribe(params => {
@@ -59,14 +59,16 @@ export class ShowUserDocumnetsComponent implements OnInit {
               this.isFile = true;
             } else {
               this.isFile = false;
+              this.docUrl = '';
             }
           } else {
             this.isFile = false;
+            this.docUrl = '';
           }
 
           console.log("breadcrumbsPart:===> ", this.breadcrumbsPart);
         } else if (result.length === 0) {
-          const param = "/cloud/files?currentPath=" + this.userId + (path ? this.getCurrentPath(path, from) : ""); //+ this.userObj.userId;
+          const param = "/cloud/file-info?currentPath=" + this.userId + (path ? this.getCurrentPath(path, from) : ""); //+ this.userObj.userId;
           this.itrMsService.getMethod(param).subscribe(
             (folderRes: any) => {
               this.folders = folderRes;
@@ -77,9 +79,11 @@ export class ShowUserDocumnetsComponent implements OnInit {
                   this.isFile = true;
                 } else {
                   this.isFile = false;
+                  this.docUrl = '';
                 }
               } else {
                 this.isFile = false;
+                this.docUrl = '';
               }
             }, (error) => {
               console.log('error: => ', error)
@@ -144,25 +148,48 @@ export class ShowUserDocumnetsComponent implements OnInit {
     docType: ''
   };
 
-  getCommonDocsUrl(index) {
-    debugger
-    this.commonDocuments = this.folders;
-    if (this.commonDocuments.length > 0) {
-      const docType = this.commonDocuments[index].fileName.split('.').pop();
-      if (this.commonDocuments[index].isDeleted) {
-        this.utilsService.showSnackBar('This file is deleted by ' + this.commonDocuments[index].deletedBy)
-        return;
-      }
-      if (this.commonDocuments[index].isPasswordProtected) {
-        this.docDetails.docUrl = this.commonDocuments[index].passwordProtectedFileUrl;
-      } else {
-        this.docDetails.docUrl = this.commonDocuments[index].signedUrl;
-      }
-      this.docDetails.docType = docType;
+  viewer = 'DOC';
+  docUrl = '';
+  getCommonDocsUrl(document) {
+    // this.commonDocuments = this.folders;
+    // if (this.commonDocuments.length > 0) {
+    //   const docType = this.commonDocuments[index].fileName.split('.').pop();
+    //   if (this.commonDocuments[index].isDeleted) {
+    //     this.utilsService.showSnackBar('This file is deleted by ' + this.commonDocuments[index].deletedBy)
+    //     return;
+    //   }
+    //   if (this.commonDocuments[index].isPasswordProtected) {
+    //     this.docDetails.docUrl = this.commonDocuments[index].passwordProtectedFileUrl;
+    //   } else {
+    //     this.docDetails.docUrl = this.commonDocuments[index].signedUrl;
+    //   }
+    //   this.docDetails.docType = docType;
+    // } else {
+    //   this.docDetails.docUrl = '';
+    //   this.docDetails.docType = '';
+    // }
+
+    console.log('document selected', document);
+    this.loading = true;
+    const ext = document.fileName.split('.').pop();
+    console.log('this.viewer', this.viewer);
+    if (ext.toLowerCase() === 'pdf' || ext.toLowerCase() === 'xls' || ext.toLowerCase() === 'doc' || ext.toLowerCase() === 'xlsx' || ext.toLowerCase() === 'docx') {
+      this.viewer = 'DOC';
     } else {
-      this.docDetails.docUrl = '';
-      this.docDetails.docType = '';
+      this.viewer = 'IMG';
     }
+    if (document.isPasswordProtected) {
+      this.docUrl = document.passwordProtectedFileUrl;
+      return;
+    }
+    const param = `/cloud/signed-s3-url?filePath=${document.filePath}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      console.log(res);
+      this.docUrl = res['signedUrl'];
+      this.loading = false;
+    }, error => {
+      this.loading = false;
+    })
   }
 
 }

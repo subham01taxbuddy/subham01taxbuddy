@@ -19,7 +19,7 @@
               <a *ngIf="!isFile" class="gryBx" (click)="getCloudFilePath(folder)"><i class="fas fa-folder fldrActv" aria-hidden="true"></i><div class="txCld">{{folder}}</div></a>
              
                 <div class="listVw"> 
-                    <a class="txtLf" *ngIf="isFile" href="javascript:void(0)" (click)="getCommonDocsUrl(k)"> {{folder.fileName}}</a>
+                    <a class="txtLf" *ngIf="isFile" href="javascript:void(0)" (click)="getCommonDocsUrl(folder)"> {{folder.fileName}}</a>
                     <p class="txtRt" *ngIf="isFile && folder.isDeleted">Deleted By {{folder.deletedBy === "USER" ? 'You' : 'Tax Buddy'}} on {{folder.date | date}}</p>
                       
                     <!-- <button class="deLdBtn" *ngIf="isFile && !folder.isDeleted" (click)="deleteFile(folder.fileName)"><i class="far fa-trash-alt"></i> Delete</button> -->
@@ -32,8 +32,8 @@
         <h3 *ngIf="breadcrumbsPart.length === 0">No document available</h3>
         <br><br><br>
 
-
-        <ngx-image-zoom *ngIf="docDetails.docType !== 'pdf'" [thumbImage]="docDetails.docUrl"
+        <app-document-viewer  [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer>
+        <!-- <ngx-image-zoom *ngIf="docDetails.docType !== 'pdf'" [thumbImage]="docDetails.docUrl"
             [fullImage]="docDetails.docUrl" [magnification]="1" [enableScrollZoom]="true" [enableLens]="true"
             [lensWidth]="200">
         </ngx-image-zoom>
@@ -50,6 +50,6 @@
         </div>
         <div *ngIf="breadcrumbsPart.length > 0 && docDetails.docUrl ===''" style="text-align: center;padding: 20px;">
             Documents not uploaded/Selected
-        </div>
+        </div> -->
     </div>
 </div>
