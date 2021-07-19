@@ -57,7 +57,7 @@ export class TaxSummaryComponent implements OnInit {
     { value: 'ORIGINAL', label: 'Original' },
     { value: 'REVISED', label: 'Revised-Ack No & DOF' }
   ];
-  financialYear = [{ value: '2019-2020' }, { value: '2020-2021' }];
+  financialYear = AppConstants.gstFyList;
 
   searchVal: string = "";
   currentUserId: number = 0;

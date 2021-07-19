@@ -41,7 +41,7 @@ font-weight: bold;">Notes for {{data.clientName}}</label><button mat-dialog-clos
     </div>
    </div>  -->
 
-   <div class="tableFixHead">
+   <div class="tableFixHead" *ngIf="notes.length > 0">
     <table>
       <thead>
         <tr>
@@ -59,6 +59,10 @@ font-weight: bold;">Notes for {{data.clientName}}</label><button mat-dialog-clos
       </tbody>
     </table>
   </div>
+
+<div *ngIf="notes.length === 0">
+    <p class="text"><b>No notes found.</b></p>
+</div>
 
 
 <div class="card__row">
