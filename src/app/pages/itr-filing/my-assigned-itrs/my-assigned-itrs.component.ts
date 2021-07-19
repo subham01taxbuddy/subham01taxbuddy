@@ -24,6 +24,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   selectedFyYear = '';
   config: any;
   selectedPageNo = 0;
+  pageWiseItr: any = [];
   constructor(private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     private router: Router,
@@ -45,9 +46,9 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   ngOnInit() {
     // this.setFyDropDown();
     this.config = {
-      itemsPerPage: 20,
+      itemsPerPage: 50,
       currentPage: 1,
-      totalItems: 80
+      totalItems: 0
     };
   }
   ngAfterContentChecked() {
@@ -89,19 +90,25 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       //   param = `${param}&fy=${fy}`;
       // }
 
-      let param = `/itr-search?page=${pageNo}&size=20`;
+      let param = `/itr-search?page=${pageNo}&size=50`;
       let param2 = reqBody;
       // this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
         console.log('filingTeamMemberId: ', res);
         // TODO Need to update the api here to get the proper data like user management
-        if (res && res.success) {
-          this.itrDataList = res.data;
-          this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res.data));
-        } else {
-          this.itrDataList = [];
-          this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData([]));
+        if (res['content'] instanceof Array) {
+          this.pageWiseItr = res['content'];
+          this.itrDataList = this.pageWiseItr;
+          this.config.totalItems = res.totalElements;
+          this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res['content']));
         }
+        // if (res && res.success) {
+        //   this.itrDataList = res.data;
+        //   this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res.data));
+        // } else {
+        //   this.itrDataList = [];
+        //   this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData([]));
+        // }
         this.loading = false;
         return resolve(true)
       }, error => {
@@ -113,6 +120,8 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   fromFy(event) {
     // this.searchParams = event;
     this.selectedFyYear = event;
+    this.selectedPageNo = 1;
+    this.config.currentPage = 1;
     console.log(event);
     this.myItrsList(event, this.selectedPageNo);
   }

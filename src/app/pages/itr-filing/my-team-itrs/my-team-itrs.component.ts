@@ -21,6 +21,8 @@ export class MyTeamItrsComponent implements OnInit {
   myItrsGridOptions: GridOptions;
   itrDataList = [];
   selectedFyYear = '';
+  config: any;
+  pageWiseItr: any = [];
   filingTeamMembers = [
     // { teamLeadId: 1063, value: 1063, label: 'Amrita Thakur' },
     // { teamLeadId: 1064, value: 1064, label: 'Ankita Murkute' },
@@ -86,6 +88,7 @@ export class MyTeamItrsComponent implements OnInit {
   // myFilingTeamMembers = [];
   selectedMember: String = '';
   selectedMemberId: any;
+  selectedPageNo = 0;
   constructor(private itrMsService: ItrMsService, public utilsService: UtilsService, private router: Router, private dialog: MatDialog,) {
     // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'))
     this.filingTeamMembers.sort((a, b) => a.label > b.label ? 1 : -1)
@@ -110,6 +113,12 @@ export class MyTeamItrsComponent implements OnInit {
       filter: true,
       floatingFilter: true
     };
+
+    this.config = {
+      itemsPerPage: 50,
+      currentPage: 1,
+      totalItems: 0
+    };
   }
 
   ngOnInit() {
@@ -120,13 +129,16 @@ export class MyTeamItrsComponent implements OnInit {
     // this.searchParams = event;
     this.selectedFyYear = event;
     console.log(event);
+    this.selectedPageNo = 0;
+    this.config.currentPage = 1;
     if (this.selectedMemberId !== null)
-      this.getMembersItr(this.selectedMemberId, event);
+      this.getMembersItr(this.selectedMemberId, event, this.selectedPageNo);
   }
 
-  getMembersItr(id, fy) {
+  getMembersItr(id, fy, pageNo) {
     this.loading = true;
     this.selectedMemberId = id;
+    this.config.currentPage = pageNo + 1;
     return new Promise((resolve, reject) => {
       if (this.utilsService.isNonEmpty(this.selectedMemberId)) {
         this.selectedMember = this.filingTeamMembers.filter(item => item.userId === id)[0].name;
@@ -137,16 +149,23 @@ export class MyTeamItrsComponent implements OnInit {
       }
       // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
       // const param = `/itr-by-filingTeamMemberId?filingTeamMemberId=${id}`;
-      let param = '/itr-search?page=0&size=20';
+      let param = `/itr-search?page=${pageNo}&size=50`;
       let param2 = reqBody;
       this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
-        if (res && res.success) {
-          this.itrDataList = res.data;
-          this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res.data));
-        } else {
-          this.itrDataList = [];
-          this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData([]));
+        if (res['content'] instanceof Array) {
+          this.pageWiseItr = res['content'];
+          this.itrDataList = this.pageWiseItr;
+          this.config.totalItems = res.totalElements;
+          this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res['content']));
         }
+
+        // if (res && res.success) {
+        //   this.itrDataList = res.data;
+        //   this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res.data));
+        // } else {
+        //   this.itrDataList = [];
+        //   this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData([]));
+        // }
         this.loading = false;
         return resolve(true)
       }, error => {
@@ -514,7 +533,7 @@ export class MyTeamItrsComponent implements OnInit {
       this.utilsService.showSnackBar(res.status)
       this.loading = false;
       setTimeout(() => {
-        this.getMembersItr(this.selectedMemberId, this.selectedFyYear);
+        this.getMembersItr(this.selectedMemberId, this.selectedFyYear, this.selectedPageNo);
       }, 5000);
 
     }, error => {
@@ -542,6 +561,12 @@ export class MyTeamItrsComponent implements OnInit {
 
   async getSmeList() {
     this.filingTeamMembers = await this.utilsService.getStoredSmeList();
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+    this.selectedPageNo = event - 1;
+    this.getMembersItr(this.selectedMemberId, this.selectedFyYear, event - 1);
   }
 
 }
