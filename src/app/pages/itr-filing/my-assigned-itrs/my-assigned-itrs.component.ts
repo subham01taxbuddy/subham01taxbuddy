@@ -120,7 +120,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   fromFy(event) {
     // this.searchParams = event;
     this.selectedFyYear = event;
-    this.selectedPageNo = 1;
+    this.selectedPageNo = 0;
     this.config.currentPage = 1;
     console.log(event);
     this.myItrsList(event, this.selectedPageNo);
