@@ -86,3 +86,9 @@
     float: right;
     width: 120px;
 }  
+
+.msg{
+    text-align: center;
+    padding: 80px 10px;
+    font-size: 15px;
+}
