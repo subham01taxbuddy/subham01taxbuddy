@@ -523,7 +523,8 @@ export class CustomerProfileComponent implements OnInit {
         "statusId": 5,
         "userId": this.ITR_JSON.userId,
         "assessmentYear": currentFyDetails[0].assessmentYear,
-        "completed": true
+        "completed": true,
+        "serviceType":"ITR"
       }
       this.userMsService.postMethod(param, request).subscribe(result => {
         console.log(result);
