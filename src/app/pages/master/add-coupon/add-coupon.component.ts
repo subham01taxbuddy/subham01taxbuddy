@@ -101,7 +101,7 @@ export class AddCouponComponent implements OnInit {
           this._toastMessageService.alert("success", "Coupon data added successfully.")
           setTimeout(() => {
             this.dialogRef.close({ event: 'close', data: 'couponAdded'})
-          }, 6000)
+          }, 3000)
         },
         error =>{
           this.loading = false;
