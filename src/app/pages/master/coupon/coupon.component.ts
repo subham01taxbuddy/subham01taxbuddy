@@ -160,29 +160,29 @@ export class CouponComponent implements OnInit {
           debounceMs: 0
         }
       },
-      {
-        headerName: 'Edit Coupon',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params) {
-          return ` 
-           <button type="button" class="action_icon add_button" title="Update Coupon" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-user" aria-hidden="true" data-action-type="updateCoupon"></i>
-           </button>`;
-        },
-        width: 80,
-        pinned: 'right',
-        cellStyle: function (params) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      }
+      // {
+      //   headerName: 'Edit Coupon',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params) {
+      //     return ` 
+      //      <button type="button" class="action_icon add_button" title="Update Coupon" style="border: none;
+      //       background: transparent; font-size: 16px; cursor:pointer;">
+      //       <i class="fa fa-user" aria-hidden="true" data-action-type="updateCoupon"></i>
+      //      </button>`;
+      //   },
+      //   width: 80,
+      //   pinned: 'right',
+      //   cellStyle: function (params) {
+      //     return {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center'
+      //     }
+      //   },
+      // }
     ]
   }
 
