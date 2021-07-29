@@ -98,7 +98,12 @@ export class AddCouponComponent implements OnInit {
         this.itrService.postMethod(param, param2).subscribe((res: any) =>{
           console.log('Coupon added responce: ', res);
           this.loading = false;
-          this._toastMessageService.alert("success", "Coupon data added successfully.")
+          if(res.hasOwnProperty('response')){
+            this._toastMessageService.alert("success", res.response)
+          }
+          else{
+            this._toastMessageService.alert("success", "Coupon added successfully.")
+          }
           setTimeout(() => {
             this.dialogRef.close({ event: 'close', data: 'couponAdded'})
           }, 3000)
