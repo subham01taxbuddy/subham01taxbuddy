@@ -65,6 +65,18 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         }
       },
       {
+        headerName: 'User Name',
+        field: 'userName',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
         headerName: 'User Selected',
         field: 'userSelected',
         width: 180,
@@ -219,8 +231,35 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         }
       },
       {
-        headerName: 'Filer Id',
-        field: 'subscriptionAssigneeId',
+        headerName: 'Invoice Details',
+        field: 'invoiceDetails',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: function (params) {
+          console.log('paramsparams: ', params)
+          if (params.value === 'All Paid') {
+            return `
+              <p style="color:green">${params.value}</p>
+             `
+          } else {
+            return `<p style="color:red">${params.value} <button type="button" class="action_icon add_button" title="View Unpaid invoices"
+          style="border: none;
+            background: transparent; font-size: 14px; cursor:pointer">
+            <i class="fa fa-eye" aria-hidden="true" data-action-type="view-invoice"></i>
+           </button> </p>`;
+          }
+        },
+      },
+
+      {
+        headerName: 'Filer Name',
+        field: 'filerName',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -354,11 +393,11 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
     var param = `/subscription${this.queryParam}`;
     this.loading = true;
     this.itrService.getMethod(param).subscribe((response: any) => {
-      console.log(response);
+      console.log('SUBSCRIPTION RESPONSE:', response);
       this.allSubscriptions = response;
       this.loading = false;
-      if (response instanceof Array && response.length > 0) {
-        this.subscriptionListGridOptions.api.setRowData(this.createRowData(response));
+      if (response.content instanceof Array && response.content.length > 0) {
+        this.subscriptionListGridOptions.api.setRowData(this.createRowData(response.content));
       } else {
         this.subscriptionListGridOptions.api.setRowData(this.createRowData([]));
         let msg = 'There is no records of subscription against this user';
@@ -377,6 +416,17 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   createRowData(subscriptionData) {
     const newData = [];
     for (let i = 0; i < subscriptionData.length; i++) {
+      let invoiceDetails = 'All Paid'
+      if (subscriptionData[i].invoiceData instanceof Array && subscriptionData[i].invoiceData.length > 0) {
+        let count = 0;
+        for (let j = 0; j < subscriptionData[i].invoiceData.length; j++) {
+          if (subscriptionData[i].invoiceData[j].paymentStatus.toString().toUpperCase() !== 'PAID') {
+            count = count + 1;
+          }
+        }
+        if (count > 0)
+          invoiceDetails = count + ' Unpaid';
+      }
       newData.push({
         subscriptionId: subscriptionData[i].subscriptionId,
         userId: subscriptionData[i].userId,
@@ -388,10 +438,13 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         endDate: subscriptionData[i].endDate,
         txbdyInvoiceId: subscriptionData[i].txbdyInvoiceId,
         subscriptionAssigneeId: subscriptionData[i].subscriptionAssigneeId !== 0 ? subscriptionData[i].subscriptionAssigneeId : 'NA',
+        filerName: subscriptionData[i].subscriptionAssigneeId !== 0 ? (subscriptionData[i].smeDetails.length > 0 ? subscriptionData[i].smeDetails[0]['first_name'] : 'NA') : 'NA',
+        userName: subscriptionData[i].userId !== 0 ? (subscriptionData[i].userData.length > 0 ? subscriptionData[i].userData[0]['first_name'] + ' ' + subscriptionData[i].userData[0]['last_name'] : '') : 'NA',
         isActive: subscriptionData[i].isActive,
         served: subscriptionData[i].served,
         promoCode: this.utilsService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : '-',
         invoiceAmount: this.utilsService.isNonEmpty(subscriptionData[i].promoApplied) ? subscriptionData[i].promoApplied.totalAmount : (this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.totalAmount : (this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.totalAmount : '0')),
+        invoiceDetails: invoiceDetails,
       });
     }
     return newData;
@@ -429,6 +482,10 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         }
         case 'view-filing-calendar': {
           this.viewFilingCalendar(params.data);
+          break;
+        }
+        case 'view-invoice': {
+          this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: params.data.userId } });
           break;
         }
       }

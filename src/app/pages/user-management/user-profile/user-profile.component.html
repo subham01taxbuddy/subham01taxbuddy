@@ -127,6 +127,27 @@
                             </div>
                         </div>
 
+                        <div class="card__row">
+                            <div class="card__col-lg-4">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>User Role</mat-label>
+                                    <mat-select [formControl]="userRole" multiple > <!--(selectionChange)="addValidationOnBtn()"-->
+                                      <mat-select-trigger>
+                                        {{userRole.value ? userRole.value[0] : ''}}
+                                        <span *ngIf="userRole.value?.length > 1" class="example-additional-selection">
+                                          (+{{userRole.value.length - 1}} {{userRole.value?.length === 2 ? 'other' : 'others'}})
+                                        </span>
+                                      </mat-select-trigger>
+                                      <mat-option *ngFor="let role of userRoles" [value]="role.value">{{role.label}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                           <div class="card__col-lg-4" *ngIf="utilsService.isNonEmpty(userRole.value)">
+                               <button *ngIf="userRole.valid" [disabled]="userRole.value.length === 0 || userRole.value === null" id="saveBtn" (click)="saveUserRole()">Save User Role</button>
+                           </div>
+                        </div>
+
 
                     </mat-card>
                     <br><br><br>

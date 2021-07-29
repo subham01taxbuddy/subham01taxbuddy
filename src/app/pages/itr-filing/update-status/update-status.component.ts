@@ -250,7 +250,8 @@ export class UpdateStatusComponent implements OnInit {
       "statusId": Number(this.fillingStatus.value),
       "userId": this.userId,
       "assessmentYear": currentFyDetails[0].assessmentYear,
-      "completed": true
+      "completed": true,
+      "serviceType":"ITR"
     }
 
     // this.loading = true;
