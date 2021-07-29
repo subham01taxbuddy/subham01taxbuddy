@@ -104,7 +104,6 @@ export class OtherUsersComponent implements OnInit {
 
   getUserData(pageNo) {
     this.loading = true;
-    // https://api.taxbuddy.com/user
     //let param = '/profile?page=' + pageNo + '&pageSize=15'
     let param = '/users?roles=ROLE_ADMIN,ROLE_FILING_TEAM,ROLE_IFA,ROLE_TPA_SME';
     this.userService.getMethod(param).subscribe((result: any) => {
@@ -112,7 +111,7 @@ export class OtherUsersComponent implements OnInit {
       this.loading = false;
       this.usersGridOptions.api.setRowData(this.createRowData(result));
       this.userInfo = result;
-      this.config.totalItems = result.totalElements;
+      // this.config.totalItems = result.length;
     },
       error => {
         this.loading = false;
