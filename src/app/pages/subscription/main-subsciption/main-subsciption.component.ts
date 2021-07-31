@@ -22,13 +22,20 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   subscriptionListGridOptions: GridOptions;
   subscription: any;
   userId: any;
+  userInfo: any = [];
+  config: any;
 
   constructor(private itrService: ItrMsService, private utilsService: UtilsService, private _toastMessageService: ToastMessageService, private router: Router,
     private userMsService: UserMsService, private dialog: MatDialog) {
+    this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: null
+    };
     this.subscription = this.utilsService.onMessage().subscribe(res => {
       console.log('Agent id :--> ', res)
       this.queryParam = res.text;
-      this.getUserSubscriptionInfo();
+      this.getUserSubscriptionInfo(0);
     });
   }
 
@@ -48,7 +55,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
     this.subscription.unsubscribe();
   }
   ngOnChanges() {
-    this.getUserSubscriptionInfo();
+    this.getUserSubscriptionInfo(0);
 
   }
   subscriptionColoumnDef(from) {
@@ -387,10 +394,14 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   allSubscriptions = [];
-  getUserSubscriptionInfo() {
+  getUserSubscriptionInfo(pageNo) {
     console.log('this.queryParam:', this.queryParam);
     // alert(this.queryParam)
-    var param = `/subscription${this.queryParam}`;
+    let pagination = `?page=${pageNo}&pageSize=20`;
+    if (this.utilsService.isNonEmpty(this.queryParam)) {
+      pagination = `&page=${pageNo}&pageSize=20`;
+    }
+    var param = `/subscription${this.queryParam}${pagination}`;
     this.loading = true;
     this.itrService.getMethod(param).subscribe((response: any) => {
       console.log('SUBSCRIPTION RESPONSE:', response);
@@ -398,8 +409,10 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       this.loading = false;
       if (response.content instanceof Array && response.content.length > 0) {
         this.subscriptionListGridOptions.api.setRowData(this.createRowData(response.content));
+        this.config.totalItems = response.totalElements;
       } else {
         this.subscriptionListGridOptions.api.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
         let msg = 'There is no records of subscription against this user';
         if (this.from === 'MY_SUB') {
           msg = 'You dont have any assigned subscriptions';
@@ -516,10 +529,10 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
     this.itrService.putMethod(param, request).subscribe((response: any) => {
       console.log('Subscription Updated Successfully:', response);
       this.utilsService.showSnackBar('Subscription updated successfully!');
-      this.getUserSubscriptionInfo();
+      this.getUserSubscriptionInfo(this.config.currentPage - 1); // TODO we may need current page
       this.loading = false;
     }, error => {
-      this.getUserSubscriptionInfo();
+      this.getUserSubscriptionInfo(this.config.currentPage - 1);
       this.utilsService.showSnackBar('Failed to update subscription!');
       this.loading = false;
       console.log('Subscription Updated error=>:', error);
@@ -535,7 +548,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       console.log('responce: ', responce);
       this._toastMessageService.alert("success", responce.reponse);
       if (responce.reponse !== 'You cannot delete invoice with Paid status')
-        this.getUserSubscriptionInfo();
+        this.getUserSubscriptionInfo(this.config.currentPage - 1);
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Faild to delete invoice.");
@@ -623,8 +636,13 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result && this.utilsService.isNonEmpty(result) && result.msg === 'success') {
-        this.getUserSubscriptionInfo();
+        this.getUserSubscriptionInfo(this.config.currentPage - 1);
       }
     });
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+    this.getUserSubscriptionInfo(event - 1);
   }
 }

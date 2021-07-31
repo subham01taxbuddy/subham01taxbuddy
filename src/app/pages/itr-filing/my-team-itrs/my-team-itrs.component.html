@@ -19,12 +19,12 @@
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
         <!-- Search for data -->
-        <!-- <div class="card__row">
-            Selected Filing Member:<b>{{selectedMember}}</b> &nbsp;&nbsp;&nbsp;
-            <span style="float: right;"> Completed: <b>{{getCount(true)}}</b>&nbsp;&nbsp;&nbsp;
+        <div class="card__row">
+            Selected Filing Member: <b>{{selectedMember}}</b> &nbsp;&nbsp;&nbsp;
+            <!-- <span style="float: right;"> Completed: <b>{{getCount(true)}}</b>&nbsp;&nbsp;&nbsp;
                 Pending: <b>{{getCount(false)}}</b>&nbsp;&nbsp;&nbsp;
-                <b>Total: {{itrDataList.length}}</b></span>
-        </div> -->
+                <b>Total: {{itrDataList.length}}</b></span> -->
+        </div>
         <div class="card__row">
             <table>
                 <tr *ngFor="let item of pageWiseItr | paginate:config"></tr>

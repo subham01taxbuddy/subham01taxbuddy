@@ -139,10 +139,11 @@ export class MyTeamItrsComponent implements OnInit {
     this.loading = true;
     this.selectedMemberId = id;
     this.config.currentPage = pageNo + 1;
+    if (this.utilsService.isNonEmpty(this.selectedMemberId)) {
+      this.selectedMember = this.filingTeamMembers.filter(item => item.userId === id)[0].name;
+    }
     return new Promise((resolve, reject) => {
-      if (this.utilsService.isNonEmpty(this.selectedMemberId)) {
-        this.selectedMember = this.filingTeamMembers.filter(item => item.userId === id)[0].name;
-      }
+
       let reqBody = {
         'financialYear': fy,
         'filingTeamMemberId': id
