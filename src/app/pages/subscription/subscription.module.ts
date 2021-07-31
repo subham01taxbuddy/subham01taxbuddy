@@ -19,6 +19,7 @@ import { MySubscriptionComponent } from './my-subscription/my-subscription.compo
 import { MainSubsciptionComponent } from './main-subsciption/main-subsciption.component';
 import { TeamSubscriptionsComponent } from './team-subscriptions/team-subscriptions.component';
 import { FilingCalendarComponent } from './filing-calendar/filing-calendar.component';
+import { NgxPaginationModule } from "ngx-pagination";
 
 @NgModule({
     declarations: [SubscriptionDetailComponent, AddNewPlanComponent, AddSubscriptionComponent, SubscriptionHeadComponent,
@@ -33,7 +34,8 @@ import { FilingCalendarComponent } from './filing-calendar/filing-calendar.compo
         MaterialModule,
         NgxLoadingModule.forRoot({}),
         OwlDateTimeModule,
-        OwlNativeDateTimeModule
+        OwlNativeDateTimeModule,
+        NgxPaginationModule
     ],
     entryComponents: [AddSubscriptionComponent, InvoiceDialogComponent, FilingCalendarComponent]
 })
