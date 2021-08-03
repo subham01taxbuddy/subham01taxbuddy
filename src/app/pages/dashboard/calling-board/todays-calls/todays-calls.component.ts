@@ -220,30 +220,13 @@ export class TodaysCallsComponent implements OnInit {
      return todaysCallsArray;
   }
 
-  addCallLogs(client) {
-    let disposable = this.dialog.open(AddCallLogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        userName: client.userName,
-        userMobile: client.userMobile,
-        userEmail: client.userEmail,
-      }
-    })
-    disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-
-  }
-
   showNotes(client) {
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.userName
+        clientName: client.name
       }
     })
 
