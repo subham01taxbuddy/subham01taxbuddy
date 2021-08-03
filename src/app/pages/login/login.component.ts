@@ -131,6 +131,7 @@ export class LoginComponent implements OnInit {
     NavbarService.getInstance(null).setUserData(userData);
     this.getSmeList();
     this.getFyList();
+    this.getAgenList();
 
     if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
       this.router.navigate(['/pages/itr-filing/my-itrs']);
@@ -181,6 +182,17 @@ export class LoginComponent implements OnInit {
       }
     }, error => {
       console.log('Error during getting all PromoCodes: ', error)
+    })
+  }
+
+  getAgenList(){
+    let param = '/agent-details';
+    this.userMsService.getMethod(param).subscribe((res: any) => {
+      if (res && res instanceof Array) {
+        sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res));
+      }
+    }, error => {
+      console.log('Error during getting all AGENT_LIST: ', error)
     })
   }
 

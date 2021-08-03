@@ -4,7 +4,7 @@
     <div class="card">
         <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field appearance="outline">
+                <!-- <mat-form-field appearance="outline">
                     <mat-label>Select Date</mat-label>
                     <input matInput [matDatepicker]="picker" class="input-field" placeholder="Select Calling Date"
                         name="callingDate" [formControl]="callingDate" required>
@@ -16,7 +16,7 @@
             <div class="card__col-xs-12 card__col-sm-4">
                 <button style="border: none; cursor: pointer;background: transparent;" (click)="getMyTodaysCalls()"><i
                         class="fa fa-search fa-2x" style="color: green;"></i></button>
-            </div>
+            </div> -->
         </div>
 
         <div class="card__row" style="margin-top: 0px;">
@@ -76,10 +76,20 @@
                 </div>
             </div> -->
 
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="todaysCallsGridOptions"
-            (rowClicked)="onTodaysCallsClicked($event)"> 
+            <div class="card__row">
+                <table>
+                    <tr *ngFor="let item of callDetetialInfo | paginate:config"></tr>
+                </table>
+                
+                <ag-grid-angular class="ag-theme-balham" [gridOptions]="todaysCallsGridOptions"
+                (rowClicked)="onTodaysCallsClicked($event)"> 
             </ag-grid-angular>
-            <p style="text-align: center; font-size: 15px; margin-top: 20px" *ngIf="callLogs.length === 0"><b>No data available.</b></p>
+    
+                <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+            </div>
+
+            
+            <!-- <p style="text-align: center; font-size: 15px; margin-top: 20px" *ngIf="callLogs.length === 0"><b>No data available.</b></p> -->
 
         </div>
     </div>

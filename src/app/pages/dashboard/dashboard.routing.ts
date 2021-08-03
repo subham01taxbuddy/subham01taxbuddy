@@ -8,7 +8,7 @@ import { EngagementComponent } from './engagement/engagement.component';
 import { KommunicateComponent } from './engagement/kommunicate/kommunicate.component';
 import { WhatsappComponent } from './engagement/whatsapp/whatsapp.component';
 import { InterestedClientsComponent } from './interested-clients/interested-clients.component';
-import { OpenComponent } from './open/open.component';
+import { OpenStatusComponent } from './open-status/open-status.component';
 
 const routes: Routes = [
     {
@@ -31,7 +31,7 @@ const routes: Routes = [
                 ]
             },
             { path: 'interested-clients', component: InterestedClientsComponent },
-            { path: 'open', component: OpenComponent },
+            { path: 'open-status', component: OpenStatusComponent },
             { path: '', redirectTo: 'new-user', pathMatch: 'full' }
         ]
     },
