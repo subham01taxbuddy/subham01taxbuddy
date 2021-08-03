@@ -237,32 +237,32 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           debounceMs: 0
         }
       },
-      {
-        headerName: 'Invoice Details',
-        field: 'invoiceDetails',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        },
-        cellRenderer: function (params) {
-          console.log('paramsparams: ', params)
-          if (params.value === 'All Paid') {
-            return `
-              <p style="color:green">${params.value}</p>
-             `
-          } else {
-            return `<p style="color:red">${params.value} <button type="button" class="action_icon add_button" title="View Unpaid invoices"
-          style="border: none;
-            background: transparent; font-size: 14px; cursor:pointer">
-            <i class="fa fa-eye" aria-hidden="true" data-action-type="view-invoice"></i>
-           </button> </p>`;
-          }
-        },
-      },
+      // {
+      //   headerName: 'Invoice Details',
+      //   field: 'invoiceDetails',
+      //   width: 100,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   },
+      //   cellRenderer: function (params) {
+      //     console.log('paramsparams: ', params)
+      //     if (params.value === 'All Paid') {
+      //       return `
+      //         <p style="color:green">${params.value}</p>
+      //        `
+      //     } else {
+      //       return `<p style="color:red">${params.value} <button type="button" class="action_icon add_button" title="View Unpaid invoices"
+      //     style="border: none;
+      //       background: transparent; font-size: 14px; cursor:pointer">
+      //       <i class="fa fa-eye" aria-hidden="true" data-action-type="view-invoice"></i>
+      //      </button> </p>`;
+      //     }
+      //   },
+      // },
 
       {
         headerName: 'Filer Name',
@@ -429,17 +429,17 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   createRowData(subscriptionData) {
     const newData = [];
     for (let i = 0; i < subscriptionData.length; i++) {
-      let invoiceDetails = 'All Paid'
-      if (subscriptionData[i].invoiceData instanceof Array && subscriptionData[i].invoiceData.length > 0) {
-        let count = 0;
-        for (let j = 0; j < subscriptionData[i].invoiceData.length; j++) {
-          if (subscriptionData[i].invoiceData[j].paymentStatus.toString().toUpperCase() !== 'PAID') {
-            count = count + 1;
-          }
-        }
-        if (count > 0)
-          invoiceDetails = count + ' Unpaid';
-      }
+      // let invoiceDetails = 'All Paid'
+      // if (subscriptionData[i].invoiceData instanceof Array && subscriptionData[i].invoiceData.length > 0) {
+      //   let count = 0;
+      //   for (let j = 0; j < subscriptionData[i].invoiceData.length; j++) {
+      //     if (subscriptionData[i].invoiceData[j].paymentStatus.toString().toUpperCase() !== 'PAID') {
+      //       count = count + 1;
+      //     }
+      //   }
+      //   if (count > 0)
+      //     invoiceDetails = count + ' Unpaid';
+      // }
       newData.push({
         subscriptionId: subscriptionData[i].subscriptionId,
         userId: subscriptionData[i].userId,
@@ -457,7 +457,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         served: subscriptionData[i].served,
         promoCode: this.utilsService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : '-',
         invoiceAmount: this.utilsService.isNonEmpty(subscriptionData[i].promoApplied) ? subscriptionData[i].promoApplied.totalAmount : (this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.totalAmount : (this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.totalAmount : '0')),
-        invoiceDetails: invoiceDetails,
+        // invoiceDetails: invoiceDetails,
       });
     }
     return newData;
