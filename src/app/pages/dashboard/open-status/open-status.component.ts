@@ -36,17 +36,22 @@ export class OpenStatusComponent implements OnInit {
       sortable: true,
     };
 
-    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
-
   }
 
   ngOnInit() {
-    // this.getOpenStatus();
+    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    var userInfo = JSON.parse(localStorage.getItem('UMD'));
+    if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
+      let loggedAgentId = this.agentList.filter(item => item.userId === userInfo.USER_UNIQUE_ID)[0].agentId;
+      this.selectedAgent = loggedAgentId;
+      this.getOpenStatus(loggedAgentId, 0);
+    }
   }
 
   searchByAgent(selectedAgent){
     if(this.utilsService.isNonEmpty(selectedAgent)){
       this.selectedAgent = selectedAgent;
+      this.pageCount = 0;
       this.getOpenStatus(selectedAgent, 0);
     }
     else{
@@ -164,6 +169,30 @@ export class OpenStatusComponent implements OnInit {
           debounceMs: 0
         }
       },
+      {
+        headerName: 'Utm Source',
+        field: 'utmSource',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Company Id',
+        field: 'companyId',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
       
       {
         headerName: 'Notes',
@@ -196,7 +225,7 @@ export class OpenStatusComponent implements OnInit {
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button" title="Open Chat Link"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-phone" aria-hidden="true" data-action-type="startConversation"></i>
+            <i class="fa fa-comments-o" aria-hidden="true" data-action-type="startConversation"></i>
            </button>`;
         },
         width: 80,
@@ -238,7 +267,7 @@ export class OpenStatusComponent implements OnInit {
     this.loading = true;
     let startPage = pageNo === 0 ? 0 : (pageNo * 10) + 1;
     // let param = `/lead-details-by-status-es?agentId=${agent}&statusId=${18}&from=${0}&to=${10}`;
-    let param = `/lead-details-by-status-es?statusId=${18}&from=${startPage}&to=10`;
+    let param = `/lead-details-by-status-es?agentId=${agent}&statusId=${18}&from=${startPage}&to=10`;
     this.userMsService.getMethod(param).subscribe((result: any)=>{
       console.log('open status: ',result, result.length);
       this.loading = false;
@@ -269,8 +298,10 @@ export class OpenStatusComponent implements OnInit {
         source: this.utilsService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilsService.isNonEmpty(openStatusInfo[i]['InitialData']['Source']) ? openStatusInfo[i]['InitialData']['Source'] : '-') : '-',
         platform: this.utilsService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilsService.isNonEmpty(openStatusInfo[i]['InitialData']['Platform']) ? openStatusInfo[i]['InitialData']['Platform'] : '-') : '-',
         service: this.utilsService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']) ? (this.utilsService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']['ServiceType']) ? openStatusInfo[i]['itrStatusLatest']['ServiceType'] : '-') : '-',
-        status: this.utilsService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']) ? (this.utilsService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']['StatusID']) ? openStatusInfo[i]['itrStatusLatest']['StatusID'] : '-') : '-',
-        KommunicateAssigneeId: openStatusInfo[i]['KommunicateAssigneeId'] 
+        status: this.utilsService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']) ? (this.utilsService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']['StatusID']) ? (openStatusInfo[i]['itrStatusLatest']['StatusID'] === 18 ? 'Open' : '-') : '-') : '-',
+        KommunicateAssigneeId: openStatusInfo[i]['KommunicateAssigneeId'],
+        utmSource: this.utilsService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilsService.isNonEmpty(openStatusInfo[i]['InitialData']['UtmSource']) ? openStatusInfo[i]['InitialData']['UtmSource'] : '-') : '-',
+        companId: this.utilsService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilsService.isNonEmpty(openStatusInfo[i]['InitialData']['CompanyID']) ? openStatusInfo[i]['InitialData']['CompanyID'] : '-') : '-',
       })
       openStatusInfosArray.push(openStatusInfosInfo);
     }

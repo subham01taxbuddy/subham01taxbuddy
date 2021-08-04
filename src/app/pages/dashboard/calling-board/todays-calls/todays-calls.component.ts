@@ -9,6 +9,7 @@ import { GridOptions } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { ToastMessageService } from 'app/services/toast-message.service';
+import { AppConstants } from 'app/shared/constants';
 
 @Component({
   selector: 'app-todays-calls',
@@ -60,7 +61,7 @@ export class TodaysCallsComponent implements OnInit {
       {
         headerName: 'Name',
         field: 'name',
-        width: 220,
+        width: 190,
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -96,6 +97,18 @@ export class TodaysCallsComponent implements OnInit {
         headerName: 'Service Type',
         field: 'serviceType',
         width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Agent name',
+        field: 'agentName',
+        width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -177,12 +190,12 @@ export class TodaysCallsComponent implements OnInit {
   getMyTodaysCalls(page) {
     const loggedInSme = JSON.parse(localStorage.getItem('UMD'));
     this.loading = true;
-    // var date = new Date(this.callingDate.value).getTime() - (new Date().getTimezoneOffset() * 60 * 1000)
-    // const param = `/call-status?date=${new Date(date).toISOString()}&scheduleCallEmail=${loggedInSme['USER_EMAIL']}&statusId=17`;
-    //console.log(date)
-
-   // let param = `/call-management/caller-agents`;
-    let param2 = `/call-management/customers?callerAgentUserId=${loggedInSme['USER_UNIQUE_ID']}&page=${page}&pageSize=15`;
+    if(loggedInSme.USER_ROLE.includes("ROLE_ADMIN")){
+      var param2 = `/call-management/customers?agentUserId=${loggedInSme['USER_UNIQUE_ID']}&page=${page}&pageSize=15`;
+    }
+    else{
+      var param2 = `/call-management/customers?callerAgentUserId=${loggedInSme['USER_UNIQUE_ID']}&page=${page}&pageSize=15`;
+    }
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
         if (result['content'] instanceof Array && result['content'].length > 0) {
@@ -212,12 +225,20 @@ export class TodaysCallsComponent implements OnInit {
         status: todaysCalls[i]['statusId'] === 18 ? 'Open' : '-',
         serviceType: todaysCalls[i]['serviceType'],
         callerAgentUserId: todaysCalls[i]['callerAgentUserId'],
-        callerAgentNumber: todaysCalls[i]['callerAgentNumber']
+        callerAgentNumber: todaysCalls[i]['callerAgentNumber'],
+        agentName: this.getAgentName(todaysCalls[i]['agentUserId'])
       })
       todaysCallsArray.push(todaysClientsInfo);
     }
     console.log('todaysCallsArray-> ', todaysCallsArray)
      return todaysCallsArray;
+  }
+
+  getAgentName(agentId){
+    var agents = []; 
+    agents = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    let agentName = agents.filter(item => item.userId === agentId)[0].name;
+    return agentName;
   }
 
   showNotes(client) {
