@@ -226,7 +226,7 @@ export class TodaysCallsComponent implements OnInit {
         serviceType: todaysCalls[i]['serviceType'],
         callerAgentUserId: todaysCalls[i]['callerAgentUserId'],
         callerAgentNumber: todaysCalls[i]['callerAgentNumber'],
-        agentName: this.getAgentName(todaysCalls[i]['agentUserId'])
+        agentName: todaysCalls[i]['callerAgentName']
       })
       todaysCallsArray.push(todaysClientsInfo);
     }

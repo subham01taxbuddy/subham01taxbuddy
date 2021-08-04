@@ -7,6 +7,8 @@ import { MatDialog } from '@angular/material';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { GridOptions } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
+import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
+import { ToastMessageService } from 'app/services/toast-message.service';
 
 @Component({
   selector: 'app-new-user',
@@ -15,36 +17,23 @@ import { formatDate } from '@angular/common';
 })
 export class NewUserComponent implements OnInit {
   userList = [];
-  newUsersGridOptions: GridOptions;
+  openStatusClientsGridOption: GridOptions;
 
   page = 0; // current page
   count = 0; // total pages
   pageSize = 20; // number of items in each page
   agentId = '';
-  agentList = [
-    { value: 'brij@ssbainnovations.com', label: 'Brij' },
-    { value: 'divya@ssbainnovations.com', label: 'Divya' },
-    { value: 'urmila@ssbainnovations.com', label: 'Urmila' },
-    { value: 'kavita@ssbainnovations.com', label: 'Kavita' },
-    { value: 'amrita@ssbainnovations.com', label: 'Amrita' },
-    { value: 'ankita@ssbainnovations.com', label: 'Ankita' },
-    { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
-    { value: 'damini@ssbainnovations.com', label: 'Damini' },
-    { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
-    { value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
-  ];
   loading = false;
-  config: any;
+  openStatusdata: any = [];
+  mobileNo: any;
+  selectedAgent: any;
+  pageCount: number = 0;
+  agentList: any;
 
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService,
-    private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string) {
-      this.config = {
-        itemsPerPage: 20,
-        currentPage: 1,
-        totalItems: 80
-      };
+  constructor(private userMsService: UserMsService, public utilService: UtilsService,
+    private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string, private toastMsgService: ToastMessageService) {
 
-      this.newUsersGridOptions = <GridOptions>{
+      this.openStatusClientsGridOption = <GridOptions>{
         rowData: [],
         columnDefs: this.usersCreateColoumnDef(),
         enableCellChangeFlash: true,
@@ -53,60 +42,46 @@ export class NewUserComponent implements OnInit {
         sortable: true,
       };
 
-    this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
-    if (!environment.production) {
-      this.agentList = [
-        { value: 'ashish.hulwan@ssbainnovations.com', label: 'Ashish' },
-        { value: 'vaibhav.gaikwad@ssbainnovations.com', label: 'Vaibhav' },
-        { value: 'dev_kommunicate@ssbainnovations.com', label: 'Dev Komm' },
-        { value: 'barakha@ssbainnovations.com', label: 'Barakha' },
-        { value: 'karan@ssbainnovations.com', label: 'Karan' },
-        { value: 'testkommunicate@ssbainnovations.com', label: 'Ajay' }
-      ];
-    }
+    //this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
+    // if (!environment.production) {
+    //   this.agentList = [
+    //     { value: 'ashish.hulwan@ssbainnovations.com', label: 'Ashish' },
+    //     { value: 'vaibhav.gaikwad@ssbainnovations.com', label: 'Vaibhav' },
+    //     { value: 'dev_kommunicate@ssbainnovations.com', label: 'Dev Komm' },
+    //     { value: 'barakha@ssbainnovations.com', label: 'Barakha' },
+    //     { value: 'karan@ssbainnovations.com', label: 'Karan' },
+    //     { value: 'testkommunicate@ssbainnovations.com', label: 'Ajay' }
+    //   ];
+    // }
   }
 
   ngOnInit() {
-    console.log('selectedAgentId -> ',localStorage.getItem('selectedAgentId'));
-    let agentId = localStorage.getItem('selectedAgentId');
-    if(this.utilsService.isNonEmpty(agentId)){
-      this.agentId = agentId;
-      this.retrieveNewUsers(0);
+    // console.log('selectedAgentId -> ',localStorage.getItem('selectedAgentId'));
+    // let agentId = localStorage.getItem('selectedAgentId');
+    // if(this.utilService.isNonEmpty(agentId)){
+    //   this.agentId = agentId;
+    //   this.retrieveNewUsers(0);
+    // }
+    // else{
+    //   this.retrieveNewUsers(0);
+    // }
+  }
+
+  advanceSearch(mobileNo){
+    if(this.utilService.isNonEmpty(mobileNo) && `${mobileNo}`.length === 10){
+      this.getSearchInfo(mobileNo);
     }
     else{
-      this.retrieveNewUsers(0);
+      this.toastMsgService.alert("error","Enter valid mobile number.")
     }
   }
 
   usersCreateColoumnDef(){
     return [
       {
-        headerName:'User Id',
+        headerName: 'User Id',
         field: 'userId',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Name',
-        field: 'name',
-        width: 220,
-        suppressMovable: true,
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Mobile',
-        field: 'Phone',
-        width: 150,
+        width: 100,
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -117,7 +92,7 @@ export class NewUserComponent implements OnInit {
       {
         headerName: 'Created Date',
         field: 'createdDate',
-        width: 150,
+        width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         cellRenderer: (data) => {
@@ -130,6 +105,52 @@ export class NewUserComponent implements OnInit {
         }
       },
       {
+        headerName: 'Client Mobile',
+        field: 'clientMobile',
+        width: 130,
+        suppressMovable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Client Name',
+        field: 'clientName',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Email Id',
+        field: 'emailId',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Source',
+        field: 'source',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },{
         headerName: 'Platform',
         field: 'platform',
         width: 150,
@@ -142,29 +163,56 @@ export class NewUserComponent implements OnInit {
         }
       },
       {
-        headerName: 'Start Conversation',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
+        headerName: 'Service',
+        field: 'service',
+        width: 100,
         suppressMovable: true,
-        cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Click to start conversation"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-comments-o" aria-hidden="true" data-action-type="startConversation"></i>
-           </button>`;
-        },
-        width: 80,
-        pinned: 'right',
-        cellStyle: function (params) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
       },
       {
-        headerName: 'See/Add Notes',
+        headerName: 'Status',
+        field: 'status',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Utm Source',
+        field: 'utmSource',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Company Id',
+        field: 'companyId',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      
+      {
+        headerName: 'Notes',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -186,15 +234,15 @@ export class NewUserComponent implements OnInit {
         },
       },
       {
-        headerName: 'Add Call Logs',
+        headerName: 'Chat Link',
         editable: false,
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Add call logs"
+          return `<button type="button" class="action_icon add_button" title="Open Chat Link"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-phone" aria-hidden="true" data-action-type="addCallLogs"></i>
+            <i class="fa fa-comments-o" aria-hidden="true" data-action-type="startConversation"></i>
            </button>`;
         },
         width: 80,
@@ -206,11 +254,78 @@ export class NewUserComponent implements OnInit {
             'justify-content': 'center'
           }
         },
+      },
+      {
+        headerName: 'Update Status',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Update Status"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+           </button>`;
+        },
+        width: 80,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        }
       }
     ]
   }
 
-  onNewUserRowClicked(params){
+  getSearchInfo(mobileNo){
+    this.loading = true;
+    let param = `/user-details-by-mobile-number-es?mobileNumber=${mobileNo}`;
+    this.userMsService.getMethod(param).subscribe((result: any)=>{
+      console.log('open status: ',result, result.length);
+      this.loading = false;
+      if (result instanceof Array && result.length > 0) {
+        this.openStatusdata = result;
+        this.openStatusClientsGridOption.api.setRowData(this.createRowData(this.openStatusdata));
+      } else {
+        this.utilService.showSnackBar('Data not available for searched number.');
+      }
+    },
+    error =>{
+      this.loading = false;
+      console.log('Error during get searched mob no: ',error);
+      this.toastMsgService.alert("error","Unable ot search, try after some time.")
+    })
+  }
+
+
+  createRowData(openStatusInfo) {
+    console.log('openStatusInfo -> ', openStatusInfo);
+    var openStatusInfosArray = [];
+    for (let i = 0; i < openStatusInfo.length; i++) {  
+      let openStatusInfosInfo = Object.assign({}, openStatusInfosArray[i], {
+        userId: this.utilService.isNonEmpty(openStatusInfo[i]['userId']) ? openStatusInfo[i]['userId'] : '-',
+        createdDate: this.utilService.isNonEmpty(openStatusInfo[i]['CreatedDate']) ? openStatusInfo[i]['CreatedDate'] : '-',
+        clientMobile: this.utilService.isNonEmpty(openStatusInfo[i]['Phone']) ? openStatusInfo[i]['Phone'] : '-',
+        clientName: (this.utilService.isNonEmpty(openStatusInfo[i]['FirstName']) ? openStatusInfo[i]['FirstName'] : '-')+' '+(this.utilService.isNonEmpty(openStatusInfo[i]['LastName']) ? openStatusInfo[i]['LastName'] : '-'),
+        emailId: this.utilService.isNonEmpty(openStatusInfo[i]['Email']) ? openStatusInfo[i]['Email'] : '-',
+        source: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['Source']) ? openStatusInfo[i]['InitialData']['Source'] : '-') : '-',
+        platform: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['Platform']) ? openStatusInfo[i]['InitialData']['Platform'] : '-') : '-',
+        service: this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']['ServiceType']) ? openStatusInfo[i]['itrStatusLatest']['ServiceType'] : '-') : '-',
+        status: this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']['StatusID']) ? (openStatusInfo[i]['itrStatusLatest']['StatusID'] === 18 ? 'Open' : '-') : '-') : '-',
+        KommunicateAssigneeId: openStatusInfo[i]['KommunicateAssigneeId'],
+        utmSource: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['UtmSource']) ? openStatusInfo[i]['InitialData']['UtmSource'] : '-') : '-',
+        companId: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['CompanyID']) ? openStatusInfo[i]['InitialData']['CompanyID'] : '-') : '-',
+      })
+      openStatusInfosArray.push(openStatusInfosInfo);
+    }
+    console.log('openStatusInfosArray-> ', openStatusInfosArray)
+     return openStatusInfosArray;
+  }
+
+  onOpenStatusClicked(params){
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -223,144 +338,73 @@ export class NewUserComponent implements OnInit {
           this.showNotes(params.data)
           break;
         }
-        case 'addCallLogs': {
-          this.addCallLogs(params.data)
+        case 'updateStatus': {
+          this.updaeStatus(params.data)
           break;
         }
       }
     }
   }
 
-  retrieveNewUsers(page) {
-    this.loading = true;
-    const param = `/user-allocation-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('New User data', result);
-      this.userList = result;
-      this.loading = false;
-      this.newUsersGridOptions.api.setRowData(this.createRowData(this.userList));
-    }, error => {
-      this.loading = false;
-      console.log(error);
-    })
-  }
-
-  createRowData(userDate) {
-    console.log('userDate -> ', userDate);
-    var userArray = [];
-    for (let i = 0; i < userDate.length; i++) {
-      let userInfo = Object.assign({}, userArray[i], {
-        userId:  userDate[i].sourceAsMap['userId'],
-        name:   userDate[i].sourceAsMap['FirstName']+' '+userDate[i].sourceAsMap['LastName'],
-        Phone: userDate[i].sourceAsMap['Phone'],
-        createdDate: userDate[i].sourceAsMap['CreatedDate'],
-        platform: userDate[i].sourceAsMap['InitialData'] ? userDate[i].sourceAsMap['InitialData']['Platform'] : '',
-        KommunicateAssigneeId: userDate[i].sourceAsMap['KommunicateAssigneeId'],
-        FirstName: userDate[i].sourceAsMap['FirstName'],
-        LastName: userDate[i].sourceAsMap['LastName'],
-        Email: userDate[i].sourceAsMap['Email']
-      })
-      userArray.push(userInfo);
-    }
-    console.log('userArray-> ', userArray)
-     return userArray;
-  }
-
-  handlePageChange(event) {
-    console.log('handlePageChange: event:', event);
-    this.page = event;
-    this.retrieveNewUsers(event);
-  }
-  selectAgent(agentName) {
-    this.agentId = agentName;
-    localStorage.setItem('selectedAgentId', this.agentId);
-    this.page = 0;
-    this.retrieveNewUsers(0);
-  }
-  previous() {
-    this.page = this.page - this.pageSize;
-    this.retrieveNewUsers(this.page);
-  }
-  next() {
-    this.page = this.page + this.pageSize;
-    console.log('clicked on next:', this.page)
-    this.retrieveNewUsers(this.page);
-  }
-  startConversation(user) {
+  startConversation(user){
     console.log('user: ',user)
-    this.loading = true;
-    const param = `/create-km-groupid?userId=${user.userId}&agentId=${user.KommunicateAssigneeId}`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('Chat Created Result: ', result);
-      this.loading = false;
-      if (this.utilsService.isNonEmpty(result) && this.utilsService.isNonEmpty(result.clientGroupId)) {
-        window.open(`https://dashboard.kommunicate.io/conversations/${result.clientGroupId}`, "_blank");
-      } else {
-        this.utilsService.showSnackBar('Error while creating conversation, Please try again.');
-      }
-    }, error => {
-      this.utilsService.showSnackBar('Error while creating conversation, Please try again.');
-      this.loading = false;
-    })
-  }
-
-  startPush(user) {
-    this.loading = true;
-    const param = `/campaign/generic`;
-    const request = {
-      "userIdList": [user.userId],
-      "channelId": 1,
-      "message": "Filing I-T Return through TaxBuddy includes Free tax saving advice and tax notice management. Start filing Now.",
-      "imageUrl": "https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/push_Notification_100K_1024+x+512.png",
-      "deepLink": "itrAssisted"
+    if(this.utilService.isNonEmpty(user.KommunicateAssigneeId)){
+      this.loading = true;
+      const param = `/create-km-groupid?userId=${user.userId}&agentId=${user.KommunicateAssigneeId}`;
+      this.userMsService.getMethod(param).subscribe((result: any) => {
+        console.log('Chat Created Result: ', result);
+        this.loading = false;
+        if (this.utilService.isNonEmpty(result) && this.utilService.isNonEmpty(result.clientGroupId)) {
+          window.open(`https://dashboard.kommunicate.io/conversations/${result.clientGroupId}`, "_blank");
+        } else {
+          this.utilService.showSnackBar('Error while creating conversation, Please try again.');
+        }
+      }, error => {
+        this.utilService.showSnackBar('Error while creating conversation, Please try again.');
+        this.loading = false;
+      })
     }
-    this.userMsService.postMethod(param, request).subscribe((result: any) => {
-      console.log('Push send: ', result);
-      this.loading = false;
-      this.utilsService.showSnackBar('Push notification send successfully.');
-    }, error => {
-      this.utilsService.showSnackBar('Error while sending push notification.');
-      this.loading = false;
-    })
+    else{
+      this.utilService.showSnackBar('Kommuncate Id is '+user.KommunicateAssigneeId);
+    }
+   
   }
 
-  showNotes(client) {
+  showNotes(client){
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.FirstName + ' ' + client.LastName
+        clientName: client.clientName 
       }
     })
 
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
-
   }
 
-  pageChanged(event) {
-    this.config.currentPage = event;
-    this.retrieveNewUsers(event - 1);
-  }
-
-  addCallLogs(client) {
-    let disposable = this.dialog.open(AddCallLogComponent, {
+  updaeStatus(client){
+    let disposable = this.dialog.open(ChangeStatusComponent, {
       width: '50%',
       height: 'auto',
       data: {
         userId: client.userId,
-        userName: client.FirstName + ' ' + client.LastName,
-        userMobile: client.Phone,
-        userEmail: client['Email'],
+        clientName: client.clientName 
       }
     })
+
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      if(result){
+        if(result.data === "statusChanged"){
+          // this.getOpenStatus(this.selectedAgent, 0);
+        }
+      }
     });
-
   }
+
 }
 
 // import { AddCallLogComponent } from './../../../shared/components/add-call-log/add-call-log.component';
@@ -396,7 +440,7 @@ export class NewUserComponent implements OnInit {
 //   ];
 //   loading = false;
 
-//   constructor(private userMsService: UserMsService, public utilsService: UtilsService,
+//   constructor(private userMsService: UserMsService, public utilService: UtilsService,
 //     private dialog: MatDialog) {
 //     this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
 //     if (!environment.production) {
@@ -445,13 +489,13 @@ export class NewUserComponent implements OnInit {
 //     this.userMsService.getMethod(param).subscribe((result: any) => {
 //       console.log('Chat Created Result: ', result);
 //       this.loading = false;
-//       if (this.utilsService.isNonEmpty(result) && this.utilsService.isNonEmpty(result.clientGroupId)) {
+//       if (this.utilService.isNonEmpty(result) && this.utilService.isNonEmpty(result.clientGroupId)) {
 //         window.open(`https://dashboard.kommunicate.io/conversations/${result.clientGroupId}`, "_blank");
 //       } else {
-//         this.utilsService.showSnackBar('Error while creating conversation, Please try again.');
+//         this.utilService.showSnackBar('Error while creating conversation, Please try again.');
 //       }
 //     }, error => {
-//       this.utilsService.showSnackBar('Error while creating conversation, Please try again.');
+//       this.utilService.showSnackBar('Error while creating conversation, Please try again.');
 //       this.loading = false;
 //     })
 //   }
@@ -469,9 +513,9 @@ export class NewUserComponent implements OnInit {
 //     this.userMsService.postMethod(param, request).subscribe((result: any) => {
 //       console.log('Push send: ', result);
 //       this.loading = false;
-//       this.utilsService.showSnackBar('Push notification send successfully.');
+//       this.utilService.showSnackBar('Push notification send successfully.');
 //     }, error => {
-//       this.utilsService.showSnackBar('Error while sending push notification.');
+//       this.utilService.showSnackBar('Error while sending push notification.');
 //       this.loading = false;
 //     })
 //   }

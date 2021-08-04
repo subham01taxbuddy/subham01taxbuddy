@@ -14,7 +14,7 @@ const routes: Routes = [
     {
         path: '', component: DashboardComponent,
         children: [
-            { path: 'new-user', component: NewUserComponent },
+            { path: 'quick-search', component: NewUserComponent }, //new-user  
             {
                 path: 'engagement', component: EngagementComponent,
                 children: [
@@ -32,7 +32,7 @@ const routes: Routes = [
             },
             { path: 'interested-clients', component: InterestedClientsComponent },
             { path: 'open-status', component: OpenStatusComponent },
-            { path: '', redirectTo: 'new-user', pathMatch: 'full' }
+            { path: '', redirectTo: 'quick-search', pathMatch: 'full' }
         ]
     },
 ];
