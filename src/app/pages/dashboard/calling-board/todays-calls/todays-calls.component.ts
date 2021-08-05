@@ -7,6 +7,9 @@ import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.
 import { FormControl, Validators } from '@angular/forms';
 import { GridOptions } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
+import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
+import { ToastMessageService } from 'app/services/toast-message.service';
+import { AppConstants } from 'app/shared/constants';
 
 @Component({
   selector: 'app-todays-calls',
@@ -18,8 +21,10 @@ export class TodaysCallsComponent implements OnInit {
   loading = false;
   callingDate = new FormControl(new Date(), Validators.required);
   todaysCallsGridOptions: GridOptions;
+  config: any;
+  callDetetialInfo: any = [];
 
-  constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string) {
+  constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string, private toastMsgService:ToastMessageService) {
     this.todaysCallsGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.createColoumnDef(),
@@ -28,18 +33,24 @@ export class TodaysCallsComponent implements OnInit {
       },
       sortable: true,
     };
+
+    this.config = {
+      itemsPerPage: 15,
+      currentPage: 1,
+      totalItems: 80
+    };
    }
 
   ngOnInit() {
-    this.getMyTodaysCalls();
+    this.getMyTodaysCalls(0);
   }
 
   createColoumnDef(){
     return [
       {
-        headerName: 'Client Name',
-        field: 'userName',
-        width: 180,
+        headerName: 'User Id',
+        field: 'userId',
+        width: 100,
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -48,9 +59,9 @@ export class TodaysCallsComponent implements OnInit {
         }
       },
       {
-        headerName: 'Client Mobile',
-        field: 'userMobile',
-        width: 130,
+        headerName: 'Name',
+        field: 'name',
+        width: 190,
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -59,9 +70,9 @@ export class TodaysCallsComponent implements OnInit {
         }
       },
       {
-        headerName: 'Last Call Message',
-        field: 'lastCallMessage',
-        width: 320,
+        headerName: 'Mobile No',
+        field: 'customerNumber',
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -71,14 +82,35 @@ export class TodaysCallsComponent implements OnInit {
         }
       },
       {
-        headerName: 'Called At',
-        field: 'calledAt',
-        width: 150,
+        headerName: 'Status',
+        field: 'status',
+        width: 120,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        cellRenderer: (data) => {
-          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
-        },
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },  
+      {
+        headerName: 'Service Type',
+        field: 'serviceType',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Agent name',
+        field: 'agentName',
+        width: 160,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -108,15 +140,37 @@ export class TodaysCallsComponent implements OnInit {
         },
       },
       {
-        headerName: 'Add Call Logs',
+        headerName: 'Call',
         editable: false,
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Add call logs"
+          return `<button type="button" class="action_icon add_button" title="Call to user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-phone" aria-hidden="true" data-action-type="addCallLogs"></i>
+            <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
+           </button>`;
+        },
+        width: 80,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Update Status',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Update Status"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
            </button>`;
         },
         width: 80,
@@ -133,21 +187,26 @@ export class TodaysCallsComponent implements OnInit {
   }
 
 
-  getMyTodaysCalls() {
+  getMyTodaysCalls(page) {
     const loggedInSme = JSON.parse(localStorage.getItem('UMD'));
     this.loading = true;
-    var date = new Date(this.callingDate.value).getTime() - (new Date().getTimezoneOffset() * 60 * 1000)
-    const param = `/call-status?date=${new Date(date).toISOString()}&scheduleCallEmail=${loggedInSme['USER_EMAIL']}&statusId=17`;
-    console.log(date)
-    this.userMsService.getMethod(param).subscribe((result: any) => {
+    if(loggedInSme.USER_ROLE.includes("ROLE_ADMIN")){
+      var param2 = `/call-management/customers?agentUserId=${loggedInSme['USER_UNIQUE_ID']}&page=${page}&pageSize=15`;
+    }
+    else{
+      var param2 = `/call-management/customers?callerAgentUserId=${loggedInSme['USER_UNIQUE_ID']}&page=${page}&pageSize=15`;
+    }
+    this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
-      if (result instanceof Array && result.length > 0) {
-        this.callLogs = result;
-        this.todaysCallsGridOptions.api.setRowData(this.createRowData(this.callLogs));
-      } else {
-        this.callLogs = [];
-        this.utilsService.showSnackBar('You dont have any calls today');
-      }
+        if (result['content'] instanceof Array && result['content'].length > 0) {
+          this.callLogs = result['content'];
+          this.todaysCallsGridOptions.api.setRowData(this.createRowData(this.callLogs));
+          this.callDetetialInfo = result['content'];
+          this.config.totalItems = result.totalElements;
+        } else {
+          this.callLogs = [];
+          this.utilsService.showSnackBar('You dont have any calls today');
+        }
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -161,12 +220,13 @@ export class TodaysCallsComponent implements OnInit {
     for (let i = 0; i < todaysCalls.length; i++) {
       let todaysClientsInfo = Object.assign({}, todaysCallsArray[i], {
         userId: todaysCalls[i]['userId'],
-        userName: todaysCalls[i]['userName'],
-        userMobile: todaysCalls[i]['userMobile'],
-        lastCallMessage: todaysCalls[i]['description'],
-        // calledBy: todaysCalls[i]['createdByName'],
-        calledAt: todaysCalls[i]['scheduleCallTime'],
-        userEmail: todaysCalls[i]['userEmail']
+        name: todaysCalls[i]['name'],
+        customerNumber: todaysCalls[i]['customerNumber'],
+        status: todaysCalls[i]['statusId'] === 18 ? 'Open' : '-',
+        serviceType: todaysCalls[i]['serviceType'],
+        callerAgentUserId: todaysCalls[i]['callerAgentUserId'],
+        callerAgentNumber: todaysCalls[i]['callerAgentNumber'],
+        agentName: todaysCalls[i]['callerAgentName']
       })
       todaysCallsArray.push(todaysClientsInfo);
     }
@@ -174,21 +234,11 @@ export class TodaysCallsComponent implements OnInit {
      return todaysCallsArray;
   }
 
-  addCallLogs(client) {
-    let disposable = this.dialog.open(AddCallLogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        userName: client.userName,
-        userMobile: client.userMobile,
-        userEmail: client.userEmail,
-      }
-    })
-    disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-
+  getAgentName(agentId){
+    var agents = []; 
+    agents = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    let agentName = agents.filter(item => item.userId === agentId)[0].name;
+    return agentName;
   }
 
   showNotes(client) {
@@ -197,7 +247,7 @@ export class TodaysCallsComponent implements OnInit {
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.userName
+        clientName: client.name
       }
     })
 
@@ -215,11 +265,66 @@ export class TodaysCallsComponent implements OnInit {
           this.showNotes(params.data)
           break;
         }
-        case 'addCallLogs': {
-          this.addCallLogs(params.data)
+        case 'call': {
+          this.startCalling(params.data)
+          break;
+        }
+        case 'updateStatus': {
+          this.updateStatus(params.data)
           break;
         }
       }
     }
+  }
+
+  startCalling(user){
+    console.log('user: ',user)
+      this.loading = true;
+      const param = `/call-management/make-call`;
+      const reqBody = {
+        "agent_number": user.callerAgentNumber,
+        "customer_number": user.customerNumber
+      }
+      this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+        console.log('Call Result: ', result);
+        this.loading = false;
+        if(result.success.status){
+          this.toastMsgService.alert("success",result.success.message)
+        }
+
+        // if (this.utilsService.isNonEmpty(result) && this.utilsService.isNonEmpty(result.clientGroupId)) {
+        //   window.open(`https://dashboard.kommunicate.io/conversations/${result.clientGroupId}`, "_blank");
+        // } else {
+        //   this.utilsService.showSnackBar('Error while creating conversation, Please try again.');
+        // }
+      }, error => {
+        this.utilsService.showSnackBar('Error while making call, Please try again.');
+        this.loading = false;
+      })
+  }
+
+  updateStatus(client){
+    let disposable = this.dialog.open(ChangeStatusComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.name 
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if(result){
+        if(result.data === "statusChanged"){
+          this.getMyTodaysCalls(0);
+        }
+      }
+    });
+  }
+
+  pageChanged(event){
+    this.config.currentPage = event;
+    this.getMyTodaysCalls(event - 1);
   }
 }

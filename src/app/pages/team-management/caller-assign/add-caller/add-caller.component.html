@@ -1,0 +1,53 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div class="main clearfix" style="padding-top: 0px;">
+    <div class="card">
+        <!-- <ag-grid-angular class="ag-theme-balham" [gridOptions]="addCallerGridOptions">   
+        </ag-grid-angular> -->
+        <table>
+            <tr>
+                <th><b>Sme Id</b></th>
+                <th><b>Name</b></th>
+                <th><b>Mobile</b></th>
+                <th><b>Email</b></th>
+                <th><b>Service Type</b></th>
+                <th colspan="2"><b>Action</b></th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th><b>Add</b></th>
+                <th><b>Remove</b></th>
+            </tr>
+            <tr *ngIf="callerData.length === 0">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr *ngFor="let item of callerData; let i=index;">
+                <td>{{item.smeId}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.mobileNumber}}</td>
+                <td>{{item.email}}</td>
+                <td>{{item.serviceType}}</td>
+                <td>
+                    <input *ngIf="!item.isAdded" type="checkbox" [value]="item.isAdded" (change)="addCaller($event, item.userId)" />
+                </td>
+                <td>
+                    <input *ngIf="item.isAdded" type="checkbox" [value]="item.isAdded" (change)="removeCaller($event, item.userId)" />
+                </td>
+            </tr>
+        </table>
+        <br><br>
+        
+        <button class="btn" style="float: right;" *ngIf="removeCallerList.length > 0" (click)="saveCaller('remove')">Remove Callers</button>&nbsp;&nbsp;
+        <button class="btn" style="float: right;" *ngIf="selectedCallerList.length > 0" (click)="saveCaller('add')">Add Callers</button>
+    </div>
+</div>

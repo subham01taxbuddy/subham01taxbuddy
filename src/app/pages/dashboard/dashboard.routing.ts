@@ -8,12 +8,13 @@ import { EngagementComponent } from './engagement/engagement.component';
 import { KommunicateComponent } from './engagement/kommunicate/kommunicate.component';
 import { WhatsappComponent } from './engagement/whatsapp/whatsapp.component';
 import { InterestedClientsComponent } from './interested-clients/interested-clients.component';
+import { OpenStatusComponent } from './open-status/open-status.component';
 
 const routes: Routes = [
     {
         path: '', component: DashboardComponent,
         children: [
-            { path: 'new-user', component: NewUserComponent },
+            { path: 'quick-search', component: NewUserComponent }, //new-user  
             {
                 path: 'engagement', component: EngagementComponent,
                 children: [
@@ -30,7 +31,8 @@ const routes: Routes = [
                 ]
             },
             { path: 'interested-clients', component: InterestedClientsComponent },
-            { path: '', redirectTo: 'new-user', pathMatch: 'full' }
+            { path: 'open-status', component: OpenStatusComponent },
+            { path: '', redirectTo: 'quick-search', pathMatch: 'full' }
         ]
     },
 ];
