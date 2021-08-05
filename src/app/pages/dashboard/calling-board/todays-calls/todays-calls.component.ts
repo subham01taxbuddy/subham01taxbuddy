@@ -234,13 +234,6 @@ export class TodaysCallsComponent implements OnInit {
      return todaysCallsArray;
   }
 
-  getAgentName(agentId){
-    var agents = []; 
-    agents = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
-    let agentName = agents.filter(item => item.userId === agentId)[0].name;
-    return agentName;
-  }
-
   showNotes(client) {
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',

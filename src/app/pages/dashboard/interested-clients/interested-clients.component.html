@@ -63,10 +63,20 @@
                     </div>
                 </div> -->
 
-                <ag-grid-angular class="ag-theme-balham" [gridOptions]="interestedClientsGridOption"
-                (rowClicked)="onInterestedClientsClicked($event)"> 
-                </ag-grid-angular>
-                 <p style="text-align: center; font-size: 15px; margin-top: 20px" *ngIf="interestedClients.length === 0"><b>No data available.</b></p>
+                <div class="card__row">
+                    <table>
+                        <tr *ngFor="let item of interstedClientInfo | paginate:config"></tr>
+                    </table>
+
+                    <ag-grid-angular class="ag-theme-balham" [gridOptions]="interestedClientsGridOption"
+                    (rowClicked)="onInterestedClientsClicked($event)"> 
+                    </ag-grid-angular>
+
+                    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                </div>
+
+
+                 <!-- <p style="text-align: center; font-size: 15px; margin-top: 20px" *ngIf="interestedClients.length === 0"><b>No data available.</b></p> -->
                 
             </div>
         </div>
