@@ -23,6 +23,9 @@ export class TodaysCallsComponent implements OnInit {
   todaysCallsGridOptions: GridOptions;
   config: any;
   callDetetialInfo: any = [];
+  agentList: any = [];
+  isAdmin: boolean;
+  selectedAgent: any;
 
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string, private toastMsgService:ToastMessageService) {
     this.todaysCallsGridOptions = <GridOptions>{
@@ -42,7 +45,26 @@ export class TodaysCallsComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.getMyTodaysCalls(0);
+    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    var userInfo = JSON.parse(localStorage.getItem('UMD'));
+    if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
+      this.isAdmin = true;
+    }
+    else{
+      this.isAdmin = false;
+      this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
+    }
+    //
+  }
+
+  searchByAgent(selectedAgent){
+    if(this.utilsService.isNonEmpty(selectedAgent)){
+      this.selectedAgent = selectedAgent;
+      this.getMyTodaysCalls(selectedAgent, 0);
+    }
+    else{
+      this.toastMsgService.alert("error","Select Agent")
+    }
   }
 
   createColoumnDef(){
@@ -187,15 +209,16 @@ export class TodaysCallsComponent implements OnInit {
   }
 
 
-  getMyTodaysCalls(page) {
-    const loggedInSme = JSON.parse(localStorage.getItem('UMD'));
+  getMyTodaysCalls(id, page) {
     this.loading = true;
-    if(loggedInSme.USER_ROLE.includes("ROLE_ADMIN")){
-      var param2 = `/call-management/customers?agentUserId=${loggedInSme['USER_UNIQUE_ID']}&page=${page}&pageSize=15`;
+    var param2;
+    if(this.isAdmin){
+      param2 = `/call-management/customers?agentId=${id}&page=${page}&pageSize=15`;
     }
     else{
-      var param2 = `/call-management/customers?callerAgentUserId=${loggedInSme['USER_UNIQUE_ID']}&page=${page}&pageSize=15`;
+      param2 = `/call-management/customers?callerAgentUserId=${id}&page=${page}&pageSize=15`;
     }
+    
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
         if (result['content'] instanceof Array && result['content'].length > 0) {
@@ -232,13 +255,6 @@ export class TodaysCallsComponent implements OnInit {
     }
     console.log('todaysCallsArray-> ', todaysCallsArray)
      return todaysCallsArray;
-  }
-
-  getAgentName(agentId){
-    var agents = []; 
-    agents = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
-    let agentName = agents.filter(item => item.userId === agentId)[0].name;
-    return agentName;
   }
 
   showNotes(client) {
@@ -309,7 +325,8 @@ export class TodaysCallsComponent implements OnInit {
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.name 
+        clientName: client.name,
+        serviceType: client.serviceType 
       }
     })
 
@@ -317,7 +334,13 @@ export class TodaysCallsComponent implements OnInit {
       console.log('The dialog was closed');
       if(result){
         if(result.data === "statusChanged"){
-          this.getMyTodaysCalls(0);
+          if(this.isAdmin){
+            this.getMyTodaysCalls(this.selectedAgent,0);
+          }
+          else{
+            var userInfo = JSON.parse(localStorage.getItem('UMD'));
+            this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID,0);
+          }
         }
       }
     });
@@ -325,6 +348,13 @@ export class TodaysCallsComponent implements OnInit {
 
   pageChanged(event){
     this.config.currentPage = event;
-    this.getMyTodaysCalls(event - 1);
+    // this.getMyTodaysCalls(this.selectedAgent, event - 1);
+    if(this.isAdmin){
+      this.getMyTodaysCalls(this.selectedAgent, event - 1);
+    }
+    else{
+      var userInfo = JSON.parse(localStorage.getItem('UMD'));
+      this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, event - 1);
+    }
   }
 }

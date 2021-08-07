@@ -53,7 +53,9 @@ export class UserProfileComponent implements OnInit {
   userRoles : any = [{label: 'Admin', value: 'ROLE_ADMIN'},
                     {label: 'User', value: 'ROLE_USER'},
                     {label: 'Ifa', value: 'ROLE_IFA'},
+                    {label: 'Sme', value: 'ROLE_SME'},
                     {label: 'Filling team', value: 'ROLE_FILING_TEAM'},
+                    {label: 'Caller team', value: 'ROLE_CALLING_TEAM'},
                     {label: 'Tpa sme', value: 'ROLE_TPA_SME'}];
 
   userRole: any = new FormControl();
