@@ -13,17 +13,29 @@
     <div class="card__col-xs-4 card__col-sm-14">
         <mat-form-field appearance="outline" >
             <mat-label>Select Status</mat-label>
-            <mat-select placeholder="Select Status" formControlName="agent" required>
-                <mat-option *ngFor="let status of allAgents"  [value]="status.statusId">
-                    {{ status.statusName }}
+            <mat-select placeholder="Select Status" formControlName="agentId" required>
+                <mat-option *ngFor="let agent of allAgents"  [value]="agent.agentId">
+                    {{ agent.name }}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="changeAgent.controls.selectStatus.hasError('required')">Select status.</mat-error>
+            <mat-error *ngIf="changeAgent.controls.agentId.hasError('required')">Select status.</mat-error>
         </mat-form-field>
     </div>
 
     <div class="card__col-xs-4 card__col-sm-14">
-        <button mat-raised-button color="primary" (click)="changeStatus()" tabindex="1">Update Status</button>
+        <mat-form-field appearance="outline" >
+            <mat-label>Select Service Type</mat-label>
+            <mat-select placeholder="Select Service Type" formControlName="serviceType" required>
+                <mat-option *ngFor="let item of services"  [value]="item.value">
+                    {{ item.label }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="changeAgent.controls.serviceType.hasError('required')">Select service type.</mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="card__col-xs-4 card__col-sm-14">
+        <button mat-raised-button color="primary" (click)="changeStatus()" tabindex="1">Update</button>
     </div>
   </form>
 

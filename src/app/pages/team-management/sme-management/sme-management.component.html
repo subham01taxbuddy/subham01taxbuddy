@@ -2,6 +2,30 @@
 
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
+
+        <div class="card__row" >
+            <div class="filter__col card__col-sm-4 card__col-xs-12">
+                <mat-form-field appearance="outline" style="margin-top: 10px;">
+                  <mat-label>Select Agent</mat-label>
+                  <mat-select placeholder="Select Agent Id" #agentId required>
+                      <mat-option *ngFor="let agent of agentList" [value]="agent.agentId">
+                          {{agent.name}}
+                      </mat-option>
+                  </mat-select>
+                  <!-- <mat-error *ngIf="agent.hasError('required')">Select agent id</mat-error> -->
+              </mat-form-field>
+              </div>
+
+              <div class="filter__col card__col-sm-4 card__col-xs-12">
+                <a class="btn btn_stroke filter__add-link" (click)="searchByAgent(agentId.value)"><i
+                    class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
+              </div>
+
+              <div class="card__col-md-3 card__col-xs-12 pull-right">
+                
+              </div>
+        </div><br><br>
+
         <!-- <ag-grid-angular class="ag-theme-balham" [gridOptions]="addCallerGridOptions">   
         </ag-grid-angular> -->
         <table>
@@ -12,9 +36,11 @@
                 <th><b>Email</b></th>
                 <th><b>Service Type</b></th>
                 <th><b>Agent Name</b></th>
+                <th><b>Role</b></th>
                 <th><b>Update Agent</b></th>
             </tr>
             <tr *ngIf="smeList.length === 0">
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -30,6 +56,7 @@
                 <td>{{item.email}}</td>
                 <td>{{item.serviceType}}</td>
                 <td>{{item.agentName}}</td>
+                <td>{{this.userRole(item.roles)}}</td>
                 <td>
                     <button (click)="updateStatus(item)"><i class="fa fa-user" aria-hidden="true"></i></button>
                 </td>

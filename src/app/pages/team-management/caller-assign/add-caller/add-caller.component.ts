@@ -3,6 +3,7 @@ import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
+import { AppConstants } from 'app/shared/constants';
 
 @Component({
   selector: 'app-add-caller',
@@ -13,8 +14,12 @@ export class AddCallerComponent implements OnInit {
   loading: boolean;
   addCallerGridOptions: GridOptions;
   callerData: any = [];
+  allCallerData: any = [];
   selectedCallerList: any = [];
   removeCallerList: any = [];
+  agentList: any = [];
+  selectedAgent: any;
+  showAllUser: boolean;
 
   constructor(private userMsService: UserMsService, private utileService: UtilsService, private toastMsgService: ToastMessageService) { 
     this.addCallerGridOptions = <GridOptions>{
@@ -29,7 +34,18 @@ export class AddCallerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getCallerUser()
+    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    this.getAllCallerUser()
+  }
+
+  searchByAgent(selectedAgent){
+    if(this.utileService.isNonEmpty(selectedAgent)){
+      this.selectedAgent = selectedAgent;
+      this.getCallerUser(selectedAgent);
+    }
+    else{
+      this.toastMsgService.alert("error","Select Agent")
+    }
   }
 
   callersColoumnDef(){
@@ -117,12 +133,42 @@ export class AddCallerComponent implements OnInit {
     ]
   }
 
-  getCallerUser(){
+  getAllCallerUser(){
     this.loading = true;
-    const userData = JSON.parse(localStorage.getItem('UMD'));
-    let param = `/call-management/caller-agents-role?agentUserId=${userData.USER_UNIQUE_ID}`;
+     let param = `/call-management/caller-agents`;
     this.userMsService.getMethod(param).subscribe(res=>{
         console.log('caller users: ',res);
+        this.loading = false;
+        this.showAllUser = true;
+        if(Array.isArray(res) && res.length > 0){
+          this.allCallerData = res;
+        }
+        else{
+          this.allCallerData = [];
+          this.toastMsgService.alert('error','Data no found.')
+        }
+    },
+    error=>{
+         console.log('Error during getting caller users daa: ',error);
+         this.toastMsgService.alert('error','Error during getting all caller users data.')
+         this.loading = false;
+    })
+  }
+
+  getCallerUser(id){
+    this.loading = true;
+    var param;
+    if(this.utileService.isNonEmpty(id)){
+      param = `/call-management/caller-agents-role?agentId=${id}`;
+    }
+    else{
+      const userData = JSON.parse(localStorage.getItem('UMD'));
+      param = `/call-management/caller-agents-role?agentId=${userData.USER_UNIQUE_ID}`;
+    }
+
+    this.userMsService.getMethod(param).subscribe(res=>{
+        console.log('caller users: ',res);
+        this.showAllUser = false;
         this.loading = false;
         if(Array.isArray(res) && res.length > 0){
           this.callerData = res;
@@ -130,9 +176,14 @@ export class AddCallerComponent implements OnInit {
           this.removeCallerList = [];
           // this.addCallerGridOptions.api.setRowData(this.createRowData(res));
         }
+        else{
+          this.callerData = [];
+          this.toastMsgService.alert('error','Data no found.')
+        }
     },
     error=>{
          console.log('Error during getting caller users daa: ',error);
+         this.toastMsgService.alert('error','Error during getting caller users data.')
          this.loading = false;
     })
   }
@@ -182,11 +233,11 @@ export class AddCallerComponent implements OnInit {
     var caller;
     if(action === 'add'){  
       caller = this.getCalletList(action)
-      var param  = `/call-management/caller-agents?agentUserId=${userData.USER_UNIQUE_ID}&addCallerAgents=${caller}&removeCallerAgent=`;
+      var param  = `/call-management/caller-agents?agentId=${this.selectedAgent}&addCallerAgents=${caller}&removeCallerAgent=`;
     }
     else{
       caller = this.getCalletList(action)
-      var param  = `/call-management/caller-agents?agentUserId=${userData.USER_UNIQUE_ID}&addCallerAgents=&removeCallerAgent=${caller}`;
+      var param  = `/call-management/caller-agents?agentId=${this.selectedAgent}&addCallerAgents=&removeCallerAgent=${caller}`;
     }
      console.log('caller -> ',caller)
      console.log('param: ',param)
@@ -194,7 +245,7 @@ export class AddCallerComponent implements OnInit {
         console.log('add: -> ',res)
         this.loading = false;
         this.toastMsgService.alert('success', 'Caller data update succesfully.');
-        this.getCallerUser();
+        this.getCallerUser(this.selectedAgent);
      },
      error=>{
        console.log('error during add callers: -> ',error);

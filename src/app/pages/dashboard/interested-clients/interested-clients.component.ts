@@ -1,4 +1,5 @@
 import { formatDate } from '@angular/common';
+import { identifierName } from '@angular/compiler';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { GridOptions } from 'ag-grid-community';
@@ -8,6 +9,7 @@ import { UtilsService } from 'app/services/utils.service';
 import { AddCallLogComponent } from 'app/shared/components/add-call-log/add-call-log.component';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
+import { AppConstants } from 'app/shared/constants';
 
 @Component({
   selector: 'app-interested-clients',
@@ -18,7 +20,9 @@ export class InterestedClientsComponent implements OnInit {
   interestedClients = [];
   loading = false;
   config: any;
-  
+  agentList: any = [];
+  isAdmin: boolean;
+  selectedAgent: any;
   interestedClientsGridOption: GridOptions;
   interstedClientInfo: any;
 
@@ -41,7 +45,26 @@ export class InterestedClientsComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.getInterestedClients(0);
+    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    var userInfo = JSON.parse(localStorage.getItem('UMD'));
+    if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
+      this.isAdmin = true;
+    }
+    else{
+      this.isAdmin = false;
+      this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+    }
+    
+  }
+
+  searchByAgent(selectedAgent){
+    if(this.utilsService.isNonEmpty(selectedAgent)){
+      this.selectedAgent = selectedAgent;
+      this.getInterestedClients(selectedAgent, 0);
+    }
+    else{
+      this.toastMsgService.alert("error","Select Agent")
+    }
   }
 
   createColoumnDef(){
@@ -186,15 +209,29 @@ export class InterestedClientsComponent implements OnInit {
   }
 
 
-  getInterestedClients(page) {
-    const loggedInSme = JSON.parse(localStorage.getItem('UMD'));
+  getInterestedClients(id, page) {
     this.loading = true;
-    if(loggedInSme.USER_ROLE.includes("ROLE_ADMIN")){
-      var param2 = `/call-management/customers?statusId=16&agentUserId=${loggedInSme['USER_UNIQUE_ID']}&page=${page}&pageSize=15`;
+    var param2;
+    if(this.isAdmin){
+      param2 = `/call-management/customers?statusId=16&agentId=${id}&page=${page}&pageSize=15`;
     }
     else{
-      var param2 = `/call-management/customers??statusId=16&callerAgentUserId=${loggedInSme['USER_UNIQUE_ID']}&page=${page}&pageSize=15`;
+      param2 = `/call-management/customers?statusId=16&callerAgentUserId=${id}&page=${page}&pageSize=15`;
     }
+    // if(this.utilsService.isNonEmpty(id)){
+    //   param2 = `/call-management/customers?statusId=16&agentId=${id}&page=${page}&pageSize=15`;
+    //   const loggedInSme = JSON.parse(localStorage.getItem('UMD'));
+    //   if(loggedInSme.USER_ROLE.includes("ROLE_ADMIN")){
+    //   param2 = `/call-management/customers?statusId=16&agentId=${id}&page=${page}&pageSize=15`;
+    //   }
+    //   // else{
+    //   //   param2 = `/call-management/customers?statusId=16&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+    //   // }
+    // }
+    // else{
+    //   param2 = `/call-management/customers?statusId=16&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+    // }
+   
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
         if (result['content'] instanceof Array && result['content'].length > 0) {
@@ -294,7 +331,8 @@ export class InterestedClientsComponent implements OnInit {
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.name 
+        clientName: client.name,
+        serviceType: client.serviceType  
       }
     })
 
@@ -302,7 +340,13 @@ export class InterestedClientsComponent implements OnInit {
       console.log('The dialog was closed');
       if(result){
         if(result.data === "statusChanged"){
-          this.getInterestedClients(0);
+          if(this.isAdmin){
+            this.getInterestedClients(this.selectedAgent,0);
+          }
+          else{
+            var userInfo = JSON.parse(localStorage.getItem('UMD'));
+            this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+          }
         }
       }
     });
@@ -310,6 +354,13 @@ export class InterestedClientsComponent implements OnInit {
 
   pageChanged(event){
     this.config.currentPage = event;
-    this.getInterestedClients(event - 1);
+    this.getInterestedClients(this.selectedAgent, event - 1);
+    if(this.isAdmin){
+      this.getInterestedClients(this.selectedAgent,event - 1);
+    }
+    else{
+      var userInfo = JSON.parse(localStorage.getItem('UMD'));
+      this.getInterestedClients(userInfo.USER_UNIQUE_ID, event - 1);
+    }
   }
 }
