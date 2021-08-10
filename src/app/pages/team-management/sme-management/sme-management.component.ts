@@ -17,6 +17,7 @@ export class SmeManagementComponent implements OnInit {
   smeList: any = [];
   agentList: any = [];
   selectedAgent: any;
+  searchMobNo: any;
 
   constructor(private userMsService: UserMsService, private dialog: MatDialog, private utileService: UtilsService, private toastMsgService: ToastMessageService ) { }
 
@@ -35,14 +36,19 @@ export class SmeManagementComponent implements OnInit {
     }
   }
 
-  getCallerUser(id){
+  getCallerUser(id, mobNo?){
     this.loading = true;
     var param;
     if(this.utileService.isNonEmpty(id)){
       param = `/sme-details?agentId=${id}`;
     }
     else{
-      param = `/custom-sme-details`;
+      if(this.utileService.isNonEmpty(mobNo)){
+        param = `/custom-sme-details?mobileNumber=${mobNo}`;
+      }
+      else{
+        param = `/custom-sme-details`;
+      }
     }
     this.userMsService.getMethod(param).subscribe(res=>{
         console.log('sme users: ',res);
@@ -82,7 +88,6 @@ export class SmeManagementComponent implements OnInit {
   }
 
   userRole(roles){
-   
     var role;
     // console.log(roles);
     if(roles instanceof Array){
@@ -102,6 +107,15 @@ export class SmeManagementComponent implements OnInit {
         
       }
       return role;
+    }
+  }
+
+  serchByMobNo(){
+    if(this.utileService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10){
+      this.getCallerUser('', this.searchMobNo);
+    }
+    else{
+      this.toastMsgService.alert("error","Enter valid mobile number.")
     }
   }
 
