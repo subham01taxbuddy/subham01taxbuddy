@@ -25,6 +25,7 @@ export class InterestedClientsComponent implements OnInit {
   selectedAgent: any;
   interestedClientsGridOption: GridOptions;
   interstedClientInfo: any;
+  showAllUser: boolean;
 
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
               private toastMsgService: ToastMessageService) {
@@ -49,6 +50,8 @@ export class InterestedClientsComponent implements OnInit {
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
       this.isAdmin = true;
+      this.showAllUser = true;
+      this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
     }
     else{
       this.isAdmin = false;
@@ -60,6 +63,7 @@ export class InterestedClientsComponent implements OnInit {
   searchByAgent(selectedAgent){
     if(this.utilsService.isNonEmpty(selectedAgent)){
       this.selectedAgent = selectedAgent;
+      this.showAllUser = false;
       this.getInterestedClients(selectedAgent, 0);
     }
     else{
@@ -213,24 +217,16 @@ export class InterestedClientsComponent implements OnInit {
     this.loading = true;
     var param2;
     if(this.isAdmin){
-      param2 = `/call-management/customers?statusId=16&agentId=${id}&page=${page}&pageSize=15`;
+      if(this.showAllUser){
+        param2 = `/call-management/customers?statusId=16&page=${page}&pageSize=15`;
+      }
+      else{
+        param2 = `/call-management/customers?statusId=16&agentId=${id}&page=${page}&pageSize=15`;
+      }
     }
     else{
       param2 = `/call-management/customers?statusId=16&callerAgentUserId=${id}&page=${page}&pageSize=15`;
     }
-    // if(this.utilsService.isNonEmpty(id)){
-    //   param2 = `/call-management/customers?statusId=16&agentId=${id}&page=${page}&pageSize=15`;
-    //   const loggedInSme = JSON.parse(localStorage.getItem('UMD'));
-    //   if(loggedInSme.USER_ROLE.includes("ROLE_ADMIN")){
-    //   param2 = `/call-management/customers?statusId=16&agentId=${id}&page=${page}&pageSize=15`;
-    //   }
-    //   // else{
-    //   //   param2 = `/call-management/customers?statusId=16&callerAgentUserId=${id}&page=${page}&pageSize=15`;
-    //   // }
-    // }
-    // else{
-    //   param2 = `/call-management/customers?statusId=16&callerAgentUserId=${id}&page=${page}&pageSize=15`;
-    // }
    
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
@@ -257,7 +253,7 @@ export class InterestedClientsComponent implements OnInit {
         userId: interestedClient[i]['userId'],
         name: interestedClient[i]['name'],
         customerNumber: interestedClient[i]['customerNumber'],
-        status: interestedClient[i]['statusId'] === 18 ? 'Open' : '-',
+        status: interestedClient[i]['statusId'] === 16 ? 'Interested' : '-',
         serviceType: interestedClient[i]['serviceType'],
         callerAgentUserId: interestedClient[i]['callerAgentUserId'],
         callerAgentNumber: interestedClient[i]['callerAgentNumber'],
@@ -341,7 +337,7 @@ export class InterestedClientsComponent implements OnInit {
       if(result){
         if(result.data === "statusChanged"){
           if(this.isAdmin){
-            this.getInterestedClients(this.selectedAgent,0);
+              this.getInterestedClients(this.selectedAgent,0);
           }
           else{
             var userInfo = JSON.parse(localStorage.getItem('UMD'));
@@ -356,7 +352,7 @@ export class InterestedClientsComponent implements OnInit {
     this.config.currentPage = event;
     this.getInterestedClients(this.selectedAgent, event - 1);
     if(this.isAdmin){
-      this.getInterestedClients(this.selectedAgent,event - 1);
+        this.getInterestedClients(this.selectedAgent,event - 1);
     }
     else{
       var userInfo = JSON.parse(localStorage.getItem('UMD'));

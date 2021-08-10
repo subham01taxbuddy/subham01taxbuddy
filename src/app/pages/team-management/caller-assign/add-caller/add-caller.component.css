@@ -36,3 +36,10 @@ table {
   font-size: 14px;
   font-weight: bold;
 }
+
+.head{
+  text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    text-decoration: underline;
+}

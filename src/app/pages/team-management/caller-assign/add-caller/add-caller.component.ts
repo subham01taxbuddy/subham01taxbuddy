@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { AppConstants } from 'app/shared/constants';
+import { AddRemoveAgentDialogComponent } from '../add-remove-agent-dialog/add-remove-agent-dialog.component';
 
 @Component({
   selector: 'app-add-caller',
@@ -12,7 +14,8 @@ import { AppConstants } from 'app/shared/constants';
 })
 export class AddCallerComponent implements OnInit {
   loading: boolean;
-  addCallerGridOptions: GridOptions;
+  allCallerGridOptions: GridOptions;
+  // addCallerGridOptions: GridOptions;
   callerData: any = [];
   allCallerData: any = [];
   selectedCallerList: any = [];
@@ -20,17 +23,27 @@ export class AddCallerComponent implements OnInit {
   agentList: any = [];
   selectedAgent: any;
   showAllUser: boolean;
+  searchMobNo: any;
 
-  constructor(private userMsService: UserMsService, private utileService: UtilsService, private toastMsgService: ToastMessageService) { 
-    this.addCallerGridOptions = <GridOptions>{
+  constructor(private userMsService: UserMsService, private utileService: UtilsService, private toastMsgService: ToastMessageService,
+        private dialog: MatDialog) { 
+    this.allCallerGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.callersColoumnDef(),
+      columnDefs: this.allCallersColoumnDef(),
       enableCellChangeFlash: true,
       onGridReady: params => {
       },
-
       sortable: true,
     };
+
+    // this.addCallerGridOptions = <GridOptions>{
+    //   rowData: [],
+    //   columnDefs: this.callersColoumnDef(),
+    //   enableCellChangeFlash: true,
+    //   onGridReady: params => {
+    //   },
+    //   sortable: true,
+    // };
   }
 
   ngOnInit() {
@@ -38,110 +51,207 @@ export class AddCallerComponent implements OnInit {
     this.getAllCallerUser()
   }
 
-  searchByAgent(selectedAgent){
-    if(this.utileService.isNonEmpty(selectedAgent)){
-      this.selectedAgent = selectedAgent;
-      this.getCallerUser(selectedAgent);
+  searchByAgent(){
+    if(this.utileService.isNonEmpty(this.selectedAgent)){
+      this.searchMobNo = '';
+      this.getCallerUser(this.selectedAgent);
     }
     else{
       this.toastMsgService.alert("error","Select Agent")
     }
   }
 
+  serchByMobNo(){
+    if(this.utileService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10){
+      this.selectedAgent = '';
+      this.getAllCallerUser(this.searchMobNo);
+    }
+    else{
+      this.toastMsgService.alert("error","Enter valid mobile number.")
+    }
+  }
+
+  allCallersColoumnDef(){
+    return [
+      {
+        headerName: 'Sme Id',
+        field: 'smeId',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Name',
+        field: 'name',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Mobile',
+        field: 'mobileNumber',
+        width: 140,
+        suppressMovable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },   
+      {
+        headerName: 'Email',
+        field: 'email',
+        width: 280,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Service Type',
+        field: 'serviceType',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Agent',
+        field: 'agents',
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      }
+   ]
+  }
+
   callersColoumnDef(){
     return [
-        {
-          headerName: 'Sme Id',
-          field: 'smeId',
-          width: 100,
-          suppressMovable: true,
-          cellStyle: { textAlign: 'center' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-        },
-        {
-          headerName: 'Name',
-          field: 'name',
-          width: 180,
-          suppressMovable: true,
-          cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-        },
-        {
-          headerName: 'Mobile',
-          field: 'mobileNumber',
-          width: 140,
-          suppressMovable: true,
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-        },   
-        {
-          headerName: 'Email',
-          field: 'email',
-          width: 280,
-          suppressMovable: true,
-          cellStyle: { textAlign: 'center' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-        },
-        {
-          headerName: 'Service Type',
-          field: 'serviceType',
-          width: 150,
-          suppressMovable: true,
-          cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-        },
+  //       {
+  //         headerName: 'Sme Id',
+  //         field: 'smeId',
+  //         width: 100,
+  //         suppressMovable: true,
+  //         cellStyle: { textAlign: 'center' },
+  //         filter: "agTextColumnFilter",
+  //         filterParams: {
+  //           filterOptions: ["contains", "notContains"],
+  //           debounceMs: 0
+  //         }
+  //       },
+  //       {
+  //         headerName: 'Name',
+  //         field: 'name',
+  //         width: 180,
+  //         suppressMovable: true,
+  //         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+  //         filter: "agTextColumnFilter",
+  //         filterParams: {
+  //           filterOptions: ["contains", "notContains"],
+  //           debounceMs: 0
+  //         }
+  //       },
+  //       {
+  //         headerName: 'Mobile',
+  //         field: 'mobileNumber',
+  //         width: 140,
+  //         suppressMovable: true,
+  //         filter: "agTextColumnFilter",
+  //         filterParams: {
+  //           filterOptions: ["contains", "notContains"],
+  //           debounceMs: 0
+  //         }
+  //       },   
+  //       {
+  //         headerName: 'Email',
+  //         field: 'email',
+  //         width: 280,
+  //         suppressMovable: true,
+  //         cellStyle: { textAlign: 'center' },
+  //         filter: "agTextColumnFilter",
+  //         filterParams: {
+  //           filterOptions: ["contains", "notContains"],
+  //           debounceMs: 0
+  //         }
+  //       },
+  //       {
+  //         headerName: 'Service Type',
+  //         field: 'serviceType',
+  //         width: 150,
+  //         suppressMovable: true,
+  //         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+  //         filter: "agTextColumnFilter",
+  //         filterParams: {
+  //           filterOptions: ["contains", "notContains"],
+  //           debounceMs: 0
+  //         }
+  //       },
         
-        { 
-          headerName: 'Add Caller',
-          editable: false,
-          suppressMenu: true,
-          sortable: true,
-          suppressMovable: true,
-          cellRenderer: function (params) {
-            console.log(params)
-            return `<input type="checkbox" [(ngModel)]="param.data.addCaller" (change)="checkValue(param)" />`;
-          },
-          width: 130,
-          pinned: 'right',
-          cellStyle: function (params) {
-            return {
-              textAlign: 'center', display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center'
-            }
-          },
-        }
+  //       { 
+  //         headerName: 'Add Caller',
+  //         editable: false,
+  //         suppressMenu: true,
+  //         sortable: true,
+  //         suppressMovable: true,
+  //         cellRenderer: function (params) {
+  //           console.log(params)
+  //           return `<input type="checkbox" [(ngModel)]="param.data.addCaller" (change)="checkValue(param)" />`;
+  //         },
+  //         width: 130,
+  //         pinned: 'right',
+  //         cellStyle: function (params) {
+  //           return {
+  //             textAlign: 'center', display: 'flex',
+  //             'align-items': 'center',
+  //             'justify-content': 'center'
+  //           }
+  //         },
+  //       }
     ]
   }
 
-  getAllCallerUser(){
+  getAllCallerUser(mobMo?){
     this.loading = true;
-     let param = `/call-management/caller-agents`;
+    var param;
+    if(this.utileService.isNonEmpty(mobMo)){
+      param = `/call-management/caller-agents?callerAgentNumber=${mobMo}`;
+    }
+    else{
+      param = `/call-management/caller-agents`;
+    }
     this.userMsService.getMethod(param).subscribe(res=>{
         console.log('caller users: ',res);
         this.loading = false;
         this.showAllUser = true;
-        if(Array.isArray(res) && res.length > 0){
+        if(res instanceof Array && res.length > 0){
           this.allCallerData = res;
+          this.selectedAgent = '';
+          console.log(this.allCallerData, typeof this.allCallerData)
+          // if(this.allCallerGridOptions.api){
+          // this.allCallerGridOptions.api.setRowData(this.createAllRowData(this.allCallerData));
+          // }
         }
         else{
           this.allCallerData = [];
@@ -188,7 +298,7 @@ export class AddCallerComponent implements OnInit {
     })
   }
 
-  createRowData(callerData){
+  createAllRowData(callerData){
     console.log('callerData -> ', callerData);
     var callerArray = [];
     for (let i = 0; i < callerData.length; i++) {
@@ -198,14 +308,32 @@ export class AddCallerComponent implements OnInit {
         mobileNumber: this.utileService.isNonEmpty(callerData[i].mobileNumber) ? callerData[i].mobileNumber : '-',
         email: this.utileService.isNonEmpty(callerData[i].email) ? callerData[i].email : '-',
         serviceType: this.utileService.isNonEmpty(callerData[i].serviceType) ? callerData[i].serviceType : '-',
-        agentId: this.utileService.isNonEmpty(callerData[i].agentId) ? callerData[i].agentId : '-',
-        addCaller: false
+        agents: this.getAgents(callerData[i].agentsName)
       })
       callerArray.push(couponInfo);
     }
     console.log('callerArray-> ', callerArray)
     return callerArray;
   }
+
+  // createRowData(callerData){
+  //   console.log('callerData -> ', callerData);
+  //   var callerArray = [];
+  //   for (let i = 0; i < callerData.length; i++) {
+  //     let couponInfo = Object.assign({}, callerArray[i], {
+  //       smeId: callerData[i].smeId,
+  //       name: this.utileService.isNonEmpty(callerData[i].name) ? callerData[i].name : '-',
+  //       mobileNumber: this.utileService.isNonEmpty(callerData[i].mobileNumber) ? callerData[i].mobileNumber : '-',
+  //       email: this.utileService.isNonEmpty(callerData[i].email) ? callerData[i].email : '-',
+  //       serviceType: this.utileService.isNonEmpty(callerData[i].serviceType) ? callerData[i].serviceType : '-',
+  //       agentId: this.utileService.isNonEmpty(callerData[i].agentId) ? callerData[i].agentId : '-',
+  //       addCaller: false 
+  //     })
+  //     callerArray.push(couponInfo);
+  //   }
+  //   console.log('callerArray-> ', callerArray)
+  //   return callerArray;
+  // }
 
   addCaller(event, userId){
     if(event.currentTarget.checked){
@@ -289,6 +417,58 @@ export class AddCallerComponent implements OnInit {
         return callerList;
       }
       
+    }
+
+    getAgents(agents){
+      var agentInfo;
+      if(agents instanceof Array){
+        if(agents.length === 1){
+          agentInfo = agents[0]; 
+        }
+        else if(agents.length > 1){
+          for(let i=0; i<agents.length; i++){
+              if(i === 0){
+                agentInfo = agents[i]; 
+              }
+              else{
+                agentInfo = agentInfo+', '+(agents[i]); 
+              }
+          }
+        }
+        return agentInfo;
+      }
+    }
+
+    onAllCallersClicked(params){
+      console.log(params)
+      if (params.event.target !== undefined) {
+        const actionType = params.event.target.getAttribute('data-action-type');
+        switch (actionType) {
+          case 'addRemoveAgent': {
+            this.addRemoveAgent(params.data)
+            break;
+          }
+        }
+      }
+    }
+
+    addRemoveAgent(agentInfo){
+        let disposable = this.dialog.open(AddRemoveAgentDialogComponent,{
+          width: '50%',
+          height: 'auto',
+          data: {
+            userInfo: agentInfo
+          }
+        })
+
+        disposable.afterClosed().subscribe(result => {
+          console.log('The dialog was closed');
+          // if(result){
+          //   if(result.data === "statusChanged"){
+          //     this.getCallerUser(this.selectedAgent);
+          //   }
+          // }
+        });
     }
 
   }
