@@ -48,18 +48,20 @@ export class WhatAppChatComponent implements OnInit {
   showChatUi: boolean = false;
   selectedAgent: any = '';
 
-  agentList = [
-    { value: 'brij@ssbainnovations.com', label: 'Brij' },
-    { value: 'divya@ssbainnovations.com', label: 'Divya' },
-    { value: 'urmila@ssbainnovations.com', label: 'Urmila' },
-    { value: 'kavita@ssbainnovations.com', label: 'Kavita' },
-    { value: 'amrita@ssbainnovations.com', label: 'Amrita' },
-    { value: 'ankita@ssbainnovations.com', label: 'Ankita' },
-    { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
-    { value: 'damini@ssbainnovations.com', label: 'Damini' },
-    { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
-		{ value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
-  ];
+  agentList : any = [];
+  
+  // [
+  //   { value: 'brij@ssbainnovations.com', label: 'Brij' },
+  //   { value: 'divya@ssbainnovations.com', label: 'Divya' },
+  //   { value: 'urmila@ssbainnovations.com', label: 'Urmila' },
+  //   { value: 'kavita@ssbainnovations.com', label: 'Kavita' },
+  //   { value: 'amrita@ssbainnovations.com', label: 'Amrita' },
+  //   { value: 'ankita@ssbainnovations.com', label: 'Ankita' },
+  //   { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
+  //   { value: 'damini@ssbainnovations.com', label: 'Damini' },
+  //   { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
+	// 	{ value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
+  // ];
 
   quicjReplay = [{label:'any one', value: 'Please select any one of the options from "Select Other Plan" OR "I Agree with this Plan" to proceed further.'},
       {label:'documents complete', value: 'Thank you for submitting your documents. Our tax expert will analyze and keep you updated with the filing process.'},
@@ -131,6 +133,8 @@ export class WhatAppChatComponent implements OnInit {
     else{
       this.selectedAgent = '';
     }
+
+    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
 
   }
 
