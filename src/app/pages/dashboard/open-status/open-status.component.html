@@ -33,7 +33,7 @@
             </ag-grid-angular>
 
             <br>
-            <div *ngIf="utilService.isNonEmpty(selectedAgent)">
+            <div *ngIf="openStatusdata.length > 0">
               <button class="btn btn_stroke" *ngIf="pageCount !== 0" (click)="previousab()">Previous</button>&nbsp;&nbsp;
               <button class="btn btn_stroke" (click)="nextTab()">Next</button>
             </div>
