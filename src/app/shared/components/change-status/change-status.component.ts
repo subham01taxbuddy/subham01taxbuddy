@@ -50,7 +50,8 @@ export class ChangeStatusComponent implements OnInit {
           "statusId" : this.changeStatus.controls.selectStatus.value,
           "userId" : this.data.userId,
           "assessmentYear" : "2019-2020",
-          "completed" : true
+          "completed" : true,
+          "serviceType" : this.data.serviceType
         }
         this.userService.postMethod(param, param2).subscribe(res =>{
           console.log("Status update responce: ",res)
@@ -72,4 +73,5 @@ export class ChangeStatusComponent implements OnInit {
 export interface ConfirmModel {
   userId: any;
   userName: string;
+  serviceType: any;
 }

@@ -1,11 +1,15 @@
 import { formatDate } from '@angular/common';
+import { identifierName } from '@angular/compiler';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { GridOptions } from 'ag-grid-community';
+import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { AddCallLogComponent } from 'app/shared/components/add-call-log/add-call-log.component';
+import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
+import { AppConstants } from 'app/shared/constants';
 
 @Component({
   selector: 'app-interested-clients',
@@ -15,10 +19,17 @@ import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.
 export class InterestedClientsComponent implements OnInit {
   interestedClients = [];
   loading = false;
-  
+  config: any;
+  agentList: any = [];
+  isAdmin: boolean;
+  selectedAgent: any;
   interestedClientsGridOption: GridOptions;
+  interstedClientInfo: any;
+  showAllUser: boolean;
+  searchMobNo: any;
 
-  constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string) {
+  constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
+              private toastMsgService: ToastMessageService) {
     this.interestedClientsGridOption = <GridOptions>{
       rowData: [],
       columnDefs: this.createColoumnDef(),
@@ -27,18 +38,77 @@ export class InterestedClientsComponent implements OnInit {
       },
       sortable: true,
     };
+
+    this.config = {
+      itemsPerPage: 15,
+      currentPage: 1,
+      totalItems: 80
+    };
    }
 
   ngOnInit() {
-    this.getInterestedClients();
+    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    // var userInfo = JSON.parse(localStorage.getItem('UMD'));
+    // if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
+    //   this.isAdmin = true;
+    //   this.showAllUser = true;
+    //   this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+    // }
+    // else{
+    //   this.isAdmin = false;
+    //   this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+    // }
+    this.showCallersAll();
+  }
+
+  showCallersAll(){
+    this.searchMobNo = '';
+    this.selectedAgent = '';
+    var userInfo = JSON.parse(localStorage.getItem('UMD'));
+    if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
+      this.isAdmin = true;
+      this.showAllUser = true;
+      this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+    }
+    else{
+      this.isAdmin = false;
+      this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+    }
+  }
+
+  searchByAgent(){
+    if(this.utilsService.isNonEmpty( this.selectedAgent)){
+      this.selectedAgent =  this.selectedAgent;
+      this.showAllUser = false;
+      this.getInterestedClients( this.selectedAgent, 0);
+    }
+    else{
+      this.toastMsgService.alert("error","Select Agent")
+    }
+  }
+
+  serchByMobNo(){
+    if(this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10){
+      this.selectedAgent = '';
+      var userInfo = JSON.parse(localStorage.getItem('UMD'));
+      if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
+        this.getInterestedClients('',0,this.searchMobNo);
+      }
+      else{
+        this.getInterestedClients(userInfo.USER_UNIQUE_ID, '', this.searchMobNo);
+      }
+    }
+    else{
+      this.toastMsgService.alert("error","Enter valid mobile number.")
+    }
   }
 
   createColoumnDef(){
     return [
       {
-        headerName: 'Client Name',
-        field: 'userName',
-        width: 180,
+        headerName: 'User Id',
+        field: 'userId',
+        width: 100,
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -47,9 +117,9 @@ export class InterestedClientsComponent implements OnInit {
         }
       },
       {
-        headerName: 'Client Mobile',
-        field: 'userMobile',
-        width: 130,
+        headerName: 'Name',
+        field: 'name',
+        width: 190,
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -58,43 +128,74 @@ export class InterestedClientsComponent implements OnInit {
         }
       },
       {
-        headerName: 'Last Call Message',
-        field: 'lastCallMessage',
-        width: 320,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Called By',
-        field: 'calledBy',
-        width: 140,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Called At',
-        field: 'calledAt',
+        headerName: 'Mobile No',
+        field: 'customerNumber',
         width: 150,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        cellRenderer: (data) => {
-          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
-        },
+        cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
+      },
+      {
+        headerName: 'Status',
+        field: 'status',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },  
+      {
+        headerName: 'Service Type',
+        field: 'serviceType',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Caller agent name',
+        field: 'agentName',
+        width: 160,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Chat',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Open Chat"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
       },
       {
         headerName: 'See/Add Notes',
@@ -108,7 +209,7 @@ export class InterestedClientsComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 80,
+        width: 60,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -119,18 +220,40 @@ export class InterestedClientsComponent implements OnInit {
         },
       },
       {
-        headerName: 'Add Call Logs',
+        headerName: 'Call',
         editable: false,
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Add call logs"
+          return `<button type="button" class="action_icon add_button" title="Call to user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-phone" aria-hidden="true" data-action-type="addCallLogs"></i>
+            <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
-        width: 80,
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Update Status',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Update Status"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+           </button>`;
+        },
+        width: 60,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -144,23 +267,48 @@ export class InterestedClientsComponent implements OnInit {
   }
 
 
-  getInterestedClients() {
-    const loggedInSme = JSON.parse(localStorage.getItem('UMD'));
+  getInterestedClients(id, page, searchMobNo?) {
     this.loading = true;
-    const param = `/call-status?statusId=16`;
-    console.log(new Date().toISOString())
-    this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('Call details', result);
-      if (result instanceof Array && result.length > 0) {
-        this.interestedClients = result;
-        this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interestedClients));
-      } else {
-        this.utilsService.showSnackBar('You dont have any calls today');
+    var param2;
+    if(this.isAdmin){
+      if(this.utilsService.isNonEmpty(searchMobNo)){
+        param2 = `/call-management/customers?statusId=16&customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       }
+      else{
+        if(this.showAllUser){
+          param2 = `/call-management/customers?statusId=16&page=${page}&pageSize=15`;
+        }
+        else{
+          param2 = `/call-management/customers?statusId=16&agentId=${id}&page=${page}&pageSize=15`;
+        }
+      }
+    }
+    else{
+      if(this.utilsService.isNonEmpty(searchMobNo)){
+        param2 = `/call-management/customers?statusId=16&customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+      }
+      else{
+        param2 = `/call-management/customers?statusId=16&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+      }
+    }
+   
+    this.userMsService.getMethod(param2).subscribe((result: any) => {
+      console.log('Call details', result);
+        if (result['content'] instanceof Array && result['content'].length > 0) {
+          this.interstedClientInfo = result['content'];
+          this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interstedClientInfo));
+          this.config.totalItems = result.totalElements;
+        } else {
+          this.interstedClientInfo = [];
+          this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interstedClientInfo));
+          this.config.totalItems = 0;
+          this.utilsService.showSnackBar('You dont have any calls today');
+        }
       this.loading = false;
     }, error => {
       this.loading = false;
       console.log(error);
+      this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status))
     })
   }
 
@@ -170,12 +318,13 @@ export class InterestedClientsComponent implements OnInit {
     for (let i = 0; i < interestedClient.length; i++) {
       let interestedClientsInfo = Object.assign({}, interestedClientsArray[i], {
         userId: interestedClient[i]['userId'],
-        userName: interestedClient[i]['userName'],
-        userMobile: interestedClient[i]['userMobile'],
-        lastCallMessage: interestedClient[i]['description'],
-        calledBy: interestedClient[i]['createdByName'],
-        calledAt: interestedClient[i]['createdDate'],
-        userEmail: interestedClient[i]['userEmail']
+        name: interestedClient[i]['name'],
+        customerNumber: interestedClient[i]['customerNumber'],
+        status: interestedClient[i]['statusId'] === 16 ? 'Interested' : '-',
+        serviceType: interestedClient[i]['serviceType'],
+        callerAgentUserId: interestedClient[i]['callerAgentUserId'],
+        callerAgentNumber: interestedClient[i]['callerAgentNumber'],
+        agentName: interestedClient[i]['callerAgentName']
       })
       interestedClientsArray.push(interestedClientsInfo);
     }
@@ -192,29 +341,20 @@ export class InterestedClientsComponent implements OnInit {
           this.showNotes(params.data)
           break;
         }
-        case 'addCallLogs': {
-          this.addCallLogs(params.data)
+        case 'call': {
+          this.startCalling(params.data)
+          break;
+        }
+        case 'updateStatus': {
+          this.updateStatus(params.data)
+          break;
+        }
+        case 'open-chat': {
+          this.openChat(params.data)
           break;
         }
       }
     }
-  }
-
-  addCallLogs(client) {
-    let disposable = this.dialog.open(AddCallLogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        userName: client.userName,
-        userMobile: client.userMobile,
-        userEmail: client.userEmail,
-      }
-    })
-    disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-
   }
 
   showNotes(client) {
@@ -230,6 +370,85 @@ export class InterestedClientsComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
 
+  startCalling(user){
+    console.log('user: ',user)
+      this.loading = true;
+      const param = `/call-management/make-call`;
+      const reqBody = {
+        "agent_number": user.callerAgentNumber,
+        "customer_number": user.customerNumber
+      }
+      this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+        console.log('Call Result: ', result);
+        this.loading = false;
+        if(result.success.status){
+          this.toastMsgService.alert("success",result.success.message)
+        }
+      }, error => {
+        this.utilsService.showSnackBar('Error while making call, Please try again.');
+        this.loading = false;
+      })
+  }
+
+  updateStatus(client){
+    let disposable = this.dialog.open(ChangeStatusComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.name,
+        serviceType: client.serviceType  
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if(result){
+        if(result.data === "statusChanged"){
+          if(this.isAdmin){
+              this.getInterestedClients(this.selectedAgent,0);
+          }
+          else{
+            var userInfo = JSON.parse(localStorage.getItem('UMD'));
+            this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+          }
+        }
+      }
+    });
+  }
+
+  pageChanged(event){
+    this.config.currentPage = event;
+    this.getInterestedClients(this.selectedAgent, event - 1);
+    if(this.isAdmin){
+        this.getInterestedClients(this.selectedAgent,event - 1);
+    }
+    else{
+      var userInfo = JSON.parse(localStorage.getItem('UMD'));
+      this.getInterestedClients(userInfo.USER_UNIQUE_ID, event - 1);
+    }
+  }
+
+  openChat(client){
+    console.log('client: ',client);
+    this.loading = true;
+    let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
+    this.userMsService.getMethod(param).subscribe((responce: any)=>{
+        console.log('open chat link res: ',responce);
+        this.loading = false;
+        if(responce.success){
+          window.open(responce.data.chatLink)
+        }
+        else{
+          this.toastMsgService.alert('error',responce.message)
+        }
+    },
+    error=>{
+      console.log('Error during feching chat link: ',error);
+      this.toastMsgService.alert('error','Error during feching chat, try after some time.')
+      this.loading = false;
+    })
   }
 }
