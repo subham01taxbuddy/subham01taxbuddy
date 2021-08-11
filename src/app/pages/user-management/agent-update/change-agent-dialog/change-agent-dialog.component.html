@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="row">
-    <h1 mat-dialog-title>Update Status
+    <h1 mat-dialog-title>Update Agent
 
     <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1"><i class="fa fa-close"></i></button>
     </h1>
@@ -12,13 +12,13 @@
   <form [formGroup]="changeAgent">
     <div class="card__col-xs-4 card__col-sm-14">
         <mat-form-field appearance="outline" >
-            <mat-label>Select Status</mat-label>
-            <mat-select placeholder="Select Status" formControlName="agentId" required>
+            <mat-label>Select Agent</mat-label>
+            <mat-select placeholder="Select Agent" formControlName="agentId" required>
                 <mat-option *ngFor="let agent of allAgents"  [value]="agent.agentId">
                     {{ agent.name }}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="changeAgent.controls.agentId.hasError('required')">Select status.</mat-error>
+            <mat-error *ngIf="changeAgent.controls.agentId.hasError('required')">Select agent.</mat-error>
         </mat-form-field>
     </div>
 

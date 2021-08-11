@@ -15,14 +15,29 @@
               </mat-form-field>
               </div>
 
-              <div class="filter__col card__col-sm-4 card__col-xs-12">
+              <div class="filter__col card__col-sm-2 card__col-xs-12">
                 <a class="btn btn_stroke filter__add-link" (click)="searchByAgent(agentId.value)"><i
                     class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
               </div>
 
-              <div class="card__col-md-3 card__col-xs-12 pull-right">
-                
+              <!-- <div class="filter__col card__col-sm-3 card__col-xs-12">
+                <mat-form-field appearance="outline" style="margin-top: 10px;" *ngIf="showAllUser">
+                  <mat-label>Mobile Number: </mat-label>
+                    <input matInput  placeholder="Enter Mobile Number" [(ngModel)]="searchMobNo" maxlength="35"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"  maxlength="10">
+                 </mat-form-field>
               </div>
+
+              <div class="filter__col card__col-sm-2 card__col-xs-12">
+                <a *ngIf="showAllUser" class="btn btn_stroke filter__add-link" (click)="serchByMobNo()"><i
+                    class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
+              </div>
+
+
+              <div class="filter__col card__col-sm-2 card__col-xs-12">
+                 <button  class="btn" (click)="getAllCallerUser()">All Caller</button>
+              </div> -->
         </div><br><br>
 
         <div class="card__row" style="margin-top: 0px;">

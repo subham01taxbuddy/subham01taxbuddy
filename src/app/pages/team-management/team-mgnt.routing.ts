@@ -15,7 +15,6 @@ const routes :Routes = [
                {path: '', redirectTo: 'add-caller', pathMatch:''}
              ]
           },
-       {path: 'sme-management', component: SmeManagementComponent},
        {path: 'agent-management', component: AgentMgntComponent},
        {path: '', redirectTo: 'caller-assign', pathMatch:''}
       ]
