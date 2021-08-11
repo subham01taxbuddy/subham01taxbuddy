@@ -350,6 +350,9 @@ export class UtilsService {
         else if (errorCode === 500) {
             errorMessage = 'Internal server error.';
         }
+        else{
+            errorMessage = 'Something went wrong.';
+        }
         return errorMessage;
     }
 

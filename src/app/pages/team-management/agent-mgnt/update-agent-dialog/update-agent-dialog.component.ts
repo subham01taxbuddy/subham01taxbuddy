@@ -45,43 +45,46 @@ export class UpdateAgentDialogComponent implements OnInit {
 
 
   saveAgentInfo(action){
-    this.loading = true;
-    var param = `/agent-details`;
-    var reqBody = this.agentForm.getRawValue();
-     if(action === 'Add Agent'){
+    if(this.agentForm.valid){
+      this.loading = true;
+      var param = `/agent-details`;
+      var reqBody = this.agentForm.getRawValue();
+       if(action === 'Add Agent'){
+          console.log('reqBody: ',reqBody);
+          this.userService.postMethod(param, reqBody).subscribe(res=>{
+            console.log('After Agent add responce: ',res);
+            this.loading = false;
+            this._toastMessageService.alert('success', 'Agent added successfully.');
+  
+            setTimeout(() => {
+              this.dialogRef.close({ event: 'close', data:'Agent Added'})
+            }, 4000)
+          },
+          error=>{
+            console.log('Error during adding agent : ',error);
+            this.loading = false;
+            this._toastMessageService.alert('error', 'Fail to added agent.')
+          })
+       }
+       else if(action === 'Update Agent'){
         console.log('reqBody: ',reqBody);
-        this.userService.postMethod(param, reqBody).subscribe(res=>{
-          console.log('After Agent add responce: ',res);
+        this.userService.putMethod(param, reqBody).subscribe(res=>{
+          console.log('After Agent update responce: ',res);
           this.loading = false;
-          this._toastMessageService.alert('success', 'Agent added successfully.');
-
+          this._toastMessageService.alert('success', 'Agent update successfully.')
           setTimeout(() => {
-            this.dialogRef.close({ event: 'close', data:'Agent Added'})
+            this.dialogRef.close({ event: 'close', data:'Agent Update'})
           }, 4000)
         },
         error=>{
-          console.log('Error during adding agent : ',error);
+          console.log('Error during update agent : ',error);
           this.loading = false;
-          this._toastMessageService.alert('error', 'Fail to added agent.')
+          this._toastMessageService.alert('error', 'Fail to update agent.')
         })
+       }
      }
-     else if(action === 'Update Agent'){
-      console.log('reqBody: ',reqBody);
-      this.userService.putMethod(param, reqBody).subscribe(res=>{
-        console.log('After Agent update responce: ',res);
-        this.loading = false;
-        this._toastMessageService.alert('success', 'Agent update successfully.')
-        setTimeout(() => {
-          this.dialogRef.close({ event: 'close', data:'Agent Update'})
-        }, 4000)
-      },
-      error=>{
-        console.log('Error during update agent : ',error);
-        this.loading = false;
-        this._toastMessageService.alert('error', 'Fail to update agent.')
-      })
-     }
-  }
+    }
+    
 
 }
 

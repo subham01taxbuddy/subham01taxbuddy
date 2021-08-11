@@ -13,11 +13,12 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ProfileDialogComponent } from './profile-dialog/profile-dialog.component';
 import { CreateNewUserComponent } from './create-new-user/create-new-user.component';
 import { OtherUsersComponent } from './other-users/other-users.component';
-import { AgentUpdateComponent } from './agent-update/agent-update.component';
-import { ChangeAgentDialogComponent } from "./agent-update/change-agent-dialog/change-agent-dialog.component";
+import { SmeUpdateComponent } from './other-users/sme-update/sme-update.component';
+import { ChangeAgentDialogComponent } from "./other-users/agent-update/change-agent-dialog/change-agent-dialog.component";
+import { AgentUpdateComponent } from "./other-users/agent-update/agent-update.component";
 
 @NgModule({
-    declarations: [UserManagementComponent , UserListComponent, UserProfileComponent, ProfileDialogComponent,ChangeAgentDialogComponent, CreateNewUserComponent, OtherUsersComponent, AgentUpdateComponent],
+    declarations: [UserManagementComponent , UserListComponent, UserProfileComponent, ProfileDialogComponent,ChangeAgentDialogComponent, CreateNewUserComponent, OtherUsersComponent, AgentUpdateComponent, SmeUpdateComponent],
     imports: [
         CommonModule,
         FormsModule,

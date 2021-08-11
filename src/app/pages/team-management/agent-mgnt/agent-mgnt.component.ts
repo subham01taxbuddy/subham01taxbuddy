@@ -157,18 +157,6 @@ export class AgentMgntComponent implements OnInit {
           }
         },
         {
-          headerName: 'Service',
-          field: 'serviceType',
-          width: 130,
-          suppressMovable: true,
-          cellStyle: { textAlign: 'center' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-        },
-        {
           headerName: 'Acive',
           field: 'active',
           width: 100,
@@ -180,28 +168,28 @@ export class AgentMgntComponent implements OnInit {
             debounceMs: 0
           }
         },
-        {
-          headerName: 'Update Status',
-          editable: false,
-          suppressMenu: true,
-          sortable: true,
-          suppressMovable: true,
-          cellRenderer: function (params) {
-            return `<button type="button" class="action_icon add_button" title="Update Agent"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-              <i class="fa fa-user" aria-hidden="true" data-action-type="updateAgent"></i>
-             </button>`;
-          },
-          width: 80,
-          pinned: 'right',
-          cellStyle: function (params) {
-            return {
-              textAlign: 'center', display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center'
-            }
-          },
-        }
+        // {
+        //   headerName: 'Update Status',
+        //   editable: false,
+        //   suppressMenu: true,
+        //   sortable: true,
+        //   suppressMovable: true,
+        //   cellRenderer: function (params) {
+        //     return `<button type="button" class="action_icon add_button" title="Update Agent"
+        //     style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+        //       <i class="fa fa-user" aria-hidden="true" data-action-type="updateAgent"></i>
+        //      </button>`;
+        //   },
+        //   width: 80,
+        //   pinned: 'right',
+        //   cellStyle: function (params) {
+        //     return {
+        //       textAlign: 'center', display: 'flex',
+        //       'align-items': 'center',
+        //       'justify-content': 'center'
+        //     }
+        //   },
+        // }
       ]
   }
 

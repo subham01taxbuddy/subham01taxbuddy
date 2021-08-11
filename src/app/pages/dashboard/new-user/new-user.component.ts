@@ -210,7 +210,28 @@ export class NewUserComponent implements OnInit {
           debounceMs: 0
         }
       },
-      
+      {
+        headerName: 'Chat',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Open Chat"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
       {
         headerName: 'Notes',
         editable: false,
@@ -342,6 +363,10 @@ export class NewUserComponent implements OnInit {
           this.updaeStatus(params.data)
           break;
         }
+        case 'open-chat': {
+          this.openChat(params.data)
+          break;
+        }
       }
     }
   }
@@ -403,6 +428,27 @@ export class NewUserComponent implements OnInit {
         }
       }
     });
+  }
+
+  openChat(client){
+    console.log('client: ',client);
+    this.loading = true;
+    let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.service}`;
+    this.userMsService.getMethod(param).subscribe((responce: any)=>{
+        console.log('open chat link res: ',responce);
+        this.loading = false;
+        if(responce.success){
+          window.open(responce.data.chatLink)
+        }
+        else{
+          this.toastMsgService.alert('error',responce.message)
+        }
+    },
+    error=>{
+      console.log('Error during feching chat link: ',error);
+      this.toastMsgService.alert('error','Error during feching chat, try after some time.')
+      this.loading = false;
+    })
   }
 
 }
