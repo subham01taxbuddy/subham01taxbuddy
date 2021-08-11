@@ -1,8 +1,9 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { AgentUpdateComponent } from "./agent-update/agent-update.component";
 import { CreateNewUserComponent } from "./create-new-user/create-new-user.component";
+import { AgentUpdateComponent } from "./other-users/agent-update/agent-update.component";
 import { OtherUsersComponent } from "./other-users/other-users.component";
+import { SmeUpdateComponent } from "./other-users/sme-update/sme-update.component";
 import { UserListComponent } from "./user-list/user-list.component";
 import { UserManagementComponent } from './user-management/user-management.component';
 import { UserProfileComponent } from "./user-profile/user-profile.component";
@@ -13,8 +14,13 @@ const routes: Routes = [
         children: [
             { path: 'users', component: UserListComponent },
             { path: 'create-user', component: CreateNewUserComponent },
-            { path: 'sme-mgnt', component: OtherUsersComponent },
-            { path: 'agent-update', component: AgentUpdateComponent },
+            { path: 'sme-mgnt', component: OtherUsersComponent,
+             children: [
+                { path: 'sme-update', component: SmeUpdateComponent },
+                { path: 'agent-update', component: AgentUpdateComponent },
+                { path: '', redirectTo: '/pages/user-management/sme-mgnt/sme-update', pathMatch: 'full' }
+                ] 
+            },
             { path: 'profile/:id', component: UserProfileComponent },
             { path: '', redirectTo: '/pages/user-management/users', pathMatch: 'full' }
         ]

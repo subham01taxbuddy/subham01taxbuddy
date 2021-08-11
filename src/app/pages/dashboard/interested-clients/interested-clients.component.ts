@@ -26,6 +26,7 @@ export class InterestedClientsComponent implements OnInit {
   interestedClientsGridOption: GridOptions;
   interstedClientInfo: any;
   showAllUser: boolean;
+  searchMobNo: any;
 
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
               private toastMsgService: ToastMessageService) {
@@ -47,6 +48,22 @@ export class InterestedClientsComponent implements OnInit {
 
   ngOnInit() {
     this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    // var userInfo = JSON.parse(localStorage.getItem('UMD'));
+    // if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
+    //   this.isAdmin = true;
+    //   this.showAllUser = true;
+    //   this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+    // }
+    // else{
+    //   this.isAdmin = false;
+    //   this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+    // }
+    this.showCallersAll();
+  }
+
+  showCallersAll(){
+    this.searchMobNo = '';
+    this.selectedAgent = '';
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
       this.isAdmin = true;
@@ -57,17 +74,32 @@ export class InterestedClientsComponent implements OnInit {
       this.isAdmin = false;
       this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
     }
-    
   }
 
-  searchByAgent(selectedAgent){
-    if(this.utilsService.isNonEmpty(selectedAgent)){
-      this.selectedAgent = selectedAgent;
+  searchByAgent(){
+    if(this.utilsService.isNonEmpty( this.selectedAgent)){
+      this.selectedAgent =  this.selectedAgent;
       this.showAllUser = false;
-      this.getInterestedClients(selectedAgent, 0);
+      this.getInterestedClients( this.selectedAgent, 0);
     }
     else{
       this.toastMsgService.alert("error","Select Agent")
+    }
+  }
+
+  serchByMobNo(){
+    if(this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10){
+      this.selectedAgent = '';
+      var userInfo = JSON.parse(localStorage.getItem('UMD'));
+      if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
+        this.getInterestedClients('',0,this.searchMobNo);
+      }
+      else{
+        this.getInterestedClients(userInfo.USER_UNIQUE_ID, '', this.searchMobNo);
+      }
+    }
+    else{
+      this.toastMsgService.alert("error","Enter valid mobile number.")
     }
   }
 
@@ -132,7 +164,7 @@ export class InterestedClientsComponent implements OnInit {
         }
       },
       {
-        headerName: 'Agent name',
+        headerName: 'Caller agent name',
         field: 'agentName',
         width: 160,
         suppressMovable: true,
@@ -142,6 +174,28 @@ export class InterestedClientsComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
+      },
+      {
+        headerName: 'Chat',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Open Chat"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
       },
       {
         headerName: 'See/Add Notes',
@@ -155,7 +209,7 @@ export class InterestedClientsComponent implements OnInit {
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
-        width: 80,
+        width: 60,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -177,7 +231,7 @@ export class InterestedClientsComponent implements OnInit {
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
-        width: 80,
+        width: 60,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -199,7 +253,7 @@ export class InterestedClientsComponent implements OnInit {
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
            </button>`;
         },
-        width: 80,
+        width: 60,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -213,19 +267,29 @@ export class InterestedClientsComponent implements OnInit {
   }
 
 
-  getInterestedClients(id, page) {
+  getInterestedClients(id, page, searchMobNo?) {
     this.loading = true;
     var param2;
     if(this.isAdmin){
-      if(this.showAllUser){
-        param2 = `/call-management/customers?statusId=16&page=${page}&pageSize=15`;
+      if(this.utilsService.isNonEmpty(searchMobNo)){
+        param2 = `/call-management/customers?statusId=16&customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       }
       else{
-        param2 = `/call-management/customers?statusId=16&agentId=${id}&page=${page}&pageSize=15`;
+        if(this.showAllUser){
+          param2 = `/call-management/customers?statusId=16&page=${page}&pageSize=15`;
+        }
+        else{
+          param2 = `/call-management/customers?statusId=16&agentId=${id}&page=${page}&pageSize=15`;
+        }
       }
     }
     else{
-      param2 = `/call-management/customers?statusId=16&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+      if(this.utilsService.isNonEmpty(searchMobNo)){
+        param2 = `/call-management/customers?statusId=16&customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+      }
+      else{
+        param2 = `/call-management/customers?statusId=16&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+      }
     }
    
     this.userMsService.getMethod(param2).subscribe((result: any) => {
@@ -236,12 +300,15 @@ export class InterestedClientsComponent implements OnInit {
           this.config.totalItems = result.totalElements;
         } else {
           this.interstedClientInfo = [];
+          this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interstedClientInfo));
+          this.config.totalItems = 0;
           this.utilsService.showSnackBar('You dont have any calls today');
         }
       this.loading = false;
     }, error => {
       this.loading = false;
       console.log(error);
+      this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status))
     })
   }
 
@@ -280,6 +347,10 @@ export class InterestedClientsComponent implements OnInit {
         }
         case 'updateStatus': {
           this.updateStatus(params.data)
+          break;
+        }
+        case 'open-chat': {
+          this.openChat(params.data)
           break;
         }
       }
@@ -358,5 +429,26 @@ export class InterestedClientsComponent implements OnInit {
       var userInfo = JSON.parse(localStorage.getItem('UMD'));
       this.getInterestedClients(userInfo.USER_UNIQUE_ID, event - 1);
     }
+  }
+
+  openChat(client){
+    console.log('client: ',client);
+    this.loading = true;
+    let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
+    this.userMsService.getMethod(param).subscribe((responce: any)=>{
+        console.log('open chat link res: ',responce);
+        this.loading = false;
+        if(responce.success){
+          window.open(responce.data.chatLink)
+        }
+        else{
+          this.toastMsgService.alert('error',responce.message)
+        }
+    },
+    error=>{
+      console.log('Error during feching chat link: ',error);
+      this.toastMsgService.alert('error','Error during feching chat, try after some time.')
+      this.loading = false;
+    })
   }
 }

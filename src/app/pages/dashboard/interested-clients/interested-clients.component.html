@@ -2,28 +2,47 @@
 
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
-        <div class="card__row" *ngIf="isAdmin">
-            <div class="filter__col card__col-sm-4 card__col-xs-12">
-                <mat-form-field appearance="outline" style="margin-top: 10px;">
-                  <mat-label>Select Agent</mat-label>
-                  <mat-select placeholder="Select Agent Id" #agentId required>
-                      <mat-option *ngFor="let agent of agentList" [value]="agent.agentId">
-                          {{agent.name}}
-                      </mat-option>
-                  </mat-select>
-                  <!-- <mat-error *ngIf="agent.hasError('required')">Select agent id</mat-error> -->
-              </mat-form-field>
+        <div class="card__row">
+            <div *ngIf="isAdmin">
+                <div class="filter__col card__col-sm-3 card__col-xs-12">
+                    <mat-form-field appearance="outline" style="margin-top: 10px;">
+                      <mat-label>Select Agent</mat-label>
+                      <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedAgent">
+                          <mat-option *ngFor="let agent of agentList" [value]="agent.agentId">
+                              {{agent.name}}
+                          </mat-option>
+                      </mat-select>
+                      <!-- <mat-error *ngIf="agent.hasError('required')">Select agent id</mat-error> -->
+                  </mat-form-field>
+                </div>
+    
+                <div class="filter__col card__col-sm-2 card__col-xs-12">
+                    <a class="btn btn_stroke filter__add-link" (click)="searchByAgent()"><i
+                        class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
+                </div>
+            </div>
+            
+
+              <div class="filter__col card__col-sm-3 card__col-xs-12">
+                <mat-form-field appearance="outline" style="margin-top: 10px;" >
+                  <mat-label>Mobile Number: </mat-label>
+                    <input matInput  placeholder="Enter Mobile Number" [(ngModel)]="searchMobNo" maxlength="35"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"  maxlength="10">
+                 </mat-form-field>
               </div>
 
-              <div class="filter__col card__col-sm-4 card__col-xs-12">
-                <a class="btn btn_stroke filter__add-link" (click)="searchByAgent(agentId.value)"><i
+              <div class="filter__col card__col-sm-2 card__col-xs-12">
+                <a  class="btn btn_stroke filter__add-link" (click)="serchByMobNo()"><i
                     class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
               </div>
 
-              <div class="card__col-md-3 card__col-xs-12 pull-right">
-                
-              </div>
-        </div><br><br>
+              <div class="filter__col card__col-sm-2 card__col-xs-12">
+                <button  class="btn" (click)="showCallersAll()">Show All</button>
+             </div>
+
+              <!-- <div class="card__col-md-3 card__col-xs-12 pull-right"></div> -->
+        </div>
 
 
         <div class="card__row" style="margin-top: 0px;">
