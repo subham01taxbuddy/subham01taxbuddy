@@ -42,9 +42,9 @@ export class OpenStatusComponent implements OnInit {
     this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
-      let loggedAgentId = this.agentList.filter(item => item.userId === userInfo.USER_UNIQUE_ID)[0].agentId;
-      this.selectedAgent = loggedAgentId;
-      this.getOpenStatus(loggedAgentId, 0);
+      // let loggedAgentId = this.agentList.filter(item => item.userId === userInfo.USER_UNIQUE_ID)[0].agentId;
+      // this.selectedAgent = loggedAgentId;
+      this.getOpenStatus(0, '');
     }
   }
 
@@ -52,7 +52,7 @@ export class OpenStatusComponent implements OnInit {
     if(this.utilsService.isNonEmpty(selectedAgent)){
       this.selectedAgent = selectedAgent;
       this.pageCount = 0;
-      this.getOpenStatus(selectedAgent, 0);
+      this.getOpenStatus(0, selectedAgent);
     }
     else{
       this.toastMsgService.alert("error","Select Agent")
@@ -284,11 +284,19 @@ export class OpenStatusComponent implements OnInit {
     ]
   }
 
-  getOpenStatus(agent, pageNo){
+  getOpenStatus(pageNo, agent?){
     this.loading = true;
-    let startPage = pageNo === 0 ? 0 : (pageNo * 10) + 1;
-    // let param = `/lead-details-by-status-es?agentId=${agent}&statusId=${18}&from=${0}&to=${10}`;
-    let param = `/lead-details-by-status-es?agentId=${agent}&statusId=${18}&from=${startPage}&to=10`;
+    var startPage;
+    var param;
+    if(this.utilService.isNonEmpty(agent)){
+      startPage = pageNo === 0 ? 0 : (pageNo * 10) + 1;
+      param = `/lead-details-by-status-es?agentId=${agent}&statusId=${18}&from=${startPage}&to=10`;
+    }
+    else{
+      startPage = pageNo === 0 ? 0 : (pageNo * 10) + 1;
+      param = `/lead-details-by-status-es?statusId=${18}&from=${startPage}&to=10`;
+    }
+   
     this.userMsService.getMethod(param).subscribe((result: any)=>{
       console.log('open status: ',result, result.length);
       this.loading = false;
@@ -408,7 +416,7 @@ export class OpenStatusComponent implements OnInit {
       console.log('The dialog was closed');
       if(result){
         if(result.data === "statusChanged"){
-          this.getOpenStatus(this.selectedAgent, 0);
+          this.getOpenStatus(0, this.selectedAgent);
         }
       }
     });
@@ -416,12 +424,12 @@ export class OpenStatusComponent implements OnInit {
 
   previousab(){
     this.pageCount++;
-    this.getOpenStatus(this.selectedAgent, Math.abs(this.pageCount));
+    this.getOpenStatus(Math.abs(this.pageCount),this.selectedAgent);
   }
 
   nextTab(){
     this.pageCount--;
-    this.getOpenStatus(this.selectedAgent, Math.abs(this.pageCount));
+    this.getOpenStatus( Math.abs(this.pageCount), this.selectedAgent);
   }
 
   openChat(client){
