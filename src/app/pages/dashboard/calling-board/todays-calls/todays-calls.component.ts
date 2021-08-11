@@ -27,6 +27,7 @@ export class TodaysCallsComponent implements OnInit {
   isAdmin: boolean;
   selectedAgent: any;
   showAllUser: boolean;
+  searchMobNo: any;
 
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string, private toastMsgService:ToastMessageService) {
     this.todaysCallsGridOptions = <GridOptions>{
@@ -59,6 +60,16 @@ export class TodaysCallsComponent implements OnInit {
     }
     //
   }
+
+  // serchByMobNo(){
+  //   if(this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10){
+  //     this.selectedAgent = '';
+  //     this.getAllCallerUser(this.searchMobNo);
+  //   }
+  //   else{
+  //     this.toastMsgService.alert("error","Enter valid mobile number.")
+  //   }
+  // }
 
   searchByAgent(selectedAgent){
     if(this.utilsService.isNonEmpty(selectedAgent)){
@@ -357,7 +368,6 @@ export class TodaysCallsComponent implements OnInit {
 
   pageChanged(event){
     this.config.currentPage = event;
-    // this.getMyTodaysCalls(this.selectedAgent, event - 1);
     if(this.isAdmin){
         this.getMyTodaysCalls(this.selectedAgent,event - 1);
     }

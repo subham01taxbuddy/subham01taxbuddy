@@ -13,9 +13,11 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ProfileDialogComponent } from './profile-dialog/profile-dialog.component';
 import { CreateNewUserComponent } from './create-new-user/create-new-user.component';
 import { OtherUsersComponent } from './other-users/other-users.component';
+import { AgentUpdateComponent } from './agent-update/agent-update.component';
+import { ChangeAgentDialogComponent } from "./agent-update/change-agent-dialog/change-agent-dialog.component";
 
 @NgModule({
-    declarations: [UserManagementComponent , UserListComponent, UserProfileComponent, ProfileDialogComponent, CreateNewUserComponent, OtherUsersComponent],
+    declarations: [UserManagementComponent , UserListComponent, UserProfileComponent, ProfileDialogComponent,ChangeAgentDialogComponent, CreateNewUserComponent, OtherUsersComponent, AgentUpdateComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -27,7 +29,7 @@ import { OtherUsersComponent } from './other-users/other-users.component';
         UserManagementRoutingModule,
         NgxPaginationModule
     ],
-    entryComponents: [ProfileDialogComponent]
+    entryComponents: [ProfileDialogComponent, ChangeAgentDialogComponent]
 })
 
 export class UserManagementModule { }

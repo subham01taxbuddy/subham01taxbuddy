@@ -4,7 +4,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { AppConstants } from 'app/shared/constants';
-import { ChangeAgentDialogComponent } from './change-agent-dialog/change-agent-dialog.component';
+// import { ChangeAgentDialogComponent } from '../../user-management/agent-update/change-agent-dialog/change-agent-dialog.component';
 
 @Component({
   selector: 'app-sme-management',
@@ -69,22 +69,22 @@ export class SmeManagementComponent implements OnInit {
   }
 
   updateStatus(userInfo){
-    let disposable = this.dialog.open(ChangeAgentDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        userInfo: userInfo
-      }
-    })
+    // let disposable = this.dialog.open(ChangeAgentDialogComponent, {
+    //   width: '50%',
+    //   height: 'auto',
+    //   data: {
+    //     userInfo: userInfo
+    //   }
+    // })
 
-    disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      if(result){
-        if(result.data === "statusChanged"){
-          this.getCallerUser(this.selectedAgent);
-        }
-      }
-    });
+    // disposable.afterClosed().subscribe(result => {
+    //   console.log('The dialog was closed');
+    //   if(result){
+    //     if(result.data === "statusChanged"){
+    //       this.getCallerUser(this.selectedAgent);
+    //     }
+    //   }
+    // });
   }
 
   userRole(roles){
