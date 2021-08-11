@@ -104,7 +104,7 @@ export class SmeUpdateComponent implements OnInit {
     this.loading = true;
     // https://api.taxbuddy.com/user
     //let param = '/profile?page=' + pageNo + '&pageSize=15'
-    let param = '/users?roles=ROLE_ADMIN,ROLE_FILING_TEAM,ROLE_IFA,ROLE_TPA_SME';
+    let param = '/users?roles=ROLE_ADMIN,ROLE_IFA,ROLE_SME,ROLE_FILING_TEAM,ROLE_TPA_SME,ROLE_CALLING_TEAM';
     this.userService.getMethod(param).subscribe((result: any) => {
       console.log('result -> ', result);
       this.loading = false;
