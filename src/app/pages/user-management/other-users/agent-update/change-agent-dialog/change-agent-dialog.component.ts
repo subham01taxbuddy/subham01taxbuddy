@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
+import { UtilsService } from 'app/services/utils.service';
 
 @Component({
   selector: 'app-change-agent-dialog',
@@ -17,7 +18,8 @@ export class ChangeAgentDialogComponent implements OnInit {
   services: any = [{label:'Itr' ,value:'ITR'},{label:'Gst' ,value:'GST'}, {label:'Notice' ,value:'NOTICE'}, {label:'Tpa' ,value:'TPA'}]
 
   constructor(public dialogRef: MatDialogRef<ChangeAgentDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
-              private userService: UserMsService, private fb: FormBuilder, private _toastMessageService: ToastMessageService) {
+              private userService: UserMsService, private fb: FormBuilder, private _toastMessageService: ToastMessageService, 
+              private utilsService: UtilsService) {
 
          }
 
@@ -27,8 +29,10 @@ export class ChangeAgentDialogComponent implements OnInit {
       serviceType: ['' ,Validators.required]
     });
     
-    console.log('selected sme info: ',this.data);
+    console.log('selected sme info: ',this.data, this.data.allInfo , this.data.allInfo.selectedAgent);
     this.changeAgent.controls.serviceType.setValue(this.data.userInfo.serviceType);
+    this.data.userInfo.roles = this.data.allInfo.smeList.filter(item=> item.smeId === this.data.userInfo.smeId)[0].roles;
+    console.log('After change roles userInfo: ',this.data.userInfo)
     this.getAgents()
   }
 
@@ -37,7 +41,12 @@ export class ChangeAgentDialogComponent implements OnInit {
     this.userService.getMethod(param).subscribe((res: any)=>{
         console.log('agent-details responce: ', res);
         if(res && res instanceof Array){
-          this.allAgents = res.filter(item => item.agentId !== this.data.userInfo.agentId);
+          if(this.utilsService.isNonEmpty(this.data.allInfo.selectedAgent)){
+            this.allAgents = res.filter(item => item.agentId !== this.data.allInfo.selectedAgent);
+          }
+          else{
+            this.allAgents = res;
+          }
         }
     },
     error=>{
@@ -74,4 +83,5 @@ export class ChangeAgentDialogComponent implements OnInit {
 
 export interface ConfirmModel {
   userInfo: any;
+  allInfo: any
 }

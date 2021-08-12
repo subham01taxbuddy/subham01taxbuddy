@@ -141,7 +141,7 @@ export class InterestedClientsComponent implements OnInit {
       },
       {
         headerName: 'Status',
-        field: 'status',
+        field: 'statusId',
         width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -165,7 +165,7 @@ export class InterestedClientsComponent implements OnInit {
       },
       {
         headerName: 'Caller agent name',
-        field: 'agentName',
+        field: 'callerAgentName',
         width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -262,6 +262,28 @@ export class InterestedClientsComponent implements OnInit {
             'justify-content': 'center'
           }
         },
+      },
+      {
+        headerName: 'Update Caller',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Update Caller SM"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-user-o" aria-hidden="true" data-action-type="updateCaller"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
       }
     ]
   }
@@ -317,14 +339,16 @@ export class InterestedClientsComponent implements OnInit {
     var interestedClientsArray = [];
     for (let i = 0; i < interestedClient.length; i++) {
       let interestedClientsInfo = Object.assign({}, interestedClientsArray[i], {
+        id: interestedClient[i]['id'],
+        agentId: interestedClient[i]['agentId'],
         userId: interestedClient[i]['userId'],
         name: interestedClient[i]['name'],
         customerNumber: interestedClient[i]['customerNumber'],
-        status: interestedClient[i]['statusId'] === 16 ? 'Interested' : '-',
+        statusId: interestedClient[i]['statusId'] === 16 ? 'Interested' : '-',
         serviceType: interestedClient[i]['serviceType'],
         callerAgentUserId: interestedClient[i]['callerAgentUserId'],
         callerAgentNumber: interestedClient[i]['callerAgentNumber'],
-        agentName: interestedClient[i]['callerAgentName']
+        callerAgentName: interestedClient[i]['callerAgentName']
       })
       interestedClientsArray.push(interestedClientsInfo);
     }
@@ -346,11 +370,15 @@ export class InterestedClientsComponent implements OnInit {
           break;
         }
         case 'updateStatus': {
-          this.updateStatus(params.data)
+          this.updateStatus('Update Status',params.data)
           break;
         }
         case 'open-chat': {
           this.openChat(params.data)
+          break;
+        }
+        case 'updateCaller': {
+          this.updateStatus('Update Caller', params.data)
           break;
         }
       }
@@ -392,14 +420,16 @@ export class InterestedClientsComponent implements OnInit {
       })
   }
 
-  updateStatus(client){
+  updateStatus(mode, client){
     let disposable = this.dialog.open(ChangeStatusComponent, {
       width: '50%',
       height: 'auto',
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType  
+        serviceType: client.serviceType,
+        mode: mode,
+        userInfo: client  
       }
     })
 

@@ -205,6 +205,7 @@ export class AgentUpdateComponent implements OnInit {
     var updateAgentsArray = [];
     for (let i = 0; i < updateAgent.length; i++) {
       let updateAgentsInfo = Object.assign({}, updateAgentsArray[i], {
+        id: updateAgent[i]['id'],
         smeId: updateAgent[i]['smeId'],
         name: updateAgent[i]['name'],
         email: updateAgent[i]['email'],
@@ -226,7 +227,8 @@ export class AgentUpdateComponent implements OnInit {
       width: '50%',
       height: 'auto',
       data: {
-        userInfo: userInfo
+        userInfo: userInfo,
+        allInfo: this
       }
     })
 

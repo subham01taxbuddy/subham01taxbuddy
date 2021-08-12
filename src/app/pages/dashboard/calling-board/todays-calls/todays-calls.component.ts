@@ -141,7 +141,7 @@ export class TodaysCallsComponent implements OnInit {
       },
       {
         headerName: 'Status',
-        field: 'status',
+        field: 'statusId',
         width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -165,7 +165,7 @@ export class TodaysCallsComponent implements OnInit {
       },
       {
         headerName: 'Caller agent name',
-        field: 'agentName',
+        field: 'callerAgentName',
         width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -187,7 +187,7 @@ export class TodaysCallsComponent implements OnInit {
             <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
            </button>`;
         },
-        width: 60,
+        width: 50,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -231,7 +231,7 @@ export class TodaysCallsComponent implements OnInit {
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
-        width: 60,
+        width: 50,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -251,6 +251,28 @@ export class TodaysCallsComponent implements OnInit {
           return `<button type="button" class="action_icon add_button" title="Update Status"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Update Caller',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Update Caller SM"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-user-o" aria-hidden="true" data-action-type="updateCaller"></i>
            </button>`;
         },
         width: 60,
@@ -320,14 +342,16 @@ export class TodaysCallsComponent implements OnInit {
     var todaysCallsArray = [];
     for (let i = 0; i < todaysCalls.length; i++) {
       let todaysClientsInfo = Object.assign({}, todaysCallsArray[i], {
+        id: todaysCalls[i]['id'],
+        agentId: todaysCalls[i]['agentId'],
         userId: todaysCalls[i]['userId'],
         name: todaysCalls[i]['name'],
         customerNumber: todaysCalls[i]['customerNumber'],
-        status: todaysCalls[i]['statusId'] === 18 ? 'Open' : '-',
+        statusId: todaysCalls[i]['statusId'] === 18 ? 'Open' : '-',
         serviceType: todaysCalls[i]['serviceType'],
         callerAgentUserId: todaysCalls[i]['callerAgentUserId'],
         callerAgentNumber: todaysCalls[i]['callerAgentNumber'],
-        agentName: todaysCalls[i]['callerAgentName']
+        callerAgentName: todaysCalls[i]['callerAgentName']
       })
       todaysCallsArray.push(todaysClientsInfo);
     }
@@ -364,11 +388,15 @@ export class TodaysCallsComponent implements OnInit {
           break;
         }
         case 'updateStatus': {
-          this.updateStatus(params.data)
+          this.updateStatus('Update Status', params.data)
           break;
         }
         case 'open-chat': {
           this.openChat(params.data)
+          break;
+        }
+        case 'updateCaller': {
+          this.updateStatus('Update Caller', params.data)
           break;
         }
       }
@@ -401,14 +429,16 @@ export class TodaysCallsComponent implements OnInit {
       })
   }
 
-  updateStatus(client){
+  updateStatus(mode, client){
     let disposable = this.dialog.open(ChangeStatusComponent, {
       width: '50%',
       height: 'auto',
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType 
+        serviceType: client.serviceType,
+        mode: mode,
+        userInfo: client
       }
     })
 
