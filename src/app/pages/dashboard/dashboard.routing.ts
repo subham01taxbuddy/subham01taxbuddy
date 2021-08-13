@@ -9,6 +9,7 @@ import { KommunicateComponent } from './engagement/kommunicate/kommunicate.compo
 import { WhatsappComponent } from './engagement/whatsapp/whatsapp.component';
 import { InterestedClientsComponent } from './interested-clients/interested-clients.component';
 import { OpenStatusComponent } from './open-status/open-status.component';
+import { KnowlarityComponent } from './knowlarity/knowlarity.component';
 
 const routes: Routes = [
     {
@@ -32,6 +33,7 @@ const routes: Routes = [
             },
             { path: 'interested-clients', component: InterestedClientsComponent },
             { path: 'open-status', component: OpenStatusComponent },
+            { path: 'knowlarity', component: KnowlarityComponent },
             { path: '', redirectTo: 'quick-search', pathMatch: 'full' }
         ]
     },
