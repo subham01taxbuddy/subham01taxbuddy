@@ -105,6 +105,7 @@ export class ChangeStatusComponent implements OnInit {
           "completed" : true,
           "serviceType" : this.data.serviceType
         }
+        console.log("param2: ",param2); 
         this.userService.postMethod(param, param2).subscribe(res =>{
           console.log("Status update responce: ",res)
           this.loading = false;
