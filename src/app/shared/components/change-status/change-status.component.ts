@@ -90,7 +90,10 @@ export class ChangeStatusComponent implements OnInit {
   setCallerName(){
     console.log(this.changeStatus.value.callerAgentUserId);
     let callerName = this.callers.filter(item=> item.callerAgentUserId === this.changeStatus.value.callerAgentUserId)[0].name;
+    let callerNumber = this.callers.filter(item=> item.callerAgentUserId === this.changeStatus.value.callerAgentUserId)[0].mobileNumber;
     this.data.userInfo.callerAgentName = callerName;
+    this.data.userInfo.callerAgentNumber = callerNumber;
+    
   }
 
   addStatus(){
