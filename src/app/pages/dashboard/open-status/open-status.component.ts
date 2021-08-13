@@ -352,7 +352,7 @@ export class OpenStatusComponent implements OnInit {
           break;
         }
         case 'updateStatus': {
-          this.updaeStatus(params.data)
+          this.updaeStatus('Update Status', params.data)
           break;
         }
         case 'open-chat': {
@@ -402,13 +402,16 @@ export class OpenStatusComponent implements OnInit {
     });
   }
 
-  updaeStatus(client){
+  updaeStatus(mode, client){
     let disposable = this.dialog.open(ChangeStatusComponent, {
       width: '50%',
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.clientName 
+        clientName: client.clientName,
+        serviceType: client.service,
+        mode: mode,
+        userInfo: client 
       }
     })
 
