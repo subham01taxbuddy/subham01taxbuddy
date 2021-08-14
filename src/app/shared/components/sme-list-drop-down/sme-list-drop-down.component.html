@@ -1,0 +1,10 @@
+<mat-form-field appearance="outline">
+  <mat-label>Select SME</mat-label>
+  <mat-select placeholder="Select SME" [formControl]="selectedSme" (selectionChange)="changeSme(selectedSme.value)"
+    required>
+    <mat-option *ngFor="let sme of smeList" [value]="sme.userId">
+      {{sme.name}}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="selectedSme.hasError('required')">Select SME</mat-error>
+</mat-form-field>

@@ -22,6 +22,10 @@ export class TeamSubscriptionsComponent implements OnInit {
     })
   }
 
+  fromSme(event) {
+    this.queryParam = `?subscriptionAssigneeId=${event}`;
+  }
+
   getMembersSubscriptions(member) {
     this.teamMember = member;
     this.queryParam = `?subscriptionAssigneeId=${member.userId}`;
