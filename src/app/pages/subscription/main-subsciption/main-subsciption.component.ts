@@ -330,7 +330,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           }
         },
       },
-      {
+      /* {
         headerName: "Served",
         field: "served",
         width: 50,
@@ -343,7 +343,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           return (!params.data.isActive) ? { 'pointer-events': 'none', opacity: '0.4' }
             : '';
         }
-      },
+      }, */
       {
         headerName: 'File',
         editable: false,

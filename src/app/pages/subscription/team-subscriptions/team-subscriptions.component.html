@@ -1,20 +1,7 @@
 <!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading> -->
-
-<div class="main clearfix" style="padding-top: 0px;min-height: 10vh;">
-    <div class="card">
-        <!-- <span>Selected Team Member: {{teamMember ? teamMember.name :''}}</span> -->
-        <div class="card__row">
-            <!-- <span *ngFor="let mem of smeList; let i=index">
-                <a href="javascript:;" (click)="getMembersSubscriptions(mem)">{{mem.name}}</a> &nbsp;&nbsp;
-            </span> -->
-            <div class="card__col-xs-3 card__col-sm-3 card__col-md-3">
-                <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
+        <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>
         <div class="card__row">
             <app-main-subsciption [queryParam]="queryParam" from="MY_SUB"></app-main-subsciption>
         </div>
