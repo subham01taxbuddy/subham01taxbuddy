@@ -1,5 +1,3 @@
-import { AddCallLogComponent } from './../../../shared/components/add-call-log/add-call-log.component';
-import { environment } from 'environments/environment';
 import { UtilsService } from 'app/services/utils.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
@@ -29,18 +27,19 @@ export class NewUserComponent implements OnInit {
   selectedAgent: any;
   pageCount: number = 0;
   agentList: any;
+  itrList: any = [];
 
   constructor(private userMsService: UserMsService, public utilService: UtilsService,
     private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string, private toastMsgService: ToastMessageService) {
 
-      this.openStatusClientsGridOption = <GridOptions>{
-        rowData: [],
-        columnDefs: this.usersCreateColoumnDef(),
-        enableCellChangeFlash: true,
-        onGridReady: params => {
-        },
-        sortable: true,
-      };
+    this.openStatusClientsGridOption = <GridOptions>{
+      rowData: [],
+      columnDefs: this.usersCreateColoumnDef(),
+      enableCellChangeFlash: true,
+      onGridReady: params => {
+      },
+      sortable: true,
+    };
 
     //this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
     // if (!environment.production) {
@@ -64,19 +63,37 @@ export class NewUserComponent implements OnInit {
     // }
     // else{
     //   this.retrieveNewUsers(0);
-    // }
+    // }  
+
+    this.getItrList()
   }
 
-  advanceSearch(mobileNo){
-    if(this.utilService.isNonEmpty(mobileNo) && `${mobileNo}`.length === 10){
+  getItrList(){
+    let param = `/itr-status-master`;
+    this.userMsService.getMethod(param).subscribe(res=>{
+        console.log("Itr info: ",res);
+        if(res instanceof Array && res.length > 0){
+          this.itrList = res;
+        }
+        else{
+          this.itrList = [];
+        }
+    },
+    error=>{
+      console.log("Error occure during getting Itr info: ",error);
+    })
+  }
+
+  advanceSearch(mobileNo) {
+    if (this.utilService.isNonEmpty(mobileNo) && `${mobileNo}`.length === 10) {
       this.getSearchInfo(mobileNo);
     }
-    else{
-      this.toastMsgService.alert("error","Enter valid mobile number.")
+    else {
+      this.toastMsgService.alert("error", "Enter valid mobile number.")
     }
   }
 
-  usersCreateColoumnDef(){
+  usersCreateColoumnDef() {
     return [
       {
         headerName: 'User Id',
@@ -150,7 +167,7 @@ export class NewUserComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
-      },{
+      }, {
         headerName: 'Platform',
         field: 'platform',
         width: 150,
@@ -301,11 +318,11 @@ export class NewUserComponent implements OnInit {
     ]
   }
 
-  getSearchInfo(mobileNo){
+  getSearchInfo(mobileNo) {
     this.loading = true;
     let param = `/user-details-by-mobile-number-es?mobileNumber=${mobileNo}`;
-    this.userMsService.getMethod(param).subscribe((result: any)=>{
-      console.log('open status: ',result, result.length);
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('open status: ', result, result.length);
       this.loading = false;
       if (result instanceof Array && result.length > 0) {
         this.openStatusdata = result;
@@ -314,28 +331,28 @@ export class NewUserComponent implements OnInit {
         this.utilService.showSnackBar('Data not available for searched number.');
       }
     },
-    error =>{
-      this.loading = false;
-      console.log('Error during get searched mob no: ',error);
-      this.toastMsgService.alert("error","Unable ot search, try after some time.")
-    })
+      error => {
+        this.loading = false;
+        console.log('Error during get searched mob no: ', error);
+        this.toastMsgService.alert("error", "Unable ot search, try after some time.")
+      })
   }
 
 
   createRowData(openStatusInfo) {
     console.log('openStatusInfo -> ', openStatusInfo);
     var openStatusInfosArray = [];
-    for (let i = 0; i < openStatusInfo.length; i++) {  
+    for (let i = 0; i < openStatusInfo.length; i++) {
       let openStatusInfosInfo = Object.assign({}, openStatusInfosArray[i], {
         userId: this.utilService.isNonEmpty(openStatusInfo[i]['userId']) ? openStatusInfo[i]['userId'] : '-',
         createdDate: this.utilService.isNonEmpty(openStatusInfo[i]['CreatedDate']) ? openStatusInfo[i]['CreatedDate'] : '-',
         clientMobile: this.utilService.isNonEmpty(openStatusInfo[i]['Phone']) ? openStatusInfo[i]['Phone'] : '-',
-        clientName: (this.utilService.isNonEmpty(openStatusInfo[i]['FirstName']) ? openStatusInfo[i]['FirstName'] : '-')+' '+(this.utilService.isNonEmpty(openStatusInfo[i]['LastName']) ? openStatusInfo[i]['LastName'] : '-'),
+        clientName: (this.utilService.isNonEmpty(openStatusInfo[i]['FirstName']) ? openStatusInfo[i]['FirstName'] : '-') + ' ' + (this.utilService.isNonEmpty(openStatusInfo[i]['LastName']) ? openStatusInfo[i]['LastName'] : '-'),
         emailId: this.utilService.isNonEmpty(openStatusInfo[i]['Email']) ? openStatusInfo[i]['Email'] : '-',
         source: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['Source']) ? openStatusInfo[i]['InitialData']['Source'] : '-') : '-',
         platform: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['Platform']) ? openStatusInfo[i]['InitialData']['Platform'] : '-') : '-',
         service: this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']['ServiceType']) ? openStatusInfo[i]['itrStatusLatest']['ServiceType'] : '-') : '-',
-        status: this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']['StatusID']) ? (openStatusInfo[i]['itrStatusLatest']['StatusID'] === 18 ? 'Open' : '-') : '-') : '-',
+        status: this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']['StatusID']) ? this.getItrStatus(openStatusInfo[i]['itrStatusLatest']['StatusID']) : '-') : '-',
         KommunicateAssigneeId: openStatusInfo[i]['KommunicateAssigneeId'],
         utmSource: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['UtmSource']) ? openStatusInfo[i]['InitialData']['UtmSource'] : '-') : '-',
         companId: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['CompanyID']) ? openStatusInfo[i]['InitialData']['CompanyID'] : '-') : '-',
@@ -343,10 +360,15 @@ export class NewUserComponent implements OnInit {
       openStatusInfosArray.push(openStatusInfosInfo);
     }
     console.log('openStatusInfosArray-> ', openStatusInfosArray)
-     return openStatusInfosArray;
+    return openStatusInfosArray;
   }
 
-  onOpenStatusClicked(params){
+  getItrStatus(itrId){
+    let itrLabel = this.itrList.filter(item => item.statusId === itrId)[0].statusName;
+    return itrLabel;
+  }
+
+  onOpenStatusClicked(params) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -360,7 +382,7 @@ export class NewUserComponent implements OnInit {
           break;
         }
         case 'updateStatus': {
-          this.updaeStatus('Update Status',params.data)
+          this.updaeStatus('Update Status', params.data)
           break;
         }
         case 'open-chat': {
@@ -371,9 +393,9 @@ export class NewUserComponent implements OnInit {
     }
   }
 
-  startConversation(user){
-    console.log('user: ',user)
-    if(this.utilService.isNonEmpty(user.KommunicateAssigneeId)){
+  startConversation(user) {
+    console.log('user: ', user)
+    if (this.utilService.isNonEmpty(user.KommunicateAssigneeId)) {
       this.loading = true;
       const param = `/create-km-groupid?userId=${user.userId}&agentId=${user.KommunicateAssigneeId}`;
       this.userMsService.getMethod(param).subscribe((result: any) => {
@@ -389,19 +411,19 @@ export class NewUserComponent implements OnInit {
         this.loading = false;
       })
     }
-    else{
-      this.utilService.showSnackBar('Kommuncate Id is '+user.KommunicateAssigneeId);
+    else {
+      this.utilService.showSnackBar('Kommuncate Id is ' + user.KommunicateAssigneeId);
     }
-   
+
   }
 
-  showNotes(client){
+  showNotes(client) {
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.clientName 
+        clientName: client.clientName
       }
     })
 
@@ -410,7 +432,7 @@ export class NewUserComponent implements OnInit {
     });
   }
 
-  updaeStatus(mode, client){
+  updaeStatus(mode, client) {
     let disposable = this.dialog.open(ChangeStatusComponent, {
       width: '50%',
       height: 'auto',
@@ -419,39 +441,39 @@ export class NewUserComponent implements OnInit {
         clientName: client.clientName,
         serviceType: client.service,
         mode: mode,
-        userInfo: client  
+        userInfo: client
       }
     })
 
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      if(result){
-        if(result.data === "statusChanged"){
+      if (result) {
+        if (result.data === "statusChanged") {
           // this.getOpenStatus(this.selectedAgent, 0);
         }
       }
     });
   }
 
-  openChat(client){
-    console.log('client: ',client);
+  openChat(client) {
+    console.log('client: ', client);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.service}`;
-    this.userMsService.getMethod(param).subscribe((responce: any)=>{
-        console.log('open chat link res: ',responce);
-        this.loading = false;
-        if(responce.success){
-          window.open(responce.data.chatLink)
-        }
-        else{
-          this.toastMsgService.alert('error',responce.message)
-        }
-    },
-    error=>{
-      console.log('Error during feching chat link: ',error);
-      this.toastMsgService.alert('error','Error during feching chat, try after some time.')
+    this.userMsService.getMethod(param).subscribe((responce: any) => {
+      console.log('open chat link res: ', responce);
       this.loading = false;
-    })
+      if (responce.success) {
+        window.open(responce.data.chatLink)
+      }
+      else {
+        this.toastMsgService.alert('error', responce.message)
+      }
+    },
+      error => {
+        console.log('Error during feching chat link: ', error);
+        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+        this.loading = false;
+      })
   }
 
 }

@@ -350,7 +350,7 @@ export class UtilsService {
         else if (errorCode === 500) {
             errorMessage = 'Internal server error.';
         }
-        else{
+        else {
             errorMessage = 'Something went wrong.';
         }
         return errorMessage;
@@ -400,13 +400,14 @@ export class UtilsService {
                 return [];
             });
             if (res && res instanceof Array) {
+                res.sort((a, b) => a.name > b.name ? 1 : -1)
                 sessionStorage.setItem(AppConstants.SME_LIST, JSON.stringify(res));
                 return res;
             }
         }
     }
     async getSmeList() {
-        const param = `${ApiEndpoints.userMs.smeDetails}`;
+        const param = `/${ApiEndpoints.userMs.smeDetails}`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 }

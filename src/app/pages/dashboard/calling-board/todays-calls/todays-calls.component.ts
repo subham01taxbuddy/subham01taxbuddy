@@ -1,12 +1,10 @@
 import { UtilsService } from 'app/services/utils.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { AddCallLogComponent } from 'app/shared/components/add-call-log/add-call-log.component';
 import { MatDialog } from '@angular/material';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { FormControl, Validators } from '@angular/forms';
 import { GridOptions } from 'ag-grid-community';
-import { formatDate } from '@angular/common';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { AppConstants } from 'app/shared/constants';
@@ -29,7 +27,7 @@ export class TodaysCallsComponent implements OnInit {
   showAllUser: boolean;
   searchMobNo: any;
 
-  constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string, private toastMsgService:ToastMessageService) {
+  constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string, private toastMsgService: ToastMessageService) {
     this.todaysCallsGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.createColoumnDef(),
@@ -44,7 +42,7 @@ export class TodaysCallsComponent implements OnInit {
       currentPage: 1,
       totalItems: 80
     };
-   }
+  }
 
   ngOnInit() {
     this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
@@ -61,49 +59,49 @@ export class TodaysCallsComponent implements OnInit {
     this.showCallersAll();
   }
 
-  showCallersAll(){
+  showCallersAll() {
     this.searchMobNo = '';
     this.selectedAgent = '';
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
-    if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
+    if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
       this.isAdmin = true;
       this.showAllUser = true;
       this.searchMobNo = '';
       this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
     }
-    else{
+    else {
       this.isAdmin = false;
       this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
     }
   }
 
-  serchByMobNo(){
-    if(this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10){
+  serchByMobNo() {
+    if (this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
       var userInfo = JSON.parse(localStorage.getItem('UMD'));
-      if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
-        this.getMyTodaysCalls('',0,this.searchMobNo);
+      if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
+        this.getMyTodaysCalls('', 0, this.searchMobNo);
       }
-      else{
+      else {
         this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, '', this.searchMobNo);
       }
     }
-    else{
-      this.toastMsgService.alert("error","Enter valid mobile number.")
+    else {
+      this.toastMsgService.alert("error", "Enter valid mobile number.")
     }
   }
 
-  searchByAgent(){
-    if(this.utilsService.isNonEmpty(this.selectedAgent)){
+  searchByAgent() {
+    if (this.utilsService.isNonEmpty(this.selectedAgent)) {
       this.showAllUser = false;
       this.searchMobNo = '';
       this.getMyTodaysCalls(this.selectedAgent, 0);
     }
-    else{
-      this.toastMsgService.alert("error","Select Agent")
+    else {
+      this.toastMsgService.alert("error", "Select Agent")
     }
   }
 
-  createColoumnDef(){
+  createColoumnDef() {
     return [
       {
         headerName: 'User Id',
@@ -150,7 +148,7 @@ export class TodaysCallsComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
-      },  
+      },
       {
         headerName: 'Service Type',
         field: 'serviceType',
@@ -292,43 +290,43 @@ export class TodaysCallsComponent implements OnInit {
   getMyTodaysCalls(id, page, searchMobNo?) {
     this.loading = true;
     var param2;
-    if(this.isAdmin){
-      if(this.utilsService.isNonEmpty(searchMobNo)){
+    if (this.isAdmin) {
+      if (this.utilsService.isNonEmpty(searchMobNo)) {
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       }
-      else{
-        if(this.showAllUser){
+      else {
+        if (this.showAllUser) {
           param2 = `/call-management/customers?page=${page}&pageSize=15`;
         }
-        else{
+        else {
           param2 = `/call-management/customers?agentId=${id}&page=${page}&pageSize=15`;
         }
       }
     }
-    else{
-      if(this.utilsService.isNonEmpty(searchMobNo)){
+    else {
+      if (this.utilsService.isNonEmpty(searchMobNo)) {
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
       }
-      else{
+      else {
         param2 = `/call-management/customers?callerAgentUserId=${id}&page=${page}&pageSize=15`;
       }
-      
+
     }
-    
+
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
-        if (result['content'] instanceof Array && result['content'].length > 0) {
-          this.callLogs = result['content'];
-          this.todaysCallsGridOptions.api.setRowData(this.createRowData(this.callLogs));
-          this.callDetetialInfo = result['content'];
-          this.config.totalItems = result.totalElements;
-        } else {
-          this.callLogs = [];
-          this.todaysCallsGridOptions.api.setRowData(this.createRowData(this.callLogs));
-          this.callDetetialInfo = [];
-          this.config.totalItems = 0;
-          this.utilsService.showSnackBar('You dont have any calls today');
-        }
+      if (result['content'] instanceof Array && result['content'].length > 0) {
+        this.callLogs = result['content'];
+        this.todaysCallsGridOptions.api.setRowData(this.createRowData(this.callLogs));
+        this.callDetetialInfo = result['content'];
+        this.config.totalItems = result.totalElements;
+      } else {
+        this.callLogs = [];
+        this.todaysCallsGridOptions.api.setRowData(this.createRowData(this.callLogs));
+        this.callDetetialInfo = [];
+        this.config.totalItems = 0;
+        this.utilsService.showSnackBar('You dont have any calls today');
+      }
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -356,7 +354,7 @@ export class TodaysCallsComponent implements OnInit {
       todaysCallsArray.push(todaysClientsInfo);
     }
     console.log('todaysCallsArray-> ', todaysCallsArray)
-     return todaysCallsArray;
+    return todaysCallsArray;
   }
 
   showNotes(client) {
@@ -374,7 +372,7 @@ export class TodaysCallsComponent implements OnInit {
     });
   }
 
-  onTodaysCallsClicked(params){
+  onTodaysCallsClicked(params) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -403,33 +401,33 @@ export class TodaysCallsComponent implements OnInit {
     }
   }
 
-  startCalling(user){
-    console.log('user: ',user)
-      this.loading = true;
-      const param = `/call-management/make-call`;
-      const reqBody = {
-        "agent_number": user.callerAgentNumber,
-        "customer_number": user.customerNumber
+  startCalling(user) {
+    console.log('user: ', user)
+    this.loading = true;
+    const param = `/call-management/make-call`;
+    const reqBody = {
+      "agent_number": user.callerAgentNumber,
+      "customer_number": user.customerNumber
+    }
+    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+      console.log('Call Result: ', result);
+      this.loading = false;
+      if (result.success.status) {
+        this.toastMsgService.alert("success", result.success.message)
       }
-      this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
-        console.log('Call Result: ', result);
-        this.loading = false;
-        if(result.success.status){
-          this.toastMsgService.alert("success",result.success.message)
-        }
 
-        // if (this.utilsService.isNonEmpty(result) && this.utilsService.isNonEmpty(result.clientGroupId)) {
-        //   window.open(`https://dashboard.kommunicate.io/conversations/${result.clientGroupId}`, "_blank");
-        // } else {
-        //   this.utilsService.showSnackBar('Error while creating conversation, Please try again.');
-        // }
-      }, error => {
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
-        this.loading = false;
-      })
+      // if (this.utilsService.isNonEmpty(result) && this.utilsService.isNonEmpty(result.clientGroupId)) {
+      //   window.open(`https://dashboard.kommunicate.io/conversations/${result.clientGroupId}`, "_blank");
+      // } else {
+      //   this.utilsService.showSnackBar('Error while creating conversation, Please try again.');
+      // }
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
+    })
   }
 
-  updateStatus(mode, client){
+  updateStatus(mode, client) {
     let disposable = this.dialog.open(ChangeStatusComponent, {
       width: '50%',
       height: 'auto',
@@ -444,49 +442,49 @@ export class TodaysCallsComponent implements OnInit {
 
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      if(result){
-        if(result.data === "statusChanged"){
-          if(this.isAdmin){
-              this.getMyTodaysCalls(this.selectedAgent,0);
+      if (result) {
+        if (result.data === "statusChanged") {
+          if (this.isAdmin) {
+            this.getMyTodaysCalls(this.selectedAgent, 0);
           }
-          else{
+          else {
             var userInfo = JSON.parse(localStorage.getItem('UMD'));
-            this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID,0);
+            this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
           }
         }
       }
     });
   }
 
-  pageChanged(event){
+  pageChanged(event) {
     this.config.currentPage = event;
-    if(this.isAdmin){
-        this.getMyTodaysCalls(this.selectedAgent,event - 1);
+    if (this.isAdmin) {
+      this.getMyTodaysCalls(this.selectedAgent, event - 1);
     }
-    else{
+    else {
       var userInfo = JSON.parse(localStorage.getItem('UMD'));
       this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, event - 1);
     }
   }
 
-  openChat(client){
-    console.log('client: ',client);
+  openChat(client) {
+    console.log('client: ', client);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
-    this.userMsService.getMethod(param).subscribe((responce: any)=>{
-        console.log('open chat link res: ',responce);
-        this.loading = false;
-        if(responce.success){
-          window.open(responce.data.chatLink)
-        }
-        else{
-          this.toastMsgService.alert('error',responce.message)
-        }
-    },
-    error=>{
-      console.log('Error during feching chat link: ',error);
-      this.toastMsgService.alert('error','Error during feching chat, try after some time.')
+    this.userMsService.getMethod(param).subscribe((responce: any) => {
+      console.log('open chat link res: ', responce);
       this.loading = false;
-    })
+      if (responce.success) {
+        window.open(responce.data.chatLink)
+      }
+      else {
+        this.toastMsgService.alert('error', responce.message)
+      }
+    },
+      error => {
+        console.log('Error during feching chat link: ', error);
+        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+        this.loading = false;
+      })
   }
 }

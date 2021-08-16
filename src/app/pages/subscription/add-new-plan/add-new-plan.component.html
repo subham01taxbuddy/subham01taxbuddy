@@ -266,7 +266,7 @@
         </div>
       </mat-card>
     </div>
-    <div class="card__row">
+    <div class="card__row" *ngIf="serviceType === 'GST'">
       <div class="card__col-lg-12">
         <div class="promo" *ngIf="this.utilService.isNonEmpty(selectedUserInfo)">
           <b style="font-size: 18px;">Filing Calender Details: </b><br>
@@ -411,7 +411,7 @@
     <div>
       <div class="card__row">
         <button class="btn act-btn" style="margin-left: 180px;" (click)="saveSubscription()">Save</button>
-        <button class="btn act-btn" (click)="activateSubscription()">Save & Activate</button>
+        <!-- <button class="btn act-btn" (click)="activateSubscription()">Save & Activate</button> -->
         <button class="btn act-btn" (click)="this.location.back()">Cancel</button>
       </div>
     </div>

@@ -101,7 +101,7 @@ export class AddInvoiceComponent implements OnInit {
         applicableService = this.userSubscription.userSelectedPlan.servicesType;
         this.getSacCode(this.userSubscription.userSelectedPlan.planId)
       }
-      
+
       this.updateDueDate(new Date());
       switch (applicableService) {
         case 'ITR': {
@@ -177,14 +177,14 @@ export class AddInvoiceComponent implements OnInit {
     // else
     //   this.invoiceForm.controls.subTotal.setValue(this.userSubscription.userSelectedPlan.basePrice);
 
-    if(this.utilsService.isNonEmpty(this.userSubscription.promoApplied)){
+    if (this.utilsService.isNonEmpty(this.userSubscription.promoApplied)) {
       this.invoiceForm.controls.subTotal.setValue(this.userSubscription.promoApplied.basePrice)
-    }else{
+    } else {
       this.invoiceForm.controls.subTotal.setValue(this.getTaxableValue());
     }
 
     if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.promoApplied)) {
-     // this.invoiceForm.controls.discountTotal.setValue(this.invoiceForm.controls.subTotal.value - this.userSubscription.promoApplied.basePrice)
+      // this.invoiceForm.controls.discountTotal.setValue(this.invoiceForm.controls.subTotal.value - this.userSubscription.promoApplied.basePrice)
       this.invoiceForm.controls.discountTotal.setValue(this.getExactPromoDiscount());
     }
   }
@@ -218,7 +218,7 @@ export class AddInvoiceComponent implements OnInit {
       balanceDue: ['', Validators.required],
       itemList: ['', Validators.required],
       inovicePreparedBy: '',
-      ifaLeadClient: '',
+      ifaLeadClient: 'Lead',
       estimatedDateTime: [''],
       itrType: [''],
       comment: [''],
@@ -561,7 +561,7 @@ export class AddInvoiceComponent implements OnInit {
     }
   }
 
-  getTaxableValue(){
+  getTaxableValue() {
     if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
       return this.userSubscription.smeSelectedPlan.basePrice;
     } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
@@ -571,30 +571,30 @@ export class AddInvoiceComponent implements OnInit {
     }
   }
 
-  getSacCode(planId){
+  getSacCode(planId) {
     const param = `/plans-master/${planId}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
-        console.log('Plan detail of plan -> ', res);
-        if(this.utilsService.isNonEmpty(res.sacCode)){
-          this.setSacCode(res.sacCode)
-        }
+      console.log('Plan detail of plan -> ', res);
+      if (this.utilsService.isNonEmpty(res.sacCode)) {
+        this.setSacCode(res.sacCode)
+      }
     },
-    error =>{
-      console.log('Error occure during getting SacCode by userId -> ', error)
-    })
+      error => {
+        console.log('Error occure during getting SacCode by userId -> ', error)
+      })
   }
 
   setSacCode(code) {
     this.itemList[0].sacCode = code;
     this.sacCode = this.itemList[0].sacCode;
-    console.log('sacCode: ',this.sacCode)
+    console.log('sacCode: ', this.sacCode)
   }
 
-  checkSacCode(){
-    if(this.utilsService.isNonEmpty(this.sacCode)){
+  checkSacCode() {
+    if (this.utilsService.isNonEmpty(this.sacCode)) {
       return true;
     }
-    else{
+    else {
       this._toastMessageService.alert("error", "Enter SAC code.");
       return false;
     }

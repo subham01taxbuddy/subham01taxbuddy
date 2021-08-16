@@ -336,7 +336,7 @@ export class AddNewPlanComponent implements OnInit {
     this.updateSubscription('CLEAR_PLAN');
   }
 
-  activateSubscription() {
+  /* activateSubscription() {
     if (this.subStartDate.valid && this.subEndDate.valid) {
       this.userSubscription.startDate = this.subStartDate.value;
       this.userSubscription.endDate = this.subEndDate.value;
@@ -346,13 +346,14 @@ export class AddNewPlanComponent implements OnInit {
     } else {
       this.toastMessage.alert("error", "Select Start date and End date")
     }
-  }
+  } */
 
   saveSubscription() {
     if (this.subStartDate.valid && this.subEndDate.valid) {
       this.userSubscription.startDate = this.subStartDate.value;
       this.userSubscription.endDate = this.subEndDate.value;
       this.userSubscription.subscriptionAssigneeId = this.subscriptionAssigneeId.value;
+      this.userSubscription.isActive = true;
       this.updateSubscription('');
     } else {
       this.toastMessage.alert("error", "Select Start date and End date")

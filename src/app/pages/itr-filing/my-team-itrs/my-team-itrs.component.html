@@ -6,12 +6,15 @@
             <div class="card__col-xs-3 card__col-sm-3 card__col-md-3">
                 <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
             </div>
-            <div class="card__col-xs-9 card__col-sm-9 card__col-md-9">
+            <div class="card__col-xs-3 card__col-sm-3 card__col-md-3">
+                <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>
+            </div>
+            <!--  <div class="card__col-xs-9 card__col-sm-9 card__col-md-9">
                 <span *ngFor="let mem of filingTeamMembers; let i=index">
                     <a href="javascript:;" (click)="getMembersItr(mem.userId, this.selectedFyYear, 0)">{{mem.name}}</a>
                     &nbsp;&nbsp;
                 </span>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
