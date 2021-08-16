@@ -27,6 +27,7 @@ export class NewUserComponent implements OnInit {
   selectedAgent: any;
   pageCount: number = 0;
   agentList: any;
+  itrList: any = [];
 
   constructor(private userMsService: UserMsService, public utilService: UtilsService,
     private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string, private toastMsgService: ToastMessageService) {
@@ -62,7 +63,25 @@ export class NewUserComponent implements OnInit {
     // }
     // else{
     //   this.retrieveNewUsers(0);
-    // }
+    // }  
+
+    this.getItrList()
+  }
+
+  getItrList(){
+    let param = `/itr-status-master`;
+    this.userMsService.getMethod(param).subscribe(res=>{
+        console.log("Itr info: ",res);
+        if(res instanceof Array && res.length > 0){
+          this.itrList = res;
+        }
+        else{
+          this.itrList = [];
+        }
+    },
+    error=>{
+      console.log("Error occure during getting Itr info: ",error);
+    })
   }
 
   advanceSearch(mobileNo) {
@@ -333,7 +352,7 @@ export class NewUserComponent implements OnInit {
         source: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['Source']) ? openStatusInfo[i]['InitialData']['Source'] : '-') : '-',
         platform: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['Platform']) ? openStatusInfo[i]['InitialData']['Platform'] : '-') : '-',
         service: this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']['ServiceType']) ? openStatusInfo[i]['itrStatusLatest']['ServiceType'] : '-') : '-',
-        status: this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']['StatusID']) ? (openStatusInfo[i]['itrStatusLatest']['StatusID'] === 18 ? 'Open' : '-') : '-') : '-',
+        status: this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']['StatusID']) ? this.getItrStatus(openStatusInfo[i]['itrStatusLatest']['StatusID']) : '-') : '-',
         KommunicateAssigneeId: openStatusInfo[i]['KommunicateAssigneeId'],
         utmSource: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['UtmSource']) ? openStatusInfo[i]['InitialData']['UtmSource'] : '-') : '-',
         companId: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['CompanyID']) ? openStatusInfo[i]['InitialData']['CompanyID'] : '-') : '-',
@@ -342,6 +361,11 @@ export class NewUserComponent implements OnInit {
     }
     console.log('openStatusInfosArray-> ', openStatusInfosArray)
     return openStatusInfosArray;
+  }
+
+  getItrStatus(itrId){
+    let itrLabel = this.itrList.filter(item => item.statusId === itrId)[0].statusName;
+    return itrLabel;
   }
 
   onOpenStatusClicked(params) {
