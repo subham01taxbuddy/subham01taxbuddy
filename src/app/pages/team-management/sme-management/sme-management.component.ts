@@ -19,56 +19,56 @@ export class SmeManagementComponent implements OnInit {
   selectedAgent: any;
   searchMobNo: any;
 
-  constructor(private userMsService: UserMsService, private dialog: MatDialog, private utileService: UtilsService, private toastMsgService: ToastMessageService ) { }
+  constructor(private userMsService: UserMsService, private dialog: MatDialog, private utileService: UtilsService, private toastMsgService: ToastMessageService) { }
 
   ngOnInit() {
     this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
-     this.getCallerUser('');
+    this.getCallerUser('');
   }
 
-  searchByAgent(selectedAgent){
-    if(this.utileService.isNonEmpty(selectedAgent)){
+  searchByAgent(selectedAgent) {
+    if (this.utileService.isNonEmpty(selectedAgent)) {
       this.selectedAgent = selectedAgent;
       this.getCallerUser(selectedAgent);
     }
-    else{
-      this.toastMsgService.alert("error","Select Agent")
+    else {
+      this.toastMsgService.alert("error", "Select Agent")
     }
   }
 
-  getCallerUser(id, mobNo?){
+  getCallerUser(id, mobNo?) {
     this.loading = true;
     var param;
-    if(this.utileService.isNonEmpty(id)){
+    if (this.utileService.isNonEmpty(id)) {
       param = `/sme-details?agentId=${id}`;
     }
-    else{
-      if(this.utileService.isNonEmpty(mobNo)){
+    else {
+      if (this.utileService.isNonEmpty(mobNo)) {
         param = `/custom-sme-details?mobileNumber=${mobNo}`;
       }
-      else{
+      else {
         param = `/custom-sme-details`;
       }
     }
-    this.userMsService.getMethod(param).subscribe(res=>{
-        console.log('sme users: ',res);
-        this.loading = false;
-        if(Array.isArray(res) && res.length > 0){
-          this.smeList = res;
-        }
-        else{
-          this.smeList = [];
-          this.toastMsgService.alert('error','Data not found.')
-        }
+    this.userMsService.getMethod(param).subscribe(res => {
+      console.log('sme users: ', res);
+      this.loading = false;
+      if (Array.isArray(res) && res.length > 0) {
+        this.smeList = res;
+      }
+      else {
+        this.smeList = [];
+        this.toastMsgService.alert('error', 'Data not found.')
+      }
     },
-    error=>{
-         console.log('Error during getting caller users daa: ',error);
-         this.toastMsgService.alert('error','Error during getting sme data.')
-         this.loading = false;
-    })
+      error => {
+        console.log('Error during getting caller users daa: ', error);
+        this.toastMsgService.alert('error', 'Error during getting sme data.')
+        this.loading = false;
+      })
   }
 
-  updateStatus(userInfo){
+  updateStatus(userInfo) {
     // let disposable = this.dialog.open(ChangeAgentDialogComponent, {
     //   width: '50%',
     //   height: 'auto',
@@ -87,35 +87,35 @@ export class SmeManagementComponent implements OnInit {
     // });
   }
 
-  userRole(roles){
+  userRole(roles) {
     var role;
     // console.log(roles);
-    if(roles instanceof Array){
-      if(roles.length === 1){
-        role = roles[0] === "ROLE_CALLING_TEAM" ? 'Caller Agent' : 'Filler Agent'; 
+    if (roles instanceof Array) {
+      if (roles.length === 1) {
+        role = roles[0] === "ROLE_CALLING_TEAM" ? 'Caller Agent' : 'Filer Agent';
       }
-      else if(roles.length > 1){
-        for(let i=0; i<roles.length; i++){
-            if(i === 0){
-              role = roles[i] === "ROLE_CALLING_TEAM" ? 'Caller Agent' : 'Filler Agent'; 
-            }
-            else{
-              role = role+', '+(roles[i] === "ROLE_CALLING_TEAM" ? 'Caller Agent' : 'Filler Agent'); 
-            }
+      else if (roles.length > 1) {
+        for (let i = 0; i < roles.length; i++) {
+          if (i === 0) {
+            role = roles[i] === "ROLE_CALLING_TEAM" ? 'Caller Agent' : 'Filer Agent';
+          }
+          else {
+            role = role + ', ' + (roles[i] === "ROLE_CALLING_TEAM" ? 'Caller Agent' : 'Filer Agent');
+          }
         }
         // console.log('main role -> ',role)
-        
+
       }
       return role;
     }
   }
 
-  serchByMobNo(){
-    if(this.utileService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10){
+  serchByMobNo() {
+    if (this.utileService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
       this.getCallerUser('', this.searchMobNo);
     }
-    else{
-      this.toastMsgService.alert("error","Enter valid mobile number.")
+    else {
+      this.toastMsgService.alert("error", "Enter valid mobile number.")
     }
   }
 

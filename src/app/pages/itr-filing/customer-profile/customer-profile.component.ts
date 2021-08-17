@@ -203,14 +203,14 @@ export class CustomerProfileComponent implements OnInit {
       lastName: ['', Validators.compose([Validators.required, /* Validators.pattern(AppConstants.charRegex) */])],
       fatherName: [''],
       dateOfBirth: ['', Validators.required],
-      gender: ['', Validators.required],
+      gender: [''],
       contactNumber: ['', Validators.compose([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required])],
       email: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.emailRegex)])],
       panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex)])],
       aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
-      employerCategory: ['', Validators.required],
+      employerCategory: [''],
       itrType: ['1', Validators.required],
       isRevised: ['N', Validators.required],
       orgITRAckNum: [''],
@@ -524,7 +524,7 @@ export class CustomerProfileComponent implements OnInit {
         "userId": this.ITR_JSON.userId,
         "assessmentYear": currentFyDetails[0].assessmentYear,
         "completed": true,
-        "serviceType":"ITR"
+        "serviceType": "ITR"
       }
       this.userMsService.postMethod(param, request).subscribe(result => {
         console.log(result);

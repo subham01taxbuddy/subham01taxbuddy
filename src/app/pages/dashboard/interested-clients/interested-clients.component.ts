@@ -20,10 +20,12 @@ export class InterestedClientsComponent implements OnInit {
   agentList: any = [];
   isAdmin: boolean;
   selectedAgent: any;
+  selectedStatus = 18;
   interestedClientsGridOption: GridOptions;
   interstedClientInfo: any;
   showAllUser: boolean;
   searchMobNo: any;
+  itrStatus: any = [];
 
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
     private toastMsgService: ToastMessageService) {
@@ -39,7 +41,7 @@ export class InterestedClientsComponent implements OnInit {
     this.config = {
       itemsPerPage: 15,
       currentPage: 1,
-      totalItems: 80
+      totalItems: null
     };
   }
 
@@ -56,6 +58,23 @@ export class InterestedClientsComponent implements OnInit {
     //   this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
     // }
     this.showCallersAll();
+    this.getStatus();
+  }
+
+  getStatus() {
+    let param = '/itr-status-master/source/BACK_OFFICE';
+    this.userMsService.getMethod(param).subscribe(respoce => {
+      console.log('status responce: ', respoce);
+      if (respoce instanceof Array && respoce.length > 0) {
+        this.itrStatus = respoce;
+      }
+      else {
+        this.itrStatus = [];
+      }
+    },
+      error => {
+        console.log('Error during fetching status info.')
+      })
   }
 
   showCallersAll() {
@@ -136,18 +155,18 @@ export class InterestedClientsComponent implements OnInit {
           debounceMs: 0
         }
       },
-      {
-        headerName: 'Status',
-        field: 'statusId',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
+      /*  {
+         headerName: 'Status',
+         field: 'statusId',
+         width: 120,
+         suppressMovable: true,
+         cellStyle: { textAlign: 'center' },
+         filter: "agTextColumnFilter",
+         filterParams: {
+           filterOptions: ["contains", "notContains"],
+           debounceMs: 0
+         }
+       }, */
       {
         headerName: 'Service Type',
         field: 'serviceType',
@@ -291,23 +310,23 @@ export class InterestedClientsComponent implements OnInit {
     var param2;
     if (this.isAdmin) {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
-        param2 = `/call-management/customers?statusId=16&customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
+        param2 = `/call-management/customers?statusId=${this.selectedStatus}&customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       }
       else {
         if (this.showAllUser) {
-          param2 = `/call-management/customers?statusId=16&page=${page}&pageSize=15`;
+          param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15`;
         }
         else {
-          param2 = `/call-management/customers?statusId=16&agentId=${id}&page=${page}&pageSize=15`;
+          param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${id}&page=${page}&pageSize=15`;
         }
       }
     }
     else {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
-        param2 = `/call-management/customers?statusId=16&customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+        param2 = `/call-management/customers?statusId=${this.selectedStatus}&customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
       }
       else {
-        param2 = `/call-management/customers?statusId=16&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+        param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
       }
     }
 
@@ -341,7 +360,7 @@ export class InterestedClientsComponent implements OnInit {
         userId: interestedClient[i]['userId'],
         name: interestedClient[i]['name'],
         customerNumber: interestedClient[i]['customerNumber'],
-        statusId: interestedClient[i]['statusId'] === 16 ? 'Interested' : '-',
+        statusId: interestedClient[i]['statusId'],
         serviceType: interestedClient[i]['serviceType'],
         callerAgentUserId: interestedClient[i]['callerAgentUserId'],
         callerAgentNumber: interestedClient[i]['callerAgentNumber'],

@@ -40,7 +40,7 @@ export class TodaysCallsComponent implements OnInit {
     this.config = {
       itemsPerPage: 15,
       currentPage: 1,
-      totalItems: 80
+      totalItems: null
     };
   }
 

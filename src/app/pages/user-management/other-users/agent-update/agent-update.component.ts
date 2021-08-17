@@ -37,14 +37,14 @@ export class AgentUpdateComponent implements OnInit {
       currentPage: 1,
       totalItems: 80
     };
-   }
+  }
 
   ngOnInit() {
     this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
     this.getCallerUser('');
   }
 
-  createColoumnDef(){
+  createColoumnDef() {
     return [
       {
         headerName: 'SME Id',
@@ -91,7 +91,7 @@ export class AgentUpdateComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
-      },  
+      },
       {
         headerName: 'Service Type',
         field: 'serviceType',
@@ -153,51 +153,51 @@ export class AgentUpdateComponent implements OnInit {
     ]
   }
 
-  searchByAgent(selectedAgent){
-    if(this.utileService.isNonEmpty(selectedAgent)){
+  searchByAgent(selectedAgent) {
+    if (this.utileService.isNonEmpty(selectedAgent)) {
       this.selectedAgent = selectedAgent;
       this.searchMobNo = ''
       this.getCallerUser(selectedAgent);
     }
-    else{
-      this.toastMsgService.alert("error","Select Agent")
+    else {
+      this.toastMsgService.alert("error", "Select Agent")
     }
   }
 
-  getCallerUser(id, mobNo?){
+  getCallerUser(id, mobNo?) {
     this.loading = true;
     var param;
-    if(this.utileService.isNonEmpty(id)){
+    if (this.utileService.isNonEmpty(id)) {
       param = `/sme-details?agentId=${id}`;
     }
-    else{
-      if(this.utileService.isNonEmpty(mobNo)){
+    else {
+      if (this.utileService.isNonEmpty(mobNo)) {
         param = `/custom-sme-details?mobileNumber=${mobNo}`;
       }
-      else{
+      else {
         param = `/custom-sme-details`;
       }
     }
-    this.userMsService.getMethod(param).subscribe((res: any)=>{
-        console.log('sme users: ',res);
-        this.loading = false;
-        this.searchMobNo = ''
-        if(Array.isArray(res) && res.length > 0){
-          this.smeList = res;
-          this.updateAgetGridOptions.api.setRowData(this.createRowData(this.smeList));
-          // this.config.totalItems = res.totalElements;
-        }
-        else{
-          this.smeList = [];
-          this.updateAgetGridOptions.api.setRowData(this.createRowData(this.smeList))
-          this.toastMsgService.alert('error','Data not found.')
-        }
+    this.userMsService.getMethod(param).subscribe((res: any) => {
+      console.log('sme users: ', res);
+      this.loading = false;
+      this.searchMobNo = ''
+      if (Array.isArray(res) && res.length > 0) {
+        this.smeList = res;
+        this.updateAgetGridOptions.api.setRowData(this.createRowData(this.smeList));
+        // this.config.totalItems = res.totalElements;
+      }
+      else {
+        this.smeList = [];
+        this.updateAgetGridOptions.api.setRowData(this.createRowData(this.smeList))
+        this.toastMsgService.alert('error', 'Data not found.')
+      }
     },
-    error=>{
-         console.log('Error during getting caller users daa: ',error);
-         this.toastMsgService.alert('error','Error during getting sme data.')
-         this.loading = false;
-    })
+      error => {
+        console.log('Error during getting caller users daa: ', error);
+        this.toastMsgService.alert('error', 'Error during getting sme data.')
+        this.loading = false;
+      })
   }
 
   createRowData(updateAgent) {
@@ -219,12 +219,12 @@ export class AgentUpdateComponent implements OnInit {
       updateAgentsArray.push(updateAgentsInfo);
     }
     console.log('updateAgentsArray-> ', updateAgentsArray)
-     return updateAgentsArray;
+    return updateAgentsArray;
   }
 
- 
 
-  updateAgent(userInfo){
+
+  updateAgent(userInfo) {
     let disposable = this.dialog.open(ChangeAgentDialogComponent, {
       width: '50%',
       height: 'auto',
@@ -236,47 +236,47 @@ export class AgentUpdateComponent implements OnInit {
 
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      if(result){
-        if(result.data === "statusChanged"){
+      if (result) {
+        if (result.data === "statusChanged") {
           this.getCallerUser(this.selectedAgent);
         }
       }
     });
   }
 
-  userRole(roles){
+  userRole(roles) {
     var role;
-     console.log(roles);
-    if(roles instanceof Array){
-      if(roles.length === 1){
-        role = roles[0] === "ROLE_CALLING_TEAM" ? 'Caller Agent' : 'Filler Agent'; 
+    console.log(roles);
+    if (roles instanceof Array) {
+      if (roles.length === 1) {
+        role = roles[0] === "ROLE_CALLING_TEAM" ? 'Caller Agent' : 'Filer Agent';
       }
-      else if(roles.length > 1){
-        for(let i=0; i<roles.length; i++){
-            if(i === 0){
-              role = roles[i] === "ROLE_CALLING_TEAM" ? 'Caller Agent' : 'Filler Agent'; 
-            }
-            else{
-              role = role+', '+(roles[i] === "ROLE_CALLING_TEAM" ? 'Caller Agent' : 'Filler Agent'); 
-            }
+      else if (roles.length > 1) {
+        for (let i = 0; i < roles.length; i++) {
+          if (i === 0) {
+            role = roles[i] === "ROLE_CALLING_TEAM" ? 'Caller Agent' : 'Filer Agent';
+          }
+          else {
+            role = role + ', ' + (roles[i] === "ROLE_CALLING_TEAM" ? 'Caller Agent' : 'Filer Agent');
+          }
         }
-         console.log('role -> ',role)
+        console.log('role -> ', role)
       }
-      console.log('main role -> ',role)
+      console.log('main role -> ', role)
       return role;
     }
   }
 
-  serchByMobNo(){
-    if(this.utileService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10){
+  serchByMobNo() {
+    if (this.utileService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
       this.getCallerUser('', this.searchMobNo);
     }
-    else{
-      this.toastMsgService.alert("error","Enter valid mobile number.")
+    else {
+      this.toastMsgService.alert("error", "Enter valid mobile number.")
     }
   }
 
-  onAgentUpdateClicked(params){
+  onAgentUpdateClicked(params) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
