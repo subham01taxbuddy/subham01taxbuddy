@@ -84,11 +84,13 @@ export class InterestedClientsComponent implements OnInit {
     if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
       this.isAdmin = true;
       this.showAllUser = true;
-      this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+      this.config.currentPage = 1;
+      this.getInterestedClients(0);
     }
     else {
       this.isAdmin = false;
-      this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+      this.config.currentPage = 1;
+      this.getInterestedClients(0);
     }
   }
 
@@ -96,23 +98,26 @@ export class InterestedClientsComponent implements OnInit {
     if (this.utilsService.isNonEmpty(this.selectedAgent)) {
       this.selectedAgent = this.selectedAgent;
       this.showAllUser = false;
-      this.getInterestedClients(this.selectedAgent, 0);
+      this.config.currentPage = 1;
+      this.getInterestedClients(0);
     }
     else {
       this.toastMsgService.alert("error", "Select Agent")
     }
   }
 
+  searchByStatus() {
+
+    this.config.currentPage = 1;
+    this.getInterestedClients(0);
+  }
+
   serchByMobNo() {
     if (this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
       this.selectedAgent = '';
-      var userInfo = JSON.parse(localStorage.getItem('UMD'));
-      if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
-        this.getInterestedClients('', 0, this.searchMobNo);
-      }
-      else {
-        this.getInterestedClients(userInfo.USER_UNIQUE_ID, '', this.searchMobNo);
-      }
+      this.config.currentPage = 1;
+      this.getInterestedClients(0, this.searchMobNo);
+
     }
     else {
       this.toastMsgService.alert("error", "Enter valid mobile number.")
@@ -305,28 +310,26 @@ export class InterestedClientsComponent implements OnInit {
   }
 
 
-  getInterestedClients(id, page, searchMobNo?) {
+  getInterestedClients(page, searchMobNo?) {
+    var userInfo = JSON.parse(localStorage.getItem('UMD'));
     this.loading = true;
     var param2;
     if (this.isAdmin) {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
         param2 = `/call-management/customers?statusId=${this.selectedStatus}&customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
-      }
-      else {
+      } else {
         if (this.showAllUser) {
           param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15`;
-        }
-        else {
-          param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${id}&page=${page}&pageSize=15`;
+        } else {
+          param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
         }
       }
     }
     else {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
-        param2 = `/call-management/customers?statusId=${this.selectedStatus}&customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
-      }
-      else {
-        param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+        param2 = `/call-management/customers?statusId=${this.selectedStatus}&customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
+      } else {
+        param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
       }
     }
 
@@ -453,13 +456,9 @@ export class InterestedClientsComponent implements OnInit {
       console.log('The dialog was closed');
       if (result) {
         if (result.data === "statusChanged") {
-          if (this.isAdmin) {
-            this.getInterestedClients(this.selectedAgent, 0);
-          }
-          else {
-            var userInfo = JSON.parse(localStorage.getItem('UMD'));
-            this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
-          }
+          this.config.currentPage = 1;
+          this.getInterestedClients(0);
+
         }
       }
     });
@@ -467,14 +466,7 @@ export class InterestedClientsComponent implements OnInit {
 
   pageChanged(event) {
     this.config.currentPage = event;
-    this.getInterestedClients(this.selectedAgent, event - 1);
-    if (this.isAdmin) {
-      this.getInterestedClients(this.selectedAgent, event - 1);
-    }
-    else {
-      var userInfo = JSON.parse(localStorage.getItem('UMD'));
-      this.getInterestedClients(userInfo.USER_UNIQUE_ID, event - 1);
-    }
+    this.getInterestedClients(event - 1);
   }
 
   openChat(client) {
