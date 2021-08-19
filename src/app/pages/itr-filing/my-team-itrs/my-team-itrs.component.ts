@@ -132,7 +132,18 @@ export class MyTeamItrsComponent implements OnInit {
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     if (this.selectedMemberId !== null)
-      this.getMembersItr(this.selectedMemberId, event, this.selectedPageNo);
+      this.getMembersItr(this.selectedMemberId, this.selectedFyYear, this.selectedPageNo);
+  }
+
+  fromSme(event) {
+    // this.searchParams = event;
+    // this.selectedFyYear = event;
+    this.selectedMemberId = event;
+    console.log(event);
+    this.selectedPageNo = 0;
+    this.config.currentPage = 1;
+    if (this.selectedMemberId !== null)
+      this.getMembersItr(this.selectedMemberId, this.selectedFyYear, this.selectedPageNo);
   }
 
   getMembersItr(id, fy, pageNo) {

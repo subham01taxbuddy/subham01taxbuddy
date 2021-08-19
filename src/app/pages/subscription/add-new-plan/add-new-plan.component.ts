@@ -48,13 +48,13 @@ export class AddNewPlanComponent implements OnInit {
   selectedPromoCode = '';
   serviceType = '';
   subStartDate = new FormControl(new Date(), [Validators.required]);
-  subEndDate = new FormControl('', [Validators.required]);
+  subEndDate = new FormControl(new Date('Mar 31, 2022'), [Validators.required]);
   gstType = new FormControl('', []);
   frequency = new FormControl('', []);
   startMonth = new FormControl('', []);
   startYear = new FormControl('', []);
   noOfMonths = new FormControl('', []);
-  subscriptionAssigneeId = new FormControl('');
+  subscriptionAssigneeId = new FormControl('', Validators.required);
   finalPricing = {
     basePrice: null,
     cgst: null,
@@ -122,10 +122,11 @@ export class AddNewPlanComponent implements OnInit {
       if (this.serviceType !== 'GST') {
         this.maxEndDate = new Date(myDate.getMonth() <= 2 ? myDate.getFullYear() : myDate.getFullYear() + 1, 2, 31);
       }
-      this.subStartDate.setValue(this.userSubscription.startDate);
-      this.subEndDate.setValue(this.userSubscription.endDate);
-      if (this.utilService.isNonEmpty(this.subEndDate.value)) {
-        this.subEndDate.setValue(this.maxEndDate);
+      if (this.utilService.isNonEmpty(this.userSubscription.startDate)) {
+        this.subStartDate.setValue(this.userSubscription.startDate);
+      }
+      if (this.utilService.isNonEmpty(this.userSubscription.endDate)) {
+        this.subEndDate.setValue(this.userSubscription.endDate);
       }
       this.subscriptionAssigneeId.setValue(this.userSubscription.subscriptionAssigneeId);
 
@@ -336,7 +337,7 @@ export class AddNewPlanComponent implements OnInit {
     this.updateSubscription('CLEAR_PLAN');
   }
 
-  activateSubscription() {
+  /* activateSubscription() {
     if (this.subStartDate.valid && this.subEndDate.valid) {
       this.userSubscription.startDate = this.subStartDate.value;
       this.userSubscription.endDate = this.subEndDate.value;
@@ -346,13 +347,14 @@ export class AddNewPlanComponent implements OnInit {
     } else {
       this.toastMessage.alert("error", "Select Start date and End date")
     }
-  }
+  } */
 
   saveSubscription() {
     if (this.subStartDate.valid && this.subEndDate.valid) {
       this.userSubscription.startDate = this.subStartDate.value;
       this.userSubscription.endDate = this.subEndDate.value;
       this.userSubscription.subscriptionAssigneeId = this.subscriptionAssigneeId.value;
+      this.userSubscription.isActive = true;
       this.updateSubscription('');
     } else {
       this.toastMessage.alert("error", "Select Start date and End date")

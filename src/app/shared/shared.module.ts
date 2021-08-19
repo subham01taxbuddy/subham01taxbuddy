@@ -25,6 +25,7 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { FyDropDownComponent } from './components/fy-drop-down/fy-drop-down.component';
 import { ChangeStatusComponent } from './components/change-status/change-status.component';
 import { NgxLoadingModule } from 'ngx-loading';
+import { SmeListDropDownComponent } from './components/sme-list-drop-down/sme-list-drop-down.component';
 // import { CheckboxRenderer } from './checkbox-renderer.component';
 
 
@@ -46,7 +47,8 @@ import { NgxLoadingModule } from 'ngx-loading';
         ItrActionsComponent,
         DocumentViewerComponent,
         FyDropDownComponent,
-        ChangeStatusComponent
+        ChangeStatusComponent,
+        SmeListDropDownComponent
     ],
     imports: [
         CommonModule,
@@ -82,7 +84,8 @@ import { NgxLoadingModule } from 'ngx-loading';
         ItrActionsComponent,
         DocumentViewerComponent,
         FyDropDownComponent,
-        ChangeStatusComponent
+        ChangeStatusComponent,
+        SmeListDropDownComponent
     ],
     providers: [],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,

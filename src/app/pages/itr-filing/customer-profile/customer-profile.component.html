@@ -145,8 +145,7 @@
                                 <input matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
                                     matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
                                     placeholder="Aadhaar" name="aadharNumber" formControlName="aadharNumber"
-                                    class="input-field" maxlength="12"
-                                    [required]="customerProfileForm.controls['assesseeType'].value === 'INDIVIDUAL'">
+                                    class="input-field" maxlength="12">
                                 <mat-error
                                     *ngIf="customerProfileForm.controls['aadharNumber'].hasError('pattern') || customerProfileForm.controls['aadharNumber'].hasError('minLength') || customerProfileForm.controls['aadharNumber'].hasError('maxLength')">
                                     Enter
@@ -182,7 +181,7 @@
                         <div class="card__col-xs-12 card__col-sm-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>Select Gender</mat-label>
-                                <mat-select placeholder="Select Gender" name="gender" formControlName="gender" required>
+                                <mat-select placeholder="Select Gender" name="gender" formControlName="gender">
                                     <mat-option *ngFor="let gender of genderMaster" [value]="gender.value">
                                         {{ gender.label }}
                                     </mat-option>
@@ -203,7 +202,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Employer Category</mat-label>
                                 <mat-select placeholder="Employer Category" name="employerCategory"
-                                    formControlName="employerCategory" required>
+                                    formControlName="employerCategory">
                                     <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
                                         {{ emp.label }}
                                     </mat-option>

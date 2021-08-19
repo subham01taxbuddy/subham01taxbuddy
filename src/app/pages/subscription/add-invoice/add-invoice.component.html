@@ -129,10 +129,10 @@
                         <mat-form-field appearance="outline">
                             <mat-label>IFA / Lead client</mat-label>
                             <input matInput formControlName="ifaLeadClient" placeholder="IFA / Lead client"
-                                autocomplete="off" maxlength="30" required>
-                            <mat-error *ngIf="invoiceForm.controls['ifaLeadClient'].hasError('required')">Enter
+                                autocomplete="off" maxlength="30">
+                            <!-- <mat-error *ngIf="invoiceForm.controls['ifaLeadClient'].hasError('required')">Enter
                                 IFA / Lead client info
-                            </mat-error>
+                            </mat-error> -->
                         </mat-form-field>
                     </div>
                     <div class="card__col-lg-4" *ngIf="this.invoiceForm.controls['paymentStatus'].value === 'Paid'">
@@ -413,7 +413,7 @@
                         <div style="float: right;" class="card__col-lg-5">₹
                             {{this.invoiceForm.controls.subTotal.value}}
                         </div> -->
-                        
+
                         <div class="card__col-lg-7">Final Price
                             <span>(Incl of GST)</span>
                         </div>
