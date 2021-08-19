@@ -204,6 +204,7 @@ export class LoginComponent implements OnInit {
     let param = '/agent-details';
     this.userMsService.getMethod(param).subscribe((res: any) => {
       if (res && res instanceof Array) {
+        res.sort((a, b) => a.name > b.name ? 1 : -1)
         sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res));
       }
     }, error => {

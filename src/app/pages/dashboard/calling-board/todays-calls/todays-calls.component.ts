@@ -26,11 +26,12 @@ export class TodaysCallsComponent implements OnInit {
   selectedAgent: any;
   showAllUser: boolean;
   searchMobNo: any;
+  itrStatus: any = [];
 
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string, private toastMsgService: ToastMessageService) {
     this.todaysCallsGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.createColoumnDef(),
+      columnDefs: this.createColoumnDef([]),
       enableCellChangeFlash: true,
       onGridReady: params => {
       },
@@ -57,6 +58,23 @@ export class TodaysCallsComponent implements OnInit {
     //   this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
     // }
     this.showCallersAll();
+    this.getStatus();
+  }
+
+  getStatus() {
+    let param = '/itr-status-master/source/BACK_OFFICE';
+    this.userMsService.getMethod(param).subscribe(respoce => {
+      console.log('status responce: ', respoce);
+      if (respoce instanceof Array && respoce.length > 0) {
+        this.itrStatus = respoce;
+      }
+      else {
+        this.itrStatus = [];
+      }
+    },
+      error => {
+        console.log('Error during fetching status info.')
+      })
   }
 
   showCallersAll() {
@@ -101,7 +119,7 @@ export class TodaysCallsComponent implements OnInit {
     }
   }
 
-  createColoumnDef() {
+  createColoumnDef(itrStatus) {
     return [
       {
         headerName: 'User Id',
@@ -147,6 +165,16 @@ export class TodaysCallsComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        },
+        valueGetter: function nameFromCode(params) {
+          console.log('params == ', params);
+          if (itrStatus.length !== 0) {
+            const nameArray = itrStatus.filter(item => (item.statusId === params.data.statusId));
+            console.log('nameArray = ', nameArray);
+            return nameArray[0].statusName;
+          } else {
+            return params.data.statusId;
+          }
         }
       },
       {
@@ -318,11 +346,13 @@ export class TodaysCallsComponent implements OnInit {
       if (result['content'] instanceof Array && result['content'].length > 0) {
         this.callLogs = result['content'];
         this.todaysCallsGridOptions.api.setRowData(this.createRowData(this.callLogs));
+        this.todaysCallsGridOptions.api.setColumnDefs(this.createColoumnDef(this.itrStatus));
         this.callDetetialInfo = result['content'];
         this.config.totalItems = result.totalElements;
       } else {
         this.callLogs = [];
         this.todaysCallsGridOptions.api.setRowData(this.createRowData(this.callLogs));
+        this.todaysCallsGridOptions.api.setColumnDefs(this.createColoumnDef(this.itrStatus));
         this.callDetetialInfo = [];
         this.config.totalItems = 0;
         this.utilsService.showSnackBar('You dont have any calls today');
@@ -345,7 +375,7 @@ export class TodaysCallsComponent implements OnInit {
         userId: todaysCalls[i]['userId'],
         name: todaysCalls[i]['name'],
         customerNumber: todaysCalls[i]['customerNumber'],
-        statusId: todaysCalls[i]['statusId'] === 18 ? 'Open' : '-',
+        statusId: todaysCalls[i]['statusId'],
         serviceType: todaysCalls[i]['serviceType'],
         callerAgentUserId: todaysCalls[i]['callerAgentUserId'],
         callerAgentNumber: todaysCalls[i]['callerAgentNumber'],

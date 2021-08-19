@@ -23,7 +23,7 @@ export class ChangeStatusComponent implements OnInit {
 
   ngOnInit() {
     this.changeStatus = this.fb.group({
-      selectStatus: [''],
+      selectStatus: [this.data.userInfo.statusId],
       callerAgentUserId: ['']
     })
 
@@ -40,13 +40,13 @@ export class ChangeStatusComponent implements OnInit {
       this.changeStatus.controls.selectStatus.updateValueAndValidity();
       this.changeStatus.controls.callerAgentUserId.updateValueAndValidity();
 
-      console.log('this.data.userInfo statusId : ', this.data.userInfo.statusId, this.data.userInfo.statusId === "Open");
-      if (this.data.userInfo.statusId === "Open") {
-        this.data.userInfo.statusId = 18;
-      }
-      else if (this.data.userInfo.statusId === "Interested") {
-        this.data.userInfo.statusId = 16;
-      }
+      // console.log('this.data.userInfo statusId : ', this.data.userInfo.statusId, this.data.userInfo.statusId === "Open");
+      // if (this.data.userInfo.statusId === "Open") {
+      //   this.data.userInfo.statusId = 18;
+      // }
+      // else if (this.data.userInfo.statusId === "Interested") {
+      //   this.data.userInfo.statusId = 16;
+      // }
 
       this.getCallers();
     }
@@ -76,6 +76,7 @@ export class ChangeStatusComponent implements OnInit {
       console.log('status responce: ', respoce);
       if (respoce instanceof Array && respoce.length > 0) {
         this.callers = respoce;
+        this.callers.sort((a, b) => a.name > b.name ? 1 : -1)
         this.callers = this.callers.filter(item => item.callerAgentUserId !== this.data.userInfo.callerAgentUserId)
       }
       else {
