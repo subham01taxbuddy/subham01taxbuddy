@@ -12,6 +12,7 @@ export class KnowlarityComponent implements OnInit {
 
   loading: boolean;
   inbondKnowlarityGridOption: GridOptions;
+  knowlarityData: any= [];
 
   constructor(private utilService: UtilsService,  @Inject(LOCALE_ID) private locale: string) {
     this.inbondKnowlarityGridOption = <GridOptions>{
@@ -33,6 +34,7 @@ export class KnowlarityComponent implements OnInit {
     console.log('knowlarityInfo -> ',knowlarityInfo)
     // if(this.utilService.isNonEmpty(knowlarityInfo)){
     if(knowlarityInfo instanceof Array && knowlarityInfo.length > 0){
+      this.knowlarityData = knowlarityInfo;
       this.inbondKnowlarityGridOption.api.setRowData(this.createRowData(knowlarityInfo))
     }
   }
@@ -117,7 +119,7 @@ export class KnowlarityComponent implements OnInit {
     for (let i = 0; i < knowlarity.length; i++) {  
       let knowlaritysInfo = Object.assign({}, knowlaritysArray[i], {
         callDate: this.utilService.isNonEmpty(knowlarity[i]['Event_Date_Local']) ? knowlarity[i]['Event_Date_Local'] : '-',
-        callTime: this.utilService.isNonEmpty(knowlarity[i]['Caller_Channel_Created_Time']) ? knowlarity[i]['Caller_Channel_Created_Time'] : '-',
+        // callTime: this.utilService.isNonEmpty(knowlarity[i]['Caller_Channel_Created_Time']) ? knowlarity[i]['Caller_Channel_Created_Time'] : '-',
         callType: this.utilService.isNonEmpty(knowlarity[i]['business_call_type']) ? knowlarity[i]['business_call_type'] : '-',
         agentNumber: this.utilService.isNonEmpty(knowlarity[i]['agent_number']) ? knowlarity[i]['agent_number'] : '-',
         callerNumber: this.utilService.isNonEmpty(knowlarity[i]['caller']) ? knowlarity[i]['caller'] : '-',
