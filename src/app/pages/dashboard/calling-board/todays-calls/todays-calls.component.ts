@@ -8,6 +8,7 @@ import { GridOptions } from 'ag-grid-community';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { AppConstants } from 'app/shared/constants';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-todays-calls',
@@ -149,6 +150,21 @@ export class TodaysCallsComponent implements OnInit {
         width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Created Date',
+        field: 'createdDate',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellRenderer: (data) => {
+          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+        },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -371,6 +387,7 @@ export class TodaysCallsComponent implements OnInit {
     for (let i = 0; i < todaysCalls.length; i++) {
       let todaysClientsInfo = Object.assign({}, todaysCallsArray[i], {
         id: todaysCalls[i]['id'],
+        createdDate: todaysCalls[i]['createdDate'],
         agentId: todaysCalls[i]['agentId'],
         userId: todaysCalls[i]['userId'],
         name: todaysCalls[i]['name'],

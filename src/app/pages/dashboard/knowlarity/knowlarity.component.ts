@@ -13,6 +13,7 @@ export class KnowlarityComponent implements OnInit {
   loading: boolean;
   inbondKnowlarityGridOption: GridOptions;
   knowlarityData: any= [];
+  config: any;
 
   constructor(private utilService: UtilsService,  @Inject(LOCALE_ID) private locale: string) {
     this.inbondKnowlarityGridOption = <GridOptions>{
@@ -23,20 +24,46 @@ export class KnowlarityComponent implements OnInit {
       },
       sortable: true,
     };
+
+    this.config = {
+      itemsPerPage: 15,
+      currentPage: 1,
+      totalItems: null
+    };
    }
 
   ngOnInit() {
     this.getKnowlarityInfo();
+
+    setInterval(()=>{
+      this.getKnowlarityInfo();
+    }, 9000);
   }
 
   getKnowlarityInfo(){
-    let knowlarityInfo = JSON.parse(sessionStorage.getItem('INBOND_KNOWLARITY'));
-    console.log('knowlarityInfo -> ',knowlarityInfo)
+    let knowlarityInfo = JSON.parse(localStorage.getItem('INBOND_KNOWLARITY'));
+    console.log('knowlarityInfo -> ',knowlarityInfo);
+    this.knowlarityData = [];
+    var knowlarityArray = [];
     // if(this.utilService.isNonEmpty(knowlarityInfo)){
     if(knowlarityInfo instanceof Array && knowlarityInfo.length > 0){
-      this.knowlarityData = knowlarityInfo;
-      this.inbondKnowlarityGridOption.api.setRowData(this.createRowData(knowlarityInfo))
+      knowlarityArray = knowlarityInfo.reverse();
+      if(knowlarityArray.length >= 50){
+        for(let i=0; i< 50; i++){
+          this.knowlarityData.splice(i, 0, knowlarityArray[i]);
+        }
+      }
+      else{
+        this.knowlarityData = knowlarityArray;
+      }
+      
+      console.log('knowlarity Array -> ',this.knowlarityData)
+      // this.config.totalItems = this.knowlarityData.length;
     }
+  }
+
+  pageChanged(event){
+    this.config.currentPage = event;
   }
 
   createColoumnDef(){

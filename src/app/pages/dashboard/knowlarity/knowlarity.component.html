@@ -4,26 +4,32 @@
     <div class="card">
         <div class="card__row">
 
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="inbondKnowlarityGridOption"
+            <!-- <ag-grid-angular class="ag-theme-balham" [gridOptions]="inbondKnowlarityGridOption"
                 >  
-            </ag-grid-angular>
+            </ag-grid-angular> -->
 
-            <!-- <table>
+            <table>
                 <tr>
-                    <th>Call Date</th>
-                    <th>Call Type</th>
-                    <th>Agent Number</th>
-                    <th>Caller Number</th>
-                    <th>Knowlarity Number</th>
+                    <th><b>Call Date</b></th>
+                    <th><b>Call Type</b></th>
+                    <th><b>Agent Number</b></th>
+                    <th><b>Caller Number</b></th>
+                    <th><b>Knowlarity Number</b></th>
                 </tr>
-                <tr *ngFor="let item of knowlarityData">
+                <tr>
+                    <td *ngIf="knowlarityData.length === 0" colspan="5" style="text-align: center;"><b>No data available</b>
+                    </td>
+                </tr>
+                <tr *ngFor="let item of knowlarityData | paginate:config">
                     <td>{{item.Event_Date_Local | date:'dd MMM yyyy, hh:mm a'}}</td>
                     <td>{{item.business_call_type}}</td>
                     <td>{{item.agent_number}}</td>
                     <td>{{item.caller}}</td>
                     <td>{{item.knowlarity_number}}</td>
                 </tr>
-            </table> -->
+            </table>
+
+            <!-- <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> -->
 
         </div>
     </div>

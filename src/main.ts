@@ -25,7 +25,7 @@ knowlarityScript.innerHTML = `var URL = "https://konnectprodstream3.knowlarity.c
                               if(data.event_type === "ORIGINATE" && data.call_direction === "Inbound"){
                                 knowlarityData.push(data);
                                 console.log("knowlarityData: ",knowlarityData)
-                                sessionStorage.setItem('INBOND_KNOWLARITY', JSON.stringify(knowlarityData));
+                                localStorage.setItem('INBOND_KNOWLARITY', JSON.stringify(knowlarityData));
                             }
                          }`
 knowlarityScript.id = '_webengage_script_tag';
