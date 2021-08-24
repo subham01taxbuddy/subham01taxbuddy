@@ -16,6 +16,7 @@ const routes: Routes = [
         path: '', component: DashboardComponent,
         children: [
             { path: 'quick-search', component: NewUserComponent }, //new-user  
+            { path: 'quick-search/:mobileNo', component: NewUserComponent },
             {
                 path: 'engagement', component: EngagementComponent,
                 children: [

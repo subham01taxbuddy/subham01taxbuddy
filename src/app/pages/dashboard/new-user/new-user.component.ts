@@ -7,6 +7,8 @@ import { GridOptions } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { ToastMessageService } from 'app/services/toast-message.service';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-user',
@@ -29,7 +31,7 @@ export class NewUserComponent implements OnInit {
   agentList: any;
   itrList: any = [];
 
-  constructor(private userMsService: UserMsService, public utilService: UtilsService,
+  constructor(private userMsService: UserMsService, public utilService: UtilsService, private router: Router,
     private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string, private toastMsgService: ToastMessageService) {
 
     this.openStatusClientsGridOption = <GridOptions>{
@@ -40,6 +42,17 @@ export class NewUserComponent implements OnInit {
       },
       sortable: true,
     };
+
+    console.log(this.router.routerState.snapshot.url)
+    let loadedUrl = this.router.routerState.snapshot.url;
+    if(loadedUrl.split('?').length > 1){
+      let startPoint = (loadedUrl.split('?')[1]).indexOf('=');
+      let endPoint = (loadedUrl.split('?')[1]).length;
+      let mobileNumber = (loadedUrl.split('?')[1]).substring(startPoint+1, endPoint);
+      console.log('mobileNumber: ',mobileNumber);
+      this.advanceSearch(mobileNumber);
+      this.mobileNo = mobileNumber;
+    }
 
     //this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
     // if (!environment.production) {

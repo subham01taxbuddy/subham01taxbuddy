@@ -13,19 +13,19 @@
                     <th><b>Call Date</b></th>
                     <th><b>Call Type</b></th>
                     <th><b>Agent Number</b></th>
-                    <th><b>Caller Number</b></th>
-                    <th><b>Knowlarity Number</b></th>
+                    <th><b>Customer Number</b></th>
+                    <!-- <th><b>Knowlarity Number</b></th> -->
                 </tr>
                 <tr>
                     <td *ngIf="knowlarityData.length === 0" colspan="5" style="text-align: center;"><b>No data available</b>
                     </td>
                 </tr>
-                <tr *ngFor="let item of knowlarityData | paginate:config">
+                <tr *ngFor="let item of knowlarityData">
                     <td>{{item.Event_Date_Local | date:'dd MMM yyyy, hh:mm a'}}</td>
                     <td>{{item.business_call_type}}</td>
                     <td>{{item.agent_number}}</td>
-                    <td>{{item.caller}}</td>
-                    <td>{{item.knowlarity_number}}</td>
+                    <td><a href="javascript:void(0)" (click)="showCustomerInfo(item.caller)">{{item.caller}}</a></td>
+                    <!-- <td>{{item.knowlarity_number}}</td> -->
                 </tr>
             </table>
 

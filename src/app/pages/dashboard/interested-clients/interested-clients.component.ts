@@ -1,5 +1,6 @@
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
@@ -28,7 +29,7 @@ export class InterestedClientsComponent implements OnInit {
   itrStatus: any = [];
 
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
-    private toastMsgService: ToastMessageService) {
+    private toastMsgService: ToastMessageService, private route: Router) {
     this.interestedClientsGridOption = <GridOptions>{
       rowData: [],
       columnDefs: this.createColoumnDef(),
@@ -197,6 +198,28 @@ export class InterestedClientsComponent implements OnInit {
         }
       },
       {
+        headerName: 'User Info',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="User Information"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-mobile" style="font-size:26px" aria-hidden="true" data-action-type="user-info"></i>
+           </button>`;
+        },
+        width: 50,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
         headerName: 'Chat',
         editable: false,
         suppressMenu: true,
@@ -208,7 +231,7 @@ export class InterestedClientsComponent implements OnInit {
             <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
            </button>`;
         },
-        width: 60,
+        width: 50,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -252,7 +275,7 @@ export class InterestedClientsComponent implements OnInit {
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
-        width: 60,
+        width: 50,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -400,7 +423,18 @@ export class InterestedClientsComponent implements OnInit {
           this.updateStatus('Update Caller', params.data)
           break;
         }
+        case 'user-info': {
+          this.showUserDetail(params.data)
+          break;
+        }
       }
+    }
+  }
+
+  showUserDetail(user){
+    if(user.customerNumber){
+      let mobileNo = user.customerNumber;
+      this.route.navigate(['/pages/dashboard/quick-search'], {queryParams: {mobileNo: mobileNo}});
     }
   }
 
