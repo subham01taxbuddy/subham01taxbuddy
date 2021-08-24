@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material';
 import { GridOptions } from 'ag-grid-community';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
+import { AppConstants } from 'app/shared/constants';
 import { environment } from 'environments/environment';
 import { UserHistryComponent } from '../user-histry/user-histry.component';
 
@@ -16,7 +17,8 @@ export class MailUserComponent implements OnInit {
 
   loading: boolean;
   showMailUser: boolean;
-  agentList = environment.agentId;
+  // agentList = environment.agentId;
+  agentList: any = [];
   mailUserListGridOptions: GridOptions;
 
   mailUser: any = [];
@@ -31,6 +33,8 @@ export class MailUserComponent implements OnInit {
       },
       sortable: true,
     };
+
+    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST))
    }
 
   ngOnInit() {

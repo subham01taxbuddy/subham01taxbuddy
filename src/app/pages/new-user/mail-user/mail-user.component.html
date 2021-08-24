@@ -8,7 +8,7 @@
     <div class="card__row">
       <label>Selected Agent for email user: </label> &nbsp;&nbsp;
       <span *ngFor="let agent of agentList; let i=index">
-          <a href="javascript:;" (click)="getMailUserByAgentId(agent.value)">{{agent.label}}</a> &nbsp;&nbsp;
+          <a href="javascript:;" (click)="getMailUserByAgentId(agent.email)">{{agent.name}}</a> &nbsp;&nbsp;
       </span>
     </div>
     <br><br>

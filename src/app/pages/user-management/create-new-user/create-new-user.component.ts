@@ -63,6 +63,7 @@ export class CreateNewUserComponent implements OnInit {
           console.log("create user responce: ", responce);
           if(this.utilSerive.isNonEmpty(this.exceptionalInfo)) {
             this.exceptionalUser = true;
+            this.clearFromExceptionList(data.email);
           }else{
             this.exceptionalUser = false;
             this.signUpForm.reset();
@@ -79,7 +80,6 @@ export class CreateNewUserComponent implements OnInit {
           }
           this.loading = false;
           this.utilSerive.showSnackBar("User create succesfully.");
-          this.clearFromExceptionList(data.email);
         },
         (error) => {
           this.loading = false;
