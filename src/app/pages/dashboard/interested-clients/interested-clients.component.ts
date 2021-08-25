@@ -8,6 +8,7 @@ import { UtilsService } from 'app/services/utils.service';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { AppConstants } from 'app/shared/constants';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-interested-clients',
@@ -164,6 +165,21 @@ export class InterestedClientsComponent implements OnInit {
         }
       },
       {
+        headerName: 'Created Date',
+        field: 'createdDate',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellRenderer: (data) => {
+          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+        },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
         headerName: 'Status',
         field: 'statusId',
         width: 120,
@@ -176,6 +192,7 @@ export class InterestedClientsComponent implements OnInit {
         },
         valueGetter: function nameFromCode(params) {
           if (itrStatus.length !== 0) {
+            console.log('Statud id', params.data.statusId)
             const nameArray = itrStatus.filter(item => item.statusId === params.data.statusId);
             return nameArray[0].statusName;
           } else {
@@ -358,8 +375,7 @@ export class InterestedClientsComponent implements OnInit {
           param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
         }
       }
-    }
-    else {
+    } else {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
       } else {
@@ -396,6 +412,7 @@ export class InterestedClientsComponent implements OnInit {
     for (let i = 0; i < interestedClient.length; i++) {
       let interestedClientsInfo = Object.assign({}, interestedClientsArray[i], {
         id: interestedClient[i]['id'],
+        createdDate: interestedClient[i]['createdDate'],
         agentId: interestedClient[i]['agentId'],
         userId: interestedClient[i]['userId'],
         name: interestedClient[i]['name'],

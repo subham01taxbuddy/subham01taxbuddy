@@ -339,16 +339,16 @@ export class TodaysCallsComponent implements OnInit {
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       } else {
         if (this.showAllUser) {
-          param2 = `/call-management/customers?page=${page}&pageSize=15`;
+          param2 = `/call-management/customers?statusId=18&page=${page}&pageSize=15`;
         } else {
-          param2 = `/call-management/customers?agentId=${id}&page=${page}&pageSize=15`;
+          param2 = `/call-management/customers?statusId=18&agentId=${id}&page=${page}&pageSize=15`;
         }
       }
     } else {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
       } else {
-        param2 = `/call-management/customers?callerAgentUserId=${id}&page=${page}&pageSize=15`;
+        param2 = `/call-management/customers?statusId=18&callerAgentUserId=${id}&page=${page}&pageSize=15`;
       }
 
     }
