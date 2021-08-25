@@ -25,7 +25,7 @@ export const environment = {
 		federationTarget: 'COGNITO_IDENTITY_POOLS',
 		authenticationFlowType: 'USER_PASSWORD_AUTH'
 	},
-	botIds: ["vaibhav.gaikwad@ssbainnovations.com", "ashish.hulwan@ssbainnovations.com", "dev_kommunicate@ssbainnovations.com", "ashish-upylx", "kommunicate-dev-cgvmc",
+	/* botIds: ["vaibhav.gaikwad@ssbainnovations.com", "ashish.hulwan@ssbainnovations.com", "dev_kommunicate@ssbainnovations.com", "ashish-upylx", "kommunicate-dev-cgvmc",
 		"txbdycustomchat-kjbxd", "vaibhav-zpyuj", "welcome-6mb0j"],
 
 	agentId: [{ "label": "ashish", "value": "ashish.hulwan@ssbainnovations.com" },
@@ -37,5 +37,5 @@ export const environment = {
 	{ "label": "uat.agent1", "value": "uat.agent1@taxbuddy.com" },
 	{ "label": "uatagent2", "value": "uatagent2@taxbuddy.com" },
 	{ "label": "uatagent3", "value": "uatagent3@taxbuddy.com" }
-	]
+	] */
 };
