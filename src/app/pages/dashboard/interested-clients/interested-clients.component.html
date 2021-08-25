@@ -21,7 +21,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Select Status</mat-label>
                     <mat-select placeholder="Select Status" [(ngModel)]="selectedStatus"
-                        (selectionChange)="this.getInterestedClients(this.selectedAgent, 0)">
+                        (selectionChange)="this.searchByStatus()">
                         <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
                             {{ status.statusName }}
                         </mat-option>

@@ -1,5 +1,6 @@
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
@@ -7,6 +8,7 @@ import { UtilsService } from 'app/services/utils.service';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { AppConstants } from 'app/shared/constants';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-interested-clients',
@@ -28,7 +30,7 @@ export class InterestedClientsComponent implements OnInit {
   itrStatus: any = [];
 
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
-    private toastMsgService: ToastMessageService) {
+    private toastMsgService: ToastMessageService, private route: Router) {
     this.interestedClientsGridOption = <GridOptions>{
       rowData: [],
       columnDefs: this.createColoumnDef(this.itrStatus),
@@ -85,11 +87,13 @@ export class InterestedClientsComponent implements OnInit {
     if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
       this.isAdmin = true;
       this.showAllUser = true;
-      this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+      this.config.currentPage = 1;
+      this.getInterestedClients(0);
     }
     else {
       this.isAdmin = false;
-      this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
+      this.config.currentPage = 1;
+      this.getInterestedClients(0);
     }
   }
 
@@ -97,24 +101,27 @@ export class InterestedClientsComponent implements OnInit {
     if (this.utilsService.isNonEmpty(this.selectedAgent)) {
       this.selectedAgent = this.selectedAgent;
       this.showAllUser = false;
-      this.getInterestedClients(this.selectedAgent, 0);
+      this.config.currentPage = 1;
+      this.getInterestedClients(0);
     }
     else {
       this.toastMsgService.alert("error", "Select Agent")
     }
   }
 
+  searchByStatus() {
+
+    this.config.currentPage = 1;
+    this.getInterestedClients(0);
+  }
+
   serchByMobNo() {
     this.selectedStatus = 0;
     if (this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
       this.selectedAgent = '';
-      var userInfo = JSON.parse(localStorage.getItem('UMD'));
-      if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
-        this.getInterestedClients('', 0, this.searchMobNo);
-      }
-      else {
-        this.getInterestedClients(userInfo.USER_UNIQUE_ID, '', this.searchMobNo);
-      }
+      this.config.currentPage = 1;
+      this.getInterestedClients(0, this.searchMobNo);
+
     }
     else {
       this.toastMsgService.alert("error", "Enter valid mobile number.")
@@ -158,6 +165,21 @@ export class InterestedClientsComponent implements OnInit {
         }
       },
       {
+        headerName: 'Created Date',
+        field: 'createdDate',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellRenderer: (data) => {
+          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+        },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
         headerName: 'Status',
         field: 'statusId',
         width: 120,
@@ -170,6 +192,7 @@ export class InterestedClientsComponent implements OnInit {
         },
         valueGetter: function nameFromCode(params) {
           if (itrStatus.length !== 0) {
+            console.log('Statud id', params.data.statusId)
             const nameArray = itrStatus.filter(item => item.statusId === params.data.statusId);
             return nameArray[0].statusName;
           } else {
@@ -202,6 +225,28 @@ export class InterestedClientsComponent implements OnInit {
         }
       },
       {
+        headerName: 'User Info',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="User Information"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-mobile" style="font-size:26px" aria-hidden="true" data-action-type="user-info"></i>
+           </button>`;
+        },
+        width: 50,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
         headerName: 'Chat',
         editable: false,
         suppressMenu: true,
@@ -213,7 +258,7 @@ export class InterestedClientsComponent implements OnInit {
             <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
            </button>`;
         },
-        width: 60,
+        width: 50,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -257,7 +302,7 @@ export class InterestedClientsComponent implements OnInit {
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
            </button>`;
         },
-        width: 60,
+        width: 50,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -315,30 +360,27 @@ export class InterestedClientsComponent implements OnInit {
   }
 
 
-  getInterestedClients(id, page, searchMobNo?) {
+  getInterestedClients(page, searchMobNo?) {
+    var userInfo = JSON.parse(localStorage.getItem('UMD'));
     this.loading = true;
     var param2;
     if (this.isAdmin) {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
-      }
-      else {
+      } else {
         this.searchMobNo = '';
         if (this.showAllUser) {
           param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15`;
-        }
-        else {
-          param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${id}&page=${page}&pageSize=15`;
+        } else {
+          param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
         }
       }
-    }
-    else {
+    } else {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
-        param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
-      }
-      else {
+        param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
+      } else {
         this.searchMobNo = '';
-        param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+        param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
       }
     }
 
@@ -370,6 +412,7 @@ export class InterestedClientsComponent implements OnInit {
     for (let i = 0; i < interestedClient.length; i++) {
       let interestedClientsInfo = Object.assign({}, interestedClientsArray[i], {
         id: interestedClient[i]['id'],
+        createdDate: interestedClient[i]['createdDate'],
         agentId: interestedClient[i]['agentId'],
         userId: interestedClient[i]['userId'],
         name: interestedClient[i]['name'],
@@ -411,7 +454,18 @@ export class InterestedClientsComponent implements OnInit {
           this.updateStatus('Update Caller', params.data)
           break;
         }
+        case 'user-info': {
+          this.showUserDetail(params.data)
+          break;
+        }
       }
+    }
+  }
+
+  showUserDetail(user) {
+    if (user.customerNumber) {
+      let mobileNo = user.customerNumber;
+      this.route.navigate(['/pages/dashboard/quick-search'], { queryParams: { mobileNo: mobileNo } });
     }
   }
 
@@ -467,13 +521,9 @@ export class InterestedClientsComponent implements OnInit {
       console.log('The dialog was closed');
       if (result) {
         if (result.data === "statusChanged") {
-          if (this.isAdmin) {
-            this.getInterestedClients(this.selectedAgent, 0);
-          }
-          else {
-            var userInfo = JSON.parse(localStorage.getItem('UMD'));
-            this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
-          }
+          this.config.currentPage = 1;
+          this.getInterestedClients(0);
+
         }
       }
     });
@@ -481,14 +531,7 @@ export class InterestedClientsComponent implements OnInit {
 
   pageChanged(event) {
     this.config.currentPage = event;
-    this.getInterestedClients(this.selectedAgent, event - 1);
-    if (this.isAdmin) {
-      this.getInterestedClients(this.selectedAgent, event - 1);
-    }
-    else {
-      var userInfo = JSON.parse(localStorage.getItem('UMD'));
-      this.getInterestedClients(userInfo.USER_UNIQUE_ID, event - 1);
-    }
+    this.getInterestedClients(event - 1);
   }
 
   openChat(client) {
