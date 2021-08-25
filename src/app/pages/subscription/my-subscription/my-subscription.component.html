@@ -1,7 +1,9 @@
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
+        <span style="float: right;"> Total Count: <b>{{totalCount}}</b></span>
+        <br>
         <div class="card__row">
-            <app-main-subsciption [queryParam]="queryParam" from="MY_SUB">
+            <app-main-subsciption [queryParam]="queryParam" from="MY_SUB" (sendTotalCount)="fromSubscription($event)">
             </app-main-subsciption>
         </div>
     </div>

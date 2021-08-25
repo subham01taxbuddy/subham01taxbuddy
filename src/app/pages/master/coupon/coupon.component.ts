@@ -12,12 +12,12 @@ import { AddCouponComponent } from '../add-coupon/add-coupon.component';
   styleUrls: ['./coupon.component.css']
 })
 export class CouponComponent implements OnInit {
-  
+
   loading: boolean;
   couponGridOptions: GridOptions;
-  
+  totalCount = 0;
   constructor(private itrService: ItrMsService, private utileService: UtilsService, @Inject(LOCALE_ID) private locale: string,
-              private dialog: MatDialog) {
+    private dialog: MatDialog) {
     this.couponGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCouponColoumnDef(),
@@ -27,13 +27,13 @@ export class CouponComponent implements OnInit {
 
       sortable: true,
     };
-   }
+  }
 
   ngOnInit() {
     this.getCoupons()
   }
 
-  usersCouponColoumnDef(){
+  usersCouponColoumnDef() {
     return [
       {
         headerName: 'Code',
@@ -186,23 +186,23 @@ export class CouponComponent implements OnInit {
     ]
   }
 
-  getCoupons(){
+  getCoupons() {
     this.loading = true;
     let param = '/promocodes?isActive=true';
-    this.itrService.getMethod(param).subscribe((result: any)=>{
+    this.itrService.getMethod(param).subscribe((result: any) => {
       console.log('Promo codes data: ', result);
       this.loading = false;
-      if(Array.isArray(result) && result.length > 0){
+      if (Array.isArray(result) && result.length > 0) {
+        this.totalCount = result.length;
         this.couponGridOptions.api.setRowData(this.createRowData(result));
       }
-    },
-    error=>{
+    }, error => {
       this.loading = false;
       console.log('Error during fatching codes data: ', error)
     })
   }
 
-  createRowData(couponData){
+  createRowData(couponData) {
     console.log('couponData -> ', couponData);
     var couponArray = [];
     for (let i = 0; i < couponData.length; i++) {
@@ -224,22 +224,22 @@ export class CouponComponent implements OnInit {
     return couponArray;
   }
 
-  addCoupon(titile, key, data){
+  addCoupon(titile, key, data) {
     let disposable = this.dialog.open(AddCouponComponent, {
       width: '65%',
       height: 'auto',
       data: {
         title: titile,
-       // submitBtn: windowBtn,
+        // submitBtn: windowBtn,
         leadData: data,
         mode: key
       }
     })
 
-    disposable.afterClosed().subscribe(result=>{
-      if(result){
-        console.log('Afetr dialog close -> ',result);
-        if(result.data === "couponAdded"){
+    disposable.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Afetr dialog close -> ', result);
+        if (result.data === "couponAdded") {
           this.getCoupons()
         }
         // else if(result.data === "leadAdded"){
@@ -250,20 +250,20 @@ export class CouponComponent implements OnInit {
     })
   }
 
-  onCouponRowClicked(params){
+  onCouponRowClicked(params) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'updateCoupon': {
-         this.updateCoupon();
+          this.updateCoupon();
           break;
         }
       }
     }
   }
 
-  updateCoupon(){
+  updateCoupon() {
     alert('In progress...')
   }
 

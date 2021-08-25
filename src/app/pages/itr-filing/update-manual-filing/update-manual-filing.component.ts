@@ -13,7 +13,7 @@ import { UserMsService } from 'app/services/user-ms.service';
   styleUrls: ['./update-manual-filing.component.css']
 })
 export class UpdateManualFilingComponent implements OnInit {
-  ackNumber = new FormControl('', Validators.required);
+  ackNumber = new FormControl('', [Validators.required, Validators.maxLength(15), Validators.minLength(15)]);
   eFillingDate = new FormControl('', Validators.required);
   maxDate = new Date();
   loading = false;

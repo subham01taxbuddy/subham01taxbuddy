@@ -1,9 +1,19 @@
 <!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading> -->
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
-        <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>
         <div class="card__row">
-            <app-main-subsciption [queryParam]="queryParam" from="MY_SUB"></app-main-subsciption>
+            <div class="card__col-lg-6">
+                <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>
+            </div>
+            <div class="card__col-lg-6">
+                <span style="float: right;"> Total Count: <b>{{totalCount}}</b></span>
+            </div>
+        </div>
+
+        <div class="card__row">
+            <app-main-subsciption [queryParam]="queryParam" from="MY_SUB" (sendTotalCount)="fromSubscription($event)">
+            </app-main-subsciption>
         </div>
     </div>
+
 </div>

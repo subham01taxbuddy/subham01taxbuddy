@@ -1,7 +1,4 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div class="main clearfix">
   <div class="content content_full">
@@ -10,40 +7,25 @@
 
         <div class="card__row">
           <div class="card__col-xs-12 card__col-sm-12">
-            <div class="filter__col card__col-sm-4 card__col-xs-12">
-              <!-- <div class="input">
-                <label class="input__label" for="attr">Select attribute</label>
-                <select class="select__box ogp_select" (change)="clearValue()" #advanceSearchKey>
-                  <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
-                    {{drop.name}}</option>
-                </select>
-              </div> -->
-            </div>
-            <div class="filter__col card__col-sm-4 card__col-xs-10">
-              <!-- <div class="input">
-                <label class="input__label" for="attr">Enter value</label>
-                <div class="input__select">
-                  <input type="text" class="select__box ogp_select" style="background-image:none" [(ngModel)]="searchVal"
-                    name="searchVal" />
-                </div>
-              </div> -->
-            </div>
+            Total Count: <b>{{totalCount}}</b>
+
             <div class="card__col-md-3 card__col-xs-12 pull-right">
-              <a class="btn btn_stroke filter__add-link" (click)="addCoupon('Add Coupon','Add', '')">Add Coupon</a>  <!--(click)="advanceSearch(advanceSearchKey.value)"-->
+              <a class="btn btn_stroke filter__add-link" (click)="addCoupon('Add Coupon','Add', '')">Add Coupon</a>
             </div>
           </div>
-        </div><br><br>
+        </div>
 
         <div class="card__row">
-            <!-- <table>
+          <!-- <table>
                 <tr *ngFor="let item of userInfo | paginate:config"></tr>
             </table> -->
-            
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="couponGridOptions"
-              (rowClicked)="onCouponRowClicked($event)">    <!--     paginationPageSize=15 pagination=true-->
-            </ag-grid-angular>
 
-            <!-- <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> -->
+          <ag-grid-angular class="ag-theme-balham" [gridOptions]="couponGridOptions"
+            (rowClicked)="onCouponRowClicked($event)">
+            <!--     paginationPageSize=15 pagination=true-->
+          </ag-grid-angular>
+
+          <!-- <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> -->
         </div>
       </div>
     </div>
