@@ -32,7 +32,7 @@ export class InterestedClientsComponent implements OnInit {
     private toastMsgService: ToastMessageService, private route: Router) {
     this.interestedClientsGridOption = <GridOptions>{
       rowData: [],
-      columnDefs: this.createColoumnDef(),
+      columnDefs: this.createColoumnDef(this.itrStatus),
       enableCellChangeFlash: true,
       onGridReady: params => {
       },
@@ -68,6 +68,7 @@ export class InterestedClientsComponent implements OnInit {
       console.log('status responce: ', respoce);
       if (respoce instanceof Array && respoce.length > 0) {
         this.itrStatus = respoce;
+        this.interestedClientsGridOption.api.setColumnDefs(this.createColoumnDef(this.itrStatus));
       }
       else {
         this.itrStatus = [];
@@ -114,6 +115,7 @@ export class InterestedClientsComponent implements OnInit {
   }
 
   serchByMobNo() {
+    this.selectedStatus = 0;
     if (this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
       this.selectedAgent = '';
       this.config.currentPage = 1;
@@ -125,7 +127,7 @@ export class InterestedClientsComponent implements OnInit {
     }
   }
 
-  createColoumnDef() {
+  createColoumnDef(itrStatus) {
     return [
       {
         headerName: 'User Id',
@@ -161,18 +163,26 @@ export class InterestedClientsComponent implements OnInit {
           debounceMs: 0
         }
       },
-      /*  {
-         headerName: 'Status',
-         field: 'statusId',
-         width: 120,
-         suppressMovable: true,
-         cellStyle: { textAlign: 'center' },
-         filter: "agTextColumnFilter",
-         filterParams: {
-           filterOptions: ["contains", "notContains"],
-           debounceMs: 0
-         }
-       }, */
+      {
+        headerName: 'Status',
+        field: 'statusId',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        valueGetter: function nameFromCode(params) {
+          if (itrStatus.length !== 0) {
+            const nameArray = itrStatus.filter(item => item.statusId === params.data.statusId);
+            return nameArray[0].statusName;
+          } else {
+            return params.data.statusId;
+          }
+        },
+      },
       {
         headerName: 'Service Type',
         field: 'serviceType',
@@ -339,8 +349,9 @@ export class InterestedClientsComponent implements OnInit {
     var param2;
     if (this.isAdmin) {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
-        param2 = `/call-management/customers?statusId=${this.selectedStatus}&customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
+        param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       } else {
+        this.searchMobNo = '';
         if (this.showAllUser) {
           param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15`;
         } else {
@@ -350,8 +361,9 @@ export class InterestedClientsComponent implements OnInit {
     }
     else {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
-        param2 = `/call-management/customers?statusId=${this.selectedStatus}&customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
+        param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
       } else {
+        this.searchMobNo = '';
         param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
       }
     }
@@ -361,12 +373,14 @@ export class InterestedClientsComponent implements OnInit {
       if (result['content'] instanceof Array && result['content'].length > 0) {
         this.interstedClientInfo = result['content'];
         this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interstedClientInfo));
+        this.interestedClientsGridOption.api.setColumnDefs(this.createColoumnDef(this.itrStatus));
         this.config.totalItems = result.totalElements;
       } else {
         this.interstedClientInfo = [];
         this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interstedClientInfo));
+        this.interestedClientsGridOption.api.setColumnDefs(this.createColoumnDef(this.itrStatus));
         this.config.totalItems = 0;
-        this.utilsService.showSnackBar('You dont have any calls today');
+        this.utilsService.showSnackBar('No records found');
       }
       this.loading = false;
     }, error => {
@@ -431,10 +445,10 @@ export class InterestedClientsComponent implements OnInit {
     }
   }
 
-  showUserDetail(user){
-    if(user.customerNumber){
+  showUserDetail(user) {
+    if (user.customerNumber) {
       let mobileNo = user.customerNumber;
-      this.route.navigate(['/pages/dashboard/quick-search'], {queryParams: {mobileNo: mobileNo}});
+      this.route.navigate(['/pages/dashboard/quick-search'], { queryParams: { mobileNo: mobileNo } });
     }
   }
 
