@@ -94,6 +94,8 @@ export class AddNewPlanComponent implements OnInit {
     console.log(today.getMonth(), '............', today.getFullYear());
     this.startYear.setValue(today.getFullYear().toString());
     this.startMonth.setValue(this.monthsMaster[today.getMonth()].value);
+
+    this.getSmeList();
   }
 
   getUserPlanInfo(id) {
@@ -223,15 +225,15 @@ export class AddNewPlanComponent implements OnInit {
       })
   }
 
-  getSmeList() {
-    let param = '/sme-details';
-    this.userService.getMethod(param).subscribe((res: any) => {
-      if (res && res instanceof Array)
-        this.smeList = res;
-    }, error => {
-      console.log('Error during getting all PromoCodes: ', error)
-    })
-  }
+  // getSmeList() {
+  //   let param = '/sme-details';
+  //   this.userService.getMethod(param).subscribe((res: any) => {
+  //     if (res && res instanceof Array)
+  //       this.smeList = res;
+  //   }, error => {
+  //     console.log('Error during getting all PromoCodes: ', error)
+  //   })
+  // }
 
   applySmeSelctedPlan(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
@@ -406,5 +408,9 @@ export class AddNewPlanComponent implements OnInit {
         this.filingCalendar = res.data.filingCalendar
       }
     });
+  }
+  
+  async getSmeList() {
+    this.smeList = await this.utilService.getStoredSmeList();
   }
 }

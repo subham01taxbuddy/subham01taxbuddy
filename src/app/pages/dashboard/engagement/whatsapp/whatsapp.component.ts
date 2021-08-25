@@ -7,6 +7,7 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { AddCallLogComponent } from 'app/shared/components/add-call-log/add-call-log.component';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
+import { AppConstants } from 'app/shared/constants';
 import { environment } from 'environments/environment';
 
 @Component({
@@ -20,18 +21,19 @@ export class WhatsappComponent implements OnInit {
   count = 0; // total elements
   pageSize = 20; // number of items in each page
   agentId = '';
-  agentList = [
-    { value: 'brij@ssbainnovations.com', label: 'Brij' },
-    { value: 'divya@ssbainnovations.com', label: 'Divya' },
-    { value: 'urmila@ssbainnovations.com', label: 'Urmila' },
-    { value: 'kavita@ssbainnovations.com', label: 'Kavita' },
-    { value: 'amrita@ssbainnovations.com', label: 'Amrita' },
-    { value: 'ankita@ssbainnovations.com', label: 'Ankita' },
-    { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
-    { value: 'damini@ssbainnovations.com', label: 'Damini' },
-    { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
-		{ value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
-  ];
+  // agentList = [
+  //   { value: 'brij@ssbainnovations.com', label: 'Brij' },
+  //   { value: 'divya@ssbainnovations.com', label: 'Divya' },
+  //   { value: 'urmila@ssbainnovations.com', label: 'Urmila' },
+  //   { value: 'kavita@ssbainnovations.com', label: 'Kavita' },
+  //   { value: 'amrita@ssbainnovations.com', label: 'Amrita' },
+  //   { value: 'ankita@ssbainnovations.com', label: 'Ankita' },
+  //   { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
+  //   { value: 'damini@ssbainnovations.com', label: 'Damini' },
+  //   { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
+	// 	{ value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
+  // ];
+  agentList: any = [];
   loading = false;
   config: any;
   whatsAppGridOptions: GridOptions;
@@ -53,16 +55,18 @@ export class WhatsappComponent implements OnInit {
     };
 
     this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
-    if (!environment.production) {
-      this.agentList = [
-        { value: 'ashish.hulwan@ssbainnovations.com', label: 'Ashish' },
-        { value: 'vaibhav.gaikwad@ssbainnovations.com', label: 'Vaibhav' },
-        { value: 'dev_kommunicate@ssbainnovations.com', label: 'Dev Komm' },
-        { value: 'barakha@ssbainnovations.com', label: 'Barakha' },
-        { value: 'karan@ssbainnovations.com', label: 'Karan' },
-        { value: 'testkommunicate@ssbainnovations.com', label: 'Ajay' }
-      ];
-    }
+    // if (!environment.production) {
+    //   this.agentList = [
+    //     { value: 'ashish.hulwan@ssbainnovations.com', label: 'Ashish' },
+    //     { value: 'vaibhav.gaikwad@ssbainnovations.com', label: 'Vaibhav' },
+    //     { value: 'dev_kommunicate@ssbainnovations.com', label: 'Dev Komm' },
+    //     { value: 'barakha@ssbainnovations.com', label: 'Barakha' },
+    //     { value: 'karan@ssbainnovations.com', label: 'Karan' },
+    //     { value: 'testkommunicate@ssbainnovations.com', label: 'Ajay' }
+    //   ];
+   // }
+
+   this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST))
   }
 
   ngOnInit() {
