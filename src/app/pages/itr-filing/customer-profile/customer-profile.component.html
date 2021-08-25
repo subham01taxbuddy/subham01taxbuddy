@@ -43,23 +43,7 @@
         <div class="content__container">
             <div class="card card_main">
                 <div class="card__title">Customer Profile</div>
-                <app-update-status [userId]="ITR_JSON.userId" (sendValue)="getStatusId($event)"></app-update-status>
-                <!-- <div class="card__row">
-                    <div class="card__col-xs-12 card__col-sm-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Filling Status</mat-label>
-                            <mat-select placeholder="Filling Status" name="fillingStatus" [formControl]="fillingStatus">
-                                <mat-option *ngFor="let status of fillingMasterStatus" [value]="status.statusId">
-                                    {{ status.statusName }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div>
-                        
-                        <button class="btn long-btn" style="border: none;" (click)="updateStatus()">Update</button>
-                    </div>
-                </div> -->
+                <!-- <app-update-status [userId]="ITR_JSON.userId" (sendValue)="getStatusId($event)"></app-update-status> -->
                 <hr>
                 <form [formGroup]="customerProfileForm">
                     <div class="card__row">
@@ -158,8 +142,7 @@
                                 <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip"
                                     matTooltipPosition="above" matInput [min]="minDate" [max]="maxDate"
                                     [matDatepicker]="picker" class="input-field" placeholder="Date of birth"
-                                    name="dateOfBirth" [formControl]="customerProfileForm.controls['dateOfBirth']"
-                                    required>
+                                    name="dateOfBirth" [formControl]="customerProfileForm.controls['dateOfBirth']">
                                 <mat-hint>Format: DD/MM/YYYY</mat-hint>
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
@@ -329,14 +312,14 @@
                     </div>
                     <div class="footer__buttons clearfix" style="margin-top: 40px;">
                         <button class="btn long-btn" style="border: none;" (click)="this.location.back()">Back</button>
-                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('SAVE')">Save
-                            Profile</button>
-                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('CONTINUE')">Continue
-                            Filing</button>
+                        <!-- <button class="btn long-btn" style="border: none;" (click)="saveProfile('SAVE')">Save
+                            Profile</button> -->
+                        <!--  <button class="btn long-btn" style="border: none;" (click)="saveProfile('CONTINUE')">Continue
+                            Filing</button> -->
                         <button class="btn long-btn" style="border: none;" (click)="saveProfile('MANUALLY')">Manually
                             Filed</button>
-                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT')">Direct
-                            Upload</button>
+                        <!-- <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT')">Direct
+                            Upload</button> -->
                     </div>
                 </form>
             </div>

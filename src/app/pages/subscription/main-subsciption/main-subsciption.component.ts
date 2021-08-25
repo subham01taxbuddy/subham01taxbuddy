@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, OnChanges } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -18,6 +18,7 @@ import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.compone
 export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   @Input('queryParam') queryParam: any;
   @Input('from') from: any;
+  @Output() sendTotalCount = new EventEmitter<any>();
   loading: boolean;
   subscriptionListGridOptions: GridOptions;
   subscription: any;
@@ -410,6 +411,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       if (response.content instanceof Array && response.content.length > 0) {
         this.subscriptionListGridOptions.api.setRowData(this.createRowData(response.content));
         this.config.totalItems = response.totalElements;
+
       } else {
         this.subscriptionListGridOptions.api.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
@@ -419,8 +421,10 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         }
         this.utilsService.showSnackBar(msg)
       }
+      this.sendTotalCount.emit(this.config.totalItems);
     },
       error => {
+        this.sendTotalCount.emit(0);
         this.loading = false;
         console.log('error during getting subscription info: ', error)
       })

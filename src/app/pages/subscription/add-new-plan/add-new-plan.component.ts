@@ -79,7 +79,7 @@ export class AddNewPlanComponent implements OnInit {
   { label: 'Dec', value: 11 }
   ];
 
-  constructor(private activatedRoute: ActivatedRoute, private itrService: ItrMsService, public utilService: UtilsService, private toastMessage: ToastMessageService,
+  constructor(private activatedRoute: ActivatedRoute, private itrService: ItrMsService, public utilsService: UtilsService, private toastMessage: ToastMessageService,
     private router: Router, private userService: UserMsService, public location: Location, private dialog: MatDialog,) {
   }
 
@@ -107,14 +107,14 @@ export class AddNewPlanComponent implements OnInit {
       this.loading = false;
       let myDate = new Date();
       console.log(myDate.getMonth(), myDate.getDate(), myDate.getFullYear())
-      if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
+      if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
         myDate.setDate(new Date().getDate() + this.userSubscription.smeSelectedPlan.validForDays - 1)
         this.maxEndDate = new Date(myDate);
         this.serviceType = this.userSubscription.smeSelectedPlan.servicesType;
         this.noOfMonths.setValue(Math.round(this.userSubscription.smeSelectedPlan.validForDays / 30));
         this.getAllPlanInfo(this.userSubscription.smeSelectedPlan.servicesType);
         console.log('this.maxEndDate:', this.maxEndDate);
-      } else if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
+      } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
         myDate.setDate(new Date().getDate() + this.userSubscription.userSelectedPlan.validForDays - 1)
         this.maxEndDate = new Date(myDate);
         this.serviceType = this.userSubscription.userSelectedPlan.servicesType;
@@ -124,13 +124,17 @@ export class AddNewPlanComponent implements OnInit {
       if (this.serviceType !== 'GST') {
         this.maxEndDate = new Date(myDate.getMonth() <= 2 ? myDate.getFullYear() : myDate.getFullYear() + 1, 2, 31);
       }
-      if (this.utilService.isNonEmpty(this.userSubscription.startDate)) {
+      if (this.utilsService.isNonEmpty(this.userSubscription.startDate)) {
         this.subStartDate.setValue(this.userSubscription.startDate);
       }
-      if (this.utilService.isNonEmpty(this.userSubscription.endDate)) {
+      if (this.utilsService.isNonEmpty(this.userSubscription.endDate)) {
         this.subEndDate.setValue(this.userSubscription.endDate);
       }
       this.subscriptionAssigneeId.setValue(this.userSubscription.subscriptionAssigneeId);
+      if (!this.utilsService.isNonEmpty(this.subscriptionAssigneeId.value)) {
+        const smeInfo = JSON.parse(localStorage.getItem('UMD'));
+        this.subscriptionAssigneeId.setValue(smeInfo.USER_UNIQUE_ID);
+      }
 
       this.setFinalPricing();
     },
@@ -160,9 +164,9 @@ export class AddNewPlanComponent implements OnInit {
       if (res && res.records instanceof Array) {
         this.selectedUserInfo = res.records[0];
         console.log('this.selectedUserInfo:', this.selectedUserInfo);
-        if (this.utilService.isNonEmpty(this.selectedUserInfo) && this.utilService.isNonEmpty(this.selectedUserInfo.gstDetails)) {
+        if (this.utilsService.isNonEmpty(this.selectedUserInfo) && this.utilsService.isNonEmpty(this.selectedUserInfo.gstDetails)) {
           this.gstType.setValue(this.selectedUserInfo.gstDetails.gstType)
-          if (this.utilService.isNonEmpty(this.selectedUserInfo.gstDetails.gstType) && this.selectedUserInfo.gstDetails.gstType === 'REGULAR') {
+          if (this.utilsService.isNonEmpty(this.selectedUserInfo.gstDetails.gstType) && this.selectedUserInfo.gstDetails.gstType === 'REGULAR') {
             this.frequency.setValue(this.selectedUserInfo.gstDetails.gstr1Type)
           } else {
             this.frequencyTypesMaster = [{ label: 'Quarterly', value: 'QUARTERLY' }];
@@ -178,19 +182,19 @@ export class AddNewPlanComponent implements OnInit {
 
   setFinalPricing() {
     this.selectedPromoCode = this.userSubscription.promoCode;
-    if (this.utilService.isNonEmpty(this.selectedPromoCode) && this.utilService.isNonEmpty(this.allPromoCodes)) {
+    if (this.utilsService.isNonEmpty(this.selectedPromoCode) && this.utilsService.isNonEmpty(this.allPromoCodes)) {
       this.showPromoCode(this.selectedPromoCode);
     }
-    if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
+    if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
       this.smeSelectedPlanId = this.userSubscription.smeSelectedPlan.planId;
     }
 
 
-    if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.promoApplied)) {
+    if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.promoApplied)) {
       Object.assign(this.finalPricing, this.userSubscription.promoApplied);
-    } else if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
+    } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
       Object.assign(this.finalPricing, this.userSubscription.smeSelectedPlan);
-    } else if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
+    } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
       Object.assign(this.finalPricing, this.userSubscription.userSelectedPlan)
     }
 
@@ -200,7 +204,7 @@ export class AddNewPlanComponent implements OnInit {
     this.itrService.getMethod(param).subscribe((plans: any) => {
       if (plans instanceof Array) {
         const activePlans = plans.filter(item => item.isActive === true);
-        if (this.utilService.isNonEmpty(serviceType))
+        if (this.utilsService.isNonEmpty(serviceType))
           this.allPlans = activePlans.filter(item => item.servicesType === serviceType);
         else
           this.allPlans = activePlans;
@@ -225,15 +229,9 @@ export class AddNewPlanComponent implements OnInit {
       })
   }
 
-  // getSmeList() {
-  //   let param = '/sme-details';
-  //   this.userService.getMethod(param).subscribe((res: any) => {
-  //     if (res && res instanceof Array)
-  //       this.smeList = res;
-  //   }, error => {
-  //     console.log('Error during getting all PromoCodes: ', error)
-  //   })
-  // }
+  async getSmeList() {
+    this.smeList = await this.utilsService.getStoredSmeList();
+  }
 
   applySmeSelctedPlan(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
@@ -249,7 +247,7 @@ export class AddNewPlanComponent implements OnInit {
     this.itrService.postMethod(param, request).subscribe((response: any) => {
       console.log('SME Selected plan:', response);
       this.userSubscription = response;
-      if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
+      if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
         this.maxEndDate.setDate(this.maxEndDate.getDate() + this.userSubscription.smeSelectedPlan.validForDays - 1)
       }
       this.setFinalPricing();
@@ -279,20 +277,20 @@ export class AddNewPlanComponent implements OnInit {
     }
     this.itrService.postMethod(param, request).subscribe((res: any) => {
       if (res['Error']) {
-        this.utilService.showSnackBar(res['Error']);
+        this.utilsService.showSnackBar(res['Error']);
         return;
       }
       this.userSubscription = res;
       this.setFinalPricing();
       console.log('PROMO code applied', res);
-      this.utilService.showSnackBar(`Promo Code ${this.selectedPromoCode} applied successfully!`);
+      this.utilsService.showSnackBar(`Promo Code ${this.selectedPromoCode} applied successfully!`);
     })
   }
 
   removePromoCode() {
     const param = `/subscription/remove-promocode?subscriptionId=${this.userSubscription.subscriptionId}`;
     this.itrService.deleteMethod(param).subscribe((res: any) => {
-      this.utilService.showSnackBar(`Promo Code ${this.selectedPromoCode} removed successfully!`);
+      this.utilsService.showSnackBar(`Promo Code ${this.selectedPromoCode} removed successfully!`);
       console.log('PROMO code removed', res);
       this.userSubscription = res;
       this.setFinalPricing();
@@ -301,9 +299,9 @@ export class AddNewPlanComponent implements OnInit {
   }
 
   getExactPromoDiscount() {
-    if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
+    if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
       return this.userSubscription.smeSelectedPlan.totalAmount - this.finalPricing['totalAmount'];
-    } else if (this.utilService.isNonEmpty(this.userSubscription) && this.utilService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
+    } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
       return this.userSubscription.userSelectedPlan.totalAmount - this.finalPricing['totalAmount'];
     } else {
       return 'NA'
@@ -316,7 +314,7 @@ export class AddNewPlanComponent implements OnInit {
     const param = "/subscription";
     this.itrService.putMethod(param, this.userSubscription).subscribe((response: any) => {
       console.log('Subscription Updated Successfully:', response);
-      this.utilService.showSnackBar('Subscription updated successfully!');
+      this.utilsService.showSnackBar('Subscription updated successfully!');
       if (value !== 'CLEAR_PLAN') {
         this.router.navigate(['/pages/subscription']);
       } else {
@@ -324,15 +322,15 @@ export class AddNewPlanComponent implements OnInit {
       }
       this.loading = false;
     }, error => {
-      this.utilService.showSnackBar('Failed to update subscription!');
+      this.utilsService.showSnackBar('Failed to update subscription!');
       this.loading = false;
       console.log('Subscription Updated error=>:', error);
     })
   }
 
   clearSmePlan() {
-    if (!this.utilService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
-      this.utilService.showSnackBar('User has not selected any plan, You can only change the plan and apply again you can not clear plan');
+    if (!this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
+      this.utilsService.showSnackBar('User has not selected any plan, You can only change the plan and apply again you can not clear plan');
       return;
     }
     this.userSubscription.smeSelectedPlan = null;
@@ -365,7 +363,7 @@ export class AddNewPlanComponent implements OnInit {
 
   selectionChangeGstType(gstType: String) {
     if (gstType === 'REGULAR') {
-      if (this.utilService.isNonEmpty(this.selectedUserInfo) && this.utilService.isNonEmpty(this.selectedUserInfo.gstDetails)) {
+      if (this.utilsService.isNonEmpty(this.selectedUserInfo) && this.utilsService.isNonEmpty(this.selectedUserInfo.gstDetails)) {
         this.frequency.setValue(this.selectedUserInfo.gstDetails.gstr1Type)
       }
       this.frequencyTypesMaster = [{ label: 'Monthly', value: 'MONTHLY' }, { label: 'Quarterly', value: 'QUARTERLY' }];
@@ -380,7 +378,7 @@ export class AddNewPlanComponent implements OnInit {
 
   generateFilingCalendar(mode) {
     if (this.serviceType === 'TPA' || this.serviceType === 'NOTICE') {
-      this.utilService.showSnackBar('We have not decided what will be calender structure in case of TPA and NOTICE.')
+      this.utilsService.showSnackBar('We have not decided what will be calender structure in case of TPA and NOTICE.')
       return;
     }
     let disposable = this.dialog.open(FilingCalendarComponent, {
@@ -403,14 +401,10 @@ export class AddNewPlanComponent implements OnInit {
 
     disposable.afterClosed().subscribe(res => {
       console.log('The dialog was closed');
-      if (res && this.utilService.isNonEmpty(res) && res.result === 'SUCCESS') {
+      if (res && this.utilsService.isNonEmpty(res) && res.result === 'SUCCESS') {
         console.log(res.data);
         this.filingCalendar = res.data.filingCalendar
       }
     });
-  }
-  
-  async getSmeList() {
-    this.smeList = await this.utilService.getStoredSmeList();
   }
 }

@@ -32,7 +32,10 @@ export class NewUserComponent implements OnInit {
   itrList: any = [];
 
   constructor(private userMsService: UserMsService, public utilService: UtilsService, private router: Router,
-    private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string, private toastMsgService: ToastMessageService) {
+    private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string,
+    private toastMsgService: ToastMessageService,
+    private activatedRoute: ActivatedRoute,
+  ) {
 
     this.openStatusClientsGridOption = <GridOptions>{
       rowData: [],
@@ -45,11 +48,11 @@ export class NewUserComponent implements OnInit {
 
     console.log(this.router.routerState.snapshot.url)
     let loadedUrl = this.router.routerState.snapshot.url;
-    if(loadedUrl.split('?').length > 1){
+    if (loadedUrl.split('?').length > 1) {
       let startPoint = (loadedUrl.split('?')[1]).indexOf('=');
       let endPoint = (loadedUrl.split('?')[1]).length;
-      let mobileNumber = (loadedUrl.split('?')[1]).substring(startPoint+1, endPoint);
-      console.log('mobileNumber: ',mobileNumber);
+      let mobileNumber = (loadedUrl.split('?')[1]).substring(startPoint + 1, endPoint);
+      console.log('mobileNumber: ', mobileNumber);
       this.advanceSearch(mobileNumber);
       this.mobileNo = mobileNumber;
     }
@@ -78,7 +81,15 @@ export class NewUserComponent implements OnInit {
     //   this.retrieveNewUsers(0);
     // }  
 
-    this.getItrList()
+    this.getItrList();
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      console.log("99999999999999999:", params)
+      this.mobileNo = params['mobileNo'];
+      if (this.utilService.isNonEmpty(this.mobileNo))
+        this.advanceSearch(this.mobileNo);
+    });
+
   }
 
   getItrList() {
@@ -98,10 +109,9 @@ export class NewUserComponent implements OnInit {
   }
 
   advanceSearch(mobileNo) {
-    if (this.utilService.isNonEmpty(mobileNo) && `${mobileNo}`.length === 10) {
+    if (this.utilService.isNonEmpty(mobileNo)) {
       this.getSearchInfo(mobileNo);
-    }
-    else {
+    } else {
       this.toastMsgService.alert("error", "Enter valid mobile number.")
     }
   }

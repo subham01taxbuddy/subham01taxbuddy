@@ -4,7 +4,7 @@
   <div class="card">
     <h1 style="font-size: 22px;"><b><u>Update Subscription: </u></b></h1><br><br>
 
-    <mat-card *ngIf="this.utilService.isNonEmpty(selectedUserInfo)">
+    <mat-card *ngIf="this.utilsService.isNonEmpty(selectedUserInfo)">
       <b style="font-size: 18px;">User Information: </b><br><br>
 
       <div class="card__row">
@@ -14,35 +14,35 @@
         </div>
         <div class="card__col-lg-4">
           <label style=" font-size: 15px;"><b>Email :</b></label> <span style="margin-left: 10px;"
-            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.emailAddress) ?
+            class="user-info">{{this.utilsService.isNonEmpty(selectedUserInfo.emailAddress) ?
             selectedUserInfo.emailAddress: 'NA' }}</span>
         </div>
         <div class="card__col-lg-4">
           <label style=" font-size: 15px;"><b>Mobile Number : </b></label> <span
-            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.mobileNumber) ?
+            class="user-info">{{this.utilsService.isNonEmpty(selectedUserInfo.mobileNumber) ?
             selectedUserInfo.mobileNumber: 'NA' }}</span>
         </div>
       </div>
       <div class="card__row">
         <div class="card__col-lg-4">
           <label style=" font-size: 15px;"><b>Birth Date :</b></label> <span style="margin-left: 10px;"
-            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.dateOfBirth) ?
+            class="user-info">{{this.utilsService.isNonEmpty(selectedUserInfo.dateOfBirth) ?
             (selectedUserInfo.dateOfBirth | date) : 'NA' }}</span>
         </div>
         <div class="card__col-lg-4">
           <label style=" font-size: 15px;"><b>Gender: </b></label> <span
-            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.gender) ? selectedUserInfo.gender: 'NA'
+            class="user-info">{{this.utilsService.isNonEmpty(selectedUserInfo.gender) ? selectedUserInfo.gender: 'NA'
             }}</span>
         </div>
         <div class="card__col-lg-4">
           <label style=" font-size: 15px;"><b>PAN :</b></label> <span style="margin-left: 40px;"
-            class="user-info">{{this.utilService.isNonEmpty(selectedUserInfo.panNumber) ? selectedUserInfo.panNumber:
+            class="user-info">{{this.utilsService.isNonEmpty(selectedUserInfo.panNumber) ? selectedUserInfo.panNumber:
             'NA' }}</span>
         </div>
       </div>
     </mat-card>
 
-    <mat-card *ngIf="!this.utilService.isNonEmpty(selectedUserInfo)">
+    <mat-card *ngIf="!this.utilsService.isNonEmpty(selectedUserInfo)">
       <p style="font-size: 15px; text-align: center; font-weight: 590;">Looks like user is not present in system
         please contact admin. </p><br>
     </mat-card><br>
@@ -65,7 +65,7 @@
               <span class="head">Total Amount:</span>
             </div>
             <div class="card__col-lg-7"
-              *ngIf="this.utilService.isNonEmpty(userSubscription) && this.utilService.isNonEmpty(userSubscription.userSelectedPlan)">
+              *ngIf="this.utilsService.isNonEmpty(userSubscription) && this.utilsService.isNonEmpty(userSubscription.userSelectedPlan)">
               <span class="head">{{userSubscription.userSelectedPlan.name}}</span><br>
               <span class="head">{{userSubscription.userSelectedPlan.validForDays}}</span><br>
               <span class="head">{{userSubscription.userSelectedPlan.basePrice | currency:'INR'}}</span><br>
@@ -100,7 +100,7 @@
               <button class="plan-btn" (click)="applySmeSelctedPlan(smeSelectedPlanId)">Apply</button> &nbsp;&nbsp;
 
               <button class="plan-btn" (click)="clearSmePlan()">Clear Plan</button>
-              <!--[disabled]="this.utilService.isNonEmpty(smeSelectedPlanId) ? false : true"  [class.disableBtn]="this.utilService.isNonEmpty(smeSelectedPlanId) ? false : true"-->
+              <!--[disabled]="this.utilsService.isNonEmpty(smeSelectedPlanId) ? false : true"  [class.disableBtn]="this.utilsService.isNonEmpty(smeSelectedPlanId) ? false : true"-->
             </div>
           </div>
           <span *ngIf="smeSelectedPlanId !== userSubscription?.smeSelectedPlan?.planId"><i><b>Note:</b> You have
@@ -119,7 +119,7 @@
               <span class="head">Total Amount:</span>
             </div>
             <div class="card__col-lg-7"
-              *ngIf="this.utilService.isNonEmpty(userSubscription) && this.utilService.isNonEmpty(userSubscription.smeSelectedPlan)">
+              *ngIf="this.utilsService.isNonEmpty(userSubscription) && this.utilsService.isNonEmpty(userSubscription.smeSelectedPlan)">
               <span class="head">{{userSubscription.smeSelectedPlan.name}}</span><br>
               <span class="head">{{userSubscription.smeSelectedPlan.validForDays}}</span><br>
               <span class="head">{{userSubscription.smeSelectedPlan.basePrice | currency:'INR'}}</span><br>
@@ -268,7 +268,7 @@
     </div>
     <div class="card__row" *ngIf="serviceType === 'GST'">
       <div class="card__col-lg-12">
-        <div class="promo" *ngIf="this.utilService.isNonEmpty(selectedUserInfo)">
+        <div class="promo" *ngIf="this.utilsService.isNonEmpty(selectedUserInfo)">
           <b style="font-size: 18px;">Filing Calender Details: </b><br>
           Note: In case of Composite delear we are only supporting quartely filing as return type CMP08, In case of
           regular delear we are
@@ -402,7 +402,7 @@
             </div>
           </div>
         </div>
-        <div class="promo" *ngIf="!this.utilService.isNonEmpty(selectedUserInfo)">
+        <div class="promo" *ngIf="!this.utilsService.isNonEmpty(selectedUserInfo)">
           <p style="font-size: 15px; text-align: center; font-weight: 590;">Looks like user is not present in system
             please contact admin. </p><br>
         </div>

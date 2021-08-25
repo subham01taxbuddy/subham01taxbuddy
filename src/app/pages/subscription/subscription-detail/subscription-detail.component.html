@@ -31,9 +31,11 @@
             'All Users'}} </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
         <label>Showing results for: {{this.utilsService.isNonEmpty(this.selectedUserName) ? selectedUserName :
             'All Users'}}</label>
-
+        <span style="float: right;"> Total Count: <b>{{totalCount}}</b></span>
+        <br>
         <div class="card__row">
-            <app-main-subsciption [queryParam]="queryParam" from="ALL_SUB"></app-main-subsciption>
+            <app-main-subsciption [queryParam]="queryParam" from="ALL_SUB" (sendTotalCount)="fromSubscription($event)">
+            </app-main-subsciption>
             <!---->
         </div>
     </div>

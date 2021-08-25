@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class MySubscriptionComponent implements OnInit {
 
   queryParam: string = "";
+  totalCount = 0;
   constructor() { }
 
   ngOnInit() {
@@ -15,4 +16,8 @@ export class MySubscriptionComponent implements OnInit {
     this.queryParam = `?subscriptionAssigneeId=${loggedInUser.USER_UNIQUE_ID}`;
   }
 
+  fromSubscription(event) {
+    this.totalCount = event;
+    console.log('My subscription total count', event)
+  }
 }

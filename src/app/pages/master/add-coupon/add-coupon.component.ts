@@ -29,34 +29,34 @@ export const MY_FORMATS = {
 export class AddCouponComponent implements OnInit {
 
   loading: boolean;
-  discountData: any = [{label: 'Amount', value: 'AMOUNT'}, {label: 'Percentage', value: 'PERCENTAGE'}];
+  discountData: any = [{ label: 'Amount', value: 'AMOUNT' }, { label: 'Percentage', value: 'PERCENTAGE' }];
   couponForm: FormGroup;
   minEndDate: any = new Date();
 
   constructor(public dialogRef: MatDialogRef<AddCouponComponent>, private _toastMessageService: ToastMessageService,
-              @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder, private itrService: ItrMsService) { }
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder, private itrService: ItrMsService) { }
 
   ngOnInit() {
     this.couponForm = this.fb.group({
-      code : ['', Validators.required],
-      title :['', Validators.required],
-      description : [''],
-      startDate : ['', Validators.required],
-      endDate : ['', Validators.required],
-      discountType : ['', Validators.required],
-      discountAmount : [''],
-      discountPercent : [''],
-      minOrderAmount : [''],
-      maxDiscountAmount : [''],
-      usedCount : [0],
-      deactivationReason : [''],
-      active : [true]
+      code: ['', Validators.required],
+      title: ['', Validators.required],
+      description: [''],
+      startDate: [new Date(), Validators.required],
+      endDate: ['2022-03-31', Validators.required],
+      discountType: ['', Validators.required],
+      discountAmount: [''],
+      discountPercent: [''],
+      minOrderAmount: [''],
+      maxDiscountAmount: [''],
+      usedCount: [0],
+      deactivationReason: [''],
+      active: [true]
     })
   }
 
-  setValidation(typeVal){
-    console.log('selec val: ',typeVal.value);
-    if(typeVal.value === 'PERCENTAGE'){
+  setValidation(typeVal) {
+    console.log('selec val: ', typeVal.value);
+    if (typeVal.value === 'PERCENTAGE') {
       this.couponForm.controls.discountPercent.setValidators([Validators.required]);
       this.couponForm.controls.maxDiscountAmount.setValidators([Validators.required]);
       this.couponForm.controls.discountPercent.updateValueAndValidity();
@@ -69,7 +69,7 @@ export class AddCouponComponent implements OnInit {
       this.couponForm.controls.discountAmount.updateValueAndValidity();
       this.couponForm.controls.minOrderAmount.updateValueAndValidity();
     }
-    else{
+    else {
       this.couponForm.controls.discountAmount.setValidators([Validators.required]);
       this.couponForm.controls.minOrderAmount.setValidators([Validators.required]);
       this.couponForm.controls.discountAmount.updateValueAndValidity();
@@ -84,31 +84,31 @@ export class AddCouponComponent implements OnInit {
     }
   }
 
-  setEndDateValidate(startDateVal){
-    console.log('startDateVal: ',startDateVal);
+  setEndDateValidate(startDateVal) {
+    console.log('startDateVal: ', startDateVal);
     this.minEndDate = startDateVal;
   }
 
-  addCoupon(){
-    if(this.couponForm.valid){
-        console.log('couponForm val: ',this.couponForm.value);
-        this.loading = true;
-        let param = '/promocodes';
-        let param2 = this.couponForm.getRawValue();
-        this.itrService.postMethod(param, param2).subscribe((res: any) =>{
-          console.log('Coupon added responce: ', res);
-          this.loading = false;
-          if(res.hasOwnProperty('response')){
-            this._toastMessageService.alert("success", res.response)
-          }
-          else{
-            this._toastMessageService.alert("success", "Coupon added successfully.")
-          }
-          setTimeout(() => {
-            this.dialogRef.close({ event: 'close', data: 'couponAdded'})
-          }, 3000)
-        },
-        error =>{
+  addCoupon() {
+    if (this.couponForm.valid) {
+      console.log('couponForm val: ', this.couponForm.value);
+      this.loading = true;
+      let param = '/promocodes';
+      let param2 = this.couponForm.getRawValue();
+      this.itrService.postMethod(param, param2).subscribe((res: any) => {
+        console.log('Coupon added responce: ', res);
+        this.loading = false;
+        if (res.hasOwnProperty('response')) {
+          this._toastMessageService.alert("success", res.response)
+        }
+        else {
+          this._toastMessageService.alert("success", "Coupon added successfully.")
+        }
+        setTimeout(() => {
+          this.dialogRef.close({ event: 'close', data: 'couponAdded' })
+        }, 3000)
+      },
+        error => {
           this.loading = false;
           console.log('Error during adding new coupon: ', error);
           this._toastMessageService.alert("error", "There is issue to generate coupon.")

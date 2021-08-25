@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { GridOptions } from 'ag-grid-community';
 import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
 import { AppConstants } from 'app/shared/constants';
 import { UpdateAgentDialogComponent } from './update-agent-dialog/update-agent-dialog.component';
 
@@ -17,8 +16,7 @@ export class AgentMgntComponent implements OnInit {
   agentList: any = [];
   agentMgntGridOption: GridOptions;
 
-  constructor(private dialog: MatDialog, private userMsService: UserMsService,
-    public utilsService: UtilsService) {
+  constructor(private dialog: MatDialog, private userMsService: UserMsService) {
     this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
 
     this.agentMgntGridOption = <GridOptions>{
@@ -32,11 +30,22 @@ export class AgentMgntComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getAgentList()
+    this.getAgentInfo()
   }
 
-  async getAgentList(refresh?) {
-    this.agentList = await this.utilsService.getStoredAgentList(refresh);
+  getAgentInfo() {
+    this.loading = true;
+    let param = '/agent-details';
+    this.userMsService.getMethod(param).subscribe((res: any) => {
+      this.loading = false;
+      if (res && res instanceof Array) {
+        this.agentMgntGridOption.api.setRowData(this.agentRowData(res));
+        sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res));
+      }
+    }, error => {
+      this.loading = false;
+      console.log('Error during getting all AGENT_LIST: ', error)
+    })
   }
 
   agentRowData(data) {
@@ -210,7 +219,7 @@ export class AgentMgntComponent implements OnInit {
       console.log('The dialog was closed');
       if (result) {
         if (result.data === 'Agent Added' || result.data === 'Agent Update') {
-          this.getAgentList('REFRESH');
+          this.getAgentInfo();
         }
       }
     });

@@ -47,7 +47,7 @@ export class TodaysCallsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    this.getAgentList();
     // var userInfo = JSON.parse(localStorage.getItem('UMD'));
     // if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
     //   this.isAdmin = true;
@@ -62,6 +62,9 @@ export class TodaysCallsComponent implements OnInit {
     this.getStatus();
   }
 
+  async getAgentList() {
+    this.agentList = await this.utilsService.getStoredAgentList();
+  }
   getStatus() {
     let param = '/itr-status-master/source/BACK_OFFICE';
     this.userMsService.getMethod(param).subscribe(respoce => {
@@ -521,7 +524,7 @@ export class TodaysCallsComponent implements OnInit {
         window.open(responce.data.chatLink)
       }
       else {
-        this.toastMsgService.alert('error', responce.message)
+        this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
       }
     },
       error => {
