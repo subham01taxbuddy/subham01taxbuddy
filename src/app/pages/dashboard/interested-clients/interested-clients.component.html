@@ -42,78 +42,12 @@
                         class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
             </div>
 
-            <!--  <div class="filter__col card__col-sm-2 card__col-xs-12">
-                <a class="btn btn_stroke filter__add-link" style="margin: 7px 5px;" (click)="showCallersAll()">Show
-                    All</a>
-            </div> -->
-
-            <!-- <div class="card__col-md-3 card__col-xs-12 pull-right"></div> -->
-            <span class="count-msg"><b>Total number of clients: {{this.config.totalItems}}</b></span>
         </div>
 
         Total Count: <b>{{config.totalItems}}</b>
         <br>
         <div class="card__row" style="margin-top: 0px;">
             <div class="tab-panel items-tab card__col-xs-12">
-
-                <!-- <div class="tab-panel__content tab-panel__content_visible">
-                    <div class="table product__table">
-                        <div class="table__row  table__row_header ">
-                            <div class="table__cell product-row__cell-unit flex-10">
-                                <a class="table__sort-link">Client Name</a>
-                            </div>
-                            <div class="table__cell product-row__cell-unit flex-10">
-                                <a class="table__sort-link">Client Mobile</a>
-                            </div>
-                            <div class="table__cell product-row__cell-unit flex-50">
-                                <a class="table__sort-link">Last Call details</a>
-                            </div>
-                            <div class="table__cell product-row__cell-unit flex-10">
-                                <a class="table__sort-link">Called By</a>
-                            </div>
-                            <div class="table__cell product-row__cell-unit flex-10">
-                                <a class="table__sort-link">Called At</a>
-                            </div>
-
-                            <div class="table__cell product-row__cell-unit flex-10">
-                                <a class="table__sort-link">Action</a>
-                            </div>
-                        </div>
-
-
-                        <div *ngFor="let item of interestedClients; let p=index">
-                            <div class="table__row-item product-row" [class.table__row-disabled]="false">
-                                <div class="table__row product-row__main-variant">
-                                    <div class="table__cell product-row__cell-stock flex-10">
-                                        {{item.userName}}
-                                    </div>
-                                    <div class="table__cell product-row__cell-stock flex-10">
-                                        {{item.userMobile}}
-                                    </div>
-                                    <div class="table__cell product-row__cell-stock flex-50">
-                                        {{item.description}}
-                                    </div>
-                                    <div class="table__cell product-row__cell-stock flex-10">
-                                        {{item.createdByName}}
-                                    </div>
-                                    <div class="table__cell product-row__cell-stock flex-10">
-                                        {{item.createdDate | date :'dd MMM yyyy, hh:mm a'}}
-                                    </div>
-
-                                    <div class="table__cell product-row__cell-stock flex-10">
-                                        <button style="border: none; cursor: pointer;background: transparent;"
-                                            (click)="showNotes(item)" title="Click see/add notes"><i class="fa fa-book"
-                                                style="font-size: 18px;"></i></button>
-                                        | <button style="border: none; cursor: pointer;background: transparent;"
-                                            (click)="addCallLogs(item)" title="Add call logs"><i class="fa fa-phone"
-                                                style="font-size: 18px;"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-
                 <div class="card__row">
                     <table>
                         <tr *ngFor="let item of interstedClientInfo | paginate:config"></tr>
@@ -125,10 +59,6 @@
 
                     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
                 </div>
-
-
-                <!-- <p style="text-align: center; font-size: 15px; margin-top: 20px" *ngIf="interestedClients.length === 0"><b>No data available.</b></p> -->
-
             </div>
         </div>
     </div>
