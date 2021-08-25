@@ -10,6 +10,7 @@ export class ApiEndpoints {
     };
     public static userMs = {
         smeDetails: 'sme-details',
+        agentDetails: 'agent-details',
 
     };
 }

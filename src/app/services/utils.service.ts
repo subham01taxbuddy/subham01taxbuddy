@@ -366,7 +366,7 @@ export class UtilsService {
     async getStoredFyList() {
         const fyList = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST));
         console.log('fyList', fyList);
-        if (this.isNonEmpty(fyList) && fyList instanceof Array) {
+        if (this.isNonEmpty(fyList) && fyList instanceof Array && fyList.length > 0) {
             return fyList;
         } else {
             let res: any = await this.getFyList().catch(error => {
@@ -390,7 +390,7 @@ export class UtilsService {
     async getStoredSmeList() {
         const smeList = JSON.parse(sessionStorage.getItem(AppConstants.SME_LIST));
         // console.log('fyList', fyList);
-        if (this.isNonEmpty(smeList) && smeList instanceof Array) {
+        if (this.isNonEmpty(smeList) && smeList instanceof Array && smeList.length > 0) {
             return smeList;
         } else {
             let res: any = await this.getSmeList().catch(error => {
@@ -408,6 +408,32 @@ export class UtilsService {
     }
     async getSmeList() {
         const param = `/${ApiEndpoints.userMs.smeDetails}`;
+        return await this.userMsService.getMethod(param).toPromise();
+    }
+
+    async getStoredAgentList(action?) {
+        let agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+        if (action === 'REFRESH') {
+            agentList = [];
+        }
+        if (this.isNonEmpty(agentList) && agentList instanceof Array && agentList.length > 0) {
+            return agentList;
+        } else {
+            let res: any = await this.getAgentList().catch(error => {
+                this.loading = false;
+                console.log(error);
+                this.showSnackBar('Error While getting SME list.');
+                return [];
+            });
+            if (res && res instanceof Array) {
+                res.sort((a, b) => a.name > b.name ? 1 : -1)
+                sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res));
+                return res;
+            }
+        }
+    }
+    async getAgentList() {
+        const param = `/${ApiEndpoints.userMs.agentDetails}`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 }

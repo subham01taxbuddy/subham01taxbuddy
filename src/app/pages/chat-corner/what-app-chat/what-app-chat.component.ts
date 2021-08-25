@@ -48,8 +48,8 @@ export class WhatAppChatComponent implements OnInit {
   showChatUi: boolean = false;
   selectedAgent: any = '';
 
-  agentList : any = [];
-  
+  agentList: any = [];
+
   // [
   //   { value: 'brij@ssbainnovations.com', label: 'Brij' },
   //   { value: 'divya@ssbainnovations.com', label: 'Divya' },
@@ -60,52 +60,55 @@ export class WhatAppChatComponent implements OnInit {
   //   { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
   //   { value: 'damini@ssbainnovations.com', label: 'Damini' },
   //   { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
-	// 	{ value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
+  // 	{ value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
   // ];
 
-  quicjReplay = [{label:'any one', value: 'Please select any one of the options from "Select Other Plan" OR "I Agree with this Plan" to proceed further.'},
-      {label:'documents complete', value: 'Thank you for submitting your documents. Our tax expert will analyze and keep you updated with the filing process.'},
-      {label:'form 26as', value: 'Please upload your *Form 26AS* using the attachment icon\n\
+  quicjReplay = [{ label: 'any one', value: 'Please select any one of the options from "Select Other Plan" OR "I Agree with this Plan" to proceed further.' },
+  { label: 'documents complete', value: 'Thank you for submitting your documents. Our tax expert will analyze and keep you updated with the filing process.' },
+  {
+    label: 'form 26as', value: 'Please upload your *Form 26AS* using the attachment icon\n\
       Note- How to download Form 26AS?\n\
       Step 1: Go to: https://www.incometaxindiaefiling.gov.in \n\
       Step 2: Login > My Account > View Form 26 AS (Tax Credit)\n\
       Step 3: Assessment Year and View Type (HTML or Text)\n\
       Step 4: Click on view/Download'},
-      {label:'bank e-verifications', value: '1. Get on to the e filing website- https://portal.incometaxindiaefiling.gov.in/e-Filing/UserLogin/LoginHome.html?lang=eng\n\
+  {
+    label: 'bank e-verifications', value: '1. Get on to the e filing website- https://portal.incometaxindiaefiling.gov.in/e-Filing/UserLogin/LoginHome.html?lang=eng\n\
       2. Login to your account\n\
       3. Go into my profile - prevalidate account'},
-      {label:'invoice', value: 'You must have received Invoice through email and Whatsapp- use the given link to pay'},
-      {label:'payment steps', value: 'Go to https://www.tin-nsdl.com/services/oltas/oltas-index.html\n\
+  { label: 'invoice', value: 'You must have received Invoice through email and Whatsapp- use the given link to pay' },
+  {
+    label: 'payment steps', value: 'Go to https://www.tin-nsdl.com/services/oltas/oltas-index.html\n\
       then in Quick Links option (left Hand side)- Services\n\
       E-payment : Pay Taxes Online\n\
       then NON-TDS/TCS--> CHALLAN NO./ITNS 280\n\
       0021- INCOME TAX\n\
       300- SELF ASSESSTMENT TAX\n\
       ASSESSMENT YEAR- 2020-21'},
-      {label:'login credentials', value: 'Please share Income Tax Login Credentials.'},
-      {label:'bank', value: 'Please share Bank Account Number and IFSC Code.'},
-      {label:'app review', value: 'Please share a review on Play Store here\n\ https://onelink.to/taxbuddy\n\ Please share a review on google here\n\ https://g.page/TaxBuddy/review '},
+  { label: 'login credentials', value: 'Please share Income Tax Login Credentials.' },
+  { label: 'bank', value: 'Please share Bank Account Number and IFSC Code.' },
+  { label: 'app review', value: 'Please share a review on Play Store here\n\ https://onelink.to/taxbuddy\n\ Please share a review on google here\n\ https://g.page/TaxBuddy/review ' },
 
-      {label:'i agree', value: 'Please click on "I Agree with this Plan Button" to proceed further'},
-      {label:'tpa', value: 'Sir you can do your tax planning using our Tax Planning Tool, here you have to enter some details about your income and it will suggest you the best option to save your taxes - https://tpa.taxbuddy.com/login.'},
-      {label:'low refund', value: ' Based on your details provided to us of Income & investments we have prepared the tax computation & found that the refund is not as much as you expected. Plz let us know if you need any other assistance. Thanks'},
-      {label:'not relevant', value: 'We are providing income tax filing and tax compliance-related services, if you need any assistance regarding this, please let us know. Thanks'},
-      {label:'high prices', value: "Thank you very much for your time. According to you, our ITR filing charges are high but I assured you these are the reasonable cost as you can avail our hassle-free online service with assisted mode for filing returns with complimentary services of next year's tax planning and notice management. Let us know if you need any assistance in the future. Thanks"},
-      {label:'not interested', value: 'Thank you very much for your time, please feel free to contact us if you need any assistance related to tax compliance in the future.'},
-      {label:'not responded', value: "I tried calling your number but couldn't reach you, please revert here so that we shall initiate the filing process. Thanks"},
-      {label:'return filed', value: 'Congratulations! Your Income tax return has been filed successfully. You must have received the ITR acknowledgment on your email-id. if any further assistance is required then please let us know. Thanks'},
-      {label:'start', value: 'Kindly click on Start ITR filing button to initiate the process'},
-      {label:'upload docs', value: 'Please upload the documents so that we can process further.'},
-      {label:'select  income', value: 'Please select any one of the Income Sources so that we can process further.'},
-      {label:'help', value: ' If you have any query please call back us on '},
-      {label:'how', value: 'How may I assist you?'},
-    ]
+  { label: 'i agree', value: 'Please click on "I Agree with this Plan Button" to proceed further' },
+  { label: 'tpa', value: 'Sir you can do your tax planning using our Tax Planning Tool, here you have to enter some details about your income and it will suggest you the best option to save your taxes - https://tpa.taxbuddy.com/login.' },
+  { label: 'low refund', value: ' Based on your details provided to us of Income & investments we have prepared the tax computation & found that the refund is not as much as you expected. Plz let us know if you need any other assistance. Thanks' },
+  { label: 'not relevant', value: 'We are providing income tax filing and tax compliance-related services, if you need any assistance regarding this, please let us know. Thanks' },
+  { label: 'high prices', value: "Thank you very much for your time. According to you, our ITR filing charges are high but I assured you these are the reasonable cost as you can avail our hassle-free online service with assisted mode for filing returns with complimentary services of next year's tax planning and notice management. Let us know if you need any assistance in the future. Thanks" },
+  { label: 'not interested', value: 'Thank you very much for your time, please feel free to contact us if you need any assistance related to tax compliance in the future.' },
+  { label: 'not responded', value: "I tried calling your number but couldn't reach you, please revert here so that we shall initiate the filing process. Thanks" },
+  { label: 'return filed', value: 'Congratulations! Your Income tax return has been filed successfully. You must have received the ITR acknowledgment on your email-id. if any further assistance is required then please let us know. Thanks' },
+  { label: 'start', value: 'Kindly click on Start ITR filing button to initiate the process' },
+  { label: 'upload docs', value: 'Please upload the documents so that we can process further.' },
+  { label: 'select  income', value: 'Please select any one of the Income Sources so that we can process further.' },
+  { label: 'help', value: ' If you have any query please call back us on ' },
+  { label: 'how', value: 'How may I assist you?' },
+  ]
   constructor(
     private _el: ElementRef,
     private fb: FormBuilder,
     private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
-    public utileService: UtilsService,
+    public utilsService: UtilsService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {
@@ -127,18 +130,17 @@ export class WhatAppChatComponent implements OnInit {
     }, 5000);
 
     var agentId = localStorage.getItem('selectedAgentId');
-    if(this.utileService.isNonEmpty(agentId)){
+    if (this.utilsService.isNonEmpty(agentId)) {
       this.selectedAgent = agentId;
     }
-    else{
+    else {
       this.selectedAgent = '';
     }
-
-    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
-
   }
 
   ngOnInit() {
+    this.getAgentList();
+
     const temp = this.activatedRoute.params.subscribe(params => {
       console.log("99999999999999999:", params)
       this.geUserChatDetail(params['no']);
@@ -154,16 +156,18 @@ export class WhatAppChatComponent implements OnInit {
     this.getTemplateInfo();
 
     this.activatedRoute.queryParams.subscribe((params: Params) => {
-      if (this.utileService.isNonEmpty(params['contact'])) {
+      if (this.utilsService.isNonEmpty(params['contact'])) {
         this.geUserChatDetail(params['contact'])
       }
     })
   }
-
-  getUnreadListByAgentId(agentId){
+  async getAgentList() {
+    this.agentList = await this.utilsService.getStoredAgentList();
+  }
+  getUnreadListByAgentId(agentId) {
     this.showChatUi = true;
     this.selectedAgent = agentId;
-    this.utileService.sendMessage(agentId);
+    this.utilsService.sendMessage(agentId);
   }
 
   ngOnDestroy() {
@@ -209,7 +213,7 @@ export class WhatAppChatComponent implements OnInit {
 
   getChatInfoByMobNo() {
     console.log('this.searchNumber: ', this.searchNumber)
-    if (this.utileService.isNonEmpty(this.searchNumber.value) && this.searchNumber.valid) {
+    if (this.utilsService.isNonEmpty(this.searchNumber.value) && this.searchNumber.valid) {
       this.loading = true;
       let param = '/whatsapp/chat/' + this.searchNumber.value;
       this.userService.getUserDetail(param).subscribe((res) => {
@@ -230,7 +234,6 @@ export class WhatAppChatComponent implements OnInit {
 
   updatedChat: any;
   getRandomUserDetail() {
-    debugger;
     let latestMsgTime = this.filteredArray[0].lastMessageDateTime;
     console.log("latestMsgTime: ", latestMsgTime, this.filteredArray[0]);
     let param = "/whatsapp/latest-user-detail?dateLong=" + latestMsgTime;
@@ -311,110 +314,109 @@ export class WhatAppChatComponent implements OnInit {
     //   this.loading = false;
     // }
 
-    if(key === "continuesCall"){
-      console.log('user chat data: ',this.userchatData, this.userchatData.length)
-      if(this.userchatData.length > 0){
-          debugger
-          this.selectdMobNum = user;
-          //this.selectedUser = '';
-          //this.serviceAvailedInfo = '';
-          let lastIndex = this.userchatData.length - 1;
-          let lastMsgTime = this.userchatData[lastIndex].dateLong;
-         let param = "/whatsapp/latest?dateLong="+lastMsgTime+"&whatsAppNumber="+this.selectdMobNum;
-          this.userService.getUserDetail(param).subscribe(
-            (res: any) => {
-                var latestChat = res;
-                console.log('Continues chat responce: ',latestChat)
-                if(latestChat.length > 0){
-                  for(let i=0; i< latestChat.length; i++){
-                    this.userchatData.push(latestChat[i]);
-                  } 
-                }
-            },
-            error=>{
-              console.log('Error during continues api call: ',error)
-        });
+    if (key === "continuesCall") {
+      console.log('user chat data: ', this.userchatData, this.userchatData.length)
+      if (this.userchatData.length > 0) {
+        this.selectdMobNum = user;
+        //this.selectedUser = '';
+        //this.serviceAvailedInfo = '';
+        let lastIndex = this.userchatData.length - 1;
+        let lastMsgTime = this.userchatData[lastIndex].dateLong;
+        let param = "/whatsapp/latest?dateLong=" + lastMsgTime + "&whatsAppNumber=" + this.selectdMobNum;
+        this.userService.getUserDetail(param).subscribe(
+          (res: any) => {
+            var latestChat = res;
+            console.log('Continues chat responce: ', latestChat)
+            if (latestChat.length > 0) {
+              for (let i = 0; i < latestChat.length; i++) {
+                this.userchatData.push(latestChat[i]);
+              }
+            }
+          },
+          error => {
+            console.log('Error during continues api call: ', error)
+          });
       }
     }
-    else{
+    else {
       this.showChatUi = true;
-        if (user === 'bySearch') {
-          if (this.utileService.isNonEmpty(this.searchNumber.value) && this.searchNumber.valid) {
-            user = '91' + this.searchNumber.value;
+      if (user === 'bySearch') {
+        if (this.utilsService.isNonEmpty(this.searchNumber.value) && this.searchNumber.valid) {
+          user = '91' + this.searchNumber.value;
+        }
+        else {
+          this._toastMessageService.alert("error", "Enter valid mobile number.");
+        }
+      }
+
+      this.loading = true;
+      this.selectdMobNum = user;
+      this.selectedUser = '';
+      this.serviceAvailedInfo = '';
+      console.log("Here we getting selected user chat details");
+      let mNO = 918299224792  //919545428497
+      let param = "/whatsapp/chat/" + user;
+      this.userService.getUserDetail(param).subscribe(
+        (res) => {
+
+          console.log(res, typeof res);
+          console.log('CHECK', res.hasOwnProperty('userInfo'))
+          this.startConversation = false;
+
+          if (res.hasOwnProperty('userInfo')) {
+            this.getServicesAvailed(res['userInfo'].userId);
+            this.selectedUser = res['userInfo'];
+            this.timeExpired = false;
+            this.countDown = 0;
+            this.getTiemCount(res['chat']);
+            this.userchatData = res['chat'];
+            this.loading = false;
           }
           else {
-            this._toastMessageService.alert("error", "Enter valid mobile number.");
-          }
-        }
-    
-        this.loading = true;
-        this.selectdMobNum = user;
-        this.selectedUser = '';
-        this.serviceAvailedInfo = '';
-        console.log("Here we getting selected user chat details");
-        let mNO = 918299224792  //919545428497
-        let param = "/whatsapp/chat/" + user;
-        this.userService.getUserDetail(param).subscribe(
-          (res) => {
-    
-            console.log(res, typeof res);
-            console.log('CHECK', res.hasOwnProperty('userInfo'))
-            this.startConversation = false;
-    
-            if (res.hasOwnProperty('userInfo')) {
-              this.getServicesAvailed(res['userInfo'].userId);
-              this.selectedUser = res['userInfo'];
-              this.timeExpired = false;
-              this.countDown = 0;
-              this.getTiemCount(res['chat']);
-              this.userchatData = res['chat'];
-              this.loading = false;
-            }
-            else {
-              this.timeExpired = false;
-              this.countDown = 0;
-              this.getTiemCount(res['chat']);
-              this.userchatData = res['chat'];
-              this.loading = false;
-            }
-    
-    
-            // if (Object.entries(res).length > 0) {
-            //   this.loading = false;
-    
-            //   if (this.backUpChatData) {
-            //     console.log("checkFetchInfoSame ", this.checkFetchInfoSame(res));
-            //     if (this.checkFetchInfoSame(res)) {
-            //       this.getTiemCount(res);
-            //     } else {
-            //       this.userchatData = res;
-            //       this.backUpChatData = this.userchatData;
-            //       this.getUserNotify("not-continues");
-            //       this.getTiemCount(res);
-            //     }
-            //   } else {
-            //     this.userchatData = res;
-            //     this.backUpChatData = this.userchatData;
-            //     this.getUserNotify("not-continues");
-            //     this.getTiemCount(res); //Show Timer Counter
-            //   }
-            // } else {
-            //   if (apicall !== "continues") {
-            //     this.loading = false;
-            //     this.userchatData = [];
-            //     this._toastMessageService.alert("error", "There is no chat data.");
-            //   } else {
-            //   }
-            // }
-          },
-          (error) => {
+            this.timeExpired = false;
+            this.countDown = 0;
+            this.getTiemCount(res['chat']);
+            this.userchatData = res['chat'];
             this.loading = false;
-            this._toastMessageService.alert("error", "Failed to fetch chat data.");
           }
-        );
+
+
+          // if (Object.entries(res).length > 0) {
+          //   this.loading = false;
+
+          //   if (this.backUpChatData) {
+          //     console.log("checkFetchInfoSame ", this.checkFetchInfoSame(res));
+          //     if (this.checkFetchInfoSame(res)) {
+          //       this.getTiemCount(res);
+          //     } else {
+          //       this.userchatData = res;
+          //       this.backUpChatData = this.userchatData;
+          //       this.getUserNotify("not-continues");
+          //       this.getTiemCount(res);
+          //     }
+          //   } else {
+          //     this.userchatData = res;
+          //     this.backUpChatData = this.userchatData;
+          //     this.getUserNotify("not-continues");
+          //     this.getTiemCount(res); //Show Timer Counter
+          //   }
+          // } else {
+          //   if (apicall !== "continues") {
+          //     this.loading = false;
+          //     this.userchatData = [];
+          //     this._toastMessageService.alert("error", "There is no chat data.");
+          //   } else {
+          //   }
+          // }
+        },
+        (error) => {
+          this.loading = false;
+          this._toastMessageService.alert("error", "Failed to fetch chat data.");
+        }
+      );
     }
 
-    
+
   }
 
   checkFetchInfoSame(fetchedInfo) {
@@ -426,17 +428,15 @@ export class WhatAppChatComponent implements OnInit {
   }
 
   sendMsg() {
-    debugger
     if (
       this.whatsAppForm.controls["sentMessage"].value &&
       !this.whatsAppForm.controls["selectTemplate"].value
     ) {
-      debugger
-      let mobileNo = this.utileService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : '91'+this.searchNumber.value;
+      let mobileNo = this.utilsService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : '91' + this.searchNumber.value;
       let sendMsg = this.whatsAppForm.controls["sentMessage"].value;
-      console.log('Before sendMsg: ',sendMsg, typeof sendMsg);
+      console.log('Before sendMsg: ', sendMsg, typeof sendMsg);
       sendMsg = sendMsg.replace(/"/g, '\\"');
-      console.log('After sendMsg: ',sendMsg)
+      console.log('After sendMsg: ', sendMsg)
 
       let body = {
         textMessage: this.whatsAppForm.controls["sentMessage"].value.replace(/"/g, '\\"'), //toUTF8String
@@ -483,28 +483,28 @@ export class WhatAppChatComponent implements OnInit {
         console.log("Selected Template Info: ", templateMsgInfo);
         const templateData = new FormData();
         if (templateMsgInfo.mediaId === null) {
-            templateData.append("whatsAppNumber", this.utileService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : '91'+this.searchNumber.value);
-            templateData.append("templateName", templateMsgInfo.templateName);
-            templateData.append("attributes", this.newAttributes);
-            templateData.append("templateMessage", this.whatsAppForm.controls["sentMessage"].value);
-            templateData.append("source", 'BO');
+          templateData.append("whatsAppNumber", this.utilsService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : '91' + this.searchNumber.value);
+          templateData.append("templateName", templateMsgInfo.templateName);
+          templateData.append("attributes", this.newAttributes);
+          templateData.append("templateMessage", this.whatsAppForm.controls["sentMessage"].value);
+          templateData.append("source", 'BO');
           // body = {
-            // whatsAppNumber: this.selectedUser.whatsAppNumber,
-            // templateName: templateMsgInfo.templateName,
-            // attributes: this.newAttributes, //this.tempArrributes
-            // templateMessage: this.whatsAppForm.controls["sentMessage"].value,
-            // source: 'BO'
+          // whatsAppNumber: this.selectedUser.whatsAppNumber,
+          // templateName: templateMsgInfo.templateName,
+          // attributes: this.newAttributes, //this.tempArrributes
+          // templateMessage: this.whatsAppForm.controls["sentMessage"].value,
+          // source: 'BO'
           // };
         } else {
-            templateData.append("whatsAppNumber", this.utileService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : this.searchNumber.value);
-            templateData.append("templateName", templateMsgInfo.templateName);
-            templateData.append("attributes", this.newAttributes);
-              //templateData.append("templateMessage", this.whatsAppForm.controls["selectTemplate"].value);
-            templateData.append("mediaId", templateMsgInfo.mediaId);
-            templateData.append("fileName", templateMsgInfo.fileName);
-            templateData.append("isMediaTemplate", 'true');
-            templateData.append("mimeType", templateMsgInfo.mimeType);
-            templateData.append("source", 'BO');
+          templateData.append("whatsAppNumber", this.utilsService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : this.searchNumber.value);
+          templateData.append("templateName", templateMsgInfo.templateName);
+          templateData.append("attributes", this.newAttributes);
+          //templateData.append("templateMessage", this.whatsAppForm.controls["selectTemplate"].value);
+          templateData.append("mediaId", templateMsgInfo.mediaId);
+          templateData.append("fileName", templateMsgInfo.fileName);
+          templateData.append("isMediaTemplate", 'true');
+          templateData.append("mimeType", templateMsgInfo.mimeType);
+          templateData.append("source", 'BO');
 
           // body = {
           //   whatsAppNumber: this.selectedUser.whatsAppNumber,
@@ -531,9 +531,9 @@ export class WhatAppChatComponent implements OnInit {
               "success",
               "Template sent successfully."
             );
-           
+
             this.userchatData = result['chat'];
-         
+
           },
           (error) => {
             this.loading = false;
@@ -555,7 +555,7 @@ export class WhatAppChatComponent implements OnInit {
       );
       console.log("this.uploadedFile: ", this.uploadedFile);
       const formData = new FormData();
-      formData.append("whatsAppNumber", this.utileService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : '91'+this.searchNumber.value);
+      formData.append("whatsAppNumber", this.utilsService.isNonEmpty(this.selectedUser.whatsAppNumber) ? this.selectedUser.whatsAppNumber : '91' + this.searchNumber.value);
       formData.append("multipartFile", this.uploadedFile);
       formData.append("source", 'BO');
       console.log("formData: ", formData);
@@ -570,7 +570,7 @@ export class WhatAppChatComponent implements OnInit {
           this._toastMessageService.alert(
             "success",
             "Media file sent successfully."
-          ); 
+          );
           this.userchatData = result['chat'];
         },
         (error) => {
@@ -607,8 +607,8 @@ export class WhatAppChatComponent implements OnInit {
         templateMsg = templateMsg.replace("}}", "");
         console.log(this.templateAttribute, i + 1);
         console.log("condition: ", this.templateAttribute !== (i + 1).toString());
-        // if (this.utileService.isNonEmpty(this.templateAttribute) && (this.templateAttribute !== (i + 1).toString())) {
-        if (this.utileService.isNonEmpty(this.templateAttribute)) {
+        // if (this.utilsService.isNonEmpty(this.templateAttribute) && (this.templateAttribute !== (i + 1).toString())) {
+        if (this.utilsService.isNonEmpty(this.templateAttribute)) {
           this.newAttributes.push(this.templateAttribute);
           console.log("newAttributes: " + this.newAttributes);
           console.log("attributes len: " + attributes.length);
@@ -632,7 +632,7 @@ export class WhatAppChatComponent implements OnInit {
 
   downloadDoc(id) {
     // window.open(environment.url + "/user/download-media-file?mediaId=" + id);
-    window.open(environment.url + "/gateway/download-media-file?mediaId=" + id);  
+    window.open(environment.url + "/gateway/download-media-file?mediaId=" + id);
   }
 
   checkImgType(fileName) {
@@ -705,8 +705,8 @@ export class WhatAppChatComponent implements OnInit {
     this.whatsAppForm.controls["sentMessage"].setValue(msg);
   }
 
-  showQuickRplyMsg(event){
-    console.log('Quick reply message: ',event.value);
+  showQuickRplyMsg(event) {
+    console.log('Quick reply message: ', event.value);
     this.whatsAppForm.controls["sentMessage"].setValue(event.value);
   }
 
@@ -791,15 +791,14 @@ export class WhatAppChatComponent implements OnInit {
     this.whatsAppForm.reset();
   }
 
-  clearQuickReply(){
+  clearQuickReply() {
     this.whatsAppForm.reset();
   }
 
   getTiemCount(chatDetail) {
     this.userLastMsgTime = "";
-    debugger
     let userChatInfo = chatDetail.filter((item) => item.isReceived === true);
-    console.log('userChatInfo: ',userChatInfo)
+    console.log('userChatInfo: ', userChatInfo)
     if (userChatInfo.length === 0) {
       this.timeExpired = true;
     } else {
@@ -847,7 +846,7 @@ export class WhatAppChatComponent implements OnInit {
   startChat(whatsAppNumber) {
     console.log('whatsAppNumber: ', whatsAppNumber)
     this.startConversation = !this.startConversation;
-    if (this.startConversation && this.utileService.isNonEmpty(whatsAppNumber)) {
+    if (this.startConversation && this.utilsService.isNonEmpty(whatsAppNumber)) {
       let param = "/whatsapp/unread/remove/" + whatsAppNumber;
       this.userService.getUserDetail(param).subscribe(res => {
         console.log('User number remove form Unread Message')
@@ -858,21 +857,21 @@ export class WhatAppChatComponent implements OnInit {
     }
   }
 
-  blockChatUser(mobNum){
-      this.loading = true;
-      let param = '/gateway/whatsapp/block/'+mobNum;
-      this.userService.getMethodInfo(param).subscribe(responce=>{
-          console.log('responce: ',responce);
-          this.loading = false;
-          this._toastMessageService.alert(
-            "success",
-            "User block successfully."
-          );
-      },
-      error=>{
+  blockChatUser(mobNum) {
+    this.loading = true;
+    let param = '/gateway/whatsapp/block/' + mobNum;
+    this.userService.getMethodInfo(param).subscribe(responce => {
+      console.log('responce: ', responce);
+      this.loading = false;
+      this._toastMessageService.alert(
+        "success",
+        "User block successfully."
+      );
+    },
+      error => {
         this.loading = false;
         console.log('Error :', error)
-        this._toastMessageService.alert("error",this.utileService.showErrorMsg(error.error.status));
+        this._toastMessageService.alert("error", this.utilsService.showErrorMsg(error.error.status));
       })
 
   }

@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
       if (this.utilsService.isNonEmpty(userData)) {
         this.utilsService.getStoredSmeList();
         this.getFyList();
-        this.getAgenList();
+        this.getAgentList();
 
         if (userData.USER_ROLE.indexOf("ROLE_ADMIN") !== -1) {
           this.router.navigate(['/pages/itr-filing/my-itrs']);
@@ -156,7 +156,7 @@ export class LoginComponent implements OnInit {
     NavbarService.getInstance(null).setUserData(userData);
     this.utilsService.getStoredSmeList();
     this.getFyList();
-    this.getAgenList();
+    this.getAgentList();
 
     if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
       this.router.navigate(['/pages/itr-filing/my-itrs']);
@@ -189,26 +189,22 @@ export class LoginComponent implements OnInit {
 
   }
 
-  getFyList() {
-    let param = '/filing-dates';
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
-      if (res && res.success && res.data instanceof Array) {
-        sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
-      }
-    }, error => {
-      console.log('Error during getting all PromoCodes: ', error)
-    })
-  }
+  /*  getFyList() {
+     let param = '/filing-dates';
+     this.itrMsService.getMethod(param).subscribe((res: any) => {
+       if (res && res.success && res.data instanceof Array) {
+         sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
+       }
+     }, error => {
+       console.log('Error during getting all PromoCodes: ', error)
+     })
+   } */
 
-  getAgenList() {
-    let param = '/agent-details';
-    this.userMsService.getMethod(param).subscribe((res: any) => {
-      if (res && res instanceof Array) {
-        sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res));
-      }
-    }, error => {
-      console.log('Error during getting all AGENT_LIST: ', error)
-    })
+  async getAgentList() {
+    await this.utilsService.getStoredAgentList();
+  }
+  async getFyList() {
+    await this.utilsService.getStoredFyList();
   }
 
   mode: string = 'SIGN_IN';

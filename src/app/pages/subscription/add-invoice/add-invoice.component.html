@@ -6,10 +6,10 @@
         <div class="card__row">
             <div class="card__col-lg-12" style="margin-top: 15px;" *ngIf="userInvoices">
                 <mat-accordion>
-                    <mat-expansion-panel [expanded]="true">
+                    <mat-expansion-panel [expanded]="false">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                <b>Previous Invoices</b>
+                                <b>Previous Invoices & Initial data</b>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <table *ngIf="userInvoices && userInvoices.length > 0">
@@ -60,6 +60,18 @@
                             style="text-align: center; padding: 15px;">
                             There is No invoice records
                         </div>
+
+                        <div class="card__row">
+                            <div class="card__col-lg-12">
+                                <label>&nbsp;&nbsp;&nbsp; Initial Data:</label><br><br>
+                                <pre class="initiatedInfo" *ngIf="initialData">
+                    {{initialData | json}}
+                </pre>
+                                <p style="margin: 12px; font-size: 15px; padding-left: 137px;" *ngIf="!initialData">
+                                    Initial data not present for selected User.
+                                </p>
+                            </div><br>
+                        </div>
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>
@@ -71,15 +83,7 @@
     <div class="card">
         <form [formGroup]="invoiceForm">
             <mat-card>
-                <div class="card__row">
-                    <label>Initial Data:</label><br><br>
-                    <pre class="initiatedInfo" *ngIf="initialData">
-                    {{initialData | json}}
-                </pre>
-                    <p style="margin: 12px; font-size: 15px; padding-left: 137px;" *ngIf="!initialData">
-                        Initial data not present for selected User.
-                    </p>
-                </div><br>
+
                 <div class="card__row">
                     <label>Invoice Information:</label><br><br>
                     <div class="card__col-lg-4">

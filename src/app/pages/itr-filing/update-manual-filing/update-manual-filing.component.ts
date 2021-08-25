@@ -76,5 +76,16 @@ export class UpdateManualFilingComponent implements OnInit {
       // this.utilsService.showSnackBar('Failed to update Filing status.')
     })
   }
+
+  setFilingDate() {
+    var id = this.ackNumber.value;
+    var lastSix = id.substr(id.length - 6);
+    var day = lastSix.slice(0, 2);
+    var month = lastSix.slice(2, 4);
+    var year = lastSix.slice(4, 6);
+    let dateString = `20${year}-${month}-${day}`;
+    console.log(dateString, year, month, day)
+    this.eFillingDate.setValue(dateString);
+  }
 }
 

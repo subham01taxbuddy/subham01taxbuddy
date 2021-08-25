@@ -293,21 +293,17 @@ export class TodaysCallsComponent implements OnInit {
     if (this.isAdmin) {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
-      }
-      else {
+      } else {
         if (this.showAllUser) {
           param2 = `/call-management/customers?page=${page}&pageSize=15`;
-        }
-        else {
+        } else {
           param2 = `/call-management/customers?agentId=${id}&page=${page}&pageSize=15`;
         }
       }
-    }
-    else {
+    } else {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
-      }
-      else {
+      } else {
         param2 = `/call-management/customers?callerAgentUserId=${id}&page=${page}&pageSize=15`;
       }
 

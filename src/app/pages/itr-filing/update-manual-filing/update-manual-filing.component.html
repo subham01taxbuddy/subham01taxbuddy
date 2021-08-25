@@ -2,19 +2,19 @@
 <div class="card__row">
     <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field appearance="outline">
+            <mat-label>Ack Number</mat-label>
+            <input matInput placeholder="Ack Number" name="ackNumber" [formControl]="ackNumber" class="input-field"
+                required (blur)="setFilingDate()">
+        </mat-form-field>
+    </div>
+    <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
             <mat-label>E-Filing Date</mat-label>
             <input matInput [max]="maxDate" [matDatepicker]="picker" class="input-field" placeholder="E-Filing Date"
                 name="dateOfBirth" [formControl]="eFillingDate" required>
             <mat-hint>Format: DD/MM/YYYY</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-    </div>
-    <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field appearance="outline">
-            <mat-label>Ack Number</mat-label>
-            <input matInput placeholder="Ack Number" name="ackNumber" [formControl]="ackNumber" class="input-field"
-                required>
         </mat-form-field>
     </div>
 </div>

@@ -16,7 +16,8 @@ export class MailUserComponent implements OnInit {
 
   loading: boolean;
   showMailUser: boolean;
-  agentList = environment.agentId;
+  agentList: any = [];
+  selectedAgent: any = '';
   mailUserListGridOptions: GridOptions;
 
   mailUser: any = [];
@@ -31,41 +32,46 @@ export class MailUserComponent implements OnInit {
       },
       sortable: true,
     };
-   }
+  }
 
   ngOnInit() {
-    console.log('selectedAgentId -> ',localStorage.getItem('selectedAgentId'));
+    this.getAgentList();
+
+    console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
     var agentId = localStorage.getItem('selectedAgentId');
-    if(this.utilsService.isNonEmpty(agentId)){
+    if (this.utilsService.isNonEmpty(agentId)) {
       this.getMailUserByAgentId(agentId);
     }
-    else{
+    else {
       this.getMailUserByAgentId(0);
     }
   }
+  async getAgentList() {
+    this.agentList = await this.utilsService.getStoredAgentList();
+  }
 
-  getMailUserByAgentId(agentId?){
+  getMailUserByAgentId(agentId?) {
     this.showMailUser = true;
     this.loading = true;
-    if(agentId){
-      var param = '/email-channel?assigneeId='+agentId;
+    if (agentId) {
+      var param = '/email-channel?assigneeId=' + agentId;
       localStorage.setItem('selectedAgentId', agentId);
-    }else{
+    } else {
       var param = '/email-channel?assigneeId=';
     }
-    
-    this.userService.getUserDetail(param).subscribe(responce=>{
+
+    this.userService.getUserDetail(param).subscribe(responce => {
       this.loading = false;
-       console.log('Email user ==> ',responce);
-       this.mailUser = responce;
+      console.log('Email user ==> ', responce);
+      this.mailUser = responce;
       this.mailUserListGridOptions.api.setRowData(this.createRowData(this.mailUser))
-    },error=>{
+    }, error => {
       this.loading = false;
-      console.log('Error while getting email User data ==> ',error);
+      console.log('Error while getting email User data ==> ', error);
     })
   }
 
-  showUserHistry(mail){
+  showUserHistry(mail) {
     let disposable = this.dialog.open(UserHistryComponent, {
       width: '60%',
       height: 'auto',
@@ -75,96 +81,96 @@ export class MailUserComponent implements OnInit {
     })
   }
 
-  createRowData(mailUserData){
+  createRowData(mailUserData) {
     var mailUser = [];
     for (let i = 0; i < mailUserData.length; i++) {
-      let updateMailUSerList = Object.assign({}, mailUserData[i], { userName: mailUserData[i].name, mobNumber: mailUserData[i].mobileNumber, email: mailUserData[i].email, assignId: mailUserData[i].assigneeId, date: mailUserData[i].createdDate})
+      let updateMailUSerList = Object.assign({}, mailUserData[i], { userName: mailUserData[i].name, mobNumber: mailUserData[i].mobileNumber, email: mailUserData[i].email, assignId: mailUserData[i].assigneeId, date: mailUserData[i].createdDate })
       mailUser.push(updateMailUSerList)
     }
     console.log('user mailUser: ', mailUser);
     return mailUser;
   }
 
-  mailUserCreateColoumnDef(){
-      return [
-        {
-          headerName: 'User Name',
-          field: 'userName',
-          width: 180,
-          suppressMovable: true,
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
+  mailUserCreateColoumnDef() {
+    return [
+      {
+        headerName: 'User Name',
+        field: 'userName',
+        width: 180,
+        suppressMovable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Mobile Number',
+        field: 'mobNumber',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Email',
+        field: 'email',
+        width: 230,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+
+      },
+      {
+        headerName: 'Assign ID',
+        field: 'assignId',
+        width: 250,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Date',
+        field: 'date',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (data) => {
+          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+        }
+      },
+      {
+        headerName: 'Action',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" data-action-type="user-histroy" title="User Histroy">User Histroy</button>`;  //fa fa-info-circle  
+          // <i class="fa fa-envelope" aria-hidden="true" data-action-type="send-Mail-Notification"></i>
+
         },
-        {
-          headerName: 'Mobile Number',
-          field: 'mobNumber',
-          width: 130,
-          suppressMovable: true,
-          cellStyle: { textAlign: 'center' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
+        width: 140,
+        pinned: 'right',
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
         },
-        {
-          headerName: 'Email',
-          field: 'email',
-          width: 230,
-          suppressMovable: true,
-          cellStyle: { textAlign: 'center' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-  
-        },
-        {
-          headerName: 'Assign ID',
-          field: 'assignId',
-          width: 250,
-          suppressMovable: true,
-          cellStyle: { textAlign: 'center' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-        },
-        {
-          headerName: 'Date',
-          field: 'date',
-          width: 130,
-          suppressMovable: true,
-          cellStyle: { textAlign: 'center' },
-          cellRenderer: (data) => {
-            return formatDate(data.value, 'dd/MM/yyyy', this.locale)
-          }
-         },
-        {
-          headerName: 'Action',
-          editable: false,
-          suppressMenu: true,
-          sortable: true,
-          suppressMovable: true,
-          cellRenderer: function (params) {
-            return `<button type="button" class="action_icon add_button" data-action-type="user-histroy" title="User Histroy">User Histroy</button>`;  //fa fa-info-circle  
-            // <i class="fa fa-envelope" aria-hidden="true" data-action-type="send-Mail-Notification"></i>
-  
-          },
-          width: 140,
-          pinned: 'right',
-          cellStyle: {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          },
-        },
-      ]
+      },
+    ]
   }
 
   public mailUserRowClicked(params) {
