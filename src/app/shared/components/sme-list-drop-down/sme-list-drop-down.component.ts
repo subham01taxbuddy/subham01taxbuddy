@@ -4,6 +4,9 @@ import { ItrMsService } from 'app/services/itr-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { ApiEndpoints } from 'app/shared/api-endpoint';
 import { AppConstants } from 'app/shared/constants';
+import { invalid } from 'moment';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sme-list-drop-down',
@@ -16,12 +19,34 @@ export class SmeListDropDownComponent implements OnInit {
 
   smeList = [];
   selectedSme = new FormControl('', Validators.required);
+  filteredOptions: Observable<any[]>;
 
   constructor(public utilsService: UtilsService,
     private itrMsService: ItrMsService) { }
 
   ngOnInit() {
     this.getSmeList();
+
+    this.filteredOptions = this.selectedSme.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => {
+          return value;
+        }),
+        map(name => {
+          return name ? this._filter(name) : this.smeList.slice();
+        })
+      );
+
+  }
+
+  displayFn(label) {
+    return label ? label : undefined;
+  }
+
+  _filter(name) {
+    const filterValue = name.toLowerCase();
+    return this.smeList.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
   async getSmeList() {
@@ -55,5 +80,19 @@ export class SmeListDropDownComponent implements OnInit {
   changeSme(sme: String) {
     console.log('SME in change:', sme, this.selectedSme)
     this.sendSme.emit(this.selectedSme.value);
+  }
+  smeCode: any;
+  getCodeFromLabelOnBlur() {
+    if (this.utilsService.isNonEmpty(this.selectedSme.value) && this.utilsService.isNonEmpty(this.selectedSme.value)) {
+      this.smeCode = this.smeList.filter(item => item.name.toLowerCase() === this.selectedSme.value.toLowerCase());
+      if (this.smeCode.length !== 0) {
+        this.smeCode = this.smeCode[0].userId;
+        console.log('smeCode on blur = ', this.smeCode);
+        this.sendSme.emit(this.smeCode);
+      } else {
+        this.selectedSme.setErrors(invalid);
+        console.log('smeCode on blur = ', this.smeCode);
+      }
+    }
   }
 }

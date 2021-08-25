@@ -1,6 +1,12 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
-<div class="main clearfix" style="padding-top: 0px;min-height: 10vh;">
+<!-- <div class="main clearfix" style="padding-top: 0px;min-height: 10vh;">
+    <div class="card">
+
+    </div>
+</div> -->
+
+<div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
         <div class="card__row">
             <div class="card__col-xs-3 card__col-sm-3 card__col-md-3">
@@ -9,25 +15,9 @@
             <div class="card__col-xs-3 card__col-sm-3 card__col-md-3">
                 <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>
             </div>
-            <!--  <div class="card__col-xs-9 card__col-sm-9 card__col-md-9">
-                <span *ngFor="let mem of filingTeamMembers; let i=index">
-                    <a href="javascript:;" (click)="getMembersItr(mem.userId, this.selectedFyYear, 0)">{{mem.name}}</a>
-                    &nbsp;&nbsp;
-                </span>
-            </div> -->
+            <span style="float: right;">Total Count: <b>{{this.config.totalItems}}</b></span>
         </div>
-    </div>
-</div>
 
-<div class="main clearfix" style="padding-top: 0px;">
-    <div class="card">
-        <!-- Search for data -->
-        <div class="card__row">
-            Selected Filing Member: <b>{{selectedMember}}</b> &nbsp;&nbsp;&nbsp;
-            <!-- <span style="float: right;"> Completed: <b>{{getCount(true)}}</b>&nbsp;&nbsp;&nbsp;
-                Pending: <b>{{getCount(false)}}</b>&nbsp;&nbsp;&nbsp;
-                <b>Total: {{itrDataList.length}}</b></span> -->
-        </div>
         <div class="card__row">
             <table>
                 <tr *ngFor="let item of pageWiseItr | paginate:config"></tr>

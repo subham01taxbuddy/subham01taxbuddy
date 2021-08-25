@@ -48,19 +48,13 @@ export class InterestedClientsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
-    // var userInfo = JSON.parse(localStorage.getItem('UMD'));
-    // if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
-    //   this.isAdmin = true;
-    //   this.showAllUser = true;
-    //   this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
-    // }
-    // else{
-    //   this.isAdmin = false;
-    //   this.getInterestedClients(userInfo.USER_UNIQUE_ID, 0);
-    // }
+    this.getAgentList();
     this.showCallersAll();
     this.getStatus();
+  }
+
+  async getAgentList() {
+    this.agentList = await this.utilsService.getStoredAgentList();
   }
 
   getStatus() {
@@ -463,9 +457,10 @@ export class InterestedClientsComponent implements OnInit {
   }
 
   showUserDetail(user) {
-    if (user.customerNumber) {
-      let mobileNo = user.customerNumber;
-      this.route.navigate(['/pages/dashboard/quick-search'], { queryParams: { mobileNo: mobileNo } });
+    if (this.utilsService.isNonEmpty(user.customerNumber)) {
+      this.route.navigate(['/pages/dashboard/quick-search'], { queryParams: { mobileNo: user.customerNumber } });
+    } else {
+      this.toastMsgService.alert("error", "Mobile number is not valid")
     }
   }
 

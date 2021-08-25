@@ -5,24 +5,9 @@
     <div class="card">
         <div class="card__row">
             <div class="card__col-xs-4">
-                <!-- <mat-form-field appearance="outline">
-                    <mat-label>Select Financial Year</mat-label>
-                    <mat-select placeholder="Select Financial Year" [formControl]="selectedFyYear"
-                        (selectionChange)="changeFy(selectedFyYear.value)" required>
-                        <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
-                            {{year.financialYear}}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="selectedFyYear.hasError('required')">Select Financial
-                        Year</mat-error>
-                </mat-form-field> -->
                 <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
             </div>
-            <!-- <div class="card__col-xs-8">
-                <span style="float: right;"> Completed: <b>{{getCount(true)}}</b>&nbsp;&nbsp;&nbsp;
-                    Pending: <b>{{getCount(false)}}</b>&nbsp;&nbsp;&nbsp;
-                    <b>Total: {{itrDataList.length}}</b></span>
-            </div> -->
+            <span style="float: right;">Total Count: <b>{{this.config.totalItems}}</b></span>
         </div>
         <div class="card__row">
             <table>
