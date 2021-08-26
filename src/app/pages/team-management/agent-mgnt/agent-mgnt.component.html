@@ -2,13 +2,13 @@
 
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
-        <div class="card__row" style="margin-top: 0px;">
+        <!--  <div class="card__row" style="margin-top: 0px;">
             <button class="btn" style="float: right;" (click)="addAgent('', 'Add Agent')">Add Agent</button><br><br>
-        </div>
-   
+        </div> -->
+        Note: If you want to add the agent please contact <b>@Dinesh Zagade</b><br><br>
         <div class="card__row" style="margin-top: 0px;">
             <ag-grid-angular class="ag-theme-balham" [gridOptions]="agentMgntGridOption"
-                (rowClicked)="onAgentMgntClicked($event)" >  
+                (rowClicked)="onAgentMgntClicked($event)">
             </ag-grid-angular>
         </div>
     </div>
