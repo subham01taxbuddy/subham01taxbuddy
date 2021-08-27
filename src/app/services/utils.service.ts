@@ -391,6 +391,7 @@ export class UtilsService {
         const smeList = JSON.parse(sessionStorage.getItem(AppConstants.SME_LIST));
         // console.log('fyList', fyList);
         if (this.isNonEmpty(smeList) && smeList instanceof Array && smeList.length > 0) {
+            smeList.sort((a, b) => a.name > b.name ? 1 : -1)
             return smeList;
         } else {
             let res: any = await this.getSmeList().catch(error => {
@@ -417,6 +418,7 @@ export class UtilsService {
             agentList = [];
         }
         if (this.isNonEmpty(agentList) && agentList instanceof Array && agentList.length > 0) {
+            agentList.sort((a, b) => a.name > b.name ? 1 : -1)
             return agentList;
         } else {
             let res: any = await this.getAgentList().catch(error => {

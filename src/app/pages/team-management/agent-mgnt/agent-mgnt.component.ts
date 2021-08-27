@@ -40,6 +40,7 @@ export class AgentMgntComponent implements OnInit {
       this.loading = false;
       if (res && res instanceof Array) {
         this.agentMgntGridOption.api.setRowData(this.agentRowData(res));
+        res.sort((a, b) => a.name > b.name ? 1 : -1)
         sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res));
       }
     }, error => {

@@ -67,12 +67,11 @@ export class TodaysCallsComponent implements OnInit {
   }
   getStatus() {
     let param = '/itr-status-master/source/BACK_OFFICE';
-    this.userMsService.getMethod(param).subscribe(respoce => {
-      console.log('status responce: ', respoce);
-      if (respoce instanceof Array && respoce.length > 0) {
-        this.itrStatus = respoce;
-      }
-      else {
+    this.userMsService.getMethod(param).subscribe(response => {
+      console.log('status responce: ', response);
+      if (response instanceof Array && response.length > 0) {
+        this.itrStatus = response;
+      } else {
         this.itrStatus = [];
       }
     },
