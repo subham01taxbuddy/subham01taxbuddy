@@ -85,6 +85,7 @@ export const routes: Routes = [
 			{ path: 'gst-filing', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './gst-filing/gst-filing.module#GstFilingModule' },
 			{ path: 'master', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './master/master.module#MasterModule' },
 			{ path: 'team-management', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './team-management/team-mgnt.module#TeamManagementModule' },
+			{ path: 'reports', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './main-reports/main-reports.module#MainReportsModule' },
 			{ path: '**', redirectTo: '/pages/dashboard/calling/todays-call', pathMatch: 'full' },
 
 		]
