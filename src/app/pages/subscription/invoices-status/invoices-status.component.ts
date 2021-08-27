@@ -17,7 +17,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class InvoicesStatusComponent implements OnInit {
   loading: boolean;
-  invoiceData: any;
+  invoiceData = [];
+  totalInvoice = 0;
   invoiceListGridOptions: GridOptions;
   maxDate: any = new Date();
   toDateMin: any;
@@ -74,6 +75,7 @@ export class InvoicesStatusComponent implements OnInit {
     this.userMsService.getMethodInfo(param).subscribe((res: any) => {
       this.loading = false;
       this.invoiceData = res;
+      this.totalInvoice = this.invoiceData.length
       console.log('this.invoiceData ', this.invoiceData)
       this.invoiceListGridOptions.api.setRowData(this.createRowData(this.invoiceData))
     }, error => {
@@ -81,6 +83,9 @@ export class InvoicesStatusComponent implements OnInit {
     })
   }
 
+  getCount(param) {
+    return this.invoiceData.filter(item => item.paymentStatus.toLowerCase() === param).length
+  }
   createRowData(userInvoices) {
     console.log('userInvoices: ', userInvoices)
     var invoices = [];

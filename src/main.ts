@@ -19,12 +19,12 @@ knowlarityScript.innerHTML = `var URL = "https://konnectprodstream3.knowlarity.c
                               source = new EventSource(URL);
                               source.onmessage = function (event) {
                             	var data = JSON.parse(event.data)
-                            	console.log('Received an event .......');
-                            	console.log(data);
+                            	// console.log('Received an event .......');
+                            	// console.log(data);
                               
                               if(data.event_type === "ORIGINATE" && data.call_direction === "Inbound"){
                                 knowlarityData.push(data);
-                                console.log("knowlarityData: ",knowlarityData)
+                                // console.log("knowlarityData: ",knowlarityData)
                                 localStorage.setItem('INBOND_KNOWLARITY', JSON.stringify(knowlarityData));
                             }
                          }`

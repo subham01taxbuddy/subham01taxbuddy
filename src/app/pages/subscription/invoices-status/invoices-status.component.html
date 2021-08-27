@@ -39,7 +39,12 @@
                         (click)="downloadInvoicesSummary()">Download File</button>
                 </div>
             </form>
+
         </div>
+        <span style="float: right;"> Total Count: <b>{{totalInvoice}}</b> | Paid: <b>{{getCount('paid')}}</b> |
+            Unpaid:
+            <b>{{getCount('unpaid')}}</b> | Failed: <b>{{getCount('failed')}}</b></span>
+        <br>
         <div class="card__row">
             <ag-grid-angular class="ag-theme-balham" [gridOptions]="invoiceListGridOptions"
                 (firstDataRendered)="onFirstDataRendered($event)" (rowClicked)="onInvoiceRowClicked($event)"
