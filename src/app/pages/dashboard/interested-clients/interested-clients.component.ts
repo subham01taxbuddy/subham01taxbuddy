@@ -188,7 +188,12 @@ export class InterestedClientsComponent implements OnInit {
           if (itrStatus.length !== 0) {
             console.log('Statud id', params.data.statusId)
             const nameArray = itrStatus.filter(item => item.statusId === params.data.statusId);
-            return nameArray[0].statusName;
+            if(nameArray.length !== 0){     
+              return nameArray[0].statusName;
+            }
+            else{
+              return '-';
+            }
           } else {
             return params.data.statusId;
           }

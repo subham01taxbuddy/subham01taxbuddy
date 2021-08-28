@@ -186,11 +186,16 @@ export class TodaysCallsComponent implements OnInit {
           debounceMs: 0
         },
         valueGetter: function nameFromCode(params) {
-          console.log('params == ', params);
+          console.log('params == ', params, params.data.statusId);
+          console.log('itrStatus array == ', itrStatus);
           if (itrStatus.length !== 0) {
             const nameArray = itrStatus.filter(item => (item.statusId === params.data.statusId));
-            console.log('nameArray = ', nameArray);
-            return nameArray[0].statusName;
+            if(nameArray.length !== 0){     
+              return nameArray[0].statusName;
+            }
+            else{
+              return '-';
+            }
           } else {
             return params.data.statusId;
           }
