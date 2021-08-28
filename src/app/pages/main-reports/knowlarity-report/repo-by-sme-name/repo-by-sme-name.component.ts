@@ -35,9 +35,11 @@ export class RepoBySmeNameComponent implements OnInit {
 
   ngOnInit() {
     this.reportBySmeForm = this.fb.group({
-      fromDate: ['', Validators.required],
-      toDate: ['', Validators.required]
+      fromDate: [new Date(), Validators.required],
+      toDate: [new Date(), Validators.required]
     })
+
+    this.showKnowlarityInfoBySme();
   }
 
   setToDateValidation(fromDate){
@@ -120,7 +122,7 @@ export class RepoBySmeNameComponent implements OnInit {
       {
         headerName: 'Total Duration',
         field: 'totalDuration',
-        width: 100,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -165,6 +167,7 @@ export class RepoBySmeNameComponent implements OnInit {
           console.log('SME wise info: ',res);
           this.loading = false;
           if(res && res instanceof Array){
+            res.sort((a, b) => a.smeName > b.smeName ? 1 : -1);
             this.repoBySmeGridOption.api.setRowData(this.createRowData(res))
           }
         },

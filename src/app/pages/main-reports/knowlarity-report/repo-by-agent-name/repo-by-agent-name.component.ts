@@ -35,9 +35,11 @@ export class RepoByAgentNameComponent implements OnInit {
 
   ngOnInit() {
     this.reportByAgentForm = this.fb.group({
-      fromDate: ['', Validators.required],
-      toDate: ['', Validators.required]
+      fromDate: [new Date(), Validators.required],
+      toDate: [new Date(), Validators.required]
     })
+
+    this.showKnowlarityInfoByAgent();
   }
 
   setToDateValidation(fromDate){
@@ -120,7 +122,7 @@ export class RepoByAgentNameComponent implements OnInit {
       {
         headerName: 'Total Duration',
         field: 'totalDuration',
-        width: 100,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -154,6 +156,7 @@ export class RepoByAgentNameComponent implements OnInit {
         console.log('Agent wise info: ',res);
         this.loading = false;
         if(res && res instanceof Array){
+          res.sort((a, b) => a.agentName > b.agentName ? 1 : -1);
           this.repoByAgentGridOption.api.setRowData(this.createRowData(res))
         }
       },
