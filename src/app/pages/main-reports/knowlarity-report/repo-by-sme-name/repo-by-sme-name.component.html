@@ -42,6 +42,29 @@
             </form>
         </div>
         <div class="card__row">
+            <div class="card__row" *ngIf="totalRecords">
+                <div class="card__col-lg-2">
+                    <b>Answered Call: </b>{{totalRecords.inboundAnsweredCall}}
+                </div>
+                <div class="card__col-lg-2">
+                    <b>Inbound Call: </b>{{totalRecords.inboundCall}}
+                </div>
+                <div class="card__col-lg-2">
+                    <b>AnsweredCall: </b>{{totalRecords.missedCall}}
+                </div>
+                <div class="card__col-lg-2">
+                    <b>Missed Call: </b>{{totalRecords.outboundAnsweredCall}}
+                </div>
+                <div class="card__col-lg-2">
+                    <b>Outbound Call: </b>{{totalRecords.outboundCall}}
+                </div>
+                <div class="card__col-lg-2">
+                    <b>Answered Call: </b>{{totalRecords.totalAnsweredCall}}
+                </div>
+                <div class="card__col-lg-2" style="padding: 10px;">
+                    <b>Total Duration: </b>{{totalRecords.totalDuration}}
+                </div>
+            </div>  
             <ag-grid-angular class="ag-theme-balham" [gridOptions]="repoBySmeGridOption"
                 paginationPageSize=20 pagination=true> 
             </ag-grid-angular>
