@@ -9,9 +9,10 @@ import { RepoBySmeNameComponent } from './knowlarity-report/repo-by-sme-name/rep
 import { RepoByAgentNameComponent } from './knowlarity-report/repo-by-agent-name/repo-by-agent-name.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ItrFillingReportComponent } from './itr-filling-report/itr-filling-report.component';
+import { MissedChatReportComponent } from './missed-chat-report/missed-chat-report.component';
 
 @NgModule({
-    declarations: [MainReportsComponent, KnowlarityReportComponent, RepoBySmeNameComponent, RepoByAgentNameComponent, ItrFillingReportComponent],
+    declarations: [MainReportsComponent, KnowlarityReportComponent, RepoBySmeNameComponent, RepoByAgentNameComponent, ItrFillingReportComponent, MissedChatReportComponent],
     imports: [
         CommonModule,
         FormsModule,
