@@ -5,6 +5,7 @@ import { KnowlarityReportComponent } from "./knowlarity-report/knowlarity-report
 import { RepoByAgentNameComponent } from "./knowlarity-report/repo-by-agent-name/repo-by-agent-name.component";
 import { RepoBySmeNameComponent } from "./knowlarity-report/repo-by-sme-name/repo-by-sme-name.component";
 import { MainReportsComponent } from "./main-reports/main-reports.component";
+import { MissedChatReportComponent } from "./missed-chat-report/missed-chat-report.component";
 
 const routes :Routes = [
     {path: '', component: MainReportsComponent,
@@ -19,6 +20,7 @@ const routes :Routes = [
         children: [
            
         ]},
+        {path: 'missed-chat', component: MissedChatReportComponent},
         {path: '', redirectTo: 'knowlarity-repo', pathMatch: ''}
      ]
     }

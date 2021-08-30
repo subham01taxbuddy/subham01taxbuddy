@@ -10,7 +10,7 @@
                         <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedAgent"
                             (selectionChange)="searchByAgent()">
                             <mat-option *ngFor="let agent of agentList" [value]="agent.agentId">
-                                {{agent.name}}
+                                {{agent.name}}  <span style="font-weight: bold;">{{agent.serviceType}}</span>
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
