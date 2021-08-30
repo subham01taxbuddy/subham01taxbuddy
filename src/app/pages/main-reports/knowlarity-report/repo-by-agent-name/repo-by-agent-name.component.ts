@@ -20,6 +20,7 @@ export class RepoByAgentNameComponent implements OnInit {
   maxDate: any = new Date();
   minToDate: any;
   repoByAgentGridOption: GridOptions;
+  totalRecords: any;
 
   constructor(private fb: FormBuilder, private datePipe: DatePipe, private userService: UserMsService, private toastMsgService: ToastMessageService, 
     private utilsService: UtilsService) { 
@@ -152,16 +153,22 @@ export class RepoByAgentNameComponent implements OnInit {
       let fromDate = this.datePipe.transform(this.reportByAgentForm.value.fromDate, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.reportByAgentForm.value.toDate, 'yyyy-MM-dd');
       let param = `/call-management/knowlarity-report-agent?from=${fromDate}&to=${toDate}`;
-      this.userService.getMethod(param).subscribe(res=>{
+      this.userService.getMethod(param).subscribe((res: any)=>{
         console.log('Agent wise info: ',res);
         this.loading = false;
-        if(res && res instanceof Array){
-          res.sort((a, b) => a.agentName > b.agentName ? 1 : -1);
-          this.repoByAgentGridOption.api.setRowData(this.createRowData(res))
+        if(res.report && res.report instanceof Array && res.report.length > 0){
+          this.totalRecords = res.reportTotal;
+          res.report.sort((a, b) => a.agentName > b.agentName ? 1 : -1);
+          this.repoByAgentGridOption.api.setRowData(this.createRowData(res.report))
+        }
+        else{
+          this.totalRecords = '';
+          this.repoByAgentGridOption.api.setRowData(this.createRowData([]))
         }
       },
       error=>{
         this.loading = false;
+        this.totalRecords = '';
         console.log(error);
         this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status))
       })
