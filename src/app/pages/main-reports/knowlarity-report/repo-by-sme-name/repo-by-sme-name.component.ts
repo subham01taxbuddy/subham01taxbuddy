@@ -20,6 +20,7 @@ export class RepoBySmeNameComponent implements OnInit {
   maxDate: any = new Date();
   minToDate: any;
   repoBySmeGridOption: GridOptions;
+  totalRecords: any;
 
   constructor(private fb: FormBuilder, private datePipe: DatePipe, private userService: UserMsService, private toastMsgService: ToastMessageService, 
               private utilsService: UtilsService) { 
@@ -163,16 +164,22 @@ export class RepoBySmeNameComponent implements OnInit {
         let fromDate = this.datePipe.transform(this.reportBySmeForm.value.fromDate, 'yyyy-MM-dd');
         let toDate = this.datePipe.transform(this.reportBySmeForm.value.toDate, 'yyyy-MM-dd');
         let param = `/call-management/knowlarity-report-sme?from=${fromDate}&to=${toDate}`;
-        this.userService.getMethod(param).subscribe(res=>{
-          console.log('SME wise info: ',res);
+        this.userService.getMethod(param).subscribe((res: any)=>{
+          console.log('SME wise info: ',res.report);
           this.loading = false;
-          if(res && res instanceof Array){
-            res.sort((a, b) => a.smeName > b.smeName ? 1 : -1);
-            this.repoBySmeGridOption.api.setRowData(this.createRowData(res))
+          if(res.report && res.report instanceof Array && res.report.length > 0){
+            this.totalRecords = res.reportTotal;
+            res.report.sort((a, b) => a.smeName > b.smeName ? 1 : -1);
+            this.repoBySmeGridOption.api.setRowData(this.createRowData(res.report))
+          }
+          else{
+            this.totalRecords = '';
+            this.repoBySmeGridOption.api.setRowData(this.createRowData([]))
           }
         },
         error=>{
           this.loading = false;
+          this.totalRecords = '';
           console.log(error);
           this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status))
         })
