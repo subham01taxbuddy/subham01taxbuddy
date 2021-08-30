@@ -8,7 +8,7 @@
                   <mat-label>Select Agent</mat-label>
                   <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedAgent">
                       <mat-option *ngFor="let agent of agentList" [value]="agent.agentId">
-                          {{agent.name}}
+                          {{agent.name}} <span style="font-weight: bold;">{{agent.serviceType}}</span>
                       </mat-option>
                   </mat-select>
                   <!-- <mat-error *ngIf="agent.hasError('required')">Select agent id</mat-error> -->

@@ -13,7 +13,7 @@
           <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedAgent"
             (selectionChange)="getMailUserByAgentId(selectedAgent)">
             <mat-option *ngFor="let agent of agentList" [value]="agent.email">
-              {{agent.name}}
+              {{agent.name}} <span style="font-weight: bold;">{{agent.serviceType}}</span>
             </mat-option>
           </mat-select>
         </mat-form-field>
