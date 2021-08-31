@@ -10,9 +10,18 @@ import { RepoByAgentNameComponent } from './knowlarity-report/repo-by-agent-name
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ItrFillingReportComponent } from './itr-filling-report/itr-filling-report.component';
 import { MissedChatReportComponent } from './missed-chat-report/missed-chat-report.component';
+import { SmewiseReportComponent } from "./itr-filling-report/smewise-report/smewise-report.component";
+import { AllFilingReportComponent } from "./itr-filling-report/all-filing-report/all-filing-report.component";
 
 @NgModule({
-    declarations: [MainReportsComponent, KnowlarityReportComponent, RepoBySmeNameComponent, RepoByAgentNameComponent, ItrFillingReportComponent, MissedChatReportComponent],
+    declarations: [MainReportsComponent,
+        KnowlarityReportComponent,
+        RepoBySmeNameComponent,
+        RepoByAgentNameComponent,
+        ItrFillingReportComponent,
+        MissedChatReportComponent,
+        SmewiseReportComponent,
+        AllFilingReportComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -23,4 +32,4 @@ import { MissedChatReportComponent } from './missed-chat-report/missed-chat-repo
     ]
 })
 
-export class MainReportsModule {}
+export class MainReportsModule { }
