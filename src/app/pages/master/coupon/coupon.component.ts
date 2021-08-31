@@ -39,6 +39,7 @@ export class CouponComponent implements OnInit {
         headerName: 'Code',
         field: 'code',
         width: 140,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -51,6 +52,7 @@ export class CouponComponent implements OnInit {
         headerName: 'Title',
         field: 'title',
         width: 200,
+        pinned: 'left',
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -65,7 +67,7 @@ export class CouponComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         cellRenderer: (data) => {
-          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+          return formatDate(data.value, 'dd MMM yyyy', this.locale)
         },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -80,7 +82,7 @@ export class CouponComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         cellRenderer: (data) => {
-          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+          return formatDate(data.value, 'dd MMM yyyy', this.locale)
         },
         filter: "agTextColumnFilter",
         filterParams: {
