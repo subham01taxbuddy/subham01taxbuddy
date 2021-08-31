@@ -18,6 +18,7 @@ export class SmewiseReportComponent implements OnInit {
   minToDate: any;
   smeReportGridOption: GridOptions;
   tlReportGridOption: GridOptions;
+  totalCount = 0;
 
   constructor(private fb: FormBuilder, private datePipe: DatePipe,
     public utilsService: UtilsService,
@@ -99,14 +100,17 @@ export class SmewiseReportComponent implements OnInit {
 
   createTlRowData(tlReport) {
     var data = [];
+    let total = 0;
     for (let i = 0; i < tlReport.length; i++) {
       let tlData = {
         srNo: i + 1,
         teamLeadName: tlReport[i].teamLeadName,
         filingCount: tlReport[i].filingCount
       }
+      total = total + tlReport[i].filingCount
       data.push(tlData);
     }
+    this.totalCount = total;
     return data;
   }
 
@@ -146,6 +150,7 @@ export class SmewiseReportComponent implements OnInit {
     for (let i = 0; i < smeReport.length; i++) {
       let smeData = {
         srNo: i + 1,
+        teamLeadName: smeReport[i].teamLeadName,
         smeName: smeReport[i].smeName,
         filingCount: smeReport[i].filingCount
       }
@@ -162,11 +167,24 @@ export class SmewiseReportComponent implements OnInit {
         suppressMovable: true,
       },
       {
+        headerName: 'Team Lead Name',
+        field: 'teamLeadName',
+        sortable: true,
+        width: 140,
+        suppressMovable: true,
+        // cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
         headerName: 'SME Name',
         field: 'smeName',
         sortable: true,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
+        // cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -177,6 +195,7 @@ export class SmewiseReportComponent implements OnInit {
         headerName: 'Filing Count',
         field: 'filingCount',
         sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
       }
