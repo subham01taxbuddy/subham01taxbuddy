@@ -2,18 +2,35 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { environment } from 'environments/environment';
 import moment = require('moment');
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 @Component({
   selector: 'app-all-filing-report',
   templateUrl: './all-filing-report.component.html',
   styleUrls: ['./all-filing-report.component.css'],
-  providers: [DatePipe]
+  providers: [DatePipe,
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
+  ]
 })
+
 export class AllFilingReportComponent implements OnInit {
   dateSearchForm: FormGroup;
   loading: boolean;
