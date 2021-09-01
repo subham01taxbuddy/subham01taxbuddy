@@ -37,7 +37,7 @@ export class UserListComponent implements OnInit {
   user_data: any = [];
 
   constructor(private userService: UserMsService, private _toastMessageService: ToastMessageService, private utileService: UtilsService, private router: Router, private http: HttpClient,
-              @Inject(LOCALE_ID) private locale: string) {
+    @Inject(LOCALE_ID) private locale: string) {
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColoumnDef(),
@@ -324,6 +324,28 @@ export class UserListComponent implements OnInit {
             'justify-content': 'center'
           }
         },
+      },
+      {
+        headerName: 'Cloud',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
+           </button>`;
+        },
+        width: 50,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
       }
     ]
   }
@@ -371,6 +393,10 @@ export class UserListComponent implements OnInit {
           this.linkToFinbingo(params.data.userId);
           break;
         }
+        case 'link-to-doc-cloud': {
+          this.linkToDocumentCloud(params.data.userId);
+          break;
+        }
       }
     }
   }
@@ -408,5 +434,9 @@ export class UserListComponent implements OnInit {
     }, error => {
       this.loading = false;
     })
+  }
+
+  linkToDocumentCloud(userId) {
+    this.router.navigate(['/pages/itr-filing/user-docs/' + userId]);
   }
 }

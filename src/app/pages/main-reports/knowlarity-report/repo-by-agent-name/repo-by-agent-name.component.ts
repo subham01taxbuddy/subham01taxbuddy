@@ -1,17 +1,33 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { environment } from 'environments/environment';
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 @Component({
   selector: 'app-repo-by-agent-name',
   templateUrl: './repo-by-agent-name.component.html',
   styleUrls: ['./repo-by-agent-name.component.css'],
-  providers: [DatePipe]
+  providers: [DatePipe,
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
+  ]
 })
 export class RepoByAgentNameComponent implements OnInit {
 
@@ -22,8 +38,8 @@ export class RepoByAgentNameComponent implements OnInit {
   repoByAgentGridOption: GridOptions;
   totalRecords: any;
 
-  constructor(private fb: FormBuilder, private datePipe: DatePipe, private userService: UserMsService, private toastMsgService: ToastMessageService, 
-    private utilsService: UtilsService) { 
+  constructor(private fb: FormBuilder, private datePipe: DatePipe, private userService: UserMsService, private toastMsgService: ToastMessageService,
+    private utilsService: UtilsService) {
     this.repoByAgentGridOption = <GridOptions>{
       rowData: [],
       columnDefs: this.newAgentCreateColoumnDef(),
@@ -43,11 +59,11 @@ export class RepoByAgentNameComponent implements OnInit {
     this.showKnowlarityInfoByAgent();
   }
 
-  setToDateValidation(fromDate){
+  setToDateValidation(fromDate) {
     this.minToDate = fromDate;
   }
 
-  newAgentCreateColoumnDef(){
+  newAgentCreateColoumnDef() {
     return [
       {
         headerName: 'Agent Name',
@@ -147,35 +163,35 @@ export class RepoByAgentNameComponent implements OnInit {
 
   }
 
-  showKnowlarityInfoByAgent(){
-    if(this.reportByAgentForm.valid){
+  showKnowlarityInfoByAgent() {
+    if (this.reportByAgentForm.valid) {
       this.loading = true;
       let fromDate = this.datePipe.transform(this.reportByAgentForm.value.fromDate, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.reportByAgentForm.value.toDate, 'yyyy-MM-dd');
       let param = `/call-management/knowlarity-report-agent?from=${fromDate}&to=${toDate}`;
-      this.userService.getMethod(param).subscribe((res: any)=>{
-        console.log('Agent wise info: ',res);
+      this.userService.getMethod(param).subscribe((res: any) => {
+        console.log('Agent wise info: ', res);
         this.loading = false;
-        if(res.report && res.report instanceof Array && res.report.length > 0){
+        if (res.report && res.report instanceof Array && res.report.length > 0) {
           this.totalRecords = res.reportTotal;
           res.report.sort((a, b) => a.agentName > b.agentName ? 1 : -1);
           this.repoByAgentGridOption.api.setRowData(this.createRowData(res.report))
         }
-        else{
+        else {
           this.totalRecords = '';
           this.repoByAgentGridOption.api.setRowData(this.createRowData([]))
         }
       },
-      error=>{
-        this.loading = false;
-        this.totalRecords = '';
-        console.log(error);
-        this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status))
-      })
+        error => {
+          this.loading = false;
+          this.totalRecords = '';
+          console.log(error);
+          this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status))
+        })
     }
   }
 
-  createRowData(agentRepoInfo){
+  createRowData(agentRepoInfo) {
     console.log('agentRepoInfo -> ', agentRepoInfo);
     var agentRepoInfoArray = [];
     for (let i = 0; i < agentRepoInfo.length; i++) {
@@ -195,8 +211,8 @@ export class RepoByAgentNameComponent implements OnInit {
     return agentRepoInfoArray;
   }
 
-  downloadRepo(){
-    if(this.reportByAgentForm.valid){
+  downloadRepo() {
+    if (this.reportByAgentForm.valid) {
       let fromDate = this.datePipe.transform(this.reportByAgentForm.value.fromDate, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.reportByAgentForm.value.toDate, 'yyyy-MM-dd');
       location.href = environment.url + `/user/call-management/download-knowlarity-report-agent?from=${fromDate}&to=${toDate}`;
