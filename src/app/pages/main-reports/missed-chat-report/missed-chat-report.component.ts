@@ -109,7 +109,6 @@ export class MissedChatReportComponent implements OnInit {
         console.log('Missed Chat info: ', res);
         this.loading = false;
         if (res && res instanceof Array && res.length > 0) {
-          this.totalCount = res.length;
           res.sort((a, b) => a.agentName > b.agentName ? 1 : -1);
           this.missedChatGridOption.api.setRowData(this.createRowData(res))
         }
@@ -129,6 +128,7 @@ export class MissedChatReportComponent implements OnInit {
   createRowData(missedChatInfo) {
     console.log('missedChatInfo -> ', missedChatInfo);
     var missedChatArray = [];
+    this.totalCount = 0;
     for (let i = 0; i < missedChatInfo.length; i++) {
       let agentReportInfo = Object.assign({}, missedChatArray[i], {
         srNo: i + 1,
@@ -136,6 +136,8 @@ export class MissedChatReportComponent implements OnInit {
         filingCount: missedChatInfo[i].filingCount,
 
       })
+      this.totalCount = this.totalCount + missedChatInfo[i].filingCount;
+
       missedChatArray.push(agentReportInfo);
     }
     console.log('missedChatArray-> ', missedChatArray)
