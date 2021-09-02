@@ -188,10 +188,10 @@ export class InterestedClientsComponent implements OnInit {
           if (itrStatus.length !== 0) {
             console.log('Statud id', params.data.statusId)
             const nameArray = itrStatus.filter(item => item.statusId === params.data.statusId);
-            if(nameArray.length !== 0){     
+            if (nameArray.length !== 0) {
               return nameArray[0].statusName;
             }
-            else{
+            else {
               return '-';
             }
           } else {
@@ -543,15 +543,13 @@ export class InterestedClientsComponent implements OnInit {
       this.loading = false;
       if (responce.success) {
         window.open(responce.data.chatLink)
+      } else {
+        this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
       }
-      else {
-        this.toastMsgService.alert('error', responce.message)
-      }
-    },
-      error => {
-        console.log('Error during feching chat link: ', error);
-        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
-        this.loading = false;
-      })
+    }, error => {
+      console.log('Error during feching chat link: ', error);
+      this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+      this.loading = false;
+    })
   }
 }

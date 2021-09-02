@@ -455,7 +455,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         endDate: subscriptionData[i].endDate,
         txbdyInvoiceId: subscriptionData[i].txbdyInvoiceId,
         subscriptionAssigneeId: subscriptionData[i].subscriptionAssigneeId !== 0 ? subscriptionData[i].subscriptionAssigneeId : 'NA',
-        filerName: subscriptionData[i].subscriptionAssigneeId !== 0 ? (subscriptionData[i].smeDetails.length > 0 ? subscriptionData[i].smeDetails[0]['first_name'] : 'NA') : 'NA',
+        filerName: subscriptionData[i].subscriptionAssigneeId !== 0 ? (subscriptionData[i].smeDetails.length > 0 ? subscriptionData[i].smeDetails[0]['first_name'] + ' ' + subscriptionData[i].smeDetails[0]['last_name'] : 'NA') : 'NA',
         userName: subscriptionData[i].userId !== 0 ? (subscriptionData[i].userData.length > 0 ? subscriptionData[i].userData[0]['first_name'] + ' ' + subscriptionData[i].userData[0]['last_name'] : '') : 'NA',
         isActive: subscriptionData[i].isActive,
         served: subscriptionData[i].served,
