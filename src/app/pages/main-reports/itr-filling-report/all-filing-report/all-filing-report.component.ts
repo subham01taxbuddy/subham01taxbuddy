@@ -104,6 +104,7 @@ export class AllFilingReportComponent implements OnInit {
         dateOfFiling: smeReport[i].dateOfFiling,
         nameOfSme: smeReport[i].nameOfSme,
         source: smeReport[i].source,
+        teamLeadName: smeReport[i].teamLeadName,
         dateOfSignup: smeReport[i].dateOfSignup,
       }
       data.push(smeData);
@@ -214,6 +215,17 @@ export class AllFilingReportComponent implements OnInit {
       {
         headerName: 'Source',
         field: 'source',
+        sortable: true,
+        suppressMovable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+      {
+        headerName: 'Team Lead',
+        field: 'teamLeadName',
         sortable: true,
         suppressMovable: true,
         filter: "agTextColumnFilter",
