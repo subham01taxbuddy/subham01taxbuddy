@@ -10,6 +10,7 @@ import { WhatsappComponent } from './engagement/whatsapp/whatsapp.component';
 import { InterestedClientsComponent } from './interested-clients/interested-clients.component';
 import { OpenStatusComponent } from './open-status/open-status.component';
 import { KnowlarityComponent } from './knowlarity/knowlarity.component';
+import { Calling2dot0Component } from './calling-board/calling2dot0/calling2dot0.component';
 
 const routes: Routes = [
     {
@@ -29,6 +30,7 @@ const routes: Routes = [
                 path: 'calling', component: CallingBoardComponent,
                 children: [
                     { path: 'todays-call', component: TodaysCallsComponent },
+                    { path: 'calling2', component: Calling2dot0Component },
                     { path: '', redirectTo: 'todays-call', pathMatch: 'full' }
                 ]
             },
