@@ -11,6 +11,7 @@ export class ApiEndpoints {
     public static userMs = {
         smeDetails: 'sme-details',
         agentDetails: 'agent-details',
+        itrStatusMasterBo: 'itr-status-master/source/BACK_OFFICE',
 
     };
 }

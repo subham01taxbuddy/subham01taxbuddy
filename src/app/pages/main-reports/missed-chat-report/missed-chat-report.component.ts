@@ -73,6 +73,7 @@ export class MissedChatReportComponent implements OnInit {
         field: 'agentName',
         width: 500,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -85,6 +86,7 @@ export class MissedChatReportComponent implements OnInit {
         field: 'filingCount',
         width: 300,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {

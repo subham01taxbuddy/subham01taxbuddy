@@ -1,7 +1,7 @@
 import { ItrActionsComponent } from './../shared/components/itr-actions/itr-actions.component';
 import { Injectable } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, UrlSerializer } from '@angular/router';
 import { AppConstants } from 'app/shared/constants';
 import { Observable, Subject } from 'rxjs';
 import { ITR_JSON } from './../shared/interfaces/itr-input.interface';
@@ -17,6 +17,7 @@ export class UtilsService {
     private subject = new Subject<any>();
     constructor(private snackBar: MatSnackBar, private itrMsService: ItrMsService,
         private router: Router, private dialog: MatDialog,
+        private serializer: UrlSerializer,
         private userMsService: UserMsService,) { }
     /**
     * @function isNonEmpty()
@@ -437,5 +438,33 @@ export class UtilsService {
     async getAgentList() {
         const param = `/${ApiEndpoints.userMs.agentDetails}`;
         return await this.userMsService.getMethod(param).toPromise();
+    }
+
+    async getStoredMasterStatusList() {
+        const masterStatus = JSON.parse(sessionStorage.getItem(AppConstants.MASTER_STATUS));
+        if (this.isNonEmpty(masterStatus) && masterStatus instanceof Array && masterStatus.length > 0) {
+            return masterStatus;
+        } else {
+            let res: any = await this.getMasterStatusList().catch(error => {
+                this.loading = false;
+                console.log(error);
+                this.showSnackBar('Error While getting MASTER_STATUS list.');
+                return [];
+            });
+            if (res && res instanceof Array) {
+                sessionStorage.setItem(AppConstants.MASTER_STATUS, JSON.stringify(res));
+                return res;
+            }
+        }
+    }
+    async getMasterStatusList() {
+        const param = `/${ApiEndpoints.userMs.itrStatusMasterBo}`;
+        return await this.userMsService.getMethod(param).toPromise();
+    }
+
+    createUrlParams(queryParams) {
+        const tree = this.router.createUrlTree([], { queryParams });
+        console.log(this.serializer.serialize(tree));
+        return this.serializer.serialize(tree).split('?').pop();
     }
 }
