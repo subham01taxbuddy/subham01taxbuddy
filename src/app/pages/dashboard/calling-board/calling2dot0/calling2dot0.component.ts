@@ -29,9 +29,10 @@ export class Calling2dot0Component implements OnInit {
     statusId: null,
     customerNumber: null,
     page: 0,
-    pageSize: 50
+    pageSize: 50,
+    callerAgentUserId: null
   }
-
+  isAdmin = false;
   constructor(public utilsService: UtilsService,
     private userMsService: UserMsService,
     private dialog: MatDialog,
@@ -57,6 +58,16 @@ export class Calling2dot0Component implements OnInit {
   ngOnInit() {
     this.getAgentList();
     this.getMasterStatusList();
+    var userInfo = JSON.parse(localStorage.getItem('UMD'));
+    if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
+      this.isAdmin = true;
+      this.searchParam.callerAgentUserId = null;
+    } else {
+      this.isAdmin = false;
+      this.searchParam.callerAgentUserId = userInfo.USER_UNIQUE_ID;
+      this.searchParam.agentId = null;
+      this.searchByQueryParams('');
+    }
   }
 
   async getAgentList() {
@@ -84,7 +95,12 @@ export class Calling2dot0Component implements OnInit {
     }
     let data = this.utilsService.createUrlParams(this.searchParam);
     console.log('Query Params', data)
-    const param = `/customers-es?${data}`;
+    let param = `/customers-es?${data}`;
+    if (this.isAdmin) {
+      param = '';
+      param = `/customers-es?${data}`;
+    }
+
     this.userMsService.getMethod(param).subscribe((res: any) => {
       console.log('Result', res);
       this.loading = false;
@@ -146,6 +162,7 @@ export class Calling2dot0Component implements OnInit {
         customerNumber: data[i]['Phone'],
         statusId: data[i]['itrStatusLatest']['StatusID'],
         chatLink: true,
+        serviceType: this.searchParam.serviceType,
         kommunicateLink: this.utilsService.isNonEmpty(data[i]['AssignedAgentsITR']) && this.utilsService.isNonEmpty(data[i]['AssignedAgentsITR']['KommunicateURL']) ? data[i]['AssignedAgentsITR']['KommunicateURL'] : 'NA',
         callerAgentNumber: data[i]['CallerAgentDetailsITR']['CallerAgentNumber'],
         callerAgentName: data[i]['CallerAgentDetailsITR']['CallerAgentName']
@@ -258,16 +275,24 @@ export class Calling2dot0Component implements OnInit {
       },
       {
         headerName: 'Chat',
-        field: 'chatLink',
+        // field: 'chatLink',
         editable: false,
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Open Chat"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
+          console.log('params.data', params.data)
+          if (params.data.kommunicateLink !== 'NA') {
+            return `<button type="button" class="action_icon add_button" title="Open Chat"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer; color:green">
+            <i class="fa fa-comments-o"  aria-hidden="true" data-action-type="open-chat"></i>
            </button>`;
+          } else {
+            return `<button type="button" class="action_icon add_button" title="User has not initiated the chat yet"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer; color:red">
+              <i class="fa fa-comments-o" aria-hidden="true"></i>
+             </button>`;
+          }
         },
         width: 50,
         pinned: 'right',
@@ -403,7 +428,8 @@ export class Calling2dot0Component implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
-    window.open(client.kommunicateLink)
+    if (client.kommunicateLink !== 'NA')
+      window.open(client.kommunicateLink)
   }
 
   startCalling(user) {
@@ -454,5 +480,14 @@ export class Calling2dot0Component implements OnInit {
         }
       }
     });
+  }
+  previous() {
+    this.searchParam.page = this.searchParam.page - this.searchParam.pageSize;
+    this.searchByQueryParams('');
+  }
+  next() {
+    this.searchParam.page = this.searchParam.page + this.searchParam.pageSize;
+    console.log('clicked on next:', this.searchParam.page)
+    this.searchByQueryParams('');
   }
 }
