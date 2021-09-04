@@ -3,7 +3,7 @@
 <div class="main clearfix" style="padding-top: 0px;">
   <div class="card">
     <div class="card__row">
-      <div class="filter__col card__col-sm-3 card__col-xs-12">
+      <div class="filter__col card__col-sm-3 card__col-xs-12" *ngIf="isAdmin">
         <mat-form-field appearance="outline" style="margin-top: 10px;">
           <mat-label>Select Agent</mat-label>
           <mat-select placeholder="Select Agent Id" [(ngModel)]="searchParam.agentId"
@@ -98,6 +98,12 @@
 
       <!-- <p style="text-align: center; font-size: 15px; margin-top: 20px" *ngIf="callLogs.length === 0"><b>No data available.</b></p> -->
 
+    </div>
+
+    <div class="col-md-12">
+      <button class="btn" style="border: none;" [style.cursor]="this.searchParam.page === 0 ? 'not-allowed':'pointer'"
+        [disabled]="this.searchParam.page === 0" (click)="previous()">Previous</button>
+      <button class="btn" style="border: none; cursor: pointer;" (click)="next()">Next</button>
     </div>
   </div>
 </div>
