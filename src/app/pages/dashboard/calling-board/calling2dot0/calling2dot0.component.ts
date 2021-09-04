@@ -22,7 +22,7 @@ export class Calling2dot0Component implements OnInit {
   loading = false;
   callingGridOptions: GridOptions;
   searchParam: any = {
-    priority: null,
+    priority: '1',
     serviceType: 'ITR',
     isChat: null,
     agentId: null,
@@ -68,6 +68,7 @@ export class Calling2dot0Component implements OnInit {
       this.searchParam.agentId = null;
       this.searchByQueryParams('');
     }
+    this.searchByQueryParams('PRIORITY');
   }
 
   async getAgentList() {
@@ -85,6 +86,9 @@ export class Calling2dot0Component implements OnInit {
       this.searchParam.priority = null
     } else if (ref === 'SERVICE') {
       return;
+    }
+    if (ref !== '') {
+      this.searchParam.page = 0;
     }
     this.loading = true;
     this.isServiceDisabled = false;
