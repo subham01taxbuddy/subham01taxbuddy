@@ -1,3 +1,4 @@
+import { UtilsService } from 'app/services/utils.service';
 import { AppConstants } from 'app/shared/constants';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { Component, OnInit } from '@angular/core';
@@ -32,7 +33,8 @@ export class LoginComponent implements OnInit {
   constructor(private fb: FormBuilder, private navbarService: NavbarService, public http: HttpClient,
     public router: Router, private _toastMessageService: ToastMessageService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService,
     private userMsService: UserMsService, private dialog: MatDialog,
-    private itrMsService: ItrMsService) {
+    private itrMsService: ItrMsService,
+    public utilsService: UtilsService,) {
     NavbarService.getInstance(null).component_link = this.component_link;
   }
 
@@ -41,6 +43,29 @@ export class LoginComponent implements OnInit {
       user: ['', Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(10)])],
       passphrase: ['']
     });
+    Auth.currentSession().then(res => {
+      const userData = JSON.parse(localStorage.getItem('UMD'));
+      console.log('Auth.current session:', res, 'USER DATA', userData);
+
+      if (this.utilsService.isNonEmpty(userData)) {
+        this.utilsService.getStoredSmeList();
+        this.getFyList();
+        this.getAgentList();
+
+        if (userData.USER_ROLE.indexOf("ROLE_ADMIN") !== -1) {
+          this.router.navigate(['/pages/dashboard/calling/todays-call']);
+        } else if (userData.USER_ROLE.indexOf("ROLE_FILING_TEAM") !== -1) {
+          this.router.navigate(['/pages/dashboard/calling/todays-call']);
+        } else if (userData.USER_ROLE.indexOf("ROLE_TPA_SME") !== -1) {
+          this.router.navigate(['pages/tpa-interested']);
+        } else {
+          if (userData.USER_ROLE.length > 0)
+            this._toastMessageService.alert("error", "Access Denied.");
+        }
+      }
+    }).catch(e => {
+      console.log('Auth.current session catch error:', e);
+    })
   }
 
   public onSubmit() {
@@ -129,13 +154,14 @@ export class LoginComponent implements OnInit {
       role: jhi.role
     };
     NavbarService.getInstance(null).setUserData(userData);
-    this.getSmeList();
+    this.utilsService.getStoredSmeList();
     this.getFyList();
+    this.getAgentList();
 
     if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
-      this.router.navigate(['/pages/itr-filing/my-itrs']);
+      this.router.navigate(['/pages/dashboard/calling/todays-call']);
     } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
-      this.router.navigate(['/pages/itr-filing/my-itrs']);
+      this.router.navigate(['/pages/dashboard/calling/todays-call']);
     } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
       this.router.navigate(['pages/tpa-interested']);
       /*  } else if (jhi.role.indexOf("ROLE_IFA") !== -1) {
@@ -163,25 +189,22 @@ export class LoginComponent implements OnInit {
 
   }
 
-  getSmeList() {
-    let param = '/sme-details';
-    this.userMsService.getMethod(param).subscribe((res: any) => {
-      if (res && res instanceof Array)
-        sessionStorage.setItem(AppConstants.SME_LIST, JSON.stringify(res));
-    }, error => {
-      console.log('Error during getting all PromoCodes: ', error)
-    })
-  }
+  /*  getFyList() {
+     let param = '/filing-dates';
+     this.itrMsService.getMethod(param).subscribe((res: any) => {
+       if (res && res.success && res.data instanceof Array) {
+         sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
+       }
+     }, error => {
+       console.log('Error during getting all PromoCodes: ', error)
+     })
+   } */
 
-  getFyList() {
-    let param = '/filing-dates';
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
-      if (res && res.success && res.data instanceof Array) {
-        sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
-      }
-    }, error => {
-      console.log('Error during getting all PromoCodes: ', error)
-    })
+  async getAgentList() {
+    await this.utilsService.getStoredAgentList();
+  }
+  async getFyList() {
+    await this.utilsService.getStoredFyList();
   }
 
   mode: string = 'SIGN_IN';

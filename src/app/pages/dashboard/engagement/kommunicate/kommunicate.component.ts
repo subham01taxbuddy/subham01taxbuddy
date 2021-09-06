@@ -7,6 +7,7 @@ import { environment } from 'environments/environment';
 import { AddCallLogComponent } from 'app/shared/components/add-call-log/add-call-log.component';
 import { GridOptions } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
+import { AppConstants } from 'app/shared/constants';
 
 @Component({
   selector: 'app-kommunicate',
@@ -19,18 +20,19 @@ export class KommunicateComponent implements OnInit {
   count = 0; // total elements
   pageSize = 20; // number of items in each page
   agentId = '';
-  agentList = [
-    { value: 'brij@ssbainnovations.com', label: 'Brij' },
-    { value: 'divya@ssbainnovations.com', label: 'Divya' },
-    { value: 'urmila@ssbainnovations.com', label: 'Urmila' },
-    { value: 'kavita@ssbainnovations.com', label: 'Kavita' },
-    { value: 'amrita@ssbainnovations.com', label: 'Amrita' },
-    { value: 'ankita@ssbainnovations.com', label: 'Ankita' },
-    { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
-    { value: 'damini@ssbainnovations.com', label: 'Damini' },
-    { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
-    { value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
-  ];
+  agentList: any = [];
+  // agentList = [
+  //   { value: 'brij@ssbainnovations.com', label: 'Brij' },
+  //   { value: 'divya@ssbainnovations.com', label: 'Divya' },
+  //   { value: 'urmila@ssbainnovations.com', label: 'Urmila' },
+  //   { value: 'kavita@ssbainnovations.com', label: 'Kavita' },
+  //   { value: 'amrita@ssbainnovations.com', label: 'Amrita' },
+  //   { value: 'ankita@ssbainnovations.com', label: 'Ankita' },
+  //   { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
+  //   { value: 'damini@ssbainnovations.com', label: 'Damini' },
+  //   { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
+  //   { value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
+  // ];
   loading = false;
   config: any;
   kommunicateGridOptions: GridOptions;
@@ -53,16 +55,18 @@ export class KommunicateComponent implements OnInit {
       };
 
     this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
-    if (!environment.production) {
-      this.agentList = [
-        { value: 'ashish.hulwan@ssbainnovations.com', label: 'Ashish' },
-        { value: 'vaibhav.gaikwad@ssbainnovations.com', label: 'Vaibhav' },
-        { value: 'dev_kommunicate@ssbainnovations.com', label: 'Dev Komm' },
-        { value: 'barakha@ssbainnovations.com', label: 'Barakha' },
-        { value: 'karan@ssbainnovations.com', label: 'Karan' },
-        { value: 'testkommunicate@ssbainnovations.com', label: 'Ajay' }
-      ];
-    }
+    // if (!environment.production) {
+    //   this.agentList = [
+    //     { value: 'ashish.hulwan@ssbainnovations.com', label: 'Ashish' },
+    //     { value: 'vaibhav.gaikwad@ssbainnovations.com', label: 'Vaibhav' },
+    //     { value: 'dev_kommunicate@ssbainnovations.com', label: 'Dev Komm' },
+    //     { value: 'barakha@ssbainnovations.com', label: 'Barakha' },
+    //     { value: 'karan@ssbainnovations.com', label: 'Karan' },
+    //     { value: 'testkommunicate@ssbainnovations.com', label: 'Ajay' }
+    //   ];
+    //}
+
+    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST))
   }
 
   ngOnInit() {

@@ -10,6 +10,8 @@ export class TeamSubscriptionsComponent implements OnInit {
   queryParam = '';
   teamMember: any;
   smeList = [];
+  totalCount = 0;
+
   constructor(private userMsService: UserMsService) { }
 
   ngOnInit() {
@@ -20,6 +22,14 @@ export class TeamSubscriptionsComponent implements OnInit {
     }, error => {
       console.log('Error during getting all PromoCodes: ', error)
     })
+  }
+
+  fromSubscription(event) {
+    this.totalCount = event;
+  }
+
+  fromSme(event) {
+    this.queryParam = `?subscriptionAssigneeId=${event}`;
   }
 
   getMembersSubscriptions(member) {

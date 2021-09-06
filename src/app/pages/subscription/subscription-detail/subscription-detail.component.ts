@@ -19,6 +19,7 @@ export class SubscriptionDetailComponent implements OnInit {
   selectedUserName: any = '';
   userId: any;
   queryParam: string = "";
+  totalCount = 0;
 
   constructor(private _toastMessageService: ToastMessageService, public utilsService: UtilsService, private itrService: ItrMsService, @Inject(LOCALE_ID) private locale: string,
     private userService: UserMsService, private router: Router, private dialog: MatDialog, private activatedRoute: ActivatedRoute) {
@@ -45,7 +46,10 @@ export class SubscriptionDetailComponent implements OnInit {
       }
     });
   }
-
+  fromSubscription(event) {
+    this.totalCount = event;
+    console.log('My subscription total count', event)
+  }
   advanceSearch() {
     console.log('this.searchVal -> ', this.searchVal)
     if (this.utilsService.isNonEmpty(this.searchVal)) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DateAdapter, MatDialog, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { GstMsService } from 'app/services/gst-ms.service';
@@ -50,6 +50,17 @@ export class UserProfileComponent implements OnInit {
     { value: 'RESIDENT', label: 'Resident' },
     { value: 'NON_RESIDENT', label: 'Non Resident' },
   ];
+  userRoles : any = [{label: 'Admin', value: 'ROLE_ADMIN'},
+                    {label: 'User', value: 'ROLE_USER'},
+                    {label: 'Ifa', value: 'ROLE_IFA'},
+                    {label: 'Sme', value: 'ROLE_SME'},
+                    {label: 'Filling team', value: 'ROLE_FILING_TEAM'},
+                    {label: 'Caller team', value: 'ROLE_CALLING_TEAM'},
+                    {label: 'Tpa sme', value: 'ROLE_TPA_SME'}];
+
+  userRole: any = new FormControl();
+  userId: any;
+
   bankData: any = [];
   addressData: any = [];
   state_list = [{
@@ -326,6 +337,7 @@ export class UserProfileComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       console.log("99999999999999999:", params)
       this.getUserInfo(params['id']);
+      this.userId = params['id'];
     });
     // })
 
@@ -498,7 +510,9 @@ export class UserProfileComponent implements OnInit {
       }
       console.log('Bank -> ', this.userProfileForm.controls.bankDetails, this.userProfileForm.controls.bankDetails.value)
       this.bankData = this.userProfileForm.controls.bankDetails.value;
-      console.log('userInfo :-> ', this.userInfo)
+      console.log('userInfo :-> ', this.userInfo);
+
+      this.updateUserRole(this.userInfo.mobileNumber)
     },
       error => {
         this.loading = false;
@@ -739,6 +753,45 @@ export class UserProfileComponent implements OnInit {
         return resolve("");
       }
     });
+  }
+
+  updateUserRole(userMobNo){
+    console.log('userMobNo: ',userMobNo, typeof userMobNo, typeof parseInt(userMobNo))
+    let param = '/users?mobileNumber='+parseInt(userMobNo);
+    this.userService.getMethod(param).subscribe((userRole: any)=>{
+        console.log('User rolses: ',userRole);
+        if(Array.isArray(userRole.role) && userRole.role.length > 0){
+          this.userRole.setValue(userRole.role)  
+        }
+    },
+    error=>{
+      console.log('Error during update user role: ',error);
+    })
+  }
+
+
+  saveUserRole(){
+      console.log("user Role: ",this.userRole, this.userRole.value);
+      // console.log("user Role value: ",this.userRole.value, typeof this.userRole.value);
+      // console.log("user Role value lengh: ",this.userRole.value.lengh);
+      if(this.userRole.value !== null){
+        this.loading = true;
+        let param = '/users';
+        let reqBody = {
+          "userId": parseInt(this.userId), 
+          "role": this.userRole.value
+        }
+        this.userService.putMethod(param, reqBody).subscribe(res=>{
+            console.log("Add user roles responce: ",res);
+            this._toastMessageService.alert("success", this.userInfo.fName + " User role updated successfully.");
+            this.loading = false;
+        },
+        error =>{
+          console.log("there is error : ",error);
+          this._toastMessageService.alert("error", this.userInfo.fName + "User role not update, try after some time.");
+          this.loading = false;
+        })
+      }
   }
 
 }

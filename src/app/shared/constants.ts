@@ -30,14 +30,16 @@ export class AppConstants {
     public static NAME = environment.production ? 'name' : 'name';
     public static ITR_DOCS = environment.production ? 'ITR_DOCS' : 'ITR_DOCS';
     public static SME_LIST = environment.production ? 'SME_LIST' : 'SME_LIST';
+    public static MASTER_STATUS = environment.production ? 'MASTER_STATUS' : 'MASTER_STATUS';
     public static FY_LIST = environment.production ? 'FY_LIST' : 'FY_LIST';
+    public static AGENT_LIST = environment.production ? 'AGENT_LIST' : 'AGENT_LIST';
     public static SELECTED_AGENT = environment.production ? 'SELECTED_AGENT' : 'SELECTED_AGENT';
     public static gstFyList = [
         { financialYear: '2021-22' },
         { financialYear: '2020-21' },
         { financialYear: '2019-20' },
         { financialYear: '2018-19' },
-        { financialYear: '2017-18' },
+        // { financialYear: '2017-18' },
     ];
     public static subscriptionFyList = [
         { financialYear: '2021-2022' },

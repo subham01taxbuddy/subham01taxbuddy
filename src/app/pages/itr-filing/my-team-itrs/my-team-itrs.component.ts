@@ -132,17 +132,29 @@ export class MyTeamItrsComponent implements OnInit {
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     if (this.selectedMemberId !== null)
-      this.getMembersItr(this.selectedMemberId, event, this.selectedPageNo);
+      this.getMembersItr(this.selectedMemberId, this.selectedFyYear, this.selectedPageNo);
+  }
+
+  fromSme(event) {
+    // this.searchParams = event;
+    // this.selectedFyYear = event;
+    this.selectedMemberId = event;
+    console.log(event);
+    this.selectedPageNo = 0;
+    this.config.currentPage = 1;
+    if (this.selectedMemberId !== null)
+      this.getMembersItr(this.selectedMemberId, this.selectedFyYear, this.selectedPageNo);
   }
 
   getMembersItr(id, fy, pageNo) {
     this.loading = true;
     this.selectedMemberId = id;
     this.config.currentPage = pageNo + 1;
+    if (this.utilsService.isNonEmpty(this.selectedMemberId)) {
+      this.selectedMember = this.filingTeamMembers.filter(item => item.userId === id)[0].name;
+    }
     return new Promise((resolve, reject) => {
-      if (this.utilsService.isNonEmpty(this.selectedMemberId)) {
-        this.selectedMember = this.filingTeamMembers.filter(item => item.userId === id)[0].name;
-      }
+
       let reqBody = {
         'financialYear': fy,
         'filingTeamMemberId': id

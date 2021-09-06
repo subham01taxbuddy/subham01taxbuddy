@@ -34,7 +34,7 @@ export class ServiceBoardSearchComponent implements OnInit {
       // this.retrieveData(0)
     }
     this.setFyDropDown();
-    this.setAgentsDropDown();
+    // this.setAgentsDropDown();
   }
 
   setFyDropDown() {
@@ -67,7 +67,8 @@ export class ServiceBoardSearchComponent implements OnInit {
       let param = '/sme-details';
       this.userMsService.getMethod(param).subscribe((res: any) => {
         if (res && res instanceof Array)
-          sessionStorage.setItem(AppConstants.SME_LIST, JSON.stringify(res));
+          res.sort((a, b) => a.name > b.name ? 1 : -1)
+        sessionStorage.setItem(AppConstants.SME_LIST, JSON.stringify(res));
       }, error => {
         console.log('Error during getting all PromoCodes: ', error)
       })

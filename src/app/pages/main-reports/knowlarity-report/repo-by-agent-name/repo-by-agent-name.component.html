@@ -1,0 +1,76 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="main clearfix" style="padding-top: 0px;">
+    <div class="card">
+        <div class="card__row">
+            <form [formGroup]="reportByAgentForm">
+                <div class="card__col-lg-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>From Date</mat-label>
+                        <input matInput formControlName="fromDate" [matDatepicker]="picker1"  [max]="maxDate"
+                            autocomplete="off"
+                            (dateChange)="setToDateValidation(reportByAgentForm.controls['fromDate'].value)">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-error *ngIf="reportByAgentForm.controls['fromDate'].hasError('required')">Select From
+                            date</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="card__col-lg-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>To Date</mat-label>
+                        <input matInput formControlName="toDate" [matDatepicker]="picker2" [max]="maxDate"
+                          [min]="minToDate"  autocomplete="off">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error *ngIf="reportByAgentForm.controls['toDate'].hasError('required')">Select To
+                            date</mat-error>
+                        <mat-error *ngIf="reportByAgentForm.controls['toDate'].hasError('min')">To date always greater
+                            than from date</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="card__col-lg-3">
+                    <button class="btn" style="border: none; cursor: pointer;"
+                        (click)="showKnowlarityInfoByAgent()">Show Report</button>
+                </div>
+
+                <div class="card__col-lg-3">
+                    <button class="btn" style="border: none; cursor: pointer;"
+                        (click)="downloadRepo()">Download</button>
+                </div>
+            </form>
+        </div>
+        <div class="card__row">
+            <div class="card__row" *ngIf="totalRecords">
+                <div class="card__col-lg-2">
+                    <b>Outbound: </b>{{totalRecords.outboundCall}}
+                </div>
+                <div class="card__col-lg-2">
+                    <b>OutBound Answered: </b>{{totalRecords.outboundAnsweredCall}}
+                </div>
+                <div class="card__col-lg-2">
+                    <b>Inbound Call: </b>{{totalRecords.inboundCall}}
+                </div>
+                <div class="card__col-lg-2">
+                    <b>Inbound Answered: </b>{{totalRecords.inboundAnsweredCall}}
+                </div>
+                <div class="card__col-lg-2">
+                    <b>Total Answered: </b>{{totalRecords.totalAnsweredCall}}
+                </div>
+                <div class="card__col-lg-2">
+                    <b>Missed Call: </b>{{totalRecords.missedCall}}
+                </div>
+                <div class="card__col-lg-2" style="padding: 10px;">
+                    <b>Total Duration: </b>{{totalRecords.totalDuration}}
+                </div>
+            </div>  
+
+            <ag-grid-angular class="ag-theme-balham" [gridOptions]="repoByAgentGridOption"
+                paginationPageSize=20 pagination=true>  <!--(firstDataRendered)="onFirstDataRendered($event)" (rowClicked)="onInvoiceRowClicked($event)"-->
+            </ag-grid-angular>
+        </div>
+
+       
+    </div>
+</div>

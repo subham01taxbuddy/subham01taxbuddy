@@ -15,7 +15,7 @@ export class KommunicateDialogComponent implements OnInit {
   botIds: any = [];
   constructor(public dialogRef: MatDialogRef<KommunicateDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
     private userService: UserMsService, public utilService: UtilsService) {
-    this.botIds = environment.botIds;
+    // this.botIds = environment.botIds;
   }
 
   ngOnInit() {

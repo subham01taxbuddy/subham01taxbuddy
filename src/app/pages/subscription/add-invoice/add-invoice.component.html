@@ -6,10 +6,10 @@
         <div class="card__row">
             <div class="card__col-lg-12" style="margin-top: 15px;" *ngIf="userInvoices">
                 <mat-accordion>
-                    <mat-expansion-panel [expanded]="true">
+                    <mat-expansion-panel [expanded]="false">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                <b>Previous Invoices</b>
+                                <b>Previous Invoices & Initial data</b>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <table *ngIf="userInvoices && userInvoices.length > 0">
@@ -60,6 +60,18 @@
                             style="text-align: center; padding: 15px;">
                             There is No invoice records
                         </div>
+
+                        <div class="card__row">
+                            <div class="card__col-lg-12">
+                                <label>&nbsp;&nbsp;&nbsp; Initial Data:</label><br><br>
+                                <pre class="initiatedInfo" *ngIf="initialData">
+                    {{initialData | json}}
+                </pre>
+                                <p style="margin: 12px; font-size: 15px; padding-left: 137px;" *ngIf="!initialData">
+                                    Initial data not present for selected User.
+                                </p>
+                            </div><br>
+                        </div>
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>
@@ -71,17 +83,8 @@
     <div class="card">
         <form [formGroup]="invoiceForm">
             <mat-card>
+                <label>Invoice Information:</label><br><br>
                 <div class="card__row">
-                    <label>Initial Data:</label><br><br>
-                    <pre class="initiatedInfo" *ngIf="initialData">
-                    {{initialData | json}}
-                </pre>
-                    <p style="margin: 12px; font-size: 15px; padding-left: 137px;" *ngIf="!initialData">
-                        Initial data not present for selected User.
-                    </p>
-                </div><br>
-                <div class="card__row">
-                    <label>Invoice Information:</label><br><br>
                     <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Invoice Date</mat-label>
@@ -129,10 +132,10 @@
                         <mat-form-field appearance="outline">
                             <mat-label>IFA / Lead client</mat-label>
                             <input matInput formControlName="ifaLeadClient" placeholder="IFA / Lead client"
-                                autocomplete="off" maxlength="30" required>
-                            <mat-error *ngIf="invoiceForm.controls['ifaLeadClient'].hasError('required')">Enter
+                                autocomplete="off" maxlength="30">
+                            <!-- <mat-error *ngIf="invoiceForm.controls['ifaLeadClient'].hasError('required')">Enter
                                 IFA / Lead client info
-                            </mat-error>
+                            </mat-error> -->
                         </mat-form-field>
                     </div>
                     <div class="card__col-lg-4" *ngIf="this.invoiceForm.controls['paymentStatus'].value === 'Paid'">
@@ -151,8 +154,8 @@
             <br>
 
             <mat-card>
+                <label>Bill to:</label><br><br>
                 <div class="card__row">
-                    <label>Bill to:</label><br><br>
                     <div class="card__col-lg-8">
                         <mat-form-field appearance="outline">
                             <mat-label>User name</mat-label>
@@ -167,8 +170,8 @@
                 </div>
             </mat-card><br><br>
             <mat-card>
+                <label>Address Information:</label><br><br>
                 <div class="card__row">
-                    <label>Address Information:</label><br><br>
                     <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Address Line 1: </mat-label>
@@ -200,7 +203,8 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-
+                </div>
+                <div class="card__row">
                     <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Country</mat-label>
@@ -238,18 +242,8 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>GSTIN:</mat-label>
-                            <input formControlName="gstin" maxlength="15" matInput placeholder="GSTIN"
-                                autocomplete="off"
-                                [required]="this.invoiceForm.controls['serviceType'].value === 'GST'">
-                            <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('required')">Enter GSTIN
-                                number</mat-error>
-                            <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('pattern')">Enter valid
-                                GSTIN</mat-error>
-                        </mat-form-field>
-                    </div>
+                </div>
+                <div class="card__row">
                     <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Phone</mat-label>
@@ -272,11 +266,23 @@
                                 email address</mat-error>
                         </mat-form-field>
                     </div>
+                    <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>GSTIN:</mat-label>
+                            <input formControlName="gstin" maxlength="15" matInput placeholder="GSTIN"
+                                autocomplete="off"
+                                [required]="this.invoiceForm.controls['serviceType'].value === 'GST'">
+                            <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('required')">Enter GSTIN
+                                number</mat-error>
+                            <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('pattern')">Enter valid
+                                GSTIN</mat-error>
+                        </mat-form-field>
+                    </div>
 
                 </div>
             </mat-card><br><br>
 
-            <mat-accordion>
+            <!-- <mat-accordion>
                 <mat-expansion-panel [expanded]="false" style="padding: 0px 20px 0px 20px;">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
@@ -311,7 +317,7 @@
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>
-            <br><br>
+            <br><br> -->
 
             <mat-card>
                 <label>Invoice table:</label><br><br>
@@ -413,7 +419,7 @@
                         <div style="float: right;" class="card__col-lg-5">₹
                             {{this.invoiceForm.controls.subTotal.value}}
                         </div> -->
-                        
+
                         <div class="card__col-lg-7">Final Price
                             <span>(Incl of GST)</span>
                         </div>

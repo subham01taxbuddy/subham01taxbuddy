@@ -83,11 +83,14 @@ export const routes: Routes = [
 			{ path: 'subscription', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_TPA_SME', 'ROLE_FILING_TEAM'] }, */ loadChildren: './subscription/subscription.module#SubscriptionModule' },
 			{ path: 'user-management', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './user-management/user-management.module#UserManagementModule' },
 			{ path: 'gst-filing', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './gst-filing/gst-filing.module#GstFilingModule' },
-			{ path: '**', redirectTo: '/pages/itr-filing/my-itrs', pathMatch: 'full' },
+			{ path: 'master', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './master/master.module#MasterModule' },
+			{ path: 'team-management', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './team-management/team-mgnt.module#TeamManagementModule' },
+			{ path: 'reports', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './main-reports/main-reports.module#MainReportsModule' },
+			{ path: '**', redirectTo: '/pages/dashboard/calling/todays-call', pathMatch: 'full' },
 
 		]
 	},
 
 	{ path: '', redirectTo: 'login', pathMatch: 'full' },
-	{ path: '**', redirectTo: '/pages/itr-filing/my-itrs' }
+	{ path: '**', redirectTo: '/pages/dashboard/calling/todays-call' }
 ];

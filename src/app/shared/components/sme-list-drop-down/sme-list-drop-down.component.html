@@ -1,0 +1,24 @@
+<!-- <mat-form-field appearance="outline">
+  <mat-label>Select SME</mat-label>
+  <mat-select placeholder="Select SME" [formControl]="selectedSme" (selectionChange)="changeSme(selectedSme.value)"
+    required>
+    <mat-option *ngFor="let sme of smeList" [value]="sme.userId">
+      {{sme.name}}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="selectedSme.hasError('required')">Select SME</mat-error>
+</mat-form-field> -->
+
+<mat-form-field class="example-full-width" appearance="outline">
+  <mat-label>Search & Select SME</mat-label>
+  <input type="text" placeholder="Start typing..." aria-label="Assignee" matInput [formControl]="selectedSme"
+    [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()" required>
+  <mat-error *ngIf="selectedSme.invalid">
+    Please select value from dropdown only.
+  </mat-error>
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name">
+      {{option.name}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

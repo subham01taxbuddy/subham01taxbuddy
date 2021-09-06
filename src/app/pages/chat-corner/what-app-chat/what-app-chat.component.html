@@ -5,15 +5,27 @@
     <div class="content__container">
       <div class="card">
 
-        <div class="card__row" >
-          <label><b>Selected Agent: </b></label> &nbsp; {{selectedAgent}} &nbsp;&nbsp;
+        <div class="card__row">
+          <!-- <label><b>Selected Agent: </b></label> &nbsp; {{selectedAgent}} &nbsp;&nbsp;
           <span *ngFor="let agent of agentList; let i=index">
-              <a href="javascript:;" (click)="getUnreadListByAgentId(agent.value)">{{agent.label}}</a> &nbsp;&nbsp;
-          </span>
+              <a href="javascript:;" (click)="getUnreadListByAgentId(agent.email)">{{agent.name}}</a> &nbsp;&nbsp;
+          </span> -->
+
         </div>
 
-        <div class="card__row" *ngIf="showChatUi">
-          <div class="card__col-xs-3 card__col-sm-3">
+        <div class="card__row">
+          <div class="filter__col card__col-sm-3 card__col-xs-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Select Agent</mat-label>
+              <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedAgent"
+                (selectionChange)="getUnreadListByAgentId(selectedAgent)">
+                <mat-option *ngFor="let agent of agentList" [value]="agent.email">
+                  {{agent.name}} <span style="font-weight: bold;">{{agent.serviceType}}</span>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="card__col-xs-3 card__col-sm-3" *ngIf="showChatUi">
             <mat-form-field appearance="outline">
               <input matInput [formControl]="searchNumber" maxlength="10" placeholder="Search By Mobile number"
                 autocomplete="off"
@@ -21,17 +33,18 @@
                 onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </mat-form-field>
           </div>
-          <div class="card__col-xs-2 card__col-sm-2">
+          <div class="card__col-xs-2 card__col-sm-2" *ngIf="showChatUi">
             <button class="sendBtn"
-              [class.btnDisable]="!this.utileService.isNonEmpty(this.searchNumber.value) || !this.searchNumber.valid"
+              [class.btnDisable]="!this.utilsService.isNonEmpty(this.searchNumber.value) || !this.searchNumber.valid"
               style="padding-left: 15px; padding-right: 15px; margin-top: 3px;"
-              [disabled]="!this.utileService.isNonEmpty(this.searchNumber.value) || !this.searchNumber.valid"
+              [disabled]="!this.utilsService.isNonEmpty(this.searchNumber.value) || !this.searchNumber.valid"
               (click)="geUserChatDetail('bySearch')">Search</button>
           </div>
 
         </div>
 
-        <div class="card__row" > <!--*ngIf="showChatUi"-->
+        <div class="card__row">
+          <!--*ngIf="showChatUi"-->
           <div class="card__col-xs-12 card__col-sm-12" style="margin-top: 0px;">
             <div class="card__col-lg-4" style="padding: 0px;">
               <!--userList-->
@@ -49,7 +62,8 @@
                 <mat-expansion-panel>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
-                      <b> {{selectedUser ? selectedUser.name : 'User Not available in our system'}}</b></mat-panel-title>
+                      <b> {{selectedUser ? selectedUser.name : 'User Not available in our system'}}</b>
+                    </mat-panel-title>
                     <!-- <mat-panel-description>
                         Type your name and age
                       </mat-panel-description> -->
@@ -208,7 +222,7 @@
                     </div>
 
                   </div> -->
-                <div class="mesgs" >
+                <div class="mesgs">
                   <div class="msg_history" #scrollMe [scrollTop]="scrollMe.scrollHeight">
                     <span *ngFor="let data of userchatData">
                       <!-- TEMPLATE SENT -->
@@ -273,7 +287,9 @@
                         <div class="received_msg">
                           <div class="received_withd_msg">
                             <p>
-                              {{data.textMessage ? (data.textMessage) : (data.templateContent?data.templateContent:(data.mediaId? this.showLink(data.mediaId):''))}}
+                              {{data.textMessage ? (data.textMessage) :
+                              (data.templateContent?data.templateContent:(data.mediaId?
+                              this.showLink(data.mediaId):''))}}
                             </p>
                             <span class="time_date"> {{data.dateLong | date:'medium':'+0530'}} <i
                                 class="fa fa-check-double" style="color: red;"></i></span>
@@ -353,7 +369,8 @@
                     (click)="startChat(selectedUser ? selectedUser.whatsAppNumber : selectdMobNum)">Start
                     Conversation</button>
 
-                    <button *ngIf="selectedUser" class="sendBtn" style="float: right; padding: 0px 10px;" (click)="blockChatUser(selectedUser.whatsAppNumber)">Block</button>
+                  <button *ngIf="selectedUser" class="sendBtn" style="float: right; padding: 0px 10px;"
+                    (click)="blockChatUser(selectedUser.whatsAppNumber)">Block</button>
                 </div>
 
                 <div class="chat-footer msger-inputarea" *ngIf="startConversation">
@@ -375,9 +392,9 @@
                     <div class="card__col-lg-7 card__col-sm-4">
                       <!--*ngIf="this.whatsAppForm.controls['selectTemplate'].value"-->
                       <mat-form-field appearance="outline">
-                        <textarea matInput id="sentMsgId" formControlName="sentMessage" cdkTextareaAutosize cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="9" [class.disableTestArea]="timeExpired" [readonly]="timeExpired"
-                          name="sentMsg" placeholder="Enter your message..."></textarea> 
+                        <textarea matInput id="sentMsgId" formControlName="sentMessage" cdkTextareaAutosize
+                          cdkAutosizeMinRows="1" cdkAutosizeMaxRows="9" [class.disableTestArea]="timeExpired"
+                          [readonly]="timeExpired" name="sentMsg" placeholder="Enter your message..."></textarea>
                         <mat-error *ngIf="this.whatsAppForm.controls['sentMessage'].hasError('fillmandate')">
                           Please fill all attributes values.
                         </mat-error>
@@ -385,7 +402,7 @@
                     </div>
 
                     <div class="card__col-lg-2 card__col-sm-4">
-                      <button class="sendBtn" (click)="sendMsg()" >Send</button>
+                      <button class="sendBtn" (click)="sendMsg()">Send</button>
                     </div><br>
 
                     <div class="card__col-lg-3 card__col-sm-4">
@@ -425,8 +442,8 @@
                       <label>{{whatsAppForm.controls['mediaFile'].value.name}}</label>&nbsp;&nbsp;
                       <button class="closeBtn" (click)="clearFile()">Close</button>
                     </div>
-                    
-                    
+
+
 
                     <!-- <button *ngIf="this.selectedUser" mat-raised-button color="primary"
                       (click)="geUserChatDetail(selectedUser, 'not-continues')" class="refreshBtn"

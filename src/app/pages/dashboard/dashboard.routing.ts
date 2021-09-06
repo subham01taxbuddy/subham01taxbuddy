@@ -8,12 +8,16 @@ import { EngagementComponent } from './engagement/engagement.component';
 import { KommunicateComponent } from './engagement/kommunicate/kommunicate.component';
 import { WhatsappComponent } from './engagement/whatsapp/whatsapp.component';
 import { InterestedClientsComponent } from './interested-clients/interested-clients.component';
+import { OpenStatusComponent } from './open-status/open-status.component';
+import { KnowlarityComponent } from './knowlarity/knowlarity.component';
+import { Calling2dot0Component } from './calling-board/calling2dot0/calling2dot0.component';
 
 const routes: Routes = [
     {
         path: '', component: DashboardComponent,
         children: [
-            { path: 'new-user', component: NewUserComponent },
+            { path: 'quick-search', component: NewUserComponent }, //new-user  
+            { path: 'quick-search/:mobileNo', component: NewUserComponent },
             {
                 path: 'engagement', component: EngagementComponent,
                 children: [
@@ -26,11 +30,14 @@ const routes: Routes = [
                 path: 'calling', component: CallingBoardComponent,
                 children: [
                     { path: 'todays-call', component: TodaysCallsComponent },
+                    { path: 'calling2', component: Calling2dot0Component },
                     { path: '', redirectTo: 'todays-call', pathMatch: 'full' }
                 ]
             },
             { path: 'interested-clients', component: InterestedClientsComponent },
-            { path: '', redirectTo: 'new-user', pathMatch: 'full' }
+            { path: 'open-status', component: OpenStatusComponent },
+            { path: 'knowlarity', component: KnowlarityComponent },
+            { path: '', redirectTo: 'quick-search', pathMatch: 'full' }
         ]
     },
 ];

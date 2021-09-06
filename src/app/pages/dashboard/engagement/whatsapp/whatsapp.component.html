@@ -5,7 +5,7 @@
         <div class="card__row">
             <label>Selected Agent: {{agentId}}</label> &nbsp;&nbsp;
             <span *ngFor="let agent of agentList; let i=index">
-                <a href="javascript:;" (click)="selectAgent(agent.value)">{{agent.label}}</a> &nbsp;&nbsp;
+                <a href="javascript:;" (click)="selectAgent(agent.email)">{{agent.name}}</a> &nbsp;&nbsp;
             </span>
         </div>
         <div class="card__row" style="margin-top: 0px;">

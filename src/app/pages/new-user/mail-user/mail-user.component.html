@@ -1,20 +1,28 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div class="main clearfix" style="padding-top: 0px">
   <div class="card">
     <div class="card__row">
-      <label>Selected Agent for email user: </label> &nbsp;&nbsp;
+      <!-- <label>Selected Agent for email user: </label> &nbsp;&nbsp;
       <span *ngFor="let agent of agentList; let i=index">
           <a href="javascript:;" (click)="getMailUserByAgentId(agent.value)">{{agent.label}}</a> &nbsp;&nbsp;
-      </span>
+      </span> -->
+      <div class="filter__col card__col-sm-3 card__col-xs-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Select Agent</mat-label>
+          <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedAgent"
+            (selectionChange)="getMailUserByAgentId(selectedAgent)">
+            <mat-option *ngFor="let agent of agentList" [value]="agent.email">
+              {{agent.name}} <span style="font-weight: bold;">{{agent.serviceType}}</span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
     <br><br>
 
-  
-      <!-- <div *ngIf="showMailUser" class="card__row" style="margin-top: 0px;">
+
+    <!-- <div *ngIf="showMailUser" class="card__row" style="margin-top: 0px;">
         <div class="tab-panel items-tab card__col-xs-12">
           <div class="tab-panel__content tab-panel__content_visible">
             <div class="table product__table">
@@ -77,19 +85,19 @@
         </div>
       </div> -->
 
-      <div class="card__row">
-        <ag-grid-angular class="ag-theme-balham" [gridOptions]="mailUserListGridOptions"
-        (rowClicked)="mailUserRowClicked($event)" paginationPageSize=15 pagination=true>   
-        </ag-grid-angular>
+    <div class="card__row">
+      <ag-grid-angular class="ag-theme-balham" [gridOptions]="mailUserListGridOptions"
+        (rowClicked)="mailUserRowClicked($event)" paginationPageSize=15 pagination=true>
+      </ag-grid-angular>
     </div>
-      
+
   </div>
 </div>
 
 
-      <br><br>
+<br><br>
 
-      <!-- <table mat-table [dataSource]="mailUser">
+<!-- <table mat-table [dataSource]="mailUser">
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> User Name </th>
           <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -114,8 +122,8 @@
           <th mat-header-cell *matHeaderCellDef> Date </th>
           <td mat-cell *matCellDef="let element"> {{element.createdDate}} </td>
         </ng-container> -->
-      
-        <!-- <ng-container matColumnDef="details">
+
+<!-- <ng-container matColumnDef="details">
           <th mat-header-cell *matHeaderCellDef> Assign Id </th>
           <td mat-cell *matCellDef="let element">
             <button mat-icon-button color="primary" (click)="redirectToDetails(element.id)">
@@ -145,5 +153,3 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>-->
-
-    

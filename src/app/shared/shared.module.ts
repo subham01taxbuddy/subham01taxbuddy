@@ -23,6 +23,9 @@ import { DocumentViewerComponent } from './components/document-viewer/document-v
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { FyDropDownComponent } from './components/fy-drop-down/fy-drop-down.component';
+import { ChangeStatusComponent } from './components/change-status/change-status.component';
+import { NgxLoadingModule } from 'ngx-loading';
+import { SmeListDropDownComponent } from './components/sme-list-drop-down/sme-list-drop-down.component';
 // import { CheckboxRenderer } from './checkbox-renderer.component';
 
 
@@ -43,7 +46,9 @@ import { FyDropDownComponent } from './components/fy-drop-down/fy-drop-down.comp
         KommunicateDialogComponent,
         ItrActionsComponent,
         DocumentViewerComponent,
-        FyDropDownComponent
+        FyDropDownComponent,
+        ChangeStatusComponent,
+        SmeListDropDownComponent
     ],
     imports: [
         CommonModule,
@@ -56,7 +61,8 @@ import { FyDropDownComponent } from './components/fy-drop-down/fy-drop-down.comp
         OwlNativeDateTimeModule,
         NgxPaginationModule,
         NgxImageZoomModule.forRoot(),
-        NgxDocViewerModule
+        NgxDocViewerModule,
+        NgxLoadingModule.forRoot({}),
     ],
     exports: [
         CommonModule,
@@ -77,10 +83,12 @@ import { FyDropDownComponent } from './components/fy-drop-down/fy-drop-down.comp
         KommunicateDialogComponent,
         ItrActionsComponent,
         DocumentViewerComponent,
-        FyDropDownComponent
+        FyDropDownComponent,
+        ChangeStatusComponent,
+        SmeListDropDownComponent
     ],
     providers: [],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,
-        KommunicateDialogComponent, ItrActionsComponent]
+        KommunicateDialogComponent, ItrActionsComponent, ChangeStatusComponent]
 })
 export class SharedModule { }

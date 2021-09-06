@@ -44,22 +44,6 @@
             <div class="card card_main">
                 <div class="card__title">Customer Profile</div>
                 <app-update-status [userId]="ITR_JSON.userId" (sendValue)="getStatusId($event)"></app-update-status>
-                <!-- <div class="card__row">
-                    <div class="card__col-xs-12 card__col-sm-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Filling Status</mat-label>
-                            <mat-select placeholder="Filling Status" name="fillingStatus" [formControl]="fillingStatus">
-                                <mat-option *ngFor="let status of fillingMasterStatus" [value]="status.statusId">
-                                    {{ status.statusName }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div>
-                        
-                        <button class="btn long-btn" style="border: none;" (click)="updateStatus()">Update</button>
-                    </div>
-                </div> -->
                 <hr>
                 <form [formGroup]="customerProfileForm">
                     <div class="card__row">
@@ -145,8 +129,7 @@
                                 <input matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
                                     matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
                                     placeholder="Aadhaar" name="aadharNumber" formControlName="aadharNumber"
-                                    class="input-field" maxlength="12"
-                                    [required]="customerProfileForm.controls['assesseeType'].value === 'INDIVIDUAL'">
+                                    class="input-field" maxlength="12">
                                 <mat-error
                                     *ngIf="customerProfileForm.controls['aadharNumber'].hasError('pattern') || customerProfileForm.controls['aadharNumber'].hasError('minLength') || customerProfileForm.controls['aadharNumber'].hasError('maxLength')">
                                     Enter
@@ -159,8 +142,7 @@
                                 <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip"
                                     matTooltipPosition="above" matInput [min]="minDate" [max]="maxDate"
                                     [matDatepicker]="picker" class="input-field" placeholder="Date of birth"
-                                    name="dateOfBirth" [formControl]="customerProfileForm.controls['dateOfBirth']"
-                                    required>
+                                    name="dateOfBirth" [formControl]="customerProfileForm.controls['dateOfBirth']">
                                 <mat-hint>Format: DD/MM/YYYY</mat-hint>
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
@@ -182,7 +164,7 @@
                         <div class="card__col-xs-12 card__col-sm-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>Select Gender</mat-label>
-                                <mat-select placeholder="Select Gender" name="gender" formControlName="gender" required>
+                                <mat-select placeholder="Select Gender" name="gender" formControlName="gender">
                                     <mat-option *ngFor="let gender of genderMaster" [value]="gender.value">
                                         {{ gender.label }}
                                     </mat-option>
@@ -203,7 +185,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Employer Category</mat-label>
                                 <mat-select placeholder="Employer Category" name="employerCategory"
-                                    formControlName="employerCategory" required>
+                                    formControlName="employerCategory">
                                     <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
                                         {{ emp.label }}
                                     </mat-option>
@@ -330,14 +312,14 @@
                     </div>
                     <div class="footer__buttons clearfix" style="margin-top: 40px;">
                         <button class="btn long-btn" style="border: none;" (click)="this.location.back()">Back</button>
-                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('SAVE')">Save
-                            Profile</button>
-                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('CONTINUE')">Continue
-                            Filing</button>
+                        <!-- <button class="btn long-btn" style="border: none;" (click)="saveProfile('SAVE')">Save
+                            Profile</button> -->
+                        <!--  <button class="btn long-btn" style="border: none;" (click)="saveProfile('CONTINUE')">Continue
+                            Filing</button> -->
                         <button class="btn long-btn" style="border: none;" (click)="saveProfile('MANUALLY')">Manually
                             Filed</button>
-                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT')">Direct
-                            Upload</button>
+                        <!-- <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT')">Direct
+                            Upload</button> -->
                     </div>
                 </form>
             </div>

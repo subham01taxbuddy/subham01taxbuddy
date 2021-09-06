@@ -1,7 +1,7 @@
 import { ItrActionsComponent } from './../shared/components/itr-actions/itr-actions.component';
 import { Injectable } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, UrlSerializer } from '@angular/router';
 import { AppConstants } from 'app/shared/constants';
 import { Observable, Subject } from 'rxjs';
 import { ITR_JSON } from './../shared/interfaces/itr-input.interface';
@@ -17,6 +17,7 @@ export class UtilsService {
     private subject = new Subject<any>();
     constructor(private snackBar: MatSnackBar, private itrMsService: ItrMsService,
         private router: Router, private dialog: MatDialog,
+        private serializer: UrlSerializer,
         private userMsService: UserMsService,) { }
     /**
     * @function isNonEmpty()
@@ -350,6 +351,9 @@ export class UtilsService {
         else if (errorCode === 500) {
             errorMessage = 'Internal server error.';
         }
+        else {
+            errorMessage = 'Something went wrong.';
+        }
         return errorMessage;
     }
 
@@ -363,7 +367,7 @@ export class UtilsService {
     async getStoredFyList() {
         const fyList = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST));
         console.log('fyList', fyList);
-        if (this.isNonEmpty(fyList) && fyList instanceof Array) {
+        if (this.isNonEmpty(fyList) && fyList instanceof Array && fyList.length > 0) {
             return fyList;
         } else {
             let res: any = await this.getFyList().catch(error => {
@@ -387,7 +391,8 @@ export class UtilsService {
     async getStoredSmeList() {
         const smeList = JSON.parse(sessionStorage.getItem(AppConstants.SME_LIST));
         // console.log('fyList', fyList);
-        if (this.isNonEmpty(smeList) && smeList instanceof Array) {
+        if (this.isNonEmpty(smeList) && smeList instanceof Array && smeList.length > 0) {
+            smeList.sort((a, b) => a.name > b.name ? 1 : -1)
             return smeList;
         } else {
             let res: any = await this.getSmeList().catch(error => {
@@ -397,13 +402,69 @@ export class UtilsService {
                 return [];
             });
             if (res && res instanceof Array) {
+                res.sort((a, b) => a.name > b.name ? 1 : -1)
                 sessionStorage.setItem(AppConstants.SME_LIST, JSON.stringify(res));
                 return res;
             }
         }
     }
     async getSmeList() {
-        const param = `${ApiEndpoints.userMs.smeDetails}`;
+        const param = `/${ApiEndpoints.userMs.smeDetails}`;
         return await this.userMsService.getMethod(param).toPromise();
+    }
+
+    async getStoredAgentList(action?) {
+        let agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+        if (action === 'REFRESH') {
+            agentList = [];
+        }
+        if (this.isNonEmpty(agentList) && agentList instanceof Array && agentList.length > 0) {
+            agentList.sort((a, b) => a.name > b.name ? 1 : -1)
+            return agentList;
+        } else {
+            let res: any = await this.getAgentList().catch(error => {
+                this.loading = false;
+                console.log(error);
+                this.showSnackBar('Error While getting SME list.');
+                return [];
+            });
+            if (res && res instanceof Array) {
+                res.sort((a, b) => a.name > b.name ? 1 : -1)
+                sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res));
+                return res;
+            }
+        }
+    }
+    async getAgentList() {
+        const param = `/${ApiEndpoints.userMs.agentDetails}`;
+        return await this.userMsService.getMethod(param).toPromise();
+    }
+
+    async getStoredMasterStatusList() {
+        const masterStatus = JSON.parse(sessionStorage.getItem(AppConstants.MASTER_STATUS));
+        if (this.isNonEmpty(masterStatus) && masterStatus instanceof Array && masterStatus.length > 0) {
+            return masterStatus;
+        } else {
+            let res: any = await this.getMasterStatusList().catch(error => {
+                this.loading = false;
+                console.log(error);
+                this.showSnackBar('Error While getting MASTER_STATUS list.');
+                return [];
+            });
+            if (res && res instanceof Array) {
+                sessionStorage.setItem(AppConstants.MASTER_STATUS, JSON.stringify(res));
+                return res;
+            }
+        }
+    }
+    async getMasterStatusList() {
+        const param = `/${ApiEndpoints.userMs.itrStatusMasterBo}`;
+        return await this.userMsService.getMethod(param).toPromise();
+    }
+
+    createUrlParams(queryParams) {
+        const tree = this.router.createUrlTree([], { queryParams });
+        console.log(this.serializer.serialize(tree));
+        return this.serializer.serialize(tree).split('?').pop();
     }
 }

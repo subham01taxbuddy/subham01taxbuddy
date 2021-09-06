@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, OnChanges } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -18,17 +18,25 @@ import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.compone
 export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   @Input('queryParam') queryParam: any;
   @Input('from') from: any;
+  @Output() sendTotalCount = new EventEmitter<any>();
   loading: boolean;
   subscriptionListGridOptions: GridOptions;
   subscription: any;
   userId: any;
+  userInfo: any = [];
+  config: any;
 
   constructor(private itrService: ItrMsService, private utilsService: UtilsService, private _toastMessageService: ToastMessageService, private router: Router,
     private userMsService: UserMsService, private dialog: MatDialog) {
+    this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: null
+    };
     this.subscription = this.utilsService.onMessage().subscribe(res => {
       console.log('Agent id :--> ', res)
       this.queryParam = res.text;
-      this.getUserSubscriptionInfo();
+      this.getUserSubscriptionInfo(0);
     });
   }
 
@@ -48,7 +56,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
     this.subscription.unsubscribe();
   }
   ngOnChanges() {
-    this.getUserSubscriptionInfo();
+    this.getUserSubscriptionInfo(0);
 
   }
   subscriptionColoumnDef(from) {
@@ -58,6 +66,18 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         field: 'userId',
         width: 80,
         suppressMovable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'User Name',
+        field: 'userName',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -218,9 +238,36 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           debounceMs: 0
         }
       },
+      // {
+      //   headerName: 'Invoice Details',
+      //   field: 'invoiceDetails',
+      //   width: 100,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   },
+      //   cellRenderer: function (params) {
+      //     console.log('paramsparams: ', params)
+      //     if (params.value === 'All Paid') {
+      //       return `
+      //         <p style="color:green">${params.value}</p>
+      //        `
+      //     } else {
+      //       return `<p style="color:red">${params.value} <button type="button" class="action_icon add_button" title="View Unpaid invoices"
+      //     style="border: none;
+      //       background: transparent; font-size: 14px; cursor:pointer">
+      //       <i class="fa fa-eye" aria-hidden="true" data-action-type="view-invoice"></i>
+      //      </button> </p>`;
+      //     }
+      //   },
+      // },
+
       {
-        headerName: 'Filer Id',
-        field: 'subscriptionAssigneeId',
+        headerName: 'Filer Name',
+        field: 'filerName',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -284,7 +331,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           }
         },
       },
-      {
+      /* {
         headerName: "Served",
         field: "served",
         width: 50,
@@ -297,7 +344,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           return (!params.data.isActive) ? { 'pointer-events': 'none', opacity: '0.4' }
             : '';
         }
-      },
+      }, */
       {
         headerName: 'File',
         editable: false,
@@ -348,27 +395,36 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   allSubscriptions = [];
-  getUserSubscriptionInfo() {
+  getUserSubscriptionInfo(pageNo) {
     console.log('this.queryParam:', this.queryParam);
     // alert(this.queryParam)
-    var param = `/subscription${this.queryParam}`;
+    let pagination = `?page=${pageNo}&pageSize=20`;
+    if (this.utilsService.isNonEmpty(this.queryParam)) {
+      pagination = `&page=${pageNo}&pageSize=20`;
+    }
+    var param = `/subscription${this.queryParam}${pagination}`;
     this.loading = true;
     this.itrService.getMethod(param).subscribe((response: any) => {
-      console.log(response);
+      console.log('SUBSCRIPTION RESPONSE:', response);
       this.allSubscriptions = response;
       this.loading = false;
-      if (response instanceof Array && response.length > 0) {
-        this.subscriptionListGridOptions.api.setRowData(this.createRowData(response));
+      if (response.content instanceof Array && response.content.length > 0) {
+        this.subscriptionListGridOptions.api.setRowData(this.createRowData(response.content));
+        this.config.totalItems = response.totalElements;
+
       } else {
         this.subscriptionListGridOptions.api.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
         let msg = 'There is no records of subscription against this user';
         if (this.from === 'MY_SUB') {
           msg = 'You dont have any assigned subscriptions';
         }
         this.utilsService.showSnackBar(msg)
       }
+      this.sendTotalCount.emit(this.config.totalItems);
     },
       error => {
+        this.sendTotalCount.emit(0);
         this.loading = false;
         console.log('error during getting subscription info: ', error)
       })
@@ -377,6 +433,17 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   createRowData(subscriptionData) {
     const newData = [];
     for (let i = 0; i < subscriptionData.length; i++) {
+      // let invoiceDetails = 'All Paid'
+      // if (subscriptionData[i].invoiceData instanceof Array && subscriptionData[i].invoiceData.length > 0) {
+      //   let count = 0;
+      //   for (let j = 0; j < subscriptionData[i].invoiceData.length; j++) {
+      //     if (subscriptionData[i].invoiceData[j].paymentStatus.toString().toUpperCase() !== 'PAID') {
+      //       count = count + 1;
+      //     }
+      //   }
+      //   if (count > 0)
+      //     invoiceDetails = count + ' Unpaid';
+      // }
       newData.push({
         subscriptionId: subscriptionData[i].subscriptionId,
         userId: subscriptionData[i].userId,
@@ -388,10 +455,13 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         endDate: subscriptionData[i].endDate,
         txbdyInvoiceId: subscriptionData[i].txbdyInvoiceId,
         subscriptionAssigneeId: subscriptionData[i].subscriptionAssigneeId !== 0 ? subscriptionData[i].subscriptionAssigneeId : 'NA',
+        filerName: subscriptionData[i].subscriptionAssigneeId !== 0 ? (subscriptionData[i].smeDetails.length > 0 ? subscriptionData[i].smeDetails[0]['first_name'] + ' ' + subscriptionData[i].smeDetails[0]['last_name'] : 'NA') : 'NA',
+        userName: subscriptionData[i].userId !== 0 ? (subscriptionData[i].userData.length > 0 ? subscriptionData[i].userData[0]['first_name'] + ' ' + subscriptionData[i].userData[0]['last_name'] : '') : 'NA',
         isActive: subscriptionData[i].isActive,
         served: subscriptionData[i].served,
         promoCode: this.utilsService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : '-',
         invoiceAmount: this.utilsService.isNonEmpty(subscriptionData[i].promoApplied) ? subscriptionData[i].promoApplied.totalAmount : (this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.totalAmount : (this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.totalAmount : '0')),
+        // invoiceDetails: invoiceDetails,
       });
     }
     return newData;
@@ -431,6 +501,10 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           this.viewFilingCalendar(params.data);
           break;
         }
+        case 'view-invoice': {
+          this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: params.data.userId } });
+          break;
+        }
       }
     }
   }
@@ -459,10 +533,10 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
     this.itrService.putMethod(param, request).subscribe((response: any) => {
       console.log('Subscription Updated Successfully:', response);
       this.utilsService.showSnackBar('Subscription updated successfully!');
-      this.getUserSubscriptionInfo();
+      this.getUserSubscriptionInfo(this.config.currentPage - 1); // TODO we may need current page
       this.loading = false;
     }, error => {
-      this.getUserSubscriptionInfo();
+      this.getUserSubscriptionInfo(this.config.currentPage - 1);
       this.utilsService.showSnackBar('Failed to update subscription!');
       this.loading = false;
       console.log('Subscription Updated error=>:', error);
@@ -478,7 +552,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       console.log('responce: ', responce);
       this._toastMessageService.alert("success", responce.reponse);
       if (responce.reponse !== 'You cannot delete invoice with Paid status')
-        this.getUserSubscriptionInfo();
+        this.getUserSubscriptionInfo(this.config.currentPage - 1);
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Faild to delete invoice.");
@@ -566,8 +640,13 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result && this.utilsService.isNonEmpty(result) && result.msg === 'success') {
-        this.getUserSubscriptionInfo();
+        this.getUserSubscriptionInfo(this.config.currentPage - 1);
       }
     });
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+    this.getUserSubscriptionInfo(event - 1);
   }
 }
