@@ -79,12 +79,12 @@ export class Calling2dot0Component implements OnInit {
   }
   searchByQueryParams(ref) {
     this.searchParam.customerNumber = null;
-    if (ref === 'PRIORITY' && this.utilsService.isNonEmpty(this.searchParam.priority)) {
+    /* if (ref === 'PRIORITY' && this.utilsService.isNonEmpty(this.searchParam.priority)) {
       this.searchParam.isChat = null
       this.searchParam.statusId = null
     } else if (ref === 'STATUS' || ref === 'CHAT') {
       this.searchParam.priority = null
-    } else if (ref === 'SERVICE') {
+    } else */ if (ref === 'SERVICE') {
       return;
     }
     if (ref !== '') {
