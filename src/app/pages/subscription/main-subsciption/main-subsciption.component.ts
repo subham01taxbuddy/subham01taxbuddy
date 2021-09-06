@@ -473,11 +473,11 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'generateInvoice': {
-          // if (params.data.isActive) {
-          this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
-          // } else {
-          //   this.utilsService.showSnackBar('Please activate the subscription first.')
-          // }
+          if (params.data.filerName !== 'NA') {
+            this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
+          } else {
+            this.utilsService.showSnackBar('Please assign this subscription to team member');
+          }
           break;
         }
         case 'subscription': {
