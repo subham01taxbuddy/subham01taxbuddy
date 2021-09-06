@@ -256,7 +256,8 @@
           <div class="card__col-lg-4">
             <mat-form-field appearance="outline">
               <mat-label>Select SME</mat-label>
-              <mat-select matInput placeholder="Select Filer" [formControl]="subscriptionAssigneeId" autocomplete="off">
+              <mat-select matInput placeholder="Select Filer" [formControl]="subscriptionAssigneeId" autocomplete="off"
+                required>
                 <mat-option *ngFor="let sme of smeList" [value]="sme.userId">
                   {{ sme.name }}
                 </mat-option>
