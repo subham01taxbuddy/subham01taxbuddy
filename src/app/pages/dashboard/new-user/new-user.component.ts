@@ -378,7 +378,7 @@ export class NewUserComponent implements OnInit {
         status: this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['itrStatusLatest']['StatusID']) ? this.getItrStatus(openStatusInfo[i]['itrStatusLatest']['StatusID']) : '-') : '-',
         KommunicateAssigneeId: openStatusInfo[i]['KommunicateAssigneeId'],
         utmSource: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['UtmSource']) ? openStatusInfo[i]['InitialData']['UtmSource'] : '-') : '-',
-        companId: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['CompanyID']) ? openStatusInfo[i]['InitialData']['CompanyID'] : '-') : '-',
+        companyId: this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']) ? (this.utilService.isNonEmpty(openStatusInfo[i]['InitialData']['CompanyID']) ? openStatusInfo[i]['InitialData']['CompanyID'] : '-') : '-',
       })
       openStatusInfosArray.push(openStatusInfosInfo);
     }
