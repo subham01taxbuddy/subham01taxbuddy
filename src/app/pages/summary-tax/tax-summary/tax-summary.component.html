@@ -30,10 +30,18 @@
                         <a class="btn btn_stroke filter__add-link" (click)="advanceSearch(advanceSearchKey.value)"><i
                             class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
                       </div>
-                      <div class="card__col-md-2 card__col-xs-6 pull-right">
+                      <div class="card__col-md-2 card__col-xs-6 pull-right" *ngIf="!newItrSumChanges">
                         <a class="btn btn_stroke filter__add-link" (click)="openSecondItr()"><i
                             class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;ITR-2/3</a>
                       </div>
+                    </div>
+                    <br>
+                    <div class="card__col-xs-12 card__col-sm-12" *ngIf="newItrSumChanges">
+                        <input type="file" id="input-file-id" hidden #file  (change)="selectFile($event)" 
+                       />  <!-- accept=".json"-->
+                        <button class="sendBtn" style="margin: 15px;" (click)="upload()">Upload JSON File</button>&nbsp; 
+
+                        <button [disabled]="!JSONData" (click)="parsJson(JSONData)">Parse JSON to ITR Form</button>  <!---->
                     </div>
                   </div>
             </div>
@@ -206,7 +214,7 @@
                         </div>
 
 
-                        <div class="card__col-lg-3" formGroupName="assesse">
+                        <div class="card__col-lg-3" formGroupName="assesse" *ngIf="!newItrSumChanges">
                             <mat-form-field appearance="outline">
                                 <mat-label>Passport No</mat-label>
                                 <input matInput placeholder="Passport No" formControlName="passportNumber" minlength="8"
@@ -215,6 +223,32 @@
                                     *ngIf="itrSummaryForm['controls'].assesse['controls'].passportNumber.hasError('minlength')">
                                     Enter
                                     8 digit passport number</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="card__col-lg-3" formGroupName="assesse" *ngIf="newItrSumChanges">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Nature of Employment</mat-label>
+                                <mat-select matInput
+                                    placeholder="Select Nature of Employment"
+                                    autocomplete="off" formControlName="natureOfEmployment" required>
+                                    <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
+                                        {{ emp.label }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="card__col-lg-3" formGroupName="assesse" *ngIf="newItrSumChanges">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Old vs New Tax Regime</mat-label>
+                                 <mat-select matInput 
+                                    placeholder="Select Nature of Employment"
+                                    autocomplete="off" formControlName="oldVsNewTaxRegime" required>
+                                    <mat-option *ngFor="let emp of taxRegime" [value]="emp.value">
+                                        {{ emp.label }}
+                                    </mat-option>
+                                </mat-select>
                             </mat-form-field>
                         </div>
 
@@ -399,322 +433,7 @@
 
 
                     <!-- <div class="card__row"> -->
-                    <div class="heading">COMPUTATION OF INCOME</div><br>
-                    <div class="table-responsive">
-                        <table>
-                            <tr>
-                                <th></th>
-                                <th><b>Particulars</b></th>
-                                <th><b>Rs.</b></th>
-                                <th><b>Rs.</b></th>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Income from Salary </td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><input type="number" formControlName="salary" disabled
-                                        maxlength="8"></td>
-                                <!--formControlName="incomeFromSalary"-->
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Income from House Property (Refer Annexure) </td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><input type="number" disabled
-                                        formControlName="housePropertyIncome" maxlength="8"></td>
-                                <!--formControlName="netHousePropertyIncome"-->
-
-                            </tr>
-                            <tr *ngIf="itrType.itrFour">
-                                <td>3</td>
-                                <td>Income from Business or Profession </td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr *ngIf="itrType.itrFour">
-                                <td></td>
-                                <td><b>Presumptive Business Income U/s 44AD</b> –
-                                    {{this.businessObject.tradeName44AD ? this.businessObject.tradeName44AD : ''}}</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr *ngIf="itrType.itrFour">
-                                <td></td>
-                                <td>Gross Receipts/ Turnover </td>
-                                <td><input type="number" [value]="this.businessObject.received44ADtaotal" disabled
-                                        maxlength="8"></td>
-                                <td></td>
-                            </tr>
-                            <tr *ngIf="itrType.itrFour">
-                                <td></td>
-                                <td>Presumptive Income </td>
-                                <td><input type="number" [value]="this.businessObject.presumptive44ADtotal" disabled
-                                        maxlength="8"></td>
-                                <td></td>
-                            </tr>
-                            <tr *ngIf="itrType.itrFour">
-                                <td></td>
-                                <td><b>Presumptive Income from Profession U/s 44ADA</b> –
-                                    {{this.businessObject.tradeName44ADA ? this.businessObject.tradeName44ADA : ''}}
-                                </td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr *ngIf="itrType.itrFour">
-                                <td></td>
-                                <td>Gross Receipts/ Turnover </td>
-                                <td><input type="number" [value]="this.businessObject.grossReciept" disabled
-                                        maxlength="8"></td>
-                                <td></td>
-                            </tr>
-                            <tr *ngIf="itrType.itrFour">
-                                <td></td>
-                                <td>Presumptive Income </td>
-                                <td><input type="number" [value]="this.businessObject.presumptiveIncome" disabled
-                                        maxlength="8"></td>
-                              
-                                <td></td>
-                            </tr>
-                            <tr *ngIf="itrType.itrFour">
-                                <td></td>
-                                <td><b>Total Presumptive Income</b></td>
-                                <td></td>
-                                <!-- <td><input type="number" [value]="this.businessObject.prsumptiveIncomeTotal" disabled
-                                        maxlength="8"></td> -->
-                                <td formGroupName="taxSummary">
-                                     <input type="number" disabled formControlName="presumptiveIncome">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 4 : 3}}</td>
-                                <td>Income from Other Sources (Refer annexure) </td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><input type="number" disabled
-                                        formControlName="otherIncome" maxlength="8">
-                                    <!--formControlName="totalIncomeFromOtherResources"-->
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 5 : 4}}</td>
-                                <td><b>Gross Total Income {{itrType.itrFour ? '(1+2+3+4)' : '(1+2+3)'}}</b> </td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><b><input type="number" disabled
-                                            formControlName="grossTotalIncome" maxlength="8"></b></td>
-
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 6 : 5}}</td>
-                                <td>Less: Deduction under Chap- VIA (Refer Annexure) </td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><input type="number"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                                        formControlName="totalDeduction" disabled maxlength="8"></td>
-                                <!--deductionUnderChapterVIA-->
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 7 : 6}}</td>
-                                <td><b>Total Income {{itrType.itrFour ? '(5-6)' : '(4-5)'}} </b></td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><b><input type="number"
-                                            formControlName="totalIncomeAfterDeductionIncludeSR" required disabled
-                                            maxlength="8"></b>
-                                    <!--totalIncome-->
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 8 : 7}}</td>
-                                <td>Tax Payable on Total Income </td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><input type="number" formControlName="taxOnTotalIncome"
-                                        (blur)="calculateTaxAfterRebate()"
-                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" required
-                                        maxlength="8"></td>
-                                <!--taxPayable-->
-
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 9 : 8}}</td>
-                                <td>Less: Rebate u/s 87A </td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><input formControlName="forRebate87Tax"
-                                        (blur)="calculateTaxAfterRebate()"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" required
-                                        maxlength="8"></td>
-                                <!--rebate-->
-
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 10 : 9}}</td>
-                                <td>Tax after rebate</td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><input type="number" formControlName="taxAfterRebate"
-                                        disabled required maxlength="8"></td>
-
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 11 : 10}}</td>
-                                <td>Health and Education cess @4% on {{itrType.itrFour ? '(10)' : '(9)'}}</td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><input type="number" formControlName="cessAmount"
-                                        disabled required maxlength="8"></td>
-                                <!--healthAndEducationCess-->
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 12 : 11}}</td>
-                                <td> Total Tax and cess {{itrType.itrFour ? '(10 + 11)' : '(9 + 10)'}}</td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><input type="number" disabled required
-                                        formControlName="totalTax" maxlength="8"></td>
-                                <!--formControlName="totalTaxAndCess"-->
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 13 : 12}}</td>
-                                <td>Less: Relief u/s 89 (Please ensure to submit Form 10E to claim this relief)</td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><input formControlName="taxReliefUnder89"
-                                        (blur)="calculateTaxAfterRelif()" type="number"
-                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
-                                </td>
-                                <!--reliefUS89l-->
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 14 : 13}}</td>
-                                <td>Balance Tax after relief {{itrType.itrFour ? '(12-13)' : '(11-12)'}}</td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><input type="number" formControlName="totalTaxRelief"
-                                        required disabled maxlength="8">
-                                    <!--balanceTaxAfterRelief-->
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 15 : 14}}</td>
-                                <td><b>Interest and Fees</b></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>u/s 234A</td>
-                                <td formGroupName="taxSummary"><input formControlName="s234A" maxlength="8"
-                                        (blur)="calculateTotalInterestFees()" type="number"
-                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
-                                <td></td>
-                                <!--section234A-->
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>u/s 234B</td>
-                                <td formGroupName="taxSummary"><input formControlName="s234B" maxlength="8"
-                                        (blur)="calculateTotalInterestFees()" type="number"
-                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>u/s 234C</td>
-                                <td formGroupName="taxSummary"><input formControlName="s234C" maxlength="8"
-                                        (blur)="calculateTotalInterestFees()" type="number"
-                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>u/s 234F</td>
-                                <td formGroupName="taxSummary"><input formControlName="s234F" maxlength="8"
-                                        (blur)="calculateTotalInterestFees()" type="number"
-                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
-
-                                <td formGroupName="taxSummary"><input type="number"
-                                        formControlName="interestAndFeesPayable" disabled maxlength="8"></td>
-                                <!--interestAndFees-->
-                                <!--[value]="totalInterest"-->
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 16 : 15}}</td>
-                                <td>Total Tax, fee and Interest {{itrType.itrFour ? '(14 + 15)' : '(13 + 14)'}}</td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><input type="number" formControlName="agrigateLiability"
-                                        disabled required maxlength="8"></td>
-                                <!--totalTaxFeeAndInterest-->
-                            </tr>
-                            <tr>
-                                <td>{{itrType.itrFour ? 17 : 16}}</td>
-                                <td><b>Taxes Paid (Refer Annexure)</b></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>TDS on Salary </td>
-                                <td><input type="number" [value]="taxesPaid.tdsOnSalary" disabled maxlength="8"></td>
-                                <!--formControlName="totalTdsOnSalary"-->
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>TDS other than Salary</td>
-                                <td><input type="number" disabled [value]="taxesPaid.tdsOtherThanSalary" maxlength="8">
-                                </td>
-                                <!--formControlName="totalTdsOnOtherThanSalary"-->
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>TDS on Sale of Property 26QB </td>
-                                <td><input type="number" disabled [value]="taxesPaid.tdsOnSal26QB" maxlength="8"></td>
-                                <!--formControlName="totalTdsSaleOfProperty26QB"-->
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>TCS </td>
-                                <td formGroupName="taxSummary"><input type="number" disabled [value]="taxesPaid.tcs"
-                                        maxlength="8"></td>
-                                <!--totalTaxCollectedAtSources    formControlName="taxPaidTCS"-->
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>Advance/ Self-Assessment Tax </td>
-                                <td><input type="number" disabled [value]="taxesPaid.advanceSelfAssTax" maxlength="8">
-                                </td>
-                                <!--totalAdvanceTax-->
-                                <td formGroupName="taxSummary"><input type="number" formControlName="totalTaxesPaid"
-                                        disabled maxlength="8"></td>
-                                <!--totalTaxPaid     formControlName="advanceTaxSelfAssessmentTax"-->
-                                <!--[value]="totalTDS"-->
-                            </tr>
-
-                            <tr
-                                *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0">
-                                <td>{{itrType.itrFour ? 18 : 17}}</td>
-                                <td><b>Net Tax Payable/ (Refund)</b></td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><b><input type="number" formControlName="taxpayable"
-                                            disabled maxlength="8"></b>
-                                    <!--formControlName="netTaxPayable"-->
-                                </td>
-                            </tr>
-                            <tr *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
-                                <td>{{itrType.itrFour ? 18 : 17}}</td>
-                                <td><b>Net Tax Payable/ (Refund)</b></td>
-                                <td></td>
-                                <td formGroupName="taxSummary"><b><input type="number" formControlName="taxRefund"
-                                            disabled maxlength="8"></b>
-                                    <!--formControlName="netTaxPayable"-->
-                                </td>
-                            </tr>
-
-                        </table>
-                    </div>
-                    <!-- </form> -->
-                    <br><br><br>
+                  
 
                     <div class="heading">ANNEXURES</div><br>
 
@@ -831,7 +550,8 @@
                             <th>Value of Perquisites as per Section 17(2)</th>
                             <th>Profit in lieu of Salary as per Section 17(3)</th>
                             <th>Gross Salary</th>
-                            <th colspan="3">Less: Exempt Allowance</th>
+                            <th *ngIf="!newItrSumChanges" colspan="3">Less: Exempt Allowance</th>
+                            <th *ngIf="newItrSumChanges" colspan="2">Less: Exempt Allowance</th>
                             <th>Total Exempt Allowance</th>
                             <th>Net Salary</th>
                             <th colspan="3">Less: Deduction u/s 16(ia)</th>
@@ -848,7 +568,7 @@
                             <th></th>
                             <th></th>
                             <th>HRA</th>
-                            <th>LTE</th>
+                            <th  *ngIf="!newItrSumChanges">LTE</th>
                             <th>O</th>
                             <th></th>
                             <th></th>
@@ -863,7 +583,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td></td>
+                            <td  *ngIf="!newItrSumChanges"></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -888,7 +608,7 @@
                             <td>{{sal.profitInLieu}}</td>
                             <td>{{sal.grossSalary}}</td>
                             <td>{{sal.houseRentAllow}}</td>
-                            <td>{{sal.leaveTravelExpense}}</td>
+                            <td  *ngIf="!newItrSumChanges">{{sal.leaveTravelExpense}}</td>
                             <td>{{sal.other}}</td>
                             <td>{{sal.totalExemptAllow}}</td>
                             <td>{{sal.netSalary}}</td>
@@ -960,6 +680,15 @@
                                         (blur)="setOtherSourceIncomeValue($event.target.value,'other')">
                                 </mat-form-field>
                             </div>
+                            <div class="card__col-lg-3" *ngIf="newItrSumChanges">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Dividend</mat-label>
+                                    <input matInput placeholder="Dividend" maxlength="8" autocomplete="off"
+                                        [value]="sourcesOfIncome.dividend" id="dividend" name="dividend"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        (blur)="setOtherSourceIncomeValue($event.target.value,'dividend')">
+                                </mat-form-field>
+                            </div>
                             <div class="card__col-lg-3">
                                 <mat-form-field appearance="outline">
                                     <mat-label><b>Total Income from Other sources</b></mat-label>
@@ -969,6 +698,39 @@
                             </div>
                         </div>
                     </mat-card><br><br>
+
+                    <div *ngIf="newItrSumChanges">
+                        <div class="tableHead">Annexures: Add Exempt Income</div><br>
+                        <mat-card>
+                            <div class="card__row">
+                                <div class="card__col-lg-9">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Nature of Exempt Income</mat-label>
+                                        <mat-select matInput formControlName="returnType"
+                                            (selectionChange)="showAcknowData($event.value)" placeholder="Select Nature of Exempt Income"
+                                            autocomplete="off" required>
+                                            <mat-option *ngFor="let res of exemptIncomes" [value]="res.value">
+                                                {{ res.label }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <!-- <mat-error *ngIf="itrSummaryForm.controls['returnType'].hasError('required')">Select
+                                            return type</mat-error> -->
+                                    </mat-form-field>
+                                </div>
+    
+                                <div class="card__col-lg-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Amount</mat-label>
+                                        <input matInput placeholder="Amount"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            (blur)="setOtherSourceIncomeValue($event.target.value,'saving')" maxlength="8"
+                                            autocomplete="off">  
+                                    </mat-form-field>
+                                </div>
+                             </div>
+                        </mat-card>
+                    </div>
+                   <br><br>
 
 
                     <div class="tableHead">Annexures: Deductions under Chap-VI A</div><br>
@@ -1230,6 +992,27 @@
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
+
+                            <div class="card__col-lg-3" *ngIf="newItrSumChanges">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>80EEB - Electric Vehicle</mat-label>
+                                    <input matInput placeholder="80EEB - Electric Vehicle" maxlength="8" 
+                                        (blur)="calculateTotalDeduction()" formControlName="us80eeb" autocomplete="off"
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-3" *ngIf="newItrSumChanges">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Any Other</mat-label>
+                                    <input matInput placeholder="Any Other" maxlength="8" 
+                                        (blur)="calculateTotalDeduction()" formControlName="other" autocomplete="off"
+                                        type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </mat-form-field>
+                            </div>
                             <!-- </form> -->
                         </div>
                     </mat-card><br><br>
@@ -1477,6 +1260,394 @@
                             <!-- </form> -->
                         </div>
                     </mat-card><br><br>
+
+                    <div class="heading">COMPUTATION OF INCOME</div><br>
+                    <div class="table-responsive">
+                        <table>
+                            <tr *ngIf="newItrSumChanges">
+                                <th></th>
+                                <th></th>
+                                <th colspan="2"><b>As Per old Tax Regime</b></th>
+                                <th><b>As Per New Tax Regime</b></th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th><b>Particulars</b></th>
+                                <th><b>Rs.</b></th>
+                                <th><b>Rs.</b></th>
+
+                                <th  *ngIf="newItrSumChanges"><b>Rs.</b></th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Income from Salary </td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><input type="number" formControlName="salary" disabled
+                                        maxlength="8"></td>
+                                <!--formControlName="incomeFromSalary"-->
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Income from House Property (Refer Annexure) </td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><input type="number" disabled
+                                        formControlName="housePropertyIncome" maxlength="8"></td>
+                                <!--formControlName="netHousePropertyIncome"-->
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td>3</td>
+                                <td>Income from Business or Profession </td>
+                                <td></td>
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges" ></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td><b>Presumptive Business Income U/s 44AD</b> –
+                                    {{this.businessObject.tradeName44AD ? this.businessObject.tradeName44AD : ''}}</td>
+                                <td></td>
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td>Gross Receipts/ Turnover </td>
+                                <td><input type="number" [value]="this.businessObject.received44ADtaotal" disabled
+                                        maxlength="8"></td>
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td>Presumptive Income </td>
+                                <td><input type="number" [value]="this.businessObject.presumptive44ADtotal" disabled
+                                        maxlength="8"></td>
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td><b>Presumptive Income from Profession U/s 44ADA</b> –
+                                    {{this.businessObject.tradeName44ADA ? this.businessObject.tradeName44ADA : ''}}
+                                </td>
+                                <td></td>
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td>Gross Receipts/ Turnover </td>
+                                <td><input type="number" [value]="this.businessObject.grossReciept" disabled
+                                        maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td>Presumptive Income </td>
+                                <td><input type="number" [value]="this.businessObject.presumptiveIncome" disabled
+                                        maxlength="8"></td>
+                              
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr *ngIf="itrType.itrFour">
+                                <td></td>
+                                <td><b>Total Presumptive Income</b></td>
+                                <td></td>
+                                <!-- <td><input type="number" [value]="this.businessObject.prsumptiveIncomeTotal" disabled
+                                        maxlength="8"></td> -->
+                                <td formGroupName="taxSummary">
+                                     <input type="number" disabled formControlName="presumptiveIncome">
+                                </td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 4 : 3}}</td>
+                                <td>Income from Other Sources (Refer annexure) </td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><input type="number" disabled
+                                        formControlName="otherIncome" maxlength="8">
+                                    <!--formControlName="totalIncomeFromOtherResources"-->
+                                </td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 5 : 4}}</td>
+                                <td><b>Gross Total Income {{itrType.itrFour ? '(1+2+3+4)' : '(1+2+3)'}}</b> </td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><b><input type="number" disabled
+                                            formControlName="grossTotalIncome" maxlength="8"></b></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 6 : 5}}</td>
+                                <td>Less: Deduction under Chap- VIA (Refer Annexure) </td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><input type="number"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        formControlName="totalDeduction" disabled maxlength="8"></td>
+                                <!--deductionUnderChapterVIA-->
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 7 : 6}}</td>
+                                <td><b>Total Income {{itrType.itrFour ? '(5-6)' : '(4-5)'}} </b></td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><b><input type="number"
+                                            formControlName="totalIncomeAfterDeductionIncludeSR" required disabled
+                                            maxlength="8"></b>
+                                    <!--totalIncome-->
+                                </td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 8 : 7}}</td>
+                                <td>Tax Payable on Total Income </td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><input type="number" formControlName="taxOnTotalIncome"
+                                        (blur)="calculateTaxAfterRebate()"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" required
+                                        maxlength="8"></td>
+                                <!--taxPayable-->
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 9 : 8}}</td>
+                                <td>Less: Rebate u/s 87A </td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><input formControlName="forRebate87Tax"
+                                        (blur)="calculateTaxAfterRebate()"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" required
+                                        maxlength="8"></td>
+                                <!--rebate-->
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 10 : 9}}</td>
+                                <td>Tax after rebate</td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><input type="number" formControlName="taxAfterRebate"
+                                        disabled required maxlength="8"></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 11 : 10}}</td>
+                                <td>Health and Education cess @4% on {{itrType.itrFour ? '(10)' : '(9)'}}</td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><input type="number" formControlName="cessAmount"
+                                        disabled required maxlength="8"></td>
+                                <!--healthAndEducationCess-->
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 12 : 11}}</td>
+                                <td> Total Tax and cess {{itrType.itrFour ? '(10 + 11)' : '(9 + 10)'}}</td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><input type="number" disabled required
+                                        formControlName="totalTax" maxlength="8"></td>
+                                <!--formControlName="totalTaxAndCess"-->
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 13 : 12}}</td>
+                                <td>Less: Relief u/s 89 (Please ensure to submit Form 10E to claim this relief)</td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><input formControlName="taxReliefUnder89"
+                                        (blur)="calculateTaxAfterRelif()" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                                </td>
+                                <!--reliefUS89l-->
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 14 : 13}}</td>
+                                <td>Balance Tax after relief {{itrType.itrFour ? '(12-13)' : '(11-12)'}}</td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><input type="number" formControlName="totalTaxRelief"
+                                        required disabled maxlength="8">
+                                    <!--balanceTaxAfterRelief-->
+                                </td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 15 : 14}}</td>
+                                <td><b>Interest and Fees</b></td>
+                                <td></td>
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>u/s 234A</td>
+                                <td formGroupName="taxSummary"><input formControlName="s234A" maxlength="8"
+                                        (blur)="calculateTotalInterestFees()" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                <td></td>
+                                <!--section234A-->
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>u/s 234B</td>
+                                <td formGroupName="taxSummary"><input formControlName="s234B" maxlength="8"
+                                        (blur)="calculateTotalInterestFees()" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>u/s 234C</td>
+                                <td formGroupName="taxSummary"><input formControlName="s234C" maxlength="8"
+                                        (blur)="calculateTotalInterestFees()" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>u/s 234F</td>
+                                <td formGroupName="taxSummary"><input formControlName="s234F" maxlength="8"
+                                        (blur)="calculateTotalInterestFees()" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+
+                                <td formGroupName="taxSummary"><input type="number"
+                                        formControlName="interestAndFeesPayable" disabled maxlength="8"></td>
+                                <!--interestAndFees-->
+                                <!--[value]="totalInterest"-->
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 16 : 15}}</td>
+                                <td>Total Tax, fee and Interest {{itrType.itrFour ? '(14 + 15)' : '(13 + 14)'}}</td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><input type="number" formControlName="agrigateLiability"
+                                        disabled required maxlength="8"></td>
+                                <!--totalTaxFeeAndInterest-->
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td>{{itrType.itrFour ? 17 : 16}}</td>
+                                <td><b>Taxes Paid (Refer Annexure)</b></td>
+                                <td></td>
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>TDS on Salary </td>
+                                <td><input type="number" [value]="taxesPaid.tdsOnSalary" disabled maxlength="8"></td>
+                                <!--formControlName="totalTdsOnSalary"-->
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>TDS other than Salary</td>
+                                <td><input type="number" disabled [value]="taxesPaid.tdsOtherThanSalary" maxlength="8">
+                                </td>
+                                <!--formControlName="totalTdsOnOtherThanSalary"-->
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>TDS on Sale of Property 26QB </td>
+                                <td><input type="number" disabled [value]="taxesPaid.tdsOnSal26QB" maxlength="8"></td>
+                                <!--formControlName="totalTdsSaleOfProperty26QB"-->
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>TCS </td>
+                                <td formGroupName="taxSummary"><input type="number" disabled [value]="taxesPaid.tcs"
+                                        maxlength="8"></td>
+                                <!--totalTaxCollectedAtSources    formControlName="taxPaidTCS"-->
+                                <td></td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>Advance/ Self-Assessment Tax </td>
+                                <td><input type="number" disabled [value]="taxesPaid.advanceSelfAssTax" maxlength="8">
+                                </td>
+                                <!--totalAdvanceTax-->
+                                <td formGroupName="taxSummary"><input type="number" formControlName="totalTaxesPaid"
+                                        disabled maxlength="8"></td>
+                                <!--totalTaxPaid     formControlName="advanceTaxSelfAssessmentTax"-->
+                                <!--[value]="totalTDS"-->
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+
+                            <tr
+                                *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0">
+                                <td>{{itrType.itrFour ? 18 : 17}}</td>
+                                <td><b>Net Tax Payable/ (Refund)</b></td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><b><input type="number" formControlName="taxpayable"
+                                            disabled maxlength="8"></b>
+                                    <!--formControlName="netTaxPayable"-->
+                                </td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+                            <tr *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
+                                <td>{{itrType.itrFour ? 18 : 17}}</td>
+                                <td><b>Net Tax Payable/ (Refund)</b></td>
+                                <td></td>
+                                <td formGroupName="taxSummary"><b><input type="number" formControlName="taxRefund"
+                                            disabled maxlength="8"></b>
+                                    <!--formControlName="netTaxPayable"-->
+                                </td>
+
+                                <td *ngIf="newItrSumChanges"></td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <!-- </form> -->
+                    <br><br><br>
 
                     <!-- </div> -->
                     <div class="card__row">
