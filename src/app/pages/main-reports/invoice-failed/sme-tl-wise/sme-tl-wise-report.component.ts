@@ -1,7 +1,5 @@
 import { ItrMsService } from 'app/services/itr-ms.service';
-import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GridOptions } from 'ag-grid-community';
 import { UtilsService } from 'app/services/utils.service';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
@@ -20,16 +18,15 @@ export const MY_FORMATS = {
 };
 
 @Component({
-  selector: 'app-smewise-report',
-  templateUrl: './smewise-report.component.html',
-  styleUrls: ['./smewise-report.component.css'],
-  providers: [DatePipe,
+  selector: 'app-sme-tl-wise-report',
+  templateUrl: './sme-tl-wise-report.component.html',
+  styleUrls: ['./sme-tl-wise-report.component.css'],
+  providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   ]
 })
-export class SmewiseReportComponent implements OnInit {
-  dateSearchForm: FormGroup;
+export class SmeTlWiseReportComponent implements OnInit {
   loading: boolean;
   maxDate: any = new Date();
   minToDate: any;
@@ -37,7 +34,7 @@ export class SmewiseReportComponent implements OnInit {
   smeReportGridOption: GridOptions;
   totalCount = 0;
 
-  constructor(private fb: FormBuilder, private datePipe: DatePipe,
+  constructor(
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
   ) {
@@ -62,39 +59,26 @@ export class SmewiseReportComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dateSearchForm = this.fb.group({
-      fromDate: [new Date(), Validators.required],
-      toDate: [new Date(), Validators.required]
-    });
-    this.getReportsbyDate();
+    this.getSmeReport();
   }
 
   setToDateValidation(fromDate) {
     this.minToDate = fromDate;
   }
 
-  getReportsbyDate() {
-    if (this.dateSearchForm.valid) {
-      this.loading = true;
-      let fromDate = this.datePipe.transform(this.dateSearchForm.value.fromDate, 'yyyy-MM-dd');
-      let toDate = this.datePipe.transform(this.dateSearchForm.value.toDate, 'yyyy-MM-dd');
-      this.getSmeReport(fromDate, toDate);
-      // this.getTeamLeadReport(fromDate, toDate);
-    }
-  }
-
-  getSmeReport(fromDate, toDate) {
-    const param = `/api/itr-filing-report-sme?from=${fromDate}&to=${toDate}`;
+  getSmeReport() {
+    this.loading = true;
+    const param = `/invoice/failed-invoice-report-sme`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log('SME REPORT: ', res);
       this.loading = false;
       if (res && res instanceof Array && res.length > 0) {
         res.sort((a, b) => a.smeName > b.smeName ? 1 : -1);
         this.smeReportGridOption.api.setRowData(this.smeCreateRowData(res))
-        res.sort((a, b) => a.teamLeadName > b.teamLeadName ? 1 : -1);
+        res.sort((a, b) => a.teamLead > b.teamLead ? 1 : -1);
         this.teamLeadReportGridOption.api.setRowData(this.teamLeadCreateRowData(res))
       } else {
-         this.smeReportGridOption.api.setRowData(this.smeCreateRowData([]))
+        this.smeReportGridOption.api.setRowData(this.smeCreateRowData([]))
         this.teamLeadReportGridOption.api.setRowData(this.teamLeadCreateRowData([]))
       }
     }, error => {
@@ -103,30 +87,14 @@ export class SmewiseReportComponent implements OnInit {
     })
 
   }
-  // getTeamLeadReport(fromDate, toDate) {
-  //   const param = `/api/itr-filing-report-team-lead?from=${fromDate}&to=${toDate}`;
-  //   this.itrMsService.getMethod(param).subscribe((res: any) => {
-  //     console.log('TL REPORT: ', res);
-  //     if (res && res instanceof Array && res.length > 0) {
-  //       res.sort((a, b) => a.teamLeadName > b.teamLeadName ? 1 : -1);
-  //       this.smeReportGridOption.api.setRowData(this.smeCreateRowData(res))
-  //     } else {
-  //       this.smeReportGridOption.api.setRowData(this.smeCreateRowData([]))
-  //     }
-  //     this.loading = false;
-  //   }, error => {
-  //     this.loading = false;
-  //     this.utilsService.showSnackBar('Unable to get Team Lead Report')
-  //   })
-  // }
 
   smeCreateRowData(tlReport) {
     var data = [];
     for (let i = 0; i < tlReport.length; i++) {
       let tlData = {
         srNo: i + 1,
-        smeName: tlReport[i].smeName + ' - '+tlReport[i].teamLeadName,
-        filingCount: tlReport[i].filingCount
+        smeName: tlReport[i].smeName + ' - ' + tlReport[i].teamLead,
+        count: tlReport[i].count
       }
       data.push(tlData);
     }
@@ -144,7 +112,7 @@ export class SmewiseReportComponent implements OnInit {
       {
         headerName: 'SME Name - TL',
         field: 'smeName',
-         width: 300,
+        width: 300,
         sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -154,10 +122,10 @@ export class SmewiseReportComponent implements OnInit {
         }
       },
       {
-        headerName: 'Filing Count',
-        field: 'filingCount',
-         width: 80,
-         pinned: 'right',
+        headerName: 'Count',
+        field: 'count',
+        width: 80,
+        pinned: 'right',
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -174,26 +142,26 @@ export class SmewiseReportComponent implements OnInit {
     for (let i = 0; i < smeReport.length; i++) {
       let smeData = {
         srNo: i + 1,
-        teamLeadName: smeReport[i].teamLeadName,
+        teamLead: smeReport[i].teamLead,
         smeName: smeReport[i].smeName,
-        filingCount: smeReport[i].filingCount,
+        count: smeReport[i].count,
         isShow: false,
         rowSpan: 1,
         teamLeadTotal: 0
       }
-      total = total + smeReport[i].filingCount
+      total = total + smeReport[i].count
 
       data.push(smeData);
     }
     this.totalCount = total;
     for (let i = 0; i < data.length; i++) {
-      let a = dataToReturn.filter(item => item.teamLeadName === data[i].teamLeadName)
+      let a = dataToReturn.filter(item => item.teamLead === data[i].teamLead)
       if (a.length === 0) {
-        const aa = data.filter(item => item.teamLeadName === data[i].teamLeadName);
+        const aa = data.filter(item => item.teamLead === data[i].teamLead);
         let index = 0;
         aa.forEach(item => {
           for (let j = 0; j < aa.length; j++) {
-            item.teamLeadTotal = item.teamLeadTotal + aa[j].filingCount
+            item.teamLeadTotal = item.teamLeadTotal + aa[j].count
           }
           if (index === 0) {
             item.isShow = true;
@@ -220,7 +188,7 @@ export class SmewiseReportComponent implements OnInit {
       },
       {
         headerName: 'Team Lead Name',
-        field: 'teamLeadName',
+        field: 'teamLead',
         sortable: true,
         // width: 140,
         suppressMovable: true,
@@ -277,18 +245,11 @@ export class SmewiseReportComponent implements OnInit {
       {
         headerName: 'SME Name',
         field: 'smeName',
-        // sortable: true,
         suppressMovable: true,
-        // cellStyle: { textAlign: 'center' },
-        // filter: "agTextColumnFilter",
-        // filterParams: {
-        //   filterOptions: ["contains", "notContains"],
-        //   debounceMs: 0
-        // }
       },
       {
-        headerName: 'Filing Count',
-        field: 'filingCount',
+        headerName: 'Count',
+        field: 'count',
         pinned: 'right',
         // sortable: true,
         width: 80,
