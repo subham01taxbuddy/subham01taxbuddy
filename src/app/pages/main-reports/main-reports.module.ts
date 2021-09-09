@@ -12,6 +12,9 @@ import { ItrFillingReportComponent } from './itr-filling-report/itr-filling-repo
 import { MissedChatReportComponent } from './missed-chat-report/missed-chat-report.component';
 import { SmewiseReportComponent } from "./itr-filling-report/smewise-report/smewise-report.component";
 import { AllFilingReportComponent } from "./itr-filling-report/all-filing-report/all-filing-report.component";
+import { InvoiceFailedReportComponent } from "./invoice-failed/invoice-failed.component";
+import { SmeTlWiseReportComponent } from "./invoice-failed/sme-tl-wise/sme-tl-wise-report.component";
+import { DetailReportComponent } from "./invoice-failed/detail-report/detail-report.component";
 
 @NgModule({
     declarations: [MainReportsComponent,
@@ -21,7 +24,10 @@ import { AllFilingReportComponent } from "./itr-filling-report/all-filing-report
         ItrFillingReportComponent,
         MissedChatReportComponent,
         SmewiseReportComponent,
-        AllFilingReportComponent],
+        AllFilingReportComponent,
+        InvoiceFailedReportComponent,
+        SmeTlWiseReportComponent,
+        DetailReportComponent],
     imports: [
         CommonModule,
         FormsModule,

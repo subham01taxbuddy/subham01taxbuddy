@@ -1,5 +1,8 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { DetailReportComponent } from "./invoice-failed/detail-report/detail-report.component";
+import { InvoiceFailedReportComponent } from "./invoice-failed/invoice-failed.component";
+import { SmeTlWiseReportComponent } from "./invoice-failed/sme-tl-wise/sme-tl-wise-report.component";
 import { AllFilingReportComponent } from "./itr-filling-report/all-filing-report/all-filing-report.component";
 import { ItrFillingReportComponent } from "./itr-filling-report/itr-filling-report.component";
 import { SmewiseReportComponent } from "./itr-filling-report/smewise-report/smewise-report.component";
@@ -27,6 +30,14 @@ const routes: Routes = [
                     { path: 'sme-wise', component: SmewiseReportComponent },
                     { path: 'all', component: AllFilingReportComponent },
                     { path: '', redirectTo: 'sme-wise', pathMatch: '' }
+                ]
+            },
+            {
+                path: 'invoice-failed', component: InvoiceFailedReportComponent,
+                children: [
+                    { path: 'sme-tl', component: SmeTlWiseReportComponent },
+                    { path: 'details', component: DetailReportComponent },
+                    { path: '', redirectTo: 'sme-tl', pathMatch: '' }
                 ]
             },
             { path: 'missed-chat', component: MissedChatReportComponent },
