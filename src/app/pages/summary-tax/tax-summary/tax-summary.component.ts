@@ -96,11 +96,11 @@ export class TaxSummaryComponent implements OnInit {
   ]
 
   employersDropdown = [
-    { value: 'GOVERNMENT', label: 'State Government' },
-    { value: 'CENTRAL_GOVT', label: 'Central Government' },
-    { value: 'PRIVATE', label: 'Public Sector Unit' },
-    { value: 'OTHER', label: 'Other-Private' },
-    { value: 'PENSIONERS', label: 'Pensioners' },
+    { value: 'SGOV', label: 'State Government' },
+    { value: 'CGOV', label: 'Central Government' },
+    { value: 'PSU', label: 'Public Sector Unit' },
+    { value: 'OTH', label: 'Other-Private' },
+    { value: 'PE', label: 'Pensioners' },
     { value: 'NA', label: 'Not-Applicable' }
   ];
   taxRegime: any = [
@@ -366,9 +366,7 @@ export class TaxSummaryComponent implements OnInit {
       this.itrSummaryForm.controls.assesse['controls'].aadharNumber.setValue(itrData['ITR1'].PersonalInfo.AadhaarCardNo);
 
       let natureOfEmployer = itrData['ITR1'].PersonalInfo.EmployerCategory;
-      if(natureOfEmployer === "OTH"){
-        this.itrSummaryForm.controls.assesse['controls'].natureOfEmployment.setValue('OTHER');
-      }
+      this.itrSummaryForm.controls.assesse['controls'].natureOfEmployment.setValue(natureOfEmployer);
 
       this.itrSummaryForm.controls.assesse['controls'].oldVsNewTaxRegime.setValue(itrData['ITR1'].FilingStatus.NewTaxRegime);
 
@@ -413,7 +411,32 @@ export class TaxSummaryComponent implements OnInit {
       }
 
       /* House Property */
+      var housingInfo = itrData['ITR1'].ITR1_IncomeDeductions;
+      let housingObj = {
+        propertyType: housingInfo.TypeOfHP === "S" ? 'SOP' : 'LOP',
+        address: '',
+        ownerOfProperty: '',
+        coOwners: '',
+        otherOwnerOfProperty: '',
+        tenantName: '',
+        tenentPanNumber: '',
+        grossAnnualRentReceived: housingInfo.GrossRentReceived,
+        annualValue:  housingInfo.AnnualValue,
+        propertyTax: housingInfo.TaxPaidlocalAuth,
+        interestAmount: housingInfo.InterestPayable,
+        taxableIncome: housingInfo.TotalIncomeOfHP,
+        exemptIncome: housingInfo.StandardDeduction,
+        pinCode: '',
+        flatNo: '',
+        building: '',
+        street: '',
+        locality: '',
+        city: '',
+        country: '',
+        state: '',
+      }
 
+      this.housingData.push(housingObj)
 
       /* Salary Property */
       var salaryInfo = itrData['ITR1'].ITR1_IncomeDeductions;
@@ -422,13 +445,18 @@ export class TaxSummaryComponent implements OnInit {
       var otherAmnt = 0;
       let exemptIncomeInfo = salaryInfo.AllwncExemptUs10.AllwncExemptUs10Dtls;
       if(exemptIncomeInfo instanceof Array && exemptIncomeInfo.length > 0){
-         hra = exemptIncomeInfo.filter(item => item.SalNatureDesc === "10(13A)")[0].SalOthAmount;
-         hra=hra.replace(/\,/g,''); 
-         hra=parseInt(hra,10);
+        if(exemptIncomeInfo.filter(item => item.SalNatureDesc === "10(13A)").length > 0){
+          hra = exemptIncomeInfo.filter(item => item.SalNatureDesc === "10(13A)")[0].SalOthAmount;
+          hra=hra.replace(/\,/g,''); 
+          hra=parseInt(hra,10);
+          otherAmnt = salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10 - hra;
+        }
+        else{
+          hra = 0;
+          otherAmnt = salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10;
+        }
       }
-
-      console.log('before -> hra: ', hra, typeof hra,  ' use hra: ', Number(hra),typeof Number(hra), ' exempt amnt: ', salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10, typeof salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10)
-      otherAmnt = salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10 - hra;
+     
 
       let salObj = {
         employerName: '',
