@@ -1,45 +1,75 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="main clearfix">
-    <div class="card" style="padding: 0 !important;">
-        <div class="card__title" style="padding: 20px;">Document List </div>
+    <div class="card">
+        <app-document-upload (onUploadDoucument)="afterUploadDocs($event)" [userId]="userId"></app-document-upload>
+        <div class="card__title" style="padding: 20px;">Document Cloud </div>
         <!-- <div style="padding-left: 30px;"><span *ngFor="let docs of commonDocuments; let i=index">
                 <a href="javascript:;" (click)="getCommonDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
             </span> &nbsp;
         </div> -->
-        <ul class="breadcrumb breadTx" style="overflow: hidden;">
-            <li *ngFor="let breadcrumb of breadcrumbsPart; let i=index" class="breadcrumb-item" style="display:inline-block">
-              <a href="javascript:;" (click)="getCloudFilePath(breadcrumb, 'fromBreadcrum')">
-                {{breadcrumb}}
-              </a>&nbsp;&nbsp;&nbsp;&nbsp;
-            </li>
-          </ul>
+        <div class="card__row">
+            <ul class="breadcrumb breadTx" style="overflow: hidden;">
+                <li *ngFor="let breadcrumb of breadcrumbsPart; let i=index" class="breadcrumb-item"
+                    style="display:inline-block">
+                    <a href="javascript:;" (click)="getCloudFilePath(breadcrumb, 'fromBreadcrum')">
+                        {{breadcrumb}}
+                    </a>&nbsp;&nbsp;&nbsp;&nbsp;
+                </li>
+            </ul>
+        </div>
+        <div class="card__row">
+            <div class="card__col-xs-4 card__col-lg-4 tpSpc">
+                <span *ngIf="!isFile">
+                    <div class="inlinBx" *ngFor="let folder of folders; let k=index;">
+                        <span style="padding-left: 15px;"> <button mat-mini-fab
+                                aria-label="Example icon button with a heart icon" title="Click to select media file"
+                                (click)="getCloudFilePath(folder)">
+                                <mat-icon>folder</mat-icon>
+                            </button></span><br>
+                        <button mat-button>{{folder}}</button>
 
-          <div class="card__col-xs-12 tpSpc">
-            <div class="inlinBx" *ngFor="let folder of folders; let k=index;">                      
-              <a *ngIf="!isFile" class="gryBx" (click)="getCloudFilePath(folder)"><i class="fas fa-folder fldrActv" aria-hidden="true"></i><div class="txCld">{{folder}}</div></a>
-             
-                <div class="listVw"> 
-                    <a class="txtLf" *ngIf="isFile" href="javascript:void(0)" (click)="getCommonDocsUrl(folder)"> {{folder.fileName}}</a>
-                    <p class="txtRt" *ngIf="isFile && folder.isDeleted">Deleted By {{folder.deletedBy === "USER" ? 'You' : 'Tax Buddy'}} on {{folder.date | date}}</p>
-                      
+
+                        <!--   <a (click)="getCloudFilePath(folder)"><i class="fa fa-folder" style="font-size: 40px;"
+                                aria-hidden="true"></i><br>
+                            {{folder}}
+                        </a> -->
+
+                    </div>
+                </span>
+                <div class="listVw" *ngIf="isFile">
+                    <span *ngFor="let folder of folders; let k=index;"><a class="txtLf" href="javascript:void(0)"
+                            (click)="getCommonDocsUrl(folder)">{{folder.fileName}}&nbsp;&nbsp;
+                            <i class="fa fa-info-circle" aria-hidden="true" *ngIf="isFile && folder.isDeleted"
+                                [title]="getInfotext(folder)" style="float: right; font-size: 18px;"></i>
+                            <i class="fa fa-download" aria-hidden="true" *ngIf="isFile && !folder.isDeleted"
+                                (click)="downloadFile(folder.fileName)" style="float: right; font-size: 18px;"></i></a>
+
+                    </span>
+
+                    <!-- <a class="txtLf" *ngIf="isFile" href="javascript:void(0)" (click)="getCommonDocsUrl(folder)">
+                        {{folder.fileName}}</a>
+                    <p class="txtRt" *ngIf="isFile && folder.isDeleted">Deleted By {{folder.deletedBy === "USER" ?
+                        'You'
+                        : 'Tax Buddy'}} on {{folder.date | date}}</p> -->
+
                     <!-- <button class="deLdBtn" *ngIf="isFile && !folder.isDeleted" (click)="deleteFile(folder.fileName)"><i class="far fa-trash-alt"></i> Delete</button> -->
-                    <button class="dwLdBtn" *ngIf="isFile && !folder.isDeleted" (click)="downloadFile(folder.fileName)"><i class="fal fa-arrow-alt-to-bottom"></i> Download</button>                         
-                </div>  
-            </div>                                            
-          </div>
-                    
+                    <!-- <button class="dwLdBtn" *ngIf="isFile && !folder.isDeleted"
+                        (click)="downloadFile(folder.fileName)"><i class="fal fa-arrow-alt-to-bottom"></i>
+                        Download</button> -->
+                </div>
+            </div>
+            <div class="card__col-xs-8 card__col-lg-8 tpSpc">
+                <h2 class="msg" *ngIf="breadcrumbsPart.length === 0"><b>No document available</b></h2>
+                <ngx-image-zoom *ngIf="viewer !== 'DOC'" [thumbImage]="docUrl" [fullImage]="docUrl" [magnification]="1"
+                    [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
+                </ngx-image-zoom>
 
-        <h2 class="msg" *ngIf="breadcrumbsPart.length === 0"><b>No document available</b></h2>
-        <br><br><br>
+                <ngx-doc-viewer *ngIf="viewer === 'DOC'" [url]="docUrl" viewer="google" style="width:100%;height:93vh;">
+                </ngx-doc-viewer>
+            </div>
+        </div>
 
-        <!-- <app-document-viewer  [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer> -->
 
-        <ngx-image-zoom *ngIf="viewer !== 'DOC'" [thumbImage]="docUrl" [fullImage]="docUrl" [magnification]="1"
-            [enableScrollZoom]="true" [enableLens]="true" [lensWidth]="200">
-        </ngx-image-zoom>
-
-        <ngx-doc-viewer *ngIf="viewer === 'DOC'" [url]="docUrl" viewer="google" style="width:100%;height:93vh;">
-        </ngx-doc-viewer>
 
 
         <!-- <ngx-image-zoom *ngIf="docDetails.docType !== 'pdf'" [thumbImage]="docDetails.docUrl"
