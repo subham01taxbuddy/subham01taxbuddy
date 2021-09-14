@@ -192,4 +192,14 @@ export class ShowUserDocumnetsComponent implements OnInit {
     })
   }
 
+  afterUploadDocs(fileUpload) {
+    if (fileUpload === 'File uploaded successfully') {
+      this.getCloudFilePath("");
+    }
+  }
+
+  getInfotext(folder) {
+    return `Deleted By ${folder.deletedBy === "USER" ? 'User' : 'Tax Buddy SME'} on ${folder.date}`
+  }
+
 }

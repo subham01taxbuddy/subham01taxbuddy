@@ -31,6 +31,7 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    MatTreeModule,
     MatFormFieldModule,
     MatStepperModule,
     MatBadgeModule,
@@ -70,6 +71,7 @@ import {
         MatTabsModule,
         MatToolbarModule,
         MatTooltipModule,
+        MatTreeModule,
         MatFormFieldModule,
         MatStepperModule,
     ],
@@ -107,6 +109,7 @@ import {
         MatTabsModule,
         MatToolbarModule,
         MatTooltipModule,
+        MatTreeModule,
         MatFormFieldModule,
         MatStepperModule,
     ]
