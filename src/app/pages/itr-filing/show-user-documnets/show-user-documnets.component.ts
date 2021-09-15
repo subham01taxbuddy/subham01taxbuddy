@@ -25,7 +25,9 @@ export class ShowUserDocumnetsComponent implements OnInit {
       console.log("USER ID :", params)
       // this.getCommonDocuments(params['userId']);
       this.userId = params['userId'];
-      this.getCloudFilePath("");
+      // For directly navigating to ITR folder docs
+      this.breadcrumbsPart = ["Home", "ITR", "2020-21", "Original", "ITR Filing Docs"];
+      this.getCloudFilePath("ITR");
     });
   }
 
@@ -37,15 +39,14 @@ export class ShowUserDocumnetsComponent implements OnInit {
   //   })
   // }
 
-  getCloudFilePath(path, from?) {
+  getCloudFilePath(path, from?,) {
     this.loading = true;
     const param = "/cloud/childnodes?currentPath=" + this.userId + (path ? this.getCurrentPath(path, from) : ""); //+ this.userObj.userId;
     this.itrMsService.getMethod(param).subscribe(
       (result: any) => {
         console.log("Cloud path: ", result, typeof result);
         console.log("Res length: ", result.length);
-        this.loading = false;
-        var mainFolder = result;
+
         if (result.length > 0) {
           if (!this.breadcrumbsPart.includes("Home")) {
             this.breadcrumbsPart.splice(0, 1, "Home");
@@ -65,6 +66,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
             this.isFile = false;
             this.docUrl = '';
           }
+          this.loading = false;
 
           console.log("breadcrumbsPart:===> ", this.breadcrumbsPart);
         } else if (result.length === 0) {
@@ -84,9 +86,15 @@ export class ShowUserDocumnetsComponent implements OnInit {
               } else {
                 this.isFile = false;
                 this.docUrl = '';
+                if (from !== 'Inside') {
+                  this.getCloudFilePath("", 'Inside');
+                  this.breadcrumbsPart = [];
+                }
               }
+              this.loading = false;
             }, (error) => {
-              console.log('error: => ', error)
+              console.log('error: => ', error);
+              this.loading = false;
             }
           );
         }
@@ -101,7 +109,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
   }
 
   getCurrentPath(path, from?) {
-    if (from) {
+    if (from === 'fromBreadcrum') {
       var indexOfClickPath = this.breadcrumbsPart.indexOf(path);
       this.breadcrumbsPart.splice((indexOfClickPath + 1), this.breadcrumbsPart.length)
     }
@@ -121,7 +129,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
             this.filePath = this.filePath + "/" + this.breadcrumbsPart[i];
           }
         }
-        console.log("this.filePath: => ", this.filePath);
+        console.log("this.filePath: => ", this.filePath, this.breadcrumbsPart);
         return this.filePath;
       } else {
         return "";
@@ -190,6 +198,16 @@ export class ShowUserDocumnetsComponent implements OnInit {
     }, error => {
       this.loading = false;
     })
+  }
+
+  afterUploadDocs(fileUpload) {
+    if (fileUpload === 'File uploaded successfully') {
+      this.getCloudFilePath("");
+    }
+  }
+
+  getInfotext(folder) {
+    return `Deleted By ${folder.deletedBy === "USER" ? 'User' : 'Tax Buddy SME'} on ${folder.date}`
   }
 
 }

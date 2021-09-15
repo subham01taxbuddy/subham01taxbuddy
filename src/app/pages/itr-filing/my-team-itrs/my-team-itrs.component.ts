@@ -441,16 +441,38 @@ export class MyTeamItrsComponent implements OnInit {
         },
       } */
 
+      // {
+      //   headerName: "Doc",
+      //   field: "showDocument",
+      //   width: 50,
+      //   pinned: 'right',
+      //   cellRenderer: params => {
+      //     return `<button type="button" class="action_icon add_button" title="Show User Documents" style="border: none;
+      //             background: transparent; font-size: 16px; color: yellow">
+      //             <i class="fa fa-file" data-action-type="showDocs" title="Show User Documents" aria-hidden="true"></i>
+      //              </button>`;
+      //   },
+      // },
       {
-        headerName: "Doc",
-        field: "showDocument",
+        headerName: 'Cloud',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
+           </button>`;
+        },
         width: 50,
         pinned: 'right',
-        cellRenderer: params => {
-          return `<button type="button" class="action_icon add_button" title="Show User Documents" style="border: none;
-                  background: transparent; font-size: 16px; color: yellow">
-                  <i class="fa fa-file" data-action-type="showDocs" title="Show User Documents" aria-hidden="true"></i>
-                   </button>`;
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
         },
       }
     ];
@@ -479,7 +501,7 @@ export class MyTeamItrsComponent implements OnInit {
         //   this.interestedForNextYearTpa(params.data);
         //   break;
         // }
-        case 'showDocs': {
+        case 'link-to-doc-cloud': {
           this.showUserDocuments(params.data);
           break;
         }
