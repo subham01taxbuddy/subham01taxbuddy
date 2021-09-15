@@ -3,10 +3,10 @@ import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { UtilsService } from './../../../services/utils.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AppConstants } from 'app/shared/constants';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { TitleCasePipe } from '@angular/common';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, DateAdapter, MatDialog } from '@angular/material';
@@ -106,7 +106,7 @@ export class CustomerProfileComponent implements OnInit {
     { value: 'MALE', label: 'Male' },
     { value: 'FEMALE', label: 'Female' },
   ]
-
+  filePath = 'ITR/';
 
   constructor(public fb: FormBuilder,
     public utilsService: UtilsService,
@@ -530,5 +530,64 @@ export class CustomerProfileComponent implements OnInit {
 
   async getSmeList() {
     this.filingTeamMembers = await this.utilsService.getStoredSmeList();
+  }
+
+  // file: File;
+  // fileName: any;
+  // showProgress: boolean;
+  // uploaded: number;
+  // showError: boolean;
+  // filesize: string;
+  // loaded: string;
+  // fileAttr = 'Choose File';
+  upload() {
+    document.getElementById("input-file-id").click();
+  }
+
+  // onUploadFile(event) {
+  //   let fileList: FileList = event.target.files;
+  //   this.file = FileList = event.target.files;
+  //   console.log("My fileList after Select==", fileList[0].name)
+  //   this.fileName = fileList[0].name;
+  // }
+
+
+  uploadFile(file: FileList) {
+    console.log("File", file);
+    if (file.length > 0) {
+      this.uploadDoc = file.item(0);
+    }
+  }
+
+  uploadDoc: any;
+  uploadDocument(document) {
+    this.loading = true;
+    var s3ObjectUrl = `${this.ITR_JSON.userId}/${this.getFilePath()}/${document.name}`;
+    let cloudFileMetaData = '{"fileName":"' + document.name + '","documentTag":"ITR_SUMMARY","userId":' + this.ITR_JSON.userId + ',"accessRight":["' + this.ITR_JSON.userId + '_W"' + '],"origin":"BO", "s3ObjectUrl":"' + s3ObjectUrl + '"}';
+    console.log("cloudFileMetaData ===> ", cloudFileMetaData)
+    const formData = new FormData();
+    formData.append("file", document);
+    formData.append("cloudFileMetaData", cloudFileMetaData);
+    console.log("formData ===> ", formData);
+    let param = '/itr/cloud/upload'
+    this.userMsService.postMethodInfo(param, formData).subscribe((res: any) => {
+      this.loading = false;
+      console.log('uploadDocument responce =>', res)
+      if (res.Failed === 'Failed to uploade file!') {
+        this.utilsService.showSnackBar(res.Failed)
+      } else if (res.Success === 'File successfully uploaded!') {
+        this.utilsService.showSnackBar(res.Success);
+        this.uploadDoc = null;
+      } else {
+        this.utilsService.showSnackBar(res.Failed)
+      }
+    }, error => {
+      this.loading = false;
+    })
+  }
+
+
+  getFilePath() {
+    return `ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/${this.customerProfileForm.controls['isRevised'].value === 'Y' ? 'Revised' : 'Original'}/ITR Filing Docs`
   }
 }
