@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { MAT_DIALOG_DATA } from '@angular/material';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { UserMsService } from 'app/services/user-ms.service';
+import { AppConstants } from 'app/shared/constants';
 
 @Component({
   selector: 'app-update-manual-filing',
@@ -13,7 +14,7 @@ import { UserMsService } from 'app/services/user-ms.service';
   styleUrls: ['./update-manual-filing.component.css']
 })
 export class UpdateManualFilingComponent implements OnInit {
-  ackNumber = new FormControl('', [Validators.required, Validators.maxLength(15), Validators.minLength(15)]);
+  ackNumber = new FormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(15), Validators.minLength(15)]);
   eFillingDate = new FormControl('', Validators.required);
   maxDate = new Date();
   loading = false;
