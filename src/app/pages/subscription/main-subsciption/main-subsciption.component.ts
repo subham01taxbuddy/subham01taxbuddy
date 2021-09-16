@@ -82,7 +82,8 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        hide: from === 'MY_SUB' ? false : true
       },
       {
         headerName: 'User Selected',
@@ -265,19 +266,19 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       //   },
       // },
 
-      {
-        headerName: 'Filer Name',
-        field: 'filerName',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        },
-        hide: from === 'MY_SUB' ? true : false
-      },
+      // {
+      //   headerName: 'Filer Name',
+      //   field: 'filerName',
+      //   width: 100,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   },
+      //   hide: from === 'MY_SUB' ? true : false
+      // },
       {
         headerName: 'Add Plan',
         editable: false,
@@ -398,11 +399,14 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   getUserSubscriptionInfo(pageNo) {
     console.log('this.queryParam:', this.queryParam);
     // alert(this.queryParam)
+    if (this.from === 'MY_SUB' && this.queryParam === '') {
+      return;
+    }
     let pagination = `?page=${pageNo}&pageSize=20`;
     if (this.utilsService.isNonEmpty(this.queryParam)) {
       pagination = `&page=${pageNo}&pageSize=20`;
     }
-    var param = `/subscription${this.queryParam}${pagination}`;
+    var param = `/subscription-dashboard${this.queryParam}${pagination}`;
     this.loading = true;
     this.itrService.getMethod(param).subscribe((response: any) => {
       console.log('SUBSCRIPTION RESPONSE:', response);
@@ -455,8 +459,9 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         endDate: subscriptionData[i].endDate,
         txbdyInvoiceId: subscriptionData[i].txbdyInvoiceId,
         subscriptionAssigneeId: subscriptionData[i].subscriptionAssigneeId !== 0 ? subscriptionData[i].subscriptionAssigneeId : 'NA',
-        filerName: subscriptionData[i].subscriptionAssigneeId !== 0 ? (subscriptionData[i].smeDetails.length > 0 ? subscriptionData[i].smeDetails[0]['first_name'] + ' ' + subscriptionData[i].smeDetails[0]['last_name'] : 'NA') : 'NA',
-        userName: subscriptionData[i].userId !== 0 ? (subscriptionData[i].userData.length > 0 ? subscriptionData[i].userData[0]['first_name'] + ' ' + subscriptionData[i].userData[0]['last_name'] : '') : 'NA',
+        // filerName: 'NA',
+        userName: subscriptionData[i].userName,
+        // userName: subscriptionData[i].userId !== 0 ? (subscriptionData[i].userData.length > 0 ? subscriptionData[i].userData[0]['first_name'] + ' ' + subscriptionData[i].userData[0]['last_name'] : '') : 'NA',
         isActive: subscriptionData[i].isActive,
         served: subscriptionData[i].served,
         promoCode: this.utilsService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : '-',
@@ -473,7 +478,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'generateInvoice': {
-          if (params.data.filerName !== 'NA') {
+          if (params.data.subscriptionAssigneeId !== 'NA') {
             this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
           } else {
             this.utilsService.showSnackBar('Please assign this subscription to team member');
@@ -567,15 +572,19 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   async startFiling(subscription) {
     console.log('subscription: ', subscription);
     if (subscription.servicesType === 'ITR') {
-      this.loading = true;
-      let profile = await this.getUserProfile(subscription.userId).catch(error => {
+      if (subscription.subscriptionAssigneeId !== 'NA') {
+        this.loading = true;
+        let profile = await this.getUserProfile(subscription.userId).catch(error => {
+          this.loading = false;
+          console.log(error);
+          this.utilsService.showSnackBar(error.error.detail);
+          return;
+        });
         this.loading = false;
-        console.log(error);
-        this.utilsService.showSnackBar(error.error.detail);
-        return;
-      });
-      this.loading = false;
-      this.utilsService.getITRByUserIdAndAssesmentYear(profile, '', subscription.subscriptionAssigneeId);
+        this.utilsService.getITRByUserIdAndAssesmentYear(profile, '', subscription.subscriptionAssigneeId);
+      } else {
+        this.utilsService.showSnackBar('Please assign this subscription to team member');
+      }
     } else if (subscription.servicesType === 'GST') {
       this.router.navigate(['/pages/gst-filing/cloud'], { queryParams: { userId: subscription.userId } })
     } else {

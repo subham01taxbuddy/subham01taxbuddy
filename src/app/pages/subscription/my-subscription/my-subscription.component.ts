@@ -13,7 +13,7 @@ export class MySubscriptionComponent implements OnInit {
 
   ngOnInit() {
     const loggedInUser = JSON.parse(localStorage.getItem('UMD'));
-    this.queryParam = `?subscriptionAssigneeId=${loggedInUser.USER_UNIQUE_ID}`;
+    this.queryParam = `?subscriptionAssigneeId=${loggedInUser.USER_UNIQUE_ID}&isUserName=true`;
   }
 
   fromSubscription(event) {
