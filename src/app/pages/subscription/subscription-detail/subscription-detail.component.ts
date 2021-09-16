@@ -18,7 +18,8 @@ export class SubscriptionDetailComponent implements OnInit {
   searchVal: any;
   selectedUserName: any = '';
   userId: any;
-  queryParam: string = "";
+  queryParam: string = "?subscriptionAssigneeId=0";
+  // https://api.taxbuddy.com/itr/subscription-dashboard?page=0&pageSize=20&subscriptionAssigneeId=0&isUserName=true
   totalCount = 0;
 
   constructor(private _toastMessageService: ToastMessageService, public utilsService: UtilsService, private itrService: ItrMsService, @Inject(LOCALE_ID) private locale: string,
@@ -61,7 +62,7 @@ export class SubscriptionDetailComponent implements OnInit {
     }
     else {
       this.selectedUserName = '';
-      this.queryParam = '';
+      this.queryParam = '?subscriptionAssigneeId=0';
       this.utilsService.sendMessage(this.queryParam);
       this.utilsService.showSnackBar('You are fetching all records.')
     }

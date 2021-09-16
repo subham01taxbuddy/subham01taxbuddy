@@ -4,7 +4,7 @@
         <mat-form-field appearance="outline">
             <mat-label>Ack Number</mat-label>
             <input matInput placeholder="Ack Number" name="ackNumber" [formControl]="ackNumber" class="input-field"
-                required (blur)="setFilingDate()" maxlength="15" minlength="15">
+                required (blur)="setFilingDate()" type="number" maxlength="15" minlength="15">
             <mat-error *ngIf="ackNumber.hasError('minlength')">Enter 15 digit valid ack number</mat-error>
         </mat-form-field>
     </div>
