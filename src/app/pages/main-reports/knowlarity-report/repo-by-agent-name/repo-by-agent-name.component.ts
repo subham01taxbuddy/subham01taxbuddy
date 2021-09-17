@@ -22,8 +22,8 @@ export class RepoByAgentNameComponent implements OnInit {
   repoByAgentGridOption: GridOptions;
   totalRecords: any;
 
-  constructor(private fb: FormBuilder, private datePipe: DatePipe, private userService: UserMsService, private toastMsgService: ToastMessageService, 
-    private utilsService: UtilsService) { 
+  constructor(private fb: FormBuilder, private datePipe: DatePipe, private userService: UserMsService, private toastMsgService: ToastMessageService,
+    private utilsService: UtilsService) {
     this.repoByAgentGridOption = <GridOptions>{
       rowData: [],
       columnDefs: this.newAgentCreateColoumnDef(),
@@ -43,15 +43,16 @@ export class RepoByAgentNameComponent implements OnInit {
     this.showKnowlarityInfoByAgent();
   }
 
-  setToDateValidation(fromDate){
+  setToDateValidation(fromDate) {
     this.minToDate = fromDate;
   }
 
-  newAgentCreateColoumnDef(){
+  newAgentCreateColoumnDef() {
     return [
       {
         headerName: 'Agent Name',
         field: 'agentName',
+        sortable: true,
         width: 180,
         suppressMovable: true,
         filter: "agTextColumnFilter",
@@ -61,9 +62,10 @@ export class RepoByAgentNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Outbound Call',
+        headerName: 'Outbound',
         field: 'outboundCall',
-        width: 120,
+        sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -73,9 +75,10 @@ export class RepoByAgentNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Outbound Answered Call',
+        headerName: 'Outbound Answered',
         field: 'outboundAnsweredCall',
-        width: 130,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -85,9 +88,23 @@ export class RepoByAgentNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Inbound Call',
+        headerName: 'Outbound %',
+        field: 'ocPct',
+        sortable: true,
+        width: 80,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Inbound',
         field: 'inboundCall',
-        width: 120,
+        sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -97,9 +114,10 @@ export class RepoByAgentNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Inbound Answered Call',
+        headerName: 'Inbound Answered',
         field: 'inboundAnsweredCall',
-        width: 130,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -109,9 +127,23 @@ export class RepoByAgentNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Total Ansered Call',
+        headerName: 'Inbound %',
+        field: 'icPct',
+        sortable: true,
+        width: 80,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Total Ansered',
         field: 'totalAnsweredCall',
-        width: 150,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -123,7 +155,8 @@ export class RepoByAgentNameComponent implements OnInit {
       {
         headerName: 'Total Duration',
         field: 'totalDuration',
-        width: 150,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -134,7 +167,8 @@ export class RepoByAgentNameComponent implements OnInit {
       }, {
         headerName: 'Missed Call',
         field: 'missedCall',
-        width: 100,
+        sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -147,44 +181,46 @@ export class RepoByAgentNameComponent implements OnInit {
 
   }
 
-  showKnowlarityInfoByAgent(){
-    if(this.reportByAgentForm.valid){
+  showKnowlarityInfoByAgent() {
+    if (this.reportByAgentForm.valid) {
       this.loading = true;
       let fromDate = this.datePipe.transform(this.reportByAgentForm.value.fromDate, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.reportByAgentForm.value.toDate, 'yyyy-MM-dd');
       let param = `/call-management/knowlarity-report-agent?from=${fromDate}&to=${toDate}`;
-      this.userService.getMethod(param).subscribe((res: any)=>{
-        console.log('Agent wise info: ',res);
+      this.userService.getMethod(param).subscribe((res: any) => {
+        console.log('Agent wise info: ', res);
         this.loading = false;
-        if(res.report && res.report instanceof Array && res.report.length > 0){
+        if (res.report && res.report instanceof Array && res.report.length > 0) {
           this.totalRecords = res.reportTotal;
           res.report.sort((a, b) => a.agentName > b.agentName ? 1 : -1);
           this.repoByAgentGridOption.api.setRowData(this.createRowData(res.report))
         }
-        else{
+        else {
           this.totalRecords = '';
           this.repoByAgentGridOption.api.setRowData(this.createRowData([]))
         }
       },
-      error=>{
-        this.loading = false;
-        this.totalRecords = '';
-        console.log(error);
-        this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status))
-      })
+        error => {
+          this.loading = false;
+          this.totalRecords = '';
+          console.log(error);
+          this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status))
+        })
     }
   }
 
-  createRowData(agentRepoInfo){
+  createRowData(agentRepoInfo) {
     console.log('agentRepoInfo -> ', agentRepoInfo);
     var agentRepoInfoArray = [];
     for (let i = 0; i < agentRepoInfo.length; i++) {
       let agentReportInfo = Object.assign({}, agentRepoInfoArray[i], {
         inboundAnsweredCall: agentRepoInfo[i].inboundAnsweredCall,
         inboundCall: agentRepoInfo[i].inboundCall,
+        icPct: agentRepoInfo[i].inboundCall > 0 ? ((agentRepoInfo[i].inboundAnsweredCall / agentRepoInfo[i].inboundCall) * 100).toFixed(2) : 0.00,
         missedCall: agentRepoInfo[i].missedCall,
         outboundAnsweredCall: agentRepoInfo[i].outboundAnsweredCall,
         outboundCall: agentRepoInfo[i].outboundCall,
+        ocPct: agentRepoInfo[i].outboundCall > 0 ? ((agentRepoInfo[i].outboundAnsweredCall / agentRepoInfo[i].outboundCall) * 100).toFixed(2) : 0.00,
         agentName: agentRepoInfo[i].agentName,
         totalAnsweredCall: agentRepoInfo[i].totalAnsweredCall,
         totalDuration: agentRepoInfo[i].totalDuration
@@ -195,8 +231,8 @@ export class RepoByAgentNameComponent implements OnInit {
     return agentRepoInfoArray;
   }
 
-  downloadRepo(){
-    if(this.reportByAgentForm.valid){
+  downloadRepo() {
+    if (this.reportByAgentForm.valid) {
       let fromDate = this.datePipe.transform(this.reportByAgentForm.value.fromDate, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.reportByAgentForm.value.toDate, 'yyyy-MM-dd');
       location.href = environment.url + `/user/call-management/download-knowlarity-report-agent?from=${fromDate}&to=${toDate}`;

@@ -22,8 +22,8 @@ export class RepoBySmeNameComponent implements OnInit {
   repoBySmeGridOption: GridOptions;
   totalRecords: any;
 
-  constructor(private fb: FormBuilder, private datePipe: DatePipe, private userService: UserMsService, private toastMsgService: ToastMessageService, 
-              private utilsService: UtilsService) { 
+  constructor(private fb: FormBuilder, private datePipe: DatePipe, private userService: UserMsService, private toastMsgService: ToastMessageService,
+    private utilsService: UtilsService) {
     this.repoBySmeGridOption = <GridOptions>{
       rowData: [],
       columnDefs: this.newUserCreateColoumnDef(),
@@ -43,15 +43,16 @@ export class RepoBySmeNameComponent implements OnInit {
     this.showKnowlarityInfoBySme();
   }
 
-  setToDateValidation(fromDate){
+  setToDateValidation(fromDate) {
     this.minToDate = fromDate;
   }
 
-  newUserCreateColoumnDef(){
+  newUserCreateColoumnDef() {
     return [
       {
         headerName: 'SME Name',
         field: 'smeName',
+        sortable: true,
         width: 180,
         suppressMovable: true,
         filter: "agTextColumnFilter",
@@ -61,9 +62,10 @@ export class RepoBySmeNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Outbound Call',
+        headerName: 'Outbound',
         field: 'outboundCall',
-        width: 120,
+        sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -73,9 +75,10 @@ export class RepoBySmeNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Outbound Answered Call',
+        headerName: 'Outbound Answered',
         field: 'outboundAnsweredCall',
-        width: 130,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -85,9 +88,23 @@ export class RepoBySmeNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Inbound Call',
+        headerName: 'Outbound %',
+        field: 'ocPct',
+        sortable: true,
+        width: 80,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Inbound',
         field: 'inboundCall',
-        width: 120,
+        sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -97,9 +114,10 @@ export class RepoBySmeNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Inbound Answered Call',
+        headerName: 'Inbound Answered',
         field: 'inboundAnsweredCall',
-        width: 130,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -109,9 +127,23 @@ export class RepoBySmeNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Total Ansered Call',
+        headerName: 'Inbound %',
+        field: 'icPct',
+        sortable: true,
+        width: 80,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Total Ansered',
         field: 'totalAnsweredCall',
-        width: 150,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -123,7 +155,8 @@ export class RepoBySmeNameComponent implements OnInit {
       {
         headerName: 'Total Duration',
         field: 'totalDuration',
-        width: 150,
+        sortable: true,
+        width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -134,7 +167,8 @@ export class RepoBySmeNameComponent implements OnInit {
       }, {
         headerName: 'Missed Call',
         field: 'missedCall',
-        width: 100,
+        sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -146,6 +180,7 @@ export class RepoBySmeNameComponent implements OnInit {
       {
         headerName: 'Team Lead Name',
         field: 'teamLeadName',
+        sortable: true,
         width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -158,26 +193,26 @@ export class RepoBySmeNameComponent implements OnInit {
     ]
   }
 
-  showKnowlarityInfoBySme(){
-    if(this.reportBySmeForm.valid){
-        this.loading = true;
-        let fromDate = this.datePipe.transform(this.reportBySmeForm.value.fromDate, 'yyyy-MM-dd');
-        let toDate = this.datePipe.transform(this.reportBySmeForm.value.toDate, 'yyyy-MM-dd');
-        let param = `/call-management/knowlarity-report-sme?from=${fromDate}&to=${toDate}`;
-        this.userService.getMethod(param).subscribe((res: any)=>{
-          console.log('SME wise info: ',res.report);
-          this.loading = false;
-          if(res.report && res.report instanceof Array && res.report.length > 0){
-            this.totalRecords = res.reportTotal;
-            res.report.sort((a, b) => a.smeName > b.smeName ? 1 : -1);
-            this.repoBySmeGridOption.api.setRowData(this.createRowData(res.report))
-          }
-          else{
-            this.totalRecords = '';
-            this.repoBySmeGridOption.api.setRowData(this.createRowData([]))
-          }
-        },
-        error=>{
+  showKnowlarityInfoBySme() {
+    if (this.reportBySmeForm.valid) {
+      this.loading = true;
+      let fromDate = this.datePipe.transform(this.reportBySmeForm.value.fromDate, 'yyyy-MM-dd');
+      let toDate = this.datePipe.transform(this.reportBySmeForm.value.toDate, 'yyyy-MM-dd');
+      let param = `/call-management/knowlarity-report-sme?from=${fromDate}&to=${toDate}`;
+      this.userService.getMethod(param).subscribe((res: any) => {
+        console.log('SME wise info: ', res.report);
+        this.loading = false;
+        if (res.report && res.report instanceof Array && res.report.length > 0) {
+          this.totalRecords = res.reportTotal;
+          res.report.sort((a, b) => a.smeName > b.smeName ? 1 : -1);
+          this.repoBySmeGridOption.api.setRowData(this.createRowData(res.report))
+        }
+        else {
+          this.totalRecords = '';
+          this.repoBySmeGridOption.api.setRowData(this.createRowData([]))
+        }
+      },
+        error => {
           this.loading = false;
           this.totalRecords = '';
           console.log(error);
@@ -186,16 +221,18 @@ export class RepoBySmeNameComponent implements OnInit {
     }
   }
 
-  createRowData(smeRepoInfo){
+  createRowData(smeRepoInfo) {
     console.log('smeRepoInfo -> ', smeRepoInfo);
     var smeRepoInfoArray = [];
     for (let i = 0; i < smeRepoInfo.length; i++) {
       let smeReportInfo = Object.assign({}, smeRepoInfoArray[i], {
         inboundAnsweredCall: smeRepoInfo[i].inboundAnsweredCall,
         inboundCall: smeRepoInfo[i].inboundCall,
+        icPct: smeRepoInfo[i].inboundCall > 0 ? ((smeRepoInfo[i].inboundAnsweredCall / smeRepoInfo[i].inboundCall) * 100).toFixed(2) : 0.00,
         missedCall: smeRepoInfo[i].missedCall,
         outboundAnsweredCall: smeRepoInfo[i].outboundAnsweredCall,
         outboundCall: smeRepoInfo[i].outboundCall,
+        ocPct: smeRepoInfo[i].outboundCall > 0 ? ((smeRepoInfo[i].outboundAnsweredCall / smeRepoInfo[i].outboundCall) * 100).toFixed(2) : 0.00,
         smeName: smeRepoInfo[i].smeName,
         teamLeadName: smeRepoInfo[i].teamLeadName,
         totalAnsweredCall: smeRepoInfo[i].totalAnsweredCall,
@@ -207,8 +244,8 @@ export class RepoBySmeNameComponent implements OnInit {
     return smeRepoInfoArray;
   }
 
-  downloadRepo(){
-    if(this.reportBySmeForm.valid){
+  downloadRepo() {
+    if (this.reportBySmeForm.valid) {
       let fromDate = this.datePipe.transform(this.reportBySmeForm.value.fromDate, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.reportBySmeForm.value.toDate, 'yyyy-MM-dd');
       location.href = environment.url + `/user/call-management/download-knowlarity-report-sme?from=${fromDate}&to=${toDate}`;
