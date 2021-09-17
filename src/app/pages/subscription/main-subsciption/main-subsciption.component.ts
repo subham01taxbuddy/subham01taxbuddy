@@ -83,7 +83,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        hide: from === 'MY_SUB' ? false : true
+        // hide: from === 'MY_SUB' ? false : true
       },
       {
         headerName: 'User Selected',
@@ -266,19 +266,19 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       //   },
       // },
 
-      // {
-      //   headerName: 'Filer Name',
-      //   field: 'filerName',
-      //   width: 100,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   },
-      //   hide: from === 'MY_SUB' ? true : false
-      // },
+      {
+        headerName: 'Filer Name',
+        field: 'assigneeName',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        hide: from === 'MY_SUB' ? true : false
+      },
       {
         headerName: 'Add Plan',
         editable: false,
@@ -459,7 +459,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         endDate: subscriptionData[i].endDate,
         txbdyInvoiceId: subscriptionData[i].txbdyInvoiceId,
         subscriptionAssigneeId: subscriptionData[i].subscriptionAssigneeId !== 0 ? subscriptionData[i].subscriptionAssigneeId : 'NA',
-        // filerName: 'NA',
+        assigneeName: subscriptionData[i].subscriptionAssigneeId !== 0 ? subscriptionData[i].assigneeName : 'NA',
         userName: subscriptionData[i].userName,
         // userName: subscriptionData[i].userId !== 0 ? (subscriptionData[i].userData.length > 0 ? subscriptionData[i].userData[0]['first_name'] + ' ' + subscriptionData[i].userData[0]['last_name'] : '') : 'NA',
         isActive: subscriptionData[i].isActive,

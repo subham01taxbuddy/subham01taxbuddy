@@ -68,6 +68,7 @@ export class RepoByAgentNameComponent implements OnInit {
       {
         headerName: 'Agent Name',
         field: 'agentName',
+        sortable: true,
         width: 180,
         suppressMovable: true,
         filter: "agTextColumnFilter",
@@ -77,9 +78,10 @@ export class RepoByAgentNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Outbound Call',
+        headerName: 'Outbound',
         field: 'outboundCall',
-        width: 120,
+        sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -89,9 +91,10 @@ export class RepoByAgentNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Outbound Answered Call',
+        headerName: 'Outbound Answered',
         field: 'outboundAnsweredCall',
-        width: 130,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -101,9 +104,23 @@ export class RepoByAgentNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Inbound Call',
+        headerName: 'Outbound %',
+        field: 'ocPct',
+        sortable: true,
+        width: 80,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Inbound',
         field: 'inboundCall',
-        width: 120,
+        sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -113,9 +130,10 @@ export class RepoByAgentNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Inbound Answered Call',
+        headerName: 'Inbound Answered',
         field: 'inboundAnsweredCall',
-        width: 130,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -125,9 +143,23 @@ export class RepoByAgentNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Total Ansered Call',
+        headerName: 'Inbound %',
+        field: 'icPct',
+        sortable: true,
+        width: 80,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Total Ansered',
         field: 'totalAnsweredCall',
-        width: 150,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -139,7 +171,8 @@ export class RepoByAgentNameComponent implements OnInit {
       {
         headerName: 'Total Duration',
         field: 'totalDuration',
-        width: 150,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -150,7 +183,8 @@ export class RepoByAgentNameComponent implements OnInit {
       }, {
         headerName: 'Missed Call',
         field: 'missedCall',
-        width: 100,
+        sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -198,9 +232,11 @@ export class RepoByAgentNameComponent implements OnInit {
       let agentReportInfo = Object.assign({}, agentRepoInfoArray[i], {
         inboundAnsweredCall: agentRepoInfo[i].inboundAnsweredCall,
         inboundCall: agentRepoInfo[i].inboundCall,
+        icPct: agentRepoInfo[i].inboundCall > 0 ? ((agentRepoInfo[i].inboundAnsweredCall / agentRepoInfo[i].inboundCall) * 100).toFixed(2) : 0.00,
         missedCall: agentRepoInfo[i].missedCall,
         outboundAnsweredCall: agentRepoInfo[i].outboundAnsweredCall,
         outboundCall: agentRepoInfo[i].outboundCall,
+        ocPct: agentRepoInfo[i].outboundCall > 0 ? ((agentRepoInfo[i].outboundAnsweredCall / agentRepoInfo[i].outboundCall) * 100).toFixed(2) : 0.00,
         agentName: agentRepoInfo[i].agentName,
         totalAnsweredCall: agentRepoInfo[i].totalAnsweredCall,
         totalDuration: agentRepoInfo[i].totalDuration
