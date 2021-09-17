@@ -19,6 +19,7 @@ import { InterestedClientsComponent } from './interested-clients/interested-clie
 import { OpenStatusComponent } from './open-status/open-status.component';
 import { KnowlarityComponent } from './knowlarity/knowlarity.component';
 import { Calling2dot0Component } from './calling-board/calling2dot0/calling2dot0.component';
+import { ScheduledCallComponent } from './calling-board/scheduled-call/scheduled-call.component';
 
 @NgModule({
     declarations: [DashboardComponent,
@@ -31,7 +32,8 @@ import { Calling2dot0Component } from './calling-board/calling2dot0/calling2dot0
         InterestedClientsComponent,
         OpenStatusComponent,
         KnowlarityComponent,
-        Calling2dot0Component],
+        Calling2dot0Component,
+        ScheduledCallComponent],
     imports: [
         CommonModule,
         FormsModule,
