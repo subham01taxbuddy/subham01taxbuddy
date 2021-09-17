@@ -6,7 +6,7 @@
                 <div class="card__col-lg-3">
                     <mat-form-field appearance="outline">
                         <mat-label>From Date</mat-label>
-                        <input matInput formControlName="fromDate" [matDatepicker]="picker1"  [max]="maxDate"
+                        <input matInput formControlName="fromDate" [matDatepicker]="picker1" [max]="maxDate"
                             autocomplete="off"
                             (dateChange)="setToDateValidation(reportByAgentForm.controls['fromDate'].value)">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -20,7 +20,7 @@
                     <mat-form-field appearance="outline">
                         <mat-label>To Date</mat-label>
                         <input matInput formControlName="toDate" [matDatepicker]="picker2" [max]="maxDate"
-                          [min]="minToDate"  autocomplete="off">
+                            [min]="minToDate" autocomplete="off">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker #picker2></mat-datepicker>
                         <mat-error *ngIf="reportByAgentForm.controls['toDate'].hasError('required')">Select To
@@ -43,34 +43,48 @@
         </div>
         <div class="card__row">
             <div class="card__row" *ngIf="totalRecords">
+                <!--                 <div class="card__col-lg-2">
+                    <b>Outbound: </b>{{totalRecords.outboundCall}}
+                </div>
                 <div class="card__col-lg-2">
-                    <b>Answered Call: </b>{{totalRecords.inboundAnsweredCall}}
+                    <b>OutBound Answered: </b>{{totalRecords.outboundAnsweredCall}}
                 </div>
                 <div class="card__col-lg-2">
                     <b>Inbound Call: </b>{{totalRecords.inboundCall}}
                 </div>
                 <div class="card__col-lg-2">
-                    <b>AnsweredCall: </b>{{totalRecords.missedCall}}
+                    <b>Inbound Answered: </b>{{totalRecords.inboundAnsweredCall}}
                 </div>
                 <div class="card__col-lg-2">
-                    <b>Missed Call: </b>{{totalRecords.outboundAnsweredCall}}
+                    <b>Total Answered: </b>{{totalRecords.totalAnsweredCall}}
                 </div>
                 <div class="card__col-lg-2">
-                    <b>Outbound Call: </b>{{totalRecords.outboundCall}}
-                </div>
-                <div class="card__col-lg-2">
-                    <b>Answered Call: </b>{{totalRecords.totalAnsweredCall}}
+                    <b>Missed Call: </b>{{totalRecords.missedCall}}
                 </div>
                 <div class="card__col-lg-2" style="padding: 10px;">
                     <b>Total Duration: </b>{{totalRecords.totalDuration}}
+                </div> -->
+                <div class="card__col-lg-12" style="padding: 10px;">
+                    <b>Outbound: </b>{{totalRecords.outboundCall}} |
+                    <b>Outbound Answered: </b>{{totalRecords.outboundAnsweredCall}} |
+                    <b>OC Conversion (%):
+                    </b>{{((totalRecords.outboundAnsweredCall/totalRecords.outboundCall)*100).toFixed(2)}}% |
+                    <b>Inbound: </b>{{totalRecords.inboundCall}} |
+                    <b>Inbound Answered: </b>{{totalRecords.inboundAnsweredCall}} |
+                    <b>IC Conversion (%):
+                    </b>{{((totalRecords.inboundAnsweredCall/totalRecords.inboundCall)*100).toFixed(2)}}% |
+                    <b>Total Answered Call: </b>{{totalRecords.totalAnsweredCall}} |
+                    <b>Missed Calls: </b>{{totalRecords.missedCall}} |
+                    <b>Total Duration: </b>{{totalRecords.totalDuration}}
                 </div>
-            </div>  
+            </div>
 
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="repoByAgentGridOption"
-                paginationPageSize=20 pagination=true>  <!--(firstDataRendered)="onFirstDataRendered($event)" (rowClicked)="onInvoiceRowClicked($event)"-->
+            <ag-grid-angular class="ag-theme-balham" [gridOptions]="repoByAgentGridOption" paginationPageSize=20
+                pagination=true>
+                <!--(firstDataRendered)="onFirstDataRendered($event)" (rowClicked)="onInvoiceRowClicked($event)"-->
             </ag-grid-angular>
         </div>
 
-       
+
     </div>
 </div>

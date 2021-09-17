@@ -68,6 +68,7 @@ export class RepoBySmeNameComponent implements OnInit {
       {
         headerName: 'SME Name',
         field: 'smeName',
+        sortable: true,
         width: 180,
         suppressMovable: true,
         filter: "agTextColumnFilter",
@@ -77,9 +78,10 @@ export class RepoBySmeNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Outbound Call',
+        headerName: 'Outbound',
         field: 'outboundCall',
-        width: 120,
+        sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -89,9 +91,10 @@ export class RepoBySmeNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Outbound Answered Call',
+        headerName: 'Outbound Answered',
         field: 'outboundAnsweredCall',
-        width: 130,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -101,9 +104,23 @@ export class RepoBySmeNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Inbound Call',
+        headerName: 'Outbound %',
+        field: 'ocPct',
+        sortable: true,
+        width: 80,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Inbound',
         field: 'inboundCall',
-        width: 120,
+        sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -113,9 +130,10 @@ export class RepoBySmeNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Inbound Answered Call',
+        headerName: 'Inbound Answered',
         field: 'inboundAnsweredCall',
-        width: 130,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -125,9 +143,23 @@ export class RepoBySmeNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Total Ansered Call',
+        headerName: 'Inbound %',
+        field: 'icPct',
+        sortable: true,
+        width: 80,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Total Ansered',
         field: 'totalAnsweredCall',
-        width: 150,
+        sortable: true,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -139,7 +171,8 @@ export class RepoBySmeNameComponent implements OnInit {
       {
         headerName: 'Total Duration',
         field: 'totalDuration',
-        width: 150,
+        sortable: true,
+        width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -150,7 +183,8 @@ export class RepoBySmeNameComponent implements OnInit {
       }, {
         headerName: 'Missed Call',
         field: 'missedCall',
-        width: 100,
+        sortable: true,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -162,6 +196,7 @@ export class RepoBySmeNameComponent implements OnInit {
       {
         headerName: 'Team Lead Name',
         field: 'teamLeadName',
+        sortable: true,
         width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -209,9 +244,11 @@ export class RepoBySmeNameComponent implements OnInit {
       let smeReportInfo = Object.assign({}, smeRepoInfoArray[i], {
         inboundAnsweredCall: smeRepoInfo[i].inboundAnsweredCall,
         inboundCall: smeRepoInfo[i].inboundCall,
+        icPct: smeRepoInfo[i].inboundCall > 0 ? ((smeRepoInfo[i].inboundAnsweredCall / smeRepoInfo[i].inboundCall) * 100).toFixed(2) : 0.00,
         missedCall: smeRepoInfo[i].missedCall,
         outboundAnsweredCall: smeRepoInfo[i].outboundAnsweredCall,
         outboundCall: smeRepoInfo[i].outboundCall,
+        ocPct: smeRepoInfo[i].outboundCall > 0 ? ((smeRepoInfo[i].outboundAnsweredCall / smeRepoInfo[i].outboundCall) * 100).toFixed(2) : 0.00,
         smeName: smeRepoInfo[i].smeName,
         teamLeadName: smeRepoInfo[i].teamLeadName,
         totalAnsweredCall: smeRepoInfo[i].totalAnsweredCall,

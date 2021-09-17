@@ -13,8 +13,8 @@ if (environment.production) {
 }
 
 const knowlarityScript = document.createElement('script');
-knowlarityScript.innerHTML = `var URL = "https://konnectprodstream3.knowlarity.com:8200/update-stream/560397a2-d875-478b-8003-cc4675e9a0eb/konnect"
-                              var knowlarityData = [];
+knowlarityScript.innerHTML = ` var knowlarityData = [];
+                              var URL = "https://konnectprodstream3.knowlarity.com:8200/update-stream/560397a2-d875-478b-8003-cc4675e9a0eb/konnect"
                               var aa = 0;
                               source = new EventSource(URL);
                               source.onmessage = function (event) {
