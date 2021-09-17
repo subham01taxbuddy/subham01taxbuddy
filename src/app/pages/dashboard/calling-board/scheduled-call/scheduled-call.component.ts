@@ -24,6 +24,7 @@ export class ScheduledCallComponent implements OnInit {
   scheduleCallsData: any= [];
   pageCount: number = 0;
   loggedUserId: any;
+  showByAdminUserId: boolean;
 
   constructor(private toastMsgService: ToastMessageService, private userMsService: UserMsService, private utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
               private dialog: MatDialog, private route: Router) {
@@ -52,6 +53,7 @@ export class ScheduledCallComponent implements OnInit {
     if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
       this.isAdmin = true;
       this.searchMobNo = '';
+      this.showByAdminUserId = true
       this.getScheduledCallsInfo(userInfo.USER_UNIQUE_ID, 0);
     }
     else {
@@ -60,11 +62,28 @@ export class ScheduledCallComponent implements OnInit {
     }
   }
 
+  searchByAgent(){
+    if (this.utilsService.isNonEmpty(this.selectedAgent)) {
+      this.searchMobNo = '';
+      this.showByAdminUserId = false;
+      this.loggedUserId = this.selectedAgent;
+      this.getScheduledCallsInfo(this.selectedAgent, 0);
+    }
+    else {
+      this.toastMsgService.alert("error", "Select Agent")
+    }
+  }
+
   getScheduledCallsInfo(id, page){
     this.loading = true;
     var param2;
     if (this.isAdmin) {
-        param2 = `/schedule-call-details?agentId=${id}&page=${page}&size=30`;  //${id}
+      if(this.showByAdminUserId){
+        param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;  
+      }
+      else{
+        param2 = `/schedule-call-details?agentId=${id}&page=${page}&size=30`;  
+      } 
     } 
     else {
         param2 = `/schedule-call-details?smeUserId=${id}&page=${page}&size=30`;
