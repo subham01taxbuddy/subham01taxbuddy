@@ -24,8 +24,7 @@ knowlarityScript.innerHTML = ` var knowlarityData = [];
                               
                               if(data.event_type === "ORIGINATE" && data.call_direction === "Inbound"){
                                 knowlarityData.push(data);
-                                console.log('pushed data: ',data);
-                                console.log("knowlarityData: ",knowlarityData)
+                                // console.log("knowlarityData: ",knowlarityData)
                                 localStorage.setItem('INBOND_KNOWLARITY', JSON.stringify(knowlarityData));
                             }
                          }`

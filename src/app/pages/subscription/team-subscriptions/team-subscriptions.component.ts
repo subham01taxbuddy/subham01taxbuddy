@@ -29,7 +29,7 @@ export class TeamSubscriptionsComponent implements OnInit {
   }
 
   fromSme(event) {
-    this.queryParam = `?subscriptionAssigneeId=${event}&isUserName=true`;
+    this.queryParam = `?subscriptionAssigneeId=${event}`;
   }
 
   getMembersSubscriptions(member) {
