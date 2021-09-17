@@ -192,7 +192,7 @@
   
   <div class="card__row" *ngIf="data.mode == 'Salary'">
       
-    <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'">
+    <div class="card__col-lg-3" *ngIf="data.mode == 'Salary'" [style.margin-left]="data.callerObj.newItrSumChanges ? '223px' : ''">
         <mat-form-field appearance="outline">
             <mat-label>House rent Allowance(section 10(13A)): </mat-label>
             <input matInput placeholder="House rent Allowance" formControlName="houseRentAllow"
@@ -203,6 +203,7 @@
                 valid mobile number</mat-error> -->
         </mat-form-field>
     </div>
+
     <div class="card__col-lg-3" *ngIf="data.mode == 'Salary' && !data.callerObj.newItrSumChanges">
         <mat-form-field appearance="outline">
             <mat-label>Leave travel Expenses (section 10(5)) </mat-label>
@@ -312,7 +313,7 @@
         <!-- </div> -->
 
     <div class="card__row" *ngIf="data.mode == 'donationSec80G'">
-        <div class="card__col-lg-2" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>Type of donee </mat-label>
                 <mat-select matInput formControlName="donationType" placeholder="Select type of donee"
@@ -323,6 +324,19 @@
                 </mat-select>
                 <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].donationType.hasError('required')">
                     Select Type of donee</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.callerObj.newItrSumChanges && this.summaryDialogForm['controls'].donations['controls'].donationType.value === 'OTHER'">
+            <mat-form-field appearance="outline">
+                <mat-label>Type of Property </mat-label>
+                <mat-select matInput formControlName="donationPropertyType" placeholder="Select type of property"
+                    autocomplete="off">
+                    <mat-option *ngFor="let donation of typeOfDonations" [value]="donation.value">
+                        {{ donation.label }}
+                    </mat-option>
+                </mat-select>
+                <!-- <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].donationType.hasError('required')">
+                    Select Type of donee</mat-error> -->
             </mat-form-field>
         </div>
     </div>
@@ -393,7 +407,7 @@
         </div>
     </div>
 
-    <div class="card row" *ngIf="data.mode == 'donationSec80G'">
+    <div class="card__row" *ngIf="data.mode == 'donationSec80G'">
         <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.mode == 'donationSec80G'">
             <mat-form-field appearance="outline">
                 <mat-label>Amount in Cash</mat-label>
@@ -434,7 +448,7 @@
        
 
 
-
+    <div *ngIf="data.mode == 'tdsOnSal'">
         <div class="card__col-lg-6" formGroupName="onSalary" *ngIf="data.mode == 'tdsOnSal'">
             <mat-form-field appearance="outline">
                 <mat-label>TAN of Employer </mat-label>
@@ -478,7 +492,10 @@
                 </mat-error>
             </mat-form-field>
         </div>
+    </div>
+        
 
+    <div *ngIf="data.mode == 'tdsOnOtherThanSal'">
         <div class="card__col-lg-6" formGroupName="otherThanSalary16A" *ngIf="data.mode == 'tdsOnOtherThanSal'">
             <mat-form-field appearance="outline">
                 <mat-label>TAN of Deductor </mat-label>
@@ -525,7 +542,9 @@
 
             </mat-form-field>
         </div>
-
+    </div>
+        
+    <div *ngIf="data.mode == 'tdsOnSalOfPro26Q'">
         <div class="card__col-lg-6" formGroupName="otherThanSalary26QB" *ngIf="data.mode == 'tdsOnSalOfPro26Q'">
             <mat-form-field appearance="outline">
                 <mat-label>TAN of Deductor </mat-label>
@@ -572,7 +591,10 @@
 
             </mat-form-field>
         </div>
+    </div>
+        
 
+    <div *ngIf="data.mode == 'taxCollSources'">
         <div class="card__col-lg-6" formGroupName="tcs" *ngIf="data.mode == 'taxCollSources'">
             <mat-form-field appearance="outline">
                 <mat-label>TAN of Deductor </mat-label>
@@ -616,7 +638,9 @@
 
             </mat-form-field>
         </div>
-
+    </div>
+        
+   <div *ngIf="data.mode == 'advanceSelfAssTax'">
         <div class="card__col-lg-6" formGroupName="otherThanTDSTCS" *ngIf="data.mode == 'advanceSelfAssTax'">
             <mat-form-field appearance="outline">
                 <mat-label>BSR Code </mat-label>
@@ -660,9 +684,11 @@
 
             </mat-form-field>
         </div>
+   </div>
+        
 
         <!--  Houe Property Pert  -->
-       <div>
+       <div *ngIf="data.mode == 'House'">
           <div class="card__row">
             <div class="card__col-lg-3" formGroupName="houseProperties" *ngIf="data.mode == 'House'">
                 <mat-form-field appearance="outline">

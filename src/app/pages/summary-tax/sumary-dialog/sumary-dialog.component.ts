@@ -57,7 +57,14 @@ export class SumaryDialogComponent implements OnInit {
   lossesYear = [{value: '2010-2011', label:'2010-2011'},{value: '2011-2012', label:'2011-2012'},{value: '2012-2013', label:'2012-2013'},
                 {value: '2013-2014', label:'2013-2014'},{value: '2014-2015', label:'2014-2015'},{value: '2015-2016', label:'2015-2016'},
                 {value: '2016-2017', label:'2016-2017'},{value: '2017-2018', label:'2017-2018'},{value: '2018-2019', label:'2018-2019'},
-                {value: '2019-2020', label:'2019-2020'}]
+                {value: '2019-2020', label:'2019-2020'}];
+
+  typeOfDonations: any = [
+    {value: 'Don100Percent', label: '100% Deduction without qualifying limit.'},
+    {value: 'Don50PercentNoApprReqd', label: '50% Deduction without qualifying limit.'},
+    {value: 'Don100PercentApprReqd', label: '100% Deduction subject to qualifying limit.'},
+    {value: 'Don50PercentApprReqd', label: '50% Deduction subject to qualifying limit.'}
+  ]
 
   salObjectVal = {
     grossSalary: 0,
@@ -149,6 +156,7 @@ export class SumaryDialogComponent implements OnInit {
         pcDeduction: [''],
         schemeCode: '',
         donationType: [''],
+        donationPropertyType: [''],
         details: '',
         category: ''
       }),
@@ -346,7 +354,8 @@ export class SumaryDialogComponent implements OnInit {
   }
   updateDonation80G(donationInfo) {
     console.log('donationInfo: ', donationInfo)
-    this.summaryDialogForm['controls'].donations.patchValue(donationInfo)
+    this.summaryDialogForm['controls'].donations.patchValue(donationInfo);
+    console.log('donationInfo value: ', this.summaryDialogForm['controls'].donations.value)
   }
   updateHouseInfo(houseInfo) {
     debugger
