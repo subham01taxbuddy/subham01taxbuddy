@@ -24,7 +24,7 @@ export class ScheduledCallComponent implements OnInit {
   scheduleCallsData: any= [];
   pageCount: number = 0;
   loggedUserId: any;
-  showByAdminUserId: boolean;
+  showByAdminUserId: boolean = true;
 
   constructor(private toastMsgService: ToastMessageService, private userMsService: UserMsService, private utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
               private dialog: MatDialog, private route: Router) {
