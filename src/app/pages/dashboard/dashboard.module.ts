@@ -20,6 +20,7 @@ import { OpenStatusComponent } from './open-status/open-status.component';
 import { KnowlarityComponent } from './knowlarity/knowlarity.component';
 import { Calling2dot0Component } from './calling-board/calling2dot0/calling2dot0.component';
 import { ScheduledCallComponent } from './calling-board/scheduled-call/scheduled-call.component';
+import { DownloadDialogComponent } from './interested-clients/download-dialog/download-dialog.component';
 
 @NgModule({
     declarations: [DashboardComponent,
@@ -33,7 +34,8 @@ import { ScheduledCallComponent } from './calling-board/scheduled-call/scheduled
         OpenStatusComponent,
         KnowlarityComponent,
         Calling2dot0Component,
-        ScheduledCallComponent],
+        ScheduledCallComponent,
+        DownloadDialogComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -48,5 +50,6 @@ import { ScheduledCallComponent } from './calling-board/scheduled-call/scheduled
         useClass: TokenInterceptor,
         multi: true,
     }],
+    entryComponents: [DownloadDialogComponent]
 })
 export class DashboardModule { }
