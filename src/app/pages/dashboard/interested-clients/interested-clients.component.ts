@@ -9,6 +9,7 @@ import { ChangeStatusComponent } from 'app/shared/components/change-status/chang
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { AppConstants } from 'app/shared/constants';
 import { formatDate } from '@angular/common';
+import { DownloadDialogComponent } from './download-dialog/download-dialog.component';
 
 @Component({
   selector: 'app-interested-clients',
@@ -551,5 +552,19 @@ export class InterestedClientsComponent implements OnInit {
       this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
       this.loading = false;
     })
+  }
+
+  downloadDocs(agentId){
+    let disposable = this.dialog.open(DownloadDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        agentId: agentId
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 }

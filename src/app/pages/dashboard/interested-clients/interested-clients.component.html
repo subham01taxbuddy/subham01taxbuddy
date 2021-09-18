@@ -42,6 +42,11 @@
                         class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
             </div>
 
+            <div class="filter__col card__col-sm-2 card__col-xs-12" *ngIf="selectedAgent">
+                <a class="btn btn_stroke filter__add-link" style="margin: 7px 5px;" (click)="downloadDocs(selectedAgent)"><i
+                        class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Download</a>
+            </div>
+
         </div>
 
         Total Count: <b>{{config.totalItems}}</b>
