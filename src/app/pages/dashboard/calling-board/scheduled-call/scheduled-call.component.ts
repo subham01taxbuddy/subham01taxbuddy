@@ -56,7 +56,13 @@ export class ScheduledCallComponent implements OnInit {
     if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
       this.isAdmin = true;
       this.searchMobNo = '';
-      this.showByAdminUserId = true
+      if(this.showByAdminUserId){
+        this.showByAdminUserId = true;
+      }
+      else{
+        this.showByAdminUserId = false;
+      }
+      
       this.getScheduledCallsInfo(this.loggedUserId, 0);
     }
     else {
@@ -176,9 +182,9 @@ export class ScheduledCallComponent implements OnInit {
           }
         },
         {
-          headerName: 'Created Date',
+          headerName: 'Schedule Call Date',
           field: 'scheduleCallTime',
-          width: 130,
+          width: 150,
           suppressMovable: true,
           cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
           cellRenderer: (data) => {
