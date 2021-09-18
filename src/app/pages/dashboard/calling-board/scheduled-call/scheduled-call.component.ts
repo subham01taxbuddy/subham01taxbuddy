@@ -49,16 +49,19 @@ export class ScheduledCallComponent implements OnInit {
 
   showScheduleCallList(){
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
-    this.loggedUserId = userInfo.USER_UNIQUE_ID;
+    if(!this.utilsService.isNonEmpty(this.loggedUserId)){
+      this.loggedUserId = userInfo.USER_UNIQUE_ID;
+    }
+  
     if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
       this.isAdmin = true;
       this.searchMobNo = '';
       this.showByAdminUserId = true
-      this.getScheduledCallsInfo(userInfo.USER_UNIQUE_ID, 0);
+      this.getScheduledCallsInfo(this.loggedUserId, 0);
     }
     else {
       this.isAdmin = false;
-      this.getScheduledCallsInfo(userInfo.USER_UNIQUE_ID, 0);
+      this.getScheduledCallsInfo(this.loggedUserId, 0);
     }
   }
 
