@@ -57,7 +57,19 @@ export class SumaryDialogComponent implements OnInit {
   lossesYear = [{value: '2010-2011', label:'2010-2011'},{value: '2011-2012', label:'2011-2012'},{value: '2012-2013', label:'2012-2013'},
                 {value: '2013-2014', label:'2013-2014'},{value: '2014-2015', label:'2014-2015'},{value: '2015-2016', label:'2015-2016'},
                 {value: '2016-2017', label:'2016-2017'},{value: '2017-2018', label:'2017-2018'},{value: '2018-2019', label:'2018-2019'},
-                {value: '2019-2020', label:'2019-2020'}]
+                {value: '2019-2020', label:'2019-2020'}];
+
+  typeOfDonations: any = [
+    {value: 'NAT_DEF_FUND_CEN_GOVT', label: '100% Deduction without qualifying limit.'},
+    {value: 'JN_MEM_FND', label: '50% Deduction without qualifying limit.'},
+    {value: 'GOVT_APPRVD_FAMLY_PLNG', label: '100% Deduction subject to qualifying limit.'},
+    {value: 'FND_SEC80G', label: '50% Deduction subject to qualifying limit.'}
+  ];
+
+  categoryData: any = [
+    {value: 'REGULAR', label: 'Regular'},
+    {value: 'AGTI', label: 'Agti'}
+  ]
 
   salObjectVal = {
     grossSalary: 0,
@@ -346,7 +358,8 @@ export class SumaryDialogComponent implements OnInit {
   }
   updateDonation80G(donationInfo) {
     console.log('donationInfo: ', donationInfo)
-    this.summaryDialogForm['controls'].donations.patchValue(donationInfo)
+    this.summaryDialogForm['controls'].donations.patchValue(donationInfo);
+    console.log('donationInfo value: ', this.summaryDialogForm['controls'].donations.value)
   }
   updateHouseInfo(houseInfo) {
     debugger
@@ -1191,6 +1204,23 @@ export class SumaryDialogComponent implements OnInit {
                                + Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].speculativeBusinessLoss.value);
 
      this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].carriedForwardToNextYear.setValue(carryForwatToNxtYrs);                         
+  }
+
+  clarOtherDropdown(donationType){
+      if(donationType !== 'OTHER'){
+        this.summaryDialogForm.controls.donations['controls'].schemeCode.setValue(null);
+        this.summaryDialogForm.controls.donations['controls'].category.setValue(null);
+      }
+  }
+
+  setCategoryVal(typeOfPropertyVal){
+    console.log('typeOfPropertyVal: ',typeOfPropertyVal)
+    if(typeOfPropertyVal === 'GOVT_APPRVD_FAMLY_PLNG' || typeOfPropertyVal === 'FND_SEC80G'){
+      this.summaryDialogForm.controls.donations['controls'].category.setValue('AGTI')
+    }
+    else{
+      this.summaryDialogForm.controls.donations['controls'].category.setValue('REGULAR')
+    }
   }
 
 }
