@@ -60,10 +60,15 @@ export class SumaryDialogComponent implements OnInit {
                 {value: '2019-2020', label:'2019-2020'}];
 
   typeOfDonations: any = [
-    {value: 'Don100Percent', label: '100% Deduction without qualifying limit.'},
-    {value: 'Don50PercentNoApprReqd', label: '50% Deduction without qualifying limit.'},
-    {value: 'Don100PercentApprReqd', label: '100% Deduction subject to qualifying limit.'},
-    {value: 'Don50PercentApprReqd', label: '50% Deduction subject to qualifying limit.'}
+    {value: 'NAT_DEF_FUND_CEN_GOVT', label: '100% Deduction without qualifying limit.'},
+    {value: 'JN_MEM_FND', label: '50% Deduction without qualifying limit.'},
+    {value: 'GOVT_APPRVD_FAMLY_PLNG', label: '100% Deduction subject to qualifying limit.'},
+    {value: 'FND_SEC80G', label: '50% Deduction subject to qualifying limit.'}
+  ];
+
+  categoryData: any = [
+    {value: 'REGULAR', label: 'Regular'},
+    {value: 'AGTI', label: 'Agti'}
   ]
 
   salObjectVal = {
@@ -156,7 +161,6 @@ export class SumaryDialogComponent implements OnInit {
         pcDeduction: [''],
         schemeCode: '',
         donationType: [''],
-        donationPropertyType: [''],
         details: '',
         category: ''
       }),
@@ -1200,6 +1204,23 @@ export class SumaryDialogComponent implements OnInit {
                                + Number(this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].speculativeBusinessLoss.value);
 
      this.summaryDialogForm.controls.lossesToBeCarriedForword['controls'].carriedForwardToNextYear.setValue(carryForwatToNxtYrs);                         
+  }
+
+  clarOtherDropdown(donationType){
+      if(donationType !== 'OTHER'){
+        this.summaryDialogForm.controls.donations['controls'].schemeCode.setValue(null);
+        this.summaryDialogForm.controls.donations['controls'].category.setValue(null);
+      }
+  }
+
+  setCategoryVal(typeOfPropertyVal){
+    console.log('typeOfPropertyVal: ',typeOfPropertyVal)
+    if(typeOfPropertyVal === 'GOVT_APPRVD_FAMLY_PLNG' || typeOfPropertyVal === 'FND_SEC80G'){
+      this.summaryDialogForm.controls.donations['controls'].category.setValue('AGTI')
+    }
+    else{
+      this.summaryDialogForm.controls.donations['controls'].category.setValue('REGULAR')
+    }
   }
 
 }

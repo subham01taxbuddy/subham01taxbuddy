@@ -317,7 +317,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>Type of donee </mat-label>
                 <mat-select matInput formControlName="donationType" placeholder="Select type of donee"
-                    autocomplete="off" required>
+                    autocomplete="off" (selectionChange)="clarOtherDropdown(this.summaryDialogForm['controls'].donations['controls'].donationType.value)" required>
                     <mat-option *ngFor="let donation of donationType" [value]="donation.value">
                         {{ donation.label }}
                     </mat-option>
@@ -329,14 +329,25 @@
         <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.callerObj.newItrSumChanges && this.summaryDialogForm['controls'].donations['controls'].donationType.value === 'OTHER'">
             <mat-form-field appearance="outline">
                 <mat-label>Type of Property </mat-label>
-                <mat-select matInput formControlName="donationPropertyType" placeholder="Select type of property"
-                    autocomplete="off">
+                <mat-select matInput formControlName="schemeCode" placeholder="Select type of property"
+                (selectionChange)="setCategoryVal(this.summaryDialogForm['controls'].donations['controls'].schemeCode.value)"  autocomplete="off">
                     <mat-option *ngFor="let donation of typeOfDonations" [value]="donation.value">
                         {{ donation.label }}
                     </mat-option>
                 </mat-select>
                 <!-- <mat-error *ngIf="summaryDialogForm['controls'].donations['controls'].donationType.hasError('required')">
                     Select Type of donee</mat-error> -->
+            </mat-form-field>
+        </div>
+        <div class="card__col-lg-3" formGroupName="donations" *ngIf="data.callerObj.newItrSumChanges && this.summaryDialogForm['controls'].donations['controls'].donationType.value === 'OTHER'">
+            <mat-form-field appearance="outline">
+                <mat-label>Type of Category </mat-label>
+                <mat-select matInput formControlName="category" placeholder="Select category"
+                    autocomplete="off" disabled>
+                    <mat-option *ngFor="let donation of categoryData" [value]="donation.value">
+                        {{ donation.label }}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
     </div>
