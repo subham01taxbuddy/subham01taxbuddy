@@ -24,7 +24,7 @@ export class ScheduledCallComponent implements OnInit {
   scheduleCallsData: any= [];
   pageCount: number = 0;
   loggedUserId: any;
-  showByAdminUserId: boolean;
+  showByAdminUserId: boolean = true;
 
   constructor(private toastMsgService: ToastMessageService, private userMsService: UserMsService, private utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
               private dialog: MatDialog, private route: Router) {
@@ -49,16 +49,25 @@ export class ScheduledCallComponent implements OnInit {
 
   showScheduleCallList(){
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
-    this.loggedUserId = userInfo.USER_UNIQUE_ID;
+    if(!this.utilsService.isNonEmpty(this.loggedUserId)){
+      this.loggedUserId = userInfo.USER_UNIQUE_ID;
+    }
+  
     if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
       this.isAdmin = true;
       this.searchMobNo = '';
-      this.showByAdminUserId = true
-      this.getScheduledCallsInfo(userInfo.USER_UNIQUE_ID, 0);
+      if(this.showByAdminUserId){
+        this.showByAdminUserId = true;
+      }
+      else{
+        this.showByAdminUserId = false;
+      }
+      
+      this.getScheduledCallsInfo(this.loggedUserId, 0);
     }
     else {
       this.isAdmin = false;
-      this.getScheduledCallsInfo(userInfo.USER_UNIQUE_ID, 0);
+      this.getScheduledCallsInfo(this.loggedUserId, 0);
     }
   }
 
@@ -173,9 +182,9 @@ export class ScheduledCallComponent implements OnInit {
           }
         },
         {
-          headerName: 'Created Date',
+          headerName: 'Schedule Call Date',
           field: 'scheduleCallTime',
-          width: 130,
+          width: 150,
           suppressMovable: true,
           cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
           cellRenderer: (data) => {
