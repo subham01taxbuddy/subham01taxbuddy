@@ -125,7 +125,7 @@ export class RepoByAgentNameComponent implements OnInit {
         }
       },
       {
-        headerName: 'Total Ansered Call',
+        headerName: 'Total Answered Call',
         field: 'totalAnsweredCall',
         width: 150,
         suppressMovable: true,

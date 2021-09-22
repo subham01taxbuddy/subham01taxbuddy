@@ -12,6 +12,7 @@ import { OpenStatusComponent } from './open-status/open-status.component';
 import { KnowlarityComponent } from './knowlarity/knowlarity.component';
 import { Calling2dot0Component } from './calling-board/calling2dot0/calling2dot0.component';
 import { ScheduledCallComponent } from './calling-board/scheduled-call/scheduled-call.component';
+import { SignupExceptionComponent } from './calling-board/signup-exception/signup-exception.component';
 
 const routes: Routes = [
     {
@@ -33,6 +34,7 @@ const routes: Routes = [
                     { path: 'todays-call', component: TodaysCallsComponent },
                     { path: 'calling2', component: Calling2dot0Component },
                     { path: 'scheduled-call', component: ScheduledCallComponent },
+                    { path: 'signup-exception', component: SignupExceptionComponent },
                     { path: '', redirectTo: 'todays-call', pathMatch: 'full' }
                 ]
             },
