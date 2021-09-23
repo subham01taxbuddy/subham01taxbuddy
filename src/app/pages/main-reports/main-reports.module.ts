@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { SharedModule } from "app/shared/shared.module";
 import { NgxLoadingModule } from "ngx-loading";
+import { ChartModule } from 'angular-highcharts';
 import { MainReportsRoutingModule } from "./main-reports-routing";
 import { MainReportsComponent } from './main-reports/main-reports.component';
 import { KnowlarityReportComponent } from './knowlarity-report/knowlarity-report.component';
@@ -15,6 +16,7 @@ import { AllFilingReportComponent } from "./itr-filling-report/all-filing-report
 import { InvoiceFailedReportComponent } from "./invoice-failed/invoice-failed.component";
 import { SmeTlWiseReportComponent } from "./invoice-failed/sme-tl-wise/sme-tl-wise-report.component";
 import { DetailReportComponent } from "./invoice-failed/detail-report/detail-report.component";
+import { FilingDashboardComponent } from "./itr-filling-report/filing-dashboard/filing-dashboard.component";
 
 @NgModule({
     declarations: [MainReportsComponent,
@@ -27,13 +29,16 @@ import { DetailReportComponent } from "./invoice-failed/detail-report/detail-rep
         AllFilingReportComponent,
         InvoiceFailedReportComponent,
         SmeTlWiseReportComponent,
-        DetailReportComponent],
+        DetailReportComponent,
+        FilingDashboardComponent
+    ],
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
         MainReportsRoutingModule,
         SharedModule,
+        ChartModule,
         NgxLoadingModule.forRoot({}),
     ]
 })

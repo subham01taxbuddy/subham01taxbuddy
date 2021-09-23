@@ -1,0 +1,59 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="main clearfix" style="padding-top: 0px;">
+  <div class="card">
+    <div class="card__row">
+      <div class="card__col-lg-4">
+        <div class="highchartWrap" [chart]="totalPieChartContainer">
+        </div>
+      </div>
+      <div class="card__col-lg-8">
+        <label style="font-size: 20px; font-weight: bold;"> Complete Filing Comparison</label>
+        <br>
+        <br>
+        <ag-grid-angular class="ag-theme-balham" [gridOptions]="completeReportGridOption">
+        </ag-grid-angular>
+      </div>
+    </div>
+    <hr>
+    <div class="card__row">
+      <div class="card__col-lg-6">
+        <div class="mb-2 border highchartWrap" *ngIf="todaysBarChartContainer !== undefined"
+          [chart]="todaysBarChartContainer">
+        </div>
+      </div>
+      <div class="card__col-lg-6">
+        <div class="mb-2 border highchartWrap" *ngIf="todaysYesterdayBarChartContainer !== undefined"
+          [chart]="todaysYesterdayBarChartContainer">
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="card__row">
+      <div class="card__col-lg-6">
+        <div class="mb-2 border highchartWrap" *ngIf="currentWeekBarChartContainer !== undefined"
+          [chart]="currentWeekBarChartContainer">
+        </div>
+      </div>
+      <div class="card__col-lg-6">
+        <div class="mb-2 border highchartWrap" *ngIf="weekBarChartContainer !== undefined"
+          [chart]="weekBarChartContainer">
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="card__row">
+      <div class="card__col-lg-6">
+        <div class="mb-2 border highchartWrap" *ngIf="currentMonthBarChartContainer !== undefined"
+          [chart]="currentMonthBarChartContainer">
+        </div>
+      </div>
+      <div class="card__col-lg-6">
+        <div class="mb-2 border highchartWrap" *ngIf="monthBarChartContainer !== undefined"
+          [chart]="monthBarChartContainer">
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
