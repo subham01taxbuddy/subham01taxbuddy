@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
+import { ItrMsService } from 'app/services/itr-ms.service';
 import { NavbarService } from 'app/services/navbar.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
@@ -36,7 +37,12 @@ export class UserListComponent implements OnInit {
   currentUserId: number = 0;
   user_data: any = [];
 
-  constructor(private userService: UserMsService, private _toastMessageService: ToastMessageService, private utileService: UtilsService, private router: Router, private http: HttpClient,
+  constructor(private userService: UserMsService,
+    private _toastMessageService: ToastMessageService,
+    private utilsService: UtilsService,
+    private router: Router,
+    private http: HttpClient,
+    private itrMsService: ItrMsService,
     @Inject(LOCALE_ID) private locale: string) {
     this.usersGridOptions = <GridOptions>{
       rowData: [],
@@ -88,7 +94,7 @@ export class UserListComponent implements OnInit {
         return resolve(true)
       }, err => {
         //let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-        this._toastMessageService.alert("error", this.utileService.showErrorMsg(err.error.status));
+        this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
         this.loading = false;
         return resolve(false)
       });
@@ -346,7 +352,20 @@ export class UserListComponent implements OnInit {
             'justify-content': 'center'
           }
         },
-      }
+      },
+      {
+        headerName: "Review",
+        field: "isReviewGiven",
+        width: 50,
+        pinned: 'right',
+        cellRenderer: params => {
+          return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
+        },
+        cellStyle: params => {
+          return (params.data.isReviewGiven) ? { 'pointer-events': 'none', opacity: '0.4' }
+            : '';
+        }
+      },
     ]
   }
 
@@ -356,15 +375,16 @@ export class UserListComponent implements OnInit {
     for (let i = 0; i < userData.length; i++) {
       let userInfo = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
-        createdDate: this.utileService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
+        createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
         name: userData[i].fName + ' ' + userData[i].lName,
-        mobileNumber: this.utileService.isNonEmpty(userData[i].mobileNumber) ? userData[i].mobileNumber : '-',
-        emailAddress: this.utileService.isNonEmpty(userData[i].emailAddress) ? userData[i].emailAddress : '-',
-        city: this.utileService.isNonEmpty(userData[i].city) ? userData[i].city : '-',
-        gender: this.utileService.isNonEmpty(userData[i].gender) ? userData[i].gender : '-',
-        maritalStatus: this.utileService.isNonEmpty(userData[i].maritalStatus) ? userData[i].maritalStatus : '-',
-        pan: this.utileService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
-        resident: this.utileService.isNonEmpty(userData[i].residentialStatus) ? userData[i].residentialStatus : '-'
+        mobileNumber: this.utilsService.isNonEmpty(userData[i].mobileNumber) ? userData[i].mobileNumber : '-',
+        emailAddress: this.utilsService.isNonEmpty(userData[i].emailAddress) ? userData[i].emailAddress : '-',
+        city: this.utilsService.isNonEmpty(userData[i].city) ? userData[i].city : '-',
+        gender: this.utilsService.isNonEmpty(userData[i].gender) ? userData[i].gender : '-',
+        maritalStatus: this.utilsService.isNonEmpty(userData[i].maritalStatus) ? userData[i].maritalStatus : '-',
+        pan: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
+        resident: this.utilsService.isNonEmpty(userData[i].residentialStatus) ? userData[i].residentialStatus : '-',
+        isReviewGiven: userData[i].reviewGiven
       })
       userArray.push(userInfo);
     }
@@ -397,6 +417,10 @@ export class UserListComponent implements OnInit {
           this.linkToDocumentCloud(params.data.userId);
           break;
         }
+        case 'isReviewGiven': {
+          this.updateReviewStatus(params.data);
+          break;
+        }
       }
     }
   }
@@ -422,14 +446,14 @@ export class UserListComponent implements OnInit {
       this.loading = false;
       if (res.success) {
         if (res.data.isFnbVirtualUser) {
-          this.utileService.showSnackBar('User is already linked with FinBingo partner, please check under virtual users.');
+          this.utilsService.showSnackBar('User is already linked with FinBingo partner, please check under virtual users.');
         } else if (res.data.isFnbUser) {
-          this.utileService.showSnackBar('This user is already FinBingo user, please check under FinBingo users.');
+          this.utilsService.showSnackBar('This user is already FinBingo user, please check under FinBingo users.');
         } else {
-          this.utileService.showSnackBar('User successfully linked with FinBingo partner, please check under virtual users.');
+          this.utilsService.showSnackBar('User successfully linked with FinBingo partner, please check under virtual users.');
         }
       } else {
-        this.utileService.showSnackBar(res.message)
+        this.utilsService.showSnackBar(res.message)
       }
     }, error => {
       this.loading = false;
@@ -438,5 +462,15 @@ export class UserListComponent implements OnInit {
 
   linkToDocumentCloud(userId) {
     this.router.navigate(['/pages/itr-filing/user-docs/' + userId]);
+  }
+
+  updateReviewStatus(data) {
+    const param = `/update-itr-userProfile?userId=${data.userId}&isReviewGiven=true`;
+    this.itrMsService.putMethod(param, {}).subscribe(result => {
+      console.log(result);
+      this.utilsService.showSnackBar('Marked as review given');
+    }, error => {
+      this.utilsService.showSnackBar('Please try again, falied to mark as review given');
+    })
   }
 }

@@ -206,6 +206,7 @@ export class MyTeamItrsComponent implements OnInit {
         eFillingCompleted: data[i].eFillingCompleted,
         eFillingDate: data[i].eFillingDate,
         nextYearTpa: data[i].nextYearTpa,
+        isReviewGiven: data[i].reviewGiven,
         isEverified: data[i].isEverified,
         isRevised: data[i].isRevised,
       });
@@ -389,15 +390,15 @@ export class MyTeamItrsComponent implements OnInit {
         pinned: 'right',
         cellRenderer: function (params) {
           if (params.data.isEverified) {
-            return `<button type="button" class="action_icon add_button" title="Acknowledgement not received, Contact team lead" style="border: none;
+            return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; color: green">
             <i class="fa fa-circle" title="E-Verification is done" 
             aria-hidden="true"></i>
            </button>`;
           } else {
-            return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
+            return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: orange">
-            <i class="fa fa-circle" title="Click to check the latest E-verification status" 
+            <i class="fa fa-check-circle" title="Click to update the E-verification status as done" 
             aria-hidden="true" data-action-type="ackDetails"></i>
            </button>`;
           }
@@ -474,7 +475,20 @@ export class MyTeamItrsComponent implements OnInit {
             'justify-content': 'center'
           }
         },
-      }
+      },
+      {
+        headerName: "Review",
+        field: "isReviewGiven",
+        width: 50,
+        pinned: 'right',
+        cellRenderer: params => {
+          return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
+        },
+        cellStyle: params => {
+          return (params.data.isReviewGiven) ? { 'pointer-events': 'none', opacity: '0.4' }
+            : '';
+        }
+      },
     ];
   }
   public onRowClicked(params) {
@@ -503,6 +517,10 @@ export class MyTeamItrsComponent implements OnInit {
         // }
         case 'link-to-doc-cloud': {
           this.showUserDocuments(params.data);
+          break;
+        }
+        case 'isReviewGiven': {
+          this.updateReviewStatus(params.data);
           break;
         }
       }
@@ -561,8 +579,20 @@ export class MyTeamItrsComponent implements OnInit {
   getAcknowledgeDetail(data) {
     console.log('Data for acknowlegement status', data);
     this.loading = true;
-    // const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
-    const param = `/itr-verify-status/${data.itrId}`;
+    var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
+    workingItr['everifiedStatus'] = 'Successfully e-Verified';
+    workingItr['isEverified'] = true;
+    const param = '/itr/' + workingItr.userId + '/' + workingItr.itrId + '/' + workingItr.assessmentYear;
+    this.itrMsService.putMethod(param, workingItr).subscribe((result: any) => {
+      this.loading = false;
+      this.utilsService.showSnackBar('E-Verification status updated successfully');
+      this.getMembersItr(this.selectedMemberId, this.selectedFyYear, this.selectedPageNo);
+    }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to update E-Verification status');
+    });
+    return;
+    // const param = `/itr-verify-status/${data.itrId}`;
     this.itrMsService.putMethod(param).subscribe((res: any) => {
       this.utilsService.showSnackBar(res.status)
       this.loading = false;
@@ -603,4 +633,15 @@ export class MyTeamItrsComponent implements OnInit {
     this.getMembersItr(this.selectedMemberId, this.selectedFyYear, event - 1);
   }
 
+  updateReviewStatus(data) {
+    const param = `/update-itr-userProfile?itrId=${data.itrId}&userId=${data.userId}&isReviewGiven=true`;
+    this.itrMsService.putMethod(param, {}).subscribe(result => {
+      console.log(result);
+      this.utilsService.showSnackBar('Marked as review given');
+      this.getMembersItr(this.selectedMemberId, this.selectedFyYear, this.selectedPageNo);
+    }, error => {
+      this.utilsService.showSnackBar('Please try again, falied to mark as review given');
+      this.getMembersItr(this.selectedMemberId, this.selectedFyYear, this.selectedPageNo);
+    })
+  }
 }
