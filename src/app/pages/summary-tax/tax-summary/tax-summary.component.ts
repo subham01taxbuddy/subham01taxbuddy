@@ -441,15 +441,19 @@ export class TaxSummaryComponent implements OnInit {
       let assessmentYear = itrData['ITR1'].Form_ITR1.AssessmentYear;
       if(assessmentYear === "2021"){
         this.itrSummaryForm.controls.assesse['controls'].assessmentYear.setValue('2021-22');
+        this.itrSummaryForm.controls.financialYear.setValue('2020-21');
       }
       else if(assessmentYear === "2020"){
         this.itrSummaryForm.controls.assesse['controls'].assessmentYear.setValue('2020-21');
+        this.itrSummaryForm.controls.financialYear.setValue('2019-20');
       }
       else if(assessmentYear === "2019"){
         this.itrSummaryForm.controls.assesse['controls'].assessmentYear.setValue('2019-20');
+        this.itrSummaryForm.controls.financialYear.setValue('2018-19');
       }
       else if(assessmentYear === "2018"){
         this.itrSummaryForm.controls.assesse['controls'].assessmentYear.setValue('2018-19');
+        this.itrSummaryForm.controls.financialYear.setValue('2017-18');
       }
 
      
@@ -483,7 +487,7 @@ export class TaxSummaryComponent implements OnInit {
           bankBody.accountNumber = bankInfo[i].BankAccountNo;
           bankBody.ifsCode = bankInfo[i].IFSCCode;
           bankBody.name = bankInfo[i].BankName;
-          bankBody.hasRefund = bankInfo[i].UseForRefund;
+          bankBody.hasRefund = typeof bankInfo[i].UseForRefund === 'string' ? (bankInfo[i].UseForRefund == "true" ? true : false) : bankInfo[i].UseForRefund;
           console.log(i+'th bankBody: ',bankBody)
           this.bankData.push(bankBody);
         }
@@ -774,26 +778,42 @@ export class TaxSummaryComponent implements OnInit {
         if(otherInfo instanceof Array && otherInfo.length > 0){
           if(otherInfo.filter(item=> item.OthSrcNatureDesc === "DIV").length > 0){
             let dividentVal = otherInfo.filter(item=> item.OthSrcNatureDesc === "DIV")[0].OthSrcOthAmount;
-            this.sourcesOfIncome.dividend = dividentVal;
+            if(typeof dividentVal === 'string'){
+              dividentVal = dividentVal.replace(/\,/g,''); 
+              dividentVal=parseInt(dividentVal,10);
+            }
+            this.sourcesOfIncome.dividend = Number(dividentVal);
           }
           if(otherInfo.filter(item=> item.OthSrcNatureDesc === "SAV").length > 0){
             let intOnSavingAcntVal = otherInfo.filter(item=> item.OthSrcNatureDesc === "SAV")[0].OthSrcOthAmount;
-            this.sourcesOfIncome.interestFromSaving = intOnSavingAcntVal;
+            if(typeof intOnSavingAcntVal === 'string'){
+              intOnSavingAcntVal = intOnSavingAcntVal.replace(/\,/g,''); 
+              intOnSavingAcntVal=parseInt(intOnSavingAcntVal,10);
+            }
+            this.sourcesOfIncome.interestFromSaving = Number(intOnSavingAcntVal);
           }
           if(otherInfo.filter(item=> item.OthSrcNatureDesc === "IFD").length > 0){
             let intfromDepositeVal = otherInfo.filter(item=> item.OthSrcNatureDesc === "IFD")[0].OthSrcOthAmount;
-            this.sourcesOfIncome.interestFromBank = intfromDepositeVal;
+            if(typeof intfromDepositeVal === 'string'){
+              intfromDepositeVal = intfromDepositeVal.replace(/\,/g,''); 
+              intfromDepositeVal=parseInt(intfromDepositeVal,10);
+            }
+            this.sourcesOfIncome.interestFromBank = Number(intfromDepositeVal);
           }
           if(otherInfo.filter(item=> item.OthSrcNatureDesc === "TAX").length > 0){
             let intFromIncoTaxVal = otherInfo.filter(item=> item.OthSrcNatureDesc === "TAX")[0].OthSrcOthAmount;
-            this.sourcesOfIncome.interestFromIncomeTax = intFromIncoTaxVal;
+            if(typeof intFromIncoTaxVal === 'string'){
+              intFromIncoTaxVal = intFromIncoTaxVal.replace(/\,/g,''); 
+              intFromIncoTaxVal=parseInt(intFromIncoTaxVal,10);
+            }
+            this.sourcesOfIncome.interestFromIncomeTax = Number(intFromIncoTaxVal);
           }
           if(otherInfo.filter(item=> item.OthSrcNatureDesc === "OTH").length > 0){
             // let otherVal = otherInfo.filter(item=> item.OthSrcNatureDesc === "OTH")[0].OthSrcOthAmount;
             //this.sourcesOfIncome.interestFromOther = otherVal;
           }
       }
-
+      console.log('sourcesOfIncome: ',this.sourcesOfIncome)
       this.sourcesOfIncome.interestFromOther = itrData['ITR1'].ITR1_IncomeDeductions.IncomeOthSrc - (this.sourcesOfIncome.dividend + this.sourcesOfIncome.interestFromSaving +  this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax);
 
       this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax +
