@@ -107,7 +107,7 @@ export class TaxSummaryComponent implements OnInit {
     { label: 'Old Tax', value: 'N' }, { label: 'New Tax', value: 'Y' }
   ]
 
-  ageDropdown = [{ value: 'bellow60', label: 'Bellow 60' }, { value: 'above60', label: 'Above 60' }];
+  ageDropdown = [{ value: 'bellow60', label: 'Below 60' }, { value: 'above60', label: 'Above 60' }];
   itrTypesData = [{ value: "1", label: 'ITR 1' }, { value: "4", label: 'ITR 4' }];
 
   taxesPaid = {
@@ -422,8 +422,8 @@ export class TaxSummaryComponent implements OnInit {
       let panNo = itrData['ITR1'].PersonalInfo.PAN;
       let dob = new Date(itrData['ITR1'].PersonalInfo.DOB);
       this.itrSummaryForm.controls.assesse['controls'].panNumber.setValue(panNo);
-      this.getUserInfoByPan( this.itrSummaryForm.controls.assesse['controls'].panNumber, dob);
-
+      this.getUserInfoByPan( this.itrSummaryForm.controls.assesse['controls'].panNumber, dob, itrData['ITR1']);
+     
       this.itrSummaryForm.controls.assesse['controls'].aadharNumber.setValue(itrData['ITR1'].PersonalInfo.AadhaarCardNo);
 
       let natureOfEmployer = itrData['ITR1'].PersonalInfo.EmployerCategory;
@@ -437,6 +437,22 @@ export class TaxSummaryComponent implements OnInit {
       this.itrSummaryForm.controls.assesse['controls'].address['controls'].premisesName.setValue(adress.ResidenceName);
       this.itrSummaryForm.controls.assesse['controls'].address['controls'].pinCode.setValue(adress.PinCode);
       this.getCityData(this.itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode, 'profile');
+
+      let assessmentYear = itrData['ITR1'].Form_ITR1.AssessmentYear;
+      if(assessmentYear === "2021"){
+        this.itrSummaryForm.controls.assesse['controls'].assessmentYear.setValue('2021-22');
+      }
+      else if(assessmentYear === "2020"){
+        this.itrSummaryForm.controls.assesse['controls'].assessmentYear.setValue('2020-21');
+      }
+      else if(assessmentYear === "2019"){
+        this.itrSummaryForm.controls.assesse['controls'].assessmentYear.setValue('2019-20');
+      }
+      else if(assessmentYear === "2018"){
+        this.itrSummaryForm.controls.assesse['controls'].assessmentYear.setValue('2018-19');
+      }
+
+     
 
       // this.itrSummaryForm.controls.assesse['controls'].address['controls'].country.setValue(adress.CountryCode);
       // this.itrSummaryForm.controls.assesse['controls'].address['controls'].state.setValue(adress.StateCode);
@@ -452,24 +468,26 @@ export class TaxSummaryComponent implements OnInit {
 
       /* bank information */
       let bankInfo = itrData['ITR1'].Refund.BankAccountDtls.AddtnlBankDetails; 
-      var bankBody = {
-        accountNumber: "",
-        bankType: "",
-        countryName: null,
-        hasRefund: true,
-        ifsCode: "",
-        name: ""
-      }
+     
 
       if(bankInfo instanceof Array && bankInfo.length > 0){
         for(let i=0; i< bankInfo.length; i++){
+          let bankBody = {
+            accountNumber: "",
+            bankType: "",
+            countryName: null,
+            hasRefund: true,
+            ifsCode: "",
+            name: ""
+          }
           bankBody.accountNumber = bankInfo[i].BankAccountNo;
           bankBody.ifsCode = bankInfo[i].IFSCCode;
           bankBody.name = bankInfo[i].BankName;
           bankBody.hasRefund = bankInfo[i].UseForRefund;
+          console.log(i+'th bankBody: ',bankBody)
           this.bankData.push(bankBody);
         }
-
+        console.log('bankData: ',this.bankData)
         this.itrSummaryForm['controls'].assesse['controls'].bankDetails.setValue(this.bankData);
         console.log('bankDetails info: ',this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value)
       }  
@@ -2229,7 +2247,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  getUserInfoByPan(pan, dob?) {
+  getUserInfoByPan(pan, dob?, personalInfo?) {
     if (pan.valid) {
       console.log('Pan: ', pan)
       const param = '/itr/api/getPanDetail?panNumber=' + pan.value;
@@ -2247,6 +2265,11 @@ export class TaxSummaryComponent implements OnInit {
             }
 
          Object.assign(reqBody, result);
+
+         if(!this.utilService.isNonEmpty(result.middleName)){
+          reqBody.middleName = personalInfo.Verification.Declaration.FatherName;
+          this.itrSummaryForm['controls'].assesse['controls'].family.controls[0].controls['fathersName'].setValue(reqBody.middleName);
+         }
          console.log('reqBody: ',reqBody);
          userData.insert(0, this.updateFamilyForm(reqBody));
          userData.removeAt(1)

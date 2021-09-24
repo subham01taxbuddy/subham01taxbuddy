@@ -52,7 +52,7 @@
                     <div class="card__row">
 
                         <div class="card__col-lg-12" style="margin-bottom: 20px;">
-                            <div class="top-head">
+                            <div class="">
                                 <div class="card__col-lg-3" formGroupName="assesse" style="margin-top: 10px;">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Type of ITR</mat-label>
@@ -96,7 +96,7 @@
 
 
 
-                        <div class="card__col-lg-3" formGroupName="assesse">
+                        <div class="card__col-lg-2" formGroupName="assesse">
                             <mat-form-field appearance="outline">
                                 <mat-label>PAN</mat-label>
                                 <input matInput placeholder="PAN" formControlName="panNumber" autocomplete="off"
@@ -117,7 +117,7 @@
                         <div formGroupName="assesse">
                             <div formArrayName="family">
                                 <div *ngFor="let family of getFamilyArray.controls; let i=index" [formGroupName]="i">
-                                    <div class="card__col-lg-3">
+                                    <div class="card__col-lg-2">
                                         <mat-form-field appearance="outline">
                                             <mat-label>First Name</mat-label>
                                             <input matInput placeholder="First Name" formControlName="fName"
@@ -129,7 +129,7 @@
                                             </mat-error>
                                         </mat-form-field>
                                     </div>
-                                    <div class="card__col-lg-3">
+                                    <div class="card__col-lg-2">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Middle Name</mat-label>
                                             <input matInput placeholder="Middle Name" formControlName="mName"
@@ -138,7 +138,7 @@
                                             </mat-error> -->
                                         </mat-form-field>
                                     </div>
-                                    <div class="card__col-lg-3">
+                                    <div class="card__col-lg-2">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Last Name</mat-label>
                                             <input matInput placeholder="Last Name" formControlName="lName"
@@ -151,7 +151,7 @@
                                         </mat-form-field>
                                     </div>
 
-                                    <div class="card__col-lg-3">
+                                    <div class="card__col-lg-2">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Father's Name</mat-label>
                                             <input matInput placeholder="Father's Name" formControlName="fathersName"
@@ -162,7 +162,7 @@
                                                 father name</mat-error>
                                         </mat-form-field>
                                     </div>
-                                    <div class="card__col-lg-3">
+                                    <div class="card__col-lg-2">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Date of Birth</mat-label>
                                             <input matInput formControlName="dateOfBirth" placeholder="Date of Birth"
@@ -178,247 +178,254 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
-                        <div class="card__col-lg-3" formGroupName="assesse">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Residential Status</mat-label>
-                                <mat-select matInput formControlName="residentialStatus"
-                                    placeholder="Select Residential Status" autocomplete="off" required>
-                                    <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
-                                        {{ res.label }}
-                                    </mat-option>
-                                </mat-select>
-                                <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].residentialStatus.hasError('required')">
-                                    Select Residential Status</mat-error>
-                            </mat-form-field>
-                        </div>
+                        <div class="card__row">
+                                <div class="card__col-lg-2" formGroupName="assesse">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Residential Status</mat-label>
+                                        <mat-select matInput formControlName="residentialStatus"
+                                            placeholder="Select Residential Status" autocomplete="off" required>
+                                            <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
+                                                {{ res.label }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].residentialStatus.hasError('required')">
+                                            Select Residential Status</mat-error>
+                                    </mat-form-field>
+                                </div>
+        
+                                <div class="card__col-lg-2" formGroupName="assesse">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Aadhaar Number</mat-label>
+                                        <input matInput placeholder="Aadhaar Number" formControlName="aadharNumber"
+                                            maxlength="12" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            autocomplete="off" required>
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].aadharNumber.hasError('required')">
+                                            Enter
+                                            Aadhar number</mat-error>
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].aadharNumber.hasError('pattern') || itrSummaryForm['controls'].assesse['controls'].aadharNumber.hasError('maxLength')">
+                                            Enter
+                                            12 digit aadhar number</mat-error>
+                                    </mat-form-field>
+                                </div>
+    
+                                <div class="card__col-lg-2" formGroupName="assesse" *ngIf="!newItrSumChanges">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Passport No</mat-label>
+                                        <input matInput placeholder="Passport No" formControlName="passportNumber" minlength="8"
+                                            maxlength="8" autocomplete="off">
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].passportNumber.hasError('minlength')">
+                                            Enter
+                                            8 digit passport number</mat-error>
+                                    </mat-form-field>
+                                </div>
+    
+                                <div class="card__col-lg-2" formGroupName="assesse" *ngIf="newItrSumChanges">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Nature of Employment</mat-label>
+                                        <mat-select matInput
+                                            placeholder="Select Nature of Employment"
+                                            autocomplete="off" formControlName="employerCategory" required>
+                                            <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
+                                                {{ emp.label }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+        
+                                <div class="card__col-lg-2" formGroupName="assesse" *ngIf="newItrSumChanges">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Old vs New Tax Regime</mat-label>
+                                         <mat-select matInput 
+                                            placeholder="Select Nature of Employment"
+                                            autocomplete="off" formControlName="regime" required>
+                                            <mat-option *ngFor="let emp of taxRegime" [value]="emp.value">
+                                                {{ emp.label }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+        
+                                <div class="card__col-lg-4" formGroupName="assesse">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>E-mail</mat-label>
+                                        <input matInput placeholder="E-mail" formControlName="email" maxlength="50"
+                                            autocomplete="off" required>
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].email.hasError('required')">
+                                            Enter email
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].email.hasError('pattern')">
+                                            Enter valid
+                                            email</mat-error>
+                                    </mat-form-field>
+                                </div>
+                         </div>
+                       
 
-                        <div class="card__col-lg-3" formGroupName="assesse">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Aadhaar Number</mat-label>
-                                <input matInput placeholder="Aadhaar Number" formControlName="aadharNumber"
-                                    maxlength="12" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                                    autocomplete="off" required>
-                                <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].aadharNumber.hasError('required')">
-                                    Enter
-                                    Aadhar number</mat-error>
-                                <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].aadharNumber.hasError('pattern') || itrSummaryForm['controls'].assesse['controls'].aadharNumber.hasError('maxLength')">
-                                    Enter
-                                    12 digit aadhar number</mat-error>
-                            </mat-form-field>
+                            <div class="card__row">
+                                <div class="card__col-lg-2" formGroupName="assesse">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Mobile Number</mat-label>
+                                        <input matInput formControlName="contactNumber" maxlength="10"
+                                            placeholder="Mobile Number" autocomplete="off" type="number"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('required')">
+                                            Enter
+                                            mobile number</mat-error>
+                                        <mat-error
+                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('pattern') || itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('minlength') || itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('maxlength')">
+                                            Enter
+                                            10 digit mobile number</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            
+                                <div class="card__col-lg-4" formGroupName="assesse">
+                                    <div formGroupName="address">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Address</mat-label>
+                                            <input matInput formControlName="premisesName" maxlength="200" placeholder="Address"
+                                                required autocomplete="off">
+                                            <mat-error
+                                                *ngIf="itrSummaryForm['controls'].assesse['controls'].address['controls'].premisesName.hasError('required')">
+                                                Enter address
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="card__col-lg-2" formGroupName="assesse">
+                                    <div formGroupName="address">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Pin code</mat-label>
+                                            <input formControlName="pinCode" maxlength="6"
+                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
+                                                placeholder="PIN Code" autocomplete="off" type="number"
+                                                (blur)="getCityData(itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode, 'profile')"
+                                                required>
+                                            <mat-error
+                                                *ngIf="itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode.hasError('required')">
+                                                Enter pin
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode.hasError('pattern')">
+                                                Enter valid
+                                                pin
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+    
+                                <div class="card__col-lg-2" formGroupName="assesse">
+                                    <div formGroupName="address">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Country</mat-label>
+                                            <input matInput formControlName="country" placeholder="Country" disabled
+                                                autocomplete="off" required>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+    
+                                <div class="card__col-lg-2" formGroupName="assesse">
+                                    <div formGroupName="address">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>State</mat-label>
+                                            <input matInput formControlName="state" disabled placeholder="State"
+                                                autocomplete="off" required>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
                         </div>
-
-
-                        <div class="card__col-lg-3" formGroupName="assesse" *ngIf="!newItrSumChanges">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Passport No</mat-label>
-                                <input matInput placeholder="Passport No" formControlName="passportNumber" minlength="8"
-                                    maxlength="8" autocomplete="off">
-                                <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].passportNumber.hasError('minlength')">
-                                    Enter
-                                    8 digit passport number</mat-error>
-                            </mat-form-field>
-                        </div>
-
-                        <div class="card__col-lg-3" formGroupName="assesse" *ngIf="newItrSumChanges">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Nature of Employment</mat-label>
-                                <mat-select matInput
-                                    placeholder="Select Nature of Employment"
-                                    autocomplete="off" formControlName="employerCategory" required>
-                                    <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
-                                        {{ emp.label }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-
-                        <div class="card__col-lg-3" formGroupName="assesse" *ngIf="newItrSumChanges">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Old vs New Tax Regime</mat-label>
-                                 <mat-select matInput 
-                                    placeholder="Select Nature of Employment"
-                                    autocomplete="off" formControlName="regime" required>
-                                    <mat-option *ngFor="let emp of taxRegime" [value]="emp.value">
-                                        {{ emp.label }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-
-                        <div class="card__col-lg-3" formGroupName="assesse">
-                            <mat-form-field appearance="outline">
-                                <mat-label>E-mail</mat-label>
-                                <input matInput placeholder="E-mail" formControlName="email" maxlength="50"
-                                    autocomplete="off" required>
-                                <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].email.hasError('required')">
-                                    Enter email
-                                </mat-error>
-                                <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].email.hasError('pattern')">
-                                    Enter valid
-                                    email</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-lg-3" formGroupName="assesse">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Mobile Number</mat-label>
-                                <input matInput formControlName="contactNumber" maxlength="10"
-                                    placeholder="Mobile Number" autocomplete="off" type="number"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
-                                <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('required')">
-                                    Enter
-                                    mobile number</mat-error>
-                                <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('pattern') || itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('minlength') || itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('maxlength')">
-                                    Enter
-                                    10 digit mobile number</mat-error>
-                            </mat-form-field>
-                        </div>
-
-                        <div class="card__col-lg-3" formGroupName="assesse">
-                            <div formGroupName="address">
+                           
+                        <div class="card__row">
+                            <div class="card__col-lg-2" formGroupName="assesse">
+                                <div formGroupName="address">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>City</mat-label>
+                                        <input matInput formControlName="city" disabled placeholder="City"
+                                            autocomplete="off" required>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+    
+                            <div class="card__col-lg-2">
                                 <mat-form-field appearance="outline">
-                                    <mat-label>Address</mat-label>
-                                    <input matInput formControlName="premisesName" maxlength="200" placeholder="Address"
-                                        required autocomplete="off">
-                                    <mat-error
-                                        *ngIf="itrSummaryForm['controls'].assesse['controls'].address['controls'].premisesName.hasError('required')">
-                                        Enter address
-                                    </mat-error>
+                                    <mat-label>Return Type</mat-label>
+                                    <mat-select matInput formControlName="returnType"
+                                        (selectionChange)="showAcknowData($event.value)" placeholder="Select return type"
+                                        autocomplete="off" required>
+                                        <mat-option *ngFor="let res of returnTypeData" [value]="res.value">
+                                            {{ res.label }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="itrSummaryForm.controls['returnType'].hasError('required')">Select
+                                        return type</mat-error>
                                 </mat-form-field>
                             </div>
-                        </div>
-                        <div class="card__col-lg-3" formGroupName="assesse">
-                            <div formGroupName="address">
+                            <div class="card__col-lg-2" formGroupName="assesse">
                                 <mat-form-field appearance="outline">
-                                    <mat-label>Pin code</mat-label>
-                                    <input formControlName="pinCode" maxlength="6"
+                                    <mat-label>Assessment Year</mat-label>
+                                    <mat-select matInput formControlName="assessmentYear" placeholder="Financial Year"
+                                        autocomplete="off"  required>
+                                        <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                                            {{year.financialYear}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-2">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Financial Year</mat-label>
+                                    <mat-select matInput formControlName="financialYear" placeholder="Financial Year"
+                                        autocomplete="off"  required>
+                                        <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                                            {{year.financialYear}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-lg-2" formGroupName="assesse" *ngIf="showAcknowInput">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Acknowledgement Number</mat-label>
+                                    <input matInput formControlName="ackNumber" maxlength="15" minlength="15"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
-                                        placeholder="PIN Code" autocomplete="off" type="number"
-                                        (blur)="getCityData(itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode, 'profile')"
-                                        required>
+                                        disabled placeholder="Acknowledgement Number"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
+                                    <!--minlength="15"-->
                                     <mat-error
-                                        *ngIf="itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode.hasError('required')">
-                                        Enter pin
-                                    </mat-error>
+                                        *ngIf="itrSummaryForm['controls'].assesse['controls'].ackNumber.hasError('required')">
+                                        Enter
+                                        acknowledgment number</mat-error>
                                     <mat-error
-                                        *ngIf="itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode.hasError('pattern')">
-                                        Enter valid
-                                        pin
-                                    </mat-error>
+                                        *ngIf="itrSummaryForm['controls'].assesse['controls'].ackNumber.hasError('minlength')">
+                                        Acknowldegemant number should be 15 digit</mat-error>
                                 </mat-form-field>
                             </div>
-                        </div>
-
-                        <div class="card__col-lg-3" formGroupName="assesse">
-                            <div formGroupName="address">
+                            <div class="card__col-lg-2" formGroupName="assesse" *ngIf="showAcknowInput">
                                 <mat-form-field appearance="outline">
-                                    <mat-label>Country</mat-label>
-                                    <input matInput formControlName="country" placeholder="Country" disabled
-                                        autocomplete="off" required>
+                                    <mat-label>Date of filling</mat-label>
+                                    <input matInput formControlName="eFillingDate" placeholder="Date of filling"
+                                        [max]="fillingMaxDate" [min]="fillingMinDate" [max]="maxDate"
+                                        [matDatepicker]="picker1" autocomplete="off">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                    <mat-error
+                                        *ngIf="itrSummaryForm['controls'].assesse['controls'].eFillingDate.hasError('required')">
+                                        Select
+                                        Date of
+                                        filling</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
-
-                        <div class="card__col-lg-3" formGroupName="assesse">
-                            <div formGroupName="address">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>State</mat-label>
-                                    <input matInput formControlName="state" disabled placeholder="State"
-                                        autocomplete="off" required>
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-                        <div class="card__col-lg-3" formGroupName="assesse">
-                            <div formGroupName="address">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>City</mat-label>
-                                    <input matInput formControlName="city" disabled placeholder="City"
-                                        autocomplete="off" required>
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-                        <div class="card__col-lg-3">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Return Type</mat-label>
-                                <mat-select matInput formControlName="returnType"
-                                    (selectionChange)="showAcknowData($event.value)" placeholder="Select return type"
-                                    autocomplete="off" required>
-                                    <mat-option *ngFor="let res of returnTypeData" [value]="res.value">
-                                        {{ res.label }}
-                                    </mat-option>
-                                </mat-select>
-                                <mat-error *ngIf="itrSummaryForm.controls['returnType'].hasError('required')">Select
-                                    return type</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-lg-3" formGroupName="assesse">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Assessment Year</mat-label>
-                                <mat-select matInput formControlName="assessmentYear" placeholder="Financial Year"
-                                    autocomplete="off"  required>
-                                    <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
-                                        {{year.financialYear}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-lg-3">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Financial Year</mat-label>
-                                <mat-select matInput formControlName="financialYear" placeholder="Financial Year"
-                                    autocomplete="off"  required>
-                                    <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
-                                        {{year.financialYear}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-lg-3" formGroupName="assesse" *ngIf="showAcknowInput">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Acknowledgement Number</mat-label>
-                                <input matInput formControlName="ackNumber" maxlength="15" minlength="15"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    disabled placeholder="Acknowledgement Number"
-                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
-                                <!--minlength="15"-->
-                                <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].ackNumber.hasError('required')">
-                                    Enter
-                                    acknowledgment number</mat-error>
-                                <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].ackNumber.hasError('minlength')">
-                                    Acknowldegemant number should be 15 digit</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-lg-3" formGroupName="assesse" *ngIf="showAcknowInput">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Date of filling</mat-label>
-                                <input matInput formControlName="eFillingDate" placeholder="Date of filling"
-                                    [max]="fillingMaxDate" [min]="fillingMinDate" [max]="maxDate"
-                                    [matDatepicker]="picker1" autocomplete="off">
-                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                                <mat-datepicker #picker1></mat-datepicker>
-                                <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].eFillingDate.hasError('required')">
-                                    Select
-                                    Date of
-                                    filling</mat-error>
-                            </mat-form-field>
-                        </div>
+                        
                         <!-- <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>ITR Form</mat-label>
