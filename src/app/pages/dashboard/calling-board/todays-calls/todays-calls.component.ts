@@ -129,6 +129,7 @@ export class TodaysCallsComponent implements OnInit {
         field: 'userId',
         width: 100,
         suppressMovable: true,
+        sortable: true,
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -140,6 +141,7 @@ export class TodaysCallsComponent implements OnInit {
         field: 'name',
         width: 190,
         suppressMovable: true,
+        sortable: true,
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -151,6 +153,7 @@ export class TodaysCallsComponent implements OnInit {
         field: 'customerNumber',
         width: 150,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -163,6 +166,7 @@ export class TodaysCallsComponent implements OnInit {
         field: 'createdDate',
         width: 120,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
@@ -178,6 +182,7 @@ export class TodaysCallsComponent implements OnInit {
         field: 'statusId',
         width: 120,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -205,6 +210,7 @@ export class TodaysCallsComponent implements OnInit {
         field: 'serviceType',
         width: 130,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -217,6 +223,7 @@ export class TodaysCallsComponent implements OnInit {
         field: 'callerAgentName',
         width: 160,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
