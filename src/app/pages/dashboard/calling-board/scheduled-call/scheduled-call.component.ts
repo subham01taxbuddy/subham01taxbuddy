@@ -86,17 +86,20 @@ export class ScheduledCallComponent implements OnInit {
   getScheduledCallsInfo(id, page){
     this.loading = true;
     var param2;
-    if (this.isAdmin) {
-      if(this.showByAdminUserId){
-        param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;  
-      }
-      else{
-        param2 = `/schedule-call-details?agentId=${id}&page=${page}&size=30`;  
-      } 
-    } 
-    else {
-        param2 = `/schedule-call-details?smeUserId=${id}&page=${page}&size=30`;
-      }
+    // if (this.isAdmin) {
+    //   if(this.showByAdminUserId){
+    //     param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;  
+    //   }
+    //   else{
+    //     param2 = `/schedule-call-details?agentId=${id}&page=${page}&size=30`;  
+    //   } 
+    // } 
+    // else {
+    //     param2 = `/schedule-call-details?smeUserId=${id}&page=${page}&size=30`;
+    //   }
+
+
+      param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;
 
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Schdule call info', result);
