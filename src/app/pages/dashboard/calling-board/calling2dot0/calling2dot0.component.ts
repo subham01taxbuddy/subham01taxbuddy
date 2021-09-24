@@ -184,6 +184,7 @@ export class Calling2dot0Component implements OnInit {
         field: 'userId',
         width: 100,
         suppressMovable: true,
+        sortable: true,
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -195,6 +196,7 @@ export class Calling2dot0Component implements OnInit {
         field: 'name',
         width: 190,
         suppressMovable: true,
+        sortable: true,
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -206,6 +208,7 @@ export class Calling2dot0Component implements OnInit {
         field: 'customerNumber',
         width: 150,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -218,6 +221,7 @@ export class Calling2dot0Component implements OnInit {
         field: 'createdDate',
         width: 120,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         valueFormatter: (data) => data.value ? moment(data.value).format('DD/MM/YYYY') : null,
         filter: "agTextColumnFilter",
@@ -231,6 +235,7 @@ export class Calling2dot0Component implements OnInit {
         field: 'statusId',
         width: 120,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -270,6 +275,7 @@ export class Calling2dot0Component implements OnInit {
         field: 'callerAgentName',
         width: 160,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
