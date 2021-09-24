@@ -123,6 +123,7 @@ export class SignupExceptionComponent implements OnInit {
         field: 'userId',
         width: 80,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -135,6 +136,7 @@ export class SignupExceptionComponent implements OnInit {
         field: 'name',
         width: 150,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -147,6 +149,7 @@ export class SignupExceptionComponent implements OnInit {
         field: 'mobile',
         width: 120,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -159,6 +162,7 @@ export class SignupExceptionComponent implements OnInit {
         field: 'createdDate',
         width: 130,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
@@ -174,6 +178,7 @@ export class SignupExceptionComponent implements OnInit {
         field: 'serviceType',
         width: 100,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -198,6 +203,7 @@ export class SignupExceptionComponent implements OnInit {
         field: 'platform',
         width: 100,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -210,6 +216,7 @@ export class SignupExceptionComponent implements OnInit {
         field: 'callerAgentName',
         width: 150,
         suppressMovable: true,
+        sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {

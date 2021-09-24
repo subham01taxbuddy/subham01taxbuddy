@@ -86,17 +86,20 @@ export class ScheduledCallComponent implements OnInit {
   getScheduledCallsInfo(id, page){
     this.loading = true;
     var param2;
-    if (this.isAdmin) {
-      if(this.showByAdminUserId){
-        param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;  
-      }
-      else{
-        param2 = `/schedule-call-details?agentId=${id}&page=${page}&size=30`;  
-      } 
-    } 
-    else {
-        param2 = `/schedule-call-details?smeUserId=${id}&page=${page}&size=30`;
-      }
+    // if (this.isAdmin) {
+    //   if(this.showByAdminUserId){
+    //     param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;  
+    //   }
+    //   else{
+    //     param2 = `/schedule-call-details?agentId=${id}&page=${page}&size=30`;  
+    //   } 
+    // } 
+    // else {
+    //     param2 = `/schedule-call-details?smeUserId=${id}&page=${page}&size=30`;
+    //   }
+
+
+      param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;
 
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Schdule call info', result);
@@ -150,6 +153,7 @@ export class ScheduledCallComponent implements OnInit {
           field: 'userId',
           width: 100,
           suppressMovable: true,
+          sortable: true,
           cellStyle: { textAlign: 'center' },
           filter: "agTextColumnFilter",
           filterParams: {
@@ -162,6 +166,7 @@ export class ScheduledCallComponent implements OnInit {
           field: 'userName',
           width: 180,
           suppressMovable: true,
+          sortable: true,
           cellStyle: { textAlign: 'center' },
           filter: "agTextColumnFilter",
           filterParams: {
@@ -174,6 +179,7 @@ export class ScheduledCallComponent implements OnInit {
           field: 'userMobile',
           width: 130,
           suppressMovable: true,
+          sortable: true,
           cellStyle: { textAlign: 'center' },
           filter: "agTextColumnFilter",
           filterParams: {
@@ -186,6 +192,7 @@ export class ScheduledCallComponent implements OnInit {
           field: 'scheduleCallTime',
           width: 150,
           suppressMovable: true,
+          sortable: true,
           cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
           cellRenderer: (data) => {
             return formatDate(data.value, 'dd/MM/yyyy', this.locale)
@@ -201,6 +208,7 @@ export class ScheduledCallComponent implements OnInit {
           field: 'time',
           width: 120,
           suppressMovable: true,
+          sortable: true,
           cellStyle: { textAlign: 'center' },
           filter: "agTextColumnFilter",
           filterParams: {
@@ -213,6 +221,7 @@ export class ScheduledCallComponent implements OnInit {
           field: 'smeName',
           width: 150,
           suppressMovable: true,
+          sortable: true,
           cellStyle: { textAlign: 'center' },
           filter: "agTextColumnFilter",
           filterParams: {
