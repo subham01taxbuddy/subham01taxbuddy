@@ -1533,7 +1533,7 @@
                                     <!--balanceTaxAfterRelief-->
                                 </td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.totalTaxRelief" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.totalTaxRelief" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 15 : 14}}</td>
@@ -1547,41 +1547,41 @@
                                 <td></td>
                                 <td>u/s 234A</td>
                                 <td formGroupName="taxSummary"><input formControlName="s234A" maxlength="8"
-                                        (blur)="calculateTotalInterestFees()" type="number" (blur)="calIntersetFeess()"
+                                        (blur)="calculateTotalInterestFees()" type="number" 
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
                                 <td></td>
                                 <!--section234A-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.s234A" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234A" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>u/s 234B</td>
                                 <td formGroupName="taxSummary"><input formControlName="s234B" maxlength="8"
-                                        (blur)="calculateTotalInterestFees()" type="number" (blur)="calIntersetFeess()"
+                                        (blur)="calculateTotalInterestFees()" type="number" 
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
                                 <td></td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.s234B" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234B" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>u/s 234C</td>
-                                <td formGroupName="taxSummary"><input formControlName="s234C" maxlength="8"
-                                        (blur)="calculateTotalInterestFees()" type="number" (blur)="calIntersetFeess()"
+                                <td formGroupName="taxSummary"><input formControlName="s234C"  maxlength="8"
+                                        (blur)="calculateTotalInterestFees()" type="number" 
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
                                 <td></td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.s234C" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234C" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>u/s 234F</td>
                                 <td formGroupName="taxSummary"><input formControlName="s234F" maxlength="8"
-                                        (blur)="calculateTotalInterestFees()" type="number" (blur)="calIntersetFeess()"
+                                        (blur)="calculateTotalInterestFees()" type="number" 
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
 
@@ -1590,7 +1590,7 @@
                                 <!--interestAndFees-->
                                 <!--[value]="totalInterest"-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.s234F" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234F" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 16 : 15}}</td>
@@ -1613,7 +1613,7 @@
                             <tr>
                                 <td></td>
                                 <td>TDS on Salary </td>
-                                <td><input type="number" [value]="taxesPaid.tdsOnSalary" disabled maxlength="8"></td>
+                                <td><input type="number" [value]="newItrSumChanges ? (newTaxRegime ? 0 : taxesPaid.tdsOnSalary) : taxesPaid.tdsOnSalary" disabled maxlength="8"></td>
                                 <!--formControlName="totalTdsOnSalary"-->
                                 <td></td>
 
@@ -1622,7 +1622,7 @@
                             <tr>
                                 <td></td>
                                 <td>TDS other than Salary</td>
-                                <td><input type="number" disabled [value]="taxesPaid.tdsOtherThanSalary" maxlength="8">
+                                <td><input type="number" disabled [value]="newItrSumChanges ? (newTaxRegime ? 0 : taxesPaid.tdsOtherThanSalary) : taxesPaid.tdsOtherThanSalary" maxlength="8">
                                 </td>
                                 <!--formControlName="totalTdsOnOtherThanSalary"-->
                                 <td></td>
@@ -1632,7 +1632,7 @@
                             <tr>
                                 <td></td>
                                 <td>TDS on Sale of Property 26QB </td>
-                                <td><input type="number" disabled [value]="taxesPaid.tdsOnSal26QB" maxlength="8"></td>
+                                <td><input type="number" disabled [value]="newItrSumChanges ? (newTaxRegime ? 0 : taxesPaid.tdsOnSal26QB) : taxesPaid.tdsOnSal26QB" maxlength="8"></td>
                                 <!--formControlName="totalTdsSaleOfProperty26QB"-->
                                 <td></td>
 
@@ -1641,7 +1641,7 @@
                             <tr>
                                 <td></td>
                                 <td>TCS </td>
-                                <td formGroupName="taxSummary"><input type="number" disabled [value]="taxesPaid.tcs"
+                                <td formGroupName="taxSummary"><input type="number" disabled [value]="newRegimeTaxesPaid ? (newTaxRegime ? 0 : taxesPaid.tcs) : taxesPaid.tcs"
                                         maxlength="8"></td>
                                 <!--totalTaxCollectedAtSources    formControlName="taxPaidTCS"-->
                                 <td></td>
@@ -1651,7 +1651,7 @@
                             <tr>
                                 <td></td>
                                 <td>Advance/ Self-Assessment Tax </td>
-                                <td><input type="number" disabled [value]="taxesPaid.advanceSelfAssTax" maxlength="8">
+                                <td><input type="number" disabled [value]="newRegimeTaxesPaid ? (newTaxRegime ? 0 : taxesPaid.advanceSelfAssTax) : taxesPaid.advanceSelfAssTax" maxlength="8">
                                 </td>
                                 <!--totalAdvanceTax-->
                                 <td formGroupName="taxSummary"><input type="number" formControlName="totalTaxesPaid"
