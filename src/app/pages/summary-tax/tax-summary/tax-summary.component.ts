@@ -147,45 +147,8 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   newTaxRegime: boolean;
-
-  newRegimeTaxSummary : any ={
-    salary: 0,
-    housePropertyIncome: 0,
-    otherIncome: 0,
-    totalDeduction: 0,
-    grossTotalIncome: 0,
-    totalIncomeAfterDeductionIncludeSR: 0,
-    forRebate87Tax: 0,
-    taxOnTotalIncome: 0,
-    totalIncomeForRebate87A: 0,
-    rebateUnderSection87A: 0,
-    taxAfterRebate: 0,
-    surcharge: 0,
-    cessAmount: null,
-    grossTaxLiability: 0,
-    taxReliefUnder89: 0,
-    taxReliefUnder90_90A: 0,
-    taxReliefUnder91: 0,
-    totalTaxRelief: 0,
-    netTaxLiability: 0,
-    interestAndFeesPayable: 0,
-    s234A: 0,
-    s234B: 0,
-    s234C: 0,
-    s234F: 0,
-    agrigateLiability: 0,
-    taxPaidAdvancedTax: 0,
-    taxPaidTDS: 0,
-    taxPaidTCS: 0,
-    selfassessmentTax: 0,
-    totalTaxesPaid: 0,
-    taxpayable: 0,
-    taxRefund: 0,
-    totalTax: 0,
-    advanceTaxSelfAssessmentTax: 0,
-    presumptiveIncome: 0
-  }
   employerArray: any = [];
+  newRegimeTaxSummary: any;
 
 
   get getFamilyArray() {
@@ -206,179 +169,8 @@ export class TaxSummaryComponent implements OnInit {
       this.newItrSumChanges = false;
     }
 
-    this.itrSummaryForm = this.fb.group({
-      _id: null,
-      summaryId: 0,
-      itrId: [0],
-      userId: [0],
-      returnType: ['ORIGINAL', [Validators.required]],
-      financialYear: ['2019-2020', [Validators.required]],
-
-      assesse: this.fb.group({
-        passportNumber: [''],
-        email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],//email
-        contactNumber: ['', [Validators.required, Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],//mobileNumber
-        panNumber: ['', [Validators.required, Validators.pattern(AppConstants.panNumberRegex)]],//pan
-        aadharNumber: ['', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)]],//aadhaarNumber
-        itrType: ['', Validators.required],//itrType(String)
-        residentialStatus: ['RESIDENT', [Validators.required]],
-        ackNumber: null,//acknowledgmentNumber
-        maritalStatus: null,
-        assesseeType: null,
-        assessmentYear: ['2020-2021', [Validators.required]],//assessmentYear
-        noOfDependents: 0,
-
-        // natureOfEmployment: [''],
-        employerCategory: null,
-        regime: [''],
-
-        currency: null,
-        locale: null,
-        eFillingCompleted: false,
-        eFillingDate: null,    //dateOfFiling
-        isRevised: null,
-        isLate: null,
-       
-        dateOfNotice: null,
-        noticeIdentificationNo: null,
-        isDefective: null,
-
-        family: this.fb.array([]),
-        address: this.fb.group({
-          flatNo: null,
-          premisesName: ['', [Validators.required]],//address
-          road: null,
-          area: null,
-          city: ['', [Validators.required]],
-          state: ['', [Validators.required]],
-          country: ['', [Validators.required]],
-          pinCode: ['', [Validators.required, Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)]]
-        }),
-        disability: null,
-        itrProgress: [],
-        employers: [],
-        houseProperties: [],
-        capitalGain: null,
-        CGBreakup: null,
-        foreignIncome: null,
-        foreignAssets: null,
-        incomes: [],
-        expenses: null,
-        loans: null,
-        capitalAssets: null,
-        investments: null,
-        insurances: [],
-        assetsLiabilities: null,
-        bankDetails: [],
-        donations: [],
-        taxPaid: [],
-        taxCalculator: null,
-        declaration: null,
-        directorInCompany: null,
-        unlistedSharesDetails: null,
-        agriculturalDetails: null,
-        dateOfDividendIncome: null,
-        systemFlags: this.fb.group({
-          hasParentOverSixty: ''
-        }),
-        statusFlags: null,
-
-        business: this.fb.group({
-          presumptiveIncomes: [],
-          financialParticulars: this.fb.group({
-            id: null,
-            grossTurnOverAmount: null,
-            membersOwnCapital: [],
-            securedLoans: [],
-            unSecuredLoans: [],
-            advances: [],
-            sundryCreditorsAmount: [],
-            otherLiabilities: [],
-            totalCapitalLiabilities: null,
-            fixedAssets: [],
-            inventories: [],
-            sundryDebtorsAmount: [],
-            balanceWithBank: [],
-            cashInHand: [],
-            loanAndAdvances: [],
-            otherAssets: [],
-          })
-        }),
-
-      }),
-
-      taxSummary: this.fb.group({
-        salary: [0],  //incomeFromSalary
-        housePropertyIncome: [0],
-        otherIncome: [0],    //totalIncomeFromOtherResources
-
-        totalDeduction: [0],//deductionUnderChapterVIA
-        grossTotalIncome: [0],//grossTotalIncome
-        totalIncomeAfterDeductionIncludeSR: [0],//totalIncome
-
-        forRebate87Tax: [0],//rebate
-        taxOnTotalIncome: [0],//taxPayable
-        totalIncomeForRebate87A: [0],
-        rebateUnderSection87A: [0],
-        taxAfterRebate: [0],//taxAfterRebate
-        surcharge: [0],
-        cessAmount: [0],//healthAndEducationCess
-        grossTaxLiability: [0],
-        taxReliefUnder89: [0],//reliefUS89l
-        taxReliefUnder90_90A: [0],
-        taxReliefUnder91: [0],
-        totalTaxRelief: [0],//balanceTaxAfterRelief
-        netTaxLiability: [0],
-        interestAndFeesPayable: [0],      //interestAndFees
-        s234A: [0],//section234A
-        s234B: [0],//section234B
-        s234C: [0],//section234C
-        s234F: [0],//section234F
-        agrigateLiability: [0],//totalTaxFeeAndInterest
-        taxPaidAdvancedTax: [0],
-        taxPaidTDS: [0],
-        taxPaidTCS: [0],//totalTaxCollectedAtSources          ONLY SHOW
-        selfassessmentTax: [0],
-        totalTaxesPaid: [0],		//totalTaxPaid												
-        taxpayable: [0],			//netTaxPayable   
-        taxRefund: [0],				//netTaxPayable   
-        totalTax: [0],   //totalTaxAndCess
-        advanceTaxSelfAssessmentTax: [0],   //totalAdvanceTax          ONLY SHOW
-
-        presumptiveIncome: [0]
-      }),
-
-      medium: 'BACK OFFICE',
-      us80c: [0],
-      us80ccc: [0],
-      us80ccc1: [0],
-      us80ccd2: [0],
-      us80ccd1b: [0],
-      us80d: [0],
-      us80dd: [0],
-      us80ddb: [0],
-      us80e: [0],
-      us80ee: [0],
-      us80g: [0],
-      us80gg: [0],
-      us80gga: [0],
-      us80ggc: [0],
-      us80ttaTtb: [0],
-      us80u: [0],
-
-      us80eeb: [0],
-      other: [0],
-
-      ppfInterest: [0],
-      giftFromRelative: [0],
-      anyOtherExcemptIncome: [0],
-
-
-      netTaxPayable: [0],
-      exemptIncomes: [],
-      newTaxRegime: null
-    })
-    console.log('itrSummaryForm: ', this.itrSummaryForm)
+    this.initialiseMainForm();
+    this.initialiseNewRegimeTaxSummary();
 
     // window.addEventListener('beforeunload', function (e) {
     //   console.log('e: ', e)
@@ -395,6 +187,9 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   selectFile(event) {
+    this.initialiseNewRegimeTaxSummary();
+    this.initialiseMainForm();
+
     const reader = new FileReader();
     reader.onload = (e: any) => {
       let jsonRes = e.target.result;
@@ -1115,7 +910,13 @@ export class TaxSummaryComponent implements OnInit {
     var tdsOnSalInfo = itrData['ITR1'].TDSonSalaries.TDSonSalary;
     console.log('tdsOnSalInfo Info: ',tdsOnSalInfo); 
     this.tdsOnSal = [];
-    this.taxesPaid.tdsOnSalary = itrData['ITR1'].TDSonSalaries.TotalTDSonSalaries;
+    if(this.newTaxRegime){
+      this.newRegimeTaxesPaid.tdsOnSalary = itrData['ITR1'].TDSonSalaries.TotalTDSonSalaries;
+    }
+    else{
+      this.taxesPaid.tdsOnSalary = itrData['ITR1'].TDSonSalaries.TotalTDSonSalaries;
+    }
+    
 
     if(tdsOnSalInfo instanceof Array && tdsOnSalInfo.length > 0){
         for(let i=0; i<tdsOnSalInfo.length; i++){
@@ -1137,7 +938,12 @@ export class TaxSummaryComponent implements OnInit {
     var tdsOtherThanSalInfo = itrData['ITR1'].TDSonOthThanSals.TDSonOthThanSal;
     console.log('tdsOtherThanSalInfo Info: ',tdsOtherThanSalInfo); 
     this.tdsOtherThanSal = [];
-    this.taxesPaid.tdsOtherThanSalary = itrData['ITR1'].TDSonOthThanSals.TotalTDSonOthThanSals;
+    if(this.newTaxRegime){
+      this.newRegimeTaxesPaid.tdsOtherThanSalary = itrData['ITR1'].TDSonOthThanSals.TotalTDSonOthThanSals;
+    }
+    else{
+      this.taxesPaid.tdsOtherThanSalary = itrData['ITR1'].TDSonOthThanSals.TotalTDSonOthThanSals;
+    }
     if(tdsOtherThanSalInfo instanceof Array && tdsOtherThanSalInfo.length > 0){
       for(let i=0; i<tdsOtherThanSalInfo.length; i++){
         let tdsOtherThanSalObj = {
@@ -1158,7 +964,13 @@ export class TaxSummaryComponent implements OnInit {
     var tcsInfo = itrData['ITR1'].ScheduleTCS.TCS;
     console.log('tcsInfo Info: ',tcsInfo); 
     this.taxCollAtSource = [];
-    this.taxesPaid.tcs = itrData['ITR1'].ScheduleTCS.TotalSchTCS;
+    if(this.newTaxRegime){
+      this.newRegimeTaxesPaid.tcs = itrData['ITR1'].ScheduleTCS.TotalSchTCS;
+    }
+    else{
+      this.taxesPaid.tcs = itrData['ITR1'].ScheduleTCS.TotalSchTCS;
+    }
+  
     if(tcsInfo instanceof Array && tcsInfo.length > 0){
       for(let i=0; i<tcsInfo.length; i++){
         let tcsObj = {
@@ -1179,7 +991,13 @@ export class TaxSummaryComponent implements OnInit {
     var advanceTaxInfo = itrData['ITR1'].TaxPayments.TaxPayment;
     console.log('advanceTaxInfo Info: ',advanceTaxInfo); 
     this.advanceSelfTax = [];
-    this.taxesPaid.advanceSelfAssTax = itrData['ITR1'].TaxPayments.TotalTaxPayments;
+    if(this.newTaxRegime){
+      this.newRegimeTaxesPaid.advanceSelfAssTax = itrData['ITR1'].TaxPayments.TotalTaxPayments;
+    }
+    else{
+      this.taxesPaid.advanceSelfAssTax = itrData['ITR1'].TaxPayments.TotalTaxPayments;
+    }
+    
     if(advanceTaxInfo instanceof Array && advanceTaxInfo.length > 0){
       for(let i=0; i<advanceTaxInfo.length; i++){
         let advanceTaxObj = {
@@ -1196,6 +1014,8 @@ export class TaxSummaryComponent implements OnInit {
       }
     }
 
+    console.log('this.newRegimeTaxesPaid Info: ',this.newRegimeTaxesPaid); 
+
     //Computation of Income
     
     let computation1Info = itrData['ITR1'].ITR1_IncomeDeductions;
@@ -1211,6 +1031,42 @@ export class TaxSummaryComponent implements OnInit {
       this.newRegimeTaxSummary.totalDeduction = itrData['ITR1'].ITR1_IncomeDeductions.DeductUndChapVIA.TotalChapVIADeductions;
 
       this.newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR = Number(this.newRegimeTaxSummary.grossTotalIncome) - Number(this.newRegimeTaxSummary.totalDeduction);
+      
+      let computation2Infos =  itrData['ITR1'].ITR1_TaxComputation;
+      console.log('computation2Info: ', computation2Infos)
+      this.newRegimeTaxSummary.taxOnTotalIncome = computation2Infos.TotalTaxPayable;
+      this.newRegimeTaxSummary.forRebate87Tax = computation2Infos.Rebate87A;
+      this.newRegimeTaxSummary.taxAfterRebate = computation2Infos.TaxPayableOnRebate;
+      this.newRegimeTaxSummary.cessAmount = computation2Infos.EducationCess;
+      this.newRegimeTaxSummary.totalTax = computation2Infos.GrossTaxLiability;
+      this.newRegimeTaxSummary.taxReliefUnder89 = computation2Infos.Section89;
+      this.newRegimeTaxSummary.totalTaxRelief = computation2Infos.NetTaxLiability;
+      this.newRegimeTaxSummary.s234A = computation2Infos.IntrstPay.IntrstPayUs234A;
+      this.newRegimeTaxSummary.s234B = computation2Infos.IntrstPay.IntrstPayUs234B;
+      this.newRegimeTaxSummary.s234C = computation2Infos.IntrstPay.IntrstPayUs234C;
+      this.newRegimeTaxSummary.s234F = computation2Infos.IntrstPay.LateFilingFee234F;
+      this.newRegimeTaxSummary.agrigateLiability = computation2Infos.TotalIntrstPay;
+
+      let taxesPaidInfos = itrData['ITR1'].TaxPaid;
+      // this.newRegimeTaxesPaid.tdsOnSalary = taxesPaidInfo;
+      // this.newRegimeTaxesPaid.tdsOtherThanSalary = ;
+      // this.newRegimeTaxesPaid.tdsOnSal26QB = ;
+      // this.newRegimeTaxesPaid.tcs = ;
+      // this.newRegimeTaxesPaid.advanceSelfAssTax = ;
+      this.calNewItrTaxesPaid();
+      this.calIntersetFeess();
+      
+      if(Number(taxesPaidInfos.BalTaxPayable) > 0){
+          let payable = Number(taxesPaidInfos.BalTaxPayable);
+         this.newRegimeTaxSummary.taxpayable = payable;
+         this.newRegimeTaxSummary.taxRefund = 0;
+      }
+      else{
+          let refundInfo = itrData['ITR1'].Refund;
+          let refundable = Number(refundInfo.RefundDue);
+         this.newRegimeTaxSummary.taxRefund = refundable;
+         this.newRegimeTaxSummary.taxpayable = 0;
+      }
 
       console.log('newRegimeTaxSummary: ',this.newRegimeTaxSummary);
 
@@ -1230,40 +1086,42 @@ export class TaxSummaryComponent implements OnInit {
         
         this.itrSummaryForm.controls.taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.setValue(computation1Info.TotalIncome);
         
-        let computation2Info =  itrData['ITR1'].ITR1_TaxComputation;
-        console.log('computation2Info: ', computation2Info)
-        this.itrSummaryForm.controls.taxSummary['controls'].taxOnTotalIncome.setValue(computation2Info.TotalTaxPayable);
-        this.itrSummaryForm.controls.taxSummary['controls'].forRebate87Tax.setValue(computation2Info.Rebate87A);
+        // let computation2Info =  itrData['ITR1'].ITR1_TaxComputation;
+        // console.log('computation2Info: ', computation2Info)
+        // this.itrSummaryForm.controls.taxSummary['controls'].taxOnTotalIncome.setValue(computation2Info.TotalTaxPayable);
+        // this.itrSummaryForm.controls.taxSummary['controls'].forRebate87Tax.setValue(computation2Info.Rebate87A);
         
-        this.itrSummaryForm.controls.taxSummary['controls'].taxAfterRebate.setValue(computation2Info.TaxPayableOnRebate);
-        this.itrSummaryForm.controls.taxSummary['controls'].cessAmount.setValue(computation2Info.EducationCess);
-        this.itrSummaryForm.controls.taxSummary['controls'].totalTax.setValue(computation2Info.GrossTaxLiability);
-        this.itrSummaryForm.controls.taxSummary['controls'].taxReliefUnder89.setValue(computation2Info.Section89);
-        this.itrSummaryForm.controls.taxSummary['controls'].totalTaxRelief.setValue(computation2Info.NetTaxLiability);
-        this.itrSummaryForm.controls.taxSummary['controls'].s234A.setValue(computation2Info.IntrstPay.IntrstPayUs234A);
-        this.itrSummaryForm.controls.taxSummary['controls'].s234B.setValue(computation2Info.IntrstPay.IntrstPayUs234B);
-        this.itrSummaryForm.controls.taxSummary['controls'].s234C.setValue(computation2Info.IntrstPay.IntrstPayUs234C);
-        this.itrSummaryForm.controls.taxSummary['controls'].s234F.setValue(computation2Info.IntrstPay.LateFilingFee234F);
-        this.itrSummaryForm.controls.taxSummary['controls'].agrigateLiability.setValue(computation2Info.TotalIntrstPay);
+        // this.itrSummaryForm.controls.taxSummary['controls'].taxAfterRebate.setValue(computation2Info.TaxPayableOnRebate);
+        // this.itrSummaryForm.controls.taxSummary['controls'].cessAmount.setValue(computation2Info.EducationCess);
+        // this.itrSummaryForm.controls.taxSummary['controls'].totalTax.setValue(computation2Info.GrossTaxLiability);
+        // this.itrSummaryForm.controls.taxSummary['controls'].taxReliefUnder89.setValue(computation2Info.Section89);
+        // this.itrSummaryForm.controls.taxSummary['controls'].totalTaxRelief.setValue(computation2Info.NetTaxLiability);
+        // this.itrSummaryForm.controls.taxSummary['controls'].s234A.setValue(computation2Info.IntrstPay.IntrstPayUs234A);
+        // this.itrSummaryForm.controls.taxSummary['controls'].s234B.setValue(computation2Info.IntrstPay.IntrstPayUs234B);
+        // this.itrSummaryForm.controls.taxSummary['controls'].s234C.setValue(computation2Info.IntrstPay.IntrstPayUs234C);
+        // this.itrSummaryForm.controls.taxSummary['controls'].s234F.setValue(computation2Info.IntrstPay.LateFilingFee234F);
+        // this.itrSummaryForm.controls.taxSummary['controls'].agrigateLiability.setValue(computation2Info.TotalIntrstPay);
+        // this.calculateTotalInterestFees();
+
         
-        let taxesPaidInfo = itrData['ITR1'].TaxPaid;
-        // this.taxesPaid.tdsOnSalary = taxesPaidInfo;
-        // this.taxesPaid.tdsOtherThanSalary = ;
-        // this.taxesPaid.tdsOnSal26QB = ;
-        // this.taxesPaid.tcs = ;
-        // this.taxesPaid.advanceSelfAssTax = ;
+        // let taxesPaidInfo = itrData['ITR1'].TaxPaid;
+        // // this.taxesPaid.tdsOnSalary = taxesPaidInfo;
+        // // this.taxesPaid.tdsOtherThanSalary = ;
+        // // this.taxesPaid.tdsOnSal26QB = ;
+        // // this.taxesPaid.tcs = ;
+        // // this.taxesPaid.advanceSelfAssTax = ;
         
-        if(Number(taxesPaidInfo.BalTaxPayable) > 0){
-            let payable = Number(taxesPaidInfo.BalTaxPayable);
-            this.itrSummaryForm.controls.taxSummary['controls'].taxpayable.setValue(payable);
-            this.itrSummaryForm.controls.taxSummary['controls'].taxRefund.setValue(0);
-        }
-        else{
-            let refundInfo = itrData['ITR1'].Refund;
-            let refundable = Number(refundInfo.RefundDue);
-            this.itrSummaryForm.controls.taxSummary['controls'].taxRefund.setValue(refundable);
-            this.itrSummaryForm.controls.taxSummary['controls'].taxpayable.setValue(0);
-        }
+        // if(Number(taxesPaidInfo.BalTaxPayable) > 0){
+        //     let payable = Number(taxesPaidInfo.BalTaxPayable);
+        //     this.itrSummaryForm.controls.taxSummary['controls'].taxpayable.setValue(payable);
+        //     this.itrSummaryForm.controls.taxSummary['controls'].taxRefund.setValue(0);
+        // }
+        // else{
+        //     let refundInfo = itrData['ITR1'].Refund;
+        //     let refundable = Number(refundInfo.RefundDue);
+        //     this.itrSummaryForm.controls.taxSummary['controls'].taxRefund.setValue(refundable);
+        //     this.itrSummaryForm.controls.taxSummary['controls'].taxpayable.setValue(0);
+        // }
       
 
     }
@@ -3137,6 +2995,8 @@ export class TaxSummaryComponent implements OnInit {
   calIntersetFeess(){
     this.newRegimeTaxSummary.interestAndFeesPayable = Number(this.newRegimeTaxSummary.s234A) + Number(this.newRegimeTaxSummary.s234B) +
                                                       Number(this.newRegimeTaxSummary.s234C) + Number(this.newRegimeTaxSummary.s234F);
+                                          
+    this.newRegimeTaxSummary.agrigateLiability = Number(this.newRegimeTaxSummary.interestAndFeesPayable) + Number(this.newRegimeTaxSummary.totalTaxRelief);
   }
 
   calNewItrTaxesPaid(){
@@ -3145,5 +3005,223 @@ export class TaxSummaryComponent implements OnInit {
                                                       Number(this.newRegimeTaxesPaid.advanceSelfAssTax);
   }
 
+
+  initialiseNewRegimeTaxSummary(){
+    this.newRegimeTaxSummary ={
+      salary: 0,
+      housePropertyIncome: 0,
+      otherIncome: 0,
+      totalDeduction: 0,
+      grossTotalIncome: 0,
+      totalIncomeAfterDeductionIncludeSR: 0,
+      forRebate87Tax: 0,
+      taxOnTotalIncome: 0,
+      totalIncomeForRebate87A: 0,
+      rebateUnderSection87A: 0,
+      taxAfterRebate: 0,
+      surcharge: 0,
+      cessAmount: null,
+      grossTaxLiability: 0,
+      taxReliefUnder89: 0,
+      taxReliefUnder90_90A: 0,
+      taxReliefUnder91: 0,
+      totalTaxRelief: 0,
+      netTaxLiability: 0,
+      interestAndFeesPayable: 0,
+      s234A: 0,
+      s234B: 0,
+      s234C: 0,
+      s234F: 0,
+      agrigateLiability: 0,
+      taxPaidAdvancedTax: 0,
+      taxPaidTDS: 0,
+      taxPaidTCS: 0,
+      selfassessmentTax: 0,
+      totalTaxesPaid: 0,
+      taxpayable: 0,
+      taxRefund: 0,
+      totalTax: 0,
+      advanceTaxSelfAssessmentTax: 0,
+      presumptiveIncome: 0
+    }
+    
+  }
+
+
+  initialiseMainForm(){
+    this.itrSummaryForm = this.fb.group({
+      _id: null,
+      summaryId: 0,
+      itrId: [0],
+      userId: [0],
+      returnType: ['ORIGINAL', [Validators.required]],
+      financialYear: ['2019-2020', [Validators.required]],
+
+      assesse: this.fb.group({
+        passportNumber: [''],
+        email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],//email
+        contactNumber: ['', [Validators.required, Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],//mobileNumber
+        panNumber: ['', [Validators.required, Validators.pattern(AppConstants.panNumberRegex)]],//pan
+        aadharNumber: ['', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)]],//aadhaarNumber
+        itrType: ['', Validators.required],//itrType(String)
+        residentialStatus: ['RESIDENT', [Validators.required]],
+        ackNumber: null,//acknowledgmentNumber
+        maritalStatus: null,
+        assesseeType: null,
+        assessmentYear: ['2020-2021', [Validators.required]],//assessmentYear
+        noOfDependents: 0,
+
+        // natureOfEmployment: [''],
+        employerCategory: null,
+        regime: [''],
+
+        currency: null,
+        locale: null,
+        eFillingCompleted: false,
+        eFillingDate: null,    //dateOfFiling
+        isRevised: null,
+        isLate: null,
+       
+        dateOfNotice: null,
+        noticeIdentificationNo: null,
+        isDefective: null,
+
+        family: this.fb.array([]),
+        address: this.fb.group({
+          flatNo: null,
+          premisesName: ['', [Validators.required]],//address
+          road: null,
+          area: null,
+          city: ['', [Validators.required]],
+          state: ['', [Validators.required]],
+          country: ['', [Validators.required]],
+          pinCode: ['', [Validators.required, Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)]]
+        }),
+        disability: null,
+        itrProgress: [],
+        employers: [],
+        houseProperties: [],
+        capitalGain: null,
+        CGBreakup: null,
+        foreignIncome: null,
+        foreignAssets: null,
+        incomes: [],
+        expenses: null,
+        loans: null,
+        capitalAssets: null,
+        investments: null,
+        insurances: [],
+        assetsLiabilities: null,
+        bankDetails: [],
+        donations: [],
+        taxPaid: [],
+        taxCalculator: null,
+        declaration: null,
+        directorInCompany: null,
+        unlistedSharesDetails: null,
+        agriculturalDetails: null,
+        dateOfDividendIncome: null,
+        systemFlags: this.fb.group({
+          hasParentOverSixty: ''
+        }),
+        statusFlags: null,
+
+        business: this.fb.group({
+          presumptiveIncomes: [],
+          financialParticulars: this.fb.group({
+            id: null,
+            grossTurnOverAmount: null,
+            membersOwnCapital: [],
+            securedLoans: [],
+            unSecuredLoans: [],
+            advances: [],
+            sundryCreditorsAmount: [],
+            otherLiabilities: [],
+            totalCapitalLiabilities: null,
+            fixedAssets: [],
+            inventories: [],
+            sundryDebtorsAmount: [],
+            balanceWithBank: [],
+            cashInHand: [],
+            loanAndAdvances: [],
+            otherAssets: [],
+          })
+        }),
+
+      }),
+
+      taxSummary: this.fb.group({
+        salary: [0],  //incomeFromSalary
+        housePropertyIncome: [0],
+        otherIncome: [0],    //totalIncomeFromOtherResources
+
+        totalDeduction: [0],//deductionUnderChapterVIA
+        grossTotalIncome: [0],//grossTotalIncome
+        totalIncomeAfterDeductionIncludeSR: [0],//totalIncome
+
+        forRebate87Tax: [0],//rebate
+        taxOnTotalIncome: [0],//taxPayable
+        totalIncomeForRebate87A: [0],
+        rebateUnderSection87A: [0],
+        taxAfterRebate: [0],//taxAfterRebate
+        surcharge: [0],
+        cessAmount: [0],//healthAndEducationCess
+        grossTaxLiability: [0],
+        taxReliefUnder89: [0],//reliefUS89l
+        taxReliefUnder90_90A: [0],
+        taxReliefUnder91: [0],
+        totalTaxRelief: [0],//balanceTaxAfterRelief
+        netTaxLiability: [0],
+        interestAndFeesPayable: [0],      //interestAndFees
+        s234A: [0],//section234A
+        s234B: [0],//section234B
+        s234C: [0],//section234C
+        s234F: [0],//section234F
+        agrigateLiability: [0],//totalTaxFeeAndInterest
+        taxPaidAdvancedTax: [0],
+        taxPaidTDS: [0],
+        taxPaidTCS: [0],//totalTaxCollectedAtSources          ONLY SHOW
+        selfassessmentTax: [0],
+        totalTaxesPaid: [0],		//totalTaxPaid												
+        taxpayable: [0],			//netTaxPayable   
+        taxRefund: [0],				//netTaxPayable   
+        totalTax: [0],   //totalTaxAndCess
+        advanceTaxSelfAssessmentTax: [0],   //totalAdvanceTax          ONLY SHOW
+
+        presumptiveIncome: [0]
+      }),
+
+      medium: 'BACK OFFICE',
+      us80c: [0],
+      us80ccc: [0],
+      us80ccc1: [0],
+      us80ccd2: [0],
+      us80ccd1b: [0],
+      us80d: [0],
+      us80dd: [0],
+      us80ddb: [0],
+      us80e: [0],
+      us80ee: [0],
+      us80g: [0],
+      us80gg: [0],
+      us80gga: [0],
+      us80ggc: [0],
+      us80ttaTtb: [0],
+      us80u: [0],
+
+      us80eeb: [0],
+      other: [0],
+
+      ppfInterest: [0],
+      giftFromRelative: [0],
+      anyOtherExcemptIncome: [0],
+
+
+      netTaxPayable: [0],
+      exemptIncomes: [],
+      newTaxRegime: null
+    })
+    console.log('itrSummaryForm: ', this.itrSummaryForm)
+  }
 
 }
