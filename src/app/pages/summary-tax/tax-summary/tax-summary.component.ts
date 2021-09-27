@@ -621,7 +621,7 @@ export class TaxSummaryComponent implements OnInit {
         standardDeduction: salaryInfo.DeductionUs16ia,
         entertainAllow: salaryInfo.EntertainmentAlw16ii,
         professionalTax: salaryInfo.ProfessionalTaxUs16iii,
-        totalSalaryDeduction: salaryInfo.DeductionUs16ia + salaryInfo.EntertainmentAlw16ii + salaryInfo.ProfessionalTaxUs16iii,
+        totalSalaryDeduction: Number(salaryInfo.DeductionUs16ia) + Number(salaryInfo.EntertainmentAlw16ii) +  (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) ,
         taxableIncome: salaryInfo.IncomeFromSal,
 
         pinCode: '',
