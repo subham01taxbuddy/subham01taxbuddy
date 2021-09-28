@@ -264,6 +264,13 @@ export class SumaryDialogComponent implements OnInit {
     console.log('userObject: ==>', this.data.userObject)
     console.log('ITR type => ',this.data.itrType);
 
+    if (this.data.mode === 'House' && this.data.submitBtn === 'Add') {
+      if(this.data.callerObj.newItrSumChanges && this.data.callerObj.housingData[0].propertyType === 'SOP'){
+        this.summaryDialogForm.controls.houseProperties['controls'].propertyType.setValue('SOP');
+        // this.summaryDialogForm.controls.houseProperties['controls'].propertyType.readonly();
+      }
+    }
+
     if (this.data.mode === 'Bank') {
       this.setBankRefundVal();
       this.updateBankData(this.data.userObject)
@@ -365,8 +372,9 @@ export class SumaryDialogComponent implements OnInit {
     debugger
     console.log('houseInfo: ', houseInfo)
     console.log('houseInfo: ', houseInfo, houseInfo.interestAmount)
-    this.summaryDialogForm['controls'].houseProperties.patchValue(houseInfo)
+    this.summaryDialogForm['controls'].houseProperties.patchValue(houseInfo);
 
+  
     this.summaryDialogForm.controls['tenantName'].setValue(houseInfo.tenantName);
     this.summaryDialogForm.controls['tenentPanNumber'].setValue(houseInfo.tenentPanNumber)
     this.summaryDialogForm.controls['loanType'].setValue(houseInfo.loanType)
