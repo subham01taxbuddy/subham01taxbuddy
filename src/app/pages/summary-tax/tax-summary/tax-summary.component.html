@@ -482,7 +482,7 @@
                     </table><br><br>
 
                     <div class="tableHead">Annexures: House Properties</div>
-                    <button [disabled]="housingData.length > 0" style="float: right;"
+                    <button [disabled]="showHouseBtn()" style="float: right;"
                         (click)="openDialog('Add House Property','Add', null, '','House')">Add House Info</button><br>
                     <table class="verticle">
                         <tr>

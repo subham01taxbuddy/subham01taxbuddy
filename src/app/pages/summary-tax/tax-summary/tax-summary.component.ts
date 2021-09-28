@@ -744,7 +744,7 @@ export class TaxSummaryComponent implements OnInit {
       }
 
       this.sec80DobjVal.healthInsuarancePremiumSelf = sec80DInfo.Sec80DSelfFamSrCtznHealth.SelfAndFamily;
-      this.sec80DobjVal.healthInsuarancePremiumParents = sec80DInfo.Sec80DSelfFamSrCtznHealth.SelfAndFamilySeniorCitizen;
+      this.sec80DobjVal.healthInsuarancePremiumParents = Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizen) - Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn);
       this.sec80DobjVal.preventiveHealthCheckupFamily = sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam;
       this.sec80DobjVal.parentAge = sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag === "Y" ? 'above60': 'bellow60';
       if(this.sec80DobjVal.parentAge === 'above60'){
@@ -1895,34 +1895,40 @@ export class TaxSummaryComponent implements OnInit {
       let address = flatNo + ' ' + building + ' ' + ' ' + street + ' ' + locality + ' ' + city + ' ' + country + ' ' + state;
 
       console.log("houseData: ", houseData)
-      console.log('Condition: ', houseData[0].coOwners.length > 0)
-      let house = {
-        propertyType: houseData[0].propertyType,
-        address: address,
-        ownerOfProperty: houseData[0].ownerOfProperty,
-        // coOwnerName: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].name : '',
-        // coOwnerPanNumber: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].panNumber : '',
-        // coOwnerPercentage: (Array.isArray(houseData[0].coOwners) && houseData[0].coOwners.length > 0) ? houseData[0].coOwners[0].percentage : '',
-        coOwners: houseData[0].coOwners,
-        otherOwnerOfProperty: houseData[0].otherOwnerOfProperty,
-        tenantName: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].name : '',
-        tenentPanNumber: (Array.isArray(houseData[0].tenant) && houseData[0].tenant.length > 0) ? houseData[0].tenant[0].panNumber : '',
-        grossAnnualRentReceived: houseData[0].grossAnnualRentReceived ? houseData[0].grossAnnualRentReceived : '',
-        annualValue: houseData[0].annualValue,
-        propertyTax: houseData[0].propertyTax,
-        interestAmount: (Array.isArray(houseData[0].loans) && houseData[0].loans.length > 0) ? houseData[0].loans[0].interestAmount : '',
-        taxableIncome: houseData[0].taxableIncome,
-        exemptIncome: houseData[0].exemptIncome,
-        pinCode: this.utilService.isNonEmpty(houseData[0].pinCode) ? houseData[0].pinCode : '',
-        flatNo: this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '',
-        building: this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '',
-        street: this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '',
-        locality: this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '',
-        city: this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '',
-        country: this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '',
-        state: this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '',
+      console.log('Condition: ', houseData[0].coOwners.length > 0);
+
+      this.housingData = [];
+
+      for(let i=0; i< houseData.length; i++){
+        let house = {
+          propertyType: houseData[i].propertyType,
+          address: address,
+          ownerOfProperty: houseData[i].ownerOfProperty,
+          // coOwnerName: (Array.isArray(houseData[i].coOwners) && houseData[i].coOwners.length > i) ? houseData[i].coOwners[i].name : '',
+          // coOwnerPanNumber: (Array.isArray(houseData[i].coOwners) && houseData[i].coOwners.length > i) ? houseData[i].coOwners[i].panNumber : '',
+          // coOwnerPercentage: (Array.isArray(houseData[i].coOwners) && houseData[i].coOwners.length > i) ? houseData[i].coOwners[i].percentage : '',
+          coOwners: houseData[i].coOwners,
+          otherOwnerOfProperty: houseData[i].otherOwnerOfProperty,
+          tenantName: (Array.isArray(houseData[i].tenant) && houseData[i].tenant.length > i) ? houseData[i].tenant[i].name : '',
+          tenentPanNumber: (Array.isArray(houseData[i].tenant) && houseData[i].tenant.length > i) ? houseData[i].tenant[i].panNumber : '',
+          grossAnnualRentReceived: houseData[i].grossAnnualRentReceived ? houseData[i].grossAnnualRentReceived : '',
+          annualValue: houseData[i].annualValue,
+          propertyTax: houseData[i].propertyTax,
+          interestAmount: (Array.isArray(houseData[i].loans) && houseData[i].loans.length > i) ? houseData[i].loans[i].interestAmount : '',
+          taxableIncome: houseData[i].taxableIncome,
+          exemptIncome: houseData[i].exemptIncome,
+          pinCode: this.utilService.isNonEmpty(houseData[i].pinCode) ? houseData[i].pinCode : '',
+          flatNo: this.utilService.isNonEmpty(houseData[i].flatNo) ? houseData[i].flatNo : '',
+          building: this.utilService.isNonEmpty(houseData[i].building) ? houseData[i].building : '',
+          street: this.utilService.isNonEmpty(houseData[i].street) ? houseData[i].street : '',
+          locality: this.utilService.isNonEmpty(houseData[i].locality) ? houseData[i].locality : '',
+          city: this.utilService.isNonEmpty(houseData[i].city) ? houseData[i].city : '',
+          country: this.utilService.isNonEmpty(houseData[i].country) ? houseData[i].country : '',
+          state: this.utilService.isNonEmpty(houseData[i].state) ? houseData[i].state : '',
+        }
+        this.housingData.push(house)
       }
-      this.housingData.push(house)
+      
       console.log('Housing:--- ', this.housingData)
     }
     else if (action === 'Edit') {
@@ -2146,7 +2152,7 @@ export class TaxSummaryComponent implements OnInit {
 
          if(!this.utilService.isNonEmpty(result.middleName)){
           reqBody.middleName = personalInfo.Verification.Declaration.FatherName;
-          this.itrSummaryForm['controls'].assesse['controls'].family.controls[0].controls['fathersName'].setValue(reqBody.middleName);
+         // this.itrSummaryForm['controls'].assesse['controls'].family.controls[0].controls['fathersName'].setValue(reqBody.middleName);
          }
          console.log('reqBody: ',reqBody);
          userData.insert(0, this.updateFamilyForm(reqBody));
@@ -3222,6 +3228,22 @@ export class TaxSummaryComponent implements OnInit {
       newTaxRegime: null
     })
     console.log('itrSummaryForm: ', this.itrSummaryForm)
+  }
+
+  showHouseBtn(){
+    if(this.housingData.length > 0){
+      let houseProType = this.housingData[0].propertyType;
+      // console.log(!this.newItrSumChanges , this.housingData.length > 1 , houseProType === 'LOP')
+      if(!this.newItrSumChanges || this.housingData.length > 1 || houseProType === 'LOP'){
+        return true;
+      }
+      else{
+        return false
+      }
+    }
+    else{
+      return false;
+    }
   }
 
 }
