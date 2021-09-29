@@ -73,24 +73,49 @@
                                 </div>
                                 <div class="card__col-lg-3" formGroupName="taxSummary">
                                     <label>Taxable Income</label>
-                                    <input type="number" placeholder="Taxable Income"
+                                    <div *ngIf="!newTaxRegime">
+                                        <input type="number" placeholder="Taxable Income"
                                         formControlName="totalIncomeAfterDeductionIncludeSR" required disabled
                                         class="disableInput">
+                                    </div>
+                                    <div *ngIf="newTaxRegime">
+                                        <input type="number" placeholder="Taxable Income"
+                                         [value]="newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR" required disabled
+                                        class="disableInput">
+                                    </div>
 
                                 </div>
 
-                                <div class="card__col-lg-3" formGroupName="taxSummary"
-                                    *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0">
-                                    <label>Tax Payable/ Refund</label>
-                                    <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxpayable"
-                                        disabled class="disableInput">
-                                </div>
-                                <div class="card__col-lg-3" formGroupName="taxSummary"
-                                    *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
-                                    <label>Tax Payable/ Refund</label>
-                                    <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxRefund"
-                                        disabled class="disableInput">
-                                </div>
+                                <div *ngIf="!newTaxRegime">
+                                    <div class="card__col-lg-3" formGroupName="taxSummary"
+                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0">
+                                        <label>Tax Payable</label>
+                                        <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxpayable"
+                                            disabled class="disableInput">
+                                     </div>
+                                    <div class="card__col-lg-3" formGroupName="taxSummary"
+                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0">
+                                        <label>Tax Refund</label>
+                                        <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxRefund"
+                                            disabled class="disableInput">
+                                    </div>
+                                 </div>
+
+                                 <div *ngIf="newTaxRegime">
+                                    <div class="card__col-lg-3" formGroupName="taxSummary"
+                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0">
+                                        <label>Tax Payable</label>
+                                        <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxpayable"
+                                            disabled class="disableInput">
+                                     </div>
+                                    <div class="card__col-lg-3" formGroupName="taxSummary"
+                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0">
+                                        <label>Tax Refund</label>
+                                        <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxRefund"
+                                            disabled class="disableInput">
+                                    </div>
+                                 </div>
+                               
                             </div>
                         </div><br><br>
 
@@ -1665,7 +1690,7 @@
                             <tr
                                 *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0">
                                 <td>{{itrType.itrFour ? 18 : 17}}</td>
-                                <td><b>Net Tax Payable/ (Refund)</b></td>
+                                <td><b>Net Tax Payable</b></td>
                                 <td></td>
                                 <td formGroupName="taxSummary"><b><input type="number" formControlName="taxpayable"
                                             disabled maxlength="8"></b>
@@ -1676,7 +1701,7 @@
                             </tr>
                             <tr *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0">
                                 <td>{{itrType.itrFour ? 18 : 17}}</td>
-                                <td><b>Net Tax Payable/ (Refund)</b></td>
+                                <td><b>Net Tax Refund</b></td>
                                 <td></td>
                                 <td formGroupName="taxSummary"><b><input type="number" formControlName="taxRefund"
                                             disabled maxlength="8"></b>
