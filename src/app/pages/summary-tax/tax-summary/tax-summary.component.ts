@@ -294,7 +294,7 @@ export class TaxSummaryComponent implements OnInit {
       /* House Property */
       var housingInfo = itrData['ITR1'].ITR1_IncomeDeductions;
       let housingObj = {
-        propertyType: housingInfo.TypeOfHP === "S" ? 'SOP' : 'LOP',
+        propertyType: housingInfo.hasOwnProperty('TypeOfHP') ? (housingInfo.TypeOfHP === "S" ? 'SOP' : 'LOP') : (housingInfo.TotalIncomeOfHP === 0 ? 'SOP' : 'LOP'),
         address: '',
         ownerOfProperty: '',
         coOwners: [],
