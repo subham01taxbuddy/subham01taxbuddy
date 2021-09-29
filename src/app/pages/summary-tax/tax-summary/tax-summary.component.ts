@@ -914,6 +914,15 @@ export class TaxSummaryComponent implements OnInit {
       tcs: 0,
       advanceSelfAssTax: 0
     }
+
+    this.taxPaiObj = {
+      "onSalary": [],
+      "otherThanSalary16A": [],
+      "otherThanSalary26QB": [],
+      "tcs": [],
+      "otherThanTDSTCS": [],
+    }
+  
     //TDS on Salary
     var tdsOnSalInfo = itrData['ITR1'].TDSonSalaries.TDSonSalary;
     console.log('tdsOnSalInfo Info: ',tdsOnSalInfo); 
@@ -939,6 +948,8 @@ export class TaxSummaryComponent implements OnInit {
           tdsObj.totalAmountCredited = tdsOnSalInfo[i].IncChrgSal;
           tdsObj.totalTdsDeposited = tdsOnSalInfo[i].TotalTDSSal;
           this.tdsOnSal.push(tdsObj);
+          this.taxPaiObj.onSalary.push(tdsObj);
+
         }
     }
   
@@ -965,6 +976,7 @@ export class TaxSummaryComponent implements OnInit {
         tdsOtherThanSalObj.totalAmountCredited = tdsOtherThanSalInfo[i].AmtForTaxDeduct;
         tdsOtherThanSalObj.totalTdsDeposited = tdsOtherThanSalInfo[i].TotTDSOnAmtPaid;
         this.tdsOtherThanSal.push(tdsOtherThanSalObj);
+        this.taxPaiObj.otherThanSalary16A.push(tdsOtherThanSalObj);
       }
     }
 
@@ -992,6 +1004,7 @@ export class TaxSummaryComponent implements OnInit {
         tcsObj.totalAmountPaid = tcsInfo[i].AmtTaxCollected;
         tcsObj.totalTcsDeposited = tcsInfo[i].TotalTCS;
         this.taxCollAtSource.push(tcsObj);
+        this.taxPaiObj.tcs.push(tcsObj);
       }
     }
 
@@ -1019,8 +1032,11 @@ export class TaxSummaryComponent implements OnInit {
         advanceTaxObj.challanNumber = advanceTaxInfo[i].SrlNoOfChaln;
         advanceTaxObj.totalTax = advanceTaxInfo[i].Amt;
         this.advanceSelfTax.push(advanceTaxObj);
+        this.taxPaiObj.otherThanTDSTCS.push(advanceTaxObj);
       }
     }
+
+    this.itrSummaryForm['controls'].assesse['controls'].taxPaid.setValue(this.taxPaiObj);
 
     var totalTaxPaidVal;
     if(this.newTaxRegime){
