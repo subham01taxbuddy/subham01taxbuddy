@@ -745,7 +745,7 @@ export class TaxSummaryComponent implements OnInit {
 
       this.sec80DobjVal.healthInsuarancePremiumSelf = sec80DInfo.Sec80DSelfFamSrCtznHealth.SelfAndFamily;
       this.sec80DobjVal.healthInsuarancePremiumParents = Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizen) - Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn);
-      this.sec80DobjVal.preventiveHealthCheckupFamily = sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam;
+      this.sec80DobjVal.preventiveHealthCheckupFamily = sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFam') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFam') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam : 0);
       this.sec80DobjVal.parentAge = sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag === "Y" ? 'above60': 'bellow60';
       if(this.sec80DobjVal.parentAge === 'above60'){
         this.sec80DobjVal.medicalExpendature = sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn;
