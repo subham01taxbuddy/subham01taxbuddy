@@ -404,9 +404,9 @@ export class TaxSummaryComponent implements OnInit {
         address: '',
         employerTAN: '',
         employerCategory: '',
-        salAsPerSec171:  0,
-        valOfPerquisites: 0,
-        profitInLieu: 0,
+        salAsPerSec171: salaryInfo.hasOwnProperty('Salary') ? this.getNumberFormat(salaryInfo.Salary) : 0,
+        valOfPerquisites: salaryInfo.hasOwnProperty('PerquisitesValue') ? this.getNumberFormat(salaryInfo.PerquisitesValue) : 0,
+        profitInLieu: salaryInfo.hasOwnProperty('ProfitsInSalary') ? this.getNumberFormat(salaryInfo.ProfitsInSalary) : 0,
         grossSalary: salaryInfo.GrossSalary,
         houseRentAllow: hra,
         leaveTravelExpense: 0,
@@ -1014,13 +1014,22 @@ export class TaxSummaryComponent implements OnInit {
       }
     }
 
+    var totalTaxPaidVal;
+    if(this.newTaxRegime){
+      this.newRegimeTaxSummary.totalTaxesPaid = Number(this.newRegimeTaxesPaid.tdsOnSalary) + Number(this.newRegimeTaxesPaid.tdsOtherThanSalary) + Number(this.newRegimeTaxesPaid.tdsOnSal26QB) +
+                                        Number(this.newRegimeTaxesPaid.tcs) + Number(this.newRegimeTaxesPaid.advanceSelfAssTax);
+    }
+    else{
+      totalTaxPaidVal = Number(this.taxesPaid.tdsOnSalary) + Number(this.taxesPaid.tdsOtherThanSalary) + Number(this.taxesPaid.tdsOnSal26QB) +
+                        Number(this.taxesPaid.tcs) + Number(this.taxesPaid.advanceSelfAssTax);
+    }
+    this.itrSummaryForm.controls.taxSummary['controls'].totalTaxesPaid.setValue(totalTaxPaidVal);
     console.log('this.newRegimeTaxesPaid Info: ',this.newRegimeTaxesPaid); 
 
     //Computation of Income
     
     let computation1Info = itrData['ITR1'].ITR1_IncomeDeductions;
     if(this.newTaxRegime){
-      this.showNewTaxRegimeSummary()
       this.newRegimeTaxSummary.salary = computation1Info.GrossSalary;
       this.newRegimeTaxSummary.housePropertyIncome = computation1Info.TotalIncomeOfHP;
 
@@ -1184,9 +1193,7 @@ export class TaxSummaryComponent implements OnInit {
     // this.itrSummaryForm.controls.taxSummary['controls'].forRebate87Tax.setValue(computation2Info.Rebate87A);
   }
 
-  showNewTaxRegimeSummary(){
-
-  }
+ 
 
   getNatureExceptionLabel(keyVal){
     return this.exemptIncomes.filter(item => item.value === keyVal)[0].label
@@ -3243,6 +3250,18 @@ export class TaxSummaryComponent implements OnInit {
     }
     else{
       return false;
+    }
+  }
+
+  getNumberFormat(val){
+    console.log('val & type: ',val, typeof val)
+    if(typeof val === 'string'){
+      val = val.replace(/\,/g,''); 
+      val=parseInt(val,10);
+      return val;
+    }
+    else{
+      return val;
     }
   }
 

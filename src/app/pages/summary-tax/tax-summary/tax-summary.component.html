@@ -1674,7 +1674,7 @@
 
                                 <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.taxpayable" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
-                            <tr *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
+                            <tr *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0">
                                 <td>{{itrType.itrFour ? 18 : 17}}</td>
                                 <td><b>Net Tax Payable/ (Refund)</b></td>
                                 <td></td>
