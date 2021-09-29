@@ -745,7 +745,15 @@ export class TaxSummaryComponent implements OnInit {
 
       this.sec80DobjVal.healthInsuarancePremiumSelf = sec80DInfo.Sec80DSelfFamSrCtznHealth.SelfAndFamily;
       this.sec80DobjVal.healthInsuarancePremiumParents = Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizen) - Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn);
-      this.sec80DobjVal.preventiveHealthCheckupFamily = sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFam') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFamSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFamSrCtzn : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParents') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParentsSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn : 0)));
+      var prehealthCheckVal = Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFam') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFamSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFamSrCtzn : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParents') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParentsSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn : 0))));
+      console.log('prehealthCheckVal: ',prehealthCheckVal)
+      if(prehealthCheckVal > 5000){
+        this.sec80DobjVal.preventiveHealthCheckupFamily = 5000;
+      }
+      else {
+        this.sec80DobjVal.preventiveHealthCheckupFamily = prehealthCheckVal;
+      }
+       
       this.sec80DobjVal.parentAge = sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag === "Y" ? 'above60': 'bellow60';
       if(this.sec80DobjVal.parentAge === 'above60'){
         this.sec80DobjVal.medicalExpendature = sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn;
@@ -1056,12 +1064,7 @@ export class TaxSummaryComponent implements OnInit {
       this.newRegimeTaxSummary.s234F = computation2Infos.IntrstPay.LateFilingFee234F;
       this.newRegimeTaxSummary.agrigateLiability = computation2Infos.TotalIntrstPay;
 
-      let taxesPaidInfos = itrData['ITR1'].TaxPaid;
-      // this.newRegimeTaxesPaid.tdsOnSalary = taxesPaidInfo;
-      // this.newRegimeTaxesPaid.tdsOtherThanSalary = ;
-      // this.newRegimeTaxesPaid.tdsOnSal26QB = ;
-      // this.newRegimeTaxesPaid.tcs = ;
-      // this.newRegimeTaxesPaid.advanceSelfAssTax = ;
+      let taxesPaidInfos = itrData['ITR1'];
       this.calNewItrTaxesPaid();
       this.calIntersetFeess();
       
@@ -1113,7 +1116,7 @@ export class TaxSummaryComponent implements OnInit {
         // this.calculateTotalInterestFees();
 
         
-        // let taxesPaidInfo = itrData['ITR1'].TaxPaid;
+        // let taxesPaidInfo = itrData['ITR1'];
         // // this.taxesPaid.tdsOnSalary = taxesPaidInfo;
         // // this.taxesPaid.tdsOtherThanSalary = ;
         // // this.taxesPaid.tdsOnSal26QB = ;
