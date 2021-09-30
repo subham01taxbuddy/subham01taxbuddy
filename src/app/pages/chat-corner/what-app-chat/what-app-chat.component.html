@@ -27,7 +27,7 @@
           </div>
           <div class="card__col-xs-3 card__col-sm-3" *ngIf="showChatUi">
             <mat-form-field appearance="outline">
-              <input matInput [formControl]="searchNumber" maxlength="10" placeholder="Search By Mobile number"
+              <input matInput [formControl]="searchNumber" maxlength="20" placeholder="Search By Mobile number"
                 autocomplete="off"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 onkeypress="return event.charCode >= 48 && event.charCode <= 57">
