@@ -15,6 +15,7 @@ import { AllFilingReportComponent } from "./itr-filling-report/all-filing-report
 import { InvoiceFailedReportComponent } from "./invoice-failed/invoice-failed.component";
 import { SmeTlWiseReportComponent } from "./invoice-failed/sme-tl-wise/sme-tl-wise-report.component";
 import { DetailReportComponent } from "./invoice-failed/detail-report/detail-report.component";
+import { SpamTableComponent } from './spam-table/spam-table.component';
 
 @NgModule({
     declarations: [MainReportsComponent,
@@ -27,7 +28,8 @@ import { DetailReportComponent } from "./invoice-failed/detail-report/detail-rep
         AllFilingReportComponent,
         InvoiceFailedReportComponent,
         SmeTlWiseReportComponent,
-        DetailReportComponent],
+        DetailReportComponent,
+        SpamTableComponent],
     imports: [
         CommonModule,
         FormsModule,

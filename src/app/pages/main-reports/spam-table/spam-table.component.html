@@ -1,0 +1,43 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="main clearfix" style="padding-top: 0px;">
+    <div class="card">
+        <div class="card__row">
+                <div class="card__col-lg-3">
+                    <!-- <mat-form-field appearance="outline">
+                        <mat-label>From Date</mat-label>
+                        <input matInput formControlName="fromDate" [matDatepicker]="picker1" [max]="maxDate"
+                            autocomplete="off"
+                            (dateChange)="setToDateValidation(missChatForm.controls['fromDate'].value)">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-error *ngIf="missChatForm.controls['fromDate'].hasError('required')">Select From
+                            date</mat-error>
+                    </mat-form-field> -->
+                </div>
+
+                <div class="card__col-lg-3">
+                    <!-- <mat-form-field appearance="outline">
+                        <mat-label>To Date</mat-label>
+                        <input matInput formControlName="toDate" [matDatepicker]="picker2" [max]="maxDate"
+                            [min]="minToDate" autocomplete="off">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error *ngIf="missChatForm.controls['toDate'].hasError('required')">Select To
+                            date</mat-error>
+                        <mat-error *ngIf="missChatForm.controls['toDate'].hasError('min')">To date always greater
+                            than from date</mat-error>
+                    </mat-form-field> -->
+                </div>
+
+                
+            <!-- <span style="float:right"> Total Count: <b>{{totalCount}}</b></span> -->
+        </div>
+        <div class="card__row">
+            <ag-grid-angular class="ag-theme-balham" [gridOptions]="spamRepoGridOption" paginationPageSize=20
+                pagination=true>
+            </ag-grid-angular>
+        </div>
+
+
+    </div>
+</div>
