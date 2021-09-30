@@ -42,7 +42,7 @@ export class WhatAppChatComponent implements OnInit {
   oldAttributes: any = [];
   newAttributes: any = [];
   whatsAppForm: FormGroup;
-  searchNumber = new FormControl('', [Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex)]);
+  searchNumber = new FormControl('');  //, [Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex)]
   startConversation: boolean;
   selectdMobNum: any;
   showChatUi: boolean = false;
@@ -342,7 +342,7 @@ export class WhatAppChatComponent implements OnInit {
       this.showChatUi = true;
       if (user === 'bySearch') {
         if (this.utilsService.isNonEmpty(this.searchNumber.value) && this.searchNumber.valid) {
-          user = '91' + this.searchNumber.value;
+          user = this.searchNumber.value;   //'91' + 
         }
         else {
           this._toastMessageService.alert("error", "Enter valid mobile number.");
