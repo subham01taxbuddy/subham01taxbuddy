@@ -12,6 +12,7 @@ import { RepoByAgentNameComponent } from "./knowlarity-report/repo-by-agent-name
 import { RepoBySmeNameComponent } from "./knowlarity-report/repo-by-sme-name/repo-by-sme-name.component";
 import { MainReportsComponent } from "./main-reports/main-reports.component";
 import { MissedChatReportComponent } from "./missed-chat-report/missed-chat-report.component";
+import { SpamTableComponent } from "./spam-table/spam-table.component";
 
 const routes: Routes = [
     {
@@ -43,6 +44,7 @@ const routes: Routes = [
                 ]
             },
             { path: 'missed-chat', component: MissedChatReportComponent },
+            { path: 'spam-report', component: SpamTableComponent },
             { path: '', redirectTo: 'knowlarity-repo', pathMatch: '' }
         ]
     }
