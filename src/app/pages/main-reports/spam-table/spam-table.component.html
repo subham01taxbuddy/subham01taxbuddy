@@ -3,16 +3,15 @@
     <div class="card">
         <div class="card__row">
                 <div class="card__col-lg-3">
-                    <!-- <mat-form-field appearance="outline">
-                        <mat-label>From Date</mat-label>
-                        <input matInput formControlName="fromDate" [matDatepicker]="picker1" [max]="maxDate"
-                            autocomplete="off"
-                            (dateChange)="setToDateValidation(missChatForm.controls['fromDate'].value)">
-                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker>
-                        <mat-error *ngIf="missChatForm.controls['fromDate'].hasError('required')">Select From
-                            date</mat-error>
-                    </mat-form-field> -->
+                    <mat-form-field appearance="outline" style="margin-top: 10px;">
+                        <mat-label>Filter List</mat-label>
+                        <mat-select placeholder="Select Option" [(ngModel)]="actionFilter"
+                          (selectionChange)="getSpamData($event.value)"> 
+                            <mat-option *ngFor="let item of actions" [value]="item.value">
+                                {{item.label}}  
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
 
                 <div class="card__col-lg-3">
@@ -34,7 +33,7 @@
         </div>
         <div class="card__row">
             <ag-grid-angular class="ag-theme-balham" [gridOptions]="spamRepoGridOption" paginationPageSize=20
-                pagination=true>
+            (rowClicked)="onSpamDataRowClicked($event)"   pagination=true>
             </ag-grid-angular>
         </div>
 

@@ -16,6 +16,7 @@ import { InvoiceFailedReportComponent } from "./invoice-failed/invoice-failed.co
 import { SmeTlWiseReportComponent } from "./invoice-failed/sme-tl-wise/sme-tl-wise-report.component";
 import { DetailReportComponent } from "./invoice-failed/detail-report/detail-report.component";
 import { SpamTableComponent } from './spam-table/spam-table.component';
+import { UserChatsComponent } from './spam-table/user-chats/user-chats.component';
 
 @NgModule({
     declarations: [MainReportsComponent,
@@ -29,7 +30,8 @@ import { SpamTableComponent } from './spam-table/spam-table.component';
         InvoiceFailedReportComponent,
         SmeTlWiseReportComponent,
         DetailReportComponent,
-        SpamTableComponent],
+        SpamTableComponent,
+        UserChatsComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -37,7 +39,8 @@ import { SpamTableComponent } from './spam-table/spam-table.component';
         MainReportsRoutingModule,
         SharedModule,
         NgxLoadingModule.forRoot({}),
-    ]
+    ],
+    entryComponents: [UserChatsComponent]
 })
 
 export class MainReportsModule { }
