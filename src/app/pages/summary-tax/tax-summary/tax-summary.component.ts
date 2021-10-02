@@ -229,7 +229,9 @@ export class TaxSummaryComponent implements OnInit {
       let adress = itrData['ITR1'].PersonalInfo.Address;
       this.itrSummaryForm.controls.assesse['controls'].email.setValue(adress.EmailAddress);
       this.itrSummaryForm.controls.assesse['controls'].contactNumber.setValue(adress.MobileNo);
-      this.itrSummaryForm.controls.assesse['controls'].address['controls'].premisesName.setValue(adress.ResidenceName);
+      let mainAddress = adress.ResidenceNo+' ,'+adress.ResidenceName+' ,'+adress.RoadOrStreet+' ,'+adress.LocalityOrArea;
+      console.log('mainAddress: ',mainAddress)
+      this.itrSummaryForm.controls.assesse['controls'].address['controls'].premisesName.setValue(mainAddress);
       this.itrSummaryForm.controls.assesse['controls'].address['controls'].pinCode.setValue(adress.PinCode);
       this.getCityData(this.itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode, 'profile');
 
@@ -2721,7 +2723,7 @@ export class TaxSummaryComponent implements OnInit {
             healthCover: null,
             details: '',
             preventiveCheckUp: this.sec80DobjVal.preventiveHealthCheckupFamily ? this.sec80DobjVal.preventiveHealthCheckupFamily : 0,
-            medicalExpenditure: null
+            medicalExpenditure: 0
           }
 
           insuranceData.push(obj);
@@ -2742,7 +2744,7 @@ export class TaxSummaryComponent implements OnInit {
         //   insuranceData.push(obj);
         //   this.itrSummaryForm['controls'].assesse['controls'].insurances.setValue(insuranceData)
         // }
-        if (this.sec80DobjVal.healthInsuarancePremiumParents !== 0) {
+        if (this.sec80DobjVal.healthInsuarancePremiumParents !== 0 || this.sec80DobjVal.medicalExpendature !== 0) {
           let obj = {
             insuranceType: 'HEALTH',
             typeOfPolicy: '',
@@ -2752,7 +2754,7 @@ export class TaxSummaryComponent implements OnInit {
             healthCover: null,
             details: '',
             preventiveCheckUp: 0,
-            medicalExpenditure: this.newItrSumChanges ? (this.sec80DobjVal.parentAge === 'above60' ? this.sec80DobjVal.medicalExpendature : null) : null
+            medicalExpenditure: this.newItrSumChanges ? (this.sec80DobjVal.parentAge === 'above60' ? this.sec80DobjVal.medicalExpendature : 0) : 0
           }
           insuranceData.push(obj);
           this.itrSummaryForm['controls'].assesse['controls'].insurances.setValue(insuranceData)
