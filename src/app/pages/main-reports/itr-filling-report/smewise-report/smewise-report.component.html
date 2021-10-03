@@ -32,6 +32,10 @@
         <div class="card__col-lg-3">
           <button class="btn" style="border: none; cursor: pointer;" (click)="getReportsbyDate()">Search</button>
         </div>
+        <div class="card__col-lg-2">
+          <mat-checkbox class="checklist-leaf-node" (change)="toggelReportView()">Super Lead
+            View</mat-checkbox>
+        </div>
 
         <!--  <div class="card__col-lg-3">
                     <button class="btn" style="border: none; cursor: pointer;"
@@ -40,21 +44,22 @@
       </form>
       <span style="float:right"> Total Count: <b>{{totalCount}}</b></span>
     </div>
-    <div class="card__row">
+    <div class="card__row" [hidden]="superLeadView">
       <div class="card__col-lg-7">Team Lead Report</div>
       <div class="card__col-lg-5">SME Report</div>
       <div class="card__col-lg-7">
-      <ag-grid-angular class="ag-theme-balham" [gridOptions]="teamLeadReportGridOption" paginationPageSize=30
-      pagination=true></ag-grid-angular>
+        <ag-grid-angular class="ag-theme-balham" [gridOptions]="teamLeadReportGridOption" paginationPageSize=30
+          pagination=true></ag-grid-angular>
       </div>
       <div class="card__col-lg-5">
         <ag-grid-angular class="ag-theme-balham" [gridOptions]="smeReportGridOption" paginationPageSize=30
-        pagination=true>
-      </ag-grid-angular>
-      
+          pagination=true>
+        </ag-grid-angular>
+
       </div>
     </div>
-
-
+    <div class="card__row" [hidden]="!superLeadView">
+      <ag-grid-angular class="ag-theme-balham" [gridOptions]="superLeadGridOption"></ag-grid-angular>
+    </div>
   </div>
 </div>
