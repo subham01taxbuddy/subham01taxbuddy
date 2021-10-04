@@ -17,6 +17,8 @@ import { InvoiceFailedReportComponent } from "./invoice-failed/invoice-failed.co
 import { SmeTlWiseReportComponent } from "./invoice-failed/sme-tl-wise/sme-tl-wise-report.component";
 import { DetailReportComponent } from "./invoice-failed/detail-report/detail-report.component";
 import { FilingDashboardComponent } from "./itr-filling-report/filing-dashboard/filing-dashboard.component";
+import { SpamTableComponent } from './spam-table/spam-table.component';
+import { UserChatsComponent } from './spam-table/user-chats/user-chats.component';
 
 @NgModule({
     declarations: [MainReportsComponent,
@@ -30,7 +32,9 @@ import { FilingDashboardComponent } from "./itr-filling-report/filing-dashboard/
         InvoiceFailedReportComponent,
         SmeTlWiseReportComponent,
         DetailReportComponent,
-        FilingDashboardComponent
+        FilingDashboardComponent,
+        SpamTableComponent,
+        UserChatsComponent
     ],
     imports: [
         CommonModule,
@@ -40,7 +44,8 @@ import { FilingDashboardComponent } from "./itr-filling-report/filing-dashboard/
         SharedModule,
         ChartModule,
         NgxLoadingModule.forRoot({}),
-    ]
+    ],
+    entryComponents: [UserChatsComponent]
 })
 
 export class MainReportsModule { }

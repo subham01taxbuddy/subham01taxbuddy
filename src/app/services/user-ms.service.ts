@@ -99,6 +99,13 @@ export class UserMsService {
     return this.httpClient.put<T>(`${environment.url}${this.microService}${param[0]}`, param[1], { headers: this.headers });
   }
 
+  spamPutMethod<T>(...param): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    console.log('put Param', param);
+    return this.httpClient.put<T>(`${environment.url}${param[0]}`, param[1], { headers: this.headers });
+  }
+
   postMethod<T>(...param): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
