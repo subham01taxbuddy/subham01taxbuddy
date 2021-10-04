@@ -21,12 +21,13 @@ export class ClientListComponent implements OnInit {
       rowData: [],
       columnDefs: this.clientListCreateColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
         // params.api.sizeColumnsToFit();
       },
       sortable: true,
       filter: true,
-     // floatingFilter: true
+      // floatingFilter: true
     };
 
   }

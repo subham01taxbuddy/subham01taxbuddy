@@ -15,8 +15,9 @@ export class GstRegistrationClientComponent implements OnInit {
       rowData: [],
       columnDefs: this.clientListCreateColoumnDef(),
       //enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
-         //params.api.sizeColumnsToFit();
+        //params.api.sizeColumnsToFit();
       },
       sortable: true
     }
@@ -83,7 +84,7 @@ export class GstRegistrationClientComponent implements OnInit {
         resizable: true,
         pinned: 'right'
       },
-     
+
     ]
   }
 

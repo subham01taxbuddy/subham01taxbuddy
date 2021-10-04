@@ -13,8 +13,8 @@ import { timeInterval } from 'rxjs/operators';
 })
 export class ServiceGridTableComponent implements OnInit {
 
-  @Input('gridRowData') gridRowData : any;   
-  @Input('from') from : any;
+  @Input('gridRowData') gridRowData: any;
+  @Input('from') from: any;
   tableGridOptions: GridOptions;
   loading: boolean;
   subscription: Subscription;
@@ -84,11 +84,12 @@ export class ServiceGridTableComponent implements OnInit {
     { value: 21354, label: 'Brijmohan Lavaniya' },
   ];
 
-  constructor(@Inject(LOCALE_ID) private locale: string, private utileService: UtilsService, private userMsService: UserMsService) { 
+  constructor(@Inject(LOCALE_ID) private locale: string, private utileService: UtilsService, private userMsService: UserMsService) {
     this.tableGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.createColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
 
@@ -96,7 +97,7 @@ export class ServiceGridTableComponent implements OnInit {
     };
 
     this.subscription = this.utileService.onMessage().subscribe(data => {
-      console.log('Service board Data: ',data)
+      console.log('Service board Data: ', data)
       if (data.text.length > 0) {
         this.gridRowData = data.text;
         this.tableGridOptions.api.setRowData(this.createRowData(this.gridRowData));
@@ -105,16 +106,16 @@ export class ServiceGridTableComponent implements OnInit {
   }
 
   ngOnInit() {
-      console.log('gridRowData -> ',this.gridRowData);
-      setTimeout(()=>{
-        this.tableGridOptions.api.setRowData(this.createRowData(this.gridRowData));
-      }, 200)
+    console.log('gridRowData -> ', this.gridRowData);
+    setTimeout(() => {
+      this.tableGridOptions.api.setRowData(this.createRowData(this.gridRowData));
+    }, 200)
   }
 
-  createColoumnDef(){
+  createColoumnDef() {
     return [
       {
-        headerName:'Client Name',
+        headerName: 'Client Name',
         field: 'clientName',
         width: 150,
         suppressMovable: true,
@@ -151,7 +152,7 @@ export class ServiceGridTableComponent implements OnInit {
           debounceMs: 0
         }
       },
-      
+
       {
         headerName: 'Status',
         field: 'status',
@@ -255,20 +256,20 @@ export class ServiceGridTableComponent implements OnInit {
     var tableArray = [];
     for (let i = 0; i < tableData.length; i++) {
       let userInfo = Object.assign({}, tableArray[i], {
-        clientName:  tableData[i].sourceAsMap['FirstName']+' '+tableData[i].sourceAsMap['LastName'],
-        mobile:  tableData[i].sourceAsMap['Phone'] ,
+        clientName: tableData[i].sourceAsMap['FirstName'] + ' ' + tableData[i].sourceAsMap['LastName'],
+        mobile: tableData[i].sourceAsMap['Phone'],
         createdDate: tableData[i].sourceAsMap['CreatedDate'],
         status: this.utileService.isNonEmpty(tableData[i].sourceAsMap['itrStatusLatest']) ? tableData[i].sourceAsMap['itrStatusLatest']['Date'] : 'NA',
         filerName: this.getFilerName(tableData[i].sourceAsMap['Itr']),
         itrType: this.utileService.isNonEmpty(tableData[i].sourceAsMap['Itr']) ? tableData[i].sourceAsMap['Itr']['ItrType'] : 'NA',
-        platform: this.utileService.isNonEmpty(tableData[i].sourceAsMap['InitialData']) ? tableData[i].sourceAsMap['InitialData']['Platform']: '',
-        userId: tableData[i].sourceAsMap['userId'], 
-        KommunicateURL: this.utileService.isNonEmpty(tableData[i].sourceAsMap['KommunicateURL']) ? tableData[i].sourceAsMap['KommunicateURL'] : '' 
+        platform: this.utileService.isNonEmpty(tableData[i].sourceAsMap['InitialData']) ? tableData[i].sourceAsMap['InitialData']['Platform'] : '',
+        userId: tableData[i].sourceAsMap['userId'],
+        KommunicateURL: this.utileService.isNonEmpty(tableData[i].sourceAsMap['KommunicateURL']) ? tableData[i].sourceAsMap['KommunicateURL'] : ''
       })
       tableArray.push(userInfo);
     }
     console.log('tableArray-> ', tableArray)
-     return tableArray;
+    return tableArray;
   }
 
   getFilerName(itr) {
@@ -299,8 +300,8 @@ export class ServiceGridTableComponent implements OnInit {
     }
   }
 
-  startItrFilling(data){
-    console.log('itr filling data -> ',data)
+  startItrFilling(data) {
+    console.log('itr filling data -> ', data)
     this.loading = true;
     const param = `/profile/${data['userId']}`
     this.userMsService.getMethod(param).subscribe((result: any) => {
@@ -311,8 +312,8 @@ export class ServiceGridTableComponent implements OnInit {
     })
   }
 
-  redirectKommunicatChat(data){
-    console.log('go to Kommunicate data -> ',data)
+  redirectKommunicatChat(data) {
+    console.log('go to Kommunicate data -> ', data)
     if (this.utileService.isNonEmpty(data['KommunicateURL'])) {
       window.open(data['KommunicateURL'], '_blank')
     }

@@ -35,6 +35,7 @@ export class AssignComponent implements OnInit {
       rowData: [],
       columnDefs: [],
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
         // params.api.sizeColumnsToFit();
       },

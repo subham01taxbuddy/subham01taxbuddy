@@ -50,13 +50,17 @@ export class UserProfileComponent implements OnInit {
     { value: 'RESIDENT', label: 'Resident' },
     { value: 'NON_RESIDENT', label: 'Non Resident' },
   ];
-  userRoles : any = [{label: 'Admin', value: 'ROLE_ADMIN'},
-                    {label: 'User', value: 'ROLE_USER'},
-                    {label: 'Ifa', value: 'ROLE_IFA'},
-                    {label: 'Sme', value: 'ROLE_SME'},
-                    {label: 'Filling team', value: 'ROLE_FILING_TEAM'},
-                    {label: 'Caller team', value: 'ROLE_CALLING_TEAM'},
-                    {label: 'Tpa sme', value: 'ROLE_TPA_SME'}];
+  userRoles: any = [{ label: 'Admin', value: 'ROLE_ADMIN' }, // Admin all access
+  { label: 'User', value: 'ROLE_USER' }, // User specific bacially used from fron end only
+  { label: 'Ifa', value: 'ROLE_IFA' }, // IFA will explore asnif required
+  { label: 'Sme', value: 'ROLE_SME' },
+  { label: 'Filling team', value: 'ROLE_FILING_TEAM' }, // ITR Filer
+  { label: 'Caller team', value: 'ROLE_CALLING_TEAM' }, // ITR Caller
+  { label: 'ITR - Super Lead', value: 'ITR_SUPER_LEAD' }, // ITR Super lead 
+  { label: 'Caller team', value: 'GST_SUPER_LEAD' }, // GST Super lead
+  { label: 'Caller team', value: 'ITR_TEAM_LEAD' }, // ITR Team lead
+  { label: 'Caller team', value: 'GST_TEAM_LEAD' }, // GST Team lead
+  { label: 'Tpa sme', value: 'ROLE_TPA_SME' }]; // TPA filer
 
   userRole: any = new FormControl();
   userId: any;
@@ -501,11 +505,11 @@ export class UserProfileComponent implements OnInit {
         this.gstForm.patchValue(this.userInfo.gstDetails)
       }
 
-      console.log('this.userProfileForm -> ',this.userProfileForm.value)
-      if(this.userProfileForm.value.address.length !== 0){
+      console.log('this.userProfileForm -> ', this.userProfileForm.value)
+      if (this.userProfileForm.value.address.length !== 0) {
         this.addressData = this.userProfileForm.value.address;
       }
-      else{
+      else {
         this.addressData = [];
       }
       console.log('Bank -> ', this.userProfileForm.controls.bankDetails, this.userProfileForm.controls.bankDetails.value)
@@ -539,53 +543,53 @@ export class UserProfileComponent implements OnInit {
       console.log('The dialog was closed');
       if (result) {
         console.log('result -> ', result, result.data);
-        if(result.data.from === 'Bank'){
+        if (result.data.from === 'Bank') {
           this.bankData.push(result.data.formValue);
           this.userProfileForm.controls.bankDetails.setValue(this.bankData);
           console.log('After Add bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
         }
-        else if(result.data.from === 'Address'){
-          if(result.data.action === 'Add'){
+        else if (result.data.from === 'Address') {
+          if (result.data.action === 'Add') {
             console.log('result formValue-> ', result.data.formValue);
             debugger
             this.addressData.push(result.data.formValue);
             this.userInfo.address.push(result.data.formValue);
-            console.log('uaerInfo after Add -> ',this.userInfo.address)
+            console.log('uaerInfo after Add -> ', this.userInfo.address)
             this.userProfileForm.controls.address.setValue(this.userInfo.address);
             //Object.assign(this.userInfo, this.userProfileForm.value);           
-            console.log('userProfileForm after Add -> ',this.userProfileForm.controls.address.value)
+            console.log('userProfileForm after Add -> ', this.userProfileForm.controls.address.value)
             console.log('After Add Address info -> ', this.userProfileForm.value, this.userProfileForm.controls.address.value)
           }
-          else if(result.data.action === 'Edit'){
+          else if (result.data.action === 'Edit') {
             console.log('result formValue-> ', result.data.formValue);
             debugger
             this.addressData.splice(result.data.index, 1, result.data.formValue);
             this.userInfo.address.splice(result.data.index, 1, result.data.formValue);
-            console.log('uaerInfo after Edit -> ',this.userInfo.address)
+            console.log('uaerInfo after Edit -> ', this.userInfo.address)
             this.userProfileForm.controls.address.setValue(this.userInfo.address);
             // this.userProfileForm.controls.address.setValue(this.addressData);
-            console.log('userProfileForm after Edit -> ',this.userProfileForm.controls.address.value)
+            console.log('userProfileForm after Edit -> ', this.userProfileForm.controls.address.value)
             console.log('After Edit Address info -> ', this.userProfileForm.value, this.userProfileForm.controls.address.value)
           }
-          
+
         }
-        
+
       }
     })
   }
 
-  getStateName(stateCode){
-      let stateName = this.state_list.filter(item => item.stateCode === stateCode)[0].stateName;
-      return stateName;
+  getStateName(stateCode) {
+    let stateName = this.state_list.filter(item => item.stateCode === stateCode)[0].stateName;
+    return stateName;
   }
 
   deleteData(type, index) {
-    if(type === 'Bank'){
+    if (type === 'Bank') {
       this.bankData.splice(index, 1);
       this.userProfileForm.controls.bankDetails.setValue(this.bankData);
       console.log('After Delete bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
     }
-    else if(type === 'Address'){
+    else if (type === 'Address') {
       this.addressData.splice(index, 1);
       this.userProfileForm.controls.address.setValue(this.addressData);
       console.log('After Delete bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
@@ -755,43 +759,43 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  updateUserRole(userMobNo){
-    console.log('userMobNo: ',userMobNo, typeof userMobNo, typeof parseInt(userMobNo))
-    let param = '/users?mobileNumber='+parseInt(userMobNo);
-    this.userService.getMethod(param).subscribe((userRole: any)=>{
-        console.log('User rolses: ',userRole);
-        if(Array.isArray(userRole.role) && userRole.role.length > 0){
-          this.userRole.setValue(userRole.role)  
-        }
+  updateUserRole(userMobNo) {
+    console.log('userMobNo: ', userMobNo, typeof userMobNo, typeof parseInt(userMobNo))
+    let param = '/users?mobileNumber=' + parseInt(userMobNo);
+    this.userService.getMethod(param).subscribe((userRole: any) => {
+      console.log('User rolses: ', userRole);
+      if (Array.isArray(userRole.role) && userRole.role.length > 0) {
+        this.userRole.setValue(userRole.role)
+      }
     },
-    error=>{
-      console.log('Error during update user role: ',error);
-    })
+      error => {
+        console.log('Error during update user role: ', error);
+      })
   }
 
 
-  saveUserRole(){
-      console.log("user Role: ",this.userRole, this.userRole.value);
-      // console.log("user Role value: ",this.userRole.value, typeof this.userRole.value);
-      // console.log("user Role value lengh: ",this.userRole.value.lengh);
-      if(this.userRole.value !== null){
-        this.loading = true;
-        let param = '/users';
-        let reqBody = {
-          "userId": parseInt(this.userId), 
-          "role": this.userRole.value
-        }
-        this.userService.putMethod(param, reqBody).subscribe(res=>{
-            console.log("Add user roles responce: ",res);
-            this._toastMessageService.alert("success", this.userInfo.fName + " User role updated successfully.");
-            this.loading = false;
-        },
-        error =>{
-          console.log("there is error : ",error);
+  saveUserRole() {
+    console.log("user Role: ", this.userRole, this.userRole.value);
+    // console.log("user Role value: ",this.userRole.value, typeof this.userRole.value);
+    // console.log("user Role value lengh: ",this.userRole.value.lengh);
+    if (this.userRole.value !== null) {
+      this.loading = true;
+      let param = '/users';
+      let reqBody = {
+        "userId": parseInt(this.userId),
+        "role": this.userRole.value
+      }
+      this.userService.putMethod(param, reqBody).subscribe(res => {
+        console.log("Add user roles responce: ", res);
+        this._toastMessageService.alert("success", this.userInfo.fName + " User role updated successfully.");
+        this.loading = false;
+      },
+        error => {
+          console.log("there is error : ", error);
           this._toastMessageService.alert("error", this.userInfo.fName + "User role not update, try after some time.");
           this.loading = false;
         })
-      }
+    }
   }
 
 }

@@ -23,6 +23,7 @@ export class AgentMgntComponent implements OnInit {
       rowData: [],
       columnDefs: this.createColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,

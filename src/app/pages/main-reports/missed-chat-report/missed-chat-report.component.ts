@@ -44,6 +44,7 @@ export class MissedChatReportComponent implements OnInit {
       rowData: [],
       columnDefs: this.newMissedChatColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,
