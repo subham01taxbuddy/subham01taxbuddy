@@ -23,7 +23,7 @@ export class AddCallerComponent implements OnInit {
   agentList: any = [];
   selectedAgent: any;
   showAllUser: boolean;
-  searchMobNo: any;
+  // searchMobNo: any;
 
   constructor(private userMsService: UserMsService, private utileService: UtilsService, private toastMsgService: ToastMessageService,
     private dialog: MatDialog) {
@@ -54,7 +54,7 @@ export class AddCallerComponent implements OnInit {
 
   searchByAgent() {
     if (this.utileService.isNonEmpty(this.selectedAgent)) {
-      this.searchMobNo = '';
+      // this.searchMobNo = '';
       this.getCallerUser(this.selectedAgent);
     }
     else {
@@ -62,15 +62,15 @@ export class AddCallerComponent implements OnInit {
     }
   }
 
-  serchByMobNo() {
-    if (this.utileService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
-      this.selectedAgent = '';
-      this.getAllCallerUser(this.searchMobNo);
-    }
-    else {
-      this.toastMsgService.alert("error", "Enter valid mobile number.")
-    }
-  }
+  // serchByMobNo() {
+  //   if (this.utileService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
+  //     this.selectedAgent = '';
+  //     this.getAllCallerUser(this.searchMobNo);
+  //   }
+  //   else {
+  //     this.toastMsgService.alert("error", "Enter valid mobile number.")
+  //   }
+  // }
 
   allCallersColoumnDef() {
     return [
