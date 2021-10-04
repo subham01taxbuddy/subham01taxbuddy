@@ -16,29 +16,30 @@ export class MailExceptionComponent implements OnInit {
 
   loading: boolean;
   showExceptionUser: boolean;
-  mailExceptionUser: any =[];
+  mailExceptionUser: any = [];
   exceptionListtGridOptions: GridOptions;
-  
-  constructor(private userService: UserMsService, private route: Router, private utilService: ItrMsService,  @Inject(LOCALE_ID) private locale: string,
-              private dialog: MatDialog) {
+
+  constructor(private userService: UserMsService, private route: Router, private utilService: ItrMsService, @Inject(LOCALE_ID) private locale: string,
+    private dialog: MatDialog) {
 
     this.exceptionListtGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.exceptionMailColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
         // params.api.sizeColumnsToFit();
       },
 
       sortable: true,
     };
-   }
+  }
 
   ngOnInit() {
     this.getMailExceptionUserByAgentId();
   }
 
-  exceptionMailColoumnDef(){
+  exceptionMailColoumnDef() {
     return [
       {
         headerName: 'Id',
@@ -94,7 +95,7 @@ export class MailExceptionComponent implements OnInit {
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button"  title="Open Agent Id Kommunicate chat">
                 <i class="fa fa-comments-o" aria-hidden="true" data-action-type="openAgentIdKommChat"></i>
-          </button>`;  
+          </button>`;
 
         },
         width: 90,
@@ -115,7 +116,7 @@ export class MailExceptionComponent implements OnInit {
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button"  title="User Histroy">
             <i class="fa fa-history" aria-hidden="true" data-action-type="user-histroy"></i>
-          </button>`; 
+          </button>`;
         },
         width: 90,
         pinned: 'right',
@@ -168,37 +169,37 @@ export class MailExceptionComponent implements OnInit {
     ];
   }
 
-  getMailExceptionUserByAgentId(){
+  getMailExceptionUserByAgentId() {
     this.showExceptionUser = true;
     this.loading = true;
     let param = '/email-channel/exception';
-    this.userService.getUserDetail(param).subscribe(responce=>{
+    this.userService.getUserDetail(param).subscribe(responce => {
       this.loading = false;
-       console.log('responce ==> ',responce);
-       this.mailExceptionUser = responce;
-       this.exceptionListtGridOptions.api.setRowData(this.createRowData(this.mailExceptionUser))
+      console.log('responce ==> ', responce);
+      this.mailExceptionUser = responce;
+      this.exceptionListtGridOptions.api.setRowData(this.createRowData(this.mailExceptionUser))
 
-    },error=>{
+    }, error => {
       this.loading = false;
-      console.log('Error while getting exception User data: ',error)
+      console.log('Error while getting exception User data: ', error)
     })
   }
 
-  createRowData(userData){
+  createRowData(userData) {
     var exceptionList = [];
     for (let i = 0; i < userData.length; i++) {
-      let updateException = Object.assign({}, userData[i], { _id: userData[i]._id, groupId: userData[i].groupId, email: userData[i].email, createdDate: userData[i].createdDate})
+      let updateException = Object.assign({}, userData[i], { _id: userData[i]._id, groupId: userData[i].groupId, email: userData[i].email, createdDate: userData[i].createdDate })
       exceptionList.push(updateException)
     }
     console.log('user exceptionList: ', exceptionList);
     return exceptionList;
   }
 
-  createNewUser(userInfo){
-      console.log('userInfo: ',userInfo);
-      sessionStorage.setItem('exceptionalUser', JSON.stringify(userInfo));
-      // this.route.navigate(['/pages/newUser/createUser']);   
-      this.route.navigate(['/pages/user-management/create-user']);
+  createNewUser(userInfo) {
+    console.log('userInfo: ', userInfo);
+    sessionStorage.setItem('exceptionalUser', JSON.stringify(userInfo));
+    // this.route.navigate(['/pages/newUser/createUser']);   
+    this.route.navigate(['/pages/user-management/create-user']);
   }
 
   // assignUser(userInfo){
@@ -207,12 +208,12 @@ export class MailExceptionComponent implements OnInit {
   //   this.route.navigate(['/pages/newUser/editUser']);
   // }
 
-  redirectToKommunicate(id){
-    let path = 'https://dashboard.kommunicate.io/conversations/'+id;
+  redirectToKommunicate(id) {
+    let path = 'https://dashboard.kommunicate.io/conversations/' + id;
     window.open(path)
   }
 
-  showUserHistry(mail){
+  showUserHistry(mail) {
     let disposable = this.dialog.open(UserHistryComponent, {
       width: '60%',
       height: 'auto',

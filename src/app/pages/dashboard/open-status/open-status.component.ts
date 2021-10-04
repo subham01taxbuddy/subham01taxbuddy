@@ -31,6 +31,7 @@ export class OpenStatusComponent implements OnInit {
       rowData: [],
       columnDefs: this.createColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,

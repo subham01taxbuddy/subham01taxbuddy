@@ -88,6 +88,7 @@ export class TpaClientListComponent implements OnInit {
       rowData: this.createTpaRowData([]),
       columnDefs: this.createTpaColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
         // params.api.sizeColumnsToFit();
       },

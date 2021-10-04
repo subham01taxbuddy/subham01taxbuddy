@@ -106,6 +106,7 @@ export class MyTeamItrsComponent implements OnInit {
       rowData: this.createOnSalaryRowData([]),
       columnDefs: this.myItrsCreateColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
         // params.api.sizeColumnsToFit();
       },

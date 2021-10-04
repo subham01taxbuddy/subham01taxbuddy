@@ -570,7 +570,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
 
     // this.DonationGridOptions.api.setRowData(this.createRowData('OTHER'));
     // this.DonationGridOptions.api.setColumnDefs(this.donationCreateColoumnDef(this.otherDonationToDropdown, this.stateDropdown));
-    console.log('Investments-DEDUCTION deletedFileData LENGTH ---> ',this.deletedFileData.length)
+    console.log('Investments-DEDUCTION deletedFileData LENGTH ---> ', this.deletedFileData.length)
   }
   max5000Limit(val) {
     if (val === 'SELF' && this.investmentDeductionForm.controls['selfPreventiveCheckUp'].valid &&
@@ -753,6 +753,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
       rowData: this.createRowData('OTHER'),
       columnDefs: this.donationCreateColoumnDef(otherDonationToDropdown, stateDropdown),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
       },
@@ -973,45 +974,45 @@ export class InvestmentsDeductionsComponent implements OnInit {
   //   if (fileUpload === 'File uploaded successfully') {
   //     this.getItrDocuments();
 
-  
-  deleteFile(fileName){
+
+  deleteFile(fileName) {
     let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy='+adminId.USER_UNIQUE_ID;
+    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
     let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
     var reqBody = [filePath];
-    console.log('URL path: ',path, ' filePath: ',filePath,' Request body: ',reqBody);
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any)=>{
-        console.log('Doc delete responce: ',responce); 
-        this.utilsService.showSnackBar(responce.response);
-        this.getItrDocuments();
+    console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
+    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
+      console.log('Doc delete responce: ', responce);
+      this.utilsService.showSnackBar(responce.response);
+      this.getItrDocuments();
     },
-    error=>{
-     console.log('Doc delete ERROR responce: ',error.responce); 
-     this.utilsService.showSnackBar(error.response);
-    })
-   }
-  
-   deletedFileInfo(cloudFileId){
-     this.deletedFileData = [];
-     this.loading = true;
-     let param = '/cloud/log?cloudFileId='+cloudFileId;
-     this.itrMsService.getMethod(param).subscribe((res: any)=>{
-       this.loading = false;
-       this.deletedFileData = res;
-       console.log('Deleted file detail info: ',this.deletedFileData);
-     },
-     error=>{
-       this.loading = false;
-     })
-   }
- 
-   closeDialog(){
-     this.deletedFileData = [];
-   }
+      error => {
+        console.log('Doc delete ERROR responce: ', error.responce);
+        this.utilsService.showSnackBar(error.response);
+      })
+  }
 
-  afterUploadDocs(fileUpload){
-    if(fileUpload === 'File uploaded successfully'){
-       this.getItrDocuments();
+  deletedFileInfo(cloudFileId) {
+    this.deletedFileData = [];
+    this.loading = true;
+    let param = '/cloud/log?cloudFileId=' + cloudFileId;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      this.loading = false;
+      this.deletedFileData = res;
+      console.log('Deleted file detail info: ', this.deletedFileData);
+    },
+      error => {
+        this.loading = false;
+      })
+  }
+
+  closeDialog() {
+    this.deletedFileData = [];
+  }
+
+  afterUploadDocs(fileUpload) {
+    if (fileUpload === 'File uploaded successfully') {
+      this.getItrDocuments();
     }
   }
 
@@ -1037,7 +1038,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
       this.docDetails.docUrl = '';
       this.docDetails.docType = '';
     }
-    
-  console.log('Doc URL: ',this.docDetails.docUrl)
+
+    console.log('Doc URL: ', this.docDetails.docUrl)
   }
 }

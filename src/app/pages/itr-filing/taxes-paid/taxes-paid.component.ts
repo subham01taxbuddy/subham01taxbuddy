@@ -80,7 +80,7 @@ export class TaxesPaidComponent implements OnInit {
     this.otherThanTdsTcsCallInConstructor();
     this.otherThanTdsTcsGridOptions.rowData = this.ITR_JSON.taxPaid.otherThanTDSTCS;
 
-    console.log('TAX_PAID deletedFileData LENGTH ---> ',this.deletedFileData.length)
+    console.log('TAX_PAID deletedFileData LENGTH ---> ', this.deletedFileData.length)
   }
 
   onSalaryCallInConstructor() {
@@ -102,6 +102,7 @@ export class TaxesPaidComponent implements OnInit {
         // matSelect: AgGridMaterialSelectEditorComponent
       },
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
       },
@@ -171,7 +172,7 @@ export class TaxesPaidComponent implements OnInit {
             }
           }
         },
-       
+
         tooltip: function (params) {
           return ('Total amount credited should be numeric, no decimal, upto 14 digit.');
         },
@@ -192,9 +193,9 @@ export class TaxesPaidComponent implements OnInit {
             }
           }
         },
-        
+
         tooltip: function (params) {
-            return ('Total tax deducted should be numeric, no decimal, upto 14 digit.');
+          return ('Total tax deducted should be numeric, no decimal, upto 14 digit.');
         },
       },
       {
@@ -255,10 +256,10 @@ export class TaxesPaidComponent implements OnInit {
             return this.utilsService.showSnackBar('Please enter valid TAN Number');
           }
 
-          if(temp[i].data.totalAmountCredited > temp[i].data.totalTdsDeposited){
+          if (temp[i].data.totalAmountCredited > temp[i].data.totalTdsDeposited) {
             isDataValid = true;
           }
-          else{
+          else {
             return this.utilsService.showSnackBar('Total amount credited is should be greater then Total tax deduction in TDS on salary table.');  //SAGAR
           }
         } else {
@@ -310,6 +311,7 @@ export class TaxesPaidComponent implements OnInit {
         matSelect: AgGridMaterialSelectEditorComponent
       },
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
       },
@@ -396,7 +398,7 @@ export class TaxesPaidComponent implements OnInit {
           }
         },
         tooltip: function (params) {
-            return ('Total amount credited should be numeric, no decimal, upto 14 digit.');
+          return ('Total amount credited should be numeric, no decimal, upto 14 digit.');
         },
       },
       {
@@ -484,10 +486,10 @@ export class TaxesPaidComponent implements OnInit {
             return this.utilsService.showSnackBar('Please enter valid TAN Number');
           }
 
-          if(temp[i].data.totalAmountCredited > temp[i].data.totalTdsDeposited){
+          if (temp[i].data.totalAmountCredited > temp[i].data.totalTdsDeposited) {
             isDataValid = true;
           }
-          else{
+          else {
             return this.utilsService.showSnackBar('Total amount credited is should be greater then Total tax deduction in TDS other than salary table.');
           }
 
@@ -541,6 +543,7 @@ export class TaxesPaidComponent implements OnInit {
         matSelect: AgGridMaterialSelectEditorComponent
       },
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
       },
@@ -646,8 +649,8 @@ export class TaxesPaidComponent implements OnInit {
             }
           }
         },
-        onKeyDown: function(event: KeyboardEvent, param){
-            console.log('Event: ',event)
+        onKeyDown: function (event: KeyboardEvent, param) {
+          console.log('Event: ', event)
         },
         tooltip: function (params) {
           return ('Total tax deducted should be numeric, no decimal, upto 14 digit.');
@@ -715,10 +718,10 @@ export class TaxesPaidComponent implements OnInit {
             return this.utilsService.showSnackBar('Please enter valid PAN Number');
           }
 
-          if(temp[i].data.totalAmountCredited > temp[i].data.totalTdsDeposited){
+          if (temp[i].data.totalAmountCredited > temp[i].data.totalTdsDeposited) {
             isDataValid = true;
           }
-          else{
+          else {
             return this.utilsService.showSnackBar('Total amount credited is should be greater then Total tax deduction in TDS other than salary 26QB table.');  //SAGAR
           }
 
@@ -770,6 +773,7 @@ export class TaxesPaidComponent implements OnInit {
         matSelect: AgGridMaterialSelectEditorComponent
       },
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
       },
@@ -948,6 +952,7 @@ export class TaxesPaidComponent implements OnInit {
         agDateInput: CustomDateComponent,
       },
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
       },
@@ -1205,45 +1210,45 @@ export class TaxesPaidComponent implements OnInit {
     })
   }
 
-  deleteFile(fileName){
+  deleteFile(fileName) {
     let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy='+adminId.USER_UNIQUE_ID;
+    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
     let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
     var reqBody = [filePath];
-    console.log('URL path: ',path, ' filePath: ',filePath,' Request body: ',reqBody);
-   // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any)=>{
-        console.log('Doc delete responce: ',responce); 
-        this.utilsService.showSnackBar(responce.response);
-        this.getItrDocuments();
+    console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
+    // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
+    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
+      console.log('Doc delete responce: ', responce);
+      this.utilsService.showSnackBar(responce.response);
+      this.getItrDocuments();
     },
-    error=>{
-     console.log('Doc delete ERROR responce: ',error.responce); 
-     this.utilsService.showSnackBar(error.response);
-    })
-   }
+      error => {
+        console.log('Doc delete ERROR responce: ', error.responce);
+        this.utilsService.showSnackBar(error.response);
+      })
+  }
 
-  deletedFileInfo(cloudFileId){
+  deletedFileInfo(cloudFileId) {
     this.deletedFileData = [];
     this.loading = true;
-    let param = '/cloud/log?cloudFileId='+cloudFileId;
-    this.itrMsService.getMethod(param).subscribe((res: any)=>{
+    let param = '/cloud/log?cloudFileId=' + cloudFileId;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
       this.deletedFileData = res;
-      console.log('Deleted file detail info: ',this.deletedFileData);
+      console.log('Deleted file detail info: ', this.deletedFileData);
     },
-    error=>{
-      this.loading = false;
-    })
+      error => {
+        this.loading = false;
+      })
   }
 
-  closeDialog(){
+  closeDialog() {
     this.deletedFileData = [];
   }
 
-  afterUploadDocs(fileUpload){
-    if(fileUpload === 'File uploaded successfully'){
-       this.getItrDocuments();
+  afterUploadDocs(fileUpload) {
+    if (fileUpload === 'File uploaded successfully') {
+      this.getItrDocuments();
     }
   }
 

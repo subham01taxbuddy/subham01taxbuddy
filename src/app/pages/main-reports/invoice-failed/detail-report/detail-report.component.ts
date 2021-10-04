@@ -41,6 +41,7 @@ export class DetailReportComponent implements OnInit {
       rowData: [],
       columnDefs: this.smeCreateColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,

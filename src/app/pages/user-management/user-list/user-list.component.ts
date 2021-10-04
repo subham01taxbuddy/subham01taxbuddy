@@ -48,6 +48,7 @@ export class UserListComponent implements OnInit {
       rowData: [],
       columnDefs: this.usersCreateColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
 

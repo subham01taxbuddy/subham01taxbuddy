@@ -31,7 +31,7 @@ export class WhatsappComponent implements OnInit {
   //   { value: 'roshan.kakade@taxbuddy.com', label: 'Roshan' },
   //   { value: 'damini@ssbainnovations.com', label: 'Damini' },
   //   { value: 'supriya.mahindrakar@taxbuddy.com', label: 'Supriya' },
-	// 	{ value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
+  // 	{ value: 'aditya.singh@taxbuddy.com', label: 'Aditya' }
   // ];
   agentList: any = [];
   loading = false;
@@ -39,16 +39,17 @@ export class WhatsappComponent implements OnInit {
   whatsAppGridOptions: GridOptions;
 
   constructor(private userMsService: UserMsService, public utilsService: UtilsService, private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string) {
-      this.config = {
-        itemsPerPage: 20,
-        currentPage: 1,
-        totalItems: 80
-      };
+    this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: 80
+    };
 
     this.whatsAppGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.createColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,
@@ -64,24 +65,24 @@ export class WhatsappComponent implements OnInit {
     //     { value: 'karan@ssbainnovations.com', label: 'Karan' },
     //     { value: 'testkommunicate@ssbainnovations.com', label: 'Ajay' }
     //   ];
-   // }
+    // }
 
-   this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST))
+    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST))
   }
 
   ngOnInit() {
-    console.log('selectedAgentId -> ',localStorage.getItem('selectedAgentId'));
+    console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
     let agentId = localStorage.getItem('selectedAgentId');
-    if(this.utilsService.isNonEmpty(agentId)){
+    if (this.utilsService.isNonEmpty(agentId)) {
       this.agentId = agentId;
       this.retrieveKommunicateChat(0);
     }
-    else{
+    else {
       this.retrieveKommunicateChat(0);
     }
   }
 
-  createColoumnDef(){
+  createColoumnDef() {
     return [
       {
         headerName: 'Name',
@@ -223,7 +224,7 @@ export class WhatsappComponent implements OnInit {
     for (let i = 0; i < whatAppData.length; i++) {
       let whatsAppInfo = Object.assign({}, whatsAppArray[i], {
         userId: whatAppData[i].sourceAsMap['userId'],
-        name: whatAppData[i].sourceAsMap['FirstName']+' '+whatAppData[i].sourceAsMap['LastName'],
+        name: whatAppData[i].sourceAsMap['FirstName'] + ' ' + whatAppData[i].sourceAsMap['LastName'],
         Phone: whatAppData[i].sourceAsMap['Phone'],
         lastMessage: whatAppData[i].sourceAsMap.WhatsAppChat ? whatAppData[i].sourceAsMap.WhatsAppChat.textMessage : '',
         timeDate: whatAppData[i].sourceAsMap.WhatsAppChat ? whatAppData[i].sourceAsMap.WhatsAppChat.dateLong : '',
@@ -235,10 +236,10 @@ export class WhatsappComponent implements OnInit {
       whatsAppArray.push(whatsAppInfo);
     }
     console.log('whatsAppArray-> ', whatsAppArray)
-     return whatsAppArray;
+    return whatsAppArray;
   }
 
-  onWhatsAppChatClicked(params){
+  onWhatsAppChatClicked(params) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');

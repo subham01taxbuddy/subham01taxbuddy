@@ -28,6 +28,7 @@ export class MailUserComponent implements OnInit {
       rowData: [],
       columnDefs: this.mailUserCreateColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
         // params.api.sizeColumnsToFit();
       },

@@ -22,6 +22,7 @@ export class CouponComponent implements OnInit {
       rowData: [],
       columnDefs: this.usersCouponColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
 
