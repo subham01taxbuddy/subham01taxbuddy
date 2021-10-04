@@ -50,17 +50,20 @@ export class UserProfileComponent implements OnInit {
     { value: 'RESIDENT', label: 'Resident' },
     { value: 'NON_RESIDENT', label: 'Non Resident' },
   ];
-  userRoles: any = [{ label: 'Admin', value: 'ROLE_ADMIN' }, // Admin all access
-  { label: 'User', value: 'ROLE_USER' }, // User specific bacially used from fron end only
-  { label: 'Ifa', value: 'ROLE_IFA' }, // IFA will explore asnif required
-  { label: 'Sme', value: 'ROLE_SME' },
-  { label: 'Filling team', value: 'ROLE_FILING_TEAM' }, // ITR Filer
-  { label: 'Caller team', value: 'ROLE_CALLING_TEAM' }, // ITR Caller
-  { label: 'ITR - Super Lead', value: 'ITR_SUPER_LEAD' }, // ITR Super lead 
-  { label: 'Caller team', value: 'GST_SUPER_LEAD' }, // GST Super lead
-  { label: 'Caller team', value: 'ITR_TEAM_LEAD' }, // ITR Team lead
-  { label: 'Caller team', value: 'GST_TEAM_LEAD' }, // GST Team lead
-  { label: 'Tpa sme', value: 'ROLE_TPA_SME' }]; // TPA filer
+  userRoles: any = [
+    { label: 'ITR - Filer', value: 'ROLE_FILING_TEAM' }, // ITR Filer
+    { label: 'Calling Team', value: 'ROLE_CALLING_TEAM' }, // ITR Caller
+    { label: 'ITR - Super Lead', value: 'ITR_SUPER_LEAD' }, // ITR Super lead 
+    { label: 'GST - Super Lead', value: 'GST_SUPER_LEAD' }, // GST Super lead
+    { label: 'ITR - Team Lead', value: 'ITR_TEAM_LEAD' }, // ITR Team lead
+    { label: 'GST - Team Lead', value: 'GST_TEAM_LEAD' }, // GST Team lead
+    { label: 'GST - Filer', value: 'GST_FILER' }, // GST Team lead
+    { label: 'TPA SME', value: 'ROLE_TPA_SME' },// TPA filer
+    { label: 'Admin', value: 'ROLE_ADMIN' }, // Admin all access
+    { label: 'User', value: 'ROLE_USER' }, // User specific bacially used from fron end only
+    { label: 'IFA', value: 'ROLE_IFA' }, // IFA will explore asnif required
+    // { label: 'SME', value: 'ROLE_SME' },
+  ];
 
   userRole: any = new FormControl();
   userId: any;

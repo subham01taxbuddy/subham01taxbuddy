@@ -4,15 +4,16 @@
             <li class="tab__item" routerLinkActive="tab__item_active">
                 <a class="tab__link" routerLink="/pages/itr-filing/my-itrs">My ITR's</a>
             </li>
-            <li class="tab__item" routerLinkActive="tab__item_active">
-                <a class="tab__link" routerLink="/pages/itr-filing/team-itrs">My Team</a>
+            <li class="tab__item" routerLinkActive="tab__item_active"
+                *ngIf="isApplicable(['ROLE_ADMIN','ITR_SUPER_LEAD','ITR_TEAM_LEAD'])">
+                <a class="tab__link" routerLink="/pages/itr-filing/team-itrs">My
+                    Team</a>
             </li>
             <!--  <li class="tab__item" routerLinkActive="tab__item_active">
                 <a class="tab__link" routerLink="/pages/itr-filing/users">Search User</a>
             </li> -->
-            <li class="tab__item" routerLinkActive="tab__item_active">
-                <!-- *ngIf="isApplicable(['ROLE_ADMIN'])"
-*ngIf="isApplicable(['ROLE_ADMIN'])" -->
+            <li class="tab__item" routerLinkActive="tab__item_active"
+                *ngIf="isApplicable(['ROLE_ADMIN','ITR_SUPER_LEAD'])">
                 <a class="tab__link" routerLink="/pages/itr-filing/delay">Delayed ITR</a>
             </li>
             <!-- <li class="tab__item" routerLinkActive="tab__item_active">
