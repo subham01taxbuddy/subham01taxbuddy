@@ -25,7 +25,7 @@ export class FilingDashboardComponent implements OnInit {
   constructor(private itrMsService: ItrMsService, public utilsService: UtilsService) {
     this.completeReportGridOption = <GridOptions>{
       rowData: [],
-      columnDefs: this.smeCreateColoumnDef(),
+      columnDefs: this.completeReportCreateColoumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -38,90 +38,6 @@ export class FilingDashboardComponent implements OnInit {
     this.getFilingReport();
   }
 
-  data = {
-    "today": {
-      "from": "2021-09-23",
-      "to": "2021-09-23",
-      "itr1": 52,
-      "itr2": 8,
-      "itr3": 16,
-      "itr4": 2,
-      "itr5": 0,
-      "itr6": 0,
-      "itr7": 0,
-      "total": 78
-    },
-    "yesterday": {
-      "from": "2021-09-22",
-      "to": "2021-09-22",
-      "itr1": 98,
-      "itr2": 6,
-      "itr3": 72,
-      "itr4": 2,
-      "itr5": 0,
-      "itr6": 0,
-      "itr7": 0,
-      "total": 178
-    },
-    "currentWeek": {
-      "from": "2021-09-20",
-      "to": "2021-09-23",
-      "itr1": 276,
-      "itr2": 24,
-      "itr3": 146,
-      "itr4": 16,
-      "itr5": 0,
-      "itr6": 0,
-      "itr7": 0,
-      "total": 462
-    },
-    "lastWeek": {
-      "from": "2021-09-13",
-      "to": "2021-09-19",
-      "itr1": 337,
-      "itr2": 45,
-      "itr3": 42,
-      "itr4": 29,
-      "itr5": 0,
-      "itr6": 0,
-      "itr7": 0,
-      "total": 453
-    },
-    "currentMonth": {
-      "from": "2021-09-01",
-      "to": "2021-09-23",
-      "itr1": 1256,
-      "itr2": 144,
-      "itr3": 226,
-      "itr4": 82,
-      "itr5": 1,
-      "itr6": 0,
-      "itr7": 0,
-      "total": 1709
-    },
-    "lastMonth": {
-      "from": "2021-08-01",
-      "to": "2021-08-31",
-      "itr1": 985,
-      "itr2": 134,
-      "itr3": 37,
-      "itr4": 77,
-      "itr5": 0,
-      "itr6": 0,
-      "itr7": 0,
-      "total": 1233
-    },
-    "total": {
-      "itr1": 2479,
-      "itr2": 280,
-      "itr3": 263,
-      "itr4": 196,
-      "itr5": 1,
-      "itr6": 0,
-      "itr7": 0,
-      "total": 3219
-    }
-  }
   getFilingReport() {
     this.loading = true;
     const param = `/api/itr-filing-count?assessmentYear=2021-2022`;
@@ -134,7 +50,7 @@ export class FilingDashboardComponent implements OnInit {
       this.setCurrentMonthChart(res['currentMonth']);
       this.monthChart(res['currentMonth'], res['lastMonth']);
       this.totalPieChart(res['total']);
-      this.completeReportGridOption.api.setRowData(this.createSmeRowData(res));
+      this.completeReportGridOption.api.setRowData(this.createCOmpleteReportRowData(res));
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -571,13 +487,25 @@ export class FilingDashboardComponent implements OnInit {
   }
   totalPieChart(total) {
     let data = [];
+    var yTotal = 0;
+    var zTotal = 0
     for (let i = 1; i <= 7; i++) {
-      data.push({
-        name: 'ITR ' + i,
-        y: total[`itr${i}`],
-        z: total[`itr${i}`]
-      })
+      if (i <= 4) {
+        data.push({
+          name: 'ITR ' + i,
+          y: total[`itr${i}`],
+          z: total[`itr${i}`]
+        })
+      } else {
+        yTotal = yTotal + total[`itr${i}`];
+        zTotal = zTotal + total[`itr${i}`];
+      }
     }
+    data.push({
+      name: 'Others',
+      y: yTotal,
+      z: zTotal
+    })
     console.log('Data for pie chart', data)
     this.totalPieChartContainer = new Chart(<any>{
       credits: {
@@ -596,7 +524,7 @@ export class FilingDashboardComponent implements OnInit {
         //   beta: 0
         // }
       },
-      colors: ['#04a3bc', '#22374e', '#e77818', '#84c124', '#5553b7', '#ff0000', '#f8ea2f'],
+      colors: ['#04a3bc', '#22374e', '#e77818', '#84c124', '#5553b7', /* '#ff0000', '#f8ea2f' */],
       title: {
         text: 'Total Filling - ' + total['total'],
         margin: 0,
@@ -659,7 +587,7 @@ export class FilingDashboardComponent implements OnInit {
 
   }
 
-  createSmeRowData(smeReport) {
+  createCOmpleteReportRowData(smeReport) {
     let temp = [{
       value: 'today',
       label: 'Today',
@@ -697,16 +625,17 @@ export class FilingDashboardComponent implements OnInit {
         itr2: smeReport[`${temp[i].value}`]['itr2'],
         itr3: smeReport[`${temp[i].value}`]['itr3'],
         itr4: smeReport[`${temp[i].value}`]['itr4'],
-        itr5: smeReport[`${temp[i].value}`]['itr5'],
-        itr6: smeReport[`${temp[i].value}`]['itr6'],
-        itr7: smeReport[`${temp[i].value}`]['itr7'],
+        others: (smeReport[`${temp[i].value}`]['itr5'] + smeReport[`${temp[i].value}`]['itr6'] + smeReport[`${temp[i].value}`]['itr7']),
+        // itr5: smeReport[`${temp[i].value}`]['itr5'],
+        // itr6: smeReport[`${temp[i].value}`]['itr6'],
+        // itr7: smeReport[`${temp[i].value}`]['itr7'],
         total: smeReport[`${temp[i].value}`]['total'],
       }
       data.push(smeData);
     }
     return data;
   }
-  smeCreateColoumnDef() {
+  completeReportCreateColoumnDef() {
     return [
       {
         headerName: 'Sr. No.',
@@ -741,20 +670,25 @@ export class FilingDashboardComponent implements OnInit {
         width: 70,
       },
       {
-        headerName: 'ITR 5',
-        field: 'itr5',
+        headerName: 'Others',
+        field: 'others',
         width: 70,
       },
-      {
-        headerName: 'ITR 6',
-        field: 'itr6',
-        width: 70,
-      },
-      {
-        headerName: 'ITR 7',
-        field: 'itr7',
-        width: 70,
-      },
+      // {
+      //   headerName: 'ITR 5',
+      //   field: 'itr5',
+      //   width: 70,
+      // },
+      // {
+      //   headerName: 'ITR 6',
+      //   field: 'itr6',
+      //   width: 70,
+      // },
+      // {
+      //   headerName: 'ITR 7',
+      //   field: 'itr7',
+      //   width: 70,
+      // },
       {
         headerName: 'Total',
         field: 'total',

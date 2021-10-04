@@ -2,25 +2,26 @@
 
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
-        <div class="card__row" >
+        <div class="card__row">
             <div class="filter__col card__col-sm-3 card__col-xs-12">
                 <mat-form-field appearance="outline" style="margin-top: 10px;">
-                  <mat-label>Select Agent</mat-label>
-                  <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedAgent">
-                      <mat-option *ngFor="let agent of agentList" [value]="agent.agentId">
-                          {{agent.name}} <span style="font-weight: bold;">{{agent.serviceType}}</span>
-                      </mat-option>
-                  </mat-select>
-                  <!-- <mat-error *ngIf="agent.hasError('required')">Select agent id</mat-error> -->
-              </mat-form-field>
-              </div>
+                    <mat-label>Select Agent</mat-label>
+                    <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedAgent"
+                        (selectionChange)="searchByAgent()">
+                        <mat-option *ngFor="let agent of agentList" [value]="agent.agentId">
+                            {{agent.name}} <span style="font-weight: bold;">{{agent.serviceType}}</span>
+                        </mat-option>
+                    </mat-select>
+                    <!-- <mat-error *ngIf="agent.hasError('required')">Select agent id</mat-error> -->
+                </mat-form-field>
+            </div>
 
-              <div class="filter__col card__col-sm-2 card__col-xs-12">
-                <a class="btn btn_stroke filter__add-link" (click)="searchByAgent()"><i
-                    class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
-              </div>
+            <!-- <div class="filter__col card__col-sm-2 card__col-xs-12">
+                <a class="btn btn_stroke filter__add-link" (click)="searchByAgent()"><i class="fa fa-search"
+                        aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
+            </div> -->
 
-              <div class="filter__col card__col-sm-3 card__col-xs-12">
+            <!-- <div class="filter__col card__col-sm-3 card__col-xs-12">
                 <mat-form-field appearance="outline" style="margin-top: 10px;" *ngIf="showAllUser">
                   <mat-label>Mobile Number: </mat-label>
                     <input matInput  placeholder="Enter Mobile Number" [(ngModel)]="searchMobNo" maxlength="35"
@@ -32,12 +33,12 @@
               <div class="filter__col card__col-sm-2 card__col-xs-12">
                 <a *ngIf="showAllUser" class="btn btn_stroke filter__add-link" (click)="serchByMobNo()"><i
                     class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
-              </div>
+              </div> -->
 
 
-              <div class="filter__col card__col-sm-2 card__col-xs-12">
-                 <button  class="btn" (click)="getAllCallerUser()">All Caller</button>
-              </div>
+            <div class="filter__col card__col-sm-2 card__col-xs-12">
+                <button class="btn" (click)="getAllCallerUser()">All Caller</button>
+            </div>
         </div><br><br>
 
         <!-- <div *ngIf="showAllUser">
@@ -47,7 +48,7 @@
 
         <div *ngIf="showAllUser">
             <p class="head"><b>All Caller Agents</b></p>
-            <table >
+            <table>
                 <tr>
                     <th><b>Sme Id</b></th>
                     <th><b>Name</b></th>
@@ -111,16 +112,20 @@
                 <td>{{item.email}}</td>
                 <td>{{item.serviceType}}</td>
                 <td>
-                    <input *ngIf="!item.isAdded" type="checkbox" [value]="item.isAdded" (change)="addCaller($event, item.userId)" />
+                    <input *ngIf="!item.isAdded" type="checkbox" [value]="item.isAdded"
+                        (change)="addCaller($event, item.userId)" />
                 </td>
                 <td>
-                    <input *ngIf="item.isAdded" type="checkbox" [value]="item.isAdded" (change)="removeCaller($event, item.userId)" />
+                    <input *ngIf="item.isAdded" type="checkbox" [value]="item.isAdded"
+                        (change)="removeCaller($event, item.userId)" />
                 </td>
             </tr>
         </table>
         <br><br>
-        
-        <button class="btn" style="float: right;" *ngIf="removeCallerList.length > 0" (click)="saveCaller('remove')">Remove Callers</button>&nbsp;&nbsp;
-        <button class="btn" style="float: right;" *ngIf="selectedCallerList.length > 0" (click)="saveCaller('add')">Add Callers</button>
+
+        <button class="btn" style="float: right;" *ngIf="removeCallerList.length > 0"
+            (click)="saveCaller('remove')">Remove Callers</button>&nbsp;&nbsp;
+        <button class="btn" style="float: right;" *ngIf="selectedCallerList.length > 0" (click)="saveCaller('add')">Add
+            Callers</button>
     </div>
 </div>

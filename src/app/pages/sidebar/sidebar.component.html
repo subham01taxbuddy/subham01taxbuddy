@@ -16,7 +16,8 @@
             <span class="sidebar__name">Subscription & Invoice</span>
         </a>
         <a class="sidebar__item" routerLink="/pages/itr-filing" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()">
+            (click)="closeSideBar()"
+            *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM','ROLE_CALLING_TEAM','ITR_SUPER_LEAD','ITR_TEAM_LEAD'])">
             <i class="fa fa-money" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">ITR Filing</span>
         </a>
@@ -31,27 +32,32 @@
             <span class="sidebar__name">User Management</span>
         </a>
         <a class="sidebar__item" routerLink="/pages/master" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()">
+            (click)="closeSideBar()"
+            *ngIf="isApplicable(['ROLE_ADMIN','ITR_SUPER_LEAD','ITR_TEAM_LEAD','GST_SUPER_LEAD','GST_TEAM_LEAD'])">
             <i class="fa fa-database" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Master</span>
         </a>
         <a class="sidebar__item" routerLink="/pages/gst-filing" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()">
+            (click)="closeSideBar()"
+            *ngIf="isApplicable(['ROLE_ADMIN','ITR_SUPER_LEAD','GST_SUPER_LEAD','GST_TEAM_LEAD','GST_FILER'])">
             <i class="fa fa-inr" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">GST Filing</span>
         </a>
         <a class="sidebar__item" routerLink="/pages/business" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN'])">
+            (click)="closeSideBar()"
+            *ngIf="isApplicable(['ROLE_ADMIN','ITR_SUPER_LEAD','GST_SUPER_LEAD','GST_TEAM_LEAD','GST_FILER'])">
             <i class="fa fa-building-o" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Business</span>
         </a>
         <a class="sidebar__item" routerLink="/pages/team-management/caller-assign"
-            routerLinkActive="sidebar__item_active" (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN'])">
+            routerLinkActive="sidebar__item_active"
+            *ngIf="isApplicable(['ROLE_ADMIN','ITR_SUPER_LEAD','GST_SUPER_LEAD'])">
             <i class="fa fa-group" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Team Management</span>
         </a>
         <a class="sidebar__item" routerLink="/pages/tax-summary" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()">
+            (click)="closeSideBar()"
+            *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM','ROLE_CALLING_TEAM','ITR_SUPER_LEAD','ITR_TEAM_LEAD'])">
             <i class="fa fa-list-alt" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Tax Summary</span>
         </a>
