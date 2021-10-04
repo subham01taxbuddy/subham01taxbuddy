@@ -45,6 +45,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       rowData: [],
       columnDefs: this.subscriptionColoumnDef(this.from),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,

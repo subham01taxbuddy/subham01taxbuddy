@@ -198,6 +198,7 @@ export class SalaryComponent implements OnInit {
       },
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
       },
@@ -301,6 +302,7 @@ export class SalaryComponent implements OnInit {
       },
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
       },
@@ -779,6 +781,7 @@ export class SalaryComponent implements OnInit {
       },
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
       },

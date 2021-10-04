@@ -1799,15 +1799,15 @@ export class Itr2mainComponent implements OnInit {
     }
 
     //Annexures: Exempt Income
-    if(itrData.hasOwnProperty('ITRForm:ScheduleOS')){
-      let otherSourceInfo = itrData['ITRForm:ScheduleOS']['ITRForm:IncOthThanOwnRaceHorse'];      
-      console.log('For except Income: ',otherSourceInfo);     
+    if (itrData.hasOwnProperty('ITRForm:ScheduleOS')) {
+      let otherSourceInfo = itrData['ITRForm:ScheduleOS']['ITRForm:IncOthThanOwnRaceHorse'];
+      console.log('For except Income: ', otherSourceInfo);
       // this.deductionAndRemainForm.controls['agricultureIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text']) ? otherSourceInfo['ITRForm:Aggrtvaluewithoutcons562x']['_text'] : '');
       this.deductionAndRemainForm.controls['dividendIncome'].setValue(this.isNotZero(otherSourceInfo['ITRForm:DividendGross']['_text']) ? otherSourceInfo['ITRForm:DividendGross']['_text'] : '');
       this.setTotalOfExempt();
     }
-    
-    if(itrData.hasOwnProperty('ITRForm:ScheduleEI')){
+
+    if (itrData.hasOwnProperty('ITRForm:ScheduleEI')) {
       this.deductionAndRemainForm.controls['agricultureIncome'].setValue(this.isNotZero(itrData['ITRForm:ScheduleEI']['ITRForm:NetAgriIncOrOthrIncRule7']['_text']) ? Number(itrData['ITRForm:ScheduleEI']['ITRForm:NetAgriIncOrOthrIncRule7']['_text']) : '');
       let otherVal = Number(itrData['ITRForm:ScheduleEI']['ITRForm:Others']['_text'])
       this.deductionAndRemainForm.controls['anyOtherExcemptIncome'].setValue(otherVal);
@@ -2669,7 +2669,7 @@ export class Itr2mainComponent implements OnInit {
       totalOfImmovale = totalOfImmovale + Number(immovableArrayData[i].amount);
     }
     debugger
-    console.log('immovableAssetsInfo: ',this.immovableAssetsInfo);
+    console.log('immovableAssetsInfo: ', this.immovableAssetsInfo);
     this.itr_2_Summary.assesse.assetsLiabilities.immovable = this.immovableAssetsInfo;
     console.log('immovableAssetsInfo: ', this.immovableAssetsInfo);
     console.log('After IMOVABLE part bind: ', this.itr_2_Summary.assesse.assetsLiabilities.immovable);
@@ -3096,6 +3096,7 @@ export class Itr2mainComponent implements OnInit {
       rowData: [this.setRowData()],
       columnDefs: this.createColumnDefs(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       frameworkComponents: {
@@ -3153,6 +3154,7 @@ export class Itr2mainComponent implements OnInit {
       rowData: [this.setRowData()],
       columnDefs: this.createColumnDefs(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       frameworkComponents: {
@@ -3210,6 +3212,7 @@ export class Itr2mainComponent implements OnInit {
       rowData: [this.setRowData()],
       columnDefs: this.createColumnDefs(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       frameworkComponents: {
@@ -3266,6 +3269,7 @@ export class Itr2mainComponent implements OnInit {
       rowData: [this.setRowData()],
       columnDefs: this.createColumnDefs(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       frameworkComponents: {
@@ -3325,6 +3329,7 @@ export class Itr2mainComponent implements OnInit {
       rowData: [this.setTdsOnSalRowData()],
       columnDefs: this.createTdsColumnDefs(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       onCellValueChanged: function (event) {
@@ -3402,6 +3407,7 @@ export class Itr2mainComponent implements OnInit {
       rowData: [this.setTdsOnData()],
       columnDefs: this.createTdsSalColumnDefs(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       onCellEditingStopped: function (event) {
@@ -3474,6 +3480,7 @@ export class Itr2mainComponent implements OnInit {
       rowData: [this.setTdsOnData()],
       columnDefs: this.createTds26QColumnDefs(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       onCellEditingStopped: function (event) {
@@ -3546,6 +3553,7 @@ export class Itr2mainComponent implements OnInit {
       rowData: [this.setTcsData()],
       columnDefs: this.createTCSColumnDefs(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       onCellEditingStopped: function (event) {
@@ -3618,6 +3626,7 @@ export class Itr2mainComponent implements OnInit {
       rowData: [this.setAdvanceTaxData()],
       columnDefs: this.createTdsOnSalColumnDefs(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       onCellEditingStopped: function (event) {

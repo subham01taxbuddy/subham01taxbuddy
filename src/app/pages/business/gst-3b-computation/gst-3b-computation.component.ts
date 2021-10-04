@@ -40,6 +40,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
         numericEditor: NumericEditor,
       },
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
         params.api.sizeColumnsToFit();
       },

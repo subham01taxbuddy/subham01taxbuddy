@@ -43,6 +43,7 @@ export class SmeTlWiseReportComponent implements OnInit {
       columnDefs: this.teamLeadCreateColoumnDef(),
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
       },
@@ -52,6 +53,7 @@ export class SmeTlWiseReportComponent implements OnInit {
       rowData: [],
       columnDefs: this.smeCreateColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,

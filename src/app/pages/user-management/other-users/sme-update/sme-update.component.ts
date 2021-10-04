@@ -36,11 +36,12 @@ export class SmeUpdateComponent implements OnInit {
   user_data: any = [];
 
   constructor(private userService: UserMsService, private _toastMessageService: ToastMessageService, private utileService: UtilsService, private router: Router, private http: HttpClient,
-              @Inject(LOCALE_ID) private locale: string) {
+    @Inject(LOCALE_ID) private locale: string) {
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
 

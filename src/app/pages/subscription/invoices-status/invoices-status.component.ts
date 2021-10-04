@@ -32,6 +32,7 @@ export class InvoicesStatusComponent implements OnInit {
       rowData: [],
       columnDefs: this.invoicesCreateColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
         // setTimeout(() => {
         //   var filterComponent = params.api.getFilterInstance("isActive");

@@ -26,6 +26,7 @@ export class DelayComponent implements OnInit {
       rowData: this.createDelayRowData([]),
       columnDefs: this.delayCreateColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true
@@ -50,7 +51,7 @@ export class DelayComponent implements OnInit {
     const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
     // let param = `${ApiEndpoints.itrMs.itrByAckStatus}`;
     let reqBody = {
-      'financialYear' : fy,
+      'financialYear': fy,
       'filingTeamMemberId': loggedInUserData.USER_UNIQUE_ID
     }
     // this.itrMsService.getMethod(param).subscribe((res: any) => {
@@ -58,10 +59,10 @@ export class DelayComponent implements OnInit {
     let param2 = reqBody;
     this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
       console.log('res: ', res);
-      if(res && res.success){
+      if (res && res.success) {
         this.delayItrGridOptions.api.setRowData(this.createDelayRowData(res.data));
       }
-      
+
     }, error => {
       console.log('error: ', error);
       if (error.error.title === "Not_found") {

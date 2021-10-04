@@ -34,6 +34,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       rowData: this.createOnSalaryRowData([]),
       columnDefs: this.myItrsCreateColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
         // params.api.sizeColumnsToFit();
       },

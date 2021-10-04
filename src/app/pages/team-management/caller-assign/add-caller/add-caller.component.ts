@@ -31,6 +31,7 @@ export class AddCallerComponent implements OnInit {
       rowData: [],
       columnDefs: this.allCallersColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,

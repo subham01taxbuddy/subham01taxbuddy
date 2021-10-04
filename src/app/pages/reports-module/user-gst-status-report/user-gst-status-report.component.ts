@@ -28,6 +28,7 @@ export class UserGstStatusReportComponent implements OnInit {
                 this.statusReportGridOptions.api.sizeColumnsToFit();
             }, */
             enableCellChangeFlash: true,
+            enableCellTextSelection: true,
             onGridReady: params => {
                 params.api.sizeColumnsToFit();
             }

@@ -21,6 +21,7 @@ export class FilingTasksComponent implements OnInit {
       rowData: this.createTasksRowData([]),
       columnDefs: this.tasksCreateColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true
@@ -136,51 +137,51 @@ export class FilingTasksComponent implements OnInit {
         headerName: "Filed",
         field: "isMarkAsDone",
         valueGetter: function (params) {
-            return params.data.isMarkAsDone ? 'Yes':'No';
+          return params.data.isMarkAsDone ? 'Yes' : 'No';
         },
         width: 80,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         pinned: 'right',
       },
 
-    //   {
-    //     headerName: 'Status',
-    //     width: 80,
-    //     sortable: true,
-    //     pinned: 'right',
-    //     cellRenderer: function (params) {
-    //       return `<button type="button" class="action_icon add_button" title="Unblock user ITR" style="border: none;
-    //         background: transparent; font-size: 16px; cursor:pointer;">
-    //         <i class="fa fa-edit" aria-hidden="true" data-action-type="changeStatus"></i>
-    //        </button>`;
-    //     },
-    //     cellStyle: {
-    //       textAlign: 'center', display: 'flex',
-    //       'align-items': 'center',
-    //       'justify-content': 'center',
-    //       color: 'blueviolet'
+      //   {
+      //     headerName: 'Status',
+      //     width: 80,
+      //     sortable: true,
+      //     pinned: 'right',
+      //     cellRenderer: function (params) {
+      //       return `<button type="button" class="action_icon add_button" title="Unblock user ITR" style="border: none;
+      //         background: transparent; font-size: 16px; cursor:pointer;">
+      //         <i class="fa fa-edit" aria-hidden="true" data-action-type="changeStatus"></i>
+      //        </button>`;
+      //     },
+      //     cellStyle: {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center',
+      //       color: 'blueviolet'
 
-    //     },
-    //   },
-    //   {
-    //     headerName: 'Ack Status',
-    //     width: 80,
-    //     sortable: true,
-    //     pinned: 'right',
-    //     cellRenderer: function (params) {
-    //       return `<button type="button" class="action_icon add_button" title="Change Acknowlegement status" style="border: none;
-    //         background: transparent; font-size: 16px; cursor:pointer;">
-    //         <i class="fa fa-user" aria-hidden="true" data-action-type="ackStatus"></i>
-    //        </button>`;
-    //     },
-    //     cellStyle: {
-    //       textAlign: 'center', display: 'flex',
-    //       'align-items': 'center',
-    //       'justify-content': 'center',
-    //       color: 'blueviolet'
+      //     },
+      //   },
+      //   {
+      //     headerName: 'Ack Status',
+      //     width: 80,
+      //     sortable: true,
+      //     pinned: 'right',
+      //     cellRenderer: function (params) {
+      //       return `<button type="button" class="action_icon add_button" title="Change Acknowlegement status" style="border: none;
+      //         background: transparent; font-size: 16px; cursor:pointer;">
+      //         <i class="fa fa-user" aria-hidden="true" data-action-type="ackStatus"></i>
+      //        </button>`;
+      //     },
+      //     cellStyle: {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center',
+      //       color: 'blueviolet'
 
-    //     },
-    //   }
+      //     },
+      //   }
 
     ];
   }
@@ -203,35 +204,35 @@ export class FilingTasksComponent implements OnInit {
     }
   }
 
-//   changeStatus(itrData) {
-//     console.log('change itr data: ', itrData);
-//     this.loading = true;
-//     let param = '/enableItrFilling/' + itrData.userId + '/' + itrData.itrId + '/' + itrData.assessmentYear;
-//     this.itrMsService.getMethod(param).subscribe((res: any) => {
-//       this.loading = false;
-//       console.log('res: ', res);
-//       this._toastMessageService.alert("success", "User unblocked successfully.");
-//       this.getFilingTasks();
-//     },
-//       error => {
-//         this.loading = false;
-//         this._toastMessageService.alert("error", "Error while unblocking, please try again");
-//       })
-//   }
+  //   changeStatus(itrData) {
+  //     console.log('change itr data: ', itrData);
+  //     this.loading = true;
+  //     let param = '/enableItrFilling/' + itrData.userId + '/' + itrData.itrId + '/' + itrData.assessmentYear;
+  //     this.itrMsService.getMethod(param).subscribe((res: any) => {
+  //       this.loading = false;
+  //       console.log('res: ', res);
+  //       this._toastMessageService.alert("success", "User unblocked successfully.");
+  //       this.getFilingTasks();
+  //     },
+  //       error => {
+  //         this.loading = false;
+  //         this._toastMessageService.alert("error", "Error while unblocking, please try again");
+  //       })
+  //   }
 
-//   getAcknowledgeDetail(data){
-//     console.log('Data for acknowlegement status', data);
-//     this.loading = true;
-//     const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
-//       this.itrMsService.getMethod(param).subscribe((res: any) => {
-//         this.utilsService.showSnackBar(res.status)
-//         this.loading = false;
-//         setTimeout(()=>{
-//           this.getFilingTasks();
-//         }, 5000)
-//       }, error => {
-//         this.loading = false;
-//       })
-//   }
+  //   getAcknowledgeDetail(data){
+  //     console.log('Data for acknowlegement status', data);
+  //     this.loading = true;
+  //     const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
+  //       this.itrMsService.getMethod(param).subscribe((res: any) => {
+  //         this.utilsService.showSnackBar(res.status)
+  //         this.loading = false;
+  //         setTimeout(()=>{
+  //           this.getFilingTasks();
+  //         }, 5000)
+  //       }, error => {
+  //         this.loading = false;
+  //       })
+  //   }
 
 }

@@ -39,20 +39,21 @@ export class KommunicateComponent implements OnInit {
 
   constructor(private userMsService: UserMsService, public utilsService: UtilsService,
     private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string) {
-      this.config = {
-        itemsPerPage: 20,
-        currentPage: 1,
-        totalItems: 80
-      };
+    this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: 80
+    };
 
-      this.kommunicateGridOptions = <GridOptions>{
-        rowData: [],
-        columnDefs: this.createColoumnDef(),
-        enableCellChangeFlash: true,
-        onGridReady: params => {
-        },
-        sortable: true,
-      };
+    this.kommunicateGridOptions = <GridOptions>{
+      rowData: [],
+      columnDefs: this.createColoumnDef(),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      onGridReady: params => {
+      },
+      sortable: true,
+    };
 
     this.agentId = JSON.parse(localStorage.getItem('UMD')).USER_EMAIL;
     // if (!environment.production) {
@@ -70,18 +71,18 @@ export class KommunicateComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('selectedAgentId -> ',localStorage.getItem('selectedAgentId'));
+    console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
     let agentId = localStorage.getItem('selectedAgentId');
-    if(this.utilsService.isNonEmpty(agentId)){
+    if (this.utilsService.isNonEmpty(agentId)) {
       this.agentId = agentId;
       this.retrieveKommunicateChat(0);
     }
-    else{
+    else {
       this.retrieveKommunicateChat(0);
     }
   }
 
-  createColoumnDef(){
+  createColoumnDef() {
     return [
       {
         headerName: 'Name',
@@ -223,7 +224,7 @@ export class KommunicateComponent implements OnInit {
     for (let i = 0; i < kmDate.length; i++) {
       let kmInfo = Object.assign({}, kmArray[i], {
         userId: kmDate[i].sourceAsMap['userId'],
-        name: kmDate[i].sourceAsMap['FirstName']+' '+kmDate[i].sourceAsMap['LastName'],
+        name: kmDate[i].sourceAsMap['FirstName'] + ' ' + kmDate[i].sourceAsMap['LastName'],
         Phone: kmDate[i].sourceAsMap['Phone'],
         lastMessage: kmDate[i].sourceAsMap.Kommunicate ? kmDate[i].sourceAsMap.Kommunicate.webhookResponse.message : '',
         timeDate: kmDate[i].sourceAsMap.Kommunicate ? kmDate[i].sourceAsMap.Kommunicate.webhookResponse.timeStamp : '',
@@ -235,10 +236,10 @@ export class KommunicateComponent implements OnInit {
       kmArray.push(kmInfo);
     }
     console.log('kmArray-> ', kmArray)
-     return kmArray;
+    return kmArray;
   }
 
-  onKommChatClicked(params){
+  onKommChatClicked(params) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');

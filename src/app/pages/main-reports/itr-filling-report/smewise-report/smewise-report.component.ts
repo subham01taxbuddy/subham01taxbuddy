@@ -49,6 +49,7 @@ export class SmewiseReportComponent implements OnInit {
       columnDefs: this.teamLeadCreateColoumnDef(),
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
       },
@@ -58,6 +59,7 @@ export class SmewiseReportComponent implements OnInit {
       rowData: [],
       columnDefs: this.smeCreateColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,
@@ -67,6 +69,7 @@ export class SmewiseReportComponent implements OnInit {
       columnDefs: this.superLeadCreateColoumnDef(),
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
       },
