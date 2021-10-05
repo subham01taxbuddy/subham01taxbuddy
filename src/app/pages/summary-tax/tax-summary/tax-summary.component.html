@@ -1331,7 +1331,7 @@
                     <div class="heading">COMPUTATION OF INCOME</div><br>
                     <div class="table-responsive">
                         <table>
-                            <tr *ngIf="newItrSumChanges">
+                            <tr *ngIf="newItrSumChanges && itrType.itrOne">
                                 <th></th>
                                 <th></th>
                                 <th colspan="2"><b>As Per old Tax Regime</b></th>
@@ -1343,7 +1343,7 @@
                                 <th><b>Rs.</b></th>
                                 <th><b>Rs.</b></th>
 
-                                <th *ngIf="newItrSumChanges"><b>Rs.</b></th>
+                                <th *ngIf="newItrSumChanges && itrType.itrOne"><b>Rs.</b></th>
                             </tr>
                             <tr>
                                 <td>1</td>
@@ -1353,7 +1353,7 @@
                                      (blur)="calculateGrossTotalIncome()"   maxlength="8"></td>
                                 <!--formControlName="incomeFromSalary"-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.salary" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.salary" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>2</td>
@@ -1363,7 +1363,7 @@
                                     (blur)="calculateGrossTotalIncome()"    formControlName="housePropertyIncome" maxlength="8"></td>
                                 <!--formControlName="netHousePropertyIncome"-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.housePropertyIncome" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.housePropertyIncome" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr *ngIf="itrType.itrFour">
                                 <td>3</td>
@@ -1371,7 +1371,7 @@
                                 <td></td>
                                 <td></td>
 
-                                <!-- <td *ngIf="newItrSumChanges && newTaxRegime" ></td> -->
+                                <!-- <td *ngIf="newItrSumChanges && itrType.itrOne && newTaxRegime" ></td> -->
                             </tr>
                             <tr *ngIf="itrType.itrFour">
                                 <td></td>
@@ -1380,7 +1380,7 @@
                                 <td></td>
                                 <td></td>
 
-                                <td > <input type="number" maxlength="8"></td>
+                                <!-- <td > <input type="number" maxlength="8"></td> -->
                             </tr>
                             <tr *ngIf="itrType.itrFour">
                                 <td></td>
@@ -1389,7 +1389,7 @@
                                         maxlength="8"></td>
                                 <td></td>
 
-                                <td > <input type="number" maxlength="8"></td>
+                                <!-- <td > <input type="number" maxlength="8"></td> -->
                             </tr>
                             <tr *ngIf="itrType.itrFour">
                                 <td></td>
@@ -1398,7 +1398,7 @@
                                         maxlength="8"></td>
                                 <td></td>
 
-                                <td > <input type="number" maxlength="8"></td>
+                                <!-- <td > <input type="number" maxlength="8"></td> -->
                             </tr>
                             <tr *ngIf="itrType.itrFour">
                                 <td></td>
@@ -1408,14 +1408,14 @@
                                 <td></td>
                                 <td></td>
 
-                                <td > <input type="number" maxlength="8"></td>
+                                <!-- <td > <input type="number" maxlength="8"></td> -->
                             </tr>
                             <tr *ngIf="itrType.itrFour">
                                 <td></td>
                                 <td>Gross Receipts/ Turnover </td>
                                 <td><input type="number" [value]="this.businessObject.grossReciept" disabled
                                         maxlength="8"></td>
-                                <td > <input type="number" maxlength="8"></td>
+                                <!-- <td > <input type="number" maxlength="8"></td> -->
                             </tr>
                             <tr *ngIf="itrType.itrFour">
                                 <td></td>
@@ -1425,7 +1425,7 @@
                               
                                 <td></td>
 
-                                <td > <input type="number" maxlength="8"></td>
+                                <!-- <td > <input type="number" maxlength="8"></td> -->
                             </tr>
                             <tr *ngIf="itrType.itrFour">
                                 <td></td>
@@ -1437,7 +1437,7 @@
                                      <input type="number" disabled formControlName="presumptiveIncome">
                                 </td>
 
-                                <td > <input type="number" maxlength="8"></td>
+                                <!-- <td > <input type="number" maxlength="8"></td> -->
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 4 : 3}}</td>
@@ -1448,7 +1448,7 @@
                                     <!--formControlName="totalIncomeFromOtherResources"-->
                                 </td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.otherIncome" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.otherIncome" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 5 : 4}}</td>
@@ -1457,7 +1457,7 @@
                                 <td formGroupName="taxSummary"><b><input type="number" disabled
                                             formControlName="grossTotalIncome" maxlength="8"></b></td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.grossTotalIncome" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.grossTotalIncome" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 6 : 5}}</td>
@@ -1468,7 +1468,7 @@
                                        (blur)="calculateTotalIncome()" formControlName="totalDeduction"  maxlength="8"></td>
                                 <!--deductionUnderChapterVIA-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.totalDeduction" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.totalDeduction" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 7 : 6}}</td>
@@ -1480,7 +1480,7 @@
                                     <!--totalIncome-->
                                 </td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 8 : 7}}</td>
@@ -1493,7 +1493,7 @@
                                         maxlength="8"></td>
                                 <!--taxPayable-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.taxOnTotalIncome" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.taxOnTotalIncome" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 9 : 8}}</td>
@@ -1505,7 +1505,7 @@
                                         maxlength="8"></td>
                                 <!--rebate-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.forRebate87Tax" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.forRebate87Tax" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 10 : 9}}</td>
@@ -1514,7 +1514,7 @@
                                 <td formGroupName="taxSummary"><input type="number" formControlName="taxAfterRebate"
                                         disabled required maxlength="8"></td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.housePropertyIncome" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.housePropertyIncome" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 11 : 10}}</td>
@@ -1524,7 +1524,7 @@
                                         disabled required maxlength="8"></td>
                                 <!--healthAndEducationCess-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.cessAmount" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.cessAmount" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 12 : 11}}</td>
@@ -1534,7 +1534,7 @@
                                         formControlName="totalTax" maxlength="8"></td>
                                 <!--formControlName="totalTaxAndCess"-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.totalTax" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.totalTax" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 13 : 12}}</td>
@@ -1547,7 +1547,7 @@
                                 </td>
                                 <!--reliefUS89l-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.taxReliefUnder89" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.taxReliefUnder89" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 14 : 13}}</td>
@@ -1558,7 +1558,7 @@
                                     <!--balanceTaxAfterRelief-->
                                 </td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.totalTaxRelief" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.totalTaxRelief" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 15 : 14}}</td>
@@ -1566,7 +1566,7 @@
                                 <td></td>
                                 <td></td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.interestAndFeesPayable" [ngModelOptions]="{standalone: true}" disabled  maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.interestAndFeesPayable" [ngModelOptions]="{standalone: true}" disabled  maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -1578,7 +1578,7 @@
                                 <td></td>
                                 <!--section234A-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234A" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234A" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -1589,7 +1589,7 @@
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
                                 <td></td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234B" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234B" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -1600,7 +1600,7 @@
                                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
                                 <td></td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234C" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234C" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -1615,7 +1615,7 @@
                                 <!--interestAndFees-->
                                 <!--[value]="totalInterest"-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234F" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234F" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 16 : 15}}</td>
@@ -1625,7 +1625,7 @@
                                         disabled required maxlength="8"></td>
                                 <!--totalTaxFeeAndInterest-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.agrigateLiability" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.agrigateLiability" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td>{{itrType.itrFour ? 17 : 16}}</td>
@@ -1633,7 +1633,7 @@
                                 <td></td>
                                 <td></td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" disabled [(ngModel)]="newRegimeTaxSummary.totalTaxesPaid" [ngModelOptions]="{standalone: true}" disabled maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" disabled [(ngModel)]="newRegimeTaxSummary.totalTaxesPaid" [ngModelOptions]="{standalone: true}" disabled maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -1642,7 +1642,7 @@
                                 <!--formControlName="totalTdsOnSalary"-->
                                 <td></td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxesPaid.tdsOnSalary" [ngModelOptions]="{standalone: true}" (blur)="calNewItrTaxesPaid()"  maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges  && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxesPaid.tdsOnSalary" [ngModelOptions]="{standalone: true}" (blur)="calNewItrTaxesPaid()"  maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -1652,7 +1652,7 @@
                                 <!--formControlName="totalTdsOnOtherThanSalary"-->
                                 <td></td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxesPaid.tdsOtherThanSalary" [ngModelOptions]="{standalone: true}" (blur)="calNewItrTaxesPaid()" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxesPaid.tdsOtherThanSalary" [ngModelOptions]="{standalone: true}" (blur)="calNewItrTaxesPaid()" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -1661,7 +1661,7 @@
                                 <!--formControlName="totalTdsSaleOfProperty26QB"-->
                                 <td></td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxesPaid.tdsOnSal26QB" [ngModelOptions]="{standalone: true}" (blur)="calNewItrTaxesPaid()" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxesPaid.tdsOnSal26QB" [ngModelOptions]="{standalone: true}" (blur)="calNewItrTaxesPaid()" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -1671,7 +1671,7 @@
                                 <!--totalTaxCollectedAtSources    formControlName="taxPaidTCS"-->
                                 <td></td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxesPaid.tcs" [ngModelOptions]="{standalone: true}" (blur)="calNewItrTaxesPaid()" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxesPaid.tcs" [ngModelOptions]="{standalone: true}" (blur)="calNewItrTaxesPaid()" maxlength="8"></td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -1684,7 +1684,7 @@
                                 <!--totalTaxPaid     formControlName="advanceTaxSelfAssessmentTax"-->
                                 <!--[value]="totalTDS"-->
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxesPaid.advanceSelfAssTax" [ngModelOptions]="{standalone: true}" (blur)="calNewItrTaxesPaid()" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxesPaid.advanceSelfAssTax" [ngModelOptions]="{standalone: true}" (blur)="calNewItrTaxesPaid()" maxlength="8"></td>
                             </tr>
 
                             <tr
@@ -1697,7 +1697,7 @@
                                     <!--formControlName="netTaxPayable"-->
                                 </td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.taxpayable" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.taxpayable" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
                             <tr *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0">
                                 <td>{{itrType.itrFour ? 18 : 17}}</td>
@@ -1708,7 +1708,7 @@
                                     <!--formControlName="netTaxPayable"-->
                                 </td>
 
-                                <td *ngIf="newItrSumChanges"> <input type="number" [(ngModel)]="newRegimeTaxSummary.taxRefund" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
+                                <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.taxRefund" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
 
                         </table>
