@@ -230,7 +230,7 @@
       <mat-card>
         <div class="card__row">
           <div class="card__col-lg-4">
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" *ngIf="serviceType === 'GST'">
               <mat-label>Start Date</mat-label>
               <input matInput placeholder="Start Date" [formControl]="subStartDate"
                 (dateChange)="applyEndDateValidation($event.value)" [matDatepicker]="picker" autocomplete="off"
@@ -243,7 +243,7 @@
           </div>
 
           <div class="card__col-lg-4">
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" *ngIf="serviceType === 'GST'">
               <mat-label>End Date</mat-label>
               <input matInput placeholder="End Date" [max]="maxEndDate" [min]="minEndDate" [formControl]="subEndDate"
                 [matDatepicker]="picker2" autocomplete="off" required>
