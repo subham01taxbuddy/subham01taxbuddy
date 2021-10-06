@@ -19,6 +19,7 @@ import { DetailReportComponent } from "./invoice-failed/detail-report/detail-rep
 import { FilingDashboardComponent } from "./itr-filling-report/filing-dashboard/filing-dashboard.component";
 import { SpamTableComponent } from './spam-table/spam-table.component';
 import { UserChatsComponent } from './spam-table/user-chats/user-chats.component';
+import { MissedInbondCallsComponent } from './knowlarity-report/missed-inbond-calls/missed-inbond-calls.component';
 
 @NgModule({
     declarations: [MainReportsComponent,
@@ -34,7 +35,8 @@ import { UserChatsComponent } from './spam-table/user-chats/user-chats.component
         DetailReportComponent,
         FilingDashboardComponent,
         SpamTableComponent,
-        UserChatsComponent
+        UserChatsComponent,
+        MissedInbondCallsComponent
     ],
     imports: [
         CommonModule,
