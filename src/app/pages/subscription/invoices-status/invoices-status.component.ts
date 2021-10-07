@@ -24,6 +24,10 @@ export class InvoicesStatusComponent implements OnInit {
   toDateMin: any;
   summartDetailForm: FormGroup;
   userId: any;
+  status:any = [
+    {label: 'Paid', value:'Paid'},
+    {label: 'Unpaid', value:'Unpaid'}
+  ]
   constructor(private userMsService: UserMsService, private _toastMessageService: ToastMessageService,
     @Inject(LOCALE_ID) private locale: string, private userService: UserMsService, private dialog: MatDialog,
     private utilService: UtilsService, private fb: FormBuilder, private activatedRoute: ActivatedRoute,
@@ -62,26 +66,38 @@ export class InvoicesStatusComponent implements OnInit {
       this.userId = params['userId'];
       // this.advanceSearch();
     });
-
-    this.getAllInvoiceInfo();
+   
     this.summartDetailForm = this.fb.group({
       fromDate: ['', Validators.required],
-      toDate: ['', Validators.required]
-    })
+      toDate: ['', Validators.required],
+      status: ['']
+    });
+
+    // this.getAllInvoiceInfo()
   }
 
   getAllInvoiceInfo() {
-    this.loading = true;
-    let param = '/itr/invoice/report';
-    this.userMsService.getMethodInfo(param).subscribe((res: any) => {
-      this.loading = false;
-      this.invoiceData = res;
-      this.totalInvoice = this.invoiceData.length
-      console.log('this.invoiceData ', this.invoiceData)
-      this.invoiceListGridOptions.api.setRowData(this.createRowData(this.invoiceData))
-    }, error => {
-      this.loading = false;
-    })
+    if(this.summartDetailForm.valid){
+      this.loading = true;
+      var param;
+       let fromData = this.summartDetailForm.value.fromDate;
+       let toData = this.summartDetailForm.value.toDate;
+       if(this.utilService.isNonEmpty(this.summartDetailForm.value.status)){
+        param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}&paymentStatus=${this.summartDetailForm.value.status}`;
+       }
+       else{
+        param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}`;
+       }
+      this.userMsService.getMethodInfo(param).subscribe((res: any) => {
+        this.loading = false;
+        this.invoiceData = res;
+        this.totalInvoice = this.invoiceData.length
+        console.log('this.invoiceData ', this.invoiceData)
+        this.invoiceListGridOptions.api.setRowData(this.createRowData(this.invoiceData))
+      }, error => {
+        this.loading = false;
+      })
+    }
   }
 
   getCount(param) {
@@ -674,7 +690,13 @@ export class InvoicesStatusComponent implements OnInit {
       console.log(this.summartDetailForm.value)
       let fromData = this.summartDetailForm.value.fromDate;
       let toData = this.summartDetailForm.value.toDate;
-      location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData.toISOString() + '&toDate=' + toData.toISOString();
+      if(this.utilService.isNonEmpty(this.summartDetailForm.value.status)){
+        location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData.toISOString() + '&toDate=' + toData.toISOString()+'&paymentStatus='+ this.summartDetailForm.value.status;
+       }
+       else{
+        location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData.toISOString() + '&toDate=' + toData.toISOString();;
+       }
+      
     }
   }
 

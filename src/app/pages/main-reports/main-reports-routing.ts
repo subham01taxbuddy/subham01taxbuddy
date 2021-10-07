@@ -8,6 +8,7 @@ import { FilingDashboardComponent } from "./itr-filling-report/filing-dashboard/
 import { ItrFillingReportComponent } from "./itr-filling-report/itr-filling-report.component";
 import { SmewiseReportComponent } from "./itr-filling-report/smewise-report/smewise-report.component";
 import { KnowlarityReportComponent } from "./knowlarity-report/knowlarity-report.component";
+import { MissedInbondCallsComponent } from "./knowlarity-report/missed-inbond-calls/missed-inbond-calls.component";
 import { RepoByAgentNameComponent } from "./knowlarity-report/repo-by-agent-name/repo-by-agent-name.component";
 import { RepoBySmeNameComponent } from "./knowlarity-report/repo-by-sme-name/repo-by-sme-name.component";
 import { MainReportsComponent } from "./main-reports/main-reports.component";
@@ -23,6 +24,7 @@ const routes: Routes = [
                 children: [
                     { path: 'sme-wise', component: RepoBySmeNameComponent },
                     { path: 'agent-wise', component: RepoByAgentNameComponent },
+                    { path: 'missed-inbond-calls', component: MissedInbondCallsComponent },
                     { path: '', redirectTo: 'sme-wise', pathMatch: '' }
                 ]
             },
@@ -36,7 +38,7 @@ const routes: Routes = [
                 ]
             },
             {
-                path: 'invoice-failed', component: InvoiceFailedReportComponent,
+                path: 'invoice', component: InvoiceFailedReportComponent,
                 children: [
                     { path: 'sme-tl', component: SmeTlWiseReportComponent },
                     { path: 'details', component: DetailReportComponent },

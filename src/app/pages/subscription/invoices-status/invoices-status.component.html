@@ -3,9 +3,9 @@
     <div class="card">
         <div class="card__row">
             <form [formGroup]="summartDetailForm">
-                <div class="card__col-lg-3">
+                <!-- <div class="card__col-lg-3">
                     <p class="head-label">Download Invoice:</p>
-                </div>
+                </div> -->
 
                 <div class="card__col-lg-3">
                     <mat-form-field appearance="outline">
@@ -34,9 +34,27 @@
                     </mat-form-field>
                 </div>
 
-                <div class="card__col-lg-3">
-                    <button class="btn" style="border: none; cursor: pointer;"
-                        (click)="downloadInvoicesSummary()">Download File</button>
+                <div class="card__col-lg-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Select Status</mat-label>
+                        <mat-select placeholder="Select Status" formControlName="status">
+                            <mat-option *ngFor="let item of status" [value]="item.value">
+                                {{item.label}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+
+                <div class="card__col-lg-2" *ngIf="summartDetailForm.valid">
+                    <button class="btn" style="border: none; cursor: pointer;" 
+                    (click)="getAllInvoiceInfo()">Show Invoice</button>
+                 
+                </div>
+
+                <div class="card__col-lg-2" *ngIf="summartDetailForm.valid">
+                    <button class="btn" style="border: none; cursor: pointer;" 
+                    (click)="downloadInvoicesSummary()">Download File</button>
                 </div>
             </form>
 
