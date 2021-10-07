@@ -467,4 +467,14 @@ export class UtilsService {
         console.log(this.serializer.serialize(tree));
         return this.serializer.serialize(tree).split('?').pop();
     }
+
+    logAction(userId, action) {
+        const param = `/action-time`;
+        const request = {
+            userId: userId,
+            action: action
+        }
+        this.userMsService.postMethod(param, request).subscribe(res => {
+        })
+    }
 }
