@@ -149,6 +149,7 @@ export class TaxSummaryComponent implements OnInit {
   newTaxRegime: boolean;
   employerArray: any = [];
   newRegimeTaxSummary: any;
+  totalExemptIncome: number = 0;
 
 
   get getFamilyArray() {
@@ -752,6 +753,7 @@ export class TaxSummaryComponent implements OnInit {
         }
        }
      }
+     this.totalExemptIncome = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? exemptIncomeInfo.ExemptIncAgriOthUs10Total : exemptIncomeInfo.OthersInc.OthersTotalTaxExe;;
 
    
 
@@ -766,7 +768,7 @@ export class TaxSummaryComponent implements OnInit {
         medicalExpendature: 0
       }
 
-      this.sec80DobjVal.healthInsuarancePremiumSelf = sec80DInfo.Sec80DSelfFamSrCtznHealth.SelfAndFamily;
+      this.sec80DobjVal.healthInsuarancePremiumSelf = sec80DInfo.Sec80DSelfFamSrCtznHealth.HealthInsPremSlfFam;
       this.sec80DobjVal.healthInsuarancePremiumParents = Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizen) - (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('MedicalExpParentsSrCtzn') ? Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn) : 0);
       var prehealthCheckVal = Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFam') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFamSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFamSrCtzn : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParents') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParentsSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn : 0))));
       console.log('prehealthCheckVal: ',prehealthCheckVal)
@@ -987,7 +989,14 @@ export class TaxSummaryComponent implements OnInit {
     }
   
     //TDS Other Than salary
-    var tdsOtherThanSalInfo = itrData.TDSonOthThanSals.TDSonOthThanSal;
+    var tdsOtherThanSalInfo ;
+    if(itrData.TDSonOthThanSals.hasOwnProperty('TDSonOthThanSal')){
+      tdsOtherThanSalInfo = itrData.TDSonOthThanSals.TDSonOthThanSal;
+    }
+    else if(itrData.TDSonOthThanSals.hasOwnProperty('TDSonOthThanSalDtls')){
+      tdsOtherThanSalInfo = itrData.TDSonOthThanSals.TDSonOthThanSalDtls;
+    }
+  
     console.log('tdsOtherThanSalInfo Info: ',tdsOtherThanSalInfo); 
     this.tdsOtherThanSal = [];
     if(this.newTaxRegime){
@@ -1002,16 +1011,54 @@ export class TaxSummaryComponent implements OnInit {
           deductorTAN: '',
           deductorName: '',
           totalAmountCredited: 0,
-          totalTdsDeposited: 0
+          totalTdsDeposited: 0,
+          isTds3Info: false
         }
-        tdsOtherThanSalObj.deductorTAN = tdsOtherThanSalInfo[i].EmployerOrDeductorOrCollectDetl.TAN;
-        tdsOtherThanSalObj.deductorName = tdsOtherThanSalInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName;
-        tdsOtherThanSalObj.totalAmountCredited = tdsOtherThanSalInfo[i].AmtForTaxDeduct;
-        tdsOtherThanSalObj.totalTdsDeposited = tdsOtherThanSalInfo[i].TotTDSOnAmtPaid;
+        tdsOtherThanSalObj.deductorTAN = this.itrType.itrOne ? tdsOtherThanSalInfo[i].EmployerOrDeductorOrCollectDetl.TAN : tdsOtherThanSalInfo[i].TANOfDeductor;
+        tdsOtherThanSalObj.deductorName = this.itrType.itrOne ? tdsOtherThanSalInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName : tdsOtherThanSalInfo[i].HeadOfIncome;
+        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].AmtForTaxDeduct : tdsOtherThanSalInfo[i].TDSDeducted;
+        tdsOtherThanSalObj.totalTdsDeposited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].TotTDSOnAmtPaid : tdsOtherThanSalInfo[i].GrossAmount;
         this.tdsOtherThanSal.push(tdsOtherThanSalObj);
         this.taxPaiObj.otherThanSalary16A.push(tdsOtherThanSalObj);
       }
     }
+
+    //TDS3Details   (info bind in tdsOtherThanSalary)
+    var tds3OtherThanSalInfo;
+     if(itrData.ScheduleTDS3Dtls.hasOwnProperty('TDS3Details')){
+      tds3OtherThanSalInfo = itrData.ScheduleTDS3Dtls.TDS3Details;
+    }
+    else if(itrData.ScheduleTDS3Dtls.hasOwnProperty('TDS3Details')){
+      tds3OtherThanSalInfo = itrData.ScheduleTDS3Dtls.TDS3Details;
+    }
+  
+    console.log('tds3OtherThanSalInfo Info: ',tds3OtherThanSalInfo); 
+    console.log('****',Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) , Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details))
+    if(this.newTaxRegime){
+      this.newRegimeTaxesPaid.tdsOtherThanSalary = Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details);
+    }
+    else{
+      this.taxesPaid.tdsOtherThanSalary = Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details);
+    }
+    if(tds3OtherThanSalInfo instanceof Array && tds3OtherThanSalInfo.length > 0){
+      for(let i=0; i<tds3OtherThanSalInfo.length; i++){
+        let tdsOtherThanSalObj = {
+          deductorTAN: '',
+          deductorName: '',
+          totalAmountCredited: 0,
+          totalTdsDeposited: 0,
+          isTds3Info: true
+        }
+        tdsOtherThanSalObj.deductorTAN = tds3OtherThanSalInfo[i].PANofTenant;
+        tdsOtherThanSalObj.deductorName = this.itrType.itrOne ? tds3OtherThanSalInfo[i].NameOfTenant : tds3OtherThanSalInfo[i].HeadOfIncome;
+        tdsOtherThanSalObj.totalAmountCredited = tds3OtherThanSalInfo[i].TDSDeducted;
+        tdsOtherThanSalObj.totalTdsDeposited = this.itrType.itrOne ? tds3OtherThanSalInfo[i].GrsRcptToTaxDeduct : tds3OtherThanSalInfo[i].GrossAmount;
+        this.tdsOtherThanSal.push(tdsOtherThanSalObj);
+        this.taxPaiObj.otherThanSalary16A.push(tdsOtherThanSalObj);
+      }
+    }
+
+
 
     //Tax Collected at Sources
     var tcsInfo = itrData.ScheduleTCS.TCS;
@@ -1034,7 +1081,7 @@ export class TaxSummaryComponent implements OnInit {
         }
         tcsObj.collectorTAN = tcsInfo[i].EmployerOrDeductorOrCollectDetl.TAN;
         tcsObj.collectorName = tcsInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName;
-        tcsObj.totalAmountPaid = tcsInfo[i].AmtTaxCollected;
+        tcsObj.totalAmountPaid = this.itrType.itrOne ? tcsInfo[i].AmtTaxCollected : tcsInfo[i].Amtfrom26AS;
         tcsObj.totalTcsDeposited = tcsInfo[i].TotalTCS;
         this.taxCollAtSource.push(tcsObj);
         this.taxPaiObj.tcs.push(tcsObj);
@@ -1042,8 +1089,11 @@ export class TaxSummaryComponent implements OnInit {
     }
 
     //Advance Tax
+    debugger
     var advanceTaxInfo = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.TaxPayments.TaxPayment : itrData.ScheduleIT.TaxPayment;
     console.log('advanceTaxInfo Info: ',advanceTaxInfo); 
+    console.log('newTaxRegime: ',this.newTaxRegime); 
+    console.log('itrData: ',itrData); 
     this.advanceSelfTax = [];
     if(this.newTaxRegime){
       this.newRegimeTaxesPaid.advanceSelfAssTax = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.TaxPayments.TotalTaxPayments : itrData.ScheduleIT.TotalTaxPayments;
@@ -1221,10 +1271,10 @@ export class TaxSummaryComponent implements OnInit {
         let taxesPaidInfo = itrData;
         console.log('taxesPaidInfo: ',taxesPaidInfo)
         this.taxesPaid.tdsOnSalary = taxesPaidInfo.hasOwnProperty('TDSonSalaries') ? taxesPaidInfo.TDSonSalaries.TotalTDSonSalaries : 0;
-        this.taxesPaid.tdsOtherThanSalary = taxesPaidInfo.hasOwnProperty('TDSonOthThanSals') ? taxesPaidInfo.TDSonOthThanSals.TotalTDSonOthThanSals : 0;
+        this.taxesPaid.tdsOtherThanSalary = taxesPaidInfo.hasOwnProperty('TDSonOthThanSals') ? Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details) : 0;
         this.taxesPaid.tdsOnSal26QB = 0;
         this.taxesPaid.tcs = taxesPaidInfo.hasOwnProperty('ScheduleTCS') ? taxesPaidInfo.ScheduleTCS.TotalSchTCS : 0;
-        this.taxesPaid.advanceSelfAssTax = taxesPaidInfo.hasOwnProperty('TaxPayments') ? taxesPaidInfo.TaxPayments.TotalTaxPayments : 0;
+        this.taxesPaid.advanceSelfAssTax = taxesPaidInfo.hasOwnProperty('TaxPayments') ? taxesPaidInfo.TaxPayments.TotalTaxPayments : (taxesPaidInfo.hasOwnProperty('ScheduleIT') ? taxesPaidInfo.ScheduleIT.TotalTaxPayments : 0);
         
         if(Number(taxesPaidInfo.TaxPaid.BalTaxPayable) > 0){
             let payable = Number(taxesPaidInfo.TaxPaid.BalTaxPayable);
@@ -1369,7 +1419,7 @@ export class TaxSummaryComponent implements OnInit {
     itr4Summary.assesse.business.financialParticulars.membersOwnCapital = Number(financialInfo.PartnerMemberOwnCapital);
     itr4Summary.assesse.business.financialParticulars.securedLoans = Number(financialInfo.SecuredLoans);
     itr4Summary.assesse.business.financialParticulars.unSecuredLoans = Number(financialInfo.UnSecuredLoans);
-    itr4Summary.assesse.business.financialParticulars.advances = Number(financialInfo.UnSecuredLoans);
+    itr4Summary.assesse.business.financialParticulars.advances = Number(financialInfo.Advances);
     itr4Summary.assesse.business.financialParticulars.sundryCreditorsAmount = Number(financialInfo.SundryCreditors);
     itr4Summary.assesse.business.financialParticulars.otherLiabilities = Number(financialInfo.OthrCurrLiab);
     let liabilityTotal = itr4Summary.assesse.business.financialParticulars.membersOwnCapital + itr4Summary.assesse.business.financialParticulars.securedLoans +

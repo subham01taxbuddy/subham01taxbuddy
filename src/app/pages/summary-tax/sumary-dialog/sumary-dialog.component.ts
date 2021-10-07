@@ -352,7 +352,15 @@ export class SumaryDialogComponent implements OnInit {
     this.summaryDialogForm['controls'].onSalary.patchValue(tdsOnSalInfo)
   }
   updateTdsOtherThanSal(tdsOtherThanSal) {
-    this.summaryDialogForm['controls'].otherThanSalary16A.patchValue(tdsOtherThanSal)
+    if(tdsOtherThanSal.isTds3Info){
+      this.summaryDialogForm['controls'].otherThanSalary16A['controls'].deductorTAN.setValidators(Validators.pattern(AppConstants.panIndividualRegex))
+      this.summaryDialogForm['controls'].otherThanSalary16A['controls'].deductorTAN.updateValueAndValidity();
+      this.summaryDialogForm['controls'].otherThanSalary16A.patchValue(tdsOtherThanSal)
+    }
+    else{
+      this.summaryDialogForm['controls'].otherThanSalary16A.patchValue(tdsOtherThanSal);
+    }
+   
   }
   updateTdsOnSalOf26Q(tds26Q) {
     this.summaryDialogForm['controls'].otherThanSalary26QB.patchValue(tds26Q)
