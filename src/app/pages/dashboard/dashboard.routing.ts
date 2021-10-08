@@ -35,7 +35,7 @@ const routes: Routes = [
                     { path: 'calling2', component: Calling2dot0Component },
                     { path: 'scheduled-call', component: ScheduledCallComponent },
                     { path: 'signup-exception', component: SignupExceptionComponent },
-                    { path: '', redirectTo: 'todays-call', pathMatch: 'full' }
+                    { path: '', redirectTo: 'calling2', pathMatch: 'full' }
                 ]
             },
             { path: 'interested-clients', component: InterestedClientsComponent },

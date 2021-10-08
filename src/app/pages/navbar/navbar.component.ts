@@ -82,7 +82,7 @@ export class NavbarComponent implements OnInit {
     }
   }
   navigateToHome() {
-    this.router.navigate(['/pages/dashboard/calling/todays-call']);
+    this.router.navigate(['/pages/dashboard/calling/calling2']);
   }
   //Http Functions
   getSingletonNavbarObj() {

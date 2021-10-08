@@ -9,6 +9,7 @@ import { ChangeStatusComponent } from 'app/shared/components/change-status/chang
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { AppConstants } from 'app/shared/constants';
 import { formatDate } from '@angular/common';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-todays-calls',
@@ -194,10 +195,10 @@ export class TodaysCallsComponent implements OnInit {
           console.log('itrStatus array == ', itrStatus);
           if (itrStatus.length !== 0) {
             const nameArray = itrStatus.filter(item => (item.statusId === params.data.statusId));
-            if(nameArray.length !== 0){     
+            if (nameArray.length !== 0) {
               return nameArray[0].statusName;
             }
-            else{
+            else {
               return '-';
             }
           } else {
@@ -244,6 +245,28 @@ export class TodaysCallsComponent implements OnInit {
            </button>`;
         },
         width: 50,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Whats App',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Click to check whats app chat"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
+           </button>`;
+        },
+        width: 60,
         pinned: 'right',
         cellStyle: function (params) {
           return {
@@ -454,6 +477,10 @@ export class TodaysCallsComponent implements OnInit {
           this.updateStatus('Update Caller', params.data)
           break;
         }
+        case 'whatsapp-chat': {
+          this.navigateToWhatsappChat(params.data)
+          break;
+        }
       }
     }
   }
@@ -544,4 +571,8 @@ export class TodaysCallsComponent implements OnInit {
         this.loading = false;
       })
   }
+  navigateToWhatsappChat(data) {
+    window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
+  }
+
 }

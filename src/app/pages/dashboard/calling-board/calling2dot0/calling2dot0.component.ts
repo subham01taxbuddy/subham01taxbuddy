@@ -1,3 +1,4 @@
+import { environment } from 'environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { GridOptions } from 'ag-grid-community';
@@ -315,6 +316,28 @@ export class Calling2dot0Component implements OnInit {
         },
       },
       {
+        headerName: 'Whats App',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Click to check whats app chat"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
         headerName: 'See/Add Notes',
         editable: false,
         suppressMenu: true,
@@ -432,6 +455,10 @@ export class Calling2dot0Component implements OnInit {
           this.updateStatus('Update Caller', params.data)
           break;
         }
+        case 'whatsapp-chat': {
+          this.navigateToWhatsappChat(params.data)
+          break;
+        }
       }
     }
   }
@@ -440,6 +467,10 @@ export class Calling2dot0Component implements OnInit {
     console.log('client: ', client);
     if (client.kommunicateLink !== 'NA')
       window.open(client.kommunicateLink)
+  }
+
+  navigateToWhatsappChat(data) {
+    window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
   }
 
   startCalling(user) {
