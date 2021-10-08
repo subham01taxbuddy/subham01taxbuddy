@@ -7,6 +7,7 @@ import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-scheduled-call',
@@ -14,20 +15,20 @@ import { UtilsService } from 'app/services/utils.service';
   styleUrls: ['./scheduled-call.component.css']
 })
 export class ScheduledCallComponent implements OnInit {
- 
+
   loading: boolean;
   selectedAgent: any;
   searchMobNo: any;
   agentList: any = [];
   isAdmin: boolean;
   scheduleCallGridOptions: GridOptions;
-  scheduleCallsData: any= [];
+  scheduleCallsData: any = [];
   pageCount: number = 0;
   loggedUserId: any;
   showByAdminUserId: boolean = true;
 
   constructor(private toastMsgService: ToastMessageService, private userMsService: UserMsService, private utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
-              private dialog: MatDialog, private route: Router) {
+    private dialog: MatDialog, private route: Router) {
     this.scheduleCallGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.createColoumnDef(),
@@ -36,7 +37,7 @@ export class ScheduledCallComponent implements OnInit {
       },
       sortable: true,
     };
-   }
+  }
 
   ngOnInit() {
     this.getAgentList();
@@ -47,22 +48,22 @@ export class ScheduledCallComponent implements OnInit {
     this.agentList = await this.utilsService.getStoredAgentList();
   }
 
-  showScheduleCallList(){
+  showScheduleCallList() {
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
-    if(!this.utilsService.isNonEmpty(this.loggedUserId)){
+    if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
       this.loggedUserId = userInfo.USER_UNIQUE_ID;
     }
-  
+
     if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
       this.isAdmin = true;
       this.searchMobNo = '';
-      if(this.showByAdminUserId){
+      if (this.showByAdminUserId) {
         this.showByAdminUserId = true;
       }
-      else{
+      else {
         this.showByAdminUserId = false;
       }
-      
+
       this.getScheduledCallsInfo(this.loggedUserId, 0);
     }
     else {
@@ -71,7 +72,7 @@ export class ScheduledCallComponent implements OnInit {
     }
   }
 
-  searchByAgent(){
+  searchByAgent() {
     if (this.utilsService.isNonEmpty(this.selectedAgent)) {
       this.searchMobNo = '';
       this.showByAdminUserId = false;
@@ -83,7 +84,7 @@ export class ScheduledCallComponent implements OnInit {
     }
   }
 
-  getScheduledCallsInfo(id, page){
+  getScheduledCallsInfo(id, page) {
     this.loading = true;
     var param2;
     // if (this.isAdmin) {
@@ -99,7 +100,7 @@ export class ScheduledCallComponent implements OnInit {
     //   }
 
 
-      param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;
+    param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;
 
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Schdule call info', result);
@@ -120,7 +121,7 @@ export class ScheduledCallComponent implements OnInit {
 
   }
 
-  createRowData(scheduleCalls){
+  createRowData(scheduleCalls) {
     console.log('scheduleCalls -> ', scheduleCalls);
     var scheduleCallsArray = [];
     for (let i = 0; i < scheduleCalls.length; i++) {
@@ -129,7 +130,7 @@ export class ScheduledCallComponent implements OnInit {
         userName: scheduleCalls[i]['userName'],
         userMobile: scheduleCalls[i]['userMobile'],
         smeMobileNumber: scheduleCalls[i]['smeMobileNumber'],
-        smeName:  scheduleCalls[i]['smeName'],
+        smeName: scheduleCalls[i]['smeName'],
         scheduleCallTime: scheduleCalls[i]['scheduleCallTime'],
         time: this.getCallTime(scheduleCalls[i]['scheduleCallTime']),
         serviceType: scheduleCalls[i]['serviceType'] !== null ? scheduleCalls[i]['serviceType'] : 'ITR'
@@ -140,181 +141,203 @@ export class ScheduledCallComponent implements OnInit {
     return scheduleCallsArray;
   }
 
-  getCallTime(callDateTime){
+  getCallTime(callDateTime) {
     let firtPoint = callDateTime.indexOf('T');
     let secondPoint = callDateTime.length;
-    return callDateTime.substring(firtPoint + 1, secondPoint - 1                                                                                                                                                                  )
+    return callDateTime.substring(firtPoint + 1, secondPoint - 1)
   }
 
-  createColoumnDef(){
+  createColoumnDef() {
     return [
-        {
-          headerName: 'User Id',
-          field: 'userId',
-          width: 100,
-          suppressMovable: true,
-          sortable: true,
-          cellStyle: { textAlign: 'center' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
+      {
+        headerName: 'User Id',
+        field: 'userId',
+        width: 100,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Name',
+        field: 'userName',
+        width: 180,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Mobile No',
+        field: 'userMobile',
+        width: 130,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Schedule Call Date',
+        field: 'scheduleCallTime',
+        width: 150,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellRenderer: (data) => {
+          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
-        {
-          headerName: 'Name',
-          field: 'userName',
-          width: 180,
-          suppressMovable: true,
-          sortable: true,
-          cellStyle: { textAlign: 'center' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-        },
-        {
-          headerName: 'Mobile No',
-          field: 'userMobile',
-          width: 130,
-          suppressMovable: true,
-          sortable: true,
-          cellStyle: { textAlign: 'center' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-        },
-        {
-          headerName: 'Schedule Call Date',
-          field: 'scheduleCallTime',
-          width: 150,
-          suppressMovable: true,
-          sortable: true,
-          cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-          cellRenderer: (data) => {
-            return formatDate(data.value, 'dd/MM/yyyy', this.locale)
-          },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-        },
-        {
-          headerName: 'Time',
-          field: 'time',
-          width: 120,
-          suppressMovable: true,
-          sortable: true,
-          cellStyle: { textAlign: 'center' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-        },
-        {
-          headerName: 'SME Name',
-          field: 'smeName',
-          width: 150,
-          suppressMovable: true,
-          sortable: true,
-          cellStyle: { textAlign: 'center' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
-        },
-        {
-          headerName: 'Chat',
-          editable: false,
-          suppressMenu: true,
-          sortable: true,
-          suppressMovable: true,
-          cellRenderer: function (params) {
-            return `<button type="button" class="action_icon add_button" title="Open Chat"
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Time',
+        field: 'time',
+        width: 120,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'SME Name',
+        field: 'smeName',
+        width: 150,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Chat',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Open Chat"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
-          },
-          width: 60,
-          pinned: 'right',
-          cellStyle: function (params) {
-            return {
-              textAlign: 'center', display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center'
-            }
-          },
         },
-        {
-          headerName: 'User Info',
-          editable: false,
-          suppressMenu: true,
-          sortable: true,
-          suppressMovable: true,
-          cellRenderer: function (params) {
-            return `<button type="button" class="action_icon add_button" title="User Information"
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Whats App',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Click to check whats app chat"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+              <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
+             </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'User Info',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="User Information"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
               <i class="fa fa-mobile" style="font-size:26px" aria-hidden="true" data-action-type="userInfo"></i>
              </button>`;
-          },
-          width: 60,
-          pinned: 'right',
-          cellStyle: function (params) {
-            return {
-              textAlign: 'center', display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center'
-            }
-          },
         },
-        {
-          headerName: 'Call',
-          editable: false,
-          suppressMenu: true,
-          sortable: true,
-          suppressMovable: true,
-          cellRenderer: function (params) {
-            return `<button type="button" class="action_icon add_button" title="Call to user"
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Call',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Call to user"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
               <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
              </button>`;
-          },
-          width: 60,
-          pinned: 'right',
-          cellStyle: function (params) {
-            return {
-              textAlign: 'center', display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center'
-            }
-          },
         },
-        {
-          headerName: 'Call Status',
-          editable: false,
-          suppressMenu: true,
-          sortable: true,
-          suppressMovable: true,
-          cellRenderer: function (params) {
-            return `<button type="button" class="action_icon add_button" title="Update Call Status"
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Call Status',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Update Call Status"
             style="font-size: 12px; cursor:pointer;" data-action-type="call-done">Done</button>`;
-          },
-          width: 80,
-          pinned: 'right',
-          cellStyle: function (params) {
-            return {
-              textAlign: 'center', display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center'
-            }
-          },
-        }
+        },
+        width: 80,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      }
     ]
   }
 
@@ -339,7 +362,10 @@ export class ScheduledCallComponent implements OnInit {
           this.callStatusChange(params.data)
           break;
         }
-      
+        case 'whatsapp-chat': {
+          this.navigateToWhatsappChat(params.data)
+          break;
+        }
       }
     }
   }
@@ -386,7 +412,7 @@ export class ScheduledCallComponent implements OnInit {
       })
   }
 
-  showUserInformation(user){
+  showUserInformation(user) {
     if (this.utilsService.isNonEmpty(user.userMobile)) {
       this.route.navigate(['/pages/dashboard/quick-search'], { queryParams: { mobileNo: user.userMobile } });
     } else {
@@ -394,39 +420,39 @@ export class ScheduledCallComponent implements OnInit {
     }
   }
 
-  callStatusChange(callInfo){
+  callStatusChange(callInfo) {
     console.log('callInfo: ', callInfo)
-      this.loading = true;
-      let reqBody = {
-        scheduleCallTime: callInfo.scheduleCallTime,
-        userId: callInfo.userId,
-        statusName: "Done",
-        statusId: 18
-      }
-      let param = `/schedule-call-details`;
-      this.userMsService.putMethod(param, reqBody).subscribe((responce: any) => {
-        console.log('schedule-call Done responce: ', responce);
-        this.loading = false;
-        this.toastMsgService.alert('success', 'Call status update successfully.');
-          setTimeout(()=>{
-            this.showScheduleCallList();
-          },3000)
+    this.loading = true;
+    let reqBody = {
+      scheduleCallTime: callInfo.scheduleCallTime,
+      userId: callInfo.userId,
+      statusName: "Done",
+      statusId: 18
+    }
+    let param = `/schedule-call-details`;
+    this.userMsService.putMethod(param, reqBody).subscribe((responce: any) => {
+      console.log('schedule-call Done responce: ', responce);
+      this.loading = false;
+      this.toastMsgService.alert('success', 'Call status update successfully.');
+      setTimeout(() => {
+        this.showScheduleCallList();
+      }, 3000)
 
-      },
-        error => {
-          console.log('Error during schedule-call status change: ', error);
-          this.toastMsgService.alert('error', 'Error during schedule-call status change.')
-          this.loading = false;
-        })
-        
+    },
+      error => {
+        console.log('Error during schedule-call status change: ', error);
+        this.toastMsgService.alert('error', 'Error during schedule-call status change.')
+        this.loading = false;
+      })
+
   }
 
-  previous(){
+  previous() {
     this.pageCount++;
     this.getScheduledCallsInfo(this.loggedUserId, Math.abs(this.pageCount));
   }
 
-  next(){
+  next() {
     this.pageCount--;
     this.getScheduledCallsInfo(this.loggedUserId, Math.abs(this.pageCount));
   }
@@ -434,5 +460,7 @@ export class ScheduledCallComponent implements OnInit {
   // serchByMobNo(){
 
   // }
-
+  navigateToWhatsappChat(data) {
+    window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
+  }
 }

@@ -53,9 +53,9 @@ export class LoginComponent implements OnInit {
         this.getAgentList();
 
         if (userData.USER_ROLE.indexOf("ROLE_ADMIN") !== -1) {
-          this.router.navigate(['/pages/dashboard/calling/todays-call']);
+          this.router.navigate(['/pages/dashboard/calling/calling2']);
         } else if (userData.USER_ROLE.indexOf("ROLE_FILING_TEAM") !== -1) {
-          this.router.navigate(['/pages/dashboard/calling/todays-call']);
+          this.router.navigate(['/pages/dashboard/calling/calling2']);
         } else if (userData.USER_ROLE.indexOf("ROLE_TPA_SME") !== -1) {
           this.router.navigate(['pages/tpa-interested']);
         } else {
@@ -159,10 +159,10 @@ export class LoginComponent implements OnInit {
     this.getAgentList();
 
     if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
-      this.router.navigate(['/pages/dashboard/calling/todays-call']);
+      this.router.navigate(['/pages/dashboard/calling/calling2']);
       this.utilsService.logAction(jhi.userId, 'login')
     } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
-      this.router.navigate(['/pages/dashboard/calling/todays-call']);
+      this.router.navigate(['/pages/dashboard/calling/calling2']);
       this.utilsService.logAction(jhi.userId, 'login')
     } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
       this.router.navigate(['pages/tpa-interested']);

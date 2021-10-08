@@ -9,6 +9,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
+import { environment } from 'environments/environment';
 
 export const MY_FORMATS = {
   parse: {
@@ -39,8 +40,8 @@ export class SignupExceptionComponent implements OnInit {
   maxDate: any = new Date();
   minToDate: any;
 
-  constructor(private userService: UserMsService, @Inject(LOCALE_ID) private locale: string, private toastMsgService: ToastMessageService, private utilsService: UtilsService,
-              private route: Router, private dialog: MatDialog, private fb: FormBuilder, private datePipe: DatePipe) { 
+  constructor(private userMsService: UserMsService, @Inject(LOCALE_ID) private locale: string, private toastMsgService: ToastMessageService, private utilsService: UtilsService,
+    private route: Router, private dialog: MatDialog, private fb: FormBuilder, private datePipe: DatePipe) {
     this.signupExceptionGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.createColoumnDef(),
@@ -56,46 +57,46 @@ export class SignupExceptionComponent implements OnInit {
       fromDate: ['', Validators.required],
       toDate: ['', Validators.required]
     })
-    
+
     this.getSignUpExceptionList()
   }
 
-  getSignUpExceptionList(){
+  getSignUpExceptionList() {
     this.loading = true;
     var fromDate = '';
     var toDate = '';
-    var param = ''; 
-    if(this.signUpExceptionForm.valid){
+    var param = '';
+    if (this.signUpExceptionForm.valid) {
       fromDate = this.datePipe.transform(this.signUpExceptionForm.value.fromDate, 'yyyy-MM-dd');
       toDate = this.datePipe.transform(this.signUpExceptionForm.value.toDate, 'yyyy-MM-dd');
-      param = `/sign-up-exceptions?fromDate=${fromDate}&toDate=${toDate}`; 
+      param = `/sign-up-exceptions?fromDate=${fromDate}&toDate=${toDate}`;
     }
-    else{
+    else {
       param = `/sign-up-exceptions`;
     }
-    this.userService.getMethod(param).subscribe((result: any)=>{
-      console.log('sign-up-exceptions responce: ',result);
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      console.log('sign-up-exceptions responce: ', result);
       this.loading = false;
-      if(result instanceof Array && result.length > 0){
+      if (result instanceof Array && result.length > 0) {
         this.signupExceptionGridOptions.api.setRowData(this.createRowData(result))
       }
-      else{
+      else {
         this.signupExceptionGridOptions.api.setRowData(this.createRowData([]))
       }
-      
+
     },
-    error=>{
-      console.log('Error during getting sign-up-exceptions: ',error);
-      this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status))
-      this.loading = false;
-    })
+      error => {
+        console.log('Error during getting sign-up-exceptions: ', error);
+        this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status))
+        this.loading = false;
+      })
   }
 
-  setToDateValidation(fromDate){
+  setToDateValidation(fromDate) {
     this.minToDate = fromDate;
   }
 
-  createRowData(signUpExceptionList){
+  createRowData(signUpExceptionList) {
     console.log('scheduleCalls -> ', signUpExceptionList);
     var signUpExceptionListArray = [];
     for (let i = 0; i < signUpExceptionList.length; i++) {
@@ -103,7 +104,7 @@ export class SignupExceptionComponent implements OnInit {
         userId: signUpExceptionList[i]['userId'],
         name: signUpExceptionList[i]['name'],
         mobile: signUpExceptionList[i]['mobile'],
-        callerAgentName:  signUpExceptionList[i]['callerAgentName'],
+        callerAgentName: signUpExceptionList[i]['callerAgentName'],
         createdDate: signUpExceptionList[i]['createdDate'],
         serviceType: signUpExceptionList[i]['serviceType'],
         // status: signUpExceptionList[i]['status'],
@@ -116,7 +117,7 @@ export class SignupExceptionComponent implements OnInit {
     return signUpExceptionListArray;
   }
 
-  createColoumnDef(){
+  createColoumnDef() {
     return [
       {
         headerName: 'User Id',
@@ -225,6 +226,50 @@ export class SignupExceptionComponent implements OnInit {
         }
       },
       {
+        headerName: 'Chat',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Open Chat"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
+           </button>`;
+        },
+        width: 50,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Whats App',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Click to check whats app chat"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
         headerName: 'User Info',
         editable: false,
         suppressMenu: true,
@@ -313,7 +358,7 @@ export class SignupExceptionComponent implements OnInit {
     ]
   }
 
-  onSignupExceptionClicked(params){
+  onSignupExceptionClicked(params) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -334,11 +379,19 @@ export class SignupExceptionComponent implements OnInit {
           this.showNotes(params.data)
           break;
         }
+        case 'whatsapp-chat': {
+          this.navigateToWhatsappChat(params.data)
+          break;
+        }
+        case 'open-chat': {
+          this.openChat(params.data)
+          break;
+        }
       }
     }
   }
 
-  startCalling(user){
+  startCalling(user) {
     console.log('user: ', user)
     this.loading = true;
     const param = `/call-management/make-call`;
@@ -346,20 +399,20 @@ export class SignupExceptionComponent implements OnInit {
       "agent_number": user.callerAgentNumber,
       "customer_number": user.mobile
     }
-    this.userService.postMethod(param, reqBody).subscribe((result: any) => {
+    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
       console.log('Call Result: ', result);
       this.loading = false;
       if (result.success.status) {
         this.toastMsgService.alert("success", result.success.message)
       }
     }, error => {
-     // this.utilsService.showSnackBar('Error while making call, Please try again.');
+      // this.utilsService.showSnackBar('Error while making call, Please try again.');
       this.toastMsgService.alert("error", 'Error while making call, Please try again')
       this.loading = false;
     })
   }
 
-  showUserInformation(user){
+  showUserInformation(user) {
     if (this.utilsService.isNonEmpty(user.mobile)) {
       this.route.navigate(['/pages/dashboard/quick-search'], { queryParams: { mobileNo: user.mobile } });
     } else {
@@ -367,25 +420,25 @@ export class SignupExceptionComponent implements OnInit {
     }
   }
 
-  callStatusChange(callInfo){
+  callStatusChange(callInfo) {
     console.log('callInfo: ', callInfo)
-      this.loading = true;
-   //https://uat-api.taxbuddy.com/user/sign-up-exceptions/{customerNumber}
-      let param = `/sign-up-exceptions/${callInfo.mobile}`;
-      this.userService.putMethod(param).subscribe((responce: any) => {
-        console.log('call Done responce: ', responce);
+    this.loading = true;
+    //https://uat-api.taxbuddy.com/user/sign-up-exceptions/{customerNumber}
+    let param = `/sign-up-exceptions/${callInfo.mobile}`;
+    this.userMsService.putMethod(param).subscribe((responce: any) => {
+      console.log('call Done responce: ', responce);
+      this.loading = false;
+      this.toastMsgService.alert('success', 'Call status update successfully.');
+      setTimeout(() => {
+        this.getSignUpExceptionList();
+      }, 3000)
+    },
+      error => {
+        console.log('Error during schedule-call status change: ', error);
+        this.toastMsgService.alert('error', 'Error during schedule-call status change.')
         this.loading = false;
-        this.toastMsgService.alert('success', 'Call status update successfully.');
-          setTimeout(()=>{
-            this.getSignUpExceptionList();
-          },3000)
-      },
-        error => {
-          console.log('Error during schedule-call status change: ', error);
-          this.toastMsgService.alert('error', 'Error during schedule-call status change.')
-          this.loading = false;
-        })
-        
+      })
+
   }
 
   showNotes(client) {
@@ -403,4 +456,29 @@ export class SignupExceptionComponent implements OnInit {
     });
   }
 
+  navigateToWhatsappChat(data) {
+    console.log(data);
+    window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['mobile']}`)
+  }
+
+  openChat(client) {
+    console.log('client: ', client);
+    this.loading = true;
+    let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
+    this.userMsService.getMethod(param).subscribe((responce: any) => {
+      console.log('open chat link res: ', responce);
+      this.loading = false;
+      if (responce.success) {
+        window.open(responce.data.chatLink)
+      }
+      else {
+        this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
+      }
+    },
+      error => {
+        console.log('Error during feching chat link: ', error);
+        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+        this.loading = false;
+      })
+  }
 }
