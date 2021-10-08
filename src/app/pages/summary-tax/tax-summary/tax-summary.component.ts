@@ -1325,43 +1325,51 @@ export class TaxSummaryComponent implements OnInit {
 
      // Presumptive Business Income U/S 44AD
      var pre44ADinfo = itrData.ScheduleBP;
-     let preBusinessObj = {
-       businessType: "BUSINESS",
-       exemptIncome: 0,
-       natureOfBusiness: pre44ADinfo.NatOfBus44AD[0].CodeAD,
-       taxableIncome: 0,
-       tradeName: pre44ADinfo.NatOfBus44AD[0].NameOfBusiness,
-       incomes: []
+     var preBusinessObj = {
+      businessType: "BUSINESS",
+      exemptIncome: 0,
+      natureOfBusiness: 0,
+      taxableIncome: 0,
+      tradeName: '',
+      incomes: []
+    }
+     if(pre44ADinfo.hasOwnProperty('NatOfBus44AD')){
+      preBusinessObj.natureOfBusiness = pre44ADinfo.NatOfBus44AD[0].CodeAD;
+      preBusinessObj.tradeName = pre44ADinfo.NatOfBus44AD[0].NameOfBusiness;
      }
+    
  
-     let recivedInBankObj = {
-       businessType: null,
-       incomeType: "BANK",
-       minimumPresumptiveIncome: Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per),
-       ownership: null,
-       periodOfHolding: 0,
-       presumptiveIncome: Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per),
-       receipts: Number(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverBank),
-       registrationNo: null,
-       tonnageCapacity: 0
+     if(pre44ADinfo.hasOwnProperty('PersumptiveInc44AD')){
+      let recivedInBankObj = {
+        businessType: null,
+        incomeType: "BANK",
+        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD6Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per) : 0,
+        ownership: null,
+        periodOfHolding: 0,
+        presumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD6Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per) : 0,
+        receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverBank') ? Number(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverBank) : 0,
+        registrationNo: null,
+        tonnageCapacity: 0
+      }
+      preBusinessObj.incomes.push(recivedInBankObj);
+  
+      let recivedCashObj = {
+        businessType: null,
+        incomeType: "CASH",
+        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
+        ownership: null,
+        periodOfHolding: 0,
+        presumptiveIncome:  pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
+        receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverAnyOthMode') ? Number(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverAnyOthMode) : 0,
+        registrationNo: null,
+        tonnageCapacity: 0
+      }
+      preBusinessObj.incomes.push(recivedCashObj);
+      itr4Summary.assesse.business.presumptiveIncomes.push(preBusinessObj);
+      console.log('preBusinessObj Object :', preBusinessObj);
+  
      }
-     preBusinessObj.incomes.push(recivedInBankObj);
- 
-     let recivedCashObj = {
-       businessType: null,
-       incomeType: "CASH",
-       minimumPresumptiveIncome: Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per),
-       ownership: null,
-       periodOfHolding: 0,
-       presumptiveIncome:  Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per),
-       receipts: Number(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverAnyOthMode),
-       registrationNo: null,
-       tonnageCapacity: 0
-     }
-     preBusinessObj.incomes.push(recivedCashObj);
-     itr4Summary.assesse.business.presumptiveIncomes.push(preBusinessObj);
-     console.log('preBusinessObj Object :', preBusinessObj);
- 
+    
      // Presumptive Business Income U/S 44ADA
     var pre44ADAinfo = itrData.ScheduleBP;
 
@@ -1394,22 +1402,26 @@ export class TaxSummaryComponent implements OnInit {
       incomes: []
     }
 
-    let grossRecipt44ADAObj = {
-      businessType: null,
-      incomeType: "PROFESSIONAL",
-      minimumPresumptiveIncome: Number(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA),
-      ownership: null,
-      periodOfHolding: 0,
-      presumptiveIncome: Number(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA),
-      receipts: Number(pre44ADAinfo.PersumptiveInc44ADA.GrsReceipt),
-      registrationNo: null,
-      tonnageCapacity: 0
+    
+    if(pre44ADAinfo.hasOwnProperty('PersumptiveInc44ADA')) {
+      let grossRecipt44ADAObj = {
+        businessType: null,
+        incomeType: "PROFESSIONAL",
+        minimumPresumptiveIncome: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('TotPersumptiveInc44ADA') ? Number(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA) : 0,
+        ownership: null,
+        periodOfHolding: 0,
+        presumptiveIncome: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('TotPersumptiveInc44ADA') ? Number(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA) : 0,
+        receipts: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('GrsReceipt') ? Number(pre44ADAinfo.PersumptiveInc44ADA.GrsReceipt) : 0,
+        registrationNo: null,
+        tonnageCapacity: 0
+      }
+      // preBusinessObj44ADA.incomes.push(recivedInBankObj);
+      preBusinessObj44ADA.incomes.push(grossRecipt44ADAObj);
+      itr4Summary.assesse.business.presumptiveIncomes.push(preBusinessObj44ADA);
+      console.log('44ADA grossRecipt44ADAObj Object :', grossRecipt44ADAObj);
+      console.log('itr4Summary total object :', itr4Summary);
     }
-    // preBusinessObj44ADA.incomes.push(recivedInBankObj);
-    preBusinessObj44ADA.incomes.push(grossRecipt44ADAObj);
-    itr4Summary.assesse.business.presumptiveIncomes.push(preBusinessObj44ADA);
-    console.log('44ADA grossRecipt44ADAObj Object :', grossRecipt44ADAObj);
-    console.log('itr4Summary total object :', itr4Summary);
+    
 
     //Financial Information as on 31/03/2020  
     //Liabilities:
