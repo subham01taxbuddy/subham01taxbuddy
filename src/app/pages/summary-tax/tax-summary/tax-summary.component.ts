@@ -753,8 +753,8 @@ export class TaxSummaryComponent implements OnInit {
         }
        }
      }
-     this.totalExemptIncome = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? exemptIncomeInfo.ExemptIncAgriOthUs10Total : exemptIncomeInfo.OthersInc.OthersTotalTaxExe;;
-
+     let totalExemptIncome = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? exemptIncomeInfo.ExemptIncAgriOthUs10Total : exemptIncomeInfo.OthersInc.OthersTotalTaxExe;;
+      this.itrSummaryForm.controls.totalExemptIncome.setValue(totalExemptIncome)
    
 
     //Deduction under cha-VI A (sec 80D)
@@ -1016,8 +1016,8 @@ export class TaxSummaryComponent implements OnInit {
         }
         tdsOtherThanSalObj.deductorTAN = this.itrType.itrOne ? tdsOtherThanSalInfo[i].EmployerOrDeductorOrCollectDetl.TAN : tdsOtherThanSalInfo[i].TANOfDeductor;
         tdsOtherThanSalObj.deductorName = this.itrType.itrOne ? tdsOtherThanSalInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName : tdsOtherThanSalInfo[i].HeadOfIncome;
-        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].AmtForTaxDeduct : tdsOtherThanSalInfo[i].TDSDeducted;
-        tdsOtherThanSalObj.totalTdsDeposited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].TotTDSOnAmtPaid : tdsOtherThanSalInfo[i].GrossAmount;
+        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].TotTDSOnAmtPaid : tdsOtherThanSalInfo[i].GrossAmount;
+        tdsOtherThanSalObj.totalTdsDeposited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].AmtForTaxDeduct : tdsOtherThanSalInfo[i].TDSDeducted;
         this.tdsOtherThanSal.push(tdsOtherThanSalObj);
         this.taxPaiObj.otherThanSalary16A.push(tdsOtherThanSalObj);
       }
@@ -1051,8 +1051,8 @@ export class TaxSummaryComponent implements OnInit {
         }
         tdsOtherThanSalObj.deductorTAN = tds3OtherThanSalInfo[i].PANofTenant;
         tdsOtherThanSalObj.deductorName = this.itrType.itrOne ? tds3OtherThanSalInfo[i].NameOfTenant : tds3OtherThanSalInfo[i].HeadOfIncome;
-        tdsOtherThanSalObj.totalAmountCredited = tds3OtherThanSalInfo[i].TDSDeducted;
-        tdsOtherThanSalObj.totalTdsDeposited = this.itrType.itrOne ? tds3OtherThanSalInfo[i].GrsRcptToTaxDeduct : tds3OtherThanSalInfo[i].GrossAmount;
+        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? tds3OtherThanSalInfo[i].GrsRcptToTaxDeduct : tds3OtherThanSalInfo[i].GrossAmount;
+        tdsOtherThanSalObj.totalTdsDeposited = tds3OtherThanSalInfo[i].TDSDeducted;
         this.tdsOtherThanSal.push(tdsOtherThanSalObj);
         this.taxPaiObj.otherThanSalary16A.push(tdsOtherThanSalObj);
       }
@@ -2656,6 +2656,7 @@ export class TaxSummaryComponent implements OnInit {
     this.itrSummaryForm['controls'].taxSummary['controls'].totalDeduction.setValue(deductTotal)
     console.log('deductionUnderChapterVIA: ', this.itrSummaryForm['controls'].taxSummary['controls'].totalDeduction.value)
     this.calculateTotalIncome();
+    console.log('jdjdj')
   }
 
   calculateTotalIncome() {  //Calculate point 6
@@ -2754,6 +2755,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   calculateNetTaxPayble() {          //Calculate point 17 (Net Tax Payable/ (Refund) (15 - 16))
+    // alert('call...')
     console.log(this.itrSummaryForm['controls'].taxSummary['controls'].agrigateLiability.value, this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxesPaid.value)
     let netTaxPayble = Number(this.itrSummaryForm['controls'].taxSummary['controls'].agrigateLiability.value) - Number(this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxesPaid.value);
     if (netTaxPayble > 0) {
@@ -3486,7 +3488,8 @@ export class TaxSummaryComponent implements OnInit {
 
       netTaxPayable: [0],
       exemptIncomes: [],
-      newTaxRegime: null
+      newTaxRegime: null,
+      totalExemptIncome: [0]
     })
     console.log('itrSummaryForm: ', this.itrSummaryForm)
   }
