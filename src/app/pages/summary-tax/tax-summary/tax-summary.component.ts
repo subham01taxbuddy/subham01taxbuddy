@@ -246,7 +246,7 @@ export class TaxSummaryComponent implements OnInit {
         let adress = itrData.PersonalInfo.Address;
         this.itrSummaryForm.controls.assesse['controls'].email.setValue(adress.EmailAddress);
         this.itrSummaryForm.controls.assesse['controls'].contactNumber.setValue(adress.MobileNo);
-        let mainAddress = adress.ResidenceNo+' ,'+adress.ResidenceName+' ,'+adress.RoadOrStreet+' ,'+adress.LocalityOrArea;
+        let mainAddress = (adress.hasOwnProperty('ResidenceNo') ?  adress.ResidenceNo : '')+' ,'+(adress.hasOwnProperty('ResidenceName') ?adress.ResidenceName : '')+' ,'+(adress.hasOwnProperty('RoadOrStreet') ? adress.RoadOrStreet : '')+' ,'+(adress.hasOwnProperty('LocalityOrArea') ? adress.LocalityOrArea : '');
         console.log('mainAddress: ',mainAddress)
         this.itrSummaryForm.controls.assesse['controls'].address['controls'].premisesName.setValue(mainAddress);
         this.itrSummaryForm.controls.assesse['controls'].address['controls'].pinCode.setValue(adress.PinCode);
@@ -768,7 +768,7 @@ export class TaxSummaryComponent implements OnInit {
         medicalExpendature: 0
       }
 
-      this.sec80DobjVal.healthInsuarancePremiumSelf = sec80DInfo.Sec80DSelfFamSrCtznHealth.HealthInsPremSlfFam;
+      this.sec80DobjVal.healthInsuarancePremiumSelf = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.HealthInsPremSlfFam) ;
       this.sec80DobjVal.healthInsuarancePremiumParents = Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizen) - (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('MedicalExpParentsSrCtzn') ? Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn) : 0);
       var prehealthCheckVal = Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFam') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFamSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFamSrCtzn : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParents') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParentsSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn : 0))));
       console.log('prehealthCheckVal: ',prehealthCheckVal)
