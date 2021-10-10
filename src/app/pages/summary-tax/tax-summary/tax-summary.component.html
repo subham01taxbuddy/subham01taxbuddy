@@ -659,11 +659,10 @@
                         </tr>
                     </table><br><br>
 
-                    
                     <div *ngIf="itrType.itrFour">
                         <div class="tableHead">Annexure: Income from Business or Profession</div><br>
                         <app-itr4part [itrType]="itrSummaryForm['controls'].assesse['controls'].itrType.value"
-                        [businessData]="this.updatBussinessInfo"  (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
+                        [businessData]="this.updatBussinessInfo" [jsonParse]="isJsonParse" (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
                     </div>
 
 

@@ -151,6 +151,8 @@ export class TaxSummaryComponent implements OnInit {
   newRegimeTaxSummary: any;
   totalExemptIncome: number = 0;
 
+  isJsonParse: boolean = false;
+
 
   get getFamilyArray() {
     return <FormArray>this.itrSummaryForm['controls'].assesse.get('family');
@@ -204,6 +206,7 @@ export class TaxSummaryComponent implements OnInit {
      console.log('itrJsonInfo: ', itrJsonInfo);
      /* Parse personal information */
      var itrData = itrJsonInfo.ITR;
+     this.isJsonParse = true;
      console.log('itrData: ', itrData);
      this.bankData = [];
      this.housingData = [];
