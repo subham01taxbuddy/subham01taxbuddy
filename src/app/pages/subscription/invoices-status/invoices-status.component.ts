@@ -2,18 +2,34 @@ import { Component, OnInit, Inject, LOCALE_ID } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { UserMsService } from 'app/services/user-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
-import { formatDate } from '@angular/common';
-import { MatDialog } from '@angular/material';
+import { DatePipe, formatDate } from '@angular/common';
+import { DateAdapter, MatDialog, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.component';
 import { UtilsService } from 'app/services/utils.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { environment } from 'environments/environment';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { ActivatedRoute } from '@angular/router';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 @Component({
   selector: 'app-invoices-status',
   templateUrl: './invoices-status.component.html',
   styleUrls: ['./invoices-status.component.css'],
+  providers: [DatePipe,
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class InvoicesStatusComponent implements OnInit {
   loading: boolean;
@@ -31,7 +47,7 @@ export class InvoicesStatusComponent implements OnInit {
   constructor(private userMsService: UserMsService, private _toastMessageService: ToastMessageService,
     @Inject(LOCALE_ID) private locale: string, private userService: UserMsService, private dialog: MatDialog,
     private utilService: UtilsService, private fb: FormBuilder, private activatedRoute: ActivatedRoute,
-    private itrService: ItrMsService) {
+    private itrService: ItrMsService, private datePipe: DatePipe) {
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.invoicesCreateColoumnDef(),
@@ -79,13 +95,14 @@ export class InvoicesStatusComponent implements OnInit {
     if(this.summartDetailForm.valid){
       this.loading = true;
       var param;
-       let fromData = this.summartDetailForm.value.fromDate;
-       let toData = this.summartDetailForm.value.toDate;
+       let fromData = this.datePipe.transform(this.summartDetailForm.value.fromDate, 'yyyy-MM-dd');
+       let toData = this.datePipe.transform(this.summartDetailForm.value.toDate, 'yyyy-MM-dd');
        if(this.utilService.isNonEmpty(this.summartDetailForm.value.status)){
-        param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}&paymentStatus=${this.summartDetailForm.value.status}`;
-       }
+        // param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}&paymentStatus=${this.summartDetailForm.value.status}`;
+        param = `/itr/invoice/report?fromDate=${fromData}&toDate=${toData}&paymentStatus=${this.summartDetailForm.value.status}`;      }
        else{
-        param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}`;
+        // param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}`;
+        param = `/itr/invoice/report?fromDate=${fromData}&toDate=${toData}`;
        }
       this.userMsService.getMethodInfo(param).subscribe((res: any) => {
         this.loading = false;
@@ -687,13 +704,15 @@ export class InvoicesStatusComponent implements OnInit {
     console.log('this.summartDetailForm.value: ', this.summartDetailForm)
     if (this.summartDetailForm.valid) {
       console.log(this.summartDetailForm.value)
-      let fromData = this.summartDetailForm.value.fromDate;
-      let toData = this.summartDetailForm.value.toDate;
+      // let fromData = this.summartDetailForm.value.fromDate;
+      // let toData = this.summartDetailForm.value.toDate;
+        let fromData = this.datePipe.transform(this.summartDetailForm.value.fromDate, 'yyyy-MM-dd');
+       let toData = this.datePipe.transform(this.summartDetailForm.value.toDate, 'yyyy-MM-dd');
       if(this.utilService.isNonEmpty(this.summartDetailForm.value.status)){
-        location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData.toISOString() + '&toDate=' + toData.toISOString()+'&paymentStatus='+ this.summartDetailForm.value.status;
+        location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData+'&paymentStatus='+ this.summartDetailForm.value.status;
        }
        else{
-        location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData.toISOString() + '&toDate=' + toData.toISOString();;
+        location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData;;
        }
       
     }
