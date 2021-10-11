@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 export class Itr4partComponent implements OnInit {
 
   @Input('itrType') itrType: string;
+  @Input('jsonParse') jsonParse: any;
   @Input('businessData') businessData: any;
 
   @Output() getBusinessInfo = new EventEmitter();
@@ -26,47 +27,91 @@ export class Itr4partComponent implements OnInit {
 
 
   constructor(private userService: UserMsService, private fb: FormBuilder, private utilService: UtilsService) {
-
+      
   }
 
   ngOnInit() {
+    this.initialiseForm()
     this.getMastersData();
-    this.natureOfBusinessForm = this.fb.group({
-      natureOfBusiness44AD: ['', Validators.required],
-      natureOfBusiness44ADA: ['', Validators.required],
-      tradeName44AD: ['', [Validators.required]],  //Validators.pattern(AppConstants.charRegex)
-      tradeName44ADA: ['', Validators.required],
-      recieptRecievedInBank: ['', Validators.required],
-      presumptiveIncomeRecieveBank: ['', Validators.required],
-      recievedinCash: ['', Validators.required],
-      presumptiveIncomeRecievedCash: ['', Validators.required],
-      grossReciept: ['', Validators.required],
-      presumptiveIncome: ['', Validators.required],
-      minimumPresumptiveIncomeRecivedInBank: [],
-      minimumPresumptiveIncomeCashInBank: [],
-      minimumPresumptiveIncome: [],
-      received44ADtaotal: [],
-      presumptive44ADtotal: [],
-      totalCapitalLiabilities: [],
-      totalAssets: [],
-
-      grossTurnOverAmount: null,
-      membersOwnCapital: [],
-      securedLoans: [],
-      unSecuredLoans: [],
-      advances: [],
-      sundryCreditorsAmount: [],
-      otherLiabilities: [],
-      fixedAssets: [],
-      inventories: [],
-      sundryDebtorsAmount: [],
-      balanceWithBank: [],
-      cashInHand: [],
-      loanAndAdvances: [],
-      otherAssets: []
-    })
-
    
+  }
+
+  initialiseForm(){
+    console.log('jsonParse: ',this.jsonParse)
+      if(this.jsonParse){
+        this.natureOfBusinessForm = this.fb.group({
+          natureOfBusiness44AD: [''],
+          natureOfBusiness44ADA: [''],
+          tradeName44AD: [''],  //Validators.pattern(AppConstants.charRegex)
+          tradeName44ADA: [''],
+          recieptRecievedInBank: [''],
+          presumptiveIncomeRecieveBank: [''],
+          recievedinCash: [''],
+          presumptiveIncomeRecievedCash: [''],
+          grossReciept: [''],
+          presumptiveIncome: [''],
+          minimumPresumptiveIncomeRecivedInBank: [],
+          minimumPresumptiveIncomeCashInBank: [],
+          minimumPresumptiveIncome: [],
+          received44ADtaotal: [],
+          presumptive44ADtotal: [],
+          totalCapitalLiabilities: [],
+          totalAssets: [],
+    
+          grossTurnOverAmount: null,
+          membersOwnCapital: [],
+          securedLoans: [],
+          unSecuredLoans: [],
+          advances: [],
+          sundryCreditorsAmount: [],
+          otherLiabilities: [],
+          fixedAssets: [],
+          inventories: [],
+          sundryDebtorsAmount: [],
+          balanceWithBank: [],
+          cashInHand: [],
+          loanAndAdvances: [],
+          otherAssets: []
+        })
+      }
+      else{
+        this.natureOfBusinessForm = this.fb.group({
+          natureOfBusiness44AD: ['', Validators.required],
+          natureOfBusiness44ADA: ['', Validators.required],
+          tradeName44AD: ['', [Validators.required]],  //Validators.pattern(AppConstants.charRegex)
+          tradeName44ADA: ['', Validators.required],
+          recieptRecievedInBank: ['', Validators.required],
+          presumptiveIncomeRecieveBank: ['', Validators.required],
+          recievedinCash: ['', Validators.required],
+          presumptiveIncomeRecievedCash: ['', Validators.required],
+          grossReciept: ['', Validators.required],
+          presumptiveIncome: ['', Validators.required],
+          minimumPresumptiveIncomeRecivedInBank: [],
+          minimumPresumptiveIncomeCashInBank: [],
+          minimumPresumptiveIncome: [],
+          received44ADtaotal: [],
+          presumptive44ADtotal: [],
+          totalCapitalLiabilities: [],
+          totalAssets: [],
+    
+          grossTurnOverAmount: null,
+          membersOwnCapital: [],
+          securedLoans: [],
+          unSecuredLoans: [],
+          advances: [],
+          sundryCreditorsAmount: [],
+          otherLiabilities: [],
+          fixedAssets: [],
+          inventories: [],
+          sundryDebtorsAmount: [],
+          balanceWithBank: [],
+          cashInHand: [],
+          loanAndAdvances: [],
+          otherAssets: []
+        })
+      }
+
+      console.log('natureOfBusinessForm: ',this.natureOfBusinessForm)
   }
 
   updateBusinessInfo(){
@@ -430,6 +475,7 @@ export class Itr4partComponent implements OnInit {
   }
 
   ngDoCheck() {
+    console.log('natureOfBusinessForm valid: ',this.natureOfBusinessForm)
     if (this.natureOfBusinessForm.valid) {
       //console.log('natureOfBusinessForm value: ',this.natureOfBusinessForm.value)
       this.getBusinessInfo.emit(this.natureOfBusinessForm)

@@ -94,7 +94,7 @@
                                             disabled class="disableInput">
                                      </div>
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0">
+                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0 || this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
                                         <label>Tax Refund</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxRefund"
                                             disabled class="disableInput">
@@ -109,7 +109,7 @@
                                             disabled class="disableInput">
                                      </div>
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0">
+                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0 || this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
                                         <label>Tax Refund</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxRefund"
                                             disabled class="disableInput">
@@ -178,9 +178,9 @@
 
                                     <div class="card__col-lg-2">
                                         <mat-form-field appearance="outline">
-                                            <mat-label>Father's Name</mat-label>
-                                            <input matInput placeholder="Father's Name" formControlName="fathersName"
-                                                maxlength="75" autocomplete="off" required>
+                                            <mat-label>Father Name</mat-label>
+                                            <input matInput placeholder="Father Name" formControlName="fathersName"
+                                                maxlength="75" autocomplete="off">
                                             <mat-error
                                                 *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['fathersName'].hasError('required')">
                                                 Enter
@@ -659,11 +659,10 @@
                         </tr>
                     </table><br><br>
 
-                    
                     <div *ngIf="itrType.itrFour">
                         <div class="tableHead">Annexure: Income from Business or Profession</div><br>
                         <app-itr4part [itrType]="itrSummaryForm['controls'].assesse['controls'].itrType.value"
-                        [businessData]="this.updatBussinessInfo"  (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
+                        [businessData]="this.updatBussinessInfo" [jsonParse]="isJsonParse" (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
                     </div>
 
 
@@ -1704,7 +1703,7 @@
 
                                 <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.taxpayable" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
-                            <tr *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0">
+                            <tr *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0 || this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
                                 <td>{{itrType.itrFour ? 18 : 17}}</td>
                                 <td><b>Net Tax Refund</b></td>
                                 <td></td>

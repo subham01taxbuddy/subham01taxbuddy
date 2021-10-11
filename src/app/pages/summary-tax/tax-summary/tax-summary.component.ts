@@ -151,6 +151,8 @@ export class TaxSummaryComponent implements OnInit {
   newRegimeTaxSummary: any;
   totalExemptIncome: number = 0;
 
+  isJsonParse: boolean = false;
+
 
   get getFamilyArray() {
     return <FormArray>this.itrSummaryForm['controls'].assesse.get('family');
@@ -204,6 +206,7 @@ export class TaxSummaryComponent implements OnInit {
      console.log('itrJsonInfo: ', itrJsonInfo);
      /* Parse personal information */
      var itrData = itrJsonInfo.ITR;
+     this.isJsonParse = true;
      console.log('itrData: ', itrData);
      this.bankData = [];
      this.housingData = [];
@@ -309,35 +312,39 @@ export class TaxSummaryComponent implements OnInit {
   
         /* House Property */
         var housingInfo = incomeDeduction;
-        let housingObj = {
-          propertyType: housingInfo.hasOwnProperty('TypeOfHP') ? (housingInfo.TypeOfHP === "S" ? 'SOP' : 'LOP') : (housingInfo.TotalIncomeOfHP === 0 ? 'SOP' : 'LOP'),
-          address: '',
-          ownerOfProperty: '',
-          coOwners: [],
-          otherOwnerOfProperty: '',
-          tenantName: '',
-          tenentPanNumber: '',
-          grossAnnualRentReceived: housingInfo.GrossRentReceived,
-          annualValue:  housingInfo.AnnualValue,
-          propertyTax: housingInfo.TaxPaidlocalAuth,
-          interestAmount: housingInfo.InterestPayable,
-          taxableIncome: housingInfo.TotalIncomeOfHP,
-          exemptIncome: housingInfo.StandardDeduction,
-          pinCode: '',
-          flatNo: '',
-          building: '',
-          street: '',
-          locality: '',
-          city: '',
-          country: '',
-          state: '',
+        if(this.utilService.isNonZero(housingInfo.GrossRentReceived) || this.utilService.isNonZero(housingInfo.AnnualValue) ||this.utilService.isNonZero(housingInfo.TaxPaidlocalAuth) ||
+          this.utilService.isNonZero(housingInfo.InterestPayable) || this.utilService.isNonZero(housingInfo.TotalIncomeOfHP) || this.utilService.isNonZero(housingInfo.StandardDeduction) ){
+            var housingObj = {
+              propertyType: housingInfo.hasOwnProperty('TypeOfHP') ? (housingInfo.TypeOfHP === "S" ? 'SOP' : 'LOP') : (housingInfo.TotalIncomeOfHP === 0 ? 'SOP' : 'LOP'),
+              address: '',
+              ownerOfProperty: '',
+              coOwners: [],
+              otherOwnerOfProperty: '',
+              tenantName: '',
+              tenentPanNumber: '',
+              grossAnnualRentReceived: housingInfo.GrossRentReceived,
+              annualValue:  housingInfo.AnnualValue,
+              propertyTax: housingInfo.TaxPaidlocalAuth,
+              interestAmount: housingInfo.InterestPayable,
+              taxableIncome: housingInfo.TotalIncomeOfHP,
+              exemptIncome: housingInfo.StandardDeduction,
+              pinCode: '',
+              flatNo: '',
+              building: '',
+              street: '',
+              locality: '',
+              city: '',
+              country: '',
+              state: '',
+            }
+
+            this.housingData.push(housingObj);
         }
   
-        this.housingData.push(housingObj);
+       
   
         this.houseArray = [];
         for (let i = 0; i < this.housingData.length; i++) {
-  
           let houceObj = {
             annualOfPropOwned: 0,
             annualValue: 0,
@@ -414,35 +421,37 @@ export class TaxSummaryComponent implements OnInit {
           }
         }
        
-  
-        let salObj = {
-          employerName: '',
-          address: '',
-          employerTAN: '',
-          employerCategory: '',
-          salAsPerSec171: salaryInfo.hasOwnProperty('Salary') ? this.getNumberFormat(salaryInfo.Salary) : 0,
-          valOfPerquisites: salaryInfo.hasOwnProperty('PerquisitesValue') ? this.getNumberFormat(salaryInfo.PerquisitesValue) : 0,
-          profitInLieu: salaryInfo.hasOwnProperty('ProfitsInSalary') ? this.getNumberFormat(salaryInfo.ProfitsInSalary) : 0,
-          grossSalary: salaryInfo.GrossSalary,
-          houseRentAllow: hra,
-          leaveTravelExpense: 0,
-          other: otherAmnt,
-          totalExemptAllow: salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10,
-          netSalary: salaryInfo.NetSalary,
-          standardDeduction: salaryInfo.DeductionUs16ia,
-          entertainAllow: salaryInfo.EntertainmentAlw16ii,
-          professionalTax: salaryInfo.ProfessionalTaxUs16iii,
-          totalSalaryDeduction: Number(salaryInfo.DeductionUs16ia) + Number(salaryInfo.EntertainmentAlw16ii) +  (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) ,
-          taxableIncome: salaryInfo.IncomeFromSal,
-  
-          pinCode: '',
-          country: '',
-          state: '',
-          city: ''
-        }
-  
-        this.salaryItrratedData.push(salObj);
-  
+        if(salaryInfo.hasOwnProperty('Salary') || salaryInfo.hasOwnProperty('PerquisitesValue') || salaryInfo.hasOwnProperty('ProfitsInSalary') || this.utilService.isNonZero(salaryInfo.GrossSalary) || this.utilService.isNonZero(salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10) ||
+          this.utilService.isNonZero(salaryInfo.NetSalary) || this.utilService.isNonZero(salaryInfo.DeductionUs16ia) || this.utilService.isNonZero(salaryInfo.EntertainmentAlw16ii) || this.utilService.isNonZero(salaryInfo.ProfessionalTaxUs16iii) || this.utilService.isNonZero(salaryInfo.IncomeFromSal)){
+            var salObj = {
+              employerName: '',
+              address: '',
+              employerTAN: '',
+              employerCategory: '',
+              salAsPerSec171: salaryInfo.hasOwnProperty('Salary') ? this.getNumberFormat(salaryInfo.Salary) : 0,
+              valOfPerquisites: salaryInfo.hasOwnProperty('PerquisitesValue') ? this.getNumberFormat(salaryInfo.PerquisitesValue) : 0,
+              profitInLieu: salaryInfo.hasOwnProperty('ProfitsInSalary') ? this.getNumberFormat(salaryInfo.ProfitsInSalary) : 0,
+              grossSalary: salaryInfo.GrossSalary,
+              houseRentAllow: hra,
+              leaveTravelExpense: 0,
+              other: otherAmnt,
+              totalExemptAllow: salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10,
+              netSalary: salaryInfo.NetSalary,
+              standardDeduction: salaryInfo.DeductionUs16ia,
+              entertainAllow: salaryInfo.EntertainmentAlw16ii,
+              professionalTax: salaryInfo.ProfessionalTaxUs16iii,
+              totalSalaryDeduction: Number(salaryInfo.DeductionUs16ia) + Number(salaryInfo.EntertainmentAlw16ii) +  (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) ,
+              taxableIncome: salaryInfo.IncomeFromSal,
+      
+              pinCode: '',
+              country: '',
+              state: '',
+              city: ''
+            }
+      
+            this.salaryItrratedData.push(salObj);
+          }
+       
         this.employerArray = [];
         for (let i = 0; i < this.salaryItrratedData.length; i++) {
           debugger
@@ -1516,7 +1525,8 @@ export class TaxSummaryComponent implements OnInit {
         this.donationData = [];
         this.salaryItrratedData = [];
         // this.setTotalOfExempt();
-        this.itrSummaryForm.patchValue(summary)
+        this.itrSummaryForm.patchValue(summary);
+        console.log('itrSummaryForm: ',this.itrSummaryForm.value);
         this.setItrType(summary.assesse.itrType)
 
         if (this.itrSummaryForm['controls'].assesse['controls'].itrType.value === "4") {
@@ -2451,7 +2461,7 @@ export class TaxSummaryComponent implements OnInit {
 
   updateFamilyForm(obj) {
     return this.fb.group({
-      fName: [obj.firstName || '', Validators.required],
+      fName: [obj.firstName || ''],
       mName: [obj.middleName || ''],
       lName: [obj.lastName || '', Validators.required],
       dateOfBirth: [obj.dateOfBirth || '', Validators.required],
