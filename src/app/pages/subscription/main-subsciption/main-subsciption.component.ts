@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
+import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
@@ -27,7 +28,8 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   config: any;
 
   constructor(private itrService: ItrMsService, private utilsService: UtilsService, private _toastMessageService: ToastMessageService, private router: Router,
-    private userMsService: UserMsService, private dialog: MatDialog) {
+    private userMsService: UserMsService, private dialog: MatDialog,
+    private roleBaseAuthGaurdService: RoleBaseAuthGaurdService,) {
     this.config = {
       itemsPerPage: 20,
       currentPage: 1,
@@ -515,10 +517,17 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  isApplicable(permissionRoles) {
+    const loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+    return this.roleBaseAuthGaurdService.checkHasPermission(loggedInUserData.USER_ROLE, permissionRoles);
+  }
+
   addNewPlan(plan) {
     if (this.utilsService.isNonZero(plan.txbdyInvoiceId)) {
-      this.utilsService.showSnackBar('This subscriptions invoice is created.');
-      return;
+      if (!this.isApplicable('ITR_SUPER_LEAD')) {
+        this.utilsService.showSnackBar('This subscriptions invoice is created.');
+        return;
+      }
     }
     this.router.navigate(['/pages/subscription/sub/' + plan.subscriptionId]);
   }
