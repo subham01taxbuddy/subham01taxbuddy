@@ -2686,7 +2686,6 @@ export class TaxSummaryComponent implements OnInit {
   calculateTotalIncome() {  //Calculate point 6
     debugger
     let totalIncome = Number(this.itrSummaryForm['controls'].taxSummary['controls'].grossTotalIncome.value) - Number(this.itrSummaryForm['controls'].taxSummary['controls'].totalDeduction.value);
-    alert(totalIncome)
     if (totalIncome > 0) {
       debugger
       // this.itrSummaryForm.controls['totalIncome'].setValue(totalIncome);
