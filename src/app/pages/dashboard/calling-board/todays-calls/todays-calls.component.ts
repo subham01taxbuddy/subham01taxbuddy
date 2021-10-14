@@ -35,6 +35,7 @@ export class TodaysCallsComponent implements OnInit {
       rowData: [],
       columnDefs: this.createColoumnDef([]),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,
@@ -371,24 +372,24 @@ export class TodaysCallsComponent implements OnInit {
   getMyTodaysCalls(id, page, searchMobNo?) {
     this.loading = true;
     var param2;
-    if (this.isAdmin) {
-      if (this.utilsService.isNonEmpty(searchMobNo)) {
-        param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
-      } else {
-        if (this.showAllUser) {
-          param2 = `/call-management/customers?statusId=18&page=${page}&pageSize=15`;
-        } else {
-          param2 = `/call-management/customers?statusId=18&agentId=${id}&page=${page}&pageSize=15`;
-        }
-      }
+    // if (this.isAdmin) {
+    if (this.utilsService.isNonEmpty(searchMobNo)) {
+      param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
     } else {
-      if (this.utilsService.isNonEmpty(searchMobNo)) {
-        param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+      if (this.showAllUser) {
+        param2 = `/call-management/customers?statusId=18&page=${page}&pageSize=15`;
       } else {
-        param2 = `/call-management/customers?statusId=18&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+        param2 = `/call-management/customers?statusId=18&agentId=${id}&page=${page}&pageSize=15`;
       }
-
     }
+    // } else {
+    //   if (this.utilsService.isNonEmpty(searchMobNo)) {
+    //     param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+    //   } else {
+    //     param2 = `/call-management/customers?statusId=18&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+    //   }
+
+    // }
 
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
@@ -528,13 +529,13 @@ export class TodaysCallsComponent implements OnInit {
       console.log('The dialog was closed');
       if (result) {
         if (result.data === "statusChanged") {
-          if (this.isAdmin) {
-            this.getMyTodaysCalls(this.selectedAgent, 0);
-          }
-          else {
-            var userInfo = JSON.parse(localStorage.getItem('UMD'));
-            this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
-          }
+          // if (this.isAdmin) {
+          this.getMyTodaysCalls(this.selectedAgent, 0);
+          // }
+          // else {
+          //   var userInfo = JSON.parse(localStorage.getItem('UMD'));
+          //   this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
+          // }
         }
       }
     });
@@ -542,13 +543,13 @@ export class TodaysCallsComponent implements OnInit {
 
   pageChanged(event) {
     this.config.currentPage = event;
-    if (this.isAdmin) {
-      this.getMyTodaysCalls(this.selectedAgent, event - 1);
-    }
-    else {
-      var userInfo = JSON.parse(localStorage.getItem('UMD'));
-      this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, event - 1);
-    }
+    // if (this.isAdmin) {
+    this.getMyTodaysCalls(this.selectedAgent, event - 1);
+    // }
+    // else {
+    //   var userInfo = JSON.parse(localStorage.getItem('UMD'));
+    //   this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, event - 1);
+    // }
   }
 
   openChat(client) {
