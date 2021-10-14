@@ -21,7 +21,7 @@ export class InterestedClientsComponent implements OnInit {
   loading = false;
   config: any;
   agentList: any = [];
-  isAdmin: boolean;
+  // isAdmin: boolean;
   selectedAgent: any;
   selectedStatus = 18;
   interestedClientsGridOption: GridOptions;
@@ -80,13 +80,13 @@ export class InterestedClientsComponent implements OnInit {
     this.selectedAgent = '';
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
-      this.isAdmin = true;
+      // this.isAdmin = true;
       this.showAllUser = true;
       this.config.currentPage = 1;
       this.getInterestedClients(0);
     }
     else {
-      this.isAdmin = false;
+      // this.isAdmin = false;
       this.config.currentPage = 1;
       this.getInterestedClients(0);
     }
@@ -371,25 +371,25 @@ export class InterestedClientsComponent implements OnInit {
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     this.loading = true;
     var param2;
-    if (this.isAdmin) {
-      if (this.utilsService.isNonEmpty(searchMobNo)) {
-        param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
-      } else {
-        this.searchMobNo = '';
-        if (this.showAllUser) {
-          param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15`;
-        } else {
-          param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
-        }
-      }
+    // if (this.isAdmin) {
+    if (this.utilsService.isNonEmpty(searchMobNo)) {
+      param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
     } else {
-      if (this.utilsService.isNonEmpty(searchMobNo)) {
-        param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
+      this.searchMobNo = '';
+      if (this.showAllUser) {
+        param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15`;
       } else {
-        this.searchMobNo = '';
-        param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
+        param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
       }
     }
+    // } else {
+    //   if (this.utilsService.isNonEmpty(searchMobNo)) {
+    //     param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
+    //   } else {
+    //     this.searchMobNo = '';
+    //     param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
+    //   }
+    // }
 
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
@@ -561,7 +561,7 @@ export class InterestedClientsComponent implements OnInit {
     })
   }
 
-  downloadDocs(agentId){
+  downloadDocs(agentId) {
     let disposable = this.dialog.open(DownloadDialogComponent, {
       width: '50%',
       height: 'auto',
