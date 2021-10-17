@@ -10,6 +10,7 @@ import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.
 import { AppConstants } from 'app/shared/constants';
 import { formatDate } from '@angular/common';
 import { DownloadDialogComponent } from './download-dialog/download-dialog.component';
+import { CallReassignmentComponent } from 'app/shared/components/call-reassignment/call-reassignment.component';
 
 @Component({
   selector: 'app-interested-clients',
@@ -21,7 +22,7 @@ export class InterestedClientsComponent implements OnInit {
   loading = false;
   config: any;
   agentList: any = [];
-  // isAdmin: boolean;
+  isAdmin: boolean;
   selectedAgent: any;
   selectedStatus = 18;
   interestedClientsGridOption: GridOptions;
@@ -36,6 +37,7 @@ export class InterestedClientsComponent implements OnInit {
       rowData: [],
       columnDefs: this.createColoumnDef(this.itrStatus),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,
@@ -58,12 +60,16 @@ export class InterestedClientsComponent implements OnInit {
     this.agentList = await this.utilsService.getStoredAgentList();
   }
 
-  getStatus() {
+  getStatus(ref?) {
     let param = '/itr-status-master/source/BACK_OFFICE';
     this.userMsService.getMethod(param).subscribe(respoce => {
       console.log('status responce: ', respoce);
       if (respoce instanceof Array && respoce.length > 0) {
         this.itrStatus = respoce;
+        if (ref === 'CALL_REASSIGN') {
+          this.callReassignment();
+          return;
+        }
         this.interestedClientsGridOption.api.setColumnDefs(this.createColoumnDef(this.itrStatus));
       }
       else {
@@ -80,13 +86,13 @@ export class InterestedClientsComponent implements OnInit {
     this.selectedAgent = '';
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
-      // this.isAdmin = true;
+      this.isAdmin = true;
       this.showAllUser = true;
       this.config.currentPage = 1;
       this.getInterestedClients(0);
     }
     else {
-      // this.isAdmin = false;
+      this.isAdmin = false;
       this.config.currentPage = 1;
       this.getInterestedClients(0);
     }
@@ -371,25 +377,25 @@ export class InterestedClientsComponent implements OnInit {
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     this.loading = true;
     var param2;
-    // if (this.isAdmin) {
-    if (this.utilsService.isNonEmpty(searchMobNo)) {
-      param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
-    } else {
-      this.searchMobNo = '';
-      if (this.showAllUser) {
-        param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15`;
+    if (this.isAdmin) {
+      if (this.utilsService.isNonEmpty(searchMobNo)) {
+        param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       } else {
-        param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
+        this.searchMobNo = '';
+        if (this.showAllUser) {
+          param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15`;
+        } else {
+          param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
+        }
+      }
+    } else {
+      if (this.utilsService.isNonEmpty(searchMobNo)) {
+        param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
+      } else {
+        this.searchMobNo = '';
+        param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
       }
     }
-    // } else {
-    //   if (this.utilsService.isNonEmpty(searchMobNo)) {
-    //     param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
-    //   } else {
-    //     this.searchMobNo = '';
-    //     param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
-    //   }
-    // }
 
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
@@ -573,5 +579,25 @@ export class InterestedClientsComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
+
+  callReassignment() {
+    if (this.utilsService.isNonEmpty(this.itrStatus)) {
+      let disposable = this.dialog.open(CallReassignmentComponent, {
+        width: '50%',
+        height: 'auto',
+        data: {
+          agentId: this.selectedAgent,
+          statusId: this.selectedStatus,
+          itrStatus: this.itrStatus,
+        }
+      })
+
+      disposable.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+      });
+    } else {
+      this.getStatus('CALL_REASSIGN')
+    }
   }
 }

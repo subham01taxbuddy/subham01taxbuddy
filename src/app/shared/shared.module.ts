@@ -26,6 +26,7 @@ import { FyDropDownComponent } from './components/fy-drop-down/fy-drop-down.comp
 import { ChangeStatusComponent } from './components/change-status/change-status.component';
 import { NgxLoadingModule } from 'ngx-loading';
 import { SmeListDropDownComponent } from './components/sme-list-drop-down/sme-list-drop-down.component';
+import { CallReassignmentComponent } from './components/call-reassignment/call-reassignment.component';
 // import { CheckboxRenderer } from './checkbox-renderer.component';
 
 
@@ -48,7 +49,8 @@ import { SmeListDropDownComponent } from './components/sme-list-drop-down/sme-li
         DocumentViewerComponent,
         FyDropDownComponent,
         ChangeStatusComponent,
-        SmeListDropDownComponent
+        SmeListDropDownComponent,
+        CallReassignmentComponent
     ],
     imports: [
         CommonModule,
@@ -85,10 +87,11 @@ import { SmeListDropDownComponent } from './components/sme-list-drop-down/sme-li
         DocumentViewerComponent,
         FyDropDownComponent,
         ChangeStatusComponent,
-        SmeListDropDownComponent
+        SmeListDropDownComponent,
+        CallReassignmentComponent
     ],
     providers: [],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,
-        KommunicateDialogComponent, ItrActionsComponent, ChangeStatusComponent]
+        KommunicateDialogComponent, ItrActionsComponent, ChangeStatusComponent, CallReassignmentComponent]
 })
 export class SharedModule { }

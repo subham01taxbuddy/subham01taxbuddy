@@ -123,4 +123,9 @@ export class NavbarComponent implements OnInit {
   onClickSalesIQ() {
     window.open("https://salesiq.zoho.com/ssbainnovationspvtltd/");
   }
+
+  getLoggedInUserName() {
+    const userObj = JSON.parse(localStorage.getItem('UMD'));
+    return userObj ? (userObj.USER_F_NAME + ' ' + userObj.USER_L_NAME) : ''
+  }
 }
