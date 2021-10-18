@@ -25,12 +25,14 @@ export class InterestedClientsComponent implements OnInit {
   isAdmin: boolean;
   selectedAgent: any;
   selectedStatus = 18;
+  selectedService = 'ITR';
   interestedClientsGridOption: GridOptions;
   interstedClientInfo: any;
   showAllUser: boolean;
   searchMobNo: any;
   itrStatus: any = [];
-
+  isServiceDisabled = false;
+  serviceTypeList = ['ITR', 'GST', 'NOTICE', 'TPA'];
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
     private toastMsgService: ToastMessageService, private route: Router) {
     this.interestedClientsGridOption = <GridOptions>{
@@ -103,10 +105,25 @@ export class InterestedClientsComponent implements OnInit {
       this.selectedAgent = this.selectedAgent;
       this.showAllUser = false;
       this.config.currentPage = 1;
+      const sType = this.agentList.filter(item => item.agentId === this.selectedAgent);
+      if (sType instanceof Array && sType.length > 0) {
+        this.selectedService = sType[0].serviceType;
+        this.isServiceDisabled = true;
+      }
+      this.getInterestedClients(0);
+    } else {
+      this.showAllUser = true;
+      this.config.currentPage = 1;
+      this.isServiceDisabled = false;
       this.getInterestedClients(0);
     }
-    else {
-      this.toastMsgService.alert("error", "Select Agent")
+  }
+
+  searchByServiceType() {
+    if (this.utilsService.isNonEmpty(this.selectedService)) {
+      this.showAllUser = true;
+      this.config.currentPage = 1;
+      this.getInterestedClients(0);
     }
   }
 
@@ -383,7 +400,7 @@ export class InterestedClientsComponent implements OnInit {
       } else {
         this.searchMobNo = '';
         if (this.showAllUser) {
-          param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15`;
+          param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15&serviceType=${this.selectedService}`;
         } else {
           param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
         }
