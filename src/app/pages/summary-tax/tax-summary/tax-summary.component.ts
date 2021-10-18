@@ -151,6 +151,8 @@ export class TaxSummaryComponent implements OnInit {
   newRegimeTaxSummary: any;
   totalExemptIncome: number = 0;
 
+  isJsonParse: boolean = false;
+
 
   get getFamilyArray() {
     return <FormArray>this.itrSummaryForm['controls'].assesse.get('family');
@@ -204,6 +206,7 @@ export class TaxSummaryComponent implements OnInit {
      console.log('itrJsonInfo: ', itrJsonInfo);
      /* Parse personal information */
      var itrData = itrJsonInfo.ITR;
+     this.isJsonParse = true;
      console.log('itrData: ', itrData);
      this.bankData = [];
      this.housingData = [];
@@ -246,7 +249,7 @@ export class TaxSummaryComponent implements OnInit {
         let adress = itrData.PersonalInfo.Address;
         this.itrSummaryForm.controls.assesse['controls'].email.setValue(adress.EmailAddress);
         this.itrSummaryForm.controls.assesse['controls'].contactNumber.setValue(adress.MobileNo);
-        let mainAddress = adress.ResidenceNo+' ,'+adress.ResidenceName+' ,'+adress.RoadOrStreet+' ,'+adress.LocalityOrArea;
+        let mainAddress = (adress.hasOwnProperty('ResidenceNo') ?  adress.ResidenceNo : '')+' ,'+(adress.hasOwnProperty('ResidenceName') ?adress.ResidenceName : '')+' ,'+(adress.hasOwnProperty('RoadOrStreet') ? adress.RoadOrStreet : '')+' ,'+(adress.hasOwnProperty('LocalityOrArea') ? adress.LocalityOrArea : '');
         console.log('mainAddress: ',mainAddress)
         this.itrSummaryForm.controls.assesse['controls'].address['controls'].premisesName.setValue(mainAddress);
         this.itrSummaryForm.controls.assesse['controls'].address['controls'].pinCode.setValue(adress.PinCode);
@@ -309,35 +312,39 @@ export class TaxSummaryComponent implements OnInit {
   
         /* House Property */
         var housingInfo = incomeDeduction;
-        let housingObj = {
-          propertyType: housingInfo.hasOwnProperty('TypeOfHP') ? (housingInfo.TypeOfHP === "S" ? 'SOP' : 'LOP') : (housingInfo.TotalIncomeOfHP === 0 ? 'SOP' : 'LOP'),
-          address: '',
-          ownerOfProperty: '',
-          coOwners: [],
-          otherOwnerOfProperty: '',
-          tenantName: '',
-          tenentPanNumber: '',
-          grossAnnualRentReceived: housingInfo.GrossRentReceived,
-          annualValue:  housingInfo.AnnualValue,
-          propertyTax: housingInfo.TaxPaidlocalAuth,
-          interestAmount: housingInfo.InterestPayable,
-          taxableIncome: housingInfo.TotalIncomeOfHP,
-          exemptIncome: housingInfo.StandardDeduction,
-          pinCode: '',
-          flatNo: '',
-          building: '',
-          street: '',
-          locality: '',
-          city: '',
-          country: '',
-          state: '',
+        if(this.utilService.isNonZero(housingInfo.GrossRentReceived) || this.utilService.isNonZero(housingInfo.AnnualValue) ||this.utilService.isNonZero(housingInfo.TaxPaidlocalAuth) ||
+          this.utilService.isNonZero(housingInfo.InterestPayable) || this.utilService.isNonZero(housingInfo.TotalIncomeOfHP) || this.utilService.isNonZero(housingInfo.StandardDeduction) ){
+            var housingObj = {
+              propertyType: housingInfo.hasOwnProperty('TypeOfHP') ? (housingInfo.TypeOfHP === "S" ? 'SOP' : 'LOP') : (housingInfo.TotalIncomeOfHP === 0 ? 'SOP' : 'LOP'),
+              address: '',
+              ownerOfProperty: '',
+              coOwners: [],
+              otherOwnerOfProperty: '',
+              tenantName: '',
+              tenentPanNumber: '',
+              grossAnnualRentReceived: housingInfo.GrossRentReceived,
+              annualValue:  housingInfo.AnnualValue,
+              propertyTax: housingInfo.TaxPaidlocalAuth,
+              interestAmount: housingInfo.InterestPayable,
+              taxableIncome: housingInfo.TotalIncomeOfHP,
+              exemptIncome: housingInfo.StandardDeduction,
+              pinCode: '',
+              flatNo: '',
+              building: '',
+              street: '',
+              locality: '',
+              city: '',
+              country: '',
+              state: '',
+            }
+
+            this.housingData.push(housingObj);
         }
   
-        this.housingData.push(housingObj);
+       
   
         this.houseArray = [];
         for (let i = 0; i < this.housingData.length; i++) {
-  
           let houceObj = {
             annualOfPropOwned: 0,
             annualValue: 0,
@@ -414,35 +421,37 @@ export class TaxSummaryComponent implements OnInit {
           }
         }
        
-  
-        let salObj = {
-          employerName: '',
-          address: '',
-          employerTAN: '',
-          employerCategory: '',
-          salAsPerSec171: salaryInfo.hasOwnProperty('Salary') ? this.getNumberFormat(salaryInfo.Salary) : 0,
-          valOfPerquisites: salaryInfo.hasOwnProperty('PerquisitesValue') ? this.getNumberFormat(salaryInfo.PerquisitesValue) : 0,
-          profitInLieu: salaryInfo.hasOwnProperty('ProfitsInSalary') ? this.getNumberFormat(salaryInfo.ProfitsInSalary) : 0,
-          grossSalary: salaryInfo.GrossSalary,
-          houseRentAllow: hra,
-          leaveTravelExpense: 0,
-          other: otherAmnt,
-          totalExemptAllow: salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10,
-          netSalary: salaryInfo.NetSalary,
-          standardDeduction: salaryInfo.DeductionUs16ia,
-          entertainAllow: salaryInfo.EntertainmentAlw16ii,
-          professionalTax: salaryInfo.ProfessionalTaxUs16iii,
-          totalSalaryDeduction: Number(salaryInfo.DeductionUs16ia) + Number(salaryInfo.EntertainmentAlw16ii) +  (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) ,
-          taxableIncome: salaryInfo.IncomeFromSal,
-  
-          pinCode: '',
-          country: '',
-          state: '',
-          city: ''
-        }
-  
-        this.salaryItrratedData.push(salObj);
-  
+        if(salaryInfo.hasOwnProperty('Salary') || salaryInfo.hasOwnProperty('PerquisitesValue') || salaryInfo.hasOwnProperty('ProfitsInSalary') || this.utilService.isNonZero(salaryInfo.GrossSalary) || this.utilService.isNonZero(salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10) ||
+          this.utilService.isNonZero(salaryInfo.NetSalary) || this.utilService.isNonZero(salaryInfo.DeductionUs16ia) || this.utilService.isNonZero(salaryInfo.EntertainmentAlw16ii) || this.utilService.isNonZero(salaryInfo.ProfessionalTaxUs16iii) || this.utilService.isNonZero(salaryInfo.IncomeFromSal)){
+            var salObj = {
+              employerName: '',
+              address: '',
+              employerTAN: '',
+              employerCategory: '',
+              salAsPerSec171: salaryInfo.hasOwnProperty('Salary') ? this.getNumberFormat(salaryInfo.Salary) : 0,
+              valOfPerquisites: salaryInfo.hasOwnProperty('PerquisitesValue') ? this.getNumberFormat(salaryInfo.PerquisitesValue) : 0,
+              profitInLieu: salaryInfo.hasOwnProperty('ProfitsInSalary') ? this.getNumberFormat(salaryInfo.ProfitsInSalary) : 0,
+              grossSalary: salaryInfo.GrossSalary,
+              houseRentAllow: hra,
+              leaveTravelExpense: 0,
+              other: otherAmnt,
+              totalExemptAllow: salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10,
+              netSalary: salaryInfo.NetSalary,
+              standardDeduction: salaryInfo.DeductionUs16ia,
+              entertainAllow: salaryInfo.EntertainmentAlw16ii,
+              professionalTax: salaryInfo.ProfessionalTaxUs16iii,
+              totalSalaryDeduction: Number(salaryInfo.DeductionUs16ia) + Number(salaryInfo.EntertainmentAlw16ii) +  (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) ,
+              taxableIncome: salaryInfo.IncomeFromSal,
+      
+              pinCode: '',
+              country: '',
+              state: '',
+              city: ''
+            }
+      
+            this.salaryItrratedData.push(salObj);
+          }
+       
         this.employerArray = [];
         for (let i = 0; i < this.salaryItrratedData.length; i++) {
           debugger
@@ -753,8 +762,8 @@ export class TaxSummaryComponent implements OnInit {
         }
        }
      }
-     this.totalExemptIncome = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? exemptIncomeInfo.ExemptIncAgriOthUs10Total : exemptIncomeInfo.OthersInc.OthersTotalTaxExe;;
-
+     let totalExemptIncome = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? exemptIncomeInfo.ExemptIncAgriOthUs10Total : exemptIncomeInfo.OthersInc.OthersTotalTaxExe;;
+      this.itrSummaryForm.controls.totalExemptIncome.setValue(totalExemptIncome)
    
 
     //Deduction under cha-VI A (sec 80D)
@@ -768,7 +777,7 @@ export class TaxSummaryComponent implements OnInit {
         medicalExpendature: 0
       }
 
-      this.sec80DobjVal.healthInsuarancePremiumSelf = sec80DInfo.Sec80DSelfFamSrCtznHealth.HealthInsPremSlfFam;
+      this.sec80DobjVal.healthInsuarancePremiumSelf = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.HealthInsPremSlfFam) ;
       this.sec80DobjVal.healthInsuarancePremiumParents = Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizen) - (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('MedicalExpParentsSrCtzn') ? Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn) : 0);
       var prehealthCheckVal = Number(sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFam') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFamSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFamSrCtzn : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParents') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParentsSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn : 0))));
       console.log('prehealthCheckVal: ',prehealthCheckVal)
@@ -917,6 +926,8 @@ export class TaxSummaryComponent implements OnInit {
    this.donationData.push(body)
   }
 
+  this.itrSummaryForm['controls'].assesse['controls'].donations.setValue(this.donationData);
+
 
    //Values 
     var deductionValues = incomeDeduction.DeductUndChapVIA;
@@ -1016,8 +1027,8 @@ export class TaxSummaryComponent implements OnInit {
         }
         tdsOtherThanSalObj.deductorTAN = this.itrType.itrOne ? tdsOtherThanSalInfo[i].EmployerOrDeductorOrCollectDetl.TAN : tdsOtherThanSalInfo[i].TANOfDeductor;
         tdsOtherThanSalObj.deductorName = this.itrType.itrOne ? tdsOtherThanSalInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName : tdsOtherThanSalInfo[i].HeadOfIncome;
-        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].AmtForTaxDeduct : tdsOtherThanSalInfo[i].TDSDeducted;
-        tdsOtherThanSalObj.totalTdsDeposited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].TotTDSOnAmtPaid : tdsOtherThanSalInfo[i].GrossAmount;
+        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].AmtForTaxDeduct : tdsOtherThanSalInfo[i].GrossAmount;
+        tdsOtherThanSalObj.totalTdsDeposited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].TotTDSOnAmtPaid : tdsOtherThanSalInfo[i].TDSDeducted;
         this.tdsOtherThanSal.push(tdsOtherThanSalObj);
         this.taxPaiObj.otherThanSalary16A.push(tdsOtherThanSalObj);
       }
@@ -1051,8 +1062,8 @@ export class TaxSummaryComponent implements OnInit {
         }
         tdsOtherThanSalObj.deductorTAN = tds3OtherThanSalInfo[i].PANofTenant;
         tdsOtherThanSalObj.deductorName = this.itrType.itrOne ? tds3OtherThanSalInfo[i].NameOfTenant : tds3OtherThanSalInfo[i].HeadOfIncome;
-        tdsOtherThanSalObj.totalAmountCredited = tds3OtherThanSalInfo[i].TDSDeducted;
-        tdsOtherThanSalObj.totalTdsDeposited = this.itrType.itrOne ? tds3OtherThanSalInfo[i].GrsRcptToTaxDeduct : tds3OtherThanSalInfo[i].GrossAmount;
+        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? tds3OtherThanSalInfo[i].GrsRcptToTaxDeduct : tds3OtherThanSalInfo[i].GrossAmount;
+        tdsOtherThanSalObj.totalTdsDeposited = tds3OtherThanSalInfo[i].TDSDeducted;
         this.tdsOtherThanSal.push(tdsOtherThanSalObj);
         this.taxPaiObj.otherThanSalary16A.push(tdsOtherThanSalObj);
       }
@@ -1325,43 +1336,51 @@ export class TaxSummaryComponent implements OnInit {
 
      // Presumptive Business Income U/S 44AD
      var pre44ADinfo = itrData.ScheduleBP;
-     let preBusinessObj = {
-       businessType: "BUSINESS",
-       exemptIncome: 0,
-       natureOfBusiness: pre44ADinfo.NatOfBus44AD[0].CodeAD,
-       taxableIncome: 0,
-       tradeName: pre44ADinfo.NatOfBus44AD[0].NameOfBusiness,
-       incomes: []
+     var preBusinessObj = {
+      businessType: "BUSINESS",
+      exemptIncome: 0,
+      natureOfBusiness: 0,
+      taxableIncome: 0,
+      tradeName: '',
+      incomes: []
+    }
+     if(pre44ADinfo.hasOwnProperty('NatOfBus44AD')){
+      preBusinessObj.natureOfBusiness = pre44ADinfo.NatOfBus44AD[0].CodeAD;
+      preBusinessObj.tradeName = pre44ADinfo.NatOfBus44AD[0].NameOfBusiness;
      }
+    
  
-     let recivedInBankObj = {
-       businessType: null,
-       incomeType: "BANK",
-       minimumPresumptiveIncome: Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per),
-       ownership: null,
-       periodOfHolding: 0,
-       presumptiveIncome: Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per),
-       receipts: Number(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverBank),
-       registrationNo: null,
-       tonnageCapacity: 0
+     if(pre44ADinfo.hasOwnProperty('PersumptiveInc44AD')){
+      let recivedInBankObj = {
+        businessType: null,
+        incomeType: "BANK",
+        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD6Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per) : 0,
+        ownership: null,
+        periodOfHolding: 0,
+        presumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD6Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per) : 0,
+        receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverBank') ? Number(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverBank) : 0,
+        registrationNo: null,
+        tonnageCapacity: 0
+      }
+      preBusinessObj.incomes.push(recivedInBankObj);
+  
+      let recivedCashObj = {
+        businessType: null,
+        incomeType: "CASH",
+        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
+        ownership: null,
+        periodOfHolding: 0,
+        presumptiveIncome:  pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
+        receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverAnyOthMode') ? Number(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverAnyOthMode) : 0,
+        registrationNo: null,
+        tonnageCapacity: 0
+      }
+      preBusinessObj.incomes.push(recivedCashObj);
+      itr4Summary.assesse.business.presumptiveIncomes.push(preBusinessObj);
+      console.log('preBusinessObj Object :', preBusinessObj);
+  
      }
-     preBusinessObj.incomes.push(recivedInBankObj);
- 
-     let recivedCashObj = {
-       businessType: null,
-       incomeType: "CASH",
-       minimumPresumptiveIncome: Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per),
-       ownership: null,
-       periodOfHolding: 0,
-       presumptiveIncome:  Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per),
-       receipts: Number(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverAnyOthMode),
-       registrationNo: null,
-       tonnageCapacity: 0
-     }
-     preBusinessObj.incomes.push(recivedCashObj);
-     itr4Summary.assesse.business.presumptiveIncomes.push(preBusinessObj);
-     console.log('preBusinessObj Object :', preBusinessObj);
- 
+    
      // Presumptive Business Income U/S 44ADA
     var pre44ADAinfo = itrData.ScheduleBP;
 
@@ -1394,22 +1413,26 @@ export class TaxSummaryComponent implements OnInit {
       incomes: []
     }
 
-    let grossRecipt44ADAObj = {
-      businessType: null,
-      incomeType: "PROFESSIONAL",
-      minimumPresumptiveIncome: Number(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA),
-      ownership: null,
-      periodOfHolding: 0,
-      presumptiveIncome: Number(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA),
-      receipts: Number(pre44ADAinfo.PersumptiveInc44ADA.GrsReceipt),
-      registrationNo: null,
-      tonnageCapacity: 0
+    
+    if(pre44ADAinfo.hasOwnProperty('PersumptiveInc44ADA')) {
+      let grossRecipt44ADAObj = {
+        businessType: null,
+        incomeType: "PROFESSIONAL",
+        minimumPresumptiveIncome: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('TotPersumptiveInc44ADA') ? Number(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA) : 0,
+        ownership: null,
+        periodOfHolding: 0,
+        presumptiveIncome: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('TotPersumptiveInc44ADA') ? Number(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA) : 0,
+        receipts: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('GrsReceipt') ? Number(pre44ADAinfo.PersumptiveInc44ADA.GrsReceipt) : 0,
+        registrationNo: null,
+        tonnageCapacity: 0
+      }
+      // preBusinessObj44ADA.incomes.push(recivedInBankObj);
+      preBusinessObj44ADA.incomes.push(grossRecipt44ADAObj);
+      itr4Summary.assesse.business.presumptiveIncomes.push(preBusinessObj44ADA);
+      console.log('44ADA grossRecipt44ADAObj Object :', grossRecipt44ADAObj);
+      console.log('itr4Summary total object :', itr4Summary);
     }
-    // preBusinessObj44ADA.incomes.push(recivedInBankObj);
-    preBusinessObj44ADA.incomes.push(grossRecipt44ADAObj);
-    itr4Summary.assesse.business.presumptiveIncomes.push(preBusinessObj44ADA);
-    console.log('44ADA grossRecipt44ADAObj Object :', grossRecipt44ADAObj);
-    console.log('itr4Summary total object :', itr4Summary);
+    
 
     //Financial Information as on 31/03/2020  
     //Liabilities:
@@ -1504,7 +1527,8 @@ export class TaxSummaryComponent implements OnInit {
         this.donationData = [];
         this.salaryItrratedData = [];
         // this.setTotalOfExempt();
-        this.itrSummaryForm.patchValue(summary)
+        this.itrSummaryForm.patchValue(summary);
+        console.log('itrSummaryForm: ',this.itrSummaryForm.value);
         this.setItrType(summary.assesse.itrType)
 
         if (this.itrSummaryForm['controls'].assesse['controls'].itrType.value === "4") {
@@ -2321,17 +2345,17 @@ export class TaxSummaryComponent implements OnInit {
         salAsPerSec171: emplyersData.employers.salary.length > 0 ? emplyersData.employers.salary[0].taxableAmount : 0,
         valOfPerquisites: emplyersData.employers.perquisites.length > 0 ? emplyersData.employers.perquisites[0].taxableAmount : 0,
         profitInLieu: emplyersData.employers.profitsInLieuOfSalaryType.length > 0 ? emplyersData.employers.profitsInLieuOfSalaryType[0].taxableAmount : 0,
-        grossSalary: emplyersData.grossSalary,
+        grossSalary: emplyersData.employers.grossSalary,
         houseRentAllow: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
         leaveTravelExpense: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'LTA')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
         other: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
         totalExemptAllow: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
-        netSalary: emplyersData.netSalary,
+        netSalary: emplyersData.employers.netSalary,
         standardDeduction: emplyersData.employers.standardDeduction,
         entertainAllow: (emplyersData.employers.deductions.length > 0 && (emplyersData.employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (emplyersData.employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
         professionalTax: (emplyersData.employers.deductions.length > 0 && (emplyersData.employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (emplyersData.employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
         totalSalaryDeduction: emplyersData.totalSalaryDeduction,
-        taxableSalary: emplyersData.taxableSalary,
+        taxableIncome: emplyersData.employers.taxableIncome,
 
         pinCode: emplyersData.employers.pinCode,
         country: emplyersData.employers.country,
@@ -2439,7 +2463,7 @@ export class TaxSummaryComponent implements OnInit {
 
   updateFamilyForm(obj) {
     return this.fb.group({
-      fName: [obj.firstName || '', Validators.required],
+      fName: [obj.firstName || ''],
       mName: [obj.middleName || ''],
       lName: [obj.lastName || '', Validators.required],
       dateOfBirth: [obj.dateOfBirth || '', Validators.required],
@@ -2656,6 +2680,7 @@ export class TaxSummaryComponent implements OnInit {
     this.itrSummaryForm['controls'].taxSummary['controls'].totalDeduction.setValue(deductTotal)
     console.log('deductionUnderChapterVIA: ', this.itrSummaryForm['controls'].taxSummary['controls'].totalDeduction.value)
     this.calculateTotalIncome();
+    console.log('jdjdj')
   }
 
   calculateTotalIncome() {  //Calculate point 6
@@ -2754,6 +2779,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   calculateNetTaxPayble() {          //Calculate point 17 (Net Tax Payable/ (Refund) (15 - 16))
+    // alert('call...')
     console.log(this.itrSummaryForm['controls'].taxSummary['controls'].agrigateLiability.value, this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxesPaid.value)
     let netTaxPayble = Number(this.itrSummaryForm['controls'].taxSummary['controls'].agrigateLiability.value) - Number(this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxesPaid.value);
     if (netTaxPayble > 0) {
@@ -3486,7 +3512,8 @@ export class TaxSummaryComponent implements OnInit {
 
       netTaxPayable: [0],
       exemptIncomes: [],
-      newTaxRegime: null
+      newTaxRegime: null,
+      totalExemptIncome: [0]
     })
     console.log('itrSummaryForm: ', this.itrSummaryForm)
   }
