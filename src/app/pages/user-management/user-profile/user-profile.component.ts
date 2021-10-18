@@ -789,9 +789,13 @@ export class UserProfileComponent implements OnInit {
         "role": this.userRole.value
       }
       this.userService.putMethod(param, reqBody).subscribe(res => {
-        console.log("Add user roles responce: ", res);
-        this._toastMessageService.alert("success", this.userInfo.fName + " User role updated successfully.");
         this.loading = false;
+        console.log("Add user roles responce: ", res);
+        if (this.utilsService.isNonEmpty(res['error'])) {
+          this._toastMessageService.alert("error", res['error']);
+          return;
+        }
+        this._toastMessageService.alert("success", this.userInfo.fName + " User role updated successfully.");
       },
         error => {
           console.log("there is error : ", error);

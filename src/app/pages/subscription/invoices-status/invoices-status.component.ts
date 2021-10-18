@@ -40,9 +40,9 @@ export class InvoicesStatusComponent implements OnInit {
   toDateMin: any;
   summartDetailForm: FormGroup;
   userId: any;
-  status:any = [
-    {label: 'Paid', value:'Paid'},
-    {label: 'Unpaid', value:'Unpaid'}
+  status: any = [
+    { label: 'Paid', value: 'Paid' },
+    { label: 'Unpaid', value: 'Unpaid' }
   ]
   constructor(private userMsService: UserMsService, private _toastMessageService: ToastMessageService,
     @Inject(LOCALE_ID) private locale: string, private userService: UserMsService, private dialog: MatDialog,
@@ -82,39 +82,43 @@ export class InvoicesStatusComponent implements OnInit {
       this.userId = params['userId'];
       // this.advanceSearch();
     });
-   
+
     this.summartDetailForm = this.fb.group({
       fromDate: ['', Validators.required],
       toDate: ['', Validators.required],
       status: ['']
     });
 
-    // this.getAllInvoiceInfo()
+    this.getAllInvoiceInfo()
   }
 
   getAllInvoiceInfo() {
-    if(this.summartDetailForm.valid){
+    this.loading = true;
+    var param;
+    if (this.summartDetailForm.valid) {
       this.loading = true;
       var param;
-       let fromData = this.datePipe.transform(this.summartDetailForm.value.fromDate, 'yyyy-MM-dd');
-       let toData = this.datePipe.transform(this.summartDetailForm.value.toDate, 'yyyy-MM-dd');
-       if(this.utilService.isNonEmpty(this.summartDetailForm.value.status)){
+      let fromData = this.datePipe.transform(this.summartDetailForm.value.fromDate, 'yyyy-MM-dd');
+      let toData = this.datePipe.transform(this.summartDetailForm.value.toDate, 'yyyy-MM-dd');
+      if (this.utilService.isNonEmpty(this.summartDetailForm.value.status)) {
         // param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}&paymentStatus=${this.summartDetailForm.value.status}`;
-        param = `/itr/invoice/report?fromDate=${fromData}&toDate=${toData}&paymentStatus=${this.summartDetailForm.value.status}`;      }
-       else{
+        param = `/itr/invoice/report?fromDate=${fromData}&toDate=${toData}&paymentStatus=${this.summartDetailForm.value.status}`;
+      } else {
         // param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}`;
         param = `/itr/invoice/report?fromDate=${fromData}&toDate=${toData}`;
-       }
-      this.userMsService.getMethodInfo(param).subscribe((res: any) => {
-        this.loading = false;
-        this.invoiceData = res;
-        this.totalInvoice = this.invoiceData.length
-        console.log('this.invoiceData ', this.invoiceData)
-        this.invoiceListGridOptions.api.setRowData(this.createRowData(this.invoiceData))
-      }, error => {
-        this.loading = false;
-      })
+      }
+    } else {
+      param = `/itr/invoice/report`
     }
+    this.userMsService.getMethodInfo(param).subscribe((res: any) => {
+      this.loading = false;
+      this.invoiceData = res;
+      this.totalInvoice = this.invoiceData.length
+      console.log('this.invoiceData ', this.invoiceData)
+      this.invoiceListGridOptions.api.setRowData(this.createRowData(this.invoiceData))
+    }, error => {
+      this.loading = false;
+    })
   }
 
   getCount(param) {
@@ -707,15 +711,15 @@ export class InvoicesStatusComponent implements OnInit {
       console.log(this.summartDetailForm.value)
       // let fromData = this.summartDetailForm.value.fromDate;
       // let toData = this.summartDetailForm.value.toDate;
-        let fromData = this.datePipe.transform(this.summartDetailForm.value.fromDate, 'yyyy-MM-dd');
-       let toData = this.datePipe.transform(this.summartDetailForm.value.toDate, 'yyyy-MM-dd');
-      if(this.utilService.isNonEmpty(this.summartDetailForm.value.status)){
-        location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData+'&paymentStatus='+ this.summartDetailForm.value.status;
-       }
-       else{
+      let fromData = this.datePipe.transform(this.summartDetailForm.value.fromDate, 'yyyy-MM-dd');
+      let toData = this.datePipe.transform(this.summartDetailForm.value.toDate, 'yyyy-MM-dd');
+      if (this.utilService.isNonEmpty(this.summartDetailForm.value.status)) {
+        location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.summartDetailForm.value.status;
+      }
+      else {
         location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData;;
-       }
-      
+      }
+
     }
   }
 
