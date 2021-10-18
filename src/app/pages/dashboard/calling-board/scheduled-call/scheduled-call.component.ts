@@ -33,6 +33,7 @@ export class ScheduledCallComponent implements OnInit {
       rowData: [],
       columnDefs: this.createColoumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,

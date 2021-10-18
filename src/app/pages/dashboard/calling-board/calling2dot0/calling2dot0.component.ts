@@ -49,6 +49,7 @@ export class Calling2dot0Component implements OnInit {
       rowData: [],
       columnDefs: this.createColoumnDef(this.masterStatusList),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,
