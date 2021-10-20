@@ -38,7 +38,7 @@ export class InvoicesStatusComponent implements OnInit {
   invoiceListGridOptions: GridOptions;
   maxDate: any = new Date();
   toDateMin: any;
-  summartDetailForm: FormGroup;
+  summaryDetailForm: FormGroup;
   userId: any;
   status: any = [
     { label: 'Paid', value: 'Paid' },
@@ -50,7 +50,7 @@ export class InvoicesStatusComponent implements OnInit {
     private itrService: ItrMsService, private datePipe: DatePipe) {
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.invoicesCreateColoumnDef(),
+      columnDefs: this.invoicesCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -83,7 +83,7 @@ export class InvoicesStatusComponent implements OnInit {
       // this.advanceSearch();
     });
 
-    this.summartDetailForm = this.fb.group({
+    this.summaryDetailForm = this.fb.group({
       fromDate: ['', Validators.required],
       toDate: ['', Validators.required],
       status: ['']
@@ -95,14 +95,14 @@ export class InvoicesStatusComponent implements OnInit {
   getAllInvoiceInfo() {
     this.loading = true;
     var param;
-    if (this.summartDetailForm.valid) {
+    if (this.summaryDetailForm.valid) {
       this.loading = true;
       var param;
-      let fromData = this.datePipe.transform(this.summartDetailForm.value.fromDate, 'yyyy-MM-dd');
-      let toData = this.datePipe.transform(this.summartDetailForm.value.toDate, 'yyyy-MM-dd');
-      if (this.utilService.isNonEmpty(this.summartDetailForm.value.status)) {
-        // param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}&paymentStatus=${this.summartDetailForm.value.status}`;
-        param = `/itr/invoice/report?fromDate=${fromData}&toDate=${toData}&paymentStatus=${this.summartDetailForm.value.status}`;
+      let fromData = this.datePipe.transform(this.summaryDetailForm.value.fromDate, 'yyyy-MM-dd');
+      let toData = this.datePipe.transform(this.summaryDetailForm.value.toDate, 'yyyy-MM-dd');
+      if (this.utilService.isNonEmpty(this.summaryDetailForm.value.status)) {
+        // param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}&paymentStatus=${this.summaryDetailForm.value.status}`;
+        param = `/itr/invoice/report?fromDate=${fromData}&toDate=${toData}&paymentStatus=${this.summaryDetailForm.value.status}`;
       } else {
         // param = `/itr/invoice/report?fromDate=${fromData.toISOString()}&toDate=${toData.toISOString()}`;
         param = `/itr/invoice/report?fromDate=${fromData}&toDate=${toData}`;
@@ -142,7 +142,7 @@ export class InvoicesStatusComponent implements OnInit {
           paymentDate: userInvoices[i].paymentDate,
           paymentStatus: userInvoices[i].paymentStatus,
           purpose: userInvoices[i].itemList[0].itemDescription,
-          inovicePreparedBy: userInvoices[i].inovicePreparedBy,
+          invoicePreparedBy: userInvoices[i].inovicePreparedBy,
           ifaLeadClient: userInvoices[i].ifaLeadClient,
           total: userInvoices[i].total
         })
@@ -152,7 +152,7 @@ export class InvoicesStatusComponent implements OnInit {
     return invoices;
   }
 
-  invoicesCreateColoumnDef() {
+  invoicesCreateColumnDef() {
     return [
       {
         headerName: 'User Id',
@@ -332,7 +332,7 @@ export class InvoicesStatusComponent implements OnInit {
         field: 'purpose',
         width: 150,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -341,10 +341,10 @@ export class InvoicesStatusComponent implements OnInit {
       },
       {
         headerName: 'Prepared by',
-        field: 'inovicePreparedBy',
+        field: 'invoicePreparedBy',
         width: 100,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -356,7 +356,7 @@ export class InvoicesStatusComponent implements OnInit {
         field: 'ifaLeadClient',
         width: 150,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -368,7 +368,7 @@ export class InvoicesStatusComponent implements OnInit {
         field: 'total',
         width: 100,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       },
       {
         headerName: 'Edit',
@@ -412,7 +412,7 @@ export class InvoicesStatusComponent implements OnInit {
         },
       },
       {
-        headerName: 'Mail Noti',
+        headerName: 'Mail Notification',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -574,6 +574,22 @@ export class InvoicesStatusComponent implements OnInit {
             }
           }
         },
+      },
+      {
+        headerName: 'Call',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call." 
+            style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer">
+            <i class="fa fa-phone" aria-hidden="true" data-action-type="place-call"></i>
+           </button>`;
+        },
+        width: 55,
+        pinned: 'right',
       }
     ]
   }
@@ -592,7 +608,7 @@ export class InvoicesStatusComponent implements OnInit {
           break;
         }
         case 'download-invoice': {
-          this.dowloadInvoice(params.data);
+          this.downloadInvoice(params.data);
           break;
         }
         case 'whatsapp-reminder': {
@@ -606,6 +622,11 @@ export class InvoicesStatusComponent implements OnInit {
         case 'delete-invoice': {
           // this.deleteInvoice(params.data);
           this.updateInvoice('Reason For Invoice Deletion', 'Delete', params.data, 'DELETE');
+          break;
+        }
+        case 'place-call': {
+          // this.deleteInvoice(params.data);
+          this.placeCall(params.data);
           break;
         }
       }
@@ -640,15 +661,15 @@ export class InvoicesStatusComponent implements OnInit {
     const param = '/itr/invoice/send-invoice?invoiceNo=' + data.invoiceNo;
     this.userService.getMethodInfo(param).subscribe((result: any) => {
       this.loading = false;
-      console.log('Email sent responce: ', result)
+      console.log('Email sent response: ', result)
       this._toastMessageService.alert("success", "Invoice mail sent successfully.");
     }, error => {
       this.loading = false;
-      this._toastMessageService.alert("error", "Faild to send invoice mail.");
+      this._toastMessageService.alert("error", "Failed to send invoice mail.");
     });
   }
 
-  dowloadInvoice(data) {
+  downloadInvoice(data) {
     location.href = environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
   }
 
@@ -658,7 +679,7 @@ export class InvoicesStatusComponent implements OnInit {
     this.userMsService.getMethodInfo(param).subscribe((res: any) => {
       this.loading = false;
       console.log("result: ", res)
-      this._toastMessageService.alert("success", "Whatsapp reminder send succesfully.");
+      this._toastMessageService.alert("success", "Whatsapp reminder send successfully.");
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Failed to send Whatsapp reminder.");
@@ -670,11 +691,11 @@ export class InvoicesStatusComponent implements OnInit {
     const param = '/itr/invoice/send-reminder';
     this.userService.postMethodInfo(param, invoiceInfo).subscribe((result: any) => {
       this.loading = false;
-      console.log('Email sent responce: ', result)
+      console.log('Email sent response: ', result)
       this._toastMessageService.alert("success", "Mail Reminder sent successfully.");
     }, error => {
       this.loading = false;
-      this._toastMessageService.alert("error", "Faild to send Mail Reminder.");
+      this._toastMessageService.alert("error", "Failed to send Mail Reminder.");
     });
   }
 
@@ -682,39 +703,38 @@ export class InvoicesStatusComponent implements OnInit {
   //   console.log('invoiceInfo: ', invoiceInfo);
   //   this.loading = true;
   //   let param = '/invoice/delete?invoiceNo=' + invoiceInfo.invoiceNo;
-  //   this.itrService.deleteMethod(param).subscribe((responce: any) => {
+  //   this.itrService.deleteMethod(param).subscribe((response: any) => {
   //     this.loading = false;
-  //     console.log('responce: ', responce);
-  //     if (responce.reponse === "Please create new invoice before deleting old one") {
-  //       this._toastMessageService.alert("error", responce.reponse);
-  //     } else if (responce.reponse === "Selected invoice must be old invoice or create new invoice before deleting this invoice") {
-  //       this._toastMessageService.alert("error", responce.reponse);
+  //     console.log('response: ', response);
+  //     if (response.reponse === "Please create new invoice before deleting old one") {
+  //       this._toastMessageService.alert("error", response.reponse);
+  //     } else if (response.reponse === "Selected invoice must be old invoice or create new invoice before deleting this invoice") {
+  //       this._toastMessageService.alert("error", response.reponse);
   //     } else {
-  //       this._toastMessageService.alert("success", responce.reponse);
+  //       this._toastMessageService.alert("success", response.reponse);
   //       this.getAllInvoiceInfo();
   //     }
   //   }, error => {
   //     this.loading = false;
-  //     this._toastMessageService.alert("error", "Faild to delete invoice.");
+  //     this._toastMessageService.alert("error", "Failed to delete invoice.");
   //   })
   // }
 
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate)
-    console.log('formated-1 FrmDate: ', new Date(FromDate))
     this.toDateMin = FromDate;
   }
 
   downloadInvoicesSummary() {
-    console.log('this.summartDetailForm.value: ', this.summartDetailForm)
-    if (this.summartDetailForm.valid) {
-      console.log(this.summartDetailForm.value)
-      // let fromData = this.summartDetailForm.value.fromDate;
-      // let toData = this.summartDetailForm.value.toDate;
-      let fromData = this.datePipe.transform(this.summartDetailForm.value.fromDate, 'yyyy-MM-dd');
-      let toData = this.datePipe.transform(this.summartDetailForm.value.toDate, 'yyyy-MM-dd');
-      if (this.utilService.isNonEmpty(this.summartDetailForm.value.status)) {
-        location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.summartDetailForm.value.status;
+    console.log('this.summaryDetailForm.value: ', this.summaryDetailForm)
+    if (this.summaryDetailForm.valid) {
+      console.log(this.summaryDetailForm.value)
+      // let fromData = this.summaryDetailForm.value.fromDate;
+      // let toData = this.summaryDetailForm.value.toDate;
+      let fromData = this.datePipe.transform(this.summaryDetailForm.value.fromDate, 'yyyy-MM-dd');
+      let toData = this.datePipe.transform(this.summaryDetailForm.value.toDate, 'yyyy-MM-dd');
+      if (this.utilService.isNonEmpty(this.summaryDetailForm.value.status)) {
+        location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.summaryDetailForm.value.status;
       }
       else {
         location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData;;
@@ -730,5 +750,31 @@ export class InvoicesStatusComponent implements OnInit {
     var requestObject = time.toISOString().slice(0, 10);
     console.log('date format: ', requestObject)
     return requestObject;
+  }
+
+  async placeCall(user) {
+    console.log('user: ', user)
+    const param = `/call-management/make-call`;
+    const agentNumber = await this.utilService.getMyCallingNumber();
+    console.log('agent number', agentNumber)
+    if (!agentNumber) {
+      this._toastMessageService.alert("error", 'You dont have calling role.')
+      return;
+    }
+    this.loading = true;
+    const reqBody = {
+      "agent_number": agentNumber,
+      "customer_number": user.phone
+    }
+    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+      console.log('Call Result: ', result);
+      this.loading = false;
+      if (result.success.status) {
+        this._toastMessageService.alert("success", result.success.message)
+      }
+    }, error => {
+      this._toastMessageService.alert('error', 'Error while making call, Please try again.');
+      this.loading = false;
+    })
   }
 }

@@ -46,7 +46,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>GSTIN Number</mat-label>
                 <input placeholder="GSTIN Number" maxlength="15" type="text" formControlName="gstinNumber" required
-                 (blur)="onEnterGSTIN($event)"  matInput>
+                  (blur)="onEnterGSTIN($event)" matInput>
               </mat-form-field>
               <mat-error *ngIf="gstDetails['controls'].gstinNumber.hasError('pattern')">
                 Please enter valid GSTN.
@@ -173,7 +173,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>IFSC Code</mat-label>
                 <input placeholder="IFSC Code" maxlength="11" formControlName="ifscCode" matInput
-                 (blur)="onEnterIFSCCode($event);" type="text" upperCase >
+                  (blur)="onEnterIFSCCode($event);" type="text" upperCase>
                 <mat-error *ngIf="gstDetails['controls'].bankInformation['controls'].ifscCode.hasError('pattern')">
                   Please enter valid IFSC code.</mat-error>
               </mat-form-field>

@@ -42,7 +42,7 @@ export class RepoBySmeNameComponent implements OnInit {
     private utilsService: UtilsService) {
     this.repoBySmeGridOption = <GridOptions>{
       rowData: [],
-      columnDefs: this.newUserCreateColoumnDef(),
+      columnDefs: this.newUserCreateColumnDef(),
       enableCellChangeFlash: true,
       onGridReady: params => {
       },
@@ -56,14 +56,14 @@ export class RepoBySmeNameComponent implements OnInit {
       toDate: [new Date(), Validators.required]
     })
 
-    this.showKnowlarityInfoBySme();
+    // this.showKnowlarityInfoBySme();
   }
 
   setToDateValidation(fromDate) {
     this.minToDate = fromDate;
   }
 
-  newUserCreateColoumnDef() {
+  newUserCreateColumnDef() {
     return [
       {
         headerName: 'SME Name',
