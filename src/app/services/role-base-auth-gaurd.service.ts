@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class RoleBaseAuthGaurdService implements CanActivate {
+export class RoleBaseAuthGuardService implements CanActivate {
 
   constructor(private router: Router) { }
 
@@ -13,8 +13,8 @@ export class RoleBaseAuthGaurdService implements CanActivate {
     : Observable<boolean> | Promise<boolean> | boolean {
     let permissionRoles = route.data.roles as Array<string>;
     let loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
-    console.log("My roles in RoleBaseAuthGaurdService: ", permissionRoles, loggedInUserData);
-    return true; // made this because brij wanted everything will be visible to evryone.
+    console.log("My roles in RoleBaseAuthGuardService: ", permissionRoles, loggedInUserData);
+    return true; // made this because brij wanted everything will be visible to everyone.
     if (loggedInUserData.USER_ROLE instanceof Array && permissionRoles instanceof Array) {
       return this.checkHasPermission(loggedInUserData.USER_ROLE, permissionRoles);
     } else {

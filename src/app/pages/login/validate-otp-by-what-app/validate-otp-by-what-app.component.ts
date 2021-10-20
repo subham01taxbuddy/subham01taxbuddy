@@ -5,8 +5,8 @@ import Auth from '@aws-amplify/auth';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { NavbarService } from 'app/services/navbar.service';
 import { Router } from '@angular/router';
-import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 import { HttpClient } from '@angular/common/http';
+import { RoleBaseAuthGuardService } from 'app/services/role-base-auth-gaurd.service';
 
 @Component({
   selector: 'app-validate-otp-by-what-app',
@@ -19,7 +19,7 @@ export class ValidateOtpByWhatAppComponent implements OnInit {
   cognitoUser: any;
   constructor(public dialogRef: MatDialogRef<ValidateOtpByWhatAppComponent>, private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private _toastMessageService: ToastMessageService,
-    private router: Router, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService,
+    private router: Router, private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     public http: HttpClient) { }
 
   ngOnInit() {
@@ -96,10 +96,10 @@ export class ValidateOtpByWhatAppComponent implements OnInit {
   getUserByCognitoId(data) {
     NavbarService.getInstance(this.http).getUserByCognitoId(`${data.attributes.sub}`).subscribe(res => {
       console.log('By CognitoId data:', res)
-      console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", /* "ROLE_IFA", */ 'ROLE_FILING_TEAM', 'ROLE_TPA_SME']))
+      console.log("Is admin template allowed", this.roleBaseAuthGuardService.checkHasPermission(res.role, ["ROLE_ADMIN", /* "ROLE_IFA", */ 'ROLE_FILING_TEAM', 'ROLE_TPA_SME']))
       if (res && data.signInUserSession.accessToken.jwtToken) {
         this.setUserDataInsession(data, res);
-      } else if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", /* "ROLE_IFA", */ 'ROLE_FILING_TEAM', 'ROLE_TPA_SME']))) {
+      } else if (res && !(this.roleBaseAuthGuardService.checkHasPermission(res.role, ["ROLE_ADMIN", /* "ROLE_IFA", */ 'ROLE_FILING_TEAM', 'ROLE_TPA_SME']))) {
         this._toastMessageService.alert("error", "Access Denied.");
       } else {
         this._toastMessageService.alert("error", "The Mobile/Email address or Password entered, is not correct. Please check and try again");

@@ -32,81 +32,82 @@ export const MY_FORMATS = {
 export class MissedInbondCallsComponent implements OnInit {
 
   loading: boolean;
-  missedInbodCallForm: FormGroup;
+  missedInboundCallForm: FormGroup;
   maxDate: any = new Date();
   minToDate: any;
-  missedInbodCallGridOption: GridOptions;
+  missedInboundCallGridOption: GridOptions;
   totalRecords: any;
 
-  constructor(private fb: FormBuilder, private datePipe: DatePipe, private userService: UserMsService, private toastMsgService: ToastMessageService,
+  constructor(private fb: FormBuilder, private datePipe: DatePipe, private userMsService: UserMsService,
+    private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService) {
-    this.missedInbodCallGridOption = <GridOptions>{
+    this.missedInboundCallGridOption = <GridOptions>{
       rowData: [],
-      columnDefs: this.newCreateColoumnDef(),
+      columnDefs: this.newCreateColumnDef(),
       enableCellChangeFlash: true,
       onGridReady: params => {
       },
       sortable: true,
     };
-   }
+  }
 
   ngOnInit() {
-    this.missedInbodCallForm = this.fb.group({
+    this.missedInboundCallForm = this.fb.group({
       fromDate: [new Date(), Validators.required],
       toDate: [new Date(), Validators.required]
     })
   }
 
-  setToDateValidation(fromDate){
+  setToDateValidation(fromDate) {
     this.minToDate = fromDate;
   }
 
-  getMissedInbondCallInfo(){
-    if (this.missedInbodCallForm.valid) {
+  getMissedInboundCallInfo() {
+    if (this.missedInboundCallForm.valid) {
       this.loading = true;
-      let fromDate = this.datePipe.transform(this.missedInbodCallForm.value.fromDate, 'yyyy-MM-dd');
-      let toDate = this.datePipe.transform(this.missedInbodCallForm.value.toDate, 'yyyy-MM-dd');
+      let fromDate = this.datePipe.transform(this.missedInboundCallForm.value.fromDate, 'yyyy-MM-dd');
+      let toDate = this.datePipe.transform(this.missedInboundCallForm.value.toDate, 'yyyy-MM-dd');
       let param = `/call-management/inbound-calls-offhours?startDate=${fromDate}&endDate=${toDate}`;
-      this.userService.getMethod(param).subscribe((res: any) => {
-        console.log('Missed inbond calls info: ', res);
+      this.userMsService.getMethod(param).subscribe((res: any) => {
+        console.log('Missed inbound calls info: ', res);
         this.loading = false;
         if (res && res instanceof Array && res.length > 0) {
           res.sort((a, b) => a.smeName > b.smeName ? 1 : -1);
-          this.missedInbodCallGridOption.api.setRowData(this.createRowData(res))
+          this.missedInboundCallGridOption.api.setRowData(this.createRowData(res))
         }
         else {
           // this.totalRecords = '';
-          this.missedInbodCallGridOption.api.setRowData(this.createRowData([]))
+          this.missedInboundCallGridOption.api.setRowData(this.createRowData([]))
         }
       },
         error => {
           this.loading = false;
           this.totalRecords = '';
           console.log(error);
-          this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status))
+          this._toastMessageService.alert('error', this.utilsService.showErrorMsg(error.error.status))
         })
     }
   }
 
-  createRowData(missedInbondCallInfo){
-    console.log('missedInbondCallInfo -> ', missedInbondCallInfo);
-    var missedInbondCallArray = [];
-    for (let i = 0; i < missedInbondCallInfo.length; i++) {
-      let smeReportInfo = Object.assign({}, missedInbondCallArray[i], {
-        name: missedInbondCallInfo[i].name,
-        agentName: missedInbondCallInfo[i].agentName,
-        mobileNumber: missedInbondCallInfo[i].mobileNumber,
-        callDate: missedInbondCallInfo[i].callDate,
-        callTime: missedInbondCallInfo[i].callTime,
-        callStatus: missedInbondCallInfo[i].callStatus
+  createRowData(missedInboundCallInfo) {
+    console.log('missedInboundCallInfo -> ', missedInboundCallInfo);
+    var missedInboundCallArray = [];
+    for (let i = 0; i < missedInboundCallInfo.length; i++) {
+      let smeReportInfo = Object.assign({}, missedInboundCallArray[i], {
+        name: missedInboundCallInfo[i].name,
+        agentName: missedInboundCallInfo[i].agentName,
+        mobileNumber: missedInboundCallInfo[i].mobileNumber,
+        callDate: missedInboundCallInfo[i].callDate,
+        callTime: missedInboundCallInfo[i].callTime,
+        callStatus: missedInboundCallInfo[i].callStatus
       })
-      missedInbondCallArray.push(smeReportInfo);
+      missedInboundCallArray.push(smeReportInfo);
     }
-    console.log('missedInbondCallArray-> ', missedInbondCallArray)
-    return missedInbondCallArray;
+    console.log('missedInboundCallArray-> ', missedInboundCallArray)
+    return missedInboundCallArray;
   }
 
-  newCreateColoumnDef(){
+  newCreateColumnDef() {
     return [
       {
         headerName: 'Name',
@@ -184,8 +185,63 @@ export class MissedInbondCallsComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
+      },
+      {
+        headerName: 'Call',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call." 
+            style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer">
+            <i class="fa fa-phone" aria-hidden="true" data-action-type="place-call"></i>
+           </button>`;
+        },
+        width: 55,
+        pinned: 'right',
       }
     ]
+  }
+
+  public onInvoiceRowClicked(params) {
+    console.log(params)
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'place-call': {
+          this.placeCall(params.data);
+          break;
+        }
+      }
+    }
+  }
+
+  async placeCall(user) {
+    console.log('user: ', user)
+    const param = `/call-management/make-call`;
+    const agentNumber = await this.utilsService.getMyCallingNumber();
+    console.log('agent number', agentNumber)
+    if (!agentNumber) {
+      this._toastMessageService.alert("error", 'You dont have calling role.')
+      return;
+    }
+    this.loading = true;
+    const reqBody = {
+      "agent_number": agentNumber,
+      "customer_number": user.mobileNumber
+    }
+    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+      console.log('Call Result: ', result);
+      this.loading = false;
+      if (result.success.status) {
+        this._toastMessageService.alert("success", result.success.message)
+      }
+    }, error => {
+      this._toastMessageService.alert('error', 'Error while making call, Please try again.');
+      this.loading = false;
+    })
   }
 
 }

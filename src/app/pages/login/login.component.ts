@@ -11,10 +11,10 @@ import { environment } from '../../../environments/environment';
 import Auth from '@aws-amplify/auth';
 
 import { ToastMessageService } from '../../services/toast-message.service';
-import { RoleBaseAuthGaurdService } from 'app/services/role-base-auth-gaurd.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { ValidateOtpByWhatAppComponent } from './validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { MatDialog } from '@angular/material';
+import { RoleBaseAuthGuardService } from 'app/services/role-base-auth-gaurd.service';
 
 declare let $: any;
 
@@ -22,7 +22,7 @@ declare let $: any;
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  providers: [RoleBaseAuthGaurdService, UserMsService]
+  providers: [RoleBaseAuthGuardService, UserMsService]
 })
 export class LoginComponent implements OnInit {
 
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
   public loading: boolean = false;
 
   constructor(private fb: FormBuilder, private navbarService: NavbarService, public http: HttpClient,
-    public router: Router, private _toastMessageService: ToastMessageService, private roleBaseAuthGaurdService: RoleBaseAuthGaurdService,
+    public router: Router, private _toastMessageService: ToastMessageService, private roleBaseAuthGaurdService: RoleBaseAuthGuardService,
     private userMsService: UserMsService, private dialog: MatDialog,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,) {
