@@ -27,7 +27,7 @@ export class InterestedClientsComponent implements OnInit {
   selectedStatus = 18;
   selectedService = 'ITR';
   interestedClientsGridOption: GridOptions;
-  interstedClientInfo: any;
+  interestedClientInfo: any;
   showAllUser: boolean;
   searchMobNo: any;
   itrStatus: any = [];
@@ -37,7 +37,7 @@ export class InterestedClientsComponent implements OnInit {
     private toastMsgService: ToastMessageService, private route: Router) {
     this.interestedClientsGridOption = <GridOptions>{
       rowData: [],
-      columnDefs: this.createColoumnDef(this.itrStatus),
+      columnDefs: this.createColumnDef(this.itrStatus),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -64,15 +64,15 @@ export class InterestedClientsComponent implements OnInit {
 
   getStatus(ref?) {
     let param = '/itr-status-master/source/BACK_OFFICE';
-    this.userMsService.getMethod(param).subscribe(respoce => {
-      console.log('status responce: ', respoce);
-      if (respoce instanceof Array && respoce.length > 0) {
-        this.itrStatus = respoce;
+    this.userMsService.getMethod(param).subscribe(response => {
+      console.log('status response: ', response);
+      if (response instanceof Array && response.length > 0) {
+        this.itrStatus = response;
         if (ref === 'CALL_REASSIGN') {
           this.callReassignment();
           return;
         }
-        this.interestedClientsGridOption.api.setColumnDefs(this.createColoumnDef(this.itrStatus));
+        this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
       }
       else {
         this.itrStatus = [];
@@ -133,7 +133,7 @@ export class InterestedClientsComponent implements OnInit {
     this.getInterestedClients(0);
   }
 
-  serchByMobNo() {
+  searchByMobNo() {
     this.selectedStatus = 0;
     if (this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
       this.selectedAgent = '';
@@ -146,7 +146,7 @@ export class InterestedClientsComponent implements OnInit {
     }
   }
 
-  createColoumnDef(itrStatus) {
+  createColumnDef(itrStatus) {
     return [
       {
         headerName: 'User Id',
@@ -191,7 +191,7 @@ export class InterestedClientsComponent implements OnInit {
         width: 120,
         suppressMovable: true,
         sortable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center' },
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
@@ -215,7 +215,7 @@ export class InterestedClientsComponent implements OnInit {
         },
         valueGetter: function nameFromCode(params) {
           if (itrStatus.length !== 0) {
-            console.log('Statud id', params.data.statusId)
+            console.log('Status id', params.data.statusId)
             const nameArray = itrStatus.filter(item => item.statusId === params.data.statusId);
             if (nameArray.length !== 0) {
               return nameArray[0].statusName;
@@ -227,6 +227,35 @@ export class InterestedClientsComponent implements OnInit {
             return params.data.statusId;
           }
         },
+      },
+      {
+        headerName: 'Status Date',
+        field: 'statusUpdatedDate',
+        width: 120,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (data) => {
+          return (data.value !== null && data.value !== '') ? formatDate(data.value, 'dd/MM/yyyy', this.locale) : ''
+        },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'A.Y.',
+        field: 'assessmentYear',
+        width: 120,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
       },
       {
         headerName: 'Service Type',
@@ -417,14 +446,14 @@ export class InterestedClientsComponent implements OnInit {
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
       if (result['content'] instanceof Array && result['content'].length > 0) {
-        this.interstedClientInfo = result['content'];
-        this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interstedClientInfo));
-        this.interestedClientsGridOption.api.setColumnDefs(this.createColoumnDef(this.itrStatus));
+        this.interestedClientInfo = result['content'];
+        this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interestedClientInfo));
+        this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
         this.config.totalItems = result.totalElements;
       } else {
-        this.interstedClientInfo = [];
-        this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interstedClientInfo));
-        this.interestedClientsGridOption.api.setColumnDefs(this.createColoumnDef(this.itrStatus));
+        this.interestedClientInfo = [];
+        this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interestedClientInfo));
+        this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
         this.config.totalItems = 0;
         this.utilsService.showSnackBar('No records found');
       }
@@ -451,7 +480,9 @@ export class InterestedClientsComponent implements OnInit {
         serviceType: interestedClient[i]['serviceType'],
         callerAgentUserId: interestedClient[i]['callerAgentUserId'],
         callerAgentNumber: interestedClient[i]['callerAgentNumber'],
-        callerAgentName: interestedClient[i]['callerAgentName']
+        callerAgentName: interestedClient[i]['callerAgentName'],
+        assessmentYear: interestedClient[i]['assessmentYear'],
+        statusUpdatedDate: interestedClient[i]['statusUpdatedDate']
       })
       interestedClientsArray.push(interestedClientsInfo);
     }
@@ -569,17 +600,17 @@ export class InterestedClientsComponent implements OnInit {
     console.log('client: ', client);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
-    this.userMsService.getMethod(param).subscribe((responce: any) => {
-      console.log('open chat link res: ', responce);
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      console.log('open chat link res: ', response);
       this.loading = false;
-      if (responce.success) {
-        window.open(responce.data.chatLink)
+      if (response.success) {
+        window.open(response.data.chatLink)
       } else {
         this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
       }
     }, error => {
-      console.log('Error during feching chat link: ', error);
-      this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+      console.log('Error during fetching chat link: ', error);
+      this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
       this.loading = false;
     })
   }

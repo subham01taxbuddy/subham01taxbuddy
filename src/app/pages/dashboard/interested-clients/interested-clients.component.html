@@ -51,7 +51,7 @@
             </div>
 
             <div class="filter__col card__col-sm-1 card__col-xs-12">
-                <button mat-raised-button color="primary" style="margin: 5px" (click)="serchByMobNo()"><i
+                <button mat-raised-button color="primary" style="margin: 5px" (click)="searchByMobNo()"><i
                         class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
             </div>
 
@@ -59,8 +59,9 @@
                 <!-- <a class="btn btn_stroke filter__add-link" style="margin: 7px 5px;"
                     (click)="downloadDocs(selectedAgent)"><i class="fa fa-download" aria-hidden="true"
                         style="color: #2ed13b;"></i>&nbsp;Download</a> -->
-                <button mat-raised-button color="primary" style="margin: 5px 15px;" (click)="serchByMobNo()"><i
-                        class="fa fa-download" aria-hidden="true"></i>&nbsp;Download</button>
+                <button mat-raised-button color="primary" style="margin: 5px 15px;"
+                    (click)="downloadDocs(selectedAgent)"><i class="fa fa-download"
+                        aria-hidden="true"></i>&nbsp;Download</button>
             </div>
 
         </div>
@@ -72,7 +73,7 @@
             <div class="tab-panel items-tab card__col-xs-12">
                 <div class="card__row">
                     <table>
-                        <tr *ngFor="let item of interstedClientInfo | paginate:config"></tr>
+                        <tr *ngFor="let item of interestedClientInfo | paginate:config"></tr>
                     </table>
 
                     <ag-grid-angular class="ag-theme-balham" [gridOptions]="interestedClientsGridOption"
