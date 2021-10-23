@@ -802,128 +802,156 @@ export class TaxSummaryComponent implements OnInit {
 
    if(sec80Ginfo.hasOwnProperty('Don100Percent')){
     if(sec80Ginfo.Don100Percent.hasOwnProperty('DoneeWithPan')){
-      let body={
-        name: sec80Ginfo.Don100Percent.DoneeWithPan[0].DoneeWithPanName,
-        address: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.AddrDetail,
-        city: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.CityOrTownOrDistrict,
-        pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.PinCode,
-        state: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.StateCode,
-        panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[0].DoneePAN,
-        donationType: 'OTHER',
-        schemeCode: 'GOVT_APPRVD_FAMLY_PLNG',
-        amountInCash: sec80Ginfo.Don100Percent.DoneeWithPan[0].DonationAmtCash,
-        amountOtherThanCash: sec80Ginfo.Don100Percent.DoneeWithPan[0].DonationAmtOtherMode,
-        eligibleAmount: sec80Ginfo.Don100Percent.DoneeWithPan[0].EligibleDonationAmt,
-       details: '',
-       category: 'AGTI'
+      if(sec80Ginfo.Don100Percent.DoneeWithPan instanceof Array && sec80Ginfo.Don100Percent.DoneeWithPan.length > 0){
+        for(let i=0; i< sec80Ginfo.Don100Percent.DoneeWithPan.length; i++){
+          let body={
+            name: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneeWithPanName,
+            address: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.AddrDetail,
+            city: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+            pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.PinCode,
+            state: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.StateCode,
+            panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneePAN,
+            donationType: 'OTHER',
+            schemeCode: 'GOVT_APPRVD_FAMLY_PLNG',
+            amountInCash: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].DonationAmtCash),
+            amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].DonationAmtOtherMode),
+            eligibleAmount: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].EligibleDonationAmt),
+           details: '',
+           category: 'AGTI'
+          }
+          this.donationData.push(body)
+        }
       }
-      this.donationData.push(body)
      }
    }
    
    if(sec80Ginfo.hasOwnProperty('Don50PercentNoApprReqd')){
     if(sec80Ginfo.Don50PercentNoApprReqd.hasOwnProperty('DoneeWithPan')){
-      let body={
-        name: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].DoneeWithPanName,
-        address: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].AddressDetail.AddrDetail,
-        city: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].AddressDetail.CityOrTownOrDistrict,
-        pinCode: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].AddressDetail.PinCode,
-        state: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].AddressDetail.StateCode,
-        panNumber: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].DoneePAN,
-        donationType: 'OTHER',
-        schemeCode: 'FND_SEC80G',
-        amountInCash: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].DonationAmtCash,
-        amountOtherThanCash: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].DonationAmtOtherMode,
-        eligibleAmount: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].EligibleDonationAmt,
-        details: '',
-       category: 'AGTI'
+      if(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan.length > 0){
+        for(let i=0; i< sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan.length; i++){
+          let body={
+            name: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DoneeWithPanName,
+            address: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
+            city: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+            pinCode: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
+            state: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
+            panNumber: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DoneePAN,
+            donationType: 'OTHER',
+            schemeCode: 'FND_SEC80G',
+            amountInCash: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DonationAmtCash),
+            amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
+            eligibleAmount: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].EligibleDonationAmt),
+            details: '',
+           category: 'AGTI'
+          }
+          this.donationData.push(body)
+        }
       }
-      this.donationData.push(body)
      }
    }
    
    if(sec80Ginfo.hasOwnProperty('Don100PercentApprReqd')){
     if(sec80Ginfo.Don100PercentApprReqd.hasOwnProperty('DoneeWithPan')){
-      let body={
-        name: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].DoneeWithPanName,
-        address: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].AddressDetail.AddrDetail,
-        city: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].AddressDetail.CityOrTownOrDistrict,
-        pinCode: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].AddressDetail.PinCode,
-        state: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].AddressDetail.StateCode,
-        panNumber: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].DoneePAN,
-        donationType: 'OTHER',
-        schemeCode: 'NAT_DEF_FUND_CEN_GOVT',
-        amountInCash: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].DonationAmtCash,
-        amountOtherThanCash: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].DonationAmtOtherMode,
-        eligibleAmount: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].EligibleDonationAmt,
-        details: '',
-       category: 'REGULAR'
+      if(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don100PercentApprReqd.DoneeWithPan.length > 0){
+        for(let i=0; i< sec80Ginfo.Don100PercentApprReqd.DoneeWithPan.length; i++){
+          let body={
+            name: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DoneeWithPanName,
+            address: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
+            city: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+            pinCode: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
+            state: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
+            panNumber: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DoneePAN,
+            donationType: 'OTHER',
+            schemeCode: 'NAT_DEF_FUND_CEN_GOVT',
+            amountInCash: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DonationAmtCash),
+            amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
+            eligibleAmount: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].EligibleDonationAmt),
+            details: '',
+           category: 'REGULAR'
+          }
+          this.donationData.push(body)
+        }
       }
-      this.donationData.push(body)
+      
      }
    }
    
    if(sec80Ginfo.hasOwnProperty('Don50PercentApprReqd')){
     if(sec80Ginfo.Don50PercentApprReqd.hasOwnProperty('DoneeWithPan')){
-      let body={
-        name: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].DoneeWithPanName,
-        address: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].AddressDetail.AddrDetail,
-        city: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].AddressDetail.CityOrTownOrDistrict,
-        pinCode: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].AddressDetail.PinCode,
-        state: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].AddressDetail.StateCode,
-        panNumber: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].DoneePAN,
-        donationType: 'OTHER',
-        schemeCode: 'JN_MEM_FND',
-        amountInCash: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].DonationAmtCash,
-        amountOtherThanCash: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].DonationAmtOtherMode,
-        eligibleAmount: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].EligibleDonationAmt,
-        details: '',
-       category: 'REGULAR'
+      if(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don50PercentApprReqd.DoneeWithPan.length > 0){
+        for(let i=0; i< sec80Ginfo.Don50PercentApprReqd.DoneeWithPan.length; i++){
+          let body={
+            name: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DoneeWithPanName,
+            address: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
+            city: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+            pinCode: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
+            state: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
+            panNumber: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DoneePAN,
+            donationType: 'OTHER',
+            schemeCode: 'JN_MEM_FND',
+            amountInCash: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DonationAmtCash),
+            amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
+            eligibleAmount: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].EligibleDonationAmt),
+            details: '',
+           category: 'REGULAR'
+          }
+          this.donationData.push(body)
+        }
       }
-      this.donationData.push(body)
+     
      }
    }
 
    if(itrData.hasOwnProperty('Schedule80GGA')){
     if(itrData.Schedule80GGA.hasOwnProperty('DonationDtlsSciRsrchRuralDev')){
       let scientificInfo = itrData.Schedule80GGA.DonationDtlsSciRsrchRuralDev;
-     let body={
-       name: scientificInfo[0].NameOfDonee,
-       address:scientificInfo[0].AddressDetail.AddrDetail,
-       city:scientificInfo[0].AddressDetail.CityOrTownOrDistrict,
-       pinCode:scientificInfo[0].AddressDetail.PinCode,
-       state:scientificInfo[0].AddressDetail.StateCode,
-       panNumber:scientificInfo[0].DoneePAN,
-       donationType: 'SCIENTIFIC',
-       schemeCode: '',
-       amountInCash: scientificInfo[0].DonationAmtCash,
-       amountOtherThanCash: scientificInfo[0].DonationAmtOtherMode,
-       eligibleAmount: scientificInfo[0].EligibleDonationAmt,
-       details: '',
-      category: ''
-     }
-     this.donationData.push(body)
+      if(scientificInfo instanceof Array && scientificInfo.length > 0){
+        for(let i=0; i< scientificInfo.length; i++){
+          let body={
+            name: scientificInfo[i].NameOfDonee,
+            address:scientificInfo[i].AddressDetail.AddrDetail,
+            city:scientificInfo[i].AddressDetail.CityOrTownOrDistrict,
+            pinCode:scientificInfo[i].AddressDetail.PinCode,
+            state:scientificInfo[i].AddressDetail.StateCode,
+            panNumber:scientificInfo[i].DoneePAN,
+            donationType: 'SCIENTIFIC',
+            schemeCode: '',
+            amountInCash: this.getNumberFormat(scientificInfo[i].DonationAmtCash),
+            amountOtherThanCash: this.getNumberFormat(scientificInfo[i].DonationAmtOtherMode),
+            eligibleAmount: this.getNumberFormat(scientificInfo[i].EligibleDonationAmt),
+            details: '',
+           category: ''
+          }
+          this.donationData.push(body)
+        }
+      }
+     
     }
    }
    
    if(itrData.hasOwnProperty('Schedule80GGC')){
     let politicalInfo = itrData.Schedule80GGC;
-   let body={
-    name: politicalInfo.DonationDtlsSciRsrchRuralDev[0].NameOfDonee,
-    address: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.AddrDetail,
-    city: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.CityOrTownOrDistrict,
-    pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.PinCode,
-    state: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.StateCode,
-    panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[0].DoneePAN,
-     donationType: 'POLITICAL',
-     schemeCode: '',
-     amountInCash: politicalInfo.DonationDtlsSciRsrchRuralDev[0].DonationAmtCash,
-     amountOtherThanCash: politicalInfo.DonationDtlsSciRsrchRuralDev[0].DonationAmtOtherMode,
-     eligibleAmount: politicalInfo.DonationDtlsSciRsrchRuralDev[0].EligibleDonationAmt,
-     details: '',
-     category: ''
-   }
-   this.donationData.push(body)
+    if(politicalInfo.DonationDtlsSciRsrchRuralDev instanceof Array && politicalInfo.DonationDtlsSciRsrchRuralDev.length > 0){
+      for(let i=0; i< politicalInfo.DonationDtlsSciRsrchRuralDev.length; i++){
+        let body={
+          name: politicalInfo.DonationDtlsSciRsrchRuralDev[i].NameOfDonee,
+          address: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.AddrDetail,
+          city: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+          pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.PinCode,
+          state: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.StateCode,
+          panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneePAN,
+           donationType: 'POLITICAL',
+           schemeCode: '',
+           amountInCash: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].DonationAmtCash),
+           amountOtherThanCash: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].DonationAmtOtherMode),
+           eligibleAmount: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].EligibleDonationAmt),
+           details: '',
+           category: ''
+         }
+         this.donationData.push(body)
+      }
+    }
+   
   }
 
   this.itrSummaryForm['controls'].assesse['controls'].donations.setValue(this.donationData);
