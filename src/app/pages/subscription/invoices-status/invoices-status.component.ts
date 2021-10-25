@@ -11,6 +11,7 @@ import { environment } from 'environments/environment';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { ActivatedRoute } from '@angular/router';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -48,9 +49,10 @@ export class InvoicesStatusComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string, private userService: UserMsService, private dialog: MatDialog,
     private utilService: UtilsService, private fb: FormBuilder, private activatedRoute: ActivatedRoute,
     private itrService: ItrMsService, private datePipe: DatePipe) {
+    const smeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.invoicesCreateColumnDef(),
+      columnDefs: this.invoicesCreateColumnDef(smeList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -152,7 +154,7 @@ export class InvoicesStatusComponent implements OnInit {
     return invoices;
   }
 
-  invoicesCreateColumnDef() {
+  invoicesCreateColumnDef(smeList) {
     return [
       {
         headerName: 'User Id',
@@ -342,14 +344,24 @@ export class InvoicesStatusComponent implements OnInit {
       {
         headerName: 'Prepared by',
         field: 'invoicePreparedBy',
-        width: 100,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        valueGetter: function nameFromCode(params) {
+          if (smeList.length !== 0) {
+            const nameArray = smeList.filter(item => item.userId.toString() === params.data.invoicePreparedBy);
+            if (nameArray.length !== 0) {
+              return nameArray[0].name;
+            }
+            return '-';
+          }
+          return params.data.statusId;
+        },
       },
       {
         headerName: 'IFA / Lead Client',
@@ -590,7 +602,29 @@ export class InvoicesStatusComponent implements OnInit {
         },
         width: 55,
         pinned: 'right',
-      }
+      },
+      {
+        headerName: 'See/Add Notes',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Click see/add notes"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
     ]
   }
 
@@ -627,6 +661,10 @@ export class InvoicesStatusComponent implements OnInit {
         case 'place-call': {
           // this.deleteInvoice(params.data);
           this.placeCall(params.data);
+          break;
+        }
+        case 'addNotes': {
+          this.showNotes(params.data)
           break;
         }
       }
@@ -776,5 +814,20 @@ export class InvoicesStatusComponent implements OnInit {
       this._toastMessageService.alert('error', 'Error while making call, Please try again.');
       this.loading = false;
     })
+  }
+
+  showNotes(client) {
+    let disposable = this.dialog.open(UserNotesComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.billTo
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 }
