@@ -214,7 +214,8 @@ export class RepoBySmeNameComponent implements OnInit {
       this.loading = true;
       let fromDate = this.datePipe.transform(this.reportBySmeForm.value.fromDate, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.reportBySmeForm.value.toDate, 'yyyy-MM-dd');
-      let param = `/call-management/knowlarity-report-sme?from=${fromDate}&to=${toDate}`;
+      let param = `/call-management/knowlarity-report?fromDate=${fromDate}&toDate=${toDate}`;
+      // http://localhost:8050/user/call-management/knowlarity-report?fromDate=2021-10-18&toDate=2021-10-18
       this.userService.getMethod(param).subscribe((res: any) => {
         console.log('SME wise info: ', res.report);
         this.loading = false;
