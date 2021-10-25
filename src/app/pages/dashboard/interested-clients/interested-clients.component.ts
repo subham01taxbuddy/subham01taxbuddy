@@ -11,6 +11,8 @@ import { AppConstants } from 'app/shared/constants';
 import { formatDate } from '@angular/common';
 import { DownloadDialogComponent } from './download-dialog/download-dialog.component';
 import { CallReassignmentComponent } from 'app/shared/components/call-reassignment/call-reassignment.component';
+import { RoleBaseAuthGuardService } from 'app/services/role-base-auth-gaurd.service';
+import moment = require('moment');
 
 @Component({
   selector: 'app-interested-clients',
@@ -22,7 +24,7 @@ export class InterestedClientsComponent implements OnInit {
   loading = false;
   config: any;
   agentList: any = [];
-  isAdmin: boolean;
+  isAgentAvailable: boolean;
   selectedAgent: any;
   selectedStatus = 18;
   selectedService = 'ITR';
@@ -34,7 +36,8 @@ export class InterestedClientsComponent implements OnInit {
   isServiceDisabled = false;
   serviceTypeList = ['ITR', 'GST', 'NOTICE', 'TPA'];
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
-    private toastMsgService: ToastMessageService, private route: Router) {
+    private toastMsgService: ToastMessageService, private route: Router,
+    private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
     this.interestedClientsGridOption = <GridOptions>{
       rowData: [],
       columnDefs: this.createColumnDef(this.itrStatus),
@@ -87,14 +90,13 @@ export class InterestedClientsComponent implements OnInit {
     this.searchMobNo = '';
     this.selectedAgent = '';
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
-    if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
-      this.isAdmin = true;
+    this.isAgentAvailable = this.roleBaseAuthGuardService.checkHasPermission(userInfo.USER_ROLE, ["ITR_TEAM_LEAD", "GST_TEAM_LEAD", "ROLE_ADMIN", "ITR_SUPER_LEAD", "GST_SUPER_LEAD"])
+    if (this.isAgentAvailable) {
       this.showAllUser = true;
       this.config.currentPage = 1;
       this.getInterestedClients(0);
     }
     else {
-      this.isAdmin = false;
       this.config.currentPage = 1;
       this.getInterestedClients(0);
     }
@@ -234,15 +236,50 @@ export class InterestedClientsComponent implements OnInit {
         width: 120,
         suppressMovable: true,
         sortable: true,
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: (data) => {
-          return (data.value !== null && data.value !== '') ? formatDate(data.value, 'dd/MM/yyyy', this.locale) : ''
-        },
+        // cellRenderer: (data) => {
+        //   return (data.value !== null && data.value !== '') ? formatDate(data.value, 'dd/MM/yyyy', this.locale) : ''
+        // },
+        valueFormatter: (data) => data.value ? moment(data.value).format('DD MMM YYYY') : null,
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        tooltip: function (params) {
+          let currentDate = new Date();
+          let dateSent = new Date(params.data.statusUpdatedDate);
+          let diff = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate())) / (1000 * 60 * 60 * 24));
+          if (diff > 10) {
+            return 'This user is more that 10 days in the current status';
+          } else if (diff > 5) {
+            return 'This user is more that 5 days in the current status';
+          }
+        },
+        cellStyle: function (params) {
+          let currentDate = new Date();
+          let dateSent = new Date(params.data.statusUpdatedDate);
+          let diff = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate())) / (1000 * 60 * 60 * 24));
+          console.log('diff' + diff)
+          if (diff > 10) {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              color: 'red',
+            }
+          } else if (diff > 5) {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+              color: 'orange',
+            }
+          } else {
+            return { textAlign: 'center' }
+          }
+        },
       },
       {
         headerName: 'A.Y.',
@@ -423,7 +460,7 @@ export class InterestedClientsComponent implements OnInit {
     var userInfo = JSON.parse(localStorage.getItem('UMD'));
     this.loading = true;
     var param2;
-    if (this.isAdmin) {
+    if (this.isAgentAvailable) {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       } else {
@@ -537,7 +574,7 @@ export class InterestedClientsComponent implements OnInit {
       height: 'auto',
       data: {
         userId: client.userId,
-        clientName: client.userName
+        clientName: client.name
       }
     })
 

@@ -1,3 +1,4 @@
+import { ToastMessageService } from 'app/services/toast-message.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -15,12 +16,13 @@ export class CallReassignmentComponent implements OnInit {
   agentList: any = [];
   smeList: any = [];
   agentsCall = true;
-  callerMessage = 'Your self calls will be reassigned to below callers, if you just want to devide your calls please select your name as well from callers list'
-  agentMessage = 'All calles of selcted agent id will be re assigned equally to newly selected callers from list irrespective of current assignment.'
+  callerMessage = 'Your self calls will be reassigned to below callers, if you just want to divide your calls please select your name as well from callers list'
+  agentMessage = 'All calls of selected agent id will be re assigned equally to newly selected callers from list irrespective of current assignment.'
   // itrStatus: any = [];
   constructor(public dialogRef: MatDialogRef<CallReassignmentComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
     private userMsService: UserMsService, private fb: FormBuilder,
-    public utilsService: UtilsService) { }
+    public utilsService: UtilsService,
+    private toastMsgService: ToastMessageService) { }
 
   ngOnInit() {
     console.log(this.data);
@@ -51,7 +53,7 @@ export class CallReassignmentComponent implements OnInit {
       console.log('Params', param)
       this.userMsService.putMethod(param, {}).subscribe(res => {
         console.log(res);
-
+        this.toastMsgService.alert('success', 'Calls reassigned successfully.')
       })
     }
 
