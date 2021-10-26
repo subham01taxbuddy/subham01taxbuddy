@@ -3,7 +3,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DateAdapter, MatDialogRef, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MAT_DIALOG_DATA } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { UserMsService } from 'app/services/user-ms.service';
 import { environment } from 'environments/environment';
 
 export const MY_FORMATS = {
@@ -34,10 +33,10 @@ export class DownloadDialogComponent implements OnInit {
   maxDate: any = new Date();
   toDateMin: any;
 
-  constructor(public dialogRef: MatDialogRef<DownloadDialogComponent>,@Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder,
-              private userService: UserMsService, private datePipe: DatePipe) {
-      console.log('data: ',data);
-   }
+  constructor(public dialogRef: MatDialogRef<DownloadDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder,
+    private datePipe: DatePipe) {
+    console.log('data: ', data);
+  }
 
   ngOnInit() {
     this.downloadFileForm = this.fb.group({
@@ -49,20 +48,19 @@ export class DownloadDialogComponent implements OnInit {
 
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate)
-    console.log('formated-1 FrmDate: ', new Date(FromDate))
     this.toDateMin = FromDate;
   }
 
-  downloadReport(){
-    console.log('downloadFileForm: ',this.downloadFileForm)
-    if(this.downloadFileForm.valid){
-       this.loading = true;
+  downloadReport() {
+    console.log('downloadFileForm: ', this.downloadFileForm)
+    if (this.downloadFileForm.valid) {
+      this.loading = true;
       let fromDate = this.datePipe.transform(this.downloadFileForm.value.fromDate, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.downloadFileForm.value.toDate, 'yyyy-MM-dd');
       let agentId = this.downloadFileForm.value.agentId;
-      console.log('values: ',fromDate, toDate);
+      console.log('values: ', fromDate, toDate);
       location.href = environment.url + `/user/customers-es-report?fromDate=${fromDate}&toDate=${toDate}&agentId=${agentId}`;
-      setTimeout(()=>{
+      setTimeout(() => {
         this.loading = false;
         this.dialogRef.close();
       }, 7000)
