@@ -362,7 +362,7 @@ export class WhatAppChatComponent implements OnInit {
           console.log(res, typeof res);
           console.log('CHECK', res.hasOwnProperty('userInfo'))
           this.startConversation = false;
-
+          debugger
           if (res.hasOwnProperty('userInfo')) {
             this.getServicesAvailed(res['userInfo'].userId);
             this.selectedUser = res['userInfo'];
@@ -703,6 +703,7 @@ export class WhatAppChatComponent implements OnInit {
     // }
     // this.whatsAppForm.controls['sentMessage'].setValue(tempInfo.templateContent)
     this.whatsAppForm.controls["sentMessage"].setValue(msg);
+    this.timeExpired = false;
   }
 
   showQuickRplyMsg(event) {
@@ -799,6 +800,7 @@ export class WhatAppChatComponent implements OnInit {
     this.userLastMsgTime = "";
     let userChatInfo = chatDetail.filter((item) => item.isReceived === true);
     console.log('userChatInfo: ', userChatInfo)
+    debugger
     if (userChatInfo.length === 0) {
       this.timeExpired = true;
     } else {
@@ -824,6 +826,7 @@ export class WhatAppChatComponent implements OnInit {
   }
 
   showTimer(remaining) {
+    debugger
     this.countDown = timer(0, 1000).pipe(
       take(remaining),
       map(() => {
