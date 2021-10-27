@@ -1579,10 +1579,10 @@
                         </ag-grid-angular>
                        <br><br>
     
-                        <div class="tableHead" *ngIf="!newItrSumChanges">Annexures: Exempt Income</div><br>
-                        <mat-card *ngIf="!newItrSumChanges">
+                        <div class="tableHead" *ngIf="newItrSumChanges">Annexures: Exempt Income</div><br>
+                        <mat-card *ngIf="newItrSumChanges">
                             <!-- <form [formGroup]="exemptIncomeForm"> -->
-                            <div class="card__row" *ngIf="!newItrSumChanges">
+                            <div class="card__row" *ngIf="newItrSumChanges">
                                 <div class="card__col-lg-2">
                                     <mat-form-field appearance="outline">
                                         <mat-label>PPF Interest</mat-label>

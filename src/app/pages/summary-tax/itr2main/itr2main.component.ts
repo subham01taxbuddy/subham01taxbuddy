@@ -31,6 +31,7 @@ export class Itr2mainComponent implements OnInit {
   itr_2_Summary: any;
   newItrSumChanges: boolean;
   exemptIncomeData: any = [];
+  newRegimeTaxSummary: any;
 
   searchMenus = [{
     value: 'fName', name: 'First Name'
@@ -221,6 +222,8 @@ export class Itr2mainComponent implements OnInit {
     else {
       this.newItrSumChanges = false;
     }
+
+    this.initialiseNewRegimeTaxSummary();
 
     this.personalInfoForm = this.fb.group({
       _id: null,
@@ -3113,6 +3116,7 @@ export class Itr2mainComponent implements OnInit {
             loanAndAdvances: 0,
             membersOwnCapital: 0,
             otherAssets: 0,
+            investment: 0,
             otherLiabilities: 0,
             securedLoans: 0,
             sundryCreditorsAmount: 0,
@@ -3240,12 +3244,14 @@ export class Itr2mainComponent implements OnInit {
     itr3Summary.assesse.business.financialParticulars.cashInHand = Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.CashOrBankBal.BankBal);
     itr3Summary.assesse.business.financialParticulars.loanAndAdvances = Number(financialInfo.FundApply.CurrAssetLoanAdv.LoanAdv.TotLoanAdv);
     itr3Summary.assesse.business.financialParticulars.otherAssets = Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.OthCurrAsset);
+    itr3Summary.assesse.business.financialParticulars.investment = Number(financialInfo.FundApply.Investments.TotInvestments);
     let assetsTotal = itr3Summary.assesse.business.financialParticulars.fixedAssets + itr3Summary.assesse.business.financialParticulars.inventories +
       itr3Summary.assesse.business.financialParticulars.sundryDebtorsAmount + itr3Summary.assesse.business.financialParticulars.balanceWithBank +
       itr3Summary.assesse.business.financialParticulars.cashInHand + itr3Summary.assesse.business.financialParticulars.loanAndAdvances +
       itr3Summary.assesse.business.financialParticulars.otherAssets;
 
     itr3Summary.assesse.business.financialParticulars.totalAssets = assetsTotal;
+    console.log('financialParticulars: ',itr3Summary.assesse.business.financialParticulars);
 
     // Speculative Business Income
     var speculativeInfo = itr3Info.PARTA_PL;
@@ -3377,6 +3383,7 @@ export class Itr2mainComponent implements OnInit {
             loanAndAdvances: 0,
             membersOwnCapital: 0,
             otherAssets: 0,
+            investment: 0,
             otherLiabilities: 0,
             securedLoans: 0,
             sundryCreditorsAmount: 0,
@@ -7119,6 +7126,62 @@ export class Itr2mainComponent implements OnInit {
     return this.exemptIncomes.filter(item => item.value === keyVal)[0].label
   }
 
+  
+  initialiseNewRegimeTaxSummary(){
+    this.newRegimeTaxSummary ={
+      salary: 0,
+      housePropertyIncome: 0,
+      
+      shortTermCapitalGain:0,
+      shortTermCapitalGain15: 0,
+      longTermCapitalGain10: 0,
+      longTermCapitalGain20: 0,
+      capitalGain: 0,
+
+      presumptiveBusinessIncomeUs44AD: 0,
+      presumptiveBusinessIncomeUs44ADA: 0,
+      speculativeBusinessIncome: 0,
+      incomeFromOtherThanSpeculativeAndPresumptive : 0,
+      incomeFromOtherThanSpeculativeAndPresumptiveProfession : 0,
+      futureAndOption: 0,
+
+      otherIncome: 0,
+      totalDeduction: 0,
+      grossTotalIncome: 0,
+      totalIncomeAfterDeductionIncludeSR: 0,
+      forRebate87Tax: 0,
+      taxOnTotalIncome: 0,
+      totalIncomeForRebate87A: 0,
+      rebateUnderSection87A: 0,
+      taxAfterRebate: 0,
+      surcharge: 0,
+      cessAmount: null,
+      grossTaxLiability: 0,
+      taxReliefUnder89: 0,
+      taxReliefUnder90_90A: 0,
+      taxReliefUnder91: 0,
+      totalTaxRelief: 0,
+      netTaxLiability: 0,
+      interestAndFeesPayable: 0,
+      s234A: 0,
+      s234B: 0,
+      s234C: 0,
+      s234F: 0,
+      agrigateLiability: 0,
+      taxPaidAdvancedTax: 0,
+      taxPaidTDS: 0,
+      taxPaidTCS: 0,
+      selfassessmentTax: 0,
+      totalTaxesPaid: 0,
+      taxpayable: 0,
+      taxRefund: 0,
+      totalTax: 0,
+      advanceTaxSelfAssessmentTax: 0,
+      presumptiveIncome: 0
+    }
+    
+  }
+
   createItrSummaryEmptyJson() {
     const ITR_SUMMARY: ITR_SUMMARY = {
       _id: null,
@@ -7336,4 +7399,6 @@ export class Itr2mainComponent implements OnInit {
     }
     return ITR_SUMMARY;
   }
+
+  
 }

@@ -481,6 +481,17 @@
                              onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
+                    <tr *ngIf="itrType === '3'">
+                        <td>8</td>
+                        <td>Invetment</td>
+                        <td>
+                            <input placeholder="Invetment" formControlName="investment"
+                             maxlength="8" autocomplete="off"
+                             type="number" (blur)="calTotalAssets()"
+                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        </td>
+                    </tr>
                     <tr>
                         <td></td>
                         <td><b>Total Assets</b></td>
