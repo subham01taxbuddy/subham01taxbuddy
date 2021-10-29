@@ -3,6 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { UtilsService } from 'app/services/utils.service';
 import moment = require('moment');
+import { ToastMessageService } from 'app/services/toast-message.service';
+import { UserMsService } from 'app/services/user-ms.service';
+import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-last-year-filing',
@@ -15,7 +19,10 @@ export class LastYearFilingComponent implements OnInit {
   totalCount = 0;
 
   constructor(public utilsService: UtilsService,
-    private itrMsService: ItrMsService,) {
+    private itrMsService: ItrMsService,
+    private _toastMessageService: ToastMessageService,
+    private userMsService: UserMsService,
+    private dialog: MatDialog,) {
     this.lastYearReportGridOption = <GridOptions>{
       rowData: [],
       columnDefs: this.lastYearCreateColumnDef(),
@@ -51,13 +58,13 @@ export class LastYearFilingComponent implements OnInit {
 
   lastYearCreateColumnDef() {
     return [
-      // {
-      //   headerName: 'Sr. No.',
-      //   field: 'srNo',
-      //   pinned: 'left',
-      //   width: 60,
-      //   suppressMovable: true,
-      // },
+      {
+        headerName: 'User Id',
+        field: 'userId',
+        pinned: 'left',
+        width: 60,
+        suppressMovable: true,
+      },
       {
         headerName: 'Client Name',
         field: 'name',
@@ -149,7 +156,102 @@ export class LastYearFilingComponent implements OnInit {
           debounceMs: 0
         },
       },
+      {
+        headerName: 'Call',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call." 
+            style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer">
+            <i class="fa fa-phone" aria-hidden="true" data-action-type="place-call"></i>
+           </button>`;
+        },
+        width: 55,
+        pinned: 'right',
+      },
+      {
+        headerName: 'See/Add Notes',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Click see/add notes"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
     ]
   }
 
+  public onLastYearReportsRowClicked(params) {
+    console.log(params)
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'place-call': {
+          this.placeCall(params.data);
+          break;
+        }
+        case 'addNotes': {
+          this.showNotes(params.data)
+          break;
+        }
+      }
+    }
+  }
+
+  async placeCall(user) {
+    console.log('user: ', user)
+    const param = `/call-management/make-call`;
+    const agentNumber = await this.utilsService.getMyCallingNumber();
+    console.log('agent number', agentNumber)
+    if (!agentNumber) {
+      this._toastMessageService.alert("error", 'You dont have calling role.')
+      return;
+    }
+    this.loading = true;
+    const reqBody = {
+      "agent_number": agentNumber,
+      "customer_number": user.mobile
+    }
+    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+      console.log('Call Result: ', result);
+      this.loading = false;
+      if (result.success.status) {
+        this._toastMessageService.alert("success", result.success.message)
+      }
+    }, error => {
+      this._toastMessageService.alert('error', 'Error while making call, Please try again.');
+      this.loading = false;
+    })
+  }
+
+  showNotes(client) {
+    let disposable = this.dialog.open(UserNotesComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.name
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
 }

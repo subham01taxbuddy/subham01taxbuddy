@@ -5,8 +5,8 @@
       <span style="float:right"> Total Count: <b>{{totalCount}}</b></span>
     </div>
     <div class="card__row">
-      <ag-grid-angular class="ag-theme-balham" [gridOptions]="lastYearReportGridOption" [suppressExcelExport]="true"
-        paginationPageSize=30 pagination=true>
+      <ag-grid-angular class="ag-theme-balham" [gridOptions]="lastYearReportGridOption"
+        (rowClicked)="onLastYearReportsRowClicked($event)" paginationPageSize=30 pagination=true>
       </ag-grid-angular>
     </div>
   </div>
