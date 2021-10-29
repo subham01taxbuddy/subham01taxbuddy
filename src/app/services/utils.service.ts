@@ -481,7 +481,6 @@ export class UtilsService {
     async getMyCallingNumber() {
         const userObj = JSON.parse(localStorage.getItem('UMD'));
         const SME_LIST = await this.getStoredSmeList();
-        debugger
         const sme = SME_LIST.filter(item => item.userId === userObj.USER_UNIQUE_ID);
         if (sme instanceof Array && sme.length > 0 && (sme[0]['roles'].length > 0 && sme[0]['roles'].includes('ROLE_CALLING_TEAM'))) {
             debugger
