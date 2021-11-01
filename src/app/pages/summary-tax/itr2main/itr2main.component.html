@@ -1783,7 +1783,8 @@
                                     <td>Income from Salary </td>
                                     <td></td>
                                     <td >  <!--formGroupName="taxSummary"-->
-                                        <input type="number" formControlName="salary"  maxlength="8"></td> 
+                                        <input type="number" formControlName="salary"  maxlength="8" (blur)="calculateTotalHeadWiseIncome()">
+                                    </td> 
                                         <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.salary" [ngModelOptions]="{standalone: true}"></td>  <!--[(ngModel)]="newRegimeTaxSummary.salary" [ngModelOptions]="{standalone: true}"-->
 
                                 </tr>
@@ -1792,8 +1793,9 @@
                                     <td>Income from House Property (Refer Annexure) </td>
                                     <td></td>
                                     <td>  <!--formGroupName="taxSummary"-->
-                                        <input type="number" formControlName="housePropertyIncome" maxlength="8"></td>  <!---->
-                                        <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.housePropertyIncome" [ngModelOptions]="{standalone: true}"></td> 
+                                        <input type="number" formControlName="housePropertyIncome" maxlength="8">
+                                    </td>  <!---->
+                                        <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.housePropertyIncome" [ngModelOptions]="{standalone: true}" (blur)="calculateTotalHeadWiseIncome()"></td> 
     
                                 </tr>
                                 <tr >
@@ -1887,7 +1889,7 @@
                                     <td>Income from Other Sources (Refer annexure) </td>
                                     <td></td>
                                     <td > <!--formGroupName="taxSummary"-->
-                                        <input type="number" formControlName="otherIncome"  maxlength="8">  <!---->
+                                        <input type="number" formControlName="otherIncome"  maxlength="8" (blur)="calculateTotalHeadWiseIncome()">  <!---->
                                     </td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.otherIncome" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
