@@ -2423,8 +2423,8 @@ export class Itr2mainComponent implements OnInit {
           netSaleValue: Number(shortCGslabofProperty.SaleOnOtherAssets.FullConsideration),
           purchaseCost: Number(shortCGslabofProperty.SaleOnOtherAssets.DeductSec48.TotalDedn),
           capitalGain: Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG),
-          deductions: Number(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal),
-          netCapitalGain: Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) < 0 ? Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) : (Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) - Number(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal)),
+          deductions: shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('ExemptionOrDednUs54') ? Number(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
+          netCapitalGain: Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) < 0 ? Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) : (Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) - (shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('ExemptionOrDednUs54') ? Number(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal) : 0)),
         }
         taxPaid.shortTermCapitalGain.push(shortTermOtherAssestsObj);
         this.updateCapitalGain(taxPaid);
@@ -2530,7 +2530,7 @@ export class Itr2mainComponent implements OnInit {
           netSaleValue: 0,
           purchaseCost: Number(longTeemCG20Per.SaleofAssetNA.DeductSec48.TotalDedn),
           capitalGain: Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets),
-          deductions: Number(longTeemCG20Per.SaleofAssetNA.ExemptionOrDednUs54.ExemptionGrandTotal),
+          deductions: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('ExemptionOrDednUs54') ? Number(longTeemCG20Per.SaleofAssetNA.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
           netCapitalGain: Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) < 0 ? Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : (Number(longTeemCG20Per.SaleofAssetNA.FullConsideration)),
         }
         taxPaid.longTermCapitalGainAt20Percent.push(longTerm20OtherAssetsObj);
@@ -2742,116 +2742,131 @@ export class Itr2mainComponent implements OnInit {
         let lossCarriedForwordInfo = itrData.ScheduleCFL;
         console.log('lossesToBeCarriedForwordInfo', lossCarriedForwordInfo);
         if (this.itrType.itrTwo) {
-
-          let currentYrLossObj = {
-            year: '2020-2021',
-            housePropertyLosses: lossCarriedForwordInfo['ITRForm:CurrentAYloss']['ITRForm:LossSummaryDetail']['ITRForm:TotalHPPTILossCF']['_text'],
-            shortTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:CurrentAYloss']['ITRForm:LossSummaryDetail']['ITRForm:TotalSTCGPTILossCF']['_text'],
-            longTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:CurrentAYloss']['ITRForm:LossSummaryDetail']['ITRForm:TotalLTCGPTILossCF']['_text'],
-            carriedForwardToNextYear: lossCarriedForwordInfo['ITRForm:CurrentAYloss']['ITRForm:LossSummaryDetail']['ITRForm:TotalHPPTILossCF']['_text'],
-          }
-          this.lossesCarriedForwarInfo.push(currentYrLossObj);
-
-          //2019-2020
-          if (lossCarriedForwordInfo.hasOwnProperty('ITRForm:LossCFCurrentAssmntYear')) {
-            if (this.utilService.isNonEmpty(lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear'].length)) {
-              for (let i = 0; i < lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear'].length; i++) {
-                let otherThanCurrYrLossObj = {
-                  year: this.returnYrs(lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:DateOfFiling']['_text']),
-                  housePropertyLosses: lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:TotalHPPTILossCF']['_text'],
-                  shortTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:TotalSTCGPTILossCF']['_text'],
-                  longTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:TotalLTCGPTILossCF']['_text'],
-                  businessProfessionalLoss: lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:BusLossOthThanSpecLossCF'] ? lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:BusLossOthThanSpecLossCF']['text'] : 0,
-                  speculativeBusinessLoss: lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:LossFrmSpecBusCF'] ? lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:LossFrmSpecBusCF']['_text'] : 0,
-                  //carriedForwardToNextYear: lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:LTCGLossCF']['_text']
+          let lossCarriedForwordInfo = itrData.ScheduleCFL;
+          if (lossCarriedForwordInfo.hasOwnProperty('LossCFCurrentAssmntYear2021')) {
+            if (lossCarriedForwordInfo.LossCFCurrentAssmntYear2021.CarryFwdLossDetail.hasOwnProperty('DateOfFiling') && lossCarriedForwordInfo.LossCFCurrentAssmntYear2021.CarryFwdLossDetail.hasOwnProperty('TotalHPPTILossCF') &&
+              lossCarriedForwordInfo.LossCFCurrentAssmntYear2021.CarryFwdLossDetail.hasOwnProperty('TotalSTCGPTILossCF') && lossCarriedForwordInfo.LossCFCurrentAssmntYear2021.CarryFwdLossDetail.hasOwnProperty('TotalLTCGPTILossCF')) {
+                let currentYrLossObj = {
+                  year: this.returnYrs(lossCarriedForwordInfo.LossCFCurrentAssmntYear2021.CarryFwdLossDetail.DateOfFiling),
+                  housePropertyLosses: lossCarriedForwordInfo.LossCFCurrentAssmntYear2021.CarryFwdLossDetail.TotalHPPTILossCF,
+                  shortTermCapitalGainLosses: lossCarriedForwordInfo.LossCFCurrentAssmntYear2021.CarryFwdLossDetail.TotalSTCGPTILossCF,
+                  longTermCapitalGainLosses: lossCarriedForwordInfo.LossCFCurrentAssmntYear2021.CarryFwdLossDetail.TotalLTCGPTILossCF,
+                  //carriedForwardToNextYear: lossCarriedForwordInfo.CurrentAYloss.LossFrmSpecBusCF,
                 }
-                this.lossesCarriedForwarInfo.push(otherThanCurrYrLossObj);
+                this.lossesCarriedForwarInfo.push(currentYrLossObj);
               }
-            } else {
+            
+          }
+
+          if (lossCarriedForwordInfo.hasOwnProperty('LossCFCurrentAssmntYear')) {
+            if (lossCarriedForwordInfo.LossCFCurrentAssmntYear.CarryFwdLossDetail.hasOwnProperty('DateOfFiling') && lossCarriedForwordInfo.LossCFCurrentAssmntYear.CarryFwdLossDetail.hasOwnProperty('TotalHPPTILossCF') &&
+            lossCarriedForwordInfo.LossCFCurrentAssmntYear.CarryFwdLossDetail.hasOwnProperty('TotalSTCGPTILossCF') && lossCarriedForwordInfo.LossCFCurrentAssmntYear.CarryFwdLossDetail.hasOwnProperty('TotalLTCGPTILossCF')) {
               let otherThanCurrYrLossObj = {
-                year: this.returnYrs(lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail']['ITRForm:DateOfFiling']['_text']),
-                housePropertyLosses: lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail']['ITRForm:TotalHPPTILossCF']['_text'],
-                shortTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail']['ITRForm:TotalSTCGPTILossCF']['_text'],
-                longTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail']['ITRForm:TotalLTCGPTILossCF']['_text'],
-                businessProfessionalLoss: lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail']['ITRForm:BusLossOthThanSpecLossCF'] ? lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail']['ITRForm:BusLossOthThanSpecLossCF']['_text'] : 0,
-                speculativeBusinessLoss: lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail']['ITRForm:LossFrmSpecBusCF'] ? lossCarriedForwordInfo['ITRForm:LossCFCurrentAssmntYear']['ITRForm:CarryFwdLossDetail']['ITRForm:LossFrmSpecBusCF']['_text'] : 0,
+                year: this.returnYrs(lossCarriedForwordInfo.LossCFCurrentAssmntYear.CarryFwdLossDetail.DateOfFiling),
+                housePropertyLosses: lossCarriedForwordInfo.LossCFCurrentAssmntYear.CarryFwdLossDetail.TotalHPPTILossCF,
+                shortTermCapitalGainLosses: lossCarriedForwordInfo.LossCFCurrentAssmntYear.CarryFwdLossDetail.TotalSTCGPTILossCF,
+                longTermCapitalGainLosses: lossCarriedForwordInfo.LossCFCurrentAssmntYear.CarryFwdLossDetail.TotalLTCGPTILossCF,
+                // businessProfessionalLoss: lossCarriedForwordInfo.LossCFCurrentAssmntYear.CarryFwdLossDetail.BusLossOthThanSpecLossCF,
+                // speculativeBusinessLoss: lossCarriedForwordInfo.LossCFCurrentAssmntYear.CarryFwdLossDetail.LossFrmSpecBusCF,
               }
               this.lossesCarriedForwarInfo.push(otherThanCurrYrLossObj);
             }
           }
 
-          //2018-2019
-          if (lossCarriedForwordInfo.hasOwnProperty('ITRForm:LossCFFromPrevYrToAY')) {
-            if (this.utilService.isNonEmpty(lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY'].length)) {
-              for (let i = 0; i < lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY'].length; i++) {
-                let otherThanCurrYrLossObj = {
-                  year: this.returnYrs(lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:DateOfFiling']['_text']),
-                  housePropertyLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:TotalHPPTILossCF']['_text'],
-                  shortTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:TotalSTCGPTILossCF']['_text'],
-                  longTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:TotalLTCGPTILossCF']['_text'],
-                  businessProfessionalLoss: lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:BusLossOthThanSpecLossCF'] ? lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:BusLossOthThanSpecLossCF']['text'] : 0,
-                  speculativeBusinessLoss: lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:LossFrmSpecBusCF'] ? lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:LossFrmSpecBusCF']['_text'] : 0,
-                  //carriedForwardToNextYear: lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:LTCGLossCF']['_text']
-                }
-                this.lossesCarriedForwarInfo.push(otherThanCurrYrLossObj);
-              }
-            } else {
+          if (lossCarriedForwordInfo.hasOwnProperty('LossCFFromPrevYrToAY')) {
+            if (lossCarriedForwordInfo.LossCFFromPrevYrToAY.CarryFwdLossDetail.hasOwnProperty('DateOfFiling') && lossCarriedForwordInfo.LossCFFromPrevYrToAY.CarryFwdLossDetail.hasOwnProperty('TotalHPPTILossCF') &&
+              lossCarriedForwordInfo.LossCFFromPrevYrToAY.CarryFwdLossDetail.hasOwnProperty('TotalSTCGPTILossCF') && lossCarriedForwordInfo.LossCFFromPrevYrToAY.CarryFwdLossDetail.hasOwnProperty('TotalLTCGPTILossCF')) {
               let otherThanCurrYrLossObj = {
-                year: this.returnYrs(lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail']['ITRForm:DateOfFiling']['_text']),
-                housePropertyLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail']['ITRForm:TotalHPPTILossCF']['_text'],
-                shortTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail']['ITRForm:TotalSTCGPTILossCF']['_text'],
-                longTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail']['ITRForm:TotalLTCGPTILossCF']['_text'],
-                businessProfessionalLoss: lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail']['ITRForm:BusLossOthThanSpecLossCF'] ? lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail']['ITRForm:BusLossOthThanSpecLossCF']['_text'] : 0,
-                speculativeBusinessLoss: lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail']['ITRForm:LossFrmSpecBusCF'] ? lossCarriedForwordInfo['ITRForm:LossCFFromPrevYrToAY']['ITRForm:CarryFwdLossDetail']['ITRForm:LossFrmSpecBusCF']['_text'] : 0,
+                year: this.returnYrs(lossCarriedForwordInfo.LossCFFromPrevYrToAY.CarryFwdLossDetail.DateOfFiling),
+                housePropertyLosses: lossCarriedForwordInfo.LossCFFromPrevYrToAY.CarryFwdLossDetail.TotalHPPTILossCF,
+                shortTermCapitalGainLosses: lossCarriedForwordInfo.LossCFFromPrevYrToAY.CarryFwdLossDetail.TotalSTCGPTILossCF,
+                longTermCapitalGainLosses: lossCarriedForwordInfo.LossCFFromPrevYrToAY.CarryFwdLossDetail.TotalLTCGPTILossCF,
+                // businessProfessionalLoss: lossCarriedForwordInfo.LossCFFromPrevYrToAY.CarryFwdLossDetail.BusLossOthThanSpecLossCF,
+                // speculativeBusinessLoss: lossCarriedForwordInfo.LossCFFromPrevYrToAY.CarryFwdLossDetail.LossFrmSpecBusCF,
               }
               this.lossesCarriedForwarInfo.push(otherThanCurrYrLossObj);
             }
           }
 
-          //ITRForm:LossCFFromPrevYrToAY 2017-2018
-          if (lossCarriedForwordInfo.hasOwnProperty('ITRForm:LossCFFromPrev2ndYearFromAY')) {
-            if (this.utilService.isNonEmpty(lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY'].length)) {
-              for (let i = 0; i < lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY'].length; i++) {
-                let otherThanCurrYrLossObj = {
-                  year: this.returnYrs(lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:DateOfFiling']['_text']),
-                  housePropertyLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:TotalHPPTILossCF']['_text'],
-                  shortTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:TotalSTCGPTILossCF']['_text'],
-                  longTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:TotalLTCGPTILossCF']['_text'],
-                  carriedForwardToNextYear: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail'][i]['ITRForm:LTCGLossCF']['_text']
-                }
-                this.lossesCarriedForwarInfo.push(otherThanCurrYrLossObj);
-              }
-            } else {
+
+          if (lossCarriedForwordInfo.hasOwnProperty('LossCFFromPrev2ndYearFromAY')) {
+            if (lossCarriedForwordInfo.LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail.hasOwnProperty('DateOfFiling') && lossCarriedForwordInfo.LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail.hasOwnProperty('TotalHPPTILossCF') &&
+              lossCarriedForwordInfo.LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail.hasOwnProperty('TotalSTCGPTILossCF') && lossCarriedForwordInfo.LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail.hasOwnProperty('TotalLTCGPTILossCF')) {
               let otherThanCurrYrLossObj = {
-                year: this.returnYrs(lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail']['ITRForm:DateOfFiling']['_text']),
-                housePropertyLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail']['ITRForm:TotalHPPTILossCF']['_text'],
-                shortTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail']['ITRForm:TotalSTCGPTILossCF']['_text'],
-                longTermCapitalGainLosses: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail']['ITRForm:TotalLTCGPTILossCF']['_text'],
-                carriedForwardToNextYear: lossCarriedForwordInfo['ITRForm:LossCFFromPrev2ndYearFromAY']['ITRForm:CarryFwdLossDetail']['ITRForm:LTCGLossCF']['_text']
+                year: this.returnYrs(lossCarriedForwordInfo.LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail.DateOfFiling),
+                housePropertyLosses: lossCarriedForwordInfo.LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail.TotalHPPTILossCF,
+                shortTermCapitalGainLosses: lossCarriedForwordInfo.LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail.TotalSTCGPTILossCF,
+                longTermCapitalGainLosses: lossCarriedForwordInfo.LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail.TotalLTCGPTILossCF,
+                // businessProfessionalLoss: lossCarriedForwordInfo.LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail.BusLossOthThanSpecLossCF,
+                // speculativeBusinessLoss: lossCarriedForwordInfo.LossCFFromPrev2ndYearFromAY.CarryFwdLossDetail.LossFrmSpecBusCF,
               }
               this.lossesCarriedForwarInfo.push(otherThanCurrYrLossObj);
             }
           }
+
+          if (lossCarriedForwordInfo.hasOwnProperty('LossCFFromPrev3rdYearFromAY')) {
+            if (lossCarriedForwordInfo.LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail.hasOwnProperty('DateOfFiling') && lossCarriedForwordInfo.LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail.hasOwnProperty('TotalHPPTILossCF') &&
+              lossCarriedForwordInfo.LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail.hasOwnProperty('TotalSTCGPTILossCF') && lossCarriedForwordInfo.LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail.hasOwnProperty('TotalLTCGPTILossCF')) {
+              let otherThanCurrYrLossObj = {
+                year: this.returnYrs(lossCarriedForwordInfo.LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail.DateOfFiling),
+                housePropertyLosses: lossCarriedForwordInfo.LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail.TotalHPPTILossCF,
+                shortTermCapitalGainLosses: lossCarriedForwordInfo.LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail.TotalSTCGPTILossCF,
+                longTermCapitalGainLosses: lossCarriedForwordInfo.LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail.TotalLTCGPTILossCF,
+                // businessProfessionalLoss: lossCarriedForwordInfo.LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail.BusLossOthThanSpecLossCF,
+                // speculativeBusinessLoss: lossCarriedForwordInfo.LossCFFromPrev3rdYearFromAY.CarryFwdLossDetail.LossFrmSpecBusCF,
+              }
+              this.lossesCarriedForwarInfo.push(otherThanCurrYrLossObj);
+            }
+          }
+
+          if (lossCarriedForwordInfo.hasOwnProperty('LossCFFromPrev4thYearFromAY')) {
+            if (lossCarriedForwordInfo.LossCFFromPrev4thYearFromAY.CarryFwdLossDetail.hasOwnProperty('DateOfFiling') && lossCarriedForwordInfo.LossCFFromPrev4thYearFromAY.CarryFwdLossDetail.hasOwnProperty('TotalHPPTILossCF') &&
+              lossCarriedForwordInfo.LossCFFromPrev4thYearFromAY.CarryFwdLossDetail.hasOwnProperty('TotalSTCGPTILossCF') && lossCarriedForwordInfo.LossCFFromPrev4thYearFromAY.CarryFwdLossDetail.hasOwnProperty('TotalLTCGPTILossCF')) {
+              let otherThanCurrYrLossObj = {
+                year: this.returnYrs(lossCarriedForwordInfo.LossCFFromPrev4thYearFromAY.CarryFwdLossDetail.DateOfFiling),
+                housePropertyLosses: lossCarriedForwordInfo.LossCFFromPrev4thYearFromAY.CarryFwdLossDetail.TotalHPPTILossCF,
+                shortTermCapitalGainLosses: lossCarriedForwordInfo.LossCFFromPrev4thYearFromAY.CarryFwdLossDetail.TotalSTCGPTILossCF,
+                longTermCapitalGainLosses: lossCarriedForwordInfo.LossCFFromPrev4thYearFromAY.CarryFwdLossDetail.TotalLTCGPTILossCF,
+                // businessProfessionalLoss: lossCarriedForwordInfo.LossCFFromPrev4thYearFromAY.CarryFwdLossDetail.BusLossOthThanSpecLossCF,
+                // speculativeBusinessLoss: lossCarriedForwordInfo.LossCFFromPrev4thYearFromAY.CarryFwdLossDetail.LossFrmSpecBusCF,
+              }
+              this.lossesCarriedForwarInfo.push(otherThanCurrYrLossObj);
+            }
+          }
+
+          if (lossCarriedForwordInfo.hasOwnProperty('LossCFFromPrev5thYearFromAY')) {
+            if (lossCarriedForwordInfo.LossCFFromPrev5thYearFromAY.CarryFwdLossDetail.hasOwnProperty('DateOfFiling') && lossCarriedForwordInfo.LossCFFromPrev5thYearFromAY.CarryFwdLossDetail.hasOwnProperty('TotalHPPTILossCF') &&
+              lossCarriedForwordInfo.LossCFFromPrev5thYearFromAY.CarryFwdLossDetail.hasOwnProperty('TotalSTCGPTILossCF') && lossCarriedForwordInfo.LossCFFromPrev5thYearFromAY.CarryFwdLossDetail.hasOwnProperty('TotalLTCGPTILossCF')) {
+              let otherThanCurrYrLossObj = {
+                year: this.returnYrs(lossCarriedForwordInfo.LossCFFromPrev5thYearFromAY.CarryFwdLossDetail.DateOfFiling),
+                housePropertyLosses: lossCarriedForwordInfo.LossCFFromPrev5thYearFromAY.CarryFwdLossDetail.TotalHPPTILossCF,
+                shortTermCapitalGainLosses: lossCarriedForwordInfo.LossCFFromPrev5thYearFromAY.CarryFwdLossDetail.TotalSTCGPTILossCF,
+                longTermCapitalGainLosses: lossCarriedForwordInfo.LossCFFromPrev5thYearFromAY.CarryFwdLossDetail.TotalLTCGPTILossCF,
+                // businessProfessionalLoss: lossCarriedForwordInfo.LossCFFromPrev5thYearFromAY.CarryFwdLossDetail.BusLossOthThanSpecLossCF,
+                // speculativeBusinessLoss: lossCarriedForwordInfo.LossCFFromPrev5thYearFromAY.CarryFwdLossDetail.LossFrmSpecBusCF,
+              }
+              this.lossesCarriedForwarInfo.push(otherThanCurrYrLossObj);
+            }
+          }
+
 
           //Lossess set of during the year
-          if (lossCarriedForwordInfo.hasOwnProperty('ITRForm:AdjTotBFLossInBFLA')) {
-            this.lossesSetOfDuringYrar.housePropertyLossesSetOffDuringTheYear = lossCarriedForwordInfo['ITRForm:AdjTotBFLossInBFLA']['ITRForm:LossSummaryDetail']['ITRForm:TotalHPPTILossCF']['_text'];
-            this.lossesSetOfDuringYrar.shortTermCapitalGainLossesSetOffDuringTheYear = lossCarriedForwordInfo['ITRForm:AdjTotBFLossInBFLA']['ITRForm:LossSummaryDetail']['ITRForm:TotalSTCGPTILossCF']['_text'];
-            this.lossesSetOfDuringYrar.longTermCapitalGainLossesSetOffDuringTheYear = lossCarriedForwordInfo['ITRForm:AdjTotBFLossInBFLA']['ITRForm:LossSummaryDetail']['ITRForm:TotalLTCGPTILossCF']['_text'];
-            this.lossesSetOfDuringYrar.businessProfessionalLossesSetOffDuringTheYear = lossCarriedForwordInfo['ITRForm:AdjTotBFLossInBFLA']['ITRForm:LossSummaryDetail']['ITRForm:BusLossOthThanSpecLossCF'] ? lossCarriedForwordInfo['ITRForm:AdjTotBFLossInBFLA']['ITRForm:LossSummaryDetail']['ITRForm:BusLossOthThanSpecLossCF']['_text'] : 0;
-            this.lossesSetOfDuringYrar.speculativeBusinessLossesSetOffDuringTheYear = lossCarriedForwordInfo['ITRForm:AdjTotBFLossInBFLA']['ITRForm:LossSummaryDetail']['ITRForm:LossFrmSpecBusCF'] ? lossCarriedForwordInfo['ITRForm:AdjTotBFLossInBFLA']['ITRForm:LossSummaryDetail']['ITRForm:LossFrmSpecBusCF']['_text'] : 0;
+          if (lossCarriedForwordInfo.hasOwnProperty('AdjTotBFLossInBFLA')) {
+            this.lossesSetOfDuringYrar.housePropertyLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalHPPTILossCF;
+            this.lossesSetOfDuringYrar.shortTermCapitalGainLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalSTCGPTILossCF;
+            this.lossesSetOfDuringYrar.longTermCapitalGainLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalLTCGPTILossCF;
+            this.lossesSetOfDuringYrar.businessProfessionalLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.BusLossOthThanSpecLossCF;
+            this.lossesSetOfDuringYrar.speculativeBusinessLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.LossFrmSpecBusCF;
           }
 
           //Carried forward to Next year
-          if (lossCarriedForwordInfo.hasOwnProperty('ITRForm:TotalLossCFSummary')) {
-
-            this.carryForwardToNxtYrs.housePropertyLossesToBeCarriedForward = lossCarriedForwordInfo['ITRForm:TotalLossCFSummary']['ITRForm:LossSummaryDetail']['ITRForm:TotalHPPTILossCF']['_text'];
-            this.carryForwardToNxtYrs.shortTermCapitalGainLossesToBeCarriedForward = lossCarriedForwordInfo['ITRForm:TotalLossCFSummary']['ITRForm:LossSummaryDetail']['ITRForm:TotalSTCGPTILossCF']['_text'];
-            this.carryForwardToNxtYrs.longTermCapitalGainLossesToBeCarriedForward = lossCarriedForwordInfo['ITRForm:TotalLossCFSummary']['ITRForm:LossSummaryDetail']['ITRForm:TotalLTCGPTILossCF']['_text'];
-            this.carryForwardToNxtYrs.businessProfessionalLossesToBeCarriedForward = lossCarriedForwordInfo['ITRForm:TotalLossCFSummary']['ITRForm:LossSummaryDetail']['ITRForm:BusLossOthThanSpecLossCF'] ? lossCarriedForwordInfo['ITRForm:TotalLossCFSummary']['ITRForm:LossSummaryDetail']['ITRForm:BusLossOthThanSpecLossCF']['_text'] : 0;
-            this.carryForwardToNxtYrs.speculativeBusinessLossesToBeCarriedForward = lossCarriedForwordInfo['ITRForm:TotalLossCFSummary']['ITRForm:LossSummaryDetail']['ITRForm:LossFrmSpecBusCF'] ? lossCarriedForwordInfo['ITRForm:TotalLossCFSummary']['ITRForm:LossSummaryDetail']['ITRForm:LossFrmSpecBusCF']['_text'] : 0;
+          if (lossCarriedForwordInfo.hasOwnProperty('TotalLossCFSummary')) {
+            this.carryForwardToNxtYrs.housePropertyLossesToBeCarriedForward = lossCarriedForwordInfo.TotalLossCFSummary.LossSummaryDetail.TotalHPPTILossCF;
+            this.carryForwardToNxtYrs.shortTermCapitalGainLossesToBeCarriedForward = lossCarriedForwordInfo.TotalLossCFSummary.LossSummaryDetail.TotalSTCGPTILossCF;
+            this.carryForwardToNxtYrs.longTermCapitalGainLossesToBeCarriedForward = lossCarriedForwordInfo.TotalLossCFSummary.LossSummaryDetail.TotalLTCGPTILossCF;
+            this.carryForwardToNxtYrs.businessProfessionalLossesToBeCarriedForward = lossCarriedForwordInfo.TotalLossCFSummary.LossSummaryDetail.BusLossOthThanSpecLossCF;
+            this.carryForwardToNxtYrs.speculativeBusinessLossesToBeCarriedForward = lossCarriedForwordInfo.TotalLossCFSummary.LossSummaryDetail.LossFrmSpecBusCF;
           }
-
           this.itr_2_Summary.lossesToBeCarriedForward = this.lossesCarriedForwarInfo;
         }
         else if (this.itrType.itrThree) {
@@ -3237,17 +3252,19 @@ export class Itr2mainComponent implements OnInit {
       if (itrData.hasOwnProperty('ScheduleTCS')) {
         var tcsInfo = itrData.ScheduleTCS;
         console.log('tcsInfo: ', tcsInfo)
-        for (let i = 0; i < tcsInfo.TCS.length; i++) {
-          let tcsObj = {
-            collectorTAN: tcsInfo.TCS[i].EmployerOrDeductorOrCollectDetl.TAN,
-            collectorName: tcsInfo.TCS[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName,
-            totalAmountPaid: tcsInfo.TCS[i].TotalTCS,
-            totalTcsDeposited: tcsInfo.TCS[i].AmtTCSClaimedThisYear
+        if(tcsInfo.hasOwnProperty('TCS')){
+          for (let i = 0; i < tcsInfo.TCS.length; i++) {
+            let tcsObj = {
+              collectorTAN: tcsInfo.TCS[i].EmployerOrDeductorOrCollectDetl.TAN,
+              collectorName: tcsInfo.TCS[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName,
+              totalAmountPaid: tcsInfo.TCS[i].TotalTCS,
+              totalTcsDeposited: tcsInfo.TCS[i].AmtTCSClaimedThisYear
+            }
+  
+            taxPaidInfo.tcs.push(tcsObj);
           }
-
-          taxPaidInfo.tcs.push(tcsObj);
+          this.updateTaxDeductionAtSourceVal(taxPaidInfo);
         }
-        this.updateTaxDeductionAtSourceVal(taxPaidInfo);
       }
 
       //Annexures: Advance Tax/ Self-Assessment Tax
