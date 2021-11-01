@@ -322,12 +322,12 @@ export class TaxSummaryComponent implements OnInit {
               otherOwnerOfProperty: '',
               tenantName: '',
               tenentPanNumber: '',
-              grossAnnualRentReceived: housingInfo.GrossRentReceived,
-              annualValue:  housingInfo.AnnualValue,
-              propertyTax: housingInfo.TaxPaidlocalAuth,
-              interestAmount: housingInfo.InterestPayable,
-              taxableIncome: housingInfo.TotalIncomeOfHP,
-              exemptIncome: housingInfo.StandardDeduction,
+              grossAnnualRentReceived: this.getNumberFormat(housingInfo.GrossRentReceived),
+              annualValue: this.getNumberFormat(housingInfo.AnnualValue),
+              propertyTax: this.getNumberFormat(housingInfo.TaxPaidlocalAuth),
+              interestAmount: this.getNumberFormat(housingInfo.InterestPayable),
+              taxableIncome: this.getNumberFormat(housingInfo.TotalIncomeOfHP),
+              exemptIncome: this.getNumberFormat(housingInfo.StandardDeduction),
               pinCode: '',
               flatNo: '',
               building: '',
@@ -375,7 +375,7 @@ export class TaxSummaryComponent implements OnInit {
           Object.assign(houceObj, this.housingData[i]);
           if (this.utilService.isNonEmpty(this.housingData[i].interestAmount)) {
             let loanObj = {
-              interestAmount: this.housingData[i].interestAmount,
+              interestAmount: this.getNumberFormat(this.housingData[i].interestAmount),
               loanType: "HOUSING",
               principalAmount: 0
             }
@@ -435,13 +435,13 @@ export class TaxSummaryComponent implements OnInit {
               houseRentAllow: hra,
               leaveTravelExpense: 0,
               other: otherAmnt,
-              totalExemptAllow: salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10,
-              netSalary: salaryInfo.NetSalary,
-              standardDeduction: salaryInfo.DeductionUs16ia,
-              entertainAllow: salaryInfo.EntertainmentAlw16ii,
-              professionalTax: salaryInfo.ProfessionalTaxUs16iii,
+              totalExemptAllow: this.getNumberFormat(salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10),
+              netSalary: this.getNumberFormat(salaryInfo.NetSalary),
+              standardDeduction: this.getNumberFormat(salaryInfo.DeductionUs16ia),
+              entertainAllow: this.getNumberFormat(salaryInfo.EntertainmentAlw16ii),
+              professionalTax: this.getNumberFormat(salaryInfo.ProfessionalTaxUs16iii),
               totalSalaryDeduction: Number(salaryInfo.DeductionUs16ia) + Number(salaryInfo.EntertainmentAlw16ii) +  (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) ,
-              taxableIncome: salaryInfo.IncomeFromSal,
+              taxableIncome: this.getNumberFormat(salaryInfo.IncomeFromSal),
       
               pinCode: '',
               country: '',
@@ -491,7 +491,7 @@ export class TaxSummaryComponent implements OnInit {
             let houceAllowObj = {
               allowanceType: "HOUSE_RENT",
               description: null,
-              exemptAmount: Number(this.salaryItrratedData[i].houseRentAllow),
+              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].houseRentAllow),
               taxableAmount: 0
             }
             employerObj.allowance.push(houceAllowObj)
@@ -509,7 +509,7 @@ export class TaxSummaryComponent implements OnInit {
             let otherAllowObj = {
               allowanceType: "ANY_OTHER",
               description: null,
-              exemptAmount: Number(this.salaryItrratedData[i].other),
+              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].other),
               taxableAmount: 0
             }
             employerObj.allowance.push(otherAllowObj)
@@ -518,7 +518,7 @@ export class TaxSummaryComponent implements OnInit {
             let totalExeAllowObj = {
               allowanceType: "ALL_ALLOWANCES",
               description: null,
-              exemptAmount: Number(this.salaryItrratedData[i].totalExemptAllow),
+              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].totalExemptAllow),
               taxableAmount: 0
             }
             employerObj.allowance.push(totalExeAllowObj)
@@ -529,7 +529,7 @@ export class TaxSummaryComponent implements OnInit {
             let entertainAllowObj = {
               deductionType: "ENTERTAINMENT_ALLOW",
               description: null,
-              exemptAmount: Number(this.salaryItrratedData[i].entertainAllow),
+              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].entertainAllow),
               taxableAmount: 0
             }
             employerObj.deductions.push(entertainAllowObj)
@@ -538,7 +538,7 @@ export class TaxSummaryComponent implements OnInit {
             let professionalTaxObj = {
               deductionType: "PROFESSIONAL_TAX",
               description: null,
-              exemptAmount: Number(this.salaryItrratedData[i].professionalTax),
+              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].professionalTax),
               taxableAmount: 0
             }
             employerObj.deductions.push(professionalTaxObj)
@@ -550,7 +550,7 @@ export class TaxSummaryComponent implements OnInit {
               description: null,
               exemptAmount: 0,
               salaryType: "SEC17_1",
-              taxableAmount: Number(this.salaryItrratedData[i].salAsPerSec171)
+              taxableAmount: this.getNumberFormat(this.salaryItrratedData[i].salAsPerSec171)
             }
             employerObj.salary.push(sal17Obj)
           }
@@ -560,7 +560,7 @@ export class TaxSummaryComponent implements OnInit {
               description: null,
               exemptAmount: 0,
               salaryType: "SEC17_2",
-              taxableAmount: Number(this.salaryItrratedData[i].valOfPerquisites)
+              taxableAmount: this.getNumberFormat(this.salaryItrratedData[i].valOfPerquisites)
             }
             employerObj.perquisites.push(valOfPerqu17Obj)
           }
@@ -570,7 +570,7 @@ export class TaxSummaryComponent implements OnInit {
               description: null,
               exemptAmount: 0,
               salaryType: "SEC17_3",
-              taxableAmount: Number(this.salaryItrratedData[i].profitInLieu)
+              taxableAmount: this.getNumberFormat(this.salaryItrratedData[i].profitInLieu)
             }
             employerObj.profitsInLieuOfSalaryType.push(profitsInLieuObj)
           }
