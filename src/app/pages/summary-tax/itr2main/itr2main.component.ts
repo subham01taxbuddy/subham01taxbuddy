@@ -2232,10 +2232,10 @@ export class Itr2mainComponent implements OnInit {
             grossSalary: salaryInfo.Salaries[i].Salarys.GrossSalary,
             houseRentAllow: hra,
             leaveTravelExpense: 0,
-            other: otherAmnt,
+            other: i === 0 ? otherAmnt : 0,
             totalExemptAllow: salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10,
             netSalary: salaryInfo.NetSalary,
-            standardDeduction: salaryInfo.DeductionUnderSection16ia,
+            standardDeduction: i === 0 ? salaryInfo.DeductionUnderSection16ia : 0,
             entertainAllow: salaryInfo.EntertainmntalwncUs16ii,
             professionalTax: Number(salaryInfo.ProfessionalTaxUs16iii),
             totalSalaryDeduction: Number(salaryInfo.DeductionUnderSection16ia) + Number(salaryInfo.EntertainmntalwncUs16ii) + (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0),
@@ -3138,7 +3138,7 @@ export class Itr2mainComponent implements OnInit {
 
     //Values 
     if (itrData.hasOwnProperty('ScheduleVIA')) {
-      var deductionValues = itrData.ScheduleVIA.UsrDeductUndChapVIA;
+      var deductionValues = itrData.ScheduleVIA.DeductUndChapVIA;
       console.log('deductionValues Info: ', deductionValues);
 
       this.deductionAndRemainForm.controls.us80c.setValue(deductionValues.Section80C);
@@ -3382,7 +3382,7 @@ export class Itr2mainComponent implements OnInit {
       // this.computationOfIncomeForm.controls['capitalGain'].setValue(computaionIncomePartTi['ITRForm:CapGain']['ITRForm:TotalCapGains']['_text'])
 
       this.computationOfIncomeForm.controls['otherIncome'].setValue(this.otherSourceForm.controls.total.value);
-      //this.computationOfIncomeForm.controls['totalHeadWiseIncome'].setValue(computaionIncomePartTi['ITRForm:TotalTI']['_text']);
+      this.computationOfIncomeForm.controls['totalHeadWiseIncome'].setValue(computaionIncomePartTi.TotalTI);
 
       this.computationOfIncomeForm.controls['lossesSetOffDuringTheYear'].setValue(computaionIncomePartTi.CurrentYearLoss);
       this.computationOfIncomeForm.controls['carriedForwardToNextYear'].setValue(computaionIncomePartTi.BroughtFwdLossesSetoff)
@@ -3391,8 +3391,10 @@ export class Itr2mainComponent implements OnInit {
 
       this.computationOfIncomeForm.controls['sec112Tax'].setValue(computaionIncomePartTi.IncChargeTaxSplRate111A112)
 
-      // this.computationOfIncomeForm.controls['totalDeduction'].setValue(this.itrType.itrTwo ? computaionIncomePartTi['ITRForm:DeductionsUnderScheduleVIA']['_text'] : computaionIncomePartTi['ITRForm:DeductionsUndSchVIADtl']['ITRForm:TotDeductUndSchVIA']['_text'])
-      //this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR'].setValue(computaionIncomePartTi['ITRForm:TotalIncome']['_text'])
+      this.computationOfIncomeForm.controls['totalDeduction'].setValue(this.itrType.itrTwo ? computaionIncomePartTi.DeductionsUnderScheduleVIA : computaionIncomePartTi.DeductionsUndSchVIADtl.TotDeductUndSchVIA)
+      this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR'].setValue(computaionIncomePartTi.TotalIncome);
+
+      this.calTotalIncome();
 
       this.computationOfIncomeForm.controls['specialIncomeAfterAdjBaseLimit'].setValue(computaionIncomePartTi.IncChargeableTaxSplRates)
       this.computationOfIncomeForm.controls['agricultureIncome'].setValue(computaionIncomePartTi.NetAgricultureIncomeOrOtherIncomeForRate)
@@ -3462,7 +3464,7 @@ export class Itr2mainComponent implements OnInit {
       // this.computationOfIncomeForm.controls['capitalGain'].setValue(computaionIncomePartTi['ITRForm:CapGain']['ITRForm:TotalCapGains']['_text'])
 
       this.newRegimeTaxSummary['otherIncome'] = this.otherSourceForm.controls.total.value;
-      //this.newRegimeTaxSummary['totalHeadWiseIncome'] = computaionIncomePartTi['ITRForm:TotalTI']['_text'];
+      this.computationOfIncomeForm.controls['totalHeadWiseIncome'].setValue(computaionIncomePartTi.TotalTI);
 
       this.newRegimeTaxSummary['lossesSetOffDuringTheYear'] = computaionIncomePartTi.CurrentYearLoss;
       this.newRegimeTaxSummary['carriedForwardToNextYear'] = computaionIncomePartTi.BroughtFwdLossesSetoff;
@@ -3471,8 +3473,10 @@ export class Itr2mainComponent implements OnInit {
 
       this.newRegimeTaxSummary['sec112Tax'] = computaionIncomePartTi.IncChargeTaxSplRate111A112;
 
-      // this.newRegimeTaxSummary['totalDeduction'] = this.itrType.itrTwo ? computaionIncomePartTi['ITRForm:DeductionsUnderScheduleVIA']['_text'] : computaionIncomePartTi['ITRForm:DeductionsUndSchVIADtl']['ITRForm:TotDeductUndSchVIA']['_text'])
-      //this.newRegimeTaxSummary['totalIncomeAfterDeductionIncludeSR'] = computaionIncomePartTi['ITRForm:TotalIncome']['_text'])
+      this.computationOfIncomeForm.controls['totalDeduction'].setValue(this.itrType.itrTwo ? computaionIncomePartTi.DeductionsUnderScheduleVIA : computaionIncomePartTi.DeductionsUndSchVIADtl.TotDeductUndSchVIA)
+      this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR'].setValue(computaionIncomePartTi.TotalIncome);
+
+      this.calTotalIncome();
 
       this.newRegimeTaxSummary['specialIncomeAfterAdjBaseLimit'] = computaionIncomePartTi.IncChargeableTaxSplRates;
       this.newRegimeTaxSummary['agricultureIncome'] = computaionIncomePartTi.NetAgricultureIncomeOrOtherIncomeForRate;
@@ -3672,12 +3676,11 @@ export class Itr2mainComponent implements OnInit {
     itr3Summary.assesse.business.financialParticulars.inventories = Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.Inventories.TotInventries);
     itr3Summary.assesse.business.financialParticulars.sundryDebtorsAmount = Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.SndryDebtors);
     itr3Summary.assesse.business.financialParticulars.balanceWithBank = Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.CashOrBankBal.BankBal);
-    itr3Summary.assesse.business.financialParticulars.cashInHand = Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.CashOrBankBal.BankBal);
+    itr3Summary.assesse.business.financialParticulars.cashInHand = Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.CashOrBankBal.CashinHand);
     itr3Summary.assesse.business.financialParticulars.loanAndAdvances = Number(financialInfo.FundApply.CurrAssetLoanAdv.LoanAdv.TotLoanAdv);
 
-    //For otherAssets val =  OthCurrAsset + TotFixedAsset + TotInventries + (TotCurrLiabilitiesProvision - SundryCred) + TotMiscAdjust
-    itr3Summary.assesse.business.financialParticulars.otherAssets = Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.OthCurrAsset) + Number(financialInfo.FundApply.FixedAsset.TotFixedAsset) + Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.Inventories.TotInventries) +
-      (Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.TotCurrLiabilitiesProvision) - Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.CurrLiabilities.SundryCred)) + Number(financialInfo.FundApply.MiscAdjust.TotMiscAdjust);
+    //For otherAssets val =  OthCurrAsset + (TotCurrLiabilitiesProvision - SundryCred) + TotMiscAdjust
+    itr3Summary.assesse.business.financialParticulars.otherAssets = Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.OthCurrAsset) + (Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.TotCurrLiabilitiesProvision) - Number(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.CurrLiabilities.SundryCred)) + Number(financialInfo.FundApply.MiscAdjust.TotMiscAdjust);
 
     itr3Summary.assesse.business.financialParticulars.investment = Number(financialInfo.FundApply.Investments.TotInvestments);
     let assetsTotal = itr3Summary.assesse.business.financialParticulars.fixedAssets + itr3Summary.assesse.business.financialParticulars.inventories +
