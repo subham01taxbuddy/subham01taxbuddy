@@ -2230,7 +2230,7 @@ export class Itr2mainComponent implements OnInit {
             valOfPerquisites: salaryInfo.Salaries[i].Salarys.ValueOfPerquisites,
             profitInLieu: salaryInfo.Salaries[i].Salarys.ProfitsinLieuOfSalary,
             grossSalary: salaryInfo.Salaries[i].Salarys.GrossSalary,
-            houseRentAllow: hra,
+            houseRentAllow: i === 0 ? hra : 0,
             leaveTravelExpense: 0,
             other: i === 0 ? otherAmnt : 0,
             totalExemptAllow: salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10,
@@ -2479,9 +2479,9 @@ export class Itr2mainComponent implements OnInit {
             nameOfTheAsset: 'Equity/MF 112A',
             netSaleValue: Number(longTermCG10Per112A.Schedule112ADtls[i].TotSaleValue),
             purchaseCost: longTermCG10Per112A.Schedule112ADtls[i].ShareOnOrBefore === "BE" ? Number(longTermCG10Per112A.Schedule112ADtls[i].FairMktValuePerShareunit) : Number(longTermCG10Per112A.Schedule112ADtls[i].CostAcqWithoutIndx),
-            capitalGain: Number(longTermCG10Per112A.Schedule112ADtls[i].TotSaleValue),
+            capitalGain: Number(longTermCG10Per112A.Schedule112ADtls[i].Balance),
             deductions: 0,
-            netCapitalGain: Number(longTermCG10Per112A.Schedule112ADtls[i].TotSaleValue) < 0 ? Number(longTermCG10Per112A.Schedule112ADtls[i].TotSaleValue) : (Number(longTermCG10Per112A.Schedule112ADtls[i].TotSaleValue) - 0),
+            netCapitalGain: Number(longTermCG10Per112A.Schedule112ADtls[i].Balance) < 0 ? Number(longTermCG10Per112A.Schedule112ADtls[i].Balance) : (Number(longTermCG10Per112A.Schedule112ADtls[i].Balance) - 0),
           }
           taxPaid.longTermCapitalGainAt10Percent.push(longTerm10PerEquityObj);
           this.updateCapitalGain(taxPaid);
@@ -2525,7 +2525,7 @@ export class Itr2mainComponent implements OnInit {
     if (longTeemCG20Per.hasOwnProperty('SaleofAssetNA')) {
       let longTerm20OtherAssetsObj = {
         nameOfTheAsset: 'Other Assests',
-        netSaleValue: 0,
+        netSaleValue: Number(longTeemCG20Per.SaleofAssetNA.FullConsideration),
         purchaseCost: Number(longTeemCG20Per.SaleofAssetNA.DeductSec48.TotalDedn),
         capitalGain: Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets),
         deductions: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('ExemptionOrDednUs54') ? Number(longTeemCG20Per.SaleofAssetNA.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
@@ -3408,7 +3408,7 @@ export class Itr2mainComponent implements OnInit {
 
       this.computationOfIncomeForm.controls['forRebate87Tax'].setValue(this.itrType.itrTwo ? computaionIncomePartTii.ComputationOfTaxLiability.Rebate87A : computaionIncomePartTii.ComputationOfTaxLiability.TaxPayableOnTI.Rebate87A)
       this.computationOfIncomeForm.controls['taxAfterRebate'].setValue(this.itrType.itrTwo ? computaionIncomePartTii.ComputationOfTaxLiability.TaxPayableOnRebate : computaionIncomePartTii.ComputationOfTaxLiability.TaxPayableOnTI.TaxPayableOnRebate)
-      this.computationOfIncomeForm.controls['surcharge'].setValue(this.itrType.itrTwo ? computaionIncomePartTii.ComputationOfTaxLiability.SurchargeOnAboveCrore : computaionIncomePartTii.ComputationOfTaxLiability.TaxPayableOnTI.SurchargeOnAboveCrore)
+      this.computationOfIncomeForm.controls['surcharge'].setValue(computaionIncomePartTii.ComputationOfTaxLiability.TaxPayableOnTI.TotalSurcharge);
       this.computationOfIncomeForm.controls['cessAmount'].setValue(this.itrType.itrTwo ? computaionIncomePartTii.ComputationOfTaxLiability.EducationCess : computaionIncomePartTii.ComputationOfTaxLiability.TaxPayableOnTI.EducationCess)
       this.computationOfIncomeForm.controls['grossTaxLiability'].setValue(this.itrType.itrTwo ? computaionIncomePartTii.ComputationOfTaxLiability.GrossTaxLiability : computaionIncomePartTii.ComputationOfTaxLiability.TaxPayableOnTI.GrossTaxLiability)
 
@@ -3686,8 +3686,9 @@ export class Itr2mainComponent implements OnInit {
     let assetsTotal = itr3Summary.assesse.business.financialParticulars.fixedAssets + itr3Summary.assesse.business.financialParticulars.inventories +
       itr3Summary.assesse.business.financialParticulars.sundryDebtorsAmount + itr3Summary.assesse.business.financialParticulars.balanceWithBank +
       itr3Summary.assesse.business.financialParticulars.cashInHand + itr3Summary.assesse.business.financialParticulars.loanAndAdvances +
-      itr3Summary.assesse.business.financialParticulars.otherAssets;
+      itr3Summary.assesse.business.financialParticulars.otherAssets + itr3Summary.assesse.business.financialParticulars.investment;
 
+    console.log('assetsTotal: ',assetsTotal);
     itr3Summary.assesse.business.financialParticulars.totalAssets = assetsTotal;
     console.log('financialParticulars: ', itr3Summary.assesse.business.financialParticulars);
 
