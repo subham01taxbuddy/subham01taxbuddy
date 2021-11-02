@@ -685,7 +685,7 @@
                           <form [formGroup]="businessIncomeForm">
                             <div class="tableHead">Annexure: Income from Business or Profession</div><br>
                             <app-itr4part [itrType]="personalInfoForm.controls['itrType'].value" [businessData]="this.updatBussinessInfo"
-                                (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
+                            [jsonParse]="isJsonParse" (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
 
                                 <br>
 

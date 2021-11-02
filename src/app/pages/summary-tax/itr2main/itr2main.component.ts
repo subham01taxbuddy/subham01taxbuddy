@@ -222,7 +222,9 @@ export class Itr2mainComponent implements OnInit {
   exemptInfo: any = {
     type: '',
     amount: 0
-  }
+  };
+
+  isJsonParse: boolean = false;
 
   constructor(public utilsService: UtilsService, private fb: FormBuilder, private userService: UserMsService, private dialog: MatDialog, private utilService: UtilsService,
     private _toastMessageService: ToastMessageService) {
@@ -1991,7 +1993,7 @@ export class Itr2mainComponent implements OnInit {
     console.log('itrJsonInfo: ', itrJsonInfo);
     /* Parse personal information */
     var itrData = itrJsonInfo.ITR;
-    // this.isJsonParse = true;
+    this.isJsonParse = true;
     console.log('itrData: ', itrData);
     this.bankData = [];
     this.housingData = [];
@@ -2220,6 +2222,19 @@ export class Itr2mainComponent implements OnInit {
       }
 
       if (salaryInfo.Salaries instanceof Array && salaryInfo.Salaries.length > 0) {
+        var highestGrossSalVal = salaryInfo.Salaries[0].Salarys.GrossSalary;
+        var maxIndex = 0;
+        for(let j=0; j < salaryInfo.Salaries.length; j++){
+          if (Number(salaryInfo.Salaries[j].Salarys.GrossSalary) > highestGrossSalVal) {
+              maxIndex = j;
+              highestGrossSalVal = Number(salaryInfo.Salaries[j].Salarys.GrossSalary);
+          }
+        }
+        console.log('heigest index of gross sal is: ',maxIndex, ' & max gross Sal val: ',highestGrossSalVal);
+        //totalExemptAllow = hra + otherAmnt
+        //net salary = gross salary - total exempt allowance
+        //taxable salary = net salary - total deduction
+
         for (let i = 0; i < salaryInfo.Salaries.length; i++) {
           var salObj = {
             employerName: salaryInfo.Salaries[i].NameOfEmployer,
@@ -2230,16 +2245,16 @@ export class Itr2mainComponent implements OnInit {
             valOfPerquisites: salaryInfo.Salaries[i].Salarys.ValueOfPerquisites,
             profitInLieu: salaryInfo.Salaries[i].Salarys.ProfitsinLieuOfSalary,
             grossSalary: salaryInfo.Salaries[i].Salarys.GrossSalary,
-            houseRentAllow: i === 0 ? hra : 0,
+            houseRentAllow: i === maxIndex ? hra : 0,
             leaveTravelExpense: 0,
-            other: i === 0 ? otherAmnt : 0,
-            totalExemptAllow: salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10,
-            netSalary: salaryInfo.NetSalary,
-            standardDeduction: i === 0 ? salaryInfo.DeductionUnderSection16ia : 0,
+            other: i === maxIndex ? otherAmnt : 0,
+            totalExemptAllow: this.newItrSumChanges ? (i === maxIndex ? (hra + otherAmnt) : 0) : salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10,
+            netSalary: this.newItrSumChanges ? (i === maxIndex ? (salaryInfo.Salaries[i].Salarys.GrossSalary - (hra + otherAmnt)) : salaryInfo.Salaries[i].Salarys.GrossSalary) : salaryInfo.NetSalary,
+            standardDeduction: i === maxIndex ? salaryInfo.DeductionUnderSection16ia : 0,
             entertainAllow: salaryInfo.EntertainmntalwncUs16ii,
             professionalTax: Number(salaryInfo.ProfessionalTaxUs16iii),
-            totalSalaryDeduction: Number(salaryInfo.DeductionUnderSection16ia) + Number(salaryInfo.EntertainmntalwncUs16ii) + (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0),
-            taxableIncome: Number(salaryInfo.TotIncUnderHeadSalaries),
+            totalSalaryDeduction: i === maxIndex ? Number(salaryInfo.DeductionUnderSection16ia) + Number(salaryInfo.EntertainmntalwncUs16ii) + (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) : Number(salaryInfo.ProfessionalTaxUs16iii),
+            taxableIncome: this.newItrSumChanges ? (i === maxIndex ? ((salaryInfo.Salaries[i].Salarys.GrossSalary - (hra + otherAmnt)) - ( Number(salaryInfo.DeductionUnderSection16ia) + Number(salaryInfo.EntertainmntalwncUs16ii) + (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0))) : Number(salaryInfo.TotIncUnderHeadSalaries)) : Number(salaryInfo.TotIncUnderHeadSalaries),
 
             pinCode: salaryInfo.Salaries[i].AddressDetail.PinCode,
             country: 'India',
@@ -3337,7 +3352,7 @@ export class Itr2mainComponent implements OnInit {
             let obj = {
               description: immovableInfo.ImmovableDetails[i].Description,
               area: address,
-              amount: Number(immovableInfo.ImmovableDetails[i].Amount)
+              amount: this.getNumberFormat(immovableInfo.ImmovableDetails[i].Amount)
             }
             this.immovableAssetsInfo.push(obj);
           }
@@ -3349,16 +3364,16 @@ export class Itr2mainComponent implements OnInit {
           let movableAssetsInfo = itrData.ScheduleAL.MovableAsset;
           console.log('movableAssetsInfo: ', movableAssetsInfo);
 
-          this.assetsLiabilitiesForm.controls['jwelleryAmount'].setValue(this.isNotZero(movableAssetsInfo.JewelleryBullionEtc) ? movableAssetsInfo.JewelleryBullionEtc : 0)
-          this.assetsLiabilitiesForm.controls['artWorkAmount'].setValue(this.isNotZero(movableAssetsInfo.ArchCollDrawPaintSulpArt) ? movableAssetsInfo.ArchCollDrawPaintSulpArt : 0)
-          this.assetsLiabilitiesForm.controls['vehicleAmount'].setValue(this.isNotZero(movableAssetsInfo.VehiclYachtsBoatsAircrafts) ? movableAssetsInfo.VehiclYachtsBoatsAircrafts : 0)
-          this.assetsLiabilitiesForm.controls['bankAmount'].setValue(this.isNotZero(movableAssetsInfo.DepositsInBank) ? movableAssetsInfo.DepositsInBank : 0)
-          this.assetsLiabilitiesForm.controls['shareAmount'].setValue(this.isNotZero(movableAssetsInfo.SharesAndSecurities) ? movableAssetsInfo.SharesAndSecurities : 0)
-          this.assetsLiabilitiesForm.controls['insuranceAmount'].setValue(this.isNotZero(movableAssetsInfo.InsurancePolicies) ? movableAssetsInfo.InsurancePolicies : 0)
-          this.assetsLiabilitiesForm.controls['loanAmount'].setValue(this.isNotZero(movableAssetsInfo.LoansAndAdvancesGiven) ? movableAssetsInfo.LoansAndAdvancesGiven : 0)
-          this.assetsLiabilitiesForm.controls['cashInHand'].setValue(this.isNotZero(movableAssetsInfo.CashInHand) ? movableAssetsInfo.CashInHand : 0);
+          this.assetsLiabilitiesForm.controls['jwelleryAmount'].setValue(this.isNotZero(movableAssetsInfo.JewelleryBullionEtc) ? this.getNumberFormat(movableAssetsInfo.JewelleryBullionEtc) : 0)
+          this.assetsLiabilitiesForm.controls['artWorkAmount'].setValue(this.isNotZero(movableAssetsInfo.ArchCollDrawPaintSulpArt) ? this.getNumberFormat(movableAssetsInfo.ArchCollDrawPaintSulpArt) : 0)
+          this.assetsLiabilitiesForm.controls['vehicleAmount'].setValue(this.isNotZero(movableAssetsInfo.VehiclYachtsBoatsAircrafts) ? this.getNumberFormat(movableAssetsInfo.VehiclYachtsBoatsAircrafts) : 0)
+          this.assetsLiabilitiesForm.controls['bankAmount'].setValue(this.isNotZero(movableAssetsInfo.DepositsInBank) ? this.getNumberFormat(movableAssetsInfo.DepositsInBank) : 0)
+          this.assetsLiabilitiesForm.controls['shareAmount'].setValue(this.isNotZero(movableAssetsInfo.SharesAndSecurities) ? this.getNumberFormat(movableAssetsInfo.SharesAndSecurities) : 0)
+          this.assetsLiabilitiesForm.controls['insuranceAmount'].setValue(this.isNotZero(movableAssetsInfo.InsurancePolicies) ? this.getNumberFormat(movableAssetsInfo.InsurancePolicies) : 0)
+          this.assetsLiabilitiesForm.controls['loanAmount'].setValue(this.isNotZero(movableAssetsInfo.LoansAndAdvancesGiven) ? this.getNumberFormat(movableAssetsInfo.LoansAndAdvancesGiven) : 0)
+          this.assetsLiabilitiesForm.controls['cashInHand'].setValue(this.isNotZero(movableAssetsInfo.CashInHand) ?this.getNumberFormat(movableAssetsInfo.CashInHand) : 0);
 
-          this.assetsLiabilitiesForm.controls['movableAssetTotal'].setValue(this.isNotZero(itrData.ScheduleAL.LiabilityInRelatAssets) ? itrData.ScheduleAL.LiabilityInRelatAssets : 0);
+          this.assetsLiabilitiesForm.controls['movableAssetTotal'].setValue(this.isNotZero(itrData.ScheduleAL.LiabilityInRelatAssets) ? this.getNumberFormat(itrData.ScheduleAL.LiabilityInRelatAssets) : 0);
 
           Object.assign(this.itr_2_Summary.assesse.assetsLiabilities, this.assetsLiabilitiesForm.value);
         }
