@@ -2204,22 +2204,31 @@ export class Itr2mainComponent implements OnInit {
       console.log('salaryInfo: ', salaryInfo)
       var hra;
       var otherAmnt = 0;
-      let salExemptIncomeInfo = salaryInfo.AllwncExemptUs10.AllwncExemptUs10Dtls;
-      if (salExemptIncomeInfo instanceof Array && salExemptIncomeInfo.length > 0) {
-        if (salExemptIncomeInfo.filter(item => item.SalNatureDesc === "10(13A)").length > 0) {
-          hra = salExemptIncomeInfo.filter(item => item.SalNatureDesc === "10(13A)")[0].SalOthAmount;
-          if (typeof hra === 'string') {
-            hra = hra.replace(/\,/g, '');
-            hra = parseInt(hra, 10);
+      debugger
+      if(salaryInfo.hasOwnProperty('AllwncExemptUs10')){
+        if(salaryInfo.AllwncExemptUs10.hasOwnProperty('AllwncExemptUs10Dtls')){
+          let salExemptIncomeInfo = salaryInfo.AllwncExemptUs10.AllwncExemptUs10Dtls;
+          if (salExemptIncomeInfo instanceof Array && salExemptIncomeInfo.length > 0) {
+            if (salExemptIncomeInfo.filter(item => item.SalNatureDesc === "10(13A)").length > 0) {
+              hra = salExemptIncomeInfo.filter(item => item.SalNatureDesc === "10(13A)")[0].SalOthAmount;
+              if (typeof hra === 'string') {
+                hra = hra.replace(/\,/g, '');
+                hra = parseInt(hra, 10);
+              }
+    
+              otherAmnt = salaryInfo.AllwncExtentExemptUs10 - hra;
+            }
+            else {
+              hra = 0;
+              otherAmnt = salaryInfo.AllwncExtentExemptUs10;
+            }
           }
-
-          otherAmnt = salaryInfo.AllwncExtentExemptUs10 - hra;
-        }
-        else {
-          hra = 0;
-          otherAmnt = salaryInfo.AllwncExtentExemptUs10;
         }
       }
+      else{
+         hra = 0;
+      }
+      
 
       if (salaryInfo.Salaries instanceof Array && salaryInfo.Salaries.length > 0) {
         var highestGrossSalVal = salaryInfo.Salaries[0].Salarys.GrossSalary;
@@ -2231,6 +2240,7 @@ export class Itr2mainComponent implements OnInit {
           }
         }
         console.log('heigest index of gross sal is: ',maxIndex, ' & max gross Sal val: ',highestGrossSalVal);
+        console.log('hra and othere amnt: ',hra,otherAmnt);
         //totalExemptAllow = hra + otherAmnt
         //net salary = gross salary - total exempt allowance
         //taxable salary = net salary - total deduction
@@ -2248,13 +2258,13 @@ export class Itr2mainComponent implements OnInit {
             houseRentAllow: i === maxIndex ? hra : 0,
             leaveTravelExpense: 0,
             other: i === maxIndex ? otherAmnt : 0,
-            totalExemptAllow: this.newItrSumChanges ? (i === maxIndex ? (hra + otherAmnt) : 0) : salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10,
+            totalExemptAllow: this.newItrSumChanges ? (i === maxIndex ? (hra + otherAmnt) : 0) : (salaryInfo.hasOwnProperty('AllwncExemptUs10') ? salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10 : 0),
             netSalary: this.newItrSumChanges ? (i === maxIndex ? (salaryInfo.Salaries[i].Salarys.GrossSalary - (hra + otherAmnt)) : salaryInfo.Salaries[i].Salarys.GrossSalary) : salaryInfo.NetSalary,
             standardDeduction: i === maxIndex ? salaryInfo.DeductionUnderSection16ia : 0,
             entertainAllow: salaryInfo.EntertainmntalwncUs16ii,
-            professionalTax: Number(salaryInfo.ProfessionalTaxUs16iii),
-            totalSalaryDeduction: i === maxIndex ? Number(salaryInfo.DeductionUnderSection16ia) + Number(salaryInfo.EntertainmntalwncUs16ii) + (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) : Number(salaryInfo.ProfessionalTaxUs16iii),
-            taxableIncome: this.newItrSumChanges ? (i === maxIndex ? ((salaryInfo.Salaries[i].Salarys.GrossSalary - (hra + otherAmnt)) - ( Number(salaryInfo.DeductionUnderSection16ia) + Number(salaryInfo.EntertainmntalwncUs16ii) + (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0))) : Number(salaryInfo.TotIncUnderHeadSalaries)) : Number(salaryInfo.TotIncUnderHeadSalaries),
+            professionalTax: i === maxIndex ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0,
+            totalSalaryDeduction: i === maxIndex ? Number(salaryInfo.DeductionUnderSection16ia) + Number(salaryInfo.EntertainmntalwncUs16ii) + (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? (i === maxIndex ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) : 0) : (i === maxIndex ? (i === maxIndex ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) : 0),
+            taxableIncome: this.newItrSumChanges ? this.calTaxableSal(i, salaryInfo, hra, otherAmnt, maxIndex) : Number(salaryInfo.TotIncUnderHeadSalaries),
 
             pinCode: salaryInfo.Salaries[i].AddressDetail.PinCode,
             country: 'India',
@@ -3547,6 +3557,11 @@ export class Itr2mainComponent implements OnInit {
 
     }
 
+  }
+
+  //i, salaryInfo, hra, otherAmnt, maxIndex
+  calTaxableSal(index, salaryInfo, hra, otherAmnt, maxIndex){
+      return  ((salaryInfo.Salaries[index].Salarys.GrossSalary - ((index === maxIndex ? hra : 0) + (index === maxIndex ? otherAmnt : 0))) - ((index === maxIndex ? Number(salaryInfo.DeductionUnderSection16ia) : 0) + Number(salaryInfo.EntertainmntalwncUs16ii) + (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? (index === maxIndex ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) : 0)))
   }
 
   itr3JSONBind(itr3Info) {
