@@ -2036,7 +2036,7 @@ export class Itr2mainComponent implements OnInit {
     this.personalInfoForm.controls['fathersName'].setValue(fatherName);
     this.personalInfoForm.controls['panNumber'].setValue(personalInfo.PersonalInfo.PAN);
 
-    this.personalInfoForm.controls['employerCategory'].setValue('')
+    
     this.personalInfoForm.controls['regime'].setValue(personalInfo.FilingStatus.NewTaxRegime)
 
     let address = personalInfo.PersonalInfo.Address;
@@ -2193,6 +2193,7 @@ export class Itr2mainComponent implements OnInit {
         }
 
         this.houseArray.push(houceObj);
+        
       }
       console.log('After json parsing houseArray => ', this.houseArray);
 
@@ -2274,7 +2275,9 @@ export class Itr2mainComponent implements OnInit {
 
           this.salaryItrratedData.push(salObj);
         }
-
+        
+        let employer = salaryInfo.Salaries[0].NatureOfEmployment;
+        this.personalInfoForm.controls['employerCategory'].setValue(employer)
       }
 
 
