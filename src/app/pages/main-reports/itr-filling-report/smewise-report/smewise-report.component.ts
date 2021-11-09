@@ -321,7 +321,7 @@ export class SmewiseReportComponent implements OnInit {
 
   }
 
-  toggelReportView() {
+  toggleReportView() {
     this.superLeadView = !this.superLeadView;
     if (this.superLeadView) {
       this.reportsData.sort((a, b) => a.superLeadName > b.superLeadName ? 1 : -1);

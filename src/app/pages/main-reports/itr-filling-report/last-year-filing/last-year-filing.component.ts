@@ -7,6 +7,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { MatDialog } from '@angular/material';
+import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 
 @Component({
   selector: 'app-last-year-filing',
@@ -194,6 +195,28 @@ export class LastYearFilingComponent implements OnInit {
           }
         },
       },
+      {
+        headerName: 'Update Status',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Update Status"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
     ]
   }
 
@@ -208,6 +231,10 @@ export class LastYearFilingComponent implements OnInit {
         }
         case 'addNotes': {
           this.showNotes(params.data)
+          break;
+        }
+        case 'updateStatus': {
+          this.updateStatus('Update Status', params.data)
           break;
         }
       }
@@ -252,6 +279,32 @@ export class LastYearFilingComponent implements OnInit {
 
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+    });
+  }
+
+  updateStatus(mode, client) {
+    console.table(client);
+    let disposable = this.dialog.open(ChangeStatusComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.name,
+        serviceType: 'ITR',
+        mode: mode,
+        userInfo: client
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if (result) {
+        if (result.data === "statusChanged") {
+          // this.config.currentPage = 1;
+          // this.getInterestedClients(0);
+
+        }
+      }
     });
   }
 }
