@@ -21,7 +21,7 @@ export class ChangeStatusComponent implements OnInit {
 
   ngOnInit() {
     this.changeStatus = this.fb.group({
-      selectStatus: [this.data.userInfo.statusId],
+      selectStatus: [this.data.userInfo.statusId || null],
       callerAgentUserId: ['']
     })
 
@@ -54,10 +54,10 @@ export class ChangeStatusComponent implements OnInit {
 
   getStatus() {
     let param = '/itr-status-master/source/BACK_OFFICE';
-    this.userService.getMethod(param).subscribe(respoce => {
-      console.log('status responce: ', respoce);
-      if (respoce instanceof Array && respoce.length > 0) {
-        this.itrStatus = respoce;
+    this.userService.getMethod(param).subscribe(response => {
+      console.log('status response: ', response);
+      if (response instanceof Array && response.length > 0) {
+        this.itrStatus = response;
       }
       else {
         this.itrStatus = [];
@@ -70,10 +70,10 @@ export class ChangeStatusComponent implements OnInit {
 
   getCallers() {
     let param = `/call-management/caller-agents`;
-    this.userService.getMethod(param).subscribe(respoce => {
-      console.log('status responce: ', respoce);
-      if (respoce instanceof Array && respoce.length > 0) {
-        this.callers = respoce;
+    this.userService.getMethod(param).subscribe(response => {
+      console.log('status response: ', response);
+      if (response instanceof Array && response.length > 0) {
+        this.callers = response;
         this.callers.sort((a, b) => a.name > b.name ? 1 : -1)
         this.callers = this.callers.filter(item => item.callerAgentUserId !== this.data.userInfo.callerAgentUserId)
       }
@@ -113,9 +113,9 @@ export class ChangeStatusComponent implements OnInit {
         }
         console.log("param2: ", param2);
         this.userService.postMethod(param, param2).subscribe(res => {
-          console.log("Status update responce: ", res)
+          console.log("Status update response: ", res)
           this.loading = false;
-          this._toastMessageService.alert("success", "Status update succesfully.");
+          this._toastMessageService.alert("success", "Status update successfully.");
           setTimeout(() => {
             this.dialogRef.close({ event: 'close', data: 'statusChanged' })
           }, 4000)
@@ -130,10 +130,10 @@ export class ChangeStatusComponent implements OnInit {
         let reqBody = Object.assign(this.data.userInfo, this.changeStatus.getRawValue());
         console.log('reqBody: ', reqBody);
         this.userService.putMethod(param, reqBody).subscribe(res => {
-          console.log("Status update responce: ", res);
+          console.log("Status update response: ", res);
 
           this.loading = false;
-          this._toastMessageService.alert("success", "Caller Agent update succesfully.");
+          this._toastMessageService.alert("success", "Caller Agent update successfully.");
           setTimeout(() => {
             this.dialogRef.close({ event: 'close', data: 'statusChanged' })
           }, 4000)

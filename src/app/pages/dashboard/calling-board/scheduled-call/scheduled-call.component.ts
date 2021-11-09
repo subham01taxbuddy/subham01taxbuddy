@@ -20,7 +20,7 @@ export class ScheduledCallComponent implements OnInit {
   selectedAgent: any;
   searchMobNo: any;
   agentList: any = [];
-  isAdmin: boolean;
+  // isAdmin: boolean;
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
   pageCount: number = 0;
@@ -56,7 +56,7 @@ export class ScheduledCallComponent implements OnInit {
     }
 
     if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
-      this.isAdmin = true;
+      // this.isAdmin = true;
       this.searchMobNo = '';
       if (this.showByAdminUserId) {
         this.showByAdminUserId = true;
@@ -68,7 +68,7 @@ export class ScheduledCallComponent implements OnInit {
       this.getScheduledCallsInfo(this.loggedUserId, 0);
     }
     else {
-      this.isAdmin = false;
+      // this.isAdmin = false;
       this.getScheduledCallsInfo(this.loggedUserId, 0);
     }
   }
