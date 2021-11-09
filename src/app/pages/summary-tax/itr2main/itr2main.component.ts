@@ -2083,28 +2083,31 @@ export class Itr2mainComponent implements OnInit {
 
     //Bank Data
     /* bank information */
-    let bankInfo = itrData.PartB_TTI.Refund.BankAccountDtls.AddtnlBankDetails;
-    if (bankInfo instanceof Array && bankInfo.length > 0) {
-      for (let i = 0; i < bankInfo.length; i++) {
-        let bankBody = {
-          accountNumber: "",
-          bankType: "",
-          countryName: null,
-          hasRefund: true,
-          ifsCode: "",
-          name: ""
+    if(itrData.PartB_TTI.hasOwnProperty('BankAccountDtls')){
+      let bankInfo = itrData.PartB_TTI.Refund.BankAccountDtls.AddtnlBankDetails;
+      if (bankInfo instanceof Array && bankInfo.length > 0) {
+        for (let i = 0; i < bankInfo.length; i++) {
+          let bankBody = {
+            accountNumber: "",
+            bankType: "",
+            countryName: null,
+            hasRefund: true,
+            ifsCode: "",
+            name: ""
+          }
+          bankBody.accountNumber = bankInfo[i].BankAccountNo;
+          bankBody.ifsCode = bankInfo[i].IFSCCode;
+          bankBody.name = bankInfo[i].BankName;
+          bankBody.hasRefund = typeof bankInfo[i].UseForRefund === 'string' ? (bankInfo[i].UseForRefund == "true" ? true : false) : bankInfo[i].UseForRefund;
+          console.log(i + 'th bankBody: ', bankBody)
+          this.bankData.push(bankBody);
         }
-        bankBody.accountNumber = bankInfo[i].BankAccountNo;
-        bankBody.ifsCode = bankInfo[i].IFSCCode;
-        bankBody.name = bankInfo[i].BankName;
-        bankBody.hasRefund = typeof bankInfo[i].UseForRefund === 'string' ? (bankInfo[i].UseForRefund == "true" ? true : false) : bankInfo[i].UseForRefund;
-        console.log(i + 'th bankBody: ', bankBody)
-        this.bankData.push(bankBody);
+        console.log('bankData: ', this.bankData)
+        // this.itrSummaryForm['controls'].assesse['controls'].bankDetails.setValue(this.bankData);
+        // console.log('bankDetails info: ',this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value)
       }
-      console.log('bankData: ', this.bankData)
-      // this.itrSummaryForm['controls'].assesse['controls'].bankDetails.setValue(this.bankData);
-      // console.log('bankDetails info: ',this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value)
     }
+    
 
     /* House Property */
     if (itrData.hasOwnProperty('ScheduleHP')) {
@@ -2447,7 +2450,7 @@ export class Itr2mainComponent implements OnInit {
       let shortTermOtherAssestsObj = {
         nameOfTheAsset: 'Other Assets',
         netSaleValue: Number(shortCGslabofProperty.SaleOnOtherAssets.FullConsideration),
-        purchaseCost: Number(shortCGslabofProperty.SaleOnOtherAssets.DeductSec48.TotalDedn),
+        purchaseCost: shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('DeductSec48') ? Number(shortCGslabofProperty.SaleOnOtherAssets.DeductSec48.TotalDedn) : 0,
         capitalGain: Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG),
         deductions: shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('ExemptionOrDednUs54') ? Number(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
         netCapitalGain: Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) < 0 ? Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) : (Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) - (shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('ExemptionOrDednUs54') ? Number(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal) : 0)),
@@ -2466,7 +2469,7 @@ export class Itr2mainComponent implements OnInit {
           let shortTerm15PerObj = {
             nameOfTheAsset: 'Equity/MF',
             netSaleValue: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.FullConsideration),
-            purchaseCost: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.DeductSec48.TotalDedn),
+            purchaseCost: shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.hasOwnProperty('DeductSec48') ? Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.DeductSec48.TotalDedn) : 0,
             capitalGain: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG),
             deductions: 0,
             netCapitalGain: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) < 0 ? Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) : (Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) - 0),
@@ -2488,7 +2491,7 @@ export class Itr2mainComponent implements OnInit {
           let longTerm10PerObj = {
             nameOfTheAsset: 'Zero Coupon Bonds',
             netSaleValue: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.FullConsideration),
-            purchaseCost: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductSec48.TotalDedn),
+            purchaseCost: longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.hasOwnProperty('DeductSec48') ? Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductSec48.TotalDedn) : 0,
             capitalGain: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG),
             deductions: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductionUs54F),
             netCapitalGain: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) < 0 ? Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) : (Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) - Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductionUs54F)),
@@ -2526,7 +2529,7 @@ export class Itr2mainComponent implements OnInit {
           let longTerm20PerObj = {
             nameOfTheAsset: 'Property',
             netSaleValue: Number(longTeemCG20Per.SaleofLandBuild[i].FullConsideration50C),
-            purchaseCost: Number(longTeemCG20Per.SaleofLandBuild[i].TotalDedn),
+            purchaseCost: longTeemCG20Per.SaleofLandBuild[i].hasOwnProperty('TotalDedn') ? Number(longTeemCG20Per.SaleofLandBuild[i].TotalDedn) : 0,
             capitalGain: Number(longTeemCG20Per.SaleofLandBuild[i].Balance),
             deductions: Number(longTeemCG20Per.SaleofLandBuild[i].ExemptionOrDednUs54.ExemptionGrandTotal),
             netCapitalGain: Number(longTeemCG20Per.SaleofLandBuild[i].Balance) < 0 ? Number(longTeemCG20Per.SaleofLandBuild[i].Balance) : (Number(longTeemCG20Per.SaleofLandBuild[i].Balance) - Number(longTeemCG20Per.SaleofLandBuild[i].ExemptionOrDednUs54.ExemptionGrandTotal)),
@@ -2540,11 +2543,11 @@ export class Itr2mainComponent implements OnInit {
     if (longTeemCG20Per.hasOwnProperty('SaleofBondsDebntr')) {
       let longTerm20BondsObj = {
         nameOfTheAsset: 'Bonds and Debenture',
-        netSaleValue: Number(longTeemCG20Per.SaleofBondsDebntr.FullConsideration),
-        purchaseCost: Number(longTeemCG20Per.SaleofBondsDebntr.DeductSec48.TotalDedn),
-        capitalGain: Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG),
-        deductions: Number(longTeemCG20Per.SaleofBondsDebntr.DeductionUs54F),
-        netCapitalGain: Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) < 0 ? Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) : (Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) - Number(longTeemCG20Per.SaleofBondsDebntr.DeductionUs54F)),
+        netSaleValue: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('FullConsideration') ? Number(longTeemCG20Per.SaleofBondsDebntr.FullConsideration) : 0,
+        purchaseCost: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductSec48') ? Number(longTeemCG20Per.SaleofBondsDebntr.DeductSec48.TotalDedn) : 0,
+        capitalGain: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('BalanceCG') ? Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) : 0,
+        deductions: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductionUs54F') ? Number(longTeemCG20Per.SaleofBondsDebntr.DeductionUs54F) : 0,
+        netCapitalGain: Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) < 0 ? Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) : (Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) - (longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductionUs54F') ? Number(longTeemCG20Per.SaleofBondsDebntr.DeductionUs54F) : 0)),
       }
       taxPaid.longTermCapitalGainAt20Percent.push(longTerm20BondsObj);
       this.updateCapitalGain(taxPaid);
@@ -2553,9 +2556,9 @@ export class Itr2mainComponent implements OnInit {
     if (longTeemCG20Per.hasOwnProperty('SaleofAssetNA')) {
       let longTerm20OtherAssetsObj = {
         nameOfTheAsset: 'Other Assests',
-        netSaleValue: Number(longTeemCG20Per.SaleofAssetNA.FullConsideration),
-        purchaseCost: Number(longTeemCG20Per.SaleofAssetNA.DeductSec48.TotalDedn),
-        capitalGain: Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets),
+        netSaleValue: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('FullConsideration') ? Number(longTeemCG20Per.SaleofAssetNA.FullConsideration) : 0,
+        purchaseCost: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('DeductSec48') ? Number(longTeemCG20Per.SaleofAssetNA.DeductSec48.TotalDedn) : 0,
+        capitalGain: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('CapgainonAssets') ? Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : 0,
         deductions: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('ExemptionOrDednUs54') ? Number(longTeemCG20Per.SaleofAssetNA.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
         netCapitalGain: Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) < 0 ? Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : (Number(longTeemCG20Per.SaleofAssetNA.FullConsideration)),
       }
@@ -2575,46 +2578,67 @@ export class Itr2mainComponent implements OnInit {
     if (itrData.hasOwnProperty('ScheduleOS')) {
       var otherInfo = itrData.ScheduleOS.IncOthThanOwnRaceHorse;
       console.log('Othet info: ', otherInfo)
-      let dividentVal = otherInfo.DividendGross;
-      if (typeof dividentVal === 'string') {
-        dividentVal = dividentVal.replace(/\,/g, '');
-        dividentVal = parseInt(dividentVal, 10);
+      if(otherInfo.hasOwnProperty('DividendGross')){
+        let dividentVal = otherInfo.DividendGross;
+        if (typeof dividentVal === 'string') {
+          dividentVal = dividentVal.replace(/\,/g, '');
+          dividentVal = parseInt(dividentVal, 10);
+        }
+        this.otherSourceForm.controls.divident.setValue(Number(dividentVal));
       }
-      this.otherSourceForm.controls.divident.setValue(Number(dividentVal));
+      else{
+        this.otherSourceForm.controls.divident.setValue(0);
+      }
 
       // if(otherInfo.filter(item=> item.OthSrcNatureDesc === "SAV").length > 0){
+     if(otherInfo.hasOwnProperty('IntrstFrmSavingBank')){
       let intOnSavingAcntVal = otherInfo.IntrstFrmSavingBank;
       if (typeof intOnSavingAcntVal === 'string') {
         intOnSavingAcntVal = intOnSavingAcntVal.replace(/\,/g, '');
         intOnSavingAcntVal = parseInt(intOnSavingAcntVal, 10);
       }
       this.otherSourceForm.controls.interestFromSaving.setValue(Number(intOnSavingAcntVal));
+     }
+     else{
+      this.otherSourceForm.controls.interestFromSaving.setValue(0);
+     }
       // }
 
-      // if(otherInfo.filter(item=> item.OthSrcNatureDesc === "IFD").length > 0){
-      let intfromDepositeVal = otherInfo.IntrstFrmTermDeposit;
-      if (typeof intfromDepositeVal === 'string') {
-        intfromDepositeVal = intfromDepositeVal.replace(/\,/g, '');
-        intfromDepositeVal = parseInt(intfromDepositeVal, 10);
+      if(otherInfo.hasOwnProperty('IntrstFrmTermDeposit')){
+        let intfromDepositeVal = otherInfo.IntrstFrmTermDeposit;
+        if (typeof intfromDepositeVal === 'string') {
+          intfromDepositeVal = intfromDepositeVal.replace(/\,/g, '');
+          intfromDepositeVal = parseInt(intfromDepositeVal, 10);
+        }
+        this.otherSourceForm.controls.interestFromDeposite.setValue(Number(intfromDepositeVal));
       }
-      this.otherSourceForm.controls.interestFromDeposite.setValue(Number(intfromDepositeVal));
-      // }
+      else{
+        this.otherSourceForm.controls.interestFromDeposite.setValue(0);
+       }
 
-      let intFromIncoTaxVal = otherInfo.IntrstFrmIncmTaxRefund;
-      if (typeof intFromIncoTaxVal === 'string') {
-        intFromIncoTaxVal = intFromIncoTaxVal.replace(/\,/g, '');
-        intFromIncoTaxVal = parseInt(intFromIncoTaxVal, 10);
+      if(otherInfo.hasOwnProperty('IntrstFrmIncmTaxRefund')){
+        let intFromIncoTaxVal = otherInfo.IntrstFrmIncmTaxRefund;
+        if (typeof intFromIncoTaxVal === 'string') {
+          intFromIncoTaxVal = intFromIncoTaxVal.replace(/\,/g, '');
+          intFromIncoTaxVal = parseInt(intFromIncoTaxVal, 10);
+        }
+        this.otherSourceForm.controls.interestFromTaxRefund.setValue(Number(intFromIncoTaxVal))
       }
-      this.otherSourceForm.controls.interestFromTaxRefund.setValue(Number(intfromDepositeVal))
-
-      // if(otherInfo.filter(item=> item.OthSrcNatureDesc === "TAX").length > 0){
-      let otherVal = otherInfo.AnyOtherIncome;
-      if (typeof intFromIncoTaxVal === 'string') {
-        otherVal = otherVal.replace(/\,/g, '');
-        otherVal = parseInt(otherVal, 10);
+      else{
+        this.otherSourceForm.controls.interestFromTaxRefund.setValue(0);
+       }
+      
+      if(otherInfo.hasOwnProperty('AnyOtherIncome')){
+        let otherVal = otherInfo.AnyOtherIncome;
+        if (typeof otherVal === 'string') {
+          otherVal = otherVal.replace(/\,/g, '');
+          otherVal = parseInt(otherVal, 10);
+        }
+        this.otherSourceForm.controls.other.setValue(Number(otherVal))
       }
-      this.otherSourceForm.controls.other.setValue(Number(otherVal))
-      // }
+      else{
+        this.otherSourceForm.controls.other.setValue(0);
+       }
       console.log('sourcesOfIncome: ', this.sourcesOfIncome)
       // this.sourcesOfIncome.interestFromOther = incomeDeduction.IncomeOthSrc - (this.sourcesOfIncome.dividend + this.sourcesOfIncome.interestFromSaving +  this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax);
 
