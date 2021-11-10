@@ -1019,8 +1019,8 @@ export class TaxSummaryComponent implements OnInit {
           }
           tdsObj.deductorTAN = tdsOnSalInfo[i].EmployerOrDeductorOrCollectDetl.TAN;
           tdsObj.deductorName = tdsOnSalInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName;
-          tdsObj.totalAmountCredited = tdsOnSalInfo[i].IncChrgSal;
-          tdsObj.totalTdsDeposited = tdsOnSalInfo[i].TotalTDSSal;
+          tdsObj.totalAmountCredited = this.getNumberFormat(tdsOnSalInfo[i].IncChrgSal);
+          tdsObj.totalTdsDeposited = this.getNumberFormat(tdsOnSalInfo[i].TotalTDSSal);
           this.tdsOnSal.push(tdsObj);
           this.taxPaiObj.onSalary.push(tdsObj);
 
@@ -1055,8 +1055,8 @@ export class TaxSummaryComponent implements OnInit {
         }
         tdsOtherThanSalObj.deductorTAN = this.itrType.itrOne ? tdsOtherThanSalInfo[i].EmployerOrDeductorOrCollectDetl.TAN : tdsOtherThanSalInfo[i].TANOfDeductor;
         tdsOtherThanSalObj.deductorName = this.itrType.itrOne ? tdsOtherThanSalInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName : tdsOtherThanSalInfo[i].HeadOfIncome;
-        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].AmtForTaxDeduct : tdsOtherThanSalInfo[i].GrossAmount;
-        tdsOtherThanSalObj.totalTdsDeposited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].TotTDSOnAmtPaid : tdsOtherThanSalInfo[i].TDSDeducted;
+        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? this.getNumberFormat(tdsOtherThanSalInfo[i].AmtForTaxDeduct) : this.getNumberFormat(tdsOtherThanSalInfo[i].GrossAmount);
+        tdsOtherThanSalObj.totalTdsDeposited = this.itrType.itrOne ? this.getNumberFormat(tdsOtherThanSalInfo[i].TotTDSOnAmtPaid) : this.getNumberFormat(tdsOtherThanSalInfo[i].TDSDeducted);
         this.tdsOtherThanSal.push(tdsOtherThanSalObj);
         this.taxPaiObj.otherThanSalary16A.push(tdsOtherThanSalObj);
       }
@@ -1090,8 +1090,8 @@ export class TaxSummaryComponent implements OnInit {
         }
         tdsOtherThanSalObj.deductorTAN = tds3OtherThanSalInfo[i].PANofTenant;
         tdsOtherThanSalObj.deductorName = this.itrType.itrOne ? tds3OtherThanSalInfo[i].NameOfTenant : tds3OtherThanSalInfo[i].HeadOfIncome;
-        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? tds3OtherThanSalInfo[i].GrsRcptToTaxDeduct : tds3OtherThanSalInfo[i].GrossAmount;
-        tdsOtherThanSalObj.totalTdsDeposited = tds3OtherThanSalInfo[i].TDSDeducted;
+        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? this.getNumberFormat(tds3OtherThanSalInfo[i].GrsRcptToTaxDeduct) : this.getNumberFormat(tds3OtherThanSalInfo[i].GrossAmount);
+        tdsOtherThanSalObj.totalTdsDeposited = this.getNumberFormat(tds3OtherThanSalInfo[i].TDSDeducted);
         this.tdsOtherThanSal.push(tdsOtherThanSalObj);
         this.taxPaiObj.otherThanSalary16A.push(tdsOtherThanSalObj);
       }
@@ -1120,8 +1120,8 @@ export class TaxSummaryComponent implements OnInit {
         }
         tcsObj.collectorTAN = tcsInfo[i].EmployerOrDeductorOrCollectDetl.TAN;
         tcsObj.collectorName = tcsInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName;
-        tcsObj.totalAmountPaid = this.itrType.itrOne ? tcsInfo[i].AmtTaxCollected : tcsInfo[i].Amtfrom26AS;
-        tcsObj.totalTcsDeposited = tcsInfo[i].TotalTCS;
+        tcsObj.totalAmountPaid = this.itrType.itrOne ? this.getNumberFormat(tcsInfo[i].AmtTaxCollected) : this.getNumberFormat(tcsInfo[i].Amtfrom26AS);
+        tcsObj.totalTcsDeposited = this.getNumberFormat(tcsInfo[i].TotalTCS);
         this.taxCollAtSource.push(tcsObj);
         this.taxPaiObj.tcs.push(tcsObj);
       }
@@ -1152,7 +1152,7 @@ export class TaxSummaryComponent implements OnInit {
         advanceTaxObj.bsrCode = advanceTaxInfo[i].BSRCode;
         advanceTaxObj.dateOfDeposit = advanceTaxInfo[i].DateDep;
         advanceTaxObj.challanNumber = advanceTaxInfo[i].SrlNoOfChaln;
-        advanceTaxObj.totalTax = advanceTaxInfo[i].Amt;
+        advanceTaxObj.totalTax = this.getNumberFormat(advanceTaxInfo[i].Amt);
         this.advanceSelfTax.push(advanceTaxObj);
         this.taxPaiObj.otherThanTDSTCS.push(advanceTaxObj);
       }
