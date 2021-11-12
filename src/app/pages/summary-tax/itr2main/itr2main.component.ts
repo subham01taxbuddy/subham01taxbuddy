@@ -2083,7 +2083,7 @@ export class Itr2mainComponent implements OnInit {
 
     //Bank Data
     /* bank information */
-    if(itrData.PartB_TTI.hasOwnProperty('BankAccountDtls')){
+    if(itrData.PartB_TTI.Refund.hasOwnProperty('BankAccountDtls')){
       let bankInfo = itrData.PartB_TTI.Refund.BankAccountDtls.AddtnlBankDetails;
       if (bankInfo instanceof Array && bankInfo.length > 0) {
         for (let i = 0; i < bankInfo.length; i++) {
@@ -7066,6 +7066,18 @@ export class Itr2mainComponent implements OnInit {
         };
         this.incomeData.push(obj)
       }
+      if (this.utilService.isNonEmpty(this.otherSourceForm['controls'].divident.value)) {
+        let obj = {
+          expenses: 0,
+          amount: this.otherSourceForm['controls'].divident.value,
+          taxableAmount: 0,
+          exemptAmount: 0,
+          incomeType: 'DIVIDEND_INCOME',
+          details: ''
+        };
+        this.incomeData.push(obj)
+      }
+
       if (this.utilService.isNonEmpty(this.deductionAndRemainForm['controls'].agricultureIncome.value)) {   //Privious val bind in otherSourceForm form
         let obj = {
           expenses: 0,
