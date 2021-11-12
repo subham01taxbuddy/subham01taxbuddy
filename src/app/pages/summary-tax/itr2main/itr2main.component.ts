@@ -4377,11 +4377,11 @@ export class Itr2mainComponent implements OnInit {
     this.taxesPaid.tcs = 0;
     this.taxesPaid.advanceSelfAssTax = 0;
 
-    this.taxesPaidForNewRegime.tdsOnSalary = 0;
-    this.taxesPaidForNewRegime.tdsOtherThanSalary = 0;
-    this.taxesPaidForNewRegime.tdsOnSal26QB = 0;
-    this.taxesPaidForNewRegime.tcs = 0;
-    this.taxesPaidForNewRegime.advanceSelfAssTax = 0;
+    this.newRegimeTaxSummary.tdsOnSalary = 0;
+    this.newRegimeTaxSummary.tdsOtherThanSalary = 0;
+    this.newRegimeTaxSummary.tdsOnSal26QB = 0;
+    this.newRegimeTaxSummary.tcs = 0;
+    this.newRegimeTaxSummary.advanceSelfAssTax = 0;
 
     this.capital_Gain_ForNewRegime.shortTermCapitalGain = 0;
     this.capital_Gain_ForNewRegime.shortTermCapitalGain15 = 0;
@@ -4465,19 +4465,18 @@ export class Itr2mainComponent implements OnInit {
           this.taxesPaid.tdsOnSalary = this.taxesPaid.tdsOnSalary + this.tdsOnSal.api.getRenderedNodes()[i].data.totalTds;
         }
         else{
-          this.newRegimeTaxSummary.tdsOnSalary = this.taxesPaidForNewRegime.tdsOnSalary + this.tdsOnSal.api.getRenderedNodes()[i].data.totalTds;
+          this.newRegimeTaxSummary.tdsOnSalary = this.newRegimeTaxSummary.tdsOnSalary + this.tdsOnSal.api.getRenderedNodes()[i].data.totalTds;
         }
       }
     }
 
-    debugger
     if (this.tdsOtherThanSal && this.tdsOtherThanSal.api && this.tdsOtherThanSal.api.getRenderedNodes()) {
       for (let i = 0; i < this.tdsOtherThanSal.api.getRenderedNodes().length; i++) {
         if(this.personalInfoForm.controls['regime'].value === 'N'){
           this.taxesPaid.tdsOtherThanSalary = this.taxesPaid.tdsOtherThanSalary + this.tdsOtherThanSal.api.getRenderedNodes()[i].data.totalTds;
         }
         else{
-          this.newRegimeTaxSummary.tdsOtherThanSalary = this.taxesPaidForNewRegime.tdsOtherThanSalary + this.tdsOtherThanSal.api.getRenderedNodes()[i].data.totalTds;
+          this.newRegimeTaxSummary.tdsOtherThanSalary = this.newRegimeTaxSummary.tdsOtherThanSalary + this.tdsOtherThanSal.api.getRenderedNodes()[i].data.totalTds;
         }
       }
     }
@@ -4488,7 +4487,7 @@ export class Itr2mainComponent implements OnInit {
           this.taxesPaid.tdsOnSal26QB = this.taxesPaid.tdsOnSal26QB + this.tdsSales26QB.api.getRenderedNodes()[i].data.totalTds;
         }
         else{
-          this.newRegimeTaxSummary.tdsOnSal26QB = this.taxesPaidForNewRegime.tdsOnSal26QB + this.tdsSales26QB.api.getRenderedNodes()[i].data.totalTds;
+          this.newRegimeTaxSummary.tdsOnSal26QB = this.newRegimeTaxSummary.tdsOnSal26QB + this.tdsSales26QB.api.getRenderedNodes()[i].data.totalTds;
         }
       }
     }
@@ -4499,7 +4498,7 @@ export class Itr2mainComponent implements OnInit {
           this.taxesPaid.tcs = this.taxesPaid.tcs + this.taxColSource.api.getRenderedNodes()[i].data.totalTcs;
         }
         else{
-          this.newRegimeTaxSummary.tcs = this.taxesPaidForNewRegime.tcs + this.taxColSource.api.getRenderedNodes()[i].data.totalTcs;
+          this.newRegimeTaxSummary.tcs = this.newRegimeTaxSummary.tcs + this.taxColSource.api.getRenderedNodes()[i].data.totalTcs;
         }
       }
     }
@@ -6786,6 +6785,7 @@ export class Itr2mainComponent implements OnInit {
         this.tdsOnSal.api.setRowData(tdsInfo);
       }
 
+      debugger
       if (taxPaidValue.otherThanSalary16A.length > 0) {
         // this.tdsOtherThanSal.api.setRowData(this.setTdsRowDate(taxPaidValue.otherThanSalary16A, 'tdsOtherThanSal'))
         this.tdsOtherThanSal.api.setRowData(this.setTdsOtherThanSalRowDate(taxPaidValue.otherThanSalary16A))
