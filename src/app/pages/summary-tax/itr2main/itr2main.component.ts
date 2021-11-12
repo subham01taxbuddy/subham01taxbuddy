@@ -2119,7 +2119,7 @@ export class Itr2mainComponent implements OnInit {
         for (let i = 0; i < housingInfo.PropertyDetails.length; i++) {
           debugger
           var housingObj = {
-            propertyType: housingInfo.PropertyDetails[i].PropertyOwner === "SE" ? 'SOP' : 'LOP',
+            propertyType: housingInfo.PropertyDetails[i].ifLetOut === "Y" ? 'LOP' : (housingInfo.PropertyDetails[i].PropertyOwner === "SE" ? 'SOP' : 'LOP'),
             address: housingInfo.PropertyDetails[i].AddressDetailWithZipCode.AddrDetail + ', ' + housingInfo.PropertyDetails[i].AddressDetailWithZipCode.CityOrTownOrDistrict,
             ownerOfProperty: '',
             coOwners: [],
