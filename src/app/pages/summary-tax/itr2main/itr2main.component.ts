@@ -2427,80 +2427,87 @@ export class Itr2mainComponent implements OnInit {
     }
     //CAPITAL GAIN
     /////Short Term Capital Gain @ Slab Rate
-    var shortCGslabofProperty = itrData.ScheduleCGFor23.ShortTermCapGainFor23;
-    console.log('shortCGslabofProperty: ', shortCGslabofProperty);
-    if (shortCGslabofProperty.hasOwnProperty('SaleofLandBuild')) {
-      if (shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls instanceof Array && shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls.length > 0) {
-        for (let i = 0; i < shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls.length; i++) {
-          let shortTermProObj = {
-            nameOfTheAsset: 'Property',
-            netSaleValue: Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].FullConsideration50C),
-            purchaseCost: Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].TotalDedn),
-            capitalGain: Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance),
-            deductions: 0,
-            netCapitalGain: Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance) < 0 ? Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance) : (Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance) - 0),
+    if(itrData.hasOwnProperty('ScheduleCGFor23')){
+      var shortCGslabofProperty = itrData.ScheduleCGFor23.ShortTermCapGainFor23;
+      console.log('shortCGslabofProperty: ', shortCGslabofProperty);
+      if (shortCGslabofProperty.hasOwnProperty('SaleofLandBuild')) {
+        if (shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls instanceof Array && shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls.length > 0) {
+          for (let i = 0; i < shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls.length; i++) {
+            let shortTermProObj = {
+              nameOfTheAsset: 'Property',
+              netSaleValue: Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].FullConsideration50C),
+              purchaseCost: Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].TotalDedn),
+              capitalGain: Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance),
+              deductions: 0,
+              netCapitalGain: Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance) < 0 ? Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance) : (Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance) - 0),
+            }
+            taxPaid.shortTermCapitalGain.push(shortTermProObj);
+            this.updateCapitalGain(taxPaid);
           }
-          taxPaid.shortTermCapitalGain.push(shortTermProObj);
-          this.updateCapitalGain(taxPaid);
         }
       }
-    }
-
-    if (shortCGslabofProperty.hasOwnProperty('SaleOnOtherAssets')) {
-      let shortTermOtherAssestsObj = {
-        nameOfTheAsset: 'Other Assets',
-        netSaleValue: Number(shortCGslabofProperty.SaleOnOtherAssets.FullConsideration),
-        purchaseCost: shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('DeductSec48') ? Number(shortCGslabofProperty.SaleOnOtherAssets.DeductSec48.TotalDedn) : 0,
-        capitalGain: Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG),
-        deductions: shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('ExemptionOrDednUs54') ? Number(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
-        netCapitalGain: Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) < 0 ? Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) : (Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) - (shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('ExemptionOrDednUs54') ? Number(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal) : 0)),
+  
+      if (shortCGslabofProperty.hasOwnProperty('SaleOnOtherAssets')) {
+        let shortTermOtherAssestsObj = {
+          nameOfTheAsset: 'Other Assets',
+          netSaleValue: Number(shortCGslabofProperty.SaleOnOtherAssets.FullConsideration),
+          purchaseCost: shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('DeductSec48') ? Number(shortCGslabofProperty.SaleOnOtherAssets.DeductSec48.TotalDedn) : 0,
+          capitalGain: Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG),
+          deductions: shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('ExemptionOrDednUs54') ? Number(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
+          netCapitalGain: Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) < 0 ? Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) : (Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) - (shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('ExemptionOrDednUs54') ? Number(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal) : 0)),
+        }
+        taxPaid.shortTermCapitalGain.push(shortTermOtherAssestsObj);
+        this.updateCapitalGain(taxPaid);
       }
-      taxPaid.shortTermCapitalGain.push(shortTermOtherAssestsObj);
-      this.updateCapitalGain(taxPaid);
+  
     }
-
+   
     debugger
     /////Short Term Capital Gain @ 15% {Equity}
-    var shortCG15Per = itrData.ScheduleCGFor23.ShortTermCapGainFor23;
-    console.log('shortCG15Per: ', shortCG15Per);
-    if (shortCG15Per.hasOwnProperty('EquityMFonSTT')) {
-      if (shortCG15Per.EquityMFonSTT instanceof Array && shortCG15Per.EquityMFonSTT.length > 0) {
-        for (let i = 0; i < shortCG15Per.EquityMFonSTT.length; i++) {
-          let shortTerm15PerObj = {
-            nameOfTheAsset: 'Equity/MF',
-            netSaleValue: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.FullConsideration),
-            purchaseCost: shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.hasOwnProperty('DeductSec48') ? Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.DeductSec48.TotalDedn) : 0,
-            capitalGain: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG),
-            deductions: 0,
-            netCapitalGain: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) < 0 ? Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) : (Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) - 0),
+    if(itrData.hasOwnProperty('ScheduleCGFor23')){
+      var shortCG15Per = itrData.ScheduleCGFor23.ShortTermCapGainFor23;
+      console.log('shortCG15Per: ', shortCG15Per);
+      if (shortCG15Per.hasOwnProperty('EquityMFonSTT')) {
+        if (shortCG15Per.EquityMFonSTT instanceof Array && shortCG15Per.EquityMFonSTT.length > 0) {
+          for (let i = 0; i < shortCG15Per.EquityMFonSTT.length; i++) {
+            let shortTerm15PerObj = {
+              nameOfTheAsset: 'Equity/MF',
+              netSaleValue: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.FullConsideration),
+              purchaseCost: shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.hasOwnProperty('DeductSec48') ? Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.DeductSec48.TotalDedn) : 0,
+              capitalGain: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG),
+              deductions: 0,
+              netCapitalGain: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) < 0 ? Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) : (Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) - 0),
+            }
+            taxPaid.shortTermCapitalGainAt15Percent.push(shortTerm15PerObj);
+            this.updateCapitalGain(taxPaid);
           }
-          taxPaid.shortTermCapitalGainAt15Percent.push(shortTerm15PerObj);
-          this.updateCapitalGain(taxPaid);
         }
       }
-
     }
 
     /////Long Term Capital Gain @ 10% {Listed Security/ Equity/MF 112A}
-    var longTeemCG10Per = itrData.ScheduleCGFor23.LongTermCapGain23;
-    console.log('longTeemCG10Per: ', longTeemCG10Per);
-    if (longTeemCG10Per.hasOwnProperty('Proviso112Applicable')) {
-
-      if (longTeemCG10Per.Proviso112Applicable instanceof Array && longTeemCG10Per.Proviso112Applicable.length > 0) {
-        for (let i = 0; i < longTeemCG10Per.Proviso112Applicable.length; i++) {
-          let longTerm10PerObj = {
-            nameOfTheAsset: 'Zero Coupon Bonds',
-            netSaleValue: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.FullConsideration),
-            purchaseCost: longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.hasOwnProperty('DeductSec48') ? Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductSec48.TotalDedn) : 0,
-            capitalGain: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG),
-            deductions: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductionUs54F),
-            netCapitalGain: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) < 0 ? Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) : (Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) - Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductionUs54F)),
+    if(itrData.hasOwnProperty('ScheduleCGFor23')){
+      var longTeemCG10Per = itrData.ScheduleCGFor23.LongTermCapGain23;
+      console.log('longTeemCG10Per: ', longTeemCG10Per);
+      if (longTeemCG10Per.hasOwnProperty('Proviso112Applicable')) {
+  
+        if (longTeemCG10Per.Proviso112Applicable instanceof Array && longTeemCG10Per.Proviso112Applicable.length > 0) {
+          for (let i = 0; i < longTeemCG10Per.Proviso112Applicable.length; i++) {
+            let longTerm10PerObj = {
+              nameOfTheAsset: 'Zero Coupon Bonds',
+              netSaleValue: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.FullConsideration),
+              purchaseCost: longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.hasOwnProperty('DeductSec48') ? Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductSec48.TotalDedn) : 0,
+              capitalGain: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG),
+              deductions: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductionUs54F),
+              netCapitalGain: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) < 0 ? Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) : (Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) - Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductionUs54F)),
+            }
+            taxPaid.longTermCapitalGainAt10Percent.push(longTerm10PerObj);
+            this.updateCapitalGain(taxPaid);
           }
-          taxPaid.longTermCapitalGainAt10Percent.push(longTerm10PerObj);
-          this.updateCapitalGain(taxPaid);
         }
       }
     }
+    
 
     if (itrData.hasOwnProperty('Schedule112A')) {
       var longTermCG10Per112A = itrData.Schedule112A;
@@ -2521,51 +2528,52 @@ export class Itr2mainComponent implements OnInit {
     }
 
     /////Long Term Capital Gain @ 20%{Property/ Bonds/ Other Assets}
-    var longTeemCG20Per = itrData.ScheduleCGFor23.LongTermCapGain23;
-    console.log('longTeemCG20Per: ', longTeemCG20Per);
-    if (longTeemCG20Per.hasOwnProperty('SaleofLandBuild')) {
-      if (longTeemCG20Per.SaleofLandBuild instanceof Array && longTeemCG20Per.SaleofLandBuild.length > 0) {
-        for (let i = 0; i < longTeemCG20Per.SaleofLandBuild.length; i++) {
-          let longTerm20PerObj = {
-            nameOfTheAsset: 'Property',
-            netSaleValue: Number(longTeemCG20Per.SaleofLandBuild[i].FullConsideration50C),
-            purchaseCost: longTeemCG20Per.SaleofLandBuild[i].hasOwnProperty('TotalDedn') ? Number(longTeemCG20Per.SaleofLandBuild[i].TotalDedn) : 0,
-            capitalGain: Number(longTeemCG20Per.SaleofLandBuild[i].Balance),
-            deductions: Number(longTeemCG20Per.SaleofLandBuild[i].ExemptionOrDednUs54.ExemptionGrandTotal),
-            netCapitalGain: Number(longTeemCG20Per.SaleofLandBuild[i].Balance) < 0 ? Number(longTeemCG20Per.SaleofLandBuild[i].Balance) : (Number(longTeemCG20Per.SaleofLandBuild[i].Balance) - Number(longTeemCG20Per.SaleofLandBuild[i].ExemptionOrDednUs54.ExemptionGrandTotal)),
+    if(itrData.hasOwnProperty('ScheduleCGFor23')){
+      var longTeemCG20Per = itrData.ScheduleCGFor23.LongTermCapGain23;
+      console.log('longTeemCG20Per: ', longTeemCG20Per);
+      if (longTeemCG20Per.hasOwnProperty('SaleofLandBuild')) {
+        if (longTeemCG20Per.SaleofLandBuild instanceof Array && longTeemCG20Per.SaleofLandBuild.length > 0) {
+          for (let i = 0; i < longTeemCG20Per.SaleofLandBuild.length; i++) {
+            let longTerm20PerObj = {
+              nameOfTheAsset: 'Property',
+              netSaleValue: Number(longTeemCG20Per.SaleofLandBuild[i].FullConsideration50C),
+              purchaseCost: longTeemCG20Per.SaleofLandBuild[i].hasOwnProperty('TotalDedn') ? Number(longTeemCG20Per.SaleofLandBuild[i].TotalDedn) : 0,
+              capitalGain: Number(longTeemCG20Per.SaleofLandBuild[i].Balance),
+              deductions: Number(longTeemCG20Per.SaleofLandBuild[i].ExemptionOrDednUs54.ExemptionGrandTotal),
+              netCapitalGain: Number(longTeemCG20Per.SaleofLandBuild[i].Balance) < 0 ? Number(longTeemCG20Per.SaleofLandBuild[i].Balance) : (Number(longTeemCG20Per.SaleofLandBuild[i].Balance) - Number(longTeemCG20Per.SaleofLandBuild[i].ExemptionOrDednUs54.ExemptionGrandTotal)),
+            }
+            taxPaid.longTermCapitalGainAt20Percent.push(longTerm20PerObj);
           }
-          taxPaid.longTermCapitalGainAt20Percent.push(longTerm20PerObj);
         }
+        this.updateCapitalGain(taxPaid);
       }
-      this.updateCapitalGain(taxPaid);
-    }
-
-    if (longTeemCG20Per.hasOwnProperty('SaleofBondsDebntr')) {
-      let longTerm20BondsObj = {
-        nameOfTheAsset: 'Bonds and Debenture',
-        netSaleValue: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('FullConsideration') ? Number(longTeemCG20Per.SaleofBondsDebntr.FullConsideration) : 0,
-        purchaseCost: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductSec48') ? Number(longTeemCG20Per.SaleofBondsDebntr.DeductSec48.TotalDedn) : 0,
-        capitalGain: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('BalanceCG') ? Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) : 0,
-        deductions: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductionUs54F') ? Number(longTeemCG20Per.SaleofBondsDebntr.DeductionUs54F) : 0,
-        netCapitalGain: Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) < 0 ? Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) : (Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) - (longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductionUs54F') ? Number(longTeemCG20Per.SaleofBondsDebntr.DeductionUs54F) : 0)),
+  
+      if (longTeemCG20Per.hasOwnProperty('SaleofBondsDebntr')) {
+        let longTerm20BondsObj = {
+          nameOfTheAsset: 'Bonds and Debenture',
+          netSaleValue: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('FullConsideration') ? Number(longTeemCG20Per.SaleofBondsDebntr.FullConsideration) : 0,
+          purchaseCost: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductSec48') ? Number(longTeemCG20Per.SaleofBondsDebntr.DeductSec48.TotalDedn) : 0,
+          capitalGain: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('BalanceCG') ? Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) : 0,
+          deductions: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductionUs54F') ? Number(longTeemCG20Per.SaleofBondsDebntr.DeductionUs54F) : 0,
+          netCapitalGain: Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) < 0 ? Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) : (Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) - (longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductionUs54F') ? Number(longTeemCG20Per.SaleofBondsDebntr.DeductionUs54F) : 0)),
+        }
+        taxPaid.longTermCapitalGainAt20Percent.push(longTerm20BondsObj);
+        this.updateCapitalGain(taxPaid);
       }
-      taxPaid.longTermCapitalGainAt20Percent.push(longTerm20BondsObj);
-      this.updateCapitalGain(taxPaid);
-    }
-
-    if (longTeemCG20Per.hasOwnProperty('SaleofAssetNA')) {
-      let longTerm20OtherAssetsObj = {
-        nameOfTheAsset: 'Other Assests',
-        netSaleValue: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('FullConsideration') ? Number(longTeemCG20Per.SaleofAssetNA.FullConsideration) : 0,
-        purchaseCost: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('DeductSec48') ? Number(longTeemCG20Per.SaleofAssetNA.DeductSec48.TotalDedn) : 0,
-        capitalGain: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('CapgainonAssets') ? Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : 0,
-        deductions: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('ExemptionOrDednUs54') ? Number(longTeemCG20Per.SaleofAssetNA.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
-        netCapitalGain: Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) < 0 ? Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : (Number(longTeemCG20Per.SaleofAssetNA.FullConsideration)),
+  
+      if (longTeemCG20Per.hasOwnProperty('SaleofAssetNA')) {
+        let longTerm20OtherAssetsObj = {
+          nameOfTheAsset: 'Other Assests',
+          netSaleValue: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('FullConsideration') ? Number(longTeemCG20Per.SaleofAssetNA.FullConsideration) : 0,
+          purchaseCost: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('DeductSec48') ? Number(longTeemCG20Per.SaleofAssetNA.DeductSec48.TotalDedn) : 0,
+          capitalGain: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('CapgainonAssets') ? Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : 0,
+          deductions: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('ExemptionOrDednUs54') ? Number(longTeemCG20Per.SaleofAssetNA.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
+          netCapitalGain: Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) < 0 ? Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : (Number(longTeemCG20Per.SaleofAssetNA.FullConsideration)),
+        }
+        taxPaid.longTermCapitalGainAt20Percent.push(longTerm20OtherAssetsObj);
+        this.updateCapitalGain(taxPaid);
       }
-      taxPaid.longTermCapitalGainAt20Percent.push(longTerm20OtherAssetsObj);
-      this.updateCapitalGain(taxPaid);
     }
-    debugger
 
     this.updateCapitalGain(taxPaid);
     console.log('taxPaid ===> ', taxPaid)
