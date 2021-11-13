@@ -45,6 +45,10 @@ export class InvoicesStatusComponent implements OnInit {
     { label: 'Paid', value: 'Paid' },
     { label: 'Unpaid', value: 'Unpaid' }
   ]
+  fyDropDown: any = [
+    { label: '2021-2022', value: '2021-2022', startDate: new Date('2021-04-01'), endDate: new Date() },
+    { label: '2020-2021', value: '2020-2021', startDate: new Date('2020-04-01'), endDate: new Date('2021-03-31') }
+  ]
   constructor(private userMsService: UserMsService, private _toastMessageService: ToastMessageService,
     @Inject(LOCALE_ID) private locale: string, private userService: UserMsService, private dialog: MatDialog,
     private utilService: UtilsService, private fb: FormBuilder, private activatedRoute: ActivatedRoute,
@@ -68,6 +72,15 @@ export class InvoicesStatusComponent implements OnInit {
       sortable: true,
     };
   }
+  setDates() {
+    let data = this.fyDropDown.filter(item => item.value === this.summaryDetailForm.controls['fy'].value);
+    if (data.length > 0) {
+      this.summaryDetailForm.controls['fromDate'].setValue(data[0].startDate);
+      this.summaryDetailForm.controls['toDate'].setValue(data[0].endDate);
+    }
+    console.log(data)
+  }
+
   onFirstDataRendered(params) {
     if (this.utilService.isNonEmpty(this.userId)) {
       var filterComponent = params.api.getFilterInstance("userId");
@@ -86,9 +99,10 @@ export class InvoicesStatusComponent implements OnInit {
     });
 
     this.summaryDetailForm = this.fb.group({
-      fromDate: ['', Validators.required],
-      toDate: ['', Validators.required],
-      status: ['']
+      fromDate: [new Date('2021-04-01'), Validators.required],
+      toDate: [new Date(), Validators.required],
+      status: [''],
+      fy: ['2021-2022']
     });
 
     this.getAllInvoiceInfo()
