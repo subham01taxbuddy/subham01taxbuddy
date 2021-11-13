@@ -43,7 +43,7 @@ export class AllFilingReportComponent implements OnInit {
     private itrMsService: ItrMsService,) {
     this.smeReportGridOption = <GridOptions>{
       rowData: [],
-      columnDefs: this.smeCreateColoumnDef(),
+      columnDefs: this.smeCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -57,13 +57,13 @@ export class AllFilingReportComponent implements OnInit {
       fromDate: [new Date(), Validators.required],
       toDate: [new Date(), Validators.required]
     });
-    this.getReportsbyDate();
+    this.getReportsByDate();
   }
   setToDateValidation(fromDate) {
     this.minToDate = fromDate;
   }
 
-  getReportsbyDate() {
+  getReportsByDate() {
     if (this.dateSearchForm.valid) {
       this.loading = true;
       let fromDate = this.datePipe.transform(this.dateSearchForm.value.fromDate, 'yyyy-MM-dd');
@@ -107,12 +107,13 @@ export class AllFilingReportComponent implements OnInit {
         source: smeReport[i].source,
         teamLeadName: smeReport[i].teamLeadName,
         dateOfSignup: smeReport[i].dateOfSignup,
+        paymentStatus: smeReport[i].paymentStatus
       }
       data.push(smeData);
     }
     return data;
   }
-  smeCreateColoumnDef() {
+  smeCreateColumnDef() {
     return [
       {
         headerName: 'Sr. No.',
@@ -178,6 +179,18 @@ export class AllFilingReportComponent implements OnInit {
         headerName: 'ITR Type',
         field: 'itrType',
         width: 70,
+        sortable: true,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Payment Status',
+        field: 'paymentStatus',
         sortable: true,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
