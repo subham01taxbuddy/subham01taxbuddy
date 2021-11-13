@@ -3,11 +3,17 @@
     <div class="card">
         <div class="card__row">
             <form [formGroup]="summaryDetailForm">
-                <!-- <div class="card__col-lg-3">
-                    <p class="head-label">Download Invoice:</p>
-                </div> -->
-
-                <div class="card__col-lg-3">
+                <div class="card__col-lg-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Select FY</mat-label>
+                        <mat-select placeholder="Select FY" formControlName="fy" (selectionChange)="setDates()">
+                            <mat-option *ngFor="let item of fyDropDown" [value]="item.value">
+                                {{item.label}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-2">
                     <mat-form-field appearance="outline">
                         <mat-label>From Date</mat-label>
                         <input matInput formControlName="fromDate" [matDatepicker]="picker1" [max]="maxDate"
@@ -20,7 +26,7 @@
                     </mat-form-field>
                 </div>
 
-                <div class="card__col-lg-3">
+                <div class="card__col-lg-2">
                     <mat-form-field appearance="outline">
                         <mat-label>To Date</mat-label>
                         <input matInput formControlName="toDate" [matDatepicker]="picker2" [max]="maxDate"
