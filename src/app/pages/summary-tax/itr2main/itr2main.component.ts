@@ -2435,11 +2435,11 @@ export class Itr2mainComponent implements OnInit {
           for (let i = 0; i < shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls.length; i++) {
             let shortTermProObj = {
               nameOfTheAsset: 'Property',
-              netSaleValue: Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].FullConsideration50C),
-              purchaseCost: Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].TotalDedn),
-              capitalGain: Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance),
+              netSaleValue: this.getNumberFormat(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].FullConsideration50C),
+              purchaseCost: this.getNumberFormat(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].TotalDedn),
+              capitalGain: this.getNumberFormat(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance),
               deductions: 0,
-              netCapitalGain: Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance) < 0 ? Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance) : (Number(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance) - 0),
+              netCapitalGain: this.getNumberFormat(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance) < 0 ? this.getNumberFormat(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance) : (this.getNumberFormat(shortCGslabofProperty.SaleofLandBuild.SaleofLandBuildDtls[i].Balance) - 0),
             }
             taxPaid.shortTermCapitalGain.push(shortTermProObj);
             // this.updateCapitalGain(taxPaid);
@@ -2450,11 +2450,11 @@ export class Itr2mainComponent implements OnInit {
       if (shortCGslabofProperty.hasOwnProperty('SaleOnOtherAssets')) {
         let shortTermOtherAssestsObj = {
           nameOfTheAsset: 'Other Assets',
-          netSaleValue: Number(shortCGslabofProperty.SaleOnOtherAssets.FullConsideration),
-          purchaseCost: shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('DeductSec48') ? Number(shortCGslabofProperty.SaleOnOtherAssets.DeductSec48.TotalDedn) : 0,
-          capitalGain: Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG),
-          deductions: shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('ExemptionOrDednUs54') ? Number(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
-          netCapitalGain: Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) < 0 ? Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) : (Number(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) - (shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('ExemptionOrDednUs54') ? Number(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal) : 0)),
+          netSaleValue: this.getNumberFormat(shortCGslabofProperty.SaleOnOtherAssets.FullConsideration),
+          purchaseCost: shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('DeductSec48') ? this.getNumberFormat(shortCGslabofProperty.SaleOnOtherAssets.DeductSec48.TotalDedn) : 0,
+          capitalGain: this.getNumberFormat(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG),
+          deductions: shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('ExemptionOrDednUs54') ? this.getNumberFormat(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
+          netCapitalGain: this.getNumberFormat(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) < 0 ? this.getNumberFormat(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) : (this.getNumberFormat(shortCGslabofProperty.SaleOnOtherAssets.BalanceCG) - (shortCGslabofProperty.SaleOnOtherAssets.hasOwnProperty('ExemptionOrDednUs54') ? this.getNumberFormat(shortCGslabofProperty.SaleOnOtherAssets.ExemptionOrDednUs54.ExemptionGrandTotal) : 0)),
         }
         taxPaid.shortTermCapitalGain.push(shortTermOtherAssestsObj);
         // this.updateCapitalGain(taxPaid);
@@ -2474,11 +2474,11 @@ export class Itr2mainComponent implements OnInit {
           for (let i = 0; i < shortCG15Per.EquityMFonSTT.length; i++) {
             let shortTerm15PerObj = {
               nameOfTheAsset: 'Equity/MF',
-              netSaleValue: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.FullConsideration),
-              purchaseCost: shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.hasOwnProperty('DeductSec48') ? Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.DeductSec48.TotalDedn) : 0,
-              capitalGain: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG),
+              netSaleValue: shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.hasOwnProperty('FullConsideration') ? this.getNumberFormat(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.FullConsideration) : 0,
+              purchaseCost: shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.hasOwnProperty('DeductSec48') ? this.getNumberFormat(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.DeductSec48.TotalDedn) : 0,
+              capitalGain: this.getNumberFormat(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG),
               deductions: 0,
-              netCapitalGain: Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) < 0 ? Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) : (Number(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) - 0),
+              netCapitalGain: this.getNumberFormat(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) < 0 ? this.getNumberFormat(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) : (this.getNumberFormat(shortCG15Per.EquityMFonSTT[i].EquityMFonSTTDtls.BalanceCG) - 0),
             }
             taxPaid.shortTermCapitalGainAt15Percent.push(shortTerm15PerObj);
             // this.updateCapitalGain(taxPaid);
@@ -2498,11 +2498,11 @@ export class Itr2mainComponent implements OnInit {
           for (let i = 0; i < longTeemCG10Per.Proviso112Applicable.length; i++) {
             let longTerm10PerObj = {
               nameOfTheAsset: 'Zero Coupon Bonds',
-              netSaleValue: longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.hasOwnProperty('FullConsideration') ? Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.FullConsideration) : 0,
-              purchaseCost: longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.hasOwnProperty('DeductSec48') ? Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductSec48.TotalDedn) : 0,
-              capitalGain: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG),
-              deductions: longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.hasOwnProperty('DeductionUs54F') ? Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductionUs54F) : 0,
-              netCapitalGain: Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) < 0 ? Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) : (Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) - (longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.hasOwnProperty('DeductionUs54F') ? Number(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductionUs54F) : 0)),
+              netSaleValue: longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.hasOwnProperty('FullConsideration') ? this.getNumberFormat(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.FullConsideration) : 0,
+              purchaseCost: longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.hasOwnProperty('DeductSec48') ? this.getNumberFormat(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductSec48.TotalDedn) : 0,
+              capitalGain: this.getNumberFormat(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG),
+              deductions: longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.hasOwnProperty('DeductionUs54F') ? this.getNumberFormat(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductionUs54F) : 0,
+              netCapitalGain: this.getNumberFormat(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) < 0 ? this.getNumberFormat(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) : (this.getNumberFormat(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.BalanceCG) - (longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.hasOwnProperty('DeductionUs54F') ? this.getNumberFormat(longTeemCG10Per.Proviso112Applicable[i].Proviso112Applicabledtls.DeductionUs54F) : 0)),
             }
             taxPaid.longTermCapitalGainAt10Percent.push(longTerm10PerObj);
             // this.updateCapitalGain(taxPaid);
@@ -2518,11 +2518,11 @@ export class Itr2mainComponent implements OnInit {
         for (let i = 0; i < longTermCG10Per112A.Schedule112ADtls.length; i++) {
           let longTerm10PerEquityObj = {
             nameOfTheAsset: 'Equity/MF 112A',
-            netSaleValue: Number(longTermCG10Per112A.Schedule112ADtls[i].TotSaleValue),
-            purchaseCost: longTermCG10Per112A.Schedule112ADtls[i].ShareOnOrBefore === "BE" ? Number(longTermCG10Per112A.Schedule112ADtls[i].FairMktValuePerShareunit) : Number(longTermCG10Per112A.Schedule112ADtls[i].CostAcqWithoutIndx),
-            capitalGain: Number(longTermCG10Per112A.Schedule112ADtls[i].Balance),
+            netSaleValue: this.getNumberFormat(longTermCG10Per112A.Schedule112ADtls[i].TotSaleValue),
+            purchaseCost: longTermCG10Per112A.Schedule112ADtls[i].ShareOnOrBefore === "BE" ? this.getNumberFormat(longTermCG10Per112A.Schedule112ADtls[i].FairMktValuePerShareunit) : this.getNumberFormat(longTermCG10Per112A.Schedule112ADtls[i].CostAcqWithoutIndx),
+            capitalGain: this.getNumberFormat(longTermCG10Per112A.Schedule112ADtls[i].Balance),
             deductions: 0,
-            netCapitalGain: Number(longTermCG10Per112A.Schedule112ADtls[i].Balance) < 0 ? Number(longTermCG10Per112A.Schedule112ADtls[i].Balance) : (Number(longTermCG10Per112A.Schedule112ADtls[i].Balance) - 0),
+            netCapitalGain: this.getNumberFormat(longTermCG10Per112A.Schedule112ADtls[i].Balance) < 0 ? this.getNumberFormat(longTermCG10Per112A.Schedule112ADtls[i].Balance) : (this.getNumberFormat(longTermCG10Per112A.Schedule112ADtls[i].Balance) - 0),
           }
           taxPaid.longTermCapitalGainAt10Percent.push(longTerm10PerEquityObj);
           // this.updateCapitalGain(taxPaid);
@@ -2539,11 +2539,11 @@ export class Itr2mainComponent implements OnInit {
           for (let i = 0; i < longTeemCG20Per.SaleofLandBuild.length; i++) {
             let longTerm20PerObj = {
               nameOfTheAsset: 'Property',
-              netSaleValue: Number(longTeemCG20Per.SaleofLandBuild[i].FullConsideration50C),
-              purchaseCost: longTeemCG20Per.SaleofLandBuild[i].hasOwnProperty('TotalDedn') ? Number(longTeemCG20Per.SaleofLandBuild[i].TotalDedn) : 0,
-              capitalGain: Number(longTeemCG20Per.SaleofLandBuild[i].Balance),
-              deductions: Number(longTeemCG20Per.SaleofLandBuild[i].ExemptionOrDednUs54.ExemptionGrandTotal),
-              netCapitalGain: Number(longTeemCG20Per.SaleofLandBuild[i].Balance) < 0 ? Number(longTeemCG20Per.SaleofLandBuild[i].Balance) : (Number(longTeemCG20Per.SaleofLandBuild[i].Balance) - Number(longTeemCG20Per.SaleofLandBuild[i].ExemptionOrDednUs54.ExemptionGrandTotal)),
+              netSaleValue: this.getNumberFormat(longTeemCG20Per.SaleofLandBuild[i].FullConsideration50C),
+              purchaseCost: longTeemCG20Per.SaleofLandBuild[i].hasOwnProperty('TotalDedn') ? this.getNumberFormat(longTeemCG20Per.SaleofLandBuild[i].TotalDedn) : 0,
+              capitalGain: this.getNumberFormat(longTeemCG20Per.SaleofLandBuild[i].Balance),
+              deductions: this.getNumberFormat(longTeemCG20Per.SaleofLandBuild[i].ExemptionOrDednUs54.ExemptionGrandTotal),
+              netCapitalGain: this.getNumberFormat(longTeemCG20Per.SaleofLandBuild[i].Balance) < 0 ? this.getNumberFormat(longTeemCG20Per.SaleofLandBuild[i].Balance) : (this.getNumberFormat(longTeemCG20Per.SaleofLandBuild[i].Balance) - this.getNumberFormat(longTeemCG20Per.SaleofLandBuild[i].ExemptionOrDednUs54.ExemptionGrandTotal)),
             }
             taxPaid.longTermCapitalGainAt20Percent.push(longTerm20PerObj);
           }
@@ -2554,11 +2554,11 @@ export class Itr2mainComponent implements OnInit {
       if (longTeemCG20Per.hasOwnProperty('SaleofBondsDebntr')) {
         let longTerm20BondsObj = {
           nameOfTheAsset: 'Bonds and Debenture',
-          netSaleValue: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('FullConsideration') ? Number(longTeemCG20Per.SaleofBondsDebntr.FullConsideration) : 0,
-          purchaseCost: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductSec48') ? Number(longTeemCG20Per.SaleofBondsDebntr.DeductSec48.TotalDedn) : 0,
-          capitalGain: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('BalanceCG') ? Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) : 0,
-          deductions: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductionUs54F') ? Number(longTeemCG20Per.SaleofBondsDebntr.DeductionUs54F) : 0,
-          netCapitalGain: Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) < 0 ? Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) : (Number(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) - (longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductionUs54F') ? Number(longTeemCG20Per.SaleofBondsDebntr.DeductionUs54F) : 0)),
+          netSaleValue: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('FullConsideration') ? this.getNumberFormat(longTeemCG20Per.SaleofBondsDebntr.FullConsideration) : 0,
+          purchaseCost: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductSec48') ? this.getNumberFormat(longTeemCG20Per.SaleofBondsDebntr.DeductSec48.TotalDedn) : 0,
+          capitalGain: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('BalanceCG') ? this.getNumberFormat(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) : 0,
+          deductions: longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductionUs54F') ? this.getNumberFormat(longTeemCG20Per.SaleofBondsDebntr.DeductionUs54F) : 0,
+          netCapitalGain: this.getNumberFormat(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) < 0 ? this.getNumberFormat(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) : (this.getNumberFormat(longTeemCG20Per.SaleofBondsDebntr.BalanceCG) - (longTeemCG20Per.SaleofBondsDebntr.hasOwnProperty('DeductionUs54F') ? this.getNumberFormat(longTeemCG20Per.SaleofBondsDebntr.DeductionUs54F) : 0)),
         }
         taxPaid.longTermCapitalGainAt20Percent.push(longTerm20BondsObj);
         // this.updateCapitalGain(taxPaid);
@@ -2567,11 +2567,11 @@ export class Itr2mainComponent implements OnInit {
       if (longTeemCG20Per.hasOwnProperty('SaleofAssetNA')) {
         let longTerm20OtherAssetsObj = {
           nameOfTheAsset: 'Other Assests',
-          netSaleValue: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('FullConsideration') ? Number(longTeemCG20Per.SaleofAssetNA.FullConsideration) : 0,
-          purchaseCost: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('DeductSec48') ? Number(longTeemCG20Per.SaleofAssetNA.DeductSec48.TotalDedn) : 0,
-          capitalGain: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('CapgainonAssets') ? Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : 0,
-          deductions: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('ExemptionOrDednUs54') ? Number(longTeemCG20Per.SaleofAssetNA.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
-          netCapitalGain: Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) < 0 ? Number(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : (Number(longTeemCG20Per.SaleofAssetNA.FullConsideration)),
+          netSaleValue: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('FullConsideration') ? this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.FullConsideration) : 0,
+          purchaseCost: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('DeductSec48') ? this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.DeductSec48.TotalDedn) : 0,
+          capitalGain: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('CapgainonAssets') ? this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : 0,
+          deductions: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('ExemptionOrDednUs54') ? this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
+          netCapitalGain: this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) < 0 ? this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : (this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.FullConsideration)),
         }
         taxPaid.longTermCapitalGainAt20Percent.push(longTerm20OtherAssetsObj);
         // this.updateCapitalGain(taxPaid);
@@ -2588,7 +2588,7 @@ export class Itr2mainComponent implements OnInit {
 
 
     //Other Source
-    if (itrData.hasOwnProperty('ScheduleOS')) {
+    if (itrData.hasOwnProperty('ScheduleOS') && itrData.ScheduleOS.hasOwnProperty('IncOthThanOwnRaceHorse')) {
       var otherInfo = itrData.ScheduleOS.IncOthThanOwnRaceHorse;
       console.log('Othet info: ', otherInfo)
       if(otherInfo.hasOwnProperty('DividendGross')){
@@ -4459,6 +4459,7 @@ export class Itr2mainComponent implements OnInit {
     }
    
   
+    debugger
     if (this.tdsOnSal && this.tdsOnSal.api && this.tdsOnSal.api.getRenderedNodes()) {
       for (let i = 0; i < this.tdsOnSal.api.getRenderedNodes().length; i++) {
         if(this.personalInfoForm.controls['regime'].value === 'N'){
@@ -4470,6 +4471,7 @@ export class Itr2mainComponent implements OnInit {
       }
     }
 
+    debugger
     if (this.tdsOtherThanSal && this.tdsOtherThanSal.api && this.tdsOtherThanSal.api.getRenderedNodes()) {
       for (let i = 0; i < this.tdsOtherThanSal.api.getRenderedNodes().length; i++) {
         if(this.personalInfoForm.controls['regime'].value === 'N'){
@@ -4509,18 +4511,19 @@ export class Itr2mainComponent implements OnInit {
           this.taxesPaid.advanceSelfAssTax = this.taxesPaid.advanceSelfAssTax + this.advanceTax.api.getRenderedNodes()[i].data.taxDeposite;
         }
         else{
-          this.newRegimeTaxSummary.advanceSelfAssTax = this.taxesPaidForNewRegime.advanceSelfAssTax + this.advanceTax.api.getRenderedNodes()[i].data.taxDeposite;
+          this.newRegimeTaxSummary.advanceSelfAssTax = this.newRegimeTaxSummary.advanceSelfAssTax + this.advanceTax.api.getRenderedNodes()[i].data.taxDeposite;
         }
         
       }
     }
 
+    // console.log('tdsOnSalary: ',Number(this.taxesPaidForNewRegime.tdsOnSalary) + ' tdsOtherThanSalary: ',Number(this.taxesPaidForNewRegime.tdsOtherThanSalary) +' tdsOnSal26QB: '+ Number(this.taxesPaidForNewRegime.tdsOnSal26QB) + ' tcs: '+ Number(this.taxesPaidForNewRegime.tcs) + ' advanceSelfAssTax: ',Number(this.taxesPaidForNewRegime.advanceSelfAssTax))
     if(this.personalInfoForm.controls['regime'].value === 'N'){
       this.totalTDS = Number(this.taxesPaid.tdsOnSalary) + Number(this.taxesPaid.tdsOtherThanSalary) + Number(this.taxesPaid.tdsOnSal26QB) + Number(this.taxesPaid.tcs) + Number(this.taxesPaid.advanceSelfAssTax);
       this.computationOfIncomeForm['controls'].totalTaxesPaid.setValue(this.totalTDS)
     }
     else{
-      this.totalTDS = Number(this.taxesPaidForNewRegime.tdsOnSalary) + Number(this.taxesPaidForNewRegime.tdsOtherThanSalary) + Number(this.taxesPaidForNewRegime.tdsOnSal26QB) + Number(this.taxesPaidForNewRegime.tcs) + Number(this.taxesPaidForNewRegime.advanceSelfAssTax);
+      this.totalTDS = Number(this.newRegimeTaxSummary.tdsOnSalary) + Number(this.newRegimeTaxSummary.tdsOtherThanSalary) + Number(this.newRegimeTaxSummary.tdsOnSal26QB) + Number(this.newRegimeTaxSummary.tcs) + Number(this.newRegimeTaxSummary.advanceSelfAssTax);
       this.newRegimeTaxSummary.totalTaxesPaid = this.totalTDS;
     }
    
