@@ -8,6 +8,7 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { MatDialog } from '@angular/material';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-last-year-filing',
@@ -306,5 +307,10 @@ export class LastYearFilingComponent implements OnInit {
         }
       }
     });
+  }
+
+  downloadReport() {
+    const param = `/download-itr-report-by-financialYear?financialYear=2019-2020`
+    location.href = environment.url + `/itr/download-itr-report-by-financialYear?financialYear=2019-2020`;
   }
 }

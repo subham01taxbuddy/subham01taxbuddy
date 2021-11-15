@@ -1,0 +1,9 @@
+.tab {
+    margin-top: -15px;
+    margin-bottom: 0px;
+}
+
+.tab__item {
+    font-size: 1.5em;
+    padding-bottom: 5px;
+}

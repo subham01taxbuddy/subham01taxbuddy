@@ -22,6 +22,11 @@ import { Calling2dot0Component } from './calling-board/calling2dot0/calling2dot0
 import { ScheduledCallComponent } from './calling-board/scheduled-call/scheduled-call.component';
 import { DownloadDialogComponent } from './interested-clients/download-dialog/download-dialog.component';
 import { SignupExceptionComponent } from './calling-board/signup-exception/signup-exception.component';
+import { StatusWiseClientsComponent } from './status-wise-clients/status-wise-clients.component';
+import { EngagementStatusComponent } from './status-wise-clients/engagement-status/engagement-status.component';
+import { StatusWiseGirdDataComponent } from './status-wise-clients/status-wise-gird-data/status-wise-gird-data.component';
+import { FilingStatusComponent } from './status-wise-clients/filing-status/filing-status.component';
+import { PaymentStatusComponent } from './status-wise-clients/payment-status/payment-status.component';
 
 @NgModule({
     declarations: [DashboardComponent,
@@ -37,7 +42,13 @@ import { SignupExceptionComponent } from './calling-board/signup-exception/signu
         Calling2dot0Component,
         ScheduledCallComponent,
         DownloadDialogComponent,
-        SignupExceptionComponent],
+        SignupExceptionComponent,
+        StatusWiseClientsComponent,
+        EngagementStatusComponent,
+        StatusWiseGirdDataComponent,
+        FilingStatusComponent,
+        PaymentStatusComponent
+    ],
     imports: [
         CommonModule,
         FormsModule,

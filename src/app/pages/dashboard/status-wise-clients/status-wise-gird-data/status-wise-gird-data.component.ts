@@ -1,43 +1,33 @@
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Component, Inject, Input, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
+import { RoleBaseAuthGuardService } from 'app/services/role-base-auth-gaurd.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
-import { AppConstants } from 'app/shared/constants';
-import { formatDate } from '@angular/common';
-import { DownloadDialogComponent } from './download-dialog/download-dialog.component';
-import { CallReassignmentComponent } from 'app/shared/components/call-reassignment/call-reassignment.component';
-import { RoleBaseAuthGuardService } from 'app/services/role-base-auth-gaurd.service';
 import moment = require('moment');
 
 @Component({
-  selector: 'app-interested-clients',
-  templateUrl: './interested-clients.component.html',
-  styleUrls: ['./interested-clients.component.css']
+  selector: 'app-status-wise-gird-data',
+  templateUrl: './status-wise-gird-data.component.html',
+  styleUrls: ['./status-wise-gird-data.component.css']
 })
-export class InterestedClientsComponent implements OnInit {
+export class StatusWiseGirdDataComponent implements OnInit {
+  @Input('statusIds') statusIds: any;
   interestedClients = [];
   loading = false;
   config: any;
-  agentList: any = [];
-  isAgentAvailable: boolean;
-  selectedAgent: any;
-  selectedStatus = 18;
-  selectedService = 'ITR';
   interestedClientsGridOption: GridOptions;
   interestedClientInfo: any;
-  showAllUser: boolean;
-  searchMobNo: any;
   itrStatus: any = [];
-  isServiceDisabled = false;
-  serviceTypeList = ['ITR', 'GST', 'NOTICE', 'TPA'];
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
     private toastMsgService: ToastMessageService, private route: Router,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
+
     this.interestedClientsGridOption = <GridOptions>{
       rowData: [],
       columnDefs: this.createColumnDef(this.itrStatus),
@@ -56,13 +46,9 @@ export class InterestedClientsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getAgentList();
-    this.showCallersAll();
     this.getStatus();
-  }
-
-  async getAgentList() {
-    this.agentList = await this.utilsService.getStoredAgentList();
+    this.config.currentPage = 1;
+    this.getInterestedClients(0);
   }
 
   getStatus(ref?) {
@@ -71,10 +57,6 @@ export class InterestedClientsComponent implements OnInit {
       console.log('status response: ', response);
       if (response instanceof Array && response.length > 0) {
         this.itrStatus = response;
-        if (ref === 'CALL_REASSIGN') {
-          this.callReassignment();
-          return;
-        }
         this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
       }
       else {
@@ -85,69 +67,6 @@ export class InterestedClientsComponent implements OnInit {
         console.log('Error during fetching status info.')
       })
   }
-
-  showCallersAll() {
-    this.searchMobNo = '';
-    this.selectedAgent = '';
-    var userInfo = JSON.parse(localStorage.getItem('UMD'));
-    this.isAgentAvailable = this.roleBaseAuthGuardService.checkHasPermission(userInfo.USER_ROLE, ["ITR_TEAM_LEAD", "GST_TEAM_LEAD", "ROLE_ADMIN", "ITR_SUPER_LEAD", "GST_SUPER_LEAD"])
-    if (this.isAgentAvailable) {
-      this.showAllUser = true;
-      this.config.currentPage = 1;
-      this.getInterestedClients(0);
-    }
-    else {
-      this.config.currentPage = 1;
-      this.getInterestedClients(0);
-    }
-  }
-
-  searchByAgent() {
-    if (this.utilsService.isNonEmpty(this.selectedAgent)) {
-      this.selectedAgent = this.selectedAgent;
-      this.showAllUser = false;
-      this.config.currentPage = 1;
-      const sType = this.agentList.filter(item => item.agentId === this.selectedAgent);
-      if (sType instanceof Array && sType.length > 0) {
-        this.selectedService = sType[0].serviceType;
-        this.isServiceDisabled = true;
-      }
-      this.getInterestedClients(0);
-    } else {
-      this.showAllUser = true;
-      this.config.currentPage = 1;
-      this.isServiceDisabled = false;
-      this.getInterestedClients(0);
-    }
-  }
-
-  searchByServiceType() {
-    if (this.utilsService.isNonEmpty(this.selectedService)) {
-      this.showAllUser = true;
-      this.config.currentPage = 1;
-      this.getInterestedClients(0);
-    }
-  }
-
-  searchByStatus() {
-
-    this.config.currentPage = 1;
-    this.getInterestedClients(0);
-  }
-
-  searchByMobNo() {
-    this.selectedStatus = 0;
-    if (this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
-      this.selectedAgent = '';
-      this.config.currentPage = 1;
-      this.getInterestedClients(0, this.searchMobNo);
-
-    }
-    else {
-      this.toastMsgService.alert("error", "Enter valid mobile number.")
-    }
-  }
-
   createColumnDef(itrStatus) {
     return [
       {
@@ -467,32 +386,9 @@ export class InterestedClientsComponent implements OnInit {
       }
     ]
   }
-
-
-  getInterestedClients(page, searchMobNo?) {
-    var userInfo = JSON.parse(localStorage.getItem('UMD'));
+  getInterestedClients(page) {
     this.loading = true;
-    var param2;
-    if (this.isAgentAvailable) {
-      if (this.utilsService.isNonEmpty(searchMobNo)) {
-        param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
-      } else {
-        this.searchMobNo = '';
-        if (this.showAllUser) {
-          param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15&serviceType=${this.selectedService}`;
-        } else {
-          param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
-        }
-      }
-    } else {
-      if (this.utilsService.isNonEmpty(searchMobNo)) {
-        param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
-      } else {
-        this.searchMobNo = '';
-        param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
-      }
-    }
-    // param2 = `/call-management/customer-by-statusids?statusIds=2,3,4,5,6,17`
+    let param2 = `/call-management/customer-by-statusids?statusIds=${this.statusIds}&page=${page}&pageSize=15`//2,3,4,5,6,17
 
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
@@ -667,37 +563,4 @@ export class InterestedClientsComponent implements OnInit {
     })
   }
 
-  downloadDocs(agentId) {
-    let disposable = this.dialog.open(DownloadDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        agentId: agentId
-      }
-    })
-
-    disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  }
-
-  callReassignment() {
-    if (this.utilsService.isNonEmpty(this.itrStatus)) {
-      let disposable = this.dialog.open(CallReassignmentComponent, {
-        width: '50%',
-        height: 'auto',
-        data: {
-          agentId: this.selectedAgent,
-          statusId: this.selectedStatus,
-          itrStatus: this.itrStatus,
-        }
-      })
-
-      disposable.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
-      });
-    } else {
-      this.getStatus('CALL_REASSIGN')
-    }
-  }
 }
