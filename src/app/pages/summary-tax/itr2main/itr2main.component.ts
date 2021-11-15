@@ -2588,7 +2588,7 @@ export class Itr2mainComponent implements OnInit {
 
 
     //Other Source
-    if (itrData.hasOwnProperty('ScheduleOS')) {
+    if (itrData.hasOwnProperty('ScheduleOS') && itrData.ScheduleOS.hasOwnProperty('IncOthThanOwnRaceHorse')) {
       var otherInfo = itrData.ScheduleOS.IncOthThanOwnRaceHorse;
       console.log('Othet info: ', otherInfo)
       if(otherInfo.hasOwnProperty('DividendGross')){
@@ -4459,6 +4459,7 @@ export class Itr2mainComponent implements OnInit {
     }
    
   
+    debugger
     if (this.tdsOnSal && this.tdsOnSal.api && this.tdsOnSal.api.getRenderedNodes()) {
       for (let i = 0; i < this.tdsOnSal.api.getRenderedNodes().length; i++) {
         if(this.personalInfoForm.controls['regime'].value === 'N'){
@@ -4470,6 +4471,7 @@ export class Itr2mainComponent implements OnInit {
       }
     }
 
+    debugger
     if (this.tdsOtherThanSal && this.tdsOtherThanSal.api && this.tdsOtherThanSal.api.getRenderedNodes()) {
       for (let i = 0; i < this.tdsOtherThanSal.api.getRenderedNodes().length; i++) {
         if(this.personalInfoForm.controls['regime'].value === 'N'){
@@ -4509,18 +4511,19 @@ export class Itr2mainComponent implements OnInit {
           this.taxesPaid.advanceSelfAssTax = this.taxesPaid.advanceSelfAssTax + this.advanceTax.api.getRenderedNodes()[i].data.taxDeposite;
         }
         else{
-          this.newRegimeTaxSummary.advanceSelfAssTax = this.taxesPaidForNewRegime.advanceSelfAssTax + this.advanceTax.api.getRenderedNodes()[i].data.taxDeposite;
+          this.newRegimeTaxSummary.advanceSelfAssTax = this.newRegimeTaxSummary.advanceSelfAssTax + this.advanceTax.api.getRenderedNodes()[i].data.taxDeposite;
         }
         
       }
     }
 
+    // console.log('tdsOnSalary: ',Number(this.taxesPaidForNewRegime.tdsOnSalary) + ' tdsOtherThanSalary: ',Number(this.taxesPaidForNewRegime.tdsOtherThanSalary) +' tdsOnSal26QB: '+ Number(this.taxesPaidForNewRegime.tdsOnSal26QB) + ' tcs: '+ Number(this.taxesPaidForNewRegime.tcs) + ' advanceSelfAssTax: ',Number(this.taxesPaidForNewRegime.advanceSelfAssTax))
     if(this.personalInfoForm.controls['regime'].value === 'N'){
       this.totalTDS = Number(this.taxesPaid.tdsOnSalary) + Number(this.taxesPaid.tdsOtherThanSalary) + Number(this.taxesPaid.tdsOnSal26QB) + Number(this.taxesPaid.tcs) + Number(this.taxesPaid.advanceSelfAssTax);
       this.computationOfIncomeForm['controls'].totalTaxesPaid.setValue(this.totalTDS)
     }
     else{
-      this.totalTDS = Number(this.taxesPaidForNewRegime.tdsOnSalary) + Number(this.taxesPaidForNewRegime.tdsOtherThanSalary) + Number(this.taxesPaidForNewRegime.tdsOnSal26QB) + Number(this.taxesPaidForNewRegime.tcs) + Number(this.taxesPaidForNewRegime.advanceSelfAssTax);
+      this.totalTDS = Number(this.newRegimeTaxSummary.tdsOnSalary) + Number(this.newRegimeTaxSummary.tdsOtherThanSalary) + Number(this.newRegimeTaxSummary.tdsOnSal26QB) + Number(this.newRegimeTaxSummary.tcs) + Number(this.newRegimeTaxSummary.advanceSelfAssTax);
       this.newRegimeTaxSummary.totalTaxesPaid = this.totalTDS;
     }
    
