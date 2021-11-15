@@ -1382,11 +1382,11 @@ export class TaxSummaryComponent implements OnInit {
       let recivedInBankObj = {
         businessType: null,
         incomeType: "BANK",
-        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD6Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per) : 0,
+        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD6Per') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per) : 0,
         ownership: null,
         periodOfHolding: 0,
-        presumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD6Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per) : 0,
-        receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverBank') ? Number(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverBank) : 0,
+        presumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD6Per') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per) : 0,
+        receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverBank') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverBank) : 0,
         registrationNo: null,
         tonnageCapacity: 0
       }
@@ -1395,11 +1395,11 @@ export class TaxSummaryComponent implements OnInit {
       let recivedCashObj = {
         businessType: null,
         incomeType: "CASH",
-        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
+        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
         ownership: null,
         periodOfHolding: 0,
-        presumptiveIncome:  pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
-        receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverAnyOthMode') ? Number(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverAnyOthMode) : 0,
+        presumptiveIncome:  pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
+        receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverAnyOthMode') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverAnyOthMode) : 0,
         registrationNo: null,
         tonnageCapacity: 0
       }
@@ -1446,11 +1446,11 @@ export class TaxSummaryComponent implements OnInit {
       let grossRecipt44ADAObj = {
         businessType: null,
         incomeType: "PROFESSIONAL",
-        minimumPresumptiveIncome: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('TotPersumptiveInc44ADA') ? Number(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA) : 0,
+        minimumPresumptiveIncome: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('TotPersumptiveInc44ADA') ? this.getNumberFormat(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA) : 0,
         ownership: null,
         periodOfHolding: 0,
-        presumptiveIncome: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('TotPersumptiveInc44ADA') ? Number(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA) : 0,
-        receipts: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('GrsReceipt') ? Number(pre44ADAinfo.PersumptiveInc44ADA.GrsReceipt) : 0,
+        presumptiveIncome: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('TotPersumptiveInc44ADA') ? this.getNumberFormat(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA) : 0,
+        receipts: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('GrsReceipt') ? this.getNumberFormat(pre44ADAinfo.PersumptiveInc44ADA.GrsReceipt) : 0,
         registrationNo: null,
         tonnageCapacity: 0
       }
@@ -1467,34 +1467,34 @@ export class TaxSummaryComponent implements OnInit {
     let financialInfo = itrData.ScheduleBP.FinanclPartclrOfBusiness;
     console.log('financialInfo: -> ', financialInfo)
 
-    itr4Summary.assesse.business.financialParticulars.membersOwnCapital = Number(financialInfo.PartnerMemberOwnCapital);
-    itr4Summary.assesse.business.financialParticulars.securedLoans = Number(financialInfo.SecuredLoans);
-    itr4Summary.assesse.business.financialParticulars.unSecuredLoans = Number(financialInfo.UnSecuredLoans);
-    itr4Summary.assesse.business.financialParticulars.advances = Number(financialInfo.Advances);
-    itr4Summary.assesse.business.financialParticulars.sundryCreditorsAmount = Number(financialInfo.SundryCreditors);
-    itr4Summary.assesse.business.financialParticulars.otherLiabilities = Number(financialInfo.OthrCurrLiab);
+    itr4Summary.assesse.business.financialParticulars.membersOwnCapital = this.getNumberFormat(financialInfo.PartnerMemberOwnCapital);
+    itr4Summary.assesse.business.financialParticulars.securedLoans = this.getNumberFormat(financialInfo.SecuredLoans);
+    itr4Summary.assesse.business.financialParticulars.unSecuredLoans = this.getNumberFormat(financialInfo.UnSecuredLoans);
+    itr4Summary.assesse.business.financialParticulars.advances = this.getNumberFormat(financialInfo.Advances);
+    itr4Summary.assesse.business.financialParticulars.sundryCreditorsAmount = this.getNumberFormat(financialInfo.SundryCreditors);
+    itr4Summary.assesse.business.financialParticulars.otherLiabilities = this.getNumberFormat(financialInfo.OthrCurrLiab);
     let liabilityTotal = itr4Summary.assesse.business.financialParticulars.membersOwnCapital + itr4Summary.assesse.business.financialParticulars.securedLoans +
       itr4Summary.assesse.business.financialParticulars.unSecuredLoans + itr4Summary.assesse.business.financialParticulars.advances +
       itr4Summary.assesse.business.financialParticulars.sundryCreditorsAmount + itr4Summary.assesse.business.financialParticulars.otherLiabilities;
 
     // itr4Summary.assesse.business.financialParticulars.totalCapitalLiabilities = liabilityTotal;
-    itr4Summary.assesse.business.financialParticulars.totalCapitalLiabilities = Number(financialInfo.TotCapLiabilities);;
+    itr4Summary.assesse.business.financialParticulars.totalCapitalLiabilities = this.getNumberFormat(financialInfo.TotCapLiabilities);;
 
     //Assets
-    itr4Summary.assesse.business.financialParticulars.fixedAssets = Number(financialInfo.FixedAssets);
-    itr4Summary.assesse.business.financialParticulars.inventories = Number(financialInfo.Inventories);
-    itr4Summary.assesse.business.financialParticulars.sundryDebtorsAmount = Number(financialInfo.SundryDebtors);
-    itr4Summary.assesse.business.financialParticulars.balanceWithBank = Number(financialInfo.BalWithBanks);
-    itr4Summary.assesse.business.financialParticulars.cashInHand = Number(financialInfo.CashInHand);
-    itr4Summary.assesse.business.financialParticulars.loanAndAdvances = Number(financialInfo.LoansAndAdvances);
-    itr4Summary.assesse.business.financialParticulars.otherAssets = Number(financialInfo.OtherAssets);
+    itr4Summary.assesse.business.financialParticulars.fixedAssets = this.getNumberFormat(financialInfo.FixedAssets);
+    itr4Summary.assesse.business.financialParticulars.inventories = this.getNumberFormat(financialInfo.Inventories);
+    itr4Summary.assesse.business.financialParticulars.sundryDebtorsAmount = this.getNumberFormat(financialInfo.SundryDebtors);
+    itr4Summary.assesse.business.financialParticulars.balanceWithBank = this.getNumberFormat(financialInfo.BalWithBanks);
+    itr4Summary.assesse.business.financialParticulars.cashInHand = this.getNumberFormat(financialInfo.CashInHand);
+    itr4Summary.assesse.business.financialParticulars.loanAndAdvances = this.getNumberFormat(financialInfo.LoansAndAdvances);
+    itr4Summary.assesse.business.financialParticulars.otherAssets = this.getNumberFormat(financialInfo.OtherAssets);
     let assetsTotal = itr4Summary.assesse.business.financialParticulars.fixedAssets + itr4Summary.assesse.business.financialParticulars.inventories +
       itr4Summary.assesse.business.financialParticulars.sundryDebtorsAmount + itr4Summary.assesse.business.financialParticulars.balanceWithBank +
       itr4Summary.assesse.business.financialParticulars.cashInHand + itr4Summary.assesse.business.financialParticulars.loanAndAdvances +
       itr4Summary.assesse.business.financialParticulars.otherAssets;
 
     // itr4Summary.assesse.business.financialParticulars.totalAssets = assetsTotal;
-    itr4Summary.assesse.business.financialParticulars.totalAssets = Number(financialInfo.TotalAssets);
+    itr4Summary.assesse.business.financialParticulars.totalAssets = this.getNumberFormat(financialInfo.TotalAssets);
 
     this.updatBussinessInfo = itr4Summary;
   }
@@ -1568,8 +1568,8 @@ export class TaxSummaryComponent implements OnInit {
             let recivedInCash = businessIncome[0].incomes.filter(item => item.incomeType === "CASH");
 
             this.businessObject.tradeName44AD = businessIncome[0].tradeName;
-            this.businessObject.received44ADtaotal = Number(recivedInBank[0].receipt) + Number(recivedInCash[0].receipts);
-            this.businessObject.presumptive44ADtotal = Number(recivedInBank[0].presumptiveIncome) + Number(recivedInCash[0].presumptiveIncome);
+            this.businessObject.received44ADtaotal = this.getNumberFormat(recivedInBank[0].receipt) + this.getNumberFormat(recivedInCash[0].receipts);
+            this.businessObject.presumptive44ADtotal = this.getNumberFormat(recivedInBank[0].presumptiveIncome) + this.getNumberFormat(recivedInCash[0].presumptiveIncome);
           }
 
           var presumptiveIncome = summary.assesse.business.presumptiveIncomes.filter(item => item.businessType === "PROFESSIONAL");
