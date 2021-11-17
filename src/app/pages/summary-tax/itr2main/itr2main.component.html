@@ -84,18 +84,36 @@
     
                                     </div>
     
-                                    <div class="card__col-lg-3"
-                                        *ngIf="this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0"> <!-- formGroupName="taxSummary"-->
-                                        <label>Tax Payable/ Refund</label>
-                                        <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxpayable'].value"
-                                            disabled class="disableInput">
+                                    <div *ngIf="!newTaxRegime">
+                                        <div class="card__col-lg-3"
+                                            *ngIf="this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0"> <!-- formGroupName="taxSummary"-->
+                                            <label>Tax Payable</label>
+                                            <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxpayable'].value"
+                                                disabled class="disableInput">
+                                        </div>
+                                        <div class="card__col-lg-3" 
+                                            *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0 || this.computationOfIncomeForm.controls['taxRefund'].value > 0"> <!--formGroupName="taxSummary"-->
+                                            <label>Tax le/ Refund</label>
+                                            <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxRefund'].value"
+                                                disabled class="disableInput">
+                                        </div>
                                     </div>
-                                    <div class="card__col-lg-3" 
-                                        *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0"> <!--formGroupName="taxSummary"-->
-                                        <label>Tax Payable/ Refund</label>
-                                        <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxRefund'].value"
-                                            disabled class="disableInput">
+
+                                    <div *ngIf="newTaxRegime">
+                                        <div class="card__col-lg-3"
+                                            *ngIf="showTaxPaybleValue()"> 
+                                            <label>Tax Payabled</label>
+                                            <input type="number" placeholder="Tax Payable/ Refund" [value]="this.newRegimeTaxSummary.taxpayable"
+                                                disabled class="disableInput">
+                                        </div>
+                                        <div class="card__col-lg-3" 
+                                            *ngIf="showTaxRefundValue()">
+                                            <label>Tax Refund</label>
+                                            <input type="number" placeholder="Tax Payable/ Refund" [value]="this.newRegimeTaxSummary.taxRefund"
+                                                disabled class="disableInput">
+                                        </div>
                                     </div>
+                                    
                                 </div>
                             </div><br><br>
     
@@ -1252,7 +1270,7 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>  
-                                <div class="card__col-lg-3" *ngIf="newItrSumChanges && this.deductionAndRemainForm.controls.medicalExpendature.value === 'above60'">
+                                <div class="card__col-lg-3" *ngIf="newItrSumChanges && this.deductionAndRemainForm.controls.paraentAge.value === 'above60'">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Medical Expendature</mat-label>
                                         <input matInput placeholder="Medical Expendature"
@@ -1810,28 +1828,28 @@
                                     <td>Short Term Capital Gain @ slab rate (Refer Annexure)</td>
                                     <td><input type="number" [(ngModel)]="capital_Gain.shortTermCapitalGain" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td>
                                     <td></td>
-                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.shortTermCapitalGain" [ngModelOptions]="{standalone: true}"></td> 
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.shortTermCapitalGainTotal" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Short Term Capital Gain @ 15% (Refer Annexure)</td>
                                     <td><input type="number" [(ngModel)]="capital_Gain.shortTermCapitalGain15" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td> 
                                     <td></td>
-                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.shortTermCapitalGain15" [ngModelOptions]="{standalone: true}"></td> 
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Long Term Capital Gain @ 10% (Refer Annexure)</td>
                                     <td><input type="number" [(ngModel)]="capital_Gain.longTermCapitalGain10" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td>  
                                     <td></td>
-                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.longTermCapitalGain10" [ngModelOptions]="{standalone: true}"></td> 
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Long Term Capital Gain @ 20% (Refer Annexure)</td>
                                     <td><input type="number" [(ngModel)]="capital_Gain.longTermCapitalGain20" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td>
                                     <td><input type="number" formControlName="capitalGain"  disabled maxlength="8"></td> <!--[value]="incomeFromCapGain"-->
-                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.longTermCapitalGain20" [ngModelOptions]="{standalone: true}"></td> 
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td>4</td>
@@ -2208,18 +2226,18 @@
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.advanceSelfAssTax" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
     
-                                <tr *ngIf="this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0"> 
+                                <tr *ngIf="showTaxPaybleValue()"> 
                                     <td>{{itrType.itrThree ? 28 : 27}}</td>
-                                    <td><b>Net Tax Payable/ (Refund)</b></td>
+                                    <td><b>Net Tax Payable</b></td>
                                     <td></td>
                                     <td> 
                                         <b><input type="number" formControlName="taxpayable"  disabled maxlength="8"></b> 
                                     </td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.taxpayable" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
-                                <tr *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0">
+                                <tr *ngIf="showTaxRefundValue()">
                                     <td>{{itrType.itrThree ? 28 : 27}}</td>
-                                    <td><b>Net Tax Payable/ (Refund)</b></td>
+                                    <td><b>Tax Refund</b></td>
                                     <td></td>
                                     <td> 
                                         <b><input type="number" formControlName="taxRefund" disabled maxlength="8"></b> 
