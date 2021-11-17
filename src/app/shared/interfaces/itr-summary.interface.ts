@@ -77,6 +77,7 @@ export interface Assesse{
     isRevised: null,
     isLate: null,
     employerCategory: null,
+    regime: string,
     dateOfNotice: null,
     noticeIdentificationNo: null,
     isDefective: null,
