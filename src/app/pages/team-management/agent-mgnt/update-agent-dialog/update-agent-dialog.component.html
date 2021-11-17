@@ -1,102 +1,115 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="row">
-    <h1 mat-dialog-title>{{data.title}}
+    <h1 mat-dialog-title>{{data.title}} <span *ngIf="this.data.code === 'SUPER_LEAD'">-
+            {{this.data.agentInfo.name}}</span>
 
-    <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1"><i class="fa fa-close"></i></button>
+        <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1"><i
+                class="fa fa-close"></i></button>
     </h1>
-    
+
 </div>
 
-
-
- <form [formGroup]="agentForm">
-   <mat-dialog-content >
-    <div class=" card__col-xs-12 card__col-sm-4" >
+<div class="card__row" *ngIf="this.data.code === 'SUPER_LEAD'">
+    <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field appearance="outline">
-            <mat-label>Agen name: </mat-label>
-            <input matInput type="text" placeholder="Enter name" formControlName="name" maxlength="35"
+            <mat-label>Select Super Lead</mat-label>
+            <mat-select matInput placeholder="Select Super Lead" [(ngModel)]="superLeadName" autocomplete="off"
                 required>
-            <mat-error *ngIf="agentForm['controls'].name.hasError('required')">
-                Enter Agent name </mat-error>
-        </mat-form-field>
-    </div>
-    <div class=" card__col-xs-12 card__col-sm-4" >
-        <mat-form-field appearance="outline">
-            <mat-label>Email: </mat-label>
-            <input matInput type="text" placeholder="Enter email" formControlName="email" maxlength="45"
-                required>
-             <mat-error *ngIf="agentForm['controls'].email.hasError('required')">
-                Enter email address</mat-error>
-            <mat-error *ngIf="agentForm['controls'].email.hasError('pattern')">
-                    Enter valid email address</mat-error>
-        </mat-form-field>
-    </div>
-    <div class=" card__col-xs-12 card__col-sm-4" >
-        <mat-form-field appearance="outline">
-            <mat-label>Mobile Number: </mat-label>
-            <input matInput  placeholder="Enter Mobile Number" formControlName="mobileNumber" maxlength="35"
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  maxlength="10"
-            required>
-            <mat-error *ngIf="agentForm['controls'].mobileNumber.hasError('required')">
-             Enter mobile number</mat-error>
-            <mat-error *ngIf="agentForm['controls'].mobileNumber.hasError('pattern')">
-             Enter valid mobile number</mat-error>
-        </mat-form-field>
-    </div>
-    <div class=" card__col-xs-12 card__col-sm-4" >
-        <mat-form-field appearance="outline">
-            <mat-label>Display Name: </mat-label>
-            <input matInput type="text" placeholder="Enter Display name" formControlName="displayName" maxlength="35"
-                required>
-            <mat-error *ngIf="agentForm['controls'].displayName.hasError('required')">
-                Enter display name</mat-error>
-        </mat-form-field>
-    </div>
-    <div class=" card__col-xs-12 card__col-sm-4" >
-        <mat-form-field appearance="outline">
-            <mat-label>Bot Id: </mat-label>
-            <input matInput type="text" placeholder="Enter Bot Id" formControlName="botId" maxlength="35">
-            <!-- <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].name.hasError('required')">
-                Bank name is required</mat-error> -->
-        </mat-form-field>
-    </div>
-    <div class=" card__col-xs-12 card__col-sm-4" >
-        <mat-form-field appearance="outline">
-            <mat-label>Bot Name: </mat-label>
-            <input matInput type="text" placeholder="Enter Bot name" formControlName="botName" maxlength="35">
-            <!-- <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].name.hasError('required')">
-                Bank name is required</mat-error> -->
-        </mat-form-field>
-    </div>
-    <div class=" card__col-xs-12 card__col-sm-4" >
-        <mat-form-field appearance="outline">
-            <mat-label>Image Url: </mat-label>
-            <input matInput type="text" placeholder="Enter Image Url" formControlName="imageUrl" maxlength="60">
-            <!-- <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].name.hasError('required')">
-                Bank name is required</mat-error> -->
-        </mat-form-field>
-    </div>
-    <div class=" card__col-xs-12 card__col-sm-4" >
-        <mat-form-field appearance="outline">
-            <mat-label>Service Type</mat-label>
-             <mat-select matInput formControlName="serviceType" placeholder="Select Service Type"
-                autocomplete="off" required>
-                  <mat-option *ngFor="let item of Services" [value]="item.value">
-                     {{ item.label }}
-                  </mat-option>
+                <mat-option *ngFor="let item of superLeads" [value]="item.name">
+                    {{ item.name }}
+                </mat-option>
             </mat-select>
-            <mat-error *ngIf="agentForm['controls'].serviceType.hasError('required')">
-                Select service type</mat-error>
         </mat-form-field>
     </div>
+    <div class=" card__col-xs-12 card__col-sm-6">
+        <button mat-raised-button color="primary" class="pull-right" (click)="updateSuperLead()">Update</button>
+    </div>
+</div>
 
-   </mat-dialog-content>
+<form [formGroup]="agentForm" *ngIf="this.data.code !== 'SUPER_LEAD'">
+    <mat-dialog-content>
+        <div class=" card__col-xs-12 card__col-sm-4">
+            <mat-form-field appearance="outline">
+                <mat-label>Agent name: </mat-label>
+                <input matInput type="text" placeholder="Enter name" formControlName="name" maxlength="35" required>
+                <mat-error *ngIf="agentForm['controls'].name.hasError('required')">
+                    Enter Agent name </mat-error>
+            </mat-form-field>
+        </div>
+        <div class=" card__col-xs-12 card__col-sm-4">
+            <mat-form-field appearance="outline">
+                <mat-label>Email: </mat-label>
+                <input matInput type="text" placeholder="Enter email" formControlName="email" maxlength="45" required>
+                <mat-error *ngIf="agentForm['controls'].email.hasError('required')">
+                    Enter email address</mat-error>
+                <mat-error *ngIf="agentForm['controls'].email.hasError('pattern')">
+                    Enter valid email address</mat-error>
+            </mat-form-field>
+        </div>
+        <div class=" card__col-xs-12 card__col-sm-4">
+            <mat-form-field appearance="outline">
+                <mat-label>Mobile Number: </mat-label>
+                <input matInput placeholder="Enter Mobile Number" formControlName="mobileNumber" maxlength="35"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="10" required>
+                <mat-error *ngIf="agentForm['controls'].mobileNumber.hasError('required')">
+                    Enter mobile number</mat-error>
+                <mat-error *ngIf="agentForm['controls'].mobileNumber.hasError('pattern')">
+                    Enter valid mobile number</mat-error>
+            </mat-form-field>
+        </div>
+        <div class=" card__col-xs-12 card__col-sm-4">
+            <mat-form-field appearance="outline">
+                <mat-label>Display Name: </mat-label>
+                <input matInput type="text" placeholder="Enter Display name" formControlName="displayName"
+                    maxlength="35" required>
+                <mat-error *ngIf="agentForm['controls'].displayName.hasError('required')">
+                    Enter display name</mat-error>
+            </mat-form-field>
+        </div>
+        <div class=" card__col-xs-12 card__col-sm-4">
+            <mat-form-field appearance="outline">
+                <mat-label>Bot Id: </mat-label>
+                <input matInput type="text" placeholder="Enter Bot Id" formControlName="botId" maxlength="35">
+                <!-- <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].name.hasError('required')">
+                Bank name is required</mat-error> -->
+            </mat-form-field>
+        </div>
+        <div class=" card__col-xs-12 card__col-sm-4">
+            <mat-form-field appearance="outline">
+                <mat-label>Bot Name: </mat-label>
+                <input matInput type="text" placeholder="Enter Bot name" formControlName="botName" maxlength="35">
+                <!-- <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].name.hasError('required')">
+                Bank name is required</mat-error> -->
+            </mat-form-field>
+        </div>
+        <div class=" card__col-xs-12 card__col-sm-4">
+            <mat-form-field appearance="outline">
+                <mat-label>Image Url: </mat-label>
+                <input matInput type="text" placeholder="Enter Image Url" formControlName="imageUrl" maxlength="60">
+                <!-- <mat-error *ngIf="summaryDialogForm['controls'].bankDetails['controls'].name.hasError('required')">
+                Bank name is required</mat-error> -->
+            </mat-form-field>
+        </div>
+        <div class=" card__col-xs-12 card__col-sm-4">
+            <mat-form-field appearance="outline">
+                <mat-label>Service Type</mat-label>
+                <mat-select matInput formControlName="serviceType" placeholder="Select Service Type" autocomplete="off"
+                    required>
+                    <mat-option *ngFor="let item of Services" [value]="item.value">
+                        {{ item.label }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="agentForm['controls'].serviceType.hasError('required')">
+                    Select service type</mat-error>
+            </mat-form-field>
+        </div>
+
+    </mat-dialog-content>
 
     <div class="btns">
-       <button mat-raised-button color="primary" (click)="saveAgentInfo(data.title)">{{data.title}}</button>&nbsp;
-       <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
+        <button mat-raised-button color="primary" (click)="saveAgentInfo(data.title)">{{data.title}}</button>&nbsp;
+        <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
     </div>
-    
- </form>
 
+</form>

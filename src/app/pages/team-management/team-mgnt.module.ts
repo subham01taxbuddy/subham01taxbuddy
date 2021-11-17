@@ -12,9 +12,11 @@ import { SmeManagementComponent } from './sme-management/sme-management.componen
 import { AddRemoveAgentDialogComponent } from './caller-assign/add-remove-agent-dialog/add-remove-agent-dialog.component';
 import { AgentMgntComponent } from './agent-mgnt/agent-mgnt.component';
 import { UpdateAgentDialogComponent } from './agent-mgnt/update-agent-dialog/update-agent-dialog.component';
+import { SuperLeadDialogComponent } from "./agent-mgnt/super-lead-dialog/super-lead-dialog.component";
 
 @NgModule({
-    declarations: [TeamManagementComponent, AddCallerComponent, CallerAssignComponent, SmeManagementComponent, AddRemoveAgentDialogComponent, AgentMgntComponent, UpdateAgentDialogComponent],
+    declarations: [TeamManagementComponent, AddCallerComponent, CallerAssignComponent, SmeManagementComponent, AddRemoveAgentDialogComponent, AgentMgntComponent, UpdateAgentDialogComponent,
+        SuperLeadDialogComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -24,7 +26,7 @@ import { UpdateAgentDialogComponent } from './agent-mgnt/update-agent-dialog/upd
         TeamManagementRouingModule,
         NgxLoadingModule.forRoot({}),
     ],
-    entryComponents: [AddRemoveAgentDialogComponent, UpdateAgentDialogComponent]
+    entryComponents: [AddRemoveAgentDialogComponent, UpdateAgentDialogComponent, SuperLeadDialogComponent]
 })
 
-export class TeamManagementModule {}
+export class TeamManagementModule { }
