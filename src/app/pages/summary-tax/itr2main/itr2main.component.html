@@ -78,9 +78,16 @@
                                     </div>
                                     <div class="card__col-lg-3" > <!--formGroupName="taxSummary"-->
                                         <label>Taxable Income</label>
-                                        <input type="number" placeholder="Taxable Income"
+                                        <div *ngIf="!newTaxRegime">
+                                            <input type="number" placeholder="Taxable Income"
                                            required disabled [value]="this.computationOfIncomeForm['controls'].totalIncomeAfterDeductionIncludeSR.value"
                                             class="disableInput">  <!-- formControlName="totalIncomeAfterDeductionIncludeSR" -->
+                                        </div>
+                                        <div *ngIf="newTaxRegime">
+                                            <input type="number" placeholder="Taxable Income"
+                                                 required disabled [value]="this.newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR"
+                                            class="disableInput">
+                                        </div>
     
                                     </div>
     
@@ -93,7 +100,7 @@
                                         </div>
                                         <div class="card__col-lg-3" 
                                             *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0 || this.computationOfIncomeForm.controls['taxRefund'].value > 0"> <!--formGroupName="taxSummary"-->
-                                            <label>Tax le/ Refund</label>
+                                            <label>Tax Refund</label>
                                             <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxRefund'].value"
                                                 disabled class="disableInput">
                                         </div>
