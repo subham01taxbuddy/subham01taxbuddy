@@ -225,6 +225,7 @@ export class Itr2mainComponent implements OnInit {
   };
 
   isJsonParse: boolean = false;
+  newTaxRegime: boolean;
 
   constructor(public utilsService: UtilsService, private fb: FormBuilder, private userService: UserMsService, private dialog: MatDialog, private utilService: UtilsService,
     private _toastMessageService: ToastMessageService) {
@@ -2037,7 +2038,8 @@ export class Itr2mainComponent implements OnInit {
     this.personalInfoForm.controls['panNumber'].setValue(personalInfo.PersonalInfo.PAN);
 
     
-    this.personalInfoForm.controls['regime'].setValue(personalInfo.FilingStatus.NewTaxRegime)
+    this.personalInfoForm.controls['regime'].setValue(personalInfo.FilingStatus.NewTaxRegime);
+    this.newTaxRegime = personalInfo.FilingStatus.NewTaxRegime === "Y" ? true : false;
 
     let address = personalInfo.PersonalInfo.Address;
     this.personalInfoForm.controls['city'].setValue(address.CityOrTownOrDistrict);
@@ -2914,13 +2916,29 @@ export class Itr2mainComponent implements OnInit {
 
 
         //Lossess set of during the year
-        if (lossCarriedForwordInfo.hasOwnProperty('AdjTotBFLossInBFLA')) {
-          this.lossesSetOfDuringYrar.housePropertyLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalHPPTILossCF;
-          this.lossesSetOfDuringYrar.shortTermCapitalGainLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalSTCGPTILossCF;
-          this.lossesSetOfDuringYrar.longTermCapitalGainLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalLTCGPTILossCF;
-          this.lossesSetOfDuringYrar.businessProfessionalLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.BusLossOthThanSpecLossCF;
-          this.lossesSetOfDuringYrar.speculativeBusinessLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.LossFrmSpecBusCF;
+        console.log('ScheduleCYLA: ',itrData.ScheduleCYLA);
+        if(itrData.hasOwnProperty('ScheduleCYLA')){
+          var lossesSetDuringTheYear = itrData.ScheduleCYLA;
+          this.lossesSetOfDuringYrar.housePropertyLossesSetOffDuringTheYear = lossesSetDuringTheYear.hasOwnProperty('Salary') ? this.getNumberFormat(lossesSetDuringTheYear.Salary.IncCYLA.HPlossCurYrSetoff) : 0;
+
+          let STCL = (lossesSetDuringTheYear.hasOwnProperty('STCG15Per') ? this.getNumberFormat(lossesSetDuringTheYear.STCG15Per.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0) + (lossesSetDuringTheYear.hasOwnProperty('STCG30Per') ? this.getNumberFormat(lossesSetDuringTheYear.STCG30Per.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0) + 
+          (lossesSetDuringTheYear.hasOwnProperty('STCGAppRate') ? this.getNumberFormat(lossesSetDuringTheYear.STCGAppRate.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0) + (lossesSetDuringTheYear.hasOwnProperty('STCGDTAARate') ? this.getNumberFormat(lossesSetDuringTheYear.STCGDTAARate.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0);
+          this.lossesSetOfDuringYrar.shortTermCapitalGainLossesSetOffDuringTheYear = STCL;
+
+          let LTCL = (lossesSetDuringTheYear.hasOwnProperty('LTCG10Per') ? this.getNumberFormat(lossesSetDuringTheYear.LTCG10Per.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0) + (lossesSetDuringTheYear.hasOwnProperty('LTCG20Per') ? this.getNumberFormat(lossesSetDuringTheYear.LTCG20Per.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0) + 
+          (lossesSetDuringTheYear.hasOwnProperty('LTCGDTAARate') ? this.getNumberFormat(lossesSetDuringTheYear.LTCGDTAARate.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0);
+          this.lossesSetOfDuringYrar.longTermCapitalGainLossesSetOffDuringTheYear = LTCL;
+
+          this.lossesSetOfDuringYrar.businessProfessionalLossesSetOffDuringTheYear = lossesSetDuringTheYear.hasOwnProperty('TotalLossSetOff') ? this.getNumberFormat(lossesSetDuringTheYear.TotalLossSetOff.TotBusLossSetoff) : 0;
+          this.lossesSetOfDuringYrar.speculativeBusinessLossesSetOffDuringTheYear = 0;
         }
+        // if (lossCarriedForwordInfo.hasOwnProperty('AdjTotBFLossInBFLA')) {
+        //   this.lossesSetOfDuringYrar.housePropertyLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalHPPTILossCF;
+        //   this.lossesSetOfDuringYrar.shortTermCapitalGainLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalSTCGPTILossCF;
+        //   this.lossesSetOfDuringYrar.longTermCapitalGainLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalLTCGPTILossCF;
+        //   this.lossesSetOfDuringYrar.businessProfessionalLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.BusLossOthThanSpecLossCF;
+        //   this.lossesSetOfDuringYrar.speculativeBusinessLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.LossFrmSpecBusCF;
+        // }
 
         //Carried forward to Next year
         if (lossCarriedForwordInfo.hasOwnProperty('TotalLossCFSummary')) {
@@ -3044,13 +3062,30 @@ export class Itr2mainComponent implements OnInit {
 
 
         //Lossess set of during the year
-        if (lossCarriedForwordInfo.hasOwnProperty('AdjTotBFLossInBFLA')) {
-          this.lossesSetOfDuringYrar.housePropertyLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalHPPTILossCF;
-          this.lossesSetOfDuringYrar.shortTermCapitalGainLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalSTCGPTILossCF;
-          this.lossesSetOfDuringYrar.longTermCapitalGainLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalLTCGPTILossCF;
-          this.lossesSetOfDuringYrar.businessProfessionalLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.BusLossOthThanSpecLossCF;
-          this.lossesSetOfDuringYrar.speculativeBusinessLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.LossFrmSpecBusCF;
+        console.log('ScheduleCYLA: ',itrData.ScheduleCYLA);
+        if(itrData.hasOwnProperty('ScheduleCYLA')){
+          var lossesSetDuringTheYear = itrData.ScheduleCYLA;
+          this.lossesSetOfDuringYrar.housePropertyLossesSetOffDuringTheYear = lossesSetDuringTheYear.hasOwnProperty('Salary') ? this.getNumberFormat(lossesSetDuringTheYear.Salary.IncCYLA.HPlossCurYrSetoff) : 0;
+
+          let STCL = (lossesSetDuringTheYear.hasOwnProperty('STCG15Per') ? this.getNumberFormat(lossesSetDuringTheYear.STCG15Per.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0) + (lossesSetDuringTheYear.hasOwnProperty('STCG30Per') ? this.getNumberFormat(lossesSetDuringTheYear.STCG30Per.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0) + 
+          (lossesSetDuringTheYear.hasOwnProperty('STCGAppRate') ? this.getNumberFormat(lossesSetDuringTheYear.STCGAppRate.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0) + (lossesSetDuringTheYear.hasOwnProperty('STCGDTAARate') ? this.getNumberFormat(lossesSetDuringTheYear.STCGDTAARate.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0);
+          this.lossesSetOfDuringYrar.shortTermCapitalGainLossesSetOffDuringTheYear = STCL;
+
+          let LTCL = (lossesSetDuringTheYear.hasOwnProperty('LTCG10Per') ? this.getNumberFormat(lossesSetDuringTheYear.LTCG10Per.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0) + (lossesSetDuringTheYear.hasOwnProperty('LTCG20Per') ? this.getNumberFormat(lossesSetDuringTheYear.LTCG20Per.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0) + 
+          (lossesSetDuringTheYear.hasOwnProperty('LTCGDTAARate') ? this.getNumberFormat(lossesSetDuringTheYear.LTCGDTAARate.IncCYLA.OthSrcLossNoRaceHorseSetoff) : 0);
+          this.lossesSetOfDuringYrar.longTermCapitalGainLossesSetOffDuringTheYear = LTCL;
+
+          this.lossesSetOfDuringYrar.businessProfessionalLossesSetOffDuringTheYear = lossesSetDuringTheYear.hasOwnProperty('TotalLossSetOff') ? this.getNumberFormat(lossesSetDuringTheYear.TotalLossSetOff.TotBusLossSetoff) : 0;
+          this.lossesSetOfDuringYrar.speculativeBusinessLossesSetOffDuringTheYear = 0;
         }
+        
+        // if (lossCarriedForwordInfo.hasOwnProperty('AdjTotBFLossInBFLA')) {
+        //   this.lossesSetOfDuringYrar.housePropertyLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalHPPTILossCF;
+        //   this.lossesSetOfDuringYrar.shortTermCapitalGainLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalSTCGPTILossCF;
+        //   this.lossesSetOfDuringYrar.longTermCapitalGainLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.TotalLTCGPTILossCF;
+        //   this.lossesSetOfDuringYrar.businessProfessionalLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.BusLossOthThanSpecLossCF;
+        //   this.lossesSetOfDuringYrar.speculativeBusinessLossesSetOffDuringTheYear = lossCarriedForwordInfo.AdjTotBFLossInBFLA.LossSummaryDetail.LossFrmSpecBusCF;
+        // }
 
         //Carried forward to Next year
         if (lossCarriedForwordInfo.hasOwnProperty('TotalLossCFSummary')) {
@@ -3503,14 +3538,15 @@ export class Itr2mainComponent implements OnInit {
       // this.taxesPaid.advanceSelfAssTax = advanceTaxTotal;
 
       this.computationOfIncomeForm.controls['totalTaxesPaid'].setValue(computaionIncomePartTii.TaxPaid.TaxesPaid.TotalTaxesPaid)
-
-      // let calTaxbleVal = Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:AdvanceTax']['_text']) - Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:SelfAssessmentTax']['_text']);
-      let calTaxbleVal = Number(computaionIncomePartTii.ComputationOfTaxLiability.AggregateTaxInterestLiability) - Number(computaionIncomePartTii.TaxPaid.TaxesPaid.TotalTaxesPaid);
-      if (calTaxbleVal > 0) {
-        this.computationOfIncomeForm.controls['taxpayable'].setValue(calTaxbleVal);
+  
+      // let calTaxbleVal = Number(computaionIncomePartTii.ComputationOfTaxLiability.AggregateTaxInterestLiability) - Number(computaionIncomePartTii.TaxPaid.TaxesPaid.TotalTaxesPaid);
+      if (this.getNumberFormat(computaionIncomePartTii.TaxPaid.BalTaxPayable) > 0) {
+        let payble = this.getNumberFormat(computaionIncomePartTii.TaxPaid.BalTaxPayable);
+        this.computationOfIncomeForm.controls['taxpayable'].setValue(payble);
         this.computationOfIncomeForm.controls['taxRefund'].setValue(0);
       } else {
-        this.computationOfIncomeForm.controls['taxRefund'].setValue(calTaxbleVal);
+        let refund = this.getNumberFormat(computaionIncomePartTii.Refund.RefundDue);
+        this.computationOfIncomeForm.controls['taxRefund'].setValue(refund);
         this.computationOfIncomeForm.controls['taxpayable'].setValue(0);
       }
 
@@ -3534,7 +3570,7 @@ export class Itr2mainComponent implements OnInit {
       // this.capital_Gain.longTermCapitalGain10 = computaionIncomePartTi['ITRForm:CapGain']['ITRForm:LongTerm']['ITRForm:LongTerm10Per']['_text'];
       // this.capital_Gain.longTermCapitalGain20 = computaionIncomePartTi['ITRForm:CapGain']['ITRForm:LongTerm']['ITRForm:LongTerm20Per']['_text'];
       // this.computationOfIncomeForm.controls['capitalGain'].setValue(computaionIncomePartTi['ITRForm:CapGain']['ITRForm:TotalCapGains']['_text'])
-
+      debugger
       this.newRegimeTaxSummary.otherIncome = this.otherSourceForm.controls.total.value;
       this.newRegimeTaxSummary.totalHeadWiseIncome = computaionIncomePartTi.TotalTI;
 
@@ -3592,15 +3628,20 @@ export class Itr2mainComponent implements OnInit {
 
       this.newRegimeTaxSummary['totalTaxesPaid'] = computaionIncomePartTii.TaxPaid.TaxesPaid.TotalTaxesPaid;
 
-      // let calTaxbleVal = Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:AdvanceTax']['_text']) - Number(computaionIncomePartTii['ITRForm:TaxPaid']['ITRForm:TaxesPaid']['ITRForm:SelfAssessmentTax']['_text'];
-      let calTaxbleVal = Number(computaionIncomePartTii.ComputationOfTaxLiability.AggregateTaxInterestLiability) - Number(computaionIncomePartTii.TaxPaid.TaxesPaid.TotalTaxesPaid);
-      if (calTaxbleVal > 0) {
-        this.newRegimeTaxSummary['taxpayable'] = calTaxbleVal;
+      debugger
+      
+     // let calTaxbleVal = Number(computaionIncomePartTii.ComputationOfTaxLiability.AggregateTaxInterestLiability) - Number(computaionIncomePartTii.TaxPaid.TaxesPaid.TotalTaxesPaid);
+      if (this.getNumberFormat(computaionIncomePartTii.TaxPaid.BalTaxPayable) > 0) {
+        let payble = this.getNumberFormat(computaionIncomePartTii.TaxPaid.BalTaxPayable);
+        this.newRegimeTaxSummary['taxpayable'] = payble;
         this.newRegimeTaxSummary['taxRefund'] = 0;
       } else {
-        this.newRegimeTaxSummary['taxRefund'] = calTaxbleVal;
+        let refund = this.getNumberFormat(computaionIncomePartTii.Refund.RefundDue);
+        this.newRegimeTaxSummary['taxRefund'] = refund;
         this.newRegimeTaxSummary['taxpayable'] = 0;
       }
+
+      console.log('taxpayable: ',this.computationOfIncomeForm.controls['taxpayable'].value,' taxRefund: ', this.computationOfIncomeForm.controls['taxRefund'].value)
 
     }
 
@@ -3736,7 +3777,7 @@ export class Itr2mainComponent implements OnInit {
     let financialInfo = itr3Info.PARTA_BS;
     console.log('financialInfo: -> ', financialInfo)
 
-    itr3Summary.assesse.business.financialParticulars.membersOwnCapital = this.getNumberFormat(financialInfo.FundSrc.PropFund.PropCap);
+    itr3Summary.assesse.business.financialParticulars.membersOwnCapital = this.getNumberFormat(financialInfo.FundSrc.PropFund.TotPropFund);
     itr3Summary.assesse.business.financialParticulars.securedLoans = this.getNumberFormat(financialInfo.FundSrc.LoanFunds.SecrLoan.TotSecrLoan);
     itr3Summary.assesse.business.financialParticulars.unSecuredLoans = this.getNumberFormat(financialInfo.FundSrc.LoanFunds.UnsecrLoan.TotUnSecrLoan);
     itr3Summary.assesse.business.financialParticulars.advances = 0;
@@ -4383,12 +4424,20 @@ export class Itr2mainComponent implements OnInit {
     this.newRegimeTaxSummary.tcs = 0;
     this.newRegimeTaxSummary.advanceSelfAssTax = 0;
 
-    this.capital_Gain_ForNewRegime.shortTermCapitalGain = 0;
-    this.capital_Gain_ForNewRegime.shortTermCapitalGain15 = 0;
-    this.capital_Gain_ForNewRegime.longTermCapitalGain10 = 0;
-    this.capital_Gain_ForNewRegime.longTermCapitalGain20 = 0;
+    this.newRegimeTaxSummary.shortTermCapitalGainTotal = 0;
+    this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal = 0;
+    this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal = 0;
+    this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal = 0;
+    this.newRegimeTaxSummary.capitalGain = 0;
+
+    this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = 0;
+    this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = 0;
+    this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = 0;
+    this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = 0;
+    
 
     // console.log('shortTermSlabRate: ',this.shortTermSlabRate.api.getRenderedNodes())
+    debugger
     if (this.shortTermSlabRate && this.shortTermSlabRate.api && this.shortTermSlabRate.api.getRenderedNodes()) {
       for (let i = 0; i < this.shortTermSlabRate.api.getRenderedNodes().length; i++) {
          if(this.personalInfoForm.controls['regime'].value === 'N'){
@@ -4396,8 +4445,11 @@ export class Itr2mainComponent implements OnInit {
         this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = Number(this.capital_Gain.shortTermCapitalGain) > 0 ? this.capital_Gain.shortTermCapitalGain : 0;
         }
         else{
-          this.capital_Gain_ForNewRegime.shortTermCapitalGain = this.capital_Gain_ForNewRegime.shortTermCapitalGain + this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain;
-          this.newRegimeTaxSummary.shortTermCapitalGain = Number(this.capital_Gain_ForNewRegime.shortTermCapitalGain) > 0 ? this.capital_Gain_ForNewRegime.shortTermCapitalGain : 0;
+          this.capital_Gain.shortTermCapitalGain = this.capital_Gain.shortTermCapitalGain + this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain;
+          this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = Number(this.capital_Gain.shortTermCapitalGain) > 0 ? this.capital_Gain.shortTermCapitalGain : 0;
+
+          this.newRegimeTaxSummary.shortTermCapitalGainTotal = this.newRegimeTaxSummary.shortTermCapitalGainTotal + this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain;
+          this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = this.newRegimeTaxSummary.shortTermCapitalGainTotal;
         }
 
       }
@@ -4411,8 +4463,11 @@ export class Itr2mainComponent implements OnInit {
           this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = Number(this.capital_Gain.shortTermCapitalGain15) > 0 ? this.capital_Gain.shortTermCapitalGain15 : 0;
         }
         else{
-          this.capital_Gain_ForNewRegime.shortTermCapitalGain15 = this.capital_Gain_ForNewRegime.shortTermCapitalGain15 + this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain;
-          this.newRegimeTaxSummary.shortTermCapitalGain15 = Number(this.capital_Gain_ForNewRegime.shortTermCapitalGain15) > 0 ? this.capital_Gain_ForNewRegime.shortTermCapitalGain15 : 0;
+          this.capital_Gain.shortTermCapitalGain15 = this.capital_Gain.shortTermCapitalGain15 + this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain;
+          this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = Number(this.capital_Gain.shortTermCapitalGain15) > 0 ? this.capital_Gain.shortTermCapitalGain15 : 0;
+
+          this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal = this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal + this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain;
+          this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal;
         }
        
       }
@@ -4426,8 +4481,11 @@ export class Itr2mainComponent implements OnInit {
           this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = Number(this.capital_Gain.longTermCapitalGain10) > 0 ? this.capital_Gain.longTermCapitalGain10 : 0;
         }
         else{
-          this.capital_Gain_ForNewRegime.longTermCapitalGain10 = this.capital_Gain_ForNewRegime.longTermCapitalGain10 + this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain;
-          this.newRegimeTaxSummary.longTermCapitalGain10 = Number(this.capital_Gain_ForNewRegime.longTermCapitalGain10) > 0 ? this.capital_Gain_ForNewRegime.longTermCapitalGain10 : 0;
+          this.capital_Gain.longTermCapitalGain10 = this.capital_Gain.longTermCapitalGain10 + this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain;
+          this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = Number(this.capital_Gain.longTermCapitalGain10) > 0 ? this.capital_Gain.longTermCapitalGain10 : 0;
+
+          this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal + this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain;
+          this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal;
         }
       }
     }
@@ -4440,8 +4498,11 @@ export class Itr2mainComponent implements OnInit {
           this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = Number(this.capital_Gain.longTermCapitalGain20) > 0 ? this.capital_Gain.longTermCapitalGain20 : 0;
         }
         else{
-          this.capital_Gain_ForNewRegime.longTermCapitalGain20 = this.capital_Gain_ForNewRegime.longTermCapitalGain20 + this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain;
-          this.newRegimeTaxSummary.longTermCapitalGain20 = Number(this.capital_Gain_ForNewRegime.longTermCapitalGain20) > 0 ? this.capital_Gain_ForNewRegime.longTermCapitalGain20 : 0;
+          this.capital_Gain.longTermCapitalGain20 = this.capital_Gain.longTermCapitalGain20 + this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain;
+          this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = Number(this.capital_Gain.longTermCapitalGain20) > 0 ? this.capital_Gain.longTermCapitalGain20 : 0;
+
+          this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal + this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain;
+          this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal;
         }
       }
     }
@@ -4452,8 +4513,10 @@ export class Itr2mainComponent implements OnInit {
       console.log('Capital gain total part for old tax Regime: ', this.itr_2_Summary.capitalGainIncome);
     }
     else{
-      this.incomeFromCapGain = Number(this.capital_Gain_ForNewRegime.shortTermCapitalGain) + Number(this.capital_Gain_ForNewRegime.shortTermCapitalGain15) + Number(this.capital_Gain_ForNewRegime.longTermCapitalGain10) + Number(this.capital_Gain_ForNewRegime.longTermCapitalGain20);
-      // this.computationOfIncomeForm.controls['capitalGain'].setValue(this.incomeFromCapGain);
+      this.incomeFromCapGain = Number(this.capital_Gain.shortTermCapitalGain) + Number(this.capital_Gain.shortTermCapitalGain15) + Number(this.capital_Gain.longTermCapitalGain10) + Number(this.capital_Gain.longTermCapitalGain20);
+      this.computationOfIncomeForm.controls['capitalGain'].setValue(this.incomeFromCapGain);
+
+      this.incomeFromCapGain = Number(this.newRegimeTaxSummary.shortTermCapitalGainTotal) + Number(this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal) + Number(this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal) + Number(this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal);
       this.newRegimeTaxSummary.capitalGain = this.incomeFromCapGain;
       console.log('Capital gain total part for new tax Regime: ', this.newRegimeTaxSummary);
     }
@@ -6985,6 +7048,9 @@ export class Itr2mainComponent implements OnInit {
       this.itr_2_Summary.assesse.assessmentYear = this.personalInfoForm['controls'].assessmentYear.value;
       this.itr_2_Summary.assesse.ackNumber = this.personalInfoForm['controls'].ackNumber.value;
       this.itr_2_Summary.assesse.eFillingDate = this.personalInfoForm['controls'].eFillingDate.value;
+      this.itr_2_Summary.assesse.regime = this.personalInfoForm.controls['regime'].value;
+
+      this.itr_2_Summary.assesse.employerCategory = this.personalInfoForm.controls['employerCategory'].value;
 
       let family = {
         'fName': this.personalInfoForm['controls'].fName.value,
@@ -7715,6 +7781,9 @@ export class Itr2mainComponent implements OnInit {
         this.computationOfIncomeForm.controls['presumptiveBusinessIncomeUs44ADA'].setValue(this.businessObject.presumptiveIncome);
       }
       else{
+        this.computationOfIncomeForm.controls['presumptiveBusinessIncomeUs44AD'].setValue(this.businessObject.presumptive44ADtotal);
+        this.computationOfIncomeForm.controls['presumptiveBusinessIncomeUs44ADA'].setValue(this.businessObject.presumptiveIncome);
+
         this.newRegimeTaxSummary.presumptiveBusinessIncomeUs44AD = this.businessObject.presumptive44ADtotal;
         this.newRegimeTaxSummary.presumptiveBusinessIncomeUs44ADA = this.businessObject.presumptiveIncome;
       }
@@ -7746,6 +7815,18 @@ export class Itr2mainComponent implements OnInit {
       this.computationOfIncomeForm.controls['presumptiveIncome'].setValue(totalOfIncomeFromBusiness);
     }
     else{
+      this.computationOfIncomeForm.controls['speculativeBusinessIncome'].setValue(Number(this.businessIncomeForm.controls['taxableIncomeOfSpeculative'].value) > 0 ? this.businessIncomeForm.controls['taxableIncomeOfSpeculative'].value : 0);
+      this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptive'].setValue(Number(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].value) > 0 ? this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].value : 0);
+  
+      this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptiveProfession'].setValue(Number(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeProfession'].value) > 0 ? this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeProfession'].value : 0);
+      this.computationOfIncomeForm.controls['futureAndOption'].setValue(Number(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeFAndO'].value) > 0 ? this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeFAndO'].value : 0);
+  
+      let totalOfIncomeFromBusines = Number(this.computationOfIncomeForm.controls['presumptiveBusinessIncomeUs44AD'].value) + Number(this.computationOfIncomeForm.controls['presumptiveBusinessIncomeUs44ADA'].value)
+        + Number(this.computationOfIncomeForm.controls['speculativeBusinessIncome'].value) + Number(this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptive'].value)
+        + Number(this.computationOfIncomeForm.controls['incomeFromOtherThanSpeculativeAndPresumptiveProfession'].value) + Number(this.computationOfIncomeForm.controls['futureAndOption'].value);
+      this.computationOfIncomeForm.controls['presumptiveIncome'].setValue(totalOfIncomeFromBusines);
+
+
       this.newRegimeTaxSummary.speculativeBusinessIncome = (Number(this.businessIncomeForm.controls['taxableIncomeOfSpeculative'].value) > 0 ? this.businessIncomeForm.controls['taxableIncomeOfSpeculative'].value : 0);
       this.newRegimeTaxSummary.incomeFromOtherThanSpeculativeAndPresumptive = (Number(this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].value) > 0 ? this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].value : 0);
   
@@ -7784,10 +7865,10 @@ export class Itr2mainComponent implements OnInit {
       salary: 0,
       housePropertyIncome: 0,
 
-      shortTermCapitalGain: 0,
-      shortTermCapitalGain15: 0,
-      longTermCapitalGain10: 0,
-      longTermCapitalGain20: 0,
+      shortTermCapitalGainTotal: 0,
+      shortTermCapitalGainAt15PercentTotal: 0,
+      longTermCapitalGainAt10PercentTotal: 0,
+      longTermCapitalGainAt20PercentTotal: 0,
       capitalGain: 0,
 
       presumptiveBusinessIncomeUs44AD: 0,
@@ -7881,6 +7962,7 @@ export class Itr2mainComponent implements OnInit {
         isRevised: null,
         isLate: null,
         employerCategory: null,
+        regime: '',
         dateOfNotice: null,
         noticeIdentificationNo: null,
         isDefective: null,
@@ -8081,7 +8163,7 @@ export class Itr2mainComponent implements OnInit {
   }
 
   calNewRegimeCapitaGain(){
-    let totalCapGain = Number(this.newRegimeTaxSummary.shortTermCapitalGain) + Number(this.newRegimeTaxSummary.shortTermCapitalGain15) + Number(this.newRegimeTaxSummary.longTermCapitalGain10) + Number(this.newRegimeTaxSummary.longTermCapitalGain20);
+    let totalCapGain = Number(this.newRegimeTaxSummary.shortTermCapitalGainTotal) + Number(this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal) + Number(this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal) + Number(this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal);
     this.newRegimeTaxSummary.capitalGain = totalCapGain;
     this.calTotalHeadWiseIncome();
   }
@@ -8092,6 +8174,44 @@ export class Itr2mainComponent implements OnInit {
     + (Number(this.newRegimeTaxSummary.presumptiveIncome) > 0 ? Number(this.newRegimeTaxSummary.presumptiveIncome) : 0);
 
     this.newRegimeTaxSummary.totalHeadWiseIncome = headWiseIncome;
+  }
+
+  showTaxPaybleValue(){
+    if(this.personalInfoForm.controls.regime.value === 'N'){
+      if(this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    else{
+      if(this.newRegimeTaxSummary.taxpayable >= 0 && this.newRegimeTaxSummary.taxRefund === 0){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+
+  showTaxRefundValue(){
+    if(this.personalInfoForm.controls.regime.value === 'N'){
+      if(this.computationOfIncomeForm.controls['taxRefund'].value < 0 || this.computationOfIncomeForm.controls['taxRefund'].value > 0){
+          return true;
+      }
+      else{
+          return false;
+      }
+    }
+    else{
+      if(this.newRegimeTaxSummary.taxRefund < 0 || this.newRegimeTaxSummary.taxRefund > 0){
+        return true;
+    }
+    else{
+        return false;
+    }
+    }
   }
 
 
