@@ -2124,7 +2124,7 @@ export class Itr2mainComponent implements OnInit {
             propertyType: housingInfo.PropertyDetails[i].ifLetOut === "Y" ? 'LOP' : (housingInfo.PropertyDetails[i].PropertyOwner === "SE" ? 'SOP' : 'LOP'),
             address: housingInfo.PropertyDetails[i].AddressDetailWithZipCode.AddrDetail + ', ' + housingInfo.PropertyDetails[i].AddressDetailWithZipCode.CityOrTownOrDistrict,
             ownerOfProperty: '',
-            coOwners: [],
+            coOwners: housingInfo.PropertyDetails[i].hasOwnProperty('CoOwners') ? this.bindCoOwnerInfo(housingInfo.PropertyDetails[i].CoOwners) : [],
             otherOwnerOfProperty: '',
             tenantName: housingInfo.PropertyDetails[i].hasOwnProperty('TenantDetails') ? housingInfo.PropertyDetails[i].TenantDetails[0].NameofTenant : '',
             tenentPanNumber: housingInfo.PropertyDetails[i].hasOwnProperty('TenantDetails') ? housingInfo.PropertyDetails[i].TenantDetails[0].PANofTenant : '',
@@ -3645,6 +3645,25 @@ export class Itr2mainComponent implements OnInit {
 
     }
 
+  }
+
+  bindCoOwnerInfo(coOwnerInfo){
+    var coOwner = [];
+    if(coOwnerInfo && coOwnerInfo instanceof Array && coOwnerInfo.length > 0){
+      for(let i=0; i< coOwnerInfo.length; i++){
+        let obj ={
+          'name' : coOwnerInfo[i].NameCoOwner,
+          'isSelf': false,
+          'panNumber': coOwnerInfo[i].PAN_CoOwner,
+          'percentage': coOwnerInfo[i].PercentShareProperty
+        }
+        coOwner.push(obj)
+      }
+      return coOwner;
+    }
+    else{
+      return [];
+    }
   }
 
   //i, salaryInfo, hra, otherAmnt, maxIndex
