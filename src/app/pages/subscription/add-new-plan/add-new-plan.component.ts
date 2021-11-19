@@ -221,9 +221,9 @@ export class AddNewPlanComponent implements OnInit {
     let param = '/promocodes?isActive=true';
     this.itrService.getMethod(param).subscribe(promoCode => {
       console.log('Plans -> ', promoCode);
-      this.showPromoCode(this.selectedPromoCode);
       if (Array.isArray(promoCode) && promoCode.length > 0) {
         this.allPromoCodes = promoCode;
+        this.showPromoCode(this.selectedPromoCode);
       }
     },
       error => {
