@@ -2121,19 +2121,20 @@ export class Itr2mainComponent implements OnInit {
         for (let i = 0; i < housingInfo.PropertyDetails.length; i++) {
           debugger
           var housingObj = {
-            propertyType: housingInfo.PropertyDetails[i].ifLetOut === "Y" ? 'LOP' : (housingInfo.PropertyDetails[i].PropertyOwner === "SE" ? 'SOP' : 'LOP'),
+            propertyType: housingInfo.PropertyDetails[i].ifLetOut === "Y" ? 'DOP' : (housingInfo.PropertyDetails[i].PropertyOwner === "SE" ? 'SOP' : 'LOP'),
             address: housingInfo.PropertyDetails[i].AddressDetailWithZipCode.AddrDetail + ', ' + housingInfo.PropertyDetails[i].AddressDetailWithZipCode.CityOrTownOrDistrict,
             ownerOfProperty: '',
             coOwners: housingInfo.PropertyDetails[i].hasOwnProperty('CoOwners') ? this.bindCoOwnerInfo(housingInfo.PropertyDetails[i].CoOwners) : [],
             otherOwnerOfProperty: '',
             tenantName: housingInfo.PropertyDetails[i].hasOwnProperty('TenantDetails') ? housingInfo.PropertyDetails[i].TenantDetails[0].NameofTenant : '',
             tenentPanNumber: housingInfo.PropertyDetails[i].hasOwnProperty('TenantDetails') ? housingInfo.PropertyDetails[i].TenantDetails[0].PANofTenant : '',
-            grossAnnualRentReceived: '',
-            annualValue: housingInfo.PropertyDetails[i].Rentdetails.hasOwnProperty('AnnualLetableValue') ? housingInfo.PropertyDetails[i].Rentdetails.AnnualLetableValue : '',
-            propertyTax: '',
+            grossAnnualRentReceived: housingInfo.PropertyDetails[i].Rentdetails.hasOwnProperty('AnnualLetableValue') ? housingInfo.PropertyDetails[i].Rentdetails.AnnualLetableValue : '',
+            propertyTax: housingInfo.PropertyDetails[i].Rentdetails.hasOwnProperty('TotalUnrealizedAndTax') ? housingInfo.PropertyDetails[i].Rentdetails.TotalUnrealizedAndTax : '',
+            annualValue: housingInfo.PropertyDetails[i].Rentdetails.hasOwnProperty('AnnualOfPropOwned') ? housingInfo.PropertyDetails[i].Rentdetails.AnnualOfPropOwned : '',
             interestAmount: housingInfo.PropertyDetails[i].Rentdetails.IntOnBorwCap,
             taxableIncome: housingInfo.PropertyDetails[i].Rentdetails.IncomeOfHP,
-            exemptIncome: '',
+            exemptIncome: housingInfo.PropertyDetails[i].Rentdetails.hasOwnProperty('ThirtyPercentOfBalance') ? housingInfo.PropertyDetails[i].Rentdetails.ThirtyPercentOfBalance : '',
+
             pinCode: housingInfo.PropertyDetails[i].AddressDetailWithZipCode.PinCode,
             flatNo: '',
             building: '',

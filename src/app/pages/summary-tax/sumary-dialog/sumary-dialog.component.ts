@@ -51,7 +51,7 @@ export class SumaryDialogComponent implements OnInit {
   donationType = [{ label: 'Political', value: 'POLITICAL' },
   { label: 'Scientific', value: 'SCIENTIFIC' }, { label: 'Other', value: 'OTHER' }]
 
-  propertyTypeData: any = [{ label: 'Rented', value: 'LOP' }, { label: 'Self-occupied', value: 'SOP' }];
+  propertyTypeData: any = [{ label: 'Rented', value: 'LOP' }, { label: 'Self-occupied', value: 'SOP' }, { label: 'Deemed Let Out', value: 'DOP' }];
   ownerships = [{ value: 'SELF', label: 'Self' }, { value: 'MINOR', label: 'Minor' }, { value: 'SPOUSE', label: 'Spouse' }, { value: 'OTHER', label: 'Other' }]
   coOwnwerData = [{ value: 'YES', label: 'Yes' }, { value: 'NO', label: 'No' }];
   lossesYear = [{value: '2010-2011', label:'2010-2011'},{value: '2011-2012', label:'2011-2012'},{value: '2012-2013', label:'2012-2013'},
@@ -549,6 +549,21 @@ export class SumaryDialogComponent implements OnInit {
       this.summaryDialogForm.controls['tenentPanNumber'].setValidators([Validators.pattern(AppConstants.panIndHUFRegex)]);  //Validators.required
       this.summaryDialogForm['controls'].houseProperties['controls'].grossAnnualRentReceived.setValidators(Validators.required)
 
+    }
+    else if(propertyType === 'DOP'){
+      this.housingShow.showTenant = false;    //ownership
+      this.housingShow.isSOP = false;                      
+
+      if(key === 'fromDialog'){
+        this.summaryDialogForm.controls['interestAmount'].setValue(null);
+        this.summaryDialogForm['controls'].houseProperties['controls'].taxableIncome.setValue(null);
+      }
+      
+      console.log('houseProperties value: ', this.summaryDialogForm['controls'].houseProperties['controls'].value)
+
+
+      this.summaryDialogForm.controls['interestAmount'].setValidators([Validators.max(200000)]);
+      this.summaryDialogForm.controls['interestAmount'].updateValueAndValidity();
     }
 
   }
