@@ -218,11 +218,13 @@ export class AddNewPlanComponent implements OnInit {
   }
 
   getAllPromoCode() {
-    let param = '/promocodes';
-    this.itrService.getMethod(param).subscribe(poemoCode => {
-      console.log('Plans -> ', poemoCode);
-      this.allPromoCodes = poemoCode['content'];
-      this.showPromoCode(this.selectedPromoCode);
+    let param = '/promocodes?isActive=true';
+    this.itrService.getMethod(param).subscribe(promoCode => {
+      console.log('Plans -> ', promoCode);
+      if (Array.isArray(promoCode) && promoCode.length > 0) {
+        this.allPromoCodes = promoCode;
+        this.showPromoCode(this.selectedPromoCode);
+      }
     },
       error => {
         console.log('Error during getting all PromoCodes: ', error)
