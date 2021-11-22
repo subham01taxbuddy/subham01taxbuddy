@@ -52,15 +52,16 @@ export class SidebarComponent implements OnInit {
   }
 
   trackEvent(path){
+     
+    // _paq.push(['setCustomUrl', + path]);
+    // _paq.push(['setDocumentTitle', this.getDocTitle(path)]);
+    // _paq.push(['trackPageView']);
     const matomoAnlysisScript = document.createElement('script');
     matomoAnlysisScript.innerHTML = ` 
             /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
             _paq.push(['trackPageView']);
             _paq.push(['enableLinkTracking']);
-            
-            _paq.push(['setCustomUrl', + path]);
-            _paq.push(['setDocumentTitle', this.getDocTitle(path)]);
-            _paq.push(['trackPageView']);
+           
             (function() {
               var u="https://finbingo.matomo.cloud/";
               _paq.push(['setTrackerUrl', u+'matomo.php']);
