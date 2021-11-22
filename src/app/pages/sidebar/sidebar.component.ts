@@ -71,16 +71,6 @@ export class SidebarComponent implements OnInit {
   }
 
   trackEvent(path){
-    console.log('location: ',window.location.pathname)
-    console.log('substr: -> ',window.location.hash.substr(1));
-    console.log('title: ',this.getDocTitle(path))
-    window.addEventListener('hashchange', function() {
-      console.log('substr: -> ',window.location.hash.substr(1))
-      
-      // _paq.push(['setCustomUrl', '/' + window.location.hash.substr(1)]);
-      // _paq.push(['setDocumentTitle', 'My New Title']);
-      // _paq.push(['trackPageView']);
-    });
     const matomoAnlysisScript = document.createElement('script');
     matomoAnlysisScript.innerHTML = ` 
             /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
