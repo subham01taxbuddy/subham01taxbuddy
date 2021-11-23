@@ -3282,8 +3282,8 @@ export class Itr2mainComponent implements OnInit {
           let tdsOnSalObj = {
             deductorTAN: tdsOnSalInfo[i].EmployerOrDeductorOrCollectDetl.TAN,
             deductorName: tdsOnSalInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName,
-            totalAmountCredited: tdsOnSalInfo[i].IncChrgSal,
-            totalTdsDeposited: tdsOnSalInfo[i].TotalTDSSal
+            totalAmountCredited: this.getNumberFormat(tdsOnSalInfo[i].IncChrgSal),
+            totalTdsDeposited: this.getNumberFormat(tdsOnSalInfo[i].TotalTDSSal) 
           }
           taxPaidInfo.onSalary.push(tdsOnSalObj);
         }
@@ -3301,8 +3301,8 @@ export class Itr2mainComponent implements OnInit {
           let tdsOtherThanSalObj = {
             deductorTAN: tdsOtherThanSalInfo[i].TANOfDeductor,
             deductorName: '',
-            totalAmountCredited: tdsOtherThanSalInfo[i].GrossAmount,
-            totalTdsDeposited: tdsOtherThanSalInfo[i].TaxDeductCreditDtls.TaxDeductedOwnHands
+            totalAmountCredited: this.getNumberFormat(tdsOtherThanSalInfo[i].GrossAmount),
+            totalTdsDeposited: this.getNumberFormat(tdsOtherThanSalInfo[i].TaxDeductCreditDtls.TaxDeductedOwnHands) 
           }
           taxPaidInfo.otherThanSalary16A.push(tdsOtherThanSalObj);
         }
@@ -3319,8 +3319,8 @@ export class Itr2mainComponent implements OnInit {
           let tdsOtherThanSalObj = {
             deductorTAN: tdsOtherThanSalInfo[i].PANOfBuyerTenant,
             deductorName: tdsOtherThanSalInfo[i].TDSCreditName,
-            totalAmountCredited: tdsOtherThanSalInfo[i].GrossAmount,
-            totalTdsDeposited: tdsOtherThanSalInfo[i].TaxDeductCreditDtls.TaxDeductedOwnHands
+            totalAmountCredited: this.getNumberFormat(tdsOtherThanSalInfo[i].GrossAmount),
+            totalTdsDeposited: this.getNumberFormat(tdsOtherThanSalInfo[i].TaxDeductCreditDtls.TaxDeductedOwnHands) 
           }
           taxPaidInfo.otherThanSalary16A.push(tdsOtherThanSalObj);
         }
@@ -3357,8 +3357,8 @@ export class Itr2mainComponent implements OnInit {
           let tcsObj = {
             collectorTAN: tcsInfo.TCS[i].EmployerOrDeductorOrCollectDetl.TAN,
             collectorName: tcsInfo.TCS[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName,
-            totalAmountPaid: tcsInfo.TCS[i].TotalTCS,
-            totalTcsDeposited: tcsInfo.TCS[i].AmtTCSClaimedThisYear
+            totalAmountPaid: this.getNumberFormat(tcsInfo.TCS[i].TotalTCS) ,
+            totalTcsDeposited: this.getNumberFormat(tcsInfo.TCS[i].AmtTCSClaimedThisYear) 
           }
 
           taxPaidInfo.tcs.push(tcsObj);
@@ -3377,7 +3377,7 @@ export class Itr2mainComponent implements OnInit {
           bsrCode: advTaxInfo.TaxPayment[i].BSRCode,
           dateOfDeposit: advTaxInfo.TaxPayment[i].DateDep,
           challanNumber: advTaxInfo.TaxPayment[i].SrlNoOfChaln,
-          totalTax: advTaxInfo.TaxPayment[i].Amt
+          totalTax: this.getNumberFormat(advTaxInfo.TaxPayment[i].Amt) 
         }
 
         taxPaidInfo.otherThanTDSTCS.push(advTaxObj);
@@ -3801,7 +3801,7 @@ export class Itr2mainComponent implements OnInit {
     itr3Summary.assesse.business.financialParticulars.securedLoans = this.getNumberFormat(financialInfo.FundSrc.LoanFunds.SecrLoan.TotSecrLoan);
     itr3Summary.assesse.business.financialParticulars.unSecuredLoans = this.getNumberFormat(financialInfo.FundSrc.LoanFunds.UnsecrLoan.TotUnSecrLoan);
     itr3Summary.assesse.business.financialParticulars.advances = 0;
-    itr3Summary.assesse.business.financialParticulars.sundryCreditorsAmount = this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.CurrLiabilities.SundryCred);
+    itr3Summary.assesse.business.financialParticulars.sundryCreditorsAmount = financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.CurrLiabilities.hasOwnProperty('SundryCred') ? this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.CurrLiabilities.SundryCred) : 0;
     itr3Summary.assesse.business.financialParticulars.otherLiabilities = this.getNumberFormat(financialInfo.FundSrc.LoanFunds.TotLoanFund);
     let liabilityTotal = itr3Summary.assesse.business.financialParticulars.membersOwnCapital + itr3Summary.assesse.business.financialParticulars.securedLoans +
       itr3Summary.assesse.business.financialParticulars.unSecuredLoans + itr3Summary.assesse.business.financialParticulars.advances +
@@ -3813,13 +3813,13 @@ export class Itr2mainComponent implements OnInit {
     //Assets
     itr3Summary.assesse.business.financialParticulars.fixedAssets = this.getNumberFormat(financialInfo.FundApply.FixedAsset.TotFixedAsset);
     itr3Summary.assesse.business.financialParticulars.inventories = this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.Inventories.TotInventries);
-    itr3Summary.assesse.business.financialParticulars.sundryDebtorsAmount = this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.SndryDebtors);
-    itr3Summary.assesse.business.financialParticulars.balanceWithBank = this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.CashOrBankBal.BankBal);
+    itr3Summary.assesse.business.financialParticulars.sundryDebtorsAmount = financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.hasOwnProperty('SndryDebtors') ? this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.SndryDebtors) : 0;
+    itr3Summary.assesse.business.financialParticulars.balanceWithBank = financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.CashOrBankBal.hasOwnProperty('BankBal') ? this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.CashOrBankBal.BankBal) : 0;
     itr3Summary.assesse.business.financialParticulars.cashInHand = this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.CashOrBankBal.CashinHand);
     itr3Summary.assesse.business.financialParticulars.loanAndAdvances = this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.LoanAdv.TotLoanAdv);
 
     //For otherAssets val =  OthCurrAsset + (TotCurrLiabilitiesProvision - SundryCred) + TotMiscAdjust
-    itr3Summary.assesse.business.financialParticulars.otherAssets = this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.OthCurrAsset) + (this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.TotCurrLiabilitiesProvision) - this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.CurrLiabilities.SundryCred)) + this.getNumberFormat(financialInfo.FundApply.MiscAdjust.TotMiscAdjust);
+    itr3Summary.assesse.business.financialParticulars.otherAssets = (financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.hasOwnProperty('OthCurrAsset') ? this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.OthCurrAsset) : 0) + (this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.TotCurrLiabilitiesProvision) - (financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.CurrLiabilities.hasOwnProperty('SundryCred') ? this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.CurrLiabilities.SundryCred) : 0)) + this.getNumberFormat(financialInfo.FundApply.MiscAdjust.TotMiscAdjust);
 
     itr3Summary.assesse.business.financialParticulars.investment = this.getNumberFormat(financialInfo.FundApply.Investments.TotInvestments);
     let assetsTotal = itr3Summary.assesse.business.financialParticulars.fixedAssets + itr3Summary.assesse.business.financialParticulars.inventories +
@@ -3836,9 +3836,9 @@ export class Itr2mainComponent implements OnInit {
     console.log('speculativeInfo: ', speculativeInfo);
     let speculativeObj = {
       businessType: "SPECULATIVE",
-      exemptIncome: speculativeInfo.hasOwnProperty('Expenditure') ? Number(speculativeInfo.Expenditure) : 0,
+      exemptIncome: speculativeInfo.hasOwnProperty('Expenditure') ? this.getNumberFormat(speculativeInfo.Expenditure) : 0,
       natureOfBusiness: '',
-      taxableIncome: speculativeInfo.hasOwnProperty('NetIncomeFrmSpecActivity') ? Number(speculativeInfo.NetIncomeFrmSpecActivity) : 0,
+      taxableIncome: speculativeInfo.hasOwnProperty('NetIncomeFrmSpecActivity') ? this.getNumberFormat(speculativeInfo.NetIncomeFrmSpecActivity) : 0,
       tradeName: '',
       incomes: []
     }
@@ -3850,7 +3850,7 @@ export class Itr2mainComponent implements OnInit {
       ownership: null,
       periodOfHolding: 0,
       presumptiveIncome: 0,
-      receipts: speculativeInfo.hasOwnProperty('TurnverFrmSpecActivity') ? Number(speculativeInfo.TurnverFrmSpecActivity) : 0,
+      receipts: speculativeInfo.hasOwnProperty('TurnverFrmSpecActivity') ? this.getNumberFormat(speculativeInfo.TurnverFrmSpecActivity) : 0,
       registrationNo: null,
       tonnageCapacity: 0
     }
@@ -3917,9 +3917,9 @@ export class Itr2mainComponent implements OnInit {
     console.log('futureAndOptionInfo: ', futureAndOptionInfo);
     let futureAndOptionObj = {
       businessType: "FUTURES_AND_OPTIONS",
-      exemptIncome: Number(futureAndOptionInfo.DirectExpenses),
+      exemptIncome: this.getNumberFormat(futureAndOptionInfo.DirectExpenses),
       natureOfBusiness: '',
-      taxableIncome: Number(futureAndOptionInfo.GrossProfitFrmBusProf),
+      taxableIncome: this.getNumberFormat(futureAndOptionInfo.GrossProfitFrmBusProf),
       tradeName: '',
       incomes: []
     }
@@ -3930,8 +3930,8 @@ export class Itr2mainComponent implements OnInit {
       minimumPresumptiveIncome: 0,
       ownership: null,
       periodOfHolding: 0,
-      presumptiveIncome: futureAndOptionInfo.hasOwnProperty('Purchases') ? Number(futureAndOptionInfo.Purchases) : 0,
-      receipts: Number(futureAndOptionInfo.TotRevenueFrmOperations),
+      presumptiveIncome: futureAndOptionInfo.hasOwnProperty('Purchases') ? this.getNumberFormat(futureAndOptionInfo.Purchases) : 0,
+      receipts: this.getNumberFormat(futureAndOptionInfo.TotRevenueFrmOperations),
       registrationNo: null,
       tonnageCapacity: 0
     }
