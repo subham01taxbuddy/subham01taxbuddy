@@ -54,7 +54,10 @@ export interface ITR_SUMMARY{
       businessProfessionalLossesSetOffDuringTheYear: string,
       speculativeBusinessLossesSetOffDuringTheYear: string,
 
-      newTaxRegime: null
+      newTaxRegime: null,
+      
+      exemptIncomes: [],
+      totalExemptIncome: any
 }
 
 export interface Assesse{
