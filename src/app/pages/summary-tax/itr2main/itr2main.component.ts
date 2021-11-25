@@ -2797,6 +2797,8 @@ export class Itr2mainComponent implements OnInit {
       }
 
       let totalExemptIncome = exemptIncomeInfo.TotalExemptInc;
+      
+      this.computationOfIncomeForm.controls.exemptIncomes.setValue(this.exemptIncomeData);
       this.computationOfIncomeForm.controls.totalExemptIncome.setValue(totalExemptIncome);
 
     }
@@ -4462,11 +4464,11 @@ export class Itr2mainComponent implements OnInit {
       for (let i = 0; i < this.shortTermSlabRate.api.getRenderedNodes().length; i++) {
          if(this.personalInfoForm.controls['regime'].value === 'N'){
         this.capital_Gain.shortTermCapitalGain = this.capital_Gain.shortTermCapitalGain + this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain;
-        this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = Number(this.capital_Gain.shortTermCapitalGain) > 0 ? this.capital_Gain.shortTermCapitalGain : 0;
+        this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = Number(this.capital_Gain.shortTermCapitalGain);  //> 0 ? this.capital_Gain.shortTermCapitalGain : 0
         }
         else{
           this.capital_Gain.shortTermCapitalGain = this.capital_Gain.shortTermCapitalGain + this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain;
-          this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = Number(this.capital_Gain.shortTermCapitalGain) > 0 ? this.capital_Gain.shortTermCapitalGain : 0;
+          this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = Number(this.capital_Gain.shortTermCapitalGain);  //> 0 ? this.capital_Gain.shortTermCapitalGain : 0
 
           this.newRegimeTaxSummary.shortTermCapitalGainTotal = this.newRegimeTaxSummary.shortTermCapitalGainTotal + this.shortTermSlabRate.api.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = this.newRegimeTaxSummary.shortTermCapitalGainTotal;
@@ -4480,11 +4482,11 @@ export class Itr2mainComponent implements OnInit {
       for (let i = 0; i < this.shortTerm15Per.api.getRenderedNodes().length; i++) {
         if(this.personalInfoForm.controls['regime'].value === 'N'){
           this.capital_Gain.shortTermCapitalGain15 = this.capital_Gain.shortTermCapitalGain15 + this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain;
-          this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = Number(this.capital_Gain.shortTermCapitalGain15) > 0 ? this.capital_Gain.shortTermCapitalGain15 : 0;
+          this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = Number(this.capital_Gain.shortTermCapitalGain15);  //> 0 ? this.capital_Gain.shortTermCapitalGain15 : 0
         }
         else{
           this.capital_Gain.shortTermCapitalGain15 = this.capital_Gain.shortTermCapitalGain15 + this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain;
-          this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = Number(this.capital_Gain.shortTermCapitalGain15) > 0 ? this.capital_Gain.shortTermCapitalGain15 : 0;
+          this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = Number(this.capital_Gain.shortTermCapitalGain15);  //> 0 ? this.capital_Gain.shortTermCapitalGain15 : 0
 
           this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal = this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal + this.shortTerm15Per.api.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal;
@@ -4498,11 +4500,11 @@ export class Itr2mainComponent implements OnInit {
       for (let i = 0; i < this.longTerm10Per.api.getRenderedNodes().length; i++) {
         if(this.personalInfoForm.controls['regime'].value === 'N'){
           this.capital_Gain.longTermCapitalGain10 = this.capital_Gain.longTermCapitalGain10 + this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain;
-          this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = Number(this.capital_Gain.longTermCapitalGain10) > 0 ? this.capital_Gain.longTermCapitalGain10 : 0;
+          this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = Number(this.capital_Gain.longTermCapitalGain10);  //> 0 ? this.capital_Gain.longTermCapitalGain10 : 0
         }
         else{
           this.capital_Gain.longTermCapitalGain10 = this.capital_Gain.longTermCapitalGain10 + this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain;
-          this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = Number(this.capital_Gain.longTermCapitalGain10) > 0 ? this.capital_Gain.longTermCapitalGain10 : 0;
+          this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = Number(this.capital_Gain.longTermCapitalGain10);  //> 0 ? this.capital_Gain.longTermCapitalGain10 : 0
 
           this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal + this.longTerm10Per.api.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal;
@@ -4515,11 +4517,11 @@ export class Itr2mainComponent implements OnInit {
       for (let i = 0; i < this.longTerm20Per.api.getRenderedNodes().length; i++) {
         if(this.personalInfoForm.controls['regime'].value === 'N'){
           this.capital_Gain.longTermCapitalGain20 = this.capital_Gain.longTermCapitalGain20 + this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain;
-          this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = Number(this.capital_Gain.longTermCapitalGain20) > 0 ? this.capital_Gain.longTermCapitalGain20 : 0;
+          this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = Number(this.capital_Gain.longTermCapitalGain20);    // > 0 ? this.capital_Gain.longTermCapitalGain20 : 0
         }
         else{
           this.capital_Gain.longTermCapitalGain20 = this.capital_Gain.longTermCapitalGain20 + this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain;
-          this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = Number(this.capital_Gain.longTermCapitalGain20) > 0 ? this.capital_Gain.longTermCapitalGain20 : 0;
+          this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = Number(this.capital_Gain.longTermCapitalGain20);     //> 0 ? this.capital_Gain.longTermCapitalGain20 : 0
 
           this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal + this.longTerm20Per.api.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal;
@@ -7409,12 +7411,16 @@ export class Itr2mainComponent implements OnInit {
         this.itr_2_Summary.anyOtherExcemptIncome = this.deductionAndRemainForm['controls'].anyOtherExcemptIncome.value;
       }
 
+      //Exempt Incomes
+      this.itr_2_Summary.exemptIncomes = this.computationOfIncomeForm.controls.exemptIncomes.value;
+
       //Computation Income
       Object.assign(this.itr_2_Summary.taxSummary, this.computationOfIncomeForm.value)
       this.itr_2_Summary.totalHeadWiseIncome = this.computationOfIncomeForm.controls['totalHeadWiseIncome'].value;
       this.itr_2_Summary.lossesSetOffDuringTheYear = this.computationOfIncomeForm.controls['lossesSetOffDuringTheYear'].value;
       this.itr_2_Summary.carriedForwardToNextYear = this.computationOfIncomeForm.controls['carriedForwardToNextYear'].value;
       this.itr_2_Summary.taxSummary.capitalGain = this.computationOfIncomeForm.controls['capitalGain'].value;
+      
 
       //Exempt Income=> Movalble / Immovable assets
       if (this.showAssetLiability) {
@@ -8171,6 +8177,8 @@ export class Itr2mainComponent implements OnInit {
 
 
       newTaxRegime: null,
+      exemptIncomes: [],
+      totalExemptIncome: ''
 
     }
     return ITR_SUMMARY;
