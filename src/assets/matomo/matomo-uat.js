@@ -11,9 +11,12 @@ function matomo(path) {
   
       // Set variables
       const _paq = window._paq = window._paq || [];
+      let userInfo = JSON.parse(localStorage.getItem("UMD"));
       _paq.push(["disableCookies"]);
+      _paq.push(['setUserId', userInfo.USER_MOBILE]);
       _paq.push(["setCustomUrl", path]);
       _paq.push(["trackPageView"]);
+      _paq.push(['enableLinkTracking']);
   
       (function () {
         _paq.push(["setTrackerUrl", u + "matomo.php"]);
