@@ -31,7 +31,7 @@ export class ScheduledCallComponent implements OnInit {
     private dialog: MatDialog, private route: Router) {
     this.scheduleCallGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.createColoumnDef(),
+      columnDefs: this.createColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -148,7 +148,7 @@ export class ScheduledCallComponent implements OnInit {
     return callDateTime.substring(firtPoint + 1, secondPoint - 1)
   }
 
-  createColoumnDef() {
+  createColumnDef() {
     return [
       {
         headerName: 'User Id',
@@ -195,7 +195,7 @@ export class ScheduledCallComponent implements OnInit {
         width: 150,
         suppressMovable: true,
         sortable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
@@ -372,14 +372,24 @@ export class ScheduledCallComponent implements OnInit {
   }
 
 
-  startCalling(user) {
-    console.log('user: ', user)
+  async startCalling(user) {
+    const agentNumber = await this.utilsService.getMyCallingNumber();
+    console.log('agent number', agentNumber)
+    if (!agentNumber) {
+      this.toastMsgService.alert("error", 'You dont have calling role.')
+      return;
+    }
     this.loading = true;
-    const param = `/call-management/make-call`;
     const reqBody = {
-      "agent_number": user.smeMobileNumber,
+      "agent_number": agentNumber,
       "customer_number": user.userMobile
     }
+
+    const param = `/call-management/make-call`;
+    // const reqBody = {
+    //   "agent_number": user.smeMobileNumber,
+    //   "customer_number": user.userMobile
+    // }
     this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
       console.log('Call Result: ', result);
       this.loading = false;
@@ -396,11 +406,11 @@ export class ScheduledCallComponent implements OnInit {
     console.log('client: ', client);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
-    this.userMsService.getMethod(param).subscribe((responce: any) => {
-      console.log('open chat link res: ', responce);
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      console.log('open chat link res: ', response);
       this.loading = false;
-      if (responce.success) {
-        window.open(responce.data.chatLink)
+      if (response.success) {
+        window.open(response.data.chatLink)
       }
       else {
         this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
@@ -408,7 +418,7 @@ export class ScheduledCallComponent implements OnInit {
     },
       error => {
         console.log('Error during feching chat link: ', error);
-        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+        this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
         this.loading = false;
       })
   }
@@ -431,8 +441,8 @@ export class ScheduledCallComponent implements OnInit {
       statusId: 18
     }
     let param = `/schedule-call-details`;
-    this.userMsService.putMethod(param, reqBody).subscribe((responce: any) => {
-      console.log('schedule-call Done responce: ', responce);
+    this.userMsService.putMethod(param, reqBody).subscribe((response: any) => {
+      console.log('schedule-call Done responce: ', response);
       this.loading = false;
       this.toastMsgService.alert('success', 'Call status update successfully.');
       setTimeout(() => {
@@ -458,9 +468,6 @@ export class ScheduledCallComponent implements OnInit {
     this.getScheduledCallsInfo(this.loggedUserId, Math.abs(this.pageCount));
   }
 
-  // serchByMobNo(){
-
-  // }
   navigateToWhatsappChat(data) {
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
   }
