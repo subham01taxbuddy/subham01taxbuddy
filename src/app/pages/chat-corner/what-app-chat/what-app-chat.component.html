@@ -14,6 +14,10 @@
         </div>
 
         <div class="card__row">
+          <p class="heilight-msg"><b>Please use Kommunicate Dashboard for whatsapp Conversation for all the new chats</b></p>
+        </div>
+
+        <div class="card__row">
           <div class="filter__col card__col-sm-3 card__col-xs-3">
             <mat-form-field appearance="outline">
               <mat-label>Select Agent</mat-label>
@@ -42,6 +46,7 @@
           </div>
 
         </div>
+        
 
         <div class="card__row">
           <!--*ngIf="showChatUi"-->
@@ -392,7 +397,6 @@
 
 
                     <div class="card__col-lg-7 card__col-sm-4">
-                      <!--*ngIf="this.whatsAppForm.controls['selectTemplate'].value"-->
                       <mat-form-field appearance="outline">
                         <textarea matInput id="sentMsgId" formControlName="sentMessage" cdkTextareaAutosize
                           cdkAutosizeMinRows="1" cdkAutosizeMaxRows="9" [class.disableTestArea]="timeExpired"
@@ -430,7 +434,6 @@
                         accept=".pdf, .jpg, .jpeg, .png">
                       <button class="sendBtn" (click)="upload()" [ngClass]="timeExpired ? 'btnDisable' : 'sendBtn'"
                         [disabled]="((this.whatsAppForm.controls['sentMessage'].value || this.whatsAppForm.controls['selectTemplate'].value || timeExpired) ? true : false) ">
-                        <!-- <i class="fa fa-cloud-upload" style="font-size: 15px;"></i> -->
                         Upload Media File
                       </button>
                     </div>
@@ -444,14 +447,8 @@
                       <label>{{whatsAppForm.controls['mediaFile'].value.name}}</label>&nbsp;&nbsp;
                       <button class="closeBtn" (click)="clearFile()">Close</button>
                     </div>
-
-
-
-                    <!-- <button *ngIf="this.selectedUser" mat-raised-button color="primary"
-                      (click)="geUserChatDetail(selectedUser, 'not-continues')" class="refreshBtn"
-                      style="float: right;">Refresh</button> -->
+                  
                   </form>
-                  <!-- </div> -->
                 </div>
 
               </div>

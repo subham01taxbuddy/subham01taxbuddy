@@ -743,7 +743,8 @@ export class WhatAppChatComponent implements OnInit {
   }
 
   startChat(whatsAppNumber) {
-    console.log('whatsAppNumber: ', whatsAppNumber)
+    console.log('whatsAppNumber: ', whatsAppNumber);
+     this._toastMessageService.alert("success", 'Please use Kommunicate Dashboard for whatsapp Conversation for all the new chats');
     this.startConversation = !this.startConversation;
     if (this.startConversation && this.utilsService.isNonEmpty(whatsAppNumber)) {
       let param = "/whatsapp/unread/remove/" + whatsAppNumber;
