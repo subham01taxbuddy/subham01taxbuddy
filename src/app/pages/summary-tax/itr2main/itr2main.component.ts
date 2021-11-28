@@ -278,7 +278,7 @@ export class Itr2mainComponent implements OnInit {
       interestFromSaving: [''],
       interestFromDeposite: [''],
       interestFromTaxRefund: [''],
-      other: [''],
+      other: [0],
       divident: [''],
       // agricultureIncome: [''],
       // dividendIncome: [''],
@@ -2654,6 +2654,18 @@ export class Itr2mainComponent implements OnInit {
       }
       else{
         this.otherSourceForm.controls.other.setValue(0);
+       }
+
+       if(otherInfo.hasOwnProperty('IntrstFrmOthers')){
+        let otherVal = otherInfo.IntrstFrmOthers;
+        if (typeof otherVal === 'string') {
+          otherVal = otherVal.replace(/\,/g, '');
+          otherVal = parseInt(otherVal, 10);
+        }
+        this.otherSourceForm.controls.other.setValue(Number(otherVal) + this.otherSourceForm.controls.other.value)
+      }
+      else{
+        this.otherSourceForm.controls.other.setValue(0 + this.otherSourceForm.controls.other.value);
        }
       console.log('sourcesOfIncome: ', this.sourcesOfIncome)
       // this.sourcesOfIncome.interestFromOther = incomeDeduction.IncomeOthSrc - (this.sourcesOfIncome.dividend + this.sourcesOfIncome.interestFromSaving +  this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax);
