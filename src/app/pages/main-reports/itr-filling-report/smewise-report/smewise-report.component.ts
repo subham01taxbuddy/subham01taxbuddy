@@ -46,7 +46,7 @@ export class SmewiseReportComponent implements OnInit {
   ) {
     this.teamLeadReportGridOption = <GridOptions>{
       rowData: [],
-      columnDefs: this.teamLeadCreateColoumnDef(),
+      columnDefs: this.teamLeadCreateColumnDef(),
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
@@ -232,7 +232,7 @@ export class SmewiseReportComponent implements OnInit {
     }
     return data;
   }
-  teamLeadCreateColoumnDef() {
+  teamLeadCreateColumnDef() {
     return [
       {
         headerName: 'Sr. No.',
