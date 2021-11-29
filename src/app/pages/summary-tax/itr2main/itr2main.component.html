@@ -1057,9 +1057,9 @@
                                 </div>
                                 <div class="card__col-lg-3" *ngIf="newItrSumChanges">
                                     <mat-form-field appearance="outline">
-                                        <mat-label>Divident</mat-label>
-                                        <input matInput placeholder="Divident" maxlength="8" autocomplete="off"
-                                             id="dividentAmnt" name="dividentAmnt" formControlName="divident" (blur)="calculateOtherSourceTotal()"
+                                        <mat-label>dividend</mat-label>
+                                        <input matInput placeholder="dividend" maxlength="8" autocomplete="off"
+                                             id="dividentAmnt" name="dividentAmnt" formControlName="dividend" (blur)="calculateOtherSourceTotal()"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                             <!--[value]="sourcesOfIncome.interestFromOther"   (blur)="setOtherSourceIncomeValue($event.target.value,'other')"-->
                                     </mat-form-field>
