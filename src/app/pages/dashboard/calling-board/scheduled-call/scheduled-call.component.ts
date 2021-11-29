@@ -104,7 +104,6 @@ export class ScheduledCallComponent implements OnInit {
     param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;
 
     this.userMsService.getMethod(param2).subscribe((result: any) => {
-      console.log('Schdule call info', result);
       if (result instanceof Array && result.length > 0) {
         this.scheduleCallsData = result;
         this.scheduleCallGridOptions.api.setRowData(this.createRowData(this.scheduleCallsData));
@@ -126,7 +125,7 @@ export class ScheduledCallComponent implements OnInit {
     console.log('scheduleCalls -> ', scheduleCalls);
     var scheduleCallsArray = [];
     for (let i = 0; i < scheduleCalls.length; i++) {
-      let sceduleCallsInfo = Object.assign({}, scheduleCallsArray[i], {
+      let scheduleCallsInfo = Object.assign({}, scheduleCallsArray[i], {
         userId: scheduleCalls[i]['userId'],
         userName: scheduleCalls[i]['userName'],
         userMobile: scheduleCalls[i]['userMobile'],
@@ -136,16 +135,16 @@ export class ScheduledCallComponent implements OnInit {
         time: this.getCallTime(scheduleCalls[i]['scheduleCallTime']),
         serviceType: scheduleCalls[i]['serviceType'] !== null ? scheduleCalls[i]['serviceType'] : 'ITR'
       })
-      scheduleCallsArray.push(sceduleCallsInfo);
+      scheduleCallsArray.push(scheduleCallsInfo);
     }
     console.log('scheduleCallsArray-> ', scheduleCallsArray)
     return scheduleCallsArray;
   }
 
   getCallTime(callDateTime) {
-    let firtPoint = callDateTime.indexOf('T');
+    let firstPoint = callDateTime.indexOf('T');
     let secondPoint = callDateTime.length;
-    return callDateTime.substring(firtPoint + 1, secondPoint - 1)
+    return callDateTime.substring(firstPoint + 1, secondPoint - 1)
   }
 
   createColumnDef() {
@@ -411,16 +410,13 @@ export class ScheduledCallComponent implements OnInit {
       this.loading = false;
       if (response.success) {
         window.open(response.data.chatLink)
-      }
-      else {
+      } else {
         this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
       }
-    },
-      error => {
-        console.log('Error during feching chat link: ', error);
-        this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
-        this.loading = false;
-      })
+    }, error => {
+      this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
+      this.loading = false;
+    })
   }
 
   showUserInformation(user) {
@@ -442,19 +438,15 @@ export class ScheduledCallComponent implements OnInit {
     }
     let param = `/schedule-call-details`;
     this.userMsService.putMethod(param, reqBody).subscribe((response: any) => {
-      console.log('schedule-call Done responce: ', response);
       this.loading = false;
       this.toastMsgService.alert('success', 'Call status update successfully.');
       setTimeout(() => {
         this.showScheduleCallList();
       }, 3000)
-
-    },
-      error => {
-        console.log('Error during schedule-call status change: ', error);
-        this.toastMsgService.alert('error', 'Error during schedule-call status change.')
-        this.loading = false;
-      })
+    }, error => {
+      this.toastMsgService.alert('error', 'Error during schedule-call status change.')
+      this.loading = false;
+    })
 
   }
 
