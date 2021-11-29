@@ -279,7 +279,7 @@ export class Itr2mainComponent implements OnInit {
       interestFromDeposite: [''],
       interestFromTaxRefund: [''],
       other: [0],
-      divident: [''],
+      dividend: [''],
       // agricultureIncome: [''],
       // dividendIncome: [''],
       total: ['']
@@ -2583,7 +2583,7 @@ export class Itr2mainComponent implements OnInit {
     
     debugger
 
-    this.updateCapitalGain(taxPaid);
+    this.updateCapitalGain(taxPaid, itrData);
     console.log('taxPaid ===> ', taxPaid)
 
 
@@ -2600,10 +2600,10 @@ export class Itr2mainComponent implements OnInit {
           dividentVal = dividentVal.replace(/\,/g, '');
           dividentVal = parseInt(dividentVal, 10);
         }
-        this.otherSourceForm.controls.divident.setValue(Number(dividentVal));
+        this.otherSourceForm.controls.dividend.setValue(Number(dividentVal));
       }
       else{
-        this.otherSourceForm.controls.divident.setValue(0);
+        this.otherSourceForm.controls.dividend.setValue(0);
       }
 
       // if(otherInfo.filter(item=> item.OthSrcNatureDesc === "SAV").length > 0){
@@ -2670,7 +2670,7 @@ export class Itr2mainComponent implements OnInit {
       console.log('sourcesOfIncome: ', this.sourcesOfIncome)
       // this.sourcesOfIncome.interestFromOther = incomeDeduction.IncomeOthSrc - (this.sourcesOfIncome.dividend + this.sourcesOfIncome.interestFromSaving +  this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax);
 
-      let otherTotal = this.otherSourceForm.controls.divident.value + this.otherSourceForm.controls.interestFromSaving.value + this.otherSourceForm.controls.interestFromTaxRefund.value + this.otherSourceForm.controls.other.value
+      let otherTotal = this.otherSourceForm.controls.dividend.value + this.otherSourceForm.controls.interestFromSaving.value + this.otherSourceForm.controls.interestFromTaxRefund.value + this.otherSourceForm.controls.other.value
         + this.otherSourceForm.controls.interestFromDeposite.value;
       this.otherSourceForm.controls.total.setValue(otherTotal);
     }
@@ -4440,7 +4440,7 @@ export class Itr2mainComponent implements OnInit {
 
 
   incomeFromCapGain: any = 0;
-  getTaxDeductionAtSourceData() {
+  getTaxDeductionAtSourceData(itrData?) {
     this.capital_Gain.shortTermCapitalGain = 0;
     this.capital_Gain.shortTermCapitalGain15 = 0;
     this.capital_Gain.longTermCapitalGain10 = 0;
@@ -4541,18 +4541,26 @@ export class Itr2mainComponent implements OnInit {
       }
     }
 
-    if(this.personalInfoForm.controls['regime'].value === 'N'){
-      this.incomeFromCapGain = Number(this.capital_Gain.shortTermCapitalGain) + Number(this.capital_Gain.shortTermCapitalGain15) + Number(this.capital_Gain.longTermCapitalGain10) + Number(this.capital_Gain.longTermCapitalGain20);
-      this.computationOfIncomeForm.controls['capitalGain'].setValue(this.incomeFromCapGain);
-      console.log('Capital gain total part for old tax Regime: ', this.itr_2_Summary.capitalGainIncome);
-    }
-    else{
-      this.incomeFromCapGain = Number(this.capital_Gain.shortTermCapitalGain) + Number(this.capital_Gain.shortTermCapitalGain15) + Number(this.capital_Gain.longTermCapitalGain10) + Number(this.capital_Gain.longTermCapitalGain20);
-      this.computationOfIncomeForm.controls['capitalGain'].setValue(this.incomeFromCapGain);
-
-      this.incomeFromCapGain = Number(this.newRegimeTaxSummary.shortTermCapitalGainTotal) + Number(this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal) + Number(this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal) + Number(this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal);
-      this.newRegimeTaxSummary.capitalGain = this.incomeFromCapGain;
-      console.log('Capital gain total part for new tax Regime: ', this.newRegimeTaxSummary);
+    
+    
+    console.log('itrData -> ',itrData);
+    if(this.utilService.isNonEmpty(itrData)){
+      if(this.personalInfoForm.controls['regime'].value === 'N'){
+        // this.incomeFromCapGain = Number(this.capital_Gain.shortTermCapitalGain) + Number(this.capital_Gain.shortTermCapitalGain15) + Number(this.capital_Gain.longTermCapitalGain10) + Number(this.capital_Gain.longTermCapitalGain20);
+        this.incomeFromCapGain = itrData['PartB-TI'].hasOwnProperty('CapGain') ? this.getNumberFormat(itrData['PartB-TI'].CapGain.TotalCapGains) : 0;      
+        this.computationOfIncomeForm.controls['capitalGain'].setValue(this.incomeFromCapGain);
+        console.log('Capital gain total part for old tax Regime: ', this.itr_2_Summary.capitalGainIncome);
+      }
+      else{
+        // this.incomeFromCapGain = Number(this.capital_Gain.shortTermCapitalGain) + Number(this.capital_Gain.shortTermCapitalGain15) + Number(this.capital_Gain.longTermCapitalGain10) + Number(this.capital_Gain.longTermCapitalGain20);
+        this.incomeFromCapGain = itrData['PartB-TI'].hasOwnProperty('CapGain') ? this.getNumberFormat(itrData['PartB-TI'].CapGain.TotalCapGains) : 0;      
+        this.computationOfIncomeForm.controls['capitalGain'].setValue(this.incomeFromCapGain);
+  
+        // this.incomeFromCapGain = Number(this.newRegimeTaxSummary.shortTermCapitalGainTotal) + Number(this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal) + Number(this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal) + Number(this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal);
+        this.incomeFromCapGain = itrData['PartB-TI'].hasOwnProperty('CapGain') ? this.getNumberFormat(itrData['PartB-TI'].CapGain.TotalCapGains) : 0;      
+        this.newRegimeTaxSummary.capitalGain = this.incomeFromCapGain;
+        console.log('Capital gain total part for new tax Regime: ', this.newRegimeTaxSummary);
+      }
     }
    
   
@@ -4566,7 +4574,8 @@ export class Itr2mainComponent implements OnInit {
           this.newRegimeTaxSummary.tdsOnSalary = this.newRegimeTaxSummary.tdsOnSalary + this.tdsOnSal.api.getRenderedNodes()[i].data.totalTds;
         }
       }
-    }
+     }
+
 
     debugger
     if (this.tdsOtherThanSal && this.tdsOtherThanSal.api && this.tdsOtherThanSal.api.getRenderedNodes()) {
@@ -5200,7 +5209,7 @@ export class Itr2mainComponent implements OnInit {
   calculateOtherSourceTotal() {
     console.log('interestFromSaving: ', this.otherSourceForm, this.otherSourceForm['controls'].interestFromSaving.value)
     let total = Number(this.otherSourceForm['controls'].interestFromSaving.value) + Number(this.otherSourceForm['controls'].interestFromDeposite.value) + Number(this.otherSourceForm['controls'].interestFromTaxRefund.value)
-      + Number(this.otherSourceForm['controls'].other.value) + Number(this.otherSourceForm['controls'].divident.value);    //+ Number(this.otherSourceForm['controls'].agricultureIncome.value) + Number(this.otherSourceForm['controls'].dividendIncome.value);
+      + Number(this.otherSourceForm['controls'].other.value) + Number(this.otherSourceForm['controls'].dividend.value);    //+ Number(this.otherSourceForm['controls'].agricultureIncome.value) + Number(this.otherSourceForm['controls'].dividendIncome.value);
     this.otherSourceForm['controls'].total.setValue(total);
     this.computationOfIncomeForm['controls'].otherIncome.setValue(total);
     this.calculateTotalHeadWiseIncome()
@@ -7013,7 +7022,7 @@ export class Itr2mainComponent implements OnInit {
   // }
 
 
-  updateCapitalGain(caitalGainData) {
+  updateCapitalGain(caitalGainData, itrData?) {
     debugger
     console.log('caitalGainData: ', caitalGainData);
     if (this.utilService.isNonEmpty(caitalGainData)) {
@@ -7046,7 +7055,7 @@ export class Itr2mainComponent implements OnInit {
         this.longTerm20Per.api.setRowData(rowData);
       }
     }
-    this.getTaxDeductionAtSourceData();
+    this.getTaxDeductionAtSourceData(itrData);
   }
 
   setCapitalGainRowDate(capGainINfo) {
@@ -7169,10 +7178,10 @@ export class Itr2mainComponent implements OnInit {
         };
         this.incomeData.push(obj)
       }
-      if (this.utilService.isNonEmpty(this.otherSourceForm['controls'].divident.value)) {
+      if (this.utilService.isNonEmpty(this.otherSourceForm['controls'].dividend.value)) {
         let obj = {
           expenses: 0,
-          amount: this.otherSourceForm['controls'].divident.value,
+          amount: this.otherSourceForm['controls'].dividend.value,
           taxableAmount: 0,
           exemptAmount: 0,
           incomeType: 'DIVIDEND_INCOME',
@@ -8197,21 +8206,23 @@ export class Itr2mainComponent implements OnInit {
   }
 
   calOldRegimeCapitaGain(){
-    let totalCapGain = Number(this.capital_Gain.shortTermCapitalGain) + Number(this.capital_Gain.shortTermCapitalGain15) + Number(this.capital_Gain.longTermCapitalGain10) + Number(this.capital_Gain.longTermCapitalGain20);
+    let totalCapGain = (this.getNumberFormat(this.capital_Gain.shortTermCapitalGain) > 0 ? this.getNumberFormat(this.capital_Gain.shortTermCapitalGain) : 0) + (this.getNumberFormat(this.capital_Gain.shortTermCapitalGain15) > 0 ? this.getNumberFormat(this.capital_Gain.shortTermCapitalGain15) : 0) 
+                      + (this.getNumberFormat(this.capital_Gain.longTermCapitalGain10) > 0 ? this.getNumberFormat(this.capital_Gain.longTermCapitalGain10) : 0) + (this.getNumberFormat(this.capital_Gain.longTermCapitalGain20) > 0 ? this.getNumberFormat(this.capital_Gain.longTermCapitalGain20) : 0);
     this.computationOfIncomeForm.controls['capitalGain'].setValue(totalCapGain);
     this.calculateTotalHeadWiseIncome();
   }
 
   calNewRegimeCapitaGain(){
-    let totalCapGain = Number(this.newRegimeTaxSummary.shortTermCapitalGainTotal) + Number(this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal) + Number(this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal) + Number(this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal);
+    let totalCapGain = (this.getNumberFormat(this.newRegimeTaxSummary.shortTermCapitalGainTotal) > 0 ? this.getNumberFormat(this.newRegimeTaxSummary.shortTermCapitalGainTotal) : 0) + (this.getNumberFormat(this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal) > 0 ? this.getNumberFormat(this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal) : 0) 
+                      + (this.getNumberFormat(this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal) > 0 ? this.getNumberFormat(this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal) : 0) + (this.getNumberFormat(this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal) > 0 ? this.getNumberFormat(this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal) : 0);
     this.newRegimeTaxSummary.capitalGain = totalCapGain;
     this.calTotalHeadWiseIncome();
   }
 
   calTotalHeadWiseIncome(){
-    let headWiseIncome = Number(this.newRegimeTaxSummary.salary) + (Number(this.newRegimeTaxSummary.housePropertyIncome) > 0 ? Number(this.newRegimeTaxSummary.housePropertyIncome) : 0)
-    + (this.newRegimeTaxSummary.capitalGain > 0 ? this.newRegimeTaxSummary.capitalGain : 0) + (Number(this.newRegimeTaxSummary.otherIncome) > 0 ? Number(this.newRegimeTaxSummary.otherIncome) : 0)
-    + (Number(this.newRegimeTaxSummary.presumptiveIncome) > 0 ? Number(this.newRegimeTaxSummary.presumptiveIncome) : 0);
+    let headWiseIncome = this.getNumberFormat(this.newRegimeTaxSummary.salary) + (this.getNumberFormat(this.newRegimeTaxSummary.housePropertyIncome) > 0 ? this.getNumberFormat(this.newRegimeTaxSummary.housePropertyIncome) : 0)
+    + (this.newRegimeTaxSummary.capitalGain > 0 ? this.newRegimeTaxSummary.capitalGain : 0) + (this.getNumberFormat(this.newRegimeTaxSummary.otherIncome) > 0 ? this.getNumberFormat(this.newRegimeTaxSummary.otherIncome) : 0)
+    + (this.getNumberFormat(this.newRegimeTaxSummary.presumptiveIncome) > 0 ? this.getNumberFormat(this.newRegimeTaxSummary.presumptiveIncome) : 0);
 
     this.newRegimeTaxSummary.totalHeadWiseIncome = headWiseIncome;
   }
