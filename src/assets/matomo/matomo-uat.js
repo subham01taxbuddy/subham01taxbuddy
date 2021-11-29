@@ -13,7 +13,9 @@ function matomo(path) {
       const _paq = window._paq = window._paq || [];
       let userInfo = JSON.parse(localStorage.getItem("UMD"));
       _paq.push(["disableCookies"]);
-      _paq.push(['setUserId', userInfo.USER_MOBILE]);
+      if(!!userInfo){
+        _paq.push(['setUserId', userInfo.USER_UNIQUE_ID]);
+      }
       _paq.push(["setCustomUrl", path]);
       _paq.push(["trackPageView"]);
       _paq.push(['enableLinkTracking']);
