@@ -20,10 +20,11 @@ import { MainSubsciptionComponent } from './main-subsciption/main-subsciption.co
 import { TeamSubscriptionsComponent } from './team-subscriptions/team-subscriptions.component';
 import { FilingCalendarComponent } from './filing-calendar/filing-calendar.component';
 import { NgxPaginationModule } from "ngx-pagination";
+import { CreditNotesComponent } from './credit-notes/credit-notes.component';
 
 @NgModule({
     declarations: [SubscriptionDetailComponent, AddNewPlanComponent, AddSubscriptionComponent, SubscriptionHeadComponent,
-        AddInvoiceComponent, InvoicesStatusComponent, InvoiceDialogComponent, MySubscriptionComponent, MainSubsciptionComponent, TeamSubscriptionsComponent, FilingCalendarComponent],
+        AddInvoiceComponent, InvoicesStatusComponent, InvoiceDialogComponent, MySubscriptionComponent, MainSubsciptionComponent, TeamSubscriptionsComponent, FilingCalendarComponent, CreditNotesComponent],
     imports: [
         SubscriptionRoutingModule,
         CommonModule,
