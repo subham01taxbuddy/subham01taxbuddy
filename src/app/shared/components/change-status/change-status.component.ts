@@ -117,7 +117,7 @@ export class ChangeStatusComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert("success", "Status update succesfully.");
           setTimeout(() => {
-            this.dialogRef.close({ event: 'close', data: 'statusChanged' })
+            this.dialogRef.close({ event: 'close', data: 'statusChanged', responce: res })
           }, 4000)
         },
           error => {
@@ -135,7 +135,7 @@ export class ChangeStatusComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert("success", "Caller Agent update succesfully.");
           setTimeout(() => {
-            this.dialogRef.close({ event: 'close', data: 'statusChanged' })
+            this.dialogRef.close({ event: 'close', data: 'statusChanged' , responce: res})
           }, 4000)
         },
           error => {
