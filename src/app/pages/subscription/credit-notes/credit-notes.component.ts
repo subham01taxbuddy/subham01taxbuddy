@@ -116,19 +116,8 @@ export class CreditNotesComponent implements OnInit {
         headerName: 'User Id',
         field: 'userId',
         width: 80,
+        pinned: 'left',
         suppressMovable: true,
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Invoice No',
-        field: 'invoiceNo',
-        width: 150,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -139,6 +128,41 @@ export class CreditNotesComponent implements OnInit {
         headerName: 'User Name',
         field: 'billTo',
         width: 180,
+        pinned: 'left',
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Credit Note No',
+        field: 'creditNoteNo',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Credit Note Date',
+        field: 'creditNoteDate',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (data) => {
+          return formatDate(data.value, 'dd MMM yyyy', this.locale)
+        }
+      },
+      {
+        headerName: 'Invoice No',
+        field: 'invoiceNo',
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -181,28 +205,7 @@ export class CreditNotesComponent implements OnInit {
           return formatDate(data.value, 'dd MMM yyyy', this.locale)
         }
       },
-      {
-        headerName: 'Credit Note No',
-        field: 'creditNoteNo',
-        width: 150,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Credit Note Date',
-        field: 'creditNoteDate',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: (data) => {
-          return formatDate(data.value, 'dd MMM yyyy', this.locale)
-        }
-      },
+     
       {
         headerName: 'GSTIN No',
         field: 'gstin',
