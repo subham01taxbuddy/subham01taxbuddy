@@ -96,14 +96,13 @@ export class CreditNotesComponent implements OnInit {
           invoiceNo: creditNotes[i].invoiceNo,
           txbdyInvoiceId: creditNotes[i].txbdyInvoiceId,
           invoiceDate: creditNotes[i].invoiceDate,
-          dueDate: creditNotes[i].dueDate,
           modeOfPayment: creditNotes[i].modeOfPayment,
-          // paymentDate: creditNotes[i].paymentDate,
-          // paymentStatus: creditNotes[i].paymentStatus,
-          // purpose: creditNotes[i].itemList[0].itemDescription,
           inovicePreparedBy: creditNotes[i].inovicePreparedBy,
-          // ifaLeadClient: creditNotes[i].ifaLeadClient,
-          // total: creditNotes[i].total
+           creditNoteNo: creditNotes[i].creditNoteNo,
+           creditNoteDate: creditNotes[i].creditNoteDate,
+           gstin: creditNotes[i].gstin,
+          serviceType: creditNotes[i].serviceType,
+          total: creditNotes[i].total
         })
       creditNotesData.push(updateInvoice)
     }
@@ -183,38 +182,64 @@ export class CreditNotesComponent implements OnInit {
         }
       },
       {
-        headerName: 'Due Date',
-        field: 'dueDate',
+        headerName: 'Credit Note No',
+        field: 'creditNoteNo',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Credit Note Date',
+        field: 'creditNoteDate',
         width: 100,
         suppressMovable: true,
-        tooltip: function (params) {
-          let currentDate = new Date();
-          let dateSent = new Date(params.data.dueDate);
-          let diff = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate())) / (1000 * 60 * 60 * 24));
-          if (diff > 0 && params.data.paymentStatus !== 'Paid') {
-            return 'Due date is over, contact user for the payment collection';
-          }
-        },
+        cellStyle: { textAlign: 'center' },
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd MMM yyyy', this.locale)
-        },
-        cellStyle: function (params) {
-          let currentDate = new Date();
-          let dateSent = new Date(params.data.dueDate);
-          let diff = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate())) / (1000 * 60 * 60 * 24));
-          if (diff > 0 && params.data.paymentStatus !== 'Paid') {
-            return {
-              textAlign: 'center',
-              display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center',
-              color: 'red',
-            }
-          } else {
-            return { textAlign: 'center' }
-          }
-        },
+        }
       },
+      {
+        headerName: 'GSTIN No',
+        field: 'gstin',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Service Type',
+        field: 'serviceType',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Total',
+        field: 'total',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      
       {
         headerName: 'Payment Mode',
         field: 'modeOfPayment',
@@ -225,218 +250,8 @@ export class CreditNotesComponent implements OnInit {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        },
-        // valueGetter: function (params) {
-        //   if (params.data.modeOfPayment) {
-        //     return params.data.modeOfPayment;
-        //   }
-        // },
+        }
       },
-      // {
-      //   headerName: 'Edit',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return `<button type="button" class="action_icon add_button" title="Paid Invoice" disabled
-      //        style="border: none; background: transparent; font-size: 16px; cursor:not-allowed">
-      //       <i class="fa fa-pencil-square" aria-hidden="true"></i>
-      //      </button>`;
-      //     } else {
-      //       return `<button type="button" class="action_icon add_button" title="Update Payment details" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //       <i class="fa fa-pencil-square" aria-hidden="true" data-action-type="edit"></i>
-      //      </button>`;
-      //     }
-      //   },
-      //   width: 55,
-      //   pinned: 'right',
-      //   cellStyle: function (params) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return {
-      //         textAlign: 'center',
-      //         display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center',
-      //         backgroundColor: '#dddddd',
-      //         color: '#dddddd',
-      //       }
-      //     } else {
-      //       return {
-      //         textAlign: 'center',
-      //         display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center'
-      //       }
-      //     }
-      //   },
-      // },
-      // {
-      //   headerName: 'Mail Noti',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params) {
-      //     return `<button type="button" class="action_icon add_button" title="Mail notification" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //       <i class="fa fa-envelope" aria-hidden="true" data-action-type="send-Mail-Notification"></i>
-      //      </button>`;
-      //   },
-      //   width: 55,
-      //   pinned: 'right',
-      //   cellStyle: {
-      //     textAlign: 'center', display: 'flex',
-      //     'align-items': 'center',
-      //     'justify-content': 'center'
-      //   },
-      // },
-      // {
-      //   headerName: 'Download invoice',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params) {
-      //     return `<button type="button" class="action_icon add_button" title="Download Invoice" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //    <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
-      //   </button>`
-
-      //   },
-      //   width: 55,
-      //   pinned: 'right',
-      //   cellStyle: {
-      //     textAlign: 'center', display: 'flex',
-      //     'align-items': 'center',
-      //     'justify-content': 'center'
-      //   },
-      // },
-      // {
-      //   headerName: 'Whatsapp reminder',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return `<button type="button" class="action_icon add_button" disabled title="Whatsapp reminder"
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:not-allowed">
-      //       <i class="fa fa-whatsapp" aria-hidden="true"></i>
-      //      </button>`;
-      //     } else {
-      //       return `<button type="button" class="action_icon add_button" title="Whatsapp reminder"
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //       <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-reminder"></i>
-      //      </button>`;
-      //     }
-      //   },
-      //   width: 55,
-      //   pinned: 'right',
-      //   cellStyle: function (params) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return {
-      //         textAlign: 'center', display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center',
-      //         backgroundColor: '#dddddd',
-      //         color: '#dddddd',
-      //       }
-      //     } else {
-      //       return {
-      //         textAlign: 'center', display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center'
-      //       }
-      //     }
-      //   },
-      // },
-      // {
-      //   headerName: 'Mail reminder',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return `<button type="button" class="action_icon add_button" disabled title="Mail reminder"
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:not-allowed">
-      //       <i class="fa fa-bell" aria-hidden="true"></i>
-      //      </button>`;
-      //     } else {
-      //       return `<button type="button" class="action_icon add_button" title="Mail reminder"
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //       <i class="fa fa-bell" aria-hidden="true" data-action-type="mail-reminder"></i>
-      //      </button>`;
-      //     }
-      //   },
-      //   width: 55,
-      //   pinned: 'right',
-      //   cellStyle: function (params) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return {
-      //         textAlign: 'center', display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center',
-      //         backgroundColor: '#dddddd',
-      //         color: '#dddddd',
-      //       }
-      //     } else {
-      //       return {
-      //         textAlign: 'center', display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center'
-      //       }
-      //     }
-      //   },
-      // },
-      // {
-      //   headerName: 'Delete',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return `<button type="button" class="action_icon add_button" disabled title="Paid Invoice you can not delete" 
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:not-allowed">
-      //       <i class="fa fa-trash" aria-hidden="true"></i>
-      //      </button>`;
-      //     } else {
-      //       return `<button type="button" class="action_icon add_button" title="Delete Invoice" 
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //       <i class="fa fa-trash" aria-hidden="true" data-action-type="delete-invoice"></i>
-      //      </button>`;
-      //     }
-      //   },
-      //   width: 55,
-      //   pinned: 'right',
-      //   cellStyle: function (params) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return {
-      //         textAlign: 'center', display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center',
-      //         backgroundColor: '#dddddd',
-      //         color: '#dddddd',
-      //       }
-      //     } else {
-      //       return {
-      //         textAlign: 'center', display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center'
-      //       }
-      //     }
-      //   },
-      // }
     ]
   }
 
