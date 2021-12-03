@@ -6,12 +6,26 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { AppConstants } from 'app/shared/constants';
 import { UtilsService } from 'app/services/utils.service';
 import { DatePipe } from '@angular/common';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 @Component({
   selector: 'app-email-reports',
   templateUrl: './email-reports.component.html',
   styleUrls: ['./email-reports.component.css'],
-  providers: [DatePipe]
+  providers: [DatePipe, { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class EmailReportsComponent implements OnInit {
   emailAddress = new FormControl('', Validators.compose([Validators.required, Validators.pattern(AppConstants.emailRegex)]))
@@ -30,7 +44,7 @@ export class EmailReportsComponent implements OnInit {
     this.dateSearchForm = this.fb.group({
       fromDate: [new Date(), Validators.required],
       toDate: [new Date(), Validators.required],
-      statusId: [null],
+      statusId: [null, Validators.required],
     });
   }
   async getMasterStatusList() {
@@ -51,7 +65,7 @@ export class EmailReportsComponent implements OnInit {
     if (this.dateSearchForm.valid) {
       let fromDate = this.datePipe.transform(this.dateSearchForm.value.fromDate, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.dateSearchForm.value.toDate, 'yyyy-MM-dd');
-      const param = `${environment.url}/user/status-wise-user-data-es?from=${fromDate}T00:00:00.000Z&to=${toDate}T23:59:00.000Z&statusId=${this.dateSearchForm.value.statusId}`
+      const param = `${environment.url}/user/status-wise-user-data?from=${fromDate}&to=${toDate}&statusId=${this.dateSearchForm.value.statusId}`
       console.log(param);
       window.open(param)
       // this.userMsService.getMethod(param).subscribe(res => {
