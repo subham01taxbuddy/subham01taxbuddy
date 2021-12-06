@@ -479,8 +479,9 @@ export class Calling2dot0Component implements OnInit {
   }
 
   startCalling(user) {
-    console.log('user: ', user)
-    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Chat icon'])
+    console.log('user: ', user);
+    let callInfo = user.customerNumber;
+    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Call', callInfo])
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
