@@ -1,4 +1,3 @@
-// import { environment } from './environments/environment';
 
 function matomo(docTitle, path, event) {
     (function () {
@@ -16,7 +15,8 @@ function matomo(docTitle, path, event) {
       let userInfo = JSON.parse(localStorage.getItem("UMD"));
       _paq.push(["disableCookies"]);
       if(!!userInfo){
-        _paq.push(['setUserId', userInfo.USER_UNIQUE_ID]);
+        let commonUserId = userInfo.USER_UNIQUE_ID+'-'+userInfo.USER_F_NAME+' '+userInfo.USER_L_NAME;
+        _paq.push(['setUserId', commonUserId]);
       }
       else{
         _paq.push(['resetUserId']);
