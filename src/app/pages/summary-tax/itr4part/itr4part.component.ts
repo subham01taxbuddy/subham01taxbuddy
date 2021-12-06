@@ -478,7 +478,7 @@ export class Itr4partComponent implements OnInit {
   }
 
   ngDoCheck() {
-    console.log('natureOfBusinessForm valid: ',this.natureOfBusinessForm)
+    console.log('natureOfBusinessForm valid: ',this.natureOfBusinessForm.valid, this.natureOfBusinessForm)
     if (this.natureOfBusinessForm.valid) {
       //console.log('natureOfBusinessForm value: ',this.natureOfBusinessForm.value)
       this.getBusinessInfo.emit(this.natureOfBusinessForm)
