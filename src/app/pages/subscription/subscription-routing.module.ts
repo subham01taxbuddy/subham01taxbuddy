@@ -7,6 +7,7 @@ import { InvoicesStatusComponent } from "./invoices-status/invoices-status.compo
 import { MySubscriptionComponent } from "./my-subscription/my-subscription.component";
 import { SubscriptionDetailComponent } from "./subscription-detail/subscription-detail.component";
 import { SubscriptionHeadComponent } from "./subscription-head/subscription-head.component";
+import { CreditNotesComponent } from './credit-notes/credit-notes.component';
 
 const routes: Routes = [
     {
@@ -18,6 +19,7 @@ const routes: Routes = [
             { path: 'add-invoice', component: AddInvoiceComponent },
             { path: 'my-sub', component: MySubscriptionComponent },
             { path: 'team-sub', component: TeamSubscriptionsComponent },
+            { path: 'credit-notes', component: CreditNotesComponent },
             { path: '', redirectTo: '/pages/subscription/sub', pathMatch: 'full' }
         ]
     }

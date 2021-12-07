@@ -47,7 +47,10 @@
               "src/assets/styles/icons.css",
               "src/assets/styles/main.less"
             ],
-            "scripts": ["node_modules/mammoth/mammoth.browser.min.js"]
+            "scripts": [
+              "node_modules/mammoth/mammoth.browser.min.js",
+              "src/assets/matomo/matomo-uat.js"
+            ]
           },
           "configurations": {
             "production": {
