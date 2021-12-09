@@ -36,7 +36,7 @@ export class CreditNotesComponent implements OnInit {
   toDateMin: any;
   creditNotesGridOptions: GridOptions;
 
-  constructor(private fb: FormBuilder, @Inject(LOCALE_ID) private locale: string, private itrService: ItrMsService, private datePipe: DatePipe, private utilService: UtilsService) { 
+  constructor(private fb: FormBuilder, @Inject(LOCALE_ID) private locale: string, private itrService: ItrMsService, private datePipe: DatePipe, private utilService: UtilsService) {
     this.creditNotesGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.creditNotesCreateColoumnDef(),
@@ -62,28 +62,28 @@ export class CreditNotesComponent implements OnInit {
     this.toDateMin = FromDate;
   }
 
-  getCreditNotesInfo(type){
+  getCreditNotesInfo(type) {
     this.loading = true;
     var param;
-    if(type === 'showAll'){
+    if (type === 'showAll') {
       param = `/credit-note`;
     }
-    else{
+    else {
       let fromData = this.datePipe.transform(this.creditNotesForm.value.fromDate, 'yyyy-MM-dd');
       let toData = this.datePipe.transform(this.creditNotesForm.value.toDate, 'yyyy-MM-dd');
       param = `/credit-note?from=${fromData}&to=${toData}`;
     }
-   
+
     this.itrService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
       this.creditNotesGridOptions.api.setRowData(this.createRowData(res))
     },
-    error=>{
-      this.loading = false;
-    })
+      error => {
+        this.loading = false;
+      })
   }
 
-  createRowData(creditNotes){
+  createRowData(creditNotes) {
     console.log('creditNotes: ', creditNotes)
     var creditNotesData = [];
     for (let i = 0; i < creditNotes.length; i++) {
@@ -98,9 +98,9 @@ export class CreditNotesComponent implements OnInit {
           invoiceDate: creditNotes[i].invoiceDate,
           modeOfPayment: creditNotes[i].modeOfPayment,
           inovicePreparedBy: creditNotes[i].inovicePreparedBy,
-           creditNoteNo: creditNotes[i].creditNoteNo,
-           creditNoteDate: creditNotes[i].creditNoteDate,
-           gstin: creditNotes[i].gstin,
+          creditNoteNo: creditNotes[i].creditNoteNo,
+          creditNoteDate: creditNotes[i].creditNoteDate,
+          gstin: creditNotes[i].gstin,
           serviceType: creditNotes[i].serviceType,
           total: creditNotes[i].total
         })
@@ -110,7 +110,7 @@ export class CreditNotesComponent implements OnInit {
     return creditNotesData;
   }
 
-  creditNotesCreateColoumnDef(){
+  creditNotesCreateColoumnDef() {
     return [
       {
         headerName: 'User Id',
@@ -156,7 +156,7 @@ export class CreditNotesComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data) => {
-          return formatDate(data.value, 'dd MMM yyyy', this.locale)
+          return data.value ? formatDate(data.value, 'dd MMM yyyy', this.locale) : 'NA'
         }
       },
       {
@@ -205,7 +205,7 @@ export class CreditNotesComponent implements OnInit {
           return formatDate(data.value, 'dd MMM yyyy', this.locale)
         }
       },
-     
+
       {
         headerName: 'GSTIN No',
         field: 'gstin',
@@ -242,7 +242,7 @@ export class CreditNotesComponent implements OnInit {
           debounceMs: 0
         }
       },
-      
+
       {
         headerName: 'Payment Mode',
         field: 'modeOfPayment',
@@ -258,12 +258,12 @@ export class CreditNotesComponent implements OnInit {
     ]
   }
 
-  downloadDocs(type){
+  downloadDocs(type) {
     var param;
-    if(type === 'downloadAll'){
+    if (type === 'downloadAll') {
       param = `/itr/credit-note-download`;
     }
-    else{
+    else {
       let fromData = this.datePipe.transform(this.creditNotesForm.value.fromDate, 'yyyy-MM-dd');
       let toData = this.datePipe.transform(this.creditNotesForm.value.toDate, 'yyyy-MM-dd');
       param = `/itr/credit-note-download?from=${fromData}&to=${toData}`;
@@ -272,11 +272,11 @@ export class CreditNotesComponent implements OnInit {
     location.href = environment.url + param;
   }
 
-  isDateSelected(formControl){
-    if(this.utilService.isNonEmpty(formControl.value.fromDate) && this.utilService.isNonEmpty(formControl.value.toDate)){
+  isDateSelected(formControl) {
+    if (this.utilService.isNonEmpty(formControl.value.fromDate) && this.utilService.isNonEmpty(formControl.value.toDate)) {
       return true;
     }
-    else{
+    else {
       return false;
     }
   }
