@@ -2574,7 +2574,7 @@ export class Itr2mainComponent implements OnInit {
           purchaseCost: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('DeductSec48') ? this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.DeductSec48.TotalDedn) : 0,
           capitalGain: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('CapgainonAssets') ? this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : 0,
           deductions: longTeemCG20Per.SaleofAssetNA.hasOwnProperty('ExemptionOrDednUs54') ? this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.ExemptionOrDednUs54.ExemptionGrandTotal) : 0,
-          netCapitalGain: this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) < 0 ? this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : (this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.FullConsideration)),
+          netCapitalGain: this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) < 0 ? this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.CapgainonAssets) : (this.getNumberFormat(longTeemCG20Per.SaleofAssetNA.CapgainonAssets)),
         }
         taxPaid.longTermCapitalGainAt20Percent.push(longTerm20OtherAssetsObj);
         // this.updateCapitalGain(taxPaid);
