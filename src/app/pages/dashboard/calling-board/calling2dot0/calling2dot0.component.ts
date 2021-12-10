@@ -35,6 +35,9 @@ export class Calling2dot0Component implements OnInit {
     callerAgentUserId: null
   }
   isAdmin = false;
+  itrStatus: any = [];
+  callers: any = [];
+
   constructor(public utilsService: UtilsService,
     private userMsService: UserMsService,
     private dialog: MatDialog,
@@ -71,6 +74,7 @@ export class Calling2dot0Component implements OnInit {
       this.searchByQueryParams('');
     }
     this.searchByQueryParams('PRIORITY');
+    this.getStatus();
   }
 
   async getAgentList() {
@@ -139,7 +143,7 @@ export class Calling2dot0Component implements OnInit {
   }
 
   serchByMobNo() {
-    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Search',this.searchParam.customerNumber]);
+    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Search', this.searchParam.customerNumber]);
     this.loading = true;
     const param = `/customers-es?customerNumber=${this.searchParam.customerNumber}&serviceType=${this.searchParam.serviceType}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
@@ -515,7 +519,7 @@ export class Calling2dot0Component implements OnInit {
 
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      console.log('result: ',result);
+      console.log('result: ', result);
       if (result) {
         if (result.data === "statusChanged") {
           this.searchByQueryParams('');
@@ -528,16 +532,19 @@ export class Calling2dot0Component implements OnInit {
           // }
         }
 
-        if(result.responce){
-          if(mode === 'Update Status'){
-            let changeStatus = client.statusId+' to '+result.responce.statusId;
+        if (result.responce) {
+          if (mode === 'Update Status') {
+            console.log('itrStatus array: ',this.itrStatus);
+            console.log('client statusId: ',client.statusId)
+            console.log('**** ',this.itrStatus.filter(item => item.statusId === client.statusId))
+            let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; //result.responce.statusId;
             matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Status', changeStatus])
           }
           // else if(mode === 'Update Caller'){
           //   let updateCaller = client.statusId+' to '+result.responce.statusId;
           //   matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Caller', changeStatus])
           // }
-         
+
         }
       }
     });
@@ -551,4 +558,39 @@ export class Calling2dot0Component implements OnInit {
     console.log('clicked on next:', this.searchParam.page)
     this.searchByQueryParams('');
   }
+
+  getStatus() {
+    let param = '/itr-status-master/source/BACK_OFFICE';
+    this.userMsService.getMethod(param).subscribe(respoce => {
+      console.log('status responce: ', respoce);
+      if (respoce instanceof Array && respoce.length > 0) {
+        this.itrStatus = respoce;
+      }
+      else {
+        this.itrStatus = [];
+      }
+    },
+      error => {
+        console.log('Error during fetching status info.')
+      })
+  }
+
+  getCallers() {
+    let param = `/call-management/caller-agents`;
+    this.userMsService.getMethod(param).subscribe(respoce => {
+      console.log('status responce: ', respoce);
+      if (respoce instanceof Array && respoce.length > 0) {
+        this.callers = respoce;
+        // this.callers.sort((a, b) => a.name > b.name ? 1 : -1)
+        // this.callers = this.callers.filter(item => item.callerAgentUserId !== this.data.userInfo.callerAgentUserId)
+      }
+      else {
+        this.callers = [];
+      }
+    },
+      error => {
+        console.log('Error during fetching status info.')
+      })
+  }
+
 }

@@ -545,7 +545,8 @@ export class TodaysCallsComponent implements OnInit {
         
         if(result.responce){
           if(mode === 'Update Status'){
-            let changeStatus = client.statusId+' to '+result.responce.statusId;
+            // let changeStatus = client.statusId+' to '+result.responce.statusId;
+            let changeStatus = this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; //result.responce.statusId;
             matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Update Status',changeStatus]);
           }
           // else if(mode === 'Update Caller'){
@@ -594,5 +595,7 @@ export class TodaysCallsComponent implements OnInit {
     matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Whatsapp icon']);
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
   }
+
+  
 
 }
