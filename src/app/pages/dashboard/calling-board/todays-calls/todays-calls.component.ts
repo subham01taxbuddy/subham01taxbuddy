@@ -492,7 +492,8 @@ export class TodaysCallsComponent implements OnInit {
 
   startCalling(user) {
     console.log('user: ', user);
-    matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Call']);
+    let callInfo = user.customerNumber;
+    matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Call', callInfo]);
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -546,7 +547,7 @@ export class TodaysCallsComponent implements OnInit {
         if(result.responce){
           if(mode === 'Update Status'){
             // let changeStatus = client.statusId+' to '+result.responce.statusId;
-            let changeStatus = this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; //result.responce.statusId;
+            let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; //result.responce.statusId;
             matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Update Status',changeStatus]);
           }
           // else if(mode === 'Update Caller'){

@@ -540,10 +540,11 @@ export class Calling2dot0Component implements OnInit {
             let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; //result.responce.statusId;
             matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Status', changeStatus])
           }
-          // else if(mode === 'Update Caller'){
+           else if(mode === 'Update Caller'){
+             console.log('Update Caller responce: ',result.responce);
           //   let updateCaller = client.statusId+' to '+result.responce.statusId;
           //   matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Caller', changeStatus])
-          // }
+          }
 
         }
       }

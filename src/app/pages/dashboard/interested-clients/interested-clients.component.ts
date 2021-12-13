@@ -10,6 +10,7 @@ import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.
 import { AppConstants } from 'app/shared/constants';
 import { formatDate } from '@angular/common';
 import { DownloadDialogComponent } from './download-dialog/download-dialog.component';
+declare function matomo(title: any, url: any, event: any);
 
 @Component({
   selector: 'app-interested-clients',
@@ -373,12 +374,17 @@ export class InterestedClientsComponent implements OnInit {
     var param2;
     // if (this.isAdmin) {
     if (this.utilsService.isNonEmpty(searchMobNo)) {
+      matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', searchMobNo]);
       param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
     } else {
       this.searchMobNo = '';
       if (this.showAllUser) {
+        let status = this.itrStatus.filter(item=> item.statusId === this.selectedStatus)[0].statusName;
+        matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', status]);
         param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15`;
       } else {
+        let statusAgentId =  this.selectedAgent+' - '+this.itrStatus.filter(item => item.statusId === this.selectedStatus)[0].statusName;
+        matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', statusAgentId]);
         param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
       }
     }
