@@ -71,7 +71,8 @@ export class Itr4partComponent implements OnInit {
           balanceWithBank: [],
           cashInHand: [],
           loanAndAdvances: [],
-          otherAssets: []
+          otherAssets: [],
+          investment: []
         })
       }
       else{
@@ -107,7 +108,8 @@ export class Itr4partComponent implements OnInit {
           balanceWithBank: [],
           cashInHand: [],
           loanAndAdvances: [],
-          otherAssets: []
+          otherAssets: [],
+          investment: []
         })
       }
 
@@ -115,6 +117,7 @@ export class Itr4partComponent implements OnInit {
   }
 
   updateBusinessInfo(){
+    console.log('financialParticulars: ',this.businessData.assesse.business);
     this.natureOfBusinessForm.patchValue(this.businessData.assesse.business.financialParticulars);
 
     var businessIncome = this.businessData.assesse.business.presumptiveIncomes.filter(item => item.businessType === "BUSINESS");
@@ -475,7 +478,7 @@ export class Itr4partComponent implements OnInit {
   }
 
   ngDoCheck() {
-    console.log('natureOfBusinessForm valid: ',this.natureOfBusinessForm)
+    console.log('natureOfBusinessForm valid: ',this.natureOfBusinessForm.valid, this.natureOfBusinessForm)
     if (this.natureOfBusinessForm.valid) {
       //console.log('natureOfBusinessForm value: ',this.natureOfBusinessForm.value)
       this.getBusinessInfo.emit(this.natureOfBusinessForm)
@@ -491,10 +494,11 @@ export class Itr4partComponent implements OnInit {
   }
 
   calTotalAssets() {
+    console.log('natureOfBusinessForm: ',this.natureOfBusinessForm.value);
     let totalAssetsNum = Number(this.natureOfBusinessForm.controls['fixedAssets'].value) + Number(this.natureOfBusinessForm.controls['inventories'].value)
       + Number(this.natureOfBusinessForm.controls['sundryDebtorsAmount'].value) + Number(this.natureOfBusinessForm.controls['balanceWithBank'].value)
       + Number(this.natureOfBusinessForm.controls['cashInHand'].value) + Number(this.natureOfBusinessForm.controls['loanAndAdvances'].value)
-      + Number(this.natureOfBusinessForm.controls['otherAssets'].value);
+      + Number(this.natureOfBusinessForm.controls['otherAssets'].value) + Number(this.natureOfBusinessForm.controls['investment'].value);
 
     this.natureOfBusinessForm.controls['totalAssets'].setValue(totalAssetsNum);
   }

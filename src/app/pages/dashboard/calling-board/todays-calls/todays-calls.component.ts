@@ -51,16 +51,16 @@ export class TodaysCallsComponent implements OnInit {
 
   ngOnInit() {
     this.getAgentList();
-    // var userInfo = JSON.parse(localStorage.getItem('UMD'));
-    // if(userInfo.USER_ROLE.includes("ROLE_ADMIN")){
-    //   this.isAdmin = true;
-    //   this.showAllUser = true;
-    //   this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
-    // }
-    // else{
-    //   this.isAdmin = false;
-    //   this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
-    // }
+    var userInfo = JSON.parse(localStorage.getItem('UMD'));
+    if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
+      this.isAdmin = true;
+      this.showAllUser = true;
+      this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
+    }
+    else {
+      this.isAdmin = false;
+      this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
+    }
     this.showCallersAll();
     this.getStatus();
   }
@@ -375,24 +375,24 @@ export class TodaysCallsComponent implements OnInit {
   getMyTodaysCalls(id, page, searchMobNo?) {
     this.loading = true;
     var param2;
-    // if (this.isAdmin) {
-    if (this.utilsService.isNonEmpty(searchMobNo)) {
-      param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
-    } else {
-      if (this.showAllUser) {
-        param2 = `/call-management/customers?statusId=18&page=${page}&pageSize=15`;
+    if (this.isAdmin) {
+      if (this.utilsService.isNonEmpty(searchMobNo)) {
+        param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       } else {
-        param2 = `/call-management/customers?statusId=18&agentId=${id}&page=${page}&pageSize=15`;
+        if (this.showAllUser) {
+          param2 = `/call-management/customers?statusId=18&page=${page}&pageSize=15`;
+        } else {
+          param2 = `/call-management/customers?statusId=18&agentId=${id}&page=${page}&pageSize=15`;
+        }
       }
-    }
-    // } else {
-    //   if (this.utilsService.isNonEmpty(searchMobNo)) {
-    //     param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
-    //   } else {
-    //     param2 = `/call-management/customers?statusId=18&callerAgentUserId=${id}&page=${page}&pageSize=15`;
-    //   }
+    } else {
+      if (this.utilsService.isNonEmpty(searchMobNo)) {
+        param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+      } else {
+        param2 = `/call-management/customers?statusId=18&callerAgentUserId=${id}&page=${page}&pageSize=15`;
+      }
 
-    // }
+    }
 
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);

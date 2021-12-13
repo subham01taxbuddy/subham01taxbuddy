@@ -322,12 +322,12 @@ export class TaxSummaryComponent implements OnInit {
               otherOwnerOfProperty: '',
               tenantName: '',
               tenentPanNumber: '',
-              grossAnnualRentReceived: housingInfo.GrossRentReceived,
-              annualValue:  housingInfo.AnnualValue,
-              propertyTax: housingInfo.TaxPaidlocalAuth,
-              interestAmount: housingInfo.InterestPayable,
-              taxableIncome: housingInfo.TotalIncomeOfHP,
-              exemptIncome: housingInfo.StandardDeduction,
+              grossAnnualRentReceived: this.getNumberFormat(housingInfo.GrossRentReceived),
+              annualValue: this.getNumberFormat(housingInfo.AnnualValue),
+              propertyTax: this.getNumberFormat(housingInfo.TaxPaidlocalAuth),
+              interestAmount: this.getNumberFormat(housingInfo.InterestPayable),
+              taxableIncome: this.getNumberFormat(housingInfo.TotalIncomeOfHP),
+              exemptIncome: this.getNumberFormat(housingInfo.StandardDeduction),
               pinCode: '',
               flatNo: '',
               building: '',
@@ -375,7 +375,7 @@ export class TaxSummaryComponent implements OnInit {
           Object.assign(houceObj, this.housingData[i]);
           if (this.utilService.isNonEmpty(this.housingData[i].interestAmount)) {
             let loanObj = {
-              interestAmount: this.housingData[i].interestAmount,
+              interestAmount: this.getNumberFormat(this.housingData[i].interestAmount),
               loanType: "HOUSING",
               principalAmount: 0
             }
@@ -435,13 +435,13 @@ export class TaxSummaryComponent implements OnInit {
               houseRentAllow: hra,
               leaveTravelExpense: 0,
               other: otherAmnt,
-              totalExemptAllow: salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10,
-              netSalary: salaryInfo.NetSalary,
-              standardDeduction: salaryInfo.DeductionUs16ia,
-              entertainAllow: salaryInfo.EntertainmentAlw16ii,
-              professionalTax: salaryInfo.ProfessionalTaxUs16iii,
+              totalExemptAllow: this.getNumberFormat(salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10),
+              netSalary: this.getNumberFormat(salaryInfo.NetSalary),
+              standardDeduction: this.getNumberFormat(salaryInfo.DeductionUs16ia),
+              entertainAllow: this.getNumberFormat(salaryInfo.EntertainmentAlw16ii),
+              professionalTax: this.getNumberFormat(salaryInfo.ProfessionalTaxUs16iii),
               totalSalaryDeduction: Number(salaryInfo.DeductionUs16ia) + Number(salaryInfo.EntertainmentAlw16ii) +  (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) ,
-              taxableIncome: salaryInfo.IncomeFromSal,
+              taxableIncome: this.getNumberFormat(salaryInfo.IncomeFromSal),
       
               pinCode: '',
               country: '',
@@ -491,7 +491,7 @@ export class TaxSummaryComponent implements OnInit {
             let houceAllowObj = {
               allowanceType: "HOUSE_RENT",
               description: null,
-              exemptAmount: Number(this.salaryItrratedData[i].houseRentAllow),
+              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].houseRentAllow),
               taxableAmount: 0
             }
             employerObj.allowance.push(houceAllowObj)
@@ -509,7 +509,7 @@ export class TaxSummaryComponent implements OnInit {
             let otherAllowObj = {
               allowanceType: "ANY_OTHER",
               description: null,
-              exemptAmount: Number(this.salaryItrratedData[i].other),
+              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].other),
               taxableAmount: 0
             }
             employerObj.allowance.push(otherAllowObj)
@@ -518,7 +518,7 @@ export class TaxSummaryComponent implements OnInit {
             let totalExeAllowObj = {
               allowanceType: "ALL_ALLOWANCES",
               description: null,
-              exemptAmount: Number(this.salaryItrratedData[i].totalExemptAllow),
+              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].totalExemptAllow),
               taxableAmount: 0
             }
             employerObj.allowance.push(totalExeAllowObj)
@@ -529,7 +529,7 @@ export class TaxSummaryComponent implements OnInit {
             let entertainAllowObj = {
               deductionType: "ENTERTAINMENT_ALLOW",
               description: null,
-              exemptAmount: Number(this.salaryItrratedData[i].entertainAllow),
+              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].entertainAllow),
               taxableAmount: 0
             }
             employerObj.deductions.push(entertainAllowObj)
@@ -538,7 +538,7 @@ export class TaxSummaryComponent implements OnInit {
             let professionalTaxObj = {
               deductionType: "PROFESSIONAL_TAX",
               description: null,
-              exemptAmount: Number(this.salaryItrratedData[i].professionalTax),
+              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].professionalTax),
               taxableAmount: 0
             }
             employerObj.deductions.push(professionalTaxObj)
@@ -550,7 +550,7 @@ export class TaxSummaryComponent implements OnInit {
               description: null,
               exemptAmount: 0,
               salaryType: "SEC17_1",
-              taxableAmount: Number(this.salaryItrratedData[i].salAsPerSec171)
+              taxableAmount: this.getNumberFormat(this.salaryItrratedData[i].salAsPerSec171)
             }
             employerObj.salary.push(sal17Obj)
           }
@@ -560,7 +560,7 @@ export class TaxSummaryComponent implements OnInit {
               description: null,
               exemptAmount: 0,
               salaryType: "SEC17_2",
-              taxableAmount: Number(this.salaryItrratedData[i].valOfPerquisites)
+              taxableAmount: this.getNumberFormat(this.salaryItrratedData[i].valOfPerquisites)
             }
             employerObj.perquisites.push(valOfPerqu17Obj)
           }
@@ -570,7 +570,7 @@ export class TaxSummaryComponent implements OnInit {
               description: null,
               exemptAmount: 0,
               salaryType: "SEC17_3",
-              taxableAmount: Number(this.salaryItrratedData[i].profitInLieu)
+              taxableAmount: this.getNumberFormat(this.salaryItrratedData[i].profitInLieu)
             }
             employerObj.profitsInLieuOfSalaryType.push(profitsInLieuObj)
           }
@@ -802,128 +802,156 @@ export class TaxSummaryComponent implements OnInit {
 
    if(sec80Ginfo.hasOwnProperty('Don100Percent')){
     if(sec80Ginfo.Don100Percent.hasOwnProperty('DoneeWithPan')){
-      let body={
-        name: sec80Ginfo.Don100Percent.DoneeWithPan[0].DoneeWithPanName,
-        address: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.AddrDetail,
-        city: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.CityOrTownOrDistrict,
-        pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.PinCode,
-        state: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.StateCode,
-        panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[0].DoneePAN,
-        donationType: 'OTHER',
-        schemeCode: 'GOVT_APPRVD_FAMLY_PLNG',
-        amountInCash: sec80Ginfo.Don100Percent.DoneeWithPan[0].DonationAmtCash,
-        amountOtherThanCash: sec80Ginfo.Don100Percent.DoneeWithPan[0].DonationAmtOtherMode,
-        eligibleAmount: sec80Ginfo.Don100Percent.DoneeWithPan[0].EligibleDonationAmt,
-       details: '',
-       category: 'AGTI'
+      if(sec80Ginfo.Don100Percent.DoneeWithPan instanceof Array && sec80Ginfo.Don100Percent.DoneeWithPan.length > 0){
+        for(let i=0; i< sec80Ginfo.Don100Percent.DoneeWithPan.length; i++){
+          let body={
+            name: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneeWithPanName,
+            address: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.AddrDetail,
+            city: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+            pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.PinCode,
+            state: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.StateCode,
+            panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneePAN,
+            donationType: 'OTHER',
+            schemeCode: 'GOVT_APPRVD_FAMLY_PLNG',
+            amountInCash: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].DonationAmtCash),
+            amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].DonationAmtOtherMode),
+            eligibleAmount: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].EligibleDonationAmt),
+           details: '',
+           category: 'AGTI'
+          }
+          this.donationData.push(body)
+        }
       }
-      this.donationData.push(body)
      }
    }
    
    if(sec80Ginfo.hasOwnProperty('Don50PercentNoApprReqd')){
     if(sec80Ginfo.Don50PercentNoApprReqd.hasOwnProperty('DoneeWithPan')){
-      let body={
-        name: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].DoneeWithPanName,
-        address: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].AddressDetail.AddrDetail,
-        city: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].AddressDetail.CityOrTownOrDistrict,
-        pinCode: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].AddressDetail.PinCode,
-        state: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].AddressDetail.StateCode,
-        panNumber: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].DoneePAN,
-        donationType: 'OTHER',
-        schemeCode: 'FND_SEC80G',
-        amountInCash: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].DonationAmtCash,
-        amountOtherThanCash: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].DonationAmtOtherMode,
-        eligibleAmount: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[0].EligibleDonationAmt,
-        details: '',
-       category: 'AGTI'
+      if(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan.length > 0){
+        for(let i=0; i< sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan.length; i++){
+          let body={
+            name: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DoneeWithPanName,
+            address: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
+            city: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+            pinCode: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
+            state: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
+            panNumber: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DoneePAN,
+            donationType: 'OTHER',
+            schemeCode: 'FND_SEC80G',
+            amountInCash: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DonationAmtCash),
+            amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
+            eligibleAmount: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].EligibleDonationAmt),
+            details: '',
+           category: 'AGTI'
+          }
+          this.donationData.push(body)
+        }
       }
-      this.donationData.push(body)
      }
    }
    
    if(sec80Ginfo.hasOwnProperty('Don100PercentApprReqd')){
     if(sec80Ginfo.Don100PercentApprReqd.hasOwnProperty('DoneeWithPan')){
-      let body={
-        name: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].DoneeWithPanName,
-        address: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].AddressDetail.AddrDetail,
-        city: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].AddressDetail.CityOrTownOrDistrict,
-        pinCode: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].AddressDetail.PinCode,
-        state: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].AddressDetail.StateCode,
-        panNumber: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].DoneePAN,
-        donationType: 'OTHER',
-        schemeCode: 'NAT_DEF_FUND_CEN_GOVT',
-        amountInCash: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].DonationAmtCash,
-        amountOtherThanCash: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].DonationAmtOtherMode,
-        eligibleAmount: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[0].EligibleDonationAmt,
-        details: '',
-       category: 'REGULAR'
+      if(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don100PercentApprReqd.DoneeWithPan.length > 0){
+        for(let i=0; i< sec80Ginfo.Don100PercentApprReqd.DoneeWithPan.length; i++){
+          let body={
+            name: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DoneeWithPanName,
+            address: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
+            city: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+            pinCode: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
+            state: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
+            panNumber: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DoneePAN,
+            donationType: 'OTHER',
+            schemeCode: 'NAT_DEF_FUND_CEN_GOVT',
+            amountInCash: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DonationAmtCash),
+            amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
+            eligibleAmount: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].EligibleDonationAmt),
+            details: '',
+           category: 'REGULAR'
+          }
+          this.donationData.push(body)
+        }
       }
-      this.donationData.push(body)
+      
      }
    }
    
    if(sec80Ginfo.hasOwnProperty('Don50PercentApprReqd')){
     if(sec80Ginfo.Don50PercentApprReqd.hasOwnProperty('DoneeWithPan')){
-      let body={
-        name: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].DoneeWithPanName,
-        address: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].AddressDetail.AddrDetail,
-        city: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].AddressDetail.CityOrTownOrDistrict,
-        pinCode: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].AddressDetail.PinCode,
-        state: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].AddressDetail.StateCode,
-        panNumber: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].DoneePAN,
-        donationType: 'OTHER',
-        schemeCode: 'JN_MEM_FND',
-        amountInCash: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].DonationAmtCash,
-        amountOtherThanCash: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].DonationAmtOtherMode,
-        eligibleAmount: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[0].EligibleDonationAmt,
-        details: '',
-       category: 'REGULAR'
+      if(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don50PercentApprReqd.DoneeWithPan.length > 0){
+        for(let i=0; i< sec80Ginfo.Don50PercentApprReqd.DoneeWithPan.length; i++){
+          let body={
+            name: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DoneeWithPanName,
+            address: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
+            city: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+            pinCode: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
+            state: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
+            panNumber: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DoneePAN,
+            donationType: 'OTHER',
+            schemeCode: 'JN_MEM_FND',
+            amountInCash: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DonationAmtCash),
+            amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
+            eligibleAmount: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].EligibleDonationAmt),
+            details: '',
+           category: 'REGULAR'
+          }
+          this.donationData.push(body)
+        }
       }
-      this.donationData.push(body)
+     
      }
    }
 
    if(itrData.hasOwnProperty('Schedule80GGA')){
     if(itrData.Schedule80GGA.hasOwnProperty('DonationDtlsSciRsrchRuralDev')){
       let scientificInfo = itrData.Schedule80GGA.DonationDtlsSciRsrchRuralDev;
-     let body={
-       name: scientificInfo[0].NameOfDonee,
-       address:scientificInfo[0].AddressDetail.AddrDetail,
-       city:scientificInfo[0].AddressDetail.CityOrTownOrDistrict,
-       pinCode:scientificInfo[0].AddressDetail.PinCode,
-       state:scientificInfo[0].AddressDetail.StateCode,
-       panNumber:scientificInfo[0].DoneePAN,
-       donationType: 'SCIENTIFIC',
-       schemeCode: '',
-       amountInCash: scientificInfo[0].DonationAmtCash,
-       amountOtherThanCash: scientificInfo[0].DonationAmtOtherMode,
-       eligibleAmount: scientificInfo[0].EligibleDonationAmt,
-       details: '',
-      category: ''
-     }
-     this.donationData.push(body)
+      if(scientificInfo instanceof Array && scientificInfo.length > 0){
+        for(let i=0; i< scientificInfo.length; i++){
+          let body={
+            name: scientificInfo[i].NameOfDonee,
+            address:scientificInfo[i].AddressDetail.AddrDetail,
+            city:scientificInfo[i].AddressDetail.CityOrTownOrDistrict,
+            pinCode:scientificInfo[i].AddressDetail.PinCode,
+            state:scientificInfo[i].AddressDetail.StateCode,
+            panNumber:scientificInfo[i].DoneePAN,
+            donationType: 'SCIENTIFIC',
+            schemeCode: '',
+            amountInCash: this.getNumberFormat(scientificInfo[i].DonationAmtCash),
+            amountOtherThanCash: this.getNumberFormat(scientificInfo[i].DonationAmtOtherMode),
+            eligibleAmount: this.getNumberFormat(scientificInfo[i].EligibleDonationAmt),
+            details: '',
+           category: ''
+          }
+          this.donationData.push(body)
+        }
+      }
+     
     }
    }
    
    if(itrData.hasOwnProperty('Schedule80GGC')){
     let politicalInfo = itrData.Schedule80GGC;
-   let body={
-    name: politicalInfo.DonationDtlsSciRsrchRuralDev[0].NameOfDonee,
-    address: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.AddrDetail,
-    city: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.CityOrTownOrDistrict,
-    pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.PinCode,
-    state: sec80Ginfo.Don100Percent.DoneeWithPan[0].AddressDetail.StateCode,
-    panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[0].DoneePAN,
-     donationType: 'POLITICAL',
-     schemeCode: '',
-     amountInCash: politicalInfo.DonationDtlsSciRsrchRuralDev[0].DonationAmtCash,
-     amountOtherThanCash: politicalInfo.DonationDtlsSciRsrchRuralDev[0].DonationAmtOtherMode,
-     eligibleAmount: politicalInfo.DonationDtlsSciRsrchRuralDev[0].EligibleDonationAmt,
-     details: '',
-     category: ''
-   }
-   this.donationData.push(body)
+    if(politicalInfo.DonationDtlsSciRsrchRuralDev instanceof Array && politicalInfo.DonationDtlsSciRsrchRuralDev.length > 0){
+      for(let i=0; i< politicalInfo.DonationDtlsSciRsrchRuralDev.length; i++){
+        let body={
+          name: politicalInfo.DonationDtlsSciRsrchRuralDev[i].NameOfDonee,
+          address: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.AddrDetail,
+          city: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+          pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.PinCode,
+          state: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.StateCode,
+          panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneePAN,
+           donationType: 'POLITICAL',
+           schemeCode: '',
+           amountInCash: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].DonationAmtCash),
+           amountOtherThanCash: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].DonationAmtOtherMode),
+           eligibleAmount: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].EligibleDonationAmt),
+           details: '',
+           category: ''
+         }
+         this.donationData.push(body)
+      }
+    }
+   
   }
 
   this.itrSummaryForm['controls'].assesse['controls'].donations.setValue(this.donationData);
@@ -991,8 +1019,8 @@ export class TaxSummaryComponent implements OnInit {
           }
           tdsObj.deductorTAN = tdsOnSalInfo[i].EmployerOrDeductorOrCollectDetl.TAN;
           tdsObj.deductorName = tdsOnSalInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName;
-          tdsObj.totalAmountCredited = tdsOnSalInfo[i].IncChrgSal;
-          tdsObj.totalTdsDeposited = tdsOnSalInfo[i].TotalTDSSal;
+          tdsObj.totalAmountCredited = this.getNumberFormat(tdsOnSalInfo[i].IncChrgSal);
+          tdsObj.totalTdsDeposited = this.getNumberFormat(tdsOnSalInfo[i].TotalTDSSal);
           this.tdsOnSal.push(tdsObj);
           this.taxPaiObj.onSalary.push(tdsObj);
 
@@ -1027,8 +1055,8 @@ export class TaxSummaryComponent implements OnInit {
         }
         tdsOtherThanSalObj.deductorTAN = this.itrType.itrOne ? tdsOtherThanSalInfo[i].EmployerOrDeductorOrCollectDetl.TAN : tdsOtherThanSalInfo[i].TANOfDeductor;
         tdsOtherThanSalObj.deductorName = this.itrType.itrOne ? tdsOtherThanSalInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName : tdsOtherThanSalInfo[i].HeadOfIncome;
-        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].AmtForTaxDeduct : tdsOtherThanSalInfo[i].GrossAmount;
-        tdsOtherThanSalObj.totalTdsDeposited = this.itrType.itrOne ? tdsOtherThanSalInfo[i].TotTDSOnAmtPaid : tdsOtherThanSalInfo[i].TDSDeducted;
+        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? this.getNumberFormat(tdsOtherThanSalInfo[i].AmtForTaxDeduct) : this.getNumberFormat(tdsOtherThanSalInfo[i].GrossAmount);
+        tdsOtherThanSalObj.totalTdsDeposited = this.itrType.itrOne ? this.getNumberFormat(tdsOtherThanSalInfo[i].TotTDSOnAmtPaid) : this.getNumberFormat(tdsOtherThanSalInfo[i].TDSDeducted);
         this.tdsOtherThanSal.push(tdsOtherThanSalObj);
         this.taxPaiObj.otherThanSalary16A.push(tdsOtherThanSalObj);
       }
@@ -1062,8 +1090,8 @@ export class TaxSummaryComponent implements OnInit {
         }
         tdsOtherThanSalObj.deductorTAN = tds3OtherThanSalInfo[i].PANofTenant;
         tdsOtherThanSalObj.deductorName = this.itrType.itrOne ? tds3OtherThanSalInfo[i].NameOfTenant : tds3OtherThanSalInfo[i].HeadOfIncome;
-        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? tds3OtherThanSalInfo[i].GrsRcptToTaxDeduct : tds3OtherThanSalInfo[i].GrossAmount;
-        tdsOtherThanSalObj.totalTdsDeposited = tds3OtherThanSalInfo[i].TDSDeducted;
+        tdsOtherThanSalObj.totalAmountCredited = this.itrType.itrOne ? this.getNumberFormat(tds3OtherThanSalInfo[i].GrsRcptToTaxDeduct) : this.getNumberFormat(tds3OtherThanSalInfo[i].GrossAmount);
+        tdsOtherThanSalObj.totalTdsDeposited = this.getNumberFormat(tds3OtherThanSalInfo[i].TDSDeducted);
         this.tdsOtherThanSal.push(tdsOtherThanSalObj);
         this.taxPaiObj.otherThanSalary16A.push(tdsOtherThanSalObj);
       }
@@ -1092,8 +1120,8 @@ export class TaxSummaryComponent implements OnInit {
         }
         tcsObj.collectorTAN = tcsInfo[i].EmployerOrDeductorOrCollectDetl.TAN;
         tcsObj.collectorName = tcsInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName;
-        tcsObj.totalAmountPaid = this.itrType.itrOne ? tcsInfo[i].AmtTaxCollected : tcsInfo[i].Amtfrom26AS;
-        tcsObj.totalTcsDeposited = tcsInfo[i].TotalTCS;
+        tcsObj.totalAmountPaid = this.itrType.itrOne ? this.getNumberFormat(tcsInfo[i].AmtTaxCollected) : this.getNumberFormat(tcsInfo[i].Amtfrom26AS);
+        tcsObj.totalTcsDeposited = this.getNumberFormat(tcsInfo[i].TotalTCS);
         this.taxCollAtSource.push(tcsObj);
         this.taxPaiObj.tcs.push(tcsObj);
       }
@@ -1124,7 +1152,7 @@ export class TaxSummaryComponent implements OnInit {
         advanceTaxObj.bsrCode = advanceTaxInfo[i].BSRCode;
         advanceTaxObj.dateOfDeposit = advanceTaxInfo[i].DateDep;
         advanceTaxObj.challanNumber = advanceTaxInfo[i].SrlNoOfChaln;
-        advanceTaxObj.totalTax = advanceTaxInfo[i].Amt;
+        advanceTaxObj.totalTax = this.getNumberFormat(advanceTaxInfo[i].Amt);
         this.advanceSelfTax.push(advanceTaxObj);
         this.taxPaiObj.otherThanTDSTCS.push(advanceTaxObj);
       }
@@ -1354,11 +1382,11 @@ export class TaxSummaryComponent implements OnInit {
       let recivedInBankObj = {
         businessType: null,
         incomeType: "BANK",
-        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD6Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per) : 0,
+        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD6Per') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per) : 0,
         ownership: null,
         periodOfHolding: 0,
-        presumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD6Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per) : 0,
-        receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverBank') ? Number(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverBank) : 0,
+        presumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD6Per') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD6Per) : 0,
+        receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverBank') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverBank) : 0,
         registrationNo: null,
         tonnageCapacity: 0
       }
@@ -1367,11 +1395,11 @@ export class TaxSummaryComponent implements OnInit {
       let recivedCashObj = {
         businessType: null,
         incomeType: "CASH",
-        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
+        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
         ownership: null,
         periodOfHolding: 0,
-        presumptiveIncome:  pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? Number(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
-        receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverAnyOthMode') ? Number(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverAnyOthMode) : 0,
+        presumptiveIncome:  pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
+        receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverAnyOthMode') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverAnyOthMode) : 0,
         registrationNo: null,
         tonnageCapacity: 0
       }
@@ -1418,11 +1446,11 @@ export class TaxSummaryComponent implements OnInit {
       let grossRecipt44ADAObj = {
         businessType: null,
         incomeType: "PROFESSIONAL",
-        minimumPresumptiveIncome: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('TotPersumptiveInc44ADA') ? Number(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA) : 0,
+        minimumPresumptiveIncome: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('TotPersumptiveInc44ADA') ? this.getNumberFormat(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA) : 0,
         ownership: null,
         periodOfHolding: 0,
-        presumptiveIncome: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('TotPersumptiveInc44ADA') ? Number(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA) : 0,
-        receipts: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('GrsReceipt') ? Number(pre44ADAinfo.PersumptiveInc44ADA.GrsReceipt) : 0,
+        presumptiveIncome: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('TotPersumptiveInc44ADA') ? this.getNumberFormat(pre44ADAinfo.PersumptiveInc44ADA.TotPersumptiveInc44ADA) : 0,
+        receipts: pre44ADAinfo.PersumptiveInc44ADA.hasOwnProperty('GrsReceipt') ? this.getNumberFormat(pre44ADAinfo.PersumptiveInc44ADA.GrsReceipt) : 0,
         registrationNo: null,
         tonnageCapacity: 0
       }
@@ -1439,34 +1467,34 @@ export class TaxSummaryComponent implements OnInit {
     let financialInfo = itrData.ScheduleBP.FinanclPartclrOfBusiness;
     console.log('financialInfo: -> ', financialInfo)
 
-    itr4Summary.assesse.business.financialParticulars.membersOwnCapital = Number(financialInfo.PartnerMemberOwnCapital);
-    itr4Summary.assesse.business.financialParticulars.securedLoans = Number(financialInfo.SecuredLoans);
-    itr4Summary.assesse.business.financialParticulars.unSecuredLoans = Number(financialInfo.UnSecuredLoans);
-    itr4Summary.assesse.business.financialParticulars.advances = Number(financialInfo.Advances);
-    itr4Summary.assesse.business.financialParticulars.sundryCreditorsAmount = Number(financialInfo.SundryCreditors);
-    itr4Summary.assesse.business.financialParticulars.otherLiabilities = Number(financialInfo.OthrCurrLiab);
+    itr4Summary.assesse.business.financialParticulars.membersOwnCapital = this.getNumberFormat(financialInfo.PartnerMemberOwnCapital);
+    itr4Summary.assesse.business.financialParticulars.securedLoans = this.getNumberFormat(financialInfo.SecuredLoans);
+    itr4Summary.assesse.business.financialParticulars.unSecuredLoans = this.getNumberFormat(financialInfo.UnSecuredLoans);
+    itr4Summary.assesse.business.financialParticulars.advances = this.getNumberFormat(financialInfo.Advances);
+    itr4Summary.assesse.business.financialParticulars.sundryCreditorsAmount = this.getNumberFormat(financialInfo.SundryCreditors);
+    itr4Summary.assesse.business.financialParticulars.otherLiabilities = this.getNumberFormat(financialInfo.OthrCurrLiab);
     let liabilityTotal = itr4Summary.assesse.business.financialParticulars.membersOwnCapital + itr4Summary.assesse.business.financialParticulars.securedLoans +
       itr4Summary.assesse.business.financialParticulars.unSecuredLoans + itr4Summary.assesse.business.financialParticulars.advances +
       itr4Summary.assesse.business.financialParticulars.sundryCreditorsAmount + itr4Summary.assesse.business.financialParticulars.otherLiabilities;
 
     // itr4Summary.assesse.business.financialParticulars.totalCapitalLiabilities = liabilityTotal;
-    itr4Summary.assesse.business.financialParticulars.totalCapitalLiabilities = Number(financialInfo.TotCapLiabilities);;
+    itr4Summary.assesse.business.financialParticulars.totalCapitalLiabilities = this.getNumberFormat(financialInfo.TotCapLiabilities);;
 
     //Assets
-    itr4Summary.assesse.business.financialParticulars.fixedAssets = Number(financialInfo.FixedAssets);
-    itr4Summary.assesse.business.financialParticulars.inventories = Number(financialInfo.Inventories);
-    itr4Summary.assesse.business.financialParticulars.sundryDebtorsAmount = Number(financialInfo.SundryDebtors);
-    itr4Summary.assesse.business.financialParticulars.balanceWithBank = Number(financialInfo.BalWithBanks);
-    itr4Summary.assesse.business.financialParticulars.cashInHand = Number(financialInfo.CashInHand);
-    itr4Summary.assesse.business.financialParticulars.loanAndAdvances = Number(financialInfo.LoansAndAdvances);
-    itr4Summary.assesse.business.financialParticulars.otherAssets = Number(financialInfo.OtherAssets);
+    itr4Summary.assesse.business.financialParticulars.fixedAssets = this.getNumberFormat(financialInfo.FixedAssets);
+    itr4Summary.assesse.business.financialParticulars.inventories = this.getNumberFormat(financialInfo.Inventories);
+    itr4Summary.assesse.business.financialParticulars.sundryDebtorsAmount = this.getNumberFormat(financialInfo.SundryDebtors);
+    itr4Summary.assesse.business.financialParticulars.balanceWithBank = this.getNumberFormat(financialInfo.BalWithBanks);
+    itr4Summary.assesse.business.financialParticulars.cashInHand = this.getNumberFormat(financialInfo.CashInHand);
+    itr4Summary.assesse.business.financialParticulars.loanAndAdvances = this.getNumberFormat(financialInfo.LoansAndAdvances);
+    itr4Summary.assesse.business.financialParticulars.otherAssets = this.getNumberFormat(financialInfo.OtherAssets);
     let assetsTotal = itr4Summary.assesse.business.financialParticulars.fixedAssets + itr4Summary.assesse.business.financialParticulars.inventories +
       itr4Summary.assesse.business.financialParticulars.sundryDebtorsAmount + itr4Summary.assesse.business.financialParticulars.balanceWithBank +
       itr4Summary.assesse.business.financialParticulars.cashInHand + itr4Summary.assesse.business.financialParticulars.loanAndAdvances +
       itr4Summary.assesse.business.financialParticulars.otherAssets;
 
     // itr4Summary.assesse.business.financialParticulars.totalAssets = assetsTotal;
-    itr4Summary.assesse.business.financialParticulars.totalAssets = Number(financialInfo.TotalAssets);
+    itr4Summary.assesse.business.financialParticulars.totalAssets = this.getNumberFormat(financialInfo.TotalAssets);
 
     this.updatBussinessInfo = itr4Summary;
   }
@@ -1540,8 +1568,8 @@ export class TaxSummaryComponent implements OnInit {
             let recivedInCash = businessIncome[0].incomes.filter(item => item.incomeType === "CASH");
 
             this.businessObject.tradeName44AD = businessIncome[0].tradeName;
-            this.businessObject.received44ADtaotal = Number(recivedInBank[0].receipt) + Number(recivedInCash[0].receipts);
-            this.businessObject.presumptive44ADtotal = Number(recivedInBank[0].presumptiveIncome) + Number(recivedInCash[0].presumptiveIncome);
+            this.businessObject.received44ADtaotal = this.getNumberFormat(recivedInBank[0].receipt) + this.getNumberFormat(recivedInCash[0].receipts);
+            this.businessObject.presumptive44ADtotal = this.getNumberFormat(recivedInBank[0].presumptiveIncome) + this.getNumberFormat(recivedInCash[0].presumptiveIncome);
           }
 
           var presumptiveIncome = summary.assesse.business.presumptiveIncomes.filter(item => item.businessType === "PROFESSIONAL");

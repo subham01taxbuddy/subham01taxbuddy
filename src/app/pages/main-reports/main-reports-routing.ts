@@ -1,3 +1,4 @@
+import { LastYearFilingComponent } from './itr-filling-report/last-year-filing/last-year-filing.component';
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { DetailReportComponent } from "./invoice-failed/detail-report/detail-report.component";
@@ -14,6 +15,7 @@ import { RepoBySmeNameComponent } from "./knowlarity-report/repo-by-sme-name/rep
 import { MainReportsComponent } from "./main-reports/main-reports.component";
 import { MissedChatReportComponent } from "./missed-chat-report/missed-chat-report.component";
 import { SpamTableComponent } from "./spam-table/spam-table.component";
+import { EmailReportsComponent } from './email-reports/email-reports.component';
 
 const routes: Routes = [
     {
@@ -34,6 +36,7 @@ const routes: Routes = [
                     { path: 'sme-wise', component: SmewiseReportComponent },
                     { path: 'all', component: AllFilingReportComponent },
                     { path: 'filing-dashboard', component: FilingDashboardComponent },
+                    { path: 'last-year', component: LastYearFilingComponent },
                     { path: '', redirectTo: 'sme-wise', pathMatch: '' }
                 ]
             },
@@ -47,6 +50,7 @@ const routes: Routes = [
             },
             { path: 'missed-chat', component: MissedChatReportComponent },
             { path: 'spam-report', component: SpamTableComponent },
+            { path: 'email-me', component: EmailReportsComponent },
             { path: '', redirectTo: 'knowlarity-repo', pathMatch: '' }
         ]
     }

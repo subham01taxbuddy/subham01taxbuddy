@@ -14,6 +14,10 @@
         </div>
 
         <div class="card__row">
+          <p class="heilight-msg"><b>Please use Kommunicate Dashboard for whatsapp Conversation for all the new chats</b></p>
+        </div>
+
+        <div class="card__row">
           <div class="filter__col card__col-sm-3 card__col-xs-3">
             <mat-form-field appearance="outline">
               <mat-label>Select Agent</mat-label>
@@ -42,6 +46,7 @@
           </div>
 
         </div>
+        
 
         <div class="card__row">
           <!--*ngIf="showChatUi"-->
@@ -57,7 +62,7 @@
               <app-recent-chat-list></app-recent-chat-list>
             </div>
             <div class="card__col-md-8" style="padding: 0px;">
-              <mat-accordion *ngIf="this.userchatData">
+              <mat-accordion *ngIf="this.userChatData">
                 <!--selectedUser-->
                 <mat-expansion-panel>
                   <mat-expansion-panel-header>
@@ -69,11 +74,11 @@
                       </mat-panel-description> -->
                   </mat-expansion-panel-header>
                   <div class="card__row">
-                    <div class="card__col-lg-2">
+                    <div class="card__col-lg-4">
                       <label><b>User Id: </b></label>
                       {{selectedUser ? selectedUser.userId : ' -'}}
                     </div>
-                    <div class="card__col-lg-3">
+                    <div class="card__col-lg-4">
                       <label><b>User Name: </b></label>
                       {{selectedUser ? selectedUser.name: ' -'}}
                     </div>
@@ -81,47 +86,57 @@
                       <label><b>Phone Number: </b></label>
                       {{selectedUser ? selectedUser.whatsAppNumber : ' -'}}
                     </div>
-                    <div class="card__col-lg-3">
+                  </div>
+                  <div class="card__row">
+                    <div class="card__col-lg-4">
                       <label><b>Services Availed: </b></label>
                       {{serviceAvailedInfo ? serviceAvailedInfo : ' -'}}
                     </div>
-                  </div>
-                  <div class="card__row">
-                    <div class="card__col-lg-3">
+                    <div class="card__col-lg-4">
                       <label><b>Consent Status: </b></label>
                       {{selectedUser ? (selectedUser.isUserOpted ? 'Opt-in' : 'Opt-out') : ' -'}}
                     </div>
-                    <div class="card__col-lg-3">
+                    <div class="card__col-lg-4">
                       <label><b>Chat Window Timer: </b></label>
                       {{selectedUser ? (timeExpired ? '00:00:00' : (countDown | async)) : ' -'}}
                       <!-- {{(Math.floor(countDown / (60 * 60))) | async}}:{{(countDown / (60) ) | async}} : {{(countDown % (60) ) | async}} -->
                       <!-- <span id="timer"></span> -->
                     </div>
-                    <div class="card__col-lg-3">
+
+                  </div>
+                  <div class="card__row">
+                    <div class="card__col-lg-4">
                       <label><b>Conversation Status: </b></label>
                       Not applicable
                     </div>
-                    <div class="card__col-lg-3">
+                    <div class="card__col-lg-4">
                       <label><b>Agent Id: </b></label>
                       <!-- {{smeInfo.USER_MOBILE !== "0014082016"? smeInfo.USER_F_NAME : 'NA'}} -->
                       {{selectedUser.smeName ? selectedUser.smeName : 'NA'}}
                     </div>
+                    <div class="card__col-lg-4">
+                      <!-- <b>Make Call:</b> -->
+                      <span class="pull right">
+                        <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon"
+                          (click)="startCalling()">
+                          <mat-icon>phone</mat-icon>
+                        </button>
+                      </span>
+                    </div>
                   </div>
-
                 </mat-expansion-panel>
 
               </mat-accordion><br>
 
-              <div class="chat-box" *ngIf="this.userchatData">
+              <div class="chat-box" *ngIf="this.userChatData">
                 <div class="chat-header">
-                  <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
-                      alt="sunil"> </div> --><i class="fa fa-user-circle-o" aria-hidden="true"> </i>
-                  {{selectedUser ? selectedUser.name : selectdMobNum}}
+                  <i class="fa fa-user-circle-o" aria-hidden="true"> </i>
+                  {{selectedUser ? selectedUser.name : selectedMobNum}}
                 </div>
 
                 <!-- <div class="card_body" #scrollMe [scrollTop]="scrollMe.scrollHeight"> -->
                 <!-- #scrollMe [scrollTop]="scrollMe.scrollHeight"-->
-                <!--  <div class="card__row" *ngFor="let data of userchatData">
+                <!--  <div class="card__row" *ngFor="let data of userChatData">
                     <div class="card__col-lg-12 card__col-md-12 card__col-sm-12 card__col-xs-12">
 
                       <span class="self"
@@ -224,7 +239,7 @@
                   </div> -->
                 <div class="mesgs">
                   <div class="msg_history" #scrollMe [scrollTop]="scrollMe.scrollHeight">
-                    <span *ngFor="let data of userchatData">
+                    <span *ngFor="let data of userChatData">
                       <!-- TEMPLATE SENT -->
                       <div class="outgoing_msg"
                         *ngIf="!data.isReceived && !data.mediaId && data.messageType !== 'media_template'">
@@ -282,8 +297,6 @@
                       <!-- TEXT REC -->
                       <div class="incoming_msg"
                         *ngIf="data.isReceived && !data.mediaId  && data.messageType !== 'media_template'">
-                        <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
-                            alt="sunil"> </div> -->
                         <div class="received_msg">
                           <div class="received_withd_msg">
                             <p>
@@ -299,8 +312,6 @@
                       <!-- IMAGES REC -->
                       <div class="incoming_msg"
                         *ngIf="data.isReceived && data.mediaId && data.mimeType.includes('image')">
-                        <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
-                            alt="sunil"> </div> -->
                         <div class="received_msg">
                           <div class="received_withd_msg">
                             <p><img (click)="downloadDoc(data.mediaId)" alt="Not Show"
@@ -312,8 +323,7 @@
                       <!-- PDF REC -->
                       <div class="incoming_msg"
                         *ngIf="data.isReceived && data.mediaId && data.mimeType.includes('pdf') && data.messageType !== 'media_template'">
-                        <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
-                            alt="sunil"> </div> -->
+
                         <div class="received_msg">
                           <div class="received_withd_msg">
                             <p> <i class="fa fa-file-pdf-o fa-5x" aria-hidden="true"
@@ -327,8 +337,7 @@
                       <!-- OTHER MEDIA REC-->
                       <div class="incoming_msg"
                         *ngIf="data.isReceived && data.mediaId && (!data.mimeType.includes('pdf') && !data.mimeType.includes('image'))">
-                        <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
-                            alt="sunil"> </div> -->
+
                         <div class="received_msg">
                           <div class="received_withd_msg">
                             <p (click)="downloadDoc(data.mediaId)"><a>Click here</a> to download Media File,
@@ -339,8 +348,6 @@
                       </div>
                       <!-- OTHER MEDIA 2 REC-->
                       <div class="incoming_msg" *ngIf="data.isReceived && data.messageType === 'media_template'">
-                        <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png"
-                            alt="sunil"> </div> -->
                         <div class="received_msg">
                           <div class="received_withd_msg">
                             <p (click)="downloadDoc(data.mediaId)"><a>Click here</a> to download
@@ -366,7 +373,7 @@
 
                 <div class="chat-footer msger-inputarea" *ngIf="!startConversation">
                   <button class="sendBtn"
-                    (click)="startChat(selectedUser ? selectedUser.whatsAppNumber : selectdMobNum)">Start
+                    (click)="startChat(selectedUser ? selectedUser.whatsAppNumber : selectedMobNum)">Start
                     Conversation</button>
 
                   <button *ngIf="selectedUser" class="sendBtn" style="float: right; padding: 0px 10px;"
@@ -390,7 +397,6 @@
 
 
                     <div class="card__col-lg-7 card__col-sm-4">
-                      <!--*ngIf="this.whatsAppForm.controls['selectTemplate'].value"-->
                       <mat-form-field appearance="outline">
                         <textarea matInput id="sentMsgId" formControlName="sentMessage" cdkTextareaAutosize
                           cdkAutosizeMinRows="1" cdkAutosizeMaxRows="9" [class.disableTestArea]="timeExpired"
@@ -410,9 +416,9 @@
                         <mat-label>Select Quick reply</mat-label>
                         <mat-select placeholder="Select Quick Reply" formControlName="selectQuickReplay" #selectTemp
                           [disabled]="(this.whatsAppForm.controls['selectTemplate'].value || timeExpired ? true : false)"
-                          (selectionChange)="showQuickRplyMsg($event)">
-                          <mat-option *ngFor="let rply of quicjReplay" [value]="rply.value">
-                            {{rply.label}}
+                          (selectionChange)="showQuickReplyMsg($event)">
+                          <mat-option *ngFor="let reply of quickReplay" [value]="reply.value">
+                            {{reply.label}}
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
@@ -424,11 +430,10 @@
                     </div>
 
                     <div class="card__col-lg-3 card__col-sm-4">
-                      <input type="file" hidden id="input-file-id" #file (change)="uploadMideaFile($event.target.files)"
+                      <input type="file" hidden id="input-file-id" #file (change)="uploadMediaFile($event.target.files)"
                         accept=".pdf, .jpg, .jpeg, .png">
                       <button class="sendBtn" (click)="upload()" [ngClass]="timeExpired ? 'btnDisable' : 'sendBtn'"
                         [disabled]="((this.whatsAppForm.controls['sentMessage'].value || this.whatsAppForm.controls['selectTemplate'].value || timeExpired) ? true : false) ">
-                        <!-- <i class="fa fa-cloud-upload" style="font-size: 15px;"></i> -->
                         Upload Media File
                       </button>
                     </div>
@@ -442,14 +447,8 @@
                       <label>{{whatsAppForm.controls['mediaFile'].value.name}}</label>&nbsp;&nbsp;
                       <button class="closeBtn" (click)="clearFile()">Close</button>
                     </div>
-
-
-
-                    <!-- <button *ngIf="this.selectedUser" mat-raised-button color="primary"
-                      (click)="geUserChatDetail(selectedUser, 'not-continues')" class="refreshBtn"
-                      style="float: right;">Refresh</button> -->
+                  
                   </form>
-                  <!-- </div> -->
                 </div>
 
               </div>

@@ -2,16 +2,16 @@
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
         <div class="card__row">
-            <form [formGroup]="missedInbodCallForm">
+            <form [formGroup]="missedInboundCallForm">
                 <div class="card__col-lg-3">
                     <mat-form-field appearance="outline">
                         <mat-label>From Date</mat-label>
                         <input matInput formControlName="fromDate" [matDatepicker]="picker1" [max]="maxDate"
                             autocomplete="off"
-                            (dateChange)="setToDateValidation(missedInbodCallForm.controls['fromDate'].value)">
+                            (dateChange)="setToDateValidation(missedInboundCallForm.controls['fromDate'].value)">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
-                        <mat-error *ngIf="missedInbodCallForm.controls['fromDate'].hasError('required')">Select From
+                        <mat-error *ngIf="missedInboundCallForm.controls['fromDate'].hasError('required')">Select From
                             date</mat-error>
                     </mat-form-field>
                 </div>
@@ -23,15 +23,16 @@
                             [min]="minToDate" autocomplete="off">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker #picker2></mat-datepicker>
-                        <mat-error *ngIf="missedInbodCallForm.controls['toDate'].hasError('required')">Select To
+                        <mat-error *ngIf="missedInboundCallForm.controls['toDate'].hasError('required')">Select To
                             date</mat-error>
-                        <mat-error *ngIf="missedInbodCallForm.controls['toDate'].hasError('min')">To date always greater
+                        <mat-error *ngIf="missedInboundCallForm.controls['toDate'].hasError('min')">To date always
+                            greater
                             than from date</mat-error>
                     </mat-form-field>
                 </div>
 
                 <div class="card__col-lg-3">
-                    <button class="btn" style="border: none; cursor: pointer;" (click)="getMissedInbondCallInfo()">Show
+                    <button class="btn" style="border: none; cursor: pointer;" (click)="getMissedInboundCallInfo()">Show
                         Report</button>
                 </div>
 
@@ -56,8 +57,8 @@
                     <b>Total Duration: </b>{{totalRecords.totalDuration}}
                 </div>
             </div> -->
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="missedInbodCallGridOption" paginationPageSize=20
-                pagination=true>
+            <ag-grid-angular class="ag-theme-balham" [gridOptions]="missedInboundCallGridOption"
+                (rowClicked)="onInvoiceRowClicked($event)" paginationPageSize=20 pagination=true>
             </ag-grid-angular>
         </div>
     </div>

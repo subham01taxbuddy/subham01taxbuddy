@@ -33,11 +33,21 @@
 
                     <br>
                     <div class="card__col-xs-12 card__col-sm-12">
-                        <input type="file" id="input-file-id" hidden #file  (change)="selectFile($event)" 
+                        <div class="card__col-xs-6">
+                            <input type="file" id="input-file-id" hidden #file  (change)="selectFile($event, 'xml')" 
                         accept=".xml"/>
                         <button class="sendBtn" style="margin: 15px;" (click)="upload()">Upload XML File</button>&nbsp; 
 
                         <button [disabled]="!JSONData" (click)="xmlJsonUpdate(JSONData)">Parse Xml to ITR Form</button>
+                        </div>
+
+                        <div class="card__col-xs-6">
+                            <input type="file" id="input-json-file-id" hidden #file  (change)="selectFile($event, 'json')" />
+                        <button class="sendBtn" style="margin: 15px;" (click)="uploadJson()">Upload JSON File</button>&nbsp; 
+
+                        <button [disabled]="!inputJSON" (click)="parsJson(inputJSON)">Parse JSON to ITR Form</button>
+                        </div>
+                        
                     </div>
                   </div>
             </div>
@@ -68,30 +78,55 @@
                                     </div>
                                     <div class="card__col-lg-3" > <!--formGroupName="taxSummary"-->
                                         <label>Taxable Income</label>
-                                        <input type="number" placeholder="Taxable Income"
+                                        <div *ngIf="!newTaxRegime">
+                                            <input type="number" placeholder="Taxable Income"
                                            required disabled [value]="this.computationOfIncomeForm['controls'].totalIncomeAfterDeductionIncludeSR.value"
                                             class="disableInput">  <!-- formControlName="totalIncomeAfterDeductionIncludeSR" -->
+                                        </div>
+                                        <div *ngIf="newTaxRegime">
+                                            <input type="number" placeholder="Taxable Income"
+                                                 required disabled [value]="this.newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR"
+                                            class="disableInput">
+                                        </div>
     
                                     </div>
     
-                                    <div class="card__col-lg-3"
-                                        *ngIf="this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0"> <!-- formGroupName="taxSummary"-->
-                                        <label>Tax Payable/ Refund</label>
-                                        <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxpayable'].value"
-                                            disabled class="disableInput">
+                                    <div *ngIf="!newTaxRegime">
+                                        <div class="card__col-lg-3"
+                                            *ngIf="this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0"> <!-- formGroupName="taxSummary"-->
+                                            <label>Tax Payable</label>
+                                            <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxpayable'].value"
+                                                disabled class="disableInput">
+                                        </div>
+                                        <div class="card__col-lg-3" 
+                                            *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0 || this.computationOfIncomeForm.controls['taxRefund'].value > 0"> <!--formGroupName="taxSummary"-->
+                                            <label>Tax Refund</label>
+                                            <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxRefund'].value"
+                                                disabled class="disableInput">
+                                        </div>
                                     </div>
-                                    <div class="card__col-lg-3" 
-                                        *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0"> <!--formGroupName="taxSummary"-->
-                                        <label>Tax Payable/ Refund</label>
-                                        <input type="number" placeholder="Tax Payable/ Refund" [value]="this.computationOfIncomeForm.controls['taxRefund'].value"
-                                            disabled class="disableInput">
+
+                                    <div *ngIf="newTaxRegime">
+                                        <div class="card__col-lg-3"
+                                            *ngIf="showTaxPaybleValue()"> 
+                                            <label>Tax Payabled</label>
+                                            <input type="number" placeholder="Tax Payable/ Refund" [value]="this.newRegimeTaxSummary.taxpayable"
+                                                disabled class="disableInput">
+                                        </div>
+                                        <div class="card__col-lg-3" 
+                                            *ngIf="showTaxRefundValue()">
+                                            <label>Tax Refund</label>
+                                            <input type="number" placeholder="Tax Payable/ Refund" [value]="this.newRegimeTaxSummary.taxRefund"
+                                                disabled class="disableInput">
+                                        </div>
                                     </div>
+                                    
                                 </div>
                             </div><br><br>
     
     
     
-                            <div class="card__col-lg-3" > <!--formGroupName="assesse"-->
+                            <div class="card__col-lg-2" > <!--formGroupName="assesse"-->
                                 <mat-form-field appearance="outline">
                                     <mat-label>PAN</mat-label>
                                     <input matInput placeholder="PAN"  autocomplete="off"
@@ -108,10 +143,7 @@
                                 </mat-form-field>
                             </div>
     
-                            <!-- <div >  
-                                <div >  
-                                    <div >   -->   <!--formGroupName="assesse"  formArrayName="family"  *ngFor="let family of getFamilyArray.controls; let i=index" [formGroupName]="i"-->
-                                        <div class="card__col-lg-3">
+                                        <div class="card__col-lg-2">
                                             <mat-form-field appearance="outline">
                                                 <mat-label>First Name</mat-label>
                                                 <input matInput placeholder="First Name" 
@@ -123,7 +155,7 @@
                                                 </mat-error>
                                             </mat-form-field>
                                         </div>
-                                        <div class="card__col-lg-3">
+                                        <div class="card__col-lg-2">
                                             <mat-form-field appearance="outline">
                                                 <mat-label>Middle Name</mat-label>
                                                 <input matInput placeholder="Middle Name" formControlName="mName"
@@ -132,7 +164,7 @@
                                                 </mat-error>
                                             </mat-form-field>
                                         </div>
-                                        <div class="card__col-lg-3">
+                                        <div class="card__col-lg-2">
                                             <mat-form-field appearance="outline">
                                                 <mat-label>Last Name</mat-label>
                                                 <input matInput placeholder="Last Name" formControlName="lName"
@@ -145,18 +177,18 @@
                                             </mat-form-field>
                                         </div>
     
-                                        <div class="card__col-lg-3">
+                                        <div class="card__col-lg-2">
                                             <mat-form-field appearance="outline">
                                                 <mat-label>Father's Name</mat-label>
                                                 <input matInput placeholder="Father's Name" formControlName="fathersName"
-                                                    maxlength="75" autocomplete="off" required>  <!--formControlName="fathersName"-->
+                                                    maxlength="75" autocomplete="off" required>  
                                                 <mat-error
                                                     *ngIf="personalInfoForm['controls'].fathersName.hasError('required')">
                                                     Enter
                                                     father name</mat-error>
                                             </mat-form-field>
                                         </div>
-                                        <div class="card__col-lg-3">
+                                        <div class="card__col-lg-2">
                                             <mat-form-field appearance="outline">
                                                 <mat-label>Date of Birth</mat-label>
                                                 <input matInput  placeholder="Date of Birth" formControlName="dateOfBirth"
@@ -170,16 +202,13 @@
                                                     Birth</mat-error>
                                             </mat-form-field>
                                         </div>
-                                    <!-- </div>
-                                </div>
     
-                            </div> -->
-    
-                            <div class="card__col-lg-3" > <!--formGroupName="assesse"-->
+                        <div class="card__row">
+                            <div class="card__col-lg-2" > 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Residential Status</mat-label>
                                     <mat-select matInput  formControlName="residentialStatus"
-                                        placeholder="Select Residential Status" autocomplete="off" required> <!--formControlName="residentialStatus"-->
+                                        placeholder="Select Residential Status" autocomplete="off" required> 
                                         <mat-option  *ngFor="let res of residentialStatus" [value]="res.value">
                                            {{ res.label }}
                                         </mat-option>
@@ -190,12 +219,12 @@
                                 </mat-form-field>
                             </div>
     
-                            <div class="card__col-lg-3"> <!-- formGroupName="assesse"-->
+                            <div class="card__col-lg-2"> 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Aadhaar Number</mat-label>
                                     <input matInput placeholder="Aadhaar Number" formControlName="aadharNumber"
                                         maxlength="12" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                                        autocomplete="off" required> <!--formControlName="aadharNumber"-->
+                                        autocomplete="off" required> 
                                     <mat-error
                                         *ngIf="personalInfoForm['controls'].aadharNumber.hasError('required')">
                                         Enter
@@ -208,7 +237,7 @@
                             </div>
     
     
-                            <div class="card__col-lg-3" >  <!--formGroupName="assesse"-->
+                            <div class="card__col-lg-2"  *ngIf="!newItrSumChanges"> 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Passport No</mat-label>
                                     <input matInput placeholder="Passport No"  minlength="8"
@@ -219,8 +248,34 @@
                                         8 digit passport number</mat-error>
                                 </mat-form-field>
                             </div>
+
+                            <div class="card__col-lg-2" *ngIf="newItrSumChanges">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Nature of Employment</mat-label>
+                                    <mat-select matInput
+                                        placeholder="Select Nature of Employment"
+                                        autocomplete="off" formControlName="employerCategory" required>
+                                        <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
+                                            {{ emp.label }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
     
-                            <div class="card__col-lg-3" >  <!--formGroupName="assesse"-->
+                            <div class="card__col-lg-2" *ngIf="newItrSumChanges">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Old vs New Tax Regime</mat-label>
+                                     <mat-select matInput 
+                                        placeholder="Old vs New Tax Regime"
+                                        autocomplete="off" formControlName="regime" required>
+                                        <mat-option *ngFor="let emp of taxRegime" [value]="emp.value">
+                                            {{ emp.label }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+    
+                            <div class="card__col-lg-4" > 
                                 <mat-form-field appearance="outline">
                                     <mat-label>E-mail</mat-label>
                                     <input matInput placeholder="E-mail"  maxlength="50"
@@ -235,81 +290,85 @@
                                         email</mat-error>
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >  <!--formGroupName="assesse"-->
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Mobile Number</mat-label>
-                                    <input matInput  maxlength="10"
-                                        placeholder="Mobile Number" autocomplete="off" type="number" formControlName="contactNumber"
-                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" required> 
-                                    <mat-error
-                                        *ngIf="personalInfoForm['controls'].contactNumber.hasError('required')">
-                                        Enter
-                                        mobile number</mat-error>
-                                    <mat-error
-                                        *ngIf="personalInfoForm['controls'].contactNumber.hasError('pattern') || personalInfoForm['controls'].contactNumber.hasError('minlength') || personalInfoForm['controls'].contactNumber.hasError('maxlength')">
-                                        Enter
-                                        10 digit mobile number</mat-error>
-                                </mat-form-field>
-                            </div>
-    
-                            <div class="card__col-lg-3" > <!--formGroupName="assesse"-->
-                                <div >  <!--formGroupName="address"-->
+                        </div>
+                            
+                            <div class="card__row">
+                                <div class="card__col-lg-2" >  
                                     <mat-form-field appearance="outline">
-                                        <mat-label>Address</mat-label>
-                                        <input matInput  maxlength="200" placeholder="Address"
-                                            required autocomplete="off" formControlName="premisesName">  <!--formControlName="premisesName"-->
-                                        <mat-error
-                                            *ngIf="personalInfoForm['controls'].premisesName.hasError('required')">
-                                            Enter address
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="card__col-lg-3">  <!-- formGroupName="assesse"-->
-                                <div >  <!--formGroupName="address"-->
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Pin code</mat-label>
-                                        <input maxlength="6"
+                                        <mat-label>Mobile Number</mat-label>
+                                        <input matInput  maxlength="10"
+                                            placeholder="Mobile Number" autocomplete="off" type="number" formControlName="contactNumber"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
-                                            placeholder="PIN Code" autocomplete="off" type="number" formControlName="pinCode" (blur)="getCityData(personalInfoForm['controls'].pinCode, 'profile')"
-                                            required>  
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" required> 
                                         <mat-error
-                                            *ngIf="personalInfoForm['controls'].pinCode.hasError('required')">
-                                            Enter pin
-                                        </mat-error>
+                                            *ngIf="personalInfoForm['controls'].contactNumber.hasError('required')">
+                                            Enter
+                                            mobile number</mat-error>
                                         <mat-error
-                                            *ngIf="personalInfoForm['controls'].pinCode.hasError('pattern')">
-                                            Enter valid
-                                            pin
-                                        </mat-error>
+                                            *ngIf="personalInfoForm['controls'].contactNumber.hasError('pattern') || personalInfoForm['controls'].contactNumber.hasError('minlength') || personalInfoForm['controls'].contactNumber.hasError('maxlength')">
+                                            Enter
+                                            10 digit mobile number</mat-error>
                                     </mat-form-field>
+                                </div>
+        
+                                <div class="card__col-lg-4" > 
+                                    <div > 
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Address</mat-label>
+                                            <input matInput  maxlength="200" placeholder="Address"
+                                                required autocomplete="off" formControlName="premisesName"> 
+                                            <mat-error
+                                                *ngIf="personalInfoForm['controls'].premisesName.hasError('required')">
+                                                Enter address
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="card__col-lg-2">  
+                                    <div >  
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Pin code</mat-label>
+                                            <input maxlength="6"
+                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
+                                                placeholder="PIN Code" autocomplete="off" type="number" formControlName="pinCode" (blur)="getCityData(personalInfoForm['controls'].pinCode, 'profile')"
+                                                required>  
+                                            <mat-error
+                                                *ngIf="personalInfoForm['controls'].pinCode.hasError('required')">
+                                                Enter pin
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="personalInfoForm['controls'].pinCode.hasError('pattern')">
+                                                Enter valid
+                                                pin
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+        
+                                <div class="card__col-lg-2" >          
+                                    <div >  
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Country</mat-label>
+                                            <input matInput  placeholder="Country" formControlName="country" disabled
+                                                autocomplete="off" required>  
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+        
+                                <div class="card__col-lg-2" >           
+                                    <div >  
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>State</mat-label>
+                                            <input matInput f disabled placeholder="State" formControlName="state"
+                                                autocomplete="off" required> 
+                                        </mat-form-field>
+                                    </div>
                                 </div>
                             </div>
     
-                            <div class="card__col-lg-3" >      <!--formGroupName="assesse"-->    
-                                <div >  <!--formGroupName="address"-->
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Country</mat-label>
-                                        <input matInput  placeholder="Country" formControlName="country" disabled
-                                            autocomplete="off" required>  
-                                    </mat-form-field>
-                                </div>
-                            </div>
-    
-                            <div class="card__col-lg-3" >          <!--formGroupName="assesse"--> 
-                                <div >  <!--formGroupName="address"-->
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>State</mat-label>
-                                        <input matInput f disabled placeholder="State" formControlName="state"
-                                            autocomplete="off" required> 
-                                    </mat-form-field>
-                                </div>
-                            </div>
-    
-                            <div class="card__col-lg-3" >    <!--formGroupName="assesse"-->   
-                               <div >  <!--formGroupName="address"-->
+                            <div class="card__col-lg-2" >       
+                               <div > 
                                     <mat-form-field appearance="outline">
                                         <mat-label>City</mat-label>
                                         <input matInput  disabled placeholder="City" formControlName="city"
@@ -318,7 +377,7 @@
                                 </div>
                             </div>
     
-                            <div class="card__col-lg-3">
+                            <div class="card__col-lg-2">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Return Type</mat-label>
                                     <mat-select matInput 
@@ -327,34 +386,34 @@
                                         <mat-option *ngFor="let res of returnTypeData" [value]="res.value">
                                             {{ res.label }}
                                         </mat-option>
-                                    </mat-select>  <!---->
+                                    </mat-select>  
                                     <mat-error *ngIf="personalInfoForm.controls['returnType'].hasError('required')">Select
                                         return type</mat-error>
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3" >  <!--formGroupName="assesse"--> 
+                            <div class="card__col-lg-2" >   
                                 <mat-form-field appearance="outline">
                                     <mat-label>Assessment Year</mat-label>
                                     <mat-select matInput  placeholder="Financial Year" formControlName="assessmentYear"
                                         autocomplete="off"  required>  
-                                        <mat-option *ngFor="let year of financialYear" [value]="year.value">
-                                            {{year.value}}
+                                        <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                                            {{year.financialYear}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3">
+                            <div class="card__col-lg-2">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Financial Year</mat-label>
                                     <mat-select matInput  placeholder="Financial Year" formControlName="financialYear"
                                         autocomplete="off"  required> 
-                                        <mat-option *ngFor="let year of financialYear" [value]="year.value">
-                                            {{year.value}}
+                                        <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                                            {{year.financialYear}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3"  *ngIf="showAcknowInput">   <!--formGroupName="assesse"   -->
+                            <div class="card__col-lg-2"  *ngIf="showAcknowInput">   
                                 <mat-form-field appearance="outline">
                                     <mat-label>Acknowledgement Number</mat-label>
                                     <input matInput  maxlength="15" minlength="15"
@@ -370,7 +429,7 @@
                                         Acknowldegemant number should be 15 digit</mat-error>
                                 </mat-form-field>
                             </div>
-                            <div class="card__col-lg-3"   *ngIf="showAcknowInput">   <!--formGroupName="assesse"-->
+                            <div class="card__col-lg-2"   *ngIf="showAcknowInput">   
                                 <mat-form-field appearance="outline">
                                     <mat-label>Date of filling</mat-label>
                                     <input matInput  placeholder="Date of filling"
@@ -439,6 +498,7 @@
                                 <th>Property Type</th>
                                 <th colspan="8" style="text-align: center;"><b>Address</b></th>
                                 <th>Ownership</th>
+                                <th *ngIf="newItrSumChanges">Percentage</th>
                                 <th>Tenat name</th>
                                 <th>Gross Rent Recived</th>
                                 <th>Less: Taxes Paid</th>
@@ -461,6 +521,7 @@
                                 <td>State</td>
                                 <td>City</td>
                                 <td></td>
+                                <td *ngIf="newItrSumChanges"></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -477,6 +538,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
+                                <td *ngIf="newItrSumChanges"></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -506,6 +568,7 @@
                                 <td>{{house.city}}</td>
 
                                 <td>{{house.ownerOfProperty}}</td>
+                                <td *ngIf="newItrSumChanges">{{house.percentage}}</td>
                                 <td>{{house.tenantName}}</td>
                                 <td>{{house.grossAnnualRentReceived}}</td>
                                 <td>{{house.propertyTax}}</td>
@@ -523,7 +586,7 @@
                         </table><br><br>
     
     
-                        <div class="tableHead">Annexures: Salary</div>
+                        <div class="tableHead">Annexures: Salary</div> 
                         <button style="float: right;" [disabled]="salaryItrratedData.length > 3"
                             (click)="openDialog('Add Salary Info','Add', null, '','Salary')">Add Employer
                             Salary</button><br> 
@@ -536,7 +599,9 @@
                                 <th>Value of Perquisites as per Section 17(2)</th>
                                 <th>Profit in lieu of Salary as per Section 17(3)</th>
                                 <th>Gross Salary</th>
-                                <th colspan="3">Less: Exempt Allowance</th>
+                                <th *ngIf="!newItrSumChanges" colspan="3">Less: Exempt Allowance</th>
+                                <th *ngIf="newItrSumChanges" colspan="2">Less: Exempt Allowance</th>
+                                <!-- <th colspan="3">Less: Exempt Allowance</th> -->
                                 <th>Total Exempt Allowance</th>
                                 <th>Net Salary</th>
                                 <th colspan="3">Less: Deduction u/s 16(ia)</th>
@@ -553,7 +618,7 @@
                                 <th></th>
                                 <th></th>
                                 <th>HRA</th>
-                                <th>LTE</th>
+                                <th *ngIf="!newItrSumChanges" >LTE</th>
                                 <th>O</th>
                                 <th></th>
                                 <th></th>
@@ -568,7 +633,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                                <td *ngIf="!newItrSumChanges"></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -593,7 +658,7 @@
                                 <td>{{sal.profitInLieu}}</td>
                                 <td>{{sal.grossSalary}}</td>
                                 <td>{{sal.houseRentAllow}}</td>
-                                <td>{{sal.leaveTravelExpense}}</td>
+                                <td  *ngIf="!newItrSumChanges">{{sal.leaveTravelExpense}}</td>
                                 <td>{{sal.other}}</td>
                                 <td>{{sal.totalExemptAllow}}</td>
                                 <td>{{sal.netSalary}}</td>
@@ -645,7 +710,7 @@
                           <form [formGroup]="businessIncomeForm">
                             <div class="tableHead">Annexure: Income from Business or Profession</div><br>
                             <app-itr4part [itrType]="personalInfoForm.controls['itrType'].value" [businessData]="this.updatBussinessInfo"
-                                (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
+                            [jsonParse]="isJsonParse" (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
 
                                 <br>
 
@@ -719,10 +784,10 @@
                                         <td><input type="number" disabled maxlength="8"></td>
                                         <td><input type="number" disabled maxlength="8"></td>
                                     </tr> -->
-                                </table><br><br>
+                                </table>
 
-                                <div class="tableHead">Income from Other than Speculative and Presumptive - Business</div><br>
-                                <div class="card__row">
+                                <div class="tableHead" *ngIf="!newItrSumChanges">Income from Other than Speculative and Presumptive - Business</div><br>
+                                <div class="card__row" *ngIf="!newItrSumChanges">
                                     <div class="card__col-lg-6">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Nature of business</mat-label> 
@@ -748,7 +813,7 @@
                                         </mat-form-field>
                                     </div>
                                 </div><br>
-                                <table>
+                                <table *ngIf="!newItrSumChanges">
                                     <tr>
                                         <th><b>Particulars</b></th>
                                         <th><b>Gross Receipts</b></th>
@@ -794,8 +859,8 @@
                                     </tr> -->
                                 </table><br><br>
 
-                                <div class="tableHead">Income from Other than Speculative and Presumptive - Profession</div><br>
-                                <div class="card__row">
+                                <div class="tableHead" *ngIf="!newItrSumChanges">Income from Other than Speculative and Presumptive - Profession</div><br>
+                                <div class="card__row" *ngIf="!newItrSumChanges">
                                     <div class="card__col-lg-6">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Nature of business</mat-label> 
@@ -821,7 +886,7 @@
                                         </mat-form-field>
                                     </div>
                                 </div><br>
-                                <table>
+                                <table *ngIf="!newItrSumChanges">
                                     <tr>
                                         <th><b>Particulars</b></th>
                                         <th><b>Gross Receipts</b></th>
@@ -990,6 +1055,15 @@
                                             <!--[value]="sourcesOfIncome.interestFromOther"   (blur)="setOtherSourceIncomeValue($event.target.value,'other')"-->
                                     </mat-form-field>
                                 </div>
+                                <div class="card__col-lg-3" *ngIf="newItrSumChanges">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>dividend</mat-label>
+                                        <input matInput placeholder="dividend" maxlength="8" autocomplete="off"
+                                             id="dividentAmnt" name="dividentAmnt" formControlName="dividend" (blur)="calculateOtherSourceTotal()"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                            <!--[value]="sourcesOfIncome.interestFromOther"   (blur)="setOtherSourceIncomeValue($event.target.value,'other')"-->
+                                    </mat-form-field>
+                                </div>
                                 <!-- <div class="card__col-lg-3">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Agriculture income</mat-label>
@@ -1018,6 +1092,61 @@
                             </div>
                             </form>
                         </mat-card><br><br>
+
+                        <div *ngIf="newItrSumChanges">
+                            <div class="tableHead">Annexures: Add Exempt Income</div><br>
+                            <mat-card>
+                                <div class="card__row">
+                                    <div class="card__col-lg-8">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Nature of Exempt Income</mat-label>
+                                            <mat-select matInput  [(ngModel)]="exemptInfo.type" [ngModelOptions]="{standalone: true}" placeholder="Select Nature of Exempt Income"
+                                             autocomplete="off" >  <!--(selectionChange)="selectExemptType($event.value)"-->
+                                                <mat-option *ngFor="let res of exemptIncomes" [value]="res.value">
+                                                    {{ res.label }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <!-- <mat-error *ngIf="itrSummaryForm.controls['returnType'].hasError('required')">Select
+                                                return type</mat-error> -->
+                                        </mat-form-field>
+                                    </div>
+        
+                                    <div class="card__col-lg-3">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Amount</mat-label>
+                                            <input matInput placeholder="Amount" [(ngModel)]="exemptInfo.amount" [ngModelOptions]="{standalone: true}" 
+                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" autocomplete="off">  
+                                        </mat-form-field>
+                                    </div>
+                                       
+                                    <div class="card__col-lg-1">
+                                      <button [disabled]="utilsService.isNonEmpty(exemptInfo.type) && utilsService.isNonEmpty(exemptInfo.amount) ? false: true" >Add</button>  <!--(click)="addExemptIncome()"-->
+                                    </div>
+                                 </div><br>
+    
+                                 <table *ngIf="exemptIncomeData && exemptIncomeData.length > 0">
+                                     <tr>
+                                         <th>Nature of Exempt Income</th> 
+                                         <th>Amount</th>
+                                         <th>Action</th>
+                                     </tr>
+                                     <tr *ngFor="let item of exemptIncomeData; let i=index">
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.value}}</td>
+                                        <td>
+                                            <button>Delete</button>  <!-- (click)="deleteExemptRecord(i)"-->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Total: </b></td>
+                                        <td><b>{{computationOfIncomeForm.controls.totalExemptIncome.value}}</b></td>  <!--itrSummaryForm.controls.totalExemptIncome.value-->
+                                        <td></td>
+                                    </tr>
+                                 </table>
+                            </mat-card>
+                        </div>
+                       <br><br>
     
 
                         <div class="tableHead">Annexures: Losses To be Carried Forward</div><br>
@@ -1146,6 +1275,16 @@
                                                 {{age.label}}
                                             </mat-option>
                                         </mat-select>
+                                    </mat-form-field>
+                                </div>  
+                                <div class="card__col-lg-3" *ngIf="newItrSumChanges && this.deductionAndRemainForm.controls.paraentAge.value === 'above60'">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Medical Expendature</mat-label>
+                                        <input matInput placeholder="Medical Expendature"
+                                            type="number"  formControlName="medicalExpendature"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            maxlength="8" autocomplete="off" (blur)="setDeduction80DVal()">
+                                        <!--[value]="sec80DobjVal.preventiveHealthCheckupFamily" (blur)="setDeduction80DVal($event.target.value, 'forFamily')" -->
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -1369,6 +1508,29 @@
                                            
                                     </mat-form-field>
                                 </div>
+
+                                <div class="card__col-lg-3" *ngIf="newItrSumChanges">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Under section 80EEB</mat-label>
+                                        <input matInput placeholder="Under section 80EEB" maxlength="8"
+                                            autocomplete="off"
+                                            type="number" formControlName="us80eeb"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-lg-3" *ngIf="newItrSumChanges">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Any Other</mat-label>
+                                        <input matInput placeholder="Any Other" maxlength="8"
+                                            autocomplete="off"
+                                            type="number" formControlName="other"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"  (blur)="calculateTotalDeduction()">
+                                           
+                                    </mat-form-field>
+                                </div>
                                 <!-- </form> -->
                             </div>
                         </mat-card>
@@ -1442,10 +1604,10 @@
                         </ag-grid-angular>
                        <br><br>
     
-                        <div class="tableHead">Annexures: Exempt Income</div><br>
-                        <mat-card>
+                        <div class="tableHead" *ngIf="!newItrSumChanges">Annexures: Exempt Income</div><br>
+                        <mat-card *ngIf="!newItrSumChanges">
                             <!-- <form [formGroup]="exemptIncomeForm"> -->
-                            <div class="card__row">
+                            <div class="card__row" *ngIf="newItrSumChanges">
                                 <div class="card__col-lg-2">
                                     <mat-form-field appearance="outline">
                                         <mat-label>PPF Interest</mat-label>
@@ -1628,9 +1790,16 @@
                         <div class="table-responsive">
                           <form [formGroup]="computationOfIncomeForm">
                             <table>
+                                <tr *ngIf="newItrSumChanges">
+                                    <th></th>
+                                    <th></th>
+                                    <th colspan="2"><b>As Per old Tax Regime</b></th>
+                                    <th ><b>As Per New Tax Regime</b></th>
+                                </tr>
                                 <tr>
                                     <th></th>
                                     <th><b>Particulars</b></th>
+                                    <th><b>Rs.</b></th>
                                     <th><b>Rs.</b></th>
                                     <th><b>Rs.</b></th>
                                 </tr>
@@ -1639,14 +1808,19 @@
                                     <td>Income from Salary </td>
                                     <td></td>
                                     <td >  <!--formGroupName="taxSummary"-->
-                                        <input type="number" formControlName="salary" disabled maxlength="8"></td>  
+                                        <input type="number" formControlName="salary"  maxlength="8" (blur)="calculateTotalHeadWiseIncome()">
+                                    </td> 
+                                        <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calTotalHeadWiseIncome()" [(ngModel)]="newRegimeTaxSummary.salary" [ngModelOptions]="{standalone: true}"></td>  <!--[(ngModel)]="newRegimeTaxSummary.salary" [ngModelOptions]="{standalone: true}"-->
+
                                 </tr>
                                 <tr>
                                     <td>2</td>
                                     <td>Income from House Property (Refer Annexure) </td>
                                     <td></td>
                                     <td>  <!--formGroupName="taxSummary"-->
-                                        <input type="number" disabled formControlName="housePropertyIncome" maxlength="8"></td>  <!---->
+                                        <input type="number" formControlName="housePropertyIncome" maxlength="8">
+                                    </td>  <!---->
+                                        <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calTotalHeadWiseIncome()" [(ngModel)]="newRegimeTaxSummary.housePropertyIncome" [ngModelOptions]="{standalone: true}" (blur)="calculateTotalHeadWiseIncome()"></td> 
     
                                 </tr>
                                 <tr >
@@ -1654,72 +1828,84 @@
                                     <td>Income from Capital Gain </td>
                                     <td></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calTotalHeadWiseIncome()" [(ngModel)]="newRegimeTaxSummary.capitalGain" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Short Term Capital Gain @ slab rate (Refer Annexure)</td>
-                                    <td><input type="number" [value]="capital_Gain.shortTermCapitalGain" disabled maxlength="8"></td>
+                                    <td><input type="number" [(ngModel)]="capital_Gain.shortTermCapitalGain" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.shortTermCapitalGainTotal" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Short Term Capital Gain @ 15% (Refer Annexure)</td>
-                                    <td><input type="number" [value]="capital_Gain.shortTermCapitalGain15" disabled maxlength="8"></td> 
+                                    <td><input type="number" [(ngModel)]="capital_Gain.shortTermCapitalGain15" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td> 
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Long Term Capital Gain @ 10% (Refer Annexure)</td>
-                                    <td><input type="number" [value]="capital_Gain.longTermCapitalGain10" disabled maxlength="8"></td>  <!--[value]="this.businessObject.presumptive44ADtotal"-->
+                                    <td><input type="number" [(ngModel)]="capital_Gain.longTermCapitalGain10" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td>  
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Long Term Capital Gain @ 20% (Refer Annexure)</td>
-                                    <td><input type="number" [value]="capital_Gain.longTermCapitalGain20" disabled maxlength="8"></td>
+                                    <td><input type="number" [(ngModel)]="capital_Gain.longTermCapitalGain20" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td>
                                     <td><input type="number" formControlName="capitalGain"  disabled maxlength="8"></td> <!--[value]="incomeFromCapGain"-->
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td>4</td>
                                     <td>Income from Business or Profession </td>
                                     <td></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calTotalHeadWiseIncome()" [(ngModel)]="newRegimeTaxSummary.presumptiveIncome" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
                                     <td>Presumptive Business Income U/s 44 AD</td>
-                                    <td><input type="number" formControlName="presumptiveBusinessIncomeUs44AD"  disabled maxlength="8"></td>
+                                    <td><input type="number" formControlName="presumptiveBusinessIncomeUs44AD"  [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calTotalHeadWiseIncome()" [(ngModel)]="newRegimeTaxSummary.presumptiveBusinessIncomeUs44AD" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
                                     <td>Presumptive Business Income U/s 44 ADA</td>
-                                    <td><input type="number" formControlName="presumptiveBusinessIncomeUs44ADA" disabled maxlength="8"></td>
+                                    <td><input type="number" formControlName="presumptiveBusinessIncomeUs44ADA" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.presumptiveBusinessIncomeUs44ADA" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
                                     <td>Speculative Business Income</td>
-                                    <td><input type="number" formControlName="speculativeBusinessIncome" disabled maxlength="8"></td>
+                                    <td><input type="number" formControlName="speculativeBusinessIncome" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.speculativeBusinessIncome" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
                                     <td>Income from Other than Speculative and Presumptive - Business</td>
-                                    <td><input type="number" formControlName="incomeFromOtherThanSpeculativeAndPresumptive" disabled maxlength="8"></td>
+                                    <td><input type="number" formControlName="incomeFromOtherThanSpeculativeAndPresumptive" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.incomeFromOtherThanSpeculativeAndPresumptive" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
                                     <td>Income from Other than Speculative and Presumptive - Profession</td>
-                                    <td><input type="number" formControlName="incomeFromOtherThanSpeculativeAndPresumptiveProfession" disabled maxlength="8"></td>
+                                    <td><input type="number" formControlName="incomeFromOtherThanSpeculativeAndPresumptiveProfession" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.incomeFromOtherThanSpeculativeAndPresumptiveProfession" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
                                     <td>F&O</td>
-                                    <td><input type="number" formControlName="futureAndOption" disabled maxlength="8"></td>
+                                    <td><input type="number" formControlName="futureAndOption" [disabled]="personalInfoForm.controls.regime.value === 'N' || personalInfoForm.controls.regime.value === ''" maxlength="8"></td>
                                     <td><input type="number" formControlName="presumptiveIncome" disabled maxlength="8"></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.futureAndOption" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
 
 
@@ -1728,8 +1914,9 @@
                                     <td>Income from Other Sources (Refer annexure) </td>
                                     <td></td>
                                     <td > <!--formGroupName="taxSummary"-->
-                                        <input type="number" formControlName="otherIncome" disabled  maxlength="8">  <!---->
+                                        <input type="number" formControlName="otherIncome"  maxlength="8" (blur)="calculateTotalHeadWiseIncome()">  <!---->
                                     </td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calTotalHeadWiseIncome()" [(ngModel)]="newRegimeTaxSummary.otherIncome" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr> 
                                     <td>{{itrType.itrThree ? 6 : 5}} </td>
@@ -1737,6 +1924,7 @@
                                     <td></td>
                                     <td> <!--formGroupName="taxSummary"-->
                                         <b><input type="number" formControlName="totalHeadWiseIncome" disabled  maxlength="8"></b></td>  <!---->
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.totalHeadWiseIncome" [ngModelOptions]="{standalone: true}"></td> 
     
                                 </tr>
                                 <tr> 
@@ -1745,6 +1933,7 @@
                                     <td></td>
                                     <td>                               
                                         <b><input type="number" formControlName="lossesSetOffDuringTheYear" (blur)="calGrossTotalIncome()" maxlength="8"></b></td>  
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.lossesSetOffDuringTheYear" [ngModelOptions]="{standalone: true}"></td> 
     
                                 </tr>
                                 <tr> 
@@ -1753,6 +1942,7 @@
                                     <td></td>
                                     <td>                           
                                         <b><input type="number" formControlName="carriedForwardToNextYear" (blur)="calGrossTotalIncome()" maxlength="8"></b></td> 
+                                        <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.carriedForwardToNextYear" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr> 
                                     <td>{{itrType.itrThree ? 9 : 8}} </td>
@@ -1760,13 +1950,15 @@
                                     <td></td>
                                     <td>
                                         <b><input type="number" disabled formControlName="grossTotalIncome" maxlength="8"></b></td>  
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.grossTotalIncome" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr> 
                                     <td>{{itrType.itrThree ? 10 : 9}}</td>
                                     <td>Income Chargeable to Tax at Special Rate U/S 111A, 112 etc</td>
                                     <td></td>
                                     <td> 
-                                        <b><input type="number" formControlName="sec112Tax" maxlength="8"></b></td>  
+                                        <b><input type="number" formControlName="sec112Tax" maxlength="8"></b></td> 
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.sec112Tax" [ngModelOptions]="{standalone: true}"></td>  
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 11 : 10}}</td>
@@ -1774,61 +1966,71 @@
                                     <td></td>
                                     <td> <!--formGroupName="taxSummary"-->
                                         <input type="number" formControlName="totalDeduction" 
-                                             disabled maxlength="8"></td> 
+                                              maxlength="8"></td> 
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.totalDeduction" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 12 : 11}}</td>
                                     <td><b>Total Income </b></td>
                                     <td></td>
                                     <td><b><input type="number" formControlName="totalIncomeAfterDeductionIncludeSR" required disabled maxlength="8"></b></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 13 : 12}}</td>
                                     <td>Income Chargeable at Special rates after adjusting BEL**</td>
                                     <td></td>
                                     <td><b><input type="number" formControlName="specialIncomeAfterAdjBaseLimit" required maxlength="8"></b></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.specialIncomeAfterAdjBaseLimit" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 14 : 13}}</td>
                                     <td>Net Agriculture Income</td>
                                     <td></td>
                                     <td><b><input type="number" formControlName="agricultureIncome" required  maxlength="8"></b></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.agricultureIncome" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 15 : 14}}</td>
                                     <td>Aggregate Income</td>
                                     <td></td>
                                     <td><b><input type="number" formControlName="aggregateIncome" required maxlength="8"></b></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.aggregateIncome" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 16 : 15}}</td>
                                     <td>Loss to be Carried Forward (Refer Annexure)</td>
                                     <td></td>
                                     <td><b><input type="number" formControlName="carryForwardLoss"  maxlength="8"></b></td> <!--[value]="totalCarryForwardToNxtYrs"-->
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.carryForwardLoss" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 17 : 16}}</td>
                                     <td>Total Tax </td>
                                     <td></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.taxOnTotalIncome" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Tax at normal rate- A</td>
                                     <td><input type="number" formControlName="taxAtNormalRate" (blur)="calTotalTax()" maxlength="8"></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.taxAtNormalRate" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Tax at special rate- B</td>
                                     <td><input type="number" formControlName="taxAtSpecialRate" (blur)="calTotalTax()"  maxlength="8"></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.taxAtSpecialRate" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Rebate on agriculture Income- C</td>
                                     <td><input type="number" formControlName="rebateOnAgricultureIncome" (blur)="calTotalTax()"  maxlength="8"></td>
                                     <td><input type="number" formControlName="taxOnTotalIncome" required disabled maxlength="8"></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.rebateOnAgricultureIncome" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 18 : 17}}</td>
@@ -1837,6 +2039,7 @@
                                     <td>  <!--formGroupName="taxSummary"-->
                                         <input formControlName="forRebate87Tax" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required
                                             maxlength="8" (blur)="calculateTaxAfterRebate()"></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.forRebate87Tax" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 19 : 18}}</td>
@@ -1844,32 +2047,36 @@
                                     <td></td>
                                     <td > <!--formGroupName="taxSummary"-->
                                         <input type="number" formControlName="taxAfterRebate" disabled required maxlength="8"></td> 
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.taxAfterRebate" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 20 : 19}}</td>
                                     <td>Surcharge</td>
                                     <td></td>
                                     <td><input type="number" formControlName="surcharge" (blur)="calculateHealthEducsCess()" required  maxlength="8"></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.surcharge" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 21 : 20}}</td>
                                     <td>Health and Education cess @4%</td>
                                     <td></td>
                                     <td> <!--formGroupName="taxSummary"-->
-                                        <input type="number" formControlName="cessAmount" disabled required maxlength="8"></td> <!---->
+                                        <input type="number" formControlName="cessAmount" required maxlength="8"></td> <!---->
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.cessAmount" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 22 : 21}}</td>
                                     <td>Gross Tax Liability {{itrType.itrThree ? '(19+20+21)' : '(18+19+20)'}}</td>
                                     <td></td>
                                     <td><input type="number" formControlName="grossTaxLiability" required disabled></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.grossTaxLiability" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 23 : 22}}</td>
                                     <td>Less: Relief </td>
                                     <td></td>
-                                    <td> 
-                                    </td>
+                                    <td> </td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" ></td> <!--[(ngModel)]="newRegimeTaxSummary.salary" [ngModelOptions]="{standalone: true}"-->
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -1881,6 +2088,7 @@
                                             (blur)="calLessRelief()">
                                            </td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.taxReliefUnder89" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -1890,6 +2098,7 @@
                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                        (blur)="calLessRelief()"></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.taxReliefUnder90_90A" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -1899,18 +2108,21 @@
                                       onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                       (blur)="calLessRelief()"></td>
                                     <td><input type="number" [value]="totalOfLessRelief" disabled maxlength="8"></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.taxReliefUnder91" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 24 : 23}}</td>
                                     <td>Net Tax Liability</td>
                                     <td></td>
                                     <td><input type="number" required formControlName="netTaxLiability" maxlength="8"></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.netTaxLiability" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 25 : 24}}</td>
                                     <td><b>Interest and Fees</b></td>
                                     <td></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.interestAndFeesPayable" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -1922,6 +2134,7 @@
                                             <!-- -->
                                     </td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.s234A" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -1933,6 +2146,7 @@
                                             <!--   -->
                                     </td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.s234B" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -1944,6 +2158,7 @@
                                            <!-- -->
                                     </td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.s234C" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -1957,20 +2172,23 @@
     
                                     <td> 
                                         <input type="number" formControlName="interestAndFeesPayable" disabled maxlength="8"></td>  <!--formControlName="interestAndFeesPayable"-->
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.s234F" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 26 : 25}}</td>
                                     <td>Aggregate Tax Liability</td>
                                     <td></td>
                                     <td> <!--formGroupName="taxSummary"-->
-                                        <input type="number" formControlName="agrigateLiability" disabled required maxlength="8"> 
+                                        <input type="number" formControlName="agrigateLiability" required maxlength="8"> 
                                     </td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.agrigateLiability" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 27 : 26}}</td>
                                     <td><b>Taxes Paid (Refer Annexure)</b></td>
                                     <td></td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.totalTaxesPaid" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -1979,6 +2197,7 @@
                                         <input type="number" [value]="taxesPaid.tdsOnSalary"  disabled maxlength="8"> 
                                     </td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.tdsOnSalary" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -1986,18 +2205,21 @@
                                     <td><input type="number" [value]="taxesPaid.tdsOtherThanSalary" disabled  maxlength="8">  
                                     </td>
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.tdsOtherThanSalary" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>TDS on Sale of Property 26QB </td>
                                     <td><input type="number" [value]="taxesPaid.tdsOnSal26QB" disabled  maxlength="8"></td> 
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.tdsOnSal26QB" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>TCS </td>
                                     <td><input type="number" [value]="taxesPaid.tcs" disabled  maxlength="8"></td> 
                                     <td></td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.tcs" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -2008,23 +2230,26 @@
                                     <td> 
                                         <input type="number" formControlName="totalTaxesPaid" disabled maxlength="8">
                                     </td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.advanceSelfAssTax" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
     
-                                <tr *ngIf="this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0"> 
+                                <tr *ngIf="showTaxPaybleValue()"> 
                                     <td>{{itrType.itrThree ? 28 : 27}}</td>
-                                    <td><b>Net Tax Payable/ (Refund)</b></td>
+                                    <td><b>Net Tax Payable</b></td>
                                     <td></td>
                                     <td> 
                                         <b><input type="number" formControlName="taxpayable"  disabled maxlength="8"></b> 
                                     </td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.taxpayable" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
-                                <tr *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0">
+                                <tr *ngIf="showTaxRefundValue()">
                                     <td>{{itrType.itrThree ? 28 : 27}}</td>
-                                    <td><b>Net Tax Payable/ (Refund)</b></td>
+                                    <td><b>Tax Refund</b></td>
                                     <td></td>
                                     <td> 
                                         <b><input type="number" formControlName="taxRefund" disabled maxlength="8"></b> 
                                     </td>
+                                    <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.taxRefund" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
     
                             </table>

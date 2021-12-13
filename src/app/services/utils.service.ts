@@ -477,4 +477,15 @@ export class UtilsService {
         this.userMsService.postMethod(param, request).subscribe(res => {
         })
     }
+
+    async getMyCallingNumber() {
+        const userObj = JSON.parse(localStorage.getItem('UMD'));
+        const SME_LIST = await this.getStoredSmeList();
+        const sme = SME_LIST.filter(item => item.userId === userObj.USER_UNIQUE_ID);
+        if (sme instanceof Array && sme.length > 0 && (sme[0]['roles'].length > 0 && sme[0]['roles'].includes('ROLE_CALLING_TEAM'))) {
+            debugger
+            return sme[0].mobileNumber;
+        }
+        return false;
+    }
 }

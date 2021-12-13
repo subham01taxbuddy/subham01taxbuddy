@@ -21,7 +21,7 @@ export class ScheduledCallComponent implements OnInit {
   selectedAgent: any;
   searchMobNo: any;
   agentList: any = [];
-  isAdmin: boolean;
+  // isAdmin: boolean;
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
   pageCount: number = 0;
@@ -32,8 +32,9 @@ export class ScheduledCallComponent implements OnInit {
     private dialog: MatDialog, private route: Router) {
     this.scheduleCallGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.createColoumnDef(),
+      columnDefs: this.createColumnDef(),
       enableCellChangeFlash: true,
+      enableCellTextSelection: true,
       onGridReady: params => {
       },
       sortable: true,
@@ -56,7 +57,7 @@ export class ScheduledCallComponent implements OnInit {
     }
 
     if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
-      this.isAdmin = true;
+      // this.isAdmin = true;
       this.searchMobNo = '';
       if (this.showByAdminUserId) {
         this.showByAdminUserId = true;
@@ -68,7 +69,7 @@ export class ScheduledCallComponent implements OnInit {
       this.getScheduledCallsInfo(this.loggedUserId, 0);
     }
     else {
-      this.isAdmin = false;
+      // this.isAdmin = false;
       this.getScheduledCallsInfo(this.loggedUserId, 0);
     }
   }
@@ -104,7 +105,6 @@ export class ScheduledCallComponent implements OnInit {
     param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;
 
     this.userMsService.getMethod(param2).subscribe((result: any) => {
-      console.log('Schdule call info', result);
       if (result instanceof Array && result.length > 0) {
         this.scheduleCallsData = result;
         this.scheduleCallGridOptions.api.setRowData(this.createRowData(this.scheduleCallsData));
@@ -126,7 +126,7 @@ export class ScheduledCallComponent implements OnInit {
     console.log('scheduleCalls -> ', scheduleCalls);
     var scheduleCallsArray = [];
     for (let i = 0; i < scheduleCalls.length; i++) {
-      let sceduleCallsInfo = Object.assign({}, scheduleCallsArray[i], {
+      let scheduleCallsInfo = Object.assign({}, scheduleCallsArray[i], {
         userId: scheduleCalls[i]['userId'],
         userName: scheduleCalls[i]['userName'],
         userMobile: scheduleCalls[i]['userMobile'],
@@ -136,19 +136,19 @@ export class ScheduledCallComponent implements OnInit {
         time: this.getCallTime(scheduleCalls[i]['scheduleCallTime']),
         serviceType: scheduleCalls[i]['serviceType'] !== null ? scheduleCalls[i]['serviceType'] : 'ITR'
       })
-      scheduleCallsArray.push(sceduleCallsInfo);
+      scheduleCallsArray.push(scheduleCallsInfo);
     }
     console.log('scheduleCallsArray-> ', scheduleCallsArray)
     return scheduleCallsArray;
   }
 
   getCallTime(callDateTime) {
-    let firtPoint = callDateTime.indexOf('T');
+    let firstPoint = callDateTime.indexOf('T');
     let secondPoint = callDateTime.length;
-    return callDateTime.substring(firtPoint + 1, secondPoint - 1)
+    return callDateTime.substring(firstPoint + 1, secondPoint - 1)
   }
 
-  createColoumnDef() {
+  createColumnDef() {
     return [
       {
         headerName: 'User Id',
@@ -195,7 +195,7 @@ export class ScheduledCallComponent implements OnInit {
         width: 150,
         suppressMovable: true,
         sortable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
@@ -372,14 +372,24 @@ export class ScheduledCallComponent implements OnInit {
   }
 
 
-  startCalling(user) {
-    console.log('user: ', user)
+  async startCalling(user) {
+    const agentNumber = await this.utilsService.getMyCallingNumber();
+    console.log('agent number', agentNumber)
+    if (!agentNumber) {
+      this.toastMsgService.alert("error", 'You dont have calling role.')
+      return;
+    }
     this.loading = true;
-    const param = `/call-management/make-call`;
     const reqBody = {
-      "agent_number": user.smeMobileNumber,
+      "agent_number": agentNumber,
       "customer_number": user.userMobile
     }
+
+    const param = `/call-management/make-call`;
+    // const reqBody = {
+    //   "agent_number": user.smeMobileNumber,
+    //   "customer_number": user.userMobile
+    // }
     this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
       console.log('Call Result: ', result);
       this.loading = false;
@@ -398,21 +408,18 @@ export class ScheduledCallComponent implements OnInit {
     matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Chat icon']);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
-    this.userMsService.getMethod(param).subscribe((responce: any) => {
-      console.log('open chat link res: ', responce);
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      console.log('open chat link res: ', response);
       this.loading = false;
-      if (responce.success) {
-        window.open(responce.data.chatLink)
-      }
-      else {
+      if (response.success) {
+        window.open(response.data.chatLink)
+      } else {
         this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
       }
-    },
-      error => {
-        console.log('Error during feching chat link: ', error);
-        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
-        this.loading = false;
-      })
+    }, error => {
+      this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
+      this.loading = false;
+    })
   }
 
   showUserInformation(user) {
@@ -441,13 +448,10 @@ export class ScheduledCallComponent implements OnInit {
       setTimeout(() => {
         this.showScheduleCallList();
       }, 3000)
-
-    },
-      error => {
-        console.log('Error during schedule-call status change: ', error);
-        this.toastMsgService.alert('error', 'Error during schedule-call status change.')
-        this.loading = false;
-      })
+    }, error => {
+      this.toastMsgService.alert('error', 'Error during schedule-call status change.')
+      this.loading = false;
+    })
 
   }
 
@@ -461,9 +465,6 @@ export class ScheduledCallComponent implements OnInit {
     this.getScheduledCallsInfo(this.loggedUserId, Math.abs(this.pageCount));
   }
 
-  // serchByMobNo(){
-
-  // }
   navigateToWhatsappChat(data) {
     matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Whatsapp icon']);
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)

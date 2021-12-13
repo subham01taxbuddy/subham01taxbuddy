@@ -42,7 +42,7 @@ export class RepoByAgentNameComponent implements OnInit {
     private utilsService: UtilsService) {
     this.repoByAgentGridOption = <GridOptions>{
       rowData: [],
-      columnDefs: this.newAgentCreateColoumnDef(),
+      columnDefs: this.newAgentCreateColumnDef(),
       enableCellChangeFlash: true,
       onGridReady: params => {
       },
@@ -56,14 +56,14 @@ export class RepoByAgentNameComponent implements OnInit {
       toDate: [new Date(), Validators.required]
     })
 
-    this.showKnowlarityInfoByAgent();
+    // this.showKnowlarityInfoByAgent();
   }
 
   setToDateValidation(fromDate) {
     this.minToDate = fromDate;
   }
 
-  newAgentCreateColoumnDef() {
+  newAgentCreateColumnDef() {
     return [
       {
         headerName: 'Agent Name',

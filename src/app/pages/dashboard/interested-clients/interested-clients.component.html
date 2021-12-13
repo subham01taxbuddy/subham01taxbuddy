@@ -3,13 +3,13 @@
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
         <div class="card__row">
-            <div>
-                <!-- *ngIf="isAdmin" -->
+            <div *ngIf="isAgentAvailable">
                 <div class="filter__col card__col-sm-2 card__col-xs-12">
                     <mat-form-field appearance="outline">
                         <mat-label>Select Agent</mat-label>
                         <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedAgent"
                             (selectionChange)="searchByAgent()">
+                            <mat-option> Clear Selection</mat-option>
                             <mat-option *ngFor="let agent of agentList" [value]="agent.agentId">
                                 {{agent.name}} <span style="font-weight: bold;">{{agent.serviceType}}</span>
                             </mat-option>
@@ -18,13 +18,24 @@
                 </div>
             </div>
 
-            <div class="filter__col card__col-sm-3 card__col-xs-12">
+            <div class="filter__col card__col-sm-2 card__col-xs-12">
                 <mat-form-field appearance="outline">
                     <mat-label>Select Status</mat-label>
                     <mat-select placeholder="Select Status" [(ngModel)]="selectedStatus"
                         (selectionChange)="this.searchByStatus()">
                         <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
                             {{ status.statusName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="filter__col card__col-sm-2 card__col-xs-12">
+                <mat-form-field appearance="outline">
+                    <mat-label>Select Service</mat-label>
+                    <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedService"
+                        (selectionChange)="searchByServiceType()" [disabled]="isServiceDisabled">
+                        <mat-option *ngFor="let service of serviceTypeList" [value]="service">
+                            {{service}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -38,26 +49,30 @@
                 </mat-form-field>
             </div>
 
-            <div class="filter__col card__col-sm-2 card__col-xs-12">
-                <a class="btn btn_stroke filter__add-link" style="margin: 7px 5px;" (click)="serchByMobNo()"><i
-                        class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
+            <div class="filter__col card__col-sm-1 card__col-xs-12">
+                <button mat-raised-button color="primary" style="margin: 5px" (click)="searchByMobNo()"><i
+                        class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
             </div>
 
             <div class="filter__col card__col-sm-2 card__col-xs-12" *ngIf="selectedAgent">
-                <a class="btn btn_stroke filter__add-link" style="margin: 7px 5px;"
-                    (click)="downloadDocs(selectedAgent)"><i class="fa fa-search" aria-hidden="true"
-                        style="color: #2ed13b;"></i>&nbsp;Download</a>
+                <!-- <a class="btn btn_stroke filter__add-link" style="margin: 7px 5px;"
+                    (click)="downloadDocs(selectedAgent)"><i class="fa fa-download" aria-hidden="true"
+                        style="color: #2ed13b;"></i>&nbsp;Download</a> -->
+                <button mat-raised-button color="primary" style="margin: 5px 15px;"
+                    (click)="downloadDocs(selectedAgent)"><i class="fa fa-download"
+                        aria-hidden="true"></i>&nbsp;Download</button>
             </div>
 
         </div>
 
-        Total Count: <b>{{config.totalItems}}</b>
+        Total Count: <b>{{config.totalItems}}</b> <span style="float: right;"><button mat-raised-button color="primary"
+                (click)="callReassignment(selectedAgent)">Re-Assignment</button> </span>
         <br>
         <div class="card__row" style="margin-top: 0px;">
             <div class="tab-panel items-tab card__col-xs-12">
                 <div class="card__row">
                     <table>
-                        <tr *ngFor="let item of interstedClientInfo | paginate:config"></tr>
+                        <tr *ngFor="let item of interestedClientInfo | paginate:config"></tr>
                     </table>
 
                     <ag-grid-angular class="ag-theme-balham" [gridOptions]="interestedClientsGridOption"

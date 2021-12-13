@@ -13,21 +13,18 @@
             <span></span>
         </span>
     </a>
-    <div class="header__breadcrumbs">
-        <div class="breadcrumbs">
-            <a *ngIf="component_link" class="breadcrumbs-link">{{component_link}}</a>
-            <a *ngIf="component_link_2" class="breadcrumbs-link"
-                (click)="getSingletonNavbarObj().component_link_3 = 'none'">{{component_link_2}}</a>
-            <a *ngIf="component_link_3" class="breadcrumbs-link hidden-btn">{{component_link_3}}</a>
-        </div>
-    </div>
     <div class="header__buttons logout-btn-wrapper" style="float:right">
         <a class="btn btn-logout logout-btn" (click)="logout()" style="float:right">Logout</a>
         <!-- <a class="btn" (click)="onClickSalesIQ()" style="float:right">Sales IQ</a>         -->
     </div>
-    <div class="header__container">
+    <div class="header__breadcrumbs" style="float:right">
+        <div class="breadcrumbs">
+            <a lass="breadcrumbs-link"> {{getLoggedInUserName()}}</a>
+        </div>
+    </div>
+    <!-- <div class="header__container">
         <div class="header__buttons" *ngIf="showBtns == 'business-profile'">
             <a class="btn" (click)="saveBusinessProfile()">Save Profile</a>
         </div>
-    </div>
+    </div> -->
 </header>

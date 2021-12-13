@@ -204,7 +204,7 @@
                     <mat-label>Sundry creditors</mat-label>
                     <input matInput placeholder="Sundry creditors" formControlName="sundryCreditorsAmount"
                        maxlength="8" autocomplete="off"
-                        type="number" required (blur)="calTotalLiabilities()"
+                        type="number"  (blur)="calTotalLiabilities()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -245,7 +245,7 @@
                     <mat-label>Inventories</mat-label>
                     <input matInput placeholder="Inventories" formControlName="inventories"
                        maxlength="8" autocomplete="off"
-                        type="number" required (blur)="calTotalAssets()"
+                        type="number"  (blur)="calTotalAssets()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -255,7 +255,7 @@
                     <mat-label>Sundry debtors</mat-label>
                     <input matInput placeholder="Sundry debtors" formControlName="sundryDebtorsAmount"
                        maxlength="8" autocomplete="off"
-                        type="number" required (blur)="calTotalAssets()"
+                        type="number"  (blur)="calTotalAssets()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -275,7 +275,7 @@
                     <mat-label>Cash in hand</mat-label>
                     <input matInput placeholder="Cash in hand" formControlName="cashInHand"
                        maxlength="8" autocomplete="off"
-                        type="number" required (blur)="calTotalAssets()"
+                        type="number"  (blur)="calTotalAssets()"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                 </mat-form-field>
@@ -370,7 +370,7 @@
                         <td>
                             <input  placeholder="Sundry creditors" formControlName="sundryCreditorsAmount"
                              maxlength="8" autocomplete="off"
-                             type="number" required (blur)="calTotalLiabilities()"
+                             type="number"  (blur)="calTotalLiabilities()"
                              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                              onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
@@ -421,7 +421,7 @@
                         <td>
                             <input placeholder="Inventories" formControlName="inventories"
                              maxlength="8" autocomplete="off"
-                             type="number" required (blur)="calTotalAssets()"
+                             type="number" (blur)="calTotalAssets()"
                              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                              onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
@@ -432,7 +432,7 @@
                         <td>
                             <input placeholder="Sundry debtors" formControlName="sundryDebtorsAmount"
                              maxlength="8" autocomplete="off"
-                             type="number" required (blur)="calTotalAssets()"
+                             type="number" (blur)="calTotalAssets()"
                              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                              onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
@@ -454,7 +454,7 @@
                         <td>
                             <input placeholder="Cash in hand" formControlName="cashInHand"
                              maxlength="8" autocomplete="off"
-                             type="number" required (blur)="calTotalAssets()"
+                             type="number" (blur)="calTotalAssets()"
                              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                              onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
@@ -475,6 +475,17 @@
                         <td>Other assets</td>
                         <td>
                             <input placeholder="Other assets" formControlName="otherAssets"
+                             maxlength="8" autocomplete="off"
+                             type="number" (blur)="calTotalAssets()"
+                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        </td>
+                    </tr>
+                    <tr *ngIf="itrType === '3'">
+                        <td>8</td>
+                        <td>Invetment</td>
+                        <td>
+                            <input placeholder="Invetment" formControlName="investment"
                              maxlength="8" autocomplete="off"
                              type="number" (blur)="calTotalAssets()"
                              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"

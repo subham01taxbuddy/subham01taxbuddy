@@ -1,0 +1,48 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="row">
+  <h1 mat-dialog-title>{{data.title}}
+    <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1"><i class="fa fa-close"></i></button>
+  </h1>
+</div>
+<mat-dialog-content>
+  <div class="card__row">
+    <div class="card__col-xs-12 card__col-sm-6">
+      <mat-form-field appearance="outline">
+        <mat-label>Mobile Number: </mat-label>
+        <input matInput type="text" placeholder="Super Lead Mobile Number" [(ngModel)]="mobileNumber" maxlength="10"
+          required>
+        <!--   <mat-error *ngIf="agentForm['controls'].name.hasError('required')">
+        Enter Super Lead Name </mat-error> -->
+      </mat-form-field>
+    </div>
+    <div class=" card__col-xs-12 card__col-sm-6">
+      <button mat-raised-button color="primary" class="pull-right" (click)="getUserDetails()">Fetch Details</button>
+    </div>
+  </div>
+  <div class="card__row" *ngIf="superLeadData.name !== ''">
+    <div class="card__col-xs-12 card__col-sm-10" style="padding-top: 10px;">
+      <b>Name: </b> {{superLeadData.name}} &nbsp;&nbsp; <b>Mobile Number: </b> {{superLeadData.mobileNumber}}
+      &nbsp;&nbsp; <b>Email: </b> {{superLeadData.emailId}} &nbsp;&nbsp;
+    </div>
+    <div class=" card__col-xs-12 card__col-sm-2">
+      <button mat-raised-button color="primary" (click)="activateAsSuperLead()">Activate</button>
+    </div>
+  </div>
+  <br>
+  <table *ngIf="superLeads.length > 0">
+    <tr>
+      <th><b>User Id</b></th>
+      <th><b>Lead Id</b></th>
+      <th><b>Name</b></th>
+      <th><b>Mobile</b></th>
+      <th><b>Email</b></th>
+    </tr>
+    <tr *ngFor="let item of superLeads; let i=index;">
+      <td>{{item.userId}}</td>
+      <td>{{item.superLeadId}}</td>
+      <td>{{item.name}}</td>
+      <td>{{item.mobileNumber}}</td>
+      <td>{{item.emailId}}</td>
+    </tr>
+  </table>
+</mat-dialog-content>

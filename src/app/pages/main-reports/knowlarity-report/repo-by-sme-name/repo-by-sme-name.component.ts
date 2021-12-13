@@ -37,16 +37,31 @@ export class RepoBySmeNameComponent implements OnInit {
   minToDate: any;
   repoBySmeGridOption: GridOptions;
   totalRecords: any;
-
+  superLeadGridOption: GridOptions;
+  superLeadView = false;
+  reportsData = [];
+  superLeadNames = []
   constructor(private fb: FormBuilder, private datePipe: DatePipe, private userService: UserMsService, private toastMsgService: ToastMessageService,
     private utilsService: UtilsService) {
     this.repoBySmeGridOption = <GridOptions>{
       rowData: [],
-      columnDefs: this.newUserCreateColoumnDef(),
+      columnDefs: this.newUserCreateColumnDef('SME'),
       enableCellChangeFlash: true,
       onGridReady: params => {
       },
       sortable: true,
+    };
+
+    this.superLeadGridOption = <GridOptions>{
+      rowData: [],
+      columnDefs: this.newUserCreateColumnDef('SL'),
+      suppressDragLeaveHidesColumns: true,
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      defaultColDef: {
+        resizable: true
+      },
+      suppressRowTransform: true
     };
   }
 
@@ -56,17 +71,17 @@ export class RepoBySmeNameComponent implements OnInit {
       toDate: [new Date(), Validators.required]
     })
 
-    this.showKnowlarityInfoBySme();
+    // this.showKnowlarityInfoBySme();
   }
 
   setToDateValidation(fromDate) {
     this.minToDate = fromDate;
   }
 
-  newUserCreateColoumnDef() {
+  newUserCreateColumnDef(view) {
     return [
       {
-        headerName: 'SME Name',
+        headerName: this.superLeadView ? 'Super Lead Name' : 'SME Name',
         field: 'smeName',
         sortable: true,
         width: 180,
@@ -173,6 +188,7 @@ export class RepoBySmeNameComponent implements OnInit {
         field: 'totalDuration',
         sortable: true,
         width: 120,
+        hide: view === 'SL' ? true : false,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -198,6 +214,7 @@ export class RepoBySmeNameComponent implements OnInit {
         field: 'teamLeadName',
         sortable: true,
         width: 180,
+        hide: view === 'SL' ? true : false,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -215,17 +232,21 @@ export class RepoBySmeNameComponent implements OnInit {
       let fromDate = this.datePipe.transform(this.reportBySmeForm.value.fromDate, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.reportBySmeForm.value.toDate, 'yyyy-MM-dd');
       let param = `/call-management/knowlarity-report-sme?from=${fromDate}&to=${toDate}`;
+      // http://localhost:8050/user/call-management/knowlarity-report?fromDate=2021-10-18&toDate=2021-10-18
       this.userService.getMethod(param).subscribe((res: any) => {
         console.log('SME wise info: ', res.report);
         this.loading = false;
         if (res.report && res.report instanceof Array && res.report.length > 0) {
           this.totalRecords = res.reportTotal;
+          this.reportsData = res.report;
           res.report.sort((a, b) => a.smeName > b.smeName ? 1 : -1);
           this.repoBySmeGridOption.api.setRowData(this.createRowData(res.report))
-        }
-        else {
+          this.reportsData.sort((a, b) => a.superLeadName > b.superLeadName ? 1 : -1);
+          this.superLeadGridOption.api.setRowData(this.superLeadCreateRowData(this.reportsData));
+        } else {
           this.totalRecords = '';
           this.repoBySmeGridOption.api.setRowData(this.createRowData([]))
+          this.superLeadGridOption.api.setRowData(this.superLeadCreateRowData([]));
         }
       },
         error => {
@@ -258,6 +279,59 @@ export class RepoBySmeNameComponent implements OnInit {
     }
     console.log('smeRepoInfoArray-> ', smeRepoInfoArray)
     return smeRepoInfoArray;
+  }
+
+  totalPrice(lead, key) {
+    let total = 0;
+    for (let data of lead) {
+      total += data[key];
+    }
+    return total;
+  }
+
+  superLeadCreateRowData(smeReport) {
+    let superLeads = smeReport.map(item => item.superLeadName)
+      .filter((value, index, self) => self.indexOf(value) === index)
+    console.log(superLeads)
+
+    var data = [];
+    var dataToReturn = [];
+    let total = 0;
+
+    for (let i = 0; i < superLeads.length; i++) {
+      let lead = smeReport.filter(item => item.superLeadName === superLeads[i]);
+      let smeData = {
+        inboundAnsweredCall: this.totalPrice(lead, 'inboundAnsweredCall'),
+        inboundCall: this.totalPrice(lead, 'inboundCall'),
+        icPct: this.totalPrice(lead, 'inboundCall') > 0 ? ((this.totalPrice(lead, 'inboundAnsweredCall') / this.totalPrice(lead, 'inboundCall')) * 100).toFixed(2) : 0.00,
+        missedCall: this.totalPrice(lead, 'missedCall'),
+        outboundAnsweredCall: this.totalPrice(lead, 'outboundAnsweredCall'),
+        outboundCall: this.totalPrice(lead, 'outboundCall'),
+        ocPct: this.totalPrice(lead, 'outboundCall') > 0 ? ((this.totalPrice(lead, 'outboundAnsweredCall') / this.totalPrice(lead, 'outboundCall')) * 100).toFixed(2) : 0.00,
+        smeName: superLeads[i],
+        teamLeadName: superLeads[i],
+        totalAnsweredCall: this.totalPrice(lead, 'totalAnsweredCall'),
+        totalDuration: this.totalPrice(lead, 'totalDuration')
+      }
+      // total = total + smeReport[i].filingCount
+      data.push(smeData);
+    }
+
+    return data;
+  }
+
+  toggleReportView() {
+    this.superLeadView = !this.superLeadView;
+    if (this.superLeadView) {
+      this.reportsData.sort((a, b) => a.superLeadName > b.superLeadName ? 1 : -1);
+      this.superLeadGridOption.api.setRowData(this.superLeadCreateRowData(this.reportsData));
+      this.superLeadGridOption.api.setColumnDefs(this.newUserCreateColumnDef('SL'))
+      console.log('reportsData:', this.reportsData);
+    } else {
+      this.reportsData.sort((a, b) => a.smeName > b.smeName ? 1 : -1);
+      this.repoBySmeGridOption.api.setRowData(this.createRowData(this.reportsData))
+      this.repoBySmeGridOption.api.setColumnDefs(this.newUserCreateColumnDef('SME'))
+    }
   }
 
   downloadRepo() {

@@ -38,7 +38,7 @@ export class NavbarComponent implements OnInit {
   component_link_2: string;
   component_link_3: string;
 
-  showBtns: string;
+  // showBtns: string;
 
   loading: boolean = false;
 
@@ -48,14 +48,14 @@ export class NavbarComponent implements OnInit {
     private navbarService: NavbarService) { }
 
   ngOnInit() {
-    this.showBtns = NavbarService.getInstance(null).showBtns;
+    // this.showBtns = NavbarService.getInstance(null).showBtns;
   }
 
   ngDoCheck() {
     this.component_link = NavbarService.getInstance(null).component_link;
     this.component_link_2 = NavbarService.getInstance(null).component_link_2;
     this.component_link_3 = NavbarService.getInstance(null).component_link_3;
-    this.showBtns = NavbarService.getInstance(null).showBtns;
+    // this.showBtns = NavbarService.getInstance(null).showBtns;
     if (NavbarService.getInstance(null).closeSideBar) {
       this.sideBar();
       NavbarService.getInstance(null).closeSideBar = false;
@@ -122,5 +122,10 @@ export class NavbarComponent implements OnInit {
 
   onClickSalesIQ() {
     window.open("https://salesiq.zoho.com/ssbainnovationspvtltd/");
+  }
+
+  getLoggedInUserName() {
+    const userObj = JSON.parse(localStorage.getItem('UMD'));
+    return userObj ? (userObj.USER_F_NAME + ' ' + userObj.USER_L_NAME) : ''
   }
 }

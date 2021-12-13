@@ -5,7 +5,12 @@
         <!--  <div class="card__row" style="margin-top: 0px;">
             <button class="btn" style="float: right;" (click)="addAgent('', 'Add Agent')">Add Agent</button><br><br>
         </div> -->
-        Note: If you want to add the agent please contact <b>@Dinesh Zagade</b><br><br>
+        <div class="card__row" style="margin-top: 0px;">
+            Note: If you want to add the agent please contact <b>@Dinesh Zagade</b><span style="float: right;"><button
+                    mat-raised-button color="primary" (click)="viewSuperLeads()">View Super Leads</button>
+            </span>
+        </div>
+        <br>
         <div class="card__row" style="margin-top: 0px;">
             <ag-grid-angular class="ag-theme-balham" [gridOptions]="agentMgntGridOption"
                 (rowClicked)="onAgentMgntClicked($event)">

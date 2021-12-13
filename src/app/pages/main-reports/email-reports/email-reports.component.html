@@ -1,0 +1,91 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="main clearfix" style="padding-top: 0px;">
+  <div class="card">
+    <div class="card__row">
+      <div class="filter__col card__col-sm-6 card__col-xs-12">
+        <mat-form-field appearance="outline">
+          <mat-label>Email Address</mat-label>
+          <input matInput placeholder="Email address" name="email" [formControl]="emailAddress" class="input-field"
+            maxlength="50" required>
+          <mat-error *ngIf="emailAddress.hasError('pattern')">Enter
+            valid email</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="filter__col card__col-sm-6 card__col-xs-12">
+        Note: Report will be sent on given email address, this will take upto 30 minutes.
+      </div>
+
+    </div>
+    <div class="card__row">
+      <button mat-stroked-button color="primary" style="margin: 5px 15px;"
+        (click)="sendReport('invoice-paid-but-itr-filed-status-not-updated')">Invoice paid but ITR not filed</button>
+      <button mat-raised-button color="primary" style="margin: 5px 15px;"
+        (click)="sendReport('itr-filed-but-invoice-not-raised')">ITR filed but invoice not raised</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card__row">
+      <form [formGroup]="dateSearchForm">
+        <div class="card__col-lg-3">
+          <mat-form-field appearance="outline">
+            <mat-label>From Date</mat-label>
+            <input matInput formControlName="fromDate" [matDatepicker]="picker1" [max]="maxDate" autocomplete="off"
+              (dateChange)="setToDateValidation(dateSearchForm.controls['fromDate'].value)">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+            <mat-error *ngIf="dateSearchForm.controls['fromDate'].hasError('required')">Select From
+              date</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="card__col-lg-3">
+          <mat-form-field appearance="outline">
+            <mat-label>To Date</mat-label>
+            <input matInput formControlName="toDate" [matDatepicker]="picker2" [max]="maxDate" [min]="minToDate"
+              autocomplete="off">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+            <mat-error *ngIf="dateSearchForm.controls['toDate'].hasError('required')">Select To
+              date</mat-error>
+            <mat-error *ngIf="dateSearchForm.controls['toDate'].hasError('min')">To date always greater
+              than from date</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card__col-lg-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Select Status</mat-label>
+            <mat-select placeholder="Select Status" formControlName="statusId">
+              <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
+                {{ status.statusName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="card__col-lg-3">
+          <button mat-raised-button color="primary" (click)="downloadDateWiseReport()">Download
+            Status
+            Report</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+  <div class="card">
+    <div class="card__row">
+      <button mat-stroked-button color="primary" style="margin: 5px 15px;" (click)="downloadRevenueReport()">Download
+        SME/TL Revenue/Filing report</button>
+      <button mat-raised-button color="primary" style="margin: 5px 15px;" (click)="getRevenueReport()">Show SME/TL
+        Revenue/Filing report</button>
+      <button mat-stroked-button color="primary" style="margin: 5px 15px;"
+        (click)="downloadMonthWiseFilingReport()">Download Month Wise Filing Report</button>
+    </div>
+    <mat-tab-group>
+      <mat-tab label="SME Report">
+        <ag-grid-angular class="ag-theme-balham" [gridOptions]="smeReportGridOption">
+        </ag-grid-angular>
+      </mat-tab>
+      <mat-tab label="Team Lead Report"> Coming Soon ...</mat-tab>
+    </mat-tab-group>
+
+  </div>
+</div>

@@ -53,6 +53,11 @@ export interface ITR_SUMMARY{
       longTermCapitalGainLossesSetOffDuringTheYear: string,
       businessProfessionalLossesSetOffDuringTheYear: string,
       speculativeBusinessLossesSetOffDuringTheYear: string,
+
+      newTaxRegime: null,
+      
+      exemptIncomes: [],
+      totalExemptIncome: any
 }
 
 export interface Assesse{
@@ -75,6 +80,7 @@ export interface Assesse{
     isRevised: null,
     isLate: null,
     employerCategory: null,
+    regime: string,
     dateOfNotice: null,
     noticeIdentificationNo: null,
     isDefective: null,

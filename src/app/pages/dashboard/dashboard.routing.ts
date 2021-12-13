@@ -1,3 +1,4 @@
+import { StatusWiseClientsComponent } from './status-wise-clients/status-wise-clients.component';
 import { TodaysCallsComponent } from './calling-board/todays-calls/todays-calls.component';
 import { CallingBoardComponent } from './calling-board/calling-board.component';
 import { NgModule } from '@angular/core';
@@ -13,6 +14,9 @@ import { KnowlarityComponent } from './knowlarity/knowlarity.component';
 import { Calling2dot0Component } from './calling-board/calling2dot0/calling2dot0.component';
 import { ScheduledCallComponent } from './calling-board/scheduled-call/scheduled-call.component';
 import { SignupExceptionComponent } from './calling-board/signup-exception/signup-exception.component';
+import { EngagementStatusComponent } from './status-wise-clients/engagement-status/engagement-status.component';
+import { FilingStatusComponent } from './status-wise-clients/filing-status/filing-status.component';
+import { PaymentStatusComponent } from './status-wise-clients/payment-status/payment-status.component';
 
 const routes: Routes = [
     {
@@ -38,7 +42,17 @@ const routes: Routes = [
                     { path: '', redirectTo: 'calling2', pathMatch: 'full' }
                 ]
             },
-            { path: 'interested-clients', component: InterestedClientsComponent },
+            {
+                path: 'status-wise', component: StatusWiseClientsComponent,
+                children: [
+                    { path: 'all', component: InterestedClientsComponent },
+                    { path: 'engagement', component: EngagementStatusComponent },
+                    { path: 'filing', component: FilingStatusComponent },
+                    { path: 'payment', component: PaymentStatusComponent },
+                    { path: '', redirectTo: 'all', pathMatch: 'full' }
+                ]
+            },
+            // { path: 'interested-clients', component: InterestedClientsComponent },
             { path: 'open-status', component: OpenStatusComponent },
             { path: 'knowlarity', component: KnowlarityComponent },
             { path: '', redirectTo: 'quick-search', pathMatch: 'full' }

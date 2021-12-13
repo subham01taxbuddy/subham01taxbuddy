@@ -284,6 +284,7 @@ export class AddCallerComponent implements OnInit {
       this.loading = false;
       if (Array.isArray(res) && res.length > 0) {
         this.callerData = res;
+        this.callerData.sort((a, b) => a.name > b.name ? 1 : -1)
         this.selectedCallerList = [];
         this.removeCallerList = [];
         // this.addCallerGridOptions.api.setRowData(this.createRowData(res));
