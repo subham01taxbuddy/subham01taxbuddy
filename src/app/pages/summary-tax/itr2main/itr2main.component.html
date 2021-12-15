@@ -1920,7 +1920,7 @@
                                 </tr>
                                 <tr> 
                                     <td>{{itrType.itrThree ? 6 : 5}} </td>
-                                    <td><b>Total Head Wise Income (1+2+3+4)</b> </td>
+                                    <td><b>Total Head Wise Income {{itrType.itrThree ? '(1+2+3+4+5)' : '(1+2+3+4)'}}</b> </td>
                                     <td></td>
                                     <td> <!--formGroupName="taxSummary"-->
                                         <b><input type="number" formControlName="totalHeadWiseIncome" disabled  maxlength="8"></b></td>  <!---->
@@ -1971,7 +1971,7 @@
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 12 : 11}}</td>
-                                    <td><b>Total Income </b></td>
+                                    <td><b>Total Income {{itrType.itrThree ? '(9-11)' : '(8-10)'}}</b></td>
                                     <td></td>
                                     <td><b><input type="number" formControlName="totalIncomeAfterDeductionIncludeSR" required disabled maxlength="8"></b></td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR" [ngModelOptions]="{standalone: true}"></td> 
@@ -2112,7 +2112,7 @@
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 24 : 23}}</td>
-                                    <td>Net Tax Liability</td>
+                                    <td>Net Tax Liability {{itrType.itrThree ? '(22-23)' : '(21-22)'}}</td>
                                     <td></td>
                                     <td><input type="number" required formControlName="netTaxLiability" maxlength="8"></td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.netTaxLiability" [ngModelOptions]="{standalone: true}"></td> 
@@ -2176,7 +2176,7 @@
                                 </tr>
                                 <tr>
                                     <td>{{itrType.itrThree ? 26 : 25}}</td>
-                                    <td>Aggregate Tax Liability</td>
+                                    <td>Aggregate Tax Liability {{itrType.itrThree ? '(24+25)' : '(23+24)'}}</td>
                                     <td></td>
                                     <td> <!--formGroupName="taxSummary"-->
                                         <input type="number" formControlName="agrigateLiability" required maxlength="8"> 
