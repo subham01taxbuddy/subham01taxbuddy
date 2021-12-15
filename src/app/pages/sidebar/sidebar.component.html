@@ -1,21 +1,21 @@
 <div class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar" [class.hideSideMenu]="hideSideBar">
     <nav class="sidebar">
-        <a class="sidebar__item" (click)="trackEvent('/pages/dashboard/quick-search')" routerLink="/pages/dashboard" routerLinkActive="sidebar__item_active"
+        <a class="sidebar__item"  routerLink="/pages/dashboard" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()">
             <i class="fa fa-life-ring" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name"> Engagement</span>
         </a>
-        <a class="sidebar__item" (click)="trackEvent('/pages/reports/knowlarity-repo/sme-wise')" routerLink="/pages/reports" routerLinkActive="sidebar__item_active"
+        <a class="sidebar__item"  routerLink="/pages/reports" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()">
             <i class="fa fa-bar-chart" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name"> Reports</span>
         </a>
-        <a class="sidebar__item" (click)="trackEvent('/pages/subscription/sub')" routerLink="/pages/subscription" routerLinkActive="sidebar__item_active"
+        <a class="sidebar__item"  routerLink="/pages/subscription" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()">
             <i class="fa fa-rocket" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Subscription & Invoice</span>
         </a>
-        <a class="sidebar__item" (click)="trackEvent('/pages/itr-filing/my-itrs')" routerLink="/pages/itr-filing" routerLinkActive="sidebar__item_active"
+        <a class="sidebar__item"  routerLink="/pages/itr-filing" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()"
             *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM','ROLE_CALLING_TEAM','ITR_SUPER_LEAD','ITR_TEAM_LEAD'])">
             <i class="fa fa-money" style="font-size: 20px;" aria-hidden="true"></i>
@@ -26,42 +26,42 @@
             <i class="fa fa-whatsapp" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Whats app Chat Corner</span>
         </a>
-        <a class="sidebar__item" (click)="trackEvent('/pages/user-management/users')" routerLink="/pages/user-management" routerLinkActive="sidebar__item_active"
+        <a class="sidebar__item"  routerLink="/pages/user-management" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()">
             <i class="fa fa-user" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">User Management</span>
         </a>
-        <a class="sidebar__item" (click)="trackEvent('/pages/master/coupon')" routerLink="/pages/master" routerLinkActive="sidebar__item_active"
+        <a class="sidebar__item"  routerLink="/pages/master" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()"
             *ngIf="isApplicable(['ROLE_ADMIN','ITR_SUPER_LEAD','ITR_TEAM_LEAD','GST_SUPER_LEAD','GST_TEAM_LEAD'])">
             <i class="fa fa-database" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Master</span>
         </a>
-        <a class="sidebar__item" (click)="trackEvent('/pages/gst-filing/cloud')" routerLink="/pages/gst-filing" routerLinkActive="sidebar__item_active"
+        <a class="sidebar__item"  routerLink="/pages/gst-filing" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()"
             *ngIf="isApplicable(['ROLE_ADMIN','ITR_SUPER_LEAD','GST_SUPER_LEAD','GST_TEAM_LEAD','GST_FILER'])">
             <i class="fa fa-inr" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">GST Filing</span>
         </a>
-        <a class="sidebar__item" (click)="trackEvent('/pages/business/business-profile')" routerLink="/pages/business" routerLinkActive="sidebar__item_active"
+        <a class="sidebar__item"  routerLink="/pages/business" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()"
             *ngIf="isApplicable(['ROLE_ADMIN','ITR_SUPER_LEAD','GST_SUPER_LEAD','GST_TEAM_LEAD','GST_FILER'])">
             <i class="fa fa-building-o" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Business</span>
         </a>
-        <a class="sidebar__item" (click)="trackEvent('/pages/team-management/caller-assign/add-caller')" routerLink="/pages/team-management/caller-assign"
+        <a class="sidebar__item"  routerLink="/pages/team-management/caller-assign"
             routerLinkActive="sidebar__item_active"
             *ngIf="isApplicable(['ROLE_ADMIN','ITR_SUPER_LEAD','GST_SUPER_LEAD','ITR_TEAM_LEAD'])">
             <i class="fa fa-group" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Team Management</span>
         </a>
-        <a class="sidebar__item" (click)="trackEvent('/pages/tax-summary/itrFirst')" routerLink="/pages/tax-summary" routerLinkActive="sidebar__item_active"
+        <a class="sidebar__item"  routerLink="/pages/tax-summary" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()"
             *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM','ROLE_CALLING_TEAM','ITR_SUPER_LEAD','ITR_TEAM_LEAD'])">
             <i class="fa fa-list-alt" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Tax Summary</span>
         </a>
-        <a class="sidebar__item" (click)="trackEvent('/pages/newUser/mail-user')" routerLink="/pages/newUser" routerLinkActive="sidebar__item_active"
+        <a class="sidebar__item"  routerLink="/pages/newUser" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()">
             <i class="fa fa-envelope" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Email Channel</span>

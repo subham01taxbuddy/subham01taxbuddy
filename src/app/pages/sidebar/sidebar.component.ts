@@ -45,16 +45,12 @@ export class SidebarComponent implements OnInit {
 
   chatCorner() {
     this.route.navigate(['/pages/chat-corner']);
-    this.trackEvent('/pages/chat-corner');
   }
 
   taxSummary() {
     this.route.navigate(['/pages/tax-summary'])
   }
 
-  trackEvent(path){
-    matomo(path);
-  }
 
  
 }
