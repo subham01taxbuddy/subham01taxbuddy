@@ -3,7 +3,6 @@ import { NavbarService } from '../../services/navbar.service';
 import { RoleBaseAuthGuardService } from 'app/services/role-base-auth-gaurd.service';
 import { Router } from '@angular/router';
 import { environment } from 'environments/environment';
-declare function matomo(url: any); 
 
 @Component({
   selector: 'app-sidebar',
@@ -45,16 +44,12 @@ export class SidebarComponent implements OnInit {
 
   chatCorner() {
     this.route.navigate(['/pages/chat-corner']);
-    this.trackEvent('/pages/chat-corner');
   }
 
   taxSummary() {
     this.route.navigate(['/pages/tax-summary'])
   }
 
-  trackEvent(path){
-    matomo(path);
-  }
 
  
 }

@@ -18,6 +18,8 @@
  */
 
 import { Component } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+declare function matomo(title: any, url: any, event: any);
 
 @Component({
   selector: 'app-root',
@@ -25,9 +27,43 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  
+
   title = 'app works!';
 
+  constructor(private router: Router) {
+    router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+       this.passDocTitleToMatomo(window.location.pathname) ;
+      }
+    });
+  }
 
- 
+  passDocTitleToMatomo(path){
+    console.log('path: ',path, typeof path)
+    if(path === '/login'){
+      matomo('Login Page', path, [])
+    }
+    else if(path === '/pages/dashboard/quick-search'){
+      matomo('Quick Search', path, []);
+    }
+    else if(path === '/pages/dashboard/calling/calling2'){
+      matomo('Priority Calling Board', path, []);
+    }
+    else if(path === '/pages/dashboard/calling/todays-call'){
+      matomo('My Todays Call', path, []);
+    }
+    else if(path === '/pages/dashboard/calling/scheduled-call'){
+      matomo('Scheduled Calls Tab', path, []);
+    }
+    else if(path === '/pages/dashboard/calling/signup-exception'){
+      matomo('Sign-Up Exceptions Tab', path, []);
+    }
+    else if(path === '/pages/dashboard/interested-clients'){
+      matomo('Status Wise Client Tab', path, []);
+    }
+    else if(path === '/pages/dashboard/knowlarity'){
+      matomo('Knowlarity Tab', path, []);
+    }
+  }
+
 }

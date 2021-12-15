@@ -10,6 +10,7 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { environment } from 'environments/environment';
+declare function matomo(title: any, url: any, event: any);
 
 export const MY_FORMATS = {
   parse: {
@@ -393,7 +394,8 @@ export class SignupExceptionComponent implements OnInit {
   }
 
   startCalling(user) {
-    console.log('user: ', user)
+    console.log('user: ', user);
+    matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Call']);
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -429,6 +431,7 @@ export class SignupExceptionComponent implements OnInit {
     this.userMsService.putMethod(param).subscribe((responce: any) => {
       console.log('call Done responce: ', responce);
       this.loading = false;
+      matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Call Status']);
       this.toastMsgService.alert('success', 'Call status update successfully.');
       setTimeout(() => {
         this.getSignUpExceptionList();
@@ -443,6 +446,7 @@ export class SignupExceptionComponent implements OnInit {
   }
 
   showNotes(client) {
+    matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Notes']);
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -458,12 +462,14 @@ export class SignupExceptionComponent implements OnInit {
   }
 
   navigateToWhatsappChat(data) {
+    matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Whatsapp icon'])
     console.log(data);
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['mobile']}`)
   }
 
   openChat(client) {
     console.log('client: ', client);
+    matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Chat icon'])
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
     this.userMsService.getMethod(param).subscribe((responce: any) => {

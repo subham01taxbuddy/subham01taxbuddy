@@ -8,6 +8,7 @@ import { UtilsService } from 'app/services/utils.service';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import moment = require('moment');
+declare function matomo(title: any, url: any, event: any);
 
 @Component({
   selector: 'app-calling2dot0',
@@ -34,6 +35,9 @@ export class Calling2dot0Component implements OnInit {
     callerAgentUserId: null
   }
   isAdmin = false;
+  itrStatus: any = [];
+  callers: any = [];
+
   constructor(public utilsService: UtilsService,
     private userMsService: UserMsService,
     private dialog: MatDialog,
@@ -71,6 +75,7 @@ export class Calling2dot0Component implements OnInit {
       this.searchByQueryParams('');
     }
     this.searchByQueryParams('PRIORITY');
+    this.getStatus();
   }
 
   async getAgentList() {
@@ -123,6 +128,7 @@ export class Calling2dot0Component implements OnInit {
   }
 
   showNotes(client) {
+    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Notes'])
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -138,6 +144,7 @@ export class Calling2dot0Component implements OnInit {
   }
 
   serchByMobNo() {
+    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Search', this.searchParam.customerNumber]);
     this.loading = true;
     const param = `/customers-es?customerNumber=${this.searchParam.customerNumber}&serviceType=${this.searchParam.serviceType}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
@@ -466,16 +473,20 @@ export class Calling2dot0Component implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
+    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Chat icon'])
     if (client.kommunicateLink !== 'NA')
       window.open(client.kommunicateLink)
   }
 
   navigateToWhatsappChat(data) {
+    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Whatsapp icon'])
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
   }
 
   startCalling(user) {
-    console.log('user: ', user)
+    console.log('user: ', user);
+    let callInfo = user.customerNumber;
+    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Call', callInfo])
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -509,6 +520,7 @@ export class Calling2dot0Component implements OnInit {
 
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      console.log('result: ', result);
       if (result) {
         if (result.data === "statusChanged") {
           this.searchByQueryParams('');
@@ -519,6 +531,22 @@ export class Calling2dot0Component implements OnInit {
           //   var userInfo = JSON.parse(localStorage.getItem('UMD'));
           //   this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
           // }
+        }
+
+        if (result.responce) {
+          if (mode === 'Update Status') {
+            console.log('itrStatus array: ',this.itrStatus);
+            console.log('client statusId: ',client.statusId)
+            console.log('**** ',this.itrStatus.filter(item => item.statusId === client.statusId))
+            let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; //result.responce.statusId;
+            matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Status', changeStatus])
+          }
+           else if(mode === 'Update Caller'){
+             console.log('Update Caller responce: ',result.responce);
+          //   let updateCaller = client.statusId+' to '+result.responce.statusId;
+          //   matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Caller', changeStatus])
+          }
+
         }
       }
     });
@@ -532,4 +560,39 @@ export class Calling2dot0Component implements OnInit {
     console.log('clicked on next:', this.searchParam.page)
     this.searchByQueryParams('');
   }
+
+  getStatus() {
+    let param = '/itr-status-master/source/BACK_OFFICE';
+    this.userMsService.getMethod(param).subscribe(respoce => {
+      console.log('status responce: ', respoce);
+      if (respoce instanceof Array && respoce.length > 0) {
+        this.itrStatus = respoce;
+      }
+      else {
+        this.itrStatus = [];
+      }
+    },
+      error => {
+        console.log('Error during fetching status info.')
+      })
+  }
+
+  getCallers() {
+    let param = `/call-management/caller-agents`;
+    this.userMsService.getMethod(param).subscribe(respoce => {
+      console.log('status responce: ', respoce);
+      if (respoce instanceof Array && respoce.length > 0) {
+        this.callers = respoce;
+        // this.callers.sort((a, b) => a.name > b.name ? 1 : -1)
+        // this.callers = this.callers.filter(item => item.callerAgentUserId !== this.data.userInfo.callerAgentUserId)
+      }
+      else {
+        this.callers = [];
+      }
+    },
+      error => {
+        console.log('Error during fetching status info.')
+      })
+  }
+
 }

@@ -1,4 +1,5 @@
-function matomo(path) {
+
+function matomo(docTitle, path, event) {
     (function () {
       const u = "https://finbingo.matomo.cloud/";
   
@@ -11,10 +12,27 @@ function matomo(path) {
   
       // Set variables
       const _paq = window._paq = window._paq || [];
+      let userInfo = JSON.parse(localStorage.getItem("UMD"));
       _paq.push(["disableCookies"]);
+      if(!!userInfo){
+        let commonUserId = userInfo.USER_UNIQUE_ID+'-'+userInfo.USER_F_NAME+' '+userInfo.USER_L_NAME;
+        _paq.push(['setUserId', commonUserId]);
+      }
+      else{
+        _paq.push(['resetUserId']);
+      }
+
+      if(event){
+        if(event.length > 0){
+          _paq.push(event);
+        }
+      }
+      _paq.push(["setDocumentTitle", docTitle]);
       _paq.push(["setCustomUrl", path]);
       _paq.push(["trackPageView"]);
+      _paq.push(['enableLinkTracking']);
   
+      // console.log('environment on prod?: ',environment.production);
       (function () {
         _paq.push(["setTrackerUrl", u + "matomo.php"]);
 

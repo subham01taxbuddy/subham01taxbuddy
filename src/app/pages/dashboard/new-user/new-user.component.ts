@@ -9,6 +9,7 @@ import { ChangeStatusComponent } from 'app/shared/components/change-status/chang
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+declare function matomo(title: any, url: any, event: any);
 
 @Component({
   selector: 'app-new-user',
@@ -342,6 +343,7 @@ export class NewUserComponent implements OnInit {
   }
 
   getSearchInfo(mobileNo) {
+    matomo('Quick Search', '/pages/dashboard/quick-search', ['trackEvent', 'Quick Search', 'Search',mobileNo])
     this.loading = true;
     let param = `/user-details-by-mobile-number-es?mobileNumber=${mobileNo}`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
