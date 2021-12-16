@@ -1,7 +1,7 @@
 
 function matomo(docTitle, path, event) {
     (function () {
-      const u = "https://finbingo.matomo.cloud/";
+      const u = "https://taxbuddy.matomo.cloud/";
   
       // Remove the script added before
       const d = document, g = d.createElement("script"), s = d.getElementsByTagName("script")[0];
@@ -40,7 +40,8 @@ function matomo(docTitle, path, event) {
         const d = document, g = d.createElement("script"), s = d.getElementsByTagName("script")[0];
         g.type = "text/javascript";
         g.async = true;
-        g.src = u + "matomo.js";
+        //g.src = u + "matomo.js";
+        g.src='//cdn.matomo.cloud/taxbuddy.matomo.cloud/matomo.js';
         s.parentNode.insertBefore(g, s);
       })();
     })();
