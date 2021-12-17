@@ -39,7 +39,7 @@ function matomo(docTitle, path, event) {
         _paq.push(["setSiteId", "2"]);
         const d = document, g = d.createElement("script"), s = d.getElementsByTagName("script")[0];
         g.type = "text/javascript";
-        g.async = true;
+        // g.async = true;
         //g.src = u + "matomo.js";
         g.src='//cdn.matomo.cloud/taxbuddy.matomo.cloud/matomo.js';
         s.parentNode.insertBefore(g, s);

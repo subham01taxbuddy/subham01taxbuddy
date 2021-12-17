@@ -39,6 +39,8 @@ export class InterestedClientsComponent implements OnInit {
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
     private toastMsgService: ToastMessageService, private route: Router,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
+    this.getStatus();
+
     this.interestedClientsGridOption = <GridOptions>{
       rowData: [],
       columnDefs: this.createColumnDef(this.itrStatus),
@@ -59,7 +61,6 @@ export class InterestedClientsComponent implements OnInit {
   ngOnInit() {
     this.getAgentList();
     this.showCallersAll();
-    this.getStatus();
   }
 
   async getAgentList() {
@@ -86,6 +87,7 @@ export class InterestedClientsComponent implements OnInit {
         console.log('Error during fetching status info.')
       })
   }
+
 
   showCallersAll() {
     this.searchMobNo = '';
@@ -139,6 +141,7 @@ export class InterestedClientsComponent implements OnInit {
   searchByMobNo() {
     this.selectedStatus = 0;
     if (this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
+      matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Search', this.searchMobNo]);
       this.selectedAgent = '';
       this.config.currentPage = 1;
       this.getInterestedClients(0, this.searchMobNo);
@@ -481,24 +484,33 @@ export class InterestedClientsComponent implements OnInit {
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       } else {
         this.searchMobNo = '';
+        debugger
+        var itrStatusData = this.itrStatus.filter(item=> item.statusId === this.selectedStatus);
         if (this.showAllUser) {
-          let status = this.itrStatus.filter(item=> item.statusId === this.selectedStatus)[0].statusName;
-          matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', status]);
+          if(itrStatusData instanceof Array && itrStatusData.length > 0){
+            let status = this.itrStatus.filter(item=> item.statusId === this.selectedStatus)[0].statusName;
+            matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', status]);
+          }
           param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15&serviceType=${this.selectedService}`;
         } else {
-          let statusAgentId =  this.selectedAgent+' - '+this.itrStatus.filter(item => item.statusId === this.selectedStatus)[0].statusName;
-          matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', statusAgentId]);
+          if(itrStatusData instanceof Array && itrStatusData.length > 0){
+            let statusAgentId =  this.selectedAgent+' - '+this.itrStatus.filter(item => item.statusId === this.selectedStatus)[0].statusName;
+            matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', statusAgentId]);
+          }
           param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
         }
       }
     } else {
+      var itrStatusData = this.itrStatus.filter(item=> item.statusId === this.selectedStatus);
       if (this.utilsService.isNonEmpty(searchMobNo)) {
         matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', searchMobNo]);
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
       } else {
-        this.searchMobNo = '';
-        let statusAgentId =  userInfo.USER_UNIQUE_ID+' - '+this.itrStatus.filter(item => item.statusId === this.selectedStatus)[0].statusName;
-        matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', statusAgentId]);
+        if(itrStatusData instanceof Array && itrStatusData.length > 0){
+          this.searchMobNo = '';
+          let statusAgentId =  userInfo.USER_UNIQUE_ID+' - '+this.itrStatus.filter(item => item.statusId === this.selectedStatus)[0].statusName;
+          matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', statusAgentId]);
+        }
         param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
       }
     }
@@ -594,6 +606,7 @@ export class InterestedClientsComponent implements OnInit {
   }
 
   showNotes(client) {
+    matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Notes']);
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -611,6 +624,8 @@ export class InterestedClientsComponent implements OnInit {
   startCalling(user) {
     console.log('user: ', user)
     this.loading = true;
+    let callInfo = user.customerNumber;
+    matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Call', callInfo]);
     const param = `/call-management/make-call`;
     const reqBody = {
       "agent_number": user.callerAgentNumber,
@@ -650,6 +665,16 @@ export class InterestedClientsComponent implements OnInit {
 
         }
       }
+
+      if (result.responce) {
+        if (mode === 'Update Status') {
+          let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; 
+          matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Update Status', changeStatus]);
+        }
+        else if(mode === 'Update Caller'){
+          //
+        }
+      }
     });
   }
 
@@ -660,6 +685,7 @@ export class InterestedClientsComponent implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
+    matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Chat icon']);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
     this.userMsService.getMethod(param).subscribe((response: any) => {
@@ -705,6 +731,13 @@ export class InterestedClientsComponent implements OnInit {
 
       disposable.afterClosed().subscribe(result => {
         console.log('The dialog was closed');
+
+        if(result.requestBody){
+            console.log(result.requestBody);
+            let reAssignedInfo = 'from: '+result.requestBody.from+' to: '+result.requestBody.to;
+            console.log('reAssignedInfo: ',reAssignedInfo);
+            matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Re-assignment', reAssignedInfo]);
+        }
       });
     } else {
       this.getStatus('CALL_REASSIGN')
