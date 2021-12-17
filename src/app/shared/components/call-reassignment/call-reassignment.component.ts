@@ -53,6 +53,13 @@ export class CallReassignmentComponent implements OnInit {
       console.log('Params', param)
       this.userMsService.putMethod(param, {}).subscribe(res => {
         console.log(res);
+        setTimeout(() => {
+          let body = {
+            from: this.agentList.filter(item => item.agentId === this.callReassignForm.controls['agentId'].value)[0].name+'-'+this.agentList.filter(item => item.agentId === this.callReassignForm.controls['agentId'].value)[0].serviceType,
+            to: this.smeList.filter(item => item.callerAgentUserId == this.callReassignForm.controls['callerAgentUserIds'].value)[0].name 
+          }
+          this.dialogRef.close({ event: 'close', requestBody: body })
+        }, 4000)
         this.toastMsgService.alert('success', 'Calls reassigned successfully.')
       })
     }

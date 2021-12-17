@@ -7,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./engagement-status.component.css']
 })
 export class EngagementStatusComponent implements OnInit {
-  ids = '2,3,4,16,17,18,19'
+  ids = '2,3,4,16,17,18,19';
+  tabName: string = 'Engagement';
   constructor() {
 
   }

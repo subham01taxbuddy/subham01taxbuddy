@@ -12,6 +12,7 @@ import { ItrMsService } from 'app/services/itr-ms.service';
 import { ActivatedRoute } from '@angular/router';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
+declare function matomo(title: any, url: any, event: any);
 
 export const MY_FORMATS = {
   parse: {
@@ -686,6 +687,7 @@ export class InvoicesStatusComponent implements OnInit {
   }
 
   updateInvoice(windowTitle: string, windowBtn: string, data: any, mode: string) {
+    matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Edit', data.phone]);
     let disposable = this.dialog.open(InvoiceDialogComponent, {
       width: '60%',
       height: 'auto',
@@ -702,13 +704,15 @@ export class InvoicesStatusComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result && this.utilService.isNonEmpty(result) && result.msg === 'success') {
+        matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Delete', data.phone]);
         this.getAllInvoiceInfo();
       }
     });
   }
 
   sendMailNotification(data) {
-    console.log(data)
+    console.log(data);
+    matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Mail', data.phone]);
     this.loading = true;
     const param = '/itr/invoice/send-invoice?invoiceNo=' + data.invoiceNo;
     this.userService.getMethodInfo(param).subscribe((result: any) => {
@@ -730,7 +734,8 @@ export class InvoicesStatusComponent implements OnInit {
     const param = '/itr/invoice/send-invoice-whatsapp?invoiceNo=' + data.invoiceNo;
     this.userMsService.getMethodInfo(param).subscribe((res: any) => {
       this.loading = false;
-      console.log("result: ", res)
+      console.log("result: ", res);
+      matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'WhatsApp Reminder', data.phone]);
       this._toastMessageService.alert("success", "Whatsapp reminder send successfully.");
     }, error => {
       this.loading = false;
@@ -743,7 +748,8 @@ export class InvoicesStatusComponent implements OnInit {
     const param = '/itr/invoice/send-reminder';
     this.userService.postMethodInfo(param, invoiceInfo).subscribe((result: any) => {
       this.loading = false;
-      console.log('Email sent response: ', result)
+      console.log('Email sent response: ', result);
+      matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Reminder', invoiceInfo.phone]);
       this._toastMessageService.alert("success", "Mail Reminder sent successfully.");
     }, error => {
       this.loading = false;
@@ -786,9 +792,13 @@ export class InvoicesStatusComponent implements OnInit {
       let fromData = this.datePipe.transform(this.summaryDetailForm.value.fromDate, 'yyyy-MM-dd');
       let toData = this.datePipe.transform(this.summaryDetailForm.value.toDate, 'yyyy-MM-dd');
       if (this.utilService.isNonEmpty(this.summaryDetailForm.value.status)) {
+        let parameter = 'fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.summaryDetailForm.value.status;
+        matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Download Invocie', parameter]);
         location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.summaryDetailForm.value.status;
       }
       else {
+        let parameter = 'fromDate=' + fromData + '&toDate=' + toData;
+        matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Download Invocie', parameter]);
         location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData;;
       }
 
@@ -824,6 +834,7 @@ export class InvoicesStatusComponent implements OnInit {
       if (result.success.status) {
         this._toastMessageService.alert("success", result.success.message)
       }
+      matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Call', user.phone]);
     }, error => {
       this._toastMessageService.alert('error', 'Error while making call, Please try again.');
       this.loading = false;
@@ -831,6 +842,7 @@ export class InvoicesStatusComponent implements OnInit {
   }
 
   showNotes(client) {
+    matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Notes', client.phone]);
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',

@@ -9,6 +9,7 @@ export class MySubscriptionComponent implements OnInit {
 
   queryParam: string = "";
   totalCount = 0;
+  tabName: string = 'MY_SUBSCRIPTION';
   constructor() { }
 
   ngOnInit() {

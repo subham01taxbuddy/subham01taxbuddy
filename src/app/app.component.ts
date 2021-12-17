@@ -33,36 +33,64 @@ export class AppComponent {
   constructor(private router: Router) {
     router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-       this.passDocTitleToMatomo(window.location.pathname) ;
+        this.passDocTitleToMatomo(window.location.pathname);
       }
     });
   }
 
-  passDocTitleToMatomo(path){
-    console.log('path: ',path, typeof path)
-    if(path === '/login'){
+  passDocTitleToMatomo(path) {
+    console.log('path: ', path, typeof path)
+    if (path === '/login') {
       matomo('Login Page', path, [])
     }
-    else if(path === '/pages/dashboard/quick-search'){
+    else if (path === '/pages/dashboard/quick-search') {
       matomo('Quick Search', path, []);
     }
-    else if(path === '/pages/dashboard/calling/calling2'){
+    else if (path === '/pages/dashboard/calling/calling2') {
       matomo('Priority Calling Board', path, []);
     }
-    else if(path === '/pages/dashboard/calling/todays-call'){
+    else if (path === '/pages/dashboard/calling/todays-call') {
       matomo('My Todays Call', path, []);
     }
-    else if(path === '/pages/dashboard/calling/scheduled-call'){
+    else if (path === '/pages/dashboard/calling/scheduled-call') {
       matomo('Scheduled Calls Tab', path, []);
     }
-    else if(path === '/pages/dashboard/calling/signup-exception'){
+    else if (path === '/pages/dashboard/calling/signup-exception') {
       matomo('Sign-Up Exceptions Tab', path, []);
     }
-    else if(path === '/pages/dashboard/interested-clients'){
-      matomo('Status Wise Client Tab', path, []);
+    // else if(path === '/pages/dashboard/interested-clients'){
+    //   matomo('Status Wise Client Tab', path, []);
+    // }
+    else if (path === '/pages/dashboard/status-wise/all') {
+      matomo('Status Wise Clients All Tab', path, []);
     }
-    else if(path === '/pages/dashboard/knowlarity'){
+    else if (path === '/pages/dashboard/status-wise/engagement') {
+      matomo('Status Wise Clients Engagement Tab', path, []);
+    }
+    else if (path === '/pages/dashboard/status-wise/filing') {
+      matomo('Status Wise Clients Filing Tab', path, []);
+    }
+    else if (path === '/pages/dashboard/status-wise/payment') {
+      matomo('Status Wise Clients Payment Tab', path, []);
+    }
+    else if (path === '/pages/dashboard/knowlarity') {
       matomo('Knowlarity Tab', path, []);
+    }
+
+    else if (path === '/pages/subscription/sub') {
+      matomo('Unassigned Subscriptions Tab', path, []);
+    }
+    else if (path === '/pages/subscription/my-sub') {
+      matomo('My Subscription Tab', path, []);
+    }
+    else if (path === '/pages/subscription/team-sub') {
+      matomo('Team Subscription Tab', path, []);
+    }
+    else if (path === '/pages/subscription/invoices') {
+      matomo('All Invoices Tab', path, []);
+    }
+    else if (path === '/pages/subscription/credit-notes') {
+      matomo('Credit Notes Tab', path, []);
     }
   }
 

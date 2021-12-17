@@ -18,6 +18,7 @@ export class SubscriptionDetailComponent implements OnInit {
   searchVal: any;
   selectedUserName: any = '';
   userId: any;
+  tabName: string = 'UNASSIGNED_SUBSCRIPTION';
   queryParam: string = "?subscriptionAssigneeId=0";
   // https://api.taxbuddy.com/itr/subscription-dashboard?page=0&pageSize=20&subscriptionAssigneeId=0&isUserName=true
   totalCount = 0;

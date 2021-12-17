@@ -10,6 +10,7 @@ import { UtilsService } from 'app/services/utils.service';
 import moment = require('moment');
 import { FilingCalendarComponent } from '../filing-calendar/filing-calendar.component';
 import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.component';
+declare function matomo(title: any, url: any, event: any);
 
 @Component({
   selector: 'app-main-subsciption',
@@ -19,6 +20,7 @@ import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.compone
 export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   @Input('queryParam') queryParam: any;
   @Input('from') from: any;
+  @Input('tabName') tabName: any;
   @Output() sendTotalCount = new EventEmitter<any>();
   loading: boolean;
   subscriptionListGridOptions: GridOptions;
@@ -482,6 +484,15 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       switch (actionType) {
         case 'generateInvoice': {
           if (params.data.subscriptionAssigneeId !== 'NA') {
+            if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
+              matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Invoice', params.data.userId]);
+            }
+            else if(this.from === 'MY_SUBSCRIPTION'){
+              matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Invoice', params.data.userId]);
+            }
+            else if(this.from === 'TEAM_SUBSCRIPTION'){
+              matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Invoice', params.data.userId]);
+            }
             this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
           } else {
             this.utilsService.showSnackBar('Please assign this subscription to team member');
@@ -524,6 +535,15 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
 
   addNewPlan(plan) {
     if (this.utilsService.isNonZero(plan.txbdyInvoiceId)) {
+      if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
+        matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Create Subscription', plan.userId]);
+      }
+      else if(this.from === 'MY_SUBSCRIPTION'){
+        matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Create Subscription', plan.userId]);
+      }
+      else if(this.from === 'TEAM_SUBSCRIPTION'){
+        matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Create Subscription', plan.userId]);
+      }
       if (!this.isApplicable('ITR_SUPER_LEAD')) {
         this.utilsService.showSnackBar('This subscriptions invoice is created.');
         return;
@@ -581,6 +601,15 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
 
   async startFiling(subscription) {
     console.log('subscription: ', subscription);
+    if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
+      matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'File', subscription.data.userId]);
+    }
+    else if(this.from === 'MY_SUBSCRIPTION'){
+      matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'File', subscription.data.userId]);
+    }
+    else if(this.from === 'TEAM_SUBSCRIPTION'){
+      matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'File', subscription.data.userId]);
+    }
     if (subscription.servicesType === 'ITR') {
       if (subscription.subscriptionAssigneeId !== 'NA') {
         this.loading = true;
@@ -604,6 +633,15 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
 
   async viewFilingCalendar(subscription) {
     console.log('subscription: ', subscription);
+    if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
+      matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Calendar', subscription.data.userId]);
+    }
+    else if(this.from === 'MY_SUBSCRIPTION'){
+      matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Calendar', subscription.data.userId]);
+    }
+    else if(this.from === 'TEAM_SUBSCRIPTION'){
+      matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Calendar', subscription.data.userId]);
+    }
     this.loading = true;
     const param = `/subscription/filings-calender?subscriptionId=${subscription.subscriptionId}`;
     this.itrService.getMethod(param).subscribe((res: any) => {
