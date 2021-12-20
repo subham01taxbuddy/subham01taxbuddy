@@ -1182,38 +1182,38 @@ export class TaxSummaryComponent implements OnInit {
       let totalOtherIncomVal = computation1Info.IncomeOthSrc + computation1Info.DeductionUs57iia;
       this.newRegimeTaxSummary.otherIncome = totalOtherIncomVal;
 
-      this.newRegimeTaxSummary.grossTotalIncome = Number(this.newRegimeTaxSummary.salary) + Number(this.newRegimeTaxSummary.housePropertyIncome) + Number(this.newRegimeTaxSummary.otherIncome);
+      this.newRegimeTaxSummary.grossTotalIncome = this.getNumberFormat(this.newRegimeTaxSummary.salary) + this.getNumberFormat(this.newRegimeTaxSummary.housePropertyIncome) + this.getNumberFormat(this.newRegimeTaxSummary.otherIncome);
       this.newRegimeTaxSummary.totalDeduction = incomeDeduction.DeductUndChapVIA.TotalChapVIADeductions;
 
-      this.newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR = Number(this.newRegimeTaxSummary.grossTotalIncome) - Number(this.newRegimeTaxSummary.totalDeduction);
+      this.newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR = this.getNumberFormat(this.newRegimeTaxSummary.grossTotalIncome) - this.getNumberFormat(this.newRegimeTaxSummary.totalDeduction);
       
       let computation2Infos =  itrData.ITR1_TaxComputation;
       console.log('computation2Info: ', computation2Infos)
-      this.newRegimeTaxSummary.taxOnTotalIncome = computation2Infos.TotalTaxPayable;
-      this.newRegimeTaxSummary.forRebate87Tax = computation2Infos.Rebate87A;
-      this.newRegimeTaxSummary.taxAfterRebate = computation2Infos.TaxPayableOnRebate;
-      this.newRegimeTaxSummary.cessAmount = computation2Infos.EducationCess;
-      this.newRegimeTaxSummary.totalTax = computation2Infos.GrossTaxLiability;
-      this.newRegimeTaxSummary.taxReliefUnder89 = computation2Infos.Section89;
-      this.newRegimeTaxSummary.totalTaxRelief = computation2Infos.NetTaxLiability;
-      this.newRegimeTaxSummary.s234A = computation2Infos.IntrstPay.IntrstPayUs234A;
-      this.newRegimeTaxSummary.s234B = computation2Infos.IntrstPay.IntrstPayUs234B;
-      this.newRegimeTaxSummary.s234C = computation2Infos.IntrstPay.IntrstPayUs234C;
-      this.newRegimeTaxSummary.s234F = computation2Infos.IntrstPay.LateFilingFee234F;
-      this.newRegimeTaxSummary.agrigateLiability = computation2Infos.TotalIntrstPay;
+      this.newRegimeTaxSummary.taxOnTotalIncome = this.getNumberFormat(computation2Infos.TotalTaxPayable);
+      this.newRegimeTaxSummary.forRebate87Tax = this.getNumberFormat(computation2Infos.Rebate87A);
+      this.newRegimeTaxSummary.taxAfterRebate = this.getNumberFormat(computation2Infos.TaxPayableOnRebate);
+      this.newRegimeTaxSummary.cessAmount = this.getNumberFormat(computation2Infos.EducationCess);
+      this.newRegimeTaxSummary.totalTax = this.getNumberFormat(computation2Infos.GrossTaxLiability);
+      this.newRegimeTaxSummary.taxReliefUnder89 = this.getNumberFormat(computation2Infos.Section89);
+      this.newRegimeTaxSummary.totalTaxRelief = this.getNumberFormat(computation2Infos.NetTaxLiability);
+      this.newRegimeTaxSummary.s234A = this.getNumberFormat(computation2Infos.IntrstPay.IntrstPayUs234A);
+      this.newRegimeTaxSummary.s234B = this.getNumberFormat(computation2Infos.IntrstPay.IntrstPayUs234B);
+      this.newRegimeTaxSummary.s234C = this.getNumberFormat(computation2Infos.IntrstPay.IntrstPayUs234C);
+      this.newRegimeTaxSummary.s234F = this.getNumberFormat(computation2Infos.IntrstPay.LateFilingFee234F);
+      this.newRegimeTaxSummary.agrigateLiability = this.getNumberFormat(computation2Infos.TotalIntrstPay);
 
       let taxesPaidInfos = itrData;
       this.calNewItrTaxesPaid();
       this.calIntersetFeess();
       
-      if(Number(taxesPaidInfos.TaxPaid.BalTaxPayable) > 0){
-          let payable = Number(taxesPaidInfos.TaxPaid.BalTaxPayable);
+      if(this.getNumberFormat(taxesPaidInfos.TaxPaid.BalTaxPayable) > 0){
+          let payable = this.getNumberFormat(taxesPaidInfos.TaxPaid.BalTaxPayable);
          this.newRegimeTaxSummary.taxpayable = payable;
          this.newRegimeTaxSummary.taxRefund = 0;
       }
       else{
           let refundInfo = itrData.Refund;
-          let refundable = Number(refundInfo.RefundDue);
+          let refundable = this.getNumberFormat(refundInfo.RefundDue);
          this.newRegimeTaxSummary.taxRefund = refundable;
          this.newRegimeTaxSummary.taxpayable = 0;
       }
@@ -1227,11 +1227,11 @@ export class TaxSummaryComponent implements OnInit {
   
         this.itrSummaryForm.controls.taxSummary['controls'].otherIncome.setValue(computation1Info.IncomeOthSrc);
   
-        let grossTotIncome = Number(this.itrSummaryForm.controls.taxSummary['controls'].salary.value) + Number(this.itrSummaryForm.controls.taxSummary['controls'].housePropertyIncome.value) + 
-        Number(this.itrSummaryForm.controls.taxSummary['controls'].otherIncome.value);
+        let grossTotIncome = this.getNumberFormat(this.itrSummaryForm.controls.taxSummary['controls'].salary.value) + this.getNumberFormat(this.itrSummaryForm.controls.taxSummary['controls'].housePropertyIncome.value) + 
+        this.getNumberFormat(this.itrSummaryForm.controls.taxSummary['controls'].otherIncome.value);
         this.itrSummaryForm.controls.taxSummary['controls'].grossTotalIncome.setValue(grossTotIncome);
         
-        let dedUnderChaVIA = incomeDeduction.DeductUndChapVIA.TotalChapVIADeductions;
+        let dedUnderChaVIA = this.getNumberFormat(incomeDeduction.DeductUndChapVIA.TotalChapVIADeductions);
         this.itrSummaryForm.controls.taxSummary['controls'].totalDeduction.setValue(dedUnderChaVIA);
         
         this.itrSummaryForm.controls.taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.setValue(computation1Info.TotalIncome);
@@ -1282,8 +1282,8 @@ export class TaxSummaryComponent implements OnInit {
   
         this.itrSummaryForm.controls.taxSummary['controls'].otherIncome.setValue(computation1Info.IncomeOthSrc);
   
-        let grossTotIncome = Number(this.itrSummaryForm.controls.taxSummary['controls'].salary.value) + Number(this.itrSummaryForm.controls.taxSummary['controls'].housePropertyIncome.value) + 
-        Number(this.itrSummaryForm.controls.taxSummary['controls'].otherIncome.value);
+        let grossTotIncome = this.getNumberFormat(this.itrSummaryForm.controls.taxSummary['controls'].salary.value) + this.getNumberFormat(this.itrSummaryForm.controls.taxSummary['controls'].housePropertyIncome.value) + 
+        this.getNumberFormat(this.itrSummaryForm.controls.taxSummary['controls'].otherIncome.value);
         this.itrSummaryForm.controls.taxSummary['controls'].grossTotalIncome.setValue(grossTotIncome);
         
         let dedUnderChaVIA = incomeDeduction.DeductUndChapVIA.TotalChapVIADeductions;
@@ -1293,19 +1293,19 @@ export class TaxSummaryComponent implements OnInit {
 
         let computation2Info = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.ITR1_TaxComputation : itrData.TaxComputation;
         console.log('computation2Info: ', computation2Info)
-        this.itrSummaryForm.controls.taxSummary['controls'].taxOnTotalIncome.setValue(computation2Info.TotalTaxPayable);
-        this.itrSummaryForm.controls.taxSummary['controls'].forRebate87Tax.setValue(computation2Info.Rebate87A);
+        this.itrSummaryForm.controls.taxSummary['controls'].taxOnTotalIncome.setValue(this.getNumberFormat(computation2Info.TotalTaxPayable));
+        this.itrSummaryForm.controls.taxSummary['controls'].forRebate87Tax.setValue(this.getNumberFormat(computation2Info.Rebate87A));
         
-        this.itrSummaryForm.controls.taxSummary['controls'].taxAfterRebate.setValue(computation2Info.TaxPayableOnRebate);
-        this.itrSummaryForm.controls.taxSummary['controls'].cessAmount.setValue(computation2Info.EducationCess);
-        this.itrSummaryForm.controls.taxSummary['controls'].totalTax.setValue(computation2Info.GrossTaxLiability);
-        this.itrSummaryForm.controls.taxSummary['controls'].taxReliefUnder89.setValue(computation2Info.Section89);
-        this.itrSummaryForm.controls.taxSummary['controls'].totalTaxRelief.setValue(computation2Info.NetTaxLiability);
-        this.itrSummaryForm.controls.taxSummary['controls'].s234A.setValue(computation2Info.IntrstPay.IntrstPayUs234A);
-        this.itrSummaryForm.controls.taxSummary['controls'].s234B.setValue(computation2Info.IntrstPay.IntrstPayUs234B);
-        this.itrSummaryForm.controls.taxSummary['controls'].s234C.setValue(computation2Info.IntrstPay.IntrstPayUs234C);
-        this.itrSummaryForm.controls.taxSummary['controls'].s234F.setValue(computation2Info.IntrstPay.LateFilingFee234F);
-        this.itrSummaryForm.controls.taxSummary['controls'].agrigateLiability.setValue(computation2Info.TotalIntrstPay);
+        this.itrSummaryForm.controls.taxSummary['controls'].taxAfterRebate.setValue(this.getNumberFormat(computation2Info.TaxPayableOnRebate));
+        this.itrSummaryForm.controls.taxSummary['controls'].cessAmount.setValue(this.getNumberFormat(computation2Info.EducationCess));
+        this.itrSummaryForm.controls.taxSummary['controls'].totalTax.setValue(this.getNumberFormat(computation2Info.GrossTaxLiability));
+        this.itrSummaryForm.controls.taxSummary['controls'].taxReliefUnder89.setValue(this.getNumberFormat(computation2Info.Section89));
+        this.itrSummaryForm.controls.taxSummary['controls'].totalTaxRelief.setValue(this.getNumberFormat(computation2Info.NetTaxLiability));
+        this.itrSummaryForm.controls.taxSummary['controls'].s234A.setValue(this.getNumberFormat(computation2Info.IntrstPay.IntrstPayUs234A));
+        this.itrSummaryForm.controls.taxSummary['controls'].s234B.setValue(this.getNumberFormat(computation2Info.IntrstPay.IntrstPayUs234B));
+        this.itrSummaryForm.controls.taxSummary['controls'].s234C.setValue(this.getNumberFormat(computation2Info.IntrstPay.IntrstPayUs234C));
+        this.itrSummaryForm.controls.taxSummary['controls'].s234F.setValue(this.getNumberFormat(computation2Info.IntrstPay.LateFilingFee234F));
+        this.itrSummaryForm.controls.taxSummary['controls'].agrigateLiability.setValue(this.getNumberFormat(computation2Info.TotalIntrstPay));
         
         let taxesPaidInfo = itrData;
         console.log('taxesPaidInfo: ',taxesPaidInfo)
@@ -1315,14 +1315,14 @@ export class TaxSummaryComponent implements OnInit {
         this.taxesPaid.tcs = taxesPaidInfo.hasOwnProperty('ScheduleTCS') ? taxesPaidInfo.ScheduleTCS.TotalSchTCS : 0;
         this.taxesPaid.advanceSelfAssTax = taxesPaidInfo.hasOwnProperty('TaxPayments') ? taxesPaidInfo.TaxPayments.TotalTaxPayments : (taxesPaidInfo.hasOwnProperty('ScheduleIT') ? taxesPaidInfo.ScheduleIT.TotalTaxPayments : 0);
         
-        if(Number(taxesPaidInfo.TaxPaid.BalTaxPayable) > 0){
-            let payable = Number(taxesPaidInfo.TaxPaid.BalTaxPayable);
+        if(this.getNumberFormat(taxesPaidInfo.TaxPaid.BalTaxPayable) > 0){
+            let payable = this.getNumberFormat(taxesPaidInfo.TaxPaid.BalTaxPayable);
             this.itrSummaryForm.controls.taxSummary['controls'].taxpayable.setValue(payable);
             this.itrSummaryForm.controls.taxSummary['controls'].taxRefund.setValue(0);
         }
         else{
             let refundInfo = itrData.Refund;
-            let refundable = Number(refundInfo.RefundDue);
+            let refundable = this.getNumberFormat(refundInfo.RefundDue);
             this.itrSummaryForm.controls.taxSummary['controls'].taxRefund.setValue(refundable);
             this.itrSummaryForm.controls.taxSummary['controls'].taxpayable.setValue(0);
         }
