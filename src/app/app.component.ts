@@ -92,6 +92,13 @@ export class AppComponent {
     else if (path === '/pages/subscription/credit-notes') {
       matomo('Credit Notes Tab', path, []);
     }
+
+    else if (path === '/pages/itr-filing/my-itrs') {
+      matomo('My ITR Tab', path, []);
+    }
+    else if (path === '/pages/itr-filing/team-itrs') {
+      matomo('My Team Tab', path, []);
+    }
   }
 
 }
