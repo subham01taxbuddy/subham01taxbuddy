@@ -3384,19 +3384,20 @@ export class Itr2mainComponent implements OnInit {
     //Annexures: Advance Tax/ Self-Assessment Tax
     if (itrData.hasOwnProperty('ScheduleIT')) {
       var advTaxInfo = itrData.ScheduleIT;
-      console.log('advTaxInfo: ', advTaxInfo)
-
-      for (let i = 0; i < advTaxInfo.length; i++) {
-        let advTaxObj = {
-          bsrCode: advTaxInfo.TaxPayment[i].BSRCode,
-          dateOfDeposit: advTaxInfo.TaxPayment[i].DateDep,
-          challanNumber: advTaxInfo.TaxPayment[i].SrlNoOfChaln,
-          totalTax: this.getNumberFormat(advTaxInfo.TaxPayment[i].Amt) 
+      console.log('advTaxInfo: ', advTaxInfo);
+      if(advTaxInfo.hasOwnProperty('TaxPayment')){
+        for (let i = 0; i < advTaxInfo.TaxPayment.length; i++) {
+          let advTaxObj = {
+            bsrCode: advTaxInfo.TaxPayment[i].BSRCode,
+            dateOfDeposit: advTaxInfo.TaxPayment[i].DateDep,
+            challanNumber: advTaxInfo.TaxPayment[i].SrlNoOfChaln,
+            totalTax: this.getNumberFormat(advTaxInfo.TaxPayment[i].Amt) 
+          }
+  
+          taxPaidInfo.otherThanTDSTCS.push(advTaxObj);
         }
-
-        taxPaidInfo.otherThanTDSTCS.push(advTaxObj);
-      }
-
+  
+      }      
       // this.updateTaxDeductionAtSourceVal(taxPaidInfo);
     }
     this.updateTaxDeductionAtSourceVal(taxPaidInfo);
