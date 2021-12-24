@@ -7,6 +7,7 @@ import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
+import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 
 @Component({
   selector: 'app-scheduled-call',
@@ -252,6 +253,28 @@ export class ScheduledCallComponent implements OnInit {
           },
         },
         {
+          headerName: 'See/Add Notes',
+          editable: false,
+          suppressMenu: true,
+          sortable: true,
+          suppressMovable: true,
+          cellRenderer: function (params) {
+            return `<button type="button" class="action_icon add_button" title="Click see/add notes"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+              <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+             </button>`;
+          },
+          width: 60,
+          pinned: 'right',
+          cellStyle: function (params) {
+            return {
+              textAlign: 'center', display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center'
+            }
+          },
+        },
+        {
           headerName: 'User Info',
           editable: false,
           suppressMenu: true,
@@ -327,6 +350,10 @@ export class ScheduledCallComponent implements OnInit {
           this.openChat(params.data)
           break;
         }
+        case 'addNotes': {
+          this.showNotes(params.data)
+          break;
+        }
         case 'userInfo': {
           this.showUserInformation(params.data)
           break;
@@ -342,6 +369,21 @@ export class ScheduledCallComponent implements OnInit {
       
       }
     }
+  }
+
+  showNotes(client) {
+    let disposable = this.dialog.open(UserNotesComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.userName
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 
 
