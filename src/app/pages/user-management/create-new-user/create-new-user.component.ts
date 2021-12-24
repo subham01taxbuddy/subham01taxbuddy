@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
+declare function matomo(title: any, url: any, event: any);
 
 @Component({
   selector: 'app-create-new-user',
@@ -44,6 +45,9 @@ export class CreateNewUserComponent implements OnInit {
 
   userSignUp() {
     if (this.signUpForm.valid) {
+      let userInfo = `firstName=${this.signUpForm.controls["first_name"].value} lastName=${ this.signUpForm.controls["last_name"].value} email=${this.signUpForm.controls["email"].value} mobile=${this.signUpForm.controls["username"].value} serviceType=${this.signUpForm.controls["serviceType"].value}`;
+      console.log('userInfo: ',userInfo);
+      matomo('Create User Tab', '/pages/user-management/create-user', ['trackEvent', 'Create User', 'User Sign-up', userInfo]);
       let data = {
         firstName: this.signUpForm.controls["first_name"].value,
         lastName: this.signUpForm.controls["last_name"].value,

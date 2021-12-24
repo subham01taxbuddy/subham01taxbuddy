@@ -68,7 +68,11 @@ export class ChangeAgentDialogComponent implements OnInit {
           this._toastMessageService.alert('success', 'Sme information update succesfully.')
 
           setTimeout(() => {
-            this.dialogRef.close({ event: 'close', data:'statusChanged'})
+            let body = {
+              changeAgent: this.allAgents.filter(item => item.agentId === this.data.userInfo.agentId)[0].name,
+              serviceType : this.data.userInfo.serviceType
+            }
+            this.dialogRef.close({ event: 'close', data:'statusChanged', changeAgentInfo: body})
           }, 4000)
        },
        error=>{
