@@ -112,6 +112,15 @@ export class AppComponent {
     else if (path === '/pages/user-management/sme-mgnt/agent-update') {
       matomo('SME Agent Update', path, []);
     }
+    else if (path === '/pages/master/coupon') {
+      matomo('Master', path, []);
+    }
+    else if (path === '/pages/team-management/caller-assign/add-caller') {
+      matomo('Team Management', path, []);
+    }
+    else if (path === '/pages/tax-summary') {
+      matomo('Tax Summary', path, []);
+    }
   }
 
 }
