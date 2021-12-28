@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { environment } from 'environments/environment';
 import * as converter from 'xml-js';
+declare function matomo(title: any, url: any, event: any);
 
 @Component({
   selector: 'app-itr2main',
@@ -7085,7 +7086,14 @@ export class Itr2mainComponent implements OnInit {
     console.log("personalInfoForm: ", this.personalInfoForm);
     console.log('businessIncomeForm: ', this.businessIncomeForm.value, ' businessFormValid:=> ', this.businessFormValid)
     if (this.personalInfoForm.valid && (this.itrType.itrThree ? this.businessFormValid : true)) {
-      console.log('bankData: ', this.bankData)
+      console.log('bankData: ', this.bankData);
+
+      if(this.newItrSumChanges){
+        matomo('Tax Summary', '/pages/tax-summary/new-summary/itr-three', ['trackEvent', 'New Summary', 'ITR 2/3', this.personalInfoForm['controls'].contactNumber.value]);
+      }
+      else{
+        matomo('Tax Summary', '/pages/tax-summary/itrSecond', ['trackEvent', 'Old Summary', 'ITR 2/3', this.personalInfoForm['controls'].contactNumber.value]);
+      }
 
       this.itr_2_Summary._id = this.personalInfoForm['controls']._id.value;
       this.itr_2_Summary.summaryId = this.personalInfoForm['controls'].summaryId.value;

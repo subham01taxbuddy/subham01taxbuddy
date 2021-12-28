@@ -99,6 +99,28 @@ export class AppComponent {
     else if (path === '/pages/itr-filing/team-itrs') {
       matomo('My Team Tab', path, []);
     }
+
+    else if (path === '/pages/user-management/users') {
+      matomo('All Users Tab', path, []);
+    }
+    else if (path === '/pages/user-management/create-user') {
+      matomo('Create User Tab', path, []);
+    }
+    else if (path === '/pages/user-management/sme-mgnt/sme-update') {
+      matomo('SME Update', path, []);
+    }
+    else if (path === '/pages/user-management/sme-mgnt/agent-update') {
+      matomo('SME Agent Update', path, []);
+    }
+    else if (path === '/pages/master/coupon') {
+      matomo('Master', path, []);
+    }
+    else if (path === '/pages/team-management/caller-assign/add-caller') {
+      matomo('Team Management', path, []);
+    }
+    else if (path === '/pages/tax-summary') {
+      matomo('Tax Summary', path, []);
+    }
   }
 
 }
