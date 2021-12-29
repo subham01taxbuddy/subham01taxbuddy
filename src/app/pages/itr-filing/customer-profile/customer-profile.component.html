@@ -68,7 +68,7 @@
                                 <mat-label>Mobile</mat-label>
                                 <input matTooltip="Mobile number should be of 10 digit." matTooltipClass="tab-tooltip"
                                     matTooltipPosition="above" matInput placeholder="Mobile" name="mobile"
-                                    formControlName="contactNumber" class="input-field" maxlength="10" required>
+                                    formControlName="contactNumber" class="input-field"  required>
                                 <mat-error
                                     *ngIf="customerProfileForm.controls['contactNumber'].hasError('pattern') || customerProfileForm.controls['contactNumber'].hasError('minlength') || customerProfileForm.controls['contactNumber'].hasError('maxlength')">
                                     Enter
@@ -152,6 +152,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Residential status</mat-label>
                                 <mat-select placeholder="Residential status" name="residentialStatus"
+                                (selectionChange)="onSelectRecidencial(customerProfileForm.controls['residentialStatus'].value)"
                                     [formControl]="customerProfileForm.controls['residentialStatus']" required>
                                     <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
                                         {{ res.label }}

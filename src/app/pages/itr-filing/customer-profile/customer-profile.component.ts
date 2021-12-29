@@ -586,6 +586,16 @@ export class CustomerProfileComponent implements OnInit {
     })
   }
 
+  onSelectRecidencial(status){
+      if(status === 'RESIDENT'){
+        this.customerProfileForm.controls['contactNumber'].setValidators([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required]);
+      }
+      else if(status === 'NON_RESIDENT' || status === 'NON_ORDINARY'){
+        this.customerProfileForm.controls['contactNumber'].setValidators([Validators.pattern(AppConstants.numericRegex),  Validators.maxLength(20), Validators.required]);
+      }
+      this.customerProfileForm.controls['contactNumber'].updateValueAndValidity();
+  }
+
 
   getFilePath() {
     return `ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/${this.customerProfileForm.controls['isRevised'].value === 'Y' ? 'Revised' : 'Original'}/ITR Filing Docs`
