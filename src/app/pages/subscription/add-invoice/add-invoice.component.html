@@ -249,7 +249,7 @@
                             <mat-label>Phone</mat-label>
                             <input formControlName="phone"
                                 onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
-                                placeholder="Phone" maxlength="10" autocomplete="off" required>
+                                placeholder="Phone" autocomplete="off" required>  <!--maxlength="10"-->
                             <mat-error *ngIf="invoiceForm.controls['phone'].hasError('required')">Enter phone
                                 number</mat-error>
                             <mat-error *ngIf="invoiceForm.controls['phone'].hasError('pattern')">Enter valid
