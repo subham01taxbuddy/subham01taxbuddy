@@ -55,7 +55,7 @@ export class SubscriptionDetailComponent implements OnInit {
   advanceSearch() {
     console.log('this.searchVal -> ', this.searchVal)
     if (this.utilsService.isNonEmpty(this.searchVal)) {
-      if (this.searchVal.toString().length === 10) {
+      if (this.searchVal.toString().length === 9 || this.searchVal.toString().length === 10) {
         this.getUserIdByMobileNum(this.searchVal)
       } else {
         this._toastMessageService.alert("error", "Enter valid mobile number.");
