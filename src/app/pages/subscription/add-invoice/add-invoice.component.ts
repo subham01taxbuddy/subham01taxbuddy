@@ -207,7 +207,7 @@ export class AddInvoiceComponent implements OnInit {
       city: ['', Validators.required],
       country: ['', Validators.required],
       gstin: ['', [Validators.pattern(AppConstants.GSTNRegex)]],
-      phone: ['', [Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex), Validators.required]],
+      phone: ['', [ Validators.required]],  //Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex),
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
       subTotal: ['', Validators.required],
       cgstTotal: [''],
