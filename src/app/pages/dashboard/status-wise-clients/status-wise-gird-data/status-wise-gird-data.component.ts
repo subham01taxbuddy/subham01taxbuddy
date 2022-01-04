@@ -9,9 +9,10 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
+import { environment } from 'environments/environment';
 import moment = require('moment');
 
-declare function matomo(title: any, url: any, event: any);
+declare function matomo(title: any, url: any, event: any, scriptId: any);
 @Component({
   selector: 'app-status-wise-gird-data',
   templateUrl: './status-wise-gird-data.component.html',
@@ -483,13 +484,13 @@ export class StatusWiseGirdDataComponent implements OnInit {
 
   showNotes(client) {
     if(this.tabName === 'Engagement'){
-      matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Notes']);
+      matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Notes'], environment.matomoScriptId);
     }
     else if(this.tabName === 'Filling'){
-      matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Notes']);
+      matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Notes'], environment.matomoScriptId);
     }
     else if(this.tabName === 'Payment'){
-      matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Notes']);
+      matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Notes'], environment.matomoScriptId);
     }
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
@@ -510,13 +511,13 @@ export class StatusWiseGirdDataComponent implements OnInit {
     this.loading = true;
     let callInfo = user.customerNumber;
     if(this.tabName === 'Engagement'){
-      matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Call', callInfo]);
+      matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Call', callInfo], environment.matomoScriptId);
     }
     else if(this.tabName === 'Filling'){
-      matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Call', callInfo]);
+      matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Call', callInfo], environment.matomoScriptId);
     }
     else if(this.tabName === 'Payment'){
-      matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Call', callInfo]);
+      matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Call', callInfo], environment.matomoScriptId);
     }
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -561,13 +562,13 @@ export class StatusWiseGirdDataComponent implements OnInit {
           if (mode === 'Update Status') {
             let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; 
             if(this.tabName === 'Engagement'){
-              matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Update Status', changeStatus]);
+              matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Update Status', changeStatus], environment.matomoScriptId);
             }
             else if(this.tabName === 'Filling'){
-              matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Update Status', changeStatus]);
+              matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Update Status', changeStatus], environment.matomoScriptId);
             }
             else if(this.tabName === 'Payment'){
-              matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Update Status', changeStatus]);
+              matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Update Status', changeStatus], environment.matomoScriptId);
             }
           }
           else if(mode === 'Update Caller'){
@@ -594,13 +595,13 @@ export class StatusWiseGirdDataComponent implements OnInit {
   openChat(client) {
     console.log('client: ', client);
     if(this.tabName === 'Engagement'){
-      matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Chat icon']);
+      matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Chat icon'], environment.matomoScriptId);
     }
     else if(this.tabName === 'Filling'){
-      matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Chat icon']);
+      matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Chat icon'], environment.matomoScriptId);
     }
     else if(this.tabName === 'Payment'){
-      matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Chat icon']);
+      matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Chat icon'], environment.matomoScriptId);
     }
    
     this.loading = true;

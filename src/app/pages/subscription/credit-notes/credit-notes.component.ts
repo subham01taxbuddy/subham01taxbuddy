@@ -7,7 +7,7 @@ import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { environment } from 'environments/environment';
-declare function matomo(title: any, url: any, event: any);
+declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 export const MY_FORMATS = {
   parse: {
@@ -263,14 +263,14 @@ export class CreditNotesComponent implements OnInit {
     var param;
     if(type === 'downloadAll'){
       param = `/itr/credit-note-download`;
-      matomo('Credit Notes Tab', '/pages/subscription/credit-notes', ['trackEvent', 'Credit Notes', 'Download All']);
+      matomo('Credit Notes Tab', '/pages/subscription/credit-notes', ['trackEvent', 'Credit Notes', 'Download All'], environment.matomoScriptId);
     }
     else{
       let fromData = this.datePipe.transform(this.creditNotesForm.value.fromDate, 'yyyy-MM-dd');
       let toData = this.datePipe.transform(this.creditNotesForm.value.toDate, 'yyyy-MM-dd');
       param = `/itr/credit-note-download?from=${fromData}&to=${toData}`;
       let parameter = 'From Date='+fromData+' To date= '+toData;
-      matomo('Credit Notes Tab', '/pages/subscription/credit-notes', ['trackEvent', 'Credit Notes', 'Download All', parameter]);
+      matomo('Credit Notes Tab', '/pages/subscription/credit-notes', ['trackEvent', 'Credit Notes', 'Download All', parameter], environment.matomoScriptId);
     }
 
     location.href = environment.url + param;
