@@ -35,6 +35,7 @@ export class CreditNotesComponent implements OnInit {
   maxDate: any = new Date();
   toDateMin: any;
   creditNotesGridOptions: GridOptions;
+  totalCount: number;
 
   constructor(private fb: FormBuilder, @Inject(LOCALE_ID) private locale: string, private itrService: ItrMsService, private datePipe: DatePipe, private utilService: UtilsService) {
     this.creditNotesGridOptions = <GridOptions>{
@@ -76,7 +77,11 @@ export class CreditNotesComponent implements OnInit {
 
     this.itrService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
-      this.creditNotesGridOptions.api.setRowData(this.createRowData(res))
+      if(res instanceof Array && res.length > 0){
+        this.totalCount = res.length;
+        this.creditNotesGridOptions.api.setRowData(this.createRowData(res))
+      }
+      
     },
       error => {
         this.loading = false;
