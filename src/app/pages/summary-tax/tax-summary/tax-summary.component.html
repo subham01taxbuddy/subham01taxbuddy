@@ -1691,8 +1691,7 @@
                                 <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxesPaid.advanceSelfAssTax" [ngModelOptions]="{standalone: true}" (blur)="calNewItrTaxesPaid()" maxlength="8"></td>
                             </tr>
 
-                            <tr
-                                *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0">
+                            <tr *ngIf="showTaxPaybleValue()">  <!--*ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0"-->
                                 <td>{{itrType.itrFour ? 18 : 17}}</td>
                                 <td><b>Net Tax Payable</b></td>
                                 <td></td>
@@ -1703,7 +1702,7 @@
 
                                 <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.taxpayable" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
-                            <tr *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0 || this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
+                            <tr *ngIf="showTaxRefundValue()"> <!--*ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0 || this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0"-->
                                 <td>{{itrType.itrFour ? 18 : 17}}</td>
                                 <td><b>Net Tax Refund</b></td>
                                 <td></td>
