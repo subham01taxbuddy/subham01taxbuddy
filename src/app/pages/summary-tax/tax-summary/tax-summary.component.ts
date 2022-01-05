@@ -1219,6 +1219,12 @@ export class TaxSummaryComponent implements OnInit {
       }
 
       console.log('newRegimeTaxSummary: ',this.newRegimeTaxSummary);
+      // this.itrSummaryForm.controls.taxSummary.setValue(this.newRegimeTaxSummary);
+      this.itrSummaryForm.controls.taxSummary['controls'].s234A.setValue(this.newRegimeTaxSummary.s234A);
+      this.itrSummaryForm.controls.taxSummary['controls'].s234B.setValue(this.newRegimeTaxSummary.s234B);
+      this.itrSummaryForm.controls.taxSummary['controls'].s234C.setValue(this.newRegimeTaxSummary.s234C);
+      this.itrSummaryForm.controls.taxSummary['controls'].s234F.setValue(this.newRegimeTaxSummary.s234F);
+      
 
       //Old summary part
 
@@ -3316,7 +3322,8 @@ export class TaxSummaryComponent implements OnInit {
   calIntersetFeess(){
     this.newRegimeTaxSummary.interestAndFeesPayable = Number(this.newRegimeTaxSummary.s234A) + Number(this.newRegimeTaxSummary.s234B) +
                                                       Number(this.newRegimeTaxSummary.s234C) + Number(this.newRegimeTaxSummary.s234F);
-                                          
+    this.itrSummaryForm.controls.taxSummary['controls'].interestAndFeesPayable.setValue(this.newRegimeTaxSummary.interestAndFeesPayable);         
+                                                      
     this.newRegimeTaxSummary.agrigateLiability = Number(this.newRegimeTaxSummary.interestAndFeesPayable) + Number(this.newRegimeTaxSummary.totalTaxRelief);
   }
 
@@ -3573,5 +3580,45 @@ export class TaxSummaryComponent implements OnInit {
       return val;
     }
   }
+
+
+  showTaxPaybleValue(){
+    if(this.itrSummaryForm['controls'].assesse['controls'].regime.value === 'N'){
+      if(this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    else{
+      if(this.newRegimeTaxSummary.taxpayable >= 0 && this.newRegimeTaxSummary.taxRefund === 0){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+
+  showTaxRefundValue(){
+    if(this.itrSummaryForm['controls'].assesse['controls'].regime.value === 'N'){
+      if(this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0 || this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0){
+          return true;
+      }
+      else{
+          return false;
+      }
+    }
+    else{
+      if(this.newRegimeTaxSummary.taxRefund < 0 || this.newRegimeTaxSummary.taxRefund > 0){
+        return true;
+    }
+    else{
+        return false;
+    }
+    }
+  }
+
 
 }
