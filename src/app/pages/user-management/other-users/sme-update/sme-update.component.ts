@@ -6,7 +6,8 @@ import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
-declare function matomo(title: any, url: any, event: any);
+import { environment } from 'environments/environment';
+declare function matomo(title: any, url: any, event: any, scriptId: any);
 @Component({
   selector: 'app-sme-update',
   templateUrl: './sme-update.component.html',
@@ -367,7 +368,7 @@ export class SmeUpdateComponent implements OnInit {
         }
         case 'profile': {
           let smeName = params.data.name;
-          matomo('SME Update', '/pages/user-management/sme-mgnt/sme-update', ['trackEvent', 'SME Update', 'User Profile', smeName]); 
+          matomo('SME Update', '/pages/user-management/sme-mgnt/sme-update', ['trackEvent', 'SME Update', 'User Profile', smeName], environment.matomoScriptId); 
           this.router.navigate(['pages/user-management/profile/' + params.data.userId])
           break;
         }

@@ -10,7 +10,8 @@ import { MatDialog } from '@angular/material';
 import moment = require('moment');
 import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 import { ApiEndpoints } from 'app/shared/api-endpoint';
-declare function matomo(title: any, url: any, event: any);
+import { environment } from 'environments/environment';
+declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 @Component({
   selector: 'app-my-assigned-itrs',
@@ -435,7 +436,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   }
 
   async startFiling(data) {
-    matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'Actions', data.contactNumber]);
+    matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'Actions', data.contactNumber], environment.matomoScriptId);
     var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
     console.log('data: ', workingItr);
     Object.entries(workingItr).forEach((key, value) => {
@@ -459,7 +460,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   }
 
   openfilingStatusDialog(data) {
-    matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'Chat', data.contactNumber]);
+    matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'Chat', data.contactNumber], environment.matomoScriptId);
     let disposable = this.dialog.open(FilingStatusDialogComponent, {
       width: '50%',
       height: 'auto',
@@ -470,7 +471,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
     });
   }
   getAcknowledgeDetail(data) {
-    matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'E-verification', data.contactNumber]);
+    matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'E-verification', data.contactNumber], environment.matomoScriptId);
     this.loading = true;
     var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
     workingItr['everifiedStatus'] = 'Successfully e-Verified';
@@ -513,12 +514,12 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
 
   showUserDoucuments(data) {
     console.log(data);
-    matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'Cloud', data.contactNumber]);
+    matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'Cloud', data.contactNumber], environment.matomoScriptId);
     this.router.navigate(['/pages/itr-filing/user-docs/' + data.userId]);
   }
 
   updateReviewStatus(data) {
-    matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'Review', data.contactNumber]);
+    matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'Review', data.contactNumber], environment.matomoScriptId);
     const param = `/update-itr-userProfile?itrId=${data.itrId}&userId=${data.userId}&isReviewGiven=true`;
     this.itrMsService.putMethod(param, {}).subscribe(result => {
       console.log(result);
