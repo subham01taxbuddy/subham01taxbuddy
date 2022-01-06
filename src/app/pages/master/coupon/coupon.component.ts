@@ -4,7 +4,9 @@ import { MatDialog } from '@angular/material';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { UtilsService } from 'app/services/utils.service';
+import { environment } from 'environments/environment';
 import { AddCouponComponent } from '../add-coupon/add-coupon.component';
+declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 @Component({
   selector: 'app-coupon',
@@ -249,6 +251,8 @@ export class CouponComponent implements OnInit {
 
         //   this.showLeadsInfo('leadAdded');
         // }
+
+        matomo('Master', '/pages/master/coupon', ['trackEvent', 'Coupon', 'Add Coupon', result.coupon], environment.matomoScriptId); 
       }
     })
   }

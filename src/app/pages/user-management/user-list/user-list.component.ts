@@ -8,6 +8,8 @@ import { NavbarService } from 'app/services/navbar.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
+import { environment } from 'environments/environment';
+declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 @Component({
   selector: 'app-user-list',
@@ -79,6 +81,8 @@ export class UserListComponent implements OnInit {
   }
 
   getUserSearchList(key, searchValue) {
+    let searchInfo = key+': '+searchValue;
+    matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Select attribute', searchInfo], environment.matomoScriptId);
     this.loading = true;
     return new Promise((resolve, reject) => {
       this.user_data = [];
@@ -407,6 +411,7 @@ export class UserListComponent implements OnInit {
           break;
         }
         case 'profile': {
+          matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'User Profile'], environment.matomoScriptId);
           this.router.navigate(['pages/user-management/profile/' + params.data.userId])
           break;
         }
@@ -427,16 +432,19 @@ export class UserListComponent implements OnInit {
   }
 
   redirectTowardInvoice(userInfo) {
+    matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Invoice'], environment.matomoScriptId);
     console.log('userInfo for subscription -> ', userInfo);
     this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: userInfo.userId } });
   }
 
   redirectTowardSubscription(userInfo) {
     console.log('userInfo for subscription -> ', userInfo);
+    matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Sunscription'], environment.matomoScriptId);
     this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: userInfo.mobileNumber } });
   }
 
   linkToFinbingo(userId) {
+    matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'FNB'], environment.matomoScriptId); 
     const param = `/partner/create-user`;
     const request = {
       userId: userId
@@ -462,10 +470,12 @@ export class UserListComponent implements OnInit {
   }
 
   linkToDocumentCloud(userId) {
+    matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId); 
     this.router.navigate(['/pages/itr-filing/user-docs/' + userId]);
   }
 
   updateReviewStatus(data) {
+    matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Review'], environment.matomoScriptId); 
     const param = `/update-itr-userProfile?userId=${data.userId}&isReviewGiven=true`;
     this.itrMsService.putMethod(param, {}).subscribe(result => {
       console.log(result);

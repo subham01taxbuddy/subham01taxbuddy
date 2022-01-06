@@ -10,6 +10,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { AppConstants } from 'app/shared/constants';
 import { formatDate } from '@angular/common';
 import { environment } from 'environments/environment';
+declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 @Component({
   selector: 'app-todays-calls',
@@ -101,6 +102,7 @@ export class TodaysCallsComponent implements OnInit {
   serchByMobNo() {
     if (this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
       var userInfo = JSON.parse(localStorage.getItem('UMD'));
+      matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Search',this.searchMobNo], environment.matomoScriptId);
       if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
         this.getMyTodaysCalls('', 0, this.searchMobNo);
       }
@@ -117,6 +119,7 @@ export class TodaysCallsComponent implements OnInit {
     if (this.utilsService.isNonEmpty(this.selectedAgent)) {
       this.showAllUser = false;
       this.searchMobNo = '';
+      matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Search',this.selectedAgent], environment.matomoScriptId);
       this.getMyTodaysCalls(this.selectedAgent, 0);
     }
     else {
@@ -439,6 +442,7 @@ export class TodaysCallsComponent implements OnInit {
   }
 
   showNotes(client) {
+    matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Notes'], environment.matomoScriptId);
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -487,7 +491,9 @@ export class TodaysCallsComponent implements OnInit {
   }
 
   startCalling(user) {
-    console.log('user: ', user)
+    console.log('user: ', user);
+    let callInfo = user.customerNumber;
+    matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Call', callInfo], environment.matomoScriptId);
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -537,6 +543,19 @@ export class TodaysCallsComponent implements OnInit {
           //   this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
           // }
         }
+        
+        if(result.responce){
+          if(mode === 'Update Status'){
+            // let changeStatus = client.statusId+' to '+result.responce.statusId;
+            let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; //result.responce.statusId;
+            matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Update Status',changeStatus], environment.matomoScriptId);
+          }
+          // else if(mode === 'Update Caller'){
+          //   let updateCaller = client.statusId+' to '+result.responce.statusId;
+          //   matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Caller', changeStatus])
+          // }
+         
+        }
       }
     });
   }
@@ -554,6 +573,7 @@ export class TodaysCallsComponent implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
+    matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Chat icon'], environment.matomoScriptId);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
     this.userMsService.getMethod(param).subscribe((responce: any) => {
@@ -573,7 +593,10 @@ export class TodaysCallsComponent implements OnInit {
       })
   }
   navigateToWhatsappChat(data) {
+    matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Whatsapp icon'], environment.matomoScriptId);
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
   }
+
+  
 
 }

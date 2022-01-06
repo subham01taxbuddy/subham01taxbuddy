@@ -10,6 +10,7 @@ export class TeamSubscriptionsComponent implements OnInit {
   queryParam = '';
   teamMember: any;
   smeList = [];
+  tabName: string = 'TEAM_SUBSCRIPTION';
   totalCount = 0;
 
   constructor(private userMsService: UserMsService) { }

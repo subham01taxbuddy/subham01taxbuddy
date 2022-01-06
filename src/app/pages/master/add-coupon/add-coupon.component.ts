@@ -188,7 +188,7 @@ export class AddCouponComponent implements OnInit {
       }
       promoCodeRequest.discountDetails = discountDetails;
       console.log('Updated discount detaiols', promoCodeRequest);
-      // return;
+      //return;
       this.itrService.postMethod(param, promoCodeRequest).subscribe((res: any) => {
         console.log('Coupon added responce: ', res);
         this.loading = false;
@@ -198,7 +198,7 @@ export class AddCouponComponent implements OnInit {
           this._toastMessageService.alert("success", "Coupon added successfully.")
         }
         setTimeout(() => {
-          this.dialogRef.close({ event: 'close', data: 'couponAdded' })
+          this.dialogRef.close({ event: 'close', data: 'couponAdded', coupon: promoCodeRequest.code })
         }, 3000)
       },
         error => {

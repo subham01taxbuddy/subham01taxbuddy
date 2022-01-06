@@ -6,7 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./payment-status.component.css']
 })
 export class PaymentStatusComponent implements OnInit {
-  ids = '12,13'
+  ids = '12,13';
+  tabName: string = 'Payment';
   constructor() { }
 
   ngOnInit() {

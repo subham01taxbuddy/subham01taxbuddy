@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FilingStatusComponent implements OnInit {
   ids = '5,6,7,8,9,10,11' // 12,13
+  tabName: string = 'Filling';
   constructor() { }
 
   ngOnInit() {

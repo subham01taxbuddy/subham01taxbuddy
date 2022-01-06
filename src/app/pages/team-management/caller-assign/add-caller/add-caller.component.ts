@@ -5,7 +5,9 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { AppConstants } from 'app/shared/constants';
+import { environment } from 'environments/environment';
 import { AddRemoveAgentDialogComponent } from '../add-remove-agent-dialog/add-remove-agent-dialog.component';
+declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 @Component({
   selector: 'app-add-caller',
@@ -55,6 +57,7 @@ export class AddCallerComponent implements OnInit {
   searchByAgent() {
     if (this.utileService.isNonEmpty(this.selectedAgent)) {
       // this.searchMobNo = '';
+      matomo('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Agent ', this.selectedAgent], environment.matomoScriptId); 
       this.getCallerUser(this.selectedAgent);
     }
     else {
@@ -365,10 +368,12 @@ export class AddCallerComponent implements OnInit {
     if (action === 'add') {
       caller = this.getCalletList(action)
       var param = `/call-management/caller-agents?agentId=${this.selectedAgent}&addCallerAgents=${caller}&removeCallerAgent=`;
+      matomo('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Add Caller'], environment.matomoScriptId); 
     }
     else {
       caller = this.getCalletList(action)
       var param = `/call-management/caller-agents?agentId=${this.selectedAgent}&addCallerAgents=&removeCallerAgent=${caller}`;
+      matomo('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Remove Caller'], environment.matomoScriptId); 
     }
     console.log('caller -> ', caller)
     console.log('param: ', param)

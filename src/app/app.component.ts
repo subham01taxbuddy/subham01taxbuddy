@@ -18,6 +18,9 @@
  */
 
 import { Component } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { environment } from 'environments/environment';
+declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 @Component({
   selector: 'app-root',
@@ -25,9 +28,100 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  
+
   title = 'app works!';
 
+  constructor(private router: Router) {
+    router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.passDocTitleToMatomo(window.location.pathname);
+      }
+    });
+  }
 
- 
+  passDocTitleToMatomo(path) {
+    console.log('path: ', path, typeof path)
+    if (path === '/login') {
+      matomo('Login Page', path, [], environment.matomoScriptId)
+    }
+    else if (path === '/pages/dashboard/quick-search') {
+      matomo('Quick Search', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/dashboard/calling/calling2') {
+      matomo('Priority Calling Board', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/dashboard/calling/todays-call') {
+      matomo('My Todays Call', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/dashboard/calling/scheduled-call') {
+      matomo('Scheduled Calls Tab', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/dashboard/calling/signup-exception') {
+      matomo('Sign-Up Exceptions Tab', path, [], environment.matomoScriptId);
+    }
+    // else if(path === '/pages/dashboard/interested-clients'){
+    //   matomo('Status Wise Client Tab', path, [], environment.matomoScriptId);
+    // }
+    else if (path === '/pages/dashboard/status-wise/all') {
+      matomo('Status Wise Clients All Tab', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/dashboard/status-wise/engagement') {
+      matomo('Status Wise Clients Engagement Tab', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/dashboard/status-wise/filing') {
+      matomo('Status Wise Clients Filing Tab', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/dashboard/status-wise/payment') {
+      matomo('Status Wise Clients Payment Tab', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/dashboard/knowlarity') {
+      matomo('Knowlarity Tab', path, [], environment.matomoScriptId);
+    }
+
+    else if (path === '/pages/subscription/sub') {
+      matomo('Unassigned Subscriptions Tab', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/subscription/my-sub') {
+      matomo('My Subscription Tab', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/subscription/team-sub') {
+      matomo('Team Subscription Tab', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/subscription/invoices') {
+      matomo('All Invoices Tab', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/subscription/credit-notes') {
+      matomo('Credit Notes Tab', path, [], environment.matomoScriptId);
+    }
+
+    else if (path === '/pages/itr-filing/my-itrs') {
+      matomo('My ITR Tab', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/itr-filing/team-itrs') {
+      matomo('My Team Tab', path, [], environment.matomoScriptId);
+    }
+
+    else if (path === '/pages/user-management/users') {
+      matomo('All Users Tab', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/user-management/create-user') {
+      matomo('Create User Tab', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/user-management/sme-mgnt/sme-update') {
+      matomo('SME Update', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/user-management/sme-mgnt/agent-update') {
+      matomo('SME Agent Update', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/master/coupon') {
+      matomo('Master', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/team-management/caller-assign/add-caller') {
+      matomo('Team Management', path, [], environment.matomoScriptId);
+    }
+    else if (path === '/pages/tax-summary') {
+      matomo('Tax Summary', path, [], environment.matomoScriptId);
+    }
+  }
+
 }

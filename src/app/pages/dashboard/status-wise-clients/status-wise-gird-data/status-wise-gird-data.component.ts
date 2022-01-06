@@ -9,8 +9,10 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
+import { environment } from 'environments/environment';
 import moment = require('moment');
 
+declare function matomo(title: any, url: any, event: any, scriptId: any);
 @Component({
   selector: 'app-status-wise-gird-data',
   templateUrl: './status-wise-gird-data.component.html',
@@ -18,6 +20,7 @@ import moment = require('moment');
 })
 export class StatusWiseGirdDataComponent implements OnInit {
   @Input('statusIds') statusIds: any;
+  @Input('tabName') tabName: any;
   interestedClients = [];
   loading = false;
   config: any;
@@ -480,6 +483,15 @@ export class StatusWiseGirdDataComponent implements OnInit {
   }
 
   showNotes(client) {
+    if(this.tabName === 'Engagement'){
+      matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Notes'], environment.matomoScriptId);
+    }
+    else if(this.tabName === 'Filling'){
+      matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Notes'], environment.matomoScriptId);
+    }
+    else if(this.tabName === 'Payment'){
+      matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Notes'], environment.matomoScriptId);
+    }
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -497,6 +509,16 @@ export class StatusWiseGirdDataComponent implements OnInit {
   startCalling(user) {
     console.log('user: ', user)
     this.loading = true;
+    let callInfo = user.customerNumber;
+    if(this.tabName === 'Engagement'){
+      matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Call', callInfo], environment.matomoScriptId);
+    }
+    else if(this.tabName === 'Filling'){
+      matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Call', callInfo], environment.matomoScriptId);
+    }
+    else if(this.tabName === 'Payment'){
+      matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Call', callInfo], environment.matomoScriptId);
+    }
     const param = `/call-management/make-call`;
     const reqBody = {
       "agent_number": user.callerAgentNumber,
@@ -535,6 +557,32 @@ export class StatusWiseGirdDataComponent implements OnInit {
           this.getInterestedClients(0);
 
         }
+
+        if(result.responce) {
+          if (mode === 'Update Status') {
+            let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; 
+            if(this.tabName === 'Engagement'){
+              matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Update Status', changeStatus], environment.matomoScriptId);
+            }
+            else if(this.tabName === 'Filling'){
+              matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Update Status', changeStatus], environment.matomoScriptId);
+            }
+            else if(this.tabName === 'Payment'){
+              matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Update Status', changeStatus], environment.matomoScriptId);
+            }
+          }
+          else if(mode === 'Update Caller'){
+            // if(this.tabName === 'Engagement'){
+            //   matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Update Caller', changeStatus]);
+            // }
+            // else if(this.tabName === 'Filling'){
+            //   matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Update Caller', changeStatus]);
+            // }
+            // else if(this.tabName === 'Payment'){
+            //   matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Update Caller', changeStatus]);
+            // }
+          }
+        }
       }
     });
   }
@@ -546,6 +594,16 @@ export class StatusWiseGirdDataComponent implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
+    if(this.tabName === 'Engagement'){
+      matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Chat icon'], environment.matomoScriptId);
+    }
+    else if(this.tabName === 'Filling'){
+      matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Chat icon'], environment.matomoScriptId);
+    }
+    else if(this.tabName === 'Payment'){
+      matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Chat icon'], environment.matomoScriptId);
+    }
+   
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
     this.userMsService.getMethod(param).subscribe((response: any) => {
