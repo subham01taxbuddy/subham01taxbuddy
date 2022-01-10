@@ -276,37 +276,36 @@ export class ScheduledCallComponent implements OnInit {
           }
         },
       },
-    
-        {
-          headerName: 'See/Add Notes',
-          editable: false,
-          suppressMenu: true,
-          sortable: true,
-          suppressMovable: true,
-          cellRenderer: function (params) {
-            return `<button type="button" class="action_icon add_button" title="Click see/add notes"
+      {
+        headerName: 'See/Add Notes',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Click see/add notes"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
               <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
              </button>`;
-          },
-          width: 60,
-          pinned: 'right',
-          cellStyle: function (params) {
-            return {
-              textAlign: 'center', display: 'flex',
-              'align-items': 'center',
-              'justify-content': 'center'
-            }
-          },
         },
-        {
-          headerName: 'User Info',
-          editable: false,
-          suppressMenu: true,
-          sortable: true,
-          suppressMovable: true,
-          cellRenderer: function (params) {
-            return `<button type="button" class="action_icon add_button" title="User Information"
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'User Info',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="User Information"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
               <i class="fa fa-mobile" style="font-size:26px" aria-hidden="true" data-action-type="userInfo"></i>
              </button>`;
@@ -448,7 +447,7 @@ export class ScheduledCallComponent implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
-    matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Chat icon'],  environment.matomoScriptId);
+    matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Chat icon'], environment.matomoScriptId);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
     this.userMsService.getMethod(param).subscribe((response: any) => {

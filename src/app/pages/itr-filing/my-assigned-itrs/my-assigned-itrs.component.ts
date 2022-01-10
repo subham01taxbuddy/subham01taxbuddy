@@ -1,3 +1,5 @@
+import { ToastMessageService } from './../../../services/toast-message.service';
+import { UserMsService } from './../../../services/user-ms.service';
 import { FormControl, Validators } from '@angular/forms';
 import { UtilsService } from 'app/services/utils.service';
 import { ChangeDetectorRef, Component, OnInit, AfterContentChecked } from '@angular/core';
@@ -11,6 +13,7 @@ import moment = require('moment');
 import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 import { ApiEndpoints } from 'app/shared/api-endpoint';
 import { environment } from 'environments/environment';
+import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 @Component({
@@ -29,6 +32,8 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   pageWiseItr: any = [];
   constructor(private itrMsService: ItrMsService,
     public utilsService: UtilsService,
+    private userMsService: UserMsService,
+    private toastMsgService: ToastMessageService,
     private router: Router,
     private dialog: MatDialog,
     private cdRef: ChangeDetectorRef) {
@@ -258,7 +263,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       },
       {
         headerName: 'Actions',
-        width: 100,
+        width: 50,
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params) {
@@ -312,6 +317,28 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
           'justify-content': 'center',
           color: 'blueviolet'
 
+        },
+      },
+      {
+        headerName: 'Call',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Call to user"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
+           </button>`;
+        },
+        width: 50,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
         },
       },
       // {
@@ -401,6 +428,28 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
             : '';
         }
       },
+      {
+        headerName: 'Update Status',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Update Status"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
     ];
   }
   public onRowClicked(params) {
@@ -429,6 +478,14 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         }
         case 'isReviewGiven': {
           this.updateReviewStatus(params.data);
+          break;
+        }
+        case 'call': {
+          this.startCalling(params.data)
+          break;
+        }
+        case 'updateStatus': {
+          this.updateStatus('Update Status', params.data)
           break;
         }
       }
@@ -526,9 +583,64 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       this.utilsService.showSnackBar('Marked as review given');
       this.myItrsList(this.selectedFyYear, this.selectedPageNo);
     }, error => {
-      this.utilsService.showSnackBar('Please try again, falied to mark as review given');
+      this.utilsService.showSnackBar('Please try again, failed to mark as review given');
       this.myItrsList(this.selectedFyYear, this.selectedPageNo);
     })
+  }
+
+  async startCalling(user) {
+    const agentNumber = await this.utilsService.getMyCallingNumber();
+    if (!agentNumber) {
+      this.toastMsgService.alert("error", 'You dont have calling role.')
+      return;
+    }
+    console.log('user: ', user);
+    // matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Call', callInfo], environment.matomoScriptId);
+    this.loading = true;
+    let customerNumber = user.contactNumber;
+    if (customerNumber.length <= 10) {
+      this.toastMsgService.alert('error', 'This is not a valid customer number');
+      return
+    }
+    const param = `/call-management/make-call`;
+    const reqBody = {
+      "agent_number": agentNumber,
+      "customer_number": customerNumber
+    }
+    console.log('reqBody:', reqBody)
+    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+      console.log('Call Result: ', result);
+      this.loading = false;
+      if (result.success.status) {
+        this.toastMsgService.alert("success", result.success.message)
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
+    })
+  }
+
+  updateStatus(mode, client) {
+    console.log('Client', client);
+    let disposable = this.dialog.open(ChangeStatusComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.fName + ' ' + client.lName,
+        serviceType: 'TPA',
+        mode: mode,
+        userInfo: client
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log('result: ', result);
+      if (result) {
+
+      }
+    });
   }
 
   pageChanged(event) {

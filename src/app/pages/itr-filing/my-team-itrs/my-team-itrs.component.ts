@@ -10,6 +10,9 @@ import { ReviseReturnDialogComponent } from '../revise-return-dialog/revise-retu
 import moment = require('moment');
 import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
 import { environment } from 'environments/environment';
+import { ToastMessageService } from 'app/services/toast-message.service';
+import { UserMsService } from 'app/services/user-ms.service';
+import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 @Component({
@@ -26,72 +29,16 @@ export class MyTeamItrsComponent implements OnInit {
   config: any;
   pageWiseItr: any = [];
   filingTeamMembers = [
-    // { teamLeadId: 1063, value: 1063, label: 'Amrita Thakur' },
-    // { teamLeadId: 1064, value: 1064, label: 'Ankita Murkute' },
-    // { teamLeadId: 1062, value: 1062, label: 'Damini Patil' },
-    // { teamLeadId: 1707, value: 1707, label: 'Kavita Singh' },
-    // { teamLeadId: 1706, value: 1706, label: 'Nimisha Panda' },
-    // { teamLeadId: 1063, value: 24346, label: 'Tushar Shilimkar' },
-    // { teamLeadId: 1062, value: 19529, label: 'Kirti Gorad' },
-    // { teamLeadId: 1062, value: 24348, label: 'Geetanjali Panchal' },
-    // { teamLeadId: 1065, value: 23553, label: 'Renuka Kalekar' },
-    // { teamLeadId: 1064, value: 23550, label: 'Bhavana Patil' },
-    // { teamLeadId: 1063, value: 23567, label: 'Sneha Suresh Utekar' },
-    // { teamLeadId: 1063, value: 23552, label: 'Roshan Vilas Kakade' },
-    // { teamLeadId: 1063, value: 23551, label: 'Pradnya Tambade' },
-    // { teamLeadId: 1063, value: 983, label: 'Usha Chellani' },
-    // { teamLeadId: 1065, value: 23670, label: 'Ashwini Kapale' },
-    // { teamLeadId: 1065, value: 23578, label: 'Aditi Ravindra Gujar' },
-    // { teamLeadId: 1062, value: 23668, label: 'Chaitanya Prakash Masurkar' },
-
-    // { teamLeadId: 1063, value: 25942, label: 'Vaibhav M. Nilkanth' },
-    // { teamLeadId: 1064, value: 26220, label: 'Pratiksha Shivaji Jagtap' },
-    // { teamLeadId: 1062, value: 177, label: 'Aditya U.Singh' },
-    // { teamLeadId: 1706, value: 26195, label: 'Tejaswi Suraj Bodke' },
-    // { teamLeadId: 1064, value: 23505, label: 'Tejshri Hanumant Bansode' },
-    // { teamLeadId: 1063, value: 26215, label: 'Deepali Nivrutti Pachangane' },
-    // { teamLeadId: 1065, value: 26217, label: 'Manasi Jadhav' },
-    // { teamLeadId: 1065, value: 26236, label: 'Supriya Mahindrakar' },
-    // { teamLeadId: 1065, value: 26218, label: 'Mrudula Vishvas Shivalkar' },
-    // { teamLeadId: 1062, value: 26235, label: 'Chaitrali Ranalkar' },
-
-    // { teamLeadId: 1064, value: 28033, label: 'Shrikanth Elegeti' },
-    // { teamLeadId: 1064, value: 28032, label: 'Pranali Patil' },
-    // { teamLeadId: 1064, value: 28040, label: 'Namrata Shringarpure' },
-    // { teamLeadId: 1064, value: 28035, label: 'Rupali Onamshetty' },
-    // { teamLeadId: 1064, value: 27474, label: 'Poonam Hase' },
-    // { teamLeadId: 1064, value: 28044, label: 'Bhakti Khatavkar' },
-    // { teamLeadId: 1064, value: 28034, label: 'Dipali Waghmode' },
-    // { teamLeadId: 1064, value: 28031, label: 'Harsha Kashyap' },
-    // { teamLeadId: 1064, value: 28222, label: 'Ankita Pawar' },
-    // { teamLeadId: 1706, value: 28763, label: 'Smita Yadav' },
-
-    // { teamLeadId: 0, value: 42886, label: 'Gitanjali Kakade' },
-    // { teamLeadId: 0, value: 42885, label: 'Dhanashri wadekar' },
-    // { teamLeadId: 0, value: 42888, label: 'Baby Kumari Yadav' },
-    // { teamLeadId: 0, value: 43406, label: 'Priyanka Shilimkar' },
-    // { teamLeadId: 0, value: 42878, label: 'Supriya Waghmare' },
-    // { teamLeadId: 0, value: 42931, label: 'Dhanashree Amarale' },
-    // { teamLeadId: 1063, value: 67523, label: 'Supriya Kumbhar' },
-    // { teamLeadId: 1063, value: 67522, label: 'Nikita Chilveri' },
-    // { teamLeadId: 1063, value: 67558, label: 'Sunita Sharma' },
-    // { teamLeadId: 1063, value: 71150, label: 'Deep Trivedi', },
-    // { teamLeadId: 1063, value: 71148, label: 'Riddhi Solanki', },
-    // { teamLeadId: 1063, value: 71159, label: 'Ajay Kandhway', },
-    // { teamLeadId: 1063, value: 71168, label: 'Ganesh Jaiswal', },
-    // { teamLeadId: 1707, value: 75925, label: 'Nikita Shah', },
-    // { teamLeadId: 1707, value: 81402, label: 'Vatsa Bhanushali' },
-    // { teamLeadId: 1064, value: 87321, label: 'Chetan Kori' },
-
-    // { teamLeadId: 0, value: 1065, label: 'Urmila Warve' },
-    // { teamLeadId: 0, value: 1067, label: 'Divya Bhanushali' },
-    // { teamLeadId: 0, value: 21354, label: 'Brijmohan Lavaniya' },
   ];
   // myFilingTeamMembers = [];
   selectedMember: String = '';
   selectedMemberId: any;
   selectedPageNo = 0;
-  constructor(private itrMsService: ItrMsService, public utilsService: UtilsService, private router: Router, private dialog: MatDialog,) {
+  constructor(private itrMsService: ItrMsService,
+    public utilsService: UtilsService,
+    private userMsService: UserMsService,
+    private toastMsgService: ToastMessageService,
+    private router: Router, private dialog: MatDialog,) {
     // const loggedInUserData = JSON.parse(localStorage.getItem('UMD'))
     this.filingTeamMembers.sort((a, b) => a.label > b.label ? 1 : -1)
     // this.myFilingTeamMembers = this.filingTeamMembers;
@@ -106,7 +53,7 @@ export class MyTeamItrsComponent implements OnInit {
     // }
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
-      columnDefs: this.myItrsCreateColoumnDef(),
+      columnDefs: this.myItrsCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -157,7 +104,7 @@ export class MyTeamItrsComponent implements OnInit {
       this.selectedMember = this.filingTeamMembers.filter(item => item.userId === id)[0].name;
       matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Select SME', this.selectedMember], environment.matomoScriptId);
     }
-    
+
     return new Promise((resolve, reject) => {
 
       let reqBody = {
@@ -218,7 +165,7 @@ export class MyTeamItrsComponent implements OnInit {
     }
     return newData;
   }
-  myItrsCreateColoumnDef() {
+  myItrsCreateColumnDef() {
     return [
       {
         headerName: 'ITR ID',
@@ -426,6 +373,28 @@ export class MyTeamItrsComponent implements OnInit {
           }
         },
       },
+      {
+        headerName: 'Call',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Call to user"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
+           </button>`;
+        },
+        width: 50,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
       /* ,
       {
         headerName: 'RR',
@@ -494,6 +463,28 @@ export class MyTeamItrsComponent implements OnInit {
             : '';
         }
       },
+      {
+        headerName: 'Update Status',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Update Status"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
     ];
   }
   public onRowClicked(params) {
@@ -505,7 +496,7 @@ export class MyTeamItrsComponent implements OnInit {
           break;
         }
         case 'filingStatus': {
-          this.openfilingStatusDialog(params.data);
+          this.openFilingStatusDialog(params.data);
           break;
         }
         case 'startRevise': {
@@ -526,6 +517,14 @@ export class MyTeamItrsComponent implements OnInit {
         }
         case 'isReviewGiven': {
           this.updateReviewStatus(params.data);
+          break;
+        }
+        case 'call': {
+          this.startCalling(params.data)
+          break;
+        }
+        case 'updateStatus': {
+          this.updateStatus('Update Status', params.data)
           break;
         }
       }
@@ -556,7 +555,7 @@ export class MyTeamItrsComponent implements OnInit {
     this.router.navigate(['/pages/itr-filing/customer-profile'])
   }
 
-  openfilingStatusDialog(data) {
+  openFilingStatusDialog(data) {
     matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Chat', data.contactNumber], environment.matomoScriptId);
     let disposable = this.dialog.open(FilingStatusDialogComponent, {
       width: '50%',
@@ -584,7 +583,6 @@ export class MyTeamItrsComponent implements OnInit {
   }
 
   getAcknowledgeDetail(data) {
-    console.log('Data for acknowlegement status', data);
     matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'E-verification', data.contactNumber], environment.matomoScriptId);
     this.loading = true;
     var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
@@ -650,10 +648,63 @@ export class MyTeamItrsComponent implements OnInit {
       this.utilsService.showSnackBar('Marked as review given');
       this.getMembersItr(this.selectedMemberId, this.selectedFyYear, this.selectedPageNo);
     }, error => {
-      this.utilsService.showSnackBar('Please try again, falied to mark as review given');
+      this.utilsService.showSnackBar('Please try again, failed to mark as review given');
       this.getMembersItr(this.selectedMemberId, this.selectedFyYear, this.selectedPageNo);
     })
   }
 
+  async startCalling(user) {
+    const agentNumber = await this.utilsService.getMyCallingNumber();
+    if (!agentNumber) {
+      this.toastMsgService.alert("error", 'You dont have calling role.')
+      return;
+    }
+    console.log('user: ', user);
+    // matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Call', callInfo], environment.matomoScriptId);
+    this.loading = true;
+    let customerNumber = user.contactNumber;
+    if (customerNumber.length <= 10) {
+      this.toastMsgService.alert('error', 'This is not a valid customer number');
+      return
+    }
+    const param = `/call-management/make-call`;
+    const reqBody = {
+      "agent_number": agentNumber,
+      "customer_number": customerNumber
+    }
+    console.log('reqBody:', reqBody)
+    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+      console.log('Call Result: ', result);
+      this.loading = false;
+      if (result.success.status) {
+        this.toastMsgService.alert("success", result.success.message)
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
+    })
+  }
 
+  updateStatus(mode, client) {
+    console.log('Client', client);
+    let disposable = this.dialog.open(ChangeStatusComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.fName + ' ' + client.lName,
+        serviceType: 'TPA',
+        mode: mode,
+        userInfo: client
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log('result: ', result);
+      if (result) {
+
+      }
+    });
+  }
 }
