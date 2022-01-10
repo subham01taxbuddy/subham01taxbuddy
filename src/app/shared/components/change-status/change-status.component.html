@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="row">
-    <h1 mat-dialog-title>{{data.mode}}
+    <h1 mat-dialog-title>{{data.mode}} <span *ngIf="data.mode === 'Update Status'">For {{this.data.serviceType}}</span>
 
         <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1"><i
                 class="fa fa-close"></i></button>
@@ -13,10 +13,11 @@
     <form [formGroup]="changeStatus">
         <div class="card__col-xs-4 card__col-sm-14" *ngIf="data.mode === 'Update Status'">
             <mat-form-field appearance="outline">
-                <mat-label>Select Status</mat-label>
+                <mat-label>Select Status </mat-label>
                 <mat-select placeholder="Select Status" formControlName="selectStatus"
                     [required]="data.mode === 'Update Status'">
-                    <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
+                    <mat-option *ngFor="let status of itrStatus" [value]="status.statusId"
+                        [disabled]="!status.applicableServices.includes(this.data.serviceType)">
                         {{ status.statusName }}
                     </mat-option>
                 </mat-select>

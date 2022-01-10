@@ -11,12 +11,14 @@
         "Backtips",
         "bcertificate",
         "blogo",
+        "blueviolet",
         "bsignature",
         "CHALLAN",
         "Chattisgarh",
         "Dadra",
         "datepicker",
         "debi",
+        "Everified",
         "fillmandate",
         "Finbingo",
         "gstin",
@@ -27,6 +29,7 @@
         "Himachal",
         "IFSC",
         "ITNS",
+        "itrs",
         "Jammu",
         "Jharkhand",
         "Karnataka",
@@ -35,6 +38,7 @@
         "Ladakh",
         "Lakshadweep",
         "Madhya",
+        "matomo",
         "Meghalaya",
         "Mizoram",
         "Nadu",
@@ -55,6 +59,7 @@
         "Uttar",
         "Uttarakhand",
         "viimond",
+        "weixin",
         "whatsapp"
     ]
 }

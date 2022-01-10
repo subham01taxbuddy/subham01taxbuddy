@@ -49,6 +49,10 @@ export class ChangeStatusComponent implements OnInit {
       this.getCallers();
     }
 
+    if (this.data.serviceType == '-' || this.data.serviceType == null || this.data.serviceType == undefined) {
+      this.data.serviceType = 'ITR';
+    }
+
     console.log('this.data.userInfo : ', this.data.userInfo);
   }
 
@@ -135,7 +139,7 @@ export class ChangeStatusComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert("success", "Caller Agent update successfully.");
           setTimeout(() => {
-            this.dialogRef.close({ event: 'close', data: 'statusChanged' , responce: res})
+            this.dialogRef.close({ event: 'close', data: 'statusChanged', responce: res })
           }, 4000)
         },
           error => {
