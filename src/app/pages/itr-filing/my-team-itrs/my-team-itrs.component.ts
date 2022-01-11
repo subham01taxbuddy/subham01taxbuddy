@@ -13,6 +13,7 @@ import { environment } from 'environments/environment';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
+import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 @Component({
@@ -485,6 +486,28 @@ export class MyTeamItrsComponent implements OnInit {
           }
         },
       },
+      {
+        headerName: 'See/Add Notes',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Click see/add notes"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
     ];
   }
   public onRowClicked(params) {
@@ -525,6 +548,10 @@ export class MyTeamItrsComponent implements OnInit {
         }
         case 'updateStatus': {
           this.updateStatus('Update Status', params.data)
+          break;
+        }
+        case 'addNotes': {
+          this.showNotes(params.data)
           break;
         }
       }
@@ -655,6 +682,7 @@ export class MyTeamItrsComponent implements OnInit {
 
   async startCalling(user) {
     const agentNumber = await this.utilsService.getMyCallingNumber();
+    debugger
     if (!agentNumber) {
       this.toastMsgService.alert("error", 'You dont have calling role.')
       return;
@@ -663,10 +691,6 @@ export class MyTeamItrsComponent implements OnInit {
     // matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Call', callInfo], environment.matomoScriptId);
     this.loading = true;
     let customerNumber = user.contactNumber;
-    if (customerNumber.length <= 10) {
-      this.toastMsgService.alert('error', 'This is not a valid customer number');
-      return
-    }
     const param = `/call-management/make-call`;
     const reqBody = {
       "agent_number": agentNumber,
@@ -705,6 +729,20 @@ export class MyTeamItrsComponent implements OnInit {
       if (result) {
 
       }
+    });
+  }
+
+  showNotes(client) {
+    let disposable = this.dialog.open(UserNotesComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.fName + ' ' + client.lName
+      }
+    })
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
     });
   }
 }
