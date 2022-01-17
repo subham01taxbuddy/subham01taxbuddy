@@ -582,7 +582,7 @@ export class MyTeamItrsComponent implements OnInit {
     this.router.navigate(['/pages/itr-filing/customer-profile'])
   }
 
-  openfilingStatusDialog(data) {
+  openFilingStatusDialog(data) {
     //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Chat', data.contactNumber], environment.matomoScriptId);
     let disposable = this.dialog.open(FilingStatusDialogComponent, {
       width: '50%',

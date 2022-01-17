@@ -10,7 +10,7 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { environment } from 'environments/environment';
-declare function matomo(title: any, url: any, event: any, scripdId: any);
+//declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 export const MY_FORMATS = {
   parse: {
