@@ -10,7 +10,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { AppConstants } from 'app/shared/constants';
 import { formatDate } from '@angular/common';
 import { environment } from 'environments/environment';
-declare function matomo(title: any, url: any, event: any, scripdId: any);
+//declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 @Component({
   selector: 'app-todays-calls',

@@ -8,7 +8,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { environment } from 'environments/environment';
-declare function matomo(title: any, url: any, event: any, scripdId: any);
+//declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 @Component({
   selector: 'app-scheduled-call',

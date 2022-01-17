@@ -10,7 +10,7 @@ import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.
 import { AppConstants } from 'app/shared/constants';
 import { formatDate } from '@angular/common';
 import { DownloadDialogComponent } from './download-dialog/download-dialog.component';
-declare function matomo(title: any, url: any, event: any, scripdId: any);
+//declare function matomo(title: any, url: any, event: any, scripdId: any);
 import { CallReassignmentComponent } from 'app/shared/components/call-reassignment/call-reassignment.component';
 import { RoleBaseAuthGuardService } from 'app/services/role-base-auth-gaurd.service';
 import moment = require('moment');

@@ -8,7 +8,7 @@ import { UtilsService } from 'app/services/utils.service';
 import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import moment = require('moment');
-declare function matomo(title: any, url: any, event: any, scripdId: any);
+//declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 @Component({
   selector: 'app-calling2dot0',
