@@ -4,13 +4,14 @@ function matomo(docTitle, path, event, scriptId) {
       const u = "https://taxbuddy.matomo.cloud/";
   
       // Remove the script added before
+
       const d = document, g = d.createElement("script"), s = d.getElementsByTagName("script")[0];
       const sSrc = s.getAttribute('src');
       if (sSrc === u + "matomo.js") {
         s.remove();
       }
   
-      // Set variables
+     // Set variables
       const _paq = window._paq = window._paq || [];
       let userInfo = JSON.parse(localStorage.getItem("UMD"));
       _paq.push(["disableCookies"]);
@@ -31,16 +32,13 @@ function matomo(docTitle, path, event, scriptId) {
       _paq.push(["setCustomUrl", path]);
       _paq.push(["trackPageView"]);
       _paq.push(['enableLinkTracking']);
-  
-      // console.log('environment on prod?: ',environment.production);
+
       (function () {
         _paq.push(["setTrackerUrl", u + "matomo.php"]);
 
         _paq.push(["setSiteId", scriptId]);
         const d = document, g = d.createElement("script"), s = d.getElementsByTagName("script")[0];
         g.type = "text/javascript";
-        // g.async = true;
-        //g.src = u + "matomo.js";
         g.src='//cdn.matomo.cloud/taxbuddy.matomo.cloud/matomo.js';
         s.parentNode.insertBefore(g, s);
       })();

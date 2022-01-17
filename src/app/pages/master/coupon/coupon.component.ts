@@ -252,7 +252,7 @@ export class CouponComponent implements OnInit {
         //   this.showLeadsInfo('leadAdded');
         // }
 
-        matomo('Master', '/pages/master/coupon', ['trackEvent', 'Coupon', 'Add Coupon', result.coupon], environment.matomoScriptId); 
+       // matomo('Master', '/pages/master/coupon', ['trackEvent', 'Coupon', 'Add Coupon', result.coupon], environment.matomoScriptId); 
       }
     })
   }

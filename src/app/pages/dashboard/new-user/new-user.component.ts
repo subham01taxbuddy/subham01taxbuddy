@@ -344,7 +344,7 @@ export class NewUserComponent implements OnInit {
   }
 
   getSearchInfo(mobileNo) {
-    matomo('Quick Search', '/pages/dashboard/quick-search', ['trackEvent', 'Quick Search', 'Search',mobileNo], environment.matomoScriptId)
+    // matomo('Quick Search', '/pages/dashboard/quick-search', ['trackEvent', 'Quick Search', 'Search',mobileNo], environment.matomoScriptId)
     this.loading = true;
     let param = `/user-details-by-mobile-number-es?mobileNumber=${mobileNo}`;
     this.userMsService.getMethod(param).subscribe((result: any) => {

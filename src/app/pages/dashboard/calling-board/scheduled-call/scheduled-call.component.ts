@@ -7,9 +7,9 @@ import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
-import { environment } from 'environments/environment';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
-declare function matomo(title: any, url: any, event: any, scripdId: any);
+import { environment } from 'environments/environment';
+//declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 @Component({
   selector: 'app-scheduled-call',
@@ -435,7 +435,7 @@ export class ScheduledCallComponent implements OnInit {
     this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
       console.log('Call Result: ', result);
       this.loading = false;
-      matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Call'], environment.matomoScriptId);
+     // matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Call'], environment.matomoScriptId);
       if (result.success.status) {
         this.toastMsgService.alert("success", result.success.message)
       }
@@ -447,7 +447,7 @@ export class ScheduledCallComponent implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
-    matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Chat icon'], environment.matomoScriptId);
+    //matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Chat icon'],  environment.matomoScriptId);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
     this.userMsService.getMethod(param).subscribe((response: any) => {
@@ -484,7 +484,7 @@ export class ScheduledCallComponent implements OnInit {
     let param = `/schedule-call-details`;
     this.userMsService.putMethod(param, reqBody).subscribe((responce: any) => {
       console.log('schedule-call Done responce: ', responce);
-      matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Call Status'], environment.matomoScriptId);
+      //matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Call Status'], environment.matomoScriptId);
       this.loading = false;
       this.toastMsgService.alert('success', 'Call status update successfully.');
       setTimeout(() => {
@@ -508,7 +508,7 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   navigateToWhatsappChat(data) {
-    matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Whatsapp icon'], environment.matomoScriptId);
+   // matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Whatsapp icon'], environment.matomoScriptId);
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
   }
 }

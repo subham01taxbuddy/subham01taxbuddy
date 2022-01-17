@@ -2907,10 +2907,10 @@ export class TaxSummaryComponent implements OnInit {
     if (this.itrSummaryForm.valid && (this.itrType.itrFour ? this.businessFormValid : true)) {
     
       if(this.newItrSumChanges){
-        matomo('Tax Summary', '/pages/tax-summary/new-summary/itr-one', ['trackEvent', 'New Summary', 'ITR 1/4', this.itrSummaryForm['controls'].assesse['controls'].contactNumber.value], environment.matomoScriptId);
+        //matomo('Tax Summary', '/pages/tax-summary/new-summary/itr-one', ['trackEvent', 'New Summary', 'ITR 1/4', this.itrSummaryForm['controls'].assesse['controls'].contactNumber.value], environment.matomoScriptId);
       }
       else{
-        matomo('Tax Summary', '/pages/tax-summary/itrFirst', ['trackEvent', 'Old Summary', 'ITR 1/4', this.itrSummaryForm['controls'].assesse['controls'].contactNumber.value], environment.matomoScriptId);
+        //matomo('Tax Summary', '/pages/tax-summary/itrFirst', ['trackEvent', 'Old Summary', 'ITR 1/4', this.itrSummaryForm['controls'].assesse['controls'].contactNumber.value], environment.matomoScriptId);
       }
 
       if (this.utilService.isNonEmpty(this.sourcesOfIncome)) {

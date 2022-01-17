@@ -486,13 +486,13 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         case 'generateInvoice': {
           if (params.data.subscriptionAssigneeId !== 'NA') {
             if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
-              matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Invoice', params.data.userId], environment.matomoScriptId);
+             // matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Invoice', params.data.userId], environment.matomoScriptId);
             }
             else if(this.from === 'MY_SUBSCRIPTION'){
-              matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Invoice', params.data.userId], environment.matomoScriptId);
+              //matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Invoice', params.data.userId], environment.matomoScriptId);
             }
             else if(this.from === 'TEAM_SUBSCRIPTION'){
-              matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Invoice', params.data.userId], environment.matomoScriptId);
+              //matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Invoice', params.data.userId], environment.matomoScriptId);
             }
             this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
           } else {
@@ -537,13 +537,13 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   addNewPlan(plan) {
     if (this.utilsService.isNonZero(plan.txbdyInvoiceId)) {
       if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
-        matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Create Subscription', plan.userId], environment.matomoScriptId);
+        //matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Create Subscription', plan.userId], environment.matomoScriptId);
       }
       else if(this.from === 'MY_SUBSCRIPTION'){
-        matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Create Subscription', plan.userId], environment.matomoScriptId);
+        //matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Create Subscription', plan.userId], environment.matomoScriptId);
       }
       else if(this.from === 'TEAM_SUBSCRIPTION'){
-        matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Create Subscription', plan.userId], environment.matomoScriptId);
+       // matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Create Subscription', plan.userId], environment.matomoScriptId);
       }
       if (!this.isApplicable('ITR_SUPER_LEAD')) {
         this.utilsService.showSnackBar('This subscriptions invoice is created.');
@@ -603,13 +603,13 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   async startFiling(subscription) {
     console.log('subscription: ', subscription);
     if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
-      matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'File', subscription.data.userId], environment.matomoScriptId);
+      //matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'File', subscription.data.userId], environment.matomoScriptId);
     }
     else if(this.from === 'MY_SUBSCRIPTION'){
-      matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'File', subscription.data.userId], environment.matomoScriptId);
+      //matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'File', subscription.data.userId], environment.matomoScriptId);
     }
     else if(this.from === 'TEAM_SUBSCRIPTION'){
-      matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'File', subscription.data.userId], environment.matomoScriptId);
+      //matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'File', subscription.data.userId], environment.matomoScriptId);
     }
     if (subscription.servicesType === 'ITR') {
       if (subscription.subscriptionAssigneeId !== 'NA') {
@@ -635,13 +635,13 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   async viewFilingCalendar(subscription) {
     console.log('subscription: ', subscription);
     if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
-      matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Calendar', subscription.data.userId], environment.matomoScriptId);
+      //matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Calendar', subscription.data.userId], environment.matomoScriptId);
     }
     else if(this.from === 'MY_SUBSCRIPTION'){
-      matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Calendar', subscription.data.userId], environment.matomoScriptId);
+      //matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Calendar', subscription.data.userId], environment.matomoScriptId);
     }
     else if(this.from === 'TEAM_SUBSCRIPTION'){
-      matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Calendar', subscription.data.userId], environment.matomoScriptId);
+      //matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Calendar', subscription.data.userId], environment.matomoScriptId);
     }
     this.loading = true;
     const param = `/subscription/filings-calender?subscriptionId=${subscription.subscriptionId}`;

@@ -48,7 +48,7 @@ export class CreateNewUserComponent implements OnInit {
     if (this.signUpForm.valid) {
       let userInfo = `firstName=${this.signUpForm.controls["first_name"].value} lastName=${ this.signUpForm.controls["last_name"].value} email=${this.signUpForm.controls["email"].value} mobile=${this.signUpForm.controls["username"].value} serviceType=${this.signUpForm.controls["serviceType"].value}`;
       console.log('userInfo: ',userInfo);
-      matomo('Create User Tab', '/pages/user-management/create-user', ['trackEvent', 'Create User', 'User Sign-up', userInfo], environment.matomoScriptId);
+     // matomo('Create User Tab', '/pages/user-management/create-user', ['trackEvent', 'Create User', 'User Sign-up', userInfo], environment.matomoScriptId);
       let data = {
         firstName: this.signUpForm.controls["first_name"].value,
         lastName: this.signUpForm.controls["last_name"].value,

@@ -57,7 +57,7 @@ export class AddCallerComponent implements OnInit {
   searchByAgent() {
     if (this.utileService.isNonEmpty(this.selectedAgent)) {
       // this.searchMobNo = '';
-      matomo('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Agent ', this.selectedAgent], environment.matomoScriptId); 
+      //matomo('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Agent ', this.selectedAgent], environment.matomoScriptId); 
       this.getCallerUser(this.selectedAgent);
     }
     else {
@@ -368,12 +368,12 @@ export class AddCallerComponent implements OnInit {
     if (action === 'add') {
       caller = this.getCalletList(action)
       var param = `/call-management/caller-agents?agentId=${this.selectedAgent}&addCallerAgents=${caller}&removeCallerAgent=`;
-      matomo('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Add Caller'], environment.matomoScriptId); 
+      //matomo('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Add Caller'], environment.matomoScriptId); 
     }
     else {
       caller = this.getCalletList(action)
       var param = `/call-management/caller-agents?agentId=${this.selectedAgent}&addCallerAgents=&removeCallerAgent=${caller}`;
-      matomo('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Remove Caller'], environment.matomoScriptId); 
+      //matomo('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Remove Caller'], environment.matomoScriptId); 
     }
     console.log('caller -> ', caller)
     console.log('param: ', param)
