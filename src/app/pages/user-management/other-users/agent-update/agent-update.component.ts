@@ -245,7 +245,7 @@ export class AgentUpdateComponent implements OnInit {
         if(result.changeAgentInfo){
           console.log('result.changeAgentInfo: ',result.changeAgentInfo);
           let agentInfo = 'change Agent: '+result.changeAgentInfo.changeAgent+' serviceType: '+result.changeAgentInfo.serviceType;
-          matomo('SME Agent Update', '/pages/user-management/sme-mgnt/agent-update', ['trackEvent', 'SMEs Agent Update', 'User Agent', agentInfo]); 
+          //matomo('SME Agent Update', '/pages/user-management/sme-mgnt/agent-update', ['trackEvent', 'SMEs Agent Update', 'User Agent', agentInfo]); 
         }
 
       }

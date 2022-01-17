@@ -103,7 +103,7 @@ export class MyTeamItrsComponent implements OnInit {
     this.config.currentPage = pageNo + 1;
     if (this.utilsService.isNonEmpty(this.selectedMemberId)) {
       this.selectedMember = this.filingTeamMembers.filter(item => item.userId === id)[0].name;
-      matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Select SME', this.selectedMember], environment.matomoScriptId);
+      //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Select SME', this.selectedMember], environment.matomoScriptId);
     }
 
     return new Promise((resolve, reject) => {
@@ -559,7 +559,7 @@ export class MyTeamItrsComponent implements OnInit {
   }
 
   async startFiling(data) {
-    matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Actions', data.contactNumber], environment.matomoScriptId);
+    //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Actions', data.contactNumber], environment.matomoScriptId);
     var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
     console.log('data: ', workingItr);
     Object.entries(workingItr).forEach((key, value) => {
@@ -582,8 +582,8 @@ export class MyTeamItrsComponent implements OnInit {
     this.router.navigate(['/pages/itr-filing/customer-profile'])
   }
 
-  openFilingStatusDialog(data) {
-    matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Chat', data.contactNumber], environment.matomoScriptId);
+  openfilingStatusDialog(data) {
+    //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Chat', data.contactNumber], environment.matomoScriptId);
     let disposable = this.dialog.open(FilingStatusDialogComponent, {
       width: '50%',
       height: 'auto',
@@ -610,7 +610,8 @@ export class MyTeamItrsComponent implements OnInit {
   }
 
   getAcknowledgeDetail(data) {
-    matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'E-verification', data.contactNumber], environment.matomoScriptId);
+    console.log('Data for acknowlegement status', data);
+   // matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'E-verification', data.contactNumber], environment.matomoScriptId);
     this.loading = true;
     var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
     workingItr['everifiedStatus'] = 'Successfully e-Verified';
@@ -653,7 +654,7 @@ export class MyTeamItrsComponent implements OnInit {
 
   showUserDocuments(data) {
     console.log(data);
-    matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Cloud', data.contactNumber], environment.matomoScriptId);
+    //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Cloud', data.contactNumber], environment.matomoScriptId);
     this.router.navigate(['/pages/itr-filing/user-docs/' + data.userId]);
   }
 
@@ -668,7 +669,7 @@ export class MyTeamItrsComponent implements OnInit {
   }
 
   updateReviewStatus(data) {
-    matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Review', data.contactNumber], environment.matomoScriptId);
+   // matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Review', data.contactNumber], environment.matomoScriptId);
     const param = `/update-itr-userProfile?itrId=${data.itrId}&userId=${data.userId}&isReviewGiven=true`;
     this.itrMsService.putMethod(param, {}).subscribe(result => {
       console.log(result);

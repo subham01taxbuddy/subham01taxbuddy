@@ -368,7 +368,7 @@ export class SmeUpdateComponent implements OnInit {
         }
         case 'profile': {
           let smeName = params.data.name;
-          matomo('SME Update', '/pages/user-management/sme-mgnt/sme-update', ['trackEvent', 'SME Update', 'User Profile', smeName], environment.matomoScriptId); 
+          //matomo('SME Update', '/pages/user-management/sme-mgnt/sme-update', ['trackEvent', 'SME Update', 'User Profile', smeName], environment.matomoScriptId); 
           this.router.navigate(['pages/user-management/profile/' + params.data.userId])
           break;
         }
