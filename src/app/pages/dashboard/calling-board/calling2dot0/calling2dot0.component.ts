@@ -128,7 +128,7 @@ export class Calling2dot0Component implements OnInit {
   }
 
   showNotes(client) {
-    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Notes'], environment.matomoScriptId)
+    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Notes'], environment.matomoScriptId)
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -144,7 +144,7 @@ export class Calling2dot0Component implements OnInit {
   }
 
   serchByMobNo() {
-    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Search', this.searchParam.customerNumber], environment.matomoScriptId);
+    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Search', this.searchParam.customerNumber], environment.matomoScriptId);
     this.loading = true;
     const param = `/customers-es?customerNumber=${this.searchParam.customerNumber}&serviceType=${this.searchParam.serviceType}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
@@ -473,20 +473,20 @@ export class Calling2dot0Component implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
-    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Chat icon'], environment.matomoScriptId)
+    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Chat icon'], environment.matomoScriptId)
     if (client.kommunicateLink !== 'NA')
       window.open(client.kommunicateLink)
   }
 
   navigateToWhatsappChat(data) {
-    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Whatsapp icon'], environment.matomoScriptId)
+    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Whatsapp icon'], environment.matomoScriptId)
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
   }
 
   startCalling(user) {
     console.log('user: ', user);
     let callInfo = user.customerNumber;
-    matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Call', callInfo], environment.matomoScriptId)
+    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Call', callInfo], environment.matomoScriptId)
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -539,12 +539,12 @@ export class Calling2dot0Component implements OnInit {
             console.log('client statusId: ',client.statusId)
             console.log('**** ',this.itrStatus.filter(item => item.statusId === client.statusId))
             let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; //result.responce.statusId;
-            matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Status', changeStatus], environment.matomoScriptId)
+           // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Status', changeStatus], environment.matomoScriptId)
           }
            else if(mode === 'Update Caller'){
              console.log('Update Caller responce: ',result.responce);
-          //   let updateCaller = client.statusId+' to '+result.responce.statusId;
-          //   matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Caller', changeStatus])
+          ////   let updateCaller = client.statusId+' to '+result.responce.statusId;
+         // //   matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Caller', changeStatus])
           }
 
         }

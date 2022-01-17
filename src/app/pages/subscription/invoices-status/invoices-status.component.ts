@@ -687,7 +687,7 @@ export class InvoicesStatusComponent implements OnInit {
   }
 
   updateInvoice(windowTitle: string, windowBtn: string, data: any, mode: string) {
-    matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Edit', data.phone], environment.matomoScriptId);
+    //matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Edit', data.phone], environment.matomoScriptId);
     let disposable = this.dialog.open(InvoiceDialogComponent, {
       width: '60%',
       height: 'auto',
@@ -704,7 +704,7 @@ export class InvoicesStatusComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result && this.utilService.isNonEmpty(result) && result.msg === 'success') {
-        matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Delete', data.phone], environment.matomoScriptId);
+       // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Delete', data.phone], environment.matomoScriptId);
         this.getAllInvoiceInfo();
       }
     });
@@ -712,7 +712,7 @@ export class InvoicesStatusComponent implements OnInit {
 
   sendMailNotification(data) {
     console.log(data);
-    matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Mail', data.phone], environment.matomoScriptId);
+    //matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Mail', data.phone], environment.matomoScriptId);
     this.loading = true;
     const param = '/itr/invoice/send-invoice?invoiceNo=' + data.invoiceNo;
     this.userService.getMethodInfo(param).subscribe((result: any) => {
@@ -735,7 +735,7 @@ export class InvoicesStatusComponent implements OnInit {
     this.userMsService.getMethodInfo(param).subscribe((res: any) => {
       this.loading = false;
       console.log("result: ", res);
-      matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'WhatsApp Reminder', data.phone], environment.matomoScriptId);
+      //matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'WhatsApp Reminder', data.phone], environment.matomoScriptId);
       this._toastMessageService.alert("success", "Whatsapp reminder send successfully.");
     }, error => {
       this.loading = false;
@@ -749,7 +749,7 @@ export class InvoicesStatusComponent implements OnInit {
     this.userService.postMethodInfo(param, invoiceInfo).subscribe((result: any) => {
       this.loading = false;
       console.log('Email sent response: ', result);
-      matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Reminder', invoiceInfo.phone], environment.matomoScriptId);
+     // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Reminder', invoiceInfo.phone], environment.matomoScriptId);
       this._toastMessageService.alert("success", "Mail Reminder sent successfully.");
     }, error => {
       this.loading = false;
@@ -793,12 +793,12 @@ export class InvoicesStatusComponent implements OnInit {
       let toData = this.datePipe.transform(this.summaryDetailForm.value.toDate, 'yyyy-MM-dd');
       if (this.utilService.isNonEmpty(this.summaryDetailForm.value.status)) {
         let parameter = 'fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.summaryDetailForm.value.status;
-        matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Download Invocie', parameter], environment.matomoScriptId);
+       // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Download Invocie', parameter], environment.matomoScriptId);
         location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.summaryDetailForm.value.status;
       }
       else {
         let parameter = 'fromDate=' + fromData + '&toDate=' + toData;
-        matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Download Invocie', parameter], environment.matomoScriptId);
+       // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Download Invocie', parameter], environment.matomoScriptId);
         location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData;;
       }
 
@@ -834,7 +834,7 @@ export class InvoicesStatusComponent implements OnInit {
       if (result.success.status) {
         this._toastMessageService.alert("success", result.success.message)
       }
-      matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Call', user.phone], environment.matomoScriptId);
+     // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Call', user.phone], environment.matomoScriptId);
     }, error => {
       this._toastMessageService.alert('error', 'Error while making call, Please try again.');
       this.loading = false;
@@ -842,7 +842,7 @@ export class InvoicesStatusComponent implements OnInit {
   }
 
   showNotes(client) {
-    matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Notes', client.phone], environment.matomoScriptId);
+    //matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Notes', client.phone], environment.matomoScriptId);
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
