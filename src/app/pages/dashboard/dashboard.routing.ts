@@ -17,6 +17,7 @@ import { SignupExceptionComponent } from './calling-board/signup-exception/signu
 import { EngagementStatusComponent } from './status-wise-clients/engagement-status/engagement-status.component';
 import { FilingStatusComponent } from './status-wise-clients/filing-status/filing-status.component';
 import { PaymentStatusComponent } from './status-wise-clients/payment-status/payment-status.component';
+import { TpaClientsComponent } from './status-wise-clients/tpa-clients/tpa-clients.component';
 
 const routes: Routes = [
     {
@@ -49,6 +50,7 @@ const routes: Routes = [
                     { path: 'engagement', component: EngagementStatusComponent },
                     { path: 'filing', component: FilingStatusComponent },
                     { path: 'payment', component: PaymentStatusComponent },
+                    { path: 'tpa-clients', component: TpaClientsComponent },
                     { path: '', redirectTo: 'all', pathMatch: 'full' }
                 ]
             },

@@ -27,6 +27,7 @@ import { EngagementStatusComponent } from './status-wise-clients/engagement-stat
 import { StatusWiseGirdDataComponent } from './status-wise-clients/status-wise-gird-data/status-wise-gird-data.component';
 import { FilingStatusComponent } from './status-wise-clients/filing-status/filing-status.component';
 import { PaymentStatusComponent } from './status-wise-clients/payment-status/payment-status.component';
+import { TpaClientsComponent } from './status-wise-clients/tpa-clients/tpa-clients.component';
 
 @NgModule({
     declarations: [DashboardComponent,
@@ -47,7 +48,8 @@ import { PaymentStatusComponent } from './status-wise-clients/payment-status/pay
         EngagementStatusComponent,
         StatusWiseGirdDataComponent,
         FilingStatusComponent,
-        PaymentStatusComponent
+        PaymentStatusComponent,
+        TpaClientsComponent
     ],
     imports: [
         CommonModule,
