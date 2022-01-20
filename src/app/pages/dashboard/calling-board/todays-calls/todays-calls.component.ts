@@ -96,6 +96,7 @@ export class TodaysCallsComponent implements OnInit {
     else {
       this.isAdmin = false;
       this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
+      this.selectedAgent = userInfo.USER_UNIQUE_ID;
     }
   }
 
