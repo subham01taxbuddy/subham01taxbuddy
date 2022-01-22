@@ -9,7 +9,7 @@ import { ChangeStatusComponent } from 'app/shared/components/change-status/chang
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { AppConstants } from 'app/shared/constants';
 import { formatDate } from '@angular/common';
-declare function matomo(title: any, url: any, event: any, scripdId: any);
+// declare function matomo(title: any, url: any, event: any, scripdId: any);
 import { CallReassignmentComponent } from 'app/shared/components/call-reassignment/call-reassignment.component';
 import { RoleBaseAuthGuardService } from 'app/services/role-base-auth-gaurd.service';
 import moment = require('moment');
@@ -80,22 +80,47 @@ export class TpaClientsComponent implements OnInit {
     this.smeList = await this.utilsService.getStoredSmeList();
   }
 
-  getTpaClients(page) {
-    const param = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${this.selectedFiler}&serviceType=TPA&page=${page}&pageSize=15`;
+  getTpaClients(page, mobNoSearch?) {
+    var param;
+    if(this.utilsService.isNonEmpty(mobNoSearch)){
+      param = `/call-management/customers?customerNumber=${mobNoSearch}&serviceType=TPA`;
+    }
+    else{
+      param = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${this.selectedFiler}&serviceType=TPA&page=${page}&pageSize=15`;
+    }
+    //const param = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${this.selectedFiler}&serviceType=TPA&page=${page}&pageSize=15`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('Call details', result);
-      if (result['content'] instanceof Array && result['content'].length > 0) {
-        this.interestedClientInfo = result['content'];
-        this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interestedClientInfo));
-        this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
-        this.config.totalItems = result.totalElements;
-      } else {
-        this.interestedClientInfo = [];
-        this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interestedClientInfo));
-        this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
-        this.config.totalItems = 0;
-        this.utilsService.showSnackBar('No records found');
+      console.log('Call details', result);debugger
+      if(this.utilsService.isNonEmpty(mobNoSearch)){
+          if(result){
+            this.interestedClientInfo = result;
+            this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interestedClientInfo, 'searchByMobile'));
+            this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
+            this.config.totalItems = 0;
+          }
+          else{
+            this.interestedClientInfo = [];
+          this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interestedClientInfo));
+          this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
+          this.config.totalItems = 0;
+          this.utilsService.showSnackBar('No records found');
+          }
       }
+      else{
+        if (result['content'] instanceof Array && result['content'].length > 0) {
+          this.interestedClientInfo = result['content'];
+          this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interestedClientInfo));
+          this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
+          this.config.totalItems = result.totalElements;
+        } else {
+          this.interestedClientInfo = [];
+          this.interestedClientsGridOption.api.setRowData(this.createRowData(this.interestedClientInfo));
+          this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
+          this.config.totalItems = 0;
+          this.utilsService.showSnackBar('No records found');
+        }
+      }
+      
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -177,10 +202,10 @@ export class TpaClientsComponent implements OnInit {
   searchByMobNo() {
     this.selectedStatus = 0;
     if (this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
-      matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Search', this.searchMobNo], environment.matomoScriptId);
+      //matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Search', this.searchMobNo], environment.matomoScriptId);
       this.selectedAgent = '';
       this.config.currentPage = 1;
-      this.getInterestedClients(0, this.searchMobNo);
+      this.getTpaClients(0, this.searchMobNo);
 
     }
     else {
@@ -516,7 +541,7 @@ export class TpaClientsComponent implements OnInit {
 
     if (this.isAgentAvailable) {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
-        matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', searchMobNo], environment.matomoScriptId);
+        //matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', searchMobNo], environment.matomoScriptId);
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       } else {
         this.searchMobNo = '';
@@ -525,13 +550,13 @@ export class TpaClientsComponent implements OnInit {
         if (this.showAllUser) {
           if (itrStatusData instanceof Array && itrStatusData.length > 0) {
             let status = this.itrStatus.filter(item => item.statusId === this.selectedStatus)[0].statusName;
-            matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', status], environment.matomoScriptId);
+            //matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', status], environment.matomoScriptId);
           }
           param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15&serviceType=${this.selectedService}`;
         } else {
           if (itrStatusData instanceof Array && itrStatusData.length > 0) {
             let statusAgentId = this.selectedAgent + ' - ' + this.itrStatus.filter(item => item.statusId === this.selectedStatus)[0].statusName;
-            matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', statusAgentId], environment.matomoScriptId);
+            //matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', statusAgentId], environment.matomoScriptId);
           }
           param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
         }
@@ -539,13 +564,13 @@ export class TpaClientsComponent implements OnInit {
     } else {
       var itrStatusData = this.itrStatus.filter(item => item.statusId === this.selectedStatus);
       if (this.utilsService.isNonEmpty(searchMobNo)) {
-        matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', searchMobNo], environment.matomoScriptId);
+        //matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', searchMobNo], environment.matomoScriptId);
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
       } else {
         if (itrStatusData instanceof Array && itrStatusData.length > 0) {
           this.searchMobNo = '';
           let statusAgentId = userInfo.USER_UNIQUE_ID + ' - ' + this.itrStatus.filter(item => item.statusId === this.selectedStatus)[0].statusName;
-          matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', statusAgentId], environment.matomoScriptId);
+          //matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', statusAgentId], environment.matomoScriptId);
         }
         param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
       }
@@ -574,28 +599,52 @@ export class TpaClientsComponent implements OnInit {
     })
   }
 
-  createRowData(interestedClient) {
+  createRowData(interestedClient, searchBy?) {
     console.log('interestedClient -> ', interestedClient);
     var interestedClientsArray = [];
-    for (let i = 0; i < interestedClient.length; i++) {
-      let interestedClientsInfo = Object.assign({}, interestedClientsArray[i], {
-        id: interestedClient[i]['id'],
-        createdDate: interestedClient[i]['createdDate'],
-        agentId: interestedClient[i]['agentId'],
-        userId: interestedClient[i]['userId'],
-        name: interestedClient[i]['name'],
-        customerNumber: interestedClient[i]['customerNumber'],
-        statusId: interestedClient[i]['statusId'],
-        serviceType: interestedClient[i]['serviceType'],
-        callerAgentUserId: interestedClient[i]['callerAgentUserId'],
-        callerAgentNumber: interestedClient[i]['callerAgentNumber'],
-        callerAgentName: interestedClient[i]['callerAgentName'],
-        assessmentYear: interestedClient[i]['assessmentYear'],
-        statusUpdatedDate: interestedClient[i]['statusUpdatedDate'],
-        language: interestedClient[i]['laguage']
-      })
-      interestedClientsArray.push(interestedClientsInfo);
+    if(this.utilsService.isNonEmpty(searchBy) && searchBy === 'searchByMobile'){
+      // for (let i = 0; i < interestedClient.length; i++) {
+        let interestedClientsInfo = Object.assign({}, interestedClientsArray[0], {
+          id: interestedClient['id'],
+          createdDate: interestedClient['createdDate'],
+          agentId: interestedClient['agentId'],
+          userId: interestedClient['userId'],
+          name: interestedClient['name'],
+          customerNumber: interestedClient['customerNumber'],
+          statusId: interestedClient['statusId'],
+          serviceType: interestedClient['serviceType'],
+          callerAgentUserId: interestedClient['callerAgentUserId'],
+          callerAgentNumber: interestedClient['callerAgentNumber'],
+          callerAgentName: interestedClient['callerAgentName'],
+          assessmentYear: interestedClient['assessmentYear'],
+          statusUpdatedDate: interestedClient['statusUpdatedDate'],
+          language: interestedClient['laguage']
+        })
+        interestedClientsArray.push(interestedClientsInfo);
+      // }
     }
+    else{
+      for (let i = 0; i < interestedClient.length; i++) {
+        let interestedClientsInfo = Object.assign({}, interestedClientsArray[i], {
+          id: interestedClient[i]['id'],
+          createdDate: interestedClient[i]['createdDate'],
+          agentId: interestedClient[i]['agentId'],
+          userId: interestedClient[i]['userId'],
+          name: interestedClient[i]['name'],
+          customerNumber: interestedClient[i]['customerNumber'],
+          statusId: interestedClient[i]['statusId'],
+          serviceType: interestedClient[i]['serviceType'],
+          callerAgentUserId: interestedClient[i]['callerAgentUserId'],
+          callerAgentNumber: interestedClient[i]['callerAgentNumber'],
+          callerAgentName: interestedClient[i]['callerAgentName'],
+          assessmentYear: interestedClient[i]['assessmentYear'],
+          statusUpdatedDate: interestedClient[i]['statusUpdatedDate'],
+          language: interestedClient[i]['laguage']
+        })
+        interestedClientsArray.push(interestedClientsInfo);
+      }
+    }
+   
     console.log('interestedClientsArray-> ', interestedClientsArray)
     return interestedClientsArray;
   }
@@ -642,7 +691,7 @@ export class TpaClientsComponent implements OnInit {
   }
 
   showNotes(client) {
-    matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Notes'], environment.matomoScriptId);
+    //matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Notes'], environment.matomoScriptId);
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -661,7 +710,7 @@ export class TpaClientsComponent implements OnInit {
     console.log('user: ', user)
     this.loading = true;
     let callInfo = user.customerNumber;
-    matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Call', callInfo], environment.matomoScriptId);
+    //matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Call', callInfo], environment.matomoScriptId);
     const param = `/call-management/make-call`;
     const reqBody = {
       "agent_number": user.callerAgentNumber,
@@ -705,7 +754,7 @@ export class TpaClientsComponent implements OnInit {
       if (result.responce) {
         if (mode === 'Update Status') {
           let changeStatus = client.customerNumber + ' - ' + this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName + ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName;
-          matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Update Status', changeStatus], environment.matomoScriptId);
+          //matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Update Status', changeStatus], environment.matomoScriptId);
         }
         else if (mode === 'Update Caller') {
           //
@@ -721,7 +770,7 @@ export class TpaClientsComponent implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
-    matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Chat icon'], environment.matomoScriptId);
+    //matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Chat icon'], environment.matomoScriptId);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
     this.userMsService.getMethod(param).subscribe((response: any) => {
@@ -758,7 +807,7 @@ export class TpaClientsComponent implements OnInit {
           console.log(result.requestBody);
           let reAssignedInfo = 'from: ' + result.requestBody.from + ' to: ' + result.requestBody.to;
           console.log('reAssignedInfo: ', reAssignedInfo);
-          matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Re-assignment', reAssignedInfo], environment.matomoScriptId);
+          //matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Re-assignment', reAssignedInfo], environment.matomoScriptId);
         }
       });
     } else {
