@@ -1164,12 +1164,16 @@ export class TaxSummaryComponent implements OnInit {
     if(this.newTaxRegime){
       this.newRegimeTaxSummary.totalTaxesPaid = Number(this.newRegimeTaxesPaid.tdsOnSalary) + Number(this.newRegimeTaxesPaid.tdsOtherThanSalary) + Number(this.newRegimeTaxesPaid.tdsOnSal26QB) +
                                         Number(this.newRegimeTaxesPaid.tcs) + Number(this.newRegimeTaxesPaid.advanceSelfAssTax);
+                                        
+      this.itrSummaryForm.controls.taxSummary['controls'].totalTaxesPaid.setValue(this.newRegimeTaxSummary.totalTaxesPaid);
     }
     else{
       totalTaxPaidVal = Number(this.taxesPaid.tdsOnSalary) + Number(this.taxesPaid.tdsOtherThanSalary) + Number(this.taxesPaid.tdsOnSal26QB) +
                         Number(this.taxesPaid.tcs) + Number(this.taxesPaid.advanceSelfAssTax);
+      this.itrSummaryForm.controls.taxSummary['controls'].totalTaxesPaid.setValue(totalTaxPaidVal);
     }
-    this.itrSummaryForm.controls.taxSummary['controls'].totalTaxesPaid.setValue(totalTaxPaidVal);
+    
+   
     console.log('this.newRegimeTaxesPaid Info: ',this.newRegimeTaxesPaid); 
 
     //Computation of Income
