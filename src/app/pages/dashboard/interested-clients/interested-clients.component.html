@@ -23,7 +23,7 @@
                     <mat-label>Select Status</mat-label>
                     <mat-select placeholder="Select Status" [(ngModel)]="selectedStatus"
                         (selectionChange)="this.searchByStatus()">
-                        <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
+                        <mat-option *ngFor="let status of mainItrStatus" [value]="status.statusId">
                             {{ status.statusName }}
                         </mat-option>
                     </mat-select>

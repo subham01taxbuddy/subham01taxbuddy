@@ -18,6 +18,9 @@ import { EngagementStatusComponent } from './status-wise-clients/engagement-stat
 import { FilingStatusComponent } from './status-wise-clients/filing-status/filing-status.component';
 import { PaymentStatusComponent } from './status-wise-clients/payment-status/payment-status.component';
 import { TpaClientsComponent } from './status-wise-clients/tpa-clients/tpa-clients.component';
+import { MainKnowlarityComponent } from './knowlarity/main-knowlarity/main-knowlarity.component';
+import { SmeWiseInfoComponent } from './knowlarity/sme-wise-info/sme-wise-info.component';
+import { CallWiseInfoComponent } from './knowlarity/call-wise-info/call-wise-info.component';
 
 const routes: Routes = [
     {
@@ -55,8 +58,15 @@ const routes: Routes = [
                 ]
             },
             // { path: 'interested-clients', component: InterestedClientsComponent },
-            { path: 'open-status', component: OpenStatusComponent },
-            { path: 'knowlarity', component: KnowlarityComponent },
+            { path: 'open-status', component: OpenStatusComponent},
+            { path: 'knowlarity', component: KnowlarityComponent,
+               children:[
+                { path:'all', component: MainKnowlarityComponent },
+                { path:'sme-wise', component: SmeWiseInfoComponent },
+                { path:'call-wise', component: CallWiseInfoComponent },
+                { path:'', redirectTo: 'all', pathMatch:'full' }
+              ] 
+            },
             { path: '', redirectTo: 'quick-search', pathMatch: 'full' }
         ]
     },

@@ -35,6 +35,7 @@ export class InterestedClientsComponent implements OnInit {
   showAllUser: boolean;
   searchMobNo: any;
   itrStatus: any = [];
+  mainItrStatus: any = [];
   isServiceDisabled = false;
   serviceTypeList = ['ITR', 'GST', 'NOTICE', 'TPA'];
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
@@ -127,6 +128,9 @@ export class InterestedClientsComponent implements OnInit {
 
   searchByServiceType() {
     if (this.utilsService.isNonEmpty(this.selectedService)) {
+      this.mainItrStatus = this.itrStatus.filter(item => item.applicableServices.includes(this.selectedService));
+      console.log('mainItrStatus: ',this.mainItrStatus);
+      
       this.showAllUser = true;
       this.config.currentPage = 1;
       this.getInterestedClients(0);
@@ -134,7 +138,6 @@ export class InterestedClientsComponent implements OnInit {
   }
 
   searchByStatus() {
-
     this.config.currentPage = 1;
     this.getInterestedClients(0);
   }

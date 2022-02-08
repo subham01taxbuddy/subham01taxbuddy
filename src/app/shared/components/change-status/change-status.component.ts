@@ -53,6 +53,8 @@ export class ChangeStatusComponent implements OnInit {
       this.data.serviceType = 'ITR';
     }
 
+
+
     console.log('this.data.userInfo : ', this.data.userInfo);
   }
 
@@ -61,6 +63,8 @@ export class ChangeStatusComponent implements OnInit {
     this.userService.getMethod(param).subscribe(response => {
       console.log('status response: ', response);
       if (response instanceof Array && response.length > 0) {
+        console.log('data: ',this.data)
+        console.log('sorted itr status array: ',response.filter(item => item.applicableServices.includes(this.data.serviceType)))
         this.itrStatus = response;
       }
       else {
