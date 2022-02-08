@@ -1,8 +1,12 @@
-<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
         <div class="card__row">
+
+            <!-- <ag-grid-angular class="ag-theme-balham" [gridOptions]="inbondKnowlarityGridOption"
+                >  
+            </ag-grid-angular> -->
 
             <table>
                 <tr>
@@ -10,6 +14,7 @@
                     <th><b>Call Type</b></th>
                     <th><b>Agent Number</b></th>
                     <th><b>Customer Number</b></th>
+                    <!-- <th><b>Knowlarity Number</b></th> -->
                 </tr>
                 <tr>
                     <td *ngIf="knowlarityData.length === 0" colspan="5" style="text-align: center;"><b>No data available</b>
@@ -20,27 +25,12 @@
                     <td>{{item.business_call_type}}</td>
                     <td>{{item.agent_number}}</td>
                     <td><a href="javascript:void(0)" (click)="showCustomerInfo(item.caller)">{{item.caller}}</a></td>
+                    <!-- <td>{{item.knowlarity_number}}</td> -->
                 </tr>
             </table>
 
+            <!-- <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> -->
+
         </div>
     </div>
-</div> -->
-
-<div class="main clearfix" style="min-height: 0vh; padding-top: 0px;">
-    <div class="tab">
-      <ul class="tab__container clearfix">
-        <li class="tab__item" routerLinkActive="tab__item_active">
-          <a class="tab__link" routerLink="/pages/dashboard/knowlarity/all">All</a>
-        </li>
-        <li class="tab__item" routerLinkActive="tab__item_active">
-          <a class="tab__link" routerLink="/pages/dashboard/knowlarity/sme-wise">SME Wise</a>
-        </li>
-        <li class="tab__item" routerLinkActive="tab__item_active">
-          <a class="tab__link" routerLink="/pages/dashboard/knowlarity/call-wise">Call Wise</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-  
-  <router-outlet></router-outlet>
+</div>

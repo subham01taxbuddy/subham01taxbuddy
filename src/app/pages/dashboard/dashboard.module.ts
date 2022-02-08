@@ -28,6 +28,9 @@ import { StatusWiseGirdDataComponent } from './status-wise-clients/status-wise-g
 import { FilingStatusComponent } from './status-wise-clients/filing-status/filing-status.component';
 import { PaymentStatusComponent } from './status-wise-clients/payment-status/payment-status.component';
 import { TpaClientsComponent } from './status-wise-clients/tpa-clients/tpa-clients.component';
+import { MainKnowlarityComponent } from './knowlarity/main-knowlarity/main-knowlarity.component';
+import { SmeWiseInfoComponent } from './knowlarity/sme-wise-info/sme-wise-info.component';
+import { CallWiseInfoComponent } from './knowlarity/call-wise-info/call-wise-info.component';
 
 @NgModule({
     declarations: [DashboardComponent,
@@ -49,7 +52,10 @@ import { TpaClientsComponent } from './status-wise-clients/tpa-clients/tpa-clien
         StatusWiseGirdDataComponent,
         FilingStatusComponent,
         PaymentStatusComponent,
-        TpaClientsComponent
+        TpaClientsComponent,
+        MainKnowlarityComponent,
+        SmeWiseInfoComponent,
+        CallWiseInfoComponent
     ],
     imports: [
         CommonModule,

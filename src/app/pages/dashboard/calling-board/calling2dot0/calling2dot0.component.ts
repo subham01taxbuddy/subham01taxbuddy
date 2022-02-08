@@ -18,6 +18,7 @@ import moment = require('moment');
 export class Calling2dot0Component implements OnInit {
   agentList = [];
   masterStatusList = [];
+  mainMasterStatusList = [];
   serviceTypeList = ['ITR', /* 'GST', 'NOTICE', 'TPA' */];
   config: any;
   isServiceDisabled = false;
@@ -76,6 +77,8 @@ export class Calling2dot0Component implements OnInit {
     }
     this.searchByQueryParams('PRIORITY');
     this.getStatus();
+
+    
   }
 
   async getAgentList() {
@@ -83,6 +86,11 @@ export class Calling2dot0Component implements OnInit {
   }
   async getMasterStatusList() {
     this.masterStatusList = await this.utilsService.getStoredMasterStatusList();
+    
+    this.masterStatusList = this.masterStatusList.filter(item => 
+      item.applicableServices.includes(this.searchParam.serviceType)
+    );
+    console.log('masterStatusList: ',this.masterStatusList)
   }
   searchByQueryParams(ref) {
     this.searchParam.customerNumber = null;
@@ -119,6 +127,7 @@ export class Calling2dot0Component implements OnInit {
         this.callingGridOptions.api.setRowData(this.createRowData(res));
         this.callingGridOptions.columnApi.setColumnsVisible(["chatLink"], this.searchParam.isChat);
         this.callingGridOptions.api.setColumnDefs(this.createColoumnDef(this.masterStatusList));
+
       } else {
         this.callingGridOptions.api.setRowData(this.createRowData([]));
       }

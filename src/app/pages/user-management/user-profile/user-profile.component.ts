@@ -582,7 +582,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   getStateName(stateCode) {
-    if (stateCode != null && stateCode !== undefined && stateCode !== '') {
+    if (stateCode !== null && stateCode !== undefined && stateCode !== '') {
       let stateName = this.state_list.filter(item => item.stateCode === stateCode)[0].stateName;
       return stateName;
     }
