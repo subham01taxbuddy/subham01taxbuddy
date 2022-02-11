@@ -10,7 +10,6 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { environment } from 'environments/environment';
-//declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 export const MY_FORMATS = {
   parse: {
@@ -395,7 +394,7 @@ export class SignupExceptionComponent implements OnInit {
 
   startCalling(user) {
     console.log('user: ', user);
-   // matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Call'], environment.matomoScriptId);
+    this.utilsService.matomoCall('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Call'], environment.matomoScriptId);
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -431,7 +430,7 @@ export class SignupExceptionComponent implements OnInit {
     this.userMsService.putMethod(param).subscribe((responce: any) => {
       console.log('call Done responce: ', responce);
       this.loading = false;
-      //matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Call Status'], environment.matomoScriptId);
+      this.utilsService.matomoCall('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Call Status'], environment.matomoScriptId);
       this.toastMsgService.alert('success', 'Call status update successfully.');
       setTimeout(() => {
         this.getSignUpExceptionList();

@@ -412,6 +412,7 @@ export class UserListComponent implements OnInit {
         }
         case 'profile': {
           //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'User Profile'], environment.matomoScriptId);
+          this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'User Profile'], environment.matomoScriptId)
           this.router.navigate(['pages/user-management/profile/' + params.data.userId])
           break;
         }
@@ -445,6 +446,7 @@ export class UserListComponent implements OnInit {
 
   linkToFinbingo(userId) {
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'FNB'], environment.matomoScriptId); 
+    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'FNB'], environment.matomoScriptId);
     const param = `/partner/create-user`;
     const request = {
       userId: userId
@@ -475,13 +477,13 @@ export class UserListComponent implements OnInit {
   }
 
   updateReviewStatus(data) {
-    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Review'], environment.matomoScriptId); 
+    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Review'], environment.matomoScriptId);
     const param = `/update-itr-userProfile?userId=${data.userId}&isReviewGiven=true`;
     this.itrMsService.putMethod(param, {}).subscribe(result => {
       console.log(result);
       this.utilsService.showSnackBar('Marked as review given');
     }, error => {
-      this.utilsService.showSnackBar('Please try again, falied to mark as review given');
+      this.utilsService.showSnackBar('Please try again, failed to mark as review given');
     })
   }
 }

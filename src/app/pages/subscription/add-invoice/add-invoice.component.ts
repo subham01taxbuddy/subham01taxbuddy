@@ -9,6 +9,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ItrMsService } from 'app/services/itr-ms.service';
+import { environment } from 'environments/environment';
 // import { createHmac } from "crypto";
 
 export const MY_FORMATS = {
@@ -375,7 +376,8 @@ export class AddInvoiceComponent implements OnInit {
         } else {
           this.loading = false;
         }
-        this._toastMessageService.alert("success", "Invoice saved succesfully.");
+        this._toastMessageService.alert("success", "Invoice saved successfully.");
+        this.utilsService.matomoCall('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Call', filingEstimateObj.clientMobile], environment.matomoScriptId)
         this.router.navigate(['/pages/subscription/sub']);
       }, error => {
         this.loading = false;

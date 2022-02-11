@@ -487,6 +487,7 @@ export class Calling2dot0Component implements OnInit {
     console.log('user: ', user);
     let callInfo = user.customerNumber;
     // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Call', callInfo], environment.matomoScriptId)
+    this.utilsService.matomoCall('Priority Call', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Call', callInfo], environment.matomoScriptId);
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -538,8 +539,8 @@ export class Calling2dot0Component implements OnInit {
             console.log('itrStatus array: ',this.itrStatus);
             console.log('client statusId: ',client.statusId)
             console.log('**** ',this.itrStatus.filter(item => item.statusId === client.statusId))
-            let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; //result.responce.statusId;
-           // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Status', changeStatus], environment.matomoScriptId)
+            let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; 
+           this.utilsService.matomoCall('Priority Call', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Call', changeStatus], environment.matomoScriptId);
           }
            else if(mode === 'Update Caller'){
              console.log('Update Caller responce: ',result.responce);

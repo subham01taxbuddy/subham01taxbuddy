@@ -368,12 +368,12 @@ export class AddCallerComponent implements OnInit {
     if (action === 'add') {
       caller = this.getCalletList(action)
       var param = `/call-management/caller-agents?agentId=${this.selectedAgent}&addCallerAgents=${caller}&removeCallerAgent=`;
-      //matomo('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Add Caller'], environment.matomoScriptId); 
+      this.utileService.matomoCall('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Add Caller'], environment.matomoScriptId);
     }
     else {
       caller = this.getCalletList(action)
       var param = `/call-management/caller-agents?agentId=${this.selectedAgent}&addCallerAgents=&removeCallerAgent=${caller}`;
-      //matomo('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Remove Caller'], environment.matomoScriptId); 
+      this.utileService.matomoCall('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Remove Caller'], environment.matomoScriptId);
     }
     console.log('caller -> ', caller)
     console.log('param: ', param)
