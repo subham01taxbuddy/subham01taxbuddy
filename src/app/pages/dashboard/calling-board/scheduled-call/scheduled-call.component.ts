@@ -9,7 +9,6 @@ import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
 import { environment } from 'environments/environment';
-//declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 @Component({
   selector: 'app-scheduled-call',
@@ -435,7 +434,7 @@ export class ScheduledCallComponent implements OnInit {
     this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
       console.log('Call Result: ', result);
       this.loading = false;
-     // matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Call'], environment.matomoScriptId);
+     this.utilsService.matomoCall('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Call'], environment.matomoScriptId);
       if (result.success.status) {
         this.toastMsgService.alert("success", result.success.message)
       }
@@ -482,9 +481,9 @@ export class ScheduledCallComponent implements OnInit {
       statusId: 18
     }
     let param = `/schedule-call-details`;
-    this.userMsService.putMethod(param, reqBody).subscribe((responce: any) => {
-      console.log('schedule-call Done responce: ', responce);
-      //matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Call Status'], environment.matomoScriptId);
+    this.userMsService.putMethod(param, reqBody).subscribe((response: any) => {
+      console.log('schedule-call Done response: ', response);
+      this.utilsService.matomoCall('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Call Status'], environment.matomoScriptId);
       this.loading = false;
       this.toastMsgService.alert('success', 'Call status update successfully.');
       setTimeout(() => {

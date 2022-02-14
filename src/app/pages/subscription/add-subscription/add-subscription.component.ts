@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { ToastMessageService } from 'app/services/toast-message.service';
 import { UtilsService } from 'app/services/utils.service';
+import { environment } from 'environments/environment';
 // import { ConfirmModel } from 'app/shared/components/itr-actions/itr-actions.component';
 
 @Component({
@@ -88,6 +89,11 @@ export class AddSubscriptionComponent implements OnInit {
         console.log('After subscription plan added res:', res);
         this.dialogRef.close({ event: 'close', data: res })
         this.toastMessage.alert("success", "Subscription created successfully.")
+        let subInfo = {
+          service: this.selectedBtn,
+          subCreatedBy: smeInfo.USER_UNIQUE_ID
+        }
+        this.utilService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Create Subscription', 'Add',subInfo], environment.matomoScriptId)
       }, error => {
         console.log('error -> ', error);
         this.toastMessage.alert("error", this.utilService.showErrorMsg(error.error.status))

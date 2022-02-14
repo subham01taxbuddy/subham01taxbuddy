@@ -10,7 +10,6 @@ import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.
 import { AppConstants } from 'app/shared/constants';
 import { formatDate } from '@angular/common';
 import { DownloadDialogComponent } from './download-dialog/download-dialog.component';
-//declare function matomo(title: any, url: any, event: any, scripdId: any);
 import { CallReassignmentComponent } from 'app/shared/components/call-reassignment/call-reassignment.component';
 import { RoleBaseAuthGuardService } from 'app/services/role-base-auth-gaurd.service';
 import moment = require('moment');
@@ -629,7 +628,7 @@ export class InterestedClientsComponent implements OnInit {
     console.log('user: ', user)
     this.loading = true;
     let callInfo = user.customerNumber;
-   // matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Call', callInfo], environment.matomoScriptId);
+    this.utilsService.matomoCall('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Call', callInfo], environment.matomoScriptId);
     const param = `/call-management/make-call`;
     const reqBody = {
       "agent_number": user.callerAgentNumber,
@@ -673,7 +672,7 @@ export class InterestedClientsComponent implements OnInit {
       if (result.responce) {
         if (mode === 'Update Status') {
           let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; 
-         // matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Update Status', changeStatus], environment.matomoScriptId);
+          this.utilsService.matomoCall('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Update Status', changeStatus], environment.matomoScriptId)
         }
         else if(mode === 'Update Caller'){
           //
