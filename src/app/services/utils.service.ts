@@ -492,7 +492,7 @@ export class UtilsService {
     }
 
     matomoCall(mainTabName, path, eventArray, scriptId){
-        matomo('Knowlarity Tab', path, eventArray, scriptId);
+        matomo(mainTabName, path, eventArray, scriptId);
     }
 
 }
