@@ -670,6 +670,7 @@ export class InterestedClientsComponent implements OnInit {
       }
 
       if (result.responce) {
+      
         if (mode === 'Update Status') {
           let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; 
           this.utilsService.matomoCall('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Update Status', changeStatus], environment.matomoScriptId)

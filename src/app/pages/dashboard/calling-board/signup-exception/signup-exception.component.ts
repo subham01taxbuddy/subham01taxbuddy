@@ -394,7 +394,8 @@ export class SignupExceptionComponent implements OnInit {
 
   startCalling(user) {
     console.log('user: ', user);
-    this.utilsService.matomoCall('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Call'], environment.matomoScriptId);
+    let callInfo = user.mobile;
+    this.utilsService.matomoCall('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Call',callInfo], environment.matomoScriptId);
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
