@@ -87,12 +87,10 @@ export class AddSubscriptionComponent implements OnInit {
       console.log('Req Body: ', reqBody)
       this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
         console.log('After subscription plan added res:', res);
-        this.dialogRef.close({ event: 'close', data: res })
+        this.dialogRef.close({ event: 'close', data: res });
         this.toastMessage.alert("success", "Subscription created successfully.")
-        let subInfo = {
-          service: this.selectedBtn,
-          subCreatedBy: smeInfo.USER_UNIQUE_ID
-        }
+        let subInfo = this.selectedBtn+' smeId: '+smeInfo.USER_UNIQUE_ID;
+        console.log('subInfo: ',subInfo)
         this.utilService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Create Subscription', 'Add',subInfo], environment.matomoScriptId)
       }, error => {
         console.log('error -> ', error);

@@ -492,9 +492,9 @@ export class UtilsService {
     }
 
     matomoCall(mainTabName, path, eventArray, scriptId){
-         if(environment.production){
+        //  if(environment.production){
             matomo(mainTabName, path, eventArray, scriptId);
-         }
+        //  }
     }
 
 }
