@@ -10,7 +10,6 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { AppConstants } from 'app/shared/constants';
 import { formatDate } from '@angular/common';
 import { environment } from 'environments/environment';
-//declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 @Component({
   selector: 'app-todays-calls',
@@ -494,7 +493,7 @@ export class TodaysCallsComponent implements OnInit {
   startCalling(user) {
     console.log('user: ', user);
     let callInfo = user.customerNumber;
-    //matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Call', callInfo], environment.matomoScriptId);
+    this.utilsService.matomoCall('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Call', callInfo], environment.matomoScriptId);
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -549,7 +548,7 @@ export class TodaysCallsComponent implements OnInit {
           if(mode === 'Update Status'){
             // let changeStatus = client.statusId+' to '+result.responce.statusId;
             let changeStatus = client.customerNumber+' - '+this.itrStatus.filter(item => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter(item => item.statusId === result.responce.statusId)[0].statusName; //result.responce.statusId;
-           // matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Update Status',changeStatus], environment.matomoScriptId);
+            this.utilsService.matomoCall('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Update Status',changeStatus], environment.matomoScriptId);
           }
           //// else if(mode === 'Update Caller'){
           ////   let updateCaller = client.statusId+' to '+result.responce.statusId;

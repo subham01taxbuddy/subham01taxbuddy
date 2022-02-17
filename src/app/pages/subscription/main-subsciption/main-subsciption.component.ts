@@ -487,12 +487,15 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           if (params.data.subscriptionAssigneeId !== 'NA') {
             if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
              // matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Invoice', params.data.userId], environment.matomoScriptId);
+             this.utilsService.matomoCall('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Invoice', params.data.userId], environment.matomoScriptId)
             }
             else if(this.from === 'MY_SUBSCRIPTION'){
               //matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Invoice', params.data.userId], environment.matomoScriptId);
+              this.utilsService.matomoCall('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Invoice', params.data.userId], environment.matomoScriptId);
             }
             else if(this.from === 'TEAM_SUBSCRIPTION'){
               //matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Invoice', params.data.userId], environment.matomoScriptId);
+              this.utilsService.matomoCall('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Invoice', params.data.userId], environment.matomoScriptId)
             }
             this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
           } else {

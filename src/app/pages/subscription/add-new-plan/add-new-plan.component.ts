@@ -10,6 +10,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { FilingCalendarComponent } from '../filing-calendar/filing-calendar.component';
+import { environment } from 'environments/environment';
 
 export const MY_FORMATS = {
   parse: {
@@ -317,6 +318,8 @@ export class AddNewPlanComponent implements OnInit {
     this.itrService.putMethod(param, this.userSubscription).subscribe((response: any) => {
       console.log('Subscription Updated Successfully:', response);
       this.utilsService.showSnackBar('Subscription updated successfully!');
+      let userInfo = this.userSubscription.userId+'-'+this.userSubscription.userName;
+      this.utilsService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Update Subscription', 'Add',userInfo], environment.matomoScriptId)
       if (value !== 'CLEAR_PLAN') {
         this.router.navigate(['/pages/subscription']);
       } else {

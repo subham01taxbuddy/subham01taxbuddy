@@ -5,6 +5,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { UtilsService } from 'app/services/utils.service';
 import { AppConstants } from 'app/shared/constants';
+import { environment } from 'environments/environment';
 import { ChangeAgentDialogComponent } from './change-agent-dialog/change-agent-dialog.component';
 declare function matomo(title: any, url: any, event: any);
 @Component({
@@ -244,8 +245,9 @@ export class AgentUpdateComponent implements OnInit {
       
         if(result.changeAgentInfo){
           console.log('result.changeAgentInfo: ',result.changeAgentInfo);
-          let agentInfo = 'change Agent: '+result.changeAgentInfo.changeAgent+' serviceType: '+result.changeAgentInfo.serviceType;
+          let agentInfo = 'changed Agent-'+result.changeAgentInfo.changeAgent+' service-'+result.changeAgentInfo.serviceType;
           //matomo('SME Agent Update', '/pages/user-management/sme-mgnt/agent-update', ['trackEvent', 'SMEs Agent Update', 'User Agent', agentInfo]); 
+          this.utileService.matomoCall('SME Agent Update', '/pages/user-management/sme-mgnt/agent-update', ['trackEvent', 'SMEs Agent Update', 'User Agent', agentInfo], environment.matomoScriptId);
         }
 
       }

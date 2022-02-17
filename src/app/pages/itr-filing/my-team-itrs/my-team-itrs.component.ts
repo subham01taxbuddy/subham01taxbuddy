@@ -560,6 +560,7 @@ export class MyTeamItrsComponent implements OnInit {
 
   async startFiling(data) {
     //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Actions', data.contactNumber], environment.matomoScriptId);
+    this.utilsService.matomoCall('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Actions', data.contactNumber], environment.matomoScriptId);
     var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
     console.log('data: ', workingItr);
     Object.entries(workingItr).forEach((key, value) => {

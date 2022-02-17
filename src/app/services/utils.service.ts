@@ -8,6 +8,8 @@ import { ITR_JSON } from './../shared/interfaces/itr-input.interface';
 import { ItrMsService } from './itr-ms.service';
 import { ApiEndpoints } from 'app/shared/api-endpoint';
 import { UserMsService } from './user-ms.service';
+import { environment } from 'environments/environment';
+declare function matomo(title: any, url: any, event: any, subscribeId: any);
 
 @Injectable()
 
@@ -488,4 +490,11 @@ export class UtilsService {
         }
         return false;
     }
+
+    matomoCall(mainTabName, path, eventArray, scriptId){
+          if(environment.production){
+            matomo(mainTabName, path, eventArray, scriptId);
+          }
+    }
+
 }

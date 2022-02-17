@@ -705,6 +705,13 @@ export class InvoicesStatusComponent implements OnInit {
       console.log('The dialog was closed');
       if (result && this.utilService.isNonEmpty(result) && result.msg === 'success') {
        // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Delete', data.phone], environment.matomoScriptId);
+       if(mode === 'UPDATE'){
+        this.utilService.matomoCall('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Edit', data.phone], environment.matomoScriptId);
+       }
+       else if(mode === 'DELETE'){
+        this.utilService.matomoCall('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Delete', data.phone], environment.matomoScriptId)
+       }
+       
         this.getAllInvoiceInfo();
       }
     });
@@ -834,7 +841,7 @@ export class InvoicesStatusComponent implements OnInit {
       if (result.success.status) {
         this._toastMessageService.alert("success", result.success.message)
       }
-     // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Call', user.phone], environment.matomoScriptId);
+     this.utilService.matomoCall('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Call', user.phone], environment.matomoScriptId);
     }, error => {
       this._toastMessageService.alert('error', 'Error while making call, Please try again.');
       this.loading = false;
