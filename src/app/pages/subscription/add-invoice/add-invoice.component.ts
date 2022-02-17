@@ -366,7 +366,8 @@ export class AddInvoiceComponent implements OnInit {
       console.log('Invoice values:', request);
       this.itrMsService.postMethod(param, request).subscribe(async (result: any) => {
         this.showInvoiceForm = false;
-        console.log("result: ", result)
+        console.log("result: ", result);
+        this.utilsService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Create Invoice', 'Add',this.invoiceForm.controls['phone'].value], environment.matomoScriptId)
         this.utilsService.smoothScrollToTop();
         this.updateAddressInProfile();
         if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
@@ -377,7 +378,6 @@ export class AddInvoiceComponent implements OnInit {
           this.loading = false;
         }
         this._toastMessageService.alert("success", "Invoice saved successfully.");
-        this.utilsService.matomoCall('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Call', filingEstimateObj.clientMobile], environment.matomoScriptId)
         this.router.navigate(['/pages/subscription/sub']);
       }, error => {
         this.loading = false;

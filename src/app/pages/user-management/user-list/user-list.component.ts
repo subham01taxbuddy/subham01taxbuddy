@@ -472,7 +472,8 @@ export class UserListComponent implements OnInit {
   }
 
   linkToDocumentCloud(userId) {
-    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId); 
+    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId);
+    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId); 
     this.router.navigate(['/pages/itr-filing/user-docs/' + userId]);
   }
 
