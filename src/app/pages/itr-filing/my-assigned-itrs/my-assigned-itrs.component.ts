@@ -521,6 +521,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
 
   async startFiling(data) {
    // matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'Actions', data.contactNumber], environment.matomoScriptId);
+   this.utilsService.matomoCall('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'Actions', data.contactNumber], environment.matomoScriptId);
     var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
     console.log('data: ', workingItr);
     Object.entries(workingItr).forEach((key, value) => {

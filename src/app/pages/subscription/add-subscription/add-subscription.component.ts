@@ -89,7 +89,7 @@ export class AddSubscriptionComponent implements OnInit {
         console.log('After subscription plan added res:', res);
         this.dialogRef.close({ event: 'close', data: res });
         this.toastMessage.alert("success", "Subscription created successfully.")
-        let subInfo = this.selectedBtn+' smeId: '+smeInfo.USER_UNIQUE_ID;
+        let subInfo = this.selectedBtn+' userId: '+this.data.userId;
         console.log('subInfo: ',subInfo)
         this.utilService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Create Subscription', 'Add',subInfo], environment.matomoScriptId)
       }, error => {
