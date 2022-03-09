@@ -35,8 +35,10 @@ export class InvoiceDialogComponent implements OnInit {
   invoiceEditForm: FormGroup;
   maxDate: any = new Date();
   loading: boolean;
-  reasonForDeletion = new FormControl('', [Validators.required]);
-
+  reasonForDeletion = new FormControl('');
+  selectReason = new FormControl('', [Validators.required]);
+  withinMonth = true;
+  invoiceAction = 'DELETE'
   constructor(public dialogRef: MatDialogRef<InvoiceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder, private userService: UserMsService,
     private _toastMessageService: ToastMessageService, private router: Router,
@@ -45,6 +47,7 @@ export class InvoiceDialogComponent implements OnInit {
   ngOnInit() {
     console.log(this.data)
     if (this.data.mode === 'DELETE') {
+      this.getInvoiceDetails(this.data.txbdyInvoiceId);
       return;
     }
     this.getUserInvoiceData(this.data.userObject);
@@ -70,7 +73,34 @@ export class InvoiceDialogComponent implements OnInit {
       transactionId: [''],
     });
   }
-
+  getInvoiceDetails(id) {
+    this.loading = true;
+    const param = `/invoice?txbdyInvoiceId=${id}`;
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      console.log(result);
+      this.invoiceDetails = result;
+      let invoiceMonth = new Date(this.invoiceDetails.invoiceDate).getMonth();
+      let currentMonth = new Date().getMonth();
+      this.withinMonth = invoiceMonth - currentMonth === 0 ? true : false;
+      console.info('Invoice Month:', invoiceMonth, currentMonth)
+      // this.invoiceForm.patchValue(result);
+      // this.itemList = result['itemList'];
+      // this.sacCode = this.itemList[0].sacCode
+      this.setInvoiceAction();
+      this.loading = false;
+    })
+  }
+  setInvoiceAction() {
+    if ((this.withinMonth && (this.selectReason.value === 'Profile Change' || this.selectReason.value === 'Amount Change')) || (!this.withinMonth && this.selectReason.value === 'Profile Change')) {
+      this.invoiceAction = 'UPDATE'
+    } else {
+      this.invoiceAction = 'DELETE'
+    }
+  }
+  navigateToUpdateInvoice() {
+    this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { txbdyInvoiceId: this.data.txbdyInvoiceId, withinMonth: this.withinMonth } });
+    this.dialogRef.close()
+  }
   getUserInvoiceData(invoiceInfo) {
 
     console.log('invoiceInfo: ', invoiceInfo)
@@ -149,7 +179,7 @@ export class InvoiceDialogComponent implements OnInit {
   }
 
   deleteInvoice() {
-    if (this.reasonForDeletion.valid) {
+    if (this.selectReason.valid && this.reasonForDeletion.valid) {
       this.loading = true;
       const loggedInUser = JSON.parse(localStorage.getItem("UMD")) || {};
       if (!this.utilsService.isNonEmpty(loggedInUser)) {
@@ -158,7 +188,7 @@ export class InvoiceDialogComponent implements OnInit {
         this.router.navigate(['/login']);
         return;
       }
-      let param = `/invoice/delete?reasonForDeletion=${this.reasonForDeletion.value}&deletedBy=${loggedInUser.USER_UNIQUE_ID}`;
+      let param = `/invoice/delete?reasonForDeletion=${this.selectReason.value} - ${this.reasonForDeletion.value}&deletedBy=${loggedInUser.USER_UNIQUE_ID}`;
       if (this.data.txbdyInvoiceId !== 0) {
         param = `${param}&txbdyInvoiceId=${this.data.txbdyInvoiceId}`
       } else {

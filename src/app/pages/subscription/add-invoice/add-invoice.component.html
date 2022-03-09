@@ -2,7 +2,7 @@
 
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
-        <h1 style="font-size: 22px;"><b><u>Generate Invoice: </u></b></h1><br><br>
+        <h1 style="font-size: 22px;"><b><u>{{isUpdateInvoice ? 'Update':'Generate'}} Invoice: </u></b></h1><br><br>
         <div class="card__row">
             <div class="card__col-lg-12" style="margin-top: 15px;" *ngIf="userInvoices">
                 <mat-accordion>
@@ -90,9 +90,10 @@
                             <mat-label>Invoice Date</mat-label>
                             <input matInput formControlName="invoiceDate" [matDatepicker]="picker" [max]="maxDate"
                                 autocomplete="off"
-                                (dateChange)="updateDueDate(this.invoiceForm.controls['invoiceDate'].value)">
+                                (dateChange)="updateDueDate(this.invoiceForm.controls['invoiceDate'].value)"
+                                [disabled]="isUpdateInvoice">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
+                            <mat-datepicker #picker [disabled]="isUpdateInvoice"></mat-datepicker>
                             <mat-error *ngIf="invoiceForm.controls['invoiceDate'].hasError('required')">Select
                                 Invoice date</mat-error>
                         </mat-form-field>
@@ -249,7 +250,8 @@
                             <mat-label>Phone</mat-label>
                             <input formControlName="phone"
                                 onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
-                                placeholder="Phone" autocomplete="off" required>  <!--maxlength="10"-->
+                                placeholder="Phone" autocomplete="off" required>
+                            <!--maxlength="10"-->
                             <mat-error *ngIf="invoiceForm.controls['phone'].hasError('required')">Enter phone
                                 number</mat-error>
                             <mat-error *ngIf="invoiceForm.controls['phone'].hasError('pattern')">Enter valid
@@ -423,7 +425,14 @@
                         <div class="card__col-lg-7">Final Price
                             <span>(Incl of GST)</span>
                         </div>
-                        <div style="float: right;" class="card__col-lg-5">₹
+
+                        <div style="float: right;" class="card__col-lg-5" *ngIf="isUpdateInvoice">
+                            <input [(ngModel)]="this.invoiceForm.controls.total.value"
+                                [ngModelOptions]="{standalone: true}"
+                                (blur)="setFinalAmount(this.invoiceForm.controls.total.value)"
+                                placeholder="Final Amount" autocomplete="off">
+                        </div>
+                        <div style="float: right;" class="card__col-lg-5" *ngIf="!isUpdateInvoice">₹
                             {{ this.invoiceForm.controls.total.value}}
                         </div>
 
@@ -454,8 +463,11 @@
                 </div>
             </mat-card>
             <br><br>
-            <div class="btns">
+            <div class="btns" *ngIf="!isUpdateInvoice">
                 <button class="butn" (click)="saveInvoice()"> Generate and Send</button>
+            </div>
+            <div class="btns" *ngIf="isUpdateInvoice">
+                <button class="butn" (click)="updateAndSendInvoice()"> Update and Send</button>
             </div>
             <br><br><br><br>
         </form>
