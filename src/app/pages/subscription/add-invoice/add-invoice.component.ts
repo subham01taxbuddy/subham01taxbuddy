@@ -74,7 +74,6 @@ export class AddInvoiceComponent implements OnInit {
     this.invoiceForm = this.createInvoiceForm(false);
     this.changeCountry('INDIA');
     this.activeRoute.queryParams.subscribe(params => {
-      this.loading = true;
       console.log("Subscription user info:", params)
       if (this.utilsService.isNonEmpty(params['subscriptionId'])) {
         this.getSubscriptionDetails(params['subscriptionId']);
@@ -99,6 +98,7 @@ export class AddInvoiceComponent implements OnInit {
     })
   }
   getSubscriptionDetails(id) {
+    this.loading = true;
     const param = `/subscription/${id}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log('Subscription by Id: ', res);
@@ -354,24 +354,24 @@ export class AddInvoiceComponent implements OnInit {
     this.invoiceForm.controls.itemList.setValue(this.itemList);
     if (this.invoiceForm.valid && this.checkSacCode()) {
       console.log('Invoice Form: ', this.invoiceForm)
-      if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
-        this.utilsService.isNonEmpty(this.invoiceForm.controls['itrType'].value) ||
-        this.utilsService.isNonEmpty(this.invoiceForm.controls['comment'].value)) {
-        var filingEstimateObj = {
-          "userId": this.invoiceForm.controls['userId'].value,
-          "clientName": this.invoiceForm.controls['billTo'].value,
-          "clientEmail": this.invoiceForm.controls['email'].value,
-          "clientMobile": this.invoiceForm.controls['phone'].value,
-          "smeEmail": smeInfo.USER_EMAIL,
-          "smeName": smeInfo.USER_F_NAME,
-          "smeMobile": smeInfo.USER_MOBILE,
-          "estimatedDateTime": this.invoiceForm.controls['estimatedDateTime'].value,
-          "itrType": this.invoiceForm.controls['itrType'].value,
-          "comment": this.invoiceForm.controls['comment'].value,
-          "isMarkAsDone": false,
-        }
-      }
-      console.log('filingEstimateObj info -> ', filingEstimateObj)
+      // if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
+      //   this.utilsService.isNonEmpty(this.invoiceForm.controls['itrType'].value) ||
+      //   this.utilsService.isNonEmpty(this.invoiceForm.controls['comment'].value)) {
+      //   var filingEstimateObj = {
+      //     "userId": this.invoiceForm.controls['userId'].value,
+      //     "clientName": this.invoiceForm.controls['billTo'].value,
+      //     "clientEmail": this.invoiceForm.controls['email'].value,
+      //     "clientMobile": this.invoiceForm.controls['phone'].value,
+      //     "smeEmail": smeInfo.USER_EMAIL,
+      //     "smeName": smeInfo.USER_F_NAME,
+      //     "smeMobile": smeInfo.USER_MOBILE,
+      //     "estimatedDateTime": this.invoiceForm.controls['estimatedDateTime'].value,
+      //     "itrType": this.invoiceForm.controls['itrType'].value,
+      //     "comment": this.invoiceForm.controls['comment'].value,
+      //     "isMarkAsDone": false,
+      //   }
+      // }
+      // console.log('filingEstimateObj info -> ', filingEstimateObj)
       this.loading = true;
       const param = '/invoice';
       const request = this.invoiceForm.getRawValue();
@@ -382,13 +382,14 @@ export class AddInvoiceComponent implements OnInit {
         this.utilsService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Create Invoice', 'Add', this.invoiceForm.controls['phone'].value], environment.matomoScriptId)
         this.utilsService.smoothScrollToTop();
         this.updateAddressInProfile();
-        if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
-          this.utilsService.isNonEmpty(this.invoiceForm.controls['itrType'].value) ||
-          this.utilsService.isNonEmpty(this.invoiceForm.controls['comment'].value)) {
-          this.saveFillingEstimate(filingEstimateObj)
-        } else {
-          this.loading = false;
-        }
+        // if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
+        //   this.utilsService.isNonEmpty(this.invoiceForm.controls['itrType'].value) ||
+        //   this.utilsService.isNonEmpty(this.invoiceForm.controls['comment'].value)) {
+        //   this.saveFillingEstimate(filingEstimateObj)
+        // } else {
+        //   this.loading = false;
+        // }
+        this.loading = false;
         this._toastMessageService.alert("success", "Invoice saved successfully.");
         this.router.navigate(['/pages/subscription/sub']);
       }, error => {

@@ -35,7 +35,7 @@ export class InvoiceDialogComponent implements OnInit {
   invoiceEditForm: FormGroup;
   maxDate: any = new Date();
   loading: boolean;
-  reasonForDeletion = new FormControl('');
+  reasonForDeletion = new FormControl('', [Validators.required]);
   selectReason = new FormControl('', [Validators.required]);
   withinMonth = true;
   invoiceAction = 'DELETE'
