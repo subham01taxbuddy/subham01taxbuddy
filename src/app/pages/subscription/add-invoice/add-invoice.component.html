@@ -278,6 +278,7 @@
                                 number</mat-error>
                             <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('pattern')">Enter valid
                                 GSTIN</mat-error>
+                            <mat-hint *ngIf="withinMonth">Note: ADD NOTE HERE</mat-hint>
                         </mat-form-field>
                     </div>
 
@@ -400,17 +401,14 @@
                     </table>
                 </div> <br>
                 <div class="card__row">
-                    <div class="card__col-lg-4">
-                    </div>
                     <div class="card__col-lg-4 total">
-
                         <div class="card__col-lg-7"
-                            *ngIf="this.utilsService.isNonEmpty(userSubscription) && this.utilsService.isNonEmpty(userSubscription.promoCode)">
-                            Promo Discount
-                            <span>({{userSubscription.promoCode}})</span>
+                            *ngIf="(this.utilsService.isNonEmpty(userSubscription) && this.utilsService.isNonEmpty(userSubscription.promoCode)) || isUpdateInvoice">
+                            Discount Total
+                            <!-- <span>({{userSubscription.promoCode}})</span> -->
                         </div>
                         <div style="float: right;" class="card__col-lg-5"
-                            *ngIf="this.utilsService.isNonEmpty(userSubscription) && this.utilsService.isNonEmpty(userSubscription.promoCode)">
+                            *ngIf="(this.utilsService.isNonEmpty(userSubscription) && this.utilsService.isNonEmpty(userSubscription.promoCode)) ||isUpdateInvoice">
                             ₹{{this.invoiceForm.controls.discountTotal.value}}
                             <!-- ₹{{ getExactPromoDiscount() }} -->
                         </div>

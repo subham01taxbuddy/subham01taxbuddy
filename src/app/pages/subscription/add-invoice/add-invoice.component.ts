@@ -62,6 +62,7 @@ export class AddInvoiceComponent implements OnInit {
   dueDays: any;
   sacCode: any;
   isUpdateInvoice = false;
+  withinMonth = false;
   constructor(public utilsService: UtilsService, private _toastMessageService: ToastMessageService,
     private fb: FormBuilder, private userMsService: UserMsService, public http: HttpClient,
     private itrMsService: ItrMsService, private activeRoute: ActivatedRoute,
@@ -78,8 +79,8 @@ export class AddInvoiceComponent implements OnInit {
       if (this.utilsService.isNonEmpty(params['subscriptionId'])) {
         this.getSubscriptionDetails(params['subscriptionId']);
       } else if (this.utilsService.isNonEmpty(params['txbdyInvoiceId'])) {
-        debugger
-        this.invoiceForm = this.createInvoiceForm(true, params['withinMonth'] == 'false' ? true : false);
+        this.withinMonth = params['withinMonth'] == 'false' ? true : false
+        this.invoiceForm = this.createInvoiceForm(true, this.withinMonth);
         this.getInvoiceDetails(params['txbdyInvoiceId']);
         this.isUpdateInvoice = true;
       }
@@ -221,12 +222,12 @@ export class AddInvoiceComponent implements OnInit {
       gstin: [{ value: '', disabled: withinMonth }, [Validators.pattern(AppConstants.GSTNRegex)]],
       phone: ['', [Validators.required]],  //Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex),
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
-      subTotal: ['', Validators.required],
-      cgstTotal: [''],
+      subTotal: ['', Validators.required], // taxable value (-gst karun)
+      cgstTotal: [''], // add as tax values
       sgstTotal: [''],
       igstTotal: [''],
-      discountTotal: [''],
-      total: ['', Validators.required],
+      discountTotal: [''], // direct discount 
+      total: ['', Validators.required], // final pricing on invoice pdf & invoice value as well
       balanceDue: ['', Validators.required],
       itemList: ['', Validators.required],
       inovicePreparedBy: '',
@@ -619,19 +620,7 @@ export class AddInvoiceComponent implements OnInit {
     this.invoiceForm.controls.cgstTotal.setValue(Number((calGst / 2).toFixed(2)))
     this.invoiceForm.controls.sgstTotal.setValue(Number((calGst / 2).toFixed(2)))
     this.invoiceForm.controls.igstTotal.setValue(Number((calGst).toFixed(2)));
-    this.itemList = [{
-      itemDescription: '',
-      sacCode: '',
-      quantity: 1,
-      rate: Number(amount),
-      cgstPercent: 9,
-      cgstAmount: Number(this.invoiceForm.controls.cgstTotal.value),
-      sgstPercent: 9,
-      sgstAmount: Number(this.invoiceForm.controls.sgstTotal.value),
-      igstAmount: Number(this.invoiceForm.controls.igstTotal.value),
-      igstPercent: 18,
-      amount: Number(amount)
-    }];
+    this.invoiceForm.controls.discountTotal.setValue(Number(this.invoiceDetails.itemList[0].amount - amount));
     this.invoiceForm.controls.balanceDue.setValue(Number(amount));
     this.invoiceForm.controls.total.setValue(Number(amount));
   }
