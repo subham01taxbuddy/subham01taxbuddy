@@ -644,7 +644,6 @@ export class InvoicesStatusComponent implements OnInit {
   }
 
   public onInvoiceRowClicked(params) {
-    console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {

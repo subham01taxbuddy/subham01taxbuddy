@@ -194,7 +194,7 @@
                             <mat-label>PIN Code</mat-label>
                             <input formControlName="pincode" maxlength="6"
                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
+                                onkeypress=" event.charCode >= 48 && event.charCode <= 57" matInput
                                 placeholder="PIN Code" autocomplete="off"
                                 (blur)="getCityData(this.invoiceForm.controls['pincode'])" required>
                             <mat-error *ngIf="invoiceForm.controls['pincode'].hasError('required')">Enter pin
@@ -249,7 +249,7 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Phone</mat-label>
                             <input formControlName="phone"
-                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
+                                onkeypress=" event.charCode >= 48 && event.charCode <= 57" matInput
                                 placeholder="Phone" autocomplete="off" required>
                             <!--maxlength="10"-->
                             <mat-error *ngIf="invoiceForm.controls['phone'].hasError('required')">Enter phone
@@ -278,8 +278,8 @@
                                 number</mat-error>
                             <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('pattern')">Enter valid
                                 GSTIN</mat-error>
-                            <mat-hint *ngIf="withinMonth">Note: ADD NOTE HERE</mat-hint>
-                        </mat-form-field>
+                            <mat-hint *ngIf="withinMonth">Note- you need to delete invoice if wanted to update GST number</mat-hint>
+                            </mat-form-field>
                     </div>
 
                 </div>
