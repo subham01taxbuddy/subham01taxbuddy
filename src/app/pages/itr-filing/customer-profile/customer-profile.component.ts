@@ -139,7 +139,7 @@ export class CustomerProfileComponent implements OnInit {
       middleName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
       lastName: ['', Validators.compose([Validators.required, /* Validators.pattern(AppConstants.charRegex) */])],
       fatherName: [''],
-      dateOfBirth: [''],
+      dateOfBirth: ['', Validators.required],
       gender: [''],
       contactNumber: ['', Validators.compose([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required])],
       email: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.emailRegex)])],
@@ -315,6 +315,9 @@ export class CustomerProfileComponent implements OnInit {
           this.router.navigate(['/pages/itr-filing/direct-upload']);
         } else if (ref === "MANUALLY") {
           this.updateManualFiling();
+        }
+        else if(ref === "DIRECT-UPLOAD"){
+          this.router.navigate(['/pages/itr-filing/add-client']);
         }
         // }
       }, error => {
@@ -599,5 +602,10 @@ export class CustomerProfileComponent implements OnInit {
 
   getFilePath() {
     return `ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/${this.customerProfileForm.controls['isRevised'].value === 'Y' ? 'Revised' : 'Original'}/ITR Filing Docs`
+  }
+
+  addClient(){
+    Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+   
   }
 }

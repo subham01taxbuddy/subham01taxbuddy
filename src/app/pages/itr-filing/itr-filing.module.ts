@@ -41,6 +41,7 @@ import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
 import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-documnets.component';
 import { UpdateManualFilingComponent } from './update-manual-filing/update-manual-filing.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { AddClientComponent } from './add-client/add-client.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -90,6 +91,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
         FilingTasksComponent,
         ShowUserDocumnetsComponent,
         UpdateManualFilingComponent,
+        AddClientComponent,
         // InputUploadComponent
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
