@@ -28,11 +28,24 @@ export class ItrMsService {
     postMethod<T>(...param): Observable<T> {
         this.headers = new HttpHeaders();
         this.headers.append('Content-Type', 'application/json');
-        // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
-        console.log('POst Param', param);
+       
         return this.httpClient.post<T>(environment.url + this.microService + param[0], param[1], { headers: this.headers });
         // .map(response => response.json())
     }
+
+    postMethodForEri<T>(...param): Observable<T> {
+        this.headers = new HttpHeaders();
+        this.headers.append('Content-Type', 'application/json');
+        // this.headers.append('panNumber', param[2].panNumber);
+        // this.headers.append('assessmentYear',param[2].assessmentYear);
+        // this.headers.append('userId',param[2].userId);
+        console.log('POst Param', param);
+        console.log('headers', this.headers);
+        console.log('url', (environment.production ? environment.url : environment.eri_url) + this.microService + param[0], param[1]);
+        return this.httpClient.post<T>((environment.production ? environment.url : environment.eri_url) + this.microService + param[0], param[1], { headers: this.headers });
+        // .map(response => response.json())
+    }
+
 
     putMethod<T>(...param): Observable<T> {
         this.headers = new HttpHeaders();
