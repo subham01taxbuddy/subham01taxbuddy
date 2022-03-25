@@ -43,7 +43,7 @@
     <form [formGroup]="customerProfileForm">
 
         <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
+            <!-- <div class="card__col-xs-12 card__col-sm-4">
                 <mat-form-field appearance="outline">
                     <mat-label>First name</mat-label>
                     <input matTooltip="First name as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above"
@@ -52,8 +52,8 @@
                     <mat-error *ngIf="customerProfileForm.controls['firstName'].hasError('pattern')">Enter
                         character only</mat-error>
                 </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            </div> -->
+            <!-- <div class="card__col-xs-12 card__col-sm-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Middle name</mat-label>
                     <input matTooltip="Middle name as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above"
@@ -62,8 +62,8 @@
                     <mat-error *ngIf="customerProfileForm.controls['middleName'].hasError('pattern')">Enter
                         character only</mat-error>
                 </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            </div> -->
+            <!-- <div class="card__col-xs-12 card__col-sm-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Last name</mat-label>
                     <input matTooltip="Last name as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above"
@@ -72,10 +72,10 @@
                     <mat-error *ngIf="customerProfileForm.controls['lastName'].hasError('pattern')">Enter
                         character only</mat-error>
                 </mat-form-field>
-            </div>
+            </div> -->
         </div>
         <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
+            <!-- <div class="card__col-xs-12 card__col-sm-4">
                 <mat-form-field appearance="outline">
                     <mat-label>PAN Number</mat-label>
                     <input [style.cursor]="ITR_JSON.eFillingCompleted == true ? 'not-allowed':''"
@@ -89,7 +89,7 @@
                         valid PAN (e.g
                         XXXXX1234X)</mat-error>
                 </mat-form-field>
-            </div>
+            </div> -->
             <div class="card__col-xs-12 card__col-sm-8">
                 <mat-form-field appearance="outline">
                     <mat-label>Father Name</mat-label>
@@ -102,8 +102,42 @@
                 </mat-form-field>
             </div>
         </div>
+
         <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Residential status</mat-label>
+                    <mat-select placeholder="Residential status" name="residentialStatus"
+                        (selectionChange)="onSelectRecidencial(customerProfileForm.controls['residentialStatus'].value)"
+                        [formControl]="customerProfileForm.controls['residentialStatus']" required>
+                        <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
+                            {{ res.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Employer Category</mat-label>
+                    <mat-select placeholder="Employer Category" name="employerCategory"
+                        formControlName="employerCategory">
+                        <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
+                            {{ emp.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Select Gender</mat-label>
+                    <mat-select placeholder="Select Gender" name="gender" formControlName="gender">
+                        <mat-option *ngFor="let gender of genderMaster" [value]="gender.value">
+                            {{ gender.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <!-- <div class="card__col-xs-12 card__col-sm-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Date Of Birth</mat-label>
                     <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip"
@@ -114,8 +148,8 @@
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-8">
+            </div> -->
+            <!-- <div class="card__col-xs-12 card__col-sm-8">
                 <mat-form-field appearance="outline">
                     <mat-label>Aadhaar Number</mat-label>
                     <input matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
@@ -127,7 +161,51 @@
                         Enter
                         12 digit aadhar number</mat-error>
                 </mat-form-field>
+            </div> -->
+        </div>
+        <div formGroupName="seventhProviso139">
+            <div class="card__row">
+                <div class="card__col-xs-12 card__col-sm-8">
+                    Have you deposited more than 1 crore in your current A/c ( if Yes) then Enter the
+                    Amount
+                </div>
+                <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Amount</mat-label>
+                        <input matInput placeholder="Amount" name="depAmtAggAmtExcd1CrPrYrFlg" type="number"
+                            formControlName="depAmtAggAmtExcd1CrPrYrFlg" class="input-field" maxlength="14">
+                    </mat-form-field>
+                </div>
             </div>
+            <div class="card__row">
+                <div class="card__col-xs-12 card__col-sm-8">
+                    Your foreign travel expenses is more than Rs. 2 Lakhs (If yes, then enter amount of
+                    expenditure)
+                </div>
+                <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Amount</mat-label>
+                        <input matInput placeholder="Amount" name="incrExpAggAmt2LkTrvFrgnCntryFlg"
+                            type="number" formControlName="incrExpAggAmt2LkTrvFrgnCntryFlg"
+                            class="input-field" maxlength="14">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="card__row">
+                <div class="card__col-xs-12 card__col-sm-8">
+                    Have your electricity bill exceeded 1 Lakh? (If yes, then enter amount)
+                </div>
+                <div class="card__col-xs-12 card__col-sm-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Amount</mat-label>
+                        <input matInput placeholder="Amount" name="incrExpAggAmt1LkElctrctyPrYrFlg"
+                            type="number" formControlName="incrExpAggAmt1LkElctrctyPrYrFlg"
+                            class="input-field" maxlength="14">
+                    </mat-form-field>
+                </div>
+
+            </div>
+
         </div>
         <hr>
         <div class="card__title" style="padding:10px; font-size: 20px;">Address Details</div>

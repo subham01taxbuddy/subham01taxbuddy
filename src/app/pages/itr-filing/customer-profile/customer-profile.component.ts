@@ -14,6 +14,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ItrMsService } from 'app/services/itr-ms.service';
 import { UserMsService } from 'app/services/user-ms.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { RoleBaseAuthGuardService } from 'app/services/role-base-auth-gaurd.service';
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -61,11 +62,7 @@ export class CustomerProfileComponent implements OnInit {
   // maxDate = new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate());
   maxDate = new Date();
   maxDateRevise = new Date();
-  residentialStatus = [
-    { value: 'RESIDENT', label: 'Resident' },
-    { value: 'NON_RESIDENT', label: 'Non Resident' },
-    { value: 'NON_ORDINARY', label: 'Non Ordinary Resident' }
-  ];
+
   itrTypes = [
     { value: '1', label: 'ITR-1' },
     { value: '4', label: 'ITR-4' },
@@ -93,20 +90,9 @@ export class CustomerProfileComponent implements OnInit {
     { value: 28, label: 'NRI Plan' },
   ];
 
-  employersDropdown = [
-    { value: 'GOVERNMENT', label: 'State Government' },
-    { value: 'CENTRAL_GOVT', label: 'Central Government' },
-    { value: 'PRIVATE', label: 'Public Sector Unit' },
-    { value: 'OTHER', label: 'Other-Private' },
-    { value: 'PENSIONERS', label: 'Pensioners' },
-    { value: 'NA', label: 'Not-Applicable' }
-  ];
 
-  genderMaster = [
-    { value: 'MALE', label: 'Male' },
-    { value: 'FEMALE', label: 'Female' },
-  ]
   filePath = 'ITR/';
+  loggedInUserData: any;
 
   constructor(public fb: FormBuilder,
     public utilsService: UtilsService,
@@ -116,8 +102,10 @@ export class CustomerProfileComponent implements OnInit {
     private userMsService: UserMsService,
     private router: Router,
     private dialog: MatDialog,
-    public location: Location,) {
+    public location: Location,
+    private roleBaseAuthGuardService:RoleBaseAuthGuardService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
   }
 
   ngOnInit() {
@@ -155,11 +143,7 @@ export class CustomerProfileComponent implements OnInit {
       filingTeamMemberId: [''], // TODO
       // planIdSelectedByUser: [null],
       // planIdSelectedByTaxExpert: [null],
-      seventhProviso139: this.fb.group({
-        depAmtAggAmtExcd1CrPrYrFlg: [null],
-        incrExpAggAmt2LkTrvFrgnCntryFlg: [null],
-        incrExpAggAmt1LkElctrctyPrYrFlg: [null],
-      })
+      
     });
   }
 
@@ -607,5 +591,9 @@ export class CustomerProfileComponent implements OnInit {
   addClient(){
     Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
    
+  }
+
+  isApplicable(permissionRoles) {
+    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
   }
 }

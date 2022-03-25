@@ -142,14 +142,16 @@
                                 <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip"
                                     matTooltipPosition="above" matInput [min]="minDate" [max]="maxDate"
                                     [matDatepicker]="picker" class="input-field" placeholder="Date of birth"
-                                    name="dateOfBirth" [formControl]="customerProfileForm.controls['dateOfBirth']" required>
+                                    name="dateOfBirth" [formControl]="customerProfileForm.controls['dateOfBirth']"
+                                    required>
                                 <mat-hint>Format: DD/MM/YYYY</mat-hint>
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
-                                <mat-error *ngIf="customerProfileForm.controls['dateOfBirth'].hasError('required')">Select date of birth</mat-error>
+                                <mat-error *ngIf="customerProfileForm.controls['dateOfBirth'].hasError('required')">
+                                    Select date of birth</mat-error>
                             </mat-form-field>
                         </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
+                        <!-- <div class="card__col-xs-12 card__col-sm-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>Residential status</mat-label>
                                 <mat-select placeholder="Residential status" name="residentialStatus"
@@ -160,10 +162,10 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-4">
+                        <!-- <div class="card__col-xs-12 card__col-sm-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>Select Gender</mat-label>
                                 <mat-select placeholder="Select Gender" name="gender" formControlName="gender">
@@ -172,7 +174,7 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </div>
+                        </div> -->
                         <div class="card__col-xs-12 card__col-sm-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>ITR Form</mat-label>
@@ -183,7 +185,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
+                        <!-- <div class="card__col-xs-12 card__col-sm-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>Employer Category</mat-label>
                                 <mat-select placeholder="Employer Category" name="employerCategory"
@@ -193,7 +195,7 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </div>
+                        </div> -->
 
                     </div>
                     <div class="card__row">
@@ -268,7 +270,8 @@
                         </div>
 
                     </div>
-                    <div formGroupName="seventhProviso139">
+                  
+                    <!-- <div formGroupName="seventhProviso139">
                         <div class="card__row">
                             <div class="card__col-xs-12 card__col-sm-8">
                                 Have you deposited more than 1 crore in your current A/c ( if Yes) then Enter the
@@ -311,8 +314,10 @@
 
                         </div>
 
-                    </div>
+                    </div> -->
                     <hr>
+
+                  
                     <div class="card__row">
                         <div class="card__col-xs-12">
                             Summary will be uploaded in- {{getFilePath()}}
@@ -347,7 +352,15 @@
                             Filed</button>
                         <!-- <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT')">Direct
                             Upload</button> -->
-                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT-UPLOAD')">Direct Upload</button>
+                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT-UPLOAD')">Direct
+                            Upload</button>
+
+                            <a class="sidebar__item" routerLink="/pages/tax-summary" routerLinkActive="sidebar__item_active"
+                            *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM','ROLE_CALLING_TEAM','ITR_SUPER_LEAD','ITR_TEAM_LEAD'])">
+                            <i class="fa fa-list-alt" style="font-size: 20px;" aria-hidden="true"></i>
+                            <span class="sidebar__name">Tax Summary</span>
+                        </a>
+    
                     </div>
                 </form>
             </div>

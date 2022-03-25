@@ -311,6 +311,28 @@ export class PersonalInformationComponent implements OnInit {
     "stateCode": "37",
     "status": true
   }]
+
+  residentialStatus = [
+    { value: 'RESIDENT', label: 'Resident' },
+    { value: 'NON_RESIDENT', label: 'Non Resident' },
+    { value: 'NON_ORDINARY', label: 'Non Ordinary Resident' }
+  ];
+
+  employersDropdown = [
+    { value: 'GOVERNMENT', label: 'State Government' },
+    { value: 'CENTRAL_GOVT', label: 'Central Government' },
+    { value: 'PRIVATE', label: 'Public Sector Unit' },
+    { value: 'OTHER', label: 'Other-Private' },
+    { value: 'PENSIONERS', label: 'Pensioners' },
+    { value: 'NA', label: 'Not-Applicable' }
+  ];
+
+  
+  genderMaster = [
+    { value: 'MALE', label: 'Male' },
+    { value: 'FEMALE', label: 'Female' },
+  ]
+
   constructor(public fb: FormBuilder,
     public utilsService: UtilsService,
     public httpClient: HttpClient,
@@ -343,6 +365,8 @@ export class PersonalInformationComponent implements OnInit {
       panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex)])],
       aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
+      residentialStatus: ['RESIDENT', Validators.required],
+      employerCategory: [''],
       address: this.fb.group({
         flatNo: ['', Validators.required],
         premisesName: [''],
@@ -352,6 +376,11 @@ export class PersonalInformationComponent implements OnInit {
         country: ['91', Validators.required],
         city: ['', Validators.required],
         pinCode: ['', Validators.compose([Validators.minLength(6), Validators.maxLength(6), Validators.required, Validators.pattern(AppConstants.PINCode)])]
+      }),
+      seventhProviso139: this.fb.group({
+        depAmtAggAmtExcd1CrPrYrFlg: [null],
+        incrExpAggAmt2LkTrvFrgnCntryFlg: [null],
+        incrExpAggAmt1LkElctrctyPrYrFlg: [null],
       }),
       bankDetails: this.fb.array([this.createBankDetailsForm({ hasRefund: true })])
     });
