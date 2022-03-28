@@ -40,7 +40,7 @@ export class AddInvoiceComponent implements OnInit {
   maxDate = new Date();
   initialData: any;
   userSubscription: any;
-
+  invoiceDetails: any;
   itrTypes = [
     { value: '1', label: 'ITR-1' },
     { value: '4', label: 'ITR-4' },
@@ -61,7 +61,8 @@ export class AddInvoiceComponent implements OnInit {
   showInvoiceForm: boolean = false;
   dueDays: any;
   sacCode: any;
-
+  isUpdateInvoice = false;
+  withinMonth = false;
   constructor(public utilsService: UtilsService, private _toastMessageService: ToastMessageService,
     private fb: FormBuilder, private userMsService: UserMsService, public http: HttpClient,
     private itrMsService: ItrMsService, private activeRoute: ActivatedRoute,
@@ -71,22 +72,34 @@ export class AddInvoiceComponent implements OnInit {
 
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
-    this.invoiceForm = this.createInvoiceForm();
+    this.invoiceForm = this.createInvoiceForm(false);
     this.changeCountry('INDIA');
     this.activeRoute.queryParams.subscribe(params => {
-      this.loading = true;
-      console.log("Subscription user info:", params, params['userId'])
-      this.getSubscriptionDetails(params['subscriptionId']);
+      console.log("Subscription user info:", params)
+      if (this.utilsService.isNonEmpty(params['subscriptionId'])) {
+        this.getSubscriptionDetails(params['subscriptionId']);
+      } else if (this.utilsService.isNonEmpty(params['txbdyInvoiceId'])) {
+        this.withinMonth = params['withinMonth'] == 'false' ? true : false
+        this.invoiceForm = this.createInvoiceForm(true, this.withinMonth);
+        this.getInvoiceDetails(params['txbdyInvoiceId']);
+        this.isUpdateInvoice = true;
+      }
     });
-    // const payload = '{\"promoCode\":\"BIKAYI\",\"servicesType\":\"GST\"}'
-    // const signature = createHmac('SHA256', 'F4FE4DF1BDCB4725BE853CA3B25FB25D588880E3E66A42')
-    //   .update('101B9232A8384D549EFD195D0BDB95E6E7998BA7F4E740' + '|' + Buffer.from(JSON.stringify(payload)).toString('base64'))
-    //   .digest('hex')
-    //   .toString();
-    // console.log('signaturesignature: ', signature)
   }
+  getInvoiceDetails(id) {
+    const param = `/invoice?txbdyInvoiceId=${id}`;
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      console.log(result);
+      this.invoiceDetails = result;
 
+      this.invoiceForm.patchValue(result);
+      this.itemList = result['itemList'];
+      this.sacCode = this.itemList[0].sacCode
+      this.loading = false;
+    })
+  }
   getSubscriptionDetails(id) {
+    this.loading = true;
     const param = `/subscription/${id}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log('Subscription by Id: ', res);
@@ -189,11 +202,11 @@ export class AddInvoiceComponent implements OnInit {
     }
   }
 
-  createInvoiceForm() {
+  createInvoiceForm(updateInvoice, withinMonth?) {
     return this.fb.group({
       _id: [null],
       userId: [null],
-      invoiceDate: [(new Date()), Validators.required],
+      invoiceDate: [{ value: new Date(), disabled: updateInvoice }, Validators.required],
       terms: ['Due on Receipt', Validators.required],
       dueDate: [{ value: new Date(), disabled: true }, Validators.required],
       // sacCode: ['998232', Validators.required],
@@ -206,15 +219,15 @@ export class AddInvoiceComponent implements OnInit {
       state: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
-      gstin: ['', [Validators.pattern(AppConstants.GSTNRegex)]],
-      phone: ['', [ Validators.required]],  //Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex),
+      gstin: [{ value: '', disabled: withinMonth }, [Validators.pattern(AppConstants.GSTNRegex)]],
+      phone: ['', [Validators.required]],  //Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex),
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
-      subTotal: ['', Validators.required],
-      cgstTotal: [''],
+      subTotal: ['', Validators.required], // taxable value (-gst karun)
+      cgstTotal: [''], // add as tax values
       sgstTotal: [''],
       igstTotal: [''],
-      discountTotal: [''],
-      total: ['', Validators.required],
+      discountTotal: [''], // direct discount 
+      total: ['', Validators.required], // final pricing on invoice pdf & invoice value as well
       balanceDue: ['', Validators.required],
       itemList: ['', Validators.required],
       inovicePreparedBy: '',
@@ -223,7 +236,8 @@ export class AddInvoiceComponent implements OnInit {
       itrType: [''],
       comment: [''],
       subscriptionId: ['', Validators.required],
-      serviceType: ['']
+      serviceType: [''],
+      paymentDate: [null]
     })
   }
 
@@ -341,24 +355,24 @@ export class AddInvoiceComponent implements OnInit {
     this.invoiceForm.controls['itemList'].setValue(this.itemList);
     if (this.invoiceForm.valid && this.checkSacCode()) {
       console.log('Invoice Form: ', this.invoiceForm)
-      if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
-        this.utilsService.isNonEmpty(this.invoiceForm.controls['itrType'].value) ||
-        this.utilsService.isNonEmpty(this.invoiceForm.controls['comment'].value)) {
-        var filingEstimateObj = {
-          "userId": this.invoiceForm.controls['userId'].value,
-          "clientName": this.invoiceForm.controls['billTo'].value,
-          "clientEmail": this.invoiceForm.controls['email'].value,
-          "clientMobile": this.invoiceForm.controls['phone'].value,
-          "smeEmail": smeInfo.USER_EMAIL,
-          "smeName": smeInfo.USER_F_NAME,
-          "smeMobile": smeInfo.USER_MOBILE,
-          "estimatedDateTime": this.invoiceForm.controls['estimatedDateTime'].value,
-          "itrType": this.invoiceForm.controls['itrType'].value,
-          "comment": this.invoiceForm.controls['comment'].value,
-          "isMarkAsDone": false,
-        }
-      }
-      console.log('filingEstimateObj info -> ', filingEstimateObj)
+      // if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
+      //   this.utilsService.isNonEmpty(this.invoiceForm.controls['itrType'].value) ||
+      //   this.utilsService.isNonEmpty(this.invoiceForm.controls['comment'].value)) {
+      //   var filingEstimateObj = {
+      //     "userId": this.invoiceForm.controls['userId'].value,
+      //     "clientName": this.invoiceForm.controls['billTo'].value,
+      //     "clientEmail": this.invoiceForm.controls['email'].value,
+      //     "clientMobile": this.invoiceForm.controls['phone'].value,
+      //     "smeEmail": smeInfo.USER_EMAIL,
+      //     "smeName": smeInfo.USER_F_NAME,
+      //     "smeMobile": smeInfo.USER_MOBILE,
+      //     "estimatedDateTime": this.invoiceForm.controls['estimatedDateTime'].value,
+      //     "itrType": this.invoiceForm.controls['itrType'].value,
+      //     "comment": this.invoiceForm.controls['comment'].value,
+      //     "isMarkAsDone": false,
+      //   }
+      // }
+      // console.log('filingEstimateObj info -> ', filingEstimateObj)
       this.loading = true;
       const param = '/invoice';
       const request = this.invoiceForm.getRawValue();
@@ -366,16 +380,17 @@ export class AddInvoiceComponent implements OnInit {
       this.itrMsService.postMethod(param, request).subscribe(async (result: any) => {
         this.showInvoiceForm = false;
         console.log("result: ", result);
-        this.utilsService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Create Invoice', 'Add',this.invoiceForm.controls['phone'].value], environment.matomoScriptId)
+        this.utilsService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Create Invoice', 'Add', this.invoiceForm.controls['phone'].value], environment.matomoScriptId)
         this.utilsService.smoothScrollToTop();
         this.updateAddressInProfile();
-        if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
-          this.utilsService.isNonEmpty(this.invoiceForm.controls['itrType'].value) ||
-          this.utilsService.isNonEmpty(this.invoiceForm.controls['comment'].value)) {
-          this.saveFillingEstimate(filingEstimateObj)
-        } else {
-          this.loading = false;
-        }
+        // if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
+        //   this.utilsService.isNonEmpty(this.invoiceForm.controls['itrType'].value) ||
+        //   this.utilsService.isNonEmpty(this.invoiceForm.controls['comment'].value)) {
+        //   this.saveFillingEstimate(filingEstimateObj)
+        // } else {
+        //   this.loading = false;
+        // }
+        this.loading = false;
         this._toastMessageService.alert("success", "Invoice saved successfully.");
         this.router.navigate(['/pages/subscription/sub']);
       }, error => {
@@ -427,11 +442,9 @@ export class AddInvoiceComponent implements OnInit {
   saveFillingEstimate(estimateInfo) {
     console.log('estimateInfo: ', estimateInfo);
     let param = '/sme-task'
-    this.itrMsService.postMethod(param, estimateInfo).subscribe(responce => {
+    this.itrMsService.postMethod(param, estimateInfo).subscribe(() => {
       this.loading = false;
-      console.log('Filling Estimate save responce => ', responce);
     }, error => {
-      console.log('Error occure during save Filling Estimate info => ', error);
       this.loading = false;
     })
   }
@@ -446,7 +459,7 @@ export class AddInvoiceComponent implements OnInit {
       this._toastMessageService.alert("success", "Invoice download successfully.");
     }, error => {
       this.loading = false;
-      this._toastMessageService.alert("error", "Faild to download Invoice.");
+      this._toastMessageService.alert("error", "Failed to download Invoice.");
     });
   }
 
@@ -458,13 +471,13 @@ export class AddInvoiceComponent implements OnInit {
       this._toastMessageService.alert("success", "Invoice sent on entered email successfully.");
     }, error => {
       this.loading = false;
-      this._toastMessageService.alert("error", "Faild to send invoice on email.");
+      this._toastMessageService.alert("error", "Failed to send invoice on email.");
     });
   }
 
   updateInvoice(invoiceInfo) {
     this.showInvoiceForm = true;
-    this.invoiceForm = this.createInvoiceForm();
+    this.invoiceForm = this.createInvoiceForm(false);
     this.invoiceForm.patchValue(invoiceInfo)
     console.log('Grid data for edit', invoiceInfo.itemList);
     this.getCityData(this.invoiceForm.controls['pincode'])
@@ -475,11 +488,11 @@ export class AddInvoiceComponent implements OnInit {
     const param = '/invoice/send-reminder';
     this.itrMsService.postMethod(param, invoiceInfo).subscribe((result: any) => {
       this.loading = false;
-      console.log('Email sent responce: ', result)
+      console.log('Email sent response: ', result)
       this._toastMessageService.alert("success", "Mail Reminder sent successfully.");
     }, error => {
       this.loading = false;
-      this._toastMessageService.alert("error", "Faild to send Mail Reminder.");
+      this._toastMessageService.alert("error", "Failed to send Mail Reminder.");
     });
   }
 
@@ -490,7 +503,7 @@ export class AddInvoiceComponent implements OnInit {
     let body = this.invoiceForm.value;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
-      this._toastMessageService.alert("success", "Whatsapp reminder send succesfully.");
+      this._toastMessageService.alert("success", "Whatsapp reminder send successfully.");
     }, error => {
       this.loading = false;
       this._toastMessageService.alert("error", "Failed to send Whatsapp reminder.");
@@ -579,10 +592,9 @@ export class AddInvoiceComponent implements OnInit {
       if (this.utilsService.isNonEmpty(res.sacCode)) {
         this.setSacCode(res.sacCode)
       }
-    },
-      error => {
-        console.log('Error occure during getting SacCode by userId -> ', error)
-      })
+    }, error => {
+      console.log('Error occurred during getting SacCode by userId -> ', error)
+    })
   }
 
   setSacCode(code) {
@@ -600,4 +612,77 @@ export class AddInvoiceComponent implements OnInit {
       return false;
     }
   }
+
+  setFinalAmount(amount) {
+    console.info(amount);
+    let calGst = amount - ((amount / 118) * 100);
+    this.invoiceForm.controls['subTotal'].setValue(Number((amount - calGst).toFixed(2)));
+    this.invoiceForm.controls['cgstTotal'].setValue(Number((calGst / 2).toFixed(2)))
+    this.invoiceForm.controls['sgstTotal'].setValue(Number((calGst / 2).toFixed(2)))
+    this.invoiceForm.controls['igstTotal'].setValue(Number((calGst).toFixed(2)));
+    this.invoiceForm.controls['discountTotal'].setValue(Number(this.invoiceDetails.itemList[0].amount - amount));
+    this.invoiceForm.controls['balanceDue'].setValue(Number(amount));
+    this.invoiceForm.controls['total'].setValue(Number(amount));
+  }
+
+  updateAndSendInvoice() {
+    let smeInfo = JSON.parse(localStorage.getItem('UMD'));
+    this.invoiceForm.controls['inovicePreparedBy'].setValue(smeInfo.USER_UNIQUE_ID);
+    if (!this.utilsService.isNonEmpty(this.serviceDetail)) {
+      return;
+    }
+    this.itemList[0].itemDescription = this.serviceDetail + ' ' + this.description;
+    this.invoiceForm.controls['itemList'].setValue(this.itemList);
+
+    if (this.invoiceForm.valid && this.checkSacCode()) {
+      console.log('Invoice Form: ', this.invoiceForm)
+      // if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
+      //   this.utilsService.isNonEmpty(this.invoiceForm.controls['itrType'].value) ||
+      //   this.utilsService.isNonEmpty(this.invoiceForm.controls['comment'].value)) {
+      //   var filingEstimateObj = {
+      //     "userId": this.invoiceForm.controls['userId'].value,
+      //     "clientName": this.invoiceForm.controls['billTo'].value,
+      //     "clientEmail": this.invoiceForm.controls['email'].value,
+      //     "clientMobile": this.invoiceForm.controls['phone'].value,
+      //     "smeEmail": smeInfo.USER_EMAIL,
+      //     "smeName": smeInfo.USER_F_NAME,
+      //     "smeMobile": smeInfo.USER_MOBILE,
+      //     "estimatedDateTime": this.invoiceForm.controls['estimatedDateTime'].value,
+      //     "itrType": this.invoiceForm.controls['itrType'].value,
+      //     "comment": this.invoiceForm.controls['comment'].value,
+      //     "isMarkAsDone": false,
+      //   }
+      // }
+      // console.log('filingEstimateObj info -> ', filingEstimateObj)
+      this.loading = true;
+      const param = '/invoice';
+      // const request = this.invoiceForm.getRawValue();
+      Object.assign(this.invoiceDetails, this.invoiceForm.getRawValue());
+      console.log('Invoice values:', this.invoiceDetails);
+      this.itrMsService.putMethod(param, this.invoiceDetails).subscribe(async (result: any) => {
+        this.showInvoiceForm = false;
+        console.log("result: ", result);
+        // this.utilsService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Create Invoice', 'Add', this.invoiceForm.controls['phone'].value], environment.matomoScriptId)
+        this.utilsService.smoothScrollToTop();
+        // this.updateAddressInProfile();
+        // if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
+        //   this.utilsService.isNonEmpty(this.invoiceForm.controls['itrType'].value) ||
+        //   this.utilsService.isNonEmpty(this.invoiceForm.controls['comment'].value)) {
+        //   this.saveFillingEstimate(filingEstimateObj)
+        // } else {
+        //   this.loading = false;
+        // }
+        this.loading = false;
+        this._toastMessageService.alert("success", "Invoice updated successfully.");
+        this.router.navigate(['/pages/subscription/sub']);
+      }, error => {
+        this.loading = false;
+        this._toastMessageService.alert("error", "Error while creating invoice, please try again.");
+      });
+
+    } else {
+      $('input.ng-invalid').first().focus();
+    }
+  }
+
 }

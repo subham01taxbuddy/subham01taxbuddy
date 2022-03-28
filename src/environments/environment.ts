@@ -2,6 +2,7 @@ export const environment:any = {
 	production: false,
 	portal_url: 'http://localhost:5400',
 	url: "https://uat-api.taxbuddy.com",
+	eri_url: "https://api.taxbuddy.com",
 	gst_gov_url: "https://devapi.gst.gov.in",
 	ifsc_url: "https://ifsc.razorpay.com",
 	matomoScriptId: '2',

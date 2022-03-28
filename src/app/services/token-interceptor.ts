@@ -33,9 +33,19 @@ export class TokenInterceptor implements HttpInterceptor {
         }).catch(err => console.log('Auth.currentSession err:', err));
         const TOKEN = (this.userData) ? this.userData.id_token : null;
         if (TOKEN) {
+            let eriHeader = JSON.parse(sessionStorage.getItem('ERI-Request-Header'))
             if (request.headers.has(InterceptorSkipHeader)) {
                 const headers = request.headers.delete(InterceptorSkipHeader);
                 return next.handle(request.clone({ headers }));
+            }
+            else if(this.utilsService.isNonEmpty(eriHeader)){
+                request = request.clone({
+                    setHeaders: {
+                        'panNumber': eriHeader.panNumber,
+                        'assessmentYear': eriHeader.assessmentYear,
+                        'userId': eriHeader.userId
+                    }
+                });
             }
             request = request.clone({
                 setHeaders: {

@@ -12,6 +12,7 @@ import { DelayComponent } from './delay/delay.component';
 import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
 import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-documnets.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-gaurd.service';
+import { AddClientComponent } from './add-client/add-client.component';
 
 const routes: Routes = [
     {
@@ -27,6 +28,7 @@ const routes: Routes = [
             { path: 'delay', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN'] }, */ component: DelayComponent },
             { path: 'tasks', component: FilingTasksComponent },
             { path: 'user-docs/:userId', component: ShowUserDocumnetsComponent },
+            { path: 'add-client', component: AddClientComponent },
             { path: '', redirectTo: '/pages/itr-filing/my-itrs', pathMatch: 'full' }
         ]
     },

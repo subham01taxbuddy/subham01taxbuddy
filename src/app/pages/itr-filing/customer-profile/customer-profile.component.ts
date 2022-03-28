@@ -15,6 +15,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-gaurd.service';
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -62,11 +63,7 @@ export class CustomerProfileComponent implements OnInit {
   // maxDate = new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate());
   maxDate = new Date();
   maxDateRevise = new Date();
-  residentialStatus = [
-    { value: 'RESIDENT', label: 'Resident' },
-    { value: 'NON_RESIDENT', label: 'Non Resident' },
-    { value: 'NON_ORDINARY', label: 'Non Ordinary Resident' }
-  ];
+
   itrTypes = [
     { value: '1', label: 'ITR-1' },
     { value: '4', label: 'ITR-4' },
@@ -94,20 +91,9 @@ export class CustomerProfileComponent implements OnInit {
     { value: 28, label: 'NRI Plan' },
   ];
 
-  employersDropdown = [
-    { value: 'GOVERNMENT', label: 'State Government' },
-    { value: 'CENTRAL_GOVT', label: 'Central Government' },
-    { value: 'PRIVATE', label: 'Public Sector Unit' },
-    { value: 'OTHER', label: 'Other-Private' },
-    { value: 'PENSIONERS', label: 'Pensioners' },
-    { value: 'NA', label: 'Not-Applicable' }
-  ];
 
-  genderMaster = [
-    { value: 'MALE', label: 'Male' },
-    { value: 'FEMALE', label: 'Female' },
-  ]
   filePath = 'ITR/';
+  loggedInUserData: any;
 
   constructor(public fb: FormBuilder,
     public utilsService: UtilsService,
@@ -117,8 +103,10 @@ export class CustomerProfileComponent implements OnInit {
     private userMsService: UserMsService,
     private router: Router,
     private dialog: MatDialog,
-    public location: Location,) {
+    public location: Location,
+    private roleBaseAuthGuardService:RoleBaseAuthGuardService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
   }
 
   ngOnInit() {
@@ -140,7 +128,7 @@ export class CustomerProfileComponent implements OnInit {
       middleName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
       lastName: ['', Validators.compose([Validators.required, /* Validators.pattern(AppConstants.charRegex) */])],
       fatherName: [''],
-      dateOfBirth: [''],
+      dateOfBirth: ['', Validators.required],
       gender: [''],
       contactNumber: ['', Validators.compose([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required])],
       email: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.emailRegex)])],
@@ -156,11 +144,7 @@ export class CustomerProfileComponent implements OnInit {
       filingTeamMemberId: [''], // TODO
       // planIdSelectedByUser: [null],
       // planIdSelectedByTaxExpert: [null],
-      seventhProviso139: this.fb.group({
-        depAmtAggAmtExcd1CrPrYrFlg: [null],
-        incrExpAggAmt2LkTrvFrgnCntryFlg: [null],
-        incrExpAggAmt1LkElctrctyPrYrFlg: [null],
-      })
+      
     });
   }
 
@@ -316,6 +300,9 @@ export class CustomerProfileComponent implements OnInit {
           this.router.navigate(['/pages/itr-filing/direct-upload']);
         } else if (ref === "MANUALLY") {
           this.updateManualFiling();
+        }
+        else if(ref === "DIRECT-UPLOAD"){
+          this.router.navigate(['/pages/itr-filing/add-client']);
         }
         // }
       }, error => {
@@ -587,18 +574,27 @@ export class CustomerProfileComponent implements OnInit {
     })
   }
 
-  onSelectRecidencial(status){
-      if(status === 'RESIDENT'){
-        this.customerProfileForm.controls['contactNumber'].setValidators([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required]);
-      }
-      else if(status === 'NON_RESIDENT' || status === 'NON_ORDINARY'){
-        this.customerProfileForm.controls['contactNumber'].setValidators([Validators.pattern(AppConstants.numericRegex),  Validators.maxLength(20), Validators.required]);
-      }
-      this.customerProfileForm.controls['contactNumber'].updateValueAndValidity();
+  onSelectRecidencial(status) {
+    if (status === 'RESIDENT') {
+      this.customerProfileForm.controls['contactNumber'].setValidators([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required]);
+    }
+    else if (status === 'NON_RESIDENT' || status === 'NON_ORDINARY') {
+      this.customerProfileForm.controls['contactNumber'].setValidators([Validators.pattern(AppConstants.numericRegex), Validators.maxLength(20), Validators.required]);
+    }
+    this.customerProfileForm.controls['contactNumber'].updateValueAndValidity();
   }
 
 
   getFilePath() {
     return `ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/${this.customerProfileForm.controls['isRevised'].value === 'Y' ? 'Revised' : 'Original'}/ITR Filing Docs`
+  }
+
+  addClient(){
+    Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+   
+  }
+
+  isApplicable(permissionRoles) {
+    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
   }
 }

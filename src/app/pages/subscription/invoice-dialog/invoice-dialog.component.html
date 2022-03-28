@@ -4,18 +4,39 @@
 <form *ngIf="this.data.mode === 'DELETE'">
     <mat-dialog-content>
         <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-12">
+
+            <div class="card__col-xs-4 card__col-sm-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Select Reason</mat-label>
+                    <mat-select [formControl]="selectReason" matInput placeholder="Select Reason" autocomplete="off"
+                        (selectionChange)="setInvoiceAction()" required>
+                        <mat-option value="Backout">Backout</mat-option>
+                        <mat-option value="Testing">Testing</mat-option>
+                        <mat-option value="Amount Change">Amount Change</mat-option>
+                        <mat-option value="Duplicate Invoice">Duplicate Invoice</mat-option>
+                        <mat-option value="Profile Change">Profile Change</mat-option>
+                        <mat-option value="Any Other">Any Other</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="selectReason.hasError('required')">Please select reason for deletion
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-8 card__col-sm-8" *ngIf="invoiceAction === 'DELETE'">
                 <mat-form-field appearance="outline">
                     <mat-label>Reason For Deletion</mat-label>
                     <input matInput [formControl]="reasonForDeletion" placeholder="Reason for deletion"
                         autocomplete="off" maxlength="150" required>
-                    <mat-error *ngIf="reasonForDeletion.hasError('required')">Please enter reason for deletion
-                    </mat-error>
                 </mat-form-field>
             </div>
+            <div class="card__col-xs-12 card__col-sm-12" style="font-size: 14px; padding-bottom: 10px;"
+                *ngIf="this.invoiceAction === 'UPDATE'">
+                <b>Note:</b> With the selected reason you have to update the invoice. Please <a href="javascript:;"
+                    (click)="navigateToUpdateInvoice()">click here </a> to update the invoice and send to user.
+            </div>
         </div>
+
     </mat-dialog-content>
-    <mat-dialog-actions align="center">
+    <mat-dialog-actions align="center" *ngIf="invoiceAction === 'DELETE'">
         <button mat-raised-button color="primary" (click)="deleteInvoice()" tabindex="1">{{data.submitBtn}}</button>
         <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
     </mat-dialog-actions>
