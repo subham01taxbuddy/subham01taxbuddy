@@ -1,14 +1,15 @@
 import { DatePipe, formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DateAdapter, MatDialog, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { GridOptions } from 'ag-grid-community';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import moment = require('moment');
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import * as moment from 'moment'
 import { LeadDialogComponent } from '../lead-dialog/lead-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 // import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 
 export const MY_FORMATS = {
@@ -34,7 +35,7 @@ export const MY_FORMATS = {
 })
 export class LeadsInfoComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   leadsForm: FormGroup;
   maxDate: any = new Date();
   toDateMin: any;
@@ -220,14 +221,14 @@ export class LeadsInfoComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Status">
             <i class="fa fa-user-circle-o" aria-hidden="true" data-action-type="status"></i>
            </button>`;
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -241,14 +242,14 @@ export class LeadsInfoComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Update Agent Id">
             <i class="fa fa-envelope" aria-hidden="true" data-action-type="agentId"></i>
            </button>`;
         },
         width: 80,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -262,14 +263,14 @@ export class LeadsInfoComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Source of leads">
             <i class="fa fa-paper-plane-o" aria-hidden="true" data-action-type="source"></i>
            </button>`;
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -284,7 +285,7 @@ export class LeadsInfoComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           // if ((params.data.modeOfPayment === 'Cash' || params.data.paymentStatus === 'Paid') || (params.data.modeOfPayment === 'Cash' && params.data.paymentStatus === 'Paid')) {
           //   return `<button type="button" class="action_icon add_button" disabled title="Delete Invoice">
           //   <i class="fa fa-trash" aria-hidden="true" data-action-type="delete-invoice"></i>
@@ -299,7 +300,7 @@ export class LeadsInfoComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           // if ((params.data.modeOfPayment === 'Cash' || params.data.paymentStatus === 'Paid') || (params.data.modeOfPayment === 'Cash' && params.data.paymentStatus === 'Paid')) {
           //   return {
           //     textAlign: 'center', display: 'flex',
@@ -335,15 +336,15 @@ export class LeadsInfoComponent implements OnInit {
     }
 
     if (this.leadsForm.valid) {
-      let oneDayAddedEndData = new Date(this.leadsForm['controls'].toDate.value);
+      let oneDayAddedEndData = new Date(this.leadsForm.controls['toDate'].value);
       oneDayAddedEndData.setDate(oneDayAddedEndData.getDate() + 1);
       console.log('oneDayAddedEndData: ', oneDayAddedEndData)
 
       var startDate;
       var endDate;
       if (from !== "leadAdded") {
-        startDate = (moment(this.leadsForm['controls'].fromDate.value).add(330, 'm').toDate()).toISOString();  //this.leadsForm.value.fromDate;
-        // let endDate = (moment(this.leadsForm['controls'].toDate.value).add(330, 'm').toDate()).toISOString();    //this.leadsForm.value.toDate;
+        startDate = (moment(this.leadsForm.controls['fromDate'].value).add(330, 'm').toDate()).toISOString();  //this.leadsForm.value.fromDate;
+        // let endDate = (moment(this.leadsForm.controls['toDate.value).add(330, 'm').toDate()).toISOString();    //this.leadsForm.value.toDate;
         endDate = (moment(oneDayAddedEndData).add(330, 'm').toDate()).toISOString();
       }
 
@@ -361,7 +362,7 @@ export class LeadsInfoComponent implements OnInit {
       this.userService.getMethod(param).subscribe((result: any) => {
         console.log('result -> ', result);
         this.loading = false;
-        this.leadsListGridOptions.api.setRowData(this.createRowData(result));
+        this.leadsListGridOptions.api?.setRowData(this.createRowData(result));
         this.leadInfo = result;
       },
         error => {

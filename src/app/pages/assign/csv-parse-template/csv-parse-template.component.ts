@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { UserMsService } from 'app/services/user-ms.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UtilsService } from 'app/services/utils.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { invalid } from 'moment';
 import { Papa } from 'ngx-papaparse';
 import { GridOptions } from 'ag-grid-community';
-import { GstMsService } from 'app/services/gst-ms.service';
+import { GstMsService } from 'src/app/services/gst-ms.service';
 import * as moment from 'moment';
 import { threadId } from 'worker_threads';
-import { NumericEditor } from 'app/shared/numeric-editor.component';
-import { CustomDateComponent } from 'app/shared/date.component';
-import { AgGridMaterialSelectEditorComponent } from 'app/shared/dropdown.component';
-import { AppConstants } from 'app/shared/constants';
-import { NavbarService } from 'app/services/navbar.service';
+import { NumericEditorComponent } from 'src/app/modules/shared/numeric-editor.component';
+import { CustomDateComponent } from 'src/app/modules/shared/date.component';
+import { AgGridMaterialSelectEditorComponent } from 'src/app/modules/shared/dropdown.component';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { NavbarService } from 'src/app/services/navbar.service';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -34,7 +34,7 @@ export class CSVParseTemplateComponent implements OnInit {
   csvDataInArray: any;
   periodType: any = [];
   isLeapYear: boolean;
-  loading: boolean;
+  loading!: boolean;
   selectedPeriod: any;
   invoice_types_list: any = [{ invoiceTypeId: 1, name: "Sales" },
   { invoiceTypeId: 2, name: "Purchase" }];
@@ -50,7 +50,7 @@ export class CSVParseTemplateComponent implements OnInit {
         // params.api.sizeColumnsToFit();
       },
       frameworkComponents: {
-        numericEditor: NumericEditor,
+        numericEditor: NumericEditorComponent,
         agDateInput: CustomDateComponent,
         matSelect: AgGridMaterialSelectEditorComponent
       },
@@ -122,7 +122,7 @@ export class CSVParseTemplateComponent implements OnInit {
   getCodeFromLabelOnBlur() {
     console.log(this.excelTamplateForm.value)
     if (this.utilsService.isNonEmpty(this.excelTamplateForm.value.user) && this.utilsService.isNonEmpty(this.excelTamplateForm.value.user)) {
-      this.natureCode = this.available_merchant_list.filter(item => item.name.toLowerCase() === this.excelTamplateForm.value.user.toLowerCase());
+      this.natureCode = this.available_merchant_list.filter((item:any) => item.name.toLowerCase() === this.excelTamplateForm.value.user.toLowerCase());
       if (this.natureCode.length !== 0) {
         this.natureCode = this.natureCode[0].userId;
         console.log('1 natureCode on blur = ', this.natureCode);
@@ -180,7 +180,7 @@ export class CSVParseTemplateComponent implements OnInit {
     console.log('My uploaded data', this.csvDataInArray)
     let file = JSON.parse(sessionStorage.getItem('uploaedFile'));
     console.log('File header data', file.meta.fields);
-    let calenderData = this.periodArray.filter(item => item.id === this.excelTamplateForm.value.period)[0];
+    let calenderData = this.periodArray.filter((item:any) => item.id === this.excelTamplateForm.value.period)[0];
     this.clientListGridOptions.api.setColumnDefs(this.clientListCreateColoumnDef(file.meta.fields, calenderData, this.invoiceType))
     this.clientListGridOptions.api.setRowData(this.createRowData(file.data, file.meta.fields));
   }
@@ -212,6 +212,7 @@ export class CSVParseTemplateComponent implements OnInit {
               return `<i class="fa fa-times" style="color: red;" aria-hidden="true"></i>`;
             }
           }
+          return '';
         },
         cellStyle: { textAlign: 'center' },
         pinned: 'left',
@@ -254,6 +255,7 @@ export class CSVParseTemplateComponent implements OnInit {
                 return true;
               }
             }
+            return true;
           },
         },
       },
@@ -274,6 +276,7 @@ export class CSVParseTemplateComponent implements OnInit {
                 return true;
               }
             }
+            return true;
           },
         },
       },
@@ -282,15 +285,16 @@ export class CSVParseTemplateComponent implements OnInit {
         field: 'gstin',
         width: 100,
         editable: function (params) {
-          if (invoiceType == 1) {
+          if (invoiceType === 1) {
             if (params.data.invoiceType === "B2B") {
               return true;
             } else {
               return false;
             }
-          } else if (invoiceType == 2) {
+          } else if (invoiceType === 2) {
             return true;
           }
+          return true;
 
         },
         cellClassRules: {
@@ -304,6 +308,7 @@ export class CSVParseTemplateComponent implements OnInit {
                 return true;
               }
             }
+            return true;
 
           },
         },
@@ -329,6 +334,7 @@ export class CSVParseTemplateComponent implements OnInit {
                 return true;
               }
             }
+            return false;
           },
         },
       },
@@ -349,6 +355,7 @@ export class CSVParseTemplateComponent implements OnInit {
                 return true;
               }
             }
+            return true;
           },
         },
       },
@@ -368,6 +375,7 @@ export class CSVParseTemplateComponent implements OnInit {
                 return true;
               }
             }
+            return true;
           },
         },
       },
@@ -497,7 +505,7 @@ export class CSVParseTemplateComponent implements OnInit {
         invoiceType: data[i][column[0]],
         invoiceDate: data[i][column[1]],
         invoiceNum: data[i][column[2]],
-        gstin: data[i][column[0]] == 'B2C' ? '' : data[i][column[3]],
+        gstin: data[i][column[0]] === 'B2C' ? '' : data[i][column[3]],
         contactNo: data[i][column[4]],
         custName: data[i][column[5]],
         custEmail: data[i][column[6]],
@@ -541,6 +549,7 @@ export class CSVParseTemplateComponent implements OnInit {
     if (date) {
       return new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate();
     }
+    return '';
   }
 
   placeOfSupplyValid(data) {
@@ -568,7 +577,7 @@ export class CSVParseTemplateComponent implements OnInit {
         this.loading = false;
         for (let i = 0; i < gridRowData.length; i++) {
           if (this.utilsService.isNonEmpty(gridRowData[i].data.gstin)) {
-            let matchGstin = res.filter(item => item.partyGstin === gridRowData[i].data.gstin)
+            let matchGstin = res.filter((item:any) => item.partyGstin === gridRowData[i].data.gstin)
             console.log("matchGstin: ", matchGstin)
             if (matchGstin.length > 0) {
               gridRowData[i].data.isValidGSTN = true;     //Set GSTIN part valid
@@ -577,8 +586,8 @@ export class CSVParseTemplateComponent implements OnInit {
             }
           }
         }
-        console.log(gridRowData)
-        this.clientListGridOptions.api.refreshView();
+        // update method (modified)
+        this.clientListGridOptions.api.refreshCells();
 
       }
     }, err => {
@@ -605,7 +614,7 @@ function extractValues(mappings) {
 function lookupValue(mappings, key) {
   let country = '';
   mappings.forEach(element => {
-    if (element.code == key) {
+    if (element.code === key) {
       country = element.name
     }
   });
@@ -619,7 +628,7 @@ function lookupValue(mappings, key) {
 // convert value to code
 function lookupKey(mappings, name) {
   mappings.forEach(element => {
-    if (element.code == name) {
+    if (element.code === name) {
       return element.name
     }
   });

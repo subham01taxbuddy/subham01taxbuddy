@@ -1,14 +1,14 @@
-import { UtilsService } from 'app/services/utils.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from './../../../services/user-ms.service';
 import { AfterContentChecked, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { AppConstants } from 'app/shared/constants';
+import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({
   selector: 'app-doc-uploaded',
   templateUrl: './doc-uploaded.component.html',
   styleUrls: ['./doc-uploaded.component.css'],
 })
-export class DocUploadedComponent implements OnInit, AfterContentChecked {
+export class DocUploadedComponent implements  AfterContentChecked {
   docUploadedList = [];
   page = 0; // current page
   count = 0; // total pages
@@ -93,12 +93,10 @@ export class DocUploadedComponent implements OnInit, AfterContentChecked {
     };
   }
 
-  ngOnInit() {
-  }
   ngAfterContentChecked() {
     this.cdRef.detectChanges();
   }
-  retrieveData(page) {
+  retrieveData(page:any) {
     this.loading = true;
     const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.searchParams['selectedAgentId']}&fy=${this.searchParams['selectedFyYear']}&statusId=11`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
@@ -122,9 +120,9 @@ export class DocUploadedComponent implements OnInit, AfterContentChecked {
     this.retrieveData(this.page);
   }
 
-  getFilerName(itr) {
+  getFilerName(itr:any) {
     if (this.utilsService.isNonEmpty(itr) && this.utilsService.isNonEmpty(itr['FilingTeamMemberId']) && itr['FilingTeamMemberId'] !== 0) {
-      const filer = this.filingTeamMembers.filter(item => item.value === itr['FilingTeamMemberId']);
+      const filer = this.filingTeamMembers.filter((item:any) => item.value === itr['FilingTeamMemberId']);
       if (filer.length > 0) {
         return filer[0].label;
       }
@@ -133,7 +131,7 @@ export class DocUploadedComponent implements OnInit, AfterContentChecked {
     return 'Not Assigned';
   }
 
-  startFiling(data) {
+  startFiling(data:any) {
     this.loading = true;
     const param = `/profile/${data['userId']}`
     this.userMsService.getMethod(param).subscribe((result: any) => {
@@ -143,18 +141,18 @@ export class DocUploadedComponent implements OnInit, AfterContentChecked {
       this.utilsService.showSnackBar('Some data points are missing please dont try from here')
     })
   }
-  goToKommunicate(data) {
+  goToKommunicate(data:any) {
     if (this.utilsService.isNonEmpty(data['KommunicateURL'])) {
       window.open(data['KommunicateURL'], '_blank')
     }
   }
 
-  pageChanged(event) {
+  pageChanged(event:any) {
     this.config.currentPage = event;
     this.retrieveData(event - 1);
   }
 
-  fromSearchParams(event) {
+  fromSearchParams(event:any) {
     this.searchParams = event;
     localStorage.setItem(AppConstants.SELECTED_AGENT, event['selectedAgentId']);
     this.retrieveData(0);

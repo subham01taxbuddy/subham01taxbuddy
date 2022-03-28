@@ -1,12 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DateAdapter, MatDialogRef, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MAT_DIALOG_DATA } from '@angular/material';
+import { DateAdapter,  MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
-import moment = require('moment');
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -414,8 +415,8 @@ export class LeadDialogComponent implements OnInit {
       console.log('this.leadStatusForm valid -> ',this.leadStatusForm.valid, this.leadStatusForm);
       console.log('selected lead -> ',this.data['leadData']);
       var selectedData;
-      if(this.leadStatusForm['controls'].leadStatus.value === 'FOLLOWUP'){
-        selectedData = (moment(this.leadStatusForm['controls'].callSheduleDate.value).add(330, 'm').toDate());   //.toISOString();
+      if(this.leadStatusForm.controls['leadStatus'].value === 'FOLLOWUP'){
+        selectedData = (moment(this.leadStatusForm.controls['callSheduleDate'].value).add(330, 'm').toDate());   //.toISOString();
       }
       else{
         selectedData = '';
@@ -424,10 +425,10 @@ export class LeadDialogComponent implements OnInit {
       this.loading = true;
       let param = '/update-lead-status';
       let body = {
-        "status": this.leadStatusForm['controls'].leadStatus.value, 
+        "status": this.leadStatusForm.controls['leadStatus'].value, 
         "mobileNumber": this.data['leadData'].mobileNumber,
         "followUpDate": selectedData,
-        "source": this.leadStatusForm['controls'].source.value
+        "source": this.leadStatusForm.controls['source'].value
       }
       this.userService.putMethod(param, body).subscribe(responce=>{
         this.loading = false;
@@ -473,7 +474,7 @@ export class LeadDialogComponent implements OnInit {
     if (e.target.checked) {
       interestArray.push(new FormControl(e.target.value));
     } else {
-       const index = interestArray.controls.findIndex(x => x.value === e.target.value);
+       const index = interestArray.controls['findIndex(x => x.value === e.target.value)'];
        interestArray.removeAt(index);
     }
 
@@ -562,6 +563,7 @@ export class LeadDialogComponent implements OnInit {
           return false;
         }
       }
+      return false;
   }
 }
 

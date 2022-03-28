@@ -1,13 +1,13 @@
-import { TCS, OtherThanTDSTCS } from './../../../shared/interfaces/itr-input.interface';
+import { TCS, OtherThanTDSTCS } from '../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { GridOptions, GridApi } from 'ag-grid-community';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-import { NumericEditor } from 'app/shared/numeric-editor.component';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
-import { AgGridMaterialSelectEditorComponent } from 'app/shared/dropdown.component';
-import { CustomDateComponent } from 'app/shared/date.component';
-import { ItrMsService } from 'app/services/itr-ms.service';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { NumericEditorComponent } from 'src/app/modules/shared/numeric-editor.component';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { AgGridMaterialSelectEditorComponent } from 'src/app/modules/shared/dropdown.component';
+import { CustomDateComponent } from 'src/app/modules/shared/date.component';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 import * as moment from 'moment';
 import { debug } from 'console';
 
@@ -97,7 +97,7 @@ export class TaxesPaidComponent implements OnInit {
         }
       },
       frameworkComponents: {
-        numericEditor: NumericEditor,
+        numericEditor: NumericEditorComponent,
         // agDateInput: CustomDateComponent,
         // matSelect: AgGridMaterialSelectEditorComponent
       },
@@ -133,6 +133,7 @@ export class TaxesPaidComponent implements OnInit {
           if (params.data.deductorTAN.length !== 10 || !new RegExp(AppConstants.tanNumberRegex).test(params.data.deductorTAN)) {
             return ('Please enter valid TAN number');
           }
+          return '';
         },
       },
       {
@@ -154,6 +155,7 @@ export class TaxesPaidComponent implements OnInit {
           if (params.data.deductorTAN.length < 1 || params.data.deductorTAN.length > 125) {
             return ('Name of employer cannot be more than 125 characters.');
           }
+          return '';
         },
       },
       {
@@ -306,7 +308,7 @@ export class TaxesPaidComponent implements OnInit {
         }
       },
       frameworkComponents: {
-        numericEditor: NumericEditor,
+        numericEditor: NumericEditorComponent,
         // agDateInput: CustomDateComponent,
         matSelect: AgGridMaterialSelectEditorComponent
       },
@@ -342,6 +344,7 @@ export class TaxesPaidComponent implements OnInit {
           if (params.data.deductorTAN.length !== 10 || !new RegExp(AppConstants.tanNumberRegex).test(params.data.deductorTAN)) {
             return ('Please enter valid TAN number');
           }
+          return '';
         },
       },
       {
@@ -379,6 +382,7 @@ export class TaxesPaidComponent implements OnInit {
           if (params.data.deductorName.length < 1 || params.data.deductorName.length > 125) {
             return ('Name of deductor cannot be more than 125 characters.');
           }
+          return '';
         },
       },
       {
@@ -538,7 +542,7 @@ export class TaxesPaidComponent implements OnInit {
         }
       },
       frameworkComponents: {
-        numericEditor: NumericEditor,
+        numericEditor: NumericEditorComponent,
         // agDateInput: CustomDateComponent,
         matSelect: AgGridMaterialSelectEditorComponent
       },
@@ -574,6 +578,7 @@ export class TaxesPaidComponent implements OnInit {
           if (params.data.deductorPAN.length !== 10 || !new RegExp(AppConstants.panNumberRegex).test(params.data.deductorPAN)) {
             return ('Please enter valid PAN number');
           }
+          return '';
         },
       },
       {
@@ -611,6 +616,7 @@ export class TaxesPaidComponent implements OnInit {
           if (params.data.deductorName.length < 1 || params.data.deductorName.length > 125) {
             return ('Name of deductor cannot be more than 125 characters.');
           }
+          return '';
         },
       },
       {
@@ -768,7 +774,7 @@ export class TaxesPaidComponent implements OnInit {
         }
       },
       frameworkComponents: {
-        numericEditor: NumericEditor,
+        numericEditor: NumericEditorComponent,
         // agDateInput: CustomDateComponent,
         matSelect: AgGridMaterialSelectEditorComponent
       },
@@ -804,6 +810,7 @@ export class TaxesPaidComponent implements OnInit {
           if (params.data.collectorTAN.length !== 10 || !new RegExp(AppConstants.tanNumberRegex).test(params.data.collectorTAN)) {
             return ('Please enter valid TAN number');
           }
+          return '';
         },
       },
       {
@@ -825,6 +832,7 @@ export class TaxesPaidComponent implements OnInit {
           if (params.data.collectorName.length < 1 || params.data.collectorName.length > 125) {
             return ('Name of collector cannot be more than 125 characters.');
           }
+          return '';
         },
       },
       {
@@ -948,7 +956,7 @@ export class TaxesPaidComponent implements OnInit {
         }
       },
       frameworkComponents: {
-        numericEditor: NumericEditor,
+        numericEditor: NumericEditorComponent,
         agDateInput: CustomDateComponent,
       },
       enableCellChangeFlash: true,
@@ -983,6 +991,7 @@ export class TaxesPaidComponent implements OnInit {
           if (params.data.bsrCode.length !== 7) {
             return ('Please enter 7 digit BSR code');
           }
+          return '';
         },
       },
       {
@@ -1090,6 +1099,7 @@ export class TaxesPaidComponent implements OnInit {
           break;
         }
       }
+      return true;
     } else {
       isDataValid = true;
     }
@@ -1098,8 +1108,10 @@ export class TaxesPaidComponent implements OnInit {
         const data = this.createOtherThanTdsTcsRowData();
         this.otherThanTdsTcsGridOptions.api.updateRowData({ add: data });
         this.otherThanTdsTcsGridOptions.api.setFocusedCell(this.otherThanTdsTcsGridOptions.api.getRenderedNodes().length - 1, 'bsrCode', '');
+        return true;
       } else {
         this.utilsService.showSnackBar('Please fill current row first.');
+        return false;
       }
     } else {
       if (isDataValid) {
@@ -1306,7 +1318,7 @@ function extractValues(mappings) {
 function lookupValue(mappings, key) {
   let country = '';
   mappings.forEach(element => {
-    if (element.code == key) {
+    if (element.code === key) {
       country = element.name
     }
   });
@@ -1320,7 +1332,7 @@ function lookupValue(mappings, key) {
 // convert value to code
 function lookupKey(mappings, name) {
   mappings.forEach(element => {
-    if (element.code == name) {
+    if (element.code === name) {
       return element.name
     }
   });

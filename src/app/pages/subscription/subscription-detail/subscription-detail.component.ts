@@ -1,10 +1,10 @@
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { AddSubscriptionComponent } from '../add-subscription/add-subscription.component';
 
 @Component({
@@ -14,7 +14,7 @@ import { AddSubscriptionComponent } from '../add-subscription/add-subscription.c
 })
 export class SubscriptionDetailComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   searchVal: any;
   selectedUserName: any = '';
   userId: any;

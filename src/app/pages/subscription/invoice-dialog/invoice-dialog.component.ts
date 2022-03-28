@@ -1,12 +1,12 @@
 import { ItrMsService } from './../../../services/itr-ms.service';
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { UserMsService } from 'app/services/user-ms.service';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UserMsService } from 'src/app/services/user-ms.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UtilsService } from 'app/services/utils.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { Router } from '@angular/router';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 declare let $: any;
 
 export const MY_FORMATS = {
@@ -34,7 +34,7 @@ export class InvoiceDialogComponent implements OnInit {
   invoiceDetails: any;
   invoiceEditForm: FormGroup;
   maxDate: any = new Date();
-  loading: boolean;
+  loading!: boolean;
   reasonForDeletion = new FormControl('', [Validators.required]);
 
   constructor(public dialogRef: MatDialogRef<InvoiceDialogComponent>,
@@ -81,7 +81,7 @@ export class InvoiceDialogComponent implements OnInit {
       console.log('User Profile: ', result);
       this.invoiceDetails = result;
       this.invoiceEditForm.patchValue(result);
-      this.invoiceEditForm.controls.paymentStatus.setValue('Paid')
+      this.invoiceEditForm.controls['paymentStatus'].setValue('Paid')
       console.log('invoiceEditForm: ', this.invoiceEditForm)
     }, error => {
       this.loading = false;

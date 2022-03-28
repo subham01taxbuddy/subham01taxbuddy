@@ -1,8 +1,8 @@
 <div class="calendar-container">
 	
 	<div class="input" [class.input_disabled]="disabled">
-	  <label class="input__label">{{(label == 'All' ? 'From To Date' : label)}}
-      	<span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+	  <label class="input__label">{{(label === 'All' ? 'From To Date' : label)}}
+      	<span *ngIf="is_mandatory === 'true'" class="mandatory_icon">*</span>
 	  </label>
 	  <div class="input__select">
 	    <input type="{{type}}" name="{{name}}" class="select__box ogp_select" placeholder="{{placeholder}}" 
@@ -14,12 +14,12 @@
 	</div>
 
 <div *ngIf="showCalendar && !disabled" class="calendar" 
-	[class.calendar-center]="position == 'center'"
-	[class.calendar-right]="position == 'right'"
-	[class.single-calendar]="format == 'from' || format == 'to'"
+	[class.calendar-center]="position === 'center'"
+	[class.calendar-right]="position === 'right'"
+	[class.single-calendar]="format === 'from' || format === 'to'"
 >
 	
-	<div *ngIf="format == 'All'" class="calendar__tab-row clearfix">  		
+	<div *ngIf="format === 'All'" class="calendar__tab-row clearfix">  		
 		<div class="calendar__tab-box">    
 			<a class="calendar__tab-item" 
 				(click)="compare_dates = false"
@@ -35,7 +35,7 @@
 	<div class="calendar__tab-container">
 
 		<div class="calendar__tab-content" 
-			*ngIf="compare_dates && format == 'All'" [class.calendar__tab_active]="compare_dates">
+			*ngIf="compare_dates && format === 'All'" [class.calendar__tab_active]="compare_dates">
 			<div class="calendar__period-selector">
 				<a class="calendar__period calendar__period_year" 
 					*ngFor="let tab of compare_tabs; let i=index "
@@ -165,11 +165,11 @@
 
 				<div class="calendar__container clearfix">
 					
-					<div *ngIf="format == 'from' || format == 'All'" class="calendar__box"
-						[class.calendar-single-box]="format == 'from'">
+					<div *ngIf="format === 'from' || format === 'All'" class="calendar__box"
+						[class.calendar-single-box]="format === 'from'">
 						<div class="calendar__start">
 							<div class="calendar__input-container">  
-								<label class="calendar__label">{{(label == 'All')? 'From' : label}}</label>  
+								<label class="calendar__label">{{(label === 'All')? 'From' : label}}</label>  
 								<input type="date" class="calendar__input input__text" 
 									name="from_data.date" (keyup)="equalDates(from_data.date, 'start')" 
 									[(ngModel)]="from_data.date">
@@ -190,7 +190,7 @@
 											<li class="list-box__item"
 												*ngFor="let month of months; let m=index "
 												(click)="from_data.month = month; from_data.month_name = months_name[m]; createDateObject(from_data.year, from_data.month, from_data)"
-												[class.list-box__item_selected]="from_data.month == month"
+												[class.list-box__item_selected]="from_data.month === month"
 											>{{months_name[m]}}</li>
 										</ul>
 									</div>
@@ -200,7 +200,7 @@
 											<li class="list-box__item"
 												*ngFor="let year of years"
 												(click)="from_data.year = year; createDateObject(from_data.year, from_data.month, from_data)"
-												[class.list-box__item_selected]="from_data.year == year">{{year}}</li>
+												[class.list-box__item_selected]="from_data.year === year">{{year}}</li>
 										</ul>
 									</div>
 								</div>
@@ -223,7 +223,7 @@
 											<td *ngFor="let day of week" 
 												class="calendar__day" 
 												[class.calendar__day_click_disabled]="day.date>restrict_from_date"
-												[class.calendar__day_disabled]="day.month == 'prev' || day.month == 'next'"
+												[class.calendar__day_disabled]="day.month === 'prev' || day.month === 'next'"
 												[class.calendar__day_start]="day.calendar_start"
 												[class.calendar__day_between]="day.calendar_selected"
 												[class.calendar__day_end]="day.calendar_end"
@@ -244,11 +244,11 @@
 						</div>
 					</div>
 
-					<div *ngIf="format == 'to' || format == 'All'" class="calendar__box"
-						[class.calendar-single-box]="format == 'to'">
+					<div *ngIf="format === 'to' || format === 'All'" class="calendar__box"
+						[class.calendar-single-box]="format === 'to'">
 						<div class="calendar__end">
 							<div class="calendar__input-container">
-								<label class="calendar__label">{{(label == 'All')? 'To' : label}}</label>  
+								<label class="calendar__label">{{(label === 'All')? 'To' : label}}</label>  
 								<input type="date" class="calendar__input input__text"
 									name="date_to" (keyup)="equalDates(to_data.date, 'end')" 
 									[(ngModel)]="to_data.date">
@@ -269,7 +269,7 @@
 											<li class="list-box__item"
 												*ngFor="let month of months; let m=index "
 												(click)="to_data.month = month; to_data.month_name = months_name[m]; createDateObject(to_data.year, to_data.month, to_data)"
-												[class.list-box__item_selected]="to_data.month == month"
+												[class.list-box__item_selected]="to_data.month === month"
 											>{{months_name[m]}}</li>
 										</ul>
 									</div>
@@ -280,7 +280,7 @@
 												*ngFor="let year of years"
 												(click)="to_data.year = year; 
 												createDateObject(to_data.year, to_data.month, to_data)"
-												[class.list-box__item_selected]="to_data.year == year">{{year}}</li>
+												[class.list-box__item_selected]="to_data.year === year">{{year}}</li>
 										</ul>
 									</div>
 								</div>
@@ -302,8 +302,8 @@
 										<tr *ngFor="let week of to_data.dateObject" class="calendar__week">
 											<td *ngFor="let day of week" 
 												class="calendar__day" 
-												[class.calendar__day_click_disabled]="format == 'All' && day.date<beginCalendar.date"
-												[class.calendar__day_disabled]="day.month == 'prev' || day.month == 'next'"
+												[class.calendar__day_click_disabled]="format === 'All' && day.date<beginCalendar.date"
+												[class.calendar__day_disabled]="day.month === 'prev' || day.month === 'next'"
 												[class.calendar__day_start]="day.calendar_start"
 												[class.calendar__day_between]="day.calendar_selected"
 												[class.calendar__day_end]="day.calendar_end"

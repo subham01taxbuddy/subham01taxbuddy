@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { environment } from 'environments/environment';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-show-user-documnets',
@@ -100,7 +100,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
         }
 
       }, (error) => {
-        console.log("error == ", error);
+        console.log("error === ", error);
         this.loading = false;
         // this.utilsService.disposable.unsubscribe();
         // this.errorHandler(error);

@@ -1,29 +1,29 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { UserMsService } from 'app/services/user-ms.service';
+import { Component, OnInit, Input, Output, EventEmitter, DoCheck } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
 import { Observable } from 'rxjs';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({
   selector: 'app-itr4part',
   templateUrl: './itr4part.component.html',
   styleUrls: ['./itr4part.component.css']
 })
-export class Itr4partComponent implements OnInit {
+export class Itr4partComponent implements OnInit, DoCheck {
 
-  @Input('itrType') itrType: string;
-  @Input('jsonParse') jsonParse: any;
-  @Input('businessData') businessData: any;
+  @Input() itrType!: string;
+  @Input() jsonParse: any;
+  @Input() businessData: any;
 
   @Output() getBusinessInfo = new EventEmitter();
 
   natureOfBusinessDropdown44AD = [];
   natureOfBusinessDropdown44ADA = [];
-  natureOfBusinessForm: FormGroup;
-  filteredOptions: Observable<any[]>;
-  filteredOptions44ADA: Observable<any[]>;
+  natureOfBusinessForm!: FormGroup;
+  filteredOptions!: Observable<any[]>;
+  filteredOptions44ADA!: Observable<any[]>;
 
 
   constructor(private userService: UserMsService, private fb: FormBuilder, private utilService: UtilsService) {
@@ -120,20 +120,20 @@ export class Itr4partComponent implements OnInit {
     console.log('financialParticulars: ',this.businessData.assesse.business);
     this.natureOfBusinessForm.patchValue(this.businessData.assesse.business.financialParticulars);
 
-    var businessIncome = this.businessData.assesse.business.presumptiveIncomes.filter(item => item.businessType === "BUSINESS");
+    var businessIncome = this.businessData.assesse.business.presumptiveIncomes.filter((item:any) => item.businessType === "BUSINESS");
     console.log('businessIncome : ',businessIncome);
     if(businessIncome.length > 0){
       let businessNatureCode = businessIncome[0].natureOfBusiness;
       console.log('businessNatureCode: ',businessNatureCode);
-      let natureLabel = this.natureOfBusinessDropdown44AD.filter(item => item.code === businessNatureCode);
+      let natureLabel:any = this.natureOfBusinessDropdown44AD.filter((item:any) => item.code === businessNatureCode);
       if(natureLabel.length > 0){
         console.log('natureLabel: ',natureLabel);
         this.natureOfBusinessForm.controls['natureOfBusiness44AD'].setValue(natureLabel[0].label);
       }
     
       this.natureOfBusinessForm.controls['tradeName44AD'].setValue(businessIncome[0].tradeName);
-      let recivedInBank = businessIncome[0].incomes.filter(item => item.incomeType === "BANK");
-      let recivedInCash = businessIncome[0].incomes.filter(item => item.incomeType === "CASH");
+      let recivedInBank = businessIncome[0].incomes.filter((item:any) => item.incomeType === "BANK");
+      let recivedInCash = businessIncome[0].incomes.filter((item:any) => item.incomeType === "CASH");
       this.natureOfBusinessForm.controls['recieptRecievedInBank'].setValue(recivedInBank[0].receipts);
       this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].setValue(recivedInBank[0].presumptiveIncome);
       this.natureOfBusinessForm.controls['recievedinCash'].setValue(recivedInCash[0].receipts);
@@ -141,7 +141,7 @@ export class Itr4partComponent implements OnInit {
       this.calculateTotalAmnt();
     }
   
-    var presumptiveIncome = this.businessData.assesse.business.presumptiveIncomes.filter(item => item.businessType === "PROFESSIONAL");
+    var presumptiveIncome = this.businessData.assesse.business.presumptiveIncomes.filter((item:any) => item.businessType === "PROFESSIONAL");
     console.log('presumptiveIncome : ',presumptiveIncome);
     if(presumptiveIncome.length > 0){
       var presumptiveNatureCode = presumptiveIncome[0].natureOfBusiness;
@@ -149,7 +149,7 @@ export class Itr4partComponent implements OnInit {
         presumptiveNatureCode = "Share of income from firm";
       }
       console.log('presumptiveNatureCode: ',presumptiveNatureCode);
-      let presumptiveLabel = this.natureOfBusinessDropdown44ADA.filter(item => item.code === presumptiveNatureCode);
+      let presumptiveLabel:any = this.natureOfBusinessDropdown44ADA.filter((item:any) => item.code === presumptiveNatureCode);
       if(presumptiveLabel.length > 0){
       console.log('nature presumptiveLabel Label: ',presumptiveLabel);
       this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].setValue(presumptiveLabel[0].label);
@@ -168,11 +168,11 @@ export class Itr4partComponent implements OnInit {
       var natureOfBusinessInfo = [];
       natureOfBusinessInfo = result.natureOfBusiness;
       console.log('natureOfBusinessInfo: ', natureOfBusinessInfo)
-      this.natureOfBusinessDropdown44AD = natureOfBusinessInfo.filter(item => item.section === '44AD');
-      this.natureOfBusinessDropdown44ADA = natureOfBusinessInfo.filter(item => item.section === '44ADA');
+      this.natureOfBusinessDropdown44AD = natureOfBusinessInfo.filter((item:any) => item.section === '44AD');
+      this.natureOfBusinessDropdown44ADA = natureOfBusinessInfo.filter((item:any) => item.section === '44ADA');
       console.log('natureOfBusinessDropdown44AD: ', this.natureOfBusinessDropdown44AD)
       console.log('natureOfBusinessDropdown44ADA: ', this.natureOfBusinessDropdown44ADA)
-      //sessionStorage.setItem('MASTER', JSON.stringify(result));
+      //sessionStorage'].setItem('MASTER', JSON.stringify(result));
 
       console.log('businessData: ===>>> ',this.businessData);   //Form here we call to updateBusinessInfo method
       if(this.utilService.isNonEmpty(this.businessData)){
@@ -180,7 +180,7 @@ export class Itr4partComponent implements OnInit {
       } 
 
 
-      this.filteredOptions = this.natureOfBusinessForm['controls'].natureOfBusiness44AD.valueChanges
+      this.filteredOptions = this.natureOfBusinessForm.controls['natureOfBusiness44AD'].valueChanges
         .pipe(
           startWith(''),
           map(value => {
@@ -192,7 +192,7 @@ export class Itr4partComponent implements OnInit {
         );
       console.log('filteredOptions: ', this.filteredOptions)
 
-      this.filteredOptions44ADA = this.natureOfBusinessForm['controls'].natureOfBusiness44ADA.valueChanges
+      this.filteredOptions44ADA = this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].valueChanges
         .pipe(
           startWith(''),
           map(value => {
@@ -211,141 +211,141 @@ export class Itr4partComponent implements OnInit {
 
   }
 
-  displayFn(label) {
+  displayFn(label:any) {
     return label ? label : undefined;
   }
 
-  _filter(name) {
+  _filter(name:any) {
     console.log('44AD name: ', name)
     const filterValue = name.toLowerCase();
-    return this.natureOfBusinessDropdown44AD.filter(option => option.label.toLowerCase().indexOf(filterValue) === 0);
+    return this.natureOfBusinessDropdown44AD.filter((option:any) => option.label.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  _filter44DA(name) {
+  _filter44DA(name:any) {
     console.log('44ADA name: ', name)
     const filterValue = name.toLowerCase();
-    return this.natureOfBusinessDropdown44ADA.filter(option => option.label.toLowerCase().indexOf(filterValue) === 0);
+    return this.natureOfBusinessDropdown44ADA.filter((option:any) => option.label.toLowerCase().indexOf(filterValue) === 0);
   }
 
 
   natureCode: any;
   getCodeFromLabelOnBlur() {
     debugger
-    if (this.utilService.isNonEmpty(this.natureOfBusinessForm['controls'].natureOfBusiness44AD.value) && this.utilService.isNonEmpty(this.natureOfBusinessForm['controls'].natureOfBusiness44AD.value)) {
-      this.natureCode = this.natureOfBusinessDropdown44AD.filter(item => item.label.toLowerCase() === this.natureOfBusinessForm['controls'].natureOfBusiness44AD.value.toLowerCase());
+    if (this.utilService.isNonEmpty(this.natureOfBusinessForm.controls['natureOfBusiness44AD'].value) && this.utilService.isNonEmpty(this.natureOfBusinessForm.controls['natureOfBusiness44AD'].value)) {
+      this.natureCode = this.natureOfBusinessDropdown44AD.filter((item:any) => item.label.toLowerCase() === this.natureOfBusinessForm.controls['natureOfBusiness44AD'].value.toLowerCase());
       if (this.natureCode.length !== 0) {
         this.natureCode = this.natureCode[0].code;
         console.log('natureCode on blur = ', this.natureCode);
       }
       else {
-        // this.natureOfBusinessForm['controls'].natureOfBusiness44AD.setErrors(invalid);
+        // this.natureOfBusinessForm.controls['natureOfBusiness44AD'].setErrors(invalid);
         // console.log('natureCode on blur = ', this.natureCode);
       }
-      this.natureOfBusinessForm['controls'].natureOfBusiness44ADA.setValidators(null)
-      this.natureOfBusinessForm['controls'].natureOfBusiness44ADA.updateValueAndValidity();
-      this.natureOfBusinessForm['controls'].tradeName44ADA.setValidators(null)
-      this.natureOfBusinessForm['controls'].tradeName44ADA.updateValueAndValidity();
+      this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].setValidators(null)
+      this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].updateValueAndValidity();
+      this.natureOfBusinessForm.controls['tradeName44ADA'].setValidators(null)
+      this.natureOfBusinessForm.controls['tradeName44ADA'].updateValueAndValidity();
 
-      this.natureOfBusinessForm['controls'].grossReciept.setValidators(null)
-      this.natureOfBusinessForm['controls'].grossReciept.updateValueAndValidity();
-      this.natureOfBusinessForm['controls'].presumptiveIncome.setValidators(null)
-      this.natureOfBusinessForm['controls'].presumptiveIncome.updateValueAndValidity();
+      this.natureOfBusinessForm.controls['grossReciept'].setValidators(null)
+      this.natureOfBusinessForm.controls['grossReciept'].updateValueAndValidity();
+      this.natureOfBusinessForm.controls['presumptiveIncome'].setValidators(null)
+      this.natureOfBusinessForm.controls['presumptiveIncome'].updateValueAndValidity();
 
     }
     else {
-      this.natureOfBusinessForm['controls'].natureOfBusiness44ADA.setValidators([Validators.required])
-      this.natureOfBusinessForm['controls'].natureOfBusiness44ADA.updateValueAndValidity();
-      this.natureOfBusinessForm['controls'].tradeName44ADA.setValidators([Validators.required])
-      this.natureOfBusinessForm['controls'].tradeName44ADA.updateValueAndValidity();
+      this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].setValidators([Validators.required])
+      this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].updateValueAndValidity();
+      this.natureOfBusinessForm.controls['tradeName44ADA'].setValidators([Validators.required])
+      this.natureOfBusinessForm.controls['tradeName44ADA'].updateValueAndValidity();
 
-      this.natureOfBusinessForm['controls'].grossReciept.setValidators([Validators.required])
-      this.natureOfBusinessForm['controls'].grossReciept.updateValueAndValidity();
-      this.natureOfBusinessForm['controls'].presumptiveIncome.setValidators([Validators.required])
-      this.natureOfBusinessForm['controls'].presumptiveIncome.updateValueAndValidity();
+      this.natureOfBusinessForm.controls['grossReciept'].setValidators([Validators.required])
+      this.natureOfBusinessForm.controls['grossReciept'].updateValueAndValidity();
+      this.natureOfBusinessForm.controls['presumptiveIncome'].setValidators([Validators.required])
+      this.natureOfBusinessForm.controls['presumptiveIncome'].updateValueAndValidity();
     }
   }
 
   getCodeFromLabelOnBlur44ADA() {
-    if (this.utilService.isNonEmpty(this.natureOfBusinessForm['controls'].natureOfBusiness44ADA.value) && this.utilService.isNonEmpty(this.natureOfBusinessForm['controls'].natureOfBusiness44ADA.value)) {
-      this.natureCode = this.natureOfBusinessDropdown44ADA.filter(item => item.label.toLowerCase() === this.natureOfBusinessForm['controls'].natureOfBusiness44ADA.value.toLowerCase());
+    if (this.utilService.isNonEmpty(this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].value) && this.utilService.isNonEmpty(this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].value)) {
+      this.natureCode = this.natureOfBusinessDropdown44ADA.filter((item:any) => item.label.toLowerCase() === this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].value.toLowerCase());
       if (this.natureCode.length !== 0) {
         this.natureCode = this.natureCode[0].code;
         console.log('natureCode on blur = ', this.natureCode);
       }
       // else {
-      //   this.natureOfBusinessForm.setErrors(invalid);
+      //   this.natureOfBusinessForm'].setErrors(invalid);
       //   console.log('natureCode on blur = ', this.natureCode);
       // }
 
-      this.natureOfBusinessForm['controls'].natureOfBusiness44AD.setValidators(null)
-      this.natureOfBusinessForm['controls'].natureOfBusiness44AD.updateValueAndValidity();
-      this.natureOfBusinessForm['controls'].tradeName44AD.setValidators(null)
-      this.natureOfBusinessForm['controls'].tradeName44AD.updateValueAndValidity();
+      this.natureOfBusinessForm.controls['natureOfBusiness44AD'].setValidators(null)
+      this.natureOfBusinessForm.controls['natureOfBusiness44AD'].updateValueAndValidity();
+      this.natureOfBusinessForm.controls['tradeName44AD'].setValidators(null)
+      this.natureOfBusinessForm.controls['tradeName44AD'].updateValueAndValidity();
 
-      this.natureOfBusinessForm['controls'].recieptRecievedInBank.setValidators(null)
-      this.natureOfBusinessForm['controls'].recieptRecievedInBank.updateValueAndValidity();
-      this.natureOfBusinessForm['controls'].presumptiveIncomeRecieveBank.setValidators(null)
-      this.natureOfBusinessForm['controls'].presumptiveIncomeRecieveBank.updateValueAndValidity();
+      this.natureOfBusinessForm.controls['recieptRecievedInBank'].setValidators(null)
+      this.natureOfBusinessForm.controls['recieptRecievedInBank'].updateValueAndValidity();
+      this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].setValidators(null)
+      this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].updateValueAndValidity();
 
-      this.natureOfBusinessForm['controls'].recievedinCash.setValidators(null)
-      this.natureOfBusinessForm['controls'].recievedinCash.updateValueAndValidity();
-      this.natureOfBusinessForm['controls'].presumptiveIncomeRecievedCash.setValidators(null)
-      this.natureOfBusinessForm['controls'].presumptiveIncomeRecievedCash.updateValueAndValidity();
+      this.natureOfBusinessForm.controls['recievedinCash'].setValidators(null)
+      this.natureOfBusinessForm.controls['recievedinCash'].updateValueAndValidity();
+      this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].setValidators(null)
+      this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].updateValueAndValidity();
     }
     else {
 
-      this.natureOfBusinessForm['controls'].natureOfBusiness44AD.setValidators([Validators.required])
-      this.natureOfBusinessForm['controls'].natureOfBusiness44AD.updateValueAndValidity();
-      this.natureOfBusinessForm['controls'].tradeName44AD.setValidators([Validators.required])
-      this.natureOfBusinessForm['controls'].tradeName44AD.updateValueAndValidity();
+      this.natureOfBusinessForm.controls['natureOfBusiness44AD'].setValidators([Validators.required])
+      this.natureOfBusinessForm.controls['natureOfBusiness44AD'].updateValueAndValidity();
+      this.natureOfBusinessForm.controls['tradeName44AD'].setValidators([Validators.required])
+      this.natureOfBusinessForm.controls['tradeName44AD'].updateValueAndValidity();
 
-      if (this.utilService.isNonEmpty(this.natureOfBusinessForm['controls'].recieptRecievedInBank.value)) {
-        this.natureOfBusinessForm['controls'].recieptRecievedInBank.setValidators(null)
-        this.natureOfBusinessForm['controls'].recieptRecievedInBank.updateValueAndValidity();
-        this.natureOfBusinessForm['controls'].presumptiveIncomeRecieveBank.setValidators(null)
-        this.natureOfBusinessForm['controls'].presumptiveIncomeRecieveBank.updateValueAndValidity();
-        this.natureOfBusinessForm['controls'].recievedinCash.setValidators(null)
-        this.natureOfBusinessForm['controls'].recievedinCash.updateValueAndValidity();
-        this.natureOfBusinessForm['controls'].presumptiveIncomeRecievedCash.setValidators(null)
-        this.natureOfBusinessForm['controls'].presumptiveIncomeRecievedCash.updateValueAndValidity();
+      if (this.utilService.isNonEmpty(this.natureOfBusinessForm.controls['recieptRecievedInBank'].value)) {
+        this.natureOfBusinessForm.controls['recieptRecievedInBank'].setValidators(null)
+        this.natureOfBusinessForm.controls['recieptRecievedInBank'].updateValueAndValidity();
+        this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].setValidators(null)
+        this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].updateValueAndValidity();
+        this.natureOfBusinessForm.controls['recievedinCash'].setValidators(null)
+        this.natureOfBusinessForm.controls['recievedinCash'].updateValueAndValidity();
+        this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].setValidators(null)
+        this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].updateValueAndValidity();
       }
       else {
-        this.natureOfBusinessForm['controls'].recieptRecievedInBank.setValidators([Validators.required])
-        this.natureOfBusinessForm['controls'].recieptRecievedInBank.updateValueAndValidity();
-        this.natureOfBusinessForm['controls'].presumptiveIncomeRecieveBank.setValidators([Validators.required])
-        this.natureOfBusinessForm['controls'].presumptiveIncomeRecieveBank.updateValueAndValidity();
-        this.natureOfBusinessForm['controls'].recievedinCash.setValidators([Validators.required])
-        this.natureOfBusinessForm['controls'].recievedinCash.updateValueAndValidity();
-        this.natureOfBusinessForm['controls'].presumptiveIncomeRecievedCash.setValidators([Validators.required])
-        this.natureOfBusinessForm['controls'].presumptiveIncomeRecievedCash.updateValueAndValidity();
+        this.natureOfBusinessForm.controls['recieptRecievedInBank'].setValidators([Validators.required])
+        this.natureOfBusinessForm.controls['recieptRecievedInBank'].updateValueAndValidity();
+        this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].setValidators([Validators.required])
+        this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].updateValueAndValidity();
+        this.natureOfBusinessForm.controls['recievedinCash'].setValidators([Validators.required])
+        this.natureOfBusinessForm.controls['recievedinCash'].updateValueAndValidity();
+        this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].setValidators([Validators.required])
+        this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].updateValueAndValidity();
       }
 
-      // if (this.utilService.isNonEmpty(this.natureOfBusinessForm['controls'].recievedinCash.value)) {
-      //   this.natureOfBusinessForm['controls'].recievedinCash.setValidators(null)
-      //   this.natureOfBusinessForm['controls'].recievedinCash.updateValueAndValidity();
-      //   this.natureOfBusinessForm['controls'].presumptiveIncomeRecievedCash.setValidators(null)
-      //   this.natureOfBusinessForm['controls'].presumptiveIncomeRecievedCash.updateValueAndValidity();
-      //   this.natureOfBusinessForm['controls'].recieptRecievedInBank.setValidators(null)
-      //   this.natureOfBusinessForm['controls'].recieptRecievedInBank.updateValueAndValidity();
-      //   this.natureOfBusinessForm['controls'].presumptiveIncomeRecieveBank.setValidators(null)
-      //   this.natureOfBusinessForm['controls'].presumptiveIncomeRecieveBank.updateValueAndValidity();
+      // if (this.utilService.isNonEmpty(this.natureOfBusinessForm.controls['recievedinCash'].value)) {
+      //   this.natureOfBusinessForm.controls['recievedinCash'].setValidators(null)
+      //   this.natureOfBusinessForm.controls['recievedinCash'].updateValueAndValidity();
+      //   this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].setValidators(null)
+      //   this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].updateValueAndValidity();
+      //   this.natureOfBusinessForm.controls['recieptRecievedInBank'].setValidators(null)
+      //   this.natureOfBusinessForm.controls['recieptRecievedInBank'].updateValueAndValidity();
+      //   this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].setValidators(null)
+      //   this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].updateValueAndValidity();
       // }
       // else {
-      //   this.natureOfBusinessForm['controls'].recievedinCash.setValidators([Validators.required])
-      //   this.natureOfBusinessForm['controls'].recievedinCash.updateValueAndValidity();
-      //   this.natureOfBusinessForm['controls'].presumptiveIncomeRecievedCash.setValidators([Validators.required])
-      //   this.natureOfBusinessForm['controls'].presumptiveIncomeRecievedCash.updateValueAndValidity();
-      //   this.natureOfBusinessForm['controls'].recieptRecievedInBank.setValidators([Validators.required])
-      //   this.natureOfBusinessForm['controls'].recieptRecievedInBank.updateValueAndValidity();
-      //   this.natureOfBusinessForm['controls'].presumptiveIncomeRecieveBank.setValidators([Validators.required])
-      //   this.natureOfBusinessForm['controls'].presumptiveIncomeRecieveBank.updateValueAndValidity();
+      //   this.natureOfBusinessForm.controls['recievedinCash'].setValidators([Validators.required])
+      //   this.natureOfBusinessForm.controls['recievedinCash'].updateValueAndValidity();
+      //   this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].setValidators([Validators.required])
+      //   this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].updateValueAndValidity();
+      //   this.natureOfBusinessForm.controls['recieptRecievedInBank'].setValidators([Validators.required])
+      //   this.natureOfBusinessForm.controls['recieptRecievedInBank'].updateValueAndValidity();
+      //   this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].setValidators([Validators.required])
+      //   this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].updateValueAndValidity();
       // }
 
     }
   }
 
 
-  calBankPresumptiveIncome(val) {
+  calBankPresumptiveIncome(val:any) {
     if (val !== '' && val !== null && val !== undefined) {
       const cal = {
         assessmentYear: "2019-2020",//this.itrSummaryForm.controls['assessmentYear'].value ,
@@ -395,7 +395,7 @@ export class Itr4partComponent implements OnInit {
   }
 
 
-  calCashPresumptiveIncome(val) {
+  calCashPresumptiveIncome(val:any) {
     if (val !== '' && val !== null && val !== undefined) {
       const cal = {
         assessmentYear: "2019-2020",  //this.ITR_JSON.assessmentYear,
@@ -450,7 +450,7 @@ export class Itr4partComponent implements OnInit {
     this.natureOfBusinessForm.controls['presumptive44ADtotal'].setValue(presumptive44ADtotal);
   }
 
-  calprofessionPresumptiveIncome(val) {
+  calprofessionPresumptiveIncome(val:any) {
     if (val !== '' && val !== null && val !== undefined) {
       const cal = {
         assessmentYear: "2019-2020",         //this.ITR_JSON.assessmentYear,
@@ -480,7 +480,7 @@ export class Itr4partComponent implements OnInit {
   ngDoCheck() {
     console.log('natureOfBusinessForm valid: ',this.natureOfBusinessForm.valid, this.natureOfBusinessForm)
     if (this.natureOfBusinessForm.valid) {
-      //console.log('natureOfBusinessForm value: ',this.natureOfBusinessForm.value)
+      //console.log('natureOfBusinessForm value: ',this.natureOfBusinessForm'].value)
       this.getBusinessInfo.emit(this.natureOfBusinessForm)
     }
   }

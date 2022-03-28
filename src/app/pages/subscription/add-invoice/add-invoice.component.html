@@ -409,7 +409,7 @@
                         </div>
                         <div style="float: right;" class="card__col-lg-5"
                             *ngIf="this.utilsService.isNonEmpty(userSubscription) && this.utilsService.isNonEmpty(userSubscription.promoCode)">
-                            ₹{{this.invoiceForm.controls.discountTotal.value}}
+                            ₹{{this.invoiceForm.controls['discountTotal.value}}
                             <!-- ₹{{ getExactPromoDiscount() }} -->
                         </div>
 
@@ -417,39 +417,39 @@
                             <span>(Tax Exclusive)</span>
                         </div>
                         <div style="float: right;" class="card__col-lg-5">₹
-                            {{this.invoiceForm.controls.subTotal.value}}
+                            {{this.invoiceForm.controls['subTotal.value}}
                         </div> -->
 
                         <div class="card__col-lg-7">Final Price
                             <span>(Incl of GST)</span>
                         </div>
                         <div style="float: right;" class="card__col-lg-5">₹
-                            {{ this.invoiceForm.controls.total.value}}
+                            {{ this.invoiceForm.controls['total.value}}
                         </div>
 
                         <div class="card__col-lg-7">Taxable Value</div>
                         <div style="float: right;" class="card__col-lg-5">₹
                             <!-- {{this.utilsService.isNonEmpty(this.userSubscription.promoApplied) ? this.userSubscription.promoApplied.basePrice : this.getTaxableValue()}} -->
-                            {{this.invoiceForm.controls.subTotal.value}}
+                            {{this.invoiceForm.controls['subTotal.value}}
                         </div>
 
 
                         <div *ngIf="isMaharashtraState" class="card__col-lg-7">CGST (9%)</div>
                         <div *ngIf="isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.invoiceForm.controls.cgstTotal.value}}
+                            {{this.invoiceForm.controls['cgstTotal.value}}
                         </div>
 
                         <div *ngIf="isMaharashtraState" class="card__col-lg-7">SGST (9%)</div>
                         <div *ngIf="isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.invoiceForm.controls.sgstTotal.value}}
+                            {{this.invoiceForm.controls['sgstTotal.value}}
                         </div>
                         <div *ngIf="!isMaharashtraState" class="card__col-lg-7">IGST (18%)</div>
                         <div *ngIf="!isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.invoiceForm.controls.igstTotal.value}}
+                            {{this.invoiceForm.controls['igstTotal.value}}
                         </div>
                         <div class="card__col-lg-7 bold">Total</div>
                         <div style="float: right;" class="card__col-lg-5 bold">₹
-                            {{this.invoiceForm.controls.total.value}}</div>
+                            {{this.invoiceForm.controls['total.value}}</div>
                     </div>
                 </div>
             </mat-card>

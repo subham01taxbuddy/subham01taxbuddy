@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UtilsService } from 'app/services/utils.service';
-import { environment } from 'environments/environment';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { environment } from 'src/environments/environment';
 // import { ConfirmModel } from 'app/shared/components/itr-actions/itr-actions.component';
 
 @Component({
@@ -14,7 +14,7 @@ import { environment } from 'environments/environment';
 })
 export class AddSubscriptionComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   allPlans: any = [];
   filteredPlans: any = [];
   selectedBtn: any = '';
@@ -108,16 +108,16 @@ export class AddSubscriptionComponent implements OnInit {
     console.log('allPlans : ',this.allPlans)
     this.selectedBtn = serviceType;
       if(serviceType === 'ITR'){
-        this.filteredPlans = this.allPlans.filter(item => item.servicesType === 'ITR');
+        this.filteredPlans = this.allPlans.filter((item:any) => item.servicesType === 'ITR');
       }
       else if(serviceType === 'GST'){
-        this.filteredPlans = this.allPlans.filter(item => item.servicesType === 'GST');
+        this.filteredPlans = this.allPlans.filter((item:any) => item.servicesType === 'GST');
       }
       else if(serviceType === 'TPA'){
-        this.filteredPlans = this.allPlans.filter(item => item.servicesType === 'TPA');
+        this.filteredPlans = this.allPlans.filter((item:any) => item.servicesType === 'TPA');
       }
       else if(serviceType === 'NOTICE'){
-        this.filteredPlans = this.allPlans.filter(item => item.servicesType === 'NOTICE');
+        this.filteredPlans = this.allPlans.filter((item:any) => item.servicesType === 'NOTICE');
       }
       else if(serviceType === 'ALL'){
         this.filteredPlans = this.allPlans;

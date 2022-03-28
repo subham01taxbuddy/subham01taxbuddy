@@ -20,7 +20,7 @@
                                     {{admin.fName}}
                                 </mat-option>
                             </mat-select>
-                            <mat-error *ngIf="reAssignForm['controls'].oldTaxExpert.hasError('required')">Select
+                            <mat-error *ngIf="reAssignForm.controls['oldTaxExpert'] .hasError('required')">Select
                                 old
                                 tax expert</mat-error>
                         </mat-form-field>
@@ -33,7 +33,7 @@
                                     {{admin.fName}}
                                 </mat-option>
                             </mat-select>
-                            <mat-error *ngIf="reAssignForm['controls'].newTaxExpert.hasError('required')">Select
+                            <mat-error *ngIf="reAssignForm.controls['newTaxExpert'].hasError('required')">Select
                                 new
                                 tax expert</mat-error>
                         </mat-form-field>

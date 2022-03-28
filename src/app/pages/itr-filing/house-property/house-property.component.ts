@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { AppConstants } from 'app/shared/constants';
-import { ITR_JSON, HouseProperties } from 'app/shared/interfaces/itr-input.interface';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { UtilsService } from 'app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { ITR_JSON, HouseProperties } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-house-property',
@@ -54,7 +54,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   checkEligibility() {
-    if (Number(this.housePropertyForm.controls.loans['controls'][0].controls['interestAmount'].value) < 200000) {
+    if (Number(((this.housePropertyForm.controls['loans'] as FormGroup).controls[0]  as FormGroup).controls['interestAmount'].value) < 200000) {
       this.housePropertyForm.controls['isEligibleFor80EE'].setValue('')
     }
   }
@@ -94,14 +94,14 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['grossAnnualRentReceived'].updateValueAndValidity();
       this.housePropertyForm.controls['propertyTax'].setValue(null);
 
-      this.housePropertyForm.controls.loans['controls'][0].controls['interestAmount'].setValidators([Validators.required, Validators.min(1)])
-      this.housePropertyForm.controls.loans['controls'][0].controls['interestAmount'].updateValueAndValidity()
+      ((this.housePropertyForm.controls['loans']  as FormGroup).controls[0]  as FormGroup).controls['interestAmount'].setValidators([Validators.required, Validators.min(1)]);
+      ((this.housePropertyForm.controls['loans']  as FormGroup).controls[0] as FormGroup).controls['interestAmount'].updateValueAndValidity();
     } else {
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.min(1)]);
       this.housePropertyForm.controls['grossAnnualRentReceived'].updateValueAndValidity();
 
-      this.housePropertyForm.controls.loans['controls'][0].controls['interestAmount'].setValidators(null)
-      this.housePropertyForm.controls.loans['controls'][0].controls['interestAmount'].updateValueAndValidity()
+      ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].setValidators(null);
+      ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].updateValueAndValidity()
     }
   }
 
@@ -217,7 +217,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   getAllHpDocs(documentTag) {
-    return this.itrDocuments.filter(item => item.documentTag === documentTag)
+    return this.itrDocuments.filter((item:any) => item.documentTag === documentTag)
 
   }
   zoom: number = 1.0;
@@ -230,7 +230,7 @@ export class HousePropertyComponent implements OnInit {
     docType: ''
   };
   getHpDocsUrl(index) {
-    const doc = this.itrDocuments.filter(item => item.documentTag === 'LOAN_STATEMENT')
+    const doc = this.itrDocuments.filter((item:any) => item.documentTag === 'LOAN_STATEMENT')
     if (doc.length > 0) {
       const docType = doc[index].fileName.split('.').pop();
       if (doc[index].isPasswordProtected) {

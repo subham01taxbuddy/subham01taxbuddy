@@ -6,14 +6,14 @@ import { GridOptions } from 'ag-grid-community';
   templateUrl: './gst-registration-client.component.html',
   styleUrls: ['./gst-registration-client.component.css']
 })
-export class GstRegistrationClientComponent implements OnInit {
+export class GstRegistrationClientComponent  {
 
-  loading: boolean;
+  loading!: boolean;
   clientListGridOptions: GridOptions;
   constructor() {
     this.clientListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.clientListCreateColoumnDef(),
+      columnDefs: this.clientListcreateColumnDef(),
       //enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -23,10 +23,8 @@ export class GstRegistrationClientComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-  }
 
-  clientListCreateColoumnDef() {
+  clientListcreateColumnDef() {
     return [
       {
         headerName: 'Name',

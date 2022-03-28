@@ -1,13 +1,13 @@
-import { UtilsService } from 'app/services/utils.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MatStepper } from '@angular/material';
+import { MatStepper } from '@angular/material/stepper';
 import { HttpHeaders, HttpRequest, HttpEvent, HttpEventType, HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-import { AppConstants } from 'app/shared/constants';
+import { environment } from 'src/environments/environment';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { Router } from '@angular/router';
-import { ItrMsService } from 'app/services/itr-ms.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 
 @Component({
   selector: 'app-direct-upload',
@@ -100,6 +100,8 @@ export class DirectUploadComponent implements OnInit {
             this.successMsg = "Successfully uploaded XML file."
 
           // this.callerObj.getXml();
+          break;
+        
           case HttpEventType.User:
             console.log('Done!', HttpEventType.User);
         }
@@ -190,6 +192,7 @@ export class DirectUploadComponent implements OnInit {
             this.loading = false;
             this.utilsService.showSnackBar(event.body['response']);
             this.showProgress = false;
+            break;
           case HttpEventType.User:
             this.file = null;
             console.log('Done!', HttpEventType.User);

@@ -1,12 +1,12 @@
 import { DatePipe, formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { GridOptions } from 'ag-grid-community';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { environment } from 'environments/environment';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { environment } from 'src/environments/environment';
 declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 export const MY_FORMATS = {
@@ -31,7 +31,7 @@ export const MY_FORMATS = {
 })
 export class CreditNotesComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   creditNotesForm: FormGroup;
   maxDate: any = new Date();
   toDateMin: any;
@@ -41,7 +41,7 @@ export class CreditNotesComponent implements OnInit {
   constructor(private fb: FormBuilder, @Inject(LOCALE_ID) private locale: string, private itrService: ItrMsService, private datePipe: DatePipe, private utilService: UtilsService) {
     this.creditNotesGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.creditNotesCreateColoumnDef(),
+      columnDefs: this.creditNotescreateColumnDef(),
       enableCellChangeFlash: true,
       onGridReady: params => {
       },
@@ -80,7 +80,7 @@ export class CreditNotesComponent implements OnInit {
       this.loading = false;
       if(res instanceof Array && res.length > 0){
         this.totalCount = res.length;
-        this.creditNotesGridOptions.api.setRowData(this.createRowData(res))
+        this.creditNotesGridOptions.api?.setRowData(this.createRowData(res))
       }
       
     },
@@ -116,7 +116,7 @@ export class CreditNotesComponent implements OnInit {
     return creditNotesData;
   }
 
-  creditNotesCreateColoumnDef() {
+  creditNotescreateColumnDef() {
     return [
       {
         headerName: 'User Id',

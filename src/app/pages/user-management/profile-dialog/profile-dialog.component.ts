@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ThirdPartyService } from 'app/services/third-party.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ThirdPartyService } from 'src/app/services/third-party.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+
 
 @Component({
   selector: 'app-profile-dialog',
@@ -17,7 +18,7 @@ export class ProfileDialogComponent implements OnInit {
   bankForm: FormGroup;
   addressForm: FormGroup;
   addressTypeData: any = [{ label: 'Home', value: 'HOME' }, { label: 'Business', value: 'BUSINESS' }];
-  state_list = [{
+  state_list:any = [{
     "id": "5b4599c9c15a76370a3424c2",
     "stateId": "1",
     "countryCode": "91",
@@ -308,9 +309,9 @@ export class ProfileDialogComponent implements OnInit {
     console.log('this.data -> ',this.data);
     if(this.data.submitBtn === "Edit" && this.data.mode === "Address"){
       this.addressForm.patchValue(this.data.userObject)
-      // let stateCode = this.state_list.filter(item => item.stateName === this.data.userObject.state)[0].stateCode;
+      // let stateCode = this.state_list.filter((item:any) => item.stateName === this.data.userObject.state)[0].stateCode;
       // if(this.utilService.isNonEmpty(stateCode)){
-      //   this.addressForm.controls.state.setValue(stateCode);
+      //   this.addressForm.controls['state'].setValue(stateCode);
       // }
        console.log('this.addressForm.value -> ',this.addressForm.value)
     }
@@ -326,7 +327,7 @@ export class ProfileDialogComponent implements OnInit {
         //this.setProfileAddressValToHouse()
       }, error => {
         if (error.status === 404) {
-          //this.itrSummaryForm['controls'].assesse['controls'].address['controls'].city.setValue(null);
+          //this.itrSummaryForm.controls['assesse.controls['address.controls['city'].setValue(null);
         }
       });
     }
@@ -340,13 +341,13 @@ export class ProfileDialogComponent implements OnInit {
         console.log("Bank details by IFSC:", res)
         let data = JSON.parse(res._body);
         let bankName = data.BANK ? data.BANK : "";
-        this.bankForm['controls'].name.setValue(bankName);
+        this.bankForm.controls['name'].setValue(bankName);
 
-        console.log('Bank Name: ', this.bankForm['controls'].name)
+        console.log('Bank Name: ', this.bankForm.controls['name'])
 
       }, err => {
         this._toastMessageService.alert("error", "invalid ifsc code entered");
-        this.bankForm['controls'].name.setValue("");
+        this.bankForm.controls['name'].setValue("");
       });
     }
 
@@ -366,15 +367,15 @@ export class ProfileDialogComponent implements OnInit {
     console.log('this.addressForm -> ',this.addressForm.value)
     console.log('state -> ',this.addressForm.value.state)
     if(this.addressForm.valid){
-      // let stateCode = this.state_list.filter(item => item.stateName === this.addressForm.value.state)[0].stateCode;
+      // let stateCode = this.state_list.filter((item:any) => item.stateName === this.addressForm.value.state)[0].stateCode;
       // if(this.utilService.isNonEmpty(stateCode)){
-      //   this.addressForm.controls.state.setValue(stateCode);
+      //   this.addressForm.controls['state'].setValue(stateCode);
       // }
       
       if(this.data.submitBtn === "Add"){
         console.log('this.addressForm -> ',this.addressForm.value)
         let randomId = Math.floor(100000 + Math.random() * 900000);
-        this.addressForm.controls.id.setValue(randomId.toString());
+        this.addressForm.controls['id'].setValue(randomId.toString());
         let body = {
           from: this.data.mode,
           formValue: this.addressForm.value,

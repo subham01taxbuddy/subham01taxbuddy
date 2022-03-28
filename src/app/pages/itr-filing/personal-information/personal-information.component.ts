@@ -1,17 +1,17 @@
-import { BankDetails } from './../../../shared/interfaces/itr-input.interface';
+import { BankDetails } from '../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Validators, FormGroup, FormBuilder, FormArray } from '@angular/forms';
-import { AppConstants } from 'app/shared/constants';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-import { UtilsService } from 'app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { UtilsService } from 'src/app/services/utils.service';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { TitleCasePipe } from '@angular/common';
-import { ItrMsService } from 'app/services/itr-ms.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Router } from '@angular/router';
-import { environment } from 'environments/environment';
-import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material';
+import { environment } from 'src/environments/environment';
+import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { UserMsService } from 'app/services/user-ms.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
 import Storage from '@aws-amplify/storage';
 import { threadId } from 'worker_threads';
 import { resolve } from 'dns';
@@ -397,14 +397,14 @@ export class PersonalInformationComponent implements OnInit {
 
   getBankListByIfsc(ifsc, i) {
     if (ifsc.valid) {
-      const bank = this.bankList.filter(item => item.ifscCode.substring(0, 4) === ifsc.value.substring(0, 4));
+      const bank = this.bankList.filter((item:any) => item.ifscCode.substring(0, 4) === ifsc.value.substring(0, 4));
       if (bank.length !== 0) {
-        this.customerProfileForm.controls['bankDetails']['controls'][i].controls['name'].setValue(bank[0].bankName);
+        ((this.customerProfileForm.controls['bankDetails'] as FormGroup).controls[i] as FormGroup).controls['name'].setValue(bank[0].bankName);
       } else {
-        this.customerProfileForm.controls['bankDetails']['controls'][i].controls['name'].setValue(null);
+       ( (this.customerProfileForm.controls['bankDetails'] as FormGroup).controls[i] as FormGroup).controls['name'].setValue(null);
       }
     } else {
-      this.customerProfileForm.controls['bankDetails']['controls'][i].controls['name'].setValue(null);
+      ((this.customerProfileForm.controls['bankDetails'] as FormGroup).controls[i] as FormGroup).controls['name'].setValue(null);
     }
   }
   findAssesseeType() {
@@ -450,17 +450,17 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   getCityData() {
-    if (this.customerProfileForm.controls.address['controls']['pinCode'].valid) {
+    if ((this.customerProfileForm.controls['address'] as FormGroup).controls['pinCode'].valid) {
       this.changeCountry('91');
-      const param = '/pincode/' + this.customerProfileForm.controls.address['controls']['pinCode'].value;
+      const param = '/pincode/' + (this.customerProfileForm.controls['address']as FormGroup).controls['pinCode'].value;
       this.userMsService.getMethod(param).subscribe((result: any) => {
-        this.customerProfileForm.controls.address['controls']['country'].setValue('91');
-        this.customerProfileForm.controls.address['controls']['city'].setValue(result.taluka);
-        this.customerProfileForm.controls.address['controls']['state'].setValue(result.stateCode);
+        (this.customerProfileForm.controls['address']as FormGroup).controls['country'].setValue('91');
+        (this.customerProfileForm.controls['address']as FormGroup).controls['city'].setValue(result.taluka);
+        (this.customerProfileForm.controls['address']as FormGroup).controls['state'].setValue(result.stateCode);
         console.log('Picode Details:', result);
       }, error => {
         if (error.status === 404) {
-          this.customerProfileForm.controls.address['controls']['city'].setValue(null);
+          (this.customerProfileForm.controls['address']as FormGroup).controls['city'].setValue(null);
         }
       });
     }
@@ -479,8 +479,8 @@ export class PersonalInformationComponent implements OnInit {
         "stateName": "Foreign",
         "stateCode": "99",
         "status": true
-      }]
-      this.customerProfileForm.controls.address['controls']['state'].setValue('99');
+      }];
+      (this.customerProfileForm.controls['address']as FormGroup).controls['state'].setValue('99');
     } else {
       this.stateDropdown = this.stateDropdownMaster;
     }
@@ -511,7 +511,7 @@ export class PersonalInformationComponent implements OnInit {
       });
       console.log('Immovable Form===', this.customerProfileForm);
     }
-    this.ITR_JSON.family.filter(item => {
+    this.ITR_JSON.family.filter((item:any) => {
       if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
         this.customerProfileForm.patchValue({
           firstName: item.fName,

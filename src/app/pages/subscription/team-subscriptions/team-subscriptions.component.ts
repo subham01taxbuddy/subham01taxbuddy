@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserMsService } from 'app/services/user-ms.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
 
 @Component({
   selector: 'app-team-subscriptions',

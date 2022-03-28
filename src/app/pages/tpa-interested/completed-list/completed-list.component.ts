@@ -5,15 +5,13 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './completed-list.component.html',
   styleUrls: ['./completed-list.component.css']
 })
-export class CompletedListComponent implements OnInit {
+export class CompletedListComponent {
 
   count = 0;
   constructor() { }
 
-  ngOnInit() {
-  }
 
-  getDetails(count) {
+  getDetails(count:any) {
     this.count = count;
   }
 }

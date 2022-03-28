@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
-import { environment } from 'environments/environment';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { environment } from 'src/environments/environment';
 import { ChangeAgentDialogComponent } from './change-agent-dialog/change-agent-dialog.component';
-declare function matomo(title: any, url: any, event: any);
 @Component({
   selector: 'app-agent-update',
   templateUrl: './agent-update.component.html',
@@ -15,8 +14,8 @@ declare function matomo(title: any, url: any, event: any);
 })
 export class AgentUpdateComponent implements OnInit {
 
-  loading: boolean;
-  updateAgetGridOptions: GridOptions;
+  loading!: boolean;
+  updateAgentGridOptions: GridOptions;
   smeList: any = [];
   agentList: any = [];
   selectedAgent: any;
@@ -24,9 +23,9 @@ export class AgentUpdateComponent implements OnInit {
   config: any;
 
   constructor(private userMsService: UserMsService, private dialog: MatDialog, private utileService: UtilsService, private toastMsgService: ToastMessageService) {
-    this.updateAgetGridOptions = <GridOptions>{
+    this.updateAgentGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.createColoumnDef(),
+      columnDefs: this.createColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -42,11 +41,11 @@ export class AgentUpdateComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST)||'');
     this.getCallerUser('');
   }
 
-  createColoumnDef() {
+  createColumnDef() {
     return [
       {
         headerName: 'SME Id',
@@ -136,7 +135,7 @@ export class AgentUpdateComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Update Agent"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateAgent"></i>
@@ -144,7 +143,7 @@ export class AgentUpdateComponent implements OnInit {
         },
         width: 80,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -155,7 +154,7 @@ export class AgentUpdateComponent implements OnInit {
     ]
   }
 
-  searchByAgent(selectedAgent) {
+  searchByAgent(selectedAgent:any) {
     if (this.utileService.isNonEmpty(selectedAgent)) {
       this.selectedAgent = selectedAgent;
       this.searchMobNo = ''
@@ -166,7 +165,7 @@ export class AgentUpdateComponent implements OnInit {
     }
   }
 
-  getCallerUser(id, mobNo?) {
+  getCallerUser(id:any, mobNo?:any) {
     this.loading = true;
     var param;
     if (this.utileService.isNonEmpty(id)) {
@@ -186,12 +185,12 @@ export class AgentUpdateComponent implements OnInit {
       this.searchMobNo = ''
       if (Array.isArray(res) && res.length > 0) {
         this.smeList = res;
-        this.updateAgetGridOptions.api.setRowData(this.createRowData(this.smeList));
+        this.updateAgentGridOptions.api?.setRowData(this.createRowData(this.smeList));
         // this.config.totalItems = res.totalElements;
       }
       else {
         this.smeList = [];
-        this.updateAgetGridOptions.api.setRowData(this.createRowData(this.smeList))
+        this.updateAgentGridOptions.api?.setRowData(this.createRowData(this.smeList))
         this.toastMsgService.alert('error', 'Data not found.')
       }
     },
@@ -202,11 +201,11 @@ export class AgentUpdateComponent implements OnInit {
       })
   }
 
-  createRowData(updateAgent) {
+  createRowData(updateAgent:any) {
     console.log('updateAgent -> ', updateAgent);
     var updateAgentsArray = [];
     for (let i = 0; i < updateAgent.length; i++) {
-      let updateAgentsInfo = Object.assign({}, updateAgentsArray[i], {
+      let updateAgentsInfo:any = Object.assign({}, updateAgentsArray[i], {
         id: updateAgent[i]['id'],
         agentId: updateAgent[i]['agentId'],
         userId: updateAgent[i]['userId'],
@@ -226,7 +225,7 @@ export class AgentUpdateComponent implements OnInit {
 
 
 
-  updateAgent(userInfo) {
+  updateAgent(userInfo:any) {
     let disposable = this.dialog.open(ChangeAgentDialogComponent, {
       width: '50%',
       height: 'auto',
@@ -254,7 +253,7 @@ export class AgentUpdateComponent implements OnInit {
     });
   }
 
-  userRole(roles) {
+  userRole(roles:any) {
     var role;
     console.log(roles);
     if (roles instanceof Array) {
@@ -286,8 +285,7 @@ export class AgentUpdateComponent implements OnInit {
     }
   }
 
-  onAgentUpdateClicked(params) {
-    console.log(params)
+  onAgentUpdateClicked(params:any) {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {

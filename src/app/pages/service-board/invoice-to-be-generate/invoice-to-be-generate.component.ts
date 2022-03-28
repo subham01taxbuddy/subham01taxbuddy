@@ -5,11 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './invoice-to-be-generate.component.html',
   styleUrls: ['./invoice-to-be-generate.component.css']
 })
-export class InvoiceToBeGenerateComponent implements OnInit {
+export class InvoiceToBeGenerateComponent {
 
   constructor() { }
 
-  ngOnInit() {
-  }
 
 }

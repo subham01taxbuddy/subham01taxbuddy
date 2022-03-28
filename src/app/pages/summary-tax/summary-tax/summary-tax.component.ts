@@ -5,11 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './summary-tax.component.html',
   styleUrls: ['./summary-tax.component.css']
 })
-export class SummaryTaxComponent implements OnInit {
+export class SummaryTaxComponent {
 
   constructor() { }
 
-  ngOnInit() {
-  }
 
 }

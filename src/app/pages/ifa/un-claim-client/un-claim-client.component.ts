@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { UserMsService } from 'app/services/user-ms.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
-import { UtilsService } from 'app/services/utils.service';
+import { UtilsService } from 'src/app/services/utils.service';
 @Component({
   selector: 'app-un-claim-client',
   templateUrl: './un-claim-client.component.html',
@@ -18,7 +18,7 @@ export class UnClaimClientComponent implements OnInit {
     this.utilsService.smoothScrollToTop();
     this.clientListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.clientListCreateColoumnDef(),
+      columnDefs: this.clientListcreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -43,10 +43,10 @@ export class UnClaimClientComponent implements OnInit {
       this.userMsService.getMethod(param).subscribe((res: any) => {
         this.clientList = res;
         if (Array.isArray(this.clientList)) {
-          this.clientList = this.clientList.filter(item => item.ifaId === userId);
+          this.clientList = this.clientList.filter((item:any) => item.ifaId === userId);
           console.log("IFA Client list:", this.clientList)
 
-          this.clientListGridOptions.api.setRowData(this.clientList);
+          this.clientListGridOptions.api?.setRowData(this.clientList);
         }
         return resolve(true)
       }, err => {
@@ -57,7 +57,7 @@ export class UnClaimClientComponent implements OnInit {
     });
   }
 
-  clientListCreateColoumnDef() {
+  clientListcreateColumnDef() {
     return [
       {
         headerName: 'User ID',
@@ -73,7 +73,7 @@ export class UnClaimClientComponent implements OnInit {
         suppressMovable: true,
         width: 100,
         pinned: 'left',
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Un-claim client" style="border: none;
           background: transparent;
           font-size: 16px; cursor:pointer">
@@ -126,14 +126,14 @@ export class UnClaimClientComponent implements OnInit {
         headerName: 'Paid',
         width: 50,
         pinned: 'right',
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           if (params.data.packages.length > 0) {
             return `<i class="fa fa-check" aria-hidden="true"></i>`;
           } else {
             return `<i class="fa fa-times" aria-hidden="true"></i>`;
           }
         },
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           if (params.data.packages.length > 0) {
             return {
               textAlign: 'center', display: 'flex',
@@ -172,9 +172,9 @@ export class UnClaimClientComponent implements OnInit {
     return new Promise((resolve, reject) => {
       const param = `/profile/0/${data.userId}`;
       this.userMsService.patchMethod(param).subscribe((res: any) => {
-        this.clientList = this.clientList.filter(item => item.userId !== data.userId);
+        this.clientList = this.clientList.filter((item:any) => item.userId !== data.userId);
         console.log("List after Unclaimed:", this.clientList)
-        this.clientListGridOptions.api.setRowData(this.clientList);
+        this.clientListGridOptions.api?.setRowData(this.clientList);
         this._toastMessageService.alert("success", "Client un-claimed successfully.");
         return resolve(true)
       }, err => {

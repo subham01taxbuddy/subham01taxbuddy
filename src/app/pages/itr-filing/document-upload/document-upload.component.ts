@@ -1,144 +1,3 @@
-/* import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-
-@Component({
-  selector: 'app-document-upload',
-  templateUrl: './document-upload.component.html',
-  styleUrls: ['./document-upload.component.css']
-})
-export class DocumentUploadComponent implements OnInit {
-
-  uploadDoc: any;
-  docType: any = [
-    { value: 'FORM_16', label: 'Form 16' },
-    { value: 'AADHAAR_FRONT', label: 'Aadhar front' },
-    { value: 'AADHAAR_BACK', label: 'Aadhar back' },
-    { value: 'PAN', label: 'Pan card' },
-    { value: 'BANK_STATEMENT', label: 'Bank Statement' },
-    { value: 'CAPITAL_GAIN_STATEMENT', label: 'Capital Gain Statement' },
-    { value: 'SALE_AGREEMENT', label: 'Sale agreement' },
-    { value: 'PURCHASE_AGREEMENT', label: 'Purchase agreement' },
-    { value: 'FOREIGN_INCOME_STATEMENT', label: 'Foreign income statement' },
-    { value: 'LOAN_STATEMENT', label: 'Loan statement' },
-    { value: 'FORM_26_AS', label: 'Form 26' },
-    { value: null, label: 'Miscellaneous' }];
-  isPassProtected: boolean;
-  filePassword: any;
-  loading: boolean = false;
-  ITR_JSON: ITR_JSON;
-
-  @Output() onUploadDoucument = new EventEmitter<any>();
-
-  constructor(private userMsService: UserMsService, private utilsService: UtilsService) {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-  }
-
-  ngOnInit() {
-  }
-
-  clearDocVal() {
-    this.uploadDoc = null;
-     this.filePassword = '';
-    this.isPassProtected = false;
-  }
-
-  uploadFile(file: FileList) {
-    console.log("File", file);
-    this.filePassword = '';
-    if (file.length > 0) {
-      this.uploadDoc = file.item(0);
-    }
-  }
-
-  upload() {
-    document.getElementById("input-file-id").click();
-  }
-
-  checkDocPassProtected(type, document, password) {
-    console.log('type: ', type, ' document: ', document)
-    if (document.name.split('.').reverse()[0] === 'pdf') {
-      this.loading = true;
-      const formData = new FormData();
-      formData.append("password", password);
-      formData.append("multipartFile", document);
-      let param = '/gateway/custom-bot/is-password-protected'
-      this.userMsService.postMethodInfo(param, formData).subscribe((res: any) => {
-        this.loading = false;
-        console.log('checkDocPassProtected responce =>', res)
-        if (res.response === 'File is password protected!') {
-          this.isPassProtected = true;
-        }
-        else if (res.response === 'Invalid Password') {
-          this.isPassProtected = true;
-          this.utilsService.showSnackBar('Invalid Password, Enter valid password.')
-        }
-        else if (res.response === 'Valid Password') {
-          this.isPassProtected = false;
-          this.uploadDocument(type, document, password)
-        }
-        else if (res.response === 'File is not password protected!') {
-          this.isPassProtected = false;
-          this.uploadDocument(type, document)
-        }
-        // this.uploadDocument(type, document)
-      },
-        error => {
-          this.loading = false;
-        })
-    }
-    else {
-      this.uploadDocument(type, document)
-
-    }
-  }
-
-  uploadDocument(type, document, password?) {
-    this.loading = true;
-    var s3ObjectUrl;
-    if (type === 'PAN' || type === 'AADHAAR_BACK' || type === 'AADHAAR_FRONT') {
-      s3ObjectUrl = `${this.ITR_JSON.userId}/Common/${document.name}`;
-    }
-    else {
-      s3ObjectUrl = `${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs/${document.name}`;
-    }
-
-    var pass;
-    //,"password":"' + (password ? password : null) + '"
-    if(password){
-      pass = '","password":"' + password + '"';
-    }
-    else{
-      pass = '"';
-    }
-    let cloudFileMetaData = '{"fileName":"' + document.name + '","userId":' + this.ITR_JSON.userId + ',"accessRight":["' + this.ITR_JSON.userId + '_W"' + '],"origin":"BO", "s3ObjectUrl":"' + s3ObjectUrl + pass+'}';
-    console.log("cloudFileMetaData ===> ", cloudFileMetaData)
-    const formData = new FormData();
-    formData.append("file", document);
-    formData.append("cloudFileMetaData", cloudFileMetaData);
-    console.log("formData ===> ", formData);
-    let param = '/itr/cloud/upload'
-    this.userMsService.postMethodInfo(param, formData).subscribe((res: any) => {
-      this.loading = false;
-      console.log('uploadDocument responce =>', res)
-      if (res.Failed === 'Failed to uploade file!') {
-        this.utilsService.showSnackBar(res.Failed)
-      }
-      else if (res.Success === 'File successfully uploaded!') {
-        this.utilsService.showSnackBar(res.Success);
-        this.onUploadDoucument.emit('File uploaded successfully')
-      }
-    },
-      error => {
-        this.loading = false;
-      })
-  }
-
-}
- */
-
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
@@ -151,25 +10,25 @@ import { BehaviorSubject } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 /**
  * Node for to-do item
  */
 export class FoodNode {
   children?: FoodNode[];
-  item: string;
-  value: string;
+  item!: string;
+  value!: string;
 }
 
 /** Flat to-do item node with expandable and level information */
 export class CloudFlatNode {
-  item: string;
-  value: string;
-  level: number;
-  expandable: boolean;
+  item!: string;
+  value!: string;
+  level!: number;
+  expandable!: boolean;
 }
 
 /**
@@ -1302,7 +1161,7 @@ const TREE_DATA: FoodNode[] = [
 @Injectable({ providedIn: 'root' })
 export class ChecklistDatabase {
   dataChange = new BehaviorSubject<FoodNode[]>([]);
-  treeData: any[];
+  treeData!: any[];
 
   get data(): FoodNode[] {
     return this.dataChange.value;
@@ -1424,14 +1283,14 @@ export class DocumentUploadComponent implements OnInit {
     { value: 'LOAN_STATEMENT', label: 'Loan statement', tree: 'ITR' },
     { value: 'FORM_26_AS', label: 'Form 26', tree: 'ITR' },
     /* { value: null, label: 'Miscellaneous' } */];
-  isPassProtected: boolean;
+  isPassProtected!: boolean;
   filePassword: any;
   loading: boolean = false;
   // ITR_JSON: ITR_JSON;
   selectedFileType = null;
 
-  @Output() onUploadDoucument = new EventEmitter<any>();
-  @Input() userId;
+  @Output() uploadDocument = new EventEmitter<any>();
+  @Input() userId!:any;
 
   ngOnInit() {
     console.log('userId', this.userId);
@@ -1441,7 +1300,7 @@ export class DocumentUploadComponent implements OnInit {
 
   isExpandable = (node: CloudFlatNode) => node.expandable;
 
-  getChildren = (node: FoodNode): FoodNode[] => node.children;
+  getChildren = (node: FoodNode) => node.children;
 
   hasChild = (_: number, _nodeData: CloudFlatNode) => _nodeData.expandable;
 
@@ -1508,12 +1367,12 @@ export class DocumentUploadComponent implements OnInit {
     // this.checkAllParentsSelection(node);
   }
 
-  checkSameLevelSelecion(selectedArray) {
+  checkSameLevelSelecion(selectedArray:any) {
     let getSelectedLevelArray = selectedArray.filter(
-      item => item.level === selectedArray[selectedArray.length - 1].level
+      (item:any) => item.level === selectedArray[selectedArray.length - 1].level
     );
     getSelectedLevelArray = getSelectedLevelArray.filter(
-      item => item.item !== selectedArray[selectedArray.length - 1].item
+      (item:any) => item.item !== selectedArray[selectedArray.length - 1].item
     );
 
     for (let i = 0; i < getSelectedLevelArray.length; i++) {
@@ -1605,10 +1464,10 @@ export class DocumentUploadComponent implements OnInit {
   }
 
   upload() {
-    document.getElementById("input-file-id").click();
+    document.getElementById("input-file-id")?.click();
   }
 
-  checkDocPassProtected(type, document, password) {
+  checkDocPassProtected(type:any, document:any, password:any) {
     console.log('type: ', type, ' document: ', document)
     // return;
     if (document.name.split('.').reverse()[0] === 'pdf') {
@@ -1629,11 +1488,11 @@ export class DocumentUploadComponent implements OnInit {
         }
         else if (res.response === 'Valid Password') {
           this.isPassProtected = false;
-          this.uploadDocument(type, document, password)
+          this.uploadDocuments(type, document, password)
         }
         else if (res.response === 'File is not password protected!') {
           this.isPassProtected = false;
-          this.uploadDocument(type, document)
+          this.uploadDocuments(type, document)
         }
         // this.uploadDocument(type, document)
       },
@@ -1642,12 +1501,12 @@ export class DocumentUploadComponent implements OnInit {
         })
     }
     else {
-      this.uploadDocument(type, document)
+      this.uploadDocuments(type, document)
 
     }
   }
 
-  uploadDocument(type, document, password?) {
+  uploadDocuments(type:any, document:any, password?:any) {
     this.loading = true;
     var s3ObjectUrl = `${this.userId}/${this.getSelectedItems()}/${document.name}`;
     // if (type === 'PAN' || type === 'AADHAAR_BACK' || type === 'AADHAAR_FRONT') {
@@ -1685,7 +1544,7 @@ export class DocumentUploadComponent implements OnInit {
         this.utilsService.showSnackBar(res.Failed)
       } else if (res.Success === 'File successfully uploaded!') {
         this.utilsService.showSnackBar(res.Success);
-        this.onUploadDoucument.emit('File uploaded successfully');
+        this.uploadDocument.emit('File uploaded successfully');
         this.uploadDoc = null;
       } else {
         this.utilsService.showSnackBar(res.Failed)

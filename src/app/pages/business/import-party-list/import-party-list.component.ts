@@ -1,36 +1,16 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
- 
-
-import { Component, OnInit,Input,Output,EventEmitter } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { NavbarService } from '../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../services/toast-message.service';
 import { HttpClient } from '@angular/common/http';
-import * as csv from "csvtojson";
+// import * as csv from "csvtojson";
 
 @Component({
   selector: 'app-import-party-list',
   templateUrl: './import-party-list.component.html',
   styleUrls: ['./import-party-list.component.css']
 })
-export class ImportPartyListComponent implements OnInit {
+export class ImportPartyListComponent implements OnInit, DoCheck {
   loading: boolean = false;   
   selected_merchant: any;
   merchantData: any;
@@ -44,35 +24,35 @@ export class ImportPartyListComponent implements OnInit {
   	private navbarService: NavbarService,
     public router: Router,public http: HttpClient,
     public _toastMessageService:ToastMessageService) { 
-    NavbarService.getInstance(null).component_link_2 = 'import-party-list';
-    NavbarService.getInstance(null).component_link_3 = '';
-  	NavbarService.getInstance(null).showBtns = 'import-party-list';
+    NavbarService.getInstance().component_link_2 = 'import-party-list';
+    NavbarService.getInstance().component_link_3 = '';
+  	NavbarService.getInstance().showBtns = 'import-party-list';
   } 
 
   ngOnInit() {
-    if (!NavbarService.getInstance(null).isSessionValid()) {
+    if (!NavbarService.getInstance().isSessionValid()) {
       this.router.navigate(['']);
       return;
     }
     
-    this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+    this.onSelectMerchant(NavbarService.getInstance().merchantData);
   }
 
   ngDoCheck() {
-    if (NavbarService.getInstance(null).isMerchantChanged && NavbarService.getInstance(null).merchantData) {
-        this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
-        NavbarService.getInstance(null).isMerchantChanged = false;
+    if (NavbarService.getInstance().isMerchantChanged && NavbarService.getInstance().merchantData) {
+        this.onSelectMerchant(NavbarService.getInstance().merchantData);
+        NavbarService.getInstance().isMerchantChanged = false;
     }
   }
 
-  onSelectMerchant(event) {    
+  onSelectMerchant(event:any) {    
     if(event && event.userId) {
       this.selected_merchant = event;
       this.merchantData = event;
     }    
   }
 
-  onUploadFile(files) {
+  onUploadFile(files:any) {
     let self = this;
     if(files && files[0]) {
       let reader: FileReader = new FileReader();
@@ -80,42 +60,42 @@ export class ImportPartyListComponent implements OnInit {
 
       reader.onload = (e) => {
         let csvData:any = reader.result;
-        csv({output: "json"})
-        .fromString(csvData)
-        .then(function(result){
-          if(Array.isArray(result)) {
-            result.forEach(pt =>{ 
-              for(var x in pt) {
-                if(x) { 
-                  let nX = x.toUpperCase();
-                  pt[nX] = pt[x]; 
-                  if(nX == "PARTY TYPE" && pt[nX]) {
-                    pt[nX] = pt[nX].toUpperCase(); 
-                  }
-                } 
-              }
+        // csv({output: "json"})
+        // .fromString(csvData)
+        // .then(function(result){
+        //   if(Array.isArray(result)) {
+        //     result.forEach(pt =>{ 
+        //       for(var x in pt) {
+        //         if(x) { 
+        //           let nX = x.toUpperCase();
+        //           pt[nX] = pt[x]; 
+        //           if(nX === "PARTY TYPE" && pt[nX]) {
+        //             pt[nX] = pt[nX].toUpperCase(); 
+        //           }
+        //         } 
+        //       }
 
-              console.log(pt);
+        //       console.log(pt);
 
-              if(
-                !pt["PARTY TYPE"] || ['CUSTOMER','SUPPLIER'].indexOf(pt["PARTY TYPE"]) == -1 || !pt["TRADE NAME"] ||
-                !pt.GSTIN || pt.GSTIN.length != 15 ||
-                (pt.EMAIL && !(/\S+@\S+\.\S+/.test(pt.EMAIL))) || 
-                (pt.MOBILE && !(/^\d{10}$/.test(pt.MOBILE)))) {
-               //in valid entry   
-               console.log(pt)
-              } else {
-                self.uploadingData.push({
-                  partyType:pt["PARTY TYPE"],
-                  partyName:pt["TRADE NAME"],
-                  partyGstin:pt["GSTIN"],
-                  partyEmail:pt["EMAIL"],
-                  partyPhone:pt["MOBILE"]
-                });
-              }
-            });
-          }
-        });
+        //       if(
+        //         !pt["PARTY TYPE"] || ['CUSTOMER','SUPPLIER'].indexOf(pt["PARTY TYPE"]) === -1 || !pt["TRADE NAME"] ||
+        //         !pt.GSTIN || pt.GSTIN.length != 15 ||
+        //         (pt.EMAIL && !(/\S+@\S+\.\S+/.test(pt.EMAIL))) || 
+        //         (pt.MOBILE && !(/^\d{10}$/.test(pt.MOBILE)))) {
+        //        //in valid entry   
+        //        console.log(pt)
+        //       } else {
+        //         self.uploadingData.push({
+        //           partyType:pt["PARTY TYPE"],
+        //           partyName:pt["TRADE NAME"],
+        //           partyGstin:pt["GSTIN"],
+        //           partyEmail:pt["EMAIL"],
+        //           partyPhone:pt["MOBILE"]
+        //         });
+        //       }
+        //     });
+        //   }
+        // });
       } 
     }
   }
@@ -135,20 +115,20 @@ export class ImportPartyListComponent implements OnInit {
     }
 
     let upLen = this.uploadingData.length;
-    if(upLen == 0) {
+    if(upLen === 0) {
       this._toastMessageService.alert("error","There is no data for update.");
       return;
     }
     this.loading = true;
     let params = {
      "businessId": this.merchantData.userId,
-     "partyList": this.uploadingData.map(ud => {
+     "partyList": this.uploadingData.map((ud:any) => {
         return {
           "partyEmail": ud.partyEmail,
           "partyGstin": ud.partyGstin,
           "partyName": ud.partyName,
           "partyPhone": ud.partyPhone,
-          "partyRolePartyRoleId": ud.partyType == 'SUPPLIER' ? 1 : 2
+          "partyRolePartyRoleId": ud.partyType === 'SUPPLIER' ? 1 : 2
         };
      })
     }

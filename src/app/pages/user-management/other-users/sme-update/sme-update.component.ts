@@ -3,11 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { environment } from 'environments/environment';
-declare function matomo(title: any, url: any, event: any, scriptId: any);
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-sme-update',
   templateUrl: './sme-update.component.html',
@@ -15,7 +14,7 @@ declare function matomo(title: any, url: any, event: any, scriptId: any);
 })
 export class SmeUpdateComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   usersGridOptions: GridOptions;
   config: any;
   userInfo: any = [];
@@ -40,7 +39,7 @@ export class SmeUpdateComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string) {
     this.usersGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.usersCreateColoumnDef(),
+      columnDefs: this.userscreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -81,7 +80,7 @@ export class SmeUpdateComponent implements OnInit {
   //       if (Array.isArray(res.records)) {
   //         this.user_data = res.records;
   //         console.log('user_data -> ', this.user_data);
-  //         this.usersGridOptions.api.setRowData(this.createRowData(this.user_data));
+  //         this.usersGridOptions.api?.setRowData(this.createRowData(this.user_data));
   //         this.userInfo = this.user_data;
   //         this.config.totalItems = this.user_data.length;
   //       }
@@ -97,12 +96,12 @@ export class SmeUpdateComponent implements OnInit {
   // }
 
 
-  pageChanged(event) {
+  pageChanged(event:any) {
     this.config.currentPage = event;
     this.getUserData(event - 1);
   }
 
-  getUserData(pageNo) {
+  getUserData(pageNo:any) {
     this.loading = true;
     // https://api.taxbuddy.com/user
     //let param = '/profile?page=' + pageNo + '&pageSize=15'
@@ -110,7 +109,7 @@ export class SmeUpdateComponent implements OnInit {
     this.userService.getMethod(param).subscribe((result: any) => {
       console.log('result -> ', result);
       this.loading = false;
-      this.usersGridOptions.api.setRowData(this.createRowData(result));
+      this.usersGridOptions.api?.setRowData(this.createRowData(result));
       this.userInfo = result;
       this.config.totalItems = result.totalElements;
     },
@@ -121,7 +120,7 @@ export class SmeUpdateComponent implements OnInit {
       })
   }
 
-  usersCreateColoumnDef() {
+  userscreateColumnDef() {
     return [
       {
         headerName: 'User Id',
@@ -141,7 +140,7 @@ export class SmeUpdateComponent implements OnInit {
         width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        cellRenderer: (data) => {
+        cellRenderer: (data:any) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
         filter: "agTextColumnFilter",
@@ -202,13 +201,13 @@ export class SmeUpdateComponent implements OnInit {
         field: 'gender',
         width: 100,
         suppressMovable: true,
-        valueGetter: function (params) {
+        valueGetter: function (params:any) {
           if (params.data.gender === 'MALE') {
             return 'Male';
           } else if (params.data.gender === 'FEMALE') {
             return 'Female'
           } else {
-            params.data.gender
+            return params.data.gender
           }
         },
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
@@ -223,13 +222,13 @@ export class SmeUpdateComponent implements OnInit {
         field: 'resident',
         width: 120,
         suppressMovable: true,
-        valueGetter: function (params) {
+        valueGetter: function (params:any) {
           if (params.data.resident === 'RESIDENT') {
             return 'Resident';
           } else if (params.data.resident === 'NON_RESIDENT') {
             return 'NRI'
           } else {
-            params.data.resident
+            return params.data.resident
           }
         },
         cellStyle: { textAlign: 'center' },
@@ -245,7 +244,7 @@ export class SmeUpdateComponent implements OnInit {
       //   suppressMenu: true,
       //   sortable: true,
       //   suppressMovable: true,
-      //   cellRenderer: function (params) {
+      //   cellRenderer: function (params:any) {
       //     return `<button type="button" class="action_icon add_button" title="Rediredt toward Invoice"
       //     style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
       //       <i class="fa fa-files-o" aria-hidden="true" data-action-type="invoice"></i>
@@ -253,7 +252,7 @@ export class SmeUpdateComponent implements OnInit {
       //   },
       //   width: 50,
       //   pinned: 'right',
-      //   cellStyle: function (params) {
+      //   cellStyle: function (params:any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
       //       'align-items': 'center',
@@ -267,7 +266,7 @@ export class SmeUpdateComponent implements OnInit {
       //   suppressMenu: true,
       //   sortable: true,
       //   suppressMovable: true,
-      //   cellRenderer: function (params) {
+      //   cellRenderer: function (params:any) {
       //     return `<button type="button" class="action_icon add_button" title="Redirect toward Subscription"
       //     style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
       //       <i class="fa fa-list-alt" aria-hidden="true" data-action-type="subscription"></i>
@@ -275,7 +274,7 @@ export class SmeUpdateComponent implements OnInit {
       //   },
       //   width: 50,
       //   pinned: 'right',
-      //   cellStyle: function (params) {
+      //   cellStyle: function (params:any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
       //       'align-items': 'center',
@@ -289,7 +288,7 @@ export class SmeUpdateComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return ` 
            <button type="button" class="action_icon add_button" title="User Profile" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
@@ -298,7 +297,7 @@ export class SmeUpdateComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -312,7 +311,7 @@ export class SmeUpdateComponent implements OnInit {
       //   suppressMenu: true,
       //   sortable: true,
       //   suppressMovable: true,
-      //   cellRenderer: function (params) {
+      //   cellRenderer: function (params:any) {
       //     return `<button type="button" class="action_icon add_button" title="Link To Finbingo" style="border: none;
       //       background: transparent; font-size: 16px; cursor:pointer;">
       //       <i class="fa fa-link" aria-hidden="true" data-action-type="link-to-finbingo"></i>
@@ -320,7 +319,7 @@ export class SmeUpdateComponent implements OnInit {
       //   },
       //   width: 50,
       //   pinned: 'right',
-      //   cellStyle: function (params) {
+      //   cellStyle: function (params:any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
       //       'align-items': 'center',
@@ -331,11 +330,10 @@ export class SmeUpdateComponent implements OnInit {
     ]
   }
 
-  createRowData(userData) {
-    console.log('userData -> ', userData);
+  createRowData(userData:any) {
     var userArray = [];
     for (let i = 0; i < userData.length; i++) {
-      let userInfo = Object.assign({}, userArray[i], {
+      let userInfo:any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
         createdDate: this.utileService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
         name: userData[i].firstName + ' ' + userData[i].lastName,
@@ -353,7 +351,7 @@ export class SmeUpdateComponent implements OnInit {
     return userArray;
   }
 
-  onUsersRowClicked(params) {
+  onUsersRowClicked(params:any) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -381,17 +379,17 @@ export class SmeUpdateComponent implements OnInit {
     }
   }
 
-  redirectTowardInvoice(userInfo) {
+  redirectTowardInvoice(userInfo:any) {
     console.log('userInfo for subscription -> ', userInfo);
     this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: userInfo.userId } });
   }
 
-  redirectTowardSubscription(userInfo) {
+  redirectTowardSubscription(userInfo:any) {
     console.log('userInfo for subscription -> ', userInfo);
     this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: userInfo.mobileNumber } });
   }
 
-  linkToFinbingo(userId) {
+  linkToFinbingo(userId:any) {
     const param = `/partner/create-user`;
     const request = {
       userId: userId

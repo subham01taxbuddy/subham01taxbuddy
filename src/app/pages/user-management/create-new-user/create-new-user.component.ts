@@ -1,19 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { environment } from 'environments/environment';
-declare function matomo(title: any, url: any, event: any, scriptId: any);
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-create-new-user',
   templateUrl: './create-new-user.component.html',
   styleUrls: ['./create-new-user.component.css']
 })
-export class CreateNewUserComponent implements OnInit {
+export class CreateNewUserComponent implements OnInit, OnDestroy {
 
-  loading: boolean;
-  signUpForm: FormGroup;
+  loading!: boolean;
+  signUpForm!: FormGroup;
   exceptionalUser: boolean = false;
   exceptionalInfo: any;
   services = [{value:'ITR'}, {value:'GST'}, {value:'TPA'}, {value:'NOTICE'}];
@@ -33,7 +32,7 @@ export class CreateNewUserComponent implements OnInit {
       serviceType: new FormControl("", Validators.required)
     });
 
-    this.exceptionalInfo = JSON.parse(sessionStorage.getItem("exceptionalUser"));
+    this.exceptionalInfo = JSON.parse(sessionStorage.getItem("exceptionalUser") || '');
     console.log("exceptionalInfo: ", this.exceptionalInfo);
     if (this.utilSerive.isNonEmpty(this.exceptionalInfo)) {
       this.signUpForm.controls["first_name"].setValue('');
@@ -95,7 +94,7 @@ export class CreateNewUserComponent implements OnInit {
     }
   }
 
-  clearFromExceptionList(mail){
+  clearFromExceptionList(mail:any){
     console.log('Mail -> ',mail);
     //https://uat-api.taxbuddy.com/gateway/email-channel/exception/delete?email={email}
     let param = '/gateway/email-channel/exception/delete?email='+mail;
@@ -136,7 +135,7 @@ export class CreateNewUserComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    sessionStorage.setItem("exceptionalUser", null);
+    sessionStorage.setItem("exceptionalUser", '');
   }
 
 }

@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { NavbarService } from 'app/services/navbar.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
+import { NavbarService } from 'src/app/services/navbar.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { HttpClient } from '@angular/common/http';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-claim-client',
   templateUrl: './claim-client.component.html',
   styleUrls: ['./claim-client.component.css']
 })
-export class ClaimClientComponent implements OnInit {
+export class ClaimClientComponent {
   searchVal: string = "";
   user_data: any = [];
   searchMenus = [{
@@ -29,30 +29,29 @@ export class ClaimClientComponent implements OnInit {
   loggedInUserData: any;
   constructor(navbarService: NavbarService, public _toastMessageService: ToastMessageService, public http: HttpClient,
     private userMsService: UserMsService, public utilsService: UtilsService) {
-    this.loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
+    this.loggedInUserData = JSON.parse(localStorage.getItem('UMD') || '');
     this.utilsService.smoothScrollToTop();
   }
 
-  ngOnInit() {
-  }
+
   clearValue() {
     this.searchVal = "";
   }
 
-  advanceSearch(key) {
+  advanceSearch(key:any) {
     this.user_data = [];
     if (this.searchVal !== "") {
       this.getUserSearchList(key, this.searchVal);
     }
   }
-  getUserSearchList(key, searchValue) {
+  getUserSearchList(key:any, searchValue:any) {
     return new Promise((resolve, reject) => {
       this.user_data = [];
       NavbarService.getInstance(this.http).getUserSearchList(key, searchValue).subscribe(res => {
         console.log("Search result:", res)
         if (Array.isArray(res.records)) {
           this.user_data = res.records
-          this.user_data = this.user_data.filter(item => item.ifaId < 2)
+          this.user_data = this.user_data.filter((item:any) => item.ifaId < 2)
           if (this.user_data.length === 0) {
             this._toastMessageService.alert("error", "Client not found");
           }
@@ -66,12 +65,12 @@ export class ClaimClientComponent implements OnInit {
     });
   }
 
-  claimClient(clientUserId) {
+  claimClient(clientUserId:any) {
     return new Promise((resolve, reject) => {
       const param = `/profile/${this.loggedInUserData.USER_UNIQUE_ID}/${clientUserId}`;
       this.userMsService.patchMethod(param).subscribe((res: any) => {
         console.log("Search result:", res)
-        const objIndex = this.user_data.findIndex((obj => obj.userId === clientUserId));
+        const objIndex = this.user_data.findIndex((obj:any) => obj.userId === clientUserId);
         this.user_data[objIndex].ifaId = res.ifaId;
         this._toastMessageService.alert("success", "Client claimed successfully.");
         return resolve(true)

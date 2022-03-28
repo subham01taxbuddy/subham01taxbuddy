@@ -8,7 +8,7 @@
                     <input type="text" placeholder="Nature of business" aria-label="Assignee" matInput
                         formControlName="natureOfBusiness44AD" [matAutocomplete]="auto1" (blur)="getCodeFromLabelOnBlur()">
                     <!-- <i class="material-icons align-arrow-right">arrow_drop_down</i>-->
-                    <mat-error *ngIf="natureOfBusinessForm['controls'].natureOfBusiness44AD.invalid">
+                    <mat-error *ngIf="natureOfBusinessForm.controls['natureOfBusiness44AD.invalid">
                         Please select value from dropdown only.
                     </mat-error>
                     <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn">    <!-- (optionSelected)="getCodeFromLabelOnBlur()"-->
@@ -22,7 +22,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Trade Name</mat-label>
                     <input matInput placeholder="Trade Name" formControlName="tradeName44AD" (blur)="getCodeFromLabelOnBlur()" maxlength="75" autocomplete="off">
-                    <!-- <mat-error *ngIf="natureOfBusinessForm['controls'].tradeName44AD.hasError('pattern')">
+                    <!-- <mat-error *ngIf="natureOfBusinessForm.controls['tradeName44AD.hasError('pattern')">
                         Name should contain character only
                     </mat-error> -->
                 </mat-form-field>
@@ -102,7 +102,7 @@
                     <input placeholder="Nature of business" aria-label="Assignee" matInput
                         formControlName="natureOfBusiness44ADA" [matAutocomplete]="auto2" (blur)="getCodeFromLabelOnBlur44ADA()">
                     <!-- <i class="material-icons align-arrow-right">arrow_drop_down</i>-->
-                    <mat-error *ngIf="natureOfBusinessForm['controls'].natureOfBusiness44ADA.invalid">
+                    <mat-error *ngIf="natureOfBusinessForm.controls['natureOfBusiness44ADA.invalid">
                         Please select value from dropdown only.
                     </mat-error>
                     <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">   <!--(optionSelected)="getCodeFromLabelOnBlur()"-->
@@ -116,7 +116,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Trade Name</mat-label>
                     <input matInput placeholder="Trade Name" disabled formControlName="tradeName44ADA" (blur)="getCodeFromLabelOnBlur44ADA()" maxlength="75" autocomplete="off">
-                    <!-- <mat-error *ngIf="natureOfBusinessForm['controls'].tradeName44ADA.hasError('pattern')">
+                    <!-- <mat-error *ngIf="natureOfBusinessForm.controls['tradeName44ADA.hasError('pattern')">
                         Name should contain character only
                     </mat-error> -->
                 </mat-form-field>

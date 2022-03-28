@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-change-agent-dialog',
@@ -13,7 +13,7 @@ import { UtilsService } from 'app/services/utils.service';
 export class ChangeAgentDialogComponent implements OnInit {
 
   changeAgent: FormGroup;
-  loading: boolean;
+  loading!: boolean;
   allAgents: any = [];
   services: any = [{label:'Itr' ,value:'ITR'},{label:'Gst' ,value:'GST'}, {label:'Notice' ,value:'NOTICE'}, {label:'Tpa' ,value:'TPA'}]
 
@@ -30,7 +30,7 @@ export class ChangeAgentDialogComponent implements OnInit {
     });
     
     console.log('selected sme info: ',this.data, this.data.allInfo , this.data.allInfo.selectedAgent);
-    this.changeAgent.controls.serviceType.setValue(this.data.userInfo.serviceType);
+    this.changeAgent.controls['serviceType'].setValue(this.data.userInfo.serviceType);
     this.data.userInfo.roles = this.data.allInfo.smeList.filter(item=> item.smeId === this.data.userInfo.smeId)[0].roles;
     console.log('After change roles userInfo: ',this.data.userInfo)
     this.getAgents()
@@ -42,7 +42,7 @@ export class ChangeAgentDialogComponent implements OnInit {
         console.log('agent-details responce: ', res);
         if(res && res instanceof Array){
           if(this.utilsService.isNonEmpty(this.data.allInfo.selectedAgent)){
-            this.allAgents = res.filter(item => item.agentId !== this.data.allInfo.selectedAgent);
+            this.allAgents = res.filter((item:any) => item.agentId !== this.data.allInfo.selectedAgent);
           }
           else{
             this.allAgents = res;
@@ -69,7 +69,7 @@ export class ChangeAgentDialogComponent implements OnInit {
 
           setTimeout(() => {
             let body = {
-              changeAgent: this.allAgents.filter(item => item.agentId === this.data.userInfo.agentId)[0].name,
+              changeAgent: this.allAgents.filter((item:any) => item.agentId === this.data.userInfo.agentId)[0].name,
               serviceType : this.data.userInfo.serviceType
             }
             this.dialogRef.close({ event: 'close', data:'statusChanged', changeAgentInfo: body})

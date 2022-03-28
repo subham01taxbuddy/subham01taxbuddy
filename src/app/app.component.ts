@@ -19,7 +19,7 @@
 
 import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { environment } from 'environments/environment';
+import { environment } from 'src/environments/environment';
 //declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 @Component({

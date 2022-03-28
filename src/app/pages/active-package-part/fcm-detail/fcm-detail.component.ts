@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { UserMsService } from 'app/services/user-ms.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { UtilsService } from 'app/services/utils.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 
 @Component({
   selector: 'app-fcm-detail',
@@ -17,7 +16,7 @@ export class FcmDetailComponent implements OnInit {
   currentUserId: number = 0;
   user_data: any = [];
   active_subscriptions: any = [];
-  loading: boolean;
+  loading!: boolean;
   searchMenus = [{
     value: 'fName', name: 'First Name'
   }, {

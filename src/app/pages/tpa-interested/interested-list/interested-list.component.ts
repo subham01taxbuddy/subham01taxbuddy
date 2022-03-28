@@ -5,14 +5,11 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './interested-list.component.html',
   styleUrls: ['./interested-list.component.css']
 })
-export class InterestedListComponent implements OnInit {
+export class InterestedListComponent {
   count = 0;
   constructor() { }
 
-  ngOnInit() {
-  }
-
-  getDetails(count) {
+  getDetails(count:any) {
     this.count = count;
   }
 }

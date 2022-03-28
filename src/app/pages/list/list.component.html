@@ -160,28 +160,28 @@
             <div class="modal-content__container bill-invoice-popup__content">
 
                 <app-add-update-gst-bill-invoice
-                    *ngIf="['sales-invoice','purchase-invoice'].indexOf(invoice_main_type) != -1"
+                    *ngIf="['sales-invoice','purchase-invoice'].indexOf(invoice_main_type) !== -1"
                     [state_list]="state_list" [invoice_types]="selected_invoice_types"
                     [merchantData]="selected_invoice_merchant_data" [invoice_main_type]="invoice_main_type"
                     [invoice_party_roles]="invoice_party_roles" [invoice_status_list]="invoice_status_list"
                     [invoiceToUpdate]="invoiceToUpdate" [is_update_item]="true"
-                    (onUpdateInvoice)="onUpdateInvoice($event)" (onCancelInvoice)="onCancelInvoice($event)">
+                    (updateInvoiceClick)="updateInvoiceClick($event)" (cancelInvoiceClick)="cancelInvoiceClick($event)">
                 </app-add-update-gst-bill-invoice>
 
                 <app-add-update-credit-debit-note-invoice
-                    *ngIf="['credit-note','debit-note'].indexOf(invoice_main_type) != -1" [state_list]="state_list"
+                    *ngIf="['credit-note','debit-note'].indexOf(invoice_main_type) !== -1" [state_list]="state_list"
                     [invoice_types]="selected_invoice_types" [merchantData]="selected_invoice_merchant_data"
                     [invoice_main_type]="invoice_main_type" [invoice_party_roles]="invoice_party_roles"
                     [invoice_status_list]="invoice_status_list" [invoiceToUpdate]="invoiceToUpdate"
-                    [is_update_item]="true" (onUpdateInvoice)="onUpdateInvoice($event)"
-                    (onCancelInvoice)="onCancelInvoice($event)">
+                    [is_update_item]="true" (updateInvoiceClick)="updateInvoiceClick($event)"
+                    (cancelInvoiceClick)="cancelInvoiceClick($event)">
                 </app-add-update-credit-debit-note-invoice>
 
             </div>
         </div>
         <!--  <div class="modal-footer clearfix">
             <div class="pull-right">
-                <a class="btn btn-cancel" (click)="onCancelInvoiceBtnClicked()">Cancel</a>
+                <a class="btn btn-cancel" (click)="cancelInvoiceClickBtnClicked()">Cancel</a>
                 <a class="btn product__save" (click)="onSaveGSTBillInvoice()">Save Invoice</a>
             </div>
         </div> -->

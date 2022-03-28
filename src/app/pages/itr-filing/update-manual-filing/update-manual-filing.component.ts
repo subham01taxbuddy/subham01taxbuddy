@@ -1,12 +1,12 @@
 import { UtilsService } from './../../../services/utils.service';
-import { ApiEndpoints } from 'app/shared/api-endpoint';
+import { ApiEndpoints } from 'src/app/modules/shared/api-endpoint';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
-import { MAT_DIALOG_DATA } from '@angular/material';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { AppConstants } from 'app/shared/constants';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({
   selector: 'app-update-manual-filing',
@@ -52,7 +52,7 @@ export class UpdateManualFilingComponent implements OnInit {
 
   async updateStatus() {
     const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
       // this.utilsService.showSnackBar('There is no any active filing year available')
       return;

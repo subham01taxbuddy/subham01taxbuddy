@@ -1,0 +1,51 @@
+import { Component, OnInit, DoCheck } from '@angular/core';
+import { NavbarService } from '../../../../services/navbar.service';
+import { Router } from '@angular/router';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-gaurd.service';
+
+@Component({
+  selector: 'app-sidebar',
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.sass']
+})
+export class SidebarComponent implements DoCheck {
+
+  showSidebar!: boolean;
+  loggedInUserData: any;
+
+  hideSideBar!: boolean;
+  constructor(private navbarService: NavbarService, private roleBaseAuthGuardService: RoleBaseAuthGuardService, private route: Router) {
+    this.loggedInUserData = JSON.parse(localStorage.getItem("UMD") ?? "") || {};
+    this.route.events.subscribe((url: any) => {
+      if (route.url === '/pages/itr-filing/itr') {
+        this.hideSideBar = true;
+      } else {
+        this.hideSideBar = false;
+      }
+    });
+  }
+
+  ngDoCheck() {
+    this.showSidebar = NavbarService.getInstance().showSideBar;
+  }
+
+  closeSideBar() {
+    NavbarService.getInstance().closeSideBar = true;
+  }
+
+  isApplicable(permissionRoles:any) {
+    return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
+  }
+
+
+  chatCorner() {
+    this.route.navigate(['/pages/chat-corner']);
+  }
+
+  taxSummary() {
+    this.route.navigate(['/pages/tax-summary'])
+  }
+
+
+ 
+}

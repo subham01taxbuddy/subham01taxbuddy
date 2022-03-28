@@ -1,8 +1,8 @@
 import { formatDate } from '@angular/common';
-import { Component, Inject, Input, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { Subscription } from 'rxjs';
 import { timeInterval } from 'rxjs/operators';
 
@@ -11,12 +11,12 @@ import { timeInterval } from 'rxjs/operators';
   templateUrl: './service-grid-table.component.html',
   styleUrls: ['./service-grid-table.component.css']
 })
-export class ServiceGridTableComponent implements OnInit {
+export class ServiceGridTableComponent implements OnInit, OnDestroy {
 
-  @Input('gridRowData') gridRowData: any;
-  @Input('from') from: any;
+  @Input() gridRowData: any;
+  @Input() from: any;
   tableGridOptions: GridOptions;
-  loading: boolean;
+  loading!: boolean;
   subscription: Subscription;
 
   filingTeamMembers = [
@@ -87,7 +87,7 @@ export class ServiceGridTableComponent implements OnInit {
   constructor(@Inject(LOCALE_ID) private locale: string, private utileService: UtilsService, private userMsService: UserMsService) {
     this.tableGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.createColoumnDef(),
+      columnDefs: this.createColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -100,7 +100,7 @@ export class ServiceGridTableComponent implements OnInit {
       console.log('Service board Data: ', data)
       if (data.text.length > 0) {
         this.gridRowData = data.text;
-        this.tableGridOptions.api.setRowData(this.createRowData(this.gridRowData));
+        this.tableGridOptions.api?.setRowData(this.createRowData(this.gridRowData));
       }
     });
   }
@@ -108,11 +108,11 @@ export class ServiceGridTableComponent implements OnInit {
   ngOnInit() {
     console.log('gridRowData -> ', this.gridRowData);
     setTimeout(() => {
-      this.tableGridOptions.api.setRowData(this.createRowData(this.gridRowData));
+      this.tableGridOptions.api?.setRowData(this.createRowData(this.gridRowData));
     }, 200)
   }
 
-  createColoumnDef() {
+  createColumnDef() {
     return [
       {
         headerName: 'Client Name',
@@ -143,7 +143,7 @@ export class ServiceGridTableComponent implements OnInit {
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        cellRenderer: (data) => {
+        cellRenderer: (data:any) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
         filter: "agTextColumnFilter",
@@ -160,7 +160,7 @@ export class ServiceGridTableComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: "agTextColumnFilter",
-        cellRenderer: (data) => {
+        cellRenderer: (data:any) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
         filterParams: {
@@ -210,7 +210,7 @@ export class ServiceGridTableComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Click to start Filing"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-paperclip" aria-hidden="true" data-action-type="startFilling"></i>
@@ -218,7 +218,7 @@ export class ServiceGridTableComponent implements OnInit {
         },
         width: 100,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -232,7 +232,7 @@ export class ServiceGridTableComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Click open kommunicate chat"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-comments-o" aria-hidden="true" data-action-type="kommunicateChat"></i>
@@ -240,7 +240,7 @@ export class ServiceGridTableComponent implements OnInit {
         },
         width: 100,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -251,11 +251,11 @@ export class ServiceGridTableComponent implements OnInit {
     ]
   }
 
-  createRowData(tableData) {
+  createRowData(tableData:any) {
     console.log('tableData -> ', tableData);
     var tableArray = [];
     for (let i = 0; i < tableData.length; i++) {
-      let userInfo = Object.assign({}, tableArray[i], {
+      let userInfo:any = Object.assign({}, tableArray[i], {
         clientName: tableData[i].sourceAsMap['FirstName'] + ' ' + tableData[i].sourceAsMap['LastName'],
         mobile: tableData[i].sourceAsMap['Phone'],
         createdDate: tableData[i].sourceAsMap['CreatedDate'],
@@ -272,9 +272,9 @@ export class ServiceGridTableComponent implements OnInit {
     return tableArray;
   }
 
-  getFilerName(itr) {
+  getFilerName(itr:any) {
     if (this.utileService.isNonEmpty(itr) && this.utileService.isNonEmpty(itr['FilingTeamMemberId']) && itr['FilingTeamMemberId'] !== 0) {
-      const filer = this.filingTeamMembers.filter(item => item.value === itr['FilingTeamMemberId']);
+      const filer = this.filingTeamMembers.filter((item:any) => item.value === itr['FilingTeamMemberId']);
       if (filer.length > 0) {
         return filer[0].label;
       }
@@ -283,7 +283,7 @@ export class ServiceGridTableComponent implements OnInit {
     return 'Not Assigned';
   }
 
-  onUsersRowClicked(params) {
+  onUsersRowClicked(params:any) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -300,7 +300,7 @@ export class ServiceGridTableComponent implements OnInit {
     }
   }
 
-  startItrFilling(data) {
+  startItrFilling(data:any) {
     console.log('itr filling data -> ', data)
     this.loading = true;
     const param = `/profile/${data['userId']}`
@@ -312,7 +312,7 @@ export class ServiceGridTableComponent implements OnInit {
     })
   }
 
-  redirectKommunicatChat(data) {
+  redirectKommunicatChat(data:any) {
     console.log('go to Kommunicate data -> ', data)
     if (this.utileService.isNonEmpty(data['KommunicateURL'])) {
       window.open(data['KommunicateURL'], '_blank')

@@ -1,12 +1,11 @@
-import { ItrMsService } from 'app/services/itr-ms.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
-import { UserMsService } from 'app/services/user-ms.service';
-import { environment } from 'environments/environment';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { UserMsService } from 'src/app/services/user-ms.service';
 declare let $: any;
 // $(document).on('wheel', 'input[type=number]', function (e) {
 //   $(this).blur();
@@ -588,7 +587,7 @@ export class AddDonationDialogComponent implements OnInit {
    * @author Arati Danane
    */
   displayTooltip() {
-    const donationLabel: any = this.otherDonationToDropdown.filter(item => item.value === this.generalDonationForm.controls['schemeCode'].value);
+    const donationLabel: any = this.otherDonationToDropdown.filter((item:any) => item.value === this.generalDonationForm.controls['schemeCode'].value);
     this.donationToolTip = donationLabel[0].label;
   }
 
@@ -596,13 +595,13 @@ export class AddDonationDialogComponent implements OnInit {
     if (this.generalDonationForm.valid) {
       if (this.generalDonationForm.controls['panNumber'].value !== this.Copy_ITR_JSON.panNumber) {
         if (this.data.mode === 'EDIT') {
-          const index = this.Copy_ITR_JSON.donations.findIndex(item => item.identifier === this.data.selectedData.identifier);
+          const index = this.Copy_ITR_JSON.donations.findIndex((item:any) => item.identifier === this.data.selectedData.identifier);
           this.Copy_ITR_JSON.donations.splice(index, 1, this.generalDonationForm.getRawValue());
         } else {
           this.Copy_ITR_JSON.donations.push(this.generalDonationForm.getRawValue());
         }
         this.serviceCall();
-        console.log('this.ITR_JSON.donations == ', this.Copy_ITR_JSON.donations);
+        console.log('this.ITR_JSON.donations === ', this.Copy_ITR_JSON.donations);
       } else {
         this.utilsService.showSnackBar('PAN of donee can not be same as PAN of logged in user');
       }

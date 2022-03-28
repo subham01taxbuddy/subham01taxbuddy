@@ -1,30 +1,12 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
 
-import { AppConstants } from './../../../../shared/constants';
-import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { AppConstants } from '../../../../modules/shared/constants';
+import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation, DoCheck } from '@angular/core';
 import { NavbarService } from '../../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../../services/toast-message.service';
 import { HttpClient } from '@angular/common/http';
 import Storage from '@aws-amplify/storage';
-import { UtilsService } from 'app/services/utils.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 
@@ -34,25 +16,25 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./add-update-credit-debit-note-invoice.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
-  @Input('is_update_item') is_update_item;
-  @Input('invoiceToUpdate') invoiceToUpdate: any;
-  @Input('state_list') state_list: any = [];
-  @Input('invoice_types') invoice_types: any = [];
-  @Input('invoice_party_roles') invoice_party_roles: any = [];
-  @Input('invoice_status_list') invoice_status_list: any = [];
-  @Input('invoice_main_type') invoice_main_type: any;
-  @Input('merchantData') merchantData: any;
-  @Output() onUpdateInvoice: EventEmitter<any> = new EventEmitter();
-  @Output() onAddInvoice: EventEmitter<any> = new EventEmitter();
-  @Output() onCancelInvoice: EventEmitter<any> = new EventEmitter();
+export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit, DoCheck {
+  @Input() is_update_item!:any;
+  @Input() invoiceToUpdate: any;
+  @Input() state_list: any = [];
+  @Input() invoice_types: any = [];
+  @Input() invoice_party_roles: any = [];
+  @Input() invoice_status_list: any = [];
+  @Input() invoice_main_type: any;
+  @Input() merchantData: any;
+  @Output() updateInvoiceClick: EventEmitter<any> = new EventEmitter();
+  @Output() addInvoiceClick: EventEmitter<any> = new EventEmitter();
+  @Output() cancelInvoiceClick: EventEmitter<any> = new EventEmitter();
 
   loading: boolean = false;
   gstinBounceBackTimeObj: any;
   imageLoader: boolean = false;
   showOriginal: boolean = false;
-  creditDebitNoteFormGroup: FormGroup;
-  loggedInUserInfo = JSON.parse(localStorage.getItem("UMD")) || {};
+  creditDebitNoteFormGroup!: FormGroup;
+  loggedInUserInfo = JSON.parse(localStorage.getItem("UMD") || '') || {};
   invoiceData: any = {
     partyRoleID: "",
     creditDebitNoteDTO: {
@@ -97,13 +79,13 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     public router: Router, public http: HttpClient,
     public _toastMessageService: ToastMessageService, public utilsService: UtilsService,
     private fb: FormBuilder) {
-    NavbarService.getInstance(null).component_link_2 = 'add-update-gst-bill-invoice';
-    NavbarService.getInstance(null).component_link_3 = '';
-    NavbarService.getInstance(null).showBtns = 'add-update-gst-bill-invoice';
+    NavbarService.getInstance().component_link_2 = 'add-update-gst-bill-invoice';
+    NavbarService.getInstance().component_link_3 = '';
+    NavbarService.getInstance().showBtns = 'add-update-gst-bill-invoice';
   }
 
   ngOnInit() {
-    if (!NavbarService.getInstance(null).isSessionValid()) {
+    if (!NavbarService.getInstance().isSessionValid()) {
       this.router.navigate(['']);
       return;
     }
@@ -130,9 +112,9 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   }
 
   ngDoCheck() {
-    if (NavbarService.getInstance(null).saveGSTBillInvoice) {
+    if (NavbarService.getInstance().saveGSTBillInvoice) {
       this.saveGSTBillInvoice();
-      NavbarService.getInstance(null).saveGSTBillInvoice = false;
+      NavbarService.getInstance().saveGSTBillInvoice = false;
     }
   }
 
@@ -147,7 +129,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
 
       //init invoice status
       if (this.invoice_status_list) {
-        let islfData = this.invoice_status_list.filter(isl => { return isl.invoiceStatusMasterName == "uploaded" });
+        let islfData = this.invoice_status_list.filter((isl:any) => { return isl.invoiceStatusMasterName === "uploaded" });
         if (islfData && islfData[0]) { this.onSelectInvoiceStatus(islfData[0]) }
       }
 
@@ -180,18 +162,18 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
 
       //init invoice type
       if (this.invoice_types) {
-        let itfData = this.invoice_types.filter(it => { return it.id == this.invoiceData.creditDebitNoteDTO.invoiceTypesInvoiceTypesId; });
+        let itfData = this.invoice_types.filter((it:any) => { return it.id === this.invoiceData.creditDebitNoteDTO.invoiceTypesInvoiceTypesId; });
         if (itfData && itfData[0]) { this.selected_invoice_type = itfData[0]; }
       }
 
       //init invoice status
       if (this.invoice_status_list) {
-        let islfData = this.invoice_status_list.filter(isl => { return isl.id == this.invoiceData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId; });
+        let islfData = this.invoice_status_list.filter((isl:any) => { return isl.id === this.invoiceData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId; });
         if (islfData && islfData[0]) { this.selected_invoice_status = islfData[0]; }
       }
 
-      this.invoiceData.noteItemDTO.forEach(item => {
-        if (item.noteItemsRate || item.noteItemsRate == 0) {
+      this.invoiceData.noteItemDTO.forEach((item:any) => {
+        if (item.noteItemsRate || item.noteItemsRate === 0) {
           item.tempInvoiceItemsTaxRate = parseFloat(item.noteItemsRate).toFixed(2);
         }
       })
@@ -199,7 +181,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       this.creditDebitNoteFormGroup.patchValue(this.invoiceData);
       //init place of supply
       if (this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId && this.state_list) {
-        let slfData = this.state_list.filter(sl => { return sl.stateMasterCode == this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId; });
+        let slfData = this.state_list.filter((sl:any) => { return sl.stateMasterCode === this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId; });
         if (slfData && slfData[0]) {
           console.log(slfData)
           this.selected_invoice_state = slfData[0];
@@ -218,7 +200,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     }
   }
 
-  getS3Image(filename) {
+  getS3Image(filename:any) {
     if (filename) {
       this.imageLoader = true;
       this.fileType = filename.split('.').pop();
@@ -247,7 +229,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       this.getS3Image(this.invoiceData.creditDebitNoteDTO.creditDebitNoteImageUrl);
     }
   }
-  convertDateToHTMLInputDateFormat(i_Date) {
+  convertDateToHTMLInputDateFormat(i_Date:any) {
     let d = new Date(i_Date);
     let result: any = "";
     if (d) {
@@ -286,7 +268,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     // } else if (!this.invoiceData.creditDebitNoteDTO.referenceInvoiceId) {
     //   this._toastMessageService.alert("error", "Please add invoice number");
     //   return;
-    // } else if (this.invoice_main_type == "credit-note" && this.invoiceData.creditDebitNoteDTO.referenceInvoiceId.length > 16) {
+    // } else if (this.invoice_main_type === "credit-note" && this.invoiceData.creditDebitNoteDTO.referenceInvoiceId.length > 16) {
     //   this._toastMessageService.alert("error", "invoice number max length can be 16 character");
     //   return;
     // } else if (this.invoice_main_type != "credit-note" && this.invoiceData.creditDebitNoteDTO.referenceInvoiceId.length > 45) {
@@ -334,9 +316,9 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     }
   }
 
-  isItemDetailsInValid(ref) {
+  isItemDetailsInValid(ref:any) {
     if (this.invoiceData.noteItemDTO instanceof Array) {
-      let temp = this.invoiceData.noteItemDTO.filter(item => item.isMarkForDeletion !== 'T')
+      let temp = this.invoiceData.noteItemDTO.filter((item:any) => item.isMarkForDeletion !== 'T')
       for (let i = 0; i < temp.length; i++) {
         if (this.utilsService.isNonZero(temp[i].noteItemsTaxableValue)) {
           continue;
@@ -352,6 +334,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
           return true;
         }
       }
+      return true;
     } else {
       return true;
     }
@@ -373,17 +356,17 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       sendData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId = 3;
     }
     if (sendData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId === 3) {
-      const loggedInUser = JSON.parse(localStorage.getItem('UMD'));
+      const loggedInUser = JSON.parse(localStorage.getItem('UMD') || '');
       sendData.creditDebitNoteDTO.creditDebitNoteAssignedTo = loggedInUser.USER_UNIQUE_ID;
     }
     sendData.creditDebitNoteDTO.noteGrossValue = parseFloat(sendData.creditDebitNoteDTO.noteGrossValue);
-    let cField = (this.invoice_main_type == "credit-note") ? "customer" : (this.invoice_main_type == "debit-note") ? "supplier" : "";
+    let cField = (this.invoice_main_type === "credit-note") ? "customer" : (this.invoice_main_type === "debit-note") ? "supplier" : "";
     if (cField) {
-      let fData = this.invoice_party_roles.filter(ipr => { return ipr.partyRoleName == cField });
+      let fData = this.invoice_party_roles.filter((ipr:any) => { return ipr.partyRoleName === cField });
       if (fData && fData[0]) { sendData.partyRoleID = fData[0].id; }
     }
 
-    // let sfData = this.invoice_status_list.filter(isl => { return isl.invoiceStatusMasterName == "uploaded" })
+    // let sfData = this.invoice_status_list.filter((isl:any) => { return isl.invoiceStatusMasterName === "uploaded" })
     // if (sfData && sfData[0]) {
     //   sendData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId = sfData[0].id;
     // }
@@ -393,7 +376,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     NavbarService.getInstance(this.http).createCreditDebitNoteInvoiceWithItems(sendData).subscribe(res => {
       this.loading = false;
       this._toastMessageService.alert("success", "Invoice created successfully.");
-      this.onAddInvoice.emit(res);
+      this.addInvoiceClick.emit(res);
     }, err => {
       let errorMessage = (err.error && err.error.detail) ? err.error.detail : (err.error.title) ? err.error.title : "Internal server error.";
       this._toastMessageService.alert("error", "save gst invoice list - " + errorMessage);
@@ -413,22 +396,22 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       sendData.creditDebitNoteDTO.noteDate = new Date(sendData.creditDebitNoteDTO.noteDate)
     }
     if (sendData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId === 3) {
-      const loggedInUser = JSON.parse(localStorage.getItem('UMD'));
+      const loggedInUser = JSON.parse(localStorage.getItem('UMD') || '');
       sendData.creditDebitNoteDTO.creditDebitNoteAssignedTo = loggedInUser.USER_UNIQUE_ID;
     }
     sendData.creditDebitNoteDTO.noteGrossValue = parseFloat(sendData.creditDebitNoteDTO.noteGrossValue);
 
     if (!sendData.partyRoleID) {
       delete sendData.partyRoleID;
-      let cField = (this.invoice_main_type == "credit-note") ? "customer" : (this.invoice_main_type == "debit-note") ? "supplier" : "";
+      let cField = (this.invoice_main_type === "credit-note") ? "customer" : (this.invoice_main_type === "debit-note") ? "supplier" : "";
       if (cField) {
-        let fData = this.invoice_party_roles.filter(ipr => { return ipr.partyRoleName == cField });
+        let fData = this.invoice_party_roles.filter((ipr:any) => { return ipr.partyRoleName === cField });
         if (fData && fData[0]) { sendData.partyRoleID = fData[0].id; }
       }
     }
 
     if (sendData.partyDTO.partyGstin != sendData.partyDTO.partyPreviousGstin) {
-      /*if(sendData.partyDTO.id == sendData.partyDTO.partyPreviousId) {
+      /*if(sendData.partyDTO.id === sendData.partyDTO.partyPreviousId) {
         delete sendData.partyDTO.id;
       }      */
       sendData.creditDebitNoteDTO.partyHasRolePartyHasRoleId = -1;
@@ -446,7 +429,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     NavbarService.getInstance(this.http).updateCreditDebitNoteInvoiceWithItems(sendData).subscribe(res => {
       this.loading = false;
       this._toastMessageService.alert("success", "Invoice updated successfully.");
-      this.onUpdateInvoice.emit(res);
+      this.updateInvoiceClick.emit(res);
     }, err => {
       let errorMessage = (err.error && err.error.detail) ? err.error.detail : (err.error.title) ? err.error.title : "Internal server error.";
       this._toastMessageService.alert("error", "save gst invoice list - " + errorMessage);
@@ -477,7 +460,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     }
   }
 
-  deleteItem(index) {
+  deleteItem(index:any) {
     if (this.invoiceData.noteItemDTO[index].id) {
       this.invoiceData.noteItemDTO[index]["isMarkForDeletion"] = "T";
     } else {
@@ -488,10 +471,10 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   }
 
   onCancelBtnClicked() {
-    this.onCancelInvoice.emit(true);
+    this.cancelInvoiceClick.emit(true);
   }
 
-  uploadInvoiceImage(files) {
+  uploadInvoiceImage(files:any) {
     if (files && files[0]) {
       this.isEditInvoiceImage = false;
       this.imageLoader = true;
@@ -524,11 +507,11 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     }
   }
 
-  getS3InvoicePath(fileExt) {
+  getS3InvoicePath(fileExt:any) {
     let invoiceSavePath = "inv_" + this.merchantData.userId + "_" + new Date().getTime() + fileExt;
-    if (this.invoice_main_type == "debit-note") {
+    if (this.invoice_main_type === "debit-note") {
       invoiceSavePath = "debit-note/" + invoiceSavePath;
-    } else if (this.invoice_main_type == "credit-note") {
+    } else if (this.invoice_main_type === "credit-note") {
       invoiceSavePath = "credit-note/" + invoiceSavePath;
     }
 
@@ -547,15 +530,14 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   //       this.isIGSTEnabled = false;
   //     }
   //     this.selected_invoice_state = event.stateMasterName;
-  //     // this.creditDebitNoteFormGroup.value.invoiceDTO.stateMasterStateMasterId.setValue(event.id);
+  //     // this.creditDebitNoteFormGroup.value.invoiceDTO.stateMasterStateMasterId'].setValue(event.id);
   //     // this.calculateTaxFields("all", this.invoiceData.noteItemDTO);
   //   }
   // }
 
-  onSelectGSTState(stateId) {
+  onSelectGSTState(stateId:any) {
     if (stateId) {
-      console.log("state_list:", this.state_list)
-      this.creditDebitNoteFormGroup['controls'].creditDebitNoteDTO['controls'].stateMasterStateMasterId.setValue(stateId);
+      (this.creditDebitNoteFormGroup.controls['creditDebitNoteDTO'] as FormGroup).controls['stateMasterStateMasterId'].setValue(stateId);
       this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId = stateId;
       if (this.merchantData && this.merchantData.gstDetails && this.merchantData.gstDetails.businessAddress &&
         this.merchantData.gstDetails.businessAddress.state && this.merchantData.gstDetails.businessAddress.state != stateId) {
@@ -566,27 +548,27 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     }
   }
 
-  onSelectInvoiceType(event) {
+  onSelectInvoiceType(event:any) {
     if (event && event.id) {
       this.invoiceData.creditDebitNoteDTO.invoiceTypesInvoiceTypesId = event.id;
       this.selected_invoice_type = event;
     }
   }
 
-  onSelectInvoiceStatus(event) {
+  onSelectInvoiceStatus(event:any) {
     if (event && event.id) {
       this.invoiceData.creditDebitNoteDTO.invoiceStatusMasterInvoiceStatusMasterId = event.id;
       this.selected_invoice_status = event;
     }
   }
 
-  onEnterGSTIN(event) {
+  onEnterGSTIN(event:any) {
     this.invoiceData.partyDTO.partyGstin = event;
     if (this.gstinBounceBackTimeObj) {
       clearTimeout(this.gstinBounceBackTimeObj)
     }
     this.gstinBounceBackTimeObj = setTimeout(() => {
-      if (this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length == 15) {
+      if (this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length === 15) {
         this.getPartyInfoByGSTIN(event).then((partyInfo: any) => {
           if (partyInfo) {
             this.invoiceData.partyDTO.partyEmail = partyInfo.partyEmail;
@@ -620,12 +602,12 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   setPartyPlaceOfSupply() {
     if (this.invoiceData.partyDTO.partyGstin) {
       let stateCode = this.invoiceData.partyDTO.partyGstin.substr(0, 2);
-      let fState = this.state_list.filter(sl => { return sl.stateMasterCode == stateCode });
+      let fState = this.state_list.filter((sl:any) => { return sl.stateMasterCode === stateCode });
       if (fState && fState[0]) { this.onSelectGSTState(fState[0].stateMasterCode); }
     }
   }
 
-  getPartyInfoByGSTIN(gstin) {
+  getPartyInfoByGSTIN(gstin:any) {
     return new Promise((resolve, reject) => {
       NavbarService.getInstance(this.http).getPartyInfoByGSTIN({ gstin: gstin }).subscribe(res => {
         return resolve(((res) ? res : null));
@@ -636,13 +618,13 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     })
   }
 
-  calculateTaxFields(field, items: any) {
+  calculateTaxFields(field:any, items: any) {
     if (!Array.isArray(items)) { items = [items] };
-    items.forEach((item, index) => {
+    items.forEach((item:any, index:any) => {
       item.noteItemsTaxableValue = item.noteItemsTaxableValue ? item.noteItemsTaxableValue : 0;
       item.noteItemsRate = item.noteItemsRate ? item.noteItemsRate : 0;
       item.noteItemsCess = item.noteItemsCess ? item.noteItemsCess : 0;
-      if (field == "tax_rate" || field == "all") {
+      if (field === "tax_rate" || field === "all") {
         if (item.tempInvoiceItemsTaxRate && parseFloat(item.tempInvoiceItemsTaxRate)) {
           item.noteItemsRate = parseFloat(item.tempInvoiceItemsTaxRate);
         } else {
@@ -662,7 +644,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
       }
 
       item.noteItemsGrossValue = parseFloat(this.fixedToDecimal(item.noteItemsTaxableValue + ((item.noteItemsRate) ? (item.noteItemsTaxableValue * item.noteItemsRate * 0.01) : 0) + (item.noteItemsCess ? item.noteItemsCess : 0)))
-      if (field == "cess" && (item.noteItemsCess > item.noteItemsTaxableValue || item.noteItemsCess < 0)) {
+      if (field === "cess" && (item.noteItemsCess > item.noteItemsTaxableValue || item.noteItemsCess < 0)) {
         setTimeout(() => {
           item.noteItemsCess = 0;
           this.calculateTaxFields("cess_changed", item)
@@ -680,7 +662,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
   calculateTotalGrossValue() {
     this.invoiceData.creditDebitNoteDTO.noteGrossValue = 0;
     if (this.invoiceData.noteItemDTO) {
-      this.invoiceData.noteItemDTO.forEach(item => {
+      this.invoiceData.noteItemDTO.forEach((item:any) => {
         if (item.isMarkForDeletion != "T") {
           this.invoiceData.creditDebitNoteDTO.noteGrossValue += (item.noteItemsGrossValue) ? item.noteItemsGrossValue : 0;
         }
@@ -689,21 +671,21 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
     this.invoiceData.creditDebitNoteDTO.noteGrossValue = parseFloat(parseFloat(this.invoiceData.creditDebitNoteDTO.noteGrossValue).toFixed(2));
   }
 
-  fixedToDecimal(value): any {
+  fixedToDecimal(value:any): any {
     return parseFloat(value).toFixed(2);
   }
 
-  onGSTINKeypress(gstn) {
+  onGSTINKeypress(gstn:any) {
     console.log("Enetr GSTN:", gstn)
     this.invoiceData.partyDTO.partyGstin = gstn;
     if (this.gstinBounceBackTimeObj) {
       clearTimeout(this.gstinBounceBackTimeObj)
     }
     this.gstinBounceBackTimeObj = setTimeout(() => {
-      if (this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length == 15 && this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin)) {
+      if (this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length === 15 && this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin)) {
         this.getPartyInfoByGSTIN(gstn).then((partyInfo: any) => {
           if (partyInfo) {
-            this.creditDebitNoteFormGroup['controls'].partyDTO.patchValue(partyInfo);
+            this.creditDebitNoteFormGroup.controls['partyDTO'].patchValue(partyInfo);
             /* this.invoiceData.partyDTO.partyEmail = partyInfo.partyEmail;
             this.invoiceData.partyDTO.partyPhone = partyInfo.partyPhone;
             this.invoiceData.partyDTO.partyName = partyInfo.partyName; */
@@ -715,7 +697,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
             /*  this.invoiceData.partyDTO.partyEmail = "";
              this.invoiceData.partyDTO.partyPhone = "";
              this.invoiceData.partyDTO.partyName = ""; */
-            this.creditDebitNoteFormGroup['controls'].partyDTO['controls'].partyName.patchValue('');
+            (this.creditDebitNoteFormGroup.controls['partyDTO'] as FormGroup).controls['partyName'].patchValue('');
 
             delete this.invoiceData.partyDTO.id;
             delete this.invoiceData.partyDTO.partyUpdatedAt;
@@ -727,7 +709,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit {
         /* this.invoiceData.partyDTO.partyEmail = "";
         this.invoiceData.partyDTO.partyPhone = "";
         this.invoiceData.partyDTO.partyName = ""; */
-        this.creditDebitNoteFormGroup['controls'].partyDTO['controls'].partyName.patchValue('');
+        (this.creditDebitNoteFormGroup.controls['partyDTO'] as FormGroup).controls['partyName'].patchValue('');
         delete this.invoiceData.partyDTO.id;
         delete this.invoiceData.partyDTO.partyUpdatedAt;
         this.setPartyPlaceOfSupply();

@@ -1,19 +1,19 @@
-import { AppConstants } from 'app/shared/constants';
-import { ApiEndpoints } from 'app/shared/api-endpoint';
-import { UtilsService } from 'app/services/utils.service';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { ApiEndpoints } from 'src/app/modules/shared/api-endpoint';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AfterContentChecked, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 
 @Component({
   selector: 'app-delay',
   templateUrl: './delay.component.html',
   styleUrls: ['./delay.component.css']
 })
-export class DelayComponent implements OnInit {
+export class DelayComponent implements AfterContentChecked {
 
-  loading: boolean;
+  loading!: boolean;
   delayItrGridOptions: GridOptions;
   delayedInfo: any = [];
   selectedFyYear = '';
@@ -24,7 +24,7 @@ export class DelayComponent implements OnInit {
 
     this.delayItrGridOptions = <GridOptions>{
       rowData: this.createDelayRowData([]),
-      columnDefs: this.delayCreateColoumnDef(),
+      columnDefs: this.delaycreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -33,10 +33,7 @@ export class DelayComponent implements OnInit {
     };
   }
 
-  ngOnInit() {
-  }
-
-  fromFy(event) {
+  fromFy(event:any) {
     this.selectedFyYear = event;
     console.log(event);
     this.getDelayedItrData(event);
@@ -47,8 +44,8 @@ export class DelayComponent implements OnInit {
   }
 
   // TODO
-  getDelayedItrData(fy) {
-    const loggedInUserData = JSON.parse(localStorage.getItem('UMD'));
+  getDelayedItrData(fy:any) {
+    const loggedInUserData = JSON.parse(localStorage.getItem('UMD')||'');
     // let param = `${ApiEndpoints.itrMs.itrByAckStatus}`;
     let reqBody = {
       'financialYear': fy,
@@ -60,7 +57,7 @@ export class DelayComponent implements OnInit {
     this.itrMsService.postMethod(param, param2).subscribe((res: any) => {
       console.log('res: ', res);
       if (res && res.success) {
-        this.delayItrGridOptions.api.setRowData(this.createDelayRowData(res.data));
+        this.delayItrGridOptions.api?.setRowData(this.createDelayRowData(res.data));
       }
 
     }, error => {
@@ -71,7 +68,7 @@ export class DelayComponent implements OnInit {
     })
   }
 
-  createDelayRowData(data) {
+  createDelayRowData(data:any) {
     console.log("delay data -> ", data)
     const newData = [];
     for (let i = 0; i < data.length; i++) {
@@ -90,7 +87,7 @@ export class DelayComponent implements OnInit {
     return newData;
   }
 
-  delayCreateColoumnDef() {
+  delaycreateColumnDef() {
     return [
       {
         headerName: 'ITR ID',
@@ -163,7 +160,7 @@ export class DelayComponent implements OnInit {
         width: 80,
         sortable: true,
         pinned: 'right',
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Unblock user ITR" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-edit" aria-hidden="true" data-action-type="changeStatus"></i>
@@ -182,7 +179,7 @@ export class DelayComponent implements OnInit {
         width: 80,
         sortable: true,
         pinned: 'right',
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Change Acknowlegement status" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="ackStatus"></i>
@@ -200,7 +197,7 @@ export class DelayComponent implements OnInit {
     ];
   }
 
-  public onRowClicked(params) {
+  public onRowClicked(params:any) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -218,7 +215,7 @@ export class DelayComponent implements OnInit {
     }
   }
 
-  changeStatus(itrData) {
+  changeStatus(itrData:any) {
     console.log('change itr data: ', itrData);
     this.loading = true;
     let param = `${ApiEndpoints.itrMs.enableItrFilling}/${itrData.userId}/${itrData.itrId}/${itrData.assessmentYear}`;
@@ -234,11 +231,11 @@ export class DelayComponent implements OnInit {
       })
   }
 
-  getAcknowledgeDetail(data) {
+  getAcknowledgeDetail(data:any) {
     console.log('Data for acknowlegement status', data);
     this.loading = true;
-    const fyDetails = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST));
-    const selectedAy = fyDetails.filter(item => item.financialYear)[0].assessmentYear
+    const fyDetails = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST) || '');
+    const selectedAy = fyDetails.filter((item:any) => item.financialYear)[0].assessmentYear
     const param = `${ApiEndpoints.itrMs.itrAckDetails}?panNumber=${data.panNumber}&assessmentYear=${selectedAy}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.utilsService.showSnackBar(res.status)

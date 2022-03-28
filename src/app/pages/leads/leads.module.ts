@@ -2,15 +2,13 @@ import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MaterialModule } from "app/shared/material.module";
-import { SharedModule } from "app/shared/shared.module";
+import { MaterialModule } from "src/app/modules/shared/material.module";
+import { SharedModule } from "src/app/modules/shared/shared.module";
 import { NgxLoadingModule } from "ngx-loading";
 import { LeadsRoutingModule } from "./leads-routing.module";
 import { LeadsInfoComponent } from './leads-info/leads-info.component';
 import { LeadsHeadComponent } from './leads-head/leads-head.component';
 import { LeadDialogComponent } from './lead-dialog/lead-dialog.component';
-import { OwlDateTimeModule } from "ng-pick-datetime/date-time/date-time.module";
-import { OwlNativeDateTimeModule } from "ng-pick-datetime/date-time/adapter/native-date-time.module";
 
 @NgModule({
     declarations: [LeadsInfoComponent, LeadsHeadComponent, LeadDialogComponent],
@@ -23,8 +21,8 @@ import { OwlNativeDateTimeModule } from "ng-pick-datetime/date-time/adapter/nati
         SharedModule,
         MaterialModule,
         NgxLoadingModule.forRoot({}),
-        OwlDateTimeModule, 
-        OwlNativeDateTimeModule
+        // OwlDateTimeModule, 
+        // OwlNativeDateTimeModule
     ],
     entryComponents: [LeadDialogComponent]
 })

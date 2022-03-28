@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-filing-status-table',
@@ -9,7 +9,7 @@ import { UtilsService } from 'app/services/utils.service';
   styleUrls: ['./filing-status-table.component.css']
 })
 export class FilingStatusTableComponent implements OnInit {
-  @Input('statusId') statusId: any;
+  @Input() statusId: any;
   docUploadedList = [];
   page = 0; // current page
   count = 0; // total pages
@@ -137,7 +137,7 @@ export class FilingStatusTableComponent implements OnInit {
 
   getFilerName(itr) {
     if (this.utilsService.isNonEmpty(itr) && this.utilsService.isNonEmpty(itr['FilingTeamMemberId']) && itr['FilingTeamMemberId'] !== 0) {
-      const filer = this.filingTeamMembers.filter(item => item.value === itr['FilingTeamMemberId']);
+      const filer = this.filingTeamMembers.filter((item:any) => item.value === itr['FilingTeamMemberId']);
       if (filer.length > 0) {
         return filer[0].label;
       }
@@ -162,11 +162,11 @@ export class FilingStatusTableComponent implements OnInit {
     }
   }
   routeAction(data) {
-    if (this.statusId == 11) {
+    if (this.statusId === 11) {
       console.log('user data : ', data, data.sourceAsMap['userId'])
       sessionStorage.setItem('invoiceNotgeneratedUserId', data.sourceAsMap['userId']);  //sourceAsMap['Phone']s //TODO removed relevent code from subscription module
       this.router.navigate(['/pages/invoice/generate']);
-    } else if (this.statusId == 12) {
+    } else if (this.statusId === 12) {
       this.router.navigate(['/pages/invoice/list']);
     }
   }

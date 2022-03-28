@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
-import { environment } from 'environments/environment';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { environment } from 'src/environments/environment';
 import { AddRemoveAgentDialogComponent } from '../add-remove-agent-dialog/add-remove-agent-dialog.component';
-declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 @Component({
   selector: 'app-add-caller',
@@ -15,7 +14,7 @@ declare function matomo(title: any, url: any, event: any, scriptId: any);
   styleUrls: ['./add-caller.component.css']
 })
 export class AddCallerComponent implements OnInit {
-  loading: boolean;
+  loading!: boolean;
   allCallerGridOptions: GridOptions;
   // addCallerGridOptions: GridOptions;
   callerData: any = [];
@@ -24,17 +23,19 @@ export class AddCallerComponent implements OnInit {
   removeCallerList: any = [];
   agentList: any = [];
   selectedAgent: any;
-  showAllUser: boolean;
+  showAllUser!: boolean;
   // searchMobNo: any;
 
-  constructor(private userMsService: UserMsService, private utileService: UtilsService, private toastMsgService: ToastMessageService,
+  constructor(private userMsService: UserMsService,
+     private utileService: UtilsService,
+      private toastMsgService: ToastMessageService,
     private dialog: MatDialog) {
     this.allCallerGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.allCallersColoumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: params => {
+      onGridReady: () => {
       },
       sortable: true,
     };
@@ -50,7 +51,7 @@ export class AddCallerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST)||'');
     this.getAllCallerUser();
 
   }
@@ -220,13 +221,13 @@ export class AddCallerComponent implements OnInit {
       //         suppressMenu: true,
       //         sortable: true,
       //         suppressMovable: true,
-      //         cellRenderer: function (params) {
+      //         cellRenderer: function (params:any) {
       //           console.log(params)
       //           return `<input type="checkbox" [(ngModel)]="param.data.addCaller" (change)="checkValue(param)" />`;
       //         },
       //         width: 130,
       //         pinned: 'right',
-      //         cellStyle: function (params) {
+      //         cellStyle: function (params:any) {
       //           return {
       //             textAlign: 'center', display: 'flex',
       //             'align-items': 'center',
@@ -237,7 +238,7 @@ export class AddCallerComponent implements OnInit {
     ]
   }
 
-  getAllCallerUser(mobMo?) {
+  getAllCallerUser(mobMo?:any) {
     this.loading = true;
     var param;
     if (this.utileService.isNonEmpty(mobMo)) {
@@ -252,12 +253,12 @@ export class AddCallerComponent implements OnInit {
       this.showAllUser = true;
       if (res instanceof Array && res.length > 0) {
         this.allCallerData = res;
-        this.allCallerData.sort((a, b) => a.name > b.name ? 1 : -1)
+        this.allCallerData.sort((a:any, b:any) => a.name > b.name ? 1 : -1)
         this.selectedAgent = '';
         console.log(this.allCallerData, typeof this.allCallerData);
 
         // if(this.allCallerGridOptions.api){
-        // this.allCallerGridOptions.api.setRowData(this.createAllRowData(this.allCallerData));
+        // this.allCallerGridOptions.api?.setRowData(this.createAllRowData(this.allCallerData));
         // }
       }
       else {
@@ -272,14 +273,14 @@ export class AddCallerComponent implements OnInit {
       })
   }
 
-  getCallerUser(id) {
+  getCallerUser(id:any) {
     this.loading = true;
     var param;
     if (this.utileService.isNonEmpty(id)) {
       param = `/call-management/caller-agents-role?agentId=${id}`;
     }
     else {
-      const userData = JSON.parse(localStorage.getItem('UMD'));
+      const userData = JSON.parse(localStorage.getItem('UMD') || '');
       param = `/call-management/caller-agents-role?agentId=${userData.USER_UNIQUE_ID}`;
     }
 
@@ -289,10 +290,10 @@ export class AddCallerComponent implements OnInit {
       this.loading = false;
       if (Array.isArray(res) && res.length > 0) {
         this.callerData = res;
-        this.callerData.sort((a, b) => a.name > b.name ? 1 : -1)
+        this.callerData.sort((a:any, b:any) => a.name > b.name ? 1 : -1)
         this.selectedCallerList = [];
         this.removeCallerList = [];
-        // this.addCallerGridOptions.api.setRowData(this.createRowData(res));
+        // this.addCallerGridOptions.api?.setRowData(this.createRowData(res));
 
       }
       else {
@@ -307,11 +308,11 @@ export class AddCallerComponent implements OnInit {
       })
   }
 
-  createAllRowData(callerData) {
+  createAllRowData(callerData:any) {
     console.log('callerData -> ', callerData);
     var callerArray = [];
     for (let i = 0; i < callerData.length; i++) {
-      let couponInfo = Object.assign({}, callerArray[i], {
+      let couponInfo:any = Object.assign({}, callerArray[i], {
         smeId: callerData[i].smeId,
         name: this.utileService.isNonEmpty(callerData[i].name) ? callerData[i].name : '-',
         mobileNumber: this.utileService.isNonEmpty(callerData[i].mobileNumber) ? callerData[i].mobileNumber : '-',
@@ -344,29 +345,28 @@ export class AddCallerComponent implements OnInit {
   //   return callerArray;
   // }
 
-  addCaller(event, userId) {
+  addCaller(event:any, userId:any) {
     if (event.currentTarget.checked) {
       this.selectedCallerList.push(userId)
     }
     else {
-      this.selectedCallerList = this.selectedCallerList.filter(item => item != userId);
+      this.selectedCallerList = this.selectedCallerList.filter((item:any) => item != userId);
     }
     console.log('final selectedCallerList: -> ', this.selectedCallerList)
   }
 
-  removeCaller(event, userId) {
+  removeCaller(event:any, userId:any) {
     if (event.currentTarget.checked) {
       this.removeCallerList.push(userId)
     }
     else {
-      this.removeCallerList = this.removeCallerList.filter(item => item != userId);
+      this.removeCallerList = this.removeCallerList.filter((item:any) => item != userId);
     }
     console.log('final removeCallerList: -> ', this.removeCallerList)
   }
 
-  saveCaller(action) {
+  saveCaller(action:any) {
     this.loading = true;
-    const userData = JSON.parse(localStorage.getItem('UMD'));
     var caller;
     if (action === 'add') {
       caller = this.getCalletList(action)
@@ -393,8 +393,7 @@ export class AddCallerComponent implements OnInit {
       })
   }
 
-  getCallerName(callers) {
-    // if(){}
+  getCallerName(callers:any) {
     var match = callers.split(",");
     console.log('match: ', match);
     var callersArray = [];
@@ -404,30 +403,27 @@ export class AddCallerComponent implements OnInit {
       callersArray.push(callerName);
     }
 
-    debugger
     for (let i = 0; i < this.callerData.length; i++) {
-      debugger
       var callerNamesList = '';
       if (i === 0) {
-        let caller = callersArray.filter(item => item === this.callerData[i].callerAgentUserId);
+        let caller = callersArray.filter((item:any) => item === this.callerData[i].callerAgentUserId);
         if (caller.length > 0) {
           callerNamesList = caller[0].name
         }
-
       }
       else {
-        let caller = callersArray.filter(item => item === this.callerData[i].callerAgentUserId);
+        let caller = callersArray.filter((item:any) => item === this.callerData[i].callerAgentUserId);
         if (caller.length > 0) {
-          callerNamesList = callerNamesList + ',' + callersArray.filter(item => item === this.callerData[i].callerAgentUserId)[0].name;
+          callerNamesList = callerNamesList + ',' + callersArray.filter((item:any) => item === this.callerData[i].callerAgentUserId)[0].name;
         }
       }
-      console.log('callerNamesList: ', callerNamesList)
       return callerNamesList;
     }
 
+    return callerNamesList;
   }
 
-  getCalletList(action) {
+  getCalletList(action:any) {
     var callerList;
     if (action === 'add') {
       if (this.selectedCallerList.length === 1) {
@@ -464,7 +460,7 @@ export class AddCallerComponent implements OnInit {
 
   }
 
-  getAgents(agents) {
+  getAgents(agents:any) {
     var agentInfo;
     if (agents instanceof Array) {
       if (agents.length === 1) {
@@ -484,7 +480,7 @@ export class AddCallerComponent implements OnInit {
     }
   }
 
-  onAllCallersClicked(params) {
+  onAllCallersClicked(params:any) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -497,7 +493,7 @@ export class AddCallerComponent implements OnInit {
     }
   }
 
-  addRemoveAgent(agentInfo) {
+  addRemoveAgent(agentInfo:any) {
     let disposable = this.dialog.open(AddRemoveAgentDialogComponent, {
       width: '50%',
       height: 'auto',
@@ -506,7 +502,7 @@ export class AddCallerComponent implements OnInit {
       }
     })
 
-    disposable.afterClosed().subscribe(result => {
+    disposable.afterClosed().subscribe(() => {
       console.log('The dialog was closed');
       // if(result){
       //   if(result.data === "statusChanged"){

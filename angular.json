@@ -1,17 +1,25 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "analytics": "7559d794-bc9f-49fa-b065-57b2b8b972b7"
+    "analytics": "7559d794-bc9f-49fa-b065-57b2b8b972b7",
+    "defaultCollection": "@angular-eslint/schematics"
   },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
     "taxbuddy-backoffice": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
       "root": "",
       "sourceRoot": "src",
-      "projectType": "application",
       "prefix": "app",
-      "schematics": {},
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -19,8 +27,9 @@
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "tsConfig": "src/tsconfig.json",
             "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
@@ -54,15 +63,14 @@
           },
           "configurations": {
             "production": {
-              "optimization": true,
+              "optimization": false,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
+              "aot": false,
+              "extractLicenses": false,
               "vendorChunk": false,
-              "buildOptimizer": true,
+              "buildOptimizer": false,
               "serviceWorker": false,
               "fileReplacements": [
                 {
@@ -71,16 +79,25 @@
                 }
               ]
             },
+            "development": {
+              "optimization": false,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "namedChunks": true,
+              "aot": false,
+              "extractLicenses": false,
+              "vendorChunk": false,
+              "buildOptimizer": false
+            },
             "staging": {
-              "optimization": true,
+              "optimization": false,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
+              "aot": false,
+              "extractLicenses": false,
               "vendorChunk": false,
-              "buildOptimizer": true,
+              "buildOptimizer": false,
               "serviceWorker": false,
               "fileReplacements": [
                 {
@@ -103,7 +120,20 @@
             },
             "staging": {
               "browserTarget": "taxbuddy-backoffice:build:staging"
+            },
+            "development": {
+              "browserTarget": "taxbuddy-backoffice:build:development"
             }
+          },
+          "defaultConfiguration": "development"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }

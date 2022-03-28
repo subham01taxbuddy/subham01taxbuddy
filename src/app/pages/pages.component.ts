@@ -1,33 +1,16 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
+
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserMsService } from 'app/services/user-ms.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
 import { interval } from 'rxjs';
 
 @Component({
-  selector: 'pages-root',
+  selector: 'app-pages-root',
   templateUrl: './pages.component.html',
   styleUrls: ['./pages.component.css']
 })
-export class PagesComponent implements OnInit {
+export class PagesComponent {
 
 
   timer: any;
@@ -50,10 +33,6 @@ export class PagesComponent implements OnInit {
       // console.log('Path: ', router.url)
       this.routePath = router.url;
     });
-  }
-
-  ngOnInit() {
-    // this.showWhatsAppNotification();          //New whatsApp msg notifivation part hide
   }
 
   showWhatsAppNotification() {
@@ -108,7 +87,7 @@ export class PagesComponent implements OnInit {
             this.userMsgInfo.push(this.updatedChat[i]);
           }
           console.log("After Data Push userMsgInfo: ", this.userMsgInfo);
-          this.userMsgInfo.sort(function (a, b) {
+          this.userMsgInfo.sort(function (a:any, b:any) {
             return b.lastMessageDateTime - a.lastMessageDateTime;
           })
           console.log("After srting userMsgInfo: ", this.userMsgInfo);

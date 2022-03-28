@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { UtilsService } from 'app/services/utils.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AppConstants } from 'app/shared/constants';
-import { UserMsService } from 'app/services/user-ms.service';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { environment } from 'environments/environment';
-// import { createHmac } from "crypto";
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { UtilsService } from 'src/app/services/utils.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { environment } from 'src/environments/environment';
 
 export const MY_FORMATS = {
   parse: {
@@ -34,7 +33,7 @@ export const MY_FORMATS = {
   ]
 })
 export class AddInvoiceComponent implements OnInit {
-  loading: boolean;
+  loading!: boolean;
   invoiceForm: FormGroup;
   stateDropdown: any;
   isMaharashtraState: boolean = true;
@@ -121,8 +120,8 @@ export class AddInvoiceComponent implements OnInit {
           break;
         }
       }
-      this.invoiceForm.controls.subscriptionId.setValue(id);
-      this.invoiceForm.controls.serviceType.setValue(applicableService);
+      this.invoiceForm.controls['subscriptionId'].setValue(id);
+      this.invoiceForm.controls['serviceType'].setValue(applicableService);
       this.setItemList(this.userSubscription);
       this.getUserDetails(res.userId);
     }, error => {
@@ -135,7 +134,7 @@ export class AddInvoiceComponent implements OnInit {
     if (this.dueDays) {
       let date = new Date(date1);
       date.setDate(date.getDate() + this.dueDays);
-      this.invoiceForm.controls.dueDate.setValue(date);
+      this.invoiceForm.controls['dueDate'].setValue(date);
     }
   }
   setItemList(userSubscription) {
@@ -154,39 +153,39 @@ export class AddInvoiceComponent implements OnInit {
     }]
 
     if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.promoApplied)) {
-      this.invoiceForm.controls.cgstTotal.setValue(this.userSubscription.promoApplied.cgst);
-      this.invoiceForm.controls.sgstTotal.setValue(this.userSubscription.promoApplied.sgst);
-      this.invoiceForm.controls.igstTotal.setValue(this.userSubscription.promoApplied.igst);
-      this.invoiceForm.controls.total.setValue(this.userSubscription.promoApplied.totalAmount);
-      this.invoiceForm.controls.balanceDue.setValue(this.userSubscription.promoApplied.totalAmount);
+      this.invoiceForm.controls['cgstTotal'].setValue(this.userSubscription.promoApplied.cgst);
+      this.invoiceForm.controls['sgstTotal'].setValue(this.userSubscription.promoApplied.sgst);
+      this.invoiceForm.controls['igstTotal'].setValue(this.userSubscription.promoApplied.igst);
+      this.invoiceForm.controls['total'].setValue(this.userSubscription.promoApplied.totalAmount);
+      this.invoiceForm.controls['balanceDue'].setValue(this.userSubscription.promoApplied.totalAmount);
     } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
-      this.invoiceForm.controls.cgstTotal.setValue(this.userSubscription.smeSelectedPlan.cgst);
-      this.invoiceForm.controls.sgstTotal.setValue(this.userSubscription.smeSelectedPlan.sgst);
-      this.invoiceForm.controls.igstTotal.setValue(this.userSubscription.smeSelectedPlan.igst);
-      this.invoiceForm.controls.total.setValue(this.userSubscription.smeSelectedPlan.totalAmount);
-      this.invoiceForm.controls.balanceDue.setValue(this.userSubscription.smeSelectedPlan.totalAmount);
+      this.invoiceForm.controls['cgstTotal'].setValue(this.userSubscription.smeSelectedPlan.cgst);
+      this.invoiceForm.controls['sgstTotal'].setValue(this.userSubscription.smeSelectedPlan.sgst);
+      this.invoiceForm.controls['igstTotal'].setValue(this.userSubscription.smeSelectedPlan.igst);
+      this.invoiceForm.controls['total'].setValue(this.userSubscription.smeSelectedPlan.totalAmount);
+      this.invoiceForm.controls['balanceDue'].setValue(this.userSubscription.smeSelectedPlan.totalAmount);
     } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
-      this.invoiceForm.controls.cgstTotal.setValue(this.userSubscription.userSelectedPlan.cgst);
-      this.invoiceForm.controls.sgstTotal.setValue(this.userSubscription.userSelectedPlan.sgst);
-      this.invoiceForm.controls.igstTotal.setValue(this.userSubscription.userSelectedPlan.igst);
-      this.invoiceForm.controls.total.setValue(this.userSubscription.userSelectedPlan.totalAmount);
-      this.invoiceForm.controls.balanceDue.setValue(this.userSubscription.userSelectedPlan.totalAmount);
+      this.invoiceForm.controls['cgstTotal'].setValue(this.userSubscription.userSelectedPlan.cgst);
+      this.invoiceForm.controls['sgstTotal'].setValue(this.userSubscription.userSelectedPlan.sgst);
+      this.invoiceForm.controls['igstTotal'].setValue(this.userSubscription.userSelectedPlan.igst);
+      this.invoiceForm.controls['total'].setValue(this.userSubscription.userSelectedPlan.totalAmount);
+      this.invoiceForm.controls['balanceDue'].setValue(this.userSubscription.userSelectedPlan.totalAmount);
     }
 
     // if (this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan))
-    //   this.invoiceForm.controls.subTotal.setValue(this.userSubscription.smeSelectedPlan.basePrice);
+    //   this.invoiceForm.controls['subTotal'].setValue(this.userSubscription.smeSelectedPlan.basePrice);
     // else
-    //   this.invoiceForm.controls.subTotal.setValue(this.userSubscription.userSelectedPlan.basePrice);
+    //   this.invoiceForm.controls['subTotal'].setValue(this.userSubscription.userSelectedPlan.basePrice);
 
     if (this.utilsService.isNonEmpty(this.userSubscription.promoApplied)) {
-      this.invoiceForm.controls.subTotal.setValue(this.userSubscription.promoApplied.basePrice)
+      this.invoiceForm.controls['subTotal'].setValue(this.userSubscription.promoApplied.basePrice)
     } else {
-      this.invoiceForm.controls.subTotal.setValue(this.getTaxableValue());
+      this.invoiceForm.controls['subTotal'].setValue(this.getTaxableValue());
     }
 
     if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.promoApplied)) {
-      // this.invoiceForm.controls.discountTotal.setValue(this.invoiceForm.controls.subTotal.value - this.userSubscription.promoApplied.basePrice)
-      this.invoiceForm.controls.discountTotal.setValue(this.getExactPromoDiscount());
+      // this.invoiceForm.controls['discountTotal'].setValue(this.invoiceForm.controls['subTotal.value - this.userSubscription.promoApplied.basePrice)
+      this.invoiceForm.controls['discountTotal'].setValue(this.getExactPromoDiscount());
     }
   }
 
@@ -253,25 +252,25 @@ export class AddInvoiceComponent implements OnInit {
     this.loading = false;
     console.log('userProfile:', this.userProfile);
     if (this.utilsService.isNonEmpty(this.userProfile)) {
-      this.invoiceForm.controls.userId.setValue(this.userProfile.userId);
-      this.invoiceForm.controls.email.setValue(this.userProfile.emailAddress);
-      this.invoiceForm.controls.phone.setValue(this.userProfile.mobileNumber);
-      this.invoiceForm.controls.billTo.setValue(this.userProfile.fName + ' ' + this.userProfile.lName);
+      this.invoiceForm.controls['userId'].setValue(this.userProfile.userId);
+      this.invoiceForm.controls['email'].setValue(this.userProfile.emailAddress);
+      this.invoiceForm.controls['phone'].setValue(this.userProfile.mobileNumber);
+      this.invoiceForm.controls['billTo'].setValue(this.userProfile.fName + ' ' + this.userProfile.lName);
       if (this.utilsService.isNonEmpty(this.userProfile.address) && this.userProfile.address instanceof Array && this.userProfile.address.length > 0) {
         let addressLine1 = this.userProfile.address[0].flatNo + ', ' + this.userProfile.address[0].premisesName;
-        this.invoiceForm.controls.addressLine1.setValue(addressLine1);
-        this.invoiceForm.controls.addressLine2.setValue(this.userProfile.address[0].area);
-        this.invoiceForm.controls.pincode.setValue(this.userProfile.address[0].pinCode);
-        this.invoiceForm.controls.country.setValue(this.userProfile.address[0].country === "91" ? "INDIA" : "");
-        this.invoiceForm.controls.city.setValue(this.userProfile.address[0].city);
-        let stateName = this.stateDropdown.filter(item => item.stateCode === this.userProfile.address[0].state)[0].stateName;
+        this.invoiceForm.controls['addressLine1'].setValue(addressLine1);
+        this.invoiceForm.controls['addressLine2'].setValue(this.userProfile.address[0].area);
+        this.invoiceForm.controls['pincode'].setValue(this.userProfile.address[0].pinCode);
+        this.invoiceForm.controls['country'].setValue(this.userProfile.address[0].country === "91" ? "INDIA" : "");
+        this.invoiceForm.controls['city'].setValue(this.userProfile.address[0].city);
+        let stateName = this.stateDropdown.filter((item:any) => item.stateCode === this.userProfile.address[0].state)[0].stateName;
         if (this.userProfile.address[0].state === "19") {
           this.isMaharashtraState = true;
         }
-        this.invoiceForm.controls.state.setValue(stateName);
+        this.invoiceForm.controls['state'].setValue(stateName);
       }
       if (this.utilsService.isNonEmpty(this.userProfile.gstDetails)) {
-        this.invoiceForm.controls.gstin.setValue(this.userProfile.gstDetails['gstinNumber']);
+        this.invoiceForm.controls['gstin'].setValue(this.userProfile.gstDetails['gstinNumber']);
       }
 
     }
@@ -334,12 +333,12 @@ export class AddInvoiceComponent implements OnInit {
 
   saveInvoice() {
     let smeInfo = JSON.parse(localStorage.getItem('UMD'));
-    this.invoiceForm.controls.inovicePreparedBy.setValue(smeInfo.USER_UNIQUE_ID);
+    this.invoiceForm.controls['inovicePreparedBy'].setValue(smeInfo.USER_UNIQUE_ID);
     if (!this.utilsService.isNonEmpty(this.serviceDetail)) {
       return;
     }
     this.itemList[0].itemDescription = this.serviceDetail + ' ' + this.description;
-    this.invoiceForm.controls.itemList.setValue(this.itemList);
+    this.invoiceForm.controls['itemList'].setValue(this.itemList);
     if (this.invoiceForm.valid && this.checkSacCode()) {
       console.log('Invoice Form: ', this.invoiceForm)
       if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
@@ -393,17 +392,17 @@ export class AddInvoiceComponent implements OnInit {
     let address = [];
     const param = `/profile/${this.userProfile.userId}/address`;
 
-    if (this.invoiceForm.controls.addressLine1.dirty || this.invoiceForm.controls.addressLine2.dirty ||
-      this.invoiceForm.controls.pincode.dirty || this.invoiceForm.controls.state.dirty ||
-      this.invoiceForm.controls.city.dirty) {
+    if (this.invoiceForm.controls['addressLine1'].dirty || this.invoiceForm.controls['addressLine2'].dirty ||
+      this.invoiceForm.controls['pincode'].dirty || this.invoiceForm.controls['state'].dirty ||
+      this.invoiceForm.controls['city'].dirty) {
       if (this.utilsService.isNonEmpty(this.userProfile.address) && this.userProfile.address instanceof Array && this.userProfile.address.length > 0) {
         console.log('this.userProfile.address :', this.userProfile.address);
         address = JSON.parse(JSON.stringify(this.userProfile.address))
-        address[0].flatNo = this.invoiceForm.controls.addressLine1.dirty ? this.invoiceForm.value.addressLine1 : address[0].flatNo;
-        address[0].area = this.invoiceForm.controls.addressLine2.dirty ? this.invoiceForm.value.addressLine2 : address[0].area;
-        address[0].pinCode = this.invoiceForm.controls.pincode.dirty ? this.invoiceForm.value.pincode : address[0].pinCode;
-        address[0].state = this.invoiceForm.controls.state.dirty ? this.stateDropdown.filter(item => item.stateName === this.invoiceForm.value.state)[0].stateCode : address[0].state;
-        address[0].city = this.invoiceForm.controls.city.dirty ? this.invoiceForm.value.city : address[0].city;
+        address[0].flatNo = this.invoiceForm.controls['addressLine1'].dirty ? this.invoiceForm.value.addressLine1 : address[0].flatNo;
+        address[0].area = this.invoiceForm.controls['addressLine2'].dirty ? this.invoiceForm.value.addressLine2 : address[0].area;
+        address[0].pinCode = this.invoiceForm.controls['pincode'].dirty ? this.invoiceForm.value.pincode : address[0].pinCode;
+        address[0].state = this.invoiceForm.controls['state'].dirty ? this.stateDropdown.filter((item:any) => item.stateName === this.invoiceForm.value.state)[0].stateCode : address[0].state;
+        address[0].city = this.invoiceForm.controls['city'].dirty ? this.invoiceForm.value.city : address[0].city;
         console.log('this.userProfile.address updated:', address)
         console.log('this.invoiceForm', this.invoiceForm);
       } else {
@@ -414,7 +413,7 @@ export class AddInvoiceComponent implements OnInit {
           road: "",
           area: this.invoiceForm.value.addressLine2,
           city: this.invoiceForm.value.city,
-          state: this.stateDropdown.filter(item => item.stateName === this.invoiceForm.value.state)[0].stateCode,
+          state: this.stateDropdown.filter((item:any) => item.stateName === this.invoiceForm.value.state)[0].stateCode,
           country: "91",
           pinCode: this.invoiceForm.value.pincode
         })
@@ -550,14 +549,14 @@ export class AddInvoiceComponent implements OnInit {
     { service: 'Other Services', details: 'PT filing' },
     { service: 'Other Services', details: 'PF Registration' },
     { service: 'Other Services', details: 'TAN Registration' }];
-    this.serviceDetails = serviceArray.filter(item => item.service === this.service);
+    this.serviceDetails = serviceArray.filter((item:any) => item.service === this.service);
   }
 
   getExactPromoDiscount() {
     if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)) {
-      return this.userSubscription.smeSelectedPlan.totalAmount - this.invoiceForm.controls.total.value;
+      return this.userSubscription.smeSelectedPlan.totalAmount - this.invoiceForm.controls['total'].value;
     } else if (this.utilsService.isNonEmpty(this.userSubscription) && this.utilsService.isNonEmpty(this.userSubscription.userSelectedPlan)) {
-      return this.userSubscription.userSelectedPlan.totalAmount - this.invoiceForm.controls.total.value;
+      return this.userSubscription.userSelectedPlan.totalAmount - this.invoiceForm.controls['total'].value;
     } else {
       return 'NA'
     }

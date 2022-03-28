@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment';
 import { InterceptorSkipHeader } from './token-interceptor';
-import { ResponseContentType, Http } from '@angular/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +12,9 @@ export class UserMsService {
   userObj: any;
   TOKEN: any;
   microService: string = '/user';
-  constructor(private httpClient: HttpClient, private http: Http) { }
+  constructor(private httpClient: HttpClient, private http: HttpClient) { }
 
-  getMethod<T>(...param): Observable<T> {
+  getMethod<T>(...param:any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
@@ -24,7 +23,7 @@ export class UserMsService {
     // .map(response => response.json())
   }
 
-  getMethodInfo<T>(...param): Observable<T> {
+  getMethodInfo<T>(...param:any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
 
@@ -33,7 +32,7 @@ export class UserMsService {
     // .map(response => response.json())
   }
 
-  postMethodInfo<T>(...param): Observable<T> {
+  postMethodInfo<T>(...param:any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
 
@@ -42,40 +41,40 @@ export class UserMsService {
     // .map(response => response.json())
   }
 
-  invoiceDownloadDoc(...params) {
+  invoiceDownloadDoc(...params:any) {
     this.headers = new Headers();
     this.headers.append('Content-Type', 'application/json');
 
-    return this.http.get(environment.url + params[0], { headers: this.headers, responseType: ResponseContentType.Blob })
+    return this.http.get(environment.url + params[0], { headers: this.headers, responseType: 'blob' })
     //.map((res) => { return new Blob([res.blob()], { type: 'application/pdf' }) });
   };
 
-  postMethodDownloadDoc(...params) {
-    const userInfo = JSON.parse(localStorage.getItem('UMD'))
+  postMethodDownloadDoc(...params:any) {
+    const userInfo = JSON.parse(localStorage.getItem('UMD')??"")
     console.log('TOKEN ', userInfo)
     this.headers = new Headers();
     this.headers.append('Content-Type', 'application/json');
     this.headers.append('Authorization', 'Bearer ' + userInfo.id_token);
 
-    return this.http.post(environment.url + params[0], params[1], { headers: this.headers, responseType: ResponseContentType.Blob })
+    return this.http.post(environment.url + params[0], params[1], { headers: this.headers, responseType: 'blob' })
     //.map((res) => { return new Blob([res.blob()], { type: 'application/pdf' }) });
   };
 
 
-  getUserDetail(...param) {
+  getUserDetail(...param:any) {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     return this.httpClient.get(environment.url + '/gateway' + param[0], { headers: this.headers });
   }
 
-  sentChatMessage(...param) {
+  sentChatMessage(...param:any) {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
 
     return this.httpClient.post(environment.url + param[0], param[1], { headers: this.headers });
   }
 
-  patchMethod<T>(...param): Observable<T> {
+  patchMethod<T>(...param:any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
@@ -84,7 +83,7 @@ export class UserMsService {
     // .map(response => response.json())
   }
 
-  userPutMethod<T>(...param): Observable<T> {
+  userPutMethod<T>(...param:any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     this.headers = this.headers.set(InterceptorSkipHeader, '');
@@ -92,31 +91,31 @@ export class UserMsService {
     return this.httpClient.put<T>(`${environment.url}${this.microService}${param[0]}`, {}, { headers: this.headers });
   }
 
-  putMethod<T>(...param): Observable<T> {
+  putMethod<T>(...param:any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     console.log('put Param', param);
     return this.httpClient.put<T>(`${environment.url}${this.microService}${param[0]}`, param[1], { headers: this.headers });
   }
 
-  spamPutMethod<T>(...param): Observable<T> {
+  spamPutMethod<T>(...param:any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     console.log('put Param', param);
     return this.httpClient.put<T>(`${environment.url}${param[0]}`, param[1], { headers: this.headers });
   }
 
-  postMethod<T>(...param): Observable<T> {
+  postMethod<T>(...param:any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     console.log('Post Param', param);
     return this.httpClient.post<T>(`${environment.url}${this.microService}${param[0]}`, param[1], { headers: this.headers });
   }
 
-  deleteMethod(...param){
+  deleteMethod(...param:any){
       this.headers = new HttpHeaders();
       this.headers.append('Content-Type', 'application/json');
-      const userData = JSON.parse(localStorage.getItem('UMD'));
+      const userData = JSON.parse(localStorage.getItem('UMD')??"");
       const TOKEN = (userData) ? userData.id_token : null;
       this.headers.append('Authorization', 'Bearer ' + TOKEN);
       

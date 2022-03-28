@@ -1,0 +1,221 @@
+@import './../../../../../assets/styles/mixins'
+
+.header
+	margin: auto
+
+.header 
+	position: relative
+	min-height: 70px
+	z-index: 999
+	box-shadow: 0px 7px 3px -3px rgba(99, 177, 45, .08)
+
+.header.fixed
+	position: fixed
+	width: 100%
+	right: 0
+	left: 0
+	background-color: #fff
+
+/** logo */
+.header__logo-img
+	float: left
+	display: block
+	height: 70px
+	width: 160px
+	background-image: url(./../../../../../assets/img/logo-img.svg)
+	background-repeat: no-repeat
+	-webkit-background-size: 118px 16px
+	background-size: 118px 16px
+	background-position: center
+
+.header__logo-img1	
+	float: left
+	display: block
+	height: 65px
+	width: 160px
+	background-image: url(./../../../../../assets/img/logo-img.svg)
+	background-repeat: no-repeat
+	-webkit-background-size: 140px 60px
+	background-size: 140px 60px
+	background-position: center
+
+.header__logo-button
+	margin-top: 17px
+	display: inline-block
+	width: 50px
+	height: 35px
+	position: relative
+	display: none
+	span
+		display: block
+		width: 100%
+		height: 4px
+		background-color: $color-accent
+		transition: all .3s ease
+		&:first-child
+			position: absolute
+			top: 0
+			left: 0
+		&:nth-child(2)
+			margin-top: 16px
+		&:last-child
+			position: absolute
+			bottom: 0
+			left: 0
+
+.header__logo-button-open
+	span
+		&:first-child
+			top: 16px
+			transition: all .3s ease
+		&:last-child
+			bottom: 15px
+			transition: all .3s ease
+
+.header__logo-button-rotate
+	span
+		&:first-child
+			transform: rotate(45deg)
+			transition: all .3s ease
+		&:last-child
+			transform: rotate(-45deg)
+			transition: all .3s ease
+
+.header__logo-button-hide
+	display: none !important
+
+.header__container
+	max-width: 1200px
+	margin: auto
+
+/** breadcrumbs */
+.header__breadcrumbs
+	float: left
+	padding-left: 20px
+
+.breadcrumbs 
+	line-height: 70px
+	white-space: nowrap
+
+.breadcrumbs-link:hover,
+.breadcrumbs-link:visited,
+.breadcrumbs-link
+	text-decoration: none
+	text-transform: capitalize
+
+.breadcrumbs-link
+	color: $color-1
+	&:last-child
+		color: $color-2
+
+.breadcrumbs-link:not(:last-child):after
+	content: " /"
+	color: $color-3
+
+/** top buttons */
+.header__buttons 
+	padding-right: 30px
+	padding-top: 3px
+	float: right
+
+/* MEDIA */
+@media only screen and (max-width: 992px)
+	.hidden-btn
+		display: none
+
+
+@media only screen and (max-width: 768px)
+	.header__logo-button
+		width: 33px
+		height: 20px
+		margin-top: 0px !important
+
+	.header__logo-button
+		span:nth-child(2)
+			margin-top: 8px
+
+	.header__logo-button-open
+		span
+			&:first-child
+				top: 4px
+				transition: all .3s ease
+			&:last-child
+				bottom: 12px
+				transition: all .3s ease
+
+	.header__logo-img1
+		height: 49px
+		width: 80px
+		background-size: 80px 49px
+
+
++max-responsive($semi-medium)
+	.header__logo 
+		display: block
+		width: 50px
+		height: 70px
+		float: left
+		position: relative
+		margin: 0 20px
+  
+	.header__logo-img 
+		display: none
+
+	.header__logo-button
+		display: inline-block
+
++max-responsive(635px)
+	.header__buttons 
+		float: right
+		clear: both
+		text-align: center		
+		padding-right: 0
+		white-space: nowrap
+		margin-top: 0px
+		overflow-x: auto
+
+	.logout-btn-wrapper
+		margin-top: -47px
+
+	.header__logo 
+		height: 50px
+
+	.header__logo-img1
+		height: 49px
+		width: 80px
+		background-size: 80px 49px
+
+	.header__logo-button
+		margin-top: 7px
+
+	.breadcrumbs 
+		line-height: 50px
+
+	.header__logo-img 
+		top: 23px
+ 	
+	.header__buttons 
+		.btn 
+			padding: 5px
+			min-width: unset !important
+			font-size: 9px   	
+
+
++max-responsive(500px)
+	.header__buttons 
+		padding-right: 0
+		white-space: nowrap		
+		overflow-x: auto
+
+	.logout-btn-wrapper
+		margin-top: -47px
+
+	.header__buttons 
+		.btn 
+			padding: 5px
+			min-width: unset !important
+			font-size: 9px    		
+
+	.variant__add-links, 
+	.modifier__add-link 
+		padding: 7px 20px

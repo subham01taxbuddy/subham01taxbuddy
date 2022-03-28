@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { UserMsService } from 'app/services/user-ms.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { UserMsService } from 'src/app/services/user-ms.service';
 import { Router } from '@angular/router';
-import { UtilsService } from 'app/services/utils.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './recent-chat-list.component.html',
   styleUrls: ['./recent-chat-list.component.css']
 })
-export class RecentChatListComponent implements OnInit {
+export class RecentChatListComponent implements OnInit, OnDestroy {
   filteredArray: any;
   selectedMobileNo: any;
   userTimer: any;
@@ -36,7 +36,7 @@ export class RecentChatListComponent implements OnInit {
     }
   }
 
-  getUserNotify(agentId) {
+  getUserNotify(agentId:any) {
     console.log('filteredArray: ',this.filteredArray)
     // let userChatData = JSON.parse(sessionStorage.getItem('userChatNotifications'))
     // this.loading = true;   
@@ -61,7 +61,7 @@ export class RecentChatListComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
-  geUserChatDetail(mobileNo) {
+  geUserChatDetail(mobileNo:any) {
     this.selectedMobileNo = mobileNo;
     console.log('MOBILE NO Selected:', mobileNo)
     this.router.navigate(['/pages/chat-corner/mobile/' + mobileNo]);

@@ -5,11 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './caller-assign.component.html',
   styleUrls: ['./caller-assign.component.css']
 })
-export class CallerAssignComponent implements OnInit {
+export class CallerAssignComponent  {
 
   constructor() { }
 
-  ngOnInit() {
-  }
 
 }

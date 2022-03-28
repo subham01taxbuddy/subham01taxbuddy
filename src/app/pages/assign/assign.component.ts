@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { GstMsService } from 'app/services/gst-ms.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
+import { GstMsService } from 'src/app/services/gst-ms.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GridOptions } from 'ag-grid-community';
 import { Observable } from 'rxjs';
 @Component({
@@ -14,7 +14,7 @@ export class AssignComponent implements OnInit {
 
   reAssignForm: FormGroup;
   adminData: any = [];
-  loading: boolean;
+  loading!: boolean;
   uploadedData: any;
   excelTamplateForm: FormGroup;
   available_merchant_list = []// Observable<any[]>;

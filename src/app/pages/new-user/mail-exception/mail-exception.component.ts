@@ -1,10 +1,10 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { UserMsService } from 'app/services/user-ms.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
 import { UserHistryComponent } from '../user-histry/user-histry.component';
 
 @Component({
@@ -14,7 +14,7 @@ import { UserHistryComponent } from '../user-histry/user-histry.component';
 })
 export class MailExceptionComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   showExceptionUser: boolean;
   mailExceptionUser: any = [];
   exceptionListtGridOptions: GridOptions;
@@ -92,7 +92,7 @@ export class MailExceptionComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button"  title="Open Agent Id Kommunicate chat">
                 <i class="fa fa-comments-o" aria-hidden="true" data-action-type="openAgentIdKommChat"></i>
           </button>`;
@@ -113,7 +113,7 @@ export class MailExceptionComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button"  title="User Histroy">
             <i class="fa fa-history" aria-hidden="true" data-action-type="user-histroy"></i>
           </button>`;
@@ -132,7 +132,7 @@ export class MailExceptionComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Create User">
          <i class="fa fa-user-plus" aria-hidden="true" data-action-type="create_user"></i>
         </button>`
@@ -152,7 +152,7 @@ export class MailExceptionComponent implements OnInit {
       //   suppressMenu  : true,
       //   sortable: true,
       //   suppressMovable: true,
-      //   cellRenderer: function (params) {
+      //   cellRenderer: function (params:any) {
       //     return `<button type="button" class="action_icon add_button" title="Assign User">
       //    <i class="fa fa-user" aria-hidden="true" data-action-type="assign_user"></i>
       //   </button>`
@@ -177,7 +177,7 @@ export class MailExceptionComponent implements OnInit {
       this.loading = false;
       console.log('responce ==> ', responce);
       this.mailExceptionUser = responce;
-      this.exceptionListtGridOptions.api.setRowData(this.createRowData(this.mailExceptionUser))
+      this.exceptionListtGridOptions.api?.setRowData(this.createRowData(this.mailExceptionUser))
 
     }, error => {
       this.loading = false;

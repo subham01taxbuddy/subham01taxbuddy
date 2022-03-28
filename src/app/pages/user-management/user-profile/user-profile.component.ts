@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DateAdapter, MatDialog, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
-import { GstMsService } from 'app/services/gst-ms.service';
-import { ThirdPartyService } from 'app/services/third-party.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
-import { promises } from 'dns';
-import { add, reject } from 'lodash';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.component';
 import { TitleCasePipe } from '@angular/common';
-import Storage from '@aws-amplify/storage';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { GstMsService } from 'src/app/services/gst-ms.service';
+import { MatDialog } from '@angular/material/dialog';
+import { UtilsService } from 'src/app/services/utils.service';
+import { ThirdPartyService } from 'src/app/services/third-party.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { Storage } from 'aws-amplify';
+import * as $ from 'jquery';
 
 export const MY_FORMATS = {
   parse: {
@@ -38,10 +38,10 @@ export const MY_FORMATS = {
 })
 export class UserProfileComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   userInfo: any;
-  userProfileForm: FormGroup;
-  gstForm: FormGroup;
+  userProfileForm!: FormGroup;
+  gstForm!: FormGroup;
   gstType: any = [{ label: 'Regular', value: 'REGULAR' }, { label: 'Composite', value: 'COMPOSITE' }, { label: 'Input Service Distributor (ISD)', value: 'Input Service Distributor (ISD)' }]
   gstr1List: any = [{ label: 'Monthly', value: 'MONTHLY' }, { label: 'Quarterly', value: 'QUARTERLY' }];
   genderData: any = [{ label: 'Male', value: 'MALE' }, { label: 'Female', value: 'FEMALE' }]
@@ -335,9 +335,17 @@ export class UserProfileComponent implements OnInit {
   //   return <FormArray>this.userProfileForm.get('address');
   // }
 
-  constructor(private activatedRoute: ActivatedRoute, private userService: UserMsService, public utilsService: UtilsService, private fb: FormBuilder,
-    private gstService: GstMsService, private _toastMessageService: ToastMessageService, private thirdPartyService: ThirdPartyService,
-    private dialog: MatDialog, private titleCasePipe: TitleCasePipe) { }
+  constructor(
+    private activatedRoute: ActivatedRoute, 
+    private userService: UserMsService, 
+    public utilsService: UtilsService,
+     private fb: FormBuilder,
+    private gstService: GstMsService,
+     private _toastMessageService: ToastMessageService,
+      private thirdPartyService: ThirdPartyService,
+    private dialog: MatDialog,
+    private router:Router,
+     private titleCasePipe: TitleCasePipe) { }
 
   ngOnInit() {
     // this.getStateInfo().then(res => {
@@ -410,7 +418,7 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  getUserInfoByPan(pan) {
+  getUserInfoByPan(pan:any) {
     if (pan.valid) {
       const param = '/itr/api/getPanDetail?panNumber=' + pan.value;
       this.userService.getMethodInfo(param).subscribe((result: any) => {
@@ -440,24 +448,24 @@ export class UserProfileComponent implements OnInit {
   //       //  this.setProfileAddressValToHouse()
   //     }, error => {
   //       if (error.status === 404) {
-  //         //this.itrSummaryForm['controls'].assesse['controls'].address['controls'].city.setValue(null);
+  //         //this.itrSummaryForm.controls['assesse.controls['address.controls['city'].setValue(null);
   //       }
   //     });
   //   }
   // }
 
-  updateAddressForm(obj) {
+  updateAddressForm(obj:any) {
     return this.fb.group({
       state: [obj.stateCode || ''],
       city: [obj.taluka || ''],
       country: ['INDIA' || ''],
 
-      premisesName: [(this.userProfileForm['controls'].address['controls'][0].controls['premisesName'].value) || ''],
-      pinCode: [(this.userProfileForm['controls'].address['controls'][0].controls['pinCode'].value) || ''],
-      addressType: [(this.userProfileForm['controls'].address['controls'][0].controls['addressType'].value) || ''],
-      flatNo: [(this.userProfileForm['controls'].address['controls'][0].controls['flatNo'].value) || ''],
+      premisesName: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['premisesName'].value) || ''],
+      pinCode: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['pinCode'].value) || ''],
+      addressType: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['addressType'].value) || ''],
+      flatNo: [(((this.userProfileForm.controls['address'] as FormArray) .controls[0] as FormGroup).controls['flatNo'].value) || ''],
       road: null,
-      area: [(this.userProfileForm['controls'].address['controls'][0].controls['area'].value) || '']
+      area: [(((this.userProfileForm.controls['address'] as FormArray) .controls[0] as FormGroup).controls['area'].value) || '']
     })
   }
 
@@ -480,7 +488,7 @@ export class UserProfileComponent implements OnInit {
   //   })
   // }
 
-  getUserInfo(userId) {
+  getUserInfo(userId:any) {
     this.loading = true;
     let param = '/profile/' + userId;
     this.userService.getMethod(param).subscribe((res: any) => {
@@ -515,10 +523,8 @@ export class UserProfileComponent implements OnInit {
       else {
         this.addressData = [];
       }
-      console.log('Bank -> ', this.userProfileForm.controls.bankDetails, this.userProfileForm.controls.bankDetails.value)
-      this.bankData = this.userProfileForm.controls.bankDetails.value;
-      console.log('userInfo :-> ', this.userInfo);
-
+      this.bankData = this.userProfileForm.controls['bankDetails'].value;
+      
       this.updateUserRole(this.userInfo.mobileNumber)
     },
       error => {
@@ -548,8 +554,8 @@ export class UserProfileComponent implements OnInit {
         console.log('result -> ', result, result.data);
         if (result.data.from === 'Bank') {
           this.bankData.push(result.data.formValue);
-          this.userProfileForm.controls.bankDetails.setValue(this.bankData);
-          console.log('After Add bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
+          this.userProfileForm.controls['bankDetails'].setValue(this.bankData);
+          console.log('After Add bank info -> ', this.userProfileForm.value, this.userProfileForm.controls['bankDetails'].value)
         }
         else if (result.data.from === 'Address') {
           if (result.data.action === 'Add') {
@@ -557,11 +563,7 @@ export class UserProfileComponent implements OnInit {
             debugger
             this.addressData.push(result.data.formValue);
             this.userInfo.address.push(result.data.formValue);
-            console.log('uaerInfo after Add -> ', this.userInfo.address)
-            this.userProfileForm.controls.address.setValue(this.userInfo.address);
-            //Object.assign(this.userInfo, this.userProfileForm.value);           
-            console.log('userProfileForm after Add -> ', this.userProfileForm.controls.address.value)
-            console.log('After Add Address info -> ', this.userProfileForm.value, this.userProfileForm.controls.address.value)
+            this.userProfileForm.controls['address'].setValue(this.userInfo.address);
           }
           else if (result.data.action === 'Edit') {
             console.log('result formValue-> ', result.data.formValue);
@@ -569,10 +571,7 @@ export class UserProfileComponent implements OnInit {
             this.addressData.splice(result.data.index, 1, result.data.formValue);
             this.userInfo.address.splice(result.data.index, 1, result.data.formValue);
             console.log('uaerInfo after Edit -> ', this.userInfo.address)
-            this.userProfileForm.controls.address.setValue(this.userInfo.address);
-            // this.userProfileForm.controls.address.setValue(this.addressData);
-            console.log('userProfileForm after Edit -> ', this.userProfileForm.controls.address.value)
-            console.log('After Edit Address info -> ', this.userProfileForm.value, this.userProfileForm.controls.address.value)
+            this.userProfileForm.controls['address'].setValue(this.userInfo.address);
           }
 
         }
@@ -581,40 +580,37 @@ export class UserProfileComponent implements OnInit {
     })
   }
 
-  getStateName(stateCode) {
+  getStateName(stateCode:any) {
     if (stateCode !== null && stateCode !== undefined && stateCode !== '') {
-      let stateName = this.state_list.filter(item => item.stateCode === stateCode)[0].stateName;
+      let stateName = this.state_list.filter((item:any) => item.stateCode === stateCode)[0].stateName;
       return stateName;
     }
     return 'NA'
   }
 
-  deleteData(type, index) {
+  deleteData(type:any, index:any) {
     if (type === 'Bank') {
       this.bankData.splice(index, 1);
-      this.userProfileForm.controls.bankDetails.setValue(this.bankData);
-      console.log('After Delete bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
+      this.userProfileForm.controls['bankDetails'].setValue(this.bankData);
     }
     else if (type === 'Address') {
       this.addressData.splice(index, 1);
-      this.userProfileForm.controls.address.setValue(this.addressData);
-      console.log('After Delete bank info -> ', this.userProfileForm.value, this.userProfileForm.controls.bankDetails.value)
+      this.userProfileForm.controls['address'].setValue(this.addressData);
     }
   }
 
-  getPartyInfoByGSTIN(event) {
+  getPartyInfoByGSTIN(event:any) {
     ///gst/api/partiesByGstin
     let gstinNo = event.target.value;
     let param = '/partiesByGstin?gstin=' + gstinNo;
-    this.gstService.getMethod(param).subscribe(res => {
-      console.log('Party Info by GSTIN -> ', res);
+    this.gstService.getMethod(param).subscribe((res:any) => {
       if (res) {
         this.gstForm.patchValue(res);
-        this.gstForm.controls.gstType.setValue(this.getGstType(res['gstnType']));
+        this.gstForm.controls['gstType'].setValue(this.getGstType(res['gstnType']));
         // this.merchantData.gstDetails.businessAddress.state = this.getStateName(partyInfo.stateName);
         // this.merchantData.gstDetails.businessAddress.pincode = partyInfo.pineCode;
         // this.merchantData.gstDetails.businessAddress.address = this.getAddress(partyInfo);
-        //this.gstForm.controls.gstr1Type.setValue(this.titleCasePipe.transform(res['gstDetails']['gstr1Type'])); 
+        //this.gstForm.controls['gstr1Type'].setValue(this.titleCasePipe.transform(res['gstDetails']['gstr1Type'])); 
       }
     },
       error => {
@@ -622,11 +618,11 @@ export class UserProfileComponent implements OnInit {
       })
   }
 
-  getGstType(gstCode) {
-    this.gstType.find(item => item.label == gstCode).label
+  getGstType(gstCode:any) {
+    this.gstType.find((item:any) => item.label === gstCode).label
   }
 
-  uploadBusinessLogo(files) {
+  uploadBusinessLogo(files:any) {
     console.log('Business logo file : ', files[0])
     if (files && files[0]) {
       this.loading = true;
@@ -643,7 +639,7 @@ export class UserProfileComponent implements OnInit {
             this.userInfo.gstDetails.businessLogo = result.key;
             this.getS3Image(this.userInfo.gstDetails.businessLogo).then(s3Image => {
               // this.userInfo.gstDetails.s3BusinessSignature = s3Image;
-              this.gstForm.controls.s3BusinessLogo.setValue(s3Image);
+              this.gstForm.controls['s3BusinessLogo'].setValue(s3Image);
               this.loading = false;
               console.log('After Business Loho upload -> ', this.userInfo)
             });
@@ -652,14 +648,14 @@ export class UserProfileComponent implements OnInit {
             this._toastMessageService.alert("error", "Error While uploading business sig image");
           }
         })
-        .catch(err => {
+        .catch((err:any) => {
           this.loading = false;
           this._toastMessageService.alert("error", "Error While uploading business sig image" + JSON.stringify(err));
         });
     }
   }
 
-  uploadBusinessSignature(files) {
+  uploadBusinessSignature(files:any) {
     if (files && files[0]) {
       this.loading = true;
       let extention = ".png";
@@ -675,7 +671,7 @@ export class UserProfileComponent implements OnInit {
             this.userInfo.gstDetails.businessSignature = result.key;
             this.getS3Image(this.userInfo.gstDetails.businessSignature).then(s3Image => {
               // this.userInfo.gstDetails.s3BusinessSignature = s3Image;
-              this.gstForm.controls.s3BusinessSignature.setValue(s3Image);
+              this.gstForm.controls['s3BusinessSignature'].setValue(s3Image);
               this.loading = false;
               console.log('After Business Signature upload -> ', this.userInfo)
             });
@@ -707,7 +703,7 @@ export class UserProfileComponent implements OnInit {
             this.userInfo.gstDetails.gstCertificate = result.key;
             this.getS3Image(this.userInfo.gstDetails.gstCertificate).then(s3Image => {
               // this.userInfo.gstDetails.s3GstCertificate = s3Image;
-              this.gstForm.controls.s3GstCertificate.setValue(s3Image);
+              this.gstForm.controls['s3GstCertificate'].setValue(s3Image);
               this.loading = false;
               console.log('After GST Certificate upload -> ', this.userInfo)
             });
@@ -716,7 +712,7 @@ export class UserProfileComponent implements OnInit {
             this._toastMessageService.alert("error", "Error While uploading business cert image");
           }
         })
-        .catch(err => {
+        .catch((err:any) => {
           this.loading = false;
           this._toastMessageService.alert("error", "Error While uploading business cert image" + JSON.stringify(err));
         });
@@ -749,14 +745,14 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  getS3Image(imagePath) {
+  getS3Image(imagePath:any) {
     return new Promise((resolve, reject) => {
       if (imagePath) {
         Storage.get(imagePath)
-          .then(result => {
+          .then((result:any) => {
             return resolve(result);
           })
-          .catch(err => {
+          .catch((err:any) => {
             return resolve("",);
           });
       } else {
@@ -765,7 +761,7 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  updateUserRole(userMobNo) {
+  updateUserRole(userMobNo:any) {
     console.log('userMobNo: ', userMobNo, typeof userMobNo, typeof parseInt(userMobNo))
     let param = '/users?mobileNumber=' + parseInt(userMobNo);
     this.userService.getMethod(param).subscribe((userRole: any) => {
@@ -791,7 +787,7 @@ export class UserProfileComponent implements OnInit {
         "userId": parseInt(this.userId),
         "role": this.userRole.value
       }
-      this.userService.putMethod(param, reqBody).subscribe(res => {
+      this.userService.putMethod(param, reqBody).subscribe((res:any) => {
         this.loading = false;
         console.log("Add user roles responce: ", res);
         if (this.utilsService.isNonEmpty(res['error'])) {
@@ -806,6 +802,10 @@ export class UserProfileComponent implements OnInit {
           this.loading = false;
         })
     }
+  }
+
+  onCancelClick(){
+    this.router.navigate(['/pages/user-management/users']);
   }
 
 }

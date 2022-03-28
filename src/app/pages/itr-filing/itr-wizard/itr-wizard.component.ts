@@ -1,10 +1,10 @@
-import { ITR_JSON } from './../../../shared/interfaces/itr-input.interface';
+import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MatStepper } from '@angular/material';
-import { AppConstants } from 'app/shared/constants';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { UtilsService } from 'app/services/utils.service';
+import { MatStepper } from '@angular/material/stepper';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -12,7 +12,7 @@ import { UtilsService } from 'app/services/utils.service';
   styleUrls: ['./itr-wizard.component.css']
 })
 export class ItrWizardComponent implements OnInit, AfterContentChecked {
-  @ViewChild('stepper', { static: true, read: MatStepper }) private stepper: MatStepper;
+  @ViewChild('stepper', {  read: MatStepper }) private stepper: MatStepper;
   personalForm: FormGroup;
   incomeForm: FormGroup;
   taxSavingForm: FormGroup;
@@ -56,7 +56,8 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   }
 
   saveAndNext(event) {
-    this.stepper.next();
+    // need to check
+    this.stepper;
   }
 
   tabChanged(tab) {

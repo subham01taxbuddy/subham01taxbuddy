@@ -63,7 +63,7 @@
                                             </mat-option>
                                         </mat-select>
                                         <mat-error
-                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].itrType.hasError('required')">
+                                            *ngIf="itrSummaryForm.controls['assesse.controls['itrType.hasError('required')">
                                             Select ITR type</mat-error>
                                     </mat-form-field>
 
@@ -88,13 +88,13 @@
 
                                 <div *ngIf="!newTaxRegime">
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0">
+                                        *ngIf="this.itrSummaryForm.controls['taxSummary.controls['taxpayable.value >= 0 && this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value === 0">
                                         <label>Tax Payable</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxpayable"
                                             disabled class="disableInput">
                                      </div>
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0 || this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
+                                        *ngIf="this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value > 0 || this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value < 0">
                                         <label>Tax Refund</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxRefund"
                                             disabled class="disableInput">
@@ -103,13 +103,13 @@
 
                                  <div *ngIf="newTaxRegime">
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0">
+                                        *ngIf="this.itrSummaryForm.controls['taxSummary.controls['taxpayable.value >= 0 && this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value === 0">
                                         <label>Tax Payable</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxpayable"
                                             disabled class="disableInput">
                                      </div>
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0 || this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0">
+                                        *ngIf="this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value > 0 || this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value < 0">
                                         <label>Tax Refund</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxRefund"
                                             disabled class="disableInput">
@@ -126,14 +126,14 @@
                                 <mat-label>PAN</mat-label>
                                 <input matInput placeholder="PAN" formControlName="panNumber" autocomplete="off"
                                     type="text" maxlength="10" minlength="10"
-                                    (blur)="getUserInfoByPan(itrSummaryForm['controls'].assesse['controls'].panNumber)"
+                                    (blur)="getUserInfoByPan(itrSummaryForm.controls['assesse.controls['panNumber)"
                                     required upperCase>
                                 <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].panNumber.hasError('required')">
+                                    *ngIf="itrSummaryForm.controls['assesse.controls['panNumber.hasError('required')">
                                     Enter PAN number
                                 </mat-error>
                                 <mat-error
-                                    *ngIf="itrSummaryForm['controls'].assesse['controls'].panNumber.hasError('pattern')">
+                                    *ngIf="itrSummaryForm.controls['assesse.controls['panNumber.hasError('pattern')">
                                     Enter valid PAN
                                     (e.g XXXXX1234X)</mat-error>
                             </mat-form-field>
@@ -148,7 +148,7 @@
                                             <input matInput placeholder="First Name" formControlName="fName"
                                                 maxlength="75" autocomplete="off" name="family[i]">
                                             <mat-error
-                                                *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['fName'].hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse.controls['family.controls[i].controls['fName'].hasError('required')">
                                                 Enter first
                                                 name
                                             </mat-error>
@@ -169,7 +169,7 @@
                                             <input matInput placeholder="Last Name" formControlName="lName"
                                                 maxlength="75" autocomplete="off" required name="family[i]">
                                             <mat-error
-                                                *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['lName'].hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse.controls['family.controls[i].controls['lName'].hasError('required')">
                                                 Enter last
                                                 name
                                             </mat-error>
@@ -182,7 +182,7 @@
                                             <input matInput placeholder="Father Name" formControlName="fathersName"
                                                 maxlength="75" autocomplete="off">
                                             <mat-error
-                                                *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['fathersName'].hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse.controls['family.controls[i].controls['fathersName'].hasError('required')">
                                                 Enter
                                                 father name</mat-error>
                                         </mat-form-field>
@@ -196,7 +196,7 @@
                                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                             <mat-datepicker #picker></mat-datepicker>
                                             <mat-error
-                                                *ngIf="itrSummaryForm['controls'].assesse['controls'].family.controls[i].controls['dateOfBirth'].hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse.controls['family.controls[i].controls['dateOfBirth'].hasError('required')">
                                                 Select Date of
                                                 Birth</mat-error>
                                         </mat-form-field>
@@ -216,7 +216,7 @@
                                             </mat-option>
                                         </mat-select>
                                         <mat-error
-                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].residentialStatus.hasError('required')">
+                                            *ngIf="itrSummaryForm.controls['assesse.controls['residentialStatus.hasError('required')">
                                             Select Residential Status</mat-error>
                                     </mat-form-field>
                                 </div>
@@ -225,14 +225,14 @@
                                     <mat-form-field appearance="outline">
                                         <mat-label>Aadhaar Number</mat-label>
                                         <input matInput placeholder="Aadhaar Number" formControlName="aadharNumber"
-                                            maxlength="12" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            maxlength="12" onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                                             autocomplete="off" required>
                                         <mat-error
-                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].aadharNumber.hasError('required')">
+                                            *ngIf="itrSummaryForm.controls['assesse.controls['aadharNumber.hasError('required')">
                                             Enter
                                             Aadhar number</mat-error>
                                         <mat-error
-                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].aadharNumber.hasError('pattern') || itrSummaryForm['controls'].assesse['controls'].aadharNumber.hasError('maxLength')">
+                                            *ngIf="itrSummaryForm.controls['assesse.controls['aadharNumber.hasError('pattern') || itrSummaryForm.controls['assesse.controls['aadharNumber.hasError('maxLength')">
                                             Enter
                                             12 digit aadhar number</mat-error>
                                     </mat-form-field>
@@ -244,7 +244,7 @@
                                         <input matInput placeholder="Passport No" formControlName="passportNumber" minlength="8"
                                             maxlength="8" autocomplete="off">
                                         <mat-error
-                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].passportNumber.hasError('minlength')">
+                                            *ngIf="itrSummaryForm.controls['assesse.controls['passportNumber.hasError('minlength')">
                                             Enter
                                             8 digit passport number</mat-error>
                                     </mat-form-field>
@@ -282,11 +282,11 @@
                                         <input matInput placeholder="E-mail" formControlName="email" maxlength="50"
                                             autocomplete="off" required>
                                         <mat-error
-                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].email.hasError('required')">
+                                            *ngIf="itrSummaryForm.controls['assesse.controls['email.hasError('required')">
                                             Enter email
                                         </mat-error>
                                         <mat-error
-                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].email.hasError('pattern')">
+                                            *ngIf="itrSummaryForm.controls['assesse.controls['email.hasError('pattern')">
                                             Enter valid
                                             email</mat-error>
                                     </mat-form-field>
@@ -301,13 +301,13 @@
                                         <input matInput formControlName="contactNumber" maxlength="10"
                                             placeholder="Mobile Number" autocomplete="off" type="number"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
+                                            onkeypress=" event.charCode >= 48 && event.charCode <= 57" required>
                                         <mat-error
-                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('required')">
+                                            *ngIf="itrSummaryForm.controls['assesse.controls['contactNumber.hasError('required')">
                                             Enter
                                             mobile number</mat-error>
                                         <mat-error
-                                            *ngIf="itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('pattern') || itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('minlength') || itrSummaryForm['controls'].assesse['controls'].contactNumber.hasError('maxlength')">
+                                            *ngIf="itrSummaryForm.controls['assesse.controls['contactNumber.hasError('pattern') || itrSummaryForm.controls['assesse.controls['contactNumber.hasError('minlength') || itrSummaryForm.controls['assesse.controls['contactNumber.hasError('maxlength')">
                                             Enter
                                             10 digit mobile number</mat-error>
                                     </mat-form-field>
@@ -320,7 +320,7 @@
                                             <input matInput formControlName="premisesName" maxlength="200" placeholder="Address"
                                                 required autocomplete="off">
                                             <mat-error
-                                                *ngIf="itrSummaryForm['controls'].assesse['controls'].address['controls'].premisesName.hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse.controls['address.controls['premisesname'].hasError('required')">
                                                 Enter address
                                             </mat-error>
                                         </mat-form-field>
@@ -332,16 +332,16 @@
                                             <mat-label>Pin code</mat-label>
                                             <input formControlName="pinCode" maxlength="6"
                                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput
+                                                onkeypress=" event.charCode >= 48 && event.charCode <= 57" matInput
                                                 placeholder="PIN Code" autocomplete="off" type="number"
-                                                (blur)="getCityData(itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode, 'profile')"
+                                                (blur)="getCityData(itrSummaryForm.controls['assesse.controls['address.controls['pinCode, 'profile')"
                                                 required>
                                             <mat-error
-                                                *ngIf="itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode.hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse.controls['address.controls['pinCode.hasError('required')">
                                                 Enter pin
                                             </mat-error>
                                             <mat-error
-                                                *ngIf="itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode.hasError('pattern')">
+                                                *ngIf="itrSummaryForm.controls['assesse.controls['address.controls['pinCode.hasError('pattern')">
                                                 Enter valid
                                                 pin
                                             </mat-error>
@@ -385,14 +385,14 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Return Type</mat-label>
                                     <mat-select matInput formControlName="returnType"
-                                        (selectionChange)="showAcknowData($event.value)" placeholder="Select return type"
+                                        (selectionChange)="showAcknowData($event.value)" placeholder="Select  type"
                                         autocomplete="off" required>
                                         <mat-option *ngFor="let res of returnTypeData" [value]="res.value">
                                             {{ res.label }}
                                         </mat-option>
                                     </mat-select>
                                     <mat-error *ngIf="itrSummaryForm.controls['returnType'].hasError('required')">Select
-                                        return type</mat-error>
+                                         type</mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-2" formGroupName="assesse">
@@ -423,14 +423,14 @@
                                     <input matInput formControlName="ackNumber" maxlength="15" minlength="15"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         disabled placeholder="Acknowledgement Number"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
                                     <!--minlength="15"-->
                                     <mat-error
-                                        *ngIf="itrSummaryForm['controls'].assesse['controls'].ackNumber.hasError('required')">
+                                        *ngIf="itrSummaryForm.controls['assesse.controls['ackNumber.hasError('required')">
                                         Enter
                                         acknowledgment number</mat-error>
                                     <mat-error
-                                        *ngIf="itrSummaryForm['controls'].assesse['controls'].ackNumber.hasError('minlength')">
+                                        *ngIf="itrSummaryForm.controls['assesse.controls['ackNumber.hasError('minlength')">
                                         Acknowldegemant number should be 15 digit</mat-error>
                                 </mat-form-field>
                             </div>
@@ -443,7 +443,7 @@
                                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                     <mat-datepicker #picker1></mat-datepicker>
                                     <mat-error
-                                        *ngIf="itrSummaryForm['controls'].assesse['controls'].eFillingDate.hasError('required')">
+                                        *ngIf="itrSummaryForm.controls['assesse.controls['eFillingDate.hasError('required')">
                                         Select
                                         Date of
                                         filling</mat-error>
@@ -661,7 +661,7 @@
 
                     <div *ngIf="itrType.itrFour">
                         <div class="tableHead">Annexure: Income from Business or Profession</div><br>
-                        <app-itr4part [itrType]="itrSummaryForm['controls'].assesse['controls'].itrType.value"
+                        <app-itr4part [itrType]="itrSummaryForm.controls['assesse.controls['itrType.value"
                         [businessData]="this.updatBussinessInfo" [jsonParse]="isJsonParse" (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
                     </div>
 
@@ -675,7 +675,7 @@
                                     <mat-label>Interest from Saving Account</mat-label>
                                     <input matInput placeholder="Interest from Saving Account"
                                         [value]="sourcesOfIncome.interestFromSaving" id="savingAmount" name="savingAmount"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                                         (blur)="setOtherSourceIncomeValue($event.target.value,'saving')" maxlength="8"
                                         autocomplete="off">  
                                 </mat-form-field>
@@ -687,7 +687,7 @@
                                     <input matInput
                                         placeholder="Interest from Deposits((Bank/ Post-Office/ Co-operative Society)"
                                         maxlength="8" [value]="sourcesOfIncome.interestFromBank" id="bankAmonut" name="bankAmonut"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                                         (blur)="setOtherSourceIncomeValue($event.target.value,'bank')"
                                         autocomplete="off">
                                 </mat-form-field>
@@ -697,7 +697,7 @@
                                     <mat-label>Interest from Income tax refund</mat-label>
                                     <input matInput placeholder="Interest from Income tax refund"
                                         [value]="sourcesOfIncome.interestFromIncomeTax" maxlength="8" id="incomeTaxAmount"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                                         name="incomeTaxAmount"
                                         (blur)="setOtherSourceIncomeValue($event.target.value,'it')" autocomplete="off">
                                 </mat-form-field>
@@ -707,7 +707,7 @@
                                     <mat-label>Others</mat-label>
                                     <input matInput placeholder="Others" maxlength="8" autocomplete="off"
                                         [value]="sourcesOfIncome.interestFromOther" id="otherAmount" name="otherAmount"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                                         (blur)="setOtherSourceIncomeValue($event.target.value,'other')">
                                 </mat-form-field>
                             </div>
@@ -716,7 +716,7 @@
                                     <mat-label>Dividend</mat-label>
                                     <input matInput placeholder="Dividend" maxlength="8" autocomplete="off"
                                         [value]="sourcesOfIncome.dividend" id="dividend" name="dividend"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                                         (blur)="setOtherSourceIncomeValue($event.target.value,'dividend')">
                                 </mat-form-field>
                             </div>
@@ -744,7 +744,7 @@
                                             </mat-option>
                                         </mat-select>
                                         <!-- <mat-error *ngIf="itrSummaryForm.controls['returnType'].hasError('required')">Select
-                                            return type</mat-error> -->
+                                             type</mat-error> -->
                                     </mat-form-field>
                                 </div>
     
@@ -753,7 +753,7 @@
                                         <mat-label>Amount</mat-label>
                                         <input matInput placeholder="Amount" [(ngModel)]="exemptInfo.amount" [ngModelOptions]="{standalone: true}" 
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" autocomplete="off">  
+                                            onkeypress=" event.charCode >= 48 && event.charCode <= 57" maxlength="8" autocomplete="off">  
                                     </mat-form-field>
                                 </div>
                                    
@@ -777,7 +777,7 @@
                                 </tr>
                                 <tr>
                                     <td><b>Total: </b></td>
-                                    <td><b>{{itrSummaryForm.controls.totalExemptIncome.value}}</b></td>
+                                    <td><b>{{itrSummaryForm.controls['totalExemptIncome.value}}</b></td>
                                     <td></td>
                                 </tr>
                              </table>
@@ -892,7 +892,7 @@
                             <tr>
                                 <td *ngIf="!newItrSumChanges" colspan="5"><b>Total</b></td>
                                 <td *ngIf="newItrSumChanges" colspan="6"><b>Total</b></td>
-                                <!--itrSummaryForm['controls'].houseProperties['controls']-->
+                                <!--itrSummaryForm.controls['houseProperties.controls['-->
                                 <td><b>{{itrSummaryForm.controls['us80g'].value}}</b></td>
                             </tr>
                         </table><br><br>
@@ -908,7 +908,7 @@
                                         (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -918,7 +918,7 @@
                                         (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -928,7 +928,7 @@
                                         (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -938,7 +938,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80ccd2" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -948,7 +948,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80ccd1b"
                                         autocomplete="off" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -958,7 +958,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80dd" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -968,7 +968,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80ddb" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -978,7 +978,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80e" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -988,7 +988,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80ee" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -998,7 +998,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80gg" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1008,7 +1008,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80gga" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1018,7 +1018,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80ggc" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1028,7 +1028,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80ttaTtb"
                                         autocomplete="off" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1038,7 +1038,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80u" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1048,7 +1048,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80g" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3">
@@ -1058,7 +1058,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80d" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
 
@@ -1069,7 +1069,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="us80eeb" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <div class="card__col-lg-3" *ngIf="newItrSumChanges">
@@ -1079,7 +1079,7 @@
                                         (blur)="calculateTotalDeduction()" formControlName="other" autocomplete="off"
                                         type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 </mat-form-field>
                             </div>
                             <!-- </form> -->
@@ -1296,7 +1296,7 @@
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             (blur)="setTotalOfExempt()" maxlength="8" type="number"
                                             formControlName="ppfInterest"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                                             autocomplete="off">
                                     </mat-form-field>
                                 </div>
@@ -1306,7 +1306,7 @@
                                         <input matInput placeholder="Gift from relative"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             (blur)="setTotalOfExempt()" type="number" formControlName="giftFromRelative"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
+                                            onkeypress=" event.charCode >= 48 && event.charCode <= 57" maxlength="8"
                                             autocomplete="off">
                                     </mat-form-field>
                                 </div>
@@ -1316,7 +1316,7 @@
                                         <input matInput placeholder="Any other" maxlength="8" type="number"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             (blur)="setTotalOfExempt()" formControlName="anyOtherExcemptIncome"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                            onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                                             autocomplete="off">
                                     </mat-form-field>
                                 </div>
@@ -1468,7 +1468,7 @@
                                 <td>Less: Deduction under Chap- VIA (Refer Annexure) </td>
                                 <td></td>
                                 <td formGroupName="taxSummary"><input type="number"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                                        (blur)="calculateTotalIncome()" formControlName="totalDeduction"  maxlength="8"></td>
                                 <!--deductionUnderChapterVIA-->
 
@@ -1493,7 +1493,7 @@
                                 <td formGroupName="taxSummary"><input type="number" formControlName="taxOnTotalIncome"
                                         (blur)="calculateTaxAfterRebate()"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" required
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57" required
                                         maxlength="8"></td>
                                 <!--taxPayable-->
 
@@ -1505,7 +1505,7 @@
                                 <td></td>
                                 <td formGroupName="taxSummary"><input formControlName="forRebate87Tax"
                                         (blur)="calculateTaxAfterRebate()"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" required
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57" required
                                         maxlength="8"></td>
                                 <!--rebate-->
 
@@ -1547,7 +1547,7 @@
                                 <td formGroupName="taxSummary"><input formControlName="taxReliefUnder89"
                                         (blur)="calculateTaxAfterRelif()" type="number"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8">
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57" maxlength="8">
                                 </td>
                                 <!--reliefUS89l-->
 
@@ -1578,7 +1578,7 @@
                                 <td formGroupName="taxSummary"><input formControlName="s234A" maxlength="8"
                                         (blur)="calculateTotalInterestFees()" type="number" 
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57"></td>
                                 <td></td>
                                 <!--section234A-->
 
@@ -1590,7 +1590,7 @@
                                 <td formGroupName="taxSummary"><input formControlName="s234B" maxlength="8"
                                         (blur)="calculateTotalInterestFees()" type="number" 
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57"></td>
                                 <td></td>
 
                                 <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234B" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
@@ -1601,7 +1601,7 @@
                                 <td formGroupName="taxSummary"><input formControlName="s234C"  maxlength="8"
                                         (blur)="calculateTotalInterestFees()" type="number" 
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57"></td>
                                 <td></td>
 
                                 <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" (blur)="calIntersetFeess()" [(ngModel)]="newRegimeTaxSummary.s234C" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
@@ -1612,7 +1612,7 @@
                                 <td formGroupName="taxSummary"><input formControlName="s234F" maxlength="8"
                                         (blur)="calculateTotalInterestFees()" type="number" 
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                        onkeypress=" event.charCode >= 48 && event.charCode <= 57"></td>
 
                                 <td formGroupName="taxSummary"><input type="number"
                                         formControlName="interestAndFeesPayable" disabled maxlength="8"></td>
@@ -1691,7 +1691,7 @@
                                 <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxesPaid.advanceSelfAssTax" [ngModelOptions]="{standalone: true}" (blur)="calNewItrTaxesPaid()" maxlength="8"></td>
                             </tr>
 
-                            <tr *ngIf="showTaxPaybleValue()">  <!--*ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0"-->
+                            <tr *ngIf="showTaxPaybleValue()">  <!--*ngIf="this.itrSummaryForm.controls['taxSummary.controls['taxpayable.value >= 0 && this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value === 0"-->
                                 <td>{{itrType.itrFour ? 18 : 17}}</td>
                                 <td><b>Net Tax Payable</b></td>
                                 <td></td>
@@ -1702,7 +1702,7 @@
 
                                 <td *ngIf="newItrSumChanges && itrType.itrOne"> <input type="number" [(ngModel)]="newRegimeTaxSummary.taxpayable" [ngModelOptions]="{standalone: true}" maxlength="8"></td>
                             </tr>
-                            <tr *ngIf="showTaxRefundValue()"> <!--*ngIf="this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0 || this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0"-->
+                            <tr *ngIf="showTaxRefundValue()"> <!--*ngIf="this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value > 0 || this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value < 0"-->
                                 <td>{{itrType.itrFour ? 18 : 17}}</td>
                                 <td><b>Net Tax Refund</b></td>
                                 <td></td>

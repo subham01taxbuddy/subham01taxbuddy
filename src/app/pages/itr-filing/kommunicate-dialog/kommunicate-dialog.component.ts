@@ -1,8 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { UserMsService } from 'app/services/user-ms.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { UtilsService } from 'app/services/utils.service';
-import { environment } from 'environments/environment';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-kommunicate-dialog',

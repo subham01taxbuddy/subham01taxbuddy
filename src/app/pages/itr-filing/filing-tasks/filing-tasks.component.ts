@@ -1,9 +1,9 @@
-import { UtilsService } from 'app/services/utils.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { Component, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import moment = require('moment');
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import * as moment from 'moment'
 
 @Component({
   selector: 'app-filing-tasks',
@@ -12,14 +12,14 @@ import moment = require('moment');
 })
 export class FilingTasksComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   tasksGridOptions: GridOptions;
   delayedInfo: any = [];
   constructor(private itrMsService: ItrMsService, private _toastMessageService: ToastMessageService, public utilsService: UtilsService) {
 
     this.tasksGridOptions = <GridOptions>{
       rowData: this.createTasksRowData([]),
-      columnDefs: this.tasksCreateColoumnDef(),
+      columnDefs: this.taskscreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -37,7 +37,7 @@ export class FilingTasksComponent implements OnInit {
     let param = `/sme-task?smeEmailId=${smeEmailId}`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log('res: ', res);
-      this.tasksGridOptions.api.setRowData(this.createTasksRowData(res));
+      this.tasksGridOptions.api?.setRowData(this.createTasksRowData(res));
     },
       error => {
         console.log('error: ', error);
@@ -65,7 +65,7 @@ export class FilingTasksComponent implements OnInit {
     return newData;
   }
 
-  tasksCreateColoumnDef() {
+  taskscreateColumnDef() {
     return [
       {
         headerName: 'User ID',
@@ -149,7 +149,7 @@ export class FilingTasksComponent implements OnInit {
       //     width: 80,
       //     sortable: true,
       //     pinned: 'right',
-      //     cellRenderer: function (params) {
+      //     cellRenderer: function (params:any) {
       //       return `<button type="button" class="action_icon add_button" title="Unblock user ITR" style="border: none;
       //         background: transparent; font-size: 16px; cursor:pointer;">
       //         <i class="fa fa-edit" aria-hidden="true" data-action-type="changeStatus"></i>
@@ -168,7 +168,7 @@ export class FilingTasksComponent implements OnInit {
       //     width: 80,
       //     sortable: true,
       //     pinned: 'right',
-      //     cellRenderer: function (params) {
+      //     cellRenderer: function (params:any) {
       //       return `<button type="button" class="action_icon add_button" title="Change Acknowlegement status" style="border: none;
       //         background: transparent; font-size: 16px; cursor:pointer;">
       //         <i class="fa fa-user" aria-hidden="true" data-action-type="ackStatus"></i>

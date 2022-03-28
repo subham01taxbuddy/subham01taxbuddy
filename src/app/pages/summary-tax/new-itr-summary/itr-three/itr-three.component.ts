@@ -5,13 +5,11 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './itr-three.component.html',
   styleUrls: ['./itr-three.component.css']
 })
-export class ItrThreeComponent implements OnInit {
+export class ItrThreeComponent  {
 
   newItrSumChanges: boolean = true;
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
 
 }

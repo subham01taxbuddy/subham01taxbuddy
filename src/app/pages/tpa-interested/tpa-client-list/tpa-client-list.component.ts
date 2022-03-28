@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
-import { FilingStatusDialogComponent } from 'app/pages/itr-filing/filing-status-dialog/filing-status-dialog.component';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-import moment = require('moment');
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import * as moment from 'moment'
+import { FilingStatusDialogComponent } from '../../itr-filing/filing-status-dialog/filing-status-dialog.component';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 
 @Component({
   selector: 'app-tpa-client-list',
@@ -14,7 +14,7 @@ import moment = require('moment');
   styleUrls: ['./tpa-client-list.component.css']
 })
 export class TpaClientListComponent implements OnInit {
-  @Input('listFor') listFor: any;
+  @Input() listFor: any;
   @Output() sendValue = new EventEmitter<any>();
 
   loading: boolean = false;
@@ -82,7 +82,8 @@ export class TpaClientListComponent implements OnInit {
     { teamLeadId: 0, value: 1067, label: 'Divya Bhanushali' },
     { teamLeadId: 0, value: 21354, label: 'Brijmohan Lavaniya' },
   ];
-  constructor(private itrMsService: ItrMsService, public utilsService: UtilsService, private router: Router,
+  constructor(private itrMsService: ItrMsService,
+     public utilsService: UtilsService, private router: Router,
     private dialog: MatDialog) {
     this.tpaGridOptions = <GridOptions>{
       rowData: this.createTpaRowData([]),
@@ -110,12 +111,12 @@ export class TpaClientListComponent implements OnInit {
       this.itrMsService.getMethod(param).subscribe((res: any) => {
         console.log('filingTeamMemberId: ', res);
         this.tpaList = res;
-        this.tpaGridOptions.api.setRowData(this.createTpaRowData(res));
+        this.tpaGridOptions.api?.setRowData(this.createTpaRowData(res));
         this.loading = false;
         if (this.listFor === "COMPLETED") {
-          this.tpaGridOptions.columnApi.setColumnsVisible(['nextYearTpa'], false)
+          this.tpaGridOptions.columnApi?.setColumnsVisible(['nextYearTpa'], false)
         } else {
-          this.tpaGridOptions.columnApi.setColumnsVisible(['nextYearTpa'], true)
+          this.tpaGridOptions.columnApi?.setColumnsVisible(['nextYearTpa'], true)
         }
         this.sendValue.emit(this.tpaList.length);
         return resolve(true)
@@ -130,16 +131,16 @@ export class TpaClientListComponent implements OnInit {
     // const param = `/itr-by-filingTeamMemberId?filingTeamMemberId=1063`;/* ${loggedInUserData.USER_UNIQUE_ID} */
     // this.itrMsService.getMethod(param).subscribe((res: any) => {
     //   console.log('filingTeamMemberId: ', res);
-    //   this.tpaGridOptions.api.setRowData(res);
+    //   this.tpaGridOptions.api?.setRowData(res);
     //   this.loading = false;
     // }, error => {
     //   this.loading = false;
     // })
   }
-  createTpaRowData(data) {
+  createTpaRowData(data:any) {
     const newData = [];
     for (let i = 0; i < data.length; i++) {
-      const filerDetails = this.filingTeamMembers.filter(item => item.value === data[i].filingTeamMemberId);
+      const filerDetails = this.filingTeamMembers.filter((item:any) => item.value === data[i].filingTeamMemberId);
       let filerName = 'NA';
       if (filerDetails.length > 0) {
         filerName = filerDetails[0].label
@@ -162,8 +163,8 @@ export class TpaClientListComponent implements OnInit {
     }
     return newData;
   }
-  getCount(val) {
-    return this.tpaList.filter(item => item.eFillingCompleted === val).length
+  getCount(val:any) {
+    return this.tpaList.filter((item:any) => item.eFillingCompleted === val).length
   }
   createTpaColoumnDef() {
     return [
@@ -219,7 +220,7 @@ export class TpaClientListComponent implements OnInit {
         field: "eFillingDate",
         sortable: true,
         width: 100,
-        valueFormatter: (data) => data.value ? moment(data.value).format('DD MMM YYYY') : null,
+        valueFormatter: (data:any) => data.value ? moment(data.value).format('DD MMM YYYY') : null,
       },
       {
         headerName: "PAN Number",
@@ -256,7 +257,7 @@ export class TpaClientListComponent implements OnInit {
         width: 100,
         sortable: true,
         pinned: 'right',
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           if (params.data.eFillingCompleted) {
             return `<i class="fa fa-check" title="ITR filed successfully" aria-hidden="true"></i>`;
           } else if (params.data.ackStatus === 'DELAY') {
@@ -272,7 +273,7 @@ export class TpaClientListComponent implements OnInit {
            </button>`;
           }
         },
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           if (params.data.eFillingCompleted) {
             return {
               textAlign: 'center', display: 'flex',
@@ -295,7 +296,7 @@ export class TpaClientListComponent implements OnInit {
         width: 50,
         sortable: true,
         pinned: 'right',
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Click to see chat" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: blueviolet">
             <i class="fa fa-weixin" aria-hidden="true" data-action-type="chatLinks"></i>
@@ -314,7 +315,7 @@ export class TpaClientListComponent implements OnInit {
         width: 50,
         sortable: true,
         pinned: 'right',
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="View Documents" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: black">
             <i class="fa fa-eye" aria-hidden="true" data-action-type="viewDocuments"></i>
@@ -333,10 +334,10 @@ export class TpaClientListComponent implements OnInit {
         width: 50,
         pinned: 'right',
         // visible: this.listFor === "INTERESTED" ? true : false,
-        cellRenderer: params => {
+        cellRenderer: (params:any) => {
           return `<input type='checkbox' data-action-type="isTpaCompleted" ${params.data.nextYearTpa === 'COMPLETED' ? 'checked' : ''} />`;
         },
-        cellStyle: params => {
+        cellStyle: (params:any) => {
           return params.data.nextYearTpa === 'COMPLETED' ? { 'pointer-events': 'none', opacity: '0.4' }
             : '';
         }
@@ -346,17 +347,17 @@ export class TpaClientListComponent implements OnInit {
         field: "nextYearTpa",
         width: 50,
         pinned: 'right',
-        cellRenderer: params => {
+        cellRenderer: (params:any) => {
           return `<input type='checkbox' data-action-type="isTpa" ${params.data.nextYearTpa === 'INTERESTED' ? 'checked' : ''} />`;
         },
-        cellStyle: params => {
+        cellStyle: (params:any) => {
           return (params.data.nextYearTpa === 'INTERESTED' || !params.data.eFillingCompleted) ? { 'pointer-events': 'none', opacity: '0.4' }
             : '';
         }
       }, */
     ];
   }
-  public onRowClicked(params) {
+  public onRowClicked(params:any) {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
@@ -378,7 +379,7 @@ export class TpaClientListComponent implements OnInit {
     }
   }
 
-  openfilingStatusDialog(data) {
+  openfilingStatusDialog(data:any) {
     let disposable = this.dialog.open(FilingStatusDialogComponent, {
       width: '50%',
       height: 'auto',
@@ -389,13 +390,13 @@ export class TpaClientListComponent implements OnInit {
     });
   }
 
-  markAsTpaCompleted(data) {
+  markAsTpaCompleted(data:any) {
     this.loading = true;
-    var workingItr = this.tpaList.filter(item => item.itrId === data.itrId)[0];
+    var workingItr:any = this.tpaList.filter((item:any) => item.itrId === data.itrId)[0];
     workingItr['nextYearTpa'] = 'COMPLETED';
     console.log(workingItr);
     const param = '/itr/' + workingItr['userId'] + '/' + workingItr['itrId'] + '/' + workingItr['assessmentYear'];
-    this.itrMsService.putMethod(param, workingItr).subscribe((result: ITR_JSON) => {
+    this.itrMsService.putMethod(param, workingItr).subscribe((result) => {
       this.getTpaList()
     }, error => {
       this.getTpaList()

@@ -24,7 +24,7 @@
 								<ul>
 									<li *ngFor="let item of selectItems;"
 										(click)="filter.attr = item.in_prod_name; sendData()"
-										[class.un-item-selected]="filter.attr == item.in_prod_name">
+										[class.un-item-selected]="filter.attr === item.in_prod_name">
 										{{item.in_prod_name}}</li>
 								</ul>
 							</div>

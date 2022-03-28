@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { UtilsService } from 'app/services/utils.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-user-documents',
@@ -22,7 +22,7 @@ export class UserDocumentsComponent implements OnInit {
       this.getDocuments(params['userId']);
     });
   }
-  getDocuments(userId) {
+  getDocuments(userId:any) {
     const param = `/cloud/file-info?currentPath=${userId}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.commonDocuments = result;
@@ -30,7 +30,7 @@ export class UserDocumentsComponent implements OnInit {
   }
 
 
-  getSignedUrl(document) {
+  getSignedUrl(document:any) {
     if (document.isDeleted) {
       this.utilsService.showSnackBar('This file is deleted by ' + document.deletedBy)
       return;

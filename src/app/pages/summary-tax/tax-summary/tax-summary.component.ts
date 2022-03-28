@@ -1,17 +1,16 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { SumaryDialogComponent } from '../sumary-dialog/sumary-dialog.component';
-import { UtilsService } from 'app/services/utils.service';
 import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
-import { AppConstants } from 'app/shared/constants';
-import { UserMsService } from 'app/services/user-ms.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { environment } from 'environments/environment';
-import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { invalid } from '@angular/compiler/src/render3/view/util';
 import { Router } from '@angular/router';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { UtilsService } from 'src/app/services/utils.service';
+import { environment } from 'src/environments/environment';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -37,16 +36,16 @@ export const MY_FORMATS = {
 })
 export class TaxSummaryComponent implements OnInit {
 
-  @Input() changes: string;
-  newItrSumChanges: boolean;
-  loading: boolean;
+  @Input() changes!: string;
+  newItrSumChanges!: boolean;
+  loading!: boolean;
 
-  itrSummaryForm: FormGroup;
+  itrSummaryForm!: FormGroup;
   natureOfBusinessForm = new FormControl('', Validators.required);
   natureOfBusinessDropdown44AD: any = [];
   natureOfBusinessDropdown44ADA: any = [];
-  filteredOptions: Observable<any[]>;
-  filteredOptions44ADA: Observable<any[]>;
+  filteredOptions!: Observable<any[]>;
+  filteredOptions44ADA!: Observable<any[]>;
 
   minDate = new Date(1900, 0, 1);
   maxDate = new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate());
@@ -78,21 +77,21 @@ export class TaxSummaryComponent implements OnInit {
   }];
 
   exemptIncomes: any = [
-    {label:'Agriculture Income (less than or equal to RS. 5000)', value: 'AGRI'},
-    {label:'Sec 10 (10D) - Any sum received under a life insurance policy, including the sum allocated by way of bonus on such policy except sum as mentioned in sub-clause (a) to (d) of Sec.10 (10D)', value: '10(10D)'},
-    {label:'Sec 10(11) - Statutory Provident Fund received)', value: '10(11)'},
-    {label:'Sec 10(12) - Recognized Provident Fund received', value: '10(12)'},
-    {label:'Sec 10(13) - Approved superannuation fund received', value: '10(13)'},
-    {label:'Sec 10(16) - Scholarships granted to meet the cost of education', value: '10(16)'},
-    {label:'Defense Medical disability pension', value: 'DMDP'},
-    {label:'Sec 10(17) - Allowance MP/MLA/MLC', value: '10(17)'},
-    {label:'Sec 10(17A) - Award instituted  by governmen', value: '10(17A)'},
-    {label:'Sec 10(18) - Pension received by winner of Param Vir Chakra or Maha-Vir Chakra or such other gallantry award', value: '10(18)'},
-    {label:'Sec 10(10BC) - Any amount from the Central/State Govt/Local authority by way of compensation on account of any disaster', value: '10(10BC)'},
-    {label:'Sec 10(19) - Armed Forces Family Pension in case of death during operational duty', value: '10(19)'},
-    {label:'Sec 10 (26) - Any Income as referred to in section 10(26)', value: '10(26)'},
-    {label:'Sec 10(26AAA) - Any income as referred to in section 10(26)', value: '10(26AAA)'},
-    {label:'Any other', value: 'OTH'}
+    { label: 'Agriculture Income (less than or equal to RS. 5000)', value: 'AGRI' },
+    { label: 'Sec 10 (10D) - Any sum received under a life insurance policy, including the sum allocated by way of bonus on such policy except sum as mentioned in sub-clause (a) to (d) of Sec.10 (10D)', value: '10(10D)' },
+    { label: 'Sec 10(11) - Statutory Provident Fund received)', value: '10(11)' },
+    { label: 'Sec 10(12) - Recognized Provident Fund received', value: '10(12)' },
+    { label: 'Sec 10(13) - Approved superannuation fund received', value: '10(13)' },
+    { label: 'Sec 10(16) - Scholarships granted to meet the cost of education', value: '10(16)' },
+    { label: 'Defense Medical disability pension', value: 'DMDP' },
+    { label: 'Sec 10(17) - Allowance MP/MLA/MLC', value: '10(17)' },
+    { label: 'Sec 10(17A) - Award instituted  by governmen', value: '10(17A)' },
+    { label: 'Sec 10(18) - Pension received by winner of Param Vir Chakra or Maha-Vir Chakra or such other gallantry award', value: '10(18)' },
+    { label: 'Sec 10(10BC) - Any amount from the Central/State Govt/Local authority by way of compensation on account of any disaster', value: '10(10BC)' },
+    { label: 'Sec 10(19) - Armed Forces Family Pension in case of death during operational duty', value: '10(19)' },
+    { label: 'Sec 10 (26) - Any Income as referred to in section 10(26)', value: '10(26)' },
+    { label: 'Sec 10(26AAA) - Any income as referred to in section 10(26)', value: '10(26AAA)' },
+    { label: 'Any other', value: 'OTH' }
   ]
 
   employersDropdown = [
@@ -146,7 +145,7 @@ export class TaxSummaryComponent implements OnInit {
     amount: 0
   }
 
-  newTaxRegime: boolean;
+  newTaxRegime!: boolean;
   employerArray: any = [];
   newRegimeTaxSummary: any;
   totalExemptIncome: number = 0;
@@ -155,20 +154,21 @@ export class TaxSummaryComponent implements OnInit {
 
 
   get getFamilyArray() {
-    return <FormArray>this.itrSummaryForm['controls'].assesse.get('family');
+    return <FormArray>this.itrSummaryForm.controls['assesse'].get('family');
   }
 
-  constructor(private dialog: MatDialog, public utilService: UtilsService, private fb: FormBuilder, private userService: UserMsService, private _toastMessageService: ToastMessageService,
+  constructor(private dialog: MatDialog, public utilService: UtilsService, private fb: FormBuilder, private userService: UserMsService,
+    private _toastMessageService: ToastMessageService,
     private router: Router) {
-     
+
   }
 
   ngOnInit() {
-    console.log("New Itr Summarry Changes: ",this.changes);
-    if(this.changes){
-        this.newItrSumChanges = true;
+    console.log("New Itr Summarry Changes: ", this.changes);
+    if (this.changes) {
+      this.newItrSumChanges = true;
     }
-    else{
+    else {
       this.newItrSumChanges = false;
     }
 
@@ -180,16 +180,16 @@ export class TaxSummaryComponent implements OnInit {
     //   e.preventDefault();
     //   e.returnValue = `Are you sure, you want to leave page?`;
     // });
-    const familyData = <FormArray>this.itrSummaryForm['controls'].assesse.get('family');
+    const familyData = <FormArray>this.itrSummaryForm.controls['assesse'].get('family');
     familyData.push(this.createFamilyForm())
   }
 
 
   upload() {
-    document.getElementById("input-file-id").click();
+    document.getElementById("input-file-id")?.click();
   }
 
-  selectFile(event) {
+  selectFile(event: any) {
     this.initialiseNewRegimeTaxSummary();
     this.initialiseMainForm();
 
@@ -197,789 +197,782 @@ export class TaxSummaryComponent implements OnInit {
     reader.onload = (e: any) => {
       let jsonRes = e.target.result;
       console.log('main json file: ', jsonRes)
-       this.JSONData = JSON.parse(jsonRes);
+      this.JSONData = JSON.parse(jsonRes);
     }
     reader.readAsText(event.target.files[0])
   }
 
-  parsJson(itrJsonInfo) {
-     console.log('itrJsonInfo: ', itrJsonInfo);
-     /* Parse personal information */
-     var itrData = itrJsonInfo.ITR;
-     this.isJsonParse = true;
-     console.log('itrData: ', itrData);
-     this.bankData = [];
-     this.housingData = [];
-     this.donationData = [];
-     this.salaryItrratedData = [];
+  parsJson(itrJsonInfo: any) {
+    console.log('itrJsonInfo: ', itrJsonInfo);
+    /* Parse personal information */
+    var itrData = itrJsonInfo.ITR;
+    this.isJsonParse = true;
+    console.log('itrData: ', itrData);
+    this.bankData = [];
+    this.housingData = [];
+    this.donationData = [];
+    this.salaryItrratedData = [];
 
-     if(itrData.hasOwnProperty('ITR1')){
-      this.itrSummaryForm.controls.assesse['controls'].itrType.setValue('1');
+    if (itrData.hasOwnProperty('ITR1')) {
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['itrType'].setValue('1');
       this.itrType.itrOne = true;
       this.itrType.itrFour = false
-       this.setJsonData(itrData['ITR1']);
-     }
-     else if(itrData.hasOwnProperty('ITR4')){
-      this.itrSummaryForm.controls.assesse['controls'].itrType.setValue('4');
+      this.setJsonData(itrData['ITR1']);
+    }
+    else if (itrData.hasOwnProperty('ITR4')) {
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['itrType'].setValue('4');
       this.itrType.itrFour = true;
       this.itrType.itrOne = false;
       this.getMastersData();
       this.setJsonData(itrData['ITR4']);
       this.businessIncomeBind(itrData['ITR4']);
-     }
+    }
   }
 
-  setJsonData(itrData){
-      
+  setJsonData(itrData: any) {
+
     //  if(itrData.hasOwnProperty('ITR1')){
-        this.newTaxRegime = itrData.FilingStatus.NewTaxRegime === "Y" ? true : false;
-        console.log(' this.newTaxRegime: ', this.newTaxRegime);
-        let panNo = itrData.PersonalInfo.PAN;
-        let dob = new Date(itrData.PersonalInfo.DOB);
-        this.itrSummaryForm.controls.assesse['controls'].panNumber.setValue(panNo);
-        this.getUserInfoByPan( this.itrSummaryForm.controls.assesse['controls'].panNumber, dob, itrData);
-       
-        this.itrSummaryForm.controls.assesse['controls'].aadharNumber.setValue(itrData.PersonalInfo.AadhaarCardNo);
-  
-        let natureOfEmployer = itrData.PersonalInfo.EmployerCategory;
-        this.itrSummaryForm.controls.assesse['controls'].employerCategory.setValue(natureOfEmployer);
-  
-        this.itrSummaryForm.controls.assesse['controls'].regime.setValue(itrData.FilingStatus.NewTaxRegime);
-  
-        let adress = itrData.PersonalInfo.Address;
-        this.itrSummaryForm.controls.assesse['controls'].email.setValue(adress.EmailAddress);
-        this.itrSummaryForm.controls.assesse['controls'].contactNumber.setValue(adress.MobileNo);
-        let mainAddress = (adress.hasOwnProperty('ResidenceNo') ?  adress.ResidenceNo : '')+' ,'+(adress.hasOwnProperty('ResidenceName') ?adress.ResidenceName : '')+' ,'+(adress.hasOwnProperty('RoadOrStreet') ? adress.RoadOrStreet : '')+' ,'+(adress.hasOwnProperty('LocalityOrArea') ? adress.LocalityOrArea : '');
-        console.log('mainAddress: ',mainAddress)
-        this.itrSummaryForm.controls.assesse['controls'].address['controls'].premisesName.setValue(mainAddress);
-        this.itrSummaryForm.controls.assesse['controls'].address['controls'].pinCode.setValue(adress.PinCode);
-        this.getCityData(this.itrSummaryForm['controls'].assesse['controls'].address['controls'].pinCode, 'profile');
-  
-        var assessmentYear;
-        if(itrData.hasOwnProperty('Form_ITR1')){
-          assessmentYear = itrData.Form_ITR1.AssessmentYear;
-        }
-        else if(itrData.hasOwnProperty('Form_ITR4')){
-          assessmentYear = itrData.Form_ITR4.AssessmentYear;
-        }
-        
-        if(assessmentYear === "2021"){
-          this.itrSummaryForm.controls.assesse['controls'].assessmentYear.setValue('2021-22');
-          this.itrSummaryForm.controls.financialYear.setValue('2020-21');
-        }
-        else if(assessmentYear === "2020"){
-          this.itrSummaryForm.controls.assesse['controls'].assessmentYear.setValue('2020-21');
-          this.itrSummaryForm.controls.financialYear.setValue('2019-20');
-        }
-        else if(assessmentYear === "2019"){
-          this.itrSummaryForm.controls.assesse['controls'].assessmentYear.setValue('2019-20');
-          this.itrSummaryForm.controls.financialYear.setValue('2018-19');
-        }
-        else if(assessmentYear === "2018"){
-          this.itrSummaryForm.controls.assesse['controls'].assessmentYear.setValue('2018-19');
-          this.itrSummaryForm.controls.financialYear.setValue('2017-18');
-        }
-  
-  
-        /* bank information */
-        let bankInfo = itrData.Refund.BankAccountDtls.AddtnlBankDetails; 
-       
-  
-        if(bankInfo instanceof Array && bankInfo.length > 0){
-          for(let i=0; i< bankInfo.length; i++){
-            let bankBody = {
-              accountNumber: "",
-              bankType: "",
-              countryName: null,
-              hasRefund: true,
-              ifsCode: "",
-              name: ""
-            }
-            bankBody.accountNumber = bankInfo[i].BankAccountNo;
-            bankBody.ifsCode = bankInfo[i].IFSCCode;
-            bankBody.name = bankInfo[i].BankName;
-            bankBody.hasRefund = typeof bankInfo[i].UseForRefund === 'string' ? (bankInfo[i].UseForRefund == "true" ? true : false) : bankInfo[i].UseForRefund;
-            console.log(i+'th bankBody: ',bankBody)
-            this.bankData.push(bankBody);
-          }
-          console.log('bankData: ',this.bankData)
-          this.itrSummaryForm['controls'].assesse['controls'].bankDetails.setValue(this.bankData);
-          console.log('bankDetails info: ',this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value)
-        }  
+    this.newTaxRegime = itrData.FilingStatus.NewTaxRegime === "Y" ? true : false;
+    console.log(' this.newTaxRegime: ', this.newTaxRegime);
+    let panNo = itrData.PersonalInfo.PAN;
+    let dob = new Date(itrData.PersonalInfo.DOB);
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['panNumber'].setValue(panNo);
+    this.getUserInfoByPan((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['panNumber'], dob, itrData);
 
-        /* For itr-1 json there contain 'ITR1_IncomeDeductions' key and for itr-2 json cotain 'IncomeDeductions' key  */
-        var incomeDeduction = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.ITR1_IncomeDeductions : itrData.IncomeDeductions
-  
-        /* House Property */
-        var housingInfo = incomeDeduction;
-        if(this.utilService.isNonZero(housingInfo.GrossRentReceived) || this.utilService.isNonZero(housingInfo.AnnualValue) ||this.utilService.isNonZero(housingInfo.TaxPaidlocalAuth) ||
-          this.utilService.isNonZero(housingInfo.InterestPayable) || this.utilService.isNonZero(housingInfo.TotalIncomeOfHP) || this.utilService.isNonZero(housingInfo.StandardDeduction) ){
-            var housingObj = {
-              propertyType: housingInfo.hasOwnProperty('TypeOfHP') ? (housingInfo.TypeOfHP === "S" ? 'SOP' : 'LOP') : (housingInfo.TotalIncomeOfHP === 0 ? 'SOP' : 'LOP'),
-              address: '',
-              ownerOfProperty: '',
-              coOwners: [],
-              otherOwnerOfProperty: '',
-              tenantName: '',
-              tenentPanNumber: '',
-              grossAnnualRentReceived: this.getNumberFormat(housingInfo.GrossRentReceived),
-              annualValue: this.getNumberFormat(housingInfo.AnnualValue),
-              propertyTax: this.getNumberFormat(housingInfo.TaxPaidlocalAuth),
-              interestAmount: this.getNumberFormat(housingInfo.InterestPayable),
-              taxableIncome: this.getNumberFormat(housingInfo.TotalIncomeOfHP),
-              exemptIncome: this.getNumberFormat(housingInfo.StandardDeduction),
-              pinCode: '',
-              flatNo: '',
-              building: '',
-              street: '',
-              locality: '',
-              city: '',
-              country: '',
-              state: '',
-            }
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['aadharNumber'].setValue(itrData.PersonalInfo.AadhaarCardNo);
 
-            this.housingData.push(housingObj);
-        }
-  
-       
-  
-        this.houseArray = [];
-        for (let i = 0; i < this.housingData.length; i++) {
-          let houceObj = {
-            annualOfPropOwned: 0,
-            annualValue: 0,
-            annualValueXml: 0,
-            building: '',
-            city: "",
-            coOwners: [],
-            country: "",
-            exemptIncome: 0,
-            flatNo: "",
-            grossAnnualRentReceived: 0,
-            grossAnnualRentReceivedXml: 0,
-            isEligibleFor80EE: null,
-            loans: [],
-            locality: "",
-            otherOwnerOfProperty: "",
-            ownerOfProperty: "",
-            pinCode: '',
-            propertyTax: 0,
-            propertyTaxXml: 0,
-            propertyType: "",
-            state: "",
-            street: "",
-            taxableIncome: 0,
-            tenant: []
-          }
-  
-          Object.assign(houceObj, this.housingData[i]);
-          if (this.utilService.isNonEmpty(this.housingData[i].interestAmount)) {
-            let loanObj = {
-              interestAmount: this.getNumberFormat(this.housingData[i].interestAmount),
-              loanType: "HOUSING",
-              principalAmount: 0
-            }
-            houceObj.loans.push(loanObj);
-          }
-  
-          if (this.utilService.isNonEmpty(this.housingData[i].tenantName) && this.utilService.isNonEmpty(this.housingData[i].tenentPanNumber)) {
-            let tenantObj = {
-              name: this.housingData[i].tenantName,
-              panNumber: this.housingData[i].tenentPanNumber
-            }
-            houceObj.tenant.push(tenantObj);
-          }
-  
-          this.houseArray.push(houceObj);
-        }
-        console.log('After xml parsing houseArray => ', this.houseArray);
-  
-        this.itrSummaryForm['controls'].assesse['controls'].houseProperties.setValue(this.houseArray);
-        console.log('Housing Data: ', this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value);
-  
-    
-        
-        /* Salary Property */
-        var salaryInfo = incomeDeduction;
-        console.log('salaryInfo: ',salaryInfo)
-        var hra;
-        var otherAmnt = 0;
-        let salExemptIncomeInfo = salaryInfo.AllwncExemptUs10.AllwncExemptUs10Dtls;
-        if(salExemptIncomeInfo instanceof Array && salExemptIncomeInfo.length > 0){
-          if(salExemptIncomeInfo.filter(item => item.SalNatureDesc === "10(13A)").length > 0){
-            hra = salExemptIncomeInfo.filter(item => item.SalNatureDesc === "10(13A)")[0].SalOthAmount;
-            if(typeof hra === 'string'){
-              hra = hra.replace(/\,/g,''); 
-              hra=parseInt(hra,10);
-            }
-           
-            otherAmnt = salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10 - hra;
-          }
-          else{
-            hra = 0;
-            otherAmnt = salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10;
-          }
-        }
-       
-        if(salaryInfo.hasOwnProperty('Salary') || salaryInfo.hasOwnProperty('PerquisitesValue') || salaryInfo.hasOwnProperty('ProfitsInSalary') || this.utilService.isNonZero(salaryInfo.GrossSalary) || this.utilService.isNonZero(salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10) ||
-          this.utilService.isNonZero(salaryInfo.NetSalary) || this.utilService.isNonZero(salaryInfo.DeductionUs16ia) || this.utilService.isNonZero(salaryInfo.EntertainmentAlw16ii) || this.utilService.isNonZero(salaryInfo.ProfessionalTaxUs16iii) || this.utilService.isNonZero(salaryInfo.IncomeFromSal)){
-            var salObj = {
-              employerName: '',
-              address: '',
-              employerTAN: '',
-              employerCategory: '',
-              salAsPerSec171: salaryInfo.hasOwnProperty('Salary') ? this.getNumberFormat(salaryInfo.Salary) : 0,
-              valOfPerquisites: salaryInfo.hasOwnProperty('PerquisitesValue') ? this.getNumberFormat(salaryInfo.PerquisitesValue) : 0,
-              profitInLieu: salaryInfo.hasOwnProperty('ProfitsInSalary') ? this.getNumberFormat(salaryInfo.ProfitsInSalary) : 0,
-              grossSalary: salaryInfo.GrossSalary,
-              houseRentAllow: hra,
-              leaveTravelExpense: 0,
-              other: otherAmnt,
-              totalExemptAllow: this.getNumberFormat(salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10),
-              netSalary: this.getNumberFormat(salaryInfo.NetSalary),
-              standardDeduction: this.getNumberFormat(salaryInfo.DeductionUs16ia),
-              entertainAllow: this.getNumberFormat(salaryInfo.EntertainmentAlw16ii),
-              professionalTax: this.getNumberFormat(salaryInfo.ProfessionalTaxUs16iii),
-              totalSalaryDeduction: Number(salaryInfo.DeductionUs16ia) + Number(salaryInfo.EntertainmentAlw16ii) +  (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0) ,
-              taxableIncome: this.getNumberFormat(salaryInfo.IncomeFromSal),
-      
-              pinCode: '',
-              country: '',
-              state: '',
-              city: ''
-            }
-      
-            this.salaryItrratedData.push(salObj);
-          }
-       
-        this.employerArray = [];
-        for (let i = 0; i < this.salaryItrratedData.length; i++) {
-          debugger
-          console.log('employerArray : ', this.employerArray);
-  
-          let employerObj = {
-            address: "",
-            allowance: [],
-            city: "",
-            country: '',
-            deductions: [],
-            employerCategory: "",
-            employerName: "",
-            employerPAN: '',
-            employerTAN: "",
-            grossSalary: 0,
-            id: '',
-            netSalary: 0,
-            periodFrom: null,
-            periodTo: null,
-            perquisites: [],
-            pinCode: "",
-            profitsInLieuOfSalaryType: [],
-            salary: [],
-            standardDeduction: 0,
-            state: "",
-            taxRelief: 0,
-            taxableIncome: 0
-          }
-  
-          Object.assign(employerObj, this.salaryItrratedData[i]);
-          console.log('employerObj after salaryItrared basic binding : ', employerObj);
-  
-          console.log('employerArray : ', this.employerArray);
-          //allowance
-          if (this.utilService.isNonEmpty(this.salaryItrratedData[i].houseRentAllow) && this.salaryItrratedData[i].houseRentAllow !== 0) {
-            let houceAllowObj = {
-              allowanceType: "HOUSE_RENT",
-              description: null,
-              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].houseRentAllow),
-              taxableAmount: 0
-            }
-            employerObj.allowance.push(houceAllowObj)
-          }
-          // if (this.utilService.isNonEmpty(this.salaryItrratedData[i].leaveTravelExpense) && this.salaryItrratedData[i].leaveTravelExpense !== 0) {
-          //   let ltaAllowObj = {
-          //     allowanceType: "LTA",
-          //     description: null,
-          //     exemptAmount: Number(this.salaryItrratedData[i].leaveTravelExpense),
-          //     taxableAmount: 0
-          //   }
-          //   employerObj.allowance.push(ltaAllowObj)
-          // }
-          if (this.utilService.isNonEmpty(this.salaryItrratedData[i].other) && this.salaryItrratedData[i].other !== 0) {
-            let otherAllowObj = {
-              allowanceType: "ANY_OTHER",
-              description: null,
-              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].other),
-              taxableAmount: 0
-            }
-            employerObj.allowance.push(otherAllowObj)
-          }
-          if (this.utilService.isNonEmpty(this.salaryItrratedData[i].totalExemptAllow) && this.salaryItrratedData[i].totalExemptAllow !== 0) {
-            let totalExeAllowObj = {
-              allowanceType: "ALL_ALLOWANCES",
-              description: null,
-              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].totalExemptAllow),
-              taxableAmount: 0
-            }
-            employerObj.allowance.push(totalExeAllowObj)
-          }
-  
-          //deduction
-          if (this.utilService.isNonEmpty(this.salaryItrratedData[i].entertainAllow) && this.salaryItrratedData[i].entertainAllow !== 0) {
-            let entertainAllowObj = {
-              deductionType: "ENTERTAINMENT_ALLOW",
-              description: null,
-              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].entertainAllow),
-              taxableAmount: 0
-            }
-            employerObj.deductions.push(entertainAllowObj)
-          }
-          if (this.utilService.isNonEmpty(this.salaryItrratedData[i].professionalTax) && this.salaryItrratedData[i].professionalTax !== 0) {
-            let professionalTaxObj = {
-              deductionType: "PROFESSIONAL_TAX",
-              description: null,
-              exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].professionalTax),
-              taxableAmount: 0
-            }
-            employerObj.deductions.push(professionalTaxObj)
-          }
-  
-          //Salary( as per sec 17(1)) 
-          if (this.utilService.isNonEmpty(this.salaryItrratedData[i].salAsPerSec171) && this.salaryItrratedData[i].salAsPerSec171 !== 0) {
-            let sal17Obj = {
-              description: null,
-              exemptAmount: 0,
-              salaryType: "SEC17_1",
-              taxableAmount: this.getNumberFormat(this.salaryItrratedData[i].salAsPerSec171)
-            }
-            employerObj.salary.push(sal17Obj)
-          }
-          //Perquist val( as per sec 17(2)) 
-          if (this.utilService.isNonEmpty(this.salaryItrratedData[i].valOfPerquisites) && this.salaryItrratedData[i].valOfPerquisites !== 0) {
-            let valOfPerqu17Obj = {
-              description: null,
-              exemptAmount: 0,
-              salaryType: "SEC17_2",
-              taxableAmount: this.getNumberFormat(this.salaryItrratedData[i].valOfPerquisites)
-            }
-            employerObj.perquisites.push(valOfPerqu17Obj)
-          }
-          //Profit in ilu( as per sec 17(3)) 
-          if (this.utilService.isNonEmpty(this.salaryItrratedData[i].profitInLieu) && this.salaryItrratedData[i].profitInLieu !== 0) {
-            let profitsInLieuObj = {
-              description: null,
-              exemptAmount: 0,
-              salaryType: "SEC17_3",
-              taxableAmount: this.getNumberFormat(this.salaryItrratedData[i].profitInLieu)
-            }
-            employerObj.profitsInLieuOfSalaryType.push(profitsInLieuObj)
-          }
-          console.log('employerArray ', this.employerArray)
-          this.employerArray.splice(i, 0, employerObj)
-          console.log('employerArray ' + i + ' position => ', this.employerArray)
-        }
-        console.log('After binding SALARY data in employerArray => ', this.employerArray)
-  
-        this.itrSummaryForm['controls'].assesse['controls'].employers.setValue(this.employerArray)
-     //}
+    let natureOfEmployer = itrData.PersonalInfo.EmployerCategory;
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employerCategory'].setValue(natureOfEmployer);
 
-     //Other Source
-     if(incomeDeduction.hasOwnProperty('OthersInc')){
-        var otherInfo = incomeDeduction.OthersInc.OthersIncDtlsOthSrc;
-        console.log('Othet info: ',otherInfo)
-        this.sourcesOfIncome = {
-          interestFromSaving: 0,
-          interestFromBank: 0,
-          interestFromIncomeTax: 0,
-          interestFromOther: 0,
-          dividend: 0,
-          toatlIncome: 0
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['regime'].setValue(itrData.FilingStatus.NewTaxRegime);
+
+    let adress = itrData.PersonalInfo.Address;
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['email'].setValue(adress.EmailAddress);
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].setValue(adress.MobileNo);
+    let mainAddress = (adress.hasOwnProperty('ResidenceNo') ? adress.ResidenceNo : '') + ' ,' + (adress.hasOwnProperty('ResidenceName') ? adress.ResidenceName : '') + ' ,' + (adress.hasOwnProperty('RoadOrStreet') ? adress.RoadOrStreet : '') + ' ,' + (adress.hasOwnProperty('LocalityOrArea') ? adress.LocalityOrArea : '');
+    ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['premisesName'].setValue(mainAddress);
+    ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['pinCode'].setValue(adress.PinCode);
+    this.getCityData(((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['pinCode'], 'profile');
+
+    var assessmentYear;
+    if (itrData.hasOwnProperty('Form_ITR1')) {
+      assessmentYear = itrData.Form_ITR1.AssessmentYear;
+    }
+    else if (itrData.hasOwnProperty('Form_ITR4')) {
+      assessmentYear = itrData.Form_ITR4.AssessmentYear;
+    }
+
+    if (assessmentYear === "2021") {
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2021-22');
+      this.itrSummaryForm.controls['financialYear'].setValue('2020-21');
+    }
+    else if (assessmentYear === "2020") {
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2020-21');
+      this.itrSummaryForm.controls['financialYear'].setValue('2019-20');
+    }
+    else if (assessmentYear === "2019") {
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2019-20');
+      this.itrSummaryForm.controls['financialYear'].setValue('2018-19');
+    }
+    else if (assessmentYear === "2018") {
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2018-19');
+      this.itrSummaryForm.controls['financialYear'].setValue('2017-18');
+    }
+
+
+    /* bank information */
+    let bankInfo = itrData.Refund.BankAccountDtls.AddtnlBankDetails;
+
+
+    if (bankInfo instanceof Array && bankInfo.length > 0) {
+      for (let i = 0; i < bankInfo.length; i++) {
+        let bankBody = {
+          accountNumber: "",
+          bankType: "",
+          countryName: null,
+          hasRefund: true,
+          ifsCode: "",
+          name: ""
         }
-        if(otherInfo instanceof Array && otherInfo.length > 0){
-          if(otherInfo.filter(item=> item.OthSrcNatureDesc === "DIV").length > 0){
-            let dividentVal = otherInfo.filter(item=> item.OthSrcNatureDesc === "DIV")[0].OthSrcOthAmount;
-            if(typeof dividentVal === 'string'){
-              dividentVal = dividentVal.replace(/\,/g,''); 
-              dividentVal=parseInt(dividentVal,10);
-            }
-            this.sourcesOfIncome.dividend = Number(dividentVal);
-          }
-          if(otherInfo.filter(item=> item.OthSrcNatureDesc === "SAV").length > 0){
-            let intOnSavingAcntVal = otherInfo.filter(item=> item.OthSrcNatureDesc === "SAV")[0].OthSrcOthAmount;
-            if(typeof intOnSavingAcntVal === 'string'){
-              intOnSavingAcntVal = intOnSavingAcntVal.replace(/\,/g,''); 
-              intOnSavingAcntVal=parseInt(intOnSavingAcntVal,10);
-            }
-            this.sourcesOfIncome.interestFromSaving = Number(intOnSavingAcntVal);
-          }
-          if(otherInfo.filter(item=> item.OthSrcNatureDesc === "IFD").length > 0){
-            let intfromDepositeVal = otherInfo.filter(item=> item.OthSrcNatureDesc === "IFD")[0].OthSrcOthAmount;
-            if(typeof intfromDepositeVal === 'string'){
-              intfromDepositeVal = intfromDepositeVal.replace(/\,/g,''); 
-              intfromDepositeVal=parseInt(intfromDepositeVal,10);
-            }
-            this.sourcesOfIncome.interestFromBank = Number(intfromDepositeVal);
-          }
-          if(otherInfo.filter(item=> item.OthSrcNatureDesc === "TAX").length > 0){
-            let intFromIncoTaxVal = otherInfo.filter(item=> item.OthSrcNatureDesc === "TAX")[0].OthSrcOthAmount;
-            if(typeof intFromIncoTaxVal === 'string'){
-              intFromIncoTaxVal = intFromIncoTaxVal.replace(/\,/g,''); 
-              intFromIncoTaxVal=parseInt(intFromIncoTaxVal,10);
-            }
-            this.sourcesOfIncome.interestFromIncomeTax = Number(intFromIncoTaxVal);
-          }
-          if(otherInfo.filter(item=> item.OthSrcNatureDesc === "OTH").length > 0){
-            // let otherVal = otherInfo.filter(item=> item.OthSrcNatureDesc === "OTH")[0].OthSrcOthAmount;
-            //this.sourcesOfIncome.interestFromOther = otherVal;
-          }
+        bankBody.accountNumber = bankInfo[i].BankAccountNo;
+        bankBody.ifsCode = bankInfo[i].IFSCCode;
+        bankBody.name = bankInfo[i].BankName;
+        bankBody.hasRefund = typeof bankInfo[i].UseForRefund === 'string' ? (bankInfo[i].UseForRefund === "true" ? true : false) : bankInfo[i].UseForRefund;
+        console.log(i + 'th bankBody: ', bankBody)
+        this.bankData.push(bankBody);
       }
-      console.log('sourcesOfIncome: ',this.sourcesOfIncome)
-      this.sourcesOfIncome.interestFromOther = incomeDeduction.IncomeOthSrc - (this.sourcesOfIncome.dividend + this.sourcesOfIncome.interestFromSaving +  this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax);
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['bankDetails'].setValue(this.bankData);
+    }
+
+    /* For itr-1 json there contain 'ITR1_IncomeDeductions' key and for itr-2 json cotain 'IncomeDeductions' key  */
+    var incomeDeduction = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.ITR1_IncomeDeductions : itrData.IncomeDeductions
+
+    /* House Property */
+    var housingInfo = incomeDeduction;
+    if (this.utilService.isNonZero(housingInfo.GrossRentReceived) || this.utilService.isNonZero(housingInfo.AnnualValue) || this.utilService.isNonZero(housingInfo.TaxPaidlocalAuth) ||
+      this.utilService.isNonZero(housingInfo.InterestPayable) || this.utilService.isNonZero(housingInfo.TotalIncomeOfHP) || this.utilService.isNonZero(housingInfo.StandardDeduction)) {
+      var housingObj = {
+        propertyType: housingInfo.hasOwnProperty('TypeOfHP') ? (housingInfo.TypeOfHP === "S" ? 'SOP' : 'LOP') : (housingInfo.TotalIncomeOfHP === 0 ? 'SOP' : 'LOP'),
+        address: '',
+        ownerOfProperty: '',
+        coOwners: [],
+        otherOwnerOfProperty: '',
+        tenantName: '',
+        tenentPanNumber: '',
+        grossAnnualRentReceived: this.getNumberFormat(housingInfo.GrossRentReceived),
+        annualValue: this.getNumberFormat(housingInfo.AnnualValue),
+        propertyTax: this.getNumberFormat(housingInfo.TaxPaidlocalAuth),
+        interestAmount: this.getNumberFormat(housingInfo.InterestPayable),
+        taxableIncome: this.getNumberFormat(housingInfo.TotalIncomeOfHP),
+        exemptIncome: this.getNumberFormat(housingInfo.StandardDeduction),
+        pinCode: '',
+        flatNo: '',
+        building: '',
+        street: '',
+        locality: '',
+        city: '',
+        country: '',
+        state: '',
+      }
+
+      this.housingData.push(housingObj);
+    }
+
+
+
+    this.houseArray = [];
+    for (let i = 0; i < this.housingData.length; i++) {
+      let houceObj = {
+        annualOfPropOwned: 0,
+        annualValue: 0,
+        annualValueXml: 0,
+        building: '',
+        city: "",
+        coOwners: [] as any[],
+        country: "",
+        exemptIncome: 0,
+        flatNo: "",
+        grossAnnualRentReceived: 0,
+        grossAnnualRentReceivedXml: 0,
+        isEligibleFor80EE: null,
+        loans: [] as any[],
+        locality: "",
+        otherOwnerOfProperty: "",
+        ownerOfProperty: "",
+        pinCode: '',
+        propertyTax: 0,
+        propertyTaxXml: 0,
+        propertyType: "",
+        state: "",
+        street: "",
+        taxableIncome: 0,
+        tenant: [] as any[]
+      }
+
+      Object.assign(houceObj, this.housingData[i]);
+      if (this.utilService.isNonEmpty(this.housingData[i].interestAmount)) {
+        let loanObj = {
+          interestAmount: this.getNumberFormat(this.housingData[i].interestAmount),
+          loanType: "HOUSING",
+          principalAmount: 0
+        };
+        houceObj.loans.push(loanObj);
+      }
+
+      if (this.utilService.isNonEmpty(this.housingData[i].tenantName) && this.utilService.isNonEmpty(this.housingData[i].tenentPanNumber)) {
+        let tenantObj = {
+          name: this.housingData[i].tenantName,
+          panNumber: this.housingData[i].tenentPanNumber
+        }
+        houceObj.tenant.push(tenantObj);
+      }
+
+      this.houseArray.push(houceObj);
+    }
+
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].setValue(this.houseArray);
+
+
+
+    /* Salary Property */
+    var salaryInfo = incomeDeduction;
+    var hra;
+    var otherAmnt = 0;
+    let salExemptIncomeInfo = salaryInfo.AllwncExemptUs10.AllwncExemptUs10Dtls;
+    if (salExemptIncomeInfo instanceof Array && salExemptIncomeInfo.length > 0) {
+      if (salExemptIncomeInfo.filter((item: any) => item.SalNatureDesc === "10(13A)").length > 0) {
+        hra = salExemptIncomeInfo.filter((item: any) => item.SalNatureDesc === "10(13A)")[0].SalOthAmount;
+        if (typeof hra === 'string') {
+          hra = hra.replace(/\,/g, '');
+          hra = parseInt(hra, 10);
+        }
+
+        otherAmnt = salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10 - hra;
+      }
+      else {
+        hra = 0;
+        otherAmnt = salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10;
+      }
+    }
+
+    if (salaryInfo.hasOwnProperty('Salary') || salaryInfo.hasOwnProperty('PerquisitesValue') || salaryInfo.hasOwnProperty('ProfitsInSalary') || this.utilService.isNonZero(salaryInfo.GrossSalary) || this.utilService.isNonZero(salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10) ||
+      this.utilService.isNonZero(salaryInfo.NetSalary) || this.utilService.isNonZero(salaryInfo.DeductionUs16ia) || this.utilService.isNonZero(salaryInfo.EntertainmentAlw16ii) || this.utilService.isNonZero(salaryInfo.ProfessionalTaxUs16iii) || this.utilService.isNonZero(salaryInfo.IncomeFromSal)) {
+      var salObj = {
+        employerName: '',
+        address: '',
+        employerTAN: '',
+        employerCategory: '',
+        salAsPerSec171: salaryInfo.hasOwnProperty('Salary') ? this.getNumberFormat(salaryInfo.Salary) : 0,
+        valOfPerquisites: salaryInfo.hasOwnProperty('PerquisitesValue') ? this.getNumberFormat(salaryInfo.PerquisitesValue) : 0,
+        profitInLieu: salaryInfo.hasOwnProperty('ProfitsInSalary') ? this.getNumberFormat(salaryInfo.ProfitsInSalary) : 0,
+        grossSalary: salaryInfo.GrossSalary,
+        houseRentAllow: hra,
+        leaveTravelExpense: 0,
+        other: otherAmnt,
+        totalExemptAllow: this.getNumberFormat(salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10),
+        netSalary: this.getNumberFormat(salaryInfo.NetSalary),
+        standardDeduction: this.getNumberFormat(salaryInfo.DeductionUs16ia),
+        entertainAllow: this.getNumberFormat(salaryInfo.EntertainmentAlw16ii),
+        professionalTax: this.getNumberFormat(salaryInfo.ProfessionalTaxUs16iii),
+        totalSalaryDeduction: Number(salaryInfo.DeductionUs16ia) + Number(salaryInfo.EntertainmentAlw16ii) + (salaryInfo.hasOwnProperty('ProfessionalTaxUs16iii') ? Number(salaryInfo.ProfessionalTaxUs16iii) : 0),
+        taxableIncome: this.getNumberFormat(salaryInfo.IncomeFromSal),
+
+        pinCode: '',
+        country: '',
+        state: '',
+        city: ''
+      }
+
+      this.salaryItrratedData.push(salObj);
+    }
+
+    this.employerArray = [];
+    for (let i = 0; i < this.salaryItrratedData.length; i++) {
+      debugger
+      console.log('employerArray : ', this.employerArray);
+
+      let employerObj = {
+        address: "",
+        allowance: [] as any[],
+        city: "",
+        country: '',
+        deductions: [] as any[],
+        employerCategory: "",
+        employerName: "",
+        employerPAN: '',
+        employerTAN: "",
+        grossSalary: 0,
+        id: '',
+        netSalary: 0,
+        periodFrom: null,
+        periodTo: null,
+        perquisites: [] as any[],
+        pinCode: "",
+        profitsInLieuOfSalaryType: [] as any[],
+        salary: [] as any[],
+        standardDeduction: 0,
+        state: "",
+        taxRelief: 0,
+        taxableIncome: 0
+      }
+
+      Object.assign(employerObj, this.salaryItrratedData[i]);
+      console.log('employerObj after salaryItrared basic binding : ', employerObj);
+
+      console.log('employerArray : ', this.employerArray);
+      //allowance
+      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].houseRentAllow) && this.salaryItrratedData[i].houseRentAllow !== 0) {
+        let houceAllowObj = {
+          allowanceType: "HOUSE_RENT",
+          description: null,
+          exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].houseRentAllow),
+          taxableAmount: 0
+        }
+        employerObj.allowance.push(houceAllowObj)
+      }
+      // if (this.utilService.isNonEmpty(this.salaryItrratedData[i].leaveTravelExpense) && this.salaryItrratedData[i].leaveTravelExpense !== 0) {
+      //   let ltaAllowObj = {
+      //     allowanceType: "LTA",
+      //     description: null,
+      //     exemptAmount: Number(this.salaryItrratedData[i].leaveTravelExpense),
+      //     taxableAmount: 0
+      //   }
+      //   employerObj.allowance.push(ltaAllowObj)
+      // }
+      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].other) && this.salaryItrratedData[i].other !== 0) {
+        let otherAllowObj = {
+          allowanceType: "ANY_OTHER",
+          description: null,
+          exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].other),
+          taxableAmount: 0
+        }
+        employerObj.allowance.push(otherAllowObj)
+      }
+      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].totalExemptAllow) && this.salaryItrratedData[i].totalExemptAllow !== 0) {
+        let totalExeAllowObj = {
+          allowanceType: "ALL_ALLOWANCES",
+          description: null,
+          exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].totalExemptAllow),
+          taxableAmount: 0
+        }
+        employerObj.allowance.push(totalExeAllowObj)
+      }
+
+      //deduction
+      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].entertainAllow) && this.salaryItrratedData[i].entertainAllow !== 0) {
+        let entertainAllowObj = {
+          deductionType: "ENTERTAINMENT_ALLOW",
+          description: null,
+          exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].entertainAllow),
+          taxableAmount: 0
+        }
+        employerObj.deductions.push(entertainAllowObj)
+      }
+      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].professionalTax) && this.salaryItrratedData[i].professionalTax !== 0) {
+        let professionalTaxObj = {
+          deductionType: "PROFESSIONAL_TAX",
+          description: null,
+          exemptAmount: this.getNumberFormat(this.salaryItrratedData[i].professionalTax),
+          taxableAmount: 0
+        }
+        employerObj.deductions.push(professionalTaxObj)
+      }
+
+      //Salary( as per sec 17(1)) 
+      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].salAsPerSec171) && this.salaryItrratedData[i].salAsPerSec171 !== 0) {
+        let sal17Obj = {
+          description: null,
+          exemptAmount: 0,
+          salaryType: "SEC17_1",
+          taxableAmount: this.getNumberFormat(this.salaryItrratedData[i].salAsPerSec171)
+        }
+        employerObj.salary.push(sal17Obj)
+      }
+      //Perquist val( as per sec 17(2)) 
+      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].valOfPerquisites) && this.salaryItrratedData[i].valOfPerquisites !== 0) {
+        let valOfPerqu17Obj = {
+          description: null,
+          exemptAmount: 0,
+          salaryType: "SEC17_2",
+          taxableAmount: this.getNumberFormat(this.salaryItrratedData[i].valOfPerquisites)
+        }
+        employerObj.perquisites.push(valOfPerqu17Obj)
+      }
+      //Profit in ilu( as per sec 17(3)) 
+      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].profitInLieu) && this.salaryItrratedData[i].profitInLieu !== 0) {
+        let profitsInLieuObj = {
+          description: null,
+          exemptAmount: 0,
+          salaryType: "SEC17_3",
+          taxableAmount: this.getNumberFormat(this.salaryItrratedData[i].profitInLieu)
+        }
+        employerObj.profitsInLieuOfSalaryType.push(profitsInLieuObj)
+      }
+      console.log('employerArray ', this.employerArray)
+      this.employerArray.splice(i, 0, employerObj)
+      console.log('employerArray ' + i + ' position => ', this.employerArray)
+    }
+
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'].setValue(this.employerArray)
+    //}
+
+    //Other Source
+    if (incomeDeduction.hasOwnProperty('OthersInc')) {
+      var otherInfo = incomeDeduction.OthersInc.OthersIncDtlsOthSrc;
+      console.log('Othet info: ', otherInfo)
+      this.sourcesOfIncome = {
+        interestFromSaving: 0,
+        interestFromBank: 0,
+        interestFromIncomeTax: 0,
+        interestFromOther: 0,
+        dividend: 0,
+        toatlIncome: 0
+      }
+      if (otherInfo instanceof Array && otherInfo.length > 0) {
+        if (otherInfo.filter((item: any) => item.OthSrcNatureDesc === "DIV").length > 0) {
+          let dividentVal = otherInfo.filter((item: any) => item.OthSrcNatureDesc === "DIV")[0].OthSrcOthAmount;
+          if (typeof dividentVal === 'string') {
+            dividentVal = dividentVal.replace(/\,/g, '');
+            dividentVal = parseInt(dividentVal, 10);
+          }
+          this.sourcesOfIncome.dividend = Number(dividentVal);
+        }
+        if (otherInfo.filter((item: any) => item.OthSrcNatureDesc === "SAV").length > 0) {
+          let intOnSavingAcntVal = otherInfo.filter((item: any) => item.OthSrcNatureDesc === "SAV")[0].OthSrcOthAmount;
+          if (typeof intOnSavingAcntVal === 'string') {
+            intOnSavingAcntVal = intOnSavingAcntVal.replace(/\,/g, '');
+            intOnSavingAcntVal = parseInt(intOnSavingAcntVal, 10);
+          }
+          this.sourcesOfIncome.interestFromSaving = Number(intOnSavingAcntVal);
+        }
+        if (otherInfo.filter((item: any) => item.OthSrcNatureDesc === "IFD").length > 0) {
+          let intfromDepositeVal = otherInfo.filter((item: any) => item.OthSrcNatureDesc === "IFD")[0].OthSrcOthAmount;
+          if (typeof intfromDepositeVal === 'string') {
+            intfromDepositeVal = intfromDepositeVal.replace(/\,/g, '');
+            intfromDepositeVal = parseInt(intfromDepositeVal, 10);
+          }
+          this.sourcesOfIncome.interestFromBank = Number(intfromDepositeVal);
+        }
+        if (otherInfo.filter((item: any) => item.OthSrcNatureDesc === "TAX").length > 0) {
+          let intFromIncoTaxVal = otherInfo.filter((item: any) => item.OthSrcNatureDesc === "TAX")[0].OthSrcOthAmount;
+          if (typeof intFromIncoTaxVal === 'string') {
+            intFromIncoTaxVal = intFromIncoTaxVal.replace(/\,/g, '');
+            intFromIncoTaxVal = parseInt(intFromIncoTaxVal, 10);
+          }
+          this.sourcesOfIncome.interestFromIncomeTax = Number(intFromIncoTaxVal);
+        }
+        if (otherInfo.filter((item: any) => item.OthSrcNatureDesc === "OTH").length > 0) {
+          // let otherVal = otherInfo.filter(item=> item.OthSrcNatureDesc === "OTH")[0].OthSrcOthAmount;
+          //this.sourcesOfIncome.interestFromOther = otherVal;
+        }
+      }
+      console.log('sourcesOfIncome: ', this.sourcesOfIncome)
+      this.sourcesOfIncome.interestFromOther = incomeDeduction.IncomeOthSrc - (this.sourcesOfIncome.dividend + this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax);
 
       this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax +
-                                          this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.dividend;
-     }
+        this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.dividend;
+    }
 
-     //Exempt Income
-     this.exemptIncomeData = [];
-     var exemptIncomeInfo;
-     debugger
-     console.log('incomeDeduction: ',incomeDeduction)
-     if(itrData.hasOwnProperty('ITR1_IncomeDeductions')){
+    //Exempt Income
+    this.exemptIncomeData = [];
+    var exemptIncomeInfo;
+    debugger
+    console.log('incomeDeduction: ', incomeDeduction)
+    if (itrData.hasOwnProperty('ITR1_IncomeDeductions')) {
       exemptIncomeInfo = incomeDeduction.ExemptIncAgriOthUs10;
-     }
-     else if(itrData.hasOwnProperty('IncomeDeductions')){
+    }
+    else if (itrData.hasOwnProperty('IncomeDeductions')) {
       exemptIncomeInfo = itrData.TaxExmpIntIncDtls;
-     }
-     console.log('exemptIncomeInfo Info: ',exemptIncomeInfo);
-     var exemptIncData = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? exemptIncomeInfo.ExemptIncAgriOthUs10Dtls : exemptIncomeInfo.OthersInc.OthersIncDtls;
-     if(exemptIncData instanceof Array && exemptIncData.length > 0){
-       for(let i=0; i<exemptIncData.length; i++){
-         if(exemptIncData[i].NatureDesc === 'AGRI'){
-           let obj={
-             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc) ,
-             value: exemptIncData[i].OthAmount
-           }
-           this.exemptIncomeData.push(obj);
-         }
-         if(exemptIncData[i].NatureDesc === '10(10D)'){
-          let obj={
+    }
+    console.log('exemptIncomeInfo Info: ', exemptIncomeInfo);
+    var exemptIncData = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? exemptIncomeInfo.ExemptIncAgriOthUs10Dtls : exemptIncomeInfo.OthersInc.OthersIncDtls;
+    if (exemptIncData instanceof Array && exemptIncData.length > 0) {
+      for (let i = 0; i < exemptIncData.length; i++) {
+        if (exemptIncData[i].NatureDesc === 'AGRI') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === '10(11)'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === '10(10D)') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === '10(12)'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === '10(11)') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === '10(13)'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === '10(12)') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === '10(16)'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === '10(13)') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === 'DMDP'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === '10(16)') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === '10(17)'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === 'DMDP') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === '10(17A)'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === '10(17)') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === '10(18)'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === '10(17A)') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === '10(10BC)'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === '10(18)') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === '10(19)'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === '10(10BC)') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === '10(26)'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === '10(19)') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === '10(26AAA)'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === '10(26)') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-        if(exemptIncData[i].NatureDesc === 'OTH'){
-          let obj={
+        if (exemptIncData[i].NatureDesc === '10(26AAA)') {
+          let obj = {
             name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
             value: exemptIncData[i].OthAmount
           }
           this.exemptIncomeData.push(obj);
         }
-       }
-     }
-     let totalExemptIncome = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? exemptIncomeInfo.ExemptIncAgriOthUs10Total : exemptIncomeInfo.OthersInc.OthersTotalTaxExe;;
-      this.itrSummaryForm.controls.totalExemptIncome.setValue(totalExemptIncome)
-   
+        if (exemptIncData[i].NatureDesc === 'OTH') {
+          let obj = {
+            name: this.getNatureExceptionLabel(exemptIncData[i].NatureDesc),
+            value: exemptIncData[i].OthAmount
+          }
+          this.exemptIncomeData.push(obj);
+        }
+      }
+    }
+    let totalExemptIncome = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? exemptIncomeInfo.ExemptIncAgriOthUs10Total : exemptIncomeInfo.OthersInc.OthersTotalTaxExe;;
+    this.itrSummaryForm.controls['totalExemptIncome'].setValue(totalExemptIncome)
+
 
     //Deduction under cha-VI A (sec 80D)
     var sec80DInfo = itrData.Schedule80D;
-      console.log('sec80D Info: ',sec80DInfo);
-      this.sec80DobjVal = {
-        healthInsuarancePremiumSelf: 0,
-        healthInsuarancePremiumParents: 0,
-        preventiveHealthCheckupFamily: 0,
-        parentAge: '',
-        medicalExpendature: 0
-      }
+    console.log('sec80D Info: ', sec80DInfo);
+    this.sec80DobjVal = {
+      healthInsuarancePremiumSelf: 0,
+      healthInsuarancePremiumParents: 0,
+      preventiveHealthCheckupFamily: 0,
+      parentAge: '',
+      medicalExpendature: 0
+    }
 
-      this.sec80DobjVal.healthInsuarancePremiumSelf = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.HealthInsPremSlfFam) ;
-      this.sec80DobjVal.healthInsuarancePremiumParents = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizen) - (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('MedicalExpParentsSrCtzn') ? this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn) : 0);
-      var prehealthCheckVal = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFam') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFamSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFamSrCtzn : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParents') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParentsSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn : 0))));
-      console.log('prehealthCheckVal: ',prehealthCheckVal)
-      if(prehealthCheckVal > 5000){
-        this.sec80DobjVal.preventiveHealthCheckupFamily = 5000;
-      }
-      else {
-        this.sec80DobjVal.preventiveHealthCheckupFamily = prehealthCheckVal;
-      }
-       
-      this.sec80DobjVal.parentAge = sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag === "Y" ? 'above60': 'bellow60';
-      if(this.sec80DobjVal.parentAge === 'above60'){
-        this.sec80DobjVal.medicalExpendature = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn);
-      }
-      
-      
+    this.sec80DobjVal.healthInsuarancePremiumSelf = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.HealthInsPremSlfFam);
+    this.sec80DobjVal.healthInsuarancePremiumParents = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizen) - (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('MedicalExpParentsSrCtzn') ? this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn) : 0);
+    var prehealthCheckVal = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFam') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFamSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFamSrCtzn : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParents') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParentsSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn : 0))));
+    console.log('prehealthCheckVal: ', prehealthCheckVal)
+    if (prehealthCheckVal > 5000) {
+      this.sec80DobjVal.preventiveHealthCheckupFamily = 5000;
+    }
+    else {
+      this.sec80DobjVal.preventiveHealthCheckupFamily = prehealthCheckVal;
+    }
 
-   //Section 80G
-   var sec80Ginfo = itrData.Schedule80G;
-   console.log('sec80Ginfo Info: ',sec80Ginfo); 
-   this.donationData = [];
+    this.sec80DobjVal.parentAge = sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizenFlag === "Y" ? 'above60' : 'bellow60';
+    if (this.sec80DobjVal.parentAge === 'above60') {
+      this.sec80DobjVal.medicalExpendature = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn);
+    }
 
-   if(sec80Ginfo.hasOwnProperty('Don100Percent')){
-    if(sec80Ginfo.Don100Percent.hasOwnProperty('DoneeWithPan')){
-      if(sec80Ginfo.Don100Percent.DoneeWithPan instanceof Array && sec80Ginfo.Don100Percent.DoneeWithPan.length > 0){
-        for(let i=0; i< sec80Ginfo.Don100Percent.DoneeWithPan.length; i++){
-          let body={
-            name: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneeWithPanName,
+
+
+    //Section 80G
+    var sec80Ginfo = itrData.Schedule80G;
+    console.log('sec80Ginfo Info: ', sec80Ginfo);
+    this.donationData = [];
+
+    if (sec80Ginfo.hasOwnProperty('Don100Percent')) {
+      if (sec80Ginfo.Don100Percent.hasOwnProperty('DoneeWithPan')) {
+        if (sec80Ginfo.Don100Percent.DoneeWithPan instanceof Array && sec80Ginfo.Don100Percent.DoneeWithPan.length > 0) {
+          for (let i = 0; i < sec80Ginfo.Don100Percent.DoneeWithPan.length; i++) {
+            let body = {
+              name: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneeWithPanName,
+              address: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.AddrDetail,
+              city: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+              pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.PinCode,
+              state: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.StateCode,
+              panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneePAN,
+              donationType: 'OTHER',
+              schemeCode: 'GOVT_APPRVD_FAMLY_PLNG',
+              amountInCash: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].DonationAmtCash),
+              amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].DonationAmtOtherMode),
+              eligibleAmount: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].EligibleDonationAmt),
+              details: '',
+              category: 'AGTI'
+            }
+            this.donationData.push(body)
+          }
+        }
+      }
+    }
+
+    if (sec80Ginfo.hasOwnProperty('Don50PercentNoApprReqd')) {
+      if (sec80Ginfo.Don50PercentNoApprReqd.hasOwnProperty('DoneeWithPan')) {
+        if (sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan.length > 0) {
+          for (let i = 0; i < sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan.length; i++) {
+            let body = {
+              name: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DoneeWithPanName,
+              address: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
+              city: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+              pinCode: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
+              state: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
+              panNumber: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DoneePAN,
+              donationType: 'OTHER',
+              schemeCode: 'FND_SEC80G',
+              amountInCash: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DonationAmtCash),
+              amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
+              eligibleAmount: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].EligibleDonationAmt),
+              details: '',
+              category: 'AGTI'
+            }
+            this.donationData.push(body)
+          }
+        }
+      }
+    }
+
+    if (sec80Ginfo.hasOwnProperty('Don100PercentApprReqd')) {
+      if (sec80Ginfo.Don100PercentApprReqd.hasOwnProperty('DoneeWithPan')) {
+        if (sec80Ginfo.Don100PercentApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don100PercentApprReqd.DoneeWithPan.length > 0) {
+          for (let i = 0; i < sec80Ginfo.Don100PercentApprReqd.DoneeWithPan.length; i++) {
+            let body = {
+              name: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DoneeWithPanName,
+              address: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
+              city: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+              pinCode: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
+              state: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
+              panNumber: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DoneePAN,
+              donationType: 'OTHER',
+              schemeCode: 'NAT_DEF_FUND_CEN_GOVT',
+              amountInCash: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DonationAmtCash),
+              amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
+              eligibleAmount: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].EligibleDonationAmt),
+              details: '',
+              category: 'REGULAR'
+            }
+            this.donationData.push(body)
+          }
+        }
+
+      }
+    }
+
+    if (sec80Ginfo.hasOwnProperty('Don50PercentApprReqd')) {
+      if (sec80Ginfo.Don50PercentApprReqd.hasOwnProperty('DoneeWithPan')) {
+        if (sec80Ginfo.Don50PercentApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don50PercentApprReqd.DoneeWithPan.length > 0) {
+          for (let i = 0; i < sec80Ginfo.Don50PercentApprReqd.DoneeWithPan.length; i++) {
+            let body = {
+              name: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DoneeWithPanName,
+              address: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
+              city: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
+              pinCode: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
+              state: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
+              panNumber: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DoneePAN,
+              donationType: 'OTHER',
+              schemeCode: 'JN_MEM_FND',
+              amountInCash: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DonationAmtCash),
+              amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
+              eligibleAmount: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].EligibleDonationAmt),
+              details: '',
+              category: 'REGULAR'
+            }
+            this.donationData.push(body)
+          }
+        }
+
+      }
+    }
+
+    if (itrData.hasOwnProperty('Schedule80GGA')) {
+      if (itrData.Schedule80GGA.hasOwnProperty('DonationDtlsSciRsrchRuralDev')) {
+        let scientificInfo = itrData.Schedule80GGA.DonationDtlsSciRsrchRuralDev;
+        if (scientificInfo instanceof Array && scientificInfo.length > 0) {
+          for (let i = 0; i < scientificInfo.length; i++) {
+            let body = {
+              name: scientificInfo[i].NameOfDonee,
+              address: scientificInfo[i].AddressDetail.AddrDetail,
+              city: scientificInfo[i].AddressDetail.CityOrTownOrDistrict,
+              pinCode: scientificInfo[i].AddressDetail.PinCode,
+              state: scientificInfo[i].AddressDetail.StateCode,
+              panNumber: scientificInfo[i].DoneePAN,
+              donationType: 'SCIENTIFIC',
+              schemeCode: '',
+              amountInCash: this.getNumberFormat(scientificInfo[i].DonationAmtCash),
+              amountOtherThanCash: this.getNumberFormat(scientificInfo[i].DonationAmtOtherMode),
+              eligibleAmount: this.getNumberFormat(scientificInfo[i].EligibleDonationAmt),
+              details: '',
+              category: ''
+            }
+            this.donationData.push(body)
+          }
+        }
+
+      }
+    }
+
+    if (itrData.hasOwnProperty('Schedule80GGC')) {
+      let politicalInfo = itrData.Schedule80GGC;
+      if (politicalInfo.DonationDtlsSciRsrchRuralDev instanceof Array && politicalInfo.DonationDtlsSciRsrchRuralDev.length > 0) {
+        for (let i = 0; i < politicalInfo.DonationDtlsSciRsrchRuralDev.length; i++) {
+          let body = {
+            name: politicalInfo.DonationDtlsSciRsrchRuralDev[i].NameOfDonee,
             address: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.AddrDetail,
             city: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
             pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.PinCode,
             state: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.StateCode,
             panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneePAN,
-            donationType: 'OTHER',
-            schemeCode: 'GOVT_APPRVD_FAMLY_PLNG',
-            amountInCash: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].DonationAmtCash),
-            amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].DonationAmtOtherMode),
-            eligibleAmount: this.getNumberFormat(sec80Ginfo.Don100Percent.DoneeWithPan[i].EligibleDonationAmt),
-           details: '',
-           category: 'AGTI'
-          }
-          this.donationData.push(body)
-        }
-      }
-     }
-   }
-   
-   if(sec80Ginfo.hasOwnProperty('Don50PercentNoApprReqd')){
-    if(sec80Ginfo.Don50PercentNoApprReqd.hasOwnProperty('DoneeWithPan')){
-      if(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan.length > 0){
-        for(let i=0; i< sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan.length; i++){
-          let body={
-            name: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DoneeWithPanName,
-            address: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
-            city: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-            pinCode: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
-            state: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
-            panNumber: sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DoneePAN,
-            donationType: 'OTHER',
-            schemeCode: 'FND_SEC80G',
-            amountInCash: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DonationAmtCash),
-            amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
-            eligibleAmount: this.getNumberFormat(sec80Ginfo.Don50PercentNoApprReqd.DoneeWithPan[i].EligibleDonationAmt),
-            details: '',
-           category: 'AGTI'
-          }
-          this.donationData.push(body)
-        }
-      }
-     }
-   }
-   
-   if(sec80Ginfo.hasOwnProperty('Don100PercentApprReqd')){
-    if(sec80Ginfo.Don100PercentApprReqd.hasOwnProperty('DoneeWithPan')){
-      if(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don100PercentApprReqd.DoneeWithPan.length > 0){
-        for(let i=0; i< sec80Ginfo.Don100PercentApprReqd.DoneeWithPan.length; i++){
-          let body={
-            name: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DoneeWithPanName,
-            address: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
-            city: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-            pinCode: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
-            state: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
-            panNumber: sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DoneePAN,
-            donationType: 'OTHER',
-            schemeCode: 'NAT_DEF_FUND_CEN_GOVT',
-            amountInCash: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DonationAmtCash),
-            amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
-            eligibleAmount: this.getNumberFormat(sec80Ginfo.Don100PercentApprReqd.DoneeWithPan[i].EligibleDonationAmt),
-            details: '',
-           category: 'REGULAR'
-          }
-          this.donationData.push(body)
-        }
-      }
-      
-     }
-   }
-   
-   if(sec80Ginfo.hasOwnProperty('Don50PercentApprReqd')){
-    if(sec80Ginfo.Don50PercentApprReqd.hasOwnProperty('DoneeWithPan')){
-      if(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan instanceof Array && sec80Ginfo.Don50PercentApprReqd.DoneeWithPan.length > 0){
-        for(let i=0; i< sec80Ginfo.Don50PercentApprReqd.DoneeWithPan.length; i++){
-          let body={
-            name: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DoneeWithPanName,
-            address: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.AddrDetail,
-            city: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-            pinCode: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.PinCode,
-            state: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].AddressDetail.StateCode,
-            panNumber: sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DoneePAN,
-            donationType: 'OTHER',
-            schemeCode: 'JN_MEM_FND',
-            amountInCash: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DonationAmtCash),
-            amountOtherThanCash: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].DonationAmtOtherMode),
-            eligibleAmount: this.getNumberFormat(sec80Ginfo.Don50PercentApprReqd.DoneeWithPan[i].EligibleDonationAmt),
-            details: '',
-           category: 'REGULAR'
-          }
-          this.donationData.push(body)
-        }
-      }
-     
-     }
-   }
-
-   if(itrData.hasOwnProperty('Schedule80GGA')){
-    if(itrData.Schedule80GGA.hasOwnProperty('DonationDtlsSciRsrchRuralDev')){
-      let scientificInfo = itrData.Schedule80GGA.DonationDtlsSciRsrchRuralDev;
-      if(scientificInfo instanceof Array && scientificInfo.length > 0){
-        for(let i=0; i< scientificInfo.length; i++){
-          let body={
-            name: scientificInfo[i].NameOfDonee,
-            address:scientificInfo[i].AddressDetail.AddrDetail,
-            city:scientificInfo[i].AddressDetail.CityOrTownOrDistrict,
-            pinCode:scientificInfo[i].AddressDetail.PinCode,
-            state:scientificInfo[i].AddressDetail.StateCode,
-            panNumber:scientificInfo[i].DoneePAN,
-            donationType: 'SCIENTIFIC',
+            donationType: 'POLITICAL',
             schemeCode: '',
-            amountInCash: this.getNumberFormat(scientificInfo[i].DonationAmtCash),
-            amountOtherThanCash: this.getNumberFormat(scientificInfo[i].DonationAmtOtherMode),
-            eligibleAmount: this.getNumberFormat(scientificInfo[i].EligibleDonationAmt),
+            amountInCash: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].DonationAmtCash),
+            amountOtherThanCash: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].DonationAmtOtherMode),
+            eligibleAmount: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].EligibleDonationAmt),
             details: '',
-           category: ''
+            category: ''
           }
           this.donationData.push(body)
         }
       }
-     
+
     }
-   }
-   
-   if(itrData.hasOwnProperty('Schedule80GGC')){
-    let politicalInfo = itrData.Schedule80GGC;
-    if(politicalInfo.DonationDtlsSciRsrchRuralDev instanceof Array && politicalInfo.DonationDtlsSciRsrchRuralDev.length > 0){
-      for(let i=0; i< politicalInfo.DonationDtlsSciRsrchRuralDev.length; i++){
-        let body={
-          name: politicalInfo.DonationDtlsSciRsrchRuralDev[i].NameOfDonee,
-          address: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.AddrDetail,
-          city: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.CityOrTownOrDistrict,
-          pinCode: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.PinCode,
-          state: sec80Ginfo.Don100Percent.DoneeWithPan[i].AddressDetail.StateCode,
-          panNumber: sec80Ginfo.Don100Percent.DoneeWithPan[i].DoneePAN,
-           donationType: 'POLITICAL',
-           schemeCode: '',
-           amountInCash: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].DonationAmtCash),
-           amountOtherThanCash: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].DonationAmtOtherMode),
-           eligibleAmount: this.getNumberFormat(politicalInfo.DonationDtlsSciRsrchRuralDev[i].EligibleDonationAmt),
-           details: '',
-           category: ''
-         }
-         this.donationData.push(body)
-      }
-    }
-   
-  }
 
-  this.itrSummaryForm['controls'].assesse['controls'].donations.setValue(this.donationData);
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].setValue(this.donationData);
 
 
-   //Values 
+    //Values 
     var deductionValues = incomeDeduction.DeductUndChapVIA;
-    console.log('deductionValues Info: ',deductionValues);    
-    
-    this.itrSummaryForm.controls.us80c.setValue(deductionValues.Section80C);
-    this.itrSummaryForm.controls.us80ccc.setValue(deductionValues.Section80CCC);
-    this.itrSummaryForm.controls.us80ccc1.setValue(deductionValues.Section80CCDEmployeeOrSE);
-    this.itrSummaryForm.controls.us80ccd2.setValue(deductionValues.Section80CCDEmployer);
-    this.itrSummaryForm.controls.us80ccd1b.setValue(deductionValues.Section80CCD1B);
-    this.itrSummaryForm.controls.us80dd.setValue(deductionValues.Section80DD);
-    this.itrSummaryForm.controls.us80ddb.setValue(deductionValues.Section80DDB);
-    this.itrSummaryForm.controls.us80e.setValue(deductionValues.Section80E);
-    this.itrSummaryForm.controls.us80ee.setValue(deductionValues.Section80EE);
-    this.itrSummaryForm.controls.us80gg.setValue(deductionValues.Section80GG);
-    this.itrSummaryForm.controls.us80gga.setValue(deductionValues.Section80GGA);
-    this.itrSummaryForm.controls.us80ggc.setValue(deductionValues.Section80GGC);
-    this.itrSummaryForm.controls.us80ttaTtb.setValue(deductionValues.Section80TTA + deductionValues.Section80TTB);
-    this.itrSummaryForm.controls.us80u.setValue(deductionValues.Section80U);
-    this.itrSummaryForm.controls.us80g.setValue(deductionValues.Section80G);
-    this.itrSummaryForm.controls.us80d.setValue(deductionValues.Section80D);
-    this.itrSummaryForm.controls.us80eeb.setValue(deductionValues.Section80EEB);
+    console.log('deductionValues Info: ', deductionValues);
 
-    this.itrSummaryForm.controls.other.setValue(deductionValues.Section80EEA);    //here bind value which not contain in above list
+    this.itrSummaryForm.controls['us80c'].setValue(deductionValues.Section80C);
+    this.itrSummaryForm.controls['us80ccc'].setValue(deductionValues.Section80CCC);
+    this.itrSummaryForm.controls['us80ccc1'].setValue(deductionValues.Section80CCDEmployeeOrSE);
+    this.itrSummaryForm.controls['us80ccd2'].setValue(deductionValues.Section80CCDEmployer);
+    this.itrSummaryForm.controls['us80ccd1b'].setValue(deductionValues.Section80CCD1B);
+    this.itrSummaryForm.controls['us80dd'].setValue(deductionValues.Section80DD);
+    this.itrSummaryForm.controls['us80ddb'].setValue(deductionValues.Section80DDB);
+    this.itrSummaryForm.controls['us80e'].setValue(deductionValues.Section80E);
+    this.itrSummaryForm.controls['us80ee'].setValue(deductionValues.Section80EE);
+    this.itrSummaryForm.controls['us80gg'].setValue(deductionValues.Section80GG);
+    this.itrSummaryForm.controls['us80gga'].setValue(deductionValues.Section80GGA);
+    this.itrSummaryForm.controls['us80ggc'].setValue(deductionValues.Section80GGC);
+    this.itrSummaryForm.controls['us80ttaTtb'].setValue(deductionValues.Section80TTA + deductionValues.Section80TTB);
+    this.itrSummaryForm.controls['us80u'].setValue(deductionValues.Section80U);
+    this.itrSummaryForm.controls['us80g'].setValue(deductionValues.Section80G);
+    this.itrSummaryForm.controls['us80d'].setValue(deductionValues.Section80D);
+    this.itrSummaryForm.controls['us80eeb'].setValue(deductionValues.Section80EEB);
+
+    this.itrSummaryForm.controls['other'].setValue(deductionValues.Section80EEA);    //here bind value which not contain in above list
 
     this.taxesPaid = {
       tdsOnSalary: 0,
@@ -996,56 +989,56 @@ export class TaxSummaryComponent implements OnInit {
       "tcs": [],
       "otherThanTDSTCS": [],
     }
-  
+
     //TDS on Salary
     var tdsOnSalInfo = itrData.TDSonSalaries.TDSonSalary;
-    console.log('tdsOnSalInfo Info: ',tdsOnSalInfo); 
+    console.log('tdsOnSalInfo Info: ', tdsOnSalInfo);
     this.tdsOnSal = [];
-    if(this.newTaxRegime){
+    if (this.newTaxRegime) {
       this.newRegimeTaxesPaid.tdsOnSalary = itrData.TDSonSalaries.TotalTDSonSalaries;
     }
-    else{
+    else {
       this.taxesPaid.tdsOnSalary = itrData.TDSonSalaries.TotalTDSonSalaries;
     }
-    
 
-    if(tdsOnSalInfo instanceof Array && tdsOnSalInfo.length > 0){
-        for(let i=0; i<tdsOnSalInfo.length; i++){
-          let tdsObj = {
-            deductorTAN: '',
-            deductorName: '',
-            totalAmountCredited: 0,
-            totalTdsDeposited: 0
-          }
-          tdsObj.deductorTAN = tdsOnSalInfo[i].EmployerOrDeductorOrCollectDetl.TAN;
-          tdsObj.deductorName = tdsOnSalInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName;
-          tdsObj.totalAmountCredited = this.getNumberFormat(tdsOnSalInfo[i].IncChrgSal);
-          tdsObj.totalTdsDeposited = this.getNumberFormat(tdsOnSalInfo[i].TotalTDSSal);
-          this.tdsOnSal.push(tdsObj);
-          this.taxPaiObj.onSalary.push(tdsObj);
 
+    if (tdsOnSalInfo instanceof Array && tdsOnSalInfo.length > 0) {
+      for (let i = 0; i < tdsOnSalInfo.length; i++) {
+        let tdsObj = {
+          deductorTAN: '',
+          deductorName: '',
+          totalAmountCredited: 0,
+          totalTdsDeposited: 0
         }
+        tdsObj.deductorTAN = tdsOnSalInfo[i].EmployerOrDeductorOrCollectDetl.TAN;
+        tdsObj.deductorName = tdsOnSalInfo[i].EmployerOrDeductorOrCollectDetl.EmployerOrDeductorOrCollecterName;
+        tdsObj.totalAmountCredited = this.getNumberFormat(tdsOnSalInfo[i].IncChrgSal);
+        tdsObj.totalTdsDeposited = this.getNumberFormat(tdsOnSalInfo[i].TotalTDSSal);
+        this.tdsOnSal.push(tdsObj);
+        this.taxPaiObj.onSalary.push(tdsObj);
+
+      }
     }
-  
+
     //TDS Other Than salary
-    var tdsOtherThanSalInfo ;
-    if(itrData.TDSonOthThanSals.hasOwnProperty('TDSonOthThanSal')){
+    var tdsOtherThanSalInfo;
+    if (itrData.TDSonOthThanSals.hasOwnProperty('TDSonOthThanSal')) {
       tdsOtherThanSalInfo = itrData.TDSonOthThanSals.TDSonOthThanSal;
     }
-    else if(itrData.TDSonOthThanSals.hasOwnProperty('TDSonOthThanSalDtls')){
+    else if (itrData.TDSonOthThanSals.hasOwnProperty('TDSonOthThanSalDtls')) {
       tdsOtherThanSalInfo = itrData.TDSonOthThanSals.TDSonOthThanSalDtls;
     }
-  
-    console.log('tdsOtherThanSalInfo Info: ',tdsOtherThanSalInfo); 
+
+    console.log('tdsOtherThanSalInfo Info: ', tdsOtherThanSalInfo);
     this.tdsOtherThanSal = [];
-    if(this.newTaxRegime){
+    if (this.newTaxRegime) {
       this.newRegimeTaxesPaid.tdsOtherThanSalary = itrData.TDSonOthThanSals.TotalTDSonOthThanSals;
     }
-    else{
+    else {
       this.taxesPaid.tdsOtherThanSalary = itrData.TDSonOthThanSals.TotalTDSonOthThanSals;
     }
-    if(tdsOtherThanSalInfo instanceof Array && tdsOtherThanSalInfo.length > 0){
-      for(let i=0; i<tdsOtherThanSalInfo.length; i++){
+    if (tdsOtherThanSalInfo instanceof Array && tdsOtherThanSalInfo.length > 0) {
+      for (let i = 0; i < tdsOtherThanSalInfo.length; i++) {
         let tdsOtherThanSalObj = {
           deductorTAN: '',
           deductorName: '',
@@ -1064,23 +1057,23 @@ export class TaxSummaryComponent implements OnInit {
 
     //TDS3Details   (info bind in tdsOtherThanSalary)
     var tds3OtherThanSalInfo;
-     if(itrData.ScheduleTDS3Dtls.hasOwnProperty('TDS3Details')){
+    if (itrData.ScheduleTDS3Dtls.hasOwnProperty('TDS3Details')) {
       tds3OtherThanSalInfo = itrData.ScheduleTDS3Dtls.TDS3Details;
     }
-    else if(itrData.ScheduleTDS3Dtls.hasOwnProperty('TDS3Details')){
+    else if (itrData.ScheduleTDS3Dtls.hasOwnProperty('TDS3Details')) {
       tds3OtherThanSalInfo = itrData.ScheduleTDS3Dtls.TDS3Details;
     }
-  
-    console.log('tds3OtherThanSalInfo Info: ',tds3OtherThanSalInfo); 
-    console.log('****',Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) , Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details))
-    if(this.newTaxRegime){
+
+    console.log('tds3OtherThanSalInfo Info: ', tds3OtherThanSalInfo);
+    console.log('****', Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals), Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details))
+    if (this.newTaxRegime) {
       this.newRegimeTaxesPaid.tdsOtherThanSalary = Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details);
     }
-    else{
+    else {
       this.taxesPaid.tdsOtherThanSalary = Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details);
     }
-    if(tds3OtherThanSalInfo instanceof Array && tds3OtherThanSalInfo.length > 0){
-      for(let i=0; i<tds3OtherThanSalInfo.length; i++){
+    if (tds3OtherThanSalInfo instanceof Array && tds3OtherThanSalInfo.length > 0) {
+      for (let i = 0; i < tds3OtherThanSalInfo.length; i++) {
         let tdsOtherThanSalObj = {
           deductorTAN: '',
           deductorName: '',
@@ -1101,17 +1094,17 @@ export class TaxSummaryComponent implements OnInit {
 
     //Tax Collected at Sources
     var tcsInfo = itrData.ScheduleTCS.TCS;
-    console.log('tcsInfo Info: ',tcsInfo); 
+    console.log('tcsInfo Info: ', tcsInfo);
     this.taxCollAtSource = [];
-    if(this.newTaxRegime){
+    if (this.newTaxRegime) {
       this.newRegimeTaxesPaid.tcs = itrData.ScheduleTCS.TotalSchTCS;
     }
-    else{
+    else {
       this.taxesPaid.tcs = itrData.ScheduleTCS.TotalSchTCS;
     }
-  
-    if(tcsInfo instanceof Array && tcsInfo.length > 0){
-      for(let i=0; i<tcsInfo.length; i++){
+
+    if (tcsInfo instanceof Array && tcsInfo.length > 0) {
+      for (let i = 0; i < tcsInfo.length; i++) {
         let tcsObj = {
           collectorTAN: '',
           collectorName: '',
@@ -1130,19 +1123,19 @@ export class TaxSummaryComponent implements OnInit {
     //Advance Tax
     debugger
     var advanceTaxInfo = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.TaxPayments.TaxPayment : itrData.ScheduleIT.TaxPayment;
-    console.log('advanceTaxInfo Info: ',advanceTaxInfo); 
-    console.log('newTaxRegime: ',this.newTaxRegime); 
-    console.log('itrData: ',itrData); 
+    console.log('advanceTaxInfo Info: ', advanceTaxInfo);
+    console.log('newTaxRegime: ', this.newTaxRegime);
+    console.log('itrData: ', itrData);
     this.advanceSelfTax = [];
-    if(this.newTaxRegime){
+    if (this.newTaxRegime) {
       this.newRegimeTaxesPaid.advanceSelfAssTax = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.TaxPayments.TotalTaxPayments : itrData.ScheduleIT.TotalTaxPayments;
     }
-    else{
+    else {
       this.taxesPaid.advanceSelfAssTax = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.TaxPayments.TotalTaxPayments : itrData.ScheduleIT.TotalTaxPayments;
     }
-    
-    if(advanceTaxInfo instanceof Array && advanceTaxInfo.length > 0){
-      for(let i=0; i<advanceTaxInfo.length; i++){
+
+    if (advanceTaxInfo instanceof Array && advanceTaxInfo.length > 0) {
+      for (let i = 0; i < advanceTaxInfo.length; i++) {
         let advanceTaxObj = {
           bsrCode: '',
           dateOfDeposit: null,
@@ -1158,28 +1151,28 @@ export class TaxSummaryComponent implements OnInit {
       }
     }
 
-    this.itrSummaryForm['controls'].assesse['controls'].taxPaid.setValue(this.taxPaiObj);
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid'].setValue(this.taxPaiObj);
 
     var totalTaxPaidVal;
-    if(this.newTaxRegime){
+    if (this.newTaxRegime) {
       this.newRegimeTaxSummary.totalTaxesPaid = Number(this.newRegimeTaxesPaid.tdsOnSalary) + Number(this.newRegimeTaxesPaid.tdsOtherThanSalary) + Number(this.newRegimeTaxesPaid.tdsOnSal26QB) +
-                                        Number(this.newRegimeTaxesPaid.tcs) + Number(this.newRegimeTaxesPaid.advanceSelfAssTax);
-                                        
-      this.itrSummaryForm.controls.taxSummary['controls'].totalTaxesPaid.setValue(this.newRegimeTaxSummary.totalTaxesPaid);
+        Number(this.newRegimeTaxesPaid.tcs) + Number(this.newRegimeTaxesPaid.advanceSelfAssTax);
+
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxesPaid'].setValue(this.newRegimeTaxSummary.totalTaxesPaid);
     }
-    else{
+    else {
       totalTaxPaidVal = Number(this.taxesPaid.tdsOnSalary) + Number(this.taxesPaid.tdsOtherThanSalary) + Number(this.taxesPaid.tdsOnSal26QB) +
-                        Number(this.taxesPaid.tcs) + Number(this.taxesPaid.advanceSelfAssTax);
-      this.itrSummaryForm.controls.taxSummary['controls'].totalTaxesPaid.setValue(totalTaxPaidVal);
+        Number(this.taxesPaid.tcs) + Number(this.taxesPaid.advanceSelfAssTax);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxesPaid'].setValue(totalTaxPaidVal);
     }
-    
-   
-    console.log('this.newRegimeTaxesPaid Info: ',this.newRegimeTaxesPaid); 
+
+
+    console.log('this.newRegimeTaxesPaid Info: ', this.newRegimeTaxesPaid);
 
     //Computation of Income
-    
+
     let computation1Info = incomeDeduction;
-    if(this.newTaxRegime){
+    if (this.newTaxRegime) {
       this.newRegimeTaxSummary.salary = computation1Info.GrossSalary;
       this.newRegimeTaxSummary.housePropertyIncome = computation1Info.TotalIncomeOfHP;
 
@@ -1190,8 +1183,8 @@ export class TaxSummaryComponent implements OnInit {
       this.newRegimeTaxSummary.totalDeduction = incomeDeduction.DeductUndChapVIA.TotalChapVIADeductions;
 
       this.newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR = this.getNumberFormat(this.newRegimeTaxSummary.grossTotalIncome) - this.getNumberFormat(this.newRegimeTaxSummary.totalDeduction);
-      
-      let computation2Infos =  itrData.ITR1_TaxComputation;
+
+      let computation2Infos = itrData.ITR1_TaxComputation;
       console.log('computation2Info: ', computation2Infos)
       this.newRegimeTaxSummary.taxOnTotalIncome = this.getNumberFormat(computation2Infos.TotalTaxPayable);
       this.newRegimeTaxSummary.forRebate87Tax = this.getNumberFormat(computation2Infos.Rebate87A);
@@ -1209,142 +1202,140 @@ export class TaxSummaryComponent implements OnInit {
       let taxesPaidInfos = itrData;
       this.calNewItrTaxesPaid();
       this.calIntersetFeess();
-      
-      if(this.getNumberFormat(taxesPaidInfos.TaxPaid.BalTaxPayable) > 0){
-          let payable = this.getNumberFormat(taxesPaidInfos.TaxPaid.BalTaxPayable);
-         this.newRegimeTaxSummary.taxpayable = payable;
-         this.newRegimeTaxSummary.taxRefund = 0;
+
+      if (this.getNumberFormat(taxesPaidInfos.TaxPaid.BalTaxPayable) > 0) {
+        let payable = this.getNumberFormat(taxesPaidInfos.TaxPaid.BalTaxPayable);
+        this.newRegimeTaxSummary.taxpayable = payable;
+        this.newRegimeTaxSummary.taxRefund = 0;
       }
-      else{
-          let refundInfo = itrData.Refund;
-          let refundable = this.getNumberFormat(refundInfo.RefundDue);
-         this.newRegimeTaxSummary.taxRefund = refundable;
-         this.newRegimeTaxSummary.taxpayable = 0;
+      else {
+        let refundInfo = itrData.Refund;
+        let refundable = this.getNumberFormat(refundInfo.RefundDue);
+        this.newRegimeTaxSummary.taxRefund = refundable;
+        this.newRegimeTaxSummary.taxpayable = 0;
       }
 
-      console.log('newRegimeTaxSummary: ',this.newRegimeTaxSummary);
-      // this.itrSummaryForm.controls.taxSummary.setValue(this.newRegimeTaxSummary);
-      this.itrSummaryForm.controls.taxSummary['controls'].s234A.setValue(this.newRegimeTaxSummary.s234A);
-      this.itrSummaryForm.controls.taxSummary['controls'].s234B.setValue(this.newRegimeTaxSummary.s234B);
-      this.itrSummaryForm.controls.taxSummary['controls'].s234C.setValue(this.newRegimeTaxSummary.s234C);
-      this.itrSummaryForm.controls.taxSummary['controls'].s234F.setValue(this.newRegimeTaxSummary.s234F);
-      
+      console.log('newRegimeTaxSummary: ', this.newRegimeTaxSummary);
+      // this.itrSummaryForm.controls['taxSummary'].setValue(this.newRegimeTaxSummary);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234A'].setValue(this.newRegimeTaxSummary.s234A);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234B'].setValue(this.newRegimeTaxSummary.s234B);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234C'].setValue(this.newRegimeTaxSummary.s234C);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234F'].setValue(this.newRegimeTaxSummary.s234F);
+
 
       //Old summary part
 
-      this.itrSummaryForm.controls.taxSummary['controls'].salary.setValue(computation1Info.IncomeFromSal);
-        this.itrSummaryForm.controls.taxSummary['controls'].housePropertyIncome.setValue(computation1Info.TotalIncomeOfHP);
-  
-        this.itrSummaryForm.controls.taxSummary['controls'].otherIncome.setValue(computation1Info.IncomeOthSrc);
-  
-        let grossTotIncome = this.getNumberFormat(this.itrSummaryForm.controls.taxSummary['controls'].salary.value) + this.getNumberFormat(this.itrSummaryForm.controls.taxSummary['controls'].housePropertyIncome.value) + 
-        this.getNumberFormat(this.itrSummaryForm.controls.taxSummary['controls'].otherIncome.value);
-        this.itrSummaryForm.controls.taxSummary['controls'].grossTotalIncome.setValue(grossTotIncome);
-        
-        let dedUnderChaVIA = this.getNumberFormat(incomeDeduction.DeductUndChapVIA.TotalChapVIADeductions);
-        this.itrSummaryForm.controls.taxSummary['controls'].totalDeduction.setValue(dedUnderChaVIA);
-        
-        this.itrSummaryForm.controls.taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.setValue(computation1Info.TotalIncome);
-        
-        // let computation2Info =  itrData.ITR1_TaxComputation;
-        // console.log('computation2Info: ', computation2Info)
-        // this.itrSummaryForm.controls.taxSummary['controls'].taxOnTotalIncome.setValue(computation2Info.TotalTaxPayable);
-        // this.itrSummaryForm.controls.taxSummary['controls'].forRebate87Tax.setValue(computation2Info.Rebate87A);
-        
-        // this.itrSummaryForm.controls.taxSummary['controls'].taxAfterRebate.setValue(computation2Info.TaxPayableOnRebate);
-        // this.itrSummaryForm.controls.taxSummary['controls'].cessAmount.setValue(computation2Info.EducationCess);
-        // this.itrSummaryForm.controls.taxSummary['controls'].totalTax.setValue(computation2Info.GrossTaxLiability);
-        // this.itrSummaryForm.controls.taxSummary['controls'].taxReliefUnder89.setValue(computation2Info.Section89);
-        // this.itrSummaryForm.controls.taxSummary['controls'].totalTaxRelief.setValue(computation2Info.NetTaxLiability);
-        // this.itrSummaryForm.controls.taxSummary['controls'].s234A.setValue(computation2Info.IntrstPay.IntrstPayUs234A);
-        // this.itrSummaryForm.controls.taxSummary['controls'].s234B.setValue(computation2Info.IntrstPay.IntrstPayUs234B);
-        // this.itrSummaryForm.controls.taxSummary['controls'].s234C.setValue(computation2Info.IntrstPay.IntrstPayUs234C);
-        // this.itrSummaryForm.controls.taxSummary['controls'].s234F.setValue(computation2Info.IntrstPay.LateFilingFee234F);
-        // this.itrSummaryForm.controls.taxSummary['controls'].agrigateLiability.setValue(computation2Info.TotalIntrstPay);
-        // this.calculateTotalInterestFees();
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].setValue(computation1Info.IncomeFromSal);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].setValue(computation1Info.TotalIncomeOfHP);
 
-        
-        // let taxesPaidInfo = itrData;
-        // // this.taxesPaid.tdsOnSalary = taxesPaidInfo;
-        // // this.taxesPaid.tdsOtherThanSalary = ;
-        // // this.taxesPaid.tdsOnSal26QB = ;
-        // // this.taxesPaid.tcs = ;
-        // // this.taxesPaid.advanceSelfAssTax = ;
-        
-        // if(Number(taxesPaidInfo.TaxPaid.BalTaxPayable) > 0){
-        //     let payable = Number(taxesPaidInfo.TaxPaid.BalTaxPayable);
-        //     this.itrSummaryForm.controls.taxSummary['controls'].taxpayable.setValue(payable);
-        //     this.itrSummaryForm.controls.taxSummary['controls'].taxRefund.setValue(0);
-        // }
-        // else{
-        //     let refundInfo = itrData.Refund;
-        //     let refundable = Number(refundInfo.RefundDue);
-        //     this.itrSummaryForm.controls.taxSummary['controls'].taxRefund.setValue(refundable);
-        //     this.itrSummaryForm.controls.taxSummary['controls'].taxpayable.setValue(0);
-        // }
-      
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].setValue(computation1Info.IncomeOthSrc);
+
+      let grossTotIncome = this.getNumberFormat((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].value) + this.getNumberFormat((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].value) +
+        this.getNumberFormat((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].value);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['grossTotalIncome'].setValue(grossTotIncome);
+
+      let dedUnderChaVIA = this.getNumberFormat(incomeDeduction.DeductUndChapVIA.TotalChapVIADeductions);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalDeduction'].setValue(dedUnderChaVIA);
+
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalIncomeAfterDeductionIncludeSR'].setValue(computation1Info.TotalIncome);
+
+      // let computation2Info =  itrData.ITR1_TaxComputation;
+      // console.log('computation2Info: ', computation2Info)
+      // this.itrSummaryForm.controls['taxSummary.controls['taxOnTotalIncome'].setValue(computation2Info.TotalTaxPayable);
+      // this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(computation2Info.Rebate87A);
+
+      // this.itrSummaryForm.controls['taxSummary.controls['taxAfterRebate'].setValue(computation2Info.TaxPayableOnRebate);
+      // this.itrSummaryForm.controls['taxSummary.controls['cessAmount'].setValue(computation2Info.EducationCess);
+      // this.itrSummaryForm.controls['taxSummary.controls['totalTax'].setValue(computation2Info.GrossTaxLiability);
+      // this.itrSummaryForm.controls['taxSummary.controls['taxReliefUnder89'].setValue(computation2Info.Section89);
+      // this.itrSummaryForm.controls['taxSummary.controls['totalTaxRelief'].setValue(computation2Info.NetTaxLiability);
+      // this.itrSummaryForm.controls['taxSummary.controls['s234A'].setValue(computation2Info.IntrstPay.IntrstPayUs234A);
+      // this.itrSummaryForm.controls['taxSummary.controls['s234B'].setValue(computation2Info.IntrstPay.IntrstPayUs234B);
+      // this.itrSummaryForm.controls['taxSummary.controls['s234C'].setValue(computation2Info.IntrstPay.IntrstPayUs234C);
+      // this.itrSummaryForm.controls['taxSummary.controls['s234F'].setValue(computation2Info.IntrstPay.LateFilingFee234F);
+      // this.itrSummaryForm.controls['taxSummary.controls['agrigateLiability'].setValue(computation2Info.TotalIntrstPay);
+      // this.calculateTotalInterestFees();
+
+
+      // let taxesPaidInfo = itrData;
+      // // this.taxesPaid.tdsOnSalary = taxesPaidInfo;
+      // // this.taxesPaid.tdsOtherThanSalary = ;
+      // // this.taxesPaid.tdsOnSal26QB = ;
+      // // this.taxesPaid.tcs = ;
+      // // this.taxesPaid.advanceSelfAssTax = ;
+
+      // if(Number(taxesPaidInfo.TaxPaid.BalTaxPayable) > 0){
+      //     let payable = Number(taxesPaidInfo.TaxPaid.BalTaxPayable);
+      //     this.itrSummaryForm.controls['taxSummary.controls['taxpayable'].setValue(payable);
+      //     this.itrSummaryForm.controls['taxSummary.controls['taxRefund'].setValue(0);
+      // }
+      // else{
+      //     let refundInfo = itrData.Refund;
+      //     let refundable = Number(refundInfo.RefundDue);
+      //     this.itrSummaryForm.controls['taxSummary.controls['taxRefund'].setValue(refundable);
+      //     this.itrSummaryForm.controls['taxSummary.controls['taxpayable'].setValue(0);
+      // }
+
 
     }
-    else{
+    else {
 
-        this.itrSummaryForm.controls.taxSummary['controls'].salary.setValue(computation1Info.IncomeFromSal);
-        this.itrSummaryForm.controls.taxSummary['controls'].housePropertyIncome.setValue(computation1Info.TotalIncomeOfHP);
-  
-        this.itrSummaryForm.controls.taxSummary['controls'].otherIncome.setValue(computation1Info.IncomeOthSrc);
-  
-        let grossTotIncome = this.getNumberFormat(this.itrSummaryForm.controls.taxSummary['controls'].salary.value) + this.getNumberFormat(this.itrSummaryForm.controls.taxSummary['controls'].housePropertyIncome.value) + 
-        this.getNumberFormat(this.itrSummaryForm.controls.taxSummary['controls'].otherIncome.value);
-        this.itrSummaryForm.controls.taxSummary['controls'].grossTotalIncome.setValue(grossTotIncome);
-        
-        let dedUnderChaVIA = incomeDeduction.DeductUndChapVIA.TotalChapVIADeductions;
-        this.itrSummaryForm.controls.taxSummary['controls'].totalDeduction.setValue(dedUnderChaVIA);
-        
-        this.itrSummaryForm.controls.taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.setValue(computation1Info.TotalIncome);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].setValue(computation1Info.IncomeFromSal);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].setValue(computation1Info.TotalIncomeOfHP);
 
-        let computation2Info = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.ITR1_TaxComputation : itrData.TaxComputation;
-        console.log('computation2Info: ', computation2Info)
-        this.itrSummaryForm.controls.taxSummary['controls'].taxOnTotalIncome.setValue(this.getNumberFormat(computation2Info.TotalTaxPayable));
-        this.itrSummaryForm.controls.taxSummary['controls'].forRebate87Tax.setValue(this.getNumberFormat(computation2Info.Rebate87A));
-        
-        this.itrSummaryForm.controls.taxSummary['controls'].taxAfterRebate.setValue(this.getNumberFormat(computation2Info.TaxPayableOnRebate));
-        this.itrSummaryForm.controls.taxSummary['controls'].cessAmount.setValue(this.getNumberFormat(computation2Info.EducationCess));
-        this.itrSummaryForm.controls.taxSummary['controls'].totalTax.setValue(this.getNumberFormat(computation2Info.GrossTaxLiability));
-        this.itrSummaryForm.controls.taxSummary['controls'].taxReliefUnder89.setValue(this.getNumberFormat(computation2Info.Section89));
-        this.itrSummaryForm.controls.taxSummary['controls'].totalTaxRelief.setValue(this.getNumberFormat(computation2Info.NetTaxLiability));
-        this.itrSummaryForm.controls.taxSummary['controls'].s234A.setValue(this.getNumberFormat(computation2Info.IntrstPay.IntrstPayUs234A));
-        this.itrSummaryForm.controls.taxSummary['controls'].s234B.setValue(this.getNumberFormat(computation2Info.IntrstPay.IntrstPayUs234B));
-        this.itrSummaryForm.controls.taxSummary['controls'].s234C.setValue(this.getNumberFormat(computation2Info.IntrstPay.IntrstPayUs234C));
-        this.itrSummaryForm.controls.taxSummary['controls'].s234F.setValue(this.getNumberFormat(computation2Info.IntrstPay.LateFilingFee234F));
-        this.itrSummaryForm.controls.taxSummary['controls'].agrigateLiability.setValue(this.getNumberFormat(computation2Info.TotalIntrstPay));
-        
-        let taxesPaidInfo = itrData;
-        console.log('taxesPaidInfo: ',taxesPaidInfo)
-        this.taxesPaid.tdsOnSalary = taxesPaidInfo.hasOwnProperty('TDSonSalaries') ? taxesPaidInfo.TDSonSalaries.TotalTDSonSalaries : 0;
-        this.taxesPaid.tdsOtherThanSalary = taxesPaidInfo.hasOwnProperty('TDSonOthThanSals') ? Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details) : 0;
-        this.taxesPaid.tdsOnSal26QB = 0;
-        this.taxesPaid.tcs = taxesPaidInfo.hasOwnProperty('ScheduleTCS') ? taxesPaidInfo.ScheduleTCS.TotalSchTCS : 0;
-        this.taxesPaid.advanceSelfAssTax = taxesPaidInfo.hasOwnProperty('TaxPayments') ? taxesPaidInfo.TaxPayments.TotalTaxPayments : (taxesPaidInfo.hasOwnProperty('ScheduleIT') ? taxesPaidInfo.ScheduleIT.TotalTaxPayments : 0);
-        
-        if(this.getNumberFormat(taxesPaidInfo.TaxPaid.BalTaxPayable) > 0){
-            let payable = this.getNumberFormat(taxesPaidInfo.TaxPaid.BalTaxPayable);
-            this.itrSummaryForm.controls.taxSummary['controls'].taxpayable.setValue(payable);
-            this.itrSummaryForm.controls.taxSummary['controls'].taxRefund.setValue(0);
-        }
-        else{
-            let refundInfo = itrData.Refund;
-            let refundable = this.getNumberFormat(refundInfo.RefundDue);
-            this.itrSummaryForm.controls.taxSummary['controls'].taxRefund.setValue(refundable);
-            this.itrSummaryForm.controls.taxSummary['controls'].taxpayable.setValue(0);
-        }
-      
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].setValue(computation1Info.IncomeOthSrc);
+
+      let grossTotIncome = this.getNumberFormat((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].value) + this.getNumberFormat((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].value) +
+        this.getNumberFormat((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].value);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['grossTotalIncome'].setValue(grossTotIncome);
+
+      let dedUnderChaVIA = incomeDeduction.DeductUndChapVIA.TotalChapVIADeductions;
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalDeduction'].setValue(dedUnderChaVIA);
+
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalIncomeAfterDeductionIncludeSR'].setValue(computation1Info.TotalIncome);
+
+      let computation2Info = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.ITR1_TaxComputation : itrData.TaxComputation;
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxOnTotalIncome'].setValue(this.getNumberFormat(computation2Info.TotalTaxPayable));
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['forRebate87Tax'].setValue(this.getNumberFormat(computation2Info.Rebate87A));
+
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxAfterRebate'].setValue(this.getNumberFormat(computation2Info.TaxPayableOnRebate));
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['cessAmount'].setValue(this.getNumberFormat(computation2Info.EducationCess));
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTax'].setValue(this.getNumberFormat(computation2Info.GrossTaxLiability));
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxReliefUnder89'].setValue(this.getNumberFormat(computation2Info.Section89));
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxRelief'].setValue(this.getNumberFormat(computation2Info.NetTaxLiability));
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234A'].setValue(this.getNumberFormat(computation2Info.IntrstPay.IntrstPayUs234A));
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234B'].setValue(this.getNumberFormat(computation2Info.IntrstPay.IntrstPayUs234B));
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234C'].setValue(this.getNumberFormat(computation2Info.IntrstPay.IntrstPayUs234C));
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234F'].setValue(this.getNumberFormat(computation2Info.IntrstPay.LateFilingFee234F));
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['agrigateLiability'].setValue(this.getNumberFormat(computation2Info.TotalIntrstPay));
+
+      let taxesPaidInfo = itrData;
+      console.log('taxesPaidInfo: ', taxesPaidInfo)
+      this.taxesPaid.tdsOnSalary = taxesPaidInfo.hasOwnProperty('TDSonSalaries') ? taxesPaidInfo.TDSonSalaries.TotalTDSonSalaries : 0;
+      this.taxesPaid.tdsOtherThanSalary = taxesPaidInfo.hasOwnProperty('TDSonOthThanSals') ? Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details) : 0;
+      this.taxesPaid.tdsOnSal26QB = 0;
+      this.taxesPaid.tcs = taxesPaidInfo.hasOwnProperty('ScheduleTCS') ? taxesPaidInfo.ScheduleTCS.TotalSchTCS : 0;
+      this.taxesPaid.advanceSelfAssTax = taxesPaidInfo.hasOwnProperty('TaxPayments') ? taxesPaidInfo.TaxPayments.TotalTaxPayments : (taxesPaidInfo.hasOwnProperty('ScheduleIT') ? taxesPaidInfo.ScheduleIT.TotalTaxPayments : 0);
+
+      if (this.getNumberFormat(taxesPaidInfo.TaxPaid.BalTaxPayable) > 0) {
+        let payable = this.getNumberFormat(taxesPaidInfo.TaxPaid.BalTaxPayable);
+        (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxpayable'].setValue(payable);
+        (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxRefund'].setValue(0);
+      }
+      else {
+        let refundInfo = itrData.Refund;
+        let refundable = this.getNumberFormat(refundInfo.RefundDue);
+        (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxRefund'].setValue(refundable);
+        (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxpayable'].setValue(0);
+      }
+
     }
-   
-    console.log('taxpayable: ',this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value,'  taxRefund: ',this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value)
-    // this.itrSummaryForm.controls.taxSummary['controls'].forRebate87Tax.setValue(computation2Info.Rebate87A);
-    // this.itrSummaryForm.controls.taxSummary['controls'].forRebate87Tax.setValue(computation2Info.Rebate87A);
+
+    // this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(computation2Info.Rebate87A);
+    // this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(computation2Info.Rebate87A);
   }
 
-  businessIncomeBind(itrData){
+  businessIncomeBind(itrData:any) {
     var itr4Summary = {
       assesse: {
         business: {
@@ -1367,28 +1358,28 @@ export class TaxSummaryComponent implements OnInit {
             totalCapitalLiabilities: 0,
             unSecuredLoans: 0
           },
-          presumptiveIncomes: []
+          presumptiveIncomes: [] as any[]
         }
       }
     }
 
-     // Presumptive Business Income U/S 44AD
-     var pre44ADinfo = itrData.ScheduleBP;
-     var preBusinessObj = {
+    // Presumptive Business Income U/S 44AD
+    var pre44ADinfo = itrData.ScheduleBP;
+    var preBusinessObj = {
       businessType: "BUSINESS",
       exemptIncome: 0,
       natureOfBusiness: 0,
       taxableIncome: 0,
       tradeName: '',
-      incomes: []
+      incomes: [] as any[]
     }
-     if(pre44ADinfo.hasOwnProperty('NatOfBus44AD')){
+    if (pre44ADinfo.hasOwnProperty('NatOfBus44AD')) {
       preBusinessObj.natureOfBusiness = pre44ADinfo.NatOfBus44AD[0].CodeAD;
       preBusinessObj.tradeName = pre44ADinfo.NatOfBus44AD[0].NameOfBusiness;
-     }
-    
- 
-     if(pre44ADinfo.hasOwnProperty('PersumptiveInc44AD')){
+    }
+
+
+    if (pre44ADinfo.hasOwnProperty('PersumptiveInc44AD')) {
       let recivedInBankObj = {
         businessType: null,
         incomeType: "BANK",
@@ -1401,14 +1392,14 @@ export class TaxSummaryComponent implements OnInit {
         tonnageCapacity: 0
       }
       preBusinessObj.incomes.push(recivedInBankObj);
-  
+
       let recivedCashObj = {
         businessType: null,
         incomeType: "CASH",
-        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
+        minimumPresumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per) : 0,
         ownership: null,
         periodOfHolding: 0,
-        presumptiveIncome:  pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per): 0,
+        presumptiveIncome: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('PersumptiveInc44AD8Per') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.PersumptiveInc44AD8Per) : 0,
         receipts: pre44ADinfo.PersumptiveInc44AD.hasOwnProperty('GrsTrnOverAnyOthMode') ? this.getNumberFormat(pre44ADinfo.PersumptiveInc44AD.GrsTrnOverAnyOthMode) : 0,
         registrationNo: null,
         tonnageCapacity: 0
@@ -1416,10 +1407,10 @@ export class TaxSummaryComponent implements OnInit {
       preBusinessObj.incomes.push(recivedCashObj);
       itr4Summary.assesse.business.presumptiveIncomes.push(preBusinessObj);
       console.log('preBusinessObj Object :', preBusinessObj);
-  
-     }
-    
-     // Presumptive Business Income U/S 44ADA
+
+    }
+
+    // Presumptive Business Income U/S 44ADA
     var pre44ADAinfo = itrData.ScheduleBP;
 
     var business44AdaInfo = {
@@ -1448,11 +1439,11 @@ export class TaxSummaryComponent implements OnInit {
       natureOfBusiness: business44AdaInfo.natureOfBusiness,//pre44ADAinfo.hasOwnProperty('ITRForm:NatOfBus44ADA') ? pre44ADAinfo['ITRForm:NatOfBus44ADA']['ITRForm:CodeADA']['_text'] : '',
       taxableIncome: 0,
       tradeName: business44AdaInfo.tradeName,//pre44ADAinfo.hasOwnProperty('ITRForm:NatOfBus44ADA') ? pre44ADAinfo['ITRForm:NatOfBus44ADA']['ITRForm:NameOfBusiness']['_text'] : '',
-      incomes: []
+      incomes: [] as any[]
     }
 
-    
-    if(pre44ADAinfo.hasOwnProperty('PersumptiveInc44ADA')) {
+
+    if (pre44ADAinfo.hasOwnProperty('PersumptiveInc44ADA')) {
       let grossRecipt44ADAObj = {
         businessType: null,
         incomeType: "PROFESSIONAL",
@@ -1470,7 +1461,7 @@ export class TaxSummaryComponent implements OnInit {
       console.log('44ADA grossRecipt44ADAObj Object :', grossRecipt44ADAObj);
       console.log('itr4Summary total object :', itr4Summary);
     }
-    
+
 
     //Financial Information as on 31/03/2020  
     //Liabilities:
@@ -1509,25 +1500,25 @@ export class TaxSummaryComponent implements OnInit {
     this.updatBussinessInfo = itr4Summary;
   }
 
-  getNatureExceptionLabel(keyVal){
-    return this.exemptIncomes.filter(item => item.value === keyVal)[0].label
-   }
-
-
-  addExemptIncome(){
-    debugger
-      console.log('exempt values: ', this.exemptInfo.type, this.exemptInfo.amount);
-      if(this.utilService.isNonEmpty(this.exemptInfo.type) && this.utilService.isNonEmpty(this.exemptInfo.amount)){
-        this.exemptIncomeData.push(this.exemptInfo);
-      
-      }
-      console.log('exemptIncomeData : ', this.exemptIncomeData);
-      this.exemptInfo.type = '';
-      this.exemptInfo.amount = 0;
-      console.log('exemptIncomeData 2: ', this.exemptIncomeData);
+  getNatureExceptionLabel(keyVal:any) {
+    return this.exemptIncomes.filter((item: any) => item.value === keyVal)[0].label
   }
 
-  deleteExemptRecord(index){
+
+  addExemptIncome() {
+    debugger
+    console.log('exempt values: ', this.exemptInfo.type, this.exemptInfo.amount);
+    if (this.utilService.isNonEmpty(this.exemptInfo.type) && this.utilService.isNonEmpty(this.exemptInfo.amount)) {
+      this.exemptIncomeData.push(this.exemptInfo);
+
+    }
+    console.log('exemptIncomeData : ', this.exemptIncomeData);
+    this.exemptInfo.type = '';
+    this.exemptInfo.amount = 0;
+    console.log('exemptIncomeData 2: ', this.exemptIncomeData);
+  }
+
+  deleteExemptRecord(index:any) {
     this.exemptIncomeData.splice(index, 1)
   }
 
@@ -1543,14 +1534,14 @@ export class TaxSummaryComponent implements OnInit {
     this.currentUserId = 0;
   }
 
-  advanceSearch(key) {
+  advanceSearch(key:any) {
     // this.user_data = [];
     if (this.searchVal !== "") {
       this.getUerSummary(this.searchVal);
     }
   }
 
-  getUerSummary(mobNum) {
+  getUerSummary(mobNum:any) {
     this.loading = true;
     let param = '/itr/summary/contact-number/' + mobNum;
     this.userService.getMethodInfo(param).subscribe((summary: any) => {
@@ -1566,23 +1557,23 @@ export class TaxSummaryComponent implements OnInit {
         this.salaryItrratedData = [];
         // this.setTotalOfExempt();
         this.itrSummaryForm.patchValue(summary);
-        console.log('itrSummaryForm: ',this.itrSummaryForm.value);
+        console.log('itrSummaryForm: ', this.itrSummaryForm.value);
         this.setItrType(summary.assesse.itrType)
 
-        if (this.itrSummaryForm['controls'].assesse['controls'].itrType.value === "4") {
+        if ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['itrType'].value === "4") {
 
-          var businessIncome = summary.assesse.business.presumptiveIncomes.filter(item => item.businessType === "BUSINESS");
+          var businessIncome = summary.assesse.business.presumptiveIncomes.filter((item: any) => item.businessType === "BUSINESS");
           if (businessIncome.length > 0) {
             let businessNatureCode = businessIncome[0].natureOfBusiness;
-            let recivedInBank = businessIncome[0].incomes.filter(item => item.incomeType === "BANK");
-            let recivedInCash = businessIncome[0].incomes.filter(item => item.incomeType === "CASH");
+            let recivedInBank = businessIncome[0].incomes.filter((item: any) => item.incomeType === "BANK");
+            let recivedInCash = businessIncome[0].incomes.filter((item: any) => item.incomeType === "CASH");
 
             this.businessObject.tradeName44AD = businessIncome[0].tradeName;
             this.businessObject.received44ADtaotal = this.getNumberFormat(recivedInBank[0].receipt) + this.getNumberFormat(recivedInCash[0].receipts);
             this.businessObject.presumptive44ADtotal = this.getNumberFormat(recivedInBank[0].presumptiveIncome) + this.getNumberFormat(recivedInCash[0].presumptiveIncome);
           }
 
-          var presumptiveIncome = summary.assesse.business.presumptiveIncomes.filter(item => item.businessType === "PROFESSIONAL");
+          var presumptiveIncome = summary.assesse.business.presumptiveIncomes.filter((item: any) => item.businessType === "PROFESSIONAL");
           console.log('presumptiveIncome : ', presumptiveIncome);
           if (presumptiveIncome.length > 0) {
             var presumptiveNatureCode = presumptiveIncome[0].natureOfBusiness;
@@ -1598,14 +1589,14 @@ export class TaxSummaryComponent implements OnInit {
 
         this.calculateGrossTotalIncome();
         console.log(this.itrSummaryForm.value)
-        this.bankData = this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value;
-        this.housingData = this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value;
-        //this.salaryItrratedData = this.itrSummaryForm['controls'].assesse['controls'].employers.value;
-        this.updateSalatyInfo(this.itrSummaryForm['controls'].assesse['controls'].employers)
-        this.updateOtherSource(this.itrSummaryForm['controls'].assesse['controls'].incomes)
-        this.updateInuranceVal(this.itrSummaryForm['controls'].assesse['controls'].insurances)
-        this.donationData = this.itrSummaryForm['controls'].assesse['controls'].donations.value;
-        this.updateTaxDeductionAtSourceVal(this.itrSummaryForm['controls'].assesse['controls'].taxPaid);
+        this.bankData = (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['bankDetails'].value;
+        this.housingData = (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].value;
+        //this.salaryItrratedData = this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers.value;
+        this.updateSalatyInfo((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'])
+        this.updateOtherSource((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['incomes'])
+        this.updateInuranceVal((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['insurances'])
+        this.donationData = (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].value;
+        this.updateTaxDeductionAtSourceVal((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid']);
         this.setTotalOfExempt();
       }
       else {
@@ -1624,7 +1615,7 @@ export class TaxSummaryComponent implements OnInit {
       })
   }
 
-  updateSalatyInfo(salaryInfo) {
+  updateSalatyInfo(salaryInfo:any) {
     console.log("salaryInfo: ", salaryInfo)
     if (salaryInfo.value) {
       var salaryData = salaryInfo.value;
@@ -1638,15 +1629,15 @@ export class TaxSummaryComponent implements OnInit {
           valOfPerquisites: salaryData[i].perquisites.length > 0 ? salaryData[i].perquisites[0].taxableAmount : 0,
           profitInLieu: salaryData[i].profitsInLieuOfSalaryType.length > 0 ? salaryData[i].profitsInLieuOfSalaryType[0].taxableAmount : 0,
           grossSalary: salaryData[i].grossSalary,
-          houseRentAllow: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter(item => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (salaryData[i].allowance.filter(item => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
-          leaveTravelExpense: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter(item => item.allowanceType === 'LTA')).length > 0) ? (salaryData[i].allowance.filter(item => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
-          other: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter(item => item.allowanceType === 'ANY_OTHER')).length > 0) ? (salaryData[i].allowance.filter(item => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
-          totalExemptAllow: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (salaryData[i].allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
+          houseRentAllow: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter((item: any) => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (salaryData[i].allowance.filter((item: any) => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
+          leaveTravelExpense: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter((item: any) => item.allowanceType === 'LTA')).length > 0) ? (salaryData[i].allowance.filter((item: any) => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
+          other: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter((item: any) => item.allowanceType === 'ANY_OTHER')).length > 0) ? (salaryData[i].allowance.filter((item: any) => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
+          totalExemptAllow: (salaryData[i].allowance.length > 0 && (salaryData[i].allowance.filter((item: any) => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (salaryData[i].allowance.filter((item: any) => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
           netSalary: salaryData[i].netSalary,
           standardDeduction: salaryData[i].standardDeduction,
-          entertainAllow: (salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (salaryData[i].deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
-          professionalTax: (salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (salaryData[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
-          totalSalaryDeduction: (salaryData[i].standardDeduction + ((salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (salaryData[i].deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0) + ((salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (salaryData[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0)),
+          entertainAllow: (salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (salaryData[i].deductions.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
+          professionalTax: (salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (salaryData[i].deductions.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
+          totalSalaryDeduction: (salaryData[i].standardDeduction + ((salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (salaryData[i].deductions.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0) + ((salaryData[i].deductions.length > 0 && (salaryData[i].deductions.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (salaryData[i].deductions.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0)),
           taxableIncome: salaryData[i].taxableIncome,
 
           pinCode: salaryData[i].pinCode,
@@ -1662,7 +1653,7 @@ export class TaxSummaryComponent implements OnInit {
 
   }
 
-  updateOtherSource(otherInfo) {
+  updateOtherSource(otherInfo:any) {
     console.log('otherInfo: ', otherInfo)
     this.sourcesOfIncome = {
       interestFromSaving: 0,
@@ -1700,7 +1691,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  updateInuranceVal(insuranceInfo) {
+  updateInuranceVal(insuranceInfo:any) {
     console.log('insuranceInfo: ', insuranceInfo)
     this.sec80DobjVal = {
       healthInsuarancePremiumSelf: 0,
@@ -1729,8 +1720,7 @@ export class TaxSummaryComponent implements OnInit {
       console.log('sec80DobjVal: ', this.sec80DobjVal)
     }
 
-    console.log('hasParentOverSixty: ', this.itrSummaryForm['controls'].assesse['controls'].systemFlags['controls'].hasParentOverSixty.value)
-    if (this.itrSummaryForm['controls'].assesse['controls'].systemFlags['controls'].hasParentOverSixty.value) {
+    if (((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['systemFlags'] as FormGroup).controls['hasParentOverSixty'].value) {
       this.sec80DobjVal.parentAge = 'above60';
     } else {
       this.sec80DobjVal.parentAge = 'bellow60';
@@ -1738,7 +1728,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
 
-  updateTaxDeductionAtSourceVal(taxPaidInfo) {
+  updateTaxDeductionAtSourceVal(taxPaidInfo:any) {
     console.log('taxPaidInfo: ', taxPaidInfo)
     this.taxesPaid = {
       tdsOnSalary: 0,
@@ -1811,29 +1801,27 @@ export class TaxSummaryComponent implements OnInit {
   taxCollAtSource: any = [];
   advanceSelfTax: any = [];
 
-  showAcknowInput: boolean;
-  showAcknowData(returnType) {
+  showAcknowInput!: boolean;
+  showAcknowData(returnType:any) {
     console.log('Selected return type: ', returnType)
     if (returnType === 'REVISED') {
       this.showAcknowInput = true;
       //this.itrSummaryForm.controls['acknowledgementNumber'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
-      this.itrSummaryForm['controls'].assesse['controls'].ackNumber.setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
-      this.itrSummaryForm['controls'].assesse['controls'].eFillingDate.setValidators([Validators.required]);
-      console.log('acknowledgementNumber: ', this.itrSummaryForm['controls'].assesse['controls'].ackNumber)
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['ackNumber'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['eFillingDate'].setValidators([Validators.required]);
     }
     else if (returnType === 'ORIGINAL') {
       this.showAcknowInput = false;
-      this.itrSummaryForm['controls'].assesse['controls'].ackNumber.reset();
-      this.itrSummaryForm['controls'].assesse['controls'].eFillingDate.reset();
-      this.itrSummaryForm['controls'].assesse['controls'].ackNumber.setValidators(null);
-      this.itrSummaryForm['controls'].assesse['controls'].ackNumber.updateValueAndValidity();
-      this.itrSummaryForm['controls'].assesse['controls'].eFillingDate.setValidators(null);
-      this.itrSummaryForm['controls'].assesse['controls'].eFillingDate.updateValueAndValidity();
-      console.log('acknowledgementNumber: ', this.itrSummaryForm['controls'].assesse['controls'].ackNumber)
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['ackNumber'].reset();
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['eFillingDate'].reset();
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['ackNumber'].setValidators(null);
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['ackNumber'].updateValueAndValidity();
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['eFillingDate'].setValidators(null);
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['eFillingDate'].updateValueAndValidity();
     }
   }
 
-  setItrType(itrType) {
+  setItrType(itrType:any) {
     if (itrType === "1") {
       this.itrType.itrOne = true;
       this.itrType.itrFour = false;
@@ -1857,8 +1845,8 @@ export class TaxSummaryComponent implements OnInit {
       var natureOfBusinessInfo = [];
       natureOfBusinessInfo = result.natureOfBusiness;
       console.log('natureOfBusinessInfo: ', natureOfBusinessInfo)
-      this.natureOfBusinessDropdown44AD = natureOfBusinessInfo.filter(item => item.section === '44AD');
-      this.natureOfBusinessDropdown44ADA = natureOfBusinessInfo.filter(item => item.section === '44ADA');
+      this.natureOfBusinessDropdown44AD = natureOfBusinessInfo.filter((item: any) => item.section === '44AD');
+      this.natureOfBusinessDropdown44ADA = natureOfBusinessInfo.filter((item: any) => item.section === '44ADA');
       console.log(' this.natureOfBusinessDropdown44AD=> ', this.natureOfBusinessDropdown44AD);
 
 
@@ -1872,7 +1860,7 @@ export class TaxSummaryComponent implements OnInit {
   natureCode: any;
   getCodeFromLabelOnBlur() {
     if (this.utilService.isNonEmpty(this.natureOfBusinessForm.value) && this.utilService.isNonEmpty(this.natureOfBusinessForm.value)) {
-      this.natureCode = this.natureOfBusinessDropdown44AD.filter(item => item.label.toLowerCase() === this.natureOfBusinessForm.value.toLowerCase());
+      this.natureCode = this.natureOfBusinessDropdown44AD.filter((item: any) => item.label.toLowerCase() === this.natureOfBusinessForm.value.toLowerCase());
       if (this.natureCode.length !== 0) {
         this.natureCode = this.natureCode[0].code;
         console.log('natureCode on blur = ', this.natureCode);
@@ -1946,7 +1934,7 @@ export class TaxSummaryComponent implements OnInit {
     });
   }
 
-  setBankValue(latestBankInfo, action, index) {
+  setBankValue(latestBankInfo:any, action:any, index:any) {
     console.log('DDAATTAA==>: ', latestBankInfo, action, index)
     if (action === 'Add') {
       if (this.bankData.length !== 0) {
@@ -1963,8 +1951,8 @@ export class TaxSummaryComponent implements OnInit {
 
       } else {
         this.bankData.push(latestBankInfo)
-        //  this.itrSummaryForm.controls['bankDetails'].setValue(this.bankData)
-        this.itrSummaryForm['controls'].assesse['controls'].bankDetails.setValue(this.bankData)
+          //  this.itrSummaryForm.controls['bankDetails'].setValue(this.bankData)
+          (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['bankDetails'].setValue(this.bankData)
       }
     }
     else if (action === 'Edit') {
@@ -1986,25 +1974,24 @@ export class TaxSummaryComponent implements OnInit {
     console.log('this.bankData: ', this.bankData)
   }
 
-  setDonationValue(latestDonationInfo, action, index) {
+  setDonationValue(latestDonationInfo:any, action:any, index:any) {
     if (action === 'Add') {
       // this.setDonationValue(result.data.donationInfo, result.data.action, result.data.index)
       this.donationData.push(latestDonationInfo);
-      this.itrSummaryForm['controls'].assesse['controls'].donations.setValue(this.donationData);
-      console.log('Donation sec 80G: ', this.donationData)
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].setValue(this.donationData);
       this.getdeductionTotal(this.donationData)
     }
     else if (action === 'Edit') {
 
       this.donationData.splice(index, 1, latestDonationInfo);
-      this.itrSummaryForm['controls'].assesse['controls'].donations.setValue(this.donationData);
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].setValue(this.donationData);
       console.log('Donation sec 80G after update: ', this.donationData)
       this.getdeductionTotal(this.donationData)
     }
 
   }
 
-  setTdsOnSalValue(tdsOnSalInfo, action, index) {
+  setTdsOnSalValue(tdsOnSalInfo:any, action:any, index:any) {
     if (action === 'Add') {
       this.tdsOnSal.push(tdsOnSalInfo);
       console.log('this.tdsOnSal: ', this.tdsOnSal)
@@ -2019,7 +2006,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setTdsOnOtherThanSalValue(tdsOnOtherThanSal, action, index) {
+  setTdsOnOtherThanSalValue(tdsOnOtherThanSal:any, action:any, index:any) {
     if (action === 'Add') {
       this.tdsOtherThanSal.push(tdsOnOtherThanSal);
       this.setTotalTDSVal(this.tdsOtherThanSal, 'otherThanSalary16A')
@@ -2032,7 +2019,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setTdsOnSal26QValue(tdsOnSal26Q, action, index) {
+  setTdsOnSal26QValue(tdsOnSal26Q:any, action:any, index:any) {
     console.log('tdsOnSal26Q CHECK =>', tdsOnSal26Q, action, index)
     if (action === 'Add') {
       this.tdsSalesPro.push(tdsOnSal26Q);
@@ -2046,7 +2033,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setTcsValue(tcs, action, index) {
+  setTcsValue(tcs:any, action:any, index:any) {
     if (action === 'Add') {
       this.taxCollAtSource.push(tcs);
       this.setTotalTCSVal(this.taxCollAtSource);
@@ -2059,7 +2046,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setAdvanSelfAssTaxValue(advanSelfAssTax, action, index) {
+  setAdvanSelfAssTaxValue(advanSelfAssTax:any, action:any, index:any) {
     if (action === 'Add') {
       this.advanceSelfTax.push(advanSelfAssTax);
       this.setTotalAdvSelfTaxVal(this.advanceSelfTax);
@@ -2081,14 +2068,14 @@ export class TaxSummaryComponent implements OnInit {
   otherThanTDSTCS: any = [];
 
   taxPaiObj = {
-    "onSalary": [],
-    "otherThanSalary16A": [],
-    "otherThanSalary26QB": [],
-    "tcs": [],
-    "otherThanTDSTCS": [],
+    "onSalary": [] as any[],
+    "otherThanSalary16A": [] as any[],
+    "otherThanSalary26QB": [] as any[],
+    "tcs": [] as any[],
+    "otherThanTDSTCS": [] as any[],
   }
 
-  setTaxValInObject(taxData, type, action, index) {
+  setTaxValInObject(taxData: any, type: any, action: any, index: any) {
     if (type === 'tdsOnSal') {
       if (action === 'Add') {
         console.log('tdsOnSal Data:', taxData)
@@ -2153,48 +2140,45 @@ export class TaxSummaryComponent implements OnInit {
       }
 
     }
-    console.log('this.taxPaiObj', this.taxPaiObj)
     //taxPaiObj.onSalary.push
 
     // this.itrSummaryForm.controls['taxPaid'].setValue(this.taxPaiObj);
-    this.itrSummaryForm['controls'].assesse['controls'].taxPaid.setValue(this.taxPaiObj);
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid'].setValue(this.taxPaiObj);
   }
 
   housingData: any = [];
   // hpStadDeduct: any = [];
   // netHousePro: any = [];
   houseArray: any = [];
-  setHousingData(housingData, action, index) {
+  setHousingData(housingData:any, action:any, index:any) {
     if (action === 'Add') {
       console.log('Housing Data: ', housingData.house)
       //var houseArray = [];
       this.houseArray.push(housingData.house)
-      // this.itrSummaryForm['controls'].assesse['controls'].houseProperties.setValue(this.houseArray);
-      this.itrSummaryForm['controls'].assesse['controls'].houseProperties.setValue(this.houseArray);
-      console.log('Housing Data: ', this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value)
+        // this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].setValue(this.houseArray);
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].setValue(this.houseArray);
 
 
       var totalTaxableIncome = 0;
       for (let i = 0; i < this.houseArray.length; i++) {
         totalTaxableIncome = totalTaxableIncome + this.houseArray[i].taxableIncome;  //exemptIncome
       }
-      this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.setValue(totalTaxableIncome)    //Here we add total of taxableIncome into housePropertyIncome to show in table 2nd point
-      console.log('totalTaxableIncome value: ', this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.value)
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].setValue(totalTaxableIncome)    //Here we add total of taxableIncome into housePropertyIncome to show in table 2nd point
+      console.log('totalTaxableIncome value: ', (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].value)
 
       this.createHouseDataObj(this.houseArray, action, null);
       this.calculateGrossTotalIncome()
-      console.log('BEFORE SAVE SUMMARY Housing Data:=> ', this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value)
+      console.log('BEFORE SAVE SUMMARY Housing Data:=> ', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].value)
     }
     else if (action === 'Edit') {
       this.houseArray.splice(index, 1, housingData.house)
-      this.itrSummaryForm['controls'].assesse['controls'].houseProperties.setValue(this.houseArray);
-      console.log('Housing Data: ', this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value)
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].setValue(this.houseArray);
 
       var totalTaxableIncome = 0;
       for (let i = 0; i < this.houseArray.length; i++) {
         totalTaxableIncome = totalTaxableIncome + this.houseArray[i].taxableIncome;
       }
-      this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.setValue(totalTaxableIncome)
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].setValue(totalTaxableIncome)
       // this.hpStadDeduct.splice(index, 1, Number(housingData.hpStandardDeduction))
       // this.netHousePro.splice(index, 1, Number(housingData.netHousePropertyIncome))
       // this.itrSummaryForm.controls['hpStandardDeduction'].setValue(this.hpStadDeduct);
@@ -2205,7 +2189,7 @@ export class TaxSummaryComponent implements OnInit {
 
   }
 
-  createHouseDataObj(houseData, action, index) {
+  createHouseDataObj(houseData:any, action:any, index:any) {
     if (action === 'Add') {
       let flatNo = this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '';
       let building = this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
@@ -2221,7 +2205,7 @@ export class TaxSummaryComponent implements OnInit {
 
       this.housingData = [];
 
-      for(let i=0; i< houseData.length; i++){
+      for (let i = 0; i < houseData.length; i++) {
         let house = {
           propertyType: houseData[i].propertyType,
           address: address,
@@ -2250,7 +2234,7 @@ export class TaxSummaryComponent implements OnInit {
         }
         this.housingData.push(house)
       }
-      
+
       console.log('Housing:--- ', this.housingData)
     }
     else if (action === 'Edit') {
@@ -2306,7 +2290,7 @@ export class TaxSummaryComponent implements OnInit {
   // netSalary: any = [];
   // totalSalaryDeduction: any = [];
   // taxableSalary: any = [];
-  setEmployerData(emplyersData, action, index) {
+  setEmployerData(emplyersData: any, action: any, index: any) {
     if (action === 'Add') {
       this.employersData.push(emplyersData)
       console.log('employersData: ', this.employersData)
@@ -2322,14 +2306,14 @@ export class TaxSummaryComponent implements OnInit {
           valOfPerquisites: this.employersData[i].employers.perquisites.length > 0 ? this.employersData[i].employers.perquisites[0].taxableAmount : 0,
           profitInLieu: this.employersData[i].employers.profitsInLieuOfSalaryType.length > 0 ? this.employersData[i].employers.profitsInLieuOfSalaryType[0].taxableAmount : 0,
           grossSalary: this.employersData[i].employers.grossSalary,
-          houseRentAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
-          leaveTravelExpense: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'LTA')).length > 0) ? (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
-          other: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER')).length > 0) ? (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
-          totalExemptAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (this.employersData[i].employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
+          houseRentAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter((item: any) => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (this.employersData[i].employers.allowance.filter((item: any) => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
+          leaveTravelExpense: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter((item: any) => item.allowanceType === 'LTA')).length > 0) ? (this.employersData[i].employers.allowance.filter((item: any) => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
+          other: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter((item: any) => item.allowanceType === 'ANY_OTHER')).length > 0) ? (this.employersData[i].employers.allowance.filter((item: any) => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
+          totalExemptAllow: (this.employersData[i].employers.allowance.length > 0 && (this.employersData[i].employers.allowance.filter((item: any) => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (this.employersData[i].employers.allowance.filter((item: any) => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
           netSalary: this.employersData[i].employers.netSalary,
           standardDeduction: this.employersData[i].employers.standardDeduction,
-          entertainAllow: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (this.employersData[i].employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
-          professionalTax: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (this.employersData[i].employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
+          entertainAllow: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (this.employersData[i].employers.deductions.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
+          professionalTax: (this.employersData[i].employers.deductions.length > 0 && (this.employersData[i].employers.deductions.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (this.employersData[i].employers.deductions.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
           totalSalaryDeduction: this.employersData[i].totalSalaryDeduction,
           taxableIncome: this.employersData[i].employers.taxableIncome,
 
@@ -2351,13 +2335,11 @@ export class TaxSummaryComponent implements OnInit {
         employerArray.push(this.employersData[i].employers)
       }
 
-      console.log('totalTaxableIncome After: ', totalTaxableIncome)
       // this.itrSummaryForm.controls['incomeFromSalary'].setValue(totalTaxableIncome)
-      this.itrSummaryForm['controls'].taxSummary['controls'].salary.setValue(totalTaxableIncome)
-      console.log('totalTaxableIncome: ', this.itrSummaryForm['controls'].taxSummary['controls'].salary)
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].setValue(totalTaxableIncome)
       this.calculateGrossTotalIncome();     //Calculate point 4 (Total gross salary)
       // this.itrSummaryForm.controls['employers'].setValue(employerArray)
-      this.itrSummaryForm['controls'].assesse['controls'].employers.setValue(employerArray)
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'].setValue(employerArray)
 
       // this.itrSummaryForm.controls['grossSalary'].setValue(this.grossSalary)
       // this.itrSummaryForm.controls['netSalary'].setValue(this.netSalary)
@@ -2384,14 +2366,14 @@ export class TaxSummaryComponent implements OnInit {
         valOfPerquisites: emplyersData.employers.perquisites.length > 0 ? emplyersData.employers.perquisites[0].taxableAmount : 0,
         profitInLieu: emplyersData.employers.profitsInLieuOfSalaryType.length > 0 ? emplyersData.employers.profitsInLieuOfSalaryType[0].taxableAmount : 0,
         grossSalary: emplyersData.employers.grossSalary,
-        houseRentAllow: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
-        leaveTravelExpense: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'LTA')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
-        other: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
-        totalExemptAllow: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (emplyersData.employers.allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
+        houseRentAllow: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter((item: any) => item.allowanceType === 'HOUSE_RENT')).length > 0) ? (emplyersData.employers.allowance.filter((item: any) => item.allowanceType === 'HOUSE_RENT'))[0].exemptAmount : 0,
+        leaveTravelExpense: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter((item: any) => item.allowanceType === 'LTA')).length > 0) ? (emplyersData.employers.allowance.filter((item: any) => item.allowanceType === 'LTA'))[0].exemptAmount : 0,
+        other: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter((item: any) => item.allowanceType === 'ANY_OTHER')).length > 0) ? (emplyersData.employers.allowance.filter((item: any) => item.allowanceType === 'ANY_OTHER'))[0].exemptAmount : 0,
+        totalExemptAllow: (emplyersData.employers.allowance.length > 0 && (emplyersData.employers.allowance.filter((item: any) => item.allowanceType === 'ALL_ALLOWANCES')).length > 0) ? (emplyersData.employers.allowance.filter((item: any) => item.allowanceType === 'ALL_ALLOWANCES'))[0].exemptAmount : 0,
         netSalary: emplyersData.employers.netSalary,
         standardDeduction: emplyersData.employers.standardDeduction,
-        entertainAllow: (emplyersData.employers.deductions.length > 0 && (emplyersData.employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (emplyersData.employers.deductions.filter(item => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
-        professionalTax: (emplyersData.employers.deductions.length > 0 && (emplyersData.employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (emplyersData.employers.deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
+        entertainAllow: (emplyersData.employers.deductions.length > 0 && (emplyersData.employers.deductions.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW')).length > 0) ? (emplyersData.employers.deductions.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW'))[0].exemptAmount : 0,
+        professionalTax: (emplyersData.employers.deductions.length > 0 && (emplyersData.employers.deductions.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX')).length > 0) ? (emplyersData.employers.deductions.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX'))[0].exemptAmount : 0,
         totalSalaryDeduction: emplyersData.totalSalaryDeduction,
         taxableIncome: emplyersData.employers.taxableIncome,
 
@@ -2413,10 +2395,10 @@ export class TaxSummaryComponent implements OnInit {
       }
 
       //this.itrSummaryForm.controls['incomeFromSalary'].setValue(totalTaxableIncome)
-      this.itrSummaryForm['controls'].taxSummary['controls'].salary.setValue(totalTaxableIncome)
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].setValue(totalTaxableIncome)
       this.calculateGrossTotalIncome();     //Calculate point 4 (Total gross salary)
       // this.itrSummaryForm.controls['employers'].setValue(employerArray)
-      this.itrSummaryForm['controls'].assesse['controls'].employers.setValue(employerArray)
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'].setValue(employerArray)
 
       // this.itrSummaryForm.controls['grossSalary'].setValue(this.grossSalary)
       // this.itrSummaryForm.controls['netSalary'].setValue(this.netSalary)
@@ -2429,7 +2411,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
 
-  getCityData(pincode, type) {
+  getCityData(pincode:any, type:any) {
     console.log(pincode)
     if (type === 'profile') {
       if (pincode.valid) {
@@ -2439,48 +2421,48 @@ export class TaxSummaryComponent implements OnInit {
           // this.itrSummaryForm.controls['country'].setValue('INDIA');   //91
           // this.itrSummaryForm.controls['city'].setValue(result.taluka);
           // this.itrSummaryForm.controls['state'].setValue(result.stateName);  //stateCode
-          this.itrSummaryForm['controls'].assesse['controls'].address['controls'].country.setValue('INDIA')
-          this.itrSummaryForm['controls'].assesse['controls'].address['controls'].city.setValue(result.taluka);
-          this.itrSummaryForm['controls'].assesse['controls'].address['controls'].state.setValue(result.stateName);
+          ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['country'].setValue('INDIA');
+          ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['city'].setValue(result.taluka);
+          ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['state'].setValue(result.stateName);
           //  this.setProfileAddressValToHouse()
         }, error => {
           if (error.status === 404) {
             //this.itrSummaryForm.controls['city'].setValue(null);
-            this.itrSummaryForm['controls'].assesse['controls'].address['controls'].city.setValue(null);
+            ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['city'].setValue(null);
           }
         });
       }
     }
   }
 
-  getUserInfoByPan(pan, dob?, personalInfo?) {
+  getUserInfoByPan(pan: any, dob?: any, personalInfo?: any) {
     if (pan.valid) {
       console.log('Pan: ', pan)
       const param = '/itr/api/getPanDetail?panNumber=' + pan.value;
       this.userService.getMethodInfo(param).subscribe((result: any) => {
         console.log('userInfo by Pan number: ', result)
-        const userData = <FormArray>this.itrSummaryForm['controls'].assesse.get('family');
-        if(this.utilService.isNonEmpty(dob)){
-            let reqBody = {
-              firstName: "",
-              isValid: "",
-              lastName: "",
-              middleName: "",
-              pan: "",
-              dateOfBirth: dob
-            }
+        const userData = <FormArray>this.itrSummaryForm.controls['assesse'].get('family');
+        if (this.utilService.isNonEmpty(dob)) {
+          let reqBody = {
+            firstName: "",
+            isValid: "",
+            lastName: "",
+            middleName: "",
+            pan: "",
+            dateOfBirth: dob
+          }
 
-         Object.assign(reqBody, result);
+          Object.assign(reqBody, result);
 
-         if(!this.utilService.isNonEmpty(result.middleName)){
-          reqBody.middleName = personalInfo.Verification.Declaration.FatherName;
-         // this.itrSummaryForm['controls'].assesse['controls'].family.controls[0].controls['fathersName'].setValue(reqBody.middleName);
-         }
-         console.log('reqBody: ',reqBody);
-         userData.insert(0, this.updateFamilyForm(reqBody));
-         userData.removeAt(1)
+          if (!this.utilService.isNonEmpty(result.middleName)) {
+            reqBody.middleName = personalInfo.Verification.Declaration.FatherName;
+            // this.itrSummaryForm.controls['assesse'] as FormGroup).controls['family.controls[0].controls['fathersName'].setValue(reqBody.middleName);
+          }
+          console.log('reqBody: ', reqBody);
+          userData.insert(0, this.updateFamilyForm(reqBody));
+          userData.removeAt(1)
         }
-        else{
+        else {
           userData.insert(0, this.updateFamilyForm(result));
           userData.removeAt(1)
         }
@@ -2499,7 +2481,7 @@ export class TaxSummaryComponent implements OnInit {
 
   }
 
-  updateFamilyForm(obj) {
+  updateFamilyForm(obj: any) {
     return this.fb.group({
       fName: [obj.firstName || ''],
       mName: [obj.middleName || ''],
@@ -2512,11 +2494,11 @@ export class TaxSummaryComponent implements OnInit {
 
 
   setProfileAddressValToHouse() {
-    this.itrSummaryForm.controls.houseProperties['controls'].locality.setValue(this.itrSummaryForm.controls['address'].value);
-    this.itrSummaryForm.controls.houseProperties['controls'].country.setValue('INDIA');   //91
-    this.itrSummaryForm.controls.houseProperties['controls'].pinCode.setValue(this.itrSummaryForm.controls['pinCode'].value);
-    this.itrSummaryForm.controls.houseProperties['controls'].city.setValue(this.itrSummaryForm.controls['city'].value);
-    this.itrSummaryForm.controls.houseProperties['controls'].state.setValue(this.itrSummaryForm.controls['state'].value);
+    (this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['locality'].setValue(this.itrSummaryForm.controls['address'].value);
+    (this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['country'].setValue('INDIA');   //91
+    (this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['pinCode'].setValue(this.itrSummaryForm.controls['pinCode'].value);
+    (this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['city'].setValue(this.itrSummaryForm.controls['city'].value);
+    (this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['state'].setValue(this.itrSummaryForm.controls['state'].value);
   }
 
   otherSource: any = [];       //Incomes Part
@@ -2528,7 +2510,7 @@ export class TaxSummaryComponent implements OnInit {
     dividend: 0,
     toatlIncome: 0
   }
-  setOtherSourceIncomeValue(incomeVal, type) {
+  setOtherSourceIncomeValue(incomeVal: any, type: any) {
     debugger
     console.log('incomeVal: ', incomeVal, ' type: ', type)
     if (Number(incomeVal) !== 0 && this.utilService.isNonEmpty(incomeVal)) {
@@ -2549,10 +2531,9 @@ export class TaxSummaryComponent implements OnInit {
       }
       console.log('this.otherSource: ', this.otherSource)
       this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.dividend;
-      console.log('Total other income: ', this.sourcesOfIncome.toatlIncome)
 
       //this.itrSummaryForm.controls['totalIncomeFromOtherResources'].setValue(this.sourcesOfIncome.toatlIncome)    //otherIncome
-      this.itrSummaryForm['controls'].taxSummary['controls'].otherIncome.setValue(this.sourcesOfIncome.toatlIncome)
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].setValue(this.sourcesOfIncome.toatlIncome)
       this.calculateGrossTotalIncome()
     }
     else {
@@ -2575,10 +2556,9 @@ export class TaxSummaryComponent implements OnInit {
         }
         console.log('this.otherSource: ', this.otherSource)
         this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.dividend;
-        console.log('Total other income: ', this.sourcesOfIncome.toatlIncome)
 
         //this.itrSummaryForm.controls['totalIncomeFromOtherResources'].setValue(this.sourcesOfIncome.toatlIncome)
-        this.itrSummaryForm['controls'].taxSummary['controls'].otherIncome.setValue(this.sourcesOfIncome.toatlIncome)
+        (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].setValue(this.sourcesOfIncome.toatlIncome);
         this.calculateGrossTotalIncome()
       }
     }
@@ -2588,14 +2568,10 @@ export class TaxSummaryComponent implements OnInit {
 
 
   setAnnualVal() {
-    console.log('itr---->', this.itrSummaryForm)
-    console.log('itr control---->', this.itrSummaryForm.controls)
-    console.log('itr control with house Proprty---->', this.itrSummaryForm.controls.houseProperties)
-    console.log('itr control with house Proprty---->', this.itrSummaryForm.controls.houseProperties['controls'].grossAnnualRentReceived.value)
-    let annualVal = Number(this.itrSummaryForm.controls.houseProperties['controls'].grossAnnualRentReceived.value) - Number(this.itrSummaryForm.controls.houseProperties['controls'].propertyTax.value);
-    this.itrSummaryForm.controls.houseProperties['controls'].annualValue.setValue(annualVal);
-    if (this.utilService.isNonEmpty(this.itrSummaryForm.controls.houseProperties['controls'].annualValue.value) || this.itrSummaryForm.controls.houseProperties['controls'].annualValue.value > 0) {
-      let standerdDeduct = Math.round((Number(this.itrSummaryForm.controls.houseProperties['controls'].annualValue.value) * 30) / 100);
+    let annualVal = Number((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['grossAnnualRentReceived'].value) - Number((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['propertyTax'].value);
+    (this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['annualValue'].setValue(annualVal);
+    if (this.utilService.isNonEmpty((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value) || (this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value > 0) {
+      let standerdDeduct = Math.round((Number((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value) * 30) / 100);
       var stadDeuct = [];
       stadDeuct.push(standerdDeduct)
       // *************************
@@ -2606,13 +2582,13 @@ export class TaxSummaryComponent implements OnInit {
 
   mainHousingData: any = [];
   setNetHousingProLoan() {
-    console.log('House Pro Data: ', this.itrSummaryForm.controls.houseProperties.value);
-    this.mainHousingData.push(this.itrSummaryForm.controls.houseProperties.value[0])
+    console.log('House Pro Data: ', this.itrSummaryForm.controls['houseProperties'].value);
+    this.mainHousingData.push(this.itrSummaryForm.controls['houseProperties'].value[0])
     console.log('Housh=ging Data=== ', this.mainHousingData)
-    // let netHousingProLoan = Number(this.itrSummaryForm.controls.houseProperties['controls'].annualValue.value) - Number(this.itrSummaryForm.controls['hpStandardDeduction'].value)
+    // let netHousingProLoan = Number(this.itrSummaryForm.controls['houseProperties.controls['annualValue.value) - Number(this.itrSummaryForm.controls['hpStandardDeduction'].value)
     // this.itrSummaryForm.controls['hpStandardDeduction'].setValue(hpStadDeduct);
     // this.itrSummaryForm.controls['netHousePropertyIncome'].setValue(netHousePro);
-    let netHousingProLoan = Number(this.itrSummaryForm.controls.houseProperties['controls'].annualValue.value) - Number(this.itrSummaryForm.controls['hpStandardDeduction'].value)
+    let netHousingProLoan = Number((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value) - Number(this.itrSummaryForm.controls['hpStandardDeduction'].value)
     var netHousing = [];
     netHousing.push(netHousingProLoan)
     this.itrSummaryForm.controls['netHousePropertyIncome'].setValue(netHousing);
@@ -2624,14 +2600,14 @@ export class TaxSummaryComponent implements OnInit {
     debugger
     if (this.itrType.itrOne) {
       debugger
-      let gti = Number(this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.value) + Number(this.itrSummaryForm['controls'].taxSummary['controls'].otherIncome.value) + Number(this.itrSummaryForm['controls'].taxSummary['controls'].salary.value);
-      this.itrSummaryForm['controls'].taxSummary['controls'].grossTotalIncome.setValue(gti);
+      let gti = Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].value);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['grossTotalIncome'].setValue(gti);
       this.calculateTotalIncome();
     }
     else if (this.itrType.itrFour) {
-      let gti = Number(this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.value) + Number(this.itrSummaryForm['controls'].taxSummary['controls'].otherIncome.value) + Number(this.itrSummaryForm['controls'].taxSummary['controls'].salary.value)
-        + Number(this.itrSummaryForm['controls'].taxSummary['controls'].presumptiveIncome.value);
-      this.itrSummaryForm['controls'].taxSummary['controls'].grossTotalIncome.setValue(gti);
+      let gti = Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].value)
+        + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['presumptiveIncome'].value);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['grossTotalIncome'].setValue(gti);
       this.calculateTotalIncome();
     }
 
@@ -2640,8 +2616,6 @@ export class TaxSummaryComponent implements OnInit {
   totalOfExcempt: any = 0;
   setTotalOfExempt() {
     this.totalOfExcempt = Number(this.itrSummaryForm.controls['ppfInterest'].value) + Number(this.itrSummaryForm.controls['giftFromRelative'].value) + Number(this.itrSummaryForm.controls['anyOtherExcemptIncome'].value)
-    console.log('totalOfExcempt: ', this.totalOfExcempt)
-    console.log('totalOfExcempt in Incomes: ', this.itrSummaryForm['controls'].assesse['controls'].incomes.value)
   }
 
   sec80DobjVal = {
@@ -2651,7 +2625,7 @@ export class TaxSummaryComponent implements OnInit {
     parentAge: '',
     medicalExpendature: 0
   }
-  setDeduction80DVal(insuranceVal, type) {
+  setDeduction80DVal(insuranceVal:any, type:any) {
     //  alert(insuranceVal)
     if (insuranceVal !== 0 || this.utilService.isNonEmpty(insuranceVal)) {
       if (type === 'forSelf') {
@@ -2669,10 +2643,10 @@ export class TaxSummaryComponent implements OnInit {
       else if (type === 'medicalExpendature') {
         this.sec80DobjVal.medicalExpendature = insuranceVal;
       }
-      // console.log('itr control with sec80DForm---->', this.itrSummaryForm.controls.sec80DForm['controls'].insuranceSelf.value)
+      // console.log('itr control with sec80DForm---->', this.itrSummaryForm.controls['sec80DForm.controls['insuranceSelf.value)
       let sec80dVal = Number(this.sec80DobjVal.healthInsuarancePremiumSelf) + Number(this.sec80DobjVal.healthInsuarancePremiumParents) + Number(this.sec80DobjVal.preventiveHealthCheckupFamily) + Number(this.sec80DobjVal.medicalExpendature);
       this.itrSummaryForm.controls['us80d'].setValue(sec80dVal);
-      this.calculateTotalDeduction()       // this.itrSummaryForm.controls[''].us80d.setValue(sec80dVal);
+      this.calculateTotalDeduction()       // this.itrSummaryForm.controls[''].us80d'].setValue(sec80dVal);
 
     }
     else {
@@ -2696,12 +2670,11 @@ export class TaxSummaryComponent implements OnInit {
 
   }
 
-  getdeductionTotal(deductionArray) {
+  getdeductionTotal(deductionArray: any) {
     var total = 0;
     for (let i = 0; i < deductionArray.length; i++) {
       total = total + Number(deductionArray[i].eligibleAmount);
     }
-    console.log('Total dneeAmountInCash: ', total)
     this.itrSummaryForm.controls['us80g'].setValue(total);
     this.calculateTotalDeduction()
   }
@@ -2715,31 +2688,30 @@ export class TaxSummaryComponent implements OnInit {
       Number(this.itrSummaryForm.controls['us80d'].value) + Number(this.itrSummaryForm.controls['us80eeb'].value) + Number(this.itrSummaryForm.controls['other'].value);
 
     //this.itrSummaryForm.controls['deductionUnderChapterVIA'].setValue(deductTotal);
-    this.itrSummaryForm['controls'].taxSummary['controls'].totalDeduction.setValue(deductTotal)
-    console.log('deductionUnderChapterVIA: ', this.itrSummaryForm['controls'].taxSummary['controls'].totalDeduction.value)
+    (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalDeduction'].setValue(deductTotal)
     this.calculateTotalIncome();
     console.log('jdjdj')
   }
 
   calculateTotalIncome() {  //Calculate point 6
-    debugger
-    let totalIncome = Number(this.itrSummaryForm['controls'].taxSummary['controls'].grossTotalIncome.value) - Number(this.itrSummaryForm['controls'].taxSummary['controls'].totalDeduction.value);
+
+    let totalIncome = Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['grossTotalIncome'].value) - Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalDeduction'].value);
     if (totalIncome > 0) {
-      debugger
+
       // this.itrSummaryForm.controls['totalIncome'].setValue(totalIncome);
-      totalIncome = this.roundOf10Val(totalIncome)
-      this.itrSummaryForm['controls'].taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.setValue(totalIncome)
+      totalIncome = this.roundOf10Val(totalIncome);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalIncomeAfterDeductionIncludeSR'].setValue(totalIncome)
     }
     else {
       //this.itrSummaryForm.controls['totalIncome'].setValue(0);
-      this.itrSummaryForm['controls'].taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.setValue(0)
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalIncomeAfterDeductionIncludeSR'].setValue(0)
     }
 
 
     this.calculateRebateus87A()
   }
 
-  roundOf10Val(num) {
+  roundOf10Val(num:any) {
     num = parseFloat(num);
     console.log(num)
     console.log('num: ', num, ' num/10: ', num / 10, ' Math.round(num / 10): ', Math.round(num / 10), ' (Math.round(num / 10) * 10)', (Math.round(num / 10) * 10))
@@ -2748,88 +2720,83 @@ export class TaxSummaryComponent implements OnInit {
 
   calculateRebateus87A() {    //Calculate point 8 (Less: Rebate u/s 87A)
     // debugger
-    console.log(this.itrSummaryForm['controls'].taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.value)
-    console.log(this.itrSummaryForm['controls'].assesse['controls'].residentialStatus.value)
     // Remove logic as descuss with brij, user direct enter this amount
 
-    // if (this.itrSummaryForm['controls'].assesse['controls'].residentialStatus.value === 'RESIDENT' && (this.itrSummaryForm['controls'].taxSummary['controls'].totalIncomeAfterDeductionIncludeSR.value < 500000)) {
-    //   this.itrSummaryForm['controls'].taxSummary['controls'].forRebate87Tax.setValue(12500)
+    // if (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['residentialStatus.value === 'RESIDENT' && (this.itrSummaryForm.controls['taxSummary.controls['totalIncomeAfterDeductionIncludeSR.value < 500000)) {
+    //   this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(12500)
     // } else {
-    //   this.itrSummaryForm['controls'].taxSummary['controls'].forRebate87Tax.setValue(0)
+    //   this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(0)
     // }
 
     this.calculateTaxAfterRebate();
   }
 
   calculateTaxAfterRebate() {      //Calculate point 9 (Tax after rebate (7-8))
-    let taxAfterRebat = Number(this.itrSummaryForm['controls'].taxSummary['controls'].taxOnTotalIncome.value) - Number(this.itrSummaryForm['controls'].taxSummary['controls'].forRebate87Tax.value);
+    let taxAfterRebat = Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxOnTotalIncome'].value) - Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['forRebate87Tax'].value);
     if (taxAfterRebat > 0) {
-      this.itrSummaryForm['controls'].taxSummary['controls'].taxAfterRebate.setValue(taxAfterRebat);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxAfterRebate'].setValue(taxAfterRebat);
     }
     else {
-      this.itrSummaryForm['controls'].taxSummary['controls'].taxAfterRebate.setValue(0);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxAfterRebate'].setValue(0);
     }
 
     this.calculateHealthEducsCess()
   }
 
   calculateHealthEducsCess() {      //Calculate point 10 (Tax after rebate (7-8))
-    if (this.itrSummaryForm['controls'].taxSummary['controls'].taxAfterRebate.value > 0) {
-      let healthEduCes = Math.round((this.itrSummaryForm['controls'].taxSummary['controls'].taxAfterRebate.value * 4) / 100)
-      this.itrSummaryForm['controls'].taxSummary['controls'].cessAmount.setValue(healthEduCes);
+    if ((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxAfterRebate'].value > 0) {
+      let healthEduCes = Math.round(((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxAfterRebate'].value * 4) / 100);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['cessAmount'].setValue(healthEduCes);
     }
     else {
-      this.itrSummaryForm['controls'].taxSummary['controls'].cessAmount.setValue(0);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['cessAmount'].setValue(0);
     }
     this.calculateTotalTaxCess();
   }
 
   calculateTotalTaxCess() {      //Calculate point 11 (Total tax & cess (9 + 10))
 
-    let totalTaxCess = Number(this.itrSummaryForm['controls'].taxSummary['controls'].taxAfterRebate.value) + Number(this.itrSummaryForm['controls'].taxSummary['controls'].cessAmount.value);
+    let totalTaxCess = Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxAfterRebate'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['cessAmount'].value);
     if (totalTaxCess > 0) {
-      this.itrSummaryForm['controls'].taxSummary['controls'].totalTax.setValue(totalTaxCess);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTax'].setValue(totalTaxCess);
     } else {
-      this.itrSummaryForm['controls'].taxSummary['controls'].totalTax.setValue(0);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTax'].setValue(0);
     }
     this.calculateTaxAfterRelif();
   }
 
   calculateTaxAfterRelif() {   //Calculate point 13 (Tax after relief  (11-12))
-    let taxAfterRelif = Number(this.itrSummaryForm['controls'].taxSummary['controls'].totalTax.value) - Number(this.itrSummaryForm['controls'].taxSummary['controls'].taxReliefUnder89.value);
+    let taxAfterRelif = Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTax'].value) - Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxReliefUnder89'].value);
     if (taxAfterRelif > 0) {
-      this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxRelief.setValue(taxAfterRelif);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxRelief'].setValue(taxAfterRelif);
     } else {
-      this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxRelief.setValue(0);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxRelief'].setValue(0);
     }
     this.calculateTotalInterestFees();
   }
 
   calculateTotalInterestFees() {    //Calculate point 14 & 15 (Total Tax, fee and Interest (13+14))
-    this.totalInterest = Number(this.itrSummaryForm['controls'].taxSummary['controls'].s234A.value) + Number(this.itrSummaryForm['controls'].taxSummary['controls'].s234B.value) +
-      Number(this.itrSummaryForm['controls'].taxSummary['controls'].s234C.value) + Number(this.itrSummaryForm['controls'].taxSummary['controls'].s234F.value);
-    this.itrSummaryForm['controls'].taxSummary['controls'].interestAndFeesPayable.setValue(this.totalInterest)
+    this.totalInterest = Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234A'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234B'].value) +
+      Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234C'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234F'].value);
+    (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['interestAndFeesPayable'].setValue(this.totalInterest)
 
-    let totalInterstFees = Number(this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxRelief.value) + this.totalInterest;
-    this.itrSummaryForm['controls'].taxSummary['controls'].agrigateLiability.setValue(totalInterstFees)     //Point 15
+    let totalInterstFees = Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxRelief'].value) + this.totalInterest;
+    (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['agrigateLiability'].setValue(totalInterstFees)     //Point 15
 
     this.calculateNetTaxPayble();
   }
 
   calculateNetTaxPayble() {          //Calculate point 17 (Net Tax Payable/ (Refund) (15 - 16))
     // alert('call...')
-    console.log(this.itrSummaryForm['controls'].taxSummary['controls'].agrigateLiability.value, this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxesPaid.value)
-    let netTaxPayble = Number(this.itrSummaryForm['controls'].taxSummary['controls'].agrigateLiability.value) - Number(this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxesPaid.value);
+    let netTaxPayble = Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['agrigateLiability'].value) - Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxesPaid'].value);
     if (netTaxPayble > 0) {
       // this.itrSummaryForm.controls['netTaxPayable'].setValue(netTaxPayble)
-      this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.setValue(netTaxPayble)
-      this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.setValue(0)
-      console.log('taxpayable: ', this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value)
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxpayable'].setValue(netTaxPayble);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxRefund'].setValue(0)
     }
     else {
-      this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.setValue(netTaxPayble)
-      this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.setValue(0)
-      console.log('taxRefund: ', this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value)
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxRefund'].setValue(netTaxPayble);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxpayable'].setValue(0)
     }
 
 
@@ -2837,7 +2804,7 @@ export class TaxSummaryComponent implements OnInit {
 
 
 
-  setTotalTDSVal(tdsData, type) {
+  setTotalTDSVal(tdsData: any, type: any) {
     var total = 0;
     for (let i = 0; i < tdsData.length; i++) {
       total = total + Number(tdsData[i].totalTdsDeposited);
@@ -2853,11 +2820,11 @@ export class TaxSummaryComponent implements OnInit {
     }
     this.totalTDS = this.taxesPaid.tdsOnSalary + this.taxesPaid.tdsOtherThanSalary + this.taxesPaid.tdsOnSal26QB + this.taxesPaid.tcs + this.taxesPaid.advanceSelfAssTax;
     //this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS) 
-    this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxesPaid.setValue(this.totalTDS)
+    (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxesPaid'].setValue(this.totalTDS)
     this.calculateNetTaxPayble();        //Calculate point 17
   }
 
-  setTotalTCSVal(tscInfo) {
+  setTotalTCSVal(tscInfo:any) {
     var total = 0;
     for (let i = 0; i < tscInfo.length; i++) {
       total = total + Number(tscInfo[i].totalTcsDeposited);
@@ -2866,11 +2833,11 @@ export class TaxSummaryComponent implements OnInit {
     this.taxesPaid.tcs = total;
     this.totalTDS = this.taxesPaid.tdsOnSalary + this.taxesPaid.tdsOtherThanSalary + this.taxesPaid.tdsOnSal26QB + this.taxesPaid.tcs + this.taxesPaid.advanceSelfAssTax;
     //this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS) 
-    this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxesPaid.setValue(this.totalTDS)
+    (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxesPaid'].setValue(this.totalTDS)
     this.calculateNetTaxPayble();        //Calculate point 17
   }
 
-  setTotalAdvSelfTaxVal(advSelfTaxInfo) {
+  setTotalAdvSelfTaxVal(advSelfTaxInfo:any) {
     var total = 0;
     for (let i = 0; i < advSelfTaxInfo.length; i++) {
       total = total + Number(advSelfTaxInfo[0].totalTax);
@@ -2885,18 +2852,17 @@ export class TaxSummaryComponent implements OnInit {
     this.taxesPaid.advanceSelfAssTax = total;
     this.totalTDS = this.taxesPaid.tdsOnSalary + this.taxesPaid.tdsOtherThanSalary + this.taxesPaid.tdsOnSal26QB + this.taxesPaid.tcs + this.taxesPaid.advanceSelfAssTax;
     //this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS) 
-    this.itrSummaryForm['controls'].taxSummary['controls'].totalTaxesPaid.setValue(this.totalTDS)
+    (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxesPaid'].setValue(this.totalTDS)
     //console.log('taxesPaid: ', this.taxesPaid)
 
     this.calculateNetTaxPayble();        //Calculate point 17
   }
 
-  setValueInLoanObj(interestAmount) {
-    console.log('interestAmount: ', interestAmount)
+  setValueInLoanObj(interestAmount:any) {
     if (interestAmount.valid) {
-      this.itrSummaryForm['controls'].houseProperties['controls'].loans['controls'].loanType.setValue('HOUSING');
+      ((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['loans'] as FormGroup).controls['loanType'].setValue('HOUSING');
     } else {
-      this.itrSummaryForm['controls'].houseProperties['controls'].loans['controls'].loanType.setValue(null);
+      ((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['loans'] as FormGroup).controls['loanType'].setValue(null);
     }
   }
 
@@ -2908,12 +2874,12 @@ export class TaxSummaryComponent implements OnInit {
     console.log('itrSummaryForm validation: ', this.itrSummaryForm.valid)
     console.log('itr summary: ', this.itrSummaryForm.valid, ' business form: ', (this.itrType.itrFour ? this.businessFormValid : true))
     if (this.itrSummaryForm.valid && (this.itrType.itrFour ? this.businessFormValid : true)) {
-    
-      if(this.newItrSumChanges){
-        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/new-summary/itr-one', ['trackEvent', 'New Summary', 'ITR 1/4', this.itrSummaryForm['controls'].assesse['controls'].contactNumber.value], environment.matomoScriptId);
+
+      if (this.newItrSumChanges) {
+        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/new-summary/itr-one', ['trackEvent', 'New Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
       }
-      else{
-        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/itrFirst', ['trackEvent', 'Old Summary', 'ITR 1/4', this.itrSummaryForm['controls'].assesse['controls'].contactNumber.value], environment.matomoScriptId);
+      else {
+        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/itrFirst', ['trackEvent', 'Old Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
       }
 
       if (this.utilService.isNonEmpty(this.sourcesOfIncome)) {
@@ -2984,19 +2950,18 @@ export class TaxSummaryComponent implements OnInit {
         //     };
         //     this.incomeData.push(obj)
         // }
-        console.log('this.incomeData.push(obj): ', this.incomeData)
-        this.itrSummaryForm['controls'].assesse['controls'].incomes.setValue(this.incomeData);
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['incomes'].setValue(this.incomeData);
       }
 
       //newRegime Exempt Income data binding
-      if(this.newItrSumChanges){
-        if(this.exemptIncomeData.length > 0){
-          this.itrSummaryForm.controls.exemptIncomes.setValue(this.exemptIncomeData);
+      if (this.newItrSumChanges) {
+        if (this.exemptIncomeData.length > 0) {
+          this.itrSummaryForm.controls['exemptIncomes'].setValue(this.exemptIncomeData);
         }
       }
 
       //newRegime Summary bind
-      this.itrSummaryForm.controls.newTaxRegime.setValue(this.newRegimeTaxSummary)
+      this.itrSummaryForm.controls['newTaxRegime'].setValue(this.newRegimeTaxSummary)
 
       if (this.utilService.isNonEmpty(this.totalOfExcempt)) {
         let incomeObj = {
@@ -3009,7 +2974,7 @@ export class TaxSummaryComponent implements OnInit {
         }
 
         this.incomeData.push(incomeObj)
-        this.itrSummaryForm['controls'].assesse['controls'].incomes.setValue(this.incomeData)
+          (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['incomes'].setValue(this.incomeData)
       }
 
 
@@ -3030,7 +2995,7 @@ export class TaxSummaryComponent implements OnInit {
           }
 
           insuranceData.push(obj);
-          this.itrSummaryForm['controls'].assesse['controls'].insurances.setValue(insuranceData)
+          (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['insurances'].setValue(insuranceData)
         }
         // if (this.sec80DobjVal.preventiveHealthCheckupFamily !== 0) {
         //   let obj = {
@@ -3045,7 +3010,7 @@ export class TaxSummaryComponent implements OnInit {
         //     medicalExpenditure: null
         //   }
         //   insuranceData.push(obj);
-        //   this.itrSummaryForm['controls'].assesse['controls'].insurances.setValue(insuranceData)
+        //   this.itrSummaryForm.controls['assesse'] as FormGroup).controls['insurances'].setValue(insuranceData)
         // }
         if (this.sec80DobjVal.healthInsuarancePremiumParents !== 0 || this.sec80DobjVal.medicalExpendature !== 0) {
           let obj = {
@@ -3060,15 +3025,15 @@ export class TaxSummaryComponent implements OnInit {
             medicalExpenditure: this.newItrSumChanges ? (this.sec80DobjVal.parentAge === 'above60' ? this.sec80DobjVal.medicalExpendature : 0) : 0
           }
           insuranceData.push(obj);
-          this.itrSummaryForm['controls'].assesse['controls'].insurances.setValue(insuranceData)
+          (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['insurances'].setValue(insuranceData)
         }
 
         if (this.sec80DobjVal.parentAge !== '' || this.sec80DobjVal.parentAge !== null) {
           if (this.sec80DobjVal.parentAge === 'bellow60') {
-            this.itrSummaryForm['controls'].assesse['controls'].systemFlags['controls'].hasParentOverSixty.setValue(false)
+            ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['systemFlags'] as FormGroup).controls['hasParentOverSixty'].setValue(false)
           }
           else if (this.sec80DobjVal.parentAge === 'above60') {
-            this.itrSummaryForm['controls'].assesse['controls'].systemFlags['controls'].hasParentOverSixty.setValue(true)
+            ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['systemFlags'] as FormGroup).controls['hasParentOverSixty'].setValue(true)
           }
         }
 
@@ -3082,16 +3047,16 @@ export class TaxSummaryComponent implements OnInit {
         var presumData = [];
         if (this.utilService.isNonEmpty(this.businessObject.natureOfBusiness44AD) && this.utilService.isNonEmpty(this.businessObject.tradeName44AD)) {
 
-          console.log(this.natureOfBusinessDropdown44AD.filter(item => item.label.toLowerCase() === this.businessObject.natureOfBusiness44AD.toLowerCase()).code)
-          console.log(this.natureOfBusinessDropdown44AD.filter(item => item.label.toLowerCase() === this.businessObject.natureOfBusiness44AD.toLowerCase())[0].code)
+          console.log(this.natureOfBusinessDropdown44AD.filter((item: any) => item.label.toLowerCase() === this.businessObject.natureOfBusiness44AD.toLowerCase()).code)
+          console.log(this.natureOfBusinessDropdown44AD.filter((item: any) => item.label.toLowerCase() === this.businessObject.natureOfBusiness44AD.toLowerCase())[0].code)
 
-          this.businessObject.natureOfBusiness44AD = this.natureOfBusinessDropdown44AD.filter(item => item.label.toLowerCase() === this.businessObject.natureOfBusiness44AD.toLowerCase())[0].code;
+          this.businessObject.natureOfBusiness44AD = this.natureOfBusinessDropdown44AD.filter((item: any) => item.label.toLowerCase() === this.businessObject.natureOfBusiness44AD.toLowerCase())[0].code;
 
           var presumptiveBusinessObj = {
             businessType: 'BUSINESS',
             natureOfBusiness: this.businessObject.natureOfBusiness44AD,//profession code
             tradeName: this.businessObject.tradeName44AD,//trade name
-            incomes: [],
+            incomes: [] as any[],
             taxableIncome: Number(this.businessObject.received44ADtaotal),
             exemptIncome: Number(this.businessObject.presumptive44ADtotal)
           }
@@ -3132,12 +3097,12 @@ export class TaxSummaryComponent implements OnInit {
         debugger
         if (this.utilService.isNonEmpty(this.businessObject.natureOfBusiness44ADA) && this.utilService.isNonEmpty(this.businessObject.tradeName44ADA)) {
 
-          this.businessObject.natureOfBusiness44ADA = this.natureOfBusinessDropdown44ADA.filter(item => item.label === this.businessObject.natureOfBusiness44ADA)[0].code;
+          this.businessObject.natureOfBusiness44ADA = this.natureOfBusinessDropdown44ADA.filter((item: any) => item.label === this.businessObject.natureOfBusiness44ADA)[0].code;
           var presumptiveProfessionalObj = {
             businessType: 'PROFESSIONAL',
             natureOfBusiness: this.businessObject.natureOfBusiness44ADA,//profession code
             tradeName: this.businessObject.tradeName44ADA,//trade name
-            incomes: []
+            incomes: [] as any[]
           }
 
           if (this.utilService.isNonEmpty(this.businessObject.grossReciept)) {
@@ -3153,29 +3118,26 @@ export class TaxSummaryComponent implements OnInit {
 
           presumData.push(presumptiveProfessionalObj)
         }
-        console.log('presumptiveBusinessObj: ', presumptiveBusinessObj)
-        console.log('presumptiveProfessionalObj: ', presumptiveProfessionalObj)
-        console.log('Main presumptiveIncomeObj ===> ', presumData)
-        this.itrSummaryForm['controls'].assesse['controls'].business['controls'].presumptiveIncomes.setValue(presumData)
+        ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['business'] as FormGroup).controls['presumptiveIncomes'].setValue(presumData)
       }
 
 
 
       /////////  taxPaid Bind part////////////////
       //console.log('itrSummaryForm taxPaid', this.itrSummaryForm.controls['taxPaid'].value)
-      var blackObj = {}
-      this.itrSummaryForm['controls'].assesse['controls'].taxPaid.value ? this.itrSummaryForm['controls'].assesse['controls'].taxPaid.value : this.itrSummaryForm['controls'].assesse['controls'].taxPaid.setValue(blackObj)
+      var blackObj = {};
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid'].value ? (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid'].value : (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid'].setValue(blackObj)
 
       //
-      var blankArray = [];
-      //this.itrSummaryForm['controls'].assesse['controls'].houseProperties.setValue([]);
-      this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value ? this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value : this.itrSummaryForm['controls'].assesse['controls'].houseProperties.setValue(blankArray)
+      var blankArray: any[] = [];
+      //this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].setValue([]);
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].value ? (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].value : (this.itrSummaryForm.controls['assesse'] as FormGroup).controls[''].setValue(blankArray);
 
-      this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value ? this.itrSummaryForm['controls'].assesse['controls'].bankDetails.value : this.itrSummaryForm['controls'].assesse['controls'].bankDetails.setValue(blankArray)
-      this.itrSummaryForm['controls'].assesse['controls'].employers.value ? this.itrSummaryForm['controls'].assesse['controls'].employers.value : this.itrSummaryForm['controls'].assesse['controls'].employers.setValue(blankArray)
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['bankDetails'].value ? (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['bankDetails'].value : (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['bankDetails'].setValue(blankArray);
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'].value ? (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'].value : (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'].setValue(blankArray);
 
 
-      this.itrSummaryForm['controls'].assesse['controls'].donations.value ? this.itrSummaryForm['controls'].assesse['controls'].donations.value : this.itrSummaryForm['controls'].assesse['controls'].donations.setValue(blankArray)
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].value ? (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].value : (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].setValue(blankArray)
 
       console.log('ITR summary Data: ', this.itrSummaryForm.value)
 
@@ -3198,7 +3160,7 @@ export class TaxSummaryComponent implements OnInit {
     }
     else {
       $('input.ng-invalid').first().focus();
-      return
+      return;
     }
   }
 
@@ -3206,14 +3168,14 @@ export class TaxSummaryComponent implements OnInit {
     location.href = environment.url + '/itr/summary/download/' + this.itrSummaryForm.value.summaryId;
   }
 
-  deleteData(type, index) {
+  deleteData(type: any, index: any) {
     if (type === 'Bank') {
       this.bankData.splice(index, 1)
     }
     else if (type === 'donationSec80G') {
       this.donationData.splice(index, 1)
-      //this.itrSummaryForm.controls['donations'].setValue(this.donationData);
-      this.itrSummaryForm['controls'].assesse['controls'].donations.setValue(this.donationData);
+        //this.itrSummaryForm.controls['donations'].setValue(this.donationData);
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].setValue(this.donationData);
       this.getdeductionTotal(this.donationData)
     }
     else if (type === 'tdsOnSal') {
@@ -3256,9 +3218,9 @@ export class TaxSummaryComponent implements OnInit {
         employerArray.push(this.employersData[i].employers)
       }
 
-      this.itrSummaryForm['controls'].taxSummary['controls'].salary.setValue(totalTaxableIncome)
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].setValue(totalTaxableIncome)
       this.calculateGrossTotalIncome();     //Calculate point 4 (Total gross salary)
-      this.itrSummaryForm['controls'].assesse['controls'].employers.setValue(employerArray)
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'].setValue(employerArray)
 
       // this.itrSummaryForm.controls['grossSalary'].setValue(this.grossSalary)
       // this.itrSummaryForm.controls['netSalary'].setValue(this.netSalary)
@@ -3267,8 +3229,7 @@ export class TaxSummaryComponent implements OnInit {
     }
     else if (type === 'House') {
       this.houseArray.splice(index, 1)
-      this.itrSummaryForm['controls'].assesse['controls'].houseProperties.setValue(this.houseArray);
-      console.log('Housing Data: ', this.itrSummaryForm['controls'].assesse['controls'].houseProperties.value)
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].setValue(this.houseArray);
       // this.hpStadDeduct.splice(index, 1)
       // this.netHousePro.splice(index, 1)
       // this.itrSummaryForm.controls['hpStandardDeduction'].setValue(this.hpStadDeduct);
@@ -3278,8 +3239,7 @@ export class TaxSummaryComponent implements OnInit {
       for (let i = 0; i < this.houseArray.length; i++) {
         totalExemptIncome = totalExemptIncome + this.houseArray[i].exemptIncome;
       }
-      this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.setValue(totalExemptIncome)
-      console.log('totalExemptIncome value: ', this.itrSummaryForm['controls'].taxSummary['controls'].housePropertyIncome.value)
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].setValue(totalExemptIncome)
       this.housingData.splice(index, 1)
       this.calculateGrossTotalIncome()
     }
@@ -3308,19 +3268,18 @@ export class TaxSummaryComponent implements OnInit {
     totalAssets: 0
   }
 
-  businessFormValid: boolean;
-  getBusinessData(businessInfo) {
+  businessFormValid!: boolean;
+  getBusinessData(businessInfo: any) {
     console.log('businessInfo: ', businessInfo)
     if (businessInfo.valid) {
       this.businessFormValid = true;
 
-      this.itrSummaryForm['controls'].assesse['controls'].business['controls'].financialParticulars.patchValue(businessInfo.value);
-      console.log('financialParticulars: ', this.itrSummaryForm['controls'].assesse['controls'].business['controls'].financialParticulars)
+      ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['business'] as FormGroup).controls['financialParticulars'].patchValue(businessInfo.value);
       Object.assign(this.businessObject, businessInfo.value)
       console.log('businessObject: ', this.businessObject)
 
       let prsumptTotal = Number(this.businessObject.presumptive44ADtotal) + Number(this.businessObject.presumptiveIncome);
-      this.itrSummaryForm['controls'].taxSummary['controls'].presumptiveIncome.setValue(prsumptTotal);
+      (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['presumptiveIncome'].setValue(prsumptTotal);
 
       //this.businessObject.prsumptiveIncomeTotal = prsumptTotal;
       this.calculateGrossTotalIncome()
@@ -3330,23 +3289,23 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  calIntersetFeess(){
+  calIntersetFeess() {
     this.newRegimeTaxSummary.interestAndFeesPayable = Number(this.newRegimeTaxSummary.s234A) + Number(this.newRegimeTaxSummary.s234B) +
-                                                      Number(this.newRegimeTaxSummary.s234C) + Number(this.newRegimeTaxSummary.s234F);
-    this.itrSummaryForm.controls.taxSummary['controls'].interestAndFeesPayable.setValue(this.newRegimeTaxSummary.interestAndFeesPayable);         
-                                                      
+      Number(this.newRegimeTaxSummary.s234C) + Number(this.newRegimeTaxSummary.s234F);
+    (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['interestAndFeesPayable'].setValue(this.newRegimeTaxSummary.interestAndFeesPayable);
+
     this.newRegimeTaxSummary.agrigateLiability = Number(this.newRegimeTaxSummary.interestAndFeesPayable) + Number(this.newRegimeTaxSummary.totalTaxRelief);
   }
 
-  calNewItrTaxesPaid(){
+  calNewItrTaxesPaid() {
     this.newRegimeTaxSummary.totalTaxesPaid = Number(this.newRegimeTaxesPaid.tdsOnSalary) + Number(this.newRegimeTaxesPaid.tdsOtherThanSalary) +
-                                                      Number(this.newRegimeTaxesPaid.tdsOnSal26QB) + Number(this.newRegimeTaxesPaid.tcs) +
-                                                      Number(this.newRegimeTaxesPaid.advanceSelfAssTax);
+      Number(this.newRegimeTaxesPaid.tdsOnSal26QB) + Number(this.newRegimeTaxesPaid.tcs) +
+      Number(this.newRegimeTaxesPaid.advanceSelfAssTax);
   }
 
 
-  initialiseNewRegimeTaxSummary(){
-    this.newRegimeTaxSummary ={
+  initialiseNewRegimeTaxSummary() {
+    this.newRegimeTaxSummary = {
       salary: 0,
       housePropertyIncome: 0,
       otherIncome: 0,
@@ -3383,11 +3342,11 @@ export class TaxSummaryComponent implements OnInit {
       advanceTaxSelfAssessmentTax: 0,
       presumptiveIncome: 0
     }
-    
+
   }
 
 
-  initialiseMainForm(){
+  initialiseMainForm() {
     this.itrSummaryForm = this.fb.group({
       _id: null,
       summaryId: 0,
@@ -3420,7 +3379,7 @@ export class TaxSummaryComponent implements OnInit {
         eFillingDate: null,    //dateOfFiling
         isRevised: null,
         isLate: null,
-       
+
         dateOfNotice: null,
         noticeIdentificationNo: null,
         isDefective: null,
@@ -3564,72 +3523,71 @@ export class TaxSummaryComponent implements OnInit {
     console.log('itrSummaryForm: ', this.itrSummaryForm)
   }
 
-  showHouseBtn(){
-    if(this.housingData.length > 0){
+  showHouseBtn() {
+    if (this.housingData.length > 0) {
       let houseProType = this.housingData[0].propertyType;
       // console.log(!this.newItrSumChanges , this.housingData.length > 1 , houseProType === 'LOP')
-      if(!this.newItrSumChanges || this.housingData.length > 1 || houseProType === 'LOP'){
+      if (!this.newItrSumChanges || this.housingData.length > 1 || houseProType === 'LOP') {
         return true;
       }
-      else{
+      else {
         return false
       }
     }
-    else{
+    else {
       return false;
     }
   }
 
-  getNumberFormat(val){
-    console.log('val & type: ',val, typeof val)
-    if(typeof val === 'string'){
-      val = val.replace(/\,/g,''); 
-      val=parseInt(val,10);
+  getNumberFormat(val: any) {
+    console.log('val & type: ', val, typeof val)
+    if (typeof val === 'string') {
+      val = val.replace(/\,/g, '');
+      val = parseInt(val, 10);
       return val;
     }
-    else{
+    else {
       return val;
     }
   }
 
 
-  showTaxPaybleValue(){
-    if(this.itrSummaryForm['controls'].assesse['controls'].regime.value === 'N'){
-      if(this.itrSummaryForm['controls'].taxSummary['controls'].taxpayable.value >= 0 && this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value === 0){
+  showTaxPaybleValue() {
+    if ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['regime'].value === 'N') {
+      if ((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxpayable'].value >= 0 && (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxRefund'].value === 0) {
         return true;
       }
-      else{
+      else {
         return false;
       }
     }
-    else{
-      if(this.newRegimeTaxSummary.taxpayable >= 0 && this.newRegimeTaxSummary.taxRefund === 0){
+    else {
+      if (this.newRegimeTaxSummary.taxpayable >= 0 && this.newRegimeTaxSummary.taxRefund === 0) {
         return true;
       }
-      else{
+      else {
         return false;
       }
     }
   }
 
-  showTaxRefundValue(){
-    if(this.itrSummaryForm['controls'].assesse['controls'].regime.value === 'N'){
-      if(this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value < 0 || this.itrSummaryForm['controls'].taxSummary['controls'].taxRefund.value > 0){
-          return true;
-      }
-      else{
-          return false;
-      }
-    }
-    else{
-      if(this.newRegimeTaxSummary.taxRefund < 0 || this.newRegimeTaxSummary.taxRefund > 0){
+  showTaxRefundValue() {
+    if ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['regime'].value === 'N') {
+      if ((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxRefund'].value < 0 || (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['taxRefund'].value > 0) {
         return true;
-    }
-    else{
+      }
+      else {
         return false;
+      }
     }
+    else {
+      if (this.newRegimeTaxSummary.taxRefund < 0 || this.newRegimeTaxSummary.taxRefund > 0) {
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
-
 
 }

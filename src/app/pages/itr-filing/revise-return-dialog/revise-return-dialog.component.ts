@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-import { ItrMsService } from 'app/services/itr-ms.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 
 @Component({
   templateUrl: './revise-return-dialog.component.html',
@@ -26,7 +26,7 @@ export class ReviseReturnDialogComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   async getITRByUserIdAndAssesmentYear(userId) {
     const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
       this.utilsService.showSnackBar('There is no any active filing year available')
       return;
@@ -37,7 +37,7 @@ export class ReviseReturnDialogComponent implements OnInit {
       if (result.length !== 0) {
         let isWIP_ITRFound = true;
         for (let i = 0; i < result.length; i++) {
-          let currentFiledITR = result.filter(item => (item.assessmentYear === currentFyDetails[0].assessmentYear && item.eFillingCompleted));
+          let currentFiledITR = result.filter((item:any) => (item.assessmentYear === currentFyDetails[0].assessmentYear && item.eFillingCompleted));
           if (result[i].eFillingCompleted || result[i].ackStatus === 'SUCCESS' || result[i].ackStatus === 'DELAY') {
             //   return "REVIEW"
           } else {
@@ -45,7 +45,7 @@ export class ReviseReturnDialogComponent implements OnInit {
             isWIP_ITRFound = false;
             this.ITR_JSON = result[i];
             if (currentFiledITR.length > 0) {
-              currentFiledITR = currentFiledITR.filter(item => item.isRevised === 'N');
+              currentFiledITR = currentFiledITR.filter((item:any) => item.isRevised === 'N');
               if (currentFiledITR.length > 0) {
                 this.ITR_JSON.orgITRAckNum = currentFiledITR[0].ackNumber;
                 this.ITR_JSON.orgITRDate = currentFiledITR[0].eFillingDate;
@@ -86,7 +86,7 @@ export class ReviseReturnDialogComponent implements OnInit {
   }
   async createReviseReturn(currentYearItrs) {
     const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
       this.utilsService.showSnackBar('There is no any active filing year available')
       return;
@@ -102,7 +102,7 @@ export class ReviseReturnDialogComponent implements OnInit {
       (result: any) => {
         console.log('Revised Return copy created Result=', result);
         this.ITR_JSON = result;
-        currentYearItrs = currentYearItrs.filter(item => item.isRevised === 'N');
+        currentYearItrs = currentYearItrs.filter((item:any) => item.isRevised === 'N');
         if (currentYearItrs.length > 0) {
           this.ITR_JSON.orgITRAckNum = currentYearItrs[0].ackNumber;
           this.ITR_JSON.orgITRDate = currentYearItrs[0].eFillingDate;

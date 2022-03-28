@@ -1,39 +1,22 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
+
  
-import { Component, OnInit, EventEmitter, HostListener, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, HostListener, Output, Input, DoCheck } from '@angular/core';
 
 @Component({
   selector: 'app-input-upload',
   templateUrl: './input-upload.component.html',
   styleUrls: ['./input-upload.component.css']
 })
-export class InputUploadComponent implements OnInit {
+export class InputUploadComponent implements OnInit, DoCheck {
 
-	@Input('upload') upload: boolean;
-	@Input('input_id') input_id: string;
-	@Input('isResetUploadedFile') isResetUploadedFile: boolean = false;
+	@Input() upload!: boolean;
+	@Input() input_id!: string;
+	@Input() isResetUploadedFile: boolean = false;
 
 	@Output() filesDropped = new EventEmitter<FileList>();
 	@Output() filesHovered = new EventEmitter();
 	@Output() filesUpload = new EventEmitter();
-	@Output() onResetFile = new EventEmitter();
+	@Output() resetFile = new EventEmitter();
 
   constructor() { }
 
@@ -53,11 +36,11 @@ export class InputUploadComponent implements OnInit {
   		fileObj.value = "";  		
   	}
   	setTimeout(() => {
-  		this.onResetFile.emit(true);
+  		this.resetFile.emit(true);
   	},500)
   }
 
-    getBase64(file) {
+    getBase64(file:any) {
 	  return new Promise((resolve, reject) => {
 	    const reader = new FileReader();
 	    reader.readAsDataURL(file);
@@ -67,7 +50,7 @@ export class InputUploadComponent implements OnInit {
 	}	
 	
   	@HostListener('drop', ['$event'])
-		onDrop($event) {
+		onDrop($event:any) {
 			$event.preventDefault();
 			
 			let transfer = $event.dataTransfer;
@@ -84,7 +67,7 @@ export class InputUploadComponent implements OnInit {
 		}
 
 	@HostListener('dragover', ['$event'])
-		onDragOver($event) {
+		onDragOver($event:any) {
 			$event.preventDefault();
 			this.filesHovered.emit(true);
 			this.upload = false;
@@ -92,19 +75,19 @@ export class InputUploadComponent implements OnInit {
 		}
 
 	@HostListener('dragleave', ['$event'])
-		onDragLeave($event) {
+		onDragLeave($event:any) {
 			this.filesHovered.emit(false);		
 		}
 
 	@HostListener('click', ['$event'])
-		onClick($event) {
+		onClick($event:any) {
 			console.log("click");
 			this.upload = false;
 			this.filesUpload.emit(this.upload);			
 		}
 
 	@HostListener('change', ['$event'])
-		onChange($event) {
+		onChange($event:any) {
 			$event.preventDefault();
 			this.filesDropped.emit($event.srcElement.files);
 

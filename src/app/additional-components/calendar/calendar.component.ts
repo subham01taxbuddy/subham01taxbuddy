@@ -26,22 +26,22 @@ import { Component, OnInit, HostListener, Input, Output, EventEmitter } from '@a
 })
 export class CalendarComponent implements OnInit {
 
-  @Input('label') label: string;
-  @Input('type') type: string;
-  @Input('name') name: string;
-  @Input('is_mandatory') is_mandatory: string = 'false';
-  @Input('value') value: string;
-  @Input('placeholder') placeholder: string;
-  @Input('position') position: string;
-  @Input('disabled') disabled: boolean = false;
+  @Input() label: string;
+  @Input() type: string;
+  @Input() name: string;
+  @Input() is_mandatory: string = 'false';
+  @Input() value: string;
+  @Input() placeholder: string;
+  @Input() position: string;
+  @Input() disabled: boolean = false;
 
-  @Input('init_from_date') init_from_date: any = new Date();
-  @Input('init_to_date') init_to_date: any = new Date();
+  @Input() init_from_date: any = new Date();
+  @Input() init_to_date: any = new Date();
 
-  @Input('restrict_from_date') restrict_from_date: any = new Date();  
+  @Input() restrict_from_date: any = new Date();  
 
-  @Input('isCompareDateShow') isCompareDateShow: boolean = false;
-  @Input('format') format: string = 'All';
+  @Input() isCompareDateShow: boolean = false;
+  @Input() format: string = 'All';
 
   @Output() sendBeginDate = new EventEmitter<Date>();
   @Output() sendEndDate = new EventEmitter<Date>();
@@ -135,10 +135,10 @@ export class CalendarComponent implements OnInit {
     this.endCalendar.date = new Date(this.endCalendar.date)
     this.beginCalendar = JSON.parse(JSON.stringify(this.from_data));
     this.beginCalendar.date = new Date(this.beginCalendar.date)*/
-    if(this.format == 'from') {      
+    if(this.format === 'from') {      
       this.createDateObject(this.from_data.year, this.from_data.month, this.from_data);
       this.compare_dates = false;
-    } else if(this.format == 'to') {
+    } else if(this.format === 'to') {
       this.createDateObject(this.to_data.year, this.to_data.month, this.to_data);
       this.compare_dates = false;
     } else {
@@ -202,7 +202,7 @@ export class CalendarComponent implements OnInit {
   	findFirstDay.setFullYear(year, month-1, 1);
   	firstDay = findFirstDay.getDay();
 
-    if(firstDay == 0) { firstDay = 6; }
+    if(firstDay === 0) { firstDay = 6; }
     else { firstDay = firstDay - 1; } 
 
   	object = object.concat(this.pushDays(count_prev_days, 'prev', count_prev_year, count_prev_month, count_prev_days - firstDay));
@@ -267,15 +267,15 @@ export class CalendarComponent implements OnInit {
         if(this.beginCalendar.date < object.dateObject[i][d].date && object.dateObject[i][d].date < this.endCalendar.date) {
           object.dateObject[i][d].calendar_selected = true;
         }
-        if(value == 'start') { 
+        if(value === 'start') { 
           object.dateObject[i][d].calendar_start = false;
-          if(this.beginCalendar.date.toDateString() == object.dateObject[i][d].date.toDateString()) { 
+          if(this.beginCalendar.date.toDateString() === object.dateObject[i][d].date.toDateString()) { 
             object.dateObject[i][d].calendar_start = true;
           } 
         }
         else { 
           object.dateObject[i][d].calendar_end = false;
-          if(this.endCalendar.date.toDateString() == object.dateObject[i][d].date.toDateString()) { 
+          if(this.endCalendar.date.toDateString() === object.dateObject[i][d].date.toDateString()) { 
             object.dateObject[i][d].calendar_end = true;
             object.dateObject[i][d].calendar_selected = false;
           } 
@@ -285,22 +285,22 @@ export class CalendarComponent implements OnInit {
   }
 
   disabledChangeMonth(day, object) {
-    if(day.month == 'prev') {
+    if(day.month === 'prev') {
       this.changeMonthUseArrow(-1, object);
-    } else if(day.month == 'next') { 
+    } else if(day.month === 'next') { 
       this.changeMonthUseArrow(+1, object);
     }
   }
 
   equalDates(val, side) {
-    if(side == 'start') {
+    if(side === 'start') {
       this.beginCalendar.date = new Date(val);
       this.from_data.year = this.beginCalendar.date.getFullYear();
       this.from_data.month = this.beginCalendar.date.getMonth() + 1;
       this.from_data.month_name = this.months_name[this.from_data.month - 1];
       this.createDateObject(this.from_data.year,  this.from_data.month,  this.from_data);
       this.calendarStartEnd(this.to_data, this.beginCalendar, 'start');
-    } else if(side == 'end') {
+    } else if(side === 'end') {
       this.endCalendar.date = new Date(val);
       this.to_data.year = this.endCalendar.date.getFullYear();
       this.to_data.month = this.endCalendar.date.getMonth() + 1;
@@ -366,7 +366,7 @@ export class CalendarComponent implements OnInit {
     
     if(dateDiff < 0) {            
       beginDays = { day: this.returnDays(this.from_data.year,this.from_data.month-1)+dateDiff, month: this.from_data.month-1 };    
-    } else if(dateDiff == 0) {            
+    } else if(dateDiff === 0) {            
       beginDays = { day: 1, month: this.from_data.month };    
     } else {
       beginDays = { day: dateDiff, month: this.from_data.month };    
@@ -430,11 +430,11 @@ export class CalendarComponent implements OnInit {
   }
 
   compareRange() {
-    if(this.compare_info.type == 'Day') {
+    if(this.compare_info.type === 'Day') {
       this.endDate = new Date();
       this.beginDate = new Date(this.endDate.getTime() - Number(this.compare_info.value - 1) * 86400000);
       this.dateRange();
-    } else if(this.compare_info.type == 'Month') {
+    } else if(this.compare_info.type === 'Month') {
       this.pipeFilter = 'on-month';
       this.selectedDates = [];
       for(var i = 0; i < Number(this.compare_info.value); i++) {
@@ -444,7 +444,7 @@ export class CalendarComponent implements OnInit {
         this.selectedDates[i] = new Date(this.beginDate.setMonth(this.beginDate.getMonth() + i));
       }
       this.beginDate = new Date(this.beginDate.setMonth(this.beginDate.getMonth() - Number(this.compare_info.value - 1)));
-    } else if(this.compare_info.type == 'Year') {
+    } else if(this.compare_info.type === 'Year') {
       this.pipeFilter = 'on-year';
       this.selectedDates = [];
       for(var i = 0; i < Number(this.compare_info.value); i++) {
@@ -456,7 +456,7 @@ export class CalendarComponent implements OnInit {
       this.beginDate = new Date(this.beginDate.setFullYear(this.beginDate.getFullYear() - Number(this.compare_info.value - 1)));
       this.getBeginYear = this.beginDate.getFullYear();
       this.getEndYear = this.endDate.getFullYear();
-    } else if(this.compare_info.type == 'Quarter') {
+    } else if(this.compare_info.type === 'Quarter') {
       let q_count = 1;
       this.pipeFilter = 'string';
       this.selectedDates = [];
@@ -475,17 +475,17 @@ export class CalendarComponent implements OnInit {
         if(q_count > 4) { q_count = 1; }
         this.selectedDates[i] = 'Q' + q_count++;
       }
-    } else if(this.compare_info.type == 'Week') { 
+    } else if(this.compare_info.type === 'Week') { 
       let w_count = 1;
       this.pipeFilter = 'string';
       this.selectedDates = [];
       this.endDate = new Date();
-      if(this.endDate.getDay() == 0) { this.endDate = new Date(this.endDate.setDate(this.endDate.getDate() + 6)); }
-      else if(this.endDate.getDay() == 1) { this.endDate = new Date(this.endDate.setDate(this.endDate.getDate() + 5)); }
-      else if(this.endDate.getDay() == 2) { this.endDate = new Date(this.endDate.setDate(this.endDate.getDate() + 4)); }
-      else if(this.endDate.getDay() == 3) { this.endDate = new Date(this.endDate.setDate(this.endDate.getDate() + 3)); }
-      else if(this.endDate.getDay() == 4) { this.endDate = new Date(this.endDate.setDate(this.endDate.getDate() + 2)); }
-      else if(this.endDate.getDay() == 5) { this.endDate = new Date(this.endDate.setDate(this.endDate.getDate() + 1)); }
+      if(this.endDate.getDay() === 0) { this.endDate = new Date(this.endDate.setDate(this.endDate.getDate() + 6)); }
+      else if(this.endDate.getDay() === 1) { this.endDate = new Date(this.endDate.setDate(this.endDate.getDate() + 5)); }
+      else if(this.endDate.getDay() === 2) { this.endDate = new Date(this.endDate.setDate(this.endDate.getDate() + 4)); }
+      else if(this.endDate.getDay() === 3) { this.endDate = new Date(this.endDate.setDate(this.endDate.getDate() + 3)); }
+      else if(this.endDate.getDay() === 4) { this.endDate = new Date(this.endDate.setDate(this.endDate.getDate() + 2)); }
+      else if(this.endDate.getDay() === 5) { this.endDate = new Date(this.endDate.setDate(this.endDate.getDate() + 1)); }
       this.beginDate = new Date();
       this.beginDate = new Date(this.beginDate.setDate(this.beginDate.getDate() - 7 * Number(this.compare_info.value)));
       for(var i = 0; i < Number(this.compare_info.value); i++) {
@@ -493,7 +493,7 @@ export class CalendarComponent implements OnInit {
       }
       this.getBeginYear = this.beginDate.getFullYear();
       this.getEndYear = this.endDate.getFullYear();
-    } else if(this.compare_info.type == 'Hour') {
+    } else if(this.compare_info.type === 'Hour') {
       this.pipeFilter = 'string';
       this.selectedDates = [];
       this.endDate = new Date();

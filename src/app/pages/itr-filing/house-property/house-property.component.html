@@ -10,7 +10,7 @@
                 </mat-expansion-panel-header>
 
                 <!--  <div class="content vertLine" style="width: 60%; padding-right: 10px;">
-                    <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+                    <app-document-upload (uploadDocument)="afterUploadDocs($event)"></app-document-upload>
                     <br>
                     <div>
                         <span *ngFor="let hpDocs of getAllHpDocs('LOAN_STATEMENT'); let i=index">
@@ -84,7 +84,7 @@
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                         <mat-error
-                                            *ngIf="housePropertyForm.controls.loans['controls'][i].controls['principalAmount'].hasError('pattern')">
+                                            *ngIf="housePropertyForm.controls['loans.controls['[i].controls['principalAmount'].hasError('pattern')">
                                             Enter
                                             positive number without decimal.</mat-error>
                                     </mat-form-field>
@@ -98,8 +98,8 @@
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
                                         <mat-error
-                                            *ngIf="housePropertyForm.controls.loans['controls'][i].controls['interestAmount'].hasError('pattern')">
-                                            <!-- || housePropertyForm.controls.loans['controls'][i].controls['interestAmount'].hasError('min') -->
+                                            *ngIf="housePropertyForm.controls['loans.controls['[i].controls['interestAmount'].hasError('pattern')">
+                                            <!-- || housePropertyForm.controls['loans.controls['[i].controls['interestAmount'].hasError('min') -->
                                             Enter positive number without decimal.
                                         </mat-error>
                                     </mat-form-field>
@@ -108,7 +108,7 @@
                         </span>
                     </div>
                     <mat-radio-group name="isEligibleFor80EE" formControlName="isEligibleFor80EE"
-                        *ngIf="housePropertyForm.controls.loans['controls'][0].controls['interestAmount'].value >= 200000">
+                        *ngIf="housePropertyForm.controls['loans.controls['[0].controls['interestAmount'].value >= 200000">
                         <div class="customradiobtn bdr_btm">
                             <mat-radio-button value="80EE" class="right-mrgn">Interest on loan taken for residential
                                 house

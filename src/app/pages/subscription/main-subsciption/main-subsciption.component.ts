@@ -1,14 +1,14 @@
 import { Component, Input, OnInit, OnDestroy, OnChanges, Output, EventEmitter } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { RoleBaseAuthGuardService } from 'app/services/role-base-auth-gaurd.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { environment } from 'environments/environment';
-import moment = require('moment');
+import * as moment from 'moment';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-gaurd.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { environment } from 'src/environments/environment';
 import { FilingCalendarComponent } from '../filing-calendar/filing-calendar.component';
 import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.component';
 declare function matomo(title: any, url: any, event: any, scriptId: any);
@@ -19,11 +19,11 @@ declare function matomo(title: any, url: any, event: any, scriptId: any);
   styleUrls: ['./main-subsciption.component.css']
 })
 export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
-  @Input('queryParam') queryParam: any;
-  @Input('from') from: any;
-  @Input('tabName') tabName: any;
+  @Input() queryParam: any;
+  @Input() from: any;
+  @Input() tabName: any;
   @Output() sendTotalCount = new EventEmitter<any>();
-  loading: boolean;
+  loading!: boolean;
   subscriptionListGridOptions: GridOptions;
   subscription: any;
   userId: any;
@@ -114,7 +114,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           if (params.data.smeSelected !== 'NA') {
             if (params.data.planAgreedByUserOn !== null && params.data.planAgreedByUserOn !== '') {
               return `<i class="fa fa-circle" style="color: green; font-size: 8px;" title="User Accepted changed amount" aria-hidden="true"></i> ` + params.data.smeSelected;
@@ -207,8 +207,9 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           } else if (diff > -8 && !params.data.served) {
             return 'Subscription will be end in next 7 days.';
           }
+          return '';
         },
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           let currentDate = new Date();
           let dateSent = new Date(params.data.endDate);
           let diff = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate())) / (1000 * 60 * 60 * 24));
@@ -256,7 +257,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       //     filterOptions: ["contains", "notContains"],
       //     debounceMs: 0
       //   },
-      //   cellRenderer: function (params) {
+      //   cellRenderer: function (params:any) {
       //     console.log('paramsparams: ', params)
       //     if (params.value === 'All Paid') {
       //       return `
@@ -291,7 +292,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Add Subscription plan"
           style="border: none;
             background: transparent; font-size: 16px; cursor:pointer">
@@ -300,7 +301,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -314,8 +315,8 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
-          if (params.data.txbdyInvoiceId == 0) {
+        cellRenderer: function (params:any) {
+          if (params.data.txbdyInvoiceId === 0) {
             return `<button type="button" class="action_icon add_button" title="Generate Invoice" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-files-o" aria-hidden="true" data-action-type="generateInvoice"></i>
@@ -330,7 +331,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -343,7 +344,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         field: "served",
         width: 50,
         pinned: 'right',
-        cellRenderer: params => {
+        cellRenderer: (params:any) => {
           return `<input type='checkbox' style="border: none;
              cursor:pointer;" data-action-type="served" ${params.data.served === true ? 'checked' : ''} />`;
         },
@@ -358,7 +359,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Start Filing" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-files-o" aria-hidden="true" data-action-type="start-filing"></i>
@@ -367,7 +368,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -381,7 +382,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="View Filing Calendar" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-calendar" aria-hidden="true" data-action-type="view-filing-calendar"></i>
@@ -390,7 +391,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -419,11 +420,11 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       this.allSubscriptions = response;
       this.loading = false;
       if (response.content instanceof Array && response.content.length > 0) {
-        this.subscriptionListGridOptions.api.setRowData(this.createRowData(response.content));
+        this.subscriptionListGridOptions.api?.setRowData(this.createRowData(response.content));
         this.config.totalItems = response.totalElements;
 
       } else {
-        this.subscriptionListGridOptions.api.setRowData(this.createRowData([]));
+        this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
         let msg = 'There is no records of subscription against this user';
         if (this.from === 'MY_SUB') {
@@ -559,7 +560,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   updateSubscription(value) {
     console.log('Subscription;', value);
     this.loading = true;
-    let temp = this.allSubscriptions.filter(item => item.subscriptionId === value.subscriptionId)
+    let temp = this.allSubscriptions.filter((item:any) => item.subscriptionId === value.subscriptionId)
     let request;
     if (temp instanceof Array && temp.length > 0) {
       request = temp[0];

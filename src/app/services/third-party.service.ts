@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'environments/environment';
-import { Http } from '@angular/http';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class ThirdPartyService {
 
-  constructor(private httpClient: HttpClient, private http: Http) { }
+  constructor(private httpClient: HttpClient, private http: HttpClient) { }
 
   getBankDetailByIFSCCode(...param) {
     let headers = new HttpHeaders();

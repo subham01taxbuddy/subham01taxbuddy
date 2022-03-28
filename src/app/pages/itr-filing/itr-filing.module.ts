@@ -11,9 +11,9 @@ import { ItrFilingRoutingModule } from './itr-filing.routing';
 import { CustomerProfileComponent } from './customer-profile/customer-profile.component';
 import { ItrFilingComponent } from './itr-filing.component';
 import { NgxLoadingModule } from 'ngx-loading';
-import { NgxImageZoomModule } from 'ngx-image-zoom';
+// import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { SharedModule } from 'app/shared/shared.module';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { ItrWizardComponent } from './itr-wizard/itr-wizard.component';
 import { PersonalInformationComponent } from './personal-information/personal-information.component';
 import { SalaryComponent } from './salary/salary.component';
@@ -50,7 +50,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
         ReactiveFormsModule,
         ItrFilingRoutingModule,
         NgxLoadingModule.forRoot({}),
-        NgxImageZoomModule.forRoot(),
+        // NgxImageZoomModule.forRoot(),
         PdfViewerModule,
         SharedModule,
         PagesModule,

@@ -1,19 +1,20 @@
 import { UpdateManualFilingComponent } from './../update-manual-filing/update-manual-filing.component';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { UtilsService } from './../../../services/utils.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { AppConstants } from 'app/shared/constants';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { HttpHeaders, HttpClient, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
-import { environment } from 'environments/environment';
+import { environment } from 'src/environments/environment';
 import { TitleCasePipe } from '@angular/common';
-import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, DateAdapter, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { UserMsService } from 'app/services/user-ms.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -184,7 +185,7 @@ export class CustomerProfileComponent implements OnInit {
     //   this.customerProfileForm.controls['planIdSelectedByTaxExpert'].setValue(null);
     // }
     if (this.utilsService.isNonEmpty(this.ITR_JSON.family) && this.ITR_JSON.family instanceof Array) {
-      this.ITR_JSON.family.filter(item => {
+      this.ITR_JSON.family.filter((item:any) => {
         if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
           this.customerProfileForm.patchValue({
             firstName: item.fName,
@@ -375,10 +376,10 @@ export class CustomerProfileComponent implements OnInit {
   //   const param = `/itr-status?userId=${this.ITR_JSON.userId}&source=USER&assessmentYear=${AppConstants.ayYear}`;
   //   this.userMsService.getMethod(param).subscribe(result => {
   //     if (result instanceof Array) {
-  //       const completedStatus = result.filter(item => item.completed === 'true' || item.completed === true)
+  //       const completedStatus = result.filter((item:any) => item.completed === 'true' || item.completed === true)
   //       const ids = completedStatus.map(status => status.statusId);
   //       const sorted = ids.sort((a, b) => a - b);
-  //       this.fillingStatus.setValue(sorted[sorted.length - 1])
+  //       this.fillingStatus'].setValue(sorted[sorted.length - 1])
   //     }
 
   //   })
@@ -456,7 +457,7 @@ export class CustomerProfileComponent implements OnInit {
     // Auto update status to Preparing ITR 
     console.error('screen Update status call in profile', this.statusId)
     const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
       this.utilsService.showSnackBar('There is no any active filing year available')
       return;

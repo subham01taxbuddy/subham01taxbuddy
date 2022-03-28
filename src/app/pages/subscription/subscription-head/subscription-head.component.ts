@@ -5,11 +5,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './subscription-head.component.html',
   styleUrls: ['./subscription-head.component.css']
 })
-export class SubscriptionHeadComponent implements OnInit {
+export class SubscriptionHeadComponent {
 
   constructor() { }
-
-  ngOnInit() {
-  }
 
 }

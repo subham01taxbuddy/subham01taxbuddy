@@ -1,21 +1,4 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
+
 
 import { Component, OnInit } from '@angular/core';
 import { NavbarService } from '../../services/navbar.service';
@@ -67,18 +50,18 @@ export class ListComponent implements OnInit {
 
   constructor(navbarService: NavbarService, public router: Router, public http: HttpClient,
     public _toastMessageService: ToastMessageService, private route: ActivatedRoute) {
-    NavbarService.getInstance(null).component_link_2 = 'list';
-    NavbarService.getInstance(null).component_link_3 = '';
-    NavbarService.getInstance(null).showBtns = 'list';
+    NavbarService.getInstance().component_link_2 = 'list';
+    NavbarService.getInstance().component_link_3 = '';
+    NavbarService.getInstance().showBtns = 'list';
   }
 
   ngOnInit() {
-    if (!NavbarService.getInstance(null).isSessionValid()) {
+    if (!NavbarService.getInstance().isSessionValid()) {
       this.router.navigate(['']);
       return;
     }
 
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params:any) => {
       if (params && params.type) {
         this.page_query_type = params.type;
       }
@@ -102,17 +85,17 @@ export class ListComponent implements OnInit {
     });
   }
 
-  onChangeAttrFilter(event) {
-    var tempReportD = this.invoices_list.filter(rd => {
+  onChangeAttrFilter(event:any) {
+    var tempReportD = this.invoices_list.filter((rd:any) => {
       var is_match = true;
       for (var i = 0; i < event.length; i++) {
         var it = event[i];
-        if (it.attr == 'Mobile Number' && it.value && rd.merchantMobileNumber.toLowerCase().indexOf(it.value.toLowerCase()) == -1 ||
-          it.attr == 'User Name' && it.value && rd.merchantName.toLowerCase().indexOf(it.value.toLowerCase()) == -1 ||
-          it.attr == 'Document Type' && it.value && rd.invoiceDocumentType && rd.invoiceDocumentType.toLowerCase().indexOf(it.value.toLowerCase()) == -1 ||
-          it.attr == 'Status of Invoice' && it.value && rd.invoiceStatus && rd.invoiceStatus.toLowerCase().indexOf(it.value.toLowerCase()) == -1 ||
-          it.attr == 'Invoice Owner' && it.value && rd.processedBy && rd.processedBy.toLowerCase().indexOf(it.value.toLowerCase()) == -1 ||
-          it.attr == 'Merchant Owner' && it.value && rd.merchantManagedBy && rd.merchantManagedBy.toLowerCase().indexOf(it.value.toLowerCase()) == -1
+        if (it.attr === 'Mobile Number' && it.value && rd.merchantMobileNumber.toLowerCase().indexOf(it.value.toLowerCase()) === -1 ||
+          it.attr === 'User Name' && it.value && rd.merchantName.toLowerCase().indexOf(it.value.toLowerCase()) === -1 ||
+          it.attr === 'Document Type' && it.value && rd.invoiceDocumentType && rd.invoiceDocumentType.toLowerCase().indexOf(it.value.toLowerCase()) === -1 ||
+          it.attr === 'Status of Invoice' && it.value && rd.invoiceStatus && rd.invoiceStatus.toLowerCase().indexOf(it.value.toLowerCase()) === -1 ||
+          it.attr === 'Invoice Owner' && it.value && rd.processedBy && rd.processedBy.toLowerCase().indexOf(it.value.toLowerCase()) === -1 ||
+          it.attr === 'Merchant Owner' && it.value && rd.merchantManagedBy && rd.merchantManagedBy.toLowerCase().indexOf(it.value.toLowerCase()) === -1
 
         ) {
           is_match = false;
@@ -120,7 +103,7 @@ export class ListComponent implements OnInit {
         } else {
           // TODO: We can upgrade this invoice list filter
           // Note: for removing data who has invoice owner as N/A
-          if (it.attr == 'Invoice Owner' && it.value && (!rd.hasOwnProperty("processedBy") || rd.processedBy === "" || rd.processedBy === undefined || rd.processedBy === null)) {
+          if (it.attr === 'Invoice Owner' && it.value && (!rd.hasOwnProperty("processedBy") || rd.processedBy === "" || rd.processedBy === undefined || rd.processedBy === null)) {
             is_match = false;
             break;
           }
@@ -203,8 +186,8 @@ export class ListComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.getSalesPurchaseInvoiceList().then((spInv: any) => {
         this.getCreditDebitNoteInvoiceList().then((cdnInv: any) => {
-          if (this.page_query_type == "my_pending_processing") {
-            this.invoices_list = spInv.concat(cdnInv).filter(inv => { return inv.invoiceStatusMasterInvoiceStatusMasterId != 3 });
+          if (this.page_query_type === "my_pending_processing") {
+            this.invoices_list = spInv.concat(cdnInv).filter((inv:any) => { return inv.invoiceStatusMasterInvoiceStatusMasterId != 3 });
           } else {
             this.invoices_list = spInv.concat(cdnInv)
           }
@@ -222,34 +205,34 @@ export class ListComponent implements OnInit {
 
   getSalesPurchaseInvoiceList() {
     return new Promise((resolve, reject) => {
-      let iParams = { page: 0, size: 1000 };
-      if (this.page_query_type == "unassigned") {
+      let iParams:any = { page: 0, size: 1000 };
+      if (this.page_query_type === "unassigned") {
         iParams["invoiceAssignedTo.specified"] = false;
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"] = [1, 2];
-      } else if (this.page_query_type == "pending_processing") {
+      } else if (this.page_query_type === "pending_processing") {
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"] = [2, 4];
-      } else if (this.page_query_type == "my_pending_processing") {
-        let loggedInUserData: any = JSON.parse(localStorage.getItem("UMD")) || {};
+      } else if (this.page_query_type === "my_pending_processing") {
+        let loggedInUserData: any = JSON.parse(localStorage.getItem("UMD")|| '') || {};
         /*iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];  */
         iParams["invoiceAssignedTo.equals"] = loggedInUserData.USER_UNIQUE_ID;
       }
       NavbarService.getInstance(this.http).getInvoiceList(iParams).subscribe(res => {
         if (Array.isArray(res)) {
-          let invoice_types_obj = {};
-          let invoice_status_obj = {};
-          this.all_invoice_types.forEach(invT => {
+          let invoice_types_obj :any= {};
+          let invoice_status_obj:any = {};
+          this.all_invoice_types.forEach((invT:any) => {
             invoice_types_obj[invT.id] = invT["invoiceTypesName"];
           });
 
-          this.invoice_status_list.forEach(invSL => {
+          this.invoice_status_list.forEach((invSL:any) => {
             invoice_status_obj[invSL.id] = invSL["invoiceStatusMasterName"]
           })
-          res.forEach(inv => {
+          res.forEach((inv:any) => {
             inv.merchantName = "";
             inv.merchantMobileNumber = "";
             inv.invoiceStatus = invoice_status_obj[inv.invoiceStatusMasterInvoiceStatusMasterId] || "";
             inv.invoiceDocumentType = invoice_types_obj[inv.invoiceTypesInvoiceTypesId] || "";
-            let mData = this.merchantList.filter(ml => { return ml.userId == inv.businessId });
+            let mData = this.merchantList.filter((ml:any) => { return ml.userId === inv.businessId });
             if (mData && mData[0]) {
               inv.merchantName = mData[0].fName + " " + mData[0].lName;
               inv.merchantManagedBy = mData[0].managedBy ? mData[0].managedBy.fName + " " + mData[0].managedBy.lName : "";
@@ -271,36 +254,36 @@ export class ListComponent implements OnInit {
 
   getCreditDebitNoteInvoiceList() {
     return new Promise((resolve, reject) => {
-      let iParams = { page: 0, size: 1000 };
-      if (this.page_query_type == "unassigned") {
+      let iParams:any = { page: 0, size: 1000 };
+      if (this.page_query_type === "unassigned") {
         iParams["creditDebitNoteAssignedTo.specified"] = false;
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"] = [1, 2];
-      } else if (this.page_query_type == "pending_processing") {
+      } else if (this.page_query_type === "pending_processing") {
         iParams["invoiceStatusMasterInvoiceStatusMasterId.in"] = [1, 2, 4];
-      } else if (this.page_query_type == "my_pending_processing") {
-        let loggedInUserData: any = JSON.parse(localStorage.getItem("UMD")) || {};
+      } else if (this.page_query_type === "my_pending_processing") {
+        let loggedInUserData: any = JSON.parse(localStorage.getItem("UMD") ||'') || {};
         /*iParams["invoiceStatusMasterInvoiceStatusMasterId.in"]=[2,4];  */
         iParams["creditDebitNoteAssignedTo.equals"] = loggedInUserData.USER_UNIQUE_ID;
       }
 
       NavbarService.getInstance(this.http).getCreditDebitNoteInvoiceList(iParams).subscribe(res => {
         if (Array.isArray(res)) {
-          let invoice_types_obj = {};
-          let invoice_status_obj = {};
-          this.all_invoice_types.forEach(invT => {
+          let invoice_types_obj:any = {};
+          let invoice_status_obj:any = {};
+          this.all_invoice_types.forEach((invT:any) => {
             invoice_types_obj[invT.id] = invT["invoiceTypesName"];
           });
 
-          this.invoice_status_list.forEach(invSL => {
+          this.invoice_status_list.forEach((invSL:any) => {
             invoice_status_obj[invSL.id] = invSL["invoiceStatusMasterName"]
           })
-          res.forEach(inv => {
+          res.forEach((inv:any) => {
             inv.merchantName = "";
             inv.merchantMobileNumber = "";
             inv.invoiceCreatedAt = inv.noteCreatedAt;
             inv.invoiceStatus = invoice_status_obj[inv.invoiceStatusMasterInvoiceStatusMasterId] || "";
             inv.invoiceDocumentType = invoice_types_obj[inv.invoiceTypesInvoiceTypesId] || "";
-            let mData = this.merchantList.filter(ml => { return ml.userId == inv.businessId });
+            let mData = this.merchantList.filter((ml:any) => { return ml.userId === inv.businessId });
             if (mData && mData[0]) {
               inv.merchantName = mData[0].fName + " " + mData[0].lName;
               inv.merchantMobileNumber = mData[0].mobileNumber;
@@ -354,19 +337,19 @@ export class ListComponent implements OnInit {
     })
   }
 
-  onSelectInvoiceStatus(event, item) {
+  onSelectInvoiceStatus(event:any, item:any) {
     if (event && event.id) {
       item.selected_invoice_status = event;
     }
   }
 
-  onSelectInvoiceAssignedToUser(event, item) {
+  onSelectInvoiceAssignedToUser(event:any, item:any) {
     if (event && event.userId) {
       item.selected_invoice_assigned_to_user = event;
     }
   }
 
-  getMerchantDetails(businessId) {
+  getMerchantDetails(businessId:any) {
     return new Promise((resolve, reject) => {
       if (this.merchantFullDetail[businessId]) {
         return resolve(this.merchantFullDetail[businessId]);
@@ -395,7 +378,7 @@ export class ListComponent implements OnInit {
     })
   }
 
-  onClickEditInvoice(invoice) {
+  onClickEditInvoice(invoice:any) {
     this.loading = true;
     this.getMerchantDetails(invoice.businessId).then(merchantDetail => {
       if (!merchantDetail) {
@@ -417,7 +400,7 @@ export class ListComponent implements OnInit {
     });
   }
 
-  getInvoiceByInvoiceId(invoice) {
+  getInvoiceByInvoiceId(invoice:any) {
     return new Promise((resolve, reject) => {
       if ([4, 5].indexOf(invoice.invoiceTypesInvoiceTypesId) != -1) {
         this.getCreditDebitNoteInvoiceByInvoiceId(invoice.id).then(result => {
@@ -431,7 +414,7 @@ export class ListComponent implements OnInit {
     })
   }
 
-  getSalesPurchaseInvoiceByInvoiceId(inv_id) {
+  getSalesPurchaseInvoiceByInvoiceId(inv_id:any) {
     return new Promise((resolve, reject) => {
       NavbarService.getInstance(this.http).getInvoiceWithItemsByInvoiceId(inv_id).subscribe(res => {
         return resolve((Array.isArray(res)) ? res[0] : null);
@@ -443,7 +426,7 @@ export class ListComponent implements OnInit {
     });
   }
 
-  getCreditDebitNoteInvoiceByInvoiceId(inv_id) {
+  getCreditDebitNoteInvoiceByInvoiceId(inv_id:any) {
     return new Promise((resolve, reject) => {
       NavbarService.getInstance(this.http).getCreditDebitNoteInvoiceWithItemsByInvoiceId(inv_id).subscribe(res => {
         return resolve((Array.isArray(res)) ? res[0] : null);
@@ -455,36 +438,36 @@ export class ListComponent implements OnInit {
     })
   }
 
-  setInvoicesByBillType(bill_type) {
+  setInvoicesByBillType(bill_type:any) {
     this.selected_invoice_types = [];
     this.invoice_main_type = "";
-    if (bill_type == 1 || bill_type == 2) {
-      let tInvT = this.all_invoice_types.filter(ait => { return ait.invoiceTypesName == "Sales" })
-      this.selected_invoice_types = tInvT.map(t => { return { id: t.id, name: t.invoiceTypesSubtype } });
+    if (bill_type === 1 || bill_type === 2) {
+      let tInvT = this.all_invoice_types.filter((ait:any) => { return ait.invoiceTypesName === "Sales" })
+      this.selected_invoice_types = tInvT.map((t:any) => { return { id: t.id, name: t.invoiceTypesSubtype } });
       this.invoice_main_type = "sales-invoice";
-    } else if (bill_type == 3 || bill_type == 6) {
-      let tInvT = this.all_invoice_types.filter(ait => { return (ait.invoiceTypesName == "Purchase" || ait.invoiceTypesName == "Expense") })
-      this.selected_invoice_types = tInvT.map(t => { return { id: t.id, name: t.invoiceTypesName } });
+    } else if (bill_type === 3 || bill_type === 6) {
+      let tInvT = this.all_invoice_types.filter((ait:any) => { return (ait.invoiceTypesName === "Purchase" || ait.invoiceTypesName === "Expense") })
+      this.selected_invoice_types = tInvT.map((t:any) => { return { id: t.id, name: t.invoiceTypesName } });
       this.invoice_main_type = "purchase-invoice";
-    } else if (bill_type == 4) {
-      let tInvT = this.all_invoice_types.filter(ait => { return (ait.invoiceTypesName == "Credit Note") })
-      this.selected_invoice_types = tInvT.map(t => { return { id: t.id, name: t.invoiceTypesName } });
+    } else if (bill_type === 4) {
+      let tInvT = this.all_invoice_types.filter((ait:any) => { return (ait.invoiceTypesName === "Credit Note") })
+      this.selected_invoice_types = tInvT.map((t:any) => { return { id: t.id, name: t.invoiceTypesName } });
       this.invoice_main_type = "credit-note";
-    } else if (bill_type == 5) {
-      let tInvT = this.all_invoice_types.filter(ait => { return (ait.invoiceTypesName == "Debit Note") })
-      this.selected_invoice_types = tInvT.map(t => { return { id: t.id, name: t.invoiceTypesName } });
+    } else if (bill_type === 5) {
+      let tInvT = this.all_invoice_types.filter((ait:any) => { return (ait.invoiceTypesName === "Debit Note") })
+      this.selected_invoice_types = tInvT.map((t:any) => { return { id: t.id, name: t.invoiceTypesName } });
       this.invoice_main_type = "debit-note";
     }
   }
 
-  onUpdateInvoice(event) {
+  updateInvoiceClick(event:any) {
     if (event && event.id) {
       let invlen = this.invoices_list.length;
       for (var i = 0; i < invlen; i++) {
-        if (this.invoices_list[i].id == event.id) {
+        if (this.invoices_list[i].id === event.id) {
           Object.assign(this.invoices_list[i], JSON.parse(JSON.stringify(event)));
-          let fData = this.invoice_status_list.filter(invSL => {
-            return invSL.id == event.invoiceStatusMasterInvoiceStatusMasterId
+          let fData = this.invoice_status_list.filter((invSL:any) => {
+            return invSL.id === event.invoiceStatusMasterInvoiceStatusMasterId
           });
           this.invoices_list[i].invoiceStatus = (fData && fData[0]) ? fData[0].invoiceStatusMasterName : "";
           break;
@@ -492,40 +475,40 @@ export class ListComponent implements OnInit {
       }
     }
 
-    if (this.page_query_type == "my_pending_processing") {
-      this.filterData = this.invoices_list.filter(inv => { return inv.invoiceStatusMasterInvoiceStatusMasterId != 3 });
+    if (this.page_query_type === "my_pending_processing") {
+      this.filterData = this.invoices_list.filter((inv:any) => { return inv.invoiceStatusMasterInvoiceStatusMasterId != 3 });
     } else {
       this.filterData = this.invoices_list;
     }
     console.log("my_pending_processing = ", this.filterData)
-    this.onCancelInvoiceBtnClicked();
+    this.cancelInvoiceClickBtnClicked();
   }
 
-  onCancelInvoiceBtnClicked() {
+  cancelInvoiceClickBtnClicked() {
     this.isGSTBillViewShown = false;
     this.bodyTag.setAttribute("class", "");
   }
 
-  onCancelInvoice(event) {
+  cancelInvoiceClick(event:any) {
     this.isGSTBillViewShown = false;
     this.bodyTag.setAttribute("class", "");
   }
   onSaveGSTBillInvoice() {
-    NavbarService.getInstance(null).saveGSTBillInvoice = true;
+    NavbarService.getInstance().saveGSTBillInvoice = true;
   }
 
-  getAdminName(id) {
+  getAdminName(id:any) {
     if (!id) {
       return "N/A";
     } else {
-      let fData = this.admin_list.filter(al => { return al.userId == id });
+      let fData = this.admin_list.filter((al:any) => { return al.userId === id });
       if (fData && fData[0]) {
         return fData[0].name;
       }
     }
   }
 
-  updateCreditDebitNoteInvoice(item, itemIndex) {
+  updateCreditDebitNoteInvoice(item:any, itemIndex:any) {
     let params: any = JSON.parse(JSON.stringify(item));
 
     params.invoiceUpdatedAt = new Date();
@@ -537,8 +520,8 @@ export class ListComponent implements OnInit {
       params.creditDebitNoteAssignedTo = item.selected_invoice_assigned_to_user.userId;
     }
 
-    if ((!params.creditDebitNoteAssignedTo || params.creditDebitNoteAssignedTo == item.creditDebitNoteAssignedTo) &&
-      (!params.invoiceStatusMasterInvoiceStatusMasterId || item.invoiceStatusMasterInvoiceStatusMasterId == params.invoiceStatusMasterInvoiceStatusMasterId)) {
+    if ((!params.creditDebitNoteAssignedTo || params.creditDebitNoteAssignedTo === item.creditDebitNoteAssignedTo) &&
+      (!params.invoiceStatusMasterInvoiceStatusMasterId || item.invoiceStatusMasterInvoiceStatusMasterId === params.invoiceStatusMasterInvoiceStatusMasterId)) {
       this._toastMessageService.alert("error", "No data for update");
       return;
     }
@@ -563,7 +546,7 @@ export class ListComponent implements OnInit {
     });
   }
 
-  updateSalesPurchaseInvoice(item, itemIndex) {
+  updateSalesPurchaseInvoice(item:any, itemIndex:any) {
     let params: any = JSON.parse(JSON.stringify(item));
 
     params.invoiceUpdatedAt = new Date();
@@ -575,8 +558,8 @@ export class ListComponent implements OnInit {
       params.invoiceAssignedTo = item.selected_invoice_assigned_to_user.userId;
     }
 
-    if ((!params.invoiceAssignedTo || params.invoiceAssignedTo == item.invoiceAssignedTo) &&
-      (!params.invoiceStatusMasterInvoiceStatusMasterId || item.invoiceStatusMasterInvoiceStatusMasterId == params.invoiceStatusMasterInvoiceStatusMasterId)) {
+    if ((!params.invoiceAssignedTo || params.invoiceAssignedTo === item.invoiceAssignedTo) &&
+      (!params.invoiceStatusMasterInvoiceStatusMasterId || item.invoiceStatusMasterInvoiceStatusMasterId === params.invoiceStatusMasterInvoiceStatusMasterId)) {
       this._toastMessageService.alert("error", "No data for update");
       return;
     }
@@ -601,15 +584,15 @@ export class ListComponent implements OnInit {
     });
   }
 
-  updateListItem(item, itemIndex) {
+  updateListItem(item:any, itemIndex:any) {
     if ([1, 2, 3, 6].indexOf(item.invoiceTypesInvoiceTypesId) != -1) {
       this.updateSalesPurchaseInvoice(item, itemIndex);
-    } else if (item.invoiceTypesInvoiceTypesId == 4 || item.invoiceTypesInvoiceTypesId == 5) {
+    } else if (item.invoiceTypesInvoiceTypesId === 4 || item.invoiceTypesInvoiceTypesId === 5) {
       this.updateCreditDebitNoteInvoice(item, itemIndex);
     }
   }
 
-  onSelectRecord(item, index) {
+  onSelectRecord(item:any, index:any) {
     this.prods_check[index] = !this.prods_check[index];
 
     let isSelected = false;
@@ -621,7 +604,7 @@ export class ListComponent implements OnInit {
 
     if (isSelected) {
       if (this.invoice_status_list.length > 0) {
-        let fislData = this.invoice_status_list.filter(isl => { return isl.id == item.invoiceStatusMasterInvoiceStatusMasterId });
+        let fislData = this.invoice_status_list.filter((isl:any) => { return isl.id === item.invoiceStatusMasterInvoiceStatusMasterId });
         if (fislData && fislData[0]) {
           item.selected_invoice_status = fislData[0];
         }
@@ -629,11 +612,11 @@ export class ListComponent implements OnInit {
 
       if (this.admin_list.length > 0) {
         let assignId = item.invoiceAssignedTo;
-        if (item.invoiceTypesInvoiceTypesId == 4 || item.invoiceTypesInvoiceTypesId == 5) {
+        if (item.invoiceTypesInvoiceTypesId === 4 || item.invoiceTypesInvoiceTypesId === 5) {
           assignId = item.creditDebitNoteAssignedTo;
         }
 
-        let falData = this.admin_list.filter(isl => { return isl.userId == assignId });
+        let falData = this.admin_list.filter((isl:any) => { return isl.userId === assignId });
         if (falData && falData[0]) {
           item.selected_invoice_assigned_to_user = falData[0];
         }
@@ -642,8 +625,8 @@ export class ListComponent implements OnInit {
   }
 
   saveGroupSelectedData() {
-    let selectedInvoiceIdList = [];
-    let selectedCreditDebitNoteInvoiceIdList = [];
+    let selectedInvoiceIdList:any = [];
+    let selectedCreditDebitNoteInvoiceIdList:any = [];
     this.prods_check.forEach((pc, index) => {
       if (pc && this.filterData[index]) {
         if ([1, 2, 3, 6].indexOf(this.filterData[index].invoiceTypesInvoiceTypesId) != -1) {
@@ -663,7 +646,7 @@ export class ListComponent implements OnInit {
     if (!params.invoiceAssignedTo) {
       this._toastMessageService.alert("error", "Select user first");
       return;
-    } else if (params.invoiceIdList.length == 0) {
+    } else if (params.invoiceIdList.length === 0) {
       this._toastMessageService.alert("error", "Select invoices first");
       return;
     }
