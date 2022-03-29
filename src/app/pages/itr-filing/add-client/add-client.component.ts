@@ -2,11 +2,10 @@ import { DatePipe } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-add-client',
@@ -45,17 +44,17 @@ export class AddClientComponent implements OnInit, OnDestroy {
     })
 
     this.personalInfo = this.ITR_JSON.family[0];
-    this.addClientForm.controls.dateOfBirth.setValue(this.personalInfo.dateOfBirth);
-    this.addClientForm.controls.panNumber.setValue(this.ITR_JSON.panNumber);
+    this.addClientForm.controls['dateOfBirth'].setValue(this.personalInfo.dateOfBirth);
+    this.addClientForm.controls['panNumber'].setValue(this.ITR_JSON.panNumber);
     console.log('ITR_JSON: ', this.ITR_JSON);
     console.log('addClientForm value: ', this.addClientForm.value);
   }
 
   setOtpValidation(){
-    if(!this.addClientForm.controls.panNumber.valid){
+    if(!this.addClientForm.controls['panNumber'].valid){
       this.otpSend =false;
-      this.addClientForm.controls.otp.setValidators(null);
-      this.addClientForm.controls.otp.updateValueAndValidity();
+      this.addClientForm.controls['otp'].setValidators(null);
+      this.addClientForm.controls['otp'].updateValueAndValidity();
     }
   }
 
@@ -65,7 +64,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
       this.headers = new HttpHeaders();
       
       const headerObj = {
-        'panNumber': this.addClientForm.controls.panNumber.value,
+        'panNumber': this.addClientForm.controls['panNumber'].value,
         'assessmentYear':this.ITR_JSON.assessmentYear,
         'userId':this.ITR_JSON.userId
       }
@@ -73,8 +72,8 @@ export class AddClientComponent implements OnInit, OnDestroy {
       const param = '/eri/v1/api';
       const request = {
         "serviceName": "EriAddClientService",
-        "pan": this.addClientForm.controls.panNumber.value,
-        "dateOfBirth": this.datePipe.transform(this.addClientForm.controls.dateOfBirth.value, 'yyyy-MM-dd'),
+        "pan": this.addClientForm.controls['panNumber'].value,
+        "dateOfBirth": this.datePipe.transform(this.addClientForm.controls['dateOfBirth'].value, 'yyyy-MM-dd'),
         "otpSourceFlag": "E"
       }
 
@@ -85,7 +84,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
             if(res.messages instanceof Array && res.messages.length > 0)
             this.utiService.showSnackBar(res.messages[0].desc);
             this.otpSend =true;
-            this.addClientForm.controls.otp.setValidators([Validators.required])
+            this.addClientForm.controls['otp'].setValidators([Validators.required])
           }
         }
         else{
@@ -96,7 +95,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
             // if(res.errors[0].desc.includes('is already a client')){
             //   this.otpSend = true;
             // }
-            this.addClientForm.controls.otp.setValidators(null)
+            this.addClientForm.controls['otp'].setValidators(null)
           }
         }
       },
@@ -104,7 +103,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
           this.utiService.showSnackBar('Something went wrong, try after some time.');
           this.loading = false;
           this.otpSend =false;
-          this.addClientForm.controls.otp.setValidators(null)
+          this.addClientForm.controls['otp'].setValidators(null)
         })
 
     }
@@ -116,8 +115,8 @@ export class AddClientComponent implements OnInit, OnDestroy {
       const param = '/eri/api';
       const request = {
         "serviceName": "EriValidateClientService",
-        "pan": this.addClientForm.controls.panNumber.value,
-        "otp": this.addClientForm.controls.otp.value,
+        "pan": this.addClientForm.controls['panNumber'].value,
+        "otp": this.addClientForm.controls['otp'].value,
         "otpSourceFlag": "E"
       }
 

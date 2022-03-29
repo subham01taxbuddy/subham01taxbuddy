@@ -1,5 +1,5 @@
 {
-  "name": "taxbuddy",
+  "name": "taxbuddy-backoffice",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,9 +7,12 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve": "node --max_old_space_size=10000 node_modules/@angular/cli/bin/ng serve",
     "lint": "ng lint"
   },
+  "pre-commit": [
+    "lint",
+    "scsslint"
+  ],
   "private": true,
   "dependencies": {
     "@angular/animations": "~13.3.0",
