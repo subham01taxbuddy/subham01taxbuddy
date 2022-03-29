@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -11,7 +11,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   selector: 'app-add-client',
   templateUrl: './add-client.component.html',
   styleUrls: ['./add-client.component.css'],
-  providers: [DatePipe]
+  providers: [DatePipe, TitleCasePipe]
 })
 export class AddClientComponent implements OnInit, OnDestroy {
 
@@ -32,7 +32,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
   }
   personalInfo: any;
 
-  constructor(private fb: FormBuilder, private itrService: ItrMsService, public datePipe: DatePipe, private utiService: UtilsService) {
+  constructor(private fb: FormBuilder, private utilsService: UtilsService, private itrService: ItrMsService, public datePipe: DatePipe, private utiService: UtilsService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
@@ -56,6 +56,10 @@ export class AddClientComponent implements OnInit, OnDestroy {
       this.addClientForm.controls['otp'].setValidators(null);
       this.addClientForm.controls['otp'].updateValueAndValidity();
     }
+  }
+
+  setUpperCase(){
+    this.addClientForm.controls['panNumber'].setValue(this.utilsService.isNonEmpty(this.addClientForm.controls['panNumber'].value) ? this.addClientForm.controls['panNumber'].value.toUpperCase() : this.addClientForm.controls['panNumber'].value);
   }
 
   verifyPan() {
@@ -112,7 +116,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
   verifyOtp(){
     if(this.addClientForm.valid){
       this.loading = true;
-      const param = '/eri/api';
+      const param = '/eri/v1/api';
       const request = {
         "serviceName": "EriValidateClientService",
         "pan": this.addClientForm.controls['panNumber'].value,
@@ -170,11 +174,14 @@ export class AddClientComponent implements OnInit, OnDestroy {
     this.itrService.postMethodForEri(param, formData).subscribe((res: any) => {
       this.loading = false;
       this.isValidateJson = true;
-      console.log('uploadDocument responce =>', res);
+      console.log('uploadDocument response =>', res);
       if (res && res.successFlag) {
         if(res.hasOwnProperty('messages') ){
           if(res.messages instanceof Array && res.messages.length > 0)
           this.utiService.showSnackBar(res.messages[0].desc);
+          setTimeout(()=>{
+            this.utiService.showSnackBar('JSON validated successfully.');
+          },3000);
         }
       }
       else{

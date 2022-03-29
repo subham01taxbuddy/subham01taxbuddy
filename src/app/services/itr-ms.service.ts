@@ -36,7 +36,8 @@ export class ItrMsService {
         // this.headers.append('userId',param[2].userId);
         console.log('POst Param', param);
         console.log('headers', this.headers);
-        return this.httpClient.post<T>(environment.production ? environment.url : environment.eri_url + this.microService + param[0], param[1], { headers: this.headers });
+        console.log('url', (environment.production ? environment.url : environment.eri_url) + this.microService + param[0], param[1]);
+        return this.httpClient.post<T>((environment.production ? environment.url : environment.eri_url) + this.microService + param[0], param[1], { headers: this.headers });
         // .map(response => response.json())
     }
 
