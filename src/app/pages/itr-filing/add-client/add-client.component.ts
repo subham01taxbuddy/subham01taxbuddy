@@ -49,6 +49,13 @@ export class AddClientComponent implements OnInit, OnDestroy {
     this.addClientForm.controls.panNumber.setValue(this.ITR_JSON.panNumber);
     console.log('ITR_JSON: ', this.ITR_JSON);
     console.log('addClientForm value: ', this.addClientForm.value);
+
+    let headerObj = {
+      'panNumber': this.addClientForm.controls.panNumber.value,
+      'assessmentYear':this.ITR_JSON.assessmentYear,
+      'userId':this.ITR_JSON.userId
+    }
+    sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
   }
 
   setOtpValidation(){
@@ -68,12 +75,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
       this.loading = true;
       this.headers = new HttpHeaders();
       
-      const headerObj = {
-        'panNumber': this.addClientForm.controls.panNumber.value,
-        'assessmentYear':this.ITR_JSON.assessmentYear,
-        'userId':this.ITR_JSON.userId
-      }
-      sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+      
       const param = '/eri/v1/api';
       const request = {
         "serviceName": "EriAddClientService",
@@ -135,9 +137,11 @@ export class AddClientComponent implements OnInit, OnDestroy {
           }
         }
         else{
-          if(res.hasOwnProperty('errors') ){
-            if(res.errors instanceof Array && res.errors.length > 0)
+          if(res.errors instanceof Array && res.errors.length > 0){
             this.utiService.showSnackBar(res.errors[0].desc);
+          }
+          else if(res.messages instanceof Array && res.messages.length > 0){
+            this.utiService.showSnackBar(res.messages[0].desc);
           }
         }
       },
@@ -176,25 +180,29 @@ export class AddClientComponent implements OnInit, OnDestroy {
       this.loading = false;
       this.isValidateJson = true;
       console.log('uploadDocument response =>', res);
-      if (res && res.successFlag) {
-        if(res.hasOwnProperty('messages') ){
-          if(res.messages instanceof Array && res.messages.length > 0)
-          this.utiService.showSnackBar(res.messages[0].desc);
-          setTimeout(()=>{
-            this.utiService.showSnackBar('JSON validated successfully.');
-          },3000);
+      if(this.utiService.isNonEmpty(res)){
+        if (res && res.successFlag) {
+          if(res.hasOwnProperty('messages') ){
+            if(res.messages instanceof Array && res.messages.length > 0)
+            this.utiService.showSnackBar(res.messages[0].desc);
+            setTimeout(()=>{
+              this.utiService.showSnackBar('JSON validated successfully.');
+            },3000);
+          }
+        }
+        else{
+          if(res.errors instanceof Array && res.errors.length > 0){
+            this.utiService.showSnackBar(res.errors[0].desc);
+          }
+          else if(res.messages instanceof Array && res.messages.length > 0){
+            this.utiService.showSnackBar(res.messages[0].desc);
+          }
         }
       }
       else{
-        // if(res.hasOwnProperty('errors') ){
-        //   if(res.errors instanceof Array && res.errors.length > 0)
-        //   this.utiService.showSnackBar(res.errors[0].desc);
-        // }
-        if(res.hasOwnProperty('messages') ){
-          if(res.messages instanceof Array && res.messages.length > 0)
-          this.utiService.showSnackBar(res.messages[0].desc);
-        }
+        this.utiService.showSnackBar('Response is null, try after some time.');
       }
+      
     }, error => {
       this.loading = false;
       this.isValidateJson = false;
@@ -222,7 +230,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
     this.itrService.postMethodForEri(param, formData).subscribe((res: any) => {
       this.loading = false;
       this.validateJsonResponse = res;
-      console.log('uploadDocument response =>', res)
+      console.log('uploadDocument response =>', res);
       if (res && res.successFlag) {
         if(res.hasOwnProperty('messages') ){
           if(res.messages instanceof Array && res.messages.length > 0)
@@ -230,16 +238,13 @@ export class AddClientComponent implements OnInit, OnDestroy {
         }
       }
       else{
-        // if(res.hasOwnProperty('errors') ){
-        //   if(res.errors instanceof Array && res.errors.length > 0)
-        //   this.utiService.showSnackBar(res.errors[0].desc);
-        // }
-        
         this.validateJsonResponse = '';
-        if(res.hasOwnProperty('messages') ){
-          if(res.messages instanceof Array && res.messages.length > 0)
-          this.utiService.showSnackBar(res.messages[0].desc);
-        }
+          if(res.errors instanceof Array && res.errors.length > 0){
+            this.utiService.showSnackBar(res.errors[0].desc);
+          }
+          else if(res.messages instanceof Array && res.messages.length > 0){
+            this.utiService.showSnackBar(res.messages[0].desc);
+          }
       }
     }, error => {
       this.validateJsonResponse = '';
