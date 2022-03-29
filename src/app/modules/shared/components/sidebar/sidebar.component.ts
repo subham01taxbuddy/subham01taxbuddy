@@ -1,4 +1,4 @@
-import { Component, OnInit, DoCheck } from '@angular/core';
+import { Component, DoCheck } from '@angular/core';
 import { NavbarService } from '../../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-gaurd.service';
@@ -37,7 +37,6 @@ export class SidebarComponent implements DoCheck {
     return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
   }
 
-
   chatCorner() {
     this.route.navigate(['/pages/chat-corner']);
   }
@@ -46,6 +45,4 @@ export class SidebarComponent implements DoCheck {
     this.route.navigate(['/pages/tax-summary'])
   }
 
-
- 
 }

@@ -661,12 +661,9 @@ export class InterestedClientsComponent implements OnInit {
     })
 
     disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
       if (result) {
         if (result.data === "statusChanged") {
-          this.config.currentPage = 1;
-          this.getInterestedClients(0);
-
+          this.getInterestedClients(this.config.currentPage);
         }
       }
 

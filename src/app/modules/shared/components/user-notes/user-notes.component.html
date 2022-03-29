@@ -45,6 +45,7 @@ font-weight: bold;">Notes for {{data.clientName}}</label><button mat-dialog-clos
     <table>
       <thead>
         <tr>
+            <th><b>Service</b></th>
             <th><b>Notes</b></th>
             <th><b>By</b></th>
             <th><b>Date</b></th>
@@ -52,6 +53,7 @@ font-weight: bold;">Notes for {{data.clientName}}</label><button mat-dialog-clos
       </thead>
       <tbody>
         <tr *ngFor="let item of notes; let p=index ">
+            <td></td>
             <td>{{item.note}}</td>
             <td>{{item.createdByName}}</td>
             <td>{{item.dateAndTime | date :'dd MMM yyyy, hh:mm a'}}</td>
@@ -66,11 +68,23 @@ font-weight: bold;">Notes for {{data.clientName}}</label><button mat-dialog-clos
 
 
 <div class="card__row">
-    <div class="card__col-xs-12 card__col-sm-9">
+    <div class="card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+            <mat-label>Service type</mat-label>
+            <mat-select placeholder="Service type" [formControl]="serviceType">
+              <mat-option *ngFor="let serviceType of serviceTypes" [value]="serviceType.value">
+                {{serviceType.label}}
+              </mat-option>
+            </mat-select>
+            <mat-error class="error-msg" *ngIf="serviceType.hasError('required') ">Please select service type</mat-error>
+          </mat-form-field>
+    </div>
+    <div class="card__col-xs-12 card__col-sm-4">
         <mat-form-field appearance="outline">
             <textarea matInput [formControl]="noteDetails" cdkTextareaAutosize cdkAutosizeMinRows="1"
                 cdkAutosizeMaxRows="9" name="noteDetails" placeholder="Enter your note..."></textarea>
-        </mat-form-field>
+                <mat-error class="error-msg" *ngIf="noteDetails.hasError('required') ">Please enter note details</mat-error>
+            </mat-form-field>
     </div>
     <div class="card__col-xs-12 card__col-sm-3" style="padding-top: 10px;">
         <button type="submit" class="btn" style="border: none;" (click)="addNote()">Add</button>

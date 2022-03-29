@@ -82,9 +82,9 @@
                                             name="Total principle amount" class="input-field" maxlength="14"
                                             type="number"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                         <mat-error
-                                            *ngIf="housePropertyForm.controls['loans.controls['[i].controls['principalAmount'].hasError('pattern')">
+                                            *ngIf="housePropertyForm.controls['loans'].controls[i].controls['principalAmount'].hasError('pattern')">
                                             Enter
                                             positive number without decimal.</mat-error>
                                     </mat-form-field>
@@ -96,10 +96,9 @@
                                             placeholder="Interest amount for this year" name="Total interest amount"
                                             class="input-field" maxlength="14" type="number" (blur)="checkEligibility()"
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
+                                            onkeypress=" event.charCode >= 48 && event.charCode <= 57" required>
                                         <mat-error
-                                            *ngIf="housePropertyForm.controls['loans.controls['[i].controls['interestAmount'].hasError('pattern')">
-                                            <!-- || housePropertyForm.controls['loans.controls['[i].controls['interestAmount'].hasError('min') -->
+                                            *ngIf="housePropertyForm.controls['loans'].controls[i].controls['interestAmount'].hasError('pattern')">
                                             Enter positive number without decimal.
                                         </mat-error>
                                     </mat-form-field>
@@ -108,7 +107,7 @@
                         </span>
                     </div>
                     <mat-radio-group name="isEligibleFor80EE" formControlName="isEligibleFor80EE"
-                        *ngIf="housePropertyForm.controls['loans.controls['[0].controls['interestAmount'].value >= 200000">
+                        *ngIf="housePropertyForm.controls['loans'].controls[0].controls['interestAmount'].value >= 200000">
                         <div class="customradiobtn bdr_btm">
                             <mat-radio-button value="80EE" class="right-mrgn">Interest on loan taken for residential
                                 house
@@ -137,7 +136,7 @@
                                         (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}"
                                     name="rentAmount" class="input-field" maxlength="11" type="number"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
+                                    onkeypress=" event.charCode >= 48 && event.charCode <= 57" required>
                                 <mat-error
                                     *ngIf="housePropertyForm.controls['grossAnnualRentReceived'].hasError('pattern')">
                                     Enter
@@ -154,7 +153,7 @@
                                     placeholder="Amount of property tax paid during the year?" name="propertyTax"
                                     class="input-field" maxlength="11" type="number"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                    onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                                 <mat-error *ngIf="housePropertyForm.controls['propertyTax'].hasError('pattern')">Enter
                                     positive amount without decimal.</mat-error>
                             </mat-form-field>

@@ -320,7 +320,7 @@
                                             <input matInput formControlName="premisesName" maxlength="200" placeholder="Address"
                                                 required autocomplete="off">
                                             <mat-error
-                                                *ngIf="itrSummaryForm.controls['assesse.controls['address.controls['premisesname'].hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse'].controls['address'].controls['premisesname'].hasError('required')">
                                                 Enter address
                                             </mat-error>
                                         </mat-form-field>
@@ -334,14 +334,14 @@
                                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                 onkeypress=" event.charCode >= 48 && event.charCode <= 57" matInput
                                                 placeholder="PIN Code" autocomplete="off" type="number"
-                                                (blur)="getCityData(itrSummaryForm.controls['assesse.controls['address.controls['pinCode, 'profile')"
+                                                (blur)="getCityData(itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode, 'profile')"
                                                 required>
                                             <mat-error
-                                                *ngIf="itrSummaryForm.controls['assesse.controls['address.controls['pinCode.hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode.hasError('required')">
                                                 Enter pin
                                             </mat-error>
                                             <mat-error
-                                                *ngIf="itrSummaryForm.controls['assesse.controls['address.controls['pinCode.hasError('pattern')">
+                                                *ngIf="itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode.hasError('pattern')">
                                                 Enter valid
                                                 pin
                                             </mat-error>

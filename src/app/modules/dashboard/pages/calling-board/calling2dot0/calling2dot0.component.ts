@@ -99,7 +99,8 @@ export class Calling2dot0Component implements OnInit {
       this.searchParam.statusId = null
     } else if (ref === 'STATUS' || ref === 'CHAT') {
       this.searchParam.priority = null
-    } else */ if (ref === 'SERVICE') {
+    } else */ 
+    if (ref === 'SERVICE') {
       return;
     }
     if (ref !== '') {

@@ -11,8 +11,17 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class UserNotesComponent implements OnInit {
   notes = [];
+  serviceTypes=[{
+    label:'ITR',
+    value:'ITR'
+  },
+  {
+    label:'GST',
+    value:'GST'
+  }]
   // userId: number;
   noteDetails = new FormControl('', Validators.required);
+  serviceType= new FormControl('', Validators.required);
   loggedInUserDetails: any;
   constructor(public dialogRef: MatDialogRef<UserNotesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
@@ -32,6 +41,7 @@ export class UserNotesComponent implements OnInit {
   }
 
   async addNote() {
+    if(this.serviceType.valid && this.noteDetails.valid){
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
@@ -44,7 +54,8 @@ export class UserNotesComponent implements OnInit {
         {
           "createdBy": this.loggedInUserDetails['USER_UNIQUE_ID'],
           "assessmentYear": currentFyDetails[0].assessmentYear,
-          "note": this.noteDetails.value
+          "note": this.noteDetails.value,
+          "serviceType":this.serviceType.value
         }
       ]
     }
@@ -59,6 +70,9 @@ export class UserNotesComponent implements OnInit {
       console.warn(error);
       this.utilsService.showSnackBar('Error while adding note, please try again.')
     })
+  }else{
+    this.serviceType.markAllAsTouched();
+  }
   }
 
   getNotes() {

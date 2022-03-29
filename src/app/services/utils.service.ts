@@ -1,15 +1,15 @@
-import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 import { Injectable } from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
-import { ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from './itr-ms.service';
 import { UserMsService } from './user-ms.service';
 import { MatDialog } from '@angular/material/dialog';
-import { AppConstants } from '../modules/shared/constants';
 import { ApiEndpoints } from '../modules/shared/api-endpoint';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
+import { AppConstants } from '../modules/shared/constants';
+import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 declare function matomo(title: any, url: any, event: any, subscribeId: any);
 
 @Injectable()
@@ -418,7 +418,7 @@ export class UtilsService {
     }
 
      async getStoredAgentList(action?:any) {
-        let agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST) || '');
+        let agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST) || null);
         if (action === 'REFRESH') {
             agentList = [];
         }
@@ -446,7 +446,7 @@ export class UtilsService {
     }
 
     async getStoredMasterStatusList() {
-        const masterStatus = JSON.parse(sessionStorage.getItem(AppConstants.MASTER_STATUS)??"");
+        const masterStatus = JSON.parse(sessionStorage.getItem(AppConstants.MASTER_STATUS)??null);
         if (this.isNonEmpty(masterStatus) && masterStatus instanceof Array && masterStatus.length > 0) {
             return masterStatus;
         } else {

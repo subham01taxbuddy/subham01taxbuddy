@@ -91,7 +91,7 @@ export class NavbarComponent implements DoCheck {
   }
 
   getLoggedInUserName() {
-    const userObj = JSON.parse(localStorage.getItem('UMD')||'');
+    const userObj = JSON.parse(localStorage.getItem('UMD')||null);
     return userObj ? (userObj.USER_F_NAME + ' ' + userObj.USER_L_NAME) : ''
   }
 }
