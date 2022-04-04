@@ -50,7 +50,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
     console.log('addClientForm value: ', this.addClientForm.value);
 
     let headerObj = {
-      'panNumber': this.addClientForm.controls.panNumber.value,
+      'panNumber': this.addClientForm.controls['panNumber'].value,
       'assessmentYear':this.ITR_JSON.assessmentYear,
       'userId':this.ITR_JSON.userId
     }
