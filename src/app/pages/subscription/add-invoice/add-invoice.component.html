@@ -175,22 +175,6 @@
                 <div class="card__row">
                     <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
-                            <mat-label>Address Line 1: </mat-label>
-                            <input formControlName="addressLine1" maxlength="50" matInput placeholder="Address Line 1: "
-                                autocomplete="off" required>
-                            <mat-error *ngIf="invoiceForm.controls['addressLine1'].hasError('required')">Enter
-                                Address line 1</mat-error>
-                        </mat-form-field>
-                    </div>
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Address Line 2: </mat-label>
-                            <input formControlName="addressLine2" maxlength="50" matInput placeholder="Address Line 2: "
-                                autocomplete="off">
-                        </mat-form-field>
-                    </div>
-                    <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
                             <mat-label>PIN Code</mat-label>
                             <input formControlName="pincode" maxlength="6"
                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -204,9 +188,39 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-                </div>
-                <div class="card__row">
                     <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>ZIP Code</mat-label>
+                            <input formControlName="zipCode" maxlength="6"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress=" event.charCode >= 48 && event.charCode <= 57" matInput
+                                placeholder="ZIP Code" autocomplete="off"
+                                 required>
+                            <mat-error *ngIf="invoiceForm.controls['zipCode'].hasError('required')">Enter pin
+                            </mat-error>
+                            <mat-error *ngIf="invoiceForm.controls['zipCode'].hasError('pattern')">Enter valid
+                                pin
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-4" *ngIf="!invoiceForm.controls['zipCode'].value">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Address Line 1: </mat-label>
+                            <input formControlName="addressLine1" maxlength="50" matInput placeholder="Address Line 1: "
+                                autocomplete="off" required>
+                            <mat-error *ngIf="invoiceForm.controls['addressLine1'].hasError('required')">Enter
+                                Address line 1</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-lg-4" *ngIf="!invoiceForm.controls['zipCode'].value">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Address Line 2: </mat-label>
+                            <input formControlName="addressLine2" maxlength="50" matInput placeholder="Address Line 2: "
+                                autocomplete="off">
+                        </mat-form-field>
+                    </div>
+              
+                    <div class="card__col-lg-4" *ngIf="!invoiceForm.controls['zipCode'].value">
                         <mat-form-field appearance="outline">
                             <mat-label>Country</mat-label>
                             <mat-select formControlName="country" matInput placeholder="Country" autocomplete="off"
@@ -218,7 +232,7 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="card__col-lg-4">
+                    <div class="card__col-lg-4" *ngIf="!invoiceForm.controls['zipCode'].value">
                         <mat-form-field appearance="outline">
                             <mat-label>State</mat-label>
                             <mat-select formControlName="state" matInput placeholder="State" autocomplete="off"
@@ -233,7 +247,7 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="card__col-lg-4">
+                    <div class="card__col-lg-4" *ngIf="!invoiceForm.controls['zipCode'].value">
                         <mat-form-field appearance="outline">
                             <mat-label>City:</mat-label>
                             <input formControlName="city" maxlength="50" matInput placeholder="city" autocomplete="off"
@@ -242,15 +256,22 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-
-                </div>
-                <div class="card__row">
                     <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
+                            <mat-label>Select country code</mat-label>
+                            <mat-select placeholder="Select country" formControlName="countryCode"
+                                required>
+                                <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
+                                    {{ country.countryCode}} ({{ country.countryName | titlecase}})
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                   <div class="card__col-lg-4">
+                        <mat-form-field appearance="outline">
                             <mat-label>Phone</mat-label>
-                            <input formControlName="phone"
-                                onkeypress=" event.charCode >= 48 && event.charCode <= 57" matInput
-                                placeholder="Phone" autocomplete="off" required>
+                            <input formControlName="phone" onkeypress=" event.charCode >= 48 && event.charCode <= 57"
+                                matInput placeholder="Phone" autocomplete="off" required>
                             <!--maxlength="10"-->
                             <mat-error *ngIf="invoiceForm.controls['phone'].hasError('required')">Enter phone
                                 number</mat-error>
@@ -278,8 +299,9 @@
                                 number</mat-error>
                             <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('pattern')">Enter valid
                                 GSTIN</mat-error>
-                            <mat-hint *ngIf="withinMonth">Note - You need to delete the existing invoice if you want to update the GST number.</mat-hint>
-                            </mat-form-field>
+                            <mat-hint *ngIf="withinMonth">Note - You need to delete the existing invoice if you want to
+                                update the GST number.</mat-hint>
+                        </mat-form-field>
                     </div>
 
                 </div>

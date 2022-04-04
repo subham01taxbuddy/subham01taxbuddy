@@ -31,7 +31,7 @@ export class FyDropDownComponent implements OnInit {
   }
 
   setFyDropDown() {
-    const fyList = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST) || '');
+    const fyList = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST));
     console.log('fyList', fyList);
     if (this.utilsService.isNonEmpty(fyList) && fyList instanceof Array) {
       this.financialYear = fyList;

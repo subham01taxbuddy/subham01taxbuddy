@@ -60,7 +60,19 @@
                 >Please enter a valid last name</mat-error
               >
             </mat-form-field>
-
+            <div class="card__row">
+              <div class="card__col-xs-3 card__col-sm-4">
+                <mat-form-field appearance="outline">
+                  <mat-label>Select country code</mat-label>
+                  <mat-select placeholder="Select country" formControlName="countryCode"
+                      required>
+                      <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
+                          {{ country.countryCode}} ({{ country.countryName | titlecase}})
+                      </mat-option>
+                  </mat-select>
+              </mat-form-field>
+              </div>
+              <div class="card__col-xs-9 card__col-sm-8">
             <mat-form-field appearance="outline">
               <mat-label>Mobile Number</mat-label>
               <input
@@ -85,7 +97,8 @@
                 >Please enter a valid mobile no.</mat-error
               >
             </mat-form-field>
-
+            </div>
+          </div>
             <mat-form-field appearance="outline">
               <mat-label>Email Address</mat-label>
               <input
