@@ -487,8 +487,8 @@ export class InterestedClientsComponent implements OnInit {
       //  matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', searchMobNo], environment.matomoScriptId);
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       } else {
+        this.selectedStatus=18;
         this.searchMobNo = '';
-        debugger
         var itrStatusData = this.itrStatus.filter(item=> item.statusId === this.selectedStatus);
         if (this.showAllUser) {
           if(itrStatusData instanceof Array && itrStatusData.length > 0){
@@ -663,7 +663,7 @@ export class InterestedClientsComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       if (result) {
         if (result.data === "statusChanged") {
-          this.getInterestedClients(this.config.currentPage);
+          this.getInterestedClients(this.config.currentPage, this.searchMobNo);
         }
       }
 

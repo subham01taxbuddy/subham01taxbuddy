@@ -18,6 +18,10 @@ export class UserNotesComponent implements OnInit {
   {
     label:'GST',
     value:'GST'
+  },
+  {
+    label:'NOTICE',
+    value:'NOTICE'
   }]
   // userId: number;
   noteDetails = new FormControl('', Validators.required);
