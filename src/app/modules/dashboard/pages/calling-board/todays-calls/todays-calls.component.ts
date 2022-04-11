@@ -7,7 +7,6 @@ import { FormControl, Validators } from '@angular/forms';
 import { GridOptions } from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { AppConstants } from 'src/app/modules/shared/constants';
 import { formatDate } from '@angular/common';
 import { environment } from 'src/environments/environment';
 
@@ -483,7 +482,7 @@ export class TodaysCallsComponent implements OnInit {
           break;
         }
         case 'whatsapp-chat': {
-          this.navigateToWhatsappChat(params.data)
+          this.openWhatsappChat(params.data)
           break;
         }
       }
@@ -592,6 +591,28 @@ export class TodaysCallsComponent implements OnInit {
         this.loading = false;
       })
   }
+
+
+  openWhatsappChat(client) {
+    this.loading = true;
+    let param = `/kommunicate/WhatsApp-chat-link?userId=${client.userId}`;
+    this.userMsService.getMethod(param).subscribe((responce: any) => {
+      console.log('open chat link res: ', responce);
+      this.loading = false;
+      if (responce.success) {
+        window.open(responce.data.whatsAppChatLink)
+      }
+      else {
+        this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
+      }
+    },
+      error => {
+        console.log('Error during feching chat link: ', error);
+        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+        this.loading = false;
+      })
+  }
+
   navigateToWhatsappChat(data) {
     //matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Whatsapp icon'], environment.matomoScriptId);
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)

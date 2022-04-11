@@ -382,7 +382,7 @@ export class SignupExceptionComponent implements OnInit {
           break;
         }
         case 'whatsapp-chat': {
-          this.navigateToWhatsappChat(params.data)
+          this.openWhatsappChat(params.data)
           break;
         }
         case 'open-chat': {
@@ -391,6 +391,26 @@ export class SignupExceptionComponent implements OnInit {
         }
       }
     }
+  }
+
+  openWhatsappChat(client) {
+    this.loading = true;
+    let param = `/kommunicate/WhatsApp-chat-link?userId=${client.userId}`;
+    this.userMsService.getMethod(param).subscribe((responce: any) => {
+      console.log('open chat link res: ', responce);
+      this.loading = false;
+      if (responce.success) {
+        window.open(responce.data.whatsAppChatLink)
+      }
+      else {
+        this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
+      }
+    },
+      error => {
+        console.log('Error during feching chat link: ', error);
+        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+        this.loading = false;
+      })
   }
 
   startCalling(user) {
