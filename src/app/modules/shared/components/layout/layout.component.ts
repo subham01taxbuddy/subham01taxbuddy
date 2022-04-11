@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { interval } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
+import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
 
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']
 })
-export class LayoutComponent  {
+export class LayoutComponent {
 
   timer: any;
   userMsgInfo: any;
@@ -17,8 +19,10 @@ export class LayoutComponent  {
   routePath: any;
   updatedChat: any;
 
-  constructor(private router: Router, private userService: UserMsService) {
-    
+  constructor(private router: Router,
+    private dialog: MatDialog,
+    private userService: UserMsService) {
+
     this.timer = interval(10000)
     this.timer.subscribe(() => {
       if (this.showNotification === false && this.userMsgInfo && this.userMsgInfo instanceof Array && this.userMsgInfo.length > 0) {
@@ -32,7 +36,7 @@ export class LayoutComponent  {
   }
 
   showWhatsAppNotification() {
-    let param = '/user-whatsapp-detail?smeMobileNumber=';  
+    let param = '/user-whatsapp-detail?smeMobileNumber=';
     console.log(this.routePath !== '/pages/chat-corner', this.routePath !== '/login', (this.routePath !== '/pages/chat-corner' && this.routePath !== '/login'))
     if (this.showNotification === false && (this.routePath !== '/pages/chat-corner' && this.routePath !== '/login')) {
       this.userService.getUserDetail(param).subscribe((res) => {
@@ -82,7 +86,7 @@ export class LayoutComponent  {
             this.userMsgInfo.push(this.updatedChat[i]);
           }
           console.log("After Data Push userMsgInfo: ", this.userMsgInfo);
-          this.userMsgInfo.sort(function (a:any, b:any) {
+          this.userMsgInfo.sort(function (a: any, b: any) {
             return b.lastMessageDateTime - a.lastMessageDateTime;
           })
           console.log("After srting userMsgInfo: ", this.userMsgInfo);
@@ -108,5 +112,16 @@ export class LayoutComponent  {
 
   closeNotification() {
     this.showNotification = false;
+  }
+
+  openCallDialog() {
+    const disposable = this.dialog.open(DirectCallingComponent, {
+      width: '50%',
+      height: 'auto',
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 }

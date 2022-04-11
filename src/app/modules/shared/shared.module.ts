@@ -28,6 +28,7 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { RouterModule } from '@angular/router';
+import { DirectCallingComponent } from './components/direct-calling/direct-calling.component';
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { RouterModule } from '@angular/router';
         CallReassignmentComponent,
         LayoutComponent,
         SidebarComponent,
-        NavbarComponent
+        NavbarComponent,
+        DirectCallingComponent
     ],
     imports: [
         CommonModule,
