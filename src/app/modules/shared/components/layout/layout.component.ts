@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { interval } from 'rxjs';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
 
@@ -10,7 +11,7 @@ import { DirectCallingComponent } from '../direct-calling/direct-calling.compone
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit {
 
   timer: any;
   userMsgInfo: any;
@@ -19,9 +20,28 @@ export class LayoutComponent {
   routePath: any;
   updatedChat: any;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private dialog: MatDialog,
-    private userService: UserMsService) {
+    private _toastMessageService: ToastMessageService,
+    private userService: UserMsService,
+    private ngZone: NgZone
+  ) {
+    const knowlarityScript = document.createElement('script');
+    knowlarityScript.innerHTML = `var URL = "https://konnectprodstream3.knowlarity.com:8200/update-stream/560397a2-d875-478b-8003-cc4675e9a0eb/konnect"
+                                    var knowlarityData = [];
+                                    var aa = 0;
+                                    source = new EventSource(URL);
+                                    source.onmessage = function (event) {
+                                    var data = JSON.parse(event.data)
+                                    console.log('Knowlarity Received an event .......');
+                                    console.log(data);
+                                    knowlarityData.push(data)
+                                    window.angularComponentReference.zone.run(() => { window.angularComponentReference.loadKnowlarityData(data); });  
+                               }`
+    knowlarityScript.id = '_webengage_script_tag';
+    knowlarityScript.type = 'text/javascript';
+    document.head.appendChild(knowlarityScript);
 
     this.timer = interval(10000)
     this.timer.subscribe(() => {
@@ -33,6 +53,14 @@ export class LayoutComponent {
     this.router.events.subscribe((url: any) => {
       this.routePath = router.url;
     });
+  }
+  ngOnInit(): void {
+    window['angularComponentReference'] = {
+      component: this, zone: this.ngZone, loadKnowlarityData: (res) => {
+       if(res.Call_Type==='Incoming')
+        this._toastMessageService.alert("success", "You have a new call");
+      }
+    };
   }
 
   showWhatsAppNotification() {
