@@ -11,7 +11,7 @@ import { MyTeamItrsComponent } from './my-team-itrs/my-team-itrs.component';
 import { DelayComponent } from './delay/delay.component';
 import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
 import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-documnets.component';
-import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-gaurd.service';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { AddClientComponent } from './add-client/add-client.component';
 
 const routes: Routes = [

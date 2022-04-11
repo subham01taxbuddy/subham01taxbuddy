@@ -560,14 +560,14 @@ export class UserProfileComponent implements OnInit {
         else if (result.data.from === 'Address') {
           if (result.data.action === 'Add') {
             console.log('result formValue-> ', result.data.formValue);
-            debugger
+            
             this.addressData.push(result.data.formValue);
             this.userInfo.address.push(result.data.formValue);
             this.userProfileForm.controls['address'].setValue(this.userInfo.address);
           }
           else if (result.data.action === 'Edit') {
             console.log('result formValue-> ', result.data.formValue);
-            debugger
+            
             this.addressData.splice(result.data.index, 1, result.data.formValue);
             this.userInfo.address.splice(result.data.index, 1, result.data.formValue);
             console.log('uaerInfo after Edit -> ', this.userInfo.address)

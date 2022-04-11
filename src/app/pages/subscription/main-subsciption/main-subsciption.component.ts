@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-gaurd.service';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';

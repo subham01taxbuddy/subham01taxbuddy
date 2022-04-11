@@ -1,9 +1,8 @@
 
 
-import { RouterModule, Routes } from '@angular/router';
+import {  Routes } from '@angular/router';
 
 //page component
-import { PagesComponent } from './pages.component';
 import { ListComponent } from './list/list.component';
 import { BusinessComponent } from './business/business.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
@@ -18,12 +17,12 @@ import { GST3BComputationComponent } from './business/gst-3b-computation/gst-3b-
 import { AuthGuard } from '../services/auth.guard';
 import { AssignComponent } from './assign/assign.component';
 import { ActivePackagePartComponent } from './active-package-part/active-package-part.component';
-import { RoleBaseAuthGuardService } from '../modules/shared/services/role-base-auth-gaurd.service';
+import { RoleBaseAuthGuardService } from '../modules/shared/services/role-base-auth-guard.service';
 
 export const routes: Routes = [
 	
 	{
-		path: 'pages', canActivate: [AuthGuard], component: PagesComponent,
+		path: '', canActivate: [AuthGuard],
 		children: [
 			// { path: 'home', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ component: HomeComponent },
 			{ path: 'list', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN'] }, */ component: ListComponent },
@@ -53,7 +52,7 @@ export const routes: Routes = [
 			// { path: 'reports', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './reports-module/reports.module#ReportsModule' },
 			{ path: 'ifa', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] } , */ loadChildren: ()=>import('./ifa/ifa.module').then(m=> m.IfaModule) },
 			{ path: 'itr-filing', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./itr-filing/itr-filing.module').then(m=> m.ItrFilingModule) },
-			{ path: 'dashboard', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('../modules/dashboard/dashboard.module').then(m=> m.DashboardModule) },
+			// { path: 'dashboard', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('../modules/dashboard/dashboard.module').then(m=> m.DashboardModule) },
 			{ path: 'tpa-interested', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_TPA_SME'] }, */ loadChildren: ()=>import('./tpa-interested/tpa-interested.module').then(m=> m.TpaInterestedModule) },
 			{ path: 'service-board', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./service-board/service-board.module').then(m=> m.ServiceBoardModule) },
 			{ path: 'leads', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./leads/leads.module').then(m=> m.LeadsModule) },
@@ -61,11 +60,11 @@ export const routes: Routes = [
 			{ path: 'user-management', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./user-management/user-management.module').then(m=> m.UserManagementModule) },
 			{ path: 'gst-filing', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren:()=>import( './gst-filing/gst-filing.module').then(m=> m.GstFilingModule) },
 			{ path: 'team-management', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./team-management/team-mgnt.module').then(m=> m.TeamManagementModule) },
-			{ path: '**', redirectTo: '/pages/dashboard/calling/calling2', pathMatch: 'full' },
+			// { path: '**', redirectTo: '/pages/dashboard/calling/calling2', pathMatch: 'full' },
 
 		]
 	},
 
 	{ path: '', redirectTo: 'login', pathMatch: 'full' },
-	{ path: '**', redirectTo: '/pages/dashboard/calling/calling2' }
+	// { path: '**', redirectTo: '/pages/dashboard/calling/calling2' }
 ];

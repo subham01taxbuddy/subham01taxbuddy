@@ -559,7 +559,7 @@ export class CSVParseTemplateComponent implements OnInit {
   }
 
   checkAndSubimit() {
-    //debugger
+    //
     let gridRowData = this.clientListGridOptions.api.getRenderedNodes();
     let param = '';
 

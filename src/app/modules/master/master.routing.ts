@@ -8,7 +8,7 @@ const routes: Routes = [
         path: '', component: MasterDataComponent,
         children: [
             { path: 'coupon', component: CouponComponent},
-            { path: '', redirectTo: '/master/coupon', pathMatch: 'full'}
+            { path: '', redirectTo: '/pages/master/coupon', pathMatch: 'full'}
         ]
     },
 ];

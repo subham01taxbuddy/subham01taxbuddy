@@ -82,7 +82,7 @@
             "development": {
               "optimization": false,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "namedChunks": true,
               "aot": false,
               "extractLicenses": false,

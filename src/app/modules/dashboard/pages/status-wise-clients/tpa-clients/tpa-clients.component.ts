@@ -9,7 +9,7 @@ import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { formatDate } from '@angular/common';
 import { CallReassignmentComponent } from 'src/app/modules/shared/components/call-reassignment/call-reassignment.component';
-import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-gaurd.service';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import * as moment from 'moment'
 import { environment } from 'src/environments/environment';
 
@@ -88,7 +88,7 @@ export class TpaClientsComponent implements OnInit {
     }
     //const param = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${this.selectedFiler}&serviceType=TPA&page=${page}&pageSize=15`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('Call details', result);debugger
+      console.log('Call details', result);
       if(this.utilsService.isNonEmpty(mobNoSearch)){
           if(result){
             this.interestedClientInfo = result;
@@ -544,7 +544,7 @@ export class TpaClientsComponent implements OnInit {
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       } else {
         this.searchMobNo = '';
-        debugger
+        
         var itrStatusData = this.itrStatus.filter((item:any) => item.statusId === this.selectedStatus);
         if (this.showAllUser) {
           if (itrStatusData instanceof Array && itrStatusData.length > 0) {

@@ -448,7 +448,7 @@ export class TaxSummaryComponent implements OnInit {
 
     this.employerArray = [];
     for (let i = 0; i < this.salaryItrratedData.length; i++) {
-      debugger
+      
       console.log('employerArray : ', this.employerArray);
 
       let employerObj = {
@@ -636,7 +636,7 @@ export class TaxSummaryComponent implements OnInit {
     //Exempt Income
     this.exemptIncomeData = [];
     var exemptIncomeInfo;
-    debugger
+    
     console.log('incomeDeduction: ', incomeDeduction)
     if (itrData.hasOwnProperty('ITR1_IncomeDeductions')) {
       exemptIncomeInfo = incomeDeduction.ExemptIncAgriOthUs10;
@@ -1121,7 +1121,7 @@ export class TaxSummaryComponent implements OnInit {
     }
 
     //Advance Tax
-    debugger
+    
     var advanceTaxInfo = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.TaxPayments.TaxPayment : itrData.ScheduleIT.TaxPayment;
     console.log('advanceTaxInfo Info: ', advanceTaxInfo);
     console.log('newTaxRegime: ', this.newTaxRegime);
@@ -1420,7 +1420,7 @@ export class TaxSummaryComponent implements OnInit {
 
     console.log('pre44ADAinfo ==> ', pre44ADAinfo)
     if (pre44ADAinfo.hasOwnProperty('NatOfBus44ADA')) {
-      debugger
+      
       var nat444Ada = pre44ADAinfo['NatOfBus44ADA'];
       if (nat444Ada instanceof Array && nat444Ada.length > 0) {
         business44AdaInfo.natureOfBusiness = nat444Ada[0]['CodeADA'];
@@ -1506,7 +1506,7 @@ export class TaxSummaryComponent implements OnInit {
 
 
   addExemptIncome() {
-    debugger
+    
     console.log('exempt values: ', this.exemptInfo.type, this.exemptInfo.amount);
     if (this.utilService.isNonEmpty(this.exemptInfo.type) && this.utilService.isNonEmpty(this.exemptInfo.amount)) {
       this.exemptIncomeData.push(this.exemptInfo);
@@ -1667,9 +1667,9 @@ export class TaxSummaryComponent implements OnInit {
     if (otherInfo.value) {
       var otherSource = otherInfo.value;
       for (let i = 0; i < otherSource.length; i++) {
-        debugger
+        
         if (otherSource[i].incomeType === "SAVING_INTEREST") {
-          debugger
+          
           this.sourcesOfIncome.interestFromSaving = otherSource[i].amount;
         }
         else if (otherSource[i].incomeType === "FD_RD_INTEREST") {
@@ -1703,17 +1703,17 @@ export class TaxSummaryComponent implements OnInit {
     if (insuranceInfo.value) {
       var insuranceVal = insuranceInfo.value;
       for (let i = 0; i < insuranceVal.length; i++) {
-        debugger
+        
         if (insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].premium)) {
-          debugger
+          
           this.sec80DobjVal.healthInsuarancePremiumSelf = insuranceVal[i].premium;
         }
         if (insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].preventiveCheckUp)) {
-          debugger
+          
           this.sec80DobjVal.preventiveHealthCheckupFamily = insuranceVal[i].preventiveCheckUp;
         }
         if (insuranceVal[i].policyFor === "PARENTS" && this.utilService.isNonEmpty(insuranceVal[i].premium)) {
-          debugger
+          
           this.sec80DobjVal.healthInsuarancePremiumParents = insuranceVal[i].premium;
         }
       }
@@ -2511,7 +2511,7 @@ export class TaxSummaryComponent implements OnInit {
     toatlIncome: 0
   }
   setOtherSourceIncomeValue(incomeVal: any, type: any) {
-    debugger
+    
     console.log('incomeVal: ', incomeVal, ' type: ', type)
     if (Number(incomeVal) !== 0 && this.utilService.isNonEmpty(incomeVal)) {
       if (type === 'saving') {
@@ -2537,7 +2537,7 @@ export class TaxSummaryComponent implements OnInit {
       this.calculateGrossTotalIncome()
     }
     else {
-      debugger
+      
       if (Number(incomeVal) === 0 || incomeVal === '' || incomeVal === 'undefined') {
         if (type === 'saving') {
           this.sourcesOfIncome.interestFromSaving = 0;
@@ -2597,9 +2597,9 @@ export class TaxSummaryComponent implements OnInit {
 
   calculateGrossTotalIncome() {    //Calculate point 4 
     // this.businessObject.prsumptiveIncomeTotal
-    debugger
+    
     if (this.itrType.itrOne) {
-      debugger
+      
       let gti = Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].value);
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['grossTotalIncome'].setValue(gti);
       this.calculateTotalIncome();
@@ -2719,7 +2719,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   calculateRebateus87A() {    //Calculate point 8 (Less: Rebate u/s 87A)
-    // debugger
+    // 
     // Remove logic as descuss with brij, user direct enter this amount
 
     // if (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['residentialStatus.value === 'RESIDENT' && (this.itrSummaryForm.controls['taxSummary.controls['totalIncomeAfterDeductionIncludeSR.value < 500000)) {
@@ -3042,7 +3042,7 @@ export class TaxSummaryComponent implements OnInit {
       ////// itr 4 part  //////////////////
       if (this.businessFormValid) {
         console.log("businessObject:=> ", this.businessObject)
-        debugger
+        
         console.log("natureOfBusinessDropdown44AD:=> ", this.natureOfBusinessDropdown44AD)
         var presumData = [];
         if (this.utilService.isNonEmpty(this.businessObject.natureOfBusiness44AD) && this.utilService.isNonEmpty(this.businessObject.tradeName44AD)) {
@@ -3094,7 +3094,7 @@ export class TaxSummaryComponent implements OnInit {
           presumData.push(presumptiveBusinessObj)
         }
 
-        debugger
+        
         if (this.utilService.isNonEmpty(this.businessObject.natureOfBusiness44ADA) && this.utilService.isNonEmpty(this.businessObject.tradeName44ADA)) {
 
           this.businessObject.natureOfBusiness44ADA = this.natureOfBusinessDropdown44ADA.filter((item: any) => item.label === this.businessObject.natureOfBusiness44ADA)[0].code;

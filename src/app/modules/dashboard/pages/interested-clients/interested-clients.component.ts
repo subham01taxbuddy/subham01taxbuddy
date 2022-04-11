@@ -11,7 +11,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { formatDate } from '@angular/common';
 import { DownloadDialogComponent } from './download-dialog/download-dialog.component';
 import { CallReassignmentComponent } from 'src/app/modules/shared/components/call-reassignment/call-reassignment.component';
-import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-gaurd.service';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import * as moment from 'moment'
 import { environment } from 'src/environments/environment';
 

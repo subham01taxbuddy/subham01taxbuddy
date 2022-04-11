@@ -374,7 +374,7 @@ export class SumaryDialogComponent implements OnInit {
     this.summaryDialogForm.controls['donations'].patchValue(donationInfo);
 }
   updateHouseInfo(houseInfo:any) {
-    debugger
+    
     console.log('houseInfo: ', houseInfo)
     console.log('houseInfo: ', houseInfo, houseInfo.interestAmount)
     this.summaryDialogForm.controls['houseProperties'].patchValue(houseInfo);
@@ -479,7 +479,7 @@ export class SumaryDialogComponent implements OnInit {
   }
 
   setTenantValue(propertyType:any, key:any) {
-    debugger
+    
     console.log('propertyType: ', propertyType)
     if (propertyType === 'SOP') {
       this.housingShow.showTenant = false;    //ownership
@@ -509,7 +509,7 @@ export class SumaryDialogComponent implements OnInit {
       this.summaryDialogForm.controls['interestAmount'].updateValueAndValidity();
 
     } else if (propertyType === 'LOP') {
-      debugger
+      
       this.housingShow.showTenant = true;
       this.housingShow.isSOP = false;
       // this.housingShow.ownership = false;
@@ -632,12 +632,12 @@ export class SumaryDialogComponent implements OnInit {
 
   calNetHouseProIncome() {
     if (this.housingShow.isSOP) {
-      debugger
+      
       //this.summaryDialogForm.controls['exemptIncome'].setValue(netHouseProIncome);
       var netHouseProIncome = Number((this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['annualValue'].value) - Number((this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['exemptIncome'].value) - Number(this.summaryDialogForm.controls['interestAmount'].value);
     }
     else {
-      debugger
+      
       // if (Number(this.summaryDialogForm.controls['interestAmount.value) > 200000) {
       //   var netHouseProIncome = Number(this.summaryDialogForm.controls['houseProperties.controls['annualValue.value) - Number(this.summaryDialogForm.controls['houseProperties.controls['exemptIncome.value) - 200000;
       // } else {
@@ -1087,7 +1087,7 @@ export class SumaryDialogComponent implements OnInit {
   checkPanDuplicate(panNum:any, type:any, index:any) {
     console.log('User Profile PAN: ', this.data.callerObj.itrSummaryForm.value.assesse.panNumber)
     if (type === 'donation') {
-      debugger
+      
       if (panNum.valid) {
         this.getUserInfoFromPan(panNum.value);                    //get user info & set to doner name
 

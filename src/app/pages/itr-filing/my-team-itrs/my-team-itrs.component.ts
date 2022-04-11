@@ -684,7 +684,7 @@ export class MyTeamItrsComponent implements OnInit {
 
   async startCalling(user) {
     const agentNumber = await this.utilsService.getMyCallingNumber();
-    debugger
+    
     if (!agentNumber) {
       this.toastMsgService.alert("error", 'You dont have calling role.')
       return;

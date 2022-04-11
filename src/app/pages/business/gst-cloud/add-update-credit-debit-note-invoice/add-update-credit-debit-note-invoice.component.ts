@@ -520,7 +520,7 @@ export class AddUpdateCreditDebitNoteInvoiceComponent implements OnInit, DoCheck
 
   // onSelectGSTState(event) {
   //   if (event && event.id) {
-  //     debugger
+  //     
   //     this.invoiceData.creditDebitNoteDTO.stateMasterStateMasterId = event.id;
   //    // this.invoiceData.invoiceDTO.supplyStateId = event;
   //     if (this.merchantData && this.merchantData.gstDetails && this.merchantData.gstDetails.businessAddress &&

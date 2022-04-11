@@ -23,8 +23,11 @@ import { UpdateStatusComponent } from '../../pages/itr-filing/update-status/upda
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { NgxLoadingModule } from 'ngx-loading';
-import { MatSelectModule } from '@angular/material/select';
 import { StorageService } from './services/storage.service';
+import { LayoutComponent } from './components/layout/layout.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -46,11 +49,15 @@ import { StorageService } from './services/storage.service';
         FyDropDownComponent,
         ChangeStatusComponent,
         SmeListDropDownComponent,
-        CallReassignmentComponent
+        CallReassignmentComponent,
+        LayoutComponent,
+        SidebarComponent,
+        NavbarComponent
     ],
     imports: [
         CommonModule,
         MaterialModule,
+        RouterModule,
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
@@ -84,6 +91,7 @@ import { StorageService } from './services/storage.service';
         SmeListDropDownComponent,
         CallReassignmentComponent,
         NgxLoadingModule,
+        LayoutComponent
     ],
     providers: [StorageService],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,

@@ -6,12 +6,12 @@ import { HttpClient } from '@angular/common/http';
 import Auth from '@aws-amplify/auth';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { MatDialog } from '@angular/material/dialog';
-import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-gaurd.service';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { StorageService } from 'src/app/modules/shared/services/storage.service';
 import { AppSetting } from 'src/app/modules/shared/app.setting';
 import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-what-app/validate-otp-by-what-app.component';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 
 declare let $: any;
 

@@ -489,7 +489,7 @@ export class UtilsService {
         const SME_LIST:any = await this.getStoredSmeList();
         const sme = SME_LIST.filter((item:any) => item.userId === userObj.USER_UNIQUE_ID);
         if (sme instanceof Array && sme.length > 0 && (sme[0]['roles'].length > 0 && sme[0]['roles'].includes('ROLE_CALLING_TEAM'))) {
-            debugger
+            
             return sme[0].mobileNumber;
         }
         return false;

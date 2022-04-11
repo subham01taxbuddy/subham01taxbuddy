@@ -230,7 +230,7 @@ export class Itr4partComponent implements OnInit, DoCheck {
 
   natureCode: any;
   getCodeFromLabelOnBlur() {
-    debugger
+    
     if (this.utilService.isNonEmpty(this.natureOfBusinessForm.controls['natureOfBusiness44AD'].value) && this.utilService.isNonEmpty(this.natureOfBusinessForm.controls['natureOfBusiness44AD'].value)) {
       this.natureCode = this.natureOfBusinessDropdown44AD.filter((item:any) => item.label.toLowerCase() === this.natureOfBusinessForm.controls['natureOfBusiness44AD'].value.toLowerCase());
       if (this.natureCode.length !== 0) {

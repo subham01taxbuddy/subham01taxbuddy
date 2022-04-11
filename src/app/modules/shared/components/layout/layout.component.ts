@@ -1,44 +1,40 @@
-
-
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { interval } from 'rxjs';
+import { UserMsService } from 'src/app/services/user-ms.service';
 
 @Component({
-  selector: 'app-pages-root',
-  templateUrl: './pages.component.html',
-  styleUrls: ['./pages.component.css']
+  selector: 'app-layout',
+  templateUrl: './layout.component.html',
+  styleUrls: ['./layout.component.scss']
 })
-export class PagesComponent {
-
+export class LayoutComponent  {
 
   timer: any;
   userMsgInfo: any;
   msgCount: any = 0;
-  showNotifivation: boolean = false;
+  showNotification: boolean = false;
   routePath: any;
   updatedChat: any;
-  //  title = 'app works!';
 
   constructor(private router: Router, private userService: UserMsService) {
+    
     this.timer = interval(10000)
     this.timer.subscribe(() => {
-      if (this.showNotifivation === false && this.userMsgInfo && this.userMsgInfo instanceof Array && this.userMsgInfo.length > 0) {
+      if (this.showNotification === false && this.userMsgInfo && this.userMsgInfo instanceof Array && this.userMsgInfo.length > 0) {
         this.showRandomWhatsAppNotification()
       }
     })
 
     this.router.events.subscribe((url: any) => {
-      // console.log('Path: ', router.url)
       this.routePath = router.url;
     });
   }
 
   showWhatsAppNotification() {
-    let param = '/user-whatsapp-detail?smeMobileNumber=';   //+this.smeInfo.USER_MOBILE;  
+    let param = '/user-whatsapp-detail?smeMobileNumber=';  
     console.log(this.routePath !== '/pages/chat-corner', this.routePath !== '/login', (this.routePath !== '/pages/chat-corner' && this.routePath !== '/login'))
-    if (this.showNotifivation === false && (this.routePath !== '/pages/chat-corner' && this.routePath !== '/login')) {
+    if (this.showNotification === false && (this.routePath !== '/pages/chat-corner' && this.routePath !== '/login')) {
       this.userService.getUserDetail(param).subscribe((res) => {
         this.userMsgInfo = res;
         sessionStorage.setItem('userChatNotifications', JSON.stringify(this.userMsgInfo))
@@ -52,14 +48,13 @@ export class PagesComponent {
           }
 
           if (this.msgCount > 0) {
-            this.showNotifivation = true;
+            this.showNotification = true;
           } else {
-            this.showNotifivation = false;
+            this.showNotification = false;
           }
         }
       },
         error => {
-          //this._toastMessageService.alert("error", "Failed to tetch chating data.");
         })
     }
 
@@ -101,18 +96,17 @@ export class PagesComponent {
           }
         }
         if (this.msgCount > 0) {
-          this.showNotifivation = true;
+          this.showNotification = true;
         } else {
-          this.showNotifivation = false;
+          this.showNotification = false;
         }
       },
       (error) => {
-        //this._toastMessageService.alert("error", "Failed to user data.");
       }
     );
   }
 
   closeNotification() {
-    this.showNotifivation = false;
+    this.showNotification = false;
   }
 }

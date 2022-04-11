@@ -38,7 +38,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { HomeComponent } from './home/home.component';
 
 //Pages Component
-import { PagesComponent } from './pages.component';
 import { ListComponent } from './list/list.component';
 import { BusinessComponent } from './business/business.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
@@ -74,7 +73,6 @@ import { AgGridCheckboxComponent } from '../additional-components/ag-grid-checkb
 import { SharedModule } from '../modules/shared/shared.module';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
-// import { NO_ERRORS_SCHEMA } from '@angular/compiler/src/core';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 Auth.configure(environment.AMPLIFY_CONFIG);
@@ -100,7 +98,6 @@ export const MY_FORMATS = {
 };
 @NgModule({
   declarations: [
-    PagesComponent,
     ListComponent,
     BusinessComponent,
     BusinessProfileComponent,
@@ -112,8 +109,6 @@ export const MY_FORMATS = {
     ImportPartyListComponent,
     GST3BComputationComponent,
     HomeComponent,
-    NavbarComponent,
-    SidebarComponent,
     SelectObjectFilterPipe,
     SelectFilterPipe,
     SelectObjFilterPipe,
@@ -179,7 +174,6 @@ export const MY_FORMATS = {
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   ],
-  bootstrap: [PagesComponent],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
 
   exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,

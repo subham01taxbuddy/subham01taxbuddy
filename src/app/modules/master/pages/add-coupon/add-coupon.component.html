@@ -69,50 +69,52 @@
             </div>
         </div>
         <div class="card__row">
-            <div class="card__col-lg-6 card__col-sm-12" *ngIf="couponForm.controls['discountType.value === 'PERCENTAGE'">
+            <div class="card__col-lg-6 card__col-sm-12"
+                *ngIf="couponForm.controls['discountType'].value === 'PERCENTAGE'">
                 <mat-form-field appearance="outline">
                     <mat-label>Discount Percent</mat-label>
                     <input matInput placeholder="Discount Percent" maxlength="2" formControlName="discountPercent"
                         required type="number"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                     <mat-error *ngIf="couponForm.controls['discountPercent'].hasError('required')">Enter discount
                         percent.
                     </mat-error>
                 </mat-form-field>
             </div>
-            <div class="card__col-lg-6 card__col-sm-12" *ngIf="couponForm.controls['discountType.value === 'AMOUNT'">
+            <div class="card__col-lg-6 card__col-sm-12" *ngIf="couponForm.controls['discountType'].value === 'AMOUNT'">
                 <mat-form-field appearance="outline">
                     <mat-label>Discount Amount</mat-label>
                     <input matInput placeholder="Discount Amount" formControlName="discountAmount" required
                         type="number" maxlength="8"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                     <mat-error *ngIf="couponForm.controls['discountPercent'].hasError('required')">Enter discount
                         amount.
                     </mat-error>
                 </mat-form-field>
             </div>
 
-            <div class="card__col-lg-6 card__col-sm-12" *ngIf="couponForm.controls['discountType.value === 'AMOUNT'">
+            <div class="card__col-lg-6 card__col-sm-12" *ngIf="couponForm.controls['discountType'].value === 'AMOUNT'">
                 <mat-form-field appearance="outline">
                     <mat-label>Minimum Order Amount</mat-label>
                     <input matInput placeholder="Minimum Order Amount" formControlName="minOrderAmount" required
                         type="number" maxlength="8"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                     <mat-error *ngIf="couponForm.controls['minOrderAmount'].hasError('required')">Enter minimum order
                         amount.</mat-error>
                 </mat-form-field>
             </div>
 
-            <div class="card__col-lg-6 card__col-sm-12" *ngIf="couponForm.controls['discountType.value === 'PERCENTAGE'">
+            <div class="card__col-lg-6 card__col-sm-12"
+                *ngIf="couponForm.controls['discountType'].value === 'PERCENTAGE'">
                 <mat-form-field appearance="outline">
                     <mat-label>Max Discount Amount</mat-label>
                     <input matInput placeholder="Max Discount Amount" formControlName="maxDiscountAmount" required
                         type="number" maxlength="8"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                     <mat-error *ngIf="couponForm.controls['maxDiscountAmount'].hasError('required')">Enter max discount
                         amount.</mat-error>
                 </mat-form-field>
@@ -120,7 +122,7 @@
 
         </div>
         <div class="card__row">
-            <table *ngIf="couponForm.controls['discountType.value === 'FIXED'">
+            <table *ngIf="couponForm.controls['discountType'].value === 'FIXED'">
                 <thead>
                     <tr>
                         <th><b>Plan Name</b></th>
@@ -140,19 +142,17 @@
                             <!-- <mat-form-field> -->
                             <input matInput name="coOwn[i]" formControlName="totalAmount" autocomplete="off"
                                 type="number" maxlength="5" required
-                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                             <!-- </mat-form-field> -->
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-
     </mat-dialog-content>
 
     <mat-dialog-actions align="center">
         <button mat-raised-button color="primary" (click)="addCoupon()" tabindex="1">{{data.title}}</button>
-
         <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
     </mat-dialog-actions>
 </form>

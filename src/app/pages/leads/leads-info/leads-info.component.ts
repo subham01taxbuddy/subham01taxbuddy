@@ -477,7 +477,7 @@ export class LeadsInfoComponent implements OnInit {
 
     disposable.afterClosed().subscribe(result => {
       if (result) {
-        debugger
+        
         console.log('Afetr dialog close -> ', result);
         if (result.data === "AgentIdUpdated") {
           this.showLeadsInfo();

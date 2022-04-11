@@ -6,7 +6,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-gaurd.service';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 
 @Component({
   selector: 'app-validate-otp-by-what-app',

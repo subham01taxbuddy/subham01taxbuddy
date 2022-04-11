@@ -150,7 +150,7 @@ export class OtherIncomeComponent implements OnInit {
   }
 
   saveOtherIncome() {
-    debugger
+    
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
     this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes.filter((item:any) => item.incomeType !== 'SAVING_INTEREST' &&
@@ -263,9 +263,9 @@ export class OtherIncomeComponent implements OnInit {
   };
   getDocsUrl(index) {
 
-    debugger
+    
     if (this.itrDocuments.length > 0) {
-      debugger
+      
       const docType = this.itrDocuments[index].fileName.split('.').pop();
       if (this.itrDocuments[index].isPasswordProtected) {
         this.docDetails.docUrl = this.itrDocuments[index].passwordProtectedFileUrl;

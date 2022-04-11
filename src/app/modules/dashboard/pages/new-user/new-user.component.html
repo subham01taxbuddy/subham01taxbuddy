@@ -1,11 +1,8 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
       <div class="card__row" >
         <!-- <div class="card__col-xs-12 card__col-sm-12"> -->
-          
-
             <div class="filter__col card__col-sm-4 card__col-xs-10">
               <div class="input">
                 <label class="input__label" for="attr">Enter Mobile Number</label>
@@ -13,7 +10,7 @@
                   <input maxlength="10" class="select__box ogp_select" style="background-image:none" [(ngModel)]="mobileNo"
                   type="number"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                  onkeypress=" event.charCode >= 48 && event.charCode <= 57" />
                 </div>
               </div>
             </div>
