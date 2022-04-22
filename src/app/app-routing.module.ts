@@ -11,18 +11,21 @@ export const appRoutes: Routes = [
     path: 'login', loadChildren: () => import('./../app/modules/auth/auth.module').then(m => m.AuthModule)
   },
   {
-    path: 'pages',component: LayoutComponent, canActivate: [RoleBaseAuthGuardService], loadChildren: () => import('./../app/pages/pages.module').then(m => m.PagesModule)
-  }, 
+    path: 'pages', component: LayoutComponent, canActivate: [RoleBaseAuthGuardService], loadChildren: () => import('./../app/pages/pages.module').then(m => m.PagesModule)
+  },
   {
     path: 'pages/master', component: LayoutComponent, canActivate: [RoleBaseAuthGuardService], loadChildren: () => import('./../app/modules/master/master.module').then(m => m.MasterModule)
-  },  
+  },
   {
     path: 'pages/dashboard', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
   {
-    path: 'pages/reports',component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/main-reports/main-reports.module').then(m => m.MainReportsModule)
+    path: 'pages/reports', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/main-reports/main-reports.module').then(m => m.MainReportsModule)
   },
-  { path: '**', redirectTo:  'login' },
+  {
+    path: 'eri', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/eri-flow/eri-flow.module').then(m => m.EriFlowModule)
+  },
+  { path: '**', redirectTo: 'login' },
 ];
 
 @NgModule({

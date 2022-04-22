@@ -31,9 +31,10 @@ export class SidebarComponent implements DoCheck {
 
   closeSideBar() {
     NavbarService.getInstance().closeSideBar = true;
+    // this.route.navigate(['/requests/fill', JSON.stringify(data)]);
   }
 
-  isApplicable(permissionRoles:any) {
+  isApplicable(permissionRoles: any) {
     return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
   }
 

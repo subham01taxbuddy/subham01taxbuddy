@@ -1,0 +1,49 @@
+<form [formGroup]="addClientForm">
+  <div class="card__row">
+
+    <div class="card__col-xs-12 card__col-sm-4">
+      <mat-form-field appearance="outline">
+        <mat-label>PAN Number</mat-label>
+        <input matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
+          matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput placeholder="PAN" name="panNumber"
+          formControlName="panNumber" class="input-field" maxlength="10" minlength="10" (blur)="setOtpValidation()"
+          type="text" upperCase required>
+        <mat-error *ngIf="addClientForm.controls['panNumber'].hasError('pattern')">
+          Enter valid PAN (e.g XXXXX1234X)</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="card__col-xs-12 card__col-sm-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Date Of Birth</mat-label>
+        <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
+          [min]="minDate" [max]="maxDate" [matDatepicker]="picker" class="input-field" placeholder="Date of birth"
+          name="dateOfBirth" [formControl]="addClientForm.controls['dateOfBirth']">
+        <mat-hint>Format: DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="card__col-xs-12 card__col-sm-4">
+      <button class="tbd-btn" (click)="verifyPan()">Verify PAN</button>
+    </div>
+
+    <div class="card__col-xs-12 card__col-sm-4" *ngIf="addClientForm.controls.panNumber.valid && otpSend">
+      <mat-form-field appearance="outline">
+        <mat-label>Verify OTP</mat-label>
+        <input matTooltip="Verify OTP" matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
+          placeholder="Verify OTP" name="otp" formControlName="otp" class="input-field" maxlength="75">
+        <mat-error *ngIf="addClientForm.controls['otp'].hasError('required')">
+          Enter OTP</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="card__col-xs-12 card__col-sm-4" *ngIf="otpSend">
+      <button class="btn long-btn" style="border: none;" (click)="verifyOtp()">Verify OTP</button>
+    </div>
+    <div class="card__col-xs-12 card__col-sm-4" *ngIf="addClientForm.valid">
+      <button class="btn long-btn" style="border: none;" (click)="changePage()">Next</button>
+    </div>
+  </div>
+
+</form>

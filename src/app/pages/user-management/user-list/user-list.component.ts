@@ -72,15 +72,15 @@ export class UserListComponent implements OnInit {
     this.currentUserId = 0;
   }
 
-  advanceSearch(key:any) {
+  advanceSearch(key: any) {
     this.user_data = [];
     if (this.searchVal !== "") {
       this.getUserSearchList(key, this.searchVal);
     }
   }
 
-  getUserSearchList(key:any, searchValue:any) {
-    let searchInfo = key+': '+searchValue;
+  getUserSearchList(key: any, searchValue: any) {
+    let searchInfo = key + ': ' + searchValue;
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Select attribute', searchInfo], environment.matomoScriptId);
     this.loading = true;
     return new Promise((resolve, reject) => {
@@ -106,12 +106,12 @@ export class UserListComponent implements OnInit {
   }
 
 
-  pageChanged(event:any) {
+  pageChanged(event: any) {
     this.config.currentPage = event;
     this.getUserData(event - 1);
   }
 
-  getUserData(pageNo:any) {
+  getUserData(pageNo: any) {
     this.loading = true;
     let param = '/profile?page=' + pageNo + '&pageSize=15'
     this.userService.getMethod(param).subscribe((result: any) => {
@@ -148,7 +148,7 @@ export class UserListComponent implements OnInit {
         width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        cellRenderer: (data:any) => {
+        cellRenderer: (data: any) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
         filter: "agTextColumnFilter",
@@ -209,7 +209,7 @@ export class UserListComponent implements OnInit {
         field: 'gender',
         width: 100,
         suppressMovable: true,
-        valueGetter: function (params:any) {
+        valueGetter: function (params: any) {
           if (params.data.gender === 'MALE') {
             return 'Male';
           } else if (params.data.gender === 'FEMALE') {
@@ -230,7 +230,7 @@ export class UserListComponent implements OnInit {
         field: 'resident',
         width: 120,
         suppressMovable: true,
-        valueGetter: function (params:any) {
+        valueGetter: function (params: any) {
           if (params.data.resident === 'RESIDENT') {
             return 'Resident';
           } else if (params.data.resident === 'NON_RESIDENT') {
@@ -253,7 +253,7 @@ export class UserListComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Rediredt toward Invoice"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-files-o" aria-hidden="true" data-action-type="invoice"></i>
@@ -261,7 +261,7 @@ export class UserListComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -275,7 +275,7 @@ export class UserListComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Redirect toward Subscription"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-list-alt" aria-hidden="true" data-action-type="subscription"></i>
@@ -283,7 +283,7 @@ export class UserListComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -297,7 +297,7 @@ export class UserListComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return ` 
            <button type="button" class="action_icon add_button" title="User Profile" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
@@ -306,7 +306,7 @@ export class UserListComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -320,7 +320,7 @@ export class UserListComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Link To Finbingo" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-link" aria-hidden="true" data-action-type="link-to-finbingo"></i>
@@ -328,7 +328,7 @@ export class UserListComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -342,7 +342,7 @@ export class UserListComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
@@ -350,7 +350,7 @@ export class UserListComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -363,22 +363,44 @@ export class UserListComponent implements OnInit {
         field: "isReviewGiven",
         width: 50,
         pinned: 'right',
-        cellRenderer: (params:any) => {
+        cellRenderer: (params: any) => {
           return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
         },
-        cellStyle: (params:any) => {
+        cellStyle: (params: any) => {
           return (params.data.isReviewGiven) ? { 'pointer-events': 'none', opacity: '0.4' }
             : '';
         }
       },
+      {
+        headerName: 'Add Client',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Add Client" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-plus" aria-hidden="true" data-action-type="add-client"></i>
+           </button>`;
+        },
+        width: 50,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
     ]
   }
 
-  createRowData(userData:any) {
+  createRowData(userData: any) {
     console.log('userData -> ', userData);
     var userArray = [];
     for (let i = 0; i < userData.length; i++) {
-      let userInfo:any = Object.assign({}, userArray[i], {
+      let userInfo: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
         createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
         name: userData[i].fName + ' ' + userData[i].lName,
@@ -397,7 +419,7 @@ export class UserListComponent implements OnInit {
     return userArray;
   }
 
-  onUsersRowClicked(params:any) {
+  onUsersRowClicked(params: any) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -428,23 +450,27 @@ export class UserListComponent implements OnInit {
           this.updateReviewStatus(params.data);
           break;
         }
+        case 'add-client': {
+          this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan } });
+          break;
+        }
       }
     }
   }
 
-  redirectTowardInvoice(userInfo:any) {
+  redirectTowardInvoice(userInfo: any) {
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Invoice'], environment.matomoScriptId);
     console.log('userInfo for subscription -> ', userInfo);
     this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: userInfo.userId } });
   }
 
-  redirectTowardSubscription(userInfo:any) {
+  redirectTowardSubscription(userInfo: any) {
     console.log('userInfo for subscription -> ', userInfo);
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Sunscription'], environment.matomoScriptId);
     this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: userInfo.mobileNumber } });
   }
 
-  linkToFinbingo(userId:any) {
+  linkToFinbingo(userId: any) {
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'FNB'], environment.matomoScriptId); 
     this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'FNB'], environment.matomoScriptId);
     const param = `/partner/create-user`;
@@ -471,13 +497,13 @@ export class UserListComponent implements OnInit {
     })
   }
 
-  linkToDocumentCloud(userId:any) {
+  linkToDocumentCloud(userId: any) {
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId);
-    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId); 
+    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId);
     this.router.navigate(['/pages/itr-filing/user-docs/' + userId]);
   }
 
-  updateReviewStatus(data:any) {
+  updateReviewStatus(data: any) {
     this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Review'], environment.matomoScriptId);
     const param = `/update-itr-userProfile?userId=${data.userId}&isReviewGiven=true`;
     this.itrMsService.putMethod(param, {}).subscribe(result => {

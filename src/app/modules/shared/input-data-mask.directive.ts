@@ -8,7 +8,7 @@ import { NgControl } from '@angular/forms';
 export class InputDataMaskDirective {
   constructor(private el: ElementRef, private control: NgControl) { }
 
-  @HostListener('blur', ['$event']) onEvent($event:any) {
+  @HostListener('blur', ['$event']) onEvent($event: any) {
     console.log(this.el.nativeElement.value);
     const trim = this.el.nativeElement.value.trim();
     this.control['control']?.setValue(trim);
@@ -22,7 +22,7 @@ export class InputDataMaskDirective {
 export class UpperCaseDirective {
   constructor(private el: ElementRef, private control: NgControl) { }
 
-  @HostListener('blur', ['$event']) onEvent($event:any) {
+  @HostListener('keyup', ['$event']) onEvent($event: any) {
     if (this.el.nativeElement.value) {
       const upper = this.el.nativeElement.value.toUpperCase().trim();
       this.control['control']?.setValue(upper);
