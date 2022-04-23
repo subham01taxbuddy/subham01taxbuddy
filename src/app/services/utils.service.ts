@@ -499,6 +499,9 @@ export class UtilsService {
           if(environment.production){
             matomo(mainTabName, path, eventArray, scriptId);
           }
+          else{
+            matomo(mainTabName, path, eventArray, scriptId);
+          }
     }
 
 }
