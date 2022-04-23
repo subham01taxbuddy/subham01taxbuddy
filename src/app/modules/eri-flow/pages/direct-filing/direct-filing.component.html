@@ -13,7 +13,7 @@
       </mat-step>
       <mat-step>
         <ng-template matStepLabel>Prefill Data</ng-template>
-        <app-prefill-data></app-prefill-data>
+        <app-prefill-data [userDetails]="addClient"></app-prefill-data>
       </mat-step>
       <mat-step>
         <ng-template matStepLabel>Generate Summary</ng-template>
@@ -25,8 +25,8 @@
       </mat-step>
 
       <mat-step>
-        <ng-template matStepLabel>Declaration/Errors</ng-template>
-        <!-- <app-declaration (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex === 4"></app-declaration> -->
+        <ng-template matStepLabel>E-Verification</ng-template>
+        <app-e-verify></app-e-verify>
       </mat-step>
 
       <ng-template matStepperIcon="create">

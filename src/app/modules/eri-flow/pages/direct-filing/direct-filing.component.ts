@@ -11,7 +11,10 @@ export class DirectFilingComponent implements OnInit {
   addClient: any
   constructor(private router: Router) {
     this.addClient = this.router.getCurrentNavigation().extras.state;
-    console.log('ssssss', this.addClient)
+    console.log('ssssss', this.addClient);
+    // this.addClient = {
+    //   userId: 116, panNumber: 'AUEPP2987M'
+    // }
   }
 
   ngOnInit() {

@@ -1,6 +1,5 @@
 <form [formGroup]="addClientForm">
   <div class="card__row">
-
     <div class="card__col-xs-12 card__col-sm-4">
       <mat-form-field appearance="outline">
         <mat-label>PAN Number</mat-label>
@@ -29,6 +28,9 @@
       <button class="tbd-btn" (click)="verifyPan()">Verify PAN</button>
     </div>
 
+
+  </div>
+  <div class="card__row">
     <div class="card__col-xs-12 card__col-sm-4" *ngIf="addClientForm.controls.panNumber.valid && otpSend">
       <mat-form-field appearance="outline">
         <mat-label>Verify OTP</mat-label>
@@ -39,11 +41,10 @@
       </mat-form-field>
     </div>
     <div class="card__col-xs-12 card__col-sm-4" *ngIf="otpSend">
-      <button class="btn long-btn" style="border: none;" (click)="verifyOtp()">Verify OTP</button>
+      <button class="tbd-btn" (click)="verifyOtp()">Verify OTP</button>
     </div>
-    <div class="card__col-xs-12 card__col-sm-4" *ngIf="addClientForm.valid">
+    <!-- <div class="card__col-xs-12 card__col-sm-4" *ngIf="addClientForm.valid">
       <button class="btn long-btn" style="border: none;" (click)="changePage()">Next</button>
-    </div>
+    </div> -->
   </div>
-
 </form>

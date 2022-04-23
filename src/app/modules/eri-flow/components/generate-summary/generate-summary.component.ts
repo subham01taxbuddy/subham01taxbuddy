@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./generate-summary.component.scss']
 })
 export class GenerateSummaryComponent implements OnInit {
-
+  newItrSumChanges: boolean = true;
   constructor() { }
 
   ngOnInit() {

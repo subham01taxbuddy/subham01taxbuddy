@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -28,7 +28,7 @@ export const MY_FORMATS = {
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
-export class AddClientComponent implements OnInit {
+export class AddClientComponent implements OnInit, OnDestroy {
   addClientForm: FormGroup;
   loading = false;
   otpSend: boolean;
@@ -68,11 +68,11 @@ export class AddClientComponent implements OnInit {
       let headerObj = {
         'panNumber': this.addClientForm.controls['panNumber'].value,
         'assessmentYear': '2021-2022',
-        'userId': this.addClientData.userId
+        'userId': this.addClientData.userId.toString()
       }
       sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
       this.itrMsService.postMethodForEri(param, request).subscribe((res: any) => {
-        sessionStorage.removeItem('ERI-Request-Header');
+
         this.loading = false;
         console.log(res)
         if (res && res.successFlag) {
@@ -111,6 +111,54 @@ export class AddClientComponent implements OnInit {
       this.addClientForm.controls['otp'].setValidators(null);
       this.addClientForm.controls['otp'].updateValueAndValidity();
     }
+  }
+
+  verifyOtp() {
+    if (this.addClientForm.valid) {
+      this.loading = true;
+      const param = '/eri/v1/api';
+      const request = {
+        "serviceName": "EriValidateClientService",
+        "pan": this.addClientForm.controls['panNumber'].value,
+        "otp": this.addClientForm.controls['otp'].value,
+        "otpSourceFlag": "E"
+      }
+      let headerObj = {
+        'panNumber': this.addClientForm.controls['panNumber'].value,
+        'assessmentYear': '2021-2022',
+        'userId': this.addClientData.userId.toString()
+      }
+      sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+      this.itrMsService.postMethodForEri(param, request).subscribe((res: any) => {
+        this.loading = false;
+        if (res && res.successFlag) {
+          if (res.hasOwnProperty('messages')) {
+            if (res.messages instanceof Array && res.messages.length > 0)
+              this.utilsService.showSnackBar(res.messages[0].desc);
+            // this.changePage();
+
+            // Show success message depends upon following paramaters
+            //             errors: []
+            // httpStatus: "ACCEPTED"
+            // messages: []
+            // successFlag: true
+          }
+        } else {
+          if (res.errors instanceof Array && res.errors.length > 0) {
+            this.utilsService.showSnackBar(res.errors[0].desc);
+          }
+          else if (res.messages instanceof Array && res.messages.length > 0) {
+            this.utilsService.showSnackBar(res.messages[0].desc);
+          }
+        }
+      }, error => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Something went wrong, try after some time.');
+      })
+    }
+  }
+  ngOnDestroy() {
+    sessionStorage.removeItem('ERI-Request-Header');
   }
 
 }

@@ -9,6 +9,8 @@ import { AddClientComponent } from "./components/add-client/add-client.component
 import { PrefillDataComponent } from "./components/prefill-data/prefill-data.component";
 import { GenerateSummaryComponent } from "./components/generate-summary/generate-summary.component";
 import { SubmitFilingComponent } from "./components/submit-filing/submit-filing.component";
+import { EVerifyComponent } from "./components/e-verify/e-verify.component";
+import { TaxSummaryComponent } from "src/app/pages/summary-tax/tax-summary/tax-summary.component";
 
 @NgModule({
     declarations: [
@@ -16,7 +18,9 @@ import { SubmitFilingComponent } from "./components/submit-filing/submit-filing.
         AddClientComponent,
         PrefillDataComponent,
         GenerateSummaryComponent,
-        SubmitFilingComponent
+        SubmitFilingComponent,
+        EVerifyComponent,
+        // TaxSummaryComponent
     ],
     imports: [
         CommonModule,
