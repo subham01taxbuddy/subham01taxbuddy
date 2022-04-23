@@ -4,7 +4,7 @@ export const environment = {
 	url: "https://uat-api.taxbuddy.com",
 	gst_gov_url: "https://devapi.gst.gov.in",
 	ifsc_url: "https://ifsc.razorpay.com",
-	matomoScriptId: '2',
+	matomoScriptId: '1',
 	s3_cred: {
 		// user_name: "ashish@ssbainnovations.com",
 		// password: "testPwd8761$",

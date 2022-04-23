@@ -1,7 +1,7 @@
 
 function matomo(docTitle, path, event, scriptId) {
     (function () {
-      const u = "https://taxbuddy.matomo.cloud/";
+      const u = "https://matomo.taxbuddy.com/";
   
       // Remove the script added before
 
