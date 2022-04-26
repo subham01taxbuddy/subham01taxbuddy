@@ -1,17 +1,59 @@
 <div class="row">
-  <input type="file" id="input-file-id" hidden file-model="MeterFile" class="inptfile"
-    (change)="selectJson($event.target.files)">
-  <button mat-raised-button (click)='upload()'>
-    <mat-icon>attachment</mat-icon> Select JSON File
-  </button>&nbsp;&nbsp;
-  <label *ngIf="uploadDoc">{{uploadDoc.name}}</label>&nbsp;
-
-  <button mat-raised-button color="primary" type="submit" (click)='validateJson(uploadDoc)' [disabled]="!uploadDoc">
-    <mat-icon>upload</mat-icon> Validate JSON
-  </button>
-  <button [disabled]="!isValidateJson" style="float: right;" class="tbd-btn" (click)="submit()">Submit</button>
+  <div class="card__row">
+    <form [formGroup]="submitJsonForm">
+      <div class="card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Assessment Year</mat-label>
+          <mat-select formControlName="assessmentYear" matInput placeholder="Select AY" autocomplete="off" required>
+            <mat-option value="2022-2023"> 2022-2023 </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>ITR Type</mat-label>
+          <mat-select formControlName="itrType" matInput placeholder="Select ITR Type" autocomplete="off" required>
+            <mat-option value="1"> ITR-1 </mat-option>
+            <mat-option value="2"> ITR-2 </mat-option>
+            <mat-option value="3"> ITR-3 </mat-option>
+            <mat-option value="4"> ITR-4 </mat-option>
+            <mat-option value="5"> ITR-5 </mat-option>
+            <mat-option value="6"> ITR-6 </mat-option>
+            <mat-option value="7"> ITR-7 </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Return Type</mat-label>
+          <mat-select formControlName="returnType" matInput placeholder="Select Return Type" autocomplete="off"
+            required>
+            <mat-option value="O"> Original </mat-option>
+            <mat-option value="R"> Revised </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+  <div class="card__row">
+    <div class="card__col-xs-12 card__col-sm-4">
+      <input type="file" id="input-file-id" hidden file-model="MeterFile" class="inptfile"
+        (change)="selectJson($event.target.files)">
+      <button mat-raised-button (click)='upload()'>
+        <mat-icon>attachment</mat-icon> Select JSON File
+      </button>&nbsp;&nbsp;
+      <label *ngIf="uploadDoc">{{uploadDoc.name}}</label>&nbsp;
+    </div>
+    <div class="card__col-xs-12 card__col-sm-4">
+      <button mat-raised-button color="primary" type="submit" (click)='validateJson(uploadDoc)' [disabled]="!uploadDoc">
+        <mat-icon>upload</mat-icon> Validate JSON
+      </button>
+    </div>
+    <div class="card__col-xs-12 card__col-sm-4">
+      <button [disabled]="!isValidateJson" style="float: right;" class="tbd-btn" (click)="submit()">Submit</button>
+    </div>
+  </div>
 </div>
-
 <br><br><br><br><br>
 <div class="successRes" *ngIf="validateJsonResponse">
   <b>Congratulations! {{personalInfo.fName}}'s I-T return is successfully filed through TaxBuddy.com.</b><br>

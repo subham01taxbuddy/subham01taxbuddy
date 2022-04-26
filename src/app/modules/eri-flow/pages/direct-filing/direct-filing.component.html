@@ -1,4 +1,3 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="main clearfix" style="padding-right: 0px; padding-left: 150px;">
   <div class="card">
     <mat-horizontal-stepper labelPosition="bottom" linear="true" #stepper (selectionChange)="tabChanged($event)">
@@ -21,7 +20,7 @@
       </mat-step>
       <mat-step>
         <ng-template matStepLabel>Submit Filing</ng-template>
-        <app-submit-filing></app-submit-filing>
+        <app-submit-filing [data]="addClient"></app-submit-filing>
       </mat-step>
 
       <mat-step>

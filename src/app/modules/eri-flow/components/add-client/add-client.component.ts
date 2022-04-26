@@ -67,7 +67,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
       }
       let headerObj = {
         'panNumber': this.addClientForm.controls['panNumber'].value,
-        'assessmentYear': '2021-2022',
+        'assessmentYear': '2022-2023',
         'userId': this.addClientData.userId.toString()
       }
       sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
@@ -125,7 +125,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
       }
       let headerObj = {
         'panNumber': this.addClientForm.controls['panNumber'].value,
-        'assessmentYear': '2021-2022',
+        'assessmentYear': '2022-2023',
         'userId': this.addClientData.userId.toString()
       }
       sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
@@ -133,6 +133,9 @@ export class AddClientComponent implements OnInit, OnDestroy {
         this.loading = false;
         if (res && res.successFlag) {
           if (res.hasOwnProperty('messages')) {
+            if (res.httpStatus === 'ACCEPTED') {
+              return this.utilsService.showSnackBar('Client added successfully to our ERI.');
+            }
             if (res.messages instanceof Array && res.messages.length > 0)
               this.utilsService.showSnackBar(res.messages[0].desc);
             // this.changePage();

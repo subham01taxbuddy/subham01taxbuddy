@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
@@ -35,12 +36,12 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
     const request = {
       "serviceName": "EriPrefill",
       "pan": this.userDetails.panNumber,
-      "assessmentYear": "2021",
+      "assessmentYear": "2022",
       "otpSourceFlag": this.selectedOtpOption,
     }
     let headerObj = {
       'panNumber': this.userDetails.panNumber,
-      'assessmentYear': '2021-2022',
+      'assessmentYear': '2022-2023',
       'userId': this.userDetails.userId.toString()
     }
     sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
@@ -74,11 +75,11 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
         "emailOtp": this.validateOtpForm.controls['email'].value,
         "mobileOtp": this.validateOtpForm.controls['mobile'].value,
         "otpSourceFlag": this.selectedOtpOption,
-        "assessmentYear": "2021"
+        "assessmentYear": "2022"
       }
       let headerObj = {
         'panNumber': this.userDetails.panNumber,
-        'assessmentYear': '2021-2022',
+        'assessmentYear': '2022-2023',
         'userId': this.userDetails.userId.toString()
       }
       sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
@@ -104,6 +105,13 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
       })
     }
   }
+
+  downloadPrefillJson() {
+    const fileURL = `${environment.url}/itr/eri/download-prefill-json-file?userId=${this.userDetails.userId.toString()}&assessmentYear=2021-2022`;
+    window.open(fileURL);
+    return;
+  }
+
 
   ngOnDestroy() {
     sessionStorage.removeItem('ERI-Request-Header');

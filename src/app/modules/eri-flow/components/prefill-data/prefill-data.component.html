@@ -1,7 +1,8 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="card__row">
   <div class="card__col-xs-12 card__col-sm-4">
     <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOtpOption" (change)="changeOtpOption()">
-      <mat-radio-button value="A">Aadhaar OTP</mat-radio-button>
+      <mat-radio-button value="A">Aadhaar OTP</mat-radio-button>&nbsp;&nbsp;&nbsp;
       <mat-radio-button value="E">E portal OTP</mat-radio-button>
     </mat-radio-group>
   </div>
@@ -32,4 +33,10 @@
       <button class="tbd-btn" (click)="verifyOtp()">Validate & Get Data</button>
     </div>
   </form>
+</div>
+
+<div class="card__row">
+  <div class="card__col-xs-12 card__col-sm-4">
+    <button class="tbd-btn" (click)="downloadPrefillJson()">Download Prefill JSON</button>
+  </div>
 </div>

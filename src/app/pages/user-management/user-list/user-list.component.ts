@@ -411,7 +411,8 @@ export class UserListComponent implements OnInit {
         maritalStatus: this.utilsService.isNonEmpty(userData[i].maritalStatus) ? userData[i].maritalStatus : '-',
         pan: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
         resident: this.utilsService.isNonEmpty(userData[i].residentialStatus) ? userData[i].residentialStatus : '-',
-        isReviewGiven: userData[i].reviewGiven
+        isReviewGiven: userData[i].reviewGiven,
+        eriClientValidUpto: userData[i].eriClientValidUpto
       })
       userArray.push(userInfo);
     }
@@ -451,7 +452,7 @@ export class UserListComponent implements OnInit {
           break;
         }
         case 'add-client': {
-          this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan } });
+          this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan, eriClientValidUpto: params.data.eriClientValidUpto } });
           break;
         }
       }
