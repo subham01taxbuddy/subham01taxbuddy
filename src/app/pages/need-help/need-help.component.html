@@ -1,0 +1,38 @@
+<div class="dialog-sec">
+  <div>
+    <span>
+      <h2>Need Help? Please provide the details below.</h2>
+    </span>
+  </div>
+
+  <form #form="ngForm" [formGroup]="helpForm">
+
+    <div>
+      <label class="decr">Description</label>
+      <div>
+        <textarea class="textarea" formControlName="description"></textarea>
+      </div>
+      <div>
+        <div>
+          <span class="error-msg text-align-right" *ngIf="helpForm.controls['description'].pristine 
+          && helpForm.controls['description'].touched && helpForm.controls['description'].status == 'INVALID' ">
+            Please enter a valid details</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="det"><label>Details</label>
+      <div><textarea class="textarea" formControlName="details"></textarea></div>
+    </div>
+
+    <div class="attch">
+      <label>Attachment</label>
+      <div>
+        <input (change)="onFileSelected($event)" type="file" id="myFile" name="filename" formControlName="filename">
+      </div>
+    </div>
+    <div class="det">
+      <input type="submit" (click)="submitForm()" [disabled]="btnDisabled">
+    </div>
+  </form>
+</div>

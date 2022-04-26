@@ -1,4 +1,4 @@
-import { NgModule,  NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -76,6 +76,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 // import { NO_ERRORS_SCHEMA } from '@angular/compiler/src/core';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { NeedHelpComponent } from './need-help/need-help.component';
 
 Auth.configure(environment.AMPLIFY_CONFIG);
 
@@ -144,6 +145,7 @@ export const MY_FORMATS = {
     ActivePackagePartComponent,
     FcmDetailComponent,
     ValidateOtpByWhatAppComponent,
+    NeedHelpComponent,
 
   ],
   entryComponents: [
@@ -184,6 +186,6 @@ export const MY_FORMATS = {
 
   exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,
     ReactiveFormsModule,
-    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent, NgxExtendedPdfViewerModule]
+    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent, NgxExtendedPdfViewerModule, NeedHelpComponent]
 })
 export class PagesModule { }

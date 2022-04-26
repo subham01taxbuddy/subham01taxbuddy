@@ -25,6 +25,7 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { NgxLoadingModule } from 'ngx-loading';
 import { MatSelectModule } from '@angular/material/select';
 import { StorageService } from './services/storage.service';
+import {MatCardModule} from '@angular/material/card';
 
 
 @NgModule({
@@ -46,7 +47,7 @@ import { StorageService } from './services/storage.service';
         FyDropDownComponent,
         ChangeStatusComponent,
         SmeListDropDownComponent,
-        CallReassignmentComponent
+        CallReassignmentComponent,
     ],
     imports: [
         CommonModule,
@@ -54,6 +55,7 @@ import { StorageService } from './services/storage.service';
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
+        MatCardModule,
         AgGridModule.withComponents([ CustomDateComponent, AgGridMaterialSelectEditorComponent, MatInputComponent,
             /* CheckboxRenderer */]),  //MatSelectComponent,
         NgxPaginationModule,
