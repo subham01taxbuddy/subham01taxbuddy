@@ -1,6 +1,6 @@
 <div class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar" [class.hideSideMenu]="hideSideBar">
     <nav class="sidebar">
-        <a class="sidebar__item"  routerLink="/pages/dashboard" routerLinkActive="sidebar__item_active"
+        <a class="sidebar__item" routerLink="/pages/dashboard" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()">
             <i class="fa fa-life-ring" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name"> Engagement</span>
@@ -65,6 +65,11 @@
             (click)="closeSideBar()">
             <i class="fa fa-envelope" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Email Channel</span>
+        </a>
+        <a class="sidebar__item" routerLink="/eri" [state]="{ example: 'data' }" routerLinkActive="sidebar__item_active"
+            (click)="closeSideBar()">
+            <i class="fa fa-envelope" style="font-size: 20px;" aria-hidden="true"></i>
+            <span class="sidebar__name">Add Client</span>
         </a>
         <!-- <a class="sidebar__item" routerLink="/pages/service-board" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()">

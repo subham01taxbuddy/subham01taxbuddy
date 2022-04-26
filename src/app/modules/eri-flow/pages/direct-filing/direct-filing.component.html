@@ -1,0 +1,38 @@
+<div class="main clearfix" style="padding-right: 0px; padding-left: 150px;">
+  <div class="card">
+    <mat-horizontal-stepper labelPosition="bottom" linear="true" #stepper (selectionChange)="tabChanged($event)">
+      <ng-template matStepperIcon="edit">
+        <mat-icon>done</mat-icon>
+      </ng-template>
+      <mat-step>
+        <ng-template matStepLabel>Add Client</ng-template>
+        <!-- <app-personal-information (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 0">
+        </app-personal-information> -->
+        <app-add-client [addClientData]="addClient"></app-add-client>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Prefill Data</ng-template>
+        <app-prefill-data [userDetails]="addClient"></app-prefill-data>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Generate Summary</ng-template>
+        <app-generate-summary></app-generate-summary>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Submit Filing</ng-template>
+        <app-submit-filing [data]="addClient"></app-submit-filing>
+      </mat-step>
+
+      <mat-step>
+        <ng-template matStepLabel>E-Verification</ng-template>
+        <app-e-verify></app-e-verify>
+      </mat-step>
+
+      <ng-template matStepperIcon="create">
+        <mat-icon>done</mat-icon>
+      </ng-template>
+
+    </mat-horizontal-stepper>
+  </div>
+
+</div>

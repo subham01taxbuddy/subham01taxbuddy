@@ -34,8 +34,8 @@ export class LayoutComponent implements OnInit {
                                     source = new EventSource(URL);
                                     source.onmessage = function (event) {
                                     var data = JSON.parse(event.data)
-                                    console.log('Knowlarity Received an event .......');
-                                    console.log(data);
+                                    // console.log('Knowlarity Received an event .......');
+                                    // console.log(data);
                                     knowlarityData.push(data)
                                     window.angularComponentReference.zone.run(() => { window.angularComponentReference.loadKnowlarityData(data); });  
                                }`
@@ -57,8 +57,8 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     window['angularComponentReference'] = {
       component: this, zone: this.ngZone, loadKnowlarityData: (res) => {
-       if(res.Call_Type==='Incoming')
-        this._toastMessageService.alert("success", "You have a new call");
+        // if (res.Call_Type === 'Incoming')
+        // this._toastMessageService.alert("success", "You have a new call");
       }
     };
   }

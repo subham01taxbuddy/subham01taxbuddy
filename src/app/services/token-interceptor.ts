@@ -38,7 +38,7 @@ export class TokenInterceptor implements HttpInterceptor {
                 const headers = request.headers.delete(InterceptorSkipHeader);
                 return next.handle(request.clone({ headers }));
             }
-            else if(this.utilsService.isNonEmpty(eriHeader)){
+            else if (this.utilsService.isNonEmpty(eriHeader)) {
                 request = request.clone({
                     setHeaders: {
                         'panNumber': eriHeader.panNumber,

@@ -29,14 +29,14 @@ export class UtilsService {
     * @author Ashish Hulwan
     * @returns this will return boolean value
     */
-    isNonEmpty(param:any): boolean {
+    isNonEmpty(param: any): boolean {
         if (param !== null && param !== undefined && param !== "")
             return true
         else
             return false
     }
 
-    isNonZero(param:any): boolean {
+    isNonZero(param: any): boolean {
         if (Number(param) !== 0 && param !== null && param !== undefined && param !== "")
             return true
         else
@@ -51,7 +51,7 @@ export class UtilsService {
         });
     }
 
-    currencyFormatter(val:any) {
+    currencyFormatter(val: any) {
         if (this.isNonEmpty(val)) {
             return val.toLocaleString('en-IN')
         } else {
@@ -59,33 +59,33 @@ export class UtilsService {
         }
     }
     gstinValidator = new RegExp(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z]{1}[0-9A-Z]{1}$/);
-    isGSTINValid(gstin:any) {
+    isGSTINValid(gstin: any) {
         let result = this.gstinValidator.test(gstin);
         console.log("GSTIN check result", result)
         return result
     }
 
     //scroll to specific div
-    smoothScrollToDiv(divId:any) {
+    smoothScrollToDiv(divId: any) {
         console.log(divId)
         return document.getElementById(divId).scrollIntoView({ behavior: "smooth" });
     }
 
-    showSnackBar(msg:any) {
+    showSnackBar(msg: any) {
         this.snackBar.open(msg, 'OK', {
             verticalPosition: 'top',
             horizontalPosition: 'center',
-            duration: 3000
+            duration: 10000
         });
     }
 
-    async getITRByUserIdAndAssesmentYear(profile:any, ref?: any, filingTeamMemberId?: any) {
+    async getITRByUserIdAndAssesmentYear(profile: any, ref?: any, filingTeamMemberId?: any) {
         console.log('filingTeamMemberId====', filingTeamMemberId);
         this.loading = true;
         // this.isLoggedIn = this.encrDecrService.get(AppConstants.IS_USER_LOGGED_IN);
         // let list = []
         const fyList = await this.getStoredFyList();
-        const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
+        const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
         if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
             this.showSnackBar('There is no any active filing year available')
             return;
@@ -98,7 +98,7 @@ export class UtilsService {
             if (result.length !== 0) {
                 let isWIP_ITRFound = true;
                 for (let i = 0; i < result.length; i++) {
-                    let currentFiledITR = result.filter((item:any) => (item.assessmentYear === currentFyDetails[0].assessmentYear && item.eFillingCompleted));
+                    let currentFiledITR = result.filter((item: any) => (item.assessmentYear === currentFyDetails[0].assessmentYear && item.eFillingCompleted));
                     if (result[i].eFillingCompleted || result[i].ackStatus === 'SUCCESS' || result[i].ackStatus === 'DELAY') {
                         //   return "REVIEW"
                     } else {
@@ -106,7 +106,7 @@ export class UtilsService {
                         isWIP_ITRFound = false;
                         this.ITR_JSON = result[i];
                         if (currentFiledITR.length > 0) {
-                            currentFiledITR = currentFiledITR.filter((item:any) => item.isRevised === 'N');
+                            currentFiledITR = currentFiledITR.filter((item: any) => item.isRevised === 'N');
                             if (currentFiledITR.length > 0) {
                                 this.ITR_JSON.orgITRAckNum = currentFiledITR[0].ackNumber;
                                 this.ITR_JSON.orgITRDate = currentFiledITR[0].eFillingDate;
@@ -210,7 +210,7 @@ export class UtilsService {
         });
     }
 
-    createEmptyJson(profile:any, assessmentYear:any, financialYear:any) {
+    createEmptyJson(profile: any, assessmentYear: any, financialYear: any) {
         const ITR_JSON: ITR_JSON = {
             ackStatus: '',
             acknowledgementReceived: false,
@@ -392,7 +392,7 @@ export class UtilsService {
     }
 
     async getStoredSmeList() {
-        const smeList = JSON.parse(sessionStorage.getItem(AppConstants.SME_LIST)||null);
+        const smeList = JSON.parse(sessionStorage.getItem(AppConstants.SME_LIST) || null);
         // console.log('fyList', fyList);
         if (this.isNonEmpty(smeList) && smeList instanceof Array && smeList.length > 0) {
             smeList.sort((a, b) => a.name > b.name ? 1 : -1)
@@ -417,7 +417,7 @@ export class UtilsService {
         return await this.userMsService.getMethod(param).toPromise();
     }
 
-     async getStoredAgentList(action?:any) {
+    async getStoredAgentList(action?: any) {
         let agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST) || null);
         if (action === 'REFRESH') {
             agentList = [];
@@ -435,7 +435,7 @@ export class UtilsService {
             if (res && res instanceof Array) {
                 res.sort((a, b) => a.name > b.name ? 1 : -1)
                 sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res));
-                return  res;
+                return res;
             }
         }
         return [];
@@ -446,7 +446,7 @@ export class UtilsService {
     }
 
     async getStoredMasterStatusList() {
-        const masterStatus = JSON.parse(sessionStorage.getItem(AppConstants.MASTER_STATUS)??null);
+        const masterStatus = JSON.parse(sessionStorage.getItem(AppConstants.MASTER_STATUS) ?? null);
         if (this.isNonEmpty(masterStatus) && masterStatus instanceof Array && masterStatus.length > 0) {
             return masterStatus;
         } else {
@@ -468,13 +468,13 @@ export class UtilsService {
         return await this.userMsService.getMethod(param).toPromise();
     }
 
-    createUrlParams(queryParams:any) {
+    createUrlParams(queryParams: any) {
         const tree = this.router.createUrlTree([], { queryParams });
         console.log(this.serializer.serialize(tree));
         return this.serializer.serialize(tree).split('?').pop();
     }
 
-    logAction(userId:any, action:any) {
+    logAction(userId: any, action: any) {
         const param = `/action-time`;
         const request = {
             userId: userId,
@@ -485,23 +485,23 @@ export class UtilsService {
     }
 
     async getMyCallingNumber() {
-        const userObj = JSON.parse(localStorage.getItem('UMD')??"");
-        const SME_LIST:any = await this.getStoredSmeList();
-        const sme = SME_LIST.filter((item:any) => item.userId === userObj.USER_UNIQUE_ID);
+        const userObj = JSON.parse(localStorage.getItem('UMD') ?? "");
+        const SME_LIST: any = await this.getStoredSmeList();
+        const sme = SME_LIST.filter((item: any) => item.userId === userObj.USER_UNIQUE_ID);
         if (sme instanceof Array && sme.length > 0 && (sme[0]['roles'].length > 0 && sme[0]['roles'].includes('ROLE_CALLING_TEAM'))) {
-            
+
             return sme[0].mobileNumber;
         }
         return false;
     }
 
-    matomoCall(mainTabName:any, path:any, eventArray:any, scriptId:any){
-          if(environment.production){
+    matomoCall(mainTabName: any, path: any, eventArray: any, scriptId: any) {
+        if (environment.production) {
             matomo(mainTabName, path, eventArray, scriptId);
-          }
-          else{
+        }
+        else {
             matomo(mainTabName, path, eventArray, scriptId);
-          }
+        }
     }
 
 }

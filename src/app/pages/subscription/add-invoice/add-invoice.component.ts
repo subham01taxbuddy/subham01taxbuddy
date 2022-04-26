@@ -216,8 +216,8 @@ export class AddInvoiceComponent implements OnInit {
       paymentStatus: ['Unpaid'],
       addressLine1: ['', Validators.required],
       addressLine2: [''],
-      pincode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode), Validators.required]],
-      zipCode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode), Validators.required]],
+      pincode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)]],
+      zipCode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)]],
       state: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
@@ -282,7 +282,7 @@ export class AddInvoiceComponent implements OnInit {
         this.invoiceForm.controls['countryCode'].setValue(this.userProfile.address[0].country);
         this.invoiceForm.controls['country'].setValue(this.userProfile.address[0].country === "91" ? "INDIA" : "");
         this.invoiceForm.controls['city'].setValue(this.userProfile.address[0].city);
-        let stateName = this.stateDropdown.filter((item:any) => item.stateCode === this.userProfile.address[0].state)[0].stateName;
+        let stateName = this.stateDropdown.filter((item: any) => item.stateCode === this.userProfile.address[0].state)[0].stateName;
         if (this.userProfile.address[0].state === "19") {
           this.isMaharashtraState = true;
         }
@@ -421,7 +421,7 @@ export class AddInvoiceComponent implements OnInit {
         address[0].flatNo = this.invoiceForm.controls['addressLine1'].dirty ? this.invoiceForm.value.addressLine1 : address[0].flatNo;
         address[0].area = this.invoiceForm.controls['addressLine2'].dirty ? this.invoiceForm.value.addressLine2 : address[0].area;
         address[0].pinCode = this.invoiceForm.controls['pincode'].dirty ? this.invoiceForm.value.pincode : address[0].pinCode;
-        address[0].state = this.invoiceForm.controls['state'].dirty ? this.stateDropdown.filter((item:any) => item.stateName === this.invoiceForm.value.state)[0].stateCode : address[0].state;
+        address[0].state = this.invoiceForm.controls['state'].dirty ? this.stateDropdown.filter((item: any) => item.stateName === this.invoiceForm.value.state)[0].stateCode : address[0].state;
         address[0].city = this.invoiceForm.controls['city'].dirty ? this.invoiceForm.value.city : address[0].city;
         console.log('this.userProfile.address updated:', address)
         console.log('this.invoiceForm', this.invoiceForm);
@@ -433,7 +433,7 @@ export class AddInvoiceComponent implements OnInit {
           road: "",
           area: this.invoiceForm.value.addressLine2,
           city: this.invoiceForm.value.city,
-          state: this.stateDropdown.filter((item:any) => item.stateName === this.invoiceForm.value.state)[0].stateCode,
+          state: this.stateDropdown.filter((item: any) => item.stateName === this.invoiceForm.value.state)[0].stateCode,
           country: "91",
           pinCode: this.invoiceForm.value.pincode
         })
@@ -525,11 +525,11 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   changeService() {
-    const serviceArray = [{ service: 'ITR Filing', details: 'ITR-1 filing (FY 20-21)/ (AY 2021-22)' },
-    { service: 'ITR Filing', details: 'ITR-2 filing (FY 20-21)/ (AY 2021-22)' },
-    { service: 'ITR Filing', details: 'ITR-3 filing (FY 20-21)/ (AY 2021-22)' },
-    { service: 'ITR Filing', details: 'ITR-4 filing (FY 20-21)/ (AY 2021-22)' },
-    { service: 'ITR Filing', details: 'ITR-5 filing (FY 20-21)/ (AY 2021-22)' },
+    const serviceArray = [{ service: 'ITR Filing', details: 'ITR-1 filing (FY 21-22)/ (AY 2022-23)' },
+    { service: 'ITR Filing', details: 'ITR-2 filing (FY 21-22)/ (AY 2022-23)' },
+    { service: 'ITR Filing', details: 'ITR-3 filing (FY 21-22)/ (AY 2022-22)' },
+    { service: 'ITR Filing', details: 'ITR-4 filing (FY 21-22)/ (AY 2022-22)' },
+    { service: 'ITR Filing', details: 'ITR-5 filing (FY 21-22)/ (AY 2022-22)' },
     { service: 'ITR Filing', details: 'ITR Filing' },
     { service: 'GST Filing', details: 'GST Registration' },
     { service: 'GST Filing', details: 'GST Annual Subscription' },
@@ -567,7 +567,7 @@ export class AddInvoiceComponent implements OnInit {
     { service: 'Other Services', details: 'PT filing' },
     { service: 'Other Services', details: 'PF Registration' },
     { service: 'Other Services', details: 'TAN Registration' }];
-    this.serviceDetails = serviceArray.filter((item:any) => item.service === this.service);
+    this.serviceDetails = serviceArray.filter((item: any) => item.service === this.service);
   }
 
   getExactPromoDiscount() {

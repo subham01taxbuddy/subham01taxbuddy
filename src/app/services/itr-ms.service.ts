@@ -11,7 +11,7 @@ export class ItrMsService {
     microService: string = '/itr';
     constructor(private httpClient: HttpClient, private http: HttpClient,) { }
 
-    getMethod<T>(...param:any): Observable<T> {
+    getMethod<T>(...param: any): Observable<T> {
         this.headers = new HttpHeaders();
         this.headers.append('Content-Type', 'application/json');
         // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
@@ -20,10 +20,10 @@ export class ItrMsService {
         // .map(response => response.json())
     }
 
-    postMethod<T>(...param:any): Observable<T> {
+    postMethod<T>(...param: any): Observable<T> {
         this.headers = new HttpHeaders();
         this.headers.append('Content-Type', 'application/json');
-       
+
         return this.httpClient.post<T>(environment.url + this.microService + param[0], param[1], { headers: this.headers });
         // .map(response => response.json())
     }
@@ -50,7 +50,7 @@ export class ItrMsService {
         return this.httpClient.put<T>(environment.url + this.microService + param[0], param[1], { headers: this.headers });
         // .map(response => response.json())
     }
-    patchMethod<T>(...param:any): Observable<T> {
+    patchMethod<T>(...param: any): Observable<T> {
         this.headers = new HttpHeaders();
         this.headers.append('Content-Type', 'application/json');
         // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
@@ -59,7 +59,7 @@ export class ItrMsService {
         // .map(response => response.json())
     }
 
-    deleteMethod<T>(param:any): Observable<T> {
+    deleteMethod<T>(param: any): Observable<T> {
         // this.TOKEN = this.encrDecrService.get(AppConstants.TOKEN);
         this.headers = new HttpHeaders();
         this.headers.append('Content-Type', 'application/json');
@@ -69,10 +69,10 @@ export class ItrMsService {
         // .map(response => response.json())
     }
 
-    deleteMethodWithRequest(param:any, body:any) {
+    deleteMethodWithRequest(param: any, body: any) {
         this.headers = new HttpHeaders();
         this.headers.append('Content-Type', 'application/json');
-        const userData = JSON.parse(localStorage.getItem('UMD')||'');
+        const userData = JSON.parse(localStorage.getItem('UMD') || '');
         const TOKEN = (userData) ? userData.id_token : null;
         this.headers.append('Authorization', 'Bearer ' + TOKEN);
         let reqBody = {
@@ -83,9 +83,9 @@ export class ItrMsService {
         //  .map(response => response.json());
     }
 
-    downloadXML(param:any) {
+    downloadXML(param: any) {
         console.log('Download XML Param', param);
-        const userData = JSON.parse(localStorage.getItem('UMD')|| '');
+        const userData = JSON.parse(localStorage.getItem('UMD') || '');
         const TOKEN = (userData) ? userData.id_token : null;
         this.headers = new Headers();
         this.headers.append('Authorization', 'Bearer ' + TOKEN);
@@ -97,9 +97,9 @@ export class ItrMsService {
             );
     }
 
-    downloadFile(param:any, fileType:any) {
+    downloadFile(param: any, fileType: any) {
         console.log('get Param', param);
-        const userData = JSON.parse(localStorage.getItem('UMD')||'');
+        const userData = JSON.parse(localStorage.getItem('UMD') || '');
         const TOKEN = (userData) ? userData.id_token : null;
         // const TOKEN = sessionStorage.getItem(AppConstants.TOKEN);
         console.log('My logged in usre objecty===', this.userObj);
@@ -113,8 +113,8 @@ export class ItrMsService {
             );
     }
 
-    invoiceDownload(params:any) {
-        const userData = JSON.parse(localStorage.getItem('UMD')||'');
+    invoiceDownload(params: any) {
+        const userData = JSON.parse(localStorage.getItem('UMD') || '');
         const TOKEN = (userData) ? userData.id_token : null;
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
