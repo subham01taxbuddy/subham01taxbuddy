@@ -1,16 +1,16 @@
 <div class="input" [class.input_disabled]="disabled">
     <label class="input__label" *ngIf="label">
   		{{label}}
-  		<span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+  		<span *ngIf="is_mandatory === 'true'" class="mandatory_icon">*</span>
   	</label>
     <div style="display: flex; width: 100%;">
-        <input *ngIf="label=='Discount' || is_percent_currency_view" (keyup)="sendData()" type="{{type}}" class="input__text" placeholder="{{placeholder}}" style="width: 70%;" disabled="{{disabled}}" name="{{name}}" [(ngModel)]="value" />
-        <input *ngIf="!(label=='Discount') && !is_percent_currency_view && !is_only_positive_number_allowed" (input)="sendData()" (focusout)="onInputFocusOut()" type="{{type}}" class="input__text" placeholder="{{placeholder}}" disabled="{{disabled}}" name="{{name}}" step="{{step}}" [(ngModel)]="value" maxLength="{{max_length}}"/>
+        <input *ngIf="label==='Discount' || is_percent_currency_view" (keyup)="sendData()" type="{{type}}" class="input__text" placeholder="{{placeholder}}" style="width: 70%;" disabled="{{disabled}}" name="{{name}}" [(ngModel)]="value" />
+        <input *ngIf="!(label==='Discount') && !is_percent_currency_view && !is_only_positive_number_allowed" (input)="sendData()" (focusout)="onInputFocusOut()" type="{{type}}" class="input__text" placeholder="{{placeholder}}" disabled="{{disabled}}" name="{{name}}" step="{{step}}" [(ngModel)]="value" maxLength="{{max_length}}"/>
 
-        <input *ngIf="!(label=='Discount') && !is_percent_currency_view && is_only_positive_number_allowed" (input)="sendData()" (focusout)="onInputFocusOut()" type="{{type}}" class="input__text" placeholder="{{placeholder}}" disabled="{{disabled}}" name="{{name}}" step="{{step}}" [(ngModel)]="value" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : ((event.charCode >= 48 && event.charCode <= 57) || event.charCode=46)"/>
+        <input *ngIf="!(label==='Discount') && !is_percent_currency_view && is_only_positive_number_allowed" (input)="sendData()" (focusout)="onInputFocusOut()" type="{{type}}" class="input__text" placeholder="{{placeholder}}" disabled="{{disabled}}" name="{{name}}" step="{{step}}" [(ngModel)]="value" onkeypress="return (event.charCode === 8 || event.charCode === 0 || event.charCode === 13) ? null : ((event.charCode >= 48 && event.charCode <= 57) || event.charCode=46)"/>
 
          
-        <span *ngIf="label=='Discount' || is_percent_currency_view" class="input-group-btn" style="width: 30%;" [class.percents]="isPercentsDiscount" (click)="isPercentsDiscount = ((!_disable_discount_type_change) ? !isPercentsDiscount:isPercentsDiscount) ;sendData();">
+        <span *ngIf="label==='Discount' || is_percent_currency_view" class="input-group-btn" style="width: 30%;" [class.percents]="isPercentsDiscount" (click)="isPercentsDiscount = ((!_disable_discount_type_change) ? !isPercentsDiscount:isPercentsDiscount) ;sendData();">
 		  	<button *ngIf="isPercentsDiscount" class="button_css" type="button">%</button>
 		  	<button *ngIf="!isPercentsDiscount" class="button_css" type="button">{{(currency)? currency:'INR'}}</button>
 	  	</span>

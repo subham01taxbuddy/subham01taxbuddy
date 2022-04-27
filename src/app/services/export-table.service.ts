@@ -16,83 +16,87 @@
  *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
  * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
  */
- 
+
 import { Injectable } from '@angular/core';
 declare var tableToExcel: any;
-
+declare global {
+  interface Navigator {
+    msSaveBlob?: (blob: any, defaultName?: string) => boolean
+  }
+}
 @Injectable()
 export class ExportTableService {
 
   constructor() { }
 
-  downloadExcel(report_id,report_name) {
-      tableToExcel(report_id,this.createFileName(report_name))
+  downloadExcel(report_id, report_name) {
+    tableToExcel(report_id, this.createFileName(report_name))
   }
 
-  downloadcsv(fields:any,data: any, exportFileName: string) {
-        var csvData = "";
-        if(typeof data == "string") {
-          csvData = data;
-        } else {
-          csvData = this.convertToCSV(fields,data);
-        }
-
-        var blob = new Blob([csvData], { type: "text/csv" });
-        try {
-          if (navigator.msSaveBlob) { // IE 10+
-              navigator.msSaveBlob(blob, this.createFileName(exportFileName))
-          } else {
-              var link = document.createElement("a");
-              //if (link.download !== undefined) { // feature detection
-              // Browsers that support HTML5 download attribute
-              var url = URL.createObjectURL(blob);
-              link.setAttribute("href", url);
-              let file_name = this.createFileName(exportFileName);
-              link.setAttribute("download",file_name );
-              link.setAttribute("name", file_name);
-              link.setAttribute("title", file_name);
-              //link.style = "visibility:hidden";
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-          }
-        }catch(e) {
-          //alert("e"+e);
-        }
+  downloadcsv(fields: any, data: any, exportFileName: string) {
+    var csvData = "";
+    if (typeof data === "string") {
+      csvData = data;
+    } else {
+      csvData = this.convertToCSV(fields, data);
     }
 
-  convertToCSV(fields: any,objarray: any) {
-      var array = typeof objarray != 'object' ? JSON.parse(objarray) : objarray;
-      fields = (fields) ? fields : objarray[0];
-      
-      var str = '';
-      var row = "";
+    var blob = new Blob([csvData], { type: "text/csv" });
+    try {
+      if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, this.createFileName(exportFileName))
+      } else {
+        var link = document.createElement("a");
+        //if (link.download !== undefined) { // feature detection
+        // Browsers that support HTML5 download attribute
+        var url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        let file_name = this.createFileName(exportFileName);
+        link.setAttribute("download", file_name);
+        link.setAttribute("name", file_name);
+        link.setAttribute("title", file_name);
+        //link.style = "visibility:hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (e) {
+      //alert("e"+e);
+    }
+  }
 
+  convertToCSV(fields: any, objarray: any) {
+    var array = typeof objarray != 'object' ? JSON.parse(objarray) : objarray;
+    fields = (fields) ? fields : objarray[0];
+
+    var str = '';
+    var row = "";
+
+    for (var index in fields) {
+      //Now convert each value to string and comma-separated
+      row += fields[index].name + ',';
+    }
+    row = row.slice(0, -1);
+    //append Label row with line break
+    str += row + '\r\n';
+
+    for (var i = 0; i < array.length; i++) {
+      var line = '';
       for (var index in fields) {
-          //Now convert each value to string and comma-separated
-          row += fields[index].name + ',';
+        if (line != '') line += ','
+        line += JSON.stringify(array[i][fields[index].field]);
       }
-      row = row.slice(0, -1);
-      //append Label row with line break
-      str += row + '\r\n';
-
-      for (var i = 0; i < array.length; i++) {
-          var line = '';
-          for (var index in fields) {
-              if (line != '') line += ','
-              line += JSON.stringify(array[i][fields[index].field]);
-          }
-          str += line + '\r\n';
-      }
-      return str;
+      str += line + '\r\n';
+    }
+    return str;
   }
 
   createFileName(exportFileName: string): string {
-      var date = new Date();
-      return (exportFileName +
-          date.toLocaleDateString() + "_" +
-          date.toLocaleTimeString()
-          + '.csv')
+    var date = new Date();
+    return (exportFileName +
+      date.toLocaleDateString() + "_" +
+      date.toLocaleTimeString()
+      + '.csv')
   }
 
 }

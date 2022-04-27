@@ -5,11 +5,10 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.css']
 })
-export class UserManagementComponent implements OnInit {
+export class UserManagementComponent {
 
   constructor() { }
 
-  ngOnInit() {
-  }
+ 
 
 }

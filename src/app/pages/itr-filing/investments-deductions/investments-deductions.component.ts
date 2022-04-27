@@ -1,11 +1,11 @@
-import { AppConstants } from 'app/shared/constants';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UtilsService } from 'app/services/utils.service';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-import { ItrMsService } from 'app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AddDonationDialogComponent } from './add-donation-dialog/add-donation-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, GridApi } from 'ag-grid-community';
 declare let $: any;
 
@@ -542,7 +542,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
     public matDialog: MatDialog,) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    const self = this.ITR_JSON.family.filter(item => item.relationShipCode === 'SELF')
+    const self = this.ITR_JSON.family.filter((item:any) => item.relationShipCode === 'SELF')
     if (self instanceof Array && self.length > 0) {
       this.userAge = self[0].age
     }
@@ -568,7 +568,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
     this.setInvestmentsDeductionsValues();
     this.donationCallInConstructor(this.otherDonationToDropdown, this.stateDropdown);
 
-    // this.DonationGridOptions.api.setRowData(this.createRowData('OTHER'));
+    // this.DonationGridOptions.api?.setRowData(this.createRowData('OTHER'));
     // this.DonationGridOptions.api.setColumnDefs(this.donationCreateColoumnDef(this.otherDonationToDropdown, this.stateDropdown));
     console.log('Investments-DEDUCTION deletedFileData LENGTH ---> ', this.deletedFileData.length)
   }
@@ -590,13 +590,13 @@ export class InvestmentsDeductionsComponent implements OnInit {
   saveInvestmentDeductions() {
     this.max5000Limit('SELF')
     if (this.investmentDeductionForm.valid) {
-      Object.keys(this.investmentDeductionForm.controls).forEach(item => {
+      Object.keys(this.investmentDeductionForm.controls).forEach((item:any) => {
         if (item === 'ELSS' || item === 'PENSION_FUND' || item === 'PS_EMPLOYEE' ||
           item === 'PS_EMPLOYER' || item === 'PENSION_SCHEME') {
           this.addAndUpdateInvestment(item);
         } else {
           if (item === 'us80e') {
-            this.ITR_JSON.loans = this.ITR_JSON.loans.filter(item => item.loanType !== 'EDUCATION')
+            this.ITR_JSON.loans = this.ITR_JSON.loans.filter((item:any) => item.loanType !== 'EDUCATION')
             this.ITR_JSON.loans.push({
               loanType: 'EDUCATION',
               name: null,
@@ -606,7 +606,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
               details: null
             });
           } else if (item === 'us80gg') {
-            this.ITR_JSON.expenses = this.ITR_JSON.expenses.filter(item => item.expenseType !== 'HOUSE_RENT_PAID')
+            this.ITR_JSON.expenses = this.ITR_JSON.expenses.filter((item:any) => item.expenseType !== 'HOUSE_RENT_PAID')
             if (!this.ITR_JSON.systemFlags.hraAvailed) {
               this.ITR_JSON.expenses.push({
                 expenseType: 'HOUSE_RENT_PAID',
@@ -619,7 +619,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
           }
         }
       });
-      this.ITR_JSON.insurances = this.ITR_JSON.insurances.filter(item => item.policyFor !== "DEPENDANT");
+      this.ITR_JSON.insurances = this.ITR_JSON.insurances.filter((item:any) => item.policyFor !== "DEPENDANT");
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPremium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value)) {
@@ -634,7 +634,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
           healthCover: null
         });
       }
-      this.ITR_JSON.insurances = this.ITR_JSON.insurances.filter(item => item.policyFor !== "PARENTS");
+      this.ITR_JSON.insurances = this.ITR_JSON.insurances.filter((item:any) => item.policyFor !== "PARENTS");
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['premium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['preventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['medicalExpenditure'].value)) {
@@ -717,7 +717,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
         });
       }
     } else {
-      this.ITR_JSON.investments = this.ITR_JSON.investments.filter(item => item.investmentType !== controlName);
+      this.ITR_JSON.investments = this.ITR_JSON.investments.filter((item:any) => item.investmentType !== controlName);
     }
   }
 
@@ -741,9 +741,9 @@ export class InvestmentsDeductionsComponent implements OnInit {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
         if (donationType === 'OTHER') {
-          this.DonationGridOptions.api.setRowData(this.createRowData('OTHER'));
+          this.DonationGridOptions.api?.setRowData(this.createRowData('OTHER'));
         } /* else if (donationType === 'SCIENTIFIC') {
-          this.scientificDonationGridOptions.api.setRowData(this.createRowData('SCIENTIFIC'));
+          this.scientificDonationGridOptions.api?.setRowData(this.createRowData('SCIENTIFIC'));
         } */
       }
     });
@@ -778,9 +778,9 @@ export class InvestmentsDeductionsComponent implements OnInit {
         suppressMovable: true,
         onCellFocused: true,
         valueGetter: function nameFromCode(params) {
-          console.log('params == ', params);
+          console.log('params === ', params);
           if (otherDonationToDropdown.length !== 0) {
-            const nameArray = otherDonationToDropdown.filter(item => (item.value === params.data.schemeCode));
+            const nameArray = otherDonationToDropdown.filter((item:any) => (item.value === params.data.schemeCode));
             console.log('nameArray = ', nameArray);
             return nameArray[0].label;
           } else {
@@ -836,9 +836,9 @@ export class InvestmentsDeductionsComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         valueGetter: function statenameFromCode(params) {
-          console.log('stateDropdown == ', stateDropdown);
+          console.log('stateDropdown === ', stateDropdown);
           if (stateDropdown.length !== 0) {
-            const nameArray = stateDropdown.filter(item => item.stateCode === params.data.state);
+            const nameArray = stateDropdown.filter((item:any) => item.stateCode === params.data.state);
             console.log('stateDropdown = ', nameArray);
             return nameArray[0].stateName;
           } else {
@@ -852,7 +852,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Edit" style="border: none;
           background: transparent; font-size: 16px; cursor:pointer;color: green">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
@@ -873,7 +873,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Delete" style="border: none;
           background: transparent; font-size: 16px; cursor:pointer;color: red">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
@@ -896,7 +896,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.Copy_ITR_JSON.donations = this.ITR_JSON.donations.filter(item => item.identifier !== params.data.identifier);
+          this.Copy_ITR_JSON.donations = this.ITR_JSON.donations.filter((item:any) => item.identifier !== params.data.identifier);
           this.serviceCall('OTHER', this.Copy_ITR_JSON);
           break;
         }
@@ -911,7 +911,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
 
   createRowData(donationType) {
     const newData = [];
-    const donations = this.ITR_JSON.donations.filter(item => item.donationType === donationType);
+    const donations = this.ITR_JSON.donations.filter((item:any) => item.donationType === donationType);
     for (let i = 0; i < donations.length; i++) {
       newData.push({
         srNo: i + 1,
@@ -941,7 +941,7 @@ export class InvestmentsDeductionsComponent implements OnInit {
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       this.loading = false;
       this.utilsService.showSnackBar('Donation updated successfully');
-      this.DonationGridOptions.api.setRowData(this.createRowData('OTHER'));
+      this.DonationGridOptions.api?.setRowData(this.createRowData('OTHER'));
       if (val === 'NEXT') {
         this.saveAndNext.emit(true);
       }

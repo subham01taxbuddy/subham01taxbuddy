@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
-// import { ChangeAgentDialogComponent } from '../../user-management/agent-update/change-agent-dialog/change-agent-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({
   selector: 'app-sme-management',
@@ -13,7 +12,7 @@ import { AppConstants } from 'app/shared/constants';
 })
 export class SmeManagementComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   smeList: any = [];
   agentList: any = [];
   selectedAgent: any;

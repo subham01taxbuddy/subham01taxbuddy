@@ -1,15 +1,15 @@
 <div class="input" [class.input_disabled]="disabled">
-    <label class="input__label" [style.opacity]="label == '.' ? '0' : '1'">{{label}}
-      <span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+    <label class="input__label" [style.opacity]="label === '.' ? '0' : '1'">{{label}}
+      <span *ngIf="is_mandatory === 'true'" class="mandatory_icon">*</span>
   </label>
     <div class="input__select">
         <input type="{{type}}" class="select__box ogp_select" placeholder="{{placeholder}}" disabled="{{disabled}}" [(ngModel)]="value" name="value" (click)="filterBy = ''; showSelect()" (keyup)="filterBy = value; sendData()" autocomplete="nope" />
         <div *ngIf="showItems" class="un-select-list">
-            <ul *ngIf="!type || type != 'number'">
-                <li *ngFor="let item of (filter_items | selectFilter:filterBy)" (click)="value = item; sendData()" [class.un-item-selected]="value == item">{{item | capitalizeFirst}}</li>
+            <ul *ngIf="!type || type !== 'number'">
+                <li *ngFor="let item of (filter_items | selectFilter:filterBy)" (click)="value = item; sendData()" [class.un-item-selected]="value === item">{{item | capitalizeFirst}}</li>
             </ul>
-            <ul *ngIf="type && type == 'number'">
-                <li *ngFor="let item of filter_items" (click)="value = item; sendData()" [class.un-item-selected]="value == item">{{item}}</li>
+            <ul *ngIf="type && type === 'number'">
+                <li *ngFor="let item of filter_items" (click)="value = item; sendData()" [class.un-item-selected]="value === item">{{item}}</li>
             </ul>
         </div>
     </div>

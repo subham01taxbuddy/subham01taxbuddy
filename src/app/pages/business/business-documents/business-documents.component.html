@@ -6,7 +6,7 @@
       <div class="card" *ngIf="is_applied_clicked">
         <div class="card__row" >      
           <div class="card__col-xs-3 card__col-sm-3" style="float: right;">
-            <app-input-upload  [input_id]="'gst-documents'" [isResetUploadedFile]="isResetUploadedFile" (onResetFile)="isResetUploadedFile = false;" (filesDropped)="uploadGSTDocument($event)"></app-input-upload>
+            <app-input-upload  [input_id]="'gst-documents'" [isResetUploadedFile]="isResetUploadedFile" (resetFile)="isResetUploadedFile = false;" (filesDropped)="uploadGSTDocument($event)"></app-input-upload>
           </div>
           <!-- <div class="card__col-xs-12" style="text-align: right;">
             <div class="upload-btn-container" (click)="uploadGSTDocument()"></div>
@@ -44,7 +44,7 @@
               </table>
           </div>
         </div>
-        <div class="card__row" *ngIf="(!documents_list || documents_list.length == 0)">
+        <div class="card__row" *ngIf="(!documents_list || documents_list.length === 0)">
           <div class="card__col-xs-12" style="font-size: 20px;text-align: center;">
             No Data Available.
           </div>

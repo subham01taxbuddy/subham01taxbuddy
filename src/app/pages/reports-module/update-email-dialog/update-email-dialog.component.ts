@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UserMsService } from 'app/services/user-ms.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { UserMsService } from 'src/app/services/user-ms.service';
 
 @Component({
   selector: 'app-update-email-dialog',
@@ -8,8 +8,8 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   styleUrls: ['./update-email-dialog.component.css'],
   providers: [UserMsService]
 })
-export class UpdateEmailDialogComponent implements OnInit {
-  isUpdated: boolean;
+export class UpdateEmailDialogComponent  {
+  isUpdated!: boolean;
   confirmation_text = "NA";
   confirmation_popup_type = "";
   userData: any;
@@ -17,7 +17,6 @@ export class UpdateEmailDialogComponent implements OnInit {
   loading: boolean = false;
   constructor(public modalRef: BsModalRef, private userMsService: UserMsService) { }
 
-  ngOnInit() { }
 
   onClosePopup() {
     this.isUpdated = false;
@@ -35,7 +34,7 @@ export class UpdateEmailDialogComponent implements OnInit {
         this.isUpdated = true;
         this.modalRef.hide();
         console.log('Email update success:', res);
-      }, error => {
+      }, (error:any) => {
         this.loading = false;
         console.log('Email update failure:', error);
       })

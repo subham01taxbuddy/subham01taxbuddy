@@ -1,25 +1,4 @@
-import { ReportsModule } from './reports-module/reports.module';
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
-
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Component, OnInit, Input, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule,  NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -59,7 +38,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { HomeComponent } from './home/home.component';
 
 //Pages Component
-import { PagesComponent } from './pages.component';
 import { ListComponent } from './list/list.component';
 import { BusinessComponent } from './business/business.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
@@ -71,39 +49,31 @@ import { PartyListComponent } from './business/party-list/party-list.component';
 import { ImportPartyListComponent } from './business/import-party-list/import-party-list.component';
 import { GST3BComputationComponent } from './business/gst-3b-computation/gst-3b-computation.component';
 
-//Login component
-import { LoginComponent } from './login/login.component';
 
 import { routes } from './pages.routing';
 
-import { NavbarComponent } from './navbar/navbar.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
+import { NavbarComponent } from '../modules/shared/components/navbar/navbar.component';
+import { SidebarComponent } from '../modules/shared/components/sidebar/sidebar.component';
 
 import { environment } from '../../environments/environment';
 
 import Auth from '@aws-amplify/auth';
 import Storage from '@aws-amplify/storage';
-import { NgxImageZoomModule } from 'ngx-image-zoom';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
-// import { NgxDocViewerModule } from 'ngx-doc-viewer';
-import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
-import { AgGridCheckboxComponent } from 'app/additional-components/ag-grid-checkbox/ag-grid-checkbox.component';
-import { MaterialModule } from 'app/shared/material.module';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { SharedModule } from 'app/shared/shared.module';
 import { AssignComponent } from './assign/assign.component';
 import { CSVParseTemplateComponent } from './assign/csv-parse-template/csv-parse-template.component';
 import { GstRegistrationClientComponent } from './assign/gst-registration-client/gst-registration-client.component';
 import { ActivePackagePartComponent } from './active-package-part/active-package-part.component';
 import { FcmDetailComponent } from './active-package-part/fcm-detail/fcm-detail.component';
 import { ActivatePackageComponent } from './active-package-part/activate-package/activate-package.component';
-import { ValidateOtpByWhatAppComponent } from './login/validate-otp-by-what-app/validate-otp-by-what-app.component';
-import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
-import { ValidateOtpComponent } from './login/validate-otp/validate-otp.component';
-// import { NO_ERRORS_SCHEMA } from '@angular/compiler/src/core';
+import { ValidateOtpByWhatAppComponent } from '../modules/auth/components/validate-otp-by-what-app/validate-otp-by-what-app.component';
+import { AgGridCheckboxComponent } from '../additional-components/ag-grid-checkbox/ag-grid-checkbox.component';
+import { SharedModule } from '../modules/shared/shared.module';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 Auth.configure(environment.AMPLIFY_CONFIG);
 
@@ -128,7 +98,6 @@ export const MY_FORMATS = {
 };
 @NgModule({
   declarations: [
-    PagesComponent,
     ListComponent,
     BusinessComponent,
     BusinessProfileComponent,
@@ -140,9 +109,6 @@ export const MY_FORMATS = {
     ImportPartyListComponent,
     GST3BComputationComponent,
     HomeComponent,
-    LoginComponent,
-    NavbarComponent,
-    SidebarComponent,
     SelectObjectFilterPipe,
     SelectFilterPipe,
     SelectObjFilterPipe,
@@ -173,8 +139,6 @@ export const MY_FORMATS = {
     ActivePackagePartComponent,
     FcmDetailComponent,
     ValidateOtpByWhatAppComponent,
-    ForgotPasswordComponent,
-    ValidateOtpComponent
 
   ],
   entryComponents: [
@@ -192,7 +156,7 @@ export const MY_FORMATS = {
     RouterModule.forChild(routes),
     NgxLoadingModule.forRoot({}),
     ModalModule.forRoot(),
-    NgxImageZoomModule.forRoot(),
+    // NgxImageZoomModule.forRoot(),
     PdfViewerModule,
     NgxExtendedPdfViewerModule,
     // AgGridModule.withComponents([]),
@@ -210,7 +174,6 @@ export const MY_FORMATS = {
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   ],
-  bootstrap: [PagesComponent],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
 
   exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, AttributesFilterComponent, FormsModule,

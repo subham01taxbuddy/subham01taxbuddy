@@ -1,16 +1,15 @@
 import { UtilsService } from './../../../services/utils.service';
-import { UserMsService } from 'app/services/user-ms.service';
 import { Component, OnInit } from '@angular/core';
-import { NavbarService } from 'app/services/navbar.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { GstMsService } from 'app/services/gst-ms.service';
 import { DatePipe } from '@angular/common';
-import { environment } from 'environments/environment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { UpdateEmailDialogComponent } from '../update-email-dialog/update-email-dialog.component';
 import { Subscription } from 'rxjs';
+import { NavbarService } from 'src/app/services/navbar.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { GstMsService } from 'src/app/services/gst-ms.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
 
 @Component({
   selector: 'app-gstr1',
@@ -47,7 +46,7 @@ export class Gstr1Component implements OnInit {
 
   gst_return_calendars_data: any = [];
   selected_gst_return_calendars_data: any;
-  modalRef: BsModalRef;
+  modalRef!: BsModalRef;
 
   ngOnInit() {
     this.currentUrl = this.router.url;
@@ -58,7 +57,7 @@ export class Gstr1Component implements OnInit {
     });
     this.loading = true;
     this.gstGSTReturnCalendarsData().then(igr => {
-      this.getInvoicePartyRoles().then(ipr => {
+      this.getInvoicePartyRoles().then((ipr:any) => {
         this.getMerchantList().then(mr => {
           this.loading = false;
         })

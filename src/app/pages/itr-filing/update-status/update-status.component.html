@@ -10,7 +10,7 @@
         </mat-form-field>
     </div>
     <div class="card__col-xs-12 card__col-sm-7" style="padding-top: 10px;">
-        <button class="btn" style="border: none;" (click)="getFilingStatus()" title="Click to Get latest Status"
+        <button class="btn" style="border: none; margin: 0 10px;" (click)="getFilingStatus()" title="Click to Get latest Status"
             *ngIf="currentUrl === '/pages/itr-filing/customer-profile'">Get</button>
         <button style="border: none; cursor: pointer;background: transparent;" (click)="updateStatus()"
             title="Click to Update Status" *ngIf="currentUrl === '/pages/itr-filing/customer-profile'"><i

@@ -53,7 +53,7 @@ export class ToastMessageComponent implements OnInit {
  
   cssClass(message: ToastMessage) {
       if (!message) {
-          return;
+          return '';
       }
       
       switch (message.type) {
@@ -65,6 +65,8 @@ export class ToastMessageComponent implements OnInit {
               return 'info';
           case 'warning':
               return 'warning';
+          default:
+            return 'info'; 
       }
   }
 

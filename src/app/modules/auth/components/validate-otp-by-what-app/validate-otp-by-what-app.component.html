@@ -1,0 +1,51 @@
+
+
+<h1 mat-dialog-title>Login via WhatsApp</h1>
+<form [formGroup]="whatAppOtpForm">
+  <div mat-dialog-content>
+    <!-- <p>What's your favorite animal?</p> -->
+    <div class="card__col-xs-6">
+      <div class="qrCode">
+        <img src="assets/img/OTP_WEB.png" alt="" />
+        <p>Scan above WhatApp QR code for login:</p>
+      </div>
+    </div>
+    <div class="card__col-xs-6">
+      <div class="linkCode">
+        <a style="font-weight: 1000;" href="https://wa.me/919321908755?text=OTP%20WEB" target="_blank" 
+          > Please send OTP WEB to our taxbuddy business account +91 93219 08755 To receve and OTP on WhatsApp</a
+        >
+      </div>
+    </div>
+    <br /><br />
+    <div class="otpInput">
+        <mat-form-field appearance="outline">
+            <mat-label>OTP</mat-label>
+            <input
+              matInput
+              placeholder="OTP"
+              formControlName="whatAppOtp"
+              maxlength="6"
+              appearance="outline"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="event.charCode >= 48 && event.charCode <= 57"
+              required
+            />
+          </mat-form-field>
+    </div>
+   
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-raised-button mat-dialog-close tabindex="-1">
+      Cancel
+    </button>
+    <button
+      mat-button style="background-color: #63b12d; color: white;"
+      (click)="sendOtp()"
+      tabindex="1"
+      cdkFocusInitial
+    >
+      Send Otp
+    </button>
+  </div>
+</form>

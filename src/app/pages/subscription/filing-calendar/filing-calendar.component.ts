@@ -1,10 +1,11 @@
-import { AppConstants } from 'app/shared/constants';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { UtilsService } from 'app/services/utils.service';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export const MY_FORMATS = {
   parse: {

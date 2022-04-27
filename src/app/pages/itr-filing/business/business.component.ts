@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { UtilsService } from 'app/services/utils.service';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { ITR_JSON, PresumptiveIncomes } from 'app/shared/interfaces/itr-input.interface';
+import { UtilsService } from 'src/app/services/utils.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { ITR_JSON, PresumptiveIncomes } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { map, startWith } from 'rxjs/operators';
 import { invalid } from 'moment';
-import { Observable } from 'rxjs/Observable';
-import { AppConstants } from 'app/shared/constants';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { GridOptions } from 'ag-grid-community';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-business',
@@ -226,7 +226,7 @@ export class BusinessComponent implements OnInit {
 
   getCodeFromLabelOnBlur() {
     if (this.utilsService.isNonEmpty(this.natureOfBusinessForm.value) && this.utilsService.isNonEmpty(this.natureOfBusinessForm.value)) {
-      this.natureCode = this.natureOfBusinessDropdown.filter(item => item.label.toLowerCase() === this.natureOfBusinessForm.value.toLowerCase());
+      this.natureCode = this.natureOfBusinessDropdown.filter((item:any) => item.label.toLowerCase() === this.natureOfBusinessForm.value.toLowerCase());
       if (this.natureCode.length !== 0) {
         this.natureCode = this.natureCode[0].code;
         console.log('natureCode on blur = ', this.natureCode);
@@ -236,11 +236,12 @@ export class BusinessComponent implements OnInit {
       }
     }
   }
+  
   getMastersData() {
     const param = '/itrmaster';
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.natureOfBusinessDropdownAll = result.natureOfBusiness;
-      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter(item => item.section === '44AD');
+      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item:any) => item.section === '44AD');
       sessionStorage.setItem('MASTER', JSON.stringify(result));
     }, error => {
     });
@@ -345,7 +346,7 @@ export class BusinessComponent implements OnInit {
 
     if (val === 'BUSINESS') {
       this.natureOfBusinessPlaceholder = 'Nature of business';
-      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter(item => item.section === '44AD');
+      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item:any) => item.section === '44AD');
       // this.businesTypeString = 'BUSINESS';
       this.businessIncomeBankForm.controls['recieptRecievedInBank'].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex)]);
       this.businessIncomeBankForm.controls['recieptRecievedInBank'].updateValueAndValidity();
@@ -357,7 +358,7 @@ export class BusinessComponent implements OnInit {
       this.businessIncomeCashForm.controls['presumptiveIncomeRecievedCash'].updateValueAndValidity();
     } else if (val === 'PROFESSIONAL') {
       this.natureOfBusinessPlaceholder = 'Nature of profession';
-      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter(item => item.section === '44ADA');
+      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item:any) => item.section === '44ADA');
       // this.businesTypeString = 'PROFESSIONAL';
       this.professionIncomeForm.controls['grossReciept'].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex)]);
       this.professionIncomeForm.controls['grossReciept'].updateValueAndValidity();
@@ -368,7 +369,7 @@ export class BusinessComponent implements OnInit {
       //   this.utilsService.showSnackBar('You can not add more than one Transport.');
       // } else {
       //   this.natureOfBusinessPlaceholder = 'Nature of profession';
-      //   this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter(item => item.section === '44AE');
+      //   this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item:any) => item.section === '44AE');
 
       //   // this.businesTypeString = 'TRANSPORT';
       //   // this.transportMode = 'ADD';
@@ -380,7 +381,7 @@ export class BusinessComponent implements OnInit {
   }
 
   saveBusinessDetail() {
-    console.log('this.natureOfBusinessForm == ', this.natureOfBusinessForm.value);
+    console.log('this.natureOfBusinessForm === ', this.natureOfBusinessForm.value);
     if (this.natureOfBusinessForm.valid && this.tradeName.valid) {
       this.localPresumptiveIncome = {
         businessType: this.businessType.value,
@@ -543,7 +544,7 @@ export class BusinessComponent implements OnInit {
 
   natureOfBusinessFromCode(natureOfBusiness) {
     if (this.natureOfBusinessDropdownAll.length !== 0) {
-      const nameArray = this.natureOfBusinessDropdownAll.filter(item => item.code === natureOfBusiness);
+      const nameArray = this.natureOfBusinessDropdownAll.filter((item:any) => item.code === natureOfBusiness);
       return nameArray[0].label;
     } else {
       return natureOfBusiness;
@@ -564,13 +565,13 @@ export class BusinessComponent implements OnInit {
     this.localPresumptiveIncome = this.ITR_JSON.business.presumptiveIncomes[index];
     this.businessMode = 'FORM';
     console.log('this.localPresumptiveIncome =', this.localPresumptiveIncome);
-    const name = this.natureOfBusinessDropdownAll.filter(item => item.code === this.localPresumptiveIncome.natureOfBusiness);
+    const name = this.natureOfBusinessDropdownAll.filter((item:any) => item.code === this.localPresumptiveIncome.natureOfBusiness);
     this.natureOfBusinessForm.setValue(name[0].label);
     this.natureCode = this.localPresumptiveIncome.natureOfBusiness;
     this.tradeName.setValue(this.localPresumptiveIncome.tradeName);
 
     if (this.localPresumptiveIncome.businessType === 'BUSINESS') {
-      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter(item => item.section === '44AD');
+      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item:any) => item.section === '44AD');
 
       // this.businesTypeString = 'BUSINESS';
       this.businessType.setValue('BUSINESS');
@@ -593,7 +594,7 @@ export class BusinessComponent implements OnInit {
     } else if (this.localPresumptiveIncome.businessType === 'PROFESSIONAL') {
       // this.businesTypeString = 'PROFESSIONAL';
       this.businessType.setValue('PROFESSIONAL');
-      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter(item => item.section === '44ADA');
+      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item:any) => item.section === '44ADA');
       for (let i = 0; i < this.localPresumptiveIncome.incomes.length; i++) {
         this.professionIncomeForm.controls['grossReciept'].setValue(this.localPresumptiveIncome.incomes[i].receipts);
         this.professionIncomeForm.controls['presumptiveIncome'].setValue(this.localPresumptiveIncome.incomes[i].presumptiveIncome);
@@ -601,7 +602,7 @@ export class BusinessComponent implements OnInit {
         this.professionIncomeForm.controls['presumptiveIncome'].updateValueAndValidity();
       }
     } else if (this.localPresumptiveIncome.businessType === 'TRANSPORT') {
-      // this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter(item => item.section === '44AE');
+      // this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item:any) => item.section === '44AE');
       // this.businesTypeString = 'TRANSPORT';
       // this.CopyIncome = JSON.parse(JSON.stringify(this.localPresumptiveIncome.incomes));
       // this.callInConstructor(this.localPresumptiveIncome.incomes);

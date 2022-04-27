@@ -1,24 +1,5 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
- 
 
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { NavbarService } from '../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../services/toast-message.service';
@@ -29,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './party-list.component.html',
   styleUrls: ['./party-list.component.css']
 })
-export class PartyListComponent implements OnInit {
+export class PartyListComponent implements OnInit, DoCheck {
   selected_merchant: any;
 	selected_party_role: any;
   loading: boolean = false;  
@@ -55,54 +36,54 @@ export class PartyListComponent implements OnInit {
   	private navbarService: NavbarService,
     public router: Router, public http: HttpClient,
     public _toastMessageService:ToastMessageService) { 
-    NavbarService.getInstance(null).component_link_2 = 'party-list';
-    NavbarService.getInstance(null).component_link_3 = '';
-  	NavbarService.getInstance(null).showBtns = 'party-list';
+    NavbarService.getInstance().component_link_2 = 'party-list';
+    NavbarService.getInstance().component_link_3 = '';
+  	NavbarService.getInstance().showBtns = 'party-list';
   } 
 
   ngOnInit() {
-    if (!NavbarService.getInstance(null).isSessionValid()) {
+    if (!NavbarService.getInstance().isSessionValid()) {
       this.router.navigate(['']);
       return;
     }
 
-    this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
-    this.onSelectPartyRole(NavbarService.getInstance(null).selected_party_role);
+    this.onSelectMerchant(NavbarService.getInstance().merchantData);
+    this.onSelectPartyRole(NavbarService.getInstance().selected_party_role);
 
   }
 
   ngDoCheck() {
-    if (NavbarService.getInstance(null).isMerchantChanged && NavbarService.getInstance(null).merchantData) {
-      this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
-      NavbarService.getInstance(null).isMerchantChanged = false;
+    if (NavbarService.getInstance().isMerchantChanged && NavbarService.getInstance().merchantData) {
+      this.onSelectMerchant(NavbarService.getInstance().merchantData);
+      NavbarService.getInstance().isMerchantChanged = false;
     }
 
-    if (NavbarService.getInstance(null).isPartyRoleChanged && NavbarService.getInstance(null).selected_party_role) {
-      this.onSelectPartyRole(NavbarService.getInstance(null).selected_party_role);
-      NavbarService.getInstance(null).isPartyRoleChanged = false;
+    if (NavbarService.getInstance().isPartyRoleChanged && NavbarService.getInstance().selected_party_role) {
+      this.onSelectPartyRole(NavbarService.getInstance().selected_party_role);
+      NavbarService.getInstance().isPartyRoleChanged = false;
     }
 
-    if (NavbarService.getInstance(null).isApplyBtnClicked) {
-      NavbarService.getInstance(null).isApplyBtnClicked = false;
+    if (NavbarService.getInstance().isApplyBtnClicked) {
+      NavbarService.getInstance().isApplyBtnClicked = false;
       this.getPartyListByMerchant();
     }
     
   }
 
-  onSelectMerchant(event) {    
+  onSelectMerchant(event:any) {    
     if(event && event.userId) {
       this.selected_merchant = event;
       this.merchantData = event;
     }    
   }
 
-  onSelectPartyRole(event) {
+  onSelectPartyRole(event:any) {
     if(event && event.id) {
       this.selected_party_role = event;
     }
   }
 
-  getMerchantDetails(merchant) {        
+  getMerchantDetails(merchant:any) {        
     this.merchantData = null;
     NavbarService.getInstance(this.http).getGetGSTMerchantDetail(merchant.userId).subscribe(res => {
       
@@ -142,15 +123,15 @@ export class PartyListComponent implements OnInit {
     
   }
 
-  onChangeAttrFilter(event) {
-    var tempFD = this.party_list.filter(rd => {
+  onChangeAttrFilter(event:any) {
+    var tempFD = this.party_list.filter((rd:any) => {
         var is_match = true;
         for(var i=0;i<event.length;i++) {
           var it = event[i];      
-          if(it.attr == 'Name' && it.value && rd.partyName.toLowerCase().indexOf(it.value.toLowerCase()) == -1 ||
-            it.attr == 'GST Number' && it.value && rd.partyGstin.toLowerCase().indexOf(it.value.toLowerCase()) == -1 ||
-            it.attr == 'Email' && it.value && rd.partyEmail.toLowerCase().indexOf(it.value.toLowerCase()) == -1 ||
-            it.attr == 'Phone' && it.value && rd.partyPhone.toLowerCase().indexOf(it.value.toLowerCase()) == -1
+          if(it.attr === 'Name' && it.value && rd.partyName.toLowerCase().indexOf(it.value.toLowerCase()) === -1 ||
+            it.attr === 'GST Number' && it.value && rd.partyGstin.toLowerCase().indexOf(it.value.toLowerCase()) === -1 ||
+            it.attr === 'Email' && it.value && rd.partyEmail.toLowerCase().indexOf(it.value.toLowerCase()) === -1 ||
+            it.attr === 'Phone' && it.value && rd.partyPhone.toLowerCase().indexOf(it.value.toLowerCase()) === -1
              ) {            
               is_match = false;
               break;
@@ -163,7 +144,7 @@ export class PartyListComponent implements OnInit {
     this.filterData = JSON.parse(JSON.stringify(tempFD));    
   }
 
-  onSelectRecord(item,index) {
+  onSelectRecord(item:any,index:any) {
     if(!this.prods_check[index]) {
       item.upartyName = item.partyName;
       item.upartyPhone = item.partyPhone;
@@ -172,7 +153,7 @@ export class PartyListComponent implements OnInit {
     this.prods_check[index] = !this.prods_check[index];
   }
 
-  updatePartyDetail(item,index) {
+  updatePartyDetail(item:any,index:any) {
     if(item.upartyPhone && !(/^\d{10}$/.test(item.upartyPhone))) {
       this._toastMessageService.alert("error","Please add valid 10 digit phone number");
       return;

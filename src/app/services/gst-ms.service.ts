@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, } from '@angular/common/http';
-import { ResponseContentType, Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { environment } from 'environments/environment';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +10,7 @@ export class GstMsService {
   headers: any;
   userObj: any;
   microService: string = '/gst/api';
-  constructor(private httpClient: HttpClient, private http: Http, ) { }
+  constructor(private httpClient: HttpClient, ) { }
 
   getMethod<T>(...param): Observable<T> {
     this.headers = new HttpHeaders();

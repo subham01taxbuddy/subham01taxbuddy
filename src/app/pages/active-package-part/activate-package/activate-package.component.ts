@@ -7,9 +7,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-import { UtilsService } from 'app/services/utils.service';
-import { NavbarService } from 'app/services/navbar.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { NavbarService } from 'src/app/services/navbar.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 
 @Component({
   selector: 'app-activate-package',
@@ -104,7 +104,7 @@ export class ActivatePackageComponent implements OnInit {
   }
 
   isPackageActivated(planId) {
-    let temp = this.active_subscriptions.filter(item => item.planId === planId);
+    let temp = this.active_subscriptions.filter((item:any) => item.planId === planId);
     if (temp instanceof Array && temp.length > 0) {
       return true
     } else {
@@ -113,7 +113,7 @@ export class ActivatePackageComponent implements OnInit {
   }
 
   getActivatedDate(planId) {
-    let temp = this.active_subscriptions.filter(item => item.planId === planId);
+    let temp = this.active_subscriptions.filter((item:any) => item.planId === planId);
     if (temp instanceof Array && temp.length > 0) {
       return this.datePipe.transform(temp[0].transactionDate, 'dd-MM-yyyy');
     } else {
@@ -143,6 +143,7 @@ export class ActivatePackageComponent implements OnInit {
         });
       });
     }
+    return '';
   }
 
   createUserOrder(order_obj, service) {

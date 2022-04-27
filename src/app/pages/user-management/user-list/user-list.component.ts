@@ -3,13 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { NavbarService } from 'app/services/navbar.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { environment } from 'environments/environment';
-declare function matomo(title: any, url: any, event: any, scriptId: any);
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { NavbarService } from 'src/app/services/navbar.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-user-list',
@@ -18,7 +17,7 @@ declare function matomo(title: any, url: any, event: any, scriptId: any);
 })
 export class UserListComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   usersGridOptions: GridOptions;
   config: any;
   userInfo: any = [];
@@ -48,7 +47,7 @@ export class UserListComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string) {
     this.usersGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.usersCreateColoumnDef(),
+      columnDefs: this.usersCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -73,15 +72,15 @@ export class UserListComponent implements OnInit {
     this.currentUserId = 0;
   }
 
-  advanceSearch(key) {
+  advanceSearch(key: any) {
     this.user_data = [];
     if (this.searchVal !== "") {
       this.getUserSearchList(key, this.searchVal);
     }
   }
 
-  getUserSearchList(key, searchValue) {
-    let searchInfo = key+': '+searchValue;
+  getUserSearchList(key: any, searchValue: any) {
+    let searchInfo = key + ': ' + searchValue;
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Select attribute', searchInfo], environment.matomoScriptId);
     this.loading = true;
     return new Promise((resolve, reject) => {
@@ -91,7 +90,7 @@ export class UserListComponent implements OnInit {
         if (Array.isArray(res.records)) {
           this.user_data = res.records;
           console.log('user_data -> ', this.user_data);
-          this.usersGridOptions.api.setRowData(this.createRowData(this.user_data));
+          this.usersGridOptions.api?.setRowData(this.createRowData(this.user_data));
           this.userInfo = this.user_data;
           this.config.totalItems = this.user_data.length;
         }
@@ -107,18 +106,18 @@ export class UserListComponent implements OnInit {
   }
 
 
-  pageChanged(event) {
+  pageChanged(event: any) {
     this.config.currentPage = event;
     this.getUserData(event - 1);
   }
 
-  getUserData(pageNo) {
+  getUserData(pageNo: any) {
     this.loading = true;
     let param = '/profile?page=' + pageNo + '&pageSize=15'
     this.userService.getMethod(param).subscribe((result: any) => {
       console.log('result -> ', result);
       this.loading = false;
-      this.usersGridOptions.api.setRowData(this.createRowData(result['content']));
+      this.usersGridOptions.api?.setRowData(this.createRowData(result['content']));
       this.userInfo = result['content'];
       this.config.totalItems = result.totalElements;
     },
@@ -129,7 +128,7 @@ export class UserListComponent implements OnInit {
       })
   }
 
-  usersCreateColoumnDef() {
+  usersCreateColumnDef() {
     return [
       {
         headerName: 'User Id',
@@ -149,7 +148,7 @@ export class UserListComponent implements OnInit {
         width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        cellRenderer: (data) => {
+        cellRenderer: (data: any) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
         filter: "agTextColumnFilter",
@@ -210,13 +209,13 @@ export class UserListComponent implements OnInit {
         field: 'gender',
         width: 100,
         suppressMovable: true,
-        valueGetter: function (params) {
+        valueGetter: function (params: any) {
           if (params.data.gender === 'MALE') {
             return 'Male';
           } else if (params.data.gender === 'FEMALE') {
             return 'Female'
           } else {
-            params.data.gender
+            return params.data.gender
           }
         },
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
@@ -231,14 +230,15 @@ export class UserListComponent implements OnInit {
         field: 'resident',
         width: 120,
         suppressMovable: true,
-        valueGetter: function (params) {
+        valueGetter: function (params: any) {
           if (params.data.resident === 'RESIDENT') {
             return 'Resident';
           } else if (params.data.resident === 'NON_RESIDENT') {
             return 'NRI'
           } else {
-            params.data.resident
+            return params.data.resident;
           }
+          return;
         },
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -253,7 +253,7 @@ export class UserListComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Rediredt toward Invoice"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-files-o" aria-hidden="true" data-action-type="invoice"></i>
@@ -261,7 +261,7 @@ export class UserListComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -275,7 +275,7 @@ export class UserListComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Redirect toward Subscription"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-list-alt" aria-hidden="true" data-action-type="subscription"></i>
@@ -283,7 +283,7 @@ export class UserListComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -297,7 +297,7 @@ export class UserListComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params: any) {
           return ` 
            <button type="button" class="action_icon add_button" title="User Profile" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
@@ -306,7 +306,7 @@ export class UserListComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -320,7 +320,7 @@ export class UserListComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Link To Finbingo" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-link" aria-hidden="true" data-action-type="link-to-finbingo"></i>
@@ -328,7 +328,7 @@ export class UserListComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -342,7 +342,7 @@ export class UserListComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
@@ -350,7 +350,7 @@ export class UserListComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -363,22 +363,44 @@ export class UserListComponent implements OnInit {
         field: "isReviewGiven",
         width: 50,
         pinned: 'right',
-        cellRenderer: params => {
+        cellRenderer: (params: any) => {
           return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
         },
-        cellStyle: params => {
+        cellStyle: (params: any) => {
           return (params.data.isReviewGiven) ? { 'pointer-events': 'none', opacity: '0.4' }
             : '';
         }
       },
+      {
+        headerName: 'Add Client',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Add Client" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-plus" aria-hidden="true" data-action-type="add-client"></i>
+           </button>`;
+        },
+        width: 50,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
     ]
   }
 
-  createRowData(userData) {
+  createRowData(userData: any) {
     console.log('userData -> ', userData);
     var userArray = [];
     for (let i = 0; i < userData.length; i++) {
-      let userInfo = Object.assign({}, userArray[i], {
+      let userInfo: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
         createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
         name: userData[i].fName + ' ' + userData[i].lName,
@@ -389,7 +411,8 @@ export class UserListComponent implements OnInit {
         maritalStatus: this.utilsService.isNonEmpty(userData[i].maritalStatus) ? userData[i].maritalStatus : '-',
         pan: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
         resident: this.utilsService.isNonEmpty(userData[i].residentialStatus) ? userData[i].residentialStatus : '-',
-        isReviewGiven: userData[i].reviewGiven
+        isReviewGiven: userData[i].reviewGiven,
+        eriClientValidUpto: userData[i].eriClientValidUpto
       })
       userArray.push(userInfo);
     }
@@ -397,7 +420,7 @@ export class UserListComponent implements OnInit {
     return userArray;
   }
 
-  onUsersRowClicked(params) {
+  onUsersRowClicked(params: any) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -428,23 +451,31 @@ export class UserListComponent implements OnInit {
           this.updateReviewStatus(params.data);
           break;
         }
+        case 'add-client': {
+          if (environment.production) {
+            this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan, eriClientValidUpto: params.data.eriClientValidUpto } });
+          } else {
+            this._toastMessageService.alert("error", 'You can not access add client on testing environment');
+          }
+          break;
+        }
       }
     }
   }
 
-  redirectTowardInvoice(userInfo) {
+  redirectTowardInvoice(userInfo: any) {
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Invoice'], environment.matomoScriptId);
     console.log('userInfo for subscription -> ', userInfo);
     this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: userInfo.userId } });
   }
 
-  redirectTowardSubscription(userInfo) {
+  redirectTowardSubscription(userInfo: any) {
     console.log('userInfo for subscription -> ', userInfo);
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Sunscription'], environment.matomoScriptId);
     this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: userInfo.mobileNumber } });
   }
 
-  linkToFinbingo(userId) {
+  linkToFinbingo(userId: any) {
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'FNB'], environment.matomoScriptId); 
     this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'FNB'], environment.matomoScriptId);
     const param = `/partner/create-user`;
@@ -471,13 +502,13 @@ export class UserListComponent implements OnInit {
     })
   }
 
-  linkToDocumentCloud(userId) {
+  linkToDocumentCloud(userId: any) {
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId);
-    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId); 
+    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId);
     this.router.navigate(['/pages/itr-filing/user-docs/' + userId]);
   }
 
-  updateReviewStatus(data) {
+  updateReviewStatus(data: any) {
     this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Review'], environment.matomoScriptId);
     const param = `/update-itr-userProfile?userId=${data.userId}&isReviewGiven=true`;
     this.itrMsService.putMethod(param, {}).subscribe(result => {

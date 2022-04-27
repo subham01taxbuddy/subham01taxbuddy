@@ -1,12 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { UserMsService } from 'app/services/user-ms.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { timer } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { environment } from 'environments/environment';
-import { UtilsService } from 'app/services/utils.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { environment } from 'src/environments/environment';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-whats-app-dialog',
@@ -16,7 +16,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 })
 export class WhatsAppDialogComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   selectdMobNum: any;
   selectedUser: any;
   startConversation: boolean;
@@ -73,7 +73,8 @@ export class WhatsAppDialogComponent implements OnInit {
 ]
 
   constructor(public dialogRef: MatDialogRef<WhatsAppDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
-              private userService: UserMsService, private _toastMessageService: ToastMessageService, private utileService: UtilsService,
+              private userService: UserMsService, private _toastMessageService: ToastMessageService,
+               private utileService: UtilsService,
               private fb: FormBuilder) {
                 this.environmentPath = environment.url;
                 this.smeInfo = JSON.parse(localStorage.getItem("UMD"));
@@ -510,10 +511,12 @@ export class WhatsAppDialogComponent implements OnInit {
           if (this.newAttributes.length === attributes.length) {
             return true;
           }
+          return false;
         } else {
           return false;
         }
       }
+      return true;
     }
     else{
       return true;

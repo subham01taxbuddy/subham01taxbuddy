@@ -25,7 +25,7 @@ export class SelectObjectFilterPipe implements PipeTransform {
 		if(criteria === 'all' || !criteria || Array.isArray(criteria)) {
 			return items;
 		} else {
-			return items.filter(item => {				
+			return items.filter((item:any) => {				
 				if(item.name && item.name.toLowerCase().indexOf(criteria.toLowerCase()) != -1) {
 					return item;
 				}

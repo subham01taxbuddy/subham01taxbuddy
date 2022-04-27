@@ -1,24 +1,4 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
-
-
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { NavbarService } from '../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../services/toast-message.service';
@@ -33,7 +13,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
   templateUrl: './gst-cloud.component.html',
   styleUrls: ['./gst-cloud.component.css']
 })
-export class GSTCloudComponent implements OnInit {
+export class GSTCloudComponent implements OnInit, DoCheck {
   selected_merchant: any;
   loading: boolean = false;
   merchantData: any;
@@ -92,7 +72,7 @@ export class GSTCloudComponent implements OnInit {
       invoice_list: []
     }
   }
-  modalRef: BsModalRef;
+  modalRef!: BsModalRef;
   bodyTag = document.getElementsByTagName("body")[0];
 
   constructor(
@@ -100,13 +80,13 @@ export class GSTCloudComponent implements OnInit {
     private modalService: BsModalService,
     public router: Router, public http: HttpClient,
     public _toastMessageService: ToastMessageService) {
-    NavbarService.getInstance(null).component_link_2 = 'gst-cloud';
-    NavbarService.getInstance(null).component_link_3 = '';
-    NavbarService.getInstance(null).showBtns = 'gst-cloud';
+    NavbarService.getInstance().component_link_2 = 'gst-cloud';
+    NavbarService.getInstance().component_link_3 = '';
+    NavbarService.getInstance().showBtns = 'gst-cloud';
   }
 
   ngOnInit() {
-    if (!NavbarService.getInstance(null).isSessionValid()) {
+    if (!NavbarService.getInstance().isSessionValid()) {
       this.router.navigate(['']);
       return;
     }
@@ -115,9 +95,9 @@ export class GSTCloudComponent implements OnInit {
     this.getGSTStateList().then(sR => {
       this.getGSTInvoiceTypes().then(iR => {
         this.getInvoicePartyRoles().then(rR => {
-          this.getInvoiceStatusList().then(iSL => {
-            this.getAdminList().then(aL => {
-              this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+          this.getInvoiceStatusList().then((isl:any) => {
+            this.getAdminList().then((al:any) => {
+              this.onSelectMerchant(NavbarService.getInstance().merchantData);
               this.loading = false;
             })
           })
@@ -127,20 +107,20 @@ export class GSTCloudComponent implements OnInit {
   }
 
   ngDoCheck() {
-    if (NavbarService.getInstance(null).isMerchantChanged && NavbarService.getInstance(null).merchantData) {
-      this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
-      NavbarService.getInstance(null).isMerchantChanged = false;
+    if (NavbarService.getInstance().isMerchantChanged && NavbarService.getInstance().merchantData) {
+      this.onSelectMerchant(NavbarService.getInstance().merchantData);
+      NavbarService.getInstance().isMerchantChanged = false;
     }
 
-    if (NavbarService.getInstance(null).isDateRangeChanged && NavbarService.getInstance(null).selected_dates) {
-      let selected_dates = NavbarService.getInstance(null).selected_dates;
+    if (NavbarService.getInstance().isDateRangeChanged && NavbarService.getInstance().selected_dates) {
+      let selected_dates = NavbarService.getInstance().selected_dates;
       this.from_date = selected_dates.from_date;
       this.to_date = selected_dates.to_date;
-      NavbarService.getInstance(null).isDateRangeChanged = false;
+      NavbarService.getInstance().isDateRangeChanged = false;
     }
 
-    if (NavbarService.getInstance(null).isApplyBtnClicked) {
-      NavbarService.getInstance(null).isApplyBtnClicked = false;
+    if (NavbarService.getInstance().isApplyBtnClicked) {
+      NavbarService.getInstance().isApplyBtnClicked = false;
       this.getAllBillInfoByMerchant();
     }
   }
@@ -211,7 +191,7 @@ export class GSTCloudComponent implements OnInit {
     })
   }
 
-  onSelectMerchant(event) {
+  onSelectMerchant(event:any) {
     if (event && event.userId) {
       this.selected_merchant = event;
       /*this.merchantData = event;      */
@@ -219,7 +199,7 @@ export class GSTCloudComponent implements OnInit {
     }
   }
 
-  getMerchantDetails(merchant) {
+  getMerchantDetails(merchant:any) {
     this.merchantData = null;
     this.loading = true;
     NavbarService.getInstance(this.http).getGetGSTMerchantDetail(merchant.userId).subscribe(res => {
@@ -233,7 +213,7 @@ export class GSTCloudComponent implements OnInit {
 
   }
 
-  setDateStartTimings(date) {
+  setDateStartTimings(date:any) {
     let f_date = new Date(date);
     f_date.setHours(0);
     f_date.setMinutes(0);
@@ -242,7 +222,7 @@ export class GSTCloudComponent implements OnInit {
     return f_date;
   }
 
-  setDateEndTimings(date) {
+  setDateEndTimings(date:any) {
     let f_date = new Date(date);
     f_date.setHours(23);
     f_date.setMinutes(59);
@@ -323,7 +303,7 @@ export class GSTCloudComponent implements OnInit {
 
       NavbarService.getInstance(this.http).getInvoiceList(params).subscribe(res => {
         if (Array.isArray(res)) {
-          res.forEach(inv => {
+          res.forEach((inv:any) => {
             inv.processed_by = this.getAdminName(inv.invoiceAssignedTo);
           });
           return resolve(res);
@@ -350,7 +330,7 @@ export class GSTCloudComponent implements OnInit {
 
       NavbarService.getInstance(this.http).getCreditDebitNoteInvoiceList(params).subscribe(res => {
         if (Array.isArray(res)) {
-          res.forEach(inv => {
+          res.forEach((inv:any) => {
             inv.processed_by = this.getAdminName(inv.creditDebitNoteAssignedTo);
           })
           return resolve(res);
@@ -365,28 +345,28 @@ export class GSTCloudComponent implements OnInit {
     });
   }
 
-  showBillTypeInvoices(type) {
+  showBillTypeInvoices(type:any) {
     this.getInvoicesByBillType(type);
   }
 
-  getInvoicesByBillType(bill_type) {
+  getInvoicesByBillType(bill_type:any) {
     this.selected_invoice_types = [];
     this.selected_invoices_list = [];
-    if (bill_type == 'sales-invoice') {
-      let tInvT = this.all_invoice_types.filter(ait => { return ait.invoiceTypesName == "Sales" })
-      this.selected_invoice_types = tInvT.map(t => { return { id: t.id, name: t.invoiceTypesSubtype } });
+    if (bill_type === 'sales-invoice') {
+      let tInvT = this.all_invoice_types.filter((ait:any) => { return ait.invoiceTypesName === "Sales" })
+      this.selected_invoice_types = tInvT.map((t:any) => { return { id: t.id, name: t.invoiceTypesSubtype } });
       this.selected_invoices_list = this.summarised_invoice.sales.invoice_list;
-    } else if (bill_type == 'purchase-invoice') {
-      let tInvT = this.all_invoice_types.filter(ait => { return (ait.invoiceTypesName == "Purchase" || ait.invoiceTypesName == "Expense") })
-      this.selected_invoice_types = tInvT.map(t => { return { id: t.id, name: t.invoiceTypesName } });
+    } else if (bill_type === 'purchase-invoice') {
+      let tInvT = this.all_invoice_types.filter((ait:any) => { return (ait.invoiceTypesName === "Purchase" || ait.invoiceTypesName === "Expense") })
+      this.selected_invoice_types = tInvT.map((t:any) => { return { id: t.id, name: t.invoiceTypesName } });
       this.selected_invoices_list = this.summarised_invoice.purchase.invoice_list;
-    } else if (bill_type == 'credit-note') {
-      let tInvT = this.all_invoice_types.filter(ait => { return (ait.invoiceTypesName == "Credit Note") })
-      this.selected_invoice_types = tInvT.map(t => { return { id: t.id, name: t.invoiceTypesName } });
+    } else if (bill_type === 'credit-note') {
+      let tInvT = this.all_invoice_types.filter((ait:any) => { return (ait.invoiceTypesName === "Credit Note") })
+      this.selected_invoice_types = tInvT.map((t:any) => { return { id: t.id, name: t.invoiceTypesName } });
       this.selected_invoices_list = this.summarised_invoice.credit_note.invoice_list;
-    } else if (bill_type == 'debit-note') {
-      let tInvT = this.all_invoice_types.filter(ait => { return (ait.invoiceTypesName == "Debit Note") })
-      this.selected_invoice_types = tInvT.map(t => { return { id: t.id, name: t.invoiceTypesName } });
+    } else if (bill_type === 'debit-note') {
+      let tInvT = this.all_invoice_types.filter((ait:any) => { return (ait.invoiceTypesName === "Debit Note") })
+      this.selected_invoice_types = tInvT.map((t:any) => { return { id: t.id, name: t.invoiceTypesName } });
       this.selected_invoices_list = this.summarised_invoice.debit_note.invoice_list;
     }
     
@@ -397,7 +377,7 @@ export class GSTCloudComponent implements OnInit {
   }
 
   invoiceSummarised() {
-    this.invoices_list.forEach(inv => {
+    this.invoices_list.forEach((inv:any) => {
       let uploadCount = 0;
       let processedCount = 0;
       let processingCount = 0;
@@ -405,10 +385,10 @@ export class GSTCloudComponent implements OnInit {
       // here 1 is id of uploaded invoice status
       //      2 is id of assigned invoice status
       //      3 is id of processed invoice status
-      if (inv.invoiceStatusMasterInvoiceStatusMasterId == 1 || inv.invoiceStatusMasterInvoiceStatusMasterId == 2) {
+      if (inv.invoiceStatusMasterInvoiceStatusMasterId === 1 || inv.invoiceStatusMasterInvoiceStatusMasterId === 2) {
         uploadCount++;
         processingCount++;
-      } else if (inv.invoiceStatusMasterInvoiceStatusMasterId == 3) {
+      } else if (inv.invoiceStatusMasterInvoiceStatusMasterId === 3) {
         uploadCount++;
         processedCount++;
       } /* else {
@@ -421,13 +401,13 @@ export class GSTCloudComponent implements OnInit {
       //     6  id of expense Bills
       //     4  id of credit note Bills
       //     5  id of debit note Bills
-      if (inv.invoiceTypesInvoiceTypesId == 1 || inv.invoiceTypesInvoiceTypesId == 2) {
+      if (inv.invoiceTypesInvoiceTypesId === 1 || inv.invoiceTypesInvoiceTypesId === 2) {
         invType = "sales";
-      } else if (inv.invoiceTypesInvoiceTypesId == 3 || inv.invoiceTypesInvoiceTypesId == 6) {
+      } else if (inv.invoiceTypesInvoiceTypesId === 3 || inv.invoiceTypesInvoiceTypesId === 6) {
         invType = "purchase";
-      } else if (inv.invoiceTypesInvoiceTypesId == 4) {
+      } else if (inv.invoiceTypesInvoiceTypesId === 4) {
         invType = "credit_note";
-      } else if (inv.invoiceTypesInvoiceTypesId == 5) {
+      } else if (inv.invoiceTypesInvoiceTypesId === 5) {
         invType = "debit_note";
       }
 
@@ -459,11 +439,11 @@ export class GSTCloudComponent implements OnInit {
     });
   }
 
-  getAdminName(id) {
+  getAdminName(id:any) {
     // if (!id) {
     //   return "N/A";
     // } else {
-    let fData = this.admin_list.filter(al => { return al.userId == id });
+    let fData = this.admin_list.filter((al:any) => { return al.userId === id });
     if (fData && fData[0]) {
       return fData[0].name;
     }else{
@@ -472,7 +452,7 @@ export class GSTCloudComponent implements OnInit {
     // }
   }
 
-  onClickEditInvoice(invoice) {
+  onClickEditInvoice(invoice:any) {
     this.loading = true;
     this.getInvoiceByInvoiceId(invoice.id).then(invoiceData => {
       if (invoiceData) {
@@ -483,7 +463,7 @@ export class GSTCloudComponent implements OnInit {
     })
   }
 
-  getInvoiceByInvoiceId(inv_id) {
+  getInvoiceByInvoiceId(inv_id:any) {
     return new Promise((resolve, reject) => {
       NavbarService.getInstance(this.http).getInvoiceWithItemsByInvoiceId(inv_id).subscribe(res => {
         return resolve((Array.isArray(res)) ? res[0] : null);
@@ -495,7 +475,7 @@ export class GSTCloudComponent implements OnInit {
     })
   }
 
-  onClickEditCreditDebitNoteInvoice(invoice) {
+  onClickEditCreditDebitNoteInvoice(invoice:any) {
     this.loading = true;
     this.getCreditDebitNoteInvoiceByInvoiceId(invoice.id).then(invoiceData => {
       if (invoiceData) {
@@ -506,7 +486,7 @@ export class GSTCloudComponent implements OnInit {
     })
   }
 
-  getCreditDebitNoteInvoiceByInvoiceId(inv_id) {
+  getCreditDebitNoteInvoiceByInvoiceId(inv_id:any) {
     return new Promise((resolve, reject) => {
       NavbarService.getInstance(this.http).getCreditDebitNoteInvoiceWithItemsByInvoiceId(inv_id).subscribe(res => {
         return resolve((Array.isArray(res)) ? res[0] : null);
@@ -519,13 +499,13 @@ export class GSTCloudComponent implements OnInit {
   }
 
   getInvoiceCardTitle() {
-    if (this.selected_bill_type == "sales-invoice") {
+    if (this.selected_bill_type === "sales-invoice") {
       return "Sales Bills Invoices";
-    } else if (this.selected_bill_type == "purchase-invoice") {
+    } else if (this.selected_bill_type === "purchase-invoice") {
       return "Purchase / Expense Bills Invoices";
-    } else if (this.selected_bill_type == "credit") {
+    } else if (this.selected_bill_type === "credit") {
       return "Credit Note Bills Invoices";
-    } else if (this.selected_bill_type == "debit") {
+    } else if (this.selected_bill_type === "debit") {
       return "Debit Note Bills Invoices";
     } else {
       return "";
@@ -540,14 +520,14 @@ export class GSTCloudComponent implements OnInit {
     this.invoiceSummarised();
   }
 
-  onChangeAttrFilter(event) {
+  onChangeAttrFilter(event:any) {
     console.log(event)
-    var tempFD = this.selected_invoices_list.filter(rd => {
+    var tempFD = this.selected_invoices_list.filter((rd:any) => {
       var is_match = true;
       for (var i = 0; i < event.length; i++) {
         var it = event[i];
-        if (it.attr == 'Processed By' && it.value && rd.processed_by.toLowerCase().indexOf(it.value.toLowerCase()) == -1 ||
-          it.attr == 'Invoice #' && it.value && rd.invoiceNumber.toLowerCase().indexOf(it.value.toLowerCase()) == -1) {
+        if (it.attr === 'Processed By' && it.value && rd.processed_by.toLowerCase().indexOf(it.value.toLowerCase()) === -1 ||
+          it.attr === 'Invoice #' && it.value && rd.invoiceNumber.toLowerCase().indexOf(it.value.toLowerCase()) === -1) {
           is_match = false;
           break;
         }
@@ -558,31 +538,31 @@ export class GSTCloudComponent implements OnInit {
     this.filterData = JSON.parse(JSON.stringify(tempFD));
   }
 
-  uploadBill(isNew) {
+  uploadBill(isNew:any) {
     this.isGSTBillViewShown = true;
     this.is_update_invoice = !isNew;
     this.bodyTag.setAttribute("class", "overflow-hidden");
   }
 
-  onAddInvoice(event) {
+  addInvoiceClick(event:any) {
     event.processed_by = "N/A";
     this.invoices_list.push(event);
     this.selected_invoices_list.push(event);
     this.onChangeAttrFilter(this.selected_invoices_list);
-    this.onCancelInvoiceBtnClicked();
+    this.cancelInvoiceClickBtnClicked();
   }
 
-  onCancelInvoice(event) {
+  cancelInvoiceClick(event:any) {
     this.isGSTBillViewShown = false;
     this.bodyTag.setAttribute("class", "");
   }
 
-  onUpdateInvoice(event) {
+  updateInvoiceClick(event:any) {
     /*NavbarService.getInstance(null).saveGSTBillInvoice = true;    */
     if (event && event.id) {
       let invlen = this.invoices_list.length;
       for (var i = 0; i < invlen; i++) {
-        if (this.invoices_list[i].id == event.id) {
+        if (this.invoices_list[i].id === event.id) {
           Object.assign(this.invoices_list[i], JSON.parse(JSON.stringify(event)));
           break;
         }
@@ -591,27 +571,27 @@ export class GSTCloudComponent implements OnInit {
     this.resetSummarisedInvoice();
     this.invoiceSummarised();
     this.getInvoicesByBillType(this.selected_bill_type);
-    this.onCancelInvoiceBtnClicked();
+    this.cancelInvoiceClickBtnClicked();
   }
 
-  onCancelInvoiceBtnClicked() {
+  cancelInvoiceClickBtnClicked() {
     this.isGSTBillViewShown = false;
     this.bodyTag.setAttribute("class", "");
   }
 
   onSaveGSTBillInvoice() {
-    NavbarService.getInstance(null).saveGSTBillInvoice = true;
+    NavbarService.getInstance().saveGSTBillInvoice = true;
     /*this.isGSTBillViewShown = false;
     this.bodyTag.setAttribute("class", ""); */
   }
 
-  onClickDeleteInvoice(tab, index) {
+  onClickDeleteInvoice(tab:any, index:any) {
     this.getDeleteConfirmtion().then(isProceed => {
       if (isProceed) {
         this.loading = true;
         NavbarService.getInstance(this.http).deleteInvoiceByInvoiceId(tab.id).subscribe(res => {
           this.loading = false;
-          let fIndex = this.invoices_list.findIndex(il => { return il.id == tab.id });
+          let fIndex = this.invoices_list.findIndex((il:any) => { return il.id === tab.id });
           if (fIndex != -1) {
             this.resetSummarisedInvoice();
             this.invoices_list.splice(fIndex, 1);
@@ -628,13 +608,13 @@ export class GSTCloudComponent implements OnInit {
     });
   }
 
-  onClickDeleteCreditDebitInvoice(tab, index) {
+  onClickDeleteCreditDebitInvoice(tab:any, index:any) {
     this.getDeleteConfirmtion().then(isProceed => {
       if (isProceed) {
         this.loading = true;
         NavbarService.getInstance(this.http).deleteCreditDebitNoteInvoiceByInvoiceId(tab.id).subscribe(res => {
           this.loading = false;
-          let fIndex = this.invoices_list.findIndex(il => { return il.id == tab.id });
+          let fIndex = this.invoices_list.findIndex((il:any) => { return il.id === tab.id });
           if (fIndex != -1) {
             this.resetSummarisedInvoice();
             this.invoices_list.splice(fIndex, 1);

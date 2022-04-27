@@ -5,11 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './team-management.component.html',
   styleUrls: ['./team-management.component.css']
 })
-export class TeamManagementComponent implements OnInit {
+export class TeamManagementComponent {
 
   constructor() { }
 
-  ngOnInit() {
-  }
 
 }

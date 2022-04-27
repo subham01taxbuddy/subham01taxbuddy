@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
-import { UserMsService } from 'app/services/user-ms.service';
-import { AppConstants } from 'app/shared/constants';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { SuperLeadDialogComponent } from './super-lead-dialog/super-lead-dialog.component';
 import { UpdateAgentDialogComponent } from './update-agent-dialog/update-agent-dialog.component';
 
@@ -13,7 +13,7 @@ import { UpdateAgentDialogComponent } from './update-agent-dialog/update-agent-d
 })
 export class AgentMgntComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   agentList: any = [];
   agentMgntGridOption: GridOptions;
 
@@ -41,7 +41,7 @@ export class AgentMgntComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
       if (res && res instanceof Array) {
-        this.agentMgntGridOption.api.setRowData(this.agentRowData(res));
+        this.agentMgntGridOption.api?.setRowData(this.agentRowData(res));
         res.sort((a, b) => a.name > b.name ? 1 : -1)
         sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res));
       }
@@ -190,7 +190,7 @@ export class AgentMgntComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Update Super Lead"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateSuperLead"></i>
@@ -198,7 +198,7 @@ export class AgentMgntComponent implements OnInit {
         },
         width: 80,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -212,7 +212,7 @@ export class AgentMgntComponent implements OnInit {
       //   suppressMenu: true,
       //   sortable: true,
       //   suppressMovable: true,
-      //   cellRenderer: function (params) {
+      //   cellRenderer: function (params:any) {
       //     return `<button type="button" class="action_icon add_button" title="Update Agent"
       //     style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
       //       <i class="fa fa-user" aria-hidden="true" data-action-type="updateAgent"></i>
@@ -220,7 +220,7 @@ export class AgentMgntComponent implements OnInit {
       //   },
       //   width: 80,
       //   pinned: 'right',
-      //   cellStyle: function (params) {
+      //   cellStyle: function (params:any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
       //       'align-items': 'center',

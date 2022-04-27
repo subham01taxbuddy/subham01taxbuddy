@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { IAfterGuiAttachedParams } from 'ag-grid-community';
-// import { IAfterGuiAttachedParams } from 'ag-grid';
 
 @Component({
     selector: 'app-ag-grid-checkbox',

@@ -1,16 +1,17 @@
-import { AppConstants } from './../../../shared/constants';
+import { AppConstants } from '../../../modules/shared/constants';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { DateAdapter, MatDialog, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { FilingCalendarComponent } from '../filing-calendar/filing-calendar.component';
-import { environment } from 'environments/environment';
+import { environment } from 'src/environments/environment';
+import { MatDialog } from '@angular/material/dialog';
 
 export const MY_FORMATS = {
   parse: {
@@ -35,7 +36,7 @@ export const MY_FORMATS = {
 })
 export class AddNewPlanComponent implements OnInit {
   userSubscription: any;
-  loading: boolean;
+  loading!: boolean;
   userSelectedPlan: any;
   allPlans: any;
   smeList = [];
@@ -204,9 +205,9 @@ export class AddNewPlanComponent implements OnInit {
     let param = '/plans-master';
     this.itrService.getMethod(param).subscribe((plans: any) => {
       if (plans instanceof Array) {
-        const activePlans = plans.filter(item => item.isActive === true);
+        const activePlans = plans.filter((item:any) => item.isActive === true);
         if (this.utilsService.isNonEmpty(serviceType))
-          this.allPlans = activePlans.filter(item => item.servicesType === serviceType);
+          this.allPlans = activePlans.filter((item:any) => item.servicesType === serviceType);
         else
           this.allPlans = activePlans;
       } else {
@@ -267,7 +268,7 @@ export class AddNewPlanComponent implements OnInit {
 
   showPromoCode(code) {
     console.log('selected promo code Id: ', code)
-    this.promoCodeInfo = this.allPromoCodes.filter(item => item.code === code)[0];
+    this.promoCodeInfo = this.allPromoCodes.filter((item:any) => item.code === code)[0];
     console.log('promoCodeInfo: ', this.promoCodeInfo)
   }
 

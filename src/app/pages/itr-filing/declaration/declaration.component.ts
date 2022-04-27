@@ -2,9 +2,9 @@ import { UtilsService } from './../../../services/utils.service';
 import { ItrMsService } from './../../../services/itr-ms.service';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { TitleCasePipe } from '@angular/common';
-import { AppConstants } from 'app/shared/constants';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { Router } from '@angular/router';
 
 @Component({
@@ -58,11 +58,11 @@ export class DeclarationComponent implements OnInit {
         }
       }
 
-      this.declarationsForm.controls.name.disable();
-      this.declarationsForm.controls.childOf.setValidators([Validators.required/* , Validators.pattern(AppConstants.charRegex) */]);
-      this.declarationsForm.controls.capacity.patchValue('Self');
+      this.declarationsForm.controls['name'].disable();
+      this.declarationsForm.controls['childOf'].setValidators([Validators.required/* , Validators.pattern(AppConstants.charRegex) */]);
+      this.declarationsForm.controls['capacity'].patchValue('Self');
       this.declarationsForm.controls['panNumber'].disable();
-      this.declarationsForm.controls.panNumber.setValue(this.ITR_JSON.panNumber);
+      this.declarationsForm.controls['panNumber'].setValue(this.ITR_JSON.panNumber);
     } else {
       if (this.ITR_JSON.family.length > 0) {
         for (let i = 0; i <= this.ITR_JSON.family.length; i++) {
@@ -73,10 +73,10 @@ export class DeclarationComponent implements OnInit {
           }
         }
       }
-      this.declarationsForm.controls.name.setValidators([Validators.required/* , Validators.pattern(AppConstants.charRegex) */]);
-      this.declarationsForm.controls.childOf.setValidators([Validators.required]);
-      this.declarationsForm.controls.capacity.patchValue('Karta');
-      this.declarationsForm.controls.panNumber.setValidators([Validators.required, Validators.pattern(AppConstants.panIndividualRegex)]);
+      this.declarationsForm.controls['name'].setValidators([Validators.required/* , Validators.pattern(AppConstants.charRegex) */]);
+      this.declarationsForm.controls['childOf'].setValidators([Validators.required]);
+      this.declarationsForm.controls['capacity'].patchValue('Karta');
+      this.declarationsForm.controls['panNumber'].setValidators([Validators.required, Validators.pattern(AppConstants.panIndividualRegex)]);
     }
   }
   setName(family) {

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NavbarService } from 'app/services/navbar.service';
 import { GridOptions } from 'ag-grid-community';
 import { HttpClient } from '@angular/common/http';
-import { AgGridCheckboxComponent } from 'app/additional-components/ag-grid-checkbox/ag-grid-checkbox.component';
 import { DatePipe } from '@angular/common';
-import { ToastMessageService } from 'app/services/toast-message.service';
+import { NavbarService } from 'src/app/services/navbar.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { AgGridCheckboxComponent } from 'src/app/additional-components/ag-grid-checkbox/ag-grid-checkbox.component';
 
 
 @Component({
@@ -13,7 +13,7 @@ import { ToastMessageService } from 'app/services/toast-message.service';
     styleUrls: ['./user-gst-status-report.component.css'],
     providers: [DatePipe]
 })
-export class UserGstStatusReportComponent implements OnInit {
+export class UserGstStatusReportComponent {
     selected_dates: any = {
         from_date: new Date(),
         to_date: new Date()
@@ -23,7 +23,7 @@ export class UserGstStatusReportComponent implements OnInit {
     constructor(private navbarService: NavbarService, private http: HttpClient, public datepipe: DatePipe, public _toastMessageService: ToastMessageService) {
         this.statusReportGridOptions = <GridOptions>{
             rowData: [],
-            columnDefs: this.statusReportCreateColoumnDef(),
+            columnDefs: this.statusReportcreateColumnDef(),
             /* onGridReady: () => {
                 this.statusReportGridOptions.api.sizeColumnsToFit();
             }, */
@@ -41,8 +41,7 @@ export class UserGstStatusReportComponent implements OnInit {
             // enableCharts: true
         };
     }
-    ngOnInit() {
-    }
+
 
     getUserWiseGstStatusReport() {
         const from_date = this.datepipe.transform(this.selected_dates.from_date, 'yyyy-MM-dd HH:mm:ss');
@@ -53,7 +52,7 @@ export class UserGstStatusReportComponent implements OnInit {
             NavbarService.getInstance(this.http).getUserWiseGstStatusReport([param]).subscribe(res => {
                 console.log("User wise status report:", res)
                 if (Array.isArray(res.listInvoiceFillingReport)) {
-                    this.statusReportGridOptions.api.setRowData(this.createRowData(res.listInvoiceFillingReport))
+                    this.statusReportGridOptions.api?.setRowData(this.createRowData(res.listInvoiceFillingReport))
                 }
                 return resolve(true)
             }, err => {
@@ -73,11 +72,11 @@ export class UserGstStatusReportComponent implements OnInit {
     }
 
     onApply() {
-        NavbarService.getInstance(null).isApplyBtnClicked = true;
+        NavbarService.getInstance(this.http).isApplyBtnClicked = true;
         this.getUserWiseGstStatusReport();
     }
 
-    createRowData(data) {
+    createRowData(data:any) {
         /*  const newData = {
              "metadata": {
                  "page": 5,
@@ -126,7 +125,7 @@ export class UserGstStatusReportComponent implements OnInit {
                  }
              }]
          }; */
-        const donations = [];// []//this.ITR_JSON.donations.filter(item => item.donationType === donationType);
+        const donations = [];// []//this.ITR_JSON.donations.filter((item:any) => item.donationType === donationType);
         for (let i = 0; i < data.length; i++) {
             let updateId = Object.assign({}, data[i], { id: 1 + i, mobileNumber: (data[i].mobileNumber ? data[i].mobileNumber : data[i].emailAddress) });
             donations.push(updateId);
@@ -136,7 +135,7 @@ export class UserGstStatusReportComponent implements OnInit {
     }
 
     rowData: any;
-    statusReportCreateColoumnDef() {
+    statusReportcreateColumnDef() {
         return [
             {
                 headerName: 'No.',
@@ -152,9 +151,9 @@ export class UserGstStatusReportComponent implements OnInit {
                 suppressMovable: true,
                 // onCellFocused: true,
                 /* valueGetter: function nameFromCode(params) {
-                    console.log('params == ', params);
+                    console.log('params === ', params);
                     if (otherDonationToDropdown.length !== 0) {
-                        const nameArray = otherDonationToDropdown.filter(item => (item.value === params.data.schemeCode));
+                        const nameArray = otherDonationToDropdown.filter((item:any) => (item.value === params.data.schemeCode));
                         console.log('nameArray = ', nameArray);
                         return nameArray[0].label;
                     } else {
@@ -216,9 +215,9 @@ export class UserGstStatusReportComponent implements OnInit {
                 //editable: false,
                 //suppressMovable: true,
                 /* valueGetter: function statenameFromCode(params) {
-                    console.log('stateDropdown == ', stateDropdown);
+                    console.log('stateDropdown === ', stateDropdown);
                     if (stateDropdown.length !== 0) {
-                        const nameArray = stateDropdown.filter(item => item.stateCode === params.data.state);
+                        const nameArray = stateDropdown.filter((item:any) => item.stateCode === params.data.state);
                         console.log('stateDropdown = ', nameArray);
                         return nameArray[0].stateName;
                     } else {
@@ -232,9 +231,9 @@ export class UserGstStatusReportComponent implements OnInit {
                 //editable: false,
                 //suppressMovable: true,
                 /* valueGetter: function statenameFromCode(params) {
-                    console.log('stateDropdown == ', stateDropdown);
+                    console.log('stateDropdown === ', stateDropdown);
                     if (stateDropdown.length !== 0) {
-                        const nameArray = stateDropdown.filter(item => item.stateCode === params.data.state);
+                        const nameArray = stateDropdown.filter((item:any) => item.stateCode === params.data.state);
                         console.log('stateDropdown = ', nameArray);
                         return nameArray[0].stateName;
                     } else {
@@ -245,7 +244,7 @@ export class UserGstStatusReportComponent implements OnInit {
         ];
     }
 
-    public onStatusReportRowClicked(params) {
+    public onStatusReportRowClicked(params:any) {
         if (params.event.target !== undefined) {
             const actionType = params.event.target.getAttribute('data-action-type');
             switch (actionType) {

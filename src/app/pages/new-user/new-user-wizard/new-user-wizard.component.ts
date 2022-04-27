@@ -5,11 +5,10 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './new-user-wizard.component.html',
   styleUrls: ['./new-user-wizard.component.css']
 })
-export class NewUserWizardComponent implements OnInit {
+export class NewUserWizardComponent {
 
   constructor() { }
 
-  ngOnInit() {
-  }
+
 
 }

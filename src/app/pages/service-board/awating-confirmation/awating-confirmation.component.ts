@@ -1,16 +1,17 @@
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+
+import { AfterContentChecked, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({
   selector: 'app-awating-confirmation',
   templateUrl: './awating-confirmation.component.html',
   styleUrls: ['./awating-confirmation.component.css'],
 })
-export class AwatingConfirmationComponent implements OnInit {
+export class AwatingConfirmationComponent implements AfterContentChecked {
   loading = false;
   dataList = [];
   page = 0; // current page
@@ -95,60 +96,11 @@ export class AwatingConfirmationComponent implements OnInit {
     };
   }
 
-  ngOnInit() {
-    // this.searchForm = this.fb.group({
-    //   selectedAgentId: ['', Validators.required],
-    //   selectedFyYear: ['', Validators.required]
-    // })
-    // console.log('selectedAgentId -> ', localStorage.getItem('selectedAgentId'));
-    // let agentId = localStorage.getItem('selectedAgentId');
-    // if (this.utilsService.isNonEmpty(agentId)) {
-    //   this.agentId = agentId;
-    //   this.searchForm.controls.selectedAgentId.setValue(this.agentId)
-    //   this.retrieveData(0)
-    // }
-    // else {
-    //   this.retrieveData(0)
-    // }
-
-    // const fyList = JSON.parse(sessionStorage.getItem(AppConstants.FY_LIST));
-    // console.log('fyList', fyList);
-    // if (this.utilsService.isNonEmpty(fyList) && fyList instanceof Array) {
-    //   this.financialYear = fyList;
-    //   const currentFy = this.financialYear.filter(item => item.isFilingActive);
-    //   this.searchForm.controls['selectedFyYear'].setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
-    // } else {
-    //   let param = '/filing-dates';
-    //   this.itrMsService.getMethod(param).subscribe((res: any) => {
-    //     if (res && res.success && res.data instanceof Array) {
-    //       sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
-    //       this.financialYear = res.data;
-    //     }
-    //   }, error => {
-    //     console.log('Error during getting all PromoCodes: ', error)
-    //   })
-    // }
-
-    // const agents = JSON.parse(sessionStorage.getItem(AppConstants.SME_LIST));
-    // console.log('agents', agents);
-    // if (this.utilsService.isNonEmpty(agents) && agents instanceof Array) {
-    //   this.agentList = agents;
-    // } else {
-    //   // let param = '/filing-dates';
-    //   // this.itrMsService.getMethod(param).subscribe((res: any) => {
-    //   //   if (res && res.success && res.data instanceof Array) {
-    //   //     sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
-    //   //     this.financialYear = res.data;
-    //   //   }
-    //   // }, error => {
-    //   //   console.log('Error during getting all PromoCodes: ', error)
-    //   // })
-    // }
-  }
+  
   ngAfterContentChecked() {
     this.cdRef.detectChanges();
   }
-  retrieveData(page) {
+  retrieveData(page:any) {
     this.loading = true;
     // const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.agentId}&statusId=7`;
     const param = `/user-details-by-status-es?from=${page}&to=${this.pageSize}&agentId=${this.searchParams['selectedAgentId']}&fy=${this.searchParams['selectedFyYear']}&statusId=7`;
@@ -170,7 +122,7 @@ export class AwatingConfirmationComponent implements OnInit {
   // }
 
   // showAwatingConfirmation() {
-  //   this.agentId = this.searchForm.controls.selectedAgentId.value;;
+  //   this.agentId = this.searchForm.controls['selectedAgentId.value;;
   //   localStorage.setItem('selectedAgentId', this.agentId);
   //   this.page = 0;
   //   this.retrieveData(0);
@@ -186,14 +138,14 @@ export class AwatingConfirmationComponent implements OnInit {
     this.retrieveData(this.page);
   }
 
-  getFilerName(itr) {
+  getFilerName(itr:any) {
     if (this.utilsService.isNonEmpty(itr) && this.utilsService.isNonEmpty(itr['FilingTeamMemberId']) && itr['FilingTeamMemberId'] !== 0) {
-      return this.filingTeamMembers.filter(item => item.value === itr['FilingTeamMemberId'])[0].label;
+      return this.filingTeamMembers.filter((item:any) => item.value === itr['FilingTeamMemberId'])[0].label;
     }
     return 'Not Assigned';
   }
 
-  startFiling(data) {
+  startFiling(data:any) {
     this.loading = true;
     const param = `/profile/${data['userId']}`
     this.userMsService.getMethod(param).subscribe((result: any) => {
@@ -203,18 +155,18 @@ export class AwatingConfirmationComponent implements OnInit {
       this.utilsService.showSnackBar('Some data points are missing please dont try from here')
     })
   }
-  goToKommunicate(data) {
+  goToKommunicate(data:any) {
     if (this.utilsService.isNonEmpty(data['KommunicateURL'])) {
       window.open(data['KommunicateURL'], '_blank')
     }
   }
 
-  fromSearchParams(event) {
+  fromSearchParams(event:any) {
     this.searchParams = event;
     localStorage.setItem(AppConstants.SELECTED_AGENT, event['selectedAgentId']);
     this.retrieveData(0);
   }
-  pageChanged(event) {
+  pageChanged(event:any) {
     this.config.currentPage = event;
     this.retrieveData(event - 1);
   }

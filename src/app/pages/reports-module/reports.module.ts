@@ -11,7 +11,7 @@ import { Gstr1Component } from './gstr1/gstr1.component';
 import { UpdateEmailDialogComponent } from './update-email-dialog/update-email-dialog.component';
 // import { SimpleModalModule } from 'ngx-simple-modal';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenInterceptor } from 'app/services/token-interceptor';
+import { TokenInterceptor } from 'src/app/services/token-interceptor';
 
 @NgModule({
     declarations: [ReportsComponent, UserGstStatusReportComponent, Gstr1Component, UpdateEmailDialogComponent],

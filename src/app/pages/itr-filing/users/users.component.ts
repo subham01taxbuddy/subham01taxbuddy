@@ -3,10 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-import { UtilsService } from 'app/services/utils.service';
-import { NavbarService } from 'app/services/navbar.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
+import { UtilsService } from 'src/app/services/utils.service';
+import { NavbarService } from 'src/app/services/navbar.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 
 @Component({
   selector: 'app-users',
@@ -102,7 +102,7 @@ export class UsersComponent implements OnInit {
   //     if (result.length !== 0) {
   //       let isWIP_ITRFound = true;
   //       for (let i = 0; i < result.length; i++) {
-  //         let currentFiledITR = result.filter(item => (item.assessmentYear === AppConstants.ayYear && item.eFillingCompleted));
+  //         let currentFiledITR = result.filter((item:any) => (item.assessmentYear === AppConstants.ayYear && item.eFillingCompleted));
   //         if (result[i].eFillingCompleted || result[i].ackStatus === 'SUCCESS' || result[i].ackStatus === 'DELAY') {
   //           //   return "REVIEW"
   //         } else {
@@ -110,7 +110,7 @@ export class UsersComponent implements OnInit {
   //           isWIP_ITRFound = false;
   //           this.ITR_JSON = result[i];
   //           if (currentFiledITR.length > 0) {
-  //             currentFiledITR = currentFiledITR.filter(item => item.isRevised === 'N');
+  //             currentFiledITR = currentFiledITR.filter((item:any) => item.isRevised === 'N');
   //             if (currentFiledITR.length > 0) {
   //               this.ITR_JSON.orgITRAckNum = currentFiledITR[0].ackNumber;
   //               this.ITR_JSON.orgITRDate = currentFiledITR[0].eFillingDate;

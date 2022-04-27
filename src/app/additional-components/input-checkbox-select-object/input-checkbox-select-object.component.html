@@ -1,6 +1,6 @@
 <div class="input">
   <label class="input__label">{{label}}
-      <span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+      <span *ngIf="is_mandatory === 'true'" class="mandatory_icon">*</span>
   </label>
   <div class="input__select">
     <input type="text" class="select__box modifier__store-assign" 
@@ -13,9 +13,9 @@
       <ul>
         <li class="select__item" *ngFor="let item of (filter_items | selectObjectFilter:filterBy); let p=index "  (click)="changeStores(item, p); sendData();" ><!-- checkStores(p);  -->
           <label class="input select__label-wrapper select__item_selected">
-            <input *ngIf="item.name != filter_label && item.name != remove_all_label" class="input__checkbox"
+            <input *ngIf="item.name !== filter_label && item.name !== remove_all_label" class="input__checkbox"
                type="checkbox" [checked]="validate(item)">
-            <label  (click)="changeStores(item, p); sendData();$event.stopPropagation(); $event.preventDefault();"  *ngIf="item.name != filter_label && item.name != remove_all_label" class="input__checkbox-control"></label>
+            <label  (click)="changeStores(item, p); sendData();$event.stopPropagation(); $event.preventDefault();"  *ngIf="item.name !== filter_label && item.name !== remove_all_label" class="input__checkbox-control"></label>
             <label  (click)="changeStores(item, p); sendData();$event.stopPropagation(); $event.preventDefault();"  class="input__label input__checkbox_label select__checkbox_label"
             >{{item.name | capitalizeFirst}}</label>
           </label>

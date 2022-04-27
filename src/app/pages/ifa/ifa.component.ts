@@ -5,11 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './ifa.component.html',
   styleUrls: ['./ifa.component.css']
 })
-export class IfaComponent implements OnInit {
+export class IfaComponent {
 
   constructor() { }
 
-  ngOnInit() {
-  }
 
 }

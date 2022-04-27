@@ -1,33 +1,14 @@
-import { AppConstants } from './../../../../shared/constants';
+import { AppConstants } from '../../../../modules/shared/constants';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
 
-
-import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation, DoCheck } from '@angular/core';
 import { NavbarService } from '../../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../../services/toast-message.service';
 import { HttpClient } from '@angular/common/http';
 import Storage from '@aws-amplify/storage';
-import { UtilsService } from 'app/services/utils.service';
-import { GstMsService } from 'app/services/gst-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { GstMsService } from 'src/app/services/gst-ms.service';
 // declare let $: any;
 @Component({
   selector: 'app-add-update-gst-bill-invoice',
@@ -35,25 +16,25 @@ import { GstMsService } from 'app/services/gst-ms.service';
   styleUrls: ['./add-update-gst-bill-invoice.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class AddUpdateGSTBillInvoiceComponent implements OnInit {
-  @Input('is_update_item') is_update_item;
-  @Input('invoiceToUpdate') invoiceToUpdate: any;
-  @Input('state_list') state_list: any = [];
-  @Input('invoice_types') invoice_types: any = [];
-  @Input('invoice_party_roles') invoice_party_roles: any = [];
-  @Input('invoice_status_list') invoice_status_list: any = [];
-  @Input('invoice_main_type') invoice_main_type: any;
-  @Input('merchantData') merchantData: any;
-  @Output() onUpdateInvoice: EventEmitter<any> = new EventEmitter();
-  @Output() onAddInvoice: EventEmitter<any> = new EventEmitter();
-  @Output() onCancelInvoice: EventEmitter<any> = new EventEmitter();
+export class AddUpdateGSTBillInvoiceComponent implements OnInit, DoCheck {
+  @Input() is_update_item!:any;
+  @Input() invoiceToUpdate: any;
+  @Input() state_list: any = [];
+  @Input() invoice_types: any = [];
+  @Input() invoice_party_roles: any = [];
+  @Input() invoice_status_list: any = [];
+  @Input() invoice_main_type: any;
+  @Input() merchantData: any;
+  @Output() updateInvoiceClick: EventEmitter<any> = new EventEmitter();
+  @Output() addInvoiceClick: EventEmitter<any> = new EventEmitter();
+  @Output() cancelInvoiceClick: EventEmitter<any> = new EventEmitter();
 
   loading: boolean = false;
   showOriginal: boolean = false;
   gstinBounceBackTimeObj: any;
   imageLoader: boolean = false;
   fileType: string = 'png';
-  loggedInUserInfo = JSON.parse(localStorage.getItem("UMD")) || {};
+  loggedInUserInfo = JSON.parse(localStorage.getItem("UMD") || '') || {};
   invoiceData: any = {
     partyRoleID: "",
     invoiceDTO: {
@@ -89,7 +70,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   taxRatesList: any = ["0.00", "0.10", "0.25", "1.00", "1.50", "3.00", "5.00", "7.50", "12.00", "18.00", "28.00", "Exempt Sales", "Non GST Sales"];
   showSubOpt: any = { 'inv_info': true, 'inv_item_detail_block': true };
   s3FilePath: any;// = 'https://wittlock.github.io/ngx-image-zoom/assets/fullres.jpg'
-  invoiceFormGroup: FormGroup;
+  invoiceFormGroup!: FormGroup;
   maxInvoiceDate = new Date();
   constructor(
     private navbarService: NavbarService,
@@ -97,9 +78,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     public router: Router, public http: HttpClient,
     public _toastMessageService: ToastMessageService, public utilsService: UtilsService,
     private fb: FormBuilder) {
-    NavbarService.getInstance(null).component_link_2 = 'add-update-gst-bill-invoice';
-    NavbarService.getInstance(null).component_link_3 = '';
-    NavbarService.getInstance(null).showBtns = 'add-update-gst-bill-invoice';
+    NavbarService.getInstance().component_link_2 = 'add-update-gst-bill-invoice';
+    NavbarService.getInstance().component_link_3 = '';
+    NavbarService.getInstance().showBtns = 'add-update-gst-bill-invoice';
   }
 
   createInvoiceFormGroup() {
@@ -121,7 +102,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!NavbarService.getInstance(null).isSessionValid()) {
+    if (!NavbarService.getInstance().isSessionValid()) {
       this.router.navigate(['']);
       return;
     }
@@ -131,9 +112,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
 
   ngDoCheck() {
-    if (NavbarService.getInstance(null).saveGSTBillInvoice) {
+    if (NavbarService.getInstance().saveGSTBillInvoice) {
       this.saveGSTBillInvoice();
-      NavbarService.getInstance(null).saveGSTBillInvoice = false;
+      NavbarService.getInstance().saveGSTBillInvoice = false;
     }
   }
 
@@ -141,7 +122,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     if (!this.is_update_item) {
       //for new invoice
       this.invoiceData.invoiceDTO.businessId = this.merchantData.userId;
-      /*if(this.invoice_main_type == "purchase-invoice" && this.invoice_types && this.invoice_types[0]) {
+      /*if(this.invoice_main_type === "purchase-invoice" && this.invoice_types && this.invoice_types[0]) {
         this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId = this.invoice_types[0].id;
       }*/
 
@@ -151,7 +132,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         ! Not using this after UI changed 
    */
       if (this.invoice_status_list) {
-        let islfData = this.invoice_status_list.filter(isl => { return isl.invoiceStatusMasterName == "uploaded" });
+        let islfData = this.invoice_status_list.filter((isl:any) => { return isl.invoiceStatusMasterName === "uploaded" });
         if (islfData && islfData[0]) { this.onSelectInvoiceStatus(islfData[0]) }
       }
 
@@ -184,8 +165,8 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       /* 
         ! Not using this after UI changed 
    */
-      if ((this.invoice_main_type == "sales-invoice" || this.invoice_main_type == "purchase-invoice") && this.invoice_types) {
-        let itfData = this.invoice_types.filter(it => { return it.id == this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId; });
+      if ((this.invoice_main_type === "sales-invoice" || this.invoice_main_type === "purchase-invoice") && this.invoice_types) {
+        let itfData = this.invoice_types.filter((it:any) => { return it.id === this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId; });
         if (itfData && itfData[0]) { this.selected_invoice_type = itfData[0]; }
       }
 
@@ -194,22 +175,22 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         ! Not using this after UI changed 
    */
       if (this.invoice_status_list) {
-        let islfData = this.invoice_status_list.filter(isl => { return isl.id == this.invoiceData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId; });
+        let islfData = this.invoice_status_list.filter((isl:any) => { return isl.id === this.invoiceData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId; });
         if (islfData && islfData[0]) { this.selected_invoice_status = islfData[0]; }
       }
 
-      this.invoiceData.listInvoiceItems.forEach(item => {
-        if (item.invoiceItemsTaxRate || item.invoiceItemsTaxRate == 0) {
+      this.invoiceData.listInvoiceItems.forEach((item:any) => {
+        if (item.invoiceItemsTaxRate || item.invoiceItemsTaxRate === 0) {
           item.tempInvoiceItemsTaxRate = parseFloat(item.invoiceItemsTaxRate).toFixed(2);
         }
       })
       console.log("this.invoiceFormGroup patch value:", this.invoiceFormGroup)
       console.log("this.invoiceData patch value:", this.invoiceData)
       this.invoiceFormGroup.patchValue(this.invoiceData);
-      // this.invoiceFormGroup['controls'].partyDTO.patchValue(this.invoiceData.partyDTO);
+      // this.invoiceFormGroup.controls['partyDTO'].patchValue(this.invoiceData.partyDTO);
       //init place of supply
       if (this.invoiceData.invoiceDTO.supplyStateId && this.state_list) {
-        let slfData = this.state_list.filter(sl => { return sl.stateMasterCode == this.invoiceData.invoiceDTO.supplyStateId; });
+        let slfData = this.state_list.filter((sl:any) => { return sl.stateMasterCode === this.invoiceData.invoiceDTO.supplyStateId; });
         if (slfData && slfData[0]) {
           this.selected_invoice_state = slfData[0];
           this.onSelectGSTState(slfData[0].stateMasterCode);
@@ -226,7 +207,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }
   }
 
-  getS3Image(filename) {
+  getS3Image(filename:any) {
     console.log('getS3Image fileName: ', filename);
     if (filename) {
       this.imageLoader = true;
@@ -258,7 +239,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }
   }
 
-  convertDateToHTMLInputDateFormat(i_Date) {
+  convertDateToHTMLInputDateFormat(i_Date:any) {
     let d = new Date(i_Date);
     let result: any = "";
     if (d) {
@@ -288,7 +269,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     } else if (!this.invoiceData.invoiceDTO.invoiceNumber) {
       this._toastMessageService.alert("error", "Please add invoice number");
       return;
-    } else if (this.invoice_main_type == "sales-invoice" && this.invoiceData.invoiceDTO.invoiceNumber.length > 16) {
+    } else if (this.invoice_main_type === "sales-invoice" && this.invoiceData.invoiceDTO.invoiceNumber.length > 16) {
       this._toastMessageService.alert("error", "invoice number max length can be 16 character");
       return;
     } else if (this.invoice_main_type != "sales-invoice" && this.invoiceData.invoiceDTO.invoiceNumber.length > 45) {
@@ -332,9 +313,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }
   }
 
-  isItemDetailsInValid(ref) {
+  isItemDetailsInValid(ref:any) {
     if (this.invoiceData.listInvoiceItems instanceof Array) {
-      let temp = this.invoiceData.listInvoiceItems.filter(item => item.isMarkForFlag !== 'T')
+      let temp = this.invoiceData.listInvoiceItems.filter((item:any) => item.isMarkForFlag !== 'T')
       for (let i = 0; i < temp.length; i++) {
         if (this.utilsService.isNonZero(temp[i].invoiceItemsTaxableValue)) {
           continue;
@@ -350,6 +331,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
           return true;
         }
       }
+      return false;
     } else {
       return true;
     }
@@ -364,20 +346,20 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       sendData.invoiceDTO.invoiceDate = new Date(sendData.invoiceDTO.invoiceDate);
     }
 
-    if (sendData.invoiceDTO.invoiceTypesInvoiceTypesId == 2) {
+    if (sendData.invoiceDTO.invoiceTypesInvoiceTypesId === 2) {
       sendData.partyDTO.partyGstin = null
     }
     if (sendData.listInvoiceItems.length > 0 && !this.isItemDetailsInValid('add')) {
       sendData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId = 3;
     }
     if (sendData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId === 3) {
-      const loggedInUser = JSON.parse(localStorage.getItem('UMD'));
+      const loggedInUser = JSON.parse(localStorage.getItem('UMD') || '');
       sendData.invoiceDTO.invoiceAssignedTo = loggedInUser.USER_UNIQUE_ID;
     }
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
-    let cField = (this.invoice_main_type == "sales-invoice") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
+    let cField = (this.invoice_main_type === "sales-invoice") ? "customer" : (this.invoice_main_type === "purchase-invoice") ? "supplier" : "";
     if (cField) {
-      let fData = this.invoice_party_roles.filter(ipr => { return ipr.partyRoleName == cField });
+      let fData = this.invoice_party_roles.filter((ipr:any) => { return ipr.partyRoleName === cField });
       if (fData && fData[0]) { sendData.partyRoleID = fData[0].id; }
     }
 
@@ -386,7 +368,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     NavbarService.getInstance(this.http).createInvoiceWithItems(sendData).subscribe(res => {
       this.loading = false;
       this._toastMessageService.alert("success", "Invoice created successfully.");
-      this.onAddInvoice.emit(res);
+      this.addInvoiceClick.emit(res);
     }, err => {
       let errorMessage = (err.error && err.error.detail) ? err.error.detail : (err.error.title) ? err.error.title : "Internal server error.";
       this._toastMessageService.alert("error", "save gst invoice list - " + errorMessage);
@@ -403,26 +385,26 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       sendData.invoiceDTO.invoiceDate = new Date(sendData.invoiceDTO.invoiceDate)
     }
 
-    if (sendData.invoiceDTO.invoiceTypesInvoiceTypesId == 2) {
+    if (sendData.invoiceDTO.invoiceTypesInvoiceTypesId === 2) {
       sendData.partyDTO.partyGstin = null
     }
     if (sendData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId === 3) {
-      const loggedInUser = JSON.parse(localStorage.getItem('UMD'));
+      const loggedInUser = JSON.parse(localStorage.getItem('UMD') || '');
       sendData.invoiceDTO.invoiceAssignedTo = loggedInUser.USER_UNIQUE_ID;
     }
     sendData.invoiceDTO.invoiceGrossValue = parseFloat(sendData.invoiceDTO.invoiceGrossValue);
 
     if (!sendData.partyRoleID) {
       delete sendData.partyRoleID;
-      let cField = (this.invoice_main_type == "sales-invoice") ? "customer" : (this.invoice_main_type == "purchase-invoice") ? "supplier" : "";
+      let cField = (this.invoice_main_type === "sales-invoice") ? "customer" : (this.invoice_main_type === "purchase-invoice") ? "supplier" : "";
       if (cField) {
-        let fData = this.invoice_party_roles.filter(ipr => { return ipr.partyRoleName == cField });
+        let fData = this.invoice_party_roles.filter((ipr:any) => { return ipr.partyRoleName === cField });
         if (fData && fData[0]) { sendData.partyRoleID = fData[0].id; }
       }
     }
 
     if (sendData.partyDTO.partyGstin != sendData.partyDTO.partyPreviousGstin) {
-      /*if(sendData.partyDTO.id == sendData.partyDTO.partyPreviousId) {
+      /*if(sendData.partyDTO.id === sendData.partyDTO.partyPreviousId) {
         delete sendData.partyDTO.id;
       }      */
       sendData.invoiceDTO.partyHasRolePartyHasRoleId = -1;
@@ -439,7 +421,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     NavbarService.getInstance(this.http).updateInvoiceWithItems(sendData).subscribe(res => {
       this.loading = false;
       this._toastMessageService.alert("success", "Invoice updated successfully.");
-      this.onUpdateInvoice.emit(res);
+      this.updateInvoiceClick.emit(res);
     }, err => {
       let errorMessage = (err.error && err.error.detail) ? err.error.detail : (err.error.title) ? err.error.title : "Internal server error.";
       this._toastMessageService.alert("error", "save gst invoice list - " + errorMessage);
@@ -470,7 +452,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }
   }
 
-  deleteItem(index) {
+  deleteItem(index:any) {
     if (this.invoiceData.listInvoiceItems[index].id) {
       this.invoiceData.listInvoiceItems[index]["isMarkForFlag"] = "T";
     } else {
@@ -481,10 +463,10 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   }
 
   onCancelBtnClicked() {
-    this.onCancelInvoice.emit(true);
+    this.cancelInvoiceClick.emit(true);
   }
 
-  uploadInvoiceImage(files) {
+  uploadInvoiceImage(files:any) {
     if (files && files[0]) {
       this.isEditInvoiceImage = false;
       this.imageLoader = true;
@@ -517,25 +499,24 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }
   }
 
-  getS3InvoicePath(fileExt) {
+  getS3InvoicePath(fileExt:any) {
     let invoiceSavePath = "inv_" + this.merchantData.userId + "_" + new Date().getTime() + fileExt;
-    if (this.invoice_main_type == "sales-invoice") {
+    if (this.invoice_main_type === "sales-invoice") {
       invoiceSavePath = "sales-invoice/" + invoiceSavePath;
-    } else if (this.invoice_main_type == "purchase-invoice") {
+    } else if (this.invoice_main_type === "purchase-invoice") {
       invoiceSavePath = "purchase-invoice/" + invoiceSavePath;
-    } else if (this.invoice_main_type == "debit-note") {
+    } else if (this.invoice_main_type === "debit-note") {
       invoiceSavePath = "debit-note/" + invoiceSavePath;
-    } else if (this.invoice_main_type == "credit-note") {
+    } else if (this.invoice_main_type === "credit-note") {
       invoiceSavePath = "credit-note/" + invoiceSavePath;
     }
 
     return invoiceSavePath;
   }
 
-  onSelectGSTState(stateId) {
+  onSelectGSTState(stateId:any) {
     if (stateId) {
-      console.log("state_list:", this.state_list)
-      this.invoiceFormGroup['controls'].invoiceDTO['controls'].supplyStateId.setValue(stateId);
+      (this.invoiceFormGroup.controls['invoiceDTO']as FormGroup).controls['supplyStateId'].setValue(stateId);
       this.invoiceData.invoiceDTO.supplyStateId = stateId;
       if (this.merchantData && this.merchantData.gstDetails && this.merchantData.gstDetails.businessAddress &&
         this.merchantData.gstDetails.businessAddress.state && this.merchantData.gstDetails.businessAddress.state != stateId) {
@@ -551,14 +532,14 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   /* 
   ! Not using this method after UI changed 
    */
-  onSelectInvoiceType(event) {
+  onSelectInvoiceType(event:any) {
     if (event && event.id) {
       this.invoiceData.invoiceDTO.invoiceTypesInvoiceTypesId = event.id;
       this.selected_invoice_type = event;
     }
   }
 
-  onSelectInvoiceStatus(event) {
+  onSelectInvoiceStatus(event:any) {
     if (event && event.id) {
       this.invoiceData.invoiceDTO.invoiceStatusMasterInvoiceStatusMasterId = event.id;
       this.selected_invoice_status = event;
@@ -571,7 +552,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       clearTimeout(this.gstinBounceBackTimeObj)
     }
     this.gstinBounceBackTimeObj = setTimeout(() => {
-      if (this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length == 15 && this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin)) {
+      if (this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length === 15 && this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin)) {
         this.getPartyInfoByGSTIN(event).then((partyInfo: any) => {
           if (partyInfo) {
             this.invoiceData.partyDTO.partyEmail = partyInfo.partyEmail;
@@ -602,17 +583,17 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }, 500)
   } */
 
-  onGSTINKeypress(gstn) {
+  onGSTINKeypress(gstn:any) {
     console.log("Enetr GSTN:", gstn)
     this.invoiceData.partyDTO.partyGstin = gstn;
     if (this.gstinBounceBackTimeObj) {
       clearTimeout(this.gstinBounceBackTimeObj)
     }
     this.gstinBounceBackTimeObj = setTimeout(() => {
-      if (this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length == 15 && this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin)) {
+      if (this.invoiceData.partyDTO.partyGstin && this.invoiceData.partyDTO.partyGstin.length === 15 && this.utilsService.isGSTINValid(this.invoiceData.partyDTO.partyGstin)) {
         this.getPartyInfoByGSTIN(gstn).then((partyInfo: any) => {
           if (partyInfo) {
-            this.invoiceFormGroup['controls'].partyDTO.patchValue(partyInfo);
+            this.invoiceFormGroup.controls['partyDTO'].patchValue(partyInfo);
             /* this.invoiceData.partyDTO.partyEmail = partyInfo.partyEmail;
             this.invoiceData.partyDTO.partyPhone = partyInfo.partyPhone;
             this.invoiceData.partyDTO.partyName = partyInfo.partyName; */
@@ -624,9 +605,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
             /*  this.invoiceData.partyDTO.partyEmail = "";
              this.invoiceData.partyDTO.partyPhone = "";
              this.invoiceData.partyDTO.partyName = ""; */
-            this.invoiceFormGroup['controls'].partyDTO['controls'].partyName.patchValue('');
-            this.invoiceFormGroup['controls'].partyDTO['controls'].partyPhone.patchValue('');
-            this.invoiceFormGroup['controls'].partyDTO['controls'].partyEmail.patchValue('');
+            (this.invoiceFormGroup.controls['partyDTO']as FormGroup).controls['partyName'].patchValue('');
+            (this.invoiceFormGroup.controls['partyDTO']as FormGroup).controls['partyPhone'].patchValue('');
+            (this.invoiceFormGroup.controls['partyDTO']as FormGroup).controls['partyEmail'].patchValue('');
             delete this.invoiceData.partyDTO.id;
             delete this.invoiceData.partyDTO.partyUpdatedAt;
           }
@@ -637,9 +618,9 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
         /* this.invoiceData.partyDTO.partyEmail = "";
         this.invoiceData.partyDTO.partyPhone = "";
         this.invoiceData.partyDTO.partyName = ""; */
-        this.invoiceFormGroup['controls'].partyDTO['controls'].partyName.patchValue('');
-        this.invoiceFormGroup['controls'].partyDTO['controls'].partyPhone.patchValue('');
-        this.invoiceFormGroup['controls'].partyDTO['controls'].partyEmail.patchValue('');
+        (this.invoiceFormGroup.controls['partyDTO'] as FormGroup).controls['partyName'].patchValue('');
+        (this.invoiceFormGroup.controls['partyDTO'] as FormGroup).controls['partyPhone'].patchValue('');
+        (this.invoiceFormGroup.controls['partyDTO'] as FormGroup).controls['partyEmail'].patchValue('');
         delete this.invoiceData.partyDTO.id;
         delete this.invoiceData.partyDTO.partyUpdatedAt;
         this.setPartyPlaceOfSupply();
@@ -647,13 +628,13 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     }, 500)
   }
 
-  onEnterContact(contact) {
+  onEnterContact(contact:any) {
     console.log("Enetr Contact:", contact)
     // this.invoiceData.partyDTO.partyGstin = contact;
-    if (this.invoiceFormGroup.value.invoiceDTO.invoiceTypesInvoiceTypesId === 2 && this.invoiceFormGroup['controls'].partyDTO['controls'].partyPhone.valid) {
+    if (this.invoiceFormGroup.value.invoiceDTO.invoiceTypesInvoiceTypesId === 2 && (this.invoiceFormGroup.controls['partyDTO'] as FormGroup).controls['partyPhone'].valid) {
       this.getPartyInfoByContact(contact).then((partyInfo: any) => {
         if (partyInfo) {
-          this.invoiceFormGroup['controls'].partyDTO.patchValue(partyInfo);
+          this.invoiceFormGroup.controls['partyDTO'].patchValue(partyInfo);
           /* this.invoiceData.partyDTO.partyEmail = partyInfo.partyEmail;
           this.invoiceData.partyDTO.partyPhone = partyInfo.partyPhone;
           this.invoiceData.partyDTO.partyName = partyInfo.partyName; */
@@ -665,8 +646,8 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
           /* this.invoiceData.partyDTO.partyEmail = "";
           this.invoiceData.partyDTO.partyPhone = "";
           this.invoiceData.partyDTO.partyName = ""; */
-          this.invoiceFormGroup['controls'].partyDTO['controls'].partyName.patchValue('');
-          this.invoiceFormGroup['controls'].partyDTO['controls'].partyEmail.patchValue('');
+          (this.invoiceFormGroup.controls['partyDTO'] as FormGroup).controls['partyName'].patchValue('');
+          (this.invoiceFormGroup.controls['partyDTO'] as FormGroup).controls['partyEmail'].patchValue('');
           delete this.invoiceData.partyDTO.id;
           delete this.invoiceData.partyDTO.partyUpdatedAt;
         }
@@ -677,12 +658,12 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   setPartyPlaceOfSupply() {
     if (this.invoiceData.partyDTO.partyGstin) {
       let stateCode = this.invoiceData.partyDTO.partyGstin.substr(0, 2);
-      let fState = this.state_list.filter(sl => { return sl.stateMasterCode == stateCode });
+      let fState = this.state_list.filter((sl:any) => { return sl.stateMasterCode === stateCode });
       if (fState && fState[0]) { this.onSelectGSTState(fState[0].stateMasterCode); }
     }
   }
 
-  getPartyInfoByGSTIN(gstin) {
+  getPartyInfoByGSTIN(gstin:any) {
     return new Promise((resolve, reject) => {
       NavbarService.getInstance(this.http).getPartyInfoByGSTIN({ gstin: gstin }).subscribe(res => {
         return resolve(((res) ? res : null));
@@ -693,7 +674,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     })
   }
 
-  getPartyInfoByContact(contact) {
+  getPartyInfoByContact(contact:any) {
     return new Promise((resolve, reject) => {
       const param = `/partiesByPhone?phone=${contact}`
       this.gstMsService.getMethod(param).subscribe(res => {
@@ -707,13 +688,13 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     })
   }
 
-  calculateTaxFields(field, items: any) {
+  calculateTaxFields(field:any, items: any) {
     if (!Array.isArray(items)) { items = [items] };
-    items.forEach((item, index) => {
+    items.forEach((item:any, index:number) => {
       item.invoiceItemsTaxableValue = item.invoiceItemsTaxableValue ? item.invoiceItemsTaxableValue : 0;
       item.invoiceItemsTaxRate = item.invoiceItemsTaxRate ? item.invoiceItemsTaxRate : 0;
       item.invoiceItemsCess = item.invoiceItemsCess ? item.invoiceItemsCess : 0;
-      if (field == "tax_rate" || field == "all") {
+      if (field === "tax_rate" || field === "all") {
         if (item.tempInvoiceItemsTaxRate && parseFloat(item.tempInvoiceItemsTaxRate)) {
           item.invoiceItemsTaxRate = parseFloat(item.tempInvoiceItemsTaxRate);
         } else {
@@ -733,7 +714,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
       }
 
       item.invoiceItemsGross = parseFloat(this.fixedToDecimal(item.invoiceItemsTaxableValue + ((item.invoiceItemsTaxRate) ? (item.invoiceItemsTaxableValue * item.invoiceItemsTaxRate * 0.01) : 0) + (item.invoiceItemsCess ? item.invoiceItemsCess : 0)))
-      if (field == "cess" && (item.invoiceItemsCess > item.invoiceItemsTaxableValue || item.invoiceItemsCess < 0)) {
+      if (field === "cess" && (item.invoiceItemsCess > item.invoiceItemsTaxableValue || item.invoiceItemsCess < 0)) {
         setTimeout(() => {
           item.invoiceItemsCess = 0;
           this.calculateTaxFields("cess_changed", item)
@@ -752,7 +733,7 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
   calculateTotalGrossValue() {
     this.invoiceData.invoiceDTO.invoiceGrossValue = 0;
     if (this.invoiceData.listInvoiceItems) {
-      this.invoiceData.listInvoiceItems.forEach(item => {
+      this.invoiceData.listInvoiceItems.forEach((item:any) => {
         if (item.isMarkForFlag != "T") {
           this.invoiceData.invoiceDTO.invoiceGrossValue += (item.invoiceItemsGross) ? item.invoiceItemsGross : 0;
         }
@@ -761,14 +742,14 @@ export class AddUpdateGSTBillInvoiceComponent implements OnInit {
     this.invoiceData.invoiceDTO.invoiceGrossValue = parseFloat(parseFloat(this.invoiceData.invoiceDTO.invoiceGrossValue).toFixed(2));
   }
 
-  fixedToDecimal(value): any {
+  fixedToDecimal(value:any): any {
     return parseFloat(value).toFixed(2);
   }
 
   changeInvoiceType() {
     if (this.invoiceFormGroup.value.invoiceDTO.invoiceTypesInvoiceTypesId === 2) {
-      this.invoiceFormGroup['controls'].partyDTO['controls'].partyGstin.setValidators(null);
-      this.invoiceFormGroup['controls'].partyDTO['controls'].partyGstin.updateValueAndValidity();
+      (this.invoiceFormGroup.controls['partyDTO']as FormGroup).controls['partyGstin'].setValidators(null);
+      (this.invoiceFormGroup.controls['partyDTO']as FormGroup).controls['partyGstin'].updateValueAndValidity();
     }
     console.log("changeInvoiceType", this.invoiceFormGroup)
   }

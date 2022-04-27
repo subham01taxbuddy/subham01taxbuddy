@@ -1,37 +1,18 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
 
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class NavbarService {
 
-	showSideBar: boolean;
-	component_link: string;
-	component_link_2: string;
-	component_link_3: string;
+	showSideBar!: boolean;
+	component_link!: string;
+	component_link_2!: string;
+	component_link_3!: string;
 
-	closeSideBar: boolean;
+	closeSideBar!: boolean;
 	headers: any
 
 	available_merchant_list: any = [];
@@ -61,20 +42,19 @@ export class NavbarService {
 	saveBusinessProfile: boolean = false;
 	saveGSTBillInvoice: boolean = false;
 
-	private id_token: string;
-	private user_email: string;
+	private id_token!:any;
 
 	//API header parameters
 	public static DEFAULT_TOKEN = '00000000000000000000000000000000';
 
 	// follow a singleton pattern
-	private static _instance: NavbarService = null;
+	private static _instance: NavbarService;
 
 	constructor(private http: HttpClient) { }
 
 	// singleton helper
-	public static getInstance(http: HttpClient): NavbarService {
-		if (NavbarService._instance === null) {
+	public static getInstance(http?: HttpClient): NavbarService {
+		if (!NavbarService._instance) {
 			NavbarService._instance = new NavbarService(http);
 
 			let userData = JSON.parse(localStorage.getItem('UMD'));
@@ -123,7 +103,7 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gateway/account/logout', 'method': 'DELETE' }, null);
 	}
 
-	getInvoiceSummary(businessId, params: any) {
+	getInvoiceSummary(businessId:any, params: any) {
 		// TODO: [IP-9] Here Financial year is hardcoded currently we dont have mastr for FY.
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoice-summary/' + businessId + '?year=2019-2020', 'method': 'GET' }, params);
 	}
@@ -132,11 +112,11 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/getAdminList', 'method': 'GET' }, {});
 	}
 
-	getUserSearchList(key, searchValue) {
+	getUserSearchList(key:string, searchValue:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/search/userprofile/query?' + key + "=" + searchValue, 'method': 'GET' }, {});
 	}
 
-	getUserSubscriptions(userId) {
+	getUserSubscriptions(userId:string) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/api/usersubscription?userId=' + userId, 'method': 'GET' }, {});
 	}
 
@@ -148,7 +128,7 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/order', 'method': 'POST' }, params);
 	}
 
-	getUserEligiblePlans(userId) {
+	getUserEligiblePlans(userId:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/eligiblePlan?userId=' + userId + '&itrId=0', 'method': 'GET' }, {});
 	}
 
@@ -156,7 +136,7 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/getGSTDetail', 'method': 'GET' }, {});
 	}
 
-	getGetGSTMerchantDetail(userId) {
+	getGetGSTMerchantDetail(userId:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/profile/' + userId, 'method': 'GET' }, {});
 	}
 
@@ -180,27 +160,27 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoice-status-masters', 'method': 'GET' }, {});
 	}
 
-	updatePartyInfo(params) {
+	updatePartyInfo(params:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/parties', 'method': 'PUT' }, params);
 	}
 
-	createParty(params) {
+	createParty(params:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/parties', 'method': 'POST' }, params);
 	}
 
-	importParties(params) {
+	importParties(params:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/import-parties', 'method': 'POST' }, params);
 	}
 
-	getPartyInfoByGSTIN(params) {
+	getPartyInfoByGSTIN(params:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/partiesByGstin', 'method': 'GET' }, params);
 	}
 
-	getPartyInfoByNoOfGSTIN(params) {
+	getPartyInfoByNoOfGSTIN(params:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/partiesByGstin', 'method': 'GET' }, params);
 	}
 
-	getPartyInfoByPartyRole(businessId, params) {
+	getPartyInfoByPartyRole(businessId:any, params:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/party-list/' + businessId, 'method': 'GET' }, params);
 	}
 
@@ -224,15 +204,15 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoices', 'method': 'GET' }, params);
 	}
 
-	getInvoiceByInvoiceId(inv_id) {
+	getInvoiceByInvoiceId(inv_id:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoices/' + inv_id, 'method': 'GET' }, {});
 	}
 
-	getInvoiceWithItemsByInvoiceId(inv_id) {
+	getInvoiceWithItemsByInvoiceId(inv_id:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoicewithInvoiceItems', 'method': 'GET' }, { 'id.equals': inv_id });
 	}
 
-	deleteInvoiceByInvoiceId(inv_id) {
+	deleteInvoiceByInvoiceId(inv_id:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoices/' + inv_id, 'method': 'DELETE' }, {});
 	}
 
@@ -278,11 +258,11 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/creditdebitnotesWithNoteItems', 'method': 'PUT' }, params);
 	}
 
-	deleteCreditDebitNoteInvoiceByInvoiceId(inv_id) {
+	deleteCreditDebitNoteInvoiceByInvoiceId(inv_id:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/credit-debit-notes/' + inv_id, 'method': 'DELETE' }, {});
 	}
 
-	getCreditDebitNoteInvoiceWithItemsByInvoiceId(inv_id) {
+	getCreditDebitNoteInvoiceWithItemsByInvoiceId(inv_id:any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/creditdebitnotesWithNoteItems', 'method': 'GET' }, { 'id.equals': inv_id });
 	}
 
@@ -361,7 +341,7 @@ export class NavbarService {
 
 	getHeaders(): HttpHeaders {
 		if (!this.id_token) {
-			let userData = JSON.parse(localStorage.getItem('UMD'));
+			let userData = JSON.parse(localStorage.getItem('UMD')??'');
 			if (userData && userData.id_token) { this.id_token = userData.id_token; }
 			console.log("ssss", userData)
 		}
@@ -392,7 +372,7 @@ export class NavbarService {
 
 	// check session validity based on time(in minutes)
 	isSessionValid(validityMinutes: number = 1440): boolean {
-		var sessionDate = new Date(localStorage.getItem('session_time')).getTime();
+		var sessionDate = new Date(localStorage.getItem('session_time')??0).getTime();
 		var now = (new Date()).getTime();
 		var timeDiff = Math.abs(sessionDate - now);
 		timeDiff = Math.ceil(timeDiff / (1000 * 60));

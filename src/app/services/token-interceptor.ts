@@ -6,9 +6,8 @@ import {
     HttpEvent,
     HttpInterceptor, HttpErrorResponse
 } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
-import { catchError } from 'rxjs/internal/operators';
 import { UtilsService } from './utils.service';
 export const InterceptorSkipHeader = 'X-Skip-Interceptor';
 
@@ -39,7 +38,7 @@ export class TokenInterceptor implements HttpInterceptor {
                 const headers = request.headers.delete(InterceptorSkipHeader);
                 return next.handle(request.clone({ headers }));
             }
-            else if(this.utilsService.isNonEmpty(eriHeader)){
+            else if (this.utilsService.isNonEmpty(eriHeader)) {
                 request = request.clone({
                     setHeaders: {
                         'panNumber': eriHeader.panNumber,

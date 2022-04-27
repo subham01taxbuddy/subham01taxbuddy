@@ -2,7 +2,7 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
 
 <mat-dialog-content *ngIf="showTable">
-    <table *ngIf="data.mode == 'source'">  <!--leadSourceInfo.length > 0-->
+    <table *ngIf="data.mode === 'source'">  <!--leadSourceInfo.length > 0-->
         <tr>
             <th><b>Source Name</b></th>
             <th><b>Created Date</b></th>
@@ -32,7 +32,7 @@
     <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
 </mat-dialog-actions>
 
-<form [formGroup]="leadStatusForm" *ngIf="!showTable && data.mode == 'update-status'">
+<form [formGroup]="leadStatusForm" *ngIf="!showTable && data.mode === 'update-status'">
     <mat-dialog-content>
         <div class="card__col-xs-4 card__col-sm-14">
             <mat-form-field appearance="outline" >
@@ -77,7 +77,7 @@
     </mat-dialog-actions>
 </form>
 
-<form [formGroup]="agentIdForm" *ngIf="data.mode == 'update-aginId'">
+<form [formGroup]="agentIdForm" *ngIf="data.mode === 'update-aginId'">
     <mat-dialog-content >
         <div class="card__col-xs-4 card__col-sm-14">
             <mat-form-field appearance="outline" >
@@ -98,7 +98,7 @@
 </form>
 
 
-<form [formGroup]="leadForm"  *ngIf="data.mode == 'partnerLead' || data.mode == 'gstLead'"> 
+<form [formGroup]="leadForm"  *ngIf="data.mode === 'partnerLead' || data.mode === 'gstLead'"> 
     <mat-dialog-content >
         <div class="card__col-xs-4 card__col-sm-14">
             <mat-form-field appearance="outline" >
@@ -138,10 +138,10 @@
                 <mat-error *ngIf="leadForm.controls['city'].hasError('required')">Select city.</mat-error>
             </mat-form-field>
         </div>
-        <div class="card__col-xs-4 card__col-sm-14" *ngIf="data.mode == 'partnerLead'">
+        <div class="card__col-xs-4 card__col-sm-14" *ngIf="data.mode === 'partnerLead'">
             <mat-form-field appearance="outline" >
                 <mat-label>How did you hear about us?</mat-label>
-                <mat-select placeholder="Select" formControlName="hearAboutUs" [required]="data.mode == 'partnerLead'">
+                <mat-select placeholder="Select" formControlName="hearAboutUs" [required]="data.mode === 'partnerLead'">
                     <mat-option *ngFor="let obj of hearABoutUs" [value]="obj.value">
                         {{ obj.key }}
                     </mat-option>
@@ -149,7 +149,7 @@
                 <mat-error *ngIf="leadForm.controls['hearAboutUs'].hasError('required')">Select option.</mat-error>
             </mat-form-field>
         </div>
-        <div class="card__col-xs-4 card__col-sm-14" *ngIf="data.mode == 'partnerLead'">
+        <div class="card__col-xs-4 card__col-sm-14" *ngIf="data.mode === 'partnerLead'">
             <mat-form-field appearance="outline" >
                 <mat-label>Website</mat-label>
                 <input matInput formControlName="website" placeholder="http://www.example.com">
@@ -177,16 +177,16 @@
             </mat-form-field>
         </div>
 
-        <div class="card__col-xs-12 card__col-sm-14" *ngIf="data.mode == 'gstLead'">
+        <div class="card__col-xs-12 card__col-sm-14" *ngIf="data.mode === 'gstLead'">
                 <label><b>I am here for: </b></label>  <span style="color: red;"> *</span><br>
-                <mat-radio-group aria-label="I am here for" formControlName="gstSubSurvice" [required]="data.mode == 'gstLead'">
+                <mat-radio-group aria-label="I am here for" formControlName="gstSubSurvice" [required]="data.mode === 'gstLead'">
                     <mat-radio-button value="gstRegistration">GST Registration</mat-radio-button> &nbsp;
                     <mat-radio-button value="gstReturnFiling">GST Returns Filing & Compliance</mat-radio-button>&nbsp;
                     <mat-radio-button value="other">Others</mat-radio-button>
                 </mat-radio-group>
         </div>
 
-        <div class="card__col-xs-12 card__col-sm-14" style="margin-top: 18px;" *ngIf="data.mode == 'partnerLead'">
+        <div class="card__col-xs-12 card__col-sm-14" style="margin-top: 18px;" *ngIf="data.mode === 'partnerLead'">
             <label><b>Your Interest Area:</b></label> <span style="color: red;"> *</span><br>
             <input type="checkbox" (change)="onCheckboxChange($event)" [value]="intersetAreaArray[0].value"> {{intersetAreaArray[0].key}} &nbsp;
             <input type="checkbox" (change)="onCheckboxChange($event)" [value]="intersetAreaArray[1].value"> {{intersetAreaArray[1].key}} &nbsp;
@@ -198,7 +198,7 @@
             <input type="checkbox" (change)="onCheckboxChange($event)" [value]="intersetAreaArray[7].value"> {{intersetAreaArray[7].key}}
         </div>
      
-        <div class="card__col-xs-12 card__col-sm-14" style="margin-top: 18px;" *ngIf="data.mode == 'partnerLead'">
+        <div class="card__col-xs-12 card__col-sm-14" style="margin-top: 18px;" *ngIf="data.mode === 'partnerLead'">
             <mat-form-field appearance="outline" >
                 <mat-label>Other Information</mat-label>
                 <textarea matInput formControlName="otherInfo" placeholder="Enter Other information" > </textarea>

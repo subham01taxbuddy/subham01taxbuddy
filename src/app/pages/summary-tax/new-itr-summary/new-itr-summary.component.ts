@@ -5,11 +5,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './new-itr-summary.component.html',
   styleUrls: ['./new-itr-summary.component.css']
 })
-export class NewItrSummaryComponent implements OnInit {
+export class NewItrSummaryComponent  {
 
   constructor() { }
-
-  ngOnInit() {
-  }
 
 }

@@ -1,26 +1,8 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
 
-import { RouterModule, Routes } from '@angular/router';
+
+import {  Routes } from '@angular/router';
 
 //page component
-import { PagesComponent } from './pages.component';
 import { ListComponent } from './list/list.component';
 import { BusinessComponent } from './business/business.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
@@ -30,23 +12,17 @@ import { PartyListComponent } from './business/party-list/party-list.component';
 import { ImportPartyListComponent } from './business/import-party-list/import-party-list.component';
 import { GST3BComputationComponent } from './business/gst-3b-computation/gst-3b-computation.component';
 
-//dashboard | home  component
-import { HomeComponent } from './home/home.component';
 
 // Login component
-import { LoginComponent } from './login/login.component';
 import { AuthGuard } from '../services/auth.guard';
-//import { ActivatePackageComponent } from './Active-Package-Part/activate-package/activate-package.component';
-import { RoleBaseAuthGuardService } from 'app/services/role-base-auth-gaurd.service';
 import { AssignComponent } from './assign/assign.component';
-import { CSVParseTemplateComponent } from './assign/csv-parse-template/csv-parse-template.component';
 import { ActivePackagePartComponent } from './active-package-part/active-package-part.component';
+import { RoleBaseAuthGuardService } from '../modules/shared/services/role-base-auth-guard.service';
 
 export const routes: Routes = [
-	{ path: 'login', /* canActivate: [AuthGuard], */ component: LoginComponent },
-
+	
 	{
-		path: 'pages', canActivate: [AuthGuard], component: PagesComponent,
+		path: '', canActivate: [AuthGuard],
 		children: [
 			// { path: 'home', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ component: HomeComponent },
 			{ path: 'list', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN'] }, */ component: ListComponent },
@@ -64,33 +40,31 @@ export const routes: Routes = [
 			},
 			{ path: 'activate-package', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ component: ActivePackagePartComponent },
 			{ path: 'assign', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN'] }, */ component: AssignComponent },
-			{ path: 'chat-corner', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './chat-corner/chat-corner.module#ChatCornerModule' },
-			{ path: 'tax-summary', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './summary-tax/summary.module#SummaryModule' },
+			{ path: 'chat-corner', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren:()=>import( './chat-corner/chat-corner.module').then(m=> m.ChatCornerModule) },
+			{ path: 'tax-summary', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./summary-tax/summary.module').then(m=> m.SummaryModule) },
 			// { path: 'invoice', canActivate: [RoleBaseAuthGaurdService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './invoiceModule/invoice.module#InvoiceModule' },
 			// {
 			// 	path: 'user-info',
 			// 	canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] },
 			// 	loadChildren: '../user-module/user-module.module#UserModuleModule'
 			// },
-			{ path: 'newUser', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './new-user/new-user.module#NewUserModule' },  //./new-user/new-user.module#NewUserModule
+			{ path: 'newUser', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./new-user/new-user.module').then(m=> m.NewUserModule) },  //./new-user/new-user.module#NewUserModule
 			// { path: 'reports', canActivate: [RoleBaseAuthGaurdService], data: { roles: ['ROLE_ADMIN'] }, loadChildren: './reports-module/reports.module#ReportsModule' },
-			{ path: 'ifa', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] } , */ loadChildren: './ifa/ifa.module#IfaModule' },
-			{ path: 'itr-filing', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './itr-filing/itr-filing.module#ItrFilingModule' },
-			{ path: 'dashboard', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './dashboard/dashboard.module#DashboardModule' },
-			{ path: 'tpa-interested', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_TPA_SME'] }, */ loadChildren: './tpa-interested/tpa-interested.module#TpaInterestedModule' },
-			{ path: 'service-board', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './service-board/service-board.module#ServiceBoardModule' },
-			{ path: 'leads', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './leads/leads.module#LeadsModule' },
-			{ path: 'subscription', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_TPA_SME', 'ROLE_FILING_TEAM'] }, */ loadChildren: './subscription/subscription.module#SubscriptionModule' },
-			{ path: 'user-management', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './user-management/user-management.module#UserManagementModule' },
-			{ path: 'gst-filing', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './gst-filing/gst-filing.module#GstFilingModule' },
-			{ path: 'master', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './master/master.module#MasterModule' },
-			{ path: 'team-management', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './team-management/team-mgnt.module#TeamManagementModule' },
-			{ path: 'reports', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: './main-reports/main-reports.module#MainReportsModule' },
-			{ path: '**', redirectTo: '/pages/dashboard/calling/calling2', pathMatch: 'full' },
+			{ path: 'ifa', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_IFA', 'ROLE_ADMIN'] } , */ loadChildren: ()=>import('./ifa/ifa.module').then(m=> m.IfaModule) },
+			{ path: 'itr-filing', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./itr-filing/itr-filing.module').then(m=> m.ItrFilingModule) },
+			// { path: 'dashboard', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('../modules/dashboard/dashboard.module').then(m=> m.DashboardModule) },
+			{ path: 'tpa-interested', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_TPA_SME'] }, */ loadChildren: ()=>import('./tpa-interested/tpa-interested.module').then(m=> m.TpaInterestedModule) },
+			{ path: 'service-board', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./service-board/service-board.module').then(m=> m.ServiceBoardModule) },
+			{ path: 'leads', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./leads/leads.module').then(m=> m.LeadsModule) },
+			{ path: 'subscription', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_TPA_SME', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./subscription/subscription.module').then(m=> m.SubscriptionModule) },
+			{ path: 'user-management', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./user-management/user-management.module').then(m=> m.UserManagementModule) },
+			{ path: 'gst-filing', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren:()=>import( './gst-filing/gst-filing.module').then(m=> m.GstFilingModule) },
+			{ path: 'team-management', canActivate: [RoleBaseAuthGuardService], /* data: { roles: ['ROLE_ADMIN', 'ROLE_FILING_TEAM'] }, */ loadChildren: ()=>import('./team-management/team-mgnt.module').then(m=> m.TeamManagementModule) },
+			// { path: '**', redirectTo: '/pages/dashboard/calling/calling2', pathMatch: 'full' },
 
 		]
 	},
 
 	{ path: '', redirectTo: 'login', pathMatch: 'full' },
-	{ path: '**', redirectTo: '/pages/dashboard/calling/calling2' }
+	// { path: '**', redirectTo: '/pages/dashboard/calling/calling2' }
 ];

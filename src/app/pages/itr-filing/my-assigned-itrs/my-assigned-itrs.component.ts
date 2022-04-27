@@ -1,20 +1,19 @@
 import { ToastMessageService } from './../../../services/toast-message.service';
 import { UserMsService } from './../../../services/user-ms.service';
 import { FormControl, Validators } from '@angular/forms';
-import { UtilsService } from 'app/services/utils.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { ChangeDetectorRef, Component, OnInit, AfterContentChecked } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { AppConstants } from 'app/shared/constants';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { Router } from '@angular/router';
 import { FilingStatusDialogComponent } from '../filing-status-dialog/filing-status-dialog.component';
-import { MatDialog } from '@angular/material';
-import moment = require('moment');
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-import { ApiEndpoints } from 'app/shared/api-endpoint';
-import { environment } from 'environments/environment';
-import { ChangeStatusComponent } from 'app/shared/components/change-status/change-status.component';
-import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
+import { MatDialog } from '@angular/material/dialog';
+import * as moment from 'moment'
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { environment } from 'src/environments/environment';
+import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
+import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 @Component({
@@ -40,7 +39,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
     private cdRef: ChangeDetectorRef) {
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
-      columnDefs: this.myItrsCreateColoumnDef(),
+      columnDefs: this.myItrscreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -69,8 +68,8 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   //   console.log('fyList', fyList);
   //   if (this.utilsService.isNonEmpty(fyList) && fyList instanceof Array) {
   //     this.financialYear = fyList;
-  //     const currentFy = this.financialYear.filter(item => item.isFilingActive);
-  //     this.selectedFyYear.setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
+  //     const currentFy = this.financialYear.filter((item:any) => item.isFilingActive);
+  //     this.selectedFyYear'].setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
   //     this.myItrsList(this.selectedFyYear.value);
   //   } else {
   //     const param = `${ApiEndpoints.itrMs.filingDates}`;
@@ -109,14 +108,14 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
           this.pageWiseItr = res['content'];
           this.itrDataList = this.pageWiseItr;
           this.config.totalItems = res.totalElements;
-          this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res['content']));
+          this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData(res['content']));
         }
         // if (res && res.success) {
         //   this.itrDataList = res.data;
-        //   this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData(res.data));
+        //   this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData(res.data));
         // } else {
         //   this.itrDataList = [];
-        //   this.myItrsGridOptions.api.setRowData(this.createOnSalaryRowData([]));
+        //   this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
         // }
         this.loading = false;
         return resolve(true)
@@ -165,9 +164,9 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
     return newData;
   }
   getCount(val) {
-    return this.itrDataList.filter(item => item.eFillingCompleted === val).length
+    return this.itrDataList.filter((item:any) => item.eFillingCompleted === val).length
   }
-  myItrsCreateColoumnDef() {
+  myItrscreateColumnDef() {
     return [
       {
         headerName: 'ITR ID',
@@ -267,7 +266,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         width: 50,
         sortable: true,
         pinned: 'right',
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           if (params.data.eFillingCompleted) {
             return `<i class="fa fa-check" title="ITR filed successfully" aria-hidden="true"></i>`;
           } else if (params.data.ackStatus === 'DELAY') {
@@ -283,7 +282,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
            </button>`;
           }
         },
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           if (params.data.eFillingCompleted) {
             return {
               textAlign: 'center', display: 'flex',
@@ -306,7 +305,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         width: 50,
         sortable: true,
         pinned: 'right',
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: blueviolet">
             <i class="fa fa-weixin" aria-hidden="true" data-action-type="filingStatus"></i>
@@ -326,7 +325,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
@@ -334,7 +333,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -347,7 +346,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       //   field: "nextYearTpa",
       //   width: 50,
       //   pinned: 'right',
-      //   cellRenderer: params => {
+      //   cellRenderer: (params:any) => {
       //     return `<input type='checkbox' data-action-type="isTpa" ${params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === "COMPLETED" ? 'checked' : ''} />`;
       //   },
       //   cellStyle: params => {
@@ -361,7 +360,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         width: 50,
         sortable: true,
         pinned: 'right',
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           if (params.data.isEverified) {
             return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; color: green">
@@ -376,7 +375,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
            </button>`;
           }
         },
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           if (params.data.eFillingCompleted) {
             return {
               textAlign: 'center', display: 'flex',
@@ -400,7 +399,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
@@ -408,7 +407,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -435,7 +434,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
@@ -443,7 +442,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -457,7 +456,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
@@ -465,7 +464,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -522,7 +521,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   async startFiling(data) {
    // matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'Actions', data.contactNumber], environment.matomoScriptId);
    this.utilsService.matomoCall('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'Actions', data.contactNumber], environment.matomoScriptId);
-    var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
+    var workingItr = this.itrDataList.filter((item:any) => item.itrId === data.itrId)[0]
     console.log('data: ', workingItr);
     Object.entries(workingItr).forEach((key, value) => {
       console.log(key, value)
@@ -531,7 +530,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       }
     });
     const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
       this.utilsService.showSnackBar('There is no any active filing year available')
       return;
@@ -558,7 +557,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   getAcknowledgeDetail(data) {
     //matomo('My ITR Tab', '/pages/itr-filing/my-itrs', ['trackEvent', 'My ITR', 'E-verification', data.contactNumber], environment.matomoScriptId);
     this.loading = true;
-    var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0]
+    var workingItr = this.itrDataList.filter((item:any) => item.itrId === data.itrId)[0]
     workingItr['everifiedStatus'] = 'Successfully e-Verified';
     workingItr['isEverified'] = true;
     const param = '/itr/' + workingItr.userId + '/' + workingItr.itrId + '/' + workingItr.assessmentYear;
@@ -585,7 +584,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
   }
   interestedForNextYearTpa(data) {
     this.loading = true;
-    var workingItr = this.itrDataList.filter(item => item.itrId === data.itrId)[0];
+    var workingItr = this.itrDataList.filter((item:any) => item.itrId === data.itrId)[0];
     workingItr['nextYearTpa'] = 'INTERESTED';
     console.log(workingItr);
 

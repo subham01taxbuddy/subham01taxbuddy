@@ -5,11 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './leads-head.component.html',
   styleUrls: ['./leads-head.component.css']
 })
-export class LeadsHeadComponent implements OnInit {
+export class LeadsHeadComponent {
 
   constructor() { }
 
-  ngOnInit() {
-  }
 
 }

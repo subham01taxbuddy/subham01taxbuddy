@@ -1,9 +1,8 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatStepper } from '@angular/material';
-import { environment } from 'environments/environment';
-import { UserMsService } from 'app/services/user-ms.service';
-import { AppConstants } from 'app/shared/constants';
-import { UtilsService } from 'app/services/utils.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import {MatStepper} from '@angular/material/stepper';
 
 @Component({
   templateUrl: './filing-status-dialog.component.html',
@@ -171,7 +170,7 @@ export class FilingStatusDialogComponent implements OnInit {
   // TODO
   async getLatestComplitedStatus() {
     const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
       this.utilsService.showSnackBar('There is no any active filing year available')
       return;

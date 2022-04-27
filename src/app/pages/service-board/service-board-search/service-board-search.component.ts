@@ -1,9 +1,9 @@
-import { UserMsService } from 'app/services/user-ms.service';
-import { ItrMsService } from 'app/services/itr-ms.service';
-import { AppConstants } from 'app/shared/constants';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UtilsService } from 'app/services/utils.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-service-board-search',
@@ -28,7 +28,7 @@ export class ServiceBoardSearchComponent implements OnInit {
     })
     let agentId = localStorage.getItem(AppConstants.SELECTED_AGENT);
     if (this.utilsService.isNonEmpty(agentId)) {
-      this.searchForm.controls.selectedAgentId.setValue(agentId)
+      this.searchForm.controls['selectedAgentId'].setValue(agentId)
       // this.retrieveData(0)
     } else {
       // this.retrieveData(0)
@@ -42,7 +42,7 @@ export class ServiceBoardSearchComponent implements OnInit {
     console.log('fyList', fyList);
     if (this.utilsService.isNonEmpty(fyList) && fyList instanceof Array) {
       this.financialYear = fyList;
-      const currentFy = this.financialYear.filter(item => item.isFilingActive);
+      const currentFy = this.financialYear.filter((item:any) => item.isFilingActive);
       this.searchForm.controls['selectedFyYear'].setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
       this.searchParams();
     } else {

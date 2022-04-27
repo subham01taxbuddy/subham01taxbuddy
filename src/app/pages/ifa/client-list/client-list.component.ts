@@ -1,7 +1,7 @@
 import { UtilsService } from './../../../services/utils.service';
 import { Component, OnInit } from '@angular/core';
-import { UserMsService } from 'app/services/user-ms.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
 
@@ -19,7 +19,7 @@ export class ClientListComponent implements OnInit {
     this.utilsService.smoothScrollToTop();
     this.clientListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.clientListCreateColoumnDef(),
+      columnDefs: this.clientListcreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -48,7 +48,7 @@ export class ClientListComponent implements OnInit {
             b = new Date(b.createdDate);
             return a > b ? -1 : a < b ? 1 : 0;
           });
-          this.clientListGridOptions.api.setRowData(res);
+          this.clientListGridOptions.api?.setRowData(res);
           this.setDefaultFilter();
         }
         return resolve(true)
@@ -60,7 +60,7 @@ export class ClientListComponent implements OnInit {
     });
   }
 
-  clientListCreateColoumnDef() {
+  clientListcreateColumnDef() {
     return [
       {
         headerName: 'IFA ID',
@@ -133,14 +133,14 @@ export class ClientListComponent implements OnInit {
         headerName: 'Paid',
         width: 50,
         pinned: 'right',
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           if (params.data.packages.length > 0) {
             return `<i class="fa fa-check" aria-hidden="true"></i>`;
           } else {
             return `<i class="fa fa-times" aria-hidden="true"></i>`;
           }
         },
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           if (params.data.packages.length > 0) {
             return {
               textAlign: 'center', display: 'flex',

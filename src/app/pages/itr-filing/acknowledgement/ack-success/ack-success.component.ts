@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({
   selector: 'app-ack-success',
@@ -21,7 +21,7 @@ export class AckSuccessComponent implements OnInit, OnDestroy {
     this.DIRECT_UPLOAD_RES = JSON.parse(sessionStorage.getItem('DIRECT_UPLOAD_RES'));
     console.log('DIRECT_UPLOAD_RES: ', this.DIRECT_UPLOAD_RES);
     this.emailString = 'mailto:' + this.ITR_JSON.email;
-    const self = this.ITR_JSON.family.filter(item => item.relationShipCode === 'SELF');
+    const self = this.ITR_JSON.family.filter((item:any) => item.relationShipCode === 'SELF');
     if (self.length > 0) {
       this.userName = self[0].fName + " " + self[0].lName;
     }

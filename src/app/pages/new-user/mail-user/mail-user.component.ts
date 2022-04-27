@@ -1,11 +1,11 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
-import { AppConstants } from 'app/shared/constants';
-import { environment } from 'environments/environment';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { environment } from 'src/environments/environment';
 import { UserHistryComponent } from '../user-histry/user-histry.component';
 
 @Component({
@@ -15,7 +15,7 @@ import { UserHistryComponent } from '../user-histry/user-histry.component';
 })
 export class MailUserComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   showMailUser: boolean;
   agentList: any = [];
   selectedAgent: any = '';
@@ -26,7 +26,7 @@ export class MailUserComponent implements OnInit {
   constructor(private userService: UserMsService, private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string, private utilsService: UtilsService) {
     this.mailUserListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.mailUserCreateColoumnDef(),
+      columnDefs: this.mailUsercreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -66,7 +66,7 @@ export class MailUserComponent implements OnInit {
       this.loading = false;
       console.log('Email user ==> ', responce);
       this.mailUser = responce;
-      this.mailUserListGridOptions.api.setRowData(this.createRowData(this.mailUser))
+      this.mailUserListGridOptions.api?.setRowData(this.createRowData(this.mailUser))
     }, error => {
       this.loading = false;
       console.log('Error while getting email User data ==> ', error);
@@ -93,7 +93,7 @@ export class MailUserComponent implements OnInit {
     return mailUser;
   }
 
-  mailUserCreateColoumnDef() {
+  mailUsercreateColumnDef() {
     return [
       {
         headerName: 'User Name',
@@ -159,7 +159,7 @@ export class MailUserComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params) {
+        cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" data-action-type="user-histroy" title="User Histroy">User Histroy</button>`;  //fa fa-info-circle  
           // <i class="fa fa-envelope" aria-hidden="true" data-action-type="send-Mail-Notification"></i>
 

@@ -1,10 +1,10 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
-import { NumericEditor } from 'app/shared/numeric-editor.component';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-import { AppConstants } from 'app/shared/constants';
-import { UtilsService } from 'app/services/utils.service';
-import { ItrMsService } from 'app/services/itr-ms.service';
+import { NumericEditorComponent } from 'src/app/modules/shared/numeric-editor.component';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { UtilsService } from 'src/app/services/utils.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 
 @Component({
   selector: 'app-other-income',
@@ -56,7 +56,7 @@ export class OtherIncomeComponent implements OnInit {
         this.otherIncomeGridOptions.api.sizeColumnsToFit();
       },
       frameworkComponents: {
-        numericEditor: NumericEditor
+        numericEditor: NumericEditorComponent
       },
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
@@ -76,7 +76,7 @@ export class OtherIncomeComponent implements OnInit {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           if (otherIncomeDropdown.length !== 0) {
-            const nameArray = otherIncomeDropdown.filter(item => item.value === params.data.incomeType);
+            const nameArray = otherIncomeDropdown.filter((item:any) => item.value === params.data.incomeType);
             return nameArray[0].label;
           } else {
             return params.data.incomeType;
@@ -85,7 +85,7 @@ export class OtherIncomeComponent implements OnInit {
         editable: false,
         tooltip: function (params) {
           if (otherIncomeDropdown.length !== 0) {
-            const nameArray = otherIncomeDropdown.filter(item => item.value === params.data.incomeType);
+            const nameArray = otherIncomeDropdown.filter((item:any) => item.value === params.data.incomeType);
             return nameArray[0].label;
           } else {
             return params.data.incomeType;
@@ -130,7 +130,7 @@ export class OtherIncomeComponent implements OnInit {
             incomeType: params.data.incomeType,
             amount: null,
           });
-          this.otherIncomeGridOptions.api.setRowData(this.otherIncomeGridOptions.rowData);
+          this.otherIncomeGridOptions.api?.setRowData(this.otherIncomeGridOptions.rowData);
           break;
         }
       }
@@ -150,10 +150,10 @@ export class OtherIncomeComponent implements OnInit {
   }
 
   saveOtherIncome() {
-    debugger
+    
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
-    this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes.filter(item => item.incomeType !== 'SAVING_INTEREST' &&
+    this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes.filter((item:any) => item.incomeType !== 'SAVING_INTEREST' &&
       item.incomeType !== 'FD_RD_INTEREST' && item.incomeType !== 'TAX_REFUND_INTEREST' &&
       item.incomeType !== 'ANY_OTHER')
     for (let i = 0; i < this.otherIncomeGridOptions.rowData.length; i++) {
@@ -188,14 +188,14 @@ export class OtherIncomeComponent implements OnInit {
     this.otherIncomeGridOptions.columnDefs = this.otherIncomeCreateColoumnDef(this.otherIncomeDropdown);
     if (this.ITR_JSON.incomes instanceof Array) {
       for (let i = 0; i < this.ITR_JSON.incomes.length; i++) {
-        const id = this.otherIncomeGridOptions.rowData.filter(item => item.incomeType === this.ITR_JSON.incomes[i].incomeType)[0].id;
+        const id = this.otherIncomeGridOptions.rowData.filter((item:any) => item.incomeType === this.ITR_JSON.incomes[i].incomeType)[0].id;
         this.otherIncomeGridOptions.rowData.splice(id, 1, {
           id: id,
           incomeType: this.ITR_JSON.incomes[i].incomeType,
           amount: this.ITR_JSON.incomes[i].amount,
         });
       }
-      // const sec17_1 = this.ITR_JSON.incomes.filter(item => item.incomeType === 'SEC17_1');
+      // const sec17_1 = this.ITR_JSON.incomes.filter((item:any) => item.incomeType === 'SEC17_1');
       // if (sec17_1.length > 0) {
       //   this.summarySalaryForm.controls['sec17_1'].setValue(sec17_1[0].taxableAmount);
       // }
@@ -263,9 +263,9 @@ export class OtherIncomeComponent implements OnInit {
   };
   getDocsUrl(index) {
 
-    debugger
+    
     if (this.itrDocuments.length > 0) {
-      debugger
+      
       const docType = this.itrDocuments[index].fileName.split('.').pop();
       if (this.itrDocuments[index].isPasswordProtected) {
         this.docDetails.docUrl = this.itrDocuments[index].passwordProtectedFileUrl;

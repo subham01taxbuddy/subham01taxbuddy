@@ -1,9 +1,9 @@
-import { AppConstants } from 'app/shared/constants';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from './../../../services/itr-ms.service';
 import { UtilsService } from './../../../services/utils.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UserMsService } from 'app/services/user-ms.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -100,13 +100,13 @@ export class GstCloudComponent implements OnInit {
   // }
 
   // getInvoiceCardTitle() {
-  //   if (this.selectedBillType == "sales-invoice") {
+  //   if (this.selectedBillType === "sales-invoice") {
   //     return "Sales Bills Invoices";
-  //   } else if (this.selectedBillType == "purchase-invoice") {
+  //   } else if (this.selectedBillType === "purchase-invoice") {
   //     return "Purchase / Expense Bills Invoices";
-  //   } else if (this.selectedBillType == "credit") {
+  //   } else if (this.selectedBillType === "credit") {
   //     return "Credit Note Bills Invoices";
-  //   } else if (this.selectedBillType == "debit") {
+  //   } else if (this.selectedBillType === "debit") {
   //     return "Debit Note Bills Invoices";
   //   } else {
   //     return "";
@@ -188,7 +188,7 @@ export class GstCloudComponent implements OnInit {
       }
       else if (res.Success === 'File successfully uploaded!') {
         this.utilsService.showSnackBar(res.Success);
-        // this.onUploadDoucument.emit('File uploaded successfully')
+        // this.uploadDocument.emit('File uploaded successfully')
       }
     }, error => {
       this.loading = false;

@@ -4,11 +4,9 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-gst-filing',
   templateUrl: './gst-filing.component.html',
 })
-export class GstFilingComponent implements OnInit {
+export class GstFilingComponent {
 
   constructor() { }
 
-  ngOnInit() {
-  }
 
 }

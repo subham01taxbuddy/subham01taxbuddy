@@ -23,7 +23,7 @@ import { NavbarService } from '../../services/navbar.service';
 import { ToastMessageService } from '../../services/toast-message.service';
 import { HttpClient } from '@angular/common/http';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
-import { GstMsService } from 'app/services/gst-ms.service';
+import { GstMsService } from 'src/app/services/gst-ms.service';
 
 @Component({
 	selector: 'app-business',
@@ -71,7 +71,7 @@ export class BusinessComponent implements OnInit {
 		this.resetAllData();
 		this.loading = true;
 		this.getMerchantList().then(igr => {
-			this.getInvoicePartyRoles().then(ipr => {
+			this.getInvoicePartyRoles().then((ipr:any) => {
 				this.getGSTDocumentsTypes().then(mpt => {
 					this.getGSTFilingTypes().then(ft => {
 						if (this.merchantData && this.merchantData.userId) {
@@ -176,7 +176,7 @@ export class BusinessComponent implements OnInit {
 	//Changed this API as for calender data 
 	gstGSTReturnCalendarsData() {
 		return new Promise((resolve, reject) => {
-			// debugger
+			// 
 			this.gst_return_calendars_data = [];
 			// TODO: For GSTR1 report get master(gstr_filling_type_master) values from db
 			// Here one is hard coded value because of the values are stored in master data

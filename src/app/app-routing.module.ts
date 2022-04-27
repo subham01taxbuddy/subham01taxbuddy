@@ -1,30 +1,35 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
-
-import { ModuleWithProviders } from '@angular/core';
-
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './services/auth.guard';
+import { LayoutComponent } from './modules/shared/components/layout/layout.component';
+import { RoleBaseAuthGuardService } from './modules/shared/services/role-base-auth-guard.service';
+
+import { AuthGuard } from './../app/services/auth.guard';
 
 export const appRoutes: Routes = [
-  { path: '', canActivate: [AuthGuard], redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' }
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  {
+    path: 'login', loadChildren: () => import('./../app/modules/auth/auth.module').then(m => m.AuthModule)
+  },
+  {
+    path: 'pages', component: LayoutComponent, canActivate: [RoleBaseAuthGuardService], loadChildren: () => import('./../app/pages/pages.module').then(m => m.PagesModule)
+  },
+  {
+    path: 'pages/master', component: LayoutComponent, canActivate: [RoleBaseAuthGuardService], loadChildren: () => import('./../app/modules/master/master.module').then(m => m.MasterModule)
+  },
+  {
+    path: 'pages/dashboard', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/dashboard/dashboard.module').then(m => m.DashboardModule)
+  },
+  {
+    path: 'pages/reports', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/main-reports/main-reports.module').then(m => m.MainReportsModule)
+  },
+  {
+    path: 'eri', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/eri-flow/eri-flow.module').then(m => m.EriFlowModule)
+  },
+  { path: '**', redirectTo: 'login' },
 ];
 
-export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes, { useHash: false });
+@NgModule({
+  imports: [RouterModule.forRoot(appRoutes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

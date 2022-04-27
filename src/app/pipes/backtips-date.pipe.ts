@@ -40,17 +40,17 @@ export class BacktipsDatePipe implements PipeTransform {
 
 		if(!(item instanceof Date) || isNaN(day)) { return "" }
 
-		if(filter == 'short') {
+		if(filter === 'short') {
 			return day + ' ' + month_names[month] + ' ' + '`' + year.slice(year.length - 2, year.length);
-		} else if(filter == 'no-year') {
+		} else if(filter === 'no-year') {
 			return day + ' ' + month_names[month];
-		} else if(filter == 'on-month') {
+		} else if(filter === 'on-month') {
 			return ' ' + month_names[month] + ' ';
-		} else if(filter == 'on-year') {
+		} else if(filter === 'on-year') {
 			return ' ' + year + ' ';
-		} else if(filter == 'string') {
+		} else if(filter === 'string') {
 			return item;
-		} else if( filter == 'full datetime') {
+		} else if( filter === 'full datetime') {
 			return day + '/' + (month+1) + '/' + year + ' '+ hours+':'+minutes+':'+seconds;
 		} else {
 			return day + ' ' + month_names[month] + ' ' + year ;

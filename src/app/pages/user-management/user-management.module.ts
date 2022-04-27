@@ -2,8 +2,6 @@ import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MaterialModule } from "app/shared/material.module";
-import { SharedModule } from "app/shared/shared.module";
 import { NgxLoadingModule } from "ngx-loading";
 import { UserManagementRoutingModule } from "./user-management.routing";
 import { UserListComponent } from './user-list/user-list.component';
@@ -16,6 +14,9 @@ import { OtherUsersComponent } from './other-users/other-users.component';
 import { SmeUpdateComponent } from './other-users/sme-update/sme-update.component';
 import { ChangeAgentDialogComponent } from "./other-users/agent-update/change-agent-dialog/change-agent-dialog.component";
 import { AgentUpdateComponent } from "./other-users/agent-update/agent-update.component";
+import { SharedModule } from "src/app/modules/shared/shared.module";
+import { MaterialModule } from "src/app/modules/shared/material.module";
+import { AgGridModule } from "ag-grid-angular";
 
 @NgModule({
     declarations: [UserManagementComponent , UserListComponent, UserProfileComponent, ProfileDialogComponent,ChangeAgentDialogComponent, CreateNewUserComponent, OtherUsersComponent, AgentUpdateComponent, SmeUpdateComponent],
@@ -25,6 +26,7 @@ import { AgentUpdateComponent } from "./other-users/agent-update/agent-update.co
         ReactiveFormsModule,
         HttpClientModule,
         SharedModule,
+        AgGridModule,
         MaterialModule,
         NgxLoadingModule.forRoot({}),
         UserManagementRoutingModule,

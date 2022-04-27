@@ -1,7 +1,7 @@
 <div class="input" [class.input_disabled]="disabled">
   	<label class="input__label">
   		{{label}}
-  		<span *ngIf="is_mandatory == 'true'" class="mandatory_icon">*</span>
+  		<span *ngIf="is_mandatory === 'true'" class="mandatory_icon">*</span>
   	</label>
   	<div style="display: flex; width: 100%;">
 	  	<input (keyup)="sendData()" type="{{type}}" class="input__text" placeholder="{{placeholder}}" style="width: 70%;" disabled="{{disabled}}" name="{{name}}" [(ngModel)]="value"/>	  	

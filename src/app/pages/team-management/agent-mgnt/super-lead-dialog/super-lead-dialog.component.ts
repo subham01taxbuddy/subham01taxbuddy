@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
+import { FormBuilder } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
 
 @Component({
   selector: 'app-super-lead-dialog',
@@ -11,7 +11,7 @@ import { UserMsService } from 'app/services/user-ms.service';
 })
 export class SuperLeadDialogComponent implements OnInit {
 
-  loading: boolean;
+  loading!: boolean;
   mobileNumber = '';
   superLeadData = {
     name: '',
@@ -21,8 +21,11 @@ export class SuperLeadDialogComponent implements OnInit {
     active: true
   }
   superLeads = [];
-  constructor(public dialogRef: MatDialogRef<SuperLeadDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
-    private userMsService: UserMsService, private fb: FormBuilder, private _toastMessageService: ToastMessageService) { }
+  constructor(public dialogRef: MatDialogRef<SuperLeadDialogComponent>,
+     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
+    private userMsService: UserMsService,
+     private fb: FormBuilder,
+      private _toastMessageService: ToastMessageService) { }
 
   ngOnInit() {
     this.getAllSuperLeads();

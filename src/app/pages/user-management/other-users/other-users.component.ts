@@ -4,14 +4,13 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './other-users.component.html',
   styleUrls: ['./other-users.component.css']
 })
-export class OtherUsersComponent implements OnInit {
+export class OtherUsersComponent  {
 
   constructor() {
   
   }
 
-  ngOnInit() {
-  }
+
 
 
 }

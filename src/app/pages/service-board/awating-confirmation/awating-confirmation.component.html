@@ -14,7 +14,7 @@
                                 {{agent.name}}
                             </mat-option>
                         </mat-select>
-                        <mat-error *ngIf="searchForm['controls'].selectedAgentId.hasError('required')">Select
+                        <mat-error *ngIf="searchForm.controls['selectedAgentId.hasError('required')">Select
                             Agent Id</mat-error>
                     </mat-form-field>
                 </div>
@@ -26,7 +26,7 @@
                                 {{year.financialYear}}
                             </mat-option>
                         </mat-select>
-                        <mat-error *ngIf="searchForm['controls'].selectedFyYear.hasError('required')">Select Financial
+                        <mat-error *ngIf="searchForm.controls['selectedFyYear.hasError('required')">Select Financial
                             Year</mat-error>
                     </mat-form-field>
                 </div>

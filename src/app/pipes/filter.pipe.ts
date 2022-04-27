@@ -25,7 +25,7 @@ export class SelectFilterPipe implements PipeTransform {
 		if(criteria === 'all' || !criteria || Array.isArray(criteria)) {
 			return items;
 		} else {
-			return items.filter(item => {
+			return items.filter((item:any) => {
 				if(item && item.toLowerCase().search(criteria.toLowerCase()) != -1) {
 					return item;
 				}
@@ -40,8 +40,8 @@ export class SelectObjFilterPipe implements PipeTransform {
 		if(criteria === 'all') {
 			return items;
 		} else if(Array.isArray(items)){
-			return items.filter(item => {
-				if(item[key].toLowerCase().indexOf(criteria.toLowerCase()) == 0) {
+			return items.filter((item:any) => {
+				if(item[key].toLowerCase().indexOf(criteria.toLowerCase()) === 0) {
 					return item;
 				}
 			});

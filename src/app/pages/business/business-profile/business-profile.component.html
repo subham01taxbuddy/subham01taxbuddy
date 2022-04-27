@@ -48,7 +48,7 @@
                 <input placeholder="GSTIN Number" maxlength="15" type="text" formControlName="gstinNumber" required
                   (blur)="onEnterGSTIN($event)" matInput>
               </mat-form-field>
-              <mat-error *ngIf="gstDetails['controls'].gstinNumber.hasError('pattern')">
+              <mat-error *ngIf="gstDetails.controls['gstinNumber'].hasError('pattern')">
                 Please enter valid GSTN.
               </mat-error>
               <!-- (inputFocusOut)="onFoucusOutOfGSTINNumber()" -->
@@ -99,8 +99,8 @@
                 <input placeholder="GSTIN Registered Mobile Number" formControlName="gstinRegisteredMobileNumber"
                   matInput maxlength="10"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                <mat-error *ngIf="gstDetails['controls'].gstinRegisteredMobileNumber.hasError('pattern')">
+                  onkeypress="event.charCode >= 48 && event.charCode <= 57">
+                <mat-error *ngIf="gstDetails.controls['gstinRegisteredMobileNumber'].hasError('pattern')">
                   Please enter valid mobile no.</mat-error>
               </mat-form-field>
             </div>
@@ -174,7 +174,7 @@
                 <mat-label>IFSC Code</mat-label>
                 <input placeholder="IFSC Code" maxlength="11" formControlName="ifscCode" matInput
                   (blur)="onEnterIFSCCode($event);" type="text" upperCase>
-                <mat-error *ngIf="gstDetails['controls'].bankInformation['controls'].ifscCode.hasError('pattern')">
+                <mat-error *ngIf="gstDetails.controls['bankInformation'].controls['ifscCode'].hasError('pattern')">
                   Please enter valid IFSC code.</mat-error>
               </mat-form-field>
             </div>
@@ -210,7 +210,7 @@
                 <mat-label>Account Number</mat-label>
                 <input placeholder="Account Number" maxlength="18" formControlName="accountNumber" matInput
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput>
+                  onkeypress="event.charCode >= 48 && event.charCode <= 57" matInput>
               </mat-form-field>
             </div>
           </div>
@@ -252,8 +252,8 @@
                 <mat-label>Pincode</mat-label>
                 <input placeholder="Pincode" maxlength="6" formControlName="pincode"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  onkeypress="return event.charCode >= 48 && event.charCode <= 57" matInput>
-                <mat-error *ngIf="gstDetails['controls'].businessAddress['controls'].pincode.hasError('pattern')">
+                  onkeypress="event.charCode >= 48 && event.charCode <= 57" matInput>
+                <mat-error *ngIf="gstDetails.controls['businessAddress'].controls['pincode'].hasError('pattern')">
                   Please enter valid PIN code.</mat-error>
               </mat-form-field>
             </div>
@@ -321,8 +321,8 @@
                 <div class="card__col-xs-6 card__col-sm-6" style="text-align: center;">
                   <div class="image" *ngIf="merchantData.gstDetails.s3GstCertificate">
                     <img src="{{merchantData.gstDetails.s3GstCertificate}}" alt="" class="image__item"
-                      *ngIf="merchantData.gstDetails.s3GstCertificate.indexOf('.pdf') == -1">
-                    <div *ngIf="merchantData.gstDetails.gstCertificate.indexOf('.pdf') != -1" class="pdf-view">
+                      *ngIf="merchantData.gstDetails.s3GstCertificate.indexOf('.pdf') === -1">
+                    <div *ngIf="merchantData.gstDetails.gstCertificate.indexOf('.pdf') !== -1" class="pdf-view">
                       <a class="btn" (click)="viewUrl(merchantData.gstDetails.s3GstCertificate);">View</a>
                     </div>
                   </div>

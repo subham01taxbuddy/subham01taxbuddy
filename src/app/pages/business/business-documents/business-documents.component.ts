@@ -1,24 +1,5 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
- 
 
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { NavbarService } from '../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../services/toast-message.service';
@@ -30,7 +11,7 @@ import Storage from '@aws-amplify/storage';
   templateUrl: './business-documents.component.html',
   styleUrls: ['./business-documents.component.css']
 })
-export class BusinessDocumentsComponent implements OnInit {
+export class BusinessDocumentsComponent implements DoCheck, OnInit {
 	selected_merchant: any;
   loading: boolean = false;  
   merchantData: any;
@@ -43,7 +24,7 @@ export class BusinessDocumentsComponent implements OnInit {
   selected_gst_return_type:any;
   is_applied_clicked: boolean = false;  
 
-  loggedInUserInfo = JSON.parse(localStorage.getItem("UMD")) || {};
+  loggedInUserInfo = JSON.parse(localStorage.getItem("UMD") ||'') || {};
   selected_gst_filling_type:any;
   filterData:any = [];      
   filters_list: any = [ 
@@ -55,13 +36,13 @@ export class BusinessDocumentsComponent implements OnInit {
   	private navbarService: NavbarService,
     public router: Router, public http: HttpClient,
     public _toastMessageService:ToastMessageService) { 
-    NavbarService.getInstance(null).component_link_2 = 'business-documents';
-    NavbarService.getInstance(null).component_link_3 = '';
-  	NavbarService.getInstance(null).showBtns = 'business-documents';
+    NavbarService.getInstance().component_link_2 = 'business-documents';
+    NavbarService.getInstance().component_link_3 = '';
+  	NavbarService.getInstance().showBtns = 'business-documents';
   } 
 
   ngOnInit() {
-    if (!NavbarService.getInstance(null).isSessionValid()) {
+    if (!NavbarService.getInstance().isSessionValid()) {
       this.router.navigate(['']);
       return;
     }
@@ -71,62 +52,62 @@ export class BusinessDocumentsComponent implements OnInit {
     });
   }  
 
-  onChangeGlobalData(type) {
-    if ((NavbarService.getInstance(null).isMerchantChanged || type == 'init') && NavbarService.getInstance(null).merchantData) {
-      this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
-      NavbarService.getInstance(null).isMerchantChanged = false;
+  onChangeGlobalData(type:any) {
+    if ((NavbarService.getInstance().isMerchantChanged || type === 'init') && NavbarService.getInstance().merchantData) {
+      this.onSelectMerchant(NavbarService.getInstance().merchantData);
+      NavbarService.getInstance().isMerchantChanged = false;
     }
 
-    if ((NavbarService.getInstance(null).isGSTReturnCalendarChanged || type == 'init') && NavbarService.getInstance(null).selected_gst_return_calendars_data) {
-      this.onSelectGSTReturnData(NavbarService.getInstance(null).selected_gst_return_calendars_data);
-      NavbarService.getInstance(null).isGSTReturnCalendarChanged = false;
+    if ((NavbarService.getInstance().isGSTReturnCalendarChanged || type === 'init') && NavbarService.getInstance().selected_gst_return_calendars_data) {
+      this.onSelectGSTReturnData(NavbarService.getInstance().selected_gst_return_calendars_data);
+      NavbarService.getInstance().isGSTReturnCalendarChanged = false;
     }
 
-    if ((NavbarService.getInstance(null).isGSTFillingTypeChanged || type == 'init') && NavbarService.getInstance(null).selected_gst_filling_type) {
-      this.onSelectGSTFillingType(NavbarService.getInstance(null).selected_gst_filling_type);
-      NavbarService.getInstance(null).isGSTFillingTypeChanged = false;
+    if ((NavbarService.getInstance().isGSTFillingTypeChanged || type === 'init') && NavbarService.getInstance().selected_gst_filling_type) {
+      this.onSelectGSTFillingType(NavbarService.getInstance().selected_gst_filling_type);
+      NavbarService.getInstance().isGSTFillingTypeChanged = false;
     }
 
-    if (NavbarService.getInstance(null).isGSTReturnTypeChanged || type == 'init') {
-      this.selected_gst_return_type = NavbarService.getInstance(null).selected_gst_return_type;      
-      NavbarService.getInstance(null).isGSTReturnTypeChanged = false;
+    if (NavbarService.getInstance().isGSTReturnTypeChanged || type === 'init') {
+      this.selected_gst_return_type = NavbarService.getInstance().selected_gst_return_type;      
+      NavbarService.getInstance().isGSTReturnTypeChanged = false;
     }    
 
-    if(NavbarService.getInstance(null).available_merchant_list && Array.isArray(NavbarService.getInstance(null).available_merchant_list)) {
-      this.available_merchant_list = NavbarService.getInstance(null).available_merchant_list;
+    if(NavbarService.getInstance().available_merchant_list && Array.isArray(NavbarService.getInstance().available_merchant_list)) {
+      this.available_merchant_list = NavbarService.getInstance().available_merchant_list;
     }
 
-    if(NavbarService.getInstance(null).gst_documents_types && Array.isArray(NavbarService.getInstance(null).gst_documents_types)) {
-      this.gst_documents_types = NavbarService.getInstance(null).gst_documents_types;
+    if(NavbarService.getInstance().gst_documents_types && Array.isArray(NavbarService.getInstance().gst_documents_types)) {
+      this.gst_documents_types = NavbarService.getInstance().gst_documents_types;
     }
 
-    if(NavbarService.getInstance(null).available_merchant_list && Array.isArray(NavbarService.getInstance(null).available_merchant_list)) {
-      this.available_merchant_list = NavbarService.getInstance(null).available_merchant_list;
+    if(NavbarService.getInstance().available_merchant_list && Array.isArray(NavbarService.getInstance().available_merchant_list)) {
+      this.available_merchant_list = NavbarService.getInstance().available_merchant_list;
     }
 
-    if(NavbarService.getInstance(null).gst_documents_types && Array.isArray(NavbarService.getInstance(null).gst_documents_types)) {
-      this.gst_documents_types = NavbarService.getInstance(null).gst_documents_types;
+    if(NavbarService.getInstance().gst_documents_types && Array.isArray(NavbarService.getInstance().gst_documents_types)) {
+      this.gst_documents_types = NavbarService.getInstance().gst_documents_types;
     }
   }
 
   ngDoCheck() {
     this.onChangeGlobalData('changed');
-    if (NavbarService.getInstance(null).isApplyBtnClicked) {
-      NavbarService.getInstance(null).isApplyBtnClicked = false;
+    if (NavbarService.getInstance().isApplyBtnClicked) {
+      NavbarService.getInstance().isApplyBtnClicked = false;
       this.getDocumentListByMerchant();
     }    
   }
 
 
 
-  onSelectMerchant(event) {    
+  onSelectMerchant(event:any) {    
     if(event && event.userId) {
       this.selected_merchant = event;
       this.getMerchantDetails(event);
     }    
   }
 
-  getMerchantDetails(merchant) {        
+  getMerchantDetails(merchant:any) {        
     this.merchantData = null;
     NavbarService.getInstance(this.http).getGetGSTMerchantDetail(merchant.userId).subscribe(res => {
       this.merchantData = res;
@@ -136,7 +117,7 @@ export class BusinessDocumentsComponent implements OnInit {
     });    
   }
 
-  onSelectGSTReturnData(event) {
+  onSelectGSTReturnData(event:any) {
     if(event && event.id) {
       this.selected_gst_return_calendars_data = event;      
     }
@@ -183,11 +164,11 @@ export class BusinessDocumentsComponent implements OnInit {
     });    
   }
 
-  onSelectGSTFillingType(event) {
+  onSelectGSTFillingType(event:any) {
     if(event && event.id) {
         this.selected_gst_filling_type = event;
-          NavbarService.getInstance(null).selected_gst_filling_type = this.selected_gst_filling_type;
-          NavbarService.getInstance(null).isGSTFillingTypeChanged = true;
+          NavbarService.getInstance().selected_gst_filling_type = this.selected_gst_filling_type;
+          NavbarService.getInstance().isGSTFillingTypeChanged = true;
       }
   }
 
@@ -210,35 +191,35 @@ export class BusinessDocumentsComponent implements OnInit {
     });
   }
 
-  getAdminName(id) {
+  getAdminName(id:any) {
     if (!id) {
       return "N/A";
     } else {
-      let fData = this.admin_list.filter(al => { return al.userId == id });
+      let fData = this.admin_list.filter((al:any) => { return al.userId === id });
       if (fData && fData[0]) {
         return fData[0].name;
       }
     }
   }
 
-  getDocumentType(id) {
+  getDocumentType(id:any) {
     if (!id) {
       return "N/A";
     } else {
-      let fData = this.gst_documents_types.filter(al => { return al.userId == id });
+      let fData = this.gst_documents_types.filter((al:any) => { return al.userId === id });
       if (fData && fData[0]) {
         return fData[0].gstDocumentTypeMasterName;
       }
     }    
   }
 
-  onChangeAttrFilter(event) {
-    var tempFD = this.documents_list.filter(rd => {
+  onChangeAttrFilter(event:any) {
+    var tempFD = this.documents_list.filter((rd:any) => {
         var is_match = true;
         for(var i=0;i<event.length;i++) {
           var it = event[i];      
-          if(it.attr == 'Document Type' && it.value && rd.document_type.toLowerCase().indexOf(it.value.toLowerCase()) == -1 ||
-            it.attr == 'Uploaded By' && it.value && rd.uploaded_by.toLowerCase().indexOf(it.value.toLowerCase()) == -1) {            
+          if(it.attr === 'Document Type' && it.value && rd.document_type.toLowerCase().indexOf(it.value.toLowerCase()) === -1 ||
+            it.attr === 'Uploaded By' && it.value && rd.uploaded_by.toLowerCase().indexOf(it.value.toLowerCase()) === -1) {            
               is_match = false;
               break;
           }        
@@ -250,7 +231,7 @@ export class BusinessDocumentsComponent implements OnInit {
     this.filterData = JSON.parse(JSON.stringify(tempFD));    
   }
 
-  uploadGSTDocument(files) {
+  uploadGSTDocument(files:any) {
     if(files && files[0]) {   
       let extention = ".png";
       if (files[0].name) {
@@ -301,7 +282,7 @@ export class BusinessDocumentsComponent implements OnInit {
     }
   }
 
-  downloadDocument(documentData) {
+  downloadDocument(documentData:any) {
     if(!documentData.gstReturnDocumentsUrl || !documentData.gstReturnDocumentsUrl.startsWith("gst-documents")) {
       this._toastMessageService.alert("error","document not found");
       return;

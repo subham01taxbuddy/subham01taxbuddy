@@ -26,17 +26,17 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class InputCheckboxSelectComponent implements OnInit {
 
-	@Input('label') label: string;
-  @Input('filter_label') filter_label: string;
-	@Input('remove_all_label') remove_all_label: string;
-	@Input('type') type: string;
-	@Input('name') name: string;
-	@Input('value') value: any;
-  @Input('is_mandatory') is_mandatory: string = 'false';
-	@Input('placeholder') placeholder: string;
-  @Input('filter_items') filter_items: any;
-  @Input('disabled') disabled: boolean = false;
-	@Input('flag_for_exclude') flag_for_exclude: boolean = false;
+	@Input() label: string;
+  @Input() filter_label: string;
+	@Input() remove_all_label: string;
+	@Input() type: string;
+	@Input() name: string;
+	@Input() value: any;
+  @Input() is_mandatory: string = 'false';
+	@Input() placeholder: string;
+  @Input() filter_items: any;
+  @Input() disabled: boolean = false;
+	@Input() flag_for_exclude: boolean = false;
 
 	@Output() sendValue = new EventEmitter<string>();
 
@@ -88,18 +88,18 @@ export class InputCheckboxSelectComponent implements OnInit {
   changeStores(item, index) {    
     for(var i = 0; i < this.filter_items.length; i++) {    
 
-      if(item == this.filter_label) {
+      if(item === this.filter_label) {
         if(this.filter_items[i] != 'Remove All' && !this.filter_items[i].toLowerCase().startsWith("all")){
-          if(this.value.indexOf(this.filter_items[i]) == -1) {
+          if(this.value.indexOf(this.filter_items[i]) === -1) {
             this.value.push(this.filter_items[i]); 
           }
         }
       }
-      else if(item == 'Remove All'){
+      else if(item === 'Remove All'){
         this.value = [];
       }else {
 
-        if(item == this.filter_items[i]) {
+        if(item === this.filter_items[i]) {
           let index = this.value.indexOf(this.filter_items[i]);
           let fData = this.value.indexOf(this.filter_items[i].split('_')[1]);          
           if(fData != -1){
@@ -112,7 +112,7 @@ export class InputCheckboxSelectComponent implements OnInit {
         }
       }
     }
-    if(this.value.length == 0) {
+    if(this.value.length === 0) {
       this.value = [];
     }
     return this.value;

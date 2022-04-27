@@ -1,7 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { SharedModule } from "app/shared/shared.module";
 import { NgxPaginationModule } from "ngx-pagination";
 import { TeamManagementRouingModule } from "./team-mgnt.routing";
 import { TeamManagementComponent } from './team-management/team-management.component';
@@ -13,6 +12,7 @@ import { AddRemoveAgentDialogComponent } from './caller-assign/add-remove-agent-
 import { AgentMgntComponent } from './agent-mgnt/agent-mgnt.component';
 import { UpdateAgentDialogComponent } from './agent-mgnt/update-agent-dialog/update-agent-dialog.component';
 import { SuperLeadDialogComponent } from "./agent-mgnt/super-lead-dialog/super-lead-dialog.component";
+import { SharedModule } from "src/app/modules/shared/shared.module";
 
 @NgModule({
     declarations: [TeamManagementComponent, AddCallerComponent, CallerAssignComponent, SmeManagementComponent, AddRemoveAgentDialogComponent, AgentMgntComponent, UpdateAgentDialogComponent,

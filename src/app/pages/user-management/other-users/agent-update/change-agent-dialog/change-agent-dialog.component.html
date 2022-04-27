@@ -18,7 +18,7 @@
                     {{ agent.name }}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="changeAgent.controls.agentId.hasError('required')">Select agent.</mat-error>
+            <mat-error *ngIf="changeAgent.controls['agentId'].hasError('required')">Select agent.</mat-error>
         </mat-form-field>
     </div>
 
@@ -30,7 +30,7 @@
                     {{ item.label }}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="changeAgent.controls.serviceType.hasError('required')">Select service type.</mat-error>
+            <mat-error *ngIf="changeAgent.controls['serviceType'].hasError('required')">Select service type.</mat-error>
         </mat-form-field>
     </div>
 

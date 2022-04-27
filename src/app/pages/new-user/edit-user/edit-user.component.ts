@@ -1,26 +1,26 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NavbarService } from 'app/services/navbar.service';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserMsService } from 'app/services/user-ms.service';
-import { UtilsService } from 'app/services/utils.service';
+import { NavbarService } from 'src/app/services/navbar.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
   styleUrls: ['./edit-user.component.css']
 })
-export class EditUserComponent implements OnInit {
+export class EditUserComponent implements OnInit, OnDestroy {
 
   searchVal: string = "";
   currentUserId: number = 0;
-  loading: boolean;
-  signUpForm: FormGroup;
+  loading!: boolean;
+  signUpForm!: FormGroup;
   userData: any;
   assignUserInfo: any;
   assignUserEmail: any = '';
-  assignUser: boolean;
+  assignUser!: boolean;
   searchMenus = [{
     value: 'emailAddress', name: 'Email Id'
   }, {
@@ -41,7 +41,7 @@ export class EditUserComponent implements OnInit {
       username: new FormControl("", Validators.required),
     });
 
-    this.assignUserInfo = JSON.parse(sessionStorage.getItem("assignUser"));
+    this.assignUserInfo = JSON.parse(sessionStorage.getItem("assignUser")||'');
     console.log("assignUser: ", this.assignUserInfo);
     if (this.utilSerive.isNonEmpty(this.assignUserInfo)) {
        this.assignUserEmail = this.assignUserInfo.email;
@@ -56,14 +56,14 @@ export class EditUserComponent implements OnInit {
     this.currentUserId = 0;
   }
 
-  advanceSearch(key) {
+  advanceSearch(key:any) {
     //this.user_data = [];
     if (this.searchVal !== "") {
       this.getUserDetail(key, this.searchVal);
     }
   }
 
-  getUserDetail(key, searchValue){
+  getUserDetail(key:any, searchValue:any){
     this.userData = {};
     this.loading = true;
     NavbarService.getInstance(this.http).getUserSearchList(key, searchValue).subscribe(res => {
@@ -72,16 +72,16 @@ export class EditUserComponent implements OnInit {
       if(this.utilService.isNonEmpty(this.userData)){
         console.log("Search result userData :", this.userData);
         if(this.utilSerive.isNonEmpty(this.assignUserEmail)){
-          this.signUpForm['controls'].first_name.setValue(this.userData.records[0].fName);
-          this.signUpForm['controls'].last_name.setValue(this.userData.records[0].lName);
-          this.signUpForm['controls'].email.setValue(this.assignUserEmail);
-          this.signUpForm['controls'].username.setValue(this.userData.records[0].mobileNumber);
+          this.signUpForm.controls['first_name'].setValue(this.userData.records[0].fName);
+          this.signUpForm.controls['last_name'].setValue(this.userData.records[0].lName);
+          this.signUpForm.controls['email'].setValue(this.assignUserEmail);
+          this.signUpForm.controls['username'].setValue(this.userData.records[0].mobileNumber);
         }
         else{
-          this.signUpForm['controls'].first_name.setValue(this.userData.records[0].fName);
-          this.signUpForm['controls'].last_name.setValue(this.userData.records[0].lName);
-          this.signUpForm['controls'].email.setValue(this.userData.records[0].emailAddress);
-          this.signUpForm['controls'].username.setValue(this.userData.records[0].mobileNumber);
+          this.signUpForm.controls['first_name'].setValue(this.userData.records[0].fName);
+          this.signUpForm.controls['last_name'].setValue(this.userData.records[0].lName);
+          this.signUpForm.controls['email'].setValue(this.userData.records[0].emailAddress);
+          this.signUpForm.controls['username'].setValue(this.userData.records[0].mobileNumber);
         }
         
       }
@@ -100,7 +100,7 @@ export class EditUserComponent implements OnInit {
   editUser(){
     if(this.signUpForm.valid){
       this.loading = true;
-      this.userData.records[0].emailAddress = this.signUpForm['controls'].email.value;
+      this.userData.records[0].emailAddress = this.signUpForm.controls['email'].value;
       let path = '/profile';
       this.userService.putMethod(path, this.userData.records[0]).subscribe(responce => {
           console.log('responce: ',responce);
@@ -111,17 +111,17 @@ export class EditUserComponent implements OnInit {
           }
           else{
             this.signUpForm.reset();
-            this.signUpForm['controls'].first_name.clearValidators(); 
-            this.signUpForm['controls'].first_name.updateValueAndValidity()
-            this.signUpForm['controls'].last_name.clearValidators();
-            this.signUpForm['controls'].last_name.updateValueAndValidity()
-            this.signUpForm['controls'].email.clearValidators();
-            this.signUpForm['controls'].email.updateValueAndValidity()
-            this.signUpForm['controls'].username.clearValidators();
-            this.signUpForm['controls'].username.updateValueAndValidity()
+            this.signUpForm.controls['first_name'].clearValidators(); 
+            this.signUpForm.controls['first_name'].updateValueAndValidity()
+            this.signUpForm.controls['last_name'].clearValidators();
+            this.signUpForm.controls['last_name'].updateValueAndValidity()
+            this.signUpForm.controls['email'].clearValidators();
+            this.signUpForm.controls['email'].updateValueAndValidity()
+            this.signUpForm.controls['username'].clearValidators();
+            this.signUpForm.controls['username'].updateValueAndValidity()
             this.assignUser = false;
           }
-          this.clearFromExceptionList(this.signUpForm['controls'].email.value);
+          this.clearFromExceptionList(this.signUpForm.controls['email'].value);
       },
       error=>{
         this.loading = false;
@@ -135,7 +135,7 @@ export class EditUserComponent implements OnInit {
     }
   }
 
-  clearFromExceptionList(mail){
+  clearFromExceptionList(mail:any){
     console.log('Mail -> ',mail);
     let param = '/gateway/email-channel/exception/delete?email='+mail;
     this.userService.deleteMethod(param).subscribe(responce=>{
@@ -148,7 +148,7 @@ export class EditUserComponent implements OnInit {
 
   uploadUserDocs(){
     this.loading = true;
-    let param = '/kommunicate/upload-files?email='+this.signUpForm['controls'].email.value;
+    let param = '/kommunicate/upload-files?email='+this.signUpForm.controls['email'].value;
     this.userService.getUserDetail(param).subscribe(responce=>{
       console.log('Document upload responce: ',responce);
       this.loading = false;
@@ -173,7 +173,7 @@ export class EditUserComponent implements OnInit {
 
 
   ngOnDestroy(): void {
-    sessionStorage.setItem("assignUser", null);
+    sessionStorage.setItem("assignUser", '');
   }
 
 }

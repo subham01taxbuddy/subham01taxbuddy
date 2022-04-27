@@ -5,11 +5,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './active-package-part.component.html',
   styleUrls: ['./active-package-part.component.css']
 })
-export class ActivePackagePartComponent implements OnInit {
+export class ActivePackagePartComponent {
 
   constructor() { }
-
-  ngOnInit() {
-  }
 
 }

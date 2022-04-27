@@ -24,7 +24,7 @@
         <ng-template matStepLabel>Income Details</ng-template>
 
         <div class="content" style="width: 60%;padding-right: 10px;">
-          <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+          <app-document-upload (uploadDocument)="afterUploadDocs($event)"></app-document-upload>
           <br>
           <div>
             <span *ngFor="let docs of documents; let i=index">
@@ -72,7 +72,7 @@
       <mat-step [stepControl]="taxSavingForm">
         <ng-template matStepLabel>Investments/Deductions</ng-template>
         <div class="content" style="width: 60%;padding-right: 10px;">
-          <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+          <app-document-upload (uploadDocument)="afterUploadDocs($event)"></app-document-upload>
           <br>
           <div>
             <span *ngFor="let docs of documents; let i=index">
@@ -115,7 +115,7 @@
       <mat-step [stepControl]="tdsTcsForm">
         <ng-template matStepLabel>Taxes Paid</ng-template>
         <div class="content" style="width: 60%;padding-right: 10px;">
-          <app-document-upload (onUploadDoucument)="afterUploadDocs($event)"></app-document-upload>
+          <app-document-upload (uploadDocument)="afterUploadDocs($event)"></app-document-upload>
           <br>
           <div>
             <span *ngFor="let docs of documents; let i=index">

@@ -50,7 +50,7 @@
                         <div class="card__col-xs-12 card__col-sm-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>PAN Number</mat-label>
-                                <input [style.cursor]="ITR_JSON.eFillingCompleted == true ? 'not-allowed':''"
+                                <input [style.cursor]="ITR_JSON.eFillingCompleted === true ? 'not-allowed':''"
                                     [disabled]="ITR_JSON.eFillingCompleted === true"
                                     matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
                                     matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput placeholder="PAN"
@@ -142,35 +142,13 @@
                                 <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip"
                                     matTooltipPosition="above" matInput [min]="minDate" [max]="maxDate"
                                     [matDatepicker]="picker" class="input-field" placeholder="Date of birth"
-                                    name="dateOfBirth" [formControl]="customerProfileForm.controls['dateOfBirth']" required>
+                                    name="dateOfBirth" [formControl]="customerProfileForm.controls['dateOfBirth']"
+                                    required>
                                 <mat-hint>Format: DD/MM/YYYY</mat-hint>
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
-                                <mat-error *ngIf="customerProfileForm.controls['dateOfBirth'].hasError('required')">Select date of birth</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Residential status</mat-label>
-                                <mat-select placeholder="Residential status" name="residentialStatus"
-                                    (selectionChange)="onSelectRecidencial(customerProfileForm.controls['residentialStatus'].value)"
-                                    [formControl]="customerProfileForm.controls['residentialStatus']" required>
-                                    <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
-                                        {{ res.label }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Select Gender</mat-label>
-                                <mat-select placeholder="Select Gender" name="gender" formControlName="gender">
-                                    <mat-option *ngFor="let gender of genderMaster" [value]="gender.value">
-                                        {{ gender.label }}
-                                    </mat-option>
-                                </mat-select>
+                                <mat-error *ngIf="customerProfileForm.controls['dateOfBirth'].hasError('required')">
+                                    Select date of birth</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="card__col-xs-12 card__col-sm-4">
@@ -183,134 +161,67 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Employer Category</mat-label>
-                                <mat-select placeholder="Employer Category" name="employerCategory"
-                                    formControlName="employerCategory">
-                                    <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
-                                        {{ emp.label }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-
                     </div>
                     <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Filing Team</mat-label>
-                                <mat-select placeholder="Filing Team Member Id" name="filingTeamMemberId"
-                                    formControlName="filingTeamMemberId">
-                                    <mat-option *ngFor="let member of filingTeamMembers" [value]="member.userId">
-                                        {{ member.name }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Return Type</mat-label>
-                                <mat-select placeholder="Return Type" name="isRevised" formControlName="isRevised"
-                                    (selectionChange)="changeReviseForm()" required>
-                                    <mat-option *ngFor="let type of returnTypes" [value]="type.value">
-                                        {{ type.label }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <!-- <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Package Selected by User</mat-label>
-                                <mat-select placeholder="Package Selected by User" name="planIdSelectedByUser"
-                                    formControlName="planIdSelectedByUser">
-                                    <mat-option *ngFor="let type of planMaster" [value]="type.value">
-                                        {{ type.label }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Package Selected by Tax Expert</mat-label>
-                                <mat-select placeholder="Package Selected by Tax Expert"
-                                    name="planIdSelectedByTaxExpert" formControlName="planIdSelectedByTaxExpert"
-                                    [required]="this.ITR_JSON.planIdSelectedByUser === null
-                                     || this.ITR_JSON.planIdSelectedByUser === 0">
-                                    <mat-option *ngFor="let res of planMaster" [value]="res.value">
-                                        {{ res.label }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div> -->
-                    </div>
-                    <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-4"
-                            *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Acknowledgement number</mat-label>
-                                <input matTooltip="Acknowledgement number maximum of 15 digit"
-                                    matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
-                                    placeholder="Acknowledgement of Original ITR" name="orgITRAckNum"
-                                    class="input-field" maxlength="15" minlength="15" formControlName="orgITRAckNum" />
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4"
-                            *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Date of filing</mat-label>
-                                <input [max]="maxDateRevise" matInput [matDatepicker]="revisedPicker"
-                                    placeholder="Date of filing original return" name="orgITRDate"
-                                    formControlName="orgITRDate" />
-                                <mat-datepicker-toggle matSuffix [for]="revisedPicker"></mat-datepicker-toggle>
-                                <mat-datepicker #revisedPicker></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-
-                    </div>
-                    <div formGroupName="seventhProviso139">
-                        <div class="card__row">
-                            <div class="card__col-xs-12 card__col-sm-8">
-                                Have you deposited more than 1 crore in your current A/c ( if Yes) then Enter the
-                                Amount
+                        <div class="card__col-xs-8">
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Filing Team</mat-label>
+                                        <mat-select placeholder="Filing Team Member Id" name="filingTeamMemberId"
+                                            formControlName="filingTeamMemberId">
+                                            <mat-option *ngFor="let member of filingTeamMembers"
+                                                [value]="member.userId">
+                                                {{ member.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-6">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Return Type</mat-label>
+                                        <mat-select placeholder="Return Type" name="isRevised"
+                                            formControlName="isRevised" (selectionChange)="changeReviseForm()" required>
+                                            <mat-option *ngFor="let type of returnTypes" [value]="type.value">
+                                                {{ type.label }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
                             </div>
-                            <div class="card__col-xs-12 card__col-sm-4">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Amount</mat-label>
-                                    <input matInput placeholder="Amount" name="depAmtAggAmtExcd1CrPrYrFlg" type="number"
-                                        formControlName="depAmtAggAmtExcd1CrPrYrFlg" class="input-field" maxlength="14">
-                                </mat-form-field>
+                            <div class="card__row">
+                                <div class="card__col-xs-12 card__col-sm-6"
+                                    *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Acknowledgement number</mat-label>
+                                        <input matTooltip="Acknowledgement number maximum of 15 digit"
+                                            matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
+                                            placeholder="Acknowledgement of Original ITR" name="orgITRAckNum"
+                                            class="input-field" maxlength="15" minlength="15"
+                                            formControlName="orgITRAckNum" />
+                                    </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-12 card__col-sm-6"
+                                    *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Date of filing</mat-label>
+                                        <input [max]="maxDateRevise" matInput [matDatepicker]="revisedPicker"
+                                            placeholder="Date of filing original return" name="orgITRDate"
+                                            formControlName="orgITRDate" />
+                                        <mat-datepicker-toggle matSuffix [for]="revisedPicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #revisedPicker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
                             </div>
                         </div>
-                        <div class="card__row">
-                            <div class="card__col-xs-12 card__col-sm-8">
-                                Your foreign travel expenses is more than Rs. 2 Lakhs (If yes, then enter amount of
-                                expenditure)
-                            </div>
-                            <div class="card__col-xs-12 card__col-sm-4">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Amount</mat-label>
-                                    <input matInput placeholder="Amount" name="incrExpAggAmt2LkTrvFrgnCntryFlg"
-                                        type="number" formControlName="incrExpAggAmt2LkTrvFrgnCntryFlg"
-                                        class="input-field" maxlength="14">
-                                </mat-form-field>
-                            </div>
+                        <div class="card__col-xs-4">
+                            <a class="sidebar__item" routerLink="/pages/tax-summary"
+                                routerLinkActive="sidebar__item_active"
+                                *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM','ROLE_CALLING_TEAM','ITR_SUPER_LEAD','ITR_TEAM_LEAD'])">
+                                <i class="fa fa-list-alt" style="font-size: 20px;" aria-hidden="true"></i>
+                                <span class="sidebar__name">Tax Summary</span>
+                            </a>
                         </div>
-                        <div class="card__row">
-                            <div class="card__col-xs-12 card__col-sm-8">
-                                Have your electricity bill exceeded 1 Lakh? (If yes, then enter amount)
-                            </div>
-                            <div class="card__col-xs-12 card__col-sm-4">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Amount</mat-label>
-                                    <input matInput placeholder="Amount" name="incrExpAggAmt1LkElctrctyPrYrFlg"
-                                        type="number" formControlName="incrExpAggAmt1LkElctrctyPrYrFlg"
-                                        class="input-field" maxlength="14">
-                                </mat-form-field>
-                            </div>
-
-                        </div>
-
                     </div>
                     <hr>
                     <div class="card__row">
@@ -347,7 +258,11 @@
                             Filed</button>
                         <!-- <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT')">Direct
                             Upload</button> -->
-                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT-UPLOAD')">Direct Upload</button>
+                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT-UPLOAD')">Direct
+                            Upload</button>
+
+
+
                     </div>
                 </form>
             </div>

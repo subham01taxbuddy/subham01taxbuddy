@@ -1,34 +1,15 @@
-/**
- * (c) OneGreenDiary Software Pvt. Ltd. 
- * This file is a part of OneGreenDiary platform code base.
- *
- * This file is distributed under following terms:
- * 1) OneGreenDiary owns the OneGreenDiary platform, of which this file is a part.
- * 2) Any modifications to the base platform by OneGreenDiary is owned by OneGreenDiary and will be 
- *    non-exclusively used by OneGreenDiary Software Pvt. Ltd. for its clients and partners.
- * 3) Rights of any third-party customizations that do not alter the base platform, 
- *    solely reside with the third-party.  
- * 4) OneGreenDiary Software Pvt. Ltd. is free to  change the licences of the base platform to permissive 
- *    opensource licences (e.g. Apache/EPL/MIT/BSD) in future.
- * 5) Onces OneGreenDiary platform is delivered to third party, they are free to modify the code for their internal use.
- *    Any such modifications will be solely owned by the third party.
- * 6) The third party may not redistribute the OneGreenDiary platform code base in any form without 
- *    prior agreement with OneGreenDiary Software Pvt. Ltd. 
- * 7) Third party agrees to preserve the above notice for all the OneGreenDiary platform files.
- */
 
-
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { NavbarService } from '../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../services/toast-message.service';
 import { HttpClient } from '@angular/common/http';
 import Storage from '@aws-amplify/storage';
-import { UtilsService } from 'app/services/utils.service';
-import { GstMsService } from 'app/services/gst-ms.service';
-import { ThirdPartyService } from 'app/services/third-party.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { GstMsService } from 'src/app/services/gst-ms.service';
+import { ThirdPartyService } from 'src/app/services/third-party.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { AppConstants } from 'app/shared/constants';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { TitleCasePipe } from '@angular/common';
 
 @Component({
@@ -37,7 +18,7 @@ import { TitleCasePipe } from '@angular/common';
   styleUrls: ['./business-profile.component.css'],
   providers: [GstMsService, TitleCasePipe]
 })
-export class BusinessProfileComponent implements OnInit {
+export class BusinessProfileComponent implements OnInit, DoCheck {
   selected_merchant: any;
 
   state_list: any = [];
@@ -51,7 +32,7 @@ export class BusinessProfileComponent implements OnInit {
   gstinBounceBackTimeObj: any;
   ifscBounceBackTimeObj: any;
 
-  gstDetails: FormGroup;
+  gstDetails!: FormGroup;
 
   gst_return_calendars_data: any = [];
   selected_gst_return_calendars_data: any;
@@ -78,13 +59,13 @@ export class BusinessProfileComponent implements OnInit {
     private thirdPartyService: ThirdPartyService,
     public router: Router, public http: HttpClient, private gstMsService: GstMsService,
     public _toastMessageService: ToastMessageService, public utilsService: UtilsService, public fb: FormBuilder) {
-    NavbarService.getInstance(null).component_link_2 = 'business-profile';
-    NavbarService.getInstance(null).component_link_3 = '';
-    NavbarService.getInstance(null).showBtns = 'business-profile';
+    NavbarService.getInstance().component_link_2 = 'business-profile';
+    NavbarService.getInstance().component_link_3 = '';
+    NavbarService.getInstance().showBtns = 'business-profile';
   }
 
   ngOnInit() {
-    if (!NavbarService.getInstance(null).isSessionValid()) {
+    if (!NavbarService.getInstance().isSessionValid()) {
       this.router.navigate(['']);
       return;
     }
@@ -92,7 +73,7 @@ export class BusinessProfileComponent implements OnInit {
     this.loading = true;
     this.getGSTStateList().then(sR => {
       // this.gstGSTReturnCalendarsData().then(ss => {
-      this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
+      this.onSelectMerchant(NavbarService.getInstance().merchantData);
       this.loading = false;
       console.log(this.merchantData)
       // })
@@ -124,14 +105,14 @@ export class BusinessProfileComponent implements OnInit {
   }
 
   ngDoCheck() {
-    if (NavbarService.getInstance(null).saveBusinessProfile) {
+    if (NavbarService.getInstance().saveBusinessProfile) {
       this.saveBusinessProfile();
-      NavbarService.getInstance(null).saveBusinessProfile = false;
+      NavbarService.getInstance().saveBusinessProfile = false;
     }
 
-    if (NavbarService.getInstance(null).isMerchantChanged && NavbarService.getInstance(null).merchantData) {
-      this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
-      NavbarService.getInstance(null).isMerchantChanged = false;
+    if (NavbarService.getInstance().isMerchantChanged && NavbarService.getInstance().merchantData) {
+      this.onSelectMerchant(NavbarService.getInstance().merchantData);
+      NavbarService.getInstance().isMerchantChanged = false;
 
     }
   }
@@ -155,7 +136,7 @@ export class BusinessProfileComponent implements OnInit {
     })
   }
 
-  onSelectMerchant(event) {
+  onSelectMerchant(event:any) {
     if (event && event.userId) {
       this.selected_merchant = event;
       this.getMerchantDetails(event);
@@ -177,7 +158,7 @@ export class BusinessProfileComponent implements OnInit {
     this.selected_gst_return_calendars_data = null;
   }
 
-  getMerchantDetails(merchant) {
+  getMerchantDetails(merchant:any) {
     this.loading = true;
     this.merchantData = null;
     this.resetOpeningBalanceCredits();
@@ -216,7 +197,7 @@ export class BusinessProfileComponent implements OnInit {
         }
 
         if (this.merchantData.gstDetails.businessAddress.state) {
-          let currentState = this.state_list.filter(sl => { return sl.stateMasterCode == this.merchantData.gstDetails.businessAddress.state });
+          let currentState = this.state_list.filter((sl:any) => { return sl.stateMasterCode === this.merchantData.gstDetails.businessAddress.state });
           if (currentState && currentState[0]) {
             this.selected_gst_state = currentState[0];
           }
@@ -237,22 +218,22 @@ export class BusinessProfileComponent implements OnInit {
     });
   }
 
-  onSelectGSTState(event) {
+  onSelectGSTState(event:any) {
     if (event && event.stateMasterCode) {
       this.merchantData.gstDetails.businessAddress.state = event.stateMasterCode;
       this.selected_gst_state = event;
     }
   }
 
-  onEnterGSTIN(event) {
+  onEnterGSTIN(event:any) {
     this.merchantData.gstDetails.gstinNumber = event.target.value;
     if (this.gstinBounceBackTimeObj) {
       clearTimeout(this.gstinBounceBackTimeObj);
     }
     this.gstinBounceBackTimeObj = setTimeout(() => {
-      if (this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length == 15 && this.utilsService.isGSTINValid(this.merchantData.gstDetails.gstinNumber)) {
+      if (this.merchantData.gstDetails.gstinNumber && this.merchantData.gstDetails.gstinNumber.length === 15 && this.utilsService.isGSTINValid(this.merchantData.gstDetails.gstinNumber)) {
         let stateCode = this.merchantData.gstDetails.gstinNumber.substr(0, 2);
-        let fState = this.state_list.filter(sl => { return sl.stateMasterCode == stateCode });
+        let fState = this.state_list.filter((sl:any) => { return sl.stateMasterCode === stateCode });
         if (fState && fState[0]) { this.onSelectGSTState(fState[0]); }
 
         this.getPartyInfoByGSTIN(this.merchantData.gstDetails.gstinNumber).then((partyInfo: any) => {
@@ -280,19 +261,19 @@ export class BusinessProfileComponent implements OnInit {
   }
 
   //Sagar
-  getGstType(gstCode) {
-    //  console.log(this.gstType.find(item=> item.code == gstCode).label)
-    console.log(this.gstType.find(item => item.label == gstCode));
-    return this.gstType.find(item => item.label == gstCode).label
+  getGstType(gstCode:any) {
+    //  console.log(this.gstType.find(item=> item.code === gstCode).label)
+    console.log(this.gstType.find((item:any) => item.label === gstCode));
+    return this.gstType.find((item:any) => item.label === gstCode).label
   }
 
-  getStateName(stateName) {
+  getStateName(stateName:any) {
     console.log(stateName)
     console.log(this.state_list)
-   return this.state_list.find(item=> (item.name).toLowerCase() == stateName.toLowerCase()).stateMasterCode
+   return this.state_list.find((item:any)=> (item.name).toLowerCase() === stateName.toLowerCase()).stateMasterCode
   }
 
-  getAddress(partyInfo) {
+  getAddress(partyInfo:any) {
     let address = "";
     if (this.utilsService.isNonEmpty(partyInfo.street)) {
       address = address + partyInfo.street + ', ';
@@ -308,7 +289,7 @@ export class BusinessProfileComponent implements OnInit {
   }
 
 
-  getPartyInfoByGSTIN(gstin) {
+  getPartyInfoByGSTIN(gstin:any) {
     return new Promise((resolve, reject) => {
       NavbarService.getInstance(this.http).getPartyInfoByGSTIN({ gstin: gstin }).subscribe(res => {
         console.log(res)
@@ -320,7 +301,7 @@ export class BusinessProfileComponent implements OnInit {
     })
   }
 
-  getS3Image(imagePath) {
+  getS3Image(imagePath:any) {
     return new Promise((resolve, reject) => {
       if (imagePath) {
         Storage.get(imagePath)
@@ -336,7 +317,7 @@ export class BusinessProfileComponent implements OnInit {
     });
   }
 
-  setBusinessLogo(files) {
+  setBusinessLogo(files:any) {
     if (files && files[0]) {
       this.bLogoLoader = true;
       let extention = ".png";
@@ -366,7 +347,7 @@ export class BusinessProfileComponent implements OnInit {
     }
   }
 
-  setBusinessSignature(files) {
+  setBusinessSignature(files:any) {
     if (files && files[0]) {
       this.bSignatureLoader = true;
       let extention = ".png";
@@ -396,7 +377,7 @@ export class BusinessProfileComponent implements OnInit {
     }
   }
 
-  setGSTCertificate(files) {
+  setGSTCertificate(files:any) {
     if (files && files[0]) {
       this.gstCertLoader = true;
       let extention = ".png";
@@ -471,7 +452,7 @@ export class BusinessProfileComponent implements OnInit {
 
   }
 
-  viewUrl(url) {
+  viewUrl(url:any) {
     window.open(url);
   }
 
@@ -570,13 +551,13 @@ export class BusinessProfileComponent implements OnInit {
     });
   }
 
-  onEnterIFSCCode(event) {
+  onEnterIFSCCode(event:any) {
     this.merchantData.gstDetails.bankInformation.ifscCode = event.target.value;
     if (this.ifscBounceBackTimeObj) {
       clearTimeout(this.ifscBounceBackTimeObj);
     }
     this.ifscBounceBackTimeObj = setTimeout(() => {
-      if (this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length == 11) {
+      if (this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length === 11) {
         let param = `/${this.merchantData.gstDetails.bankInformation.ifscCode}`;
         this.thirdPartyService.getBankDetailByIFSCCode(param).subscribe((res: any) => {
           console.log("Bank details by IFSC:", res)
@@ -602,7 +583,7 @@ export class BusinessProfileComponent implements OnInit {
     }, 300);
   }
 
-  onFoucusOutOfIFSCCode(event) {
+  onFoucusOutOfIFSCCode(event:any) {
     console.log(this.merchantData.gstDetails.bankInformation.ifscCode)
     console.log(event.target.value)
     if (this.merchantData.gstDetails.bankInformation.ifscCode && this.merchantData.gstDetails.bankInformation.ifscCode.length != 11) {
@@ -657,7 +638,7 @@ export class BusinessProfileComponent implements OnInit {
     // })
   }
 
-  onSelectGSTReturnCalendar(event) {
+  onSelectGSTReturnCalendar(event:any) {
     if (event && event.id) {
       this.selected_gst_return_calendars_data = event;
     }
@@ -789,7 +770,7 @@ export class BusinessProfileComponent implements OnInit {
 
   }
 
-  addGstOpeningBalance(balanceUpdate) {
+  addGstOpeningBalance(balanceUpdate:any) {
     NavbarService.getInstance(this.http).addOpeningBalance(balanceUpdate).subscribe(res => {
       console.log("Opening Balance Added result", res);
       this.opBalCreditObj = res
@@ -802,7 +783,7 @@ export class BusinessProfileComponent implements OnInit {
     });
   }
 
-  updateGstOpeningBalance(balanceUpdate) {
+  updateGstOpeningBalance(balanceUpdate:any) {
     NavbarService.getInstance(this.http).updateOpeningBalance(balanceUpdate).subscribe(res => {
       console.log("Opening Balance updated result", res);
       this.opBalCreditObj = res

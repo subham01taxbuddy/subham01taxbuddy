@@ -1,27 +1,24 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, AfterContentChecked } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { UserMsService } from 'app/services/user-ms.service';
-import { ITR_JSON } from 'app/shared/interfaces/itr-input.interface';
-import { AppConstants } from 'app/shared/constants';
-import { UtilsService } from 'app/services/utils.service';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { WhatsAppDialogComponent } from '../whats-app-dialog/whats-app-dialog.component';
 import { KommunicateDialogComponent } from '../kommunicate-dialog/kommunicate-dialog.component';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { ToastMessageService } from 'app/services/toast-message.service';
-import { UserNotesComponent } from 'app/shared/components/user-notes/user-notes.component';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 
 @Component({
   selector: 'app-update-status',
   templateUrl: './update-status.component.html',
   styleUrls: ['./update-status.component.css']
 })
-export class UpdateStatusComponent implements OnInit {
+export class UpdateStatusComponent implements OnInit, AfterContentChecked {
   fillingStatus = new FormControl('', Validators.required);
   currentUrl: any = '';
   // ITR_JSON: ITR_JSON;
-  @Input('userId') userId: any;
+  @Input() userId: any;
   @Output() sendValue = new EventEmitter<any>();
   fillingMasterStatus = [
     // {
@@ -179,8 +176,11 @@ export class UpdateStatusComponent implements OnInit {
     }
   ]
 
-  constructor(private userMsService: UserMsService, public utilsService: UtilsService, private route: Router, private dialog: MatDialog,
-    private _toastMessageService: ToastMessageService, private router: Router) {
+  constructor(private userMsService: UserMsService,
+     public utilsService: UtilsService, 
+     private route: Router, private dialog: MatDialog,
+    private _toastMessageService: ToastMessageService,
+     private router: Router) {
     // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
@@ -195,7 +195,7 @@ export class UpdateStatusComponent implements OnInit {
   }
   async getFilingStatus() {
     const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
       this.utilsService.showSnackBar('There is no any active filing year available')
       return;
@@ -204,7 +204,7 @@ export class UpdateStatusComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe(result => {
       console.log('Filing status for drop down:', result);
       if (result instanceof Array) {
-        const completedStatus = result.filter(item => item.completed === 'true' || item.completed === true)
+        const completedStatus = result.filter((item:any) => item.completed === 'true' || item.completed === true)
         const ids = completedStatus.map(status => status.statusId);
         const sorted = ids.sort((a, b) => a - b);
         this.fillingStatus.setValue(sorted[sorted.length - 1])
@@ -214,7 +214,7 @@ export class UpdateStatusComponent implements OnInit {
     })
   }
 
-  getUserKommunicateChat(kommunicateGroupId) {
+  getUserKommunicateChat(kommunicateGroupId:any) {
     let param = `/gateway/kommunicate/chat/user/${kommunicateGroupId}`;
     this.userMsService.getMethodInfo(param).subscribe(result => {
       console.log('User kommunicate chat data: ', result);
@@ -240,7 +240,7 @@ export class UpdateStatusComponent implements OnInit {
 
   async updateStatus() {
     const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter(item => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
       this.utilsService.showSnackBar('There is no any active filing year available')
       return;
@@ -255,7 +255,7 @@ export class UpdateStatusComponent implements OnInit {
     }
 
     // this.loading = true;
-    this.userMsService.postMethod(param, request).subscribe(result => {
+    this.userMsService.postMethod(param, request).subscribe((result:any) => {
       console.log('##########################', result['statusId']);
       this.utilsService.showSnackBar('Filing status updated successfully.')
       this.sendValue.emit(result['statusId']);

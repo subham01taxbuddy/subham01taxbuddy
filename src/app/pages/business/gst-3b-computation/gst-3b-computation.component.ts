@@ -1,10 +1,11 @@
-import { NumericEditor } from './../../../shared/numeric-editor.component';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+
+import { Component, OnInit, AfterViewInit, DoCheck } from '@angular/core';
 import { NavbarService } from '../../../services/navbar.service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from '../../../services/toast-message.service';
 import { HttpClient } from '@angular/common/http';
 import { GridOptions, RowNode } from 'ag-grid-community';
+import { NumericEditorComponent } from 'src/app/modules/shared/numeric-editor.component';
 
 @Component({
   selector: 'app-gst-3b-computation',
@@ -12,7 +13,7 @@ import { GridOptions, RowNode } from 'ag-grid-community';
   styleUrls: ['./gst-3b-computation.component.css']
 })
 
-export class GST3BComputationComponent implements OnInit, AfterViewInit {
+export class GST3BComputationComponent implements OnInit, AfterViewInit, DoCheck {
   selected_merchant: any;
   loading: boolean = false;
   merchantData: any;
@@ -29,15 +30,15 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
     private navbarService: NavbarService,
     public router: Router, public http: HttpClient,
     public _toastMessageService: ToastMessageService) {
-    NavbarService.getInstance(null).component_link_2 = 'gst-3b-computation';
-    NavbarService.getInstance(null).component_link_3 = '';
-    NavbarService.getInstance(null).showBtns = 'gst-3b-computation';
+    NavbarService.getInstance().component_link_2 = 'gst-3b-computation';
+    NavbarService.getInstance().component_link_3 = '';
+    NavbarService.getInstance().showBtns = 'gst-3b-computation';
 
     this.computationGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.computationCreateColoumnDef(),
+      columnDefs: this.computationcreateColumnDef(),
       frameworkComponents: {
-        numericEditor: NumericEditor,
+        numericEditor: NumericEditorComponent,
       },
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
@@ -53,7 +54,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
       }),
     };
   }
-  getPinnedBottomData(data) {
+  getPinnedBottomData(data:any) {
     return [
       {
         taxId: 'Total',
@@ -66,7 +67,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
   }
 
   calTotalRowData() {
-    var rowData = this.computationGridOptions.api.getRenderedNodes();
+    var rowData:any = this.computationGridOptions.api?.getRenderedNodes();
     let sales = 0;
     let purchases = 0;
     let opBal = 0;
@@ -83,8 +84,8 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
       liability: sales - (purchases + opBal)
     }
   }
-  onCellValueChanged(event) {
-    this.computationGridOptions.api.setPinnedBottomRowData([this.calTotalRowData()])
+  onCellValueChanged(event:any) {
+    this.computationGridOptions.api?.setPinnedBottomRowData([this.calTotalRowData()])
   }
 
   ngAfterViewInit() {
@@ -95,40 +96,40 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
     })
   }
   ngOnInit() {
-    if (!NavbarService.getInstance(null).isSessionValid()) {
+    if (!NavbarService.getInstance().isSessionValid()) {
       this.router.navigate(['']);
       return;
     }
 
-    this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
-    this.onSelectGSTReturnData(NavbarService.getInstance(null).selected_gst_return_calendars_data);
+    this.onSelectMerchant(NavbarService.getInstance().merchantData);
+    this.onSelectGSTReturnData(NavbarService.getInstance().selected_gst_return_calendars_data);
   }
 
   ngDoCheck() {
-    if (NavbarService.getInstance(null).isMerchantChanged && NavbarService.getInstance(null).merchantData) {
-      this.onSelectMerchant(NavbarService.getInstance(null).merchantData);
-      NavbarService.getInstance(null).isMerchantChanged = false;
+    if (NavbarService.getInstance().isMerchantChanged && NavbarService.getInstance().merchantData) {
+      this.onSelectMerchant(NavbarService.getInstance().merchantData);
+      NavbarService.getInstance().isMerchantChanged = false;
     }
 
-    if (NavbarService.getInstance(null).isGSTReturnCalendarChanged && NavbarService.getInstance(null).selected_gst_return_calendars_data) {
-      this.onSelectGSTReturnData(NavbarService.getInstance(null).selected_gst_return_calendars_data);
-      NavbarService.getInstance(null).isGSTReturnCalendarChanged = false;
+    if (NavbarService.getInstance().isGSTReturnCalendarChanged && NavbarService.getInstance().selected_gst_return_calendars_data) {
+      this.onSelectGSTReturnData(NavbarService.getInstance().selected_gst_return_calendars_data);
+      NavbarService.getInstance().isGSTReturnCalendarChanged = false;
     }
 
-    if (NavbarService.getInstance(null).isApplyBtnClicked) {
-      NavbarService.getInstance(null).isApplyBtnClicked = false;
+    if (NavbarService.getInstance().isApplyBtnClicked) {
+      NavbarService.getInstance().isApplyBtnClicked = false;
       this.getGST3BGrid();
     }
   }
 
-  onSelectMerchant(event) {
+  onSelectMerchant(event:any) {
     if (event && event.userId) {
       this.selected_merchant = event;
       this.getMerchantDetails(event);
     }
   }
 
-  getMerchantDetails(merchant) {
+  getMerchantDetails(merchant:any) {
     this.loading = true;
     this.merchantData = null;
     NavbarService.getInstance(this.http).getGetGSTMerchantDetail(merchant.userId).subscribe(res => {
@@ -171,7 +172,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
     })
   }
 
-  createGST3BData(gst3BCompData, openingBalanceData) {
+  createGST3BData(gst3BCompData:any, openingBalanceData:any) {
     // this.gst3bComputation["id"] = gst3BCompData["id"] || null;
 
     // this.gst3bComputation["salesIgst"] = gst3BCompData["salesIgst"] || 0;
@@ -209,8 +210,8 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
     // this.gst3bComputation["opBalLateFee"] = openingBalanceData["lateFee"] || 0;
     // this.gst3bComputation["opBalTotal"] = openingBalanceData["opBalTotal"] || 0;
 
-    this.computationGridOptions.api.setRowData(this.createRowData(gst3BCompData, openingBalanceData));
-    this.computationGridOptions.api.setPinnedBottomRowData([this.calTotalRowData()])
+    this.computationGridOptions.api?.setRowData(this.createRowData(gst3BCompData, openingBalanceData));
+    this.computationGridOptions.api?.setPinnedBottomRowData([this.calTotalRowData()])
 
     this.loading = false;
   }
@@ -244,7 +245,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
         businessId: this.currentMerchantData.userId,
         gstReturnCalendarId: this.selected_gst_return_calendars_data.id,
       }
-      NavbarService.getInstance(this.http).getOpeningBalance(params).subscribe(openingBal => {
+      NavbarService.getInstance(this.http).getOpeningBalance(params).subscribe((openingBal:any) => {
         if (openingBal) {
           return resolve(openingBal);
         } else {
@@ -259,7 +260,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSelectGSTReturnData(event) {
+  onSelectGSTReturnData(event:any) {
     if (event && event.id) {
       this.selected_gst_return_calendars_data = event;
       // this.gst3bComputation.gstReturnCalendarId = event.id;
@@ -285,7 +286,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
   }
 
   returnUpdated3BComputation() {
-    const rowData3B = this.computationGridOptions.api.getRenderedNodes();
+    const rowData3B:any = this.computationGridOptions.api?.getRenderedNodes();
     const totalRowData = this.calTotalRowData();
     const gst3B = {
       id: this.gst3BCompData.id,
@@ -325,7 +326,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
   }
 
   returnUpdatedOpeningBalance() {
-    const rowData3B = this.computationGridOptions.api.getRenderedNodes();
+    const rowData3B:any = this.computationGridOptions.api?.getRenderedNodes();
     return {
       id: this.openingBalanceData.id,
       igst: rowData3B[0].data.opBal,
@@ -338,7 +339,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
     }
   }
 
-  updateGst3BComputation(gst3BCompData) {
+  updateGst3BComputation(gst3BCompData:any) {
     return new Promise((resolve, reject) => {
       NavbarService.getInstance(this.http).updateGST3BComputation(gst3BCompData).subscribe(res => {
         return resolve(res);
@@ -351,7 +352,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
     });
   }
 
-  updateOpeningBalance(openingBal) {
+  updateOpeningBalance(openingBal:any) {
     return new Promise((resolve, reject) => {
       NavbarService.getInstance(this.http).updateOpeningBalance(openingBal).subscribe(res => {
         return resolve(res);
@@ -364,7 +365,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
     });
   }
 
-  computationCreateColoumnDef() {
+  computationcreateColumnDef() {
     return [
       {
         headerName: ' ',
@@ -378,13 +379,13 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
         field: 'sales',
         suppressMovable: true,
         cellEditor: 'numericEditor',
-        editable: function (params) {
+        editable: function (params:any) {
           return (params.data.taxId === 'Late Fees' || params.data.taxId === 'Interest') ? true : false;
         },
-        valueFormatter: function valueFormatter(params) {
+        valueFormatter: function valueFormatter(params:any) {
           return params.data.sales ? (Math.round(params.data.sales * 100) / 100).toLocaleString('en-IN') : params.data.sales;
         },
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           if (params.data.taxId === 'Late Fees' || params.data.taxId === 'Interest') {
             return { 'text-align': "right", 'cursor': 'pointer' }
           } else {
@@ -396,7 +397,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
         headerName: 'GST paid on purchases during the month',
         field: 'purchases',
         suppressMovable: true,
-        valueFormatter: function valueFormatter(params) {
+        valueFormatter: function valueFormatter(params:any) {
           if (params.data.purchases && params.data.purchases !== 'NA') {
             return (Math.round(params.data.purchases * 100) / 100).toLocaleString('en-IN')
           } else {
@@ -411,18 +412,18 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
         headerName: 'Op. Bal. of Credit',
         field: 'opBal',
         suppressMovable: true,
-        editable: function (params) {
+        editable: function (params:any) {
           return (params.data.opBal === 'NA' || params.data.taxId === 'Total') ? false : true;
         },
         cellEditor: 'numericEditor',
-        valueFormatter: function valueFormatter(params) {
+        valueFormatter: function valueFormatter(params:any) {
           if (params.data.opBal && params.data.opBal !== 'NA') {
             return (Math.round(params.data.opBal * 100) / 100).toLocaleString('en-IN')
           } else {
             return params.data.opBal
           }
         },
-        cellStyle: function (params) {
+        cellStyle: function (params:any) {
           if (params.data.opBal === 'NA' || params.data.taxId === 'Total') {
             return { 'text-align': "right", 'cursor': 'not-allowed' }
           } else {
@@ -434,7 +435,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
         headerName: 'Net GST Payable',
         field: 'liability',
         suppressMovable: true,
-        valueFormatter: function calculatePayable(params) {
+        valueFormatter: function calculatePayable(params:any) {
           const purchases = params.data.purchases === 'NA' ? 0 : params.data.purchases;
           const opBal = params.data.opBal === 'NA' ? 0 : params.data.opBal;
           const inc = (params.data.sales - (purchases + opBal));
@@ -446,7 +447,7 @@ export class GST3BComputationComponent implements OnInit, AfterViewInit {
     ];
   }
 
-  createRowData(gst3BCompData, openingBalanceData) {
+  createRowData(gst3BCompData:any, openingBalanceData:any) {
     return [{
       taxId: 'IGST',
       sales: gst3BCompData['salesIgst'],

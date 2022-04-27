@@ -1,34 +1,41 @@
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-balham.css";
-@import "~ng-pick-datetime/assets/style/picker.min.css";
+
+// @import "~ng-pick-datetime/assets/style/picker.min.css";
 // @import "~ag-grid/src/styles/ag-grid";
 .ag-theme-balham .ag-root {
   min-height: 82px !important;
 }
+
 .ag-root-wrapper-body.ag-layout-normal {
   flex: 1 1 auto;
   height: 100%;
   /* min-height: 0; */
 }
+
 .ag-header-cell-label .ag-header-cell-text {
   white-space: normal !important;
 }
+
 /* .ag-overlay-wrapper {
   vertical-align: bottom !important;
 } */
 .ag-theme-balham .ag-header-cell-label {
   justify-content: center;
 }
+
 .ag-overlay-wrapper {
   align-items: flex-end;
   padding-bottom: 15px;
 }
+
 /* input type number style */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 /* .modal {
   position: fixed;
   top: 0;
@@ -75,13 +82,16 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
 .mat-form-field {
   width: 100% !important;
 }
+
 .mat-error {
   display: block;
   font-size: 11px;
@@ -96,12 +106,15 @@ body {
   vertical-align: middle;
   border: #d9dcde solid 1px !important;
 }
+
 .ag-theme-balham .invalid-row {
   border: 1px solid sandybrown !important;
 }
+
 .ag-theme-balham .ag-root {
   min-height: 62px !important;
 }
+
 .ag-overlay-wrapper {
   vertical-align: bottom !important;
 }
@@ -121,4 +134,28 @@ body {
 
 .mat-expansion-panel-body {
   padding: 0px !important;
+}
+
+
+.tbd-btn {
+  display: inline-block;
+  /* min-width: 129px; */
+  margin: 8px;
+  padding: 12px 15px;
+  text-align: center;
+  /* font-size: 1.166666667em; */
+  font-weight: 600;
+  line-height: 1em;
+  text-decoration: none;
+  border-radius: 5px;
+  transition-property: color, background-color;
+  transition-duration: 0.25s;
+  cursor: pointer;
+  border: none;
+  background-color: #22374e;
+  color: #fff;
+}
+
+.tbd-btn:hover {
+  background-color: #307E00;
 }
