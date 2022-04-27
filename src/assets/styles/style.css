@@ -246,11 +246,11 @@ a {
   z-index: 40;
 }
 
-.left-sidebar + .left-sidebar {
+.left-sidebar+.left-sidebar {
   display: none;
 }
 
-.left-sidebar.fixed + .left-sidebar {
+.left-sidebar.fixed+.left-sidebar {
   display: block;
   position: relative;
   z-index: 1;
@@ -302,11 +302,17 @@ a {
 /* TABS */
 
 .main {
-  max-width: 1300px;
+  /* max-width: 1300px;
   padding-top: 30px;
   padding-left: 170px;
   padding-right: 30px;
+  margin: auto; */
+  max-width: 1400px;
+  padding-top: 5px;
+  padding-left: 170px;
+  padding-right: 5px;
   margin: auto;
+
 }
 
 .tab {
@@ -602,11 +608,11 @@ a {
   border-style: solid;
 }
 
-.variant__container > .hidder > .hidder__line {
+.variant__container>.hidder>.hidder__line {
   padding: 15px 0;
 }
 
-.variant__container .hidder__content > .card__row:first-child {
+.variant__container .hidder__content>.card__row:first-child {
   margin-top: 0;
 }
 
@@ -623,7 +629,7 @@ a {
   padding-bottom: 0;
 }
 
-.variant__shop-tab-panel .hidder > .hidder__line {
+.variant__shop-tab-panel .hidder>.hidder__line {
   padding: 25px 0;
 }
 
@@ -837,7 +843,8 @@ a {
 }
 
 .popup-bill-invoice-modal .modal-content {
-  max-height: calc(100vh - 69px); /*140px*/
+  max-height: calc(100vh - 69px);
+  /*140px*/
   min-height: calc(100vh - 0px);
 }
 
@@ -1001,27 +1008,15 @@ a {
 /*.register-closure__table>.report-table__body>.report-table__row>.report-table__cell:nth-child(3),
 .register-closure__table>.report-table__head>.report-table__row>.report-table__cell:nth-child(3)  { min-width: 3.75em; } /* # */
 
-.register-closure__table
-  > .report-table__body
-  > .report-table__row
-  > .report-table__cell:nth-child(4),
-.register-closure__table
-  > .report-table__head
-  > .report-table__row
-  > .report-table__cell:nth-child(4) {
+.register-closure__table>.report-table__body>.report-table__row>.report-table__cell:nth-child(4),
+.register-closure__table>.report-table__head>.report-table__row>.report-table__cell:nth-child(4) {
   min-width: 12.0833333em;
 }
 
 /* Time opened */
 
-.register-closure__table
-  > .report-table__body
-  > .report-table__row
-  > .report-table__cell:nth-child(5),
-.register-closure__table
-  > .report-table__head
-  > .report-table__row
-  > .report-table__cell:nth-child(5) {
+.register-closure__table>.report-table__body>.report-table__row>.report-table__cell:nth-child(5),
+.register-closure__table>.report-table__head>.report-table__row>.report-table__cell:nth-child(5) {
   min-width: 10.416666667em;
 }
 
@@ -1042,9 +1037,7 @@ a {
 /*.register-closure__table>.report-table__body>.report-table__row>.report-table__cell:nth-child(10),
 .register-closure__table>.report-table__head>.report-table__row>.report-table__cell:nth-child(10) { min-width: 11.66666667em; } /* Cash */
 
-.sale-table
-  .report-table__row:not(.report-table__row_top-head)
-  .report-table__cell:last-child {
+.sale-table .report-table__row:not(.report-table__row_top-head) .report-table__cell:last-child {
   border-right: none;
 }
 
@@ -1052,10 +1045,7 @@ a {
   width: 50%;
 }
 
-.gift-card-details
-  > .report-table__head
-  > .report-table__row_top-head
-  > .report-table__cell {
+.gift-card-details>.report-table__head>.report-table__row_top-head>.report-table__cell {
   border-bottom: none;
 }
 
@@ -1089,11 +1079,7 @@ a {
   margin-bottom: 0;
 }
 
-.draggable-container
-  .container
-  .card__col-xs-6:first-child
-  .image
-  + .image__main-text {
+.draggable-container .container .card__col-xs-6:first-child .image+.image__main-text {
   display: block;
 }
 
@@ -1217,14 +1203,17 @@ a {
     font-size: 1.25em;
     padding-bottom: 10px;
   }
+
   .tab__item_active {
     padding-bottom: 7px;
   }
+
   .content,
   .right-sidebar {
     float: none;
     width: 100%;
   }
+
   .main {
     padding-top: 0;
   }
@@ -1239,6 +1228,7 @@ a {
     position: relative;
     margin: 0 20px;
   }
+
   .header__logo-img {
     background-image: none;
     width: 100%;
@@ -1251,9 +1241,11 @@ a {
     -webkit-transition: background 0s 0.3s;
     transition: background 0s 0.3s;
   }
+
   .header__logo-img_open {
     background: transparent;
   }
+
   .header__logo-img:after,
   .header__logo-img:before {
     position: absolute;
@@ -1267,38 +1259,45 @@ a {
     -webkit-transition-delay: 0.3s, 0s;
     transition-delay: 0.3s, 0s;
   }
+
   .header__logo-img_open:after,
   .header__logo-img_open:before {
     -webkit-transition-delay: 0s, 0.3s;
     transition-delay: 0s, 0.3s;
   }
+
   .header__logo-img:before {
     top: -15px;
     -webkit-transition-property: top, -webkit-transform;
     transition-property: top, transform;
   }
+
   .header__logo-img_open:before {
     top: 0;
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
   }
+
   .header__logo-img:after {
     bottom: -15px;
     -webkit-transition-property: bottom, -webkit-transform;
     transition-property: bottom, transform;
   }
+
   .header__logo-img_open:after {
     bottom: 0;
     -webkit-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     transform: rotate(-45deg);
   }
+
   .main {
     margin: 0;
     padding-right: 10px;
     padding-left: 10px;
   }
+
   .left-sidebar {
     height: auto;
     min-height: auto;
@@ -1307,12 +1306,15 @@ a {
     -o-transition: left 0.25s ease-in-out;
     transition: left 0.25s ease-in-out;
   }
+
   .left-sidebar_open .left-sidebar {
     left: 0px;
   }
+
   .card__row {
     margin-top: 15px;
   }
+
   .card__col-xs-1,
   .card__col-xs-2,
   .card__col-xs-3,
@@ -1327,36 +1329,43 @@ a {
   .card__col-xs-12 {
     margin-top: 15px;
   }
-  .hidder__line > .card__col-xs-1,
-  .hidder__line > .card__col-xs-2,
-  .hidder__line > .card__col-xs-3,
-  .hidder__line > .card__col-xs-4,
-  .hidder__line > .card__col-xs-5,
-  .hidder__line > .card__col-xs-6,
-  .hidder__line > .card__col-xs-7,
-  .hidder__line > .card__col-xs-8,
-  .hidder__line > .card__col-xs-9,
-  .hidder__line > .card__col-xs-10,
-  .hidder__line > .card__col-xs-11,
-  .hidder__line > .card__col-xs-12 {
+
+  .hidder__line>.card__col-xs-1,
+  .hidder__line>.card__col-xs-2,
+  .hidder__line>.card__col-xs-3,
+  .hidder__line>.card__col-xs-4,
+  .hidder__line>.card__col-xs-5,
+  .hidder__line>.card__col-xs-6,
+  .hidder__line>.card__col-xs-7,
+  .hidder__line>.card__col-xs-8,
+  .hidder__line>.card__col-xs-9,
+  .hidder__line>.card__col-xs-10,
+  .hidder__line>.card__col-xs-11,
+  .hidder__line>.card__col-xs-12 {
     margin-top: 0px;
   }
+
   .calendar-input {
     position: static;
   }
+
   .calendar-input .calendar {
     left: 0;
   }
+
   .calendar {
     min-width: auto;
   }
+
   .calendar__box {
     float: none;
     width: 100%;
   }
+
   .expander__text {
     margin-bottom: 10px;
   }
+
   .input-group__checkbox {
     padding-top: 0px;
   }
@@ -1366,35 +1375,44 @@ a {
   .wrapper {
     padding-top: 109px;
   }
+
   .no-header-buttons .wrapper {
     padding-top: 70px;
   }
+
   .left-sidebar.fixed {
     height: auto;
     padding-top: 109px;
   }
+
   .header__buttons {
     float: none;
     clear: both;
     text-align: center;
   }
+
   .btn:visited,
   .btn {
     margin-top: 10px;
     margin-bottom: 10px;
   }
+
   .header__logo {
     height: 50px;
   }
+
   .breadcrumbs {
     line-height: 50px;
   }
+
   .header__logo-img {
     top: 23px;
   }
+
   .modifier__cell-price {
     flex-basis: 50%;
   }
+
   .ogp_images__text {
     padding: 0;
   }
@@ -1404,6 +1422,7 @@ a {
   .card__toggle .input-toggle_label {
     display: none;
   }
+
   .modifier__table .table__property .table__cell_checkbox,
   .modifier__table .table__property .table__cell-duplicate,
   .modifier__table .table__property .table__cell-edit,
@@ -1414,27 +1433,34 @@ a {
   .variant__table .table__property .table__cell-toggle {
     display: none;
   }
+
   .variant__name,
   .modifier__name {
     flex-basis: 100%;
   }
+
   .modal-footer {
     text-align: center;
   }
+
   .modal-footer .btn {
     margin-left: 0;
   }
+
   .popup-product-edit .modal-content {
     min-height: 400px;
   }
+
   .header__buttons {
     padding-right: 0;
     white-space: nowrap;
   }
+
   .variant__add-links,
   .modifier__add-link {
     padding: 7px 20px;
   }
+
   .btn {
     margin: 5px 0 10px;
   }

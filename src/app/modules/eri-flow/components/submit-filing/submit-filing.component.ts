@@ -5,7 +5,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
-
+declare let $: any;
 @Component({
   selector: 'app-submit-filing',
   templateUrl: './submit-filing.component.html',
@@ -86,6 +86,8 @@ export class SubmitFilingComponent implements OnInit {
         this.isValidateJson = false;
         this.utilsService.showSnackBar('Something went wrong, try after some time.');
       })
+    } else {
+      $('input.ng-invalid').first().focus();
     }
   }
 
@@ -111,13 +113,11 @@ export class SubmitFilingComponent implements OnInit {
             if (res.messages instanceof Array && res.messages.length > 0)
               this.utilsService.showSnackBar(res.messages[0].desc);
           }
-        }
-        else {
+        } else {
           this.validateJsonResponse = '';
           if (res.errors instanceof Array && res.errors.length > 0) {
             this.utilsService.showSnackBar(res.errors[0].desc);
-          }
-          else if (res.messages instanceof Array && res.messages.length > 0) {
+          } else if (res.messages instanceof Array && res.messages.length > 0) {
             this.utilsService.showSnackBar(res.messages[0].desc);
           }
         }
