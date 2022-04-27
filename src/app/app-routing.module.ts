@@ -25,6 +25,9 @@ export const appRoutes: Routes = [
   {
     path: 'eri', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/eri-flow/eri-flow.module').then(m => m.EriFlowModule)
   },
+  {
+    path: 'tasks', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/tasks/tasks.module').then(m => m.TasksModule)
+  },
   { path: '**', redirectTo: 'login' },
 ];
 
