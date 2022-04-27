@@ -452,7 +452,11 @@ export class UserListComponent implements OnInit {
           break;
         }
         case 'add-client': {
-          this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan, eriClientValidUpto: params.data.eriClientValidUpto } });
+          if (environment.production) {
+            this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan, eriClientValidUpto: params.data.eriClientValidUpto } });
+          } else {
+            this._toastMessageService.alert("error", 'You can not access add client on testing environment');
+          }
           break;
         }
       }
