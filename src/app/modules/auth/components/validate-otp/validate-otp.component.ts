@@ -67,9 +67,9 @@ export class ValidateOtpComponent implements OnInit {
     }
   }
 
-  /* resendOTP() {
+  resendOTP() {
     this.isError = false;
-    if (this.otpMode === 'FORGOT_PASSWORD') {
+    // if (this.otpMode === 'FORGOT_PASSWORD') {
       Auth.forgotPassword(this.username)
         .then(res => {
           console.log('FORGOT_PASSWORD code resent successfully:', res);
@@ -85,6 +85,6 @@ export class ValidateOtpComponent implements OnInit {
           this.errorMessage = err.message;
           console.log('FORGOT_PASSWORD code resent failure:', err);
         });
-    }
-  } */
+    // }
+  }
 }

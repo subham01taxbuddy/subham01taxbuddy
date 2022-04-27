@@ -22,7 +22,11 @@
       <mat-error class="error-msg" *ngIf="otpForm.controls['password'].hasError('minlength')">
         Minimum 6 characters required.</mat-error>
     </mat-form-field>
-
+    <div>
+      <div class="card__col-xs-12 card__col-sm-12" style="text-align: right;">
+        <a class="green-link green-link-toggle" (click)="resendOTP()">Resend OTP</a>
+      </div>
+    </div>
 
     <div class="row" *ngIf="isError">
       <div class='mat-error '>
@@ -42,8 +46,8 @@
 
     <div class="form-group clearfix">
       <button type="submit" (click)="otpValidationMethod()" class="btn whiteTxt uppercase loginbt"
-        [style.cursor]="busy ?'not-allowed':'pointer'"
-        [disabled]="busy">{{busy ? 'Validating OTP...':'SUBMIT'}}</button>
+        [style.cursor]="busy ?'not-allowed':'pointer'" [disabled]="busy">{{busy ? 'Validating
+        OTP...':'SUBMIT'}}</button>
     </div>
 
     <!-- Didn't receive a OTP? <br>
