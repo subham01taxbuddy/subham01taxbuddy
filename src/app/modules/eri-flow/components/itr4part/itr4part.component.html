@@ -8,7 +8,7 @@
                     <input type="text" placeholder="Nature of business" aria-label="Assignee" matInput
                         formControlName="natureOfBusiness44AD" [matAutocomplete]="auto1" (blur)="getCodeFromLabelOnBlur()">
                     <!-- <i class="material-icons align-arrow-right">arrow_drop_down</i>-->
-                    <mat-error *ngIf="natureOfBusinessForm.controls['natureOfBusiness44AD.invalid">
+                    <mat-error *ngIf="natureOfBusinessForm.controls['natureOfBusiness44AD'].invalid">
                         Please select value from dropdown only.
                     </mat-error>
                     <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn">    <!-- (optionSelected)="getCodeFromLabelOnBlur()"-->
@@ -102,7 +102,7 @@
                     <input placeholder="Nature of business" aria-label="Assignee" matInput
                         formControlName="natureOfBusiness44ADA" [matAutocomplete]="auto2" (blur)="getCodeFromLabelOnBlur44ADA()">
                     <!-- <i class="material-icons align-arrow-right">arrow_drop_down</i>-->
-                    <mat-error *ngIf="natureOfBusinessForm.controls['natureOfBusiness44ADA.invalid">
+                    <mat-error *ngIf="natureOfBusinessForm.controls['natureOfBusiness44ADA'].invalid">
                         Please select value from dropdown only.
                     </mat-error>
                     <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">   <!--(optionSelected)="getCodeFromLabelOnBlur()"-->

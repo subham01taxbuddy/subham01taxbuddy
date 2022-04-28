@@ -573,7 +573,7 @@ export class SumaryDialogComponent implements OnInit {
       this.housingShow.showCoOwner = false;
       (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['coOwners'] = this.fb.array([]);
 
-      //summaryDialogForm.controls['houseProperties.controls['coOwners.controls[i].controls['panNumber']
+      //summaryDialogForm.controls['houseProperties'].controls['coOwners'].controls[i].controls['panNumber']
 
       // this.summaryDialogForm.controls['name'].setValidators(null);
       // this.summaryDialogForm.controls['panNumber'].setValidators(null);
@@ -948,8 +948,8 @@ export class SumaryDialogComponent implements OnInit {
         (this.summaryDialogForm.controls['donations']as FormGroup).controls['amountInCash'].setValidators([Validators.required]);
         (this.summaryDialogForm.controls['donations']as FormGroup).controls['amountOtherThanCash'].setValidators(null);
         (this.summaryDialogForm.controls['donations']as FormGroup).controls['amountOtherThanCash'].updateValueAndValidity();
-        // this.summaryDialogForm.controls['donations.controls['dneeAmountOtherThanCash'].setValidators([Validators.required]);
-        // this.summaryDialogForm.controls['donations.controls['amountInCash'].setValidators(null);
+        // this.summaryDialogForm.controls['donations'].controls['dneeAmountOtherThanCash'].setValidators([Validators.required]);
+        // this.summaryDialogForm.controls['donations'].controls['amountInCash'].setValidators(null);
       }
     }
 

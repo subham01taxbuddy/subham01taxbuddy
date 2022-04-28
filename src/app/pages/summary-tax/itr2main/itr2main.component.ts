@@ -2101,8 +2101,8 @@ export class Itr2mainComponent implements OnInit {
           this.bankData.push(bankBody);
         }
         console.log('bankData: ', this.bankData)
-        // this.itrSummaryForm.controls['assesse.controls['bankDetails'].setValue(this.bankData);
-        // console.log('bankDetails info: ',this.itrSummaryForm.controls['assesse.controls['bankDetails.value)
+        // this.itrSummaryForm.controls['assesse'].controls['bankDetails'].setValue(this.bankData);
+        // console.log('bankDetails info: ',this.itrSummaryForm.controls['assesse'].controls['bankDetails.value)
       }
     }
     
@@ -4727,7 +4727,7 @@ export class Itr2mainComponent implements OnInit {
 
       } else {
         this.bankData.push(latestBankInfo)
-        // this.itrSummaryForm.controls['assesse.controls['bankDetails'].setValue(this.bankData)
+        // this.itrSummaryForm.controls['assesse'].controls['bankDetails'].setValue(this.bankData)
       }
     }
     else if (action === 'Edit') {
@@ -4876,11 +4876,11 @@ export class Itr2mainComponent implements OnInit {
       this.computationOfIncomeForm.controls['housePropertyIncome'].setValue(totalTaxableIncome)
       this.createHouseDataObj(this.houseArray, action, null);
       this.calculateTotalHeadWiseIncome();
-      // console.log('BEFORE SAVE SUMMARY Housing Data:=> ', this.itrSummaryForm.controls['assesse.controls['houseProperties.value)
+      // console.log('BEFORE SAVE SUMMARY Housing Data:=> ', this.itrSummaryForm.controls['assesse'].controls['houseProperties.value)
     }
     else if (action === 'Edit') {
       this.houseArray.splice(index, 1, housingData.house)
-      //this.itrSummaryForm.controls['assesse.controls['houseProperties'].setValue(this.houseArray);
+      //this.itrSummaryForm.controls['assesse'].controls['houseProperties'].setValue(this.houseArray);
 
       var totalTaxableIncome = 0;
       for (let i = 0; i < this.houseArray.length; i++) {
@@ -5081,7 +5081,7 @@ export class Itr2mainComponent implements OnInit {
       this.calculateTotalHeadWiseIncome();
       //this.calculateGrossTotalIncome();     //Calculate point 4 (Total gross salary)
 
-      //this.itrSummaryForm.controls['assesse.controls['employers'].setValue(this.employerArray)
+      //this.itrSummaryForm.controls['assesse'].controls['employers'].setValue(this.employerArray)
 
       console.log('Salary Data: ', this.salaryItrratedData);
       //console.log('ITR formData: ', this.itrSummaryForm.value);
@@ -5091,7 +5091,7 @@ export class Itr2mainComponent implements OnInit {
   setDonationValue(latestDonationInfo, action, index) {
     if (action === 'Add') {
       this.donationData.push(latestDonationInfo);
-      //this.itrSummaryForm.controls['assesse.controls['donations'].setValue(this.donationData);
+      //this.itrSummaryForm.controls['assesse'].controls['donations'].setValue(this.donationData);
       this.itr_2_Summary.assesse.donations = this.donationData;
       console.log('Donation sec 80G: ', this.donationData)
       this.getdeductionTotal(this.donationData)
@@ -5099,7 +5099,7 @@ export class Itr2mainComponent implements OnInit {
     else if (action === 'Edit') {
 
       this.donationData.splice(index, 1, latestDonationInfo);
-      // this.itrSummaryForm.controls['assesse.controls['donations'].setValue(this.donationData);
+      // this.itrSummaryForm.controls['assesse'].controls['donations'].setValue(this.donationData);
       this.itr_2_Summary.assesse.donations = this.donationData;
       console.log('Donation sec 80G after update: ', this.donationData)
       this.getdeductionTotal(this.donationData)
@@ -7342,7 +7342,7 @@ export class Itr2mainComponent implements OnInit {
 
         insuranceData.push(obj);
         this.itr_2_Summary.assesse.insurances = insuranceData;
-        //this.itrSummaryForm.controls['assesse.controls['insurances'].setValue(insuranceData)
+        //this.itrSummaryForm.controls['assesse'].controls['insurances'].setValue(insuranceData)
       }
       if (this.utilService.isNonEmpty(this.deductionAndRemainForm.controls['healthInsuPremiumForParent'].value)) {
         let obj = {
@@ -7359,17 +7359,17 @@ export class Itr2mainComponent implements OnInit {
         insuranceData.push(obj);
         
         this.itr_2_Summary.assesse.insurances = insuranceData;
-        // this.itrSummaryForm.controls['assesse.controls['insurances'].setValue(insuranceData)
+        // this.itrSummaryForm.controls['assesse'].controls['insurances'].setValue(insuranceData)
       }
 
       if (this.utilService.isNonEmpty(this.deductionAndRemainForm.controls['paraentAge'].value)) {
         if (this.deductionAndRemainForm.controls['paraentAge'].value === 'bellow60') {
           this.itr_2_Summary.assesse.systemFlags.hasParentOverSixty = false;
-          // this.itrSummaryForm.controls['assesse.controls['systemFlags.controls['hasParentOverSixty'].setValue(false)
+          // this.itrSummaryForm.controls['assesse'].controls['systemFlags.controls['hasParentOverSixty'].setValue(false)
         }
         else if (this.deductionAndRemainForm.controls['paraentAge'].value === 'above60') {
           this.itr_2_Summary.assesse.systemFlags.hasParentOverSixty = true;
-          //this.itrSummaryForm.controls['assesse.controls['systemFlags.controls['hasParentOverSixty'].setValue(true)
+          //this.itrSummaryForm.controls['assesse'].controls['systemFlags.controls['hasParentOverSixty'].setValue(true)
         }
       }
 
@@ -7716,7 +7716,7 @@ export class Itr2mainComponent implements OnInit {
 
         console.log('presumptiveIncomes ==> ', presumData)
 
-        // this.itrSummaryForm.controls['assesse.controls['business.controls['presumptiveIncomes'].setValue(presumData)
+        // this.itrSummaryForm.controls['assesse'].controls['business.controls['presumptiveIncomes'].setValue(presumData)
         this.itr_2_Summary.assesse.business.presumptiveIncomes = presumData;
         console.log('this.itr_2_Summary.assesse.business.presumptiveIncomes ==> ', this.itr_2_Summary.assesse.business.presumptiveIncomes)
         Object.assign(this.itr_2_Summary, this.computationOfIncomeForm.value);
@@ -7761,7 +7761,7 @@ export class Itr2mainComponent implements OnInit {
     }
     else if (type === 'donationSec80G') {
       this.donationData.splice(index, 1)
-      // this.itrSummaryForm.controls['assesse.controls['donations'].setValue(this.donationData);
+      // this.itrSummaryForm.controls['assesse'].controls['donations'].setValue(this.donationData);
       this.getdeductionTotal(this.donationData)
     }
     else if (type === 'Salary') {
@@ -7778,8 +7778,8 @@ export class Itr2mainComponent implements OnInit {
     }
     else if (type === 'House') {
       this.houseArray.splice(index, 1)
-      // this.itrSummaryForm.controls['assesse.controls['houseProperties'].setValue(this.houseArray);
-      // console.log('Housing Data: ', this.itrSummaryForm.controls['assesse.controls['houseProperties.value)
+      // this.itrSummaryForm.controls['assesse'].controls['houseProperties'].setValue(this.houseArray);
+      // console.log('Housing Data: ', this.itrSummaryForm.controls['assesse'].controls['houseProperties.value)
       var totalExemptIncome = 0;
       for (let i = 0; i < this.houseArray.length; i++) {
         totalExemptIncome = totalExemptIncome + this.houseArray[i].exemptIncome;
@@ -7840,7 +7840,7 @@ export class Itr2mainComponent implements OnInit {
     if (businessInfo.valid) {
       this.businessFormValid = true;
 
-      //this.itrSummaryForm.controls['assesse.controls['business.controls['financialParticulars.patchValue(businessInfo.value);
+      //this.itrSummaryForm.controls['assesse'].controls['business.controls['financialParticulars.patchValue(businessInfo.value);
       // this.itr_2_Summary.assesse.business.financialParticulars.patchValue(businessInfo.value);  ???
       Object.assign(this.itr_2_Summary.assesse.business.financialParticulars, businessInfo.value)
       console.log('financialParticulars: ', this.itr_2_Summary.assesse.business.financialParticulars)

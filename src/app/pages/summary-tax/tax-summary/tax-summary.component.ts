@@ -2722,7 +2722,7 @@ export class TaxSummaryComponent implements OnInit {
     // 
     // Remove logic as descuss with brij, user direct enter this amount
 
-    // if (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['residentialStatus.value === 'RESIDENT' && (this.itrSummaryForm.controls['taxSummary.controls['totalIncomeAfterDeductionIncludeSR.value < 500000)) {
+    // if (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['residentialStatus'].value === 'RESIDENT' && (this.itrSummaryForm.controls['taxSummary.controls['totalIncomeAfterDeductionIncludeSR'].value < 500000)) {
     //   this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(12500)
     // } else {
     //   this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(0)

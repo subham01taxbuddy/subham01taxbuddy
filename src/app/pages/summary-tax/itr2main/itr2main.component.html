@@ -68,7 +68,7 @@
                                                 </mat-option>
                                             </mat-select>
                                             <!-- <mat-error
-                                                *ngIf="itrSummaryForm.controls['assesse.controls['itrType.hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse'].controls['itrType.hasError('required')">
                                                 Select ITR type</mat-error> -->
                                         </mat-form-field>
     
@@ -80,7 +80,7 @@
                                         <label>Taxable Income</label>
                                         <div *ngIf="!newTaxRegime">
                                             <input type="number" placeholder="Taxable Income"
-                                           required disabled [value]="this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR.value"
+                                           required disabled [value]="this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR'].value"
                                             class="disableInput">  <!-- formControlName="totalIncomeAfterDeductionIncludeSR" -->
                                         </div>
                                         <div *ngIf="newTaxRegime">
@@ -131,13 +131,13 @@
                                     <mat-label>PAN</mat-label>
                                     <input matInput placeholder="PAN"  autocomplete="off"
                                         type="text" maxlength="10" minlength="10"
-                                        required formControlName="panNumber" upperCase (blur)="getUserInfoByPan(personalInfoForm.controls['panNumber)">
+                                        required formControlName="panNumber" upperCase (blur)="getUserInfoByPan(personalInfoForm.controls['panNumber'])">
                                     <mat-error
-                                        *ngIf="personalInfoForm.controls['panNumber.hasError('required')">
+                                        *ngIf="personalInfoForm.controls['panNumber'].hasError('required')">
                                         Enter PAN number
                                     </mat-error>
                                     <mat-error
-                                        *ngIf="personalInfoForm.controls['panNumber.hasError('pattern')">
+                                        *ngIf="personalInfoForm.controls['panNumber'].hasError('pattern')">
                                         Enter valid PAN
                                         (e.g XXXXX1234X)</mat-error>
                                 </mat-form-field>
@@ -197,7 +197,7 @@
                                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                                 <mat-datepicker #picker></mat-datepicker>
                                                 <mat-error
-                                                    *ngIf="personalInfoForm.controls['dateOfBirth.hasError('required')">
+                                                    *ngIf="personalInfoForm.controls['dateOfBirth'].hasError('required')">
                                                     Select Date of
                                                     Birth</mat-error>
                                             </mat-form-field>
@@ -214,7 +214,7 @@
                                         </mat-option>
                                     </mat-select>
                                     <mat-error
-                                        *ngIf="personalInfoForm.controls['residentialStatus.hasError('required')">
+                                        *ngIf="personalInfoForm.controls['residentialStatus'].hasError('required')">
                                         Select Residential Status</mat-error>
                                 </mat-form-field>
                             </div>
@@ -226,11 +226,11 @@
                                         maxlength="12" onkeypress=" event.charCode >= 48 && event.charCode <= 57"
                                         autocomplete="off" required> 
                                     <mat-error
-                                        *ngIf="personalInfoForm.controls['aadharNumber.hasError('required')">
+                                        *ngIf="personalInfoForm.controls['aadharNumber'].hasError('required')">
                                         Enter
                                         Aadhar number</mat-error>
                                     <mat-error
-                                        *ngIf="personalInfoForm.controls['aadharNumber.hasError('pattern') || personalInfoForm.controls['aadharNumber.hasError('maxLength')">
+                                        *ngIf="personalInfoForm.controls['aadharNumber'].hasError('pattern') || personalInfoForm.controls['aadharNumber'].hasError('maxLength')">
                                         Enter
                                         12 digit aadhar number</mat-error>
                                 </mat-form-field>
@@ -243,7 +243,7 @@
                                     <input matInput placeholder="Passport No"  minlength="8"
                                         maxlength="8" autocomplete="off" formControlName="passportNumber">  
                                     <mat-error
-                                        *ngIf="personalInfoForm.controls['passportNumber.hasError('minlength')">
+                                        *ngIf="personalInfoForm.controls['passportNumber'].hasError('minlength')">
                                         Enter
                                         8 digit passport number</mat-error>
                                 </mat-form-field>
@@ -281,11 +281,11 @@
                                     <input matInput placeholder="E-mail"  maxlength="50"
                                         autocomplete="off" formControlName="email" required> 
                                     <mat-error
-                                        *ngIf="personalInfoForm.controls['email.hasError('required')">
+                                        *ngIf="personalInfoForm.controls['email'].hasError('required')">
                                         Enter email
                                     </mat-error>
                                     <mat-error
-                                        *ngIf="personalInfoForm.controls['email.hasError('pattern')">
+                                        *ngIf="personalInfoForm.controls['email'].hasError('pattern')">
                                         Enter valid
                                         email</mat-error>
                                 </mat-form-field>
@@ -301,11 +301,11 @@
                                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             onkeypress=" event.charCode >= 48 && event.charCode <= 57" required> 
                                         <mat-error
-                                            *ngIf="personalInfoForm.controls['contactNumber.hasError('required')">
+                                            *ngIf="personalInfoForm.controls['contactNumber'].hasError('required')">
                                             Enter
                                             mobile number</mat-error>
                                         <mat-error
-                                            *ngIf="personalInfoForm.controls['contactNumber.hasError('pattern') || personalInfoForm.controls['contactNumber.hasError('minlength') || personalInfoForm.controls['contactNumber.hasError('maxlength')">
+                                            *ngIf="personalInfoForm.controls['contactNumber'].hasError('pattern') || personalInfoForm.controls['contactNumber'].hasError('minlength') || personalInfoForm.controls['contactNumber'].hasError('maxlength')">
                                             Enter
                                             10 digit mobile number</mat-error>
                                     </mat-form-field>
@@ -334,11 +334,11 @@
                                                 placeholder="PIN Code" autocomplete="off" type="number" formControlName="pinCode" (blur)="getCityData(personalInfoForm.controls['pinCode, 'profile')"
                                                 required>  
                                             <mat-error
-                                                *ngIf="personalInfoForm.controls['pinCode.hasError('required')">
+                                                *ngIf="personalInfoForm.controls['pinCode'].hasError('required')">
                                                 Enter pin
                                             </mat-error>
                                             <mat-error
-                                                *ngIf="personalInfoForm.controls['pinCode.hasError('pattern')">
+                                                *ngIf="personalInfoForm.controls['pinCode'].hasError('pattern')">
                                                 Enter valid
                                                 pin
                                             </mat-error>
@@ -421,11 +421,11 @@
                                         disabled placeholder="Acknowledgement Number" formControlName="ackNumber"
                                         onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
                                     <mat-error
-                                        *ngIf="personalInfoForm.controls['ackNumber.hasError('required')">
+                                        *ngIf="personalInfoForm.controls['ackNumber'].hasError('required')">
                                         Enter
                                         acknowledgment number</mat-error>
                                     <mat-error
-                                        *ngIf="personalInfoForm.controls['ackNumber.hasError('minlength')">
+                                        *ngIf="personalInfoForm.controls['ackNumber'].hasError('minlength')">
                                         Acknowldegemant number should be 15 digit</mat-error>
                                 </mat-form-field>
                             </div>
@@ -438,7 +438,7 @@
                                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                     <mat-datepicker #picker1></mat-datepicker>
                                     <mat-error
-                                        *ngIf="personalInfoForm.controls['eFillingDate.hasError('required')">
+                                        *ngIf="personalInfoForm.controls['eFillingDate'].hasError('required')">
                                         Select
                                         Date of
                                         filling</mat-error>
@@ -721,7 +721,7 @@
                                             <mat-label>Nature of business</mat-label> 
                                             <input type="text" placeholder="Nature of business" aria-label="Assignee" matInput
                                                 formControlName="natureOfSpeculativeBusiness" [matAutocomplete]="auto3" >  <!--(blur)="getCodeFromLabelOnBlur()"-->
-                                            <mat-error *ngIf="businessIncomeForm.controls['natureOfSpeculativeBusiness.invalid">
+                                            <mat-error *ngIf="businessIncomeForm.controls['natureOfSpeculativeBusiness'].invalid">
                                                 Please select value from dropdown only.
                                             </mat-error>
                                             <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">   
@@ -793,7 +793,7 @@
                                             <mat-label>Nature of business</mat-label> 
                                             <input type="text" placeholder="Nature of business" aria-label="Assignee" matInput
                                                 formControlName="natureOfothertThanSpeculativeBusiness" [matAutocomplete]="auto3" >  <!--(blur)="getCodeFromLabelOnBlur()"-->
-                                            <mat-error *ngIf="businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness.invalid">
+                                            <mat-error *ngIf="businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].invalid">
                                                 Please select value from dropdown only.
                                             </mat-error>
                                             <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">   
@@ -866,7 +866,7 @@
                                             <mat-label>Nature of business</mat-label> 
                                             <input type="text" placeholder="Nature of business" aria-label="Assignee" matInput
                                                 formControlName="natureOfothertThanSpeculativeProfession" [matAutocomplete]="auto3" >  <!--(blur)="getCodeFromLabelOnBlur()"-->
-                                            <mat-error *ngIf="businessIncomeForm.controls['natureOfothertThanSpeculativeProfession.invalid">
+                                            <mat-error *ngIf="businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].invalid">
                                                 Please select value from dropdown only.
                                             </mat-error>
                                             <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">   
@@ -939,7 +939,7 @@
                                             <mat-label>Nature of business</mat-label> 
                                             <input type="text" placeholder="Nature of business" aria-label="Assignee" matInput
                                                 formControlName="natureOfothertThanSpeculativeBusiness" [matAutocomplete]="auto3" >
-                                            <mat-error *ngIf="businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness.invalid">
+                                            <mat-error *ngIf="businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].invalid">
                                                 Please select value from dropdown only.
                                             </mat-error>
                                             <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayFn">   
@@ -1277,7 +1277,7 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>  
-                                <div class="card__col-lg-3" *ngIf="newItrSumChanges && this.deductionAndRemainForm.controls['paraentAge.value === 'above60'">
+                                <div class="card__col-lg-3" *ngIf="newItrSumChanges && this.deductionAndRemainForm.controls['paraentAge'].value === 'above60'">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Medical Expendature</mat-label>
                                         <input matInput placeholder="Medical Expendature"
@@ -1833,28 +1833,28 @@
                                 <tr>
                                     <td></td>
                                     <td>Short Term Capital Gain @ slab rate (Refer Annexure)</td>
-                                    <td><input type="number" [(ngModel)]="capital_Gain.shortTermCapitalGain" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls['regime.value === 'N' || personalInfoForm.controls['regime.value === ''" maxlength="8"></td>
+                                    <td><input type="number" [(ngModel)]="capital_Gain.shortTermCapitalGain" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls['regime'].value === 'N' || personalInfoForm.controls['regime'].value === ''" maxlength="8"></td>
                                     <td></td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.shortTermCapitalGainTotal" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Short Term Capital Gain @ 15% (Refer Annexure)</td>
-                                    <td><input type="number" [(ngModel)]="capital_Gain.shortTermCapitalGain15" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls['regime.value === 'N' || personalInfoForm.controls['regime.value === ''" maxlength="8"></td> 
+                                    <td><input type="number" [(ngModel)]="capital_Gain.shortTermCapitalGain15" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls['regime'].value === 'N' || personalInfoForm.controls['regime'].value === ''" maxlength="8"></td> 
                                     <td></td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Long Term Capital Gain @ 10% (Refer Annexure)</td>
-                                    <td><input type="number" [(ngModel)]="capital_Gain.longTermCapitalGain10" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls['regime.value === 'N' || personalInfoForm.controls['regime.value === ''" maxlength="8"></td>  
+                                    <td><input type="number" [(ngModel)]="capital_Gain.longTermCapitalGain10" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls['regime'].value === 'N' || personalInfoForm.controls['regime'].value === ''" maxlength="8"></td>  
                                     <td></td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>Long Term Capital Gain @ 20% (Refer Annexure)</td>
-                                    <td><input type="number" [(ngModel)]="capital_Gain.longTermCapitalGain20" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls['regime.value === 'N' || personalInfoForm.controls['regime.value === ''" maxlength="8"></td>
+                                    <td><input type="number" [(ngModel)]="capital_Gain.longTermCapitalGain20" [ngModelOptions]="{standalone: true}" (blur)="calOldRegimeCapitaGain()" [disabled]="personalInfoForm.controls['regime'].value === 'N' || personalInfoForm.controls['regime'].value === ''" maxlength="8"></td>
                                     <td><input type="number" formControlName="capitalGain"  disabled maxlength="8"></td> <!--[value]="incomeFromCapGain"-->
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calNewRegimeCapitaGain()" [(ngModel)]="newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
@@ -1868,42 +1868,42 @@
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
                                     <td>Presumptive Business Income U/s 44 AD</td>
-                                    <td><input type="number" formControlName="presumptiveBusinessIncomeUs44AD"  [disabled]="personalInfoForm.controls['regime.value === 'N' || personalInfoForm.controls['regime.value === ''" maxlength="8"></td>
+                                    <td><input type="number" formControlName="presumptiveBusinessIncomeUs44AD"  [disabled]="personalInfoForm.controls['regime'].value === 'N' || personalInfoForm.controls['regime'].value === ''" maxlength="8"></td>
                                     <td></td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" (blur)="calTotalHeadWiseIncome()" [(ngModel)]="newRegimeTaxSummary.presumptiveBusinessIncomeUs44AD" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
                                     <td>Presumptive Business Income U/s 44 ADA</td>
-                                    <td><input type="number" formControlName="presumptiveBusinessIncomeUs44ADA" [disabled]="personalInfoForm.controls['regime.value === 'N' || personalInfoForm.controls['regime.value === ''" maxlength="8"></td>
+                                    <td><input type="number" formControlName="presumptiveBusinessIncomeUs44ADA" [disabled]="personalInfoForm.controls['regime'].value === 'N' || personalInfoForm.controls['regime'].value === ''" maxlength="8"></td>
                                     <td></td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.presumptiveBusinessIncomeUs44ADA" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
                                     <td>Speculative Business Income</td>
-                                    <td><input type="number" formControlName="speculativeBusinessIncome" [disabled]="personalInfoForm.controls['regime.value === 'N' || personalInfoForm.controls['regime.value === ''" maxlength="8"></td>
+                                    <td><input type="number" formControlName="speculativeBusinessIncome" [disabled]="personalInfoForm.controls['regime'].value === 'N' || personalInfoForm.controls['regime'].value === ''" maxlength="8"></td>
                                     <td></td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.speculativeBusinessIncome" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
                                     <td>Income from Other than Speculative and Presumptive - Business</td>
-                                    <td><input type="number" formControlName="incomeFromOtherThanSpeculativeAndPresumptive" [disabled]="personalInfoForm.controls['regime.value === 'N' || personalInfoForm.controls['regime.value === ''" maxlength="8"></td>
+                                    <td><input type="number" formControlName="incomeFromOtherThanSpeculativeAndPresumptive" [disabled]="personalInfoForm.controls['regime'].value === 'N' || personalInfoForm.controls['regime'].value === ''" maxlength="8"></td>
                                     <td></td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.incomeFromOtherThanSpeculativeAndPresumptive" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
                                     <td>Income from Other than Speculative and Presumptive - Profession</td>
-                                    <td><input type="number" formControlName="incomeFromOtherThanSpeculativeAndPresumptiveProfession" [disabled]="personalInfoForm.controls['regime.value === 'N' || personalInfoForm.controls['regime.value === ''" maxlength="8"></td>
+                                    <td><input type="number" formControlName="incomeFromOtherThanSpeculativeAndPresumptiveProfession" [disabled]="personalInfoForm.controls['regime'].value === 'N' || personalInfoForm.controls['regime'].value === ''" maxlength="8"></td>
                                     <td></td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.incomeFromOtherThanSpeculativeAndPresumptiveProfession" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>
                                 <tr *ngIf="itrType.itrThree">
                                     <td></td>
                                     <td>F&O</td>
-                                    <td><input type="number" formControlName="futureAndOption" [disabled]="personalInfoForm.controls['regime.value === 'N' || personalInfoForm.controls['regime.value === ''" maxlength="8"></td>
+                                    <td><input type="number" formControlName="futureAndOption" [disabled]="personalInfoForm.controls['regime'].value === 'N' || personalInfoForm.controls['regime'].value === ''" maxlength="8"></td>
                                     <td><input type="number" formControlName="presumptiveIncome" disabled maxlength="8"></td>
                                     <td *ngIf="newItrSumChanges"> <input type="number" maxlength="8" [(ngModel)]="newRegimeTaxSummary.futureAndOption" [ngModelOptions]="{standalone: true}"></td> 
                                 </tr>

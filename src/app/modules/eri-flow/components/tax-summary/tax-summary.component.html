@@ -63,7 +63,7 @@
                                             </mat-option>
                                         </mat-select>
                                         <mat-error
-                                            *ngIf="(itrSummaryForm.get('assesse')controls['assesse'] as FormGroup).controls['itrType'].hasError('required')">
+                                            *ngIf="itrSummaryForm.controls['assesse'].controls['itrType'].hasError('required')">
                                             Select ITR type</mat-error>
                                     </mat-form-field>
 
@@ -89,13 +89,13 @@
                                 <div *ngIf="!newTaxRegime">
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
                                         *ngIf="itrSummaryForm.controls['taxSummary'].
-                                        controls.taxpayable.value >= 0 && itrSummaryForm.controls['taxSummary'].controls.taxRefund.value === 0">
+                                        controls['taxpayable'].value >= 0 && itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value === 0">
                                         <label>Tax Payable</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxpayable"
                                             disabled class="disableInput">
                                      </div>
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm.controls['taxSummary']controls.taxRefund.value > 0 || this.itrSummaryForm.controls['taxSummary']controls.taxRefund.value < 0">
+                                        *ngIf="this.itrSummaryForm.controls['taxSummary']controls['taxRefund'].value > 0 || this.itrSummaryForm.controls['taxSummary']controls['taxRefund'].value < 0">
                                         <label>Tax Refund</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxRefund"
                                             disabled class="disableInput">
@@ -104,13 +104,13 @@
 
                                  <div *ngIf="newTaxRegime">
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm.controls['taxSummary'].controls.taxpayable.value >= 0 && this.itrSummaryForm.controls['taxSummary'].controls.taxRefund.value === 0">
+                                        *ngIf="this.itrSummaryForm.controls['taxSummary'].controls['taxpayable'].value >= 0 && this.itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value === 0">
                                         <label>Tax Payable</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxpayable"
                                             disabled class="disableInput">
                                      </div>
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm.controls['taxSummary'].controls.taxRefund.value > 0 || this.itrSummaryForm.controls['taxSummary'].controls.taxRefund.value < 0">
+                                        *ngIf="this.itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value > 0 || this.itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value < 0">
                                         <label>Tax Refund</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxRefund"
                                             disabled class="disableInput">
@@ -233,7 +233,7 @@
                                             Enter
                                             Aadhar number</mat-error>
                                         <mat-error
-                                            *ngIf="itrSummaryForm.controls['assesse'].controls['aadharNumber'].hasError('pattern') || itrSummaryForm.controls['assesse.controls['aadharNumber.hasError('maxLength')">
+                                            *ngIf="itrSummaryForm.controls['assesse'].controls['aadharNumber'].hasError('pattern') || itrSummaryForm.controls['assesse'].controls['aadharNumber'].hasError('maxLength')">
                                             Enter
                                             12 digit aadhar number</mat-error>
                                     </mat-form-field>
