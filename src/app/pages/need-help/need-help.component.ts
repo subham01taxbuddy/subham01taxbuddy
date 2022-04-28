@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from 'src/app/modules/shared/components/navbar/navbar.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
 
@@ -15,7 +15,9 @@ export class NeedHelpComponent implements OnInit {
   btnDisabled: Boolean = false;
   errorMessage = '';
   fileName = '';
+  // dialogRef: any;
   constructor(
+    public dialogRef: MatDialogRef<NeedHelpComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: FormBuilder,
     private userMsService: UserMsService,
@@ -36,11 +38,10 @@ export class NeedHelpComponent implements OnInit {
       const request = {
         "code": "TAXBUDDY_TECHNICAL_ISSUE",
         "description": this.helpForm.controls['description'].value,
-        "details": this.helpForm.controls['details'].value,
-        // "agentName": "Test Agent3",
-        // "email": "test@gmail.com",
-        // "mobile": "+919999999999",
-        "fileName": this.fileName, // optional, include if there is any attachment
+        "agentName": "Test Agent3",
+        "email": "test@gmail.com",
+        "mobile": "+919999999999",
+        // "fileName": this.fileName, // optional, include if there is any attachment
         "environment": "UAT"
       };
       this.userMsService.postMethodAWSURL(param, request).subscribe(res => {
@@ -67,7 +68,9 @@ export class NeedHelpComponent implements OnInit {
       });
     }
 
-
+  }
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
 }

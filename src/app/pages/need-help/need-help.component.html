@@ -10,13 +10,13 @@
     <div>
       <label class="decr">Description</label>
       <div>
-        <textarea class="textarea" formControlName="description"></textarea>
+        <textarea class="textarea" formControlName="description" maxlength="300"></textarea>
       </div>
       <div>
         <div>
           <span class="error-msg text-align-right" *ngIf="helpForm.controls['description'].pristine 
           && helpForm.controls['description'].touched && helpForm.controls['description'].status == 'INVALID' ">
-            Please enter a valid details</span>
+            Please enter valid details</span>
         </div>
       </div>
     </div>
@@ -26,13 +26,23 @@
     </div>
 
     <div class="attch">
-      <label>Attachment</label>
+      <div id="lb"><label>Add a file</label></div>
       <div>
         <input (change)="onFileSelected($event)" type="file" id="myFile" name="filename" formControlName="filename">
       </div>
+      <div id="or"><span>or</span></div>
+      <div class="scr-shot">
+        <a href="https://chrome.google.com/webstore/detail/full-page-screenshot-capt/pojgkmkfincpdkdgjepkmdekcahmckjp"
+          target="_blank">Take
+          a Screen Shot</a>
+      </div>
     </div>
     <div class="det">
-      <input type="submit" (click)="submitForm()" [disabled]="btnDisabled">
+      <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button type="submit" (click)="submitForm()" [disabled]="!helpForm.valid" [mat-dialog-close]="true"
+          cdkFocusInitial>Submit</button>
+      </mat-dialog-actions>
     </div>
   </form>
 </div>

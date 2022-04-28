@@ -128,13 +128,13 @@ export class UserMsService {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     console.log('Post Param', param);
-    return this.httpClient.post<T>(`${environment.amazonaws_url}${this.microService}${param[0]}`, param[1], { headers: this.headers });
+    return this.httpClient.post<T>(`${environment.amazonaws_url}${param[0]}`, param[1], { headers: this.headers });
   }
 
   uploadFile(file: File): Observable<any> {
     const data = new FormData();
     data.append('file', file);
-    return this.httpClient.post(environment.url + 'itr/cloud/upload/temp', data);
+    return this.httpClient.post(environment.url + '/itr/cloud/upload/temp', data);
   }
 
 }

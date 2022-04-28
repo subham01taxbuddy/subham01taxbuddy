@@ -66,14 +66,21 @@ export class NavbarComponent implements DoCheck {
     this.router.navigate(['/pages/dashboard/calling/calling2']);
   }
 
+
+
   submit() {
-    this.dialog.open(NeedHelpComponent, {
+    const dialogRef = this.dialog.open(NeedHelpComponent, {
       data: {
       },
       width: '450px',
       height: '500px'
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
+
 
   //Http Functions
   getSingletonNavbarObj() {
