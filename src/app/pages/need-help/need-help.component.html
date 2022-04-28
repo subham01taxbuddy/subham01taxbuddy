@@ -1,0 +1,64 @@
+<div class="dialog-sec" [ngClass]="{'dnone': apiSuccess}">
+  <div>
+    <span>
+      <h2>Need Help? Please provide the details below.</h2>
+    </span>
+  </div>
+
+  <form #form="ngForm" [formGroup]="helpForm">
+
+    <div>
+      <label class="decr">Description</label>
+      <div>
+        <textarea class="textarea" formControlName="description" maxlength="300"></textarea>
+      </div>
+      <div>
+        <div>
+          <span class="error-msg text-align-right" *ngIf="helpForm.controls['description'].pristine 
+          && helpForm.controls['description'].touched && helpForm.controls['description'].status == 'INVALID' ">
+            Please enter valid details</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="det"><label>Details</label>
+      <div><textarea class="textarea" formControlName="details"></textarea></div>
+    </div>
+
+    <div class="attch">
+      <div id="lb"><label>Add a file</label></div>
+      <div>
+        <input (change)="onFileSelected($event)" type="file" id="myFile" name="filename" formControlName="filename">
+      </div>
+      <div id="or"><span>or</span></div>
+      <div class="scr-shot">
+        <a href="https://chrome.google.com/webstore/detail/full-page-screenshot-capt/pojgkmkfincpdkdgjepkmdekcahmckjp"
+          target="_blank">Take
+          a Screen Shot</a>
+      </div>
+    </div>
+    <div class="det">
+      <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button type="submit" (click)="submitForm()" [disabled]="!helpForm.valid"
+          cdkFocusInitial>Submit</button>
+      </mat-dialog-actions>
+    </div>
+  </form>
+</div>
+<!--success message after ticket creation-->
+<div *ngIf="apiSuccess">
+  <div id="sec">
+    <div id="sec1"><span>Your ticket has created successfully.</span></div>
+    <br>
+    <br>
+    <div id="sec2">
+      <p>Ticket Number : {{ticket_number}}</p>
+    </div>
+    <br>
+    <br>
+    <div id="btn-cl">
+      <button mat-button mat-dialog-close>close</button>
+    </div>
+  </div>
+</div>

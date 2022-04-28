@@ -2,6 +2,12 @@ import { Component, DoCheck } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { NeedHelpComponent } from 'src/app/pages/need-help/need-help.component';
+
+export interface DialogData {
+  animal: 'panda' | 'unicorn' | 'lion';
+}
 
 @Component({
   selector: 'app-navbar',
@@ -22,7 +28,8 @@ export class NavbarComponent implements DoCheck {
   loading: boolean = false;
 
   constructor(
-    private router: Router) { }
+    private router: Router,
+    public dialog: MatDialog) { }
 
 
 
@@ -58,6 +65,23 @@ export class NavbarComponent implements DoCheck {
   navigateToHome() {
     this.router.navigate(['/pages/dashboard/calling/calling2']);
   }
+
+
+
+  openDialog() {
+    const dialogRef = this.dialog.open(NeedHelpComponent, {
+      data: {
+      },
+      width: '450px',
+      height: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+
   //Http Functions
   getSingletonNavbarObj() {
     return NavbarService.getInstance();
@@ -69,7 +93,7 @@ export class NavbarComponent implements DoCheck {
 
   logout() {
     this.loading = true;
-   
+
     Auth.signOut()
       .then(data => {
         this.loading = false;
@@ -91,7 +115,7 @@ export class NavbarComponent implements DoCheck {
   }
 
   getLoggedInUserName() {
-    const userObj = JSON.parse(localStorage.getItem('UMD')||null);
+    const userObj = JSON.parse(localStorage.getItem('UMD') || null);
     return userObj ? (userObj.USER_F_NAME + ' ' + userObj.USER_L_NAME) : ''
   }
 }

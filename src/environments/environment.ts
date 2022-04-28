@@ -1,11 +1,12 @@
-export const environment = {
-	production: true,
-	portal_url: 'https://gst-admin.taxbuddy.com/',
-	url: "https://api.taxbuddy.com",
+export const environment: any = {
+	production: false,
+	portal_url: 'http://localhost:5400',
+	url: "https://uat-api.taxbuddy.com",
 	eri_url: "https://api.taxbuddy.com",
 	gst_gov_url: "https://devapi.gst.gov.in",
 	ifsc_url: "https://ifsc.razorpay.com",
-	matomoScriptId: '1',
+	amazonaws_url: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com",
+	matomoScriptId: '2',
 	s3_cred: {
 		// user_name: "ashish@ssbainnovations.com",
 		// password: "testPwd8761$",
@@ -29,3 +30,5 @@ export const environment = {
 		authenticationFlowType: 'USER_PASSWORD_AUTH'
 	},
 };
+
+// /prod/ticket

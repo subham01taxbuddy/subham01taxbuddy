@@ -1,7 +1,7 @@
 import { KommunicateDialogComponent } from '../../pages/itr-filing/kommunicate-dialog/kommunicate-dialog.component';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UpperCaseDirective, InputDataMaskDirective,  } from './input-data-mask.directive';
+import { UpperCaseDirective, InputDataMaskDirective, } from './input-data-mask.directive';
 import { AgGridModule } from 'ag-grid-angular';
 import { CustomDateComponent } from './date.component';
 import { MatSelectComponent } from './mat-select.component';
@@ -63,7 +63,7 @@ import { DirectCallingComponent } from './components/direct-calling/direct-calli
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
-        AgGridModule.withComponents([ CustomDateComponent, AgGridMaterialSelectEditorComponent, MatInputComponent,
+        AgGridModule.withComponents([CustomDateComponent, AgGridMaterialSelectEditorComponent, MatInputComponent,
             /* CheckboxRenderer */]),  //MatSelectComponent,
         NgxPaginationModule,
         // NgxImageZoomModule.forRoot(),
@@ -102,10 +102,10 @@ import { DirectCallingComponent } from './components/direct-calling/direct-calli
 export class SharedModule {
     static forRoot(): ModuleWithProviders<SharedModule> {
         return {
-          ngModule: SharedModule,
-          providers:[
-              
-          ]
+            ngModule: SharedModule,
+            providers: [
+
+            ]
         };
     }
- }
+}
