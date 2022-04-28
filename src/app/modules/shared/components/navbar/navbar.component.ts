@@ -68,7 +68,7 @@ export class NavbarComponent implements DoCheck {
 
 
 
-  submit() {
+  openDialog() {
     const dialogRef = this.dialog.open(NeedHelpComponent, {
       data: {
       },

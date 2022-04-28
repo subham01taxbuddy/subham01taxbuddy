@@ -124,7 +124,7 @@ export class UserMsService {
 
   }
 
-  postMethodAWSURL<T>(...param: any): Observable<T> {
+  postMethodAWSURL<T>(...param: any): Observable<any> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     console.log('Post Param', param);

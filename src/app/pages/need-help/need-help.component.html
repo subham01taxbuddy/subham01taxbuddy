@@ -1,4 +1,4 @@
-<div class="dialog-sec">
+<div class="dialog-sec" [ngClass]="{'dnone': apiSuccess}">
   <div>
     <span>
       <h2>Need Help? Please provide the details below.</h2>
@@ -40,9 +40,25 @@
     <div class="det">
       <mat-dialog-actions align="end">
         <button mat-button mat-dialog-close>Cancel</button>
-        <button mat-button type="submit" (click)="submitForm()" [disabled]="!helpForm.valid" [mat-dialog-close]="true"
+        <button mat-button type="submit" (click)="submitForm()" [disabled]="!helpForm.valid"
           cdkFocusInitial>Submit</button>
       </mat-dialog-actions>
     </div>
   </form>
+</div>
+<!--success message after ticket creation-->
+<div *ngIf="apiSuccess">
+  <div id="sec">
+    <div id="sec1"><span>Your ticket has created successfully.</span></div>
+    <br>
+    <br>
+    <div id="sec2">
+      <p>Ticket Number : {{ticket_number}}</p>
+    </div>
+    <br>
+    <br>
+    <div id="btn-cl">
+      <button mat-button mat-dialog-close>close</button>
+    </div>
+  </div>
 </div>

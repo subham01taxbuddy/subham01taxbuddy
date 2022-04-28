@@ -12,10 +12,12 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 export class NeedHelpComponent implements OnInit {
   helpForm!: FormGroup;
   isError: Boolean = false;
+  apiSuccess: Boolean = false;
   btnDisabled: Boolean = false;
   errorMessage = '';
   fileName = '';
-  // dialogRef: any;
+  ticket_number = '';
+  userData: any;
   constructor(
     public dialogRef: MatDialogRef<NeedHelpComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -28,6 +30,8 @@ export class NeedHelpComponent implements OnInit {
       details: new FormControl(''),
       filename: new FormControl(''),
     });
+    this.userData = JSON.parse(localStorage.getItem('UMD'));
+    console.log('user-data', this.userData);
   }
 
   submitForm() {
@@ -38,15 +42,21 @@ export class NeedHelpComponent implements OnInit {
       const request = {
         "code": "TAXBUDDY_TECHNICAL_ISSUE",
         "description": this.helpForm.controls['description'].value,
-        "agentName": "Test Agent3",
-        "email": "test@gmail.com",
-        "mobile": "+919999999999",
-        // "fileName": this.fileName, // optional, include if there is any attachment
+        "agentName": this.userData.USER_F_NAME + this.userData.USER_L_NAME,
+        "email": this.userData.USER_EMAIL,
+        "mobile": this.userData.USER_MOBILE,
         "environment": "UAT"
       };
+      if (this.fileName) {
+        request["fileName"] = this.fileName;
+        // optional, include if there is any attachment 
+      }
       this.userMsService.postMethodAWSURL(param, request).subscribe(res => {
-        console.log('file upload res:', res);
+        this.ticket_number = res.data.ticket_number;
+        console.log('success:', this.ticket_number);
+
         this.btnDisabled = false;
+        this.apiSuccess = true;
       }, (error) => {
         this.btnDisabled = false;
       });

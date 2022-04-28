@@ -10,12 +10,17 @@
           {{selectedPlanInfo.servicesType}}</b></span>
     </div>
     <br> -->
-    <div ><br><br>
-          <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false" href="javascript:" (click)="showSelectedServicePlans('ITR')">ITR</a>
-          <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'NOTICE' ? true : false" href="javascript:" (click)="showSelectedServicePlans('NOTICE')">NOTICE</a>
-          <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'GST' ? true : false" href="javascript:" (click)="showSelectedServicePlans('GST')">GST</a>
-          <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'TPA' ? true : false" href="javascript:" (click)="showSelectedServicePlans('TPA')">TPA</a>
-          <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ALL' ? true : false" href="javascript:" (click)="showSelectedServicePlans('ALL')">ALL</a>
+    <div><br><br>
+      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false" href="javascript:"
+        (click)="showSelectedServicePlans('ITR')">ITR</a>
+      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'NOTICE' ? true : false" href="javascript:"
+        (click)="showSelectedServicePlans('NOTICE')">NOTICE</a>
+      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'GST' ? true : false" href="javascript:"
+        (click)="showSelectedServicePlans('GST')">GST</a>
+      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'TPA' ? true : false" href="javascript:"
+        (click)="showSelectedServicePlans('TPA')">TPA</a>
+      <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ALL' ? true : false" href="javascript:"
+        (click)="showSelectedServicePlans('ALL')">ALL</a>
     </div><br><br><br><br>
 
     <div *ngIf="serviceTypeSelected">
@@ -32,7 +37,7 @@
         </div>
       </div>
     </div>
-    
+
 
   </mat-dialog-content>
 

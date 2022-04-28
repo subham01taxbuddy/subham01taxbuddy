@@ -52,3 +52,36 @@ span h2 {
 .error-msg {
   color: #FF0000;
 }
+
+.dnone {
+  display: none;
+}
+
+#sec {
+  margin-top: 100px;
+}
+
+#sec1 {
+  text-align: center;
+}
+
+#sec1 span {
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#sec2 p {
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  text-align: center;
+  align-items: center;
+}
+
+#btn-cl {
+  // font-size: 20px;
+  text-align: center;
+  align-items: center;
+}
