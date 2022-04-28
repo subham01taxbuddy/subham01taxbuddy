@@ -17,9 +17,11 @@ import { AgentUpdateComponent } from "./other-users/agent-update/agent-update.co
 import { SharedModule } from "src/app/modules/shared/shared.module";
 import { MaterialModule } from "src/app/modules/shared/material.module";
 import { AgGridModule } from "ag-grid-angular";
+import { RoleUpdateComponent } from './role-update/role-update.component';
 
 @NgModule({
-    declarations: [UserManagementComponent , UserListComponent, UserProfileComponent, ProfileDialogComponent,ChangeAgentDialogComponent, CreateNewUserComponent, OtherUsersComponent, AgentUpdateComponent, SmeUpdateComponent],
+    declarations: [UserManagementComponent , UserListComponent, UserProfileComponent, ProfileDialogComponent,ChangeAgentDialogComponent, CreateNewUserComponent, OtherUsersComponent, AgentUpdateComponent, SmeUpdateComponent,
+        RoleUpdateComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -32,7 +34,8 @@ import { AgGridModule } from "ag-grid-angular";
         UserManagementRoutingModule,
         NgxPaginationModule
     ],
-    entryComponents: [ProfileDialogComponent, ChangeAgentDialogComponent]
+    entryComponents: [ProfileDialogComponent, ChangeAgentDialogComponent,
+        RoleUpdateComponent]
 })
 
 export class UserManagementModule { }
