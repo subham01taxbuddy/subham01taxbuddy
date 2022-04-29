@@ -331,6 +331,24 @@ export class AddInvoiceComponent implements OnInit {
     }
   }
 
+  changeCountryCode(countryCode) {
+    if (countryCode === '91') {
+      this.invoiceForm.controls['pincode'].setValidators(Validators.required);
+      this.invoiceForm.controls['pincode'].updateValueAndValidity();
+
+      this.invoiceForm.controls['zipCode'].setValidators(null);
+      this.invoiceForm.controls['zipCode'].setValue(null);
+      this.invoiceForm.controls['zipCode'].updateValueAndValidity();
+    } else {
+      this.invoiceForm.controls['pincode'].setValidators(null);
+      this.invoiceForm.controls['pincode'].setValue(null);
+      this.invoiceForm.controls['pincode'].updateValueAndValidity();
+
+      this.invoiceForm.controls['zipCode'].setValidators(Validators.required);
+      this.invoiceForm.controls['zipCode'].updateValueAndValidity();
+    }
+  }
+
   getCityData(pinCode) {
     console.log(pinCode)
     if (pinCode.valid) {
@@ -358,6 +376,7 @@ export class AddInvoiceComponent implements OnInit {
     }
     this.itemList[0].itemDescription = this.serviceDetail + ' ' + this.description;
     this.invoiceForm.controls['itemList'].setValue(this.itemList);
+    console.log('Invoice Form: ', this.invoiceForm)
     if (this.invoiceForm.valid && this.checkSacCode()) {
       console.log('Invoice Form: ', this.invoiceForm)
       // if (this.utilsService.isNonEmpty(this.invoiceForm.controls['estimatedDateTime'].value) ||
@@ -609,6 +628,7 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   checkSacCode() {
+    debugger
     if (this.utilsService.isNonEmpty(this.sacCode)) {
       return true;
     }

@@ -258,7 +258,9 @@
                     <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Select country code</mat-label>
-                            <mat-select placeholder="Select country" formControlName="countryCode" required>
+                            <mat-select placeholder="Select country" formControlName="countryCode"
+                                (selectionChange)="changeCountryCode(invoiceForm.controls['countryCode'].value)"
+                                required>
                                 <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
                                     {{ country.countryCode}} ({{ country.countryName | titlecase}})
                                 </mat-option>
