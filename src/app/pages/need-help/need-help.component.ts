@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { request } from 'http';
+import { getbaseUrl } from 'ngx-doc-viewer';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DialogData } from 'src/app/modules/shared/components/navbar/navbar.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -37,11 +39,9 @@ export class NeedHelpComponent implements OnInit {
     this.userData = JSON.parse(localStorage.getItem('UMD'));
     console.log('user-data', this.userData);
   }
-
-  // save(): void {
-  //   this.loading = true;
-  //   // do your saving thing here
-  // }
+  getURL() {
+    return window.location.href;
+  }
 
   submitForm() {
     this.loading = true;
@@ -51,8 +51,8 @@ export class NeedHelpComponent implements OnInit {
       const param = `/prod/ticket`;
       const request = {
         "code": "TAXBUDDY_TECHNICAL_ISSUE",
-        "description": this.helpForm.controls['description'].value,
-        "agentName": this.userData.USER_F_NAME + this.userData.USER_L_NAME,
+        "description": this.helpForm.controls['description'].value + ' ~ screen url:' + window.location.href,
+        "agentName": this.userData.USER_F_NAME + ' ' + this.userData.USER_L_NAME,
         "email": this.userData.USER_EMAIL,
         "mobile": this.userData.USER_MOBILE,
         "environment": "UAT"
@@ -88,9 +88,6 @@ export class NeedHelpComponent implements OnInit {
       });
     }
 
-  }
-  onNoClick(): void {
-    this.dialogRef.close();
   }
 
 }
