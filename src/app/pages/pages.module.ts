@@ -78,6 +78,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { NeedHelpComponent } from './need-help/need-help.component';
 
+
 Auth.configure(environment.AMPLIFY_CONFIG);
 
 Storage.configure({

@@ -21,9 +21,9 @@
       </div>
     </div>
 
-    <div class="det"><label>Details</label>
+    <!-- <div class="det"><label>Details</label>
       <div><textarea class="textarea" formControlName="details"></textarea></div>
-    </div>
+    </div> -->
 
     <div class="attch">
       <div id="lb"><label>Add a file</label></div>
@@ -37,14 +37,21 @@
           a Screen Shot</a>
       </div>
     </div>
+    <!-- <div>
+      <div style="text-align:center">
+        <button mat-raised-button color="primary" [class.spinner]="loading" [disabled]="loading"
+          (click)="save()">Save</button>
+      </div>
+    </div> -->
     <div class="det">
       <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>Cancel</button>
-        <button mat-button type="submit" (click)="submitForm()" [disabled]="!helpForm.valid"
-          cdkFocusInitial>Submit</button>
+        <button mat-button color="warn" mat-dialog-close>Cancel</button>
+        <button mat-button color="primary" [class.spinner]="loading" [disabled]="loading" type="submit"
+          (click)="submitForm()" [disabled]="!helpForm.valid" cdkFocusInitial>Submit</button>
       </mat-dialog-actions>
     </div>
   </form>
+
 </div>
 <!--success message after ticket creation-->
 <div *ngIf="apiSuccess">
