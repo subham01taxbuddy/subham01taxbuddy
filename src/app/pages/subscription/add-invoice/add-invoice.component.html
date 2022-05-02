@@ -194,8 +194,7 @@
                             <input formControlName="zipCode" maxlength="6"
                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 onkeypress=" event.charCode >= 48 && event.charCode <= 57" matInput
-                                placeholder="ZIP Code" autocomplete="off"
-                                 required>
+                                placeholder="ZIP Code" autocomplete="off" required>
                             <mat-error *ngIf="invoiceForm.controls['zipCode'].hasError('required')">Enter pin
                             </mat-error>
                             <mat-error *ngIf="invoiceForm.controls['zipCode'].hasError('pattern')">Enter valid
@@ -219,7 +218,7 @@
                                 autocomplete="off">
                         </mat-form-field>
                     </div>
-              
+
                     <div class="card__col-lg-4" *ngIf="!invoiceForm.controls['zipCode'].value">
                         <mat-form-field appearance="outline">
                             <mat-label>Country</mat-label>
@@ -259,15 +258,14 @@
                     <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Select country code</mat-label>
-                            <mat-select placeholder="Select country" formControlName="countryCode"
-                                required>
+                            <mat-select placeholder="Select country" formControlName="countryCode" required>
                                 <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
                                     {{ country.countryCode}} ({{ country.countryName | titlecase}})
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
-                   <div class="card__col-lg-4">
+                    <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Phone</mat-label>
                             <input formControlName="phone" onkeypress=" event.charCode >= 48 && event.charCode <= 57"
@@ -431,7 +429,7 @@
                         </div>
                         <div style="float: right;" class="card__col-lg-5"
                             *ngIf="(this.utilsService.isNonEmpty(userSubscription) && this.utilsService.isNonEmpty(userSubscription.promoCode)) ||isUpdateInvoice">
-                            ₹{{this.invoiceForm.controls.discountTotal.value}}
+                            ₹{{this.invoiceForm.controls['discountTotal'].value}}
                             <!-- ₹{{ getExactPromoDiscount() }} -->
                         </div>
 
@@ -447,38 +445,38 @@
                         </div>
 
                         <div style="float: right;" class="card__col-lg-5" *ngIf="isUpdateInvoice">
-                            <input [(ngModel)]="this.invoiceForm.controls.total.value"
+                            <input [(ngModel)]="this.invoiceForm.controls['total']"
                                 [ngModelOptions]="{standalone: true}"
-                                (blur)="setFinalAmount(this.invoiceForm.controls.total.value)"
+                                (blur)="setFinalAmount(this.invoiceForm.controls['total'].value)"
                                 placeholder="Final Amount" autocomplete="off">
                         </div>
                         <div style="float: right;" class="card__col-lg-5" *ngIf="!isUpdateInvoice">₹
-                            {{ this.invoiceForm.controls.total.value}}
+                            {{ this.invoiceForm.controls['total'].value}}
                         </div>
 
                         <div class="card__col-lg-7">Taxable Value</div>
                         <div style="float: right;" class="card__col-lg-5">₹
                             <!-- {{this.utilsService.isNonEmpty(this.userSubscription.promoApplied) ? this.userSubscription.promoApplied.basePrice : this.getTaxableValue()}} -->
-                            {{this.invoiceForm.controls['subTotal.value}}
+                            {{this.invoiceForm.controls['subTotal.value']}}
                         </div>
 
 
                         <div *ngIf="isMaharashtraState" class="card__col-lg-7">CGST (9%)</div>
                         <div *ngIf="isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.invoiceForm.controls['cgstTotal.value}}
+                            {{this.invoiceForm.controls['cgstTotal'].value}}
                         </div>
 
                         <div *ngIf="isMaharashtraState" class="card__col-lg-7">SGST (9%)</div>
                         <div *ngIf="isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.invoiceForm.controls['sgstTotal.value}}
+                            {{this.invoiceForm.controls['sgstTotal'].value}}
                         </div>
                         <div *ngIf="!isMaharashtraState" class="card__col-lg-7">IGST (18%)</div>
                         <div *ngIf="!isMaharashtraState" style="float: right;" class="card__col-lg-5">₹
-                            {{this.invoiceForm.controls['igstTotal.value}}
+                            {{this.invoiceForm.controls['igstTotal.value']}}
                         </div>
                         <div class="card__col-lg-7 bold">Total</div>
                         <div style="float: right;" class="card__col-lg-5 bold">₹
-                            {{this.invoiceForm.controls['total.value}}</div>
+                            {{this.invoiceForm.controls['total.value']}}</div>
                     </div>
                 </div>
             </mat-card>
