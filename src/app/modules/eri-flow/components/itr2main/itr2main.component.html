@@ -149,7 +149,7 @@
                                                 <input matInput placeholder="First Name" 
                                                     maxlength="75" autocomplete="off" formControlName="fName" required>
                                                 <mat-error
-                                                    *ngIf="personalInfoForm.controls['fName'].hasError('required')">
+                                                    *ngIf="personalInfoForm.controls['fname'].hasError('required')">
                                                     Enter first
                                                     name
                                                 </mat-error>
@@ -160,7 +160,7 @@
                                                 <mat-label>Middle Name</mat-label>
                                                 <input matInput placeholder="Middle Name" formControlName="mName"
                                                     maxlength="75" autocomplete="off" > <!--name="family[i]"-->
-                                                <mat-error *ngIf="personalInfoForm.controls['mName'].hasError('required')">Enter middle name
+                                                <mat-error *ngIf="personalInfoForm.controls['mName'] && personalInfoForm.controls['mName'].hasError('required')">Enter middle name
                                                 </mat-error>
                                             </mat-form-field>
                                         </div>

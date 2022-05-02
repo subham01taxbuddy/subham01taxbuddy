@@ -2973,7 +2973,7 @@ export class TaxSummaryComponent implements OnInit {
           details: ''
         }
 
-        this.incomeData.push(incomeObj);
+        this.incomeData.push(incomeObj)
           (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['incomes'].setValue(this.incomeData)
       }
 

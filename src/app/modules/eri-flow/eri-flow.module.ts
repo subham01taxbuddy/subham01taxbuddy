@@ -10,7 +10,13 @@ import { PrefillDataComponent } from "./components/prefill-data/prefill-data.com
 import { GenerateSummaryComponent } from "./components/generate-summary/generate-summary.component";
 import { SubmitFilingComponent } from "./components/submit-filing/submit-filing.component";
 import { EVerifyComponent } from "./components/e-verify/e-verify.component";
-import { TaxSummaryComponent } from "src/app/pages/summary-tax/tax-summary/tax-summary.component";
+import { SumaryDialogComponent } from "./components/sumary-dialog/sumary-dialog.component";
+import { Itr4partComponent } from "./components/itr4part/itr4part.component";
+import { Itr2mainComponent } from "./components/itr2main/itr2main.component";
+import { NewItrSummaryComponent } from "./components/new-itr-summary/new-itr-summary.component";
+import { ItrOneComponent } from "./components/new-itr-summary/itr-one/itr-one.component";
+import { ItrThreeComponent } from "./components/new-itr-summary/itr-three/itr-three.component";
+import { TaxSummaryComponent } from "./components/tax-summary/tax-summary.component";
 
 @NgModule({
     declarations: [
@@ -21,6 +27,14 @@ import { TaxSummaryComponent } from "src/app/pages/summary-tax/tax-summary/tax-s
         SubmitFilingComponent,
         EVerifyComponent,
         // TaxSummaryComponent
+
+        TaxSummaryComponent,
+        SumaryDialogComponent, 
+        Itr4partComponent,
+        Itr2mainComponent,
+        NewItrSummaryComponent, 
+        ItrOneComponent,
+        ItrThreeComponent
     ],
     imports: [
         CommonModule,

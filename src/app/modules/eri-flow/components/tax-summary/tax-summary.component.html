@@ -338,11 +338,11 @@
                                                 (blur)="getCityData(itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode'], 'profile')"
                                                 required>
                                             <mat-error
-                                                *ngIf=" itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode'].hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode'].hasError('required')">
                                                 Enter pin
                                             </mat-error>
                                             <mat-error
-                                                *ngIf=" itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode'].hasError('pattern')">
+                                                *ngIf="itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode'].hasError('pattern')">
                                                 Enter valid
                                                 pin
                                             </mat-error>
