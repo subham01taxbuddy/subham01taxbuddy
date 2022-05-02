@@ -25,19 +25,10 @@ const routes: Routes = [
                     },
                 ]
             },
-            { path: '', redirectTo: '/eri/direct-filing', pathMatch: 'full' }
-        ],
-
-            // { path: 'itrFirst', component: TaxSummaryComponent},
-            // { path: 'itrSecond', component: Itr2mainComponent },
-            // { path: 'new-summary', component: NewItrSummaryComponent,
-            //     children: [
-            //         {path: 'itr-one', component: ItrOneComponent},
-            //         {path: 'itr-three', component: ItrThreeComponent}
-            //     ]
-            // },
-            // { path: '', redirectTo: '/eri/direct-filing', pathMatch: 'full' }
-    }];
+            
+        ]
+    },
+    { path: '', redirectTo: '/eri/direct-filing', pathMatch: 'full' }];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],

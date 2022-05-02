@@ -12,17 +12,17 @@ export class GenerateSummaryComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
-    this.router.navigate(['/eri/direct-filing/itrFirst']);
+    // this.router.navigate(['/eri/direct-filing/itrFirst']);
   }
 
-  tabClick(tab: any){
-      console.log(tab);
-      if(tab.index === 0){
-        this.router.navigate(['/eri/direct-filing/itrFirst']);
-      }
-      else{
-        this.router.navigate(['/eri/direct-filing/new-summary/itr-one']);
-      }
-  }
+   tabClick(tab: any){
+  //     console.log(tab);
+  //     if(tab.index === 0){
+  //       this.router.navigate(['/eri/direct-filing/itrFirst']);
+  //     }
+  //     else{
+  //       this.router.navigate(['/eri/direct-filing/new-summary/itr-one']);
+  //     }
+   }
 
 }
