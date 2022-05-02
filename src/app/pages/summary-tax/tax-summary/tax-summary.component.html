@@ -63,7 +63,7 @@
                                             </mat-option>
                                         </mat-select>
                                         <mat-error
-                                            *ngIf="itrSummaryForm.controls['assesse'].controls['itrType.hasError('required')">
+                                            *ngIf="itrSummaryForm.controls['assesse'].controls['itrType'].hasError('required')">
                                             Select ITR type</mat-error>
                                     </mat-form-field>
 
@@ -88,13 +88,14 @@
 
                                 <div *ngIf="!newTaxRegime">
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm.controls['taxSummary.controls['taxpayable.value >= 0 && this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value === 0">
+                                        *ngIf="itrSummaryForm.controls['taxSummary'].
+                                        controls['taxpayable'].value >= 0 && itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value === 0">
                                         <label>Tax Payable</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxpayable"
                                             disabled class="disableInput">
                                      </div>
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value > 0 || this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value < 0">
+                                        *ngIf="this.itrSummaryForm.controls['taxSummary']controls['taxRefund'].value > 0 || this.itrSummaryForm.controls['taxSummary']controls['taxRefund'].value < 0">
                                         <label>Tax Refund</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxRefund"
                                             disabled class="disableInput">
@@ -103,13 +104,13 @@
 
                                  <div *ngIf="newTaxRegime">
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm.controls['taxSummary.controls['taxpayable.value >= 0 && this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value === 0">
+                                        *ngIf="this.itrSummaryForm.controls['taxSummary'].controls['taxpayable'].value >= 0 && this.itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value === 0">
                                         <label>Tax Payable</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxpayable"
                                             disabled class="disableInput">
                                      </div>
                                     <div class="card__col-lg-3" formGroupName="taxSummary"
-                                        *ngIf="this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value > 0 || this.itrSummaryForm.controls['taxSummary.controls['taxRefund.value < 0">
+                                        *ngIf="this.itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value > 0 || this.itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value < 0">
                                         <label>Tax Refund</label>
                                         <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxRefund"
                                             disabled class="disableInput">
@@ -126,14 +127,14 @@
                                 <mat-label>PAN</mat-label>
                                 <input matInput placeholder="PAN" formControlName="panNumber" autocomplete="off"
                                     type="text" maxlength="10" minlength="10"
-                                    (blur)="getUserInfoByPan(itrSummaryForm.controls['assesse'].controls['panNumber)"
+                                    (blur)="getUserInfoByPan(itrSummaryForm.controls['assesse'].controls['panNumber'])"
                                     required upperCase>
                                 <mat-error
-                                    *ngIf="itrSummaryForm.controls['assesse'].controls['panNumber.hasError('required')">
+                                    *ngIf="itrSummaryForm.controls['assesse'].controls['panNumber'].hasError('required')">
                                     Enter PAN number
                                 </mat-error>
                                 <mat-error
-                                    *ngIf="itrSummaryForm.controls['assesse'].controls['panNumber.hasError('pattern')">
+                                    *ngIf="itrSummaryForm.controls['assesse'].controls['panNumber'].hasError('pattern')">
                                     Enter valid PAN
                                     (e.g XXXXX1234X)</mat-error>
                             </mat-form-field>
@@ -148,7 +149,7 @@
                                             <input matInput placeholder="First Name" formControlName="fName"
                                                 maxlength="75" autocomplete="off" name="family[i]">
                                             <mat-error
-                                                *ngIf="itrSummaryForm.controls['assesse'].controls['family.controls[i].controls['fName'].hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse'].controls['family'].controls[i].controls['fName'].hasError('required')">
                                                 Enter first
                                                 name
                                             </mat-error>
@@ -169,7 +170,7 @@
                                             <input matInput placeholder="Last Name" formControlName="lName"
                                                 maxlength="75" autocomplete="off" required name="family[i]">
                                             <mat-error
-                                                *ngIf="itrSummaryForm.controls['assesse'].controls['family.controls[i].controls['lName'].hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse'].controls['family'].controls[i].controls['lName'].hasError('required')">
                                                 Enter last
                                                 name
                                             </mat-error>
@@ -182,7 +183,7 @@
                                             <input matInput placeholder="Father Name" formControlName="fathersName"
                                                 maxlength="75" autocomplete="off">
                                             <mat-error
-                                                *ngIf="itrSummaryForm.controls['assesse'].controls['family.controls[i].controls['fathersName'].hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse'].controls['family'].controls[i].controls['fathersName'].hasError('required')">
                                                 Enter
                                                 father name</mat-error>
                                         </mat-form-field>
@@ -196,7 +197,7 @@
                                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                             <mat-datepicker #picker></mat-datepicker>
                                             <mat-error
-                                                *ngIf="itrSummaryForm.controls['assesse'].controls['family.controls[i].controls['dateOfBirth'].hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse'].controls['family'].controls[i].controls['dateOfBirth'].hasError('required')">
                                                 Select Date of
                                                 Birth</mat-error>
                                         </mat-form-field>
@@ -661,7 +662,7 @@
 
                     <div *ngIf="itrType.itrFour">
                         <div class="tableHead">Annexure: Income from Business or Profession</div><br>
-                        <app-itr4part [itrType]="itrSummaryForm.controls['assesse'].controls['itrType.value"
+                        <app-itr4part [itrType]="itrSummaryForm.controls['assesse'].controls['itrType'].value"
                         [businessData]="this.updatBussinessInfo" [jsonParse]="isJsonParse" (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
                     </div>
 
@@ -777,7 +778,7 @@
                                 </tr>
                                 <tr>
                                     <td><b>Total: </b></td>
-                                    <td><b>{{itrSummaryForm.controls['totalExemptIncome.value}}</b></td>
+                                    <td><b>{{itrSummaryForm.controls['totalExemptIncome'].value}}</b></td>
                                     <td></td>
                                 </tr>
                              </table>
@@ -892,7 +893,7 @@
                             <tr>
                                 <td *ngIf="!newItrSumChanges" colspan="5"><b>Total</b></td>
                                 <td *ngIf="newItrSumChanges" colspan="6"><b>Total</b></td>
-                                <!--itrSummaryForm.controls['houseProperties.controls['-->
+                                <!--itrSummaryForm.controls['houseProperties'].controls-->
                                 <td><b>{{itrSummaryForm.controls['us80g'].value}}</b></td>
                             </tr>
                         </table><br><br>

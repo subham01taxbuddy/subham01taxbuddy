@@ -11,19 +11,33 @@ const routes: Routes = [
     {
         path: '', component: DirectFilingComponent,
         children: [
-            { path: 'direct-filing', component: DirectFilingComponent },
-            { path: 'itrFirst', component: TaxSummaryComponent},
-            { path: 'itrSecond', component: Itr2mainComponent },
-            { path: 'new-summary', component: NewItrSummaryComponent,
+            { path: 'direct-filing', component: DirectFilingComponent ,
+                
                 children: [
-                    {path: 'itr-one', component: ItrOneComponent},
-                    {path: 'itr-three', component: ItrThreeComponent}
+                    { path: 'itrFirst', component: TaxSummaryComponent },
+                    { path: 'itrSecond', component: Itr2mainComponent },
+                    {
+                        path: 'new-summary', component: NewItrSummaryComponent,
+                        children: [
+                            { path: 'itr-one', component: ItrOneComponent },
+                            { path: 'itr-three', component: ItrThreeComponent }
+                        ]
+                    },
                 ]
             },
             { path: '', redirectTo: '/eri/direct-filing', pathMatch: 'full' }
-        ]
-    },
-];
+        ],
+
+            // { path: 'itrFirst', component: TaxSummaryComponent},
+            // { path: 'itrSecond', component: Itr2mainComponent },
+            // { path: 'new-summary', component: NewItrSummaryComponent,
+            //     children: [
+            //         {path: 'itr-one', component: ItrOneComponent},
+            //         {path: 'itr-three', component: ItrThreeComponent}
+            //     ]
+            // },
+            // { path: '', redirectTo: '/eri/direct-filing', pathMatch: 'full' }
+    }];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],

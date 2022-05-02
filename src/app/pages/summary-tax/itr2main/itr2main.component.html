@@ -331,7 +331,7 @@
                                             <input maxlength="6"
                                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                 onkeypress=" event.charCode >= 48 && event.charCode <= 57" matInput
-                                                placeholder="PIN Code" autocomplete="off" type="number" formControlName="pinCode" (blur)="getCityData(personalInfoForm.controls['pinCode, 'profile')"
+                                                placeholder="PIN Code" autocomplete="off" type="number" formControlName="pinCode" (blur)="getCityData(personalInfoForm.controls['pinCode'], 'profile')"
                                                 required>  
                                             <mat-error
                                                 *ngIf="personalInfoForm.controls['pinCode'].hasError('required')">
