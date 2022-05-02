@@ -321,7 +321,7 @@
                                             <input matInput formControlName="premisesName" maxlength="200" placeholder="Address"
                                                 required autocomplete="off">
                                             <mat-error
-                                                *ngIf="itrSummaryForm.controls['assesse'] && itrSummaryForm.controls['assesse'].controls['address'] && itrSummaryForm.controls['assesse'].controls['address'].controls['premisesname']&& itrSummaryForm.controls['assesse'].controls['address'].controls['premisesname'].hasError('required')">
+                                                *ngIf="itrSummaryForm.controls['assesse'].controls['address'].controls['premisesName'].hasError('required')">
                                                 Enter address
                                             </mat-error>
                                         </mat-form-field>
@@ -338,11 +338,11 @@
                                                 (blur)="getCityData(itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode'], 'profile')"
                                                 required>
                                             <mat-error
-                                                *ngIf="itrSummaryForm.controls['assesse'] && itrSummaryForm.controls['assesse'].controls['address']  && itrSummaryForm.controls['assesse'].controls['address'] && itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode'] && itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode'].errors['required']">
+                                                *ngIf=" itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode'].hasError('required')">
                                                 Enter pin
                                             </mat-error>
                                             <mat-error
-                                                *ngIf="itrSummaryForm.controls['assesse'] && itrSummaryForm.controls['assesse'].controls['address']  && itrSummaryForm.controls['assesse'].controls['address'] && itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode'] && itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode'].errors['pattern']">
+                                                *ngIf=" itrSummaryForm.controls['assesse'].controls['address'].controls['pinCode'].hasError('pattern')">
                                                 Enter valid
                                                 pin
                                             </mat-error>
