@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import * as moment from 'moment';
 
 export const MY_FORMATS = {
@@ -64,7 +65,8 @@ export class CreateSmeComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private userMsService: UserMsService,
     private utilsService: UtilsService,
-    private _toastMessageService: ToastMessageService
+    private _toastMessageService: ToastMessageService,
+    private activatedRoute: ActivatedRoute,
   ) { }
 
   ngOnInit() {
@@ -95,6 +97,12 @@ export class CreateSmeComponent implements OnInit {
       assessmentYears: [['2022-2023'], [Validators.required]],
       userId: [null, Validators.required],
       smeId: [null, Validators.required]
+    });
+   
+    this.activatedRoute.queryParams.subscribe(params => {
+      console.log(params);
+      this.mobile.setValue(params['mobile']);
+      this.searchSme();
     });
   }
 

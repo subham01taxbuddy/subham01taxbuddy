@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
@@ -19,6 +20,7 @@ export class SmeListComponent implements OnInit {
   constructor(private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
+    private router:Router,
     @Inject(LOCALE_ID) private locale: string) {
     this.smeListGridOptions = <GridOptions>{
       rowData: [],
@@ -107,7 +109,7 @@ export class SmeListComponent implements OnInit {
       {
         headerName: 'Mobile No',
         field: 'mobileNumber',
-        width: 100,
+        width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -131,7 +133,7 @@ export class SmeListComponent implements OnInit {
       {
         headerName: 'Assignment',
         field: 'assignmentStart',
-        width: 180,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -143,28 +145,58 @@ export class SmeListComponent implements OnInit {
       {
         headerName: 'ITR Types',
         field: 'itrTypes',
-        width: 180,
+        width: 80,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'center' ,display: 'flex', 'align-items': 'center',
+        'justify-content': 'center'},
       },
       {
         headerName: 'Service Type',
         field: 'serviceType',
-        width: 180,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
       },
       {
         headerName: 'Active',
         field: 'active',
-        width: 100,
+        width: 80,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        // cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellStyle: function (params:any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Update',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params:any) {
+          return `<button type="button" class="action_icon add_button" title="Update SME Details"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-pencil" aria-hidden="true" data-action-type="updateSmeDetails"></i>
+           </button>`;
+        },
+        width: 80,
+        pinned: 'right',
+        cellStyle: function (params:any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
       },
     ]
   }
@@ -181,7 +213,7 @@ export class SmeListComponent implements OnInit {
         email: this.utilsService.isNonEmpty(userData[i].email) ? userData[i].email : '-',
         assignmentStart: userData[i].assignmentStart ? 'Yes' : 'No',
         active: userData[i].active ? 'Yes' : 'No',
-        itrTypes: userData[i].itrTypes,
+        itrTypes: userData[i].serviceType === 'ITR'? userData[i].itrTypes : 'NA',
         serviceType: userData[i].serviceType,
       })
       userArray.push(smeList);
@@ -195,40 +227,41 @@ export class SmeListComponent implements OnInit {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
-        case 'invoice': {
+        case 'updateSmeDetails': {
+          this.router.navigate(['sme-management/create'],{ queryParams: { mobile: params.data.mobileNumber } });
           // this.redirectTowardInvoice(params.data);
           break;
         }
-        case 'subscription': {
-          // this.redirectTowardSubscription(params.data)
-          break;
-        }
-        case 'profile': {
-          //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'User Profile'], environment.matomoScriptId);
-          // this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'User Profile'], environment.matomoScriptId)
-          // this.router.navigate(['pages/user-management/profile/' + params.data.userId])
-          break;
-        }
-        case 'link-to-finbingo': {
-          // this.linkToFinbingo(params.data.userId);
-          break;
-        }
-        case 'link-to-doc-cloud': {
-          // this.linkToDocumentCloud(params.data.userId);
-          break;
-        }
-        case 'isReviewGiven': {
-          // this.updateReviewStatus(params.data);
-          break;
-        }
-        case 'add-client': {
-          // if (environment.production) {
-          //   this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan, eriClientValidUpto: params.data.eriClientValidUpto } });
-          // } else {
-          //   this._toastMessageService.alert("error", 'You can not access add client on testing environment');
-          // }
-          break;
-        }
+        // case 'subscription': {
+        //   // this.redirectTowardSubscription(params.data)
+        //   break;
+        // }
+        // case 'profile': {
+        //   //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'User Profile'], environment.matomoScriptId);
+        //   // this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'User Profile'], environment.matomoScriptId)
+        //   // this.router.navigate(['pages/user-management/profile/' + params.data.userId])
+        //   break;
+        // }
+        // case 'link-to-finbingo': {
+        //   // this.linkToFinbingo(params.data.userId);
+        //   break;
+        // }
+        // case 'link-to-doc-cloud': {
+        //   // this.linkToDocumentCloud(params.data.userId);
+        //   break;
+        // }
+        // case 'isReviewGiven': {
+        //   // this.updateReviewStatus(params.data);
+        //   break;
+        // }
+        // case 'add-client': {
+        //   // if (environment.production) {
+        //   //   this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan, eriClientValidUpto: params.data.eriClientValidUpto } });
+        //   // } else {
+        //   //   this._toastMessageService.alert("error", 'You can not access add client on testing environment');
+        //   // }
+        //   break;
+        // }
       }
     }
   }
