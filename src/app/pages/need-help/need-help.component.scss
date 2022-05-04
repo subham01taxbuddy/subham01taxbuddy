@@ -1,0 +1,109 @@
+.dialog-sec {
+  height: 400px;
+  padding: 20px;
+}
+
+span h2 {
+  font-size: 20px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.decr {
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.det {
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.attch {
+  padding: 10px;
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.scr-shot {
+  margin: 10px 0px 10px 0px;
+
+  a {
+    text-decoration: none;
+  }
+}
+
+#lb {
+  margin: 5px 0px 5px 0px;
+}
+
+#or {
+  margin: 5px 0px 5px 70px;
+}
+
+.textarea {
+  height: 70px;
+  width: 90%
+}
+
+.error-msg {
+  color: #FF0000;
+}
+
+.dnone {
+  display: none;
+}
+
+#sec {
+  margin-top: 150px;
+}
+
+#sec1 {
+  text-align: center;
+}
+
+#sec1 span {
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#sec2 p {
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  text-align: center;
+  align-items: center;
+}
+
+#btn-cl {
+  // font-size: 20px;
+  text-align: center;
+  align-items: center;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  border-top-color: #000000;
+  animation: spinner .8s linear infinite;
+}

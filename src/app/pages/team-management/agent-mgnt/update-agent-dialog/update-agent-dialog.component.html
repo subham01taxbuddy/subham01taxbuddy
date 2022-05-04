@@ -40,9 +40,9 @@
             <mat-form-field appearance="outline">
                 <mat-label>Email: </mat-label>
                 <input matInput type="text" placeholder="Enter email" formControlName="email" maxlength="45" required>
-                <mat-error *ngIf="agentForm.controls['email.hasError('required')">
+                <mat-error *ngIf="agentForm.controls['email'].hasError('required')">
                     Enter email address</mat-error>
-                <mat-error *ngIf="agentForm.controls['email.hasError('pattern')">
+                <mat-error *ngIf="agentForm.controls['email'].hasError('pattern')">
                     Enter valid email address</mat-error>
             </mat-form-field>
         </div>
@@ -71,7 +71,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>Bot Id: </mat-label>
                 <input matInput type="text" placeholder="Enter Bot Id" formControlName="botId" maxlength="35">
-                <!-- <mat-error *ngIf="summaryDialogForm.controls['bankDetails.controls['name'].hasError('required')">
+                <!-- <mat-error *ngIf="summaryDialogForm.controls['bankDetails'].controls['name'].hasError('required')">
                 Bank name is required</mat-error> -->
             </mat-form-field>
         </div>
@@ -79,7 +79,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>Bot Name: </mat-label>
                 <input matInput type="text" placeholder="Enter Bot name" formControlName="botName" maxlength="35">
-                <!-- <mat-error *ngIf="summaryDialogForm.controls['bankDetails.controls['name'].hasError('required')">
+                <!-- <mat-error *ngIf="summaryDialogForm.controls['bankDetails'].controls['name'].hasError('required')">
                 Bank name is required</mat-error> -->
             </mat-form-field>
         </div>
@@ -87,7 +87,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>Image Url: </mat-label>
                 <input matInput type="text" placeholder="Enter Image Url" formControlName="imageUrl" maxlength="60">
-                <!-- <mat-error *ngIf="summaryDialogForm.controls['bankDetails.controls['name'].hasError('required')">
+                <!-- <mat-error *ngIf="summaryDialogForm.controls['bankDetails'].controls['name'].hasError('required')">
                 Bank name is required</mat-error> -->
             </mat-form-field>
         </div>

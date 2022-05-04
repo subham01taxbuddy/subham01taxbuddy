@@ -487,7 +487,7 @@ export class InterestedClientsComponent implements OnInit {
       //  matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', searchMobNo], environment.matomoScriptId);
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       } else {
-        this.selectedStatus=18;
+        // this.selectedStatus=18;
         this.searchMobNo = '';
         var itrStatusData = this.itrStatus.filter(item=> item.statusId === this.selectedStatus);
         if (this.showAllUser) {
@@ -519,7 +519,6 @@ export class InterestedClientsComponent implements OnInit {
       }
     }
     // param2 = `/call-management/customer-by-statusids?statusIds=2,3,4,5,6,17`
-
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
       if (result['content'] instanceof Array && result['content'].length > 0) {
