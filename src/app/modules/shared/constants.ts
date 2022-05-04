@@ -35,6 +35,7 @@ export class AppConstants {
     public static AGENT_LIST = environment.production ? 'AGENT_LIST' : 'AGENT_LIST';
     public static SELECTED_AGENT = environment.production ? 'SELECTED_AGENT' : 'SELECTED_AGENT';
     public static gstFyList = [
+        { financialYear: '2022-23' },
         { financialYear: '2021-22' },
         { financialYear: '2020-21' },
         { financialYear: '2019-20' },
@@ -42,6 +43,7 @@ export class AppConstants {
         // { financialYear: '2017-18' },
     ];
     public static subscriptionFyList = [
+        { financialYear: '2022-2023' },
         { financialYear: '2021-2022' },
         { financialYear: '2020-2021' },
     ];
