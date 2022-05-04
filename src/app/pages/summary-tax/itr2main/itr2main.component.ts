@@ -2062,6 +2062,10 @@ export class Itr2mainComponent implements OnInit {
       assessmentYear = itrData.Form_ITR2.AssessmentYear;
     }
 
+    if (assessmentYear === "2022") {
+      this.personalInfoForm.controls['assessmentYear'].setValue('2022-23')
+      this.personalInfoForm.controls['financialYear'].setValue('2021-22')
+    }else 
     if (assessmentYear === "2021") {
       this.personalInfoForm.controls['assessmentYear'].setValue('2021-22')
       this.personalInfoForm.controls['financialYear'].setValue('2020-21')

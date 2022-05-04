@@ -262,6 +262,10 @@ export class TaxSummaryComponent implements OnInit {
       assessmentYear = itrData.Form_ITR4.AssessmentYear;
     }
 
+    if (assessmentYear === "2022") {
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2022-23');
+      this.itrSummaryForm.controls['financialYear'].setValue('2021-22');
+    }else
     if (assessmentYear === "2021") {
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2021-22');
       this.itrSummaryForm.controls['financialYear'].setValue('2020-21');
