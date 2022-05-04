@@ -1,6 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { request } from 'http';
+import { getbaseUrl } from 'ngx-doc-viewer';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { DialogData } from 'src/app/modules/shared/components/navbar/navbar.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
 
@@ -14,8 +17,10 @@ export class NeedHelpComponent implements OnInit {
   isError: Boolean = false;
   apiSuccess: Boolean = false;
   btnDisabled: Boolean = false;
+  hasSubmit = true;
   errorMessage = '';
   fileName = '';
+  loading: Boolean = false;
   ticket_number = '';
   userData: any;
   constructor(
@@ -23,6 +28,7 @@ export class NeedHelpComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: FormBuilder,
     private userMsService: UserMsService,
+    private spinner: NgxSpinnerService
   ) { }
   ngOnInit(): void {
     this.helpForm = this.fb.group({
@@ -33,16 +39,20 @@ export class NeedHelpComponent implements OnInit {
     this.userData = JSON.parse(localStorage.getItem('UMD'));
     console.log('user-data', this.userData);
   }
+  getURL() {
+    return window.location.href;
+  }
 
   submitForm() {
+    this.loading = true;
     this.isError = false;
     if (this.helpForm.valid) {
       console.log('submitForm');
       const param = `/prod/ticket`;
       const request = {
         "code": "TAXBUDDY_TECHNICAL_ISSUE",
-        "description": this.helpForm.controls['description'].value,
-        "agentName": this.userData.USER_F_NAME + this.userData.USER_L_NAME,
+        "description": this.helpForm.controls['description'].value + ' ~ screen url:' + window.location.href,
+        "agentName": this.userData.USER_F_NAME + ' ' + this.userData.USER_L_NAME,
         "email": this.userData.USER_EMAIL,
         "mobile": this.userData.USER_MOBILE,
         "environment": "UAT"
@@ -78,9 +88,6 @@ export class NeedHelpComponent implements OnInit {
       });
     }
 
-  }
-  onNoClick(): void {
-    this.dialogRef.close();
   }
 
 }

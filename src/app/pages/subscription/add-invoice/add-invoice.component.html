@@ -429,7 +429,7 @@
                         </div>
                         <div style="float: right;" class="card__col-lg-5"
                             *ngIf="(this.utilsService.isNonEmpty(userSubscription) && this.utilsService.isNonEmpty(userSubscription.promoCode)) ||isUpdateInvoice">
-                            ₹{{this.invoiceForm.controls.discountTotal.value}}
+                            ₹{{this.invoiceForm.controls['discountTotal'].value}}
                             <!-- ₹{{ getExactPromoDiscount() }} -->
                         </div>
 
@@ -445,13 +445,13 @@
                         </div>
 
                         <div style="float: right;" class="card__col-lg-5" *ngIf="isUpdateInvoice">
-                            <input [(ngModel)]="this.invoiceForm.controls.total.value"
+                            <input [(ngModel)]="this.invoiceForm.controls['total']"
                                 [ngModelOptions]="{standalone: true}"
-                                (blur)="setFinalAmount(this.invoiceForm.controls.total.value)"
+                                (blur)="setFinalAmount(this.invoiceForm.controls['total'].value)"
                                 placeholder="Final Amount" autocomplete="off">
                         </div>
                         <div style="float: right;" class="card__col-lg-5" *ngIf="!isUpdateInvoice">₹
-                            {{ this.invoiceForm.controls.total.value}}
+                            {{ this.invoiceForm.controls['total'].value}}
                         </div>
 
                         <div class="card__col-lg-7">Taxable Value</div>
