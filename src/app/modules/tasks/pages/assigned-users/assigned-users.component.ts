@@ -3,20 +3,19 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
-import { MatDialog } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
-import { RoleUpdateComponent } from "../role-update/role-update.component";
+
 @Component({
-  selector: 'app-user-list',
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.css']
+  selector: 'app-assigned-users',
+  templateUrl: './assigned-users.component.html',
+  styleUrls: ['./assigned-users.component.scss']
 })
-export class UserListComponent implements OnInit {
+export class AssignedUsersComponent implements OnInit {
 
   loading!: boolean;
   usersGridOptions: GridOptions;
@@ -44,7 +43,6 @@ export class UserListComponent implements OnInit {
     private utilsService: UtilsService,
     private router: Router,
     private http: HttpClient,
-    private dialog: MatDialog,
     private itrMsService: ItrMsService,
     @Inject(LOCALE_ID) private locale: string) {
     this.usersGridOptions = <GridOptions>{
@@ -395,28 +393,6 @@ export class UserListComponent implements OnInit {
           }
         },
       },
-      {
-        headerName: 'Add Role',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Add Role" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-users" aria-hidden="true" data-action-type="add-role"></i>
-           </button>`;
-        },
-        width: 50,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
     ]
   }
 
@@ -483,10 +459,6 @@ export class UserListComponent implements OnInit {
           }
           break;
         }
-        case 'add-role': {
-            this.updateRoles(params.data);
-          break;
-        }
       }
     }
   }
@@ -545,20 +517,5 @@ export class UserListComponent implements OnInit {
     }, error => {
       this.utilsService.showSnackBar('Please try again, failed to mark as review given');
     })
-  }
-
-  updateRoles(data){
-    let disposable = this.dialog.open(RoleUpdateComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        userId: data.userId,
-        clientName: data.name
-      }
-    })
-
-    disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
   }
 }
