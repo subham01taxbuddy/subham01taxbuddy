@@ -28,6 +28,9 @@ export const appRoutes: Routes = [
   {
     path: 'tasks', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/tasks/tasks.module').then(m => m.TasksModule)
   },
+  {
+    path: 'sme-management', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/sme-management/sme-management.module').then(m => m.SmeManagementModule)
+  },
   { path: '**', redirectTo: 'login' },
 ];
 

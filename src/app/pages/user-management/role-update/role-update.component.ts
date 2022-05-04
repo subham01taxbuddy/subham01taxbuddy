@@ -16,7 +16,7 @@ export class RoleUpdateComponent implements OnInit {
   userRoles: any = [
     { label: 'User', value: 'ROLE_USER' }, // User specific bacially used from fron end only
     { label: 'Admin', value: 'ROLE_ADMIN' }, // Admin all access
-    { label: 'Super Lead', value: 'ROLE_SUPER_LEAD' }, // Admin all access
+    // { label: 'Super Lead', value: 'ROLE_SUPER_LEAD' }, // Admin all access
     { label: 'ITR Super Lead', value: 'ROLE_ITR_SL' }, // Admin all access
     { label: 'GST Super Lead', value: 'ROLE_GST_SL' }, // Admin all access
     { label: 'Notice Super Lead', value: 'ROLE_NOTICE_SL' }, // Admin all access
@@ -25,9 +25,9 @@ export class RoleUpdateComponent implements OnInit {
     { label: 'Notice Agent', value: 'ROLE_NOTICE_AGENT' }, // Admin all access
     { label: 'GST Caller', value: 'ROLE_GST_CALLER' }, // Admin all access
     { label: 'Notice Caller', value: 'ROLE_NOTICE_CALLER' }, // Admin all access
-    { label: 'Calling Team', value: 'ROLE_CALLING_TEAM' }, // ITR Caller
-    { label: 'ITR - Filer', value: 'ROLE_FILING_TEAM' }, // ITR Filer
-    { label: 'SME', value: 'ROLE_SME' }, // ITR Filer
+    // { label: 'Calling Team', value: 'ROLE_CALLING_TEAM' }, // ITR Caller
+    // { label: 'ITR - Filer', value: 'ROLE_FILING_TEAM' }, // ITR Filer
+    // { label: 'SME', value: 'ROLE_SME' }, // ITR Filer
 
     // { label: 'ITR - Super Lead', value: 'ITR_SUPER_LEAD' }, // ITR Super lead 
     // { label: 'GST - Super Lead', value: 'GST_SUPER_LEAD' }, // GST Super lead
@@ -39,15 +39,14 @@ export class RoleUpdateComponent implements OnInit {
   ];
   // userId: number;
   noteDetails = new FormControl('', Validators.required);
-  serviceType= new FormControl('', Validators.required);
-  userRole: any = new FormControl();
+  userRole: any = new FormControl([], Validators.required);
   loggedInUserDetails: any;
-  loading=false;
+  loading = false;
   constructor(public dialogRef: MatDialogRef<RoleUpdateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
     private itrMsService: ItrMsService,
     private utilsService: UtilsService,
-    private userMsService: UserMsService, 
+    private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
   ) {
     console.log('Selected UserID for notes',
@@ -70,7 +69,7 @@ export class RoleUpdateComponent implements OnInit {
         "userId": parseInt(this.data.userId),
         "role": this.userRole.value
       }
-      this.userMsService.putMethod(param, reqBody).subscribe((res:any) => {
+      this.userMsService.putMethod(param, reqBody).subscribe((res: any) => {
         this.loading = false;
         console.log("Add user roles response: ", res);
         if (this.utilsService.isNonEmpty(res['error'])) {
@@ -79,14 +78,14 @@ export class RoleUpdateComponent implements OnInit {
         }
         this._toastMessageService.alert("success", this.data.clientName + " User role updated successfully.");
       }, error => {
-          console.log("there is error : ", error);
-          this._toastMessageService.alert("error", this.data.clientName + "User role not update, try after some time.");
-          this.loading = false;
-        });
+        console.log("there is error : ", error);
+        this._toastMessageService.alert("error", this.data.clientName + "User role not update, try after some time.");
+        this.loading = false;
+      });
     }
   }
 
- 
+
 }
 
 export interface ConfirmModel {
