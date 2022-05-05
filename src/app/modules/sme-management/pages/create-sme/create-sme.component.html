@@ -119,7 +119,7 @@
 
         <div class="card__col-xs-12 card__col-sm-3">
           <mat-form-field appearance="outline">
-            <mat-label>Status</mat-label>
+            <mat-label>SME Active Status</mat-label>
             <mat-select matInput formControlName="active" placeholder="Select Status" required>
               <mat-option [value]="trueVal"> Yes </mat-option>
               <mat-option [value]="falseVal"> No </mat-option>
@@ -230,7 +230,7 @@
           <mat-form-field appearance="outline">
             <mat-label>Select Super Lead</mat-label>
             <mat-select matInput formControlName="parentId" placeholder="Select Super Lead">
-              <mat-option *ngFor="let sl of parents" [value]="sl"> {{sl}} </mat-option>
+              <mat-option *ngFor="let sl of parents" [value]="sl.userId"> {{sl.name}} </mat-option>
               <!-- <mat-option [value]="falseVal"> No </mat-option> -->
             </mat-select>
           </mat-form-field>
