@@ -98,7 +98,7 @@ export class CreateSmeComponent implements OnInit {
       userId: [null, Validators.required],
       smeId: [null, Validators.required]
     });
-   
+
     this.activatedRoute.queryParams.subscribe(params => {
       console.log(params);
       this.mobile.setValue(params['mobile']);
@@ -197,7 +197,6 @@ export class CreateSmeComponent implements OnInit {
     this.loading = true;
     const param = `/sme/info?userId=${this.smeData.userId}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
-      debugger
       this.loading = false;
       this.showSmeDetails = true;
       console.log(res);
@@ -217,7 +216,7 @@ export class CreateSmeComponent implements OnInit {
     const param = `/sme/parent-list-by-role?role=${this.smeData.role.toString()}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
       console.log('parent list', res);
-      this.parents = res;
+      this.parents = res.data;
     }, () => {
       this.parents = [];
     })
