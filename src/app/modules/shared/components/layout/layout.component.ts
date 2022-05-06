@@ -13,8 +13,6 @@ import { KnowlarityNotificationComponent } from '../knowlarity-notification/know
   styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit {
-  @ViewChild(KnowlarityNotificationComponent) knowlarityNotificationComponent: KnowlarityNotificationComponent;
-
   timer: any;
   userMsgInfo: any;
   msgCount: any = 0;
