@@ -1,10 +1,11 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { interval } from 'rxjs';
-import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { interval } from 'rxjs';  
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { KnowlarityNotificationComponent } from '../knowlarity-notification/knowlarity-notification.component';
 
 @Component({
   selector: 'app-layout',
@@ -12,6 +13,7 @@ import { DirectCallingComponent } from '../direct-calling/direct-calling.compone
   styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit {
+  @ViewChild(KnowlarityNotificationComponent) knowlarityNotificationComponent: KnowlarityNotificationComponent;
 
   timer: any;
   userMsgInfo: any;
@@ -23,9 +25,9 @@ export class LayoutComponent implements OnInit {
   constructor(
     private router: Router,
     private dialog: MatDialog,
-    private _toastMessageService: ToastMessageService,
     private userService: UserMsService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private matBottomSheet: MatBottomSheet
   ) {
     const knowlarityScript = document.createElement('script');
     knowlarityScript.innerHTML = `var URL = "https://konnectprodstream3.knowlarity.com:8200/update-stream/560397a2-d875-478b-8003-cc4675e9a0eb/konnect"
@@ -57,8 +59,12 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     window['angularComponentReference'] = {
       component: this, zone: this.ngZone, loadKnowlarityData: (res) => {
-        // if (res.Call_Type === 'Incoming')
-        // this._toastMessageService.alert("success", "You have a new call");
+        if (res.Call_Type === 'Incoming'){
+          console.log(res);
+          this.matBottomSheet.open(KnowlarityNotificationComponent,{
+            data:res
+          });
+        }
       }
     };
   }
