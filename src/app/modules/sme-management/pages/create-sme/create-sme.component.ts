@@ -63,6 +63,8 @@ export class CreateSmeComponent implements OnInit {
     { label: 'GST Caller', value: 'ROLE_GST_CALLER' }, // Admin all access
     { label: 'Notice Caller', value: 'ROLE_NOTICE_CALLER' }, // Admin all access
   ];
+  newRoles = ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_ITR_AGENT', 'ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT']
+
   parents = [];
   mobile = new FormControl('', Validators.required);
   userRole = new FormControl([], Validators.required);
@@ -160,8 +162,7 @@ export class CreateSmeComponent implements OnInit {
         this.smeData = res;
         this.loading = false;
         this.userRole.patchValue(this.smeData.role);
-        const newRoles = ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_ITR_AGENT', 'ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT']
-        let isNewRole = this.roleBaseAuthGuardService.checkHasPermission(this.smeData.role, newRoles);
+        let isNewRole = this.roleBaseAuthGuardService.checkHasPermission(this.smeData.role, this.newRoles);
         if (this.smeData.role instanceof Array && isNewRole) {
           this.getSmeInfoDetails();
           this.getParentList();
@@ -221,6 +222,15 @@ export class CreateSmeComponent implements OnInit {
   }
 
   getParentList() {
+    let data = ['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT'].some(item => this.userRole.value.includes(item))
+    console.log('My roles : ', data);
+    if (data) {
+      this.submitJsonForm.controls['parentId'].setValidators(Validators.required);
+      this.submitJsonForm.controls['parentId'].updateValueAndValidity();
+    } else {
+      this.submitJsonForm.controls['parentId'].setValidators(null);
+      this.submitJsonForm.controls['parentId'].updateValueAndValidity();
+    }
     const param = `/sme/parent-list-by-role?role=${this.userRole.value.toString()}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
       console.log('parent list', res);
