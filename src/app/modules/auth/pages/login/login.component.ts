@@ -1,6 +1,6 @@
 import { UtilsService } from 'src/app/services/utils.service';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup,  FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import Auth from '@aws-amplify/auth';
@@ -31,13 +31,13 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     public http: HttpClient,
     public router: Router,
-     private _toastMessageService: ToastMessageService, 
-     private roleBaseAuthGaurdService: RoleBaseAuthGuardService,
+    private _toastMessageService: ToastMessageService,
+    private roleBaseAuthGaurdService: RoleBaseAuthGuardService,
     private userMsService: UserMsService,
-     private dialog: MatDialog,
+    private dialog: MatDialog,
     public utilsService: UtilsService,
-    private storageService:StorageService
-    ) {
+    private storageService: StorageService
+  ) {
     NavbarService.getInstance().component_link = this.component_link;
   }
 
@@ -98,12 +98,12 @@ export class LoginComponent implements OnInit {
   }
 
   apiCallCounter = 0;
-  updateCognitoId(data:any) {
+  updateCognitoId(data: any) {
     const param = `/user_account/${data.attributes['phone_number'].substring(3, 13)}/${data.attributes.sub}`;
     this.userMsService.userPutMethod(param).subscribe((res: any) => {
       this.loading = false;
       console.log('Cognito Id updated result:', res);
-      data.deleteAttributes(['custom:user_type'], (err:any, result:any) => {
+      data.deleteAttributes(['custom:user_type'], (err: any, result: any) => {
         if (err) {
           console.log('error while deleting after migration:', err); return;
         }
@@ -123,7 +123,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  getUserByCognitoId(data:any) {
+  getUserByCognitoId(data: any) {
     NavbarService.getInstance(this.http).getUserByCognitoId(`${data.attributes.sub}`).subscribe(res => {
       console.log('By CognitoId data:', res)
       console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", /* "ROLE_IFA", */ 'ROLE_FILING_TEAM', 'ROLE_TPA_SME']))
@@ -145,7 +145,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  setUserDataInsession(data:any, jhi:any) {
+  setUserDataInsession(data: any, jhi: any) {
     const userData = {
       mobile: data.attributes['phone_number'].substring(3, 13),
       email: jhi['email'],
@@ -170,15 +170,15 @@ export class LoginComponent implements OnInit {
     } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
       this.router.navigate(['pages/tpa-interested']);
       this.utilsService.logAction(jhi.userId, 'login')
-      /*  } else if (jhi.role.indexOf("ROLE_IFA") !== -1) {
-         this.router.navigate(['/pages/ifa/claim-client']); */
+    } else if (jhi.role.indexOf("ROLE_ITR_SL", "ROLE_ITR_AGENT", "ROLE_GST_AGENT", 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL') !== -1) {
+      this.router.navigate(['/pages/dashboard/calling/calling2']);
     } else {
       if (jhi.role.length > 0)
         this._toastMessageService.alert("error", "Access Denied.");
     }
   }
 
-  sendOtpOnWhatapp(values:any) {
+  sendOtpOnWhatapp(values: any) {
     this.form.controls['passphrase'].setValidators(null);
     this.form.controls['passphrase'].updateValueAndValidity();
     let disposable = this.dialog.open(ValidateOtpByWhatAppComponent, {
@@ -215,17 +215,17 @@ export class LoginComponent implements OnInit {
 
   mode: string = 'SIGN_IN';
   username: string = '';
-  changeMode(view:any) {
+  changeMode(view: any) {
     this.mode = view;
   }
 
-  fromForgotPassword(event:any) {
+  fromForgotPassword(event: any) {
     console.log('FOrgot pass Event result in component:', event);
     this.mode = event.view;
     this.username = event.username;
   }
 
-  fromOtp(event:any) {
+  fromOtp(event: any) {
     this.mode = event.view;
   }
 }

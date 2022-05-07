@@ -67,7 +67,8 @@
         <div class="card__col-xs-12 card__col-sm-3">
           <mat-form-field appearance="outline">
             <mat-label>Service Type</mat-label>
-            <mat-select matInput formControlName="serviceType" placeholder="Select Service Type" required>
+            <mat-select matInput formControlName="serviceType" placeholder="Select Service Type"
+              (selectionChange)="changeServiceType()" required>
               <mat-option value="ITR"> ITR </mat-option>
               <mat-option value="GST"> GST </mat-option>
               <mat-option value="NOTICE"> Notice </mat-option>
@@ -129,8 +130,9 @@
         <div class="card__col-xs-12 card__col-sm-3">
           <mat-form-field appearance="outline">
             <mat-label>Joining Date</mat-label>
-            <input matInput [matDatepicker]="joinPicker" class="input-field" placeholder="Joining Date"
-              name="joiningDate" formControlName="joiningDate" required>
+            <input matInput [matDatepicker]="joinPicker" [max]="maxJoinDate" class="input-field"
+              placeholder="Joining Date" name="joiningDate" formControlName="joiningDate"
+              (dateChange)="changeJoinDate(submitJsonForm.controls['joiningDate'].value)" required>
             <mat-hint>Format: DD/MM/YYYY</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="joinPicker"></mat-datepicker-toggle>
             <mat-datepicker #joinPicker></mat-datepicker>
@@ -139,8 +141,8 @@
         <div class="card__col-xs-12 card__col-sm-3">
           <mat-form-field appearance="outline">
             <mat-label>Resigning Date</mat-label>
-            <input matInput [matDatepicker]="resignPicker" class="input-field" placeholder="Resigning Date"
-              name="resigningDate" formControlName="resigningDate">
+            <input matInput [matDatepicker]="resignPicker" [min]="minResignDate" [max]="maxResignDate"
+              class="input-field" placeholder="Resigning Date" name="resigningDate" formControlName="resigningDate">
             <mat-hint>Format: DD/MM/YYYY</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="resignPicker"></mat-datepicker-toggle>
             <mat-datepicker #resignPicker></mat-datepicker>
@@ -166,7 +168,7 @@
             <mat-datepicker #leaveEPicker></mat-datepicker>
           </mat-form-field>
         </div>
-        <div class="card__col-xs-12 card__col-sm-3">
+        <div class="card__col-xs-12 card__col-sm-3" *ngIf="submitJsonForm.controls['serviceType'].value === 'ITR'">
           <mat-form-field appearance="fill">
             <mat-label>Select ITR Types</mat-label>
             <mat-select formControlName="itrTypes" multiple>
@@ -180,13 +182,6 @@
                 </span> -->
               </mat-select-trigger>
               <mat-option *ngFor="let itrType of itrTypeList" [value]="itrType.value"> {{itrType.display}}</mat-option>
-              <!-- <mat-option value="1"> ITR 1</mat-option>
-              <mat-option value="2"> ITR 2</mat-option>
-              <mat-option value="3"> ITR 3</mat-option>
-              <mat-option value="4"> ITR 4</mat-option>
-              <mat-option value="5"> ITR 5</mat-option>
-              <mat-option value="6"> ITR 6</mat-option>
-              <mat-option value="7"> ITR 7</mat-option> -->
             </mat-select>
           </mat-form-field>
         </div>
@@ -235,13 +230,6 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <!-- <div class="card__col-xs-12 card__col-sm-3">
-          <mat-form-field appearance="outline">
-            <mat-label>Partner Name</mat-label>
-            <input matInput placeholder="Partner Name" name="partnerName" formControlName="partnerName"
-              class="input-field" maxlength="50" type="text">
-          </mat-form-field>
-        </div> -->
       </div>
       <button type="submit" class="tbd-btn" (click)="updateSmeDetails()">Update SME</button>
     </form>

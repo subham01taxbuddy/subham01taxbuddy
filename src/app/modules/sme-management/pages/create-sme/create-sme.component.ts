@@ -8,6 +8,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import * as moment from 'moment';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -35,6 +36,9 @@ export class CreateSmeComponent implements OnInit {
   loading = false;
   showSmeDetails = false;
   smeDetails: any;
+  maxJoinDate = new Date();
+  maxResignDate = new Date();
+  minResignDate = new Date();
   langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
     'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
     'Santali', 'Sindhi', 'Urdu']
@@ -67,6 +71,7 @@ export class CreateSmeComponent implements OnInit {
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService,
     private activatedRoute: ActivatedRoute,
+    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
   ) { }
 
   ngOnInit() {
@@ -93,7 +98,7 @@ export class CreateSmeComponent implements OnInit {
       internal: [true, [Validators.required]],
       assignmentStart: [false, [Validators.required]],
       partnerName: [null],
-      itrTypes: [[], [Validators.required]],
+      itrTypes: [[]],
       assessmentYears: [['2022-2023'], [Validators.required]],
       userId: [null, Validators.required],
       smeId: [null, Validators.required]
@@ -155,7 +160,9 @@ export class CreateSmeComponent implements OnInit {
         this.smeData = res;
         this.loading = false;
         this.userRole.patchValue(this.smeData.role);
-        if (this.smeData.role instanceof Array && this.smeData.role.length > 1) {
+        const newRoles = ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_ITR_AGENT', 'ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT']
+        let isNewRole = this.roleBaseAuthGuardService.checkHasPermission(this.smeData.role, newRoles);
+        if (this.smeData.role instanceof Array && isNewRole) {
           this.getSmeInfoDetails();
           this.getParentList();
         }
@@ -202,6 +209,7 @@ export class CreateSmeComponent implements OnInit {
       console.log(res);
       this.smeDetails = res;
       this.submitJsonForm.patchValue(res.data);
+      this.minResignDate = this.convertToYYMMDD(res.data.joiningDate);
       this.submitJsonForm.controls['joiningDate'].setValue(this.convertToYYMMDD(res.data.joiningDate));
       this.submitJsonForm.controls['resigningDate'].setValue(this.convertToYYMMDD(res.data.resigningDate));
       this.submitJsonForm.controls['leaveStartDate'].setValue(this.convertToYYMMDD(res.data.leaveStartDate));
@@ -213,12 +221,26 @@ export class CreateSmeComponent implements OnInit {
   }
 
   getParentList() {
-    const param = `/sme/parent-list-by-role?role=${this.smeData.role.toString()}`;
+    const param = `/sme/parent-list-by-role?role=${this.userRole.value.toString()}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
       console.log('parent list', res);
       this.parents = res.data;
     }, () => {
       this.parents = [];
     })
+  }
+
+  changeServiceType() {
+    if (this.submitJsonForm.controls['serviceType'].value === 'ITR') {
+      this.submitJsonForm.controls['itrTypes'].setValidators(Validators.required);
+      this.submitJsonForm.controls['itrTypes'].updateValueAndValidity();
+    } else {
+      this.submitJsonForm.controls['itrTypes'].setValidators(null);
+      this.submitJsonForm.controls['itrTypes'].updateValueAndValidity();
+    }
+  }
+
+  changeJoinDate(date) {
+    this.minResignDate = date;
   }
 }

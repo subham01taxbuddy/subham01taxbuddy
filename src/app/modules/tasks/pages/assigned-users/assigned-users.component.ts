@@ -1,8 +1,12 @@
 import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
+import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
+import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -21,33 +25,28 @@ export class AssignedUsersComponent implements OnInit {
   usersGridOptions: GridOptions;
   config: any;
   userInfo: any = [];
-  searchMenus = [{
-    value: 'fName', name: 'First Name'
-  }, {
-    value: 'lName', name: 'Last Name'
-  }, {
-    value: 'emailAddress', name: 'Email Id'
-  }, {
-    value: 'mobileNumber', name: 'Mobile Number'
-  }, {
-    value: 'panNumber', name: 'PAN Number'
-  }, {
-    value: 'userId', name: 'User Id'
-  }];
-  searchVal: string = "";
-  currentUserId: number = 0;
-  user_data: any = [];
-
-  constructor(private userService: UserMsService,
+  itrStatus: any = [];
+  searchParam: any = {
+    // serviceType: 'ITR',
+    statusId: null,
+    page: 0,
+    pageSize: 20,
+    mobileNumber: null
+  }
+  agents = [];
+  agentId = null;
+  constructor(private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private router: Router,
     private http: HttpClient,
+    private dialog: MatDialog,
     private itrMsService: ItrMsService,
+    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     @Inject(LOCALE_ID) private locale: string) {
     this.usersGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.usersCreateColumnDef(),
+      columnDefs: this.usersCreateColumnDef([]),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -57,85 +56,71 @@ export class AssignedUsersComponent implements OnInit {
     };
 
     this.config = {
-      itemsPerPage: 15,
+      itemsPerPage: 20,
       currentPage: 1,
-      totalItems: 80
+      totalItems: null
     };
   }
 
   ngOnInit() {
-    this.getUserData(0);
+    const UMD = JSON.parse(localStorage.getItem('UMD'))
+    this.agentId = UMD.USER_UNIQUE_ID;
+    this.getMasterStatusList();
+    this.search();
+    this.getAgentList();
   }
 
-  clearValue() {
-    this.searchVal = "";
-    this.currentUserId = 0;
+  async getMasterStatusList() {
+    this.itrStatus = await this.utilsService.getStoredMasterStatusList();
+    console.log('masterStatusList: ', this.itrStatus)
   }
-
-  advanceSearch(key: any) {
-    this.user_data = [];
-    if (this.searchVal !== "") {
-      this.getUserSearchList(key, this.searchVal);
-    }
-  }
-
-  getUserSearchList(key: any, searchValue: any) {
-    let searchInfo = key + ': ' + searchValue;
-    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Select attribute', searchInfo], environment.matomoScriptId);
-    this.loading = true;
-    return new Promise((resolve, reject) => {
-      this.user_data = [];
-      NavbarService.getInstance(this.http).getUserSearchList(key, searchValue).subscribe(res => {
-        console.log("Search result:", res)
-        if (Array.isArray(res.records)) {
-          this.user_data = res.records;
-          console.log('user_data -> ', this.user_data);
-          this.usersGridOptions.api?.setRowData(this.createRowData(this.user_data));
-          this.userInfo = this.user_data;
-          this.config.totalItems = this.user_data.length;
-        }
-        this.loading = false;
-        return resolve(true)
-      }, err => {
-        //let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
-        this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
-        this.loading = false;
-        return resolve(false)
-      });
-    });
-  }
-
 
   pageChanged(event: any) {
     this.config.currentPage = event;
-    this.getUserData(event - 1);
+    this.searchParam.page = event - 1
+    this.search();
   }
-
-  getUserData(pageNo: any) {
-    this.loading = true;
-    let param = '/profile?page=' + pageNo + '&pageSize=15'
-    this.userService.getMethod(param).subscribe((result: any) => {
-      console.log('result -> ', result);
-      this.loading = false;
-      this.usersGridOptions.api?.setRowData(this.createRowData(result['content']));
-      this.userInfo = result['content'];
-      this.config.totalItems = result.totalElements;
-    },
-      error => {
-        this.loading = false;
-        this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-        console.log('Error during getting Leads data. -> ', error)
+  getAgentList() {
+    const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
+    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserDetails.USER_ROLE, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL']);
+    if (isAgentListAvailable) {
+      const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+      this.userMsService.getMethod(param).subscribe((result: any) => {
+        console.log('Agent List', result);
+        if (result.success) {
+          this.agents = result.data;
+        }
       })
+    }
   }
+  // getUserData(pageNo: any) {
+  //   this.loading = true;
+  //   const UMD = JSON.parse(localStorage.getItem('UMD'))
+  //   let param = `/sme/${UMD.USER_UNIQUE_ID}/user-list?page=${pageNo}&pageSize=20`;
+  //   this.userMsService.getMethod(param).subscribe((result: any) => {
+  //     console.log('result -> ', result);
+  //     this.loading = false;
+  //     if (result.success) {
+  //       this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
+  //       this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
+  //       this.userInfo = result.data['content'];
+  //       this.config.totalItems = result.totalElements;
+  //     }
+  //   }, error => {
+  //     this.loading = false;
+  //     this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
+  //     console.log('Error during getting Leads data. -> ', error)
+  //   })
+  // }
 
-  usersCreateColumnDef() {
+  usersCreateColumnDef(itrStatus) {
     return [
       {
         headerName: 'User Id',
         field: 'userId',
         width: 80,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -147,7 +132,7 @@ export class AssignedUsersComponent implements OnInit {
         field: 'createdDate',
         width: 120,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
@@ -182,7 +167,7 @@ export class AssignedUsersComponent implements OnInit {
       },
       {
         headerName: 'Email',
-        field: 'emailAddress',
+        field: 'email',
         width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -194,7 +179,7 @@ export class AssignedUsersComponent implements OnInit {
       },
       {
         headerName: 'PAN Number',
-        field: 'pan',
+        field: 'panNumber',
         width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -205,20 +190,11 @@ export class AssignedUsersComponent implements OnInit {
         }
       },
       {
-        headerName: 'Gender',
-        field: 'gender',
+        headerName: 'Service Type',
+        field: 'serviceType',
         width: 100,
         suppressMovable: true,
-        valueGetter: function (params: any) {
-          if (params.data.gender === 'MALE') {
-            return 'Male';
-          } else if (params.data.gender === 'FEMALE') {
-            return 'Female'
-          } else {
-            return params.data.gender
-          }
-        },
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -226,21 +202,87 @@ export class AssignedUsersComponent implements OnInit {
         }
       },
       {
-        headerName: 'Residential Status',
-        field: 'resident',
+        headerName: 'Agent Name',
+        field: 'callerAgentName',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Language',
+        field: 'laguage',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Status',
+        field: 'statusId',
         width: 120,
         suppressMovable: true,
-        valueGetter: function (params: any) {
-          if (params.data.resident === 'RESIDENT') {
-            return 'Resident';
-          } else if (params.data.resident === 'NON_RESIDENT') {
-            return 'NRI'
-          } else {
-            return params.data.resident;
-          }
-          return;
-        },
+        sortable: true,
         cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        valueGetter: function nameFromCode(params) {
+          // console.log('params === ', params, params.data.statusId);
+          // console.log('itrStatus array === ', itrStatus);
+          if (itrStatus.length !== 0) {
+            const nameArray = itrStatus.filter((item: any) => (item.statusId === params.data.statusId));
+            if (nameArray.length !== 0) {
+              return nameArray[0].statusName;
+            }
+            else {
+              return '-';
+            }
+          } else {
+            return params.data.statusId;
+          }
+        }
+      },
+      {
+        headerName: 'Status Updated On',
+        field: 'statusUpdatedDate',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (data: any) => {
+          if (data !== null)
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          else
+            return '-';
+        },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'ERI Client',
+        field: 'eriClientValidUpto',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (data: any) => {
+          if (data.value !== null)
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          else
+            return '-';
+        },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -254,7 +296,7 @@ export class AssignedUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Rediredt toward Invoice"
+          return `<button type="button" class="action_icon add_button" title="Redirect toward Invoice"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-files-o" aria-hidden="true" data-action-type="invoice"></i>
            </button>`;
@@ -358,19 +400,19 @@ export class AssignedUsersComponent implements OnInit {
           }
         },
       },
-      {
-        headerName: "Review",
-        field: "isReviewGiven",
-        width: 50,
-        pinned: 'right',
-        cellRenderer: (params: any) => {
-          return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
-        },
-        cellStyle: (params: any) => {
-          return (params.data.isReviewGiven) ? { 'pointer-events': 'none', opacity: '0.4' }
-            : '';
-        }
-      },
+      // {
+      //   headerName: "Review",
+      //   field: "isReviewGiven",
+      //   width: 50,
+      //   pinned: 'right',
+      //   cellRenderer: (params: any) => {
+      //     return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
+      //   },
+      //   cellStyle: (params: any) => {
+      //     return (params.data.isReviewGiven) ? { 'pointer-events': 'none', opacity: '0.4' }
+      //       : '';
+      //   }
+      // },
       {
         headerName: 'Add Client',
         editable: false,
@@ -393,6 +435,72 @@ export class AssignedUsersComponent implements OnInit {
           }
         },
       },
+      {
+        headerName: 'Call',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Call to user"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
+           </button>`;
+        },
+        width: 50,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Update Status',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Update Status"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'See/Add Notes',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Click see/add notes"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
     ]
   }
 
@@ -403,16 +511,18 @@ export class AssignedUsersComponent implements OnInit {
       let userInfo: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
         createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
-        name: userData[i].fName + ' ' + userData[i].lName,
-        mobileNumber: this.utilsService.isNonEmpty(userData[i].mobileNumber) ? userData[i].mobileNumber : '-',
-        emailAddress: this.utilsService.isNonEmpty(userData[i].emailAddress) ? userData[i].emailAddress : '-',
-        city: this.utilsService.isNonEmpty(userData[i].city) ? userData[i].city : '-',
-        gender: this.utilsService.isNonEmpty(userData[i].gender) ? userData[i].gender : '-',
-        maritalStatus: this.utilsService.isNonEmpty(userData[i].maritalStatus) ? userData[i].maritalStatus : '-',
-        pan: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
-        resident: this.utilsService.isNonEmpty(userData[i].residentialStatus) ? userData[i].residentialStatus : '-',
-        isReviewGiven: userData[i].reviewGiven,
-        eriClientValidUpto: userData[i].eriClientValidUpto
+        name: userData[i].name,
+        mobileNumber: this.utilsService.isNonEmpty(userData[i].customerNumber) ? userData[i].customerNumber : '-',
+        email: this.utilsService.isNonEmpty(userData[i].email) ? userData[i].email : '-',
+        serviceType: userData[i].serviceType,
+        assessmentYear: userData[i].assessmentYear,
+        callerAgentName: userData[i].callerAgentName,
+        callerAgentNumber: userData[i].callerAgentNumber,
+        statusId: userData[i].statusId,
+        statusUpdatedDate: userData[i].statusUpdatedDate,
+        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
+        eriClientValidUpto: userData[i].eriClientValidUpto,
+        laguage: userData[i].laguage
       })
       userArray.push(userInfo);
     }
@@ -447,16 +557,24 @@ export class AssignedUsersComponent implements OnInit {
           this.linkToDocumentCloud(params.data.userId);
           break;
         }
-        case 'isReviewGiven': {
-          this.updateReviewStatus(params.data);
+        case 'updateStatus': {
+          this.updateStatus('Update Status', params.data)
           break;
         }
         case 'add-client': {
           if (environment.production) {
-            this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan, eriClientValidUpto: params.data.eriClientValidUpto } });
+            this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.panNumber, eriClientValidUpto: params.data.eriClientValidUpto } });
           } else {
             this._toastMessageService.alert("error", 'You can not access add client on testing environment');
           }
+          break;
+        }
+        case 'call': {
+          this.call(params.data);
+          break;
+        }
+        case 'addNotes': {
+          this.showNotes(params.data)
           break;
         }
       }
@@ -483,7 +601,7 @@ export class AssignedUsersComponent implements OnInit {
       userId: userId
     }
     this.loading = true;
-    this.userService.postMethod(param, request).subscribe((res: any) => {
+    this.userMsService.postMethod(param, request).subscribe((res: any) => {
       console.log('Link To Finbingo Response: ', res);
       this.loading = false;
       if (res.success) {
@@ -517,5 +635,125 @@ export class AssignedUsersComponent implements OnInit {
     }, error => {
       this.utilsService.showSnackBar('Please try again, failed to mark as review given');
     })
+  }
+
+  call(data) {
+    console.log('user: ', data);
+    // let callInfo = data.customerNumber;
+    this.loading = true;
+    const param = `/call-management/make-call`;
+    // TODO check the caller agent number;
+    const reqBody = {
+      "agent_number": data.callerAgentNumber,
+      "customer_number": data.mobileNumber
+    }
+    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+      console.log('Call Result: ', result);
+      this.loading = false;
+      if (result.success.status) {
+        this._toastMessageService.alert("success", result.success.message)
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Error while making call, Please try again.');
+      this.loading = false;
+    })
+  }
+
+  updateStatus(mode, client) {
+    let disposable = this.dialog.open(ChangeStatusComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.name,
+        serviceType: client.serviceType,
+        mode: mode,
+        userInfo: client
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log('result: ', result);
+      if (result) {
+        if (result.data === "statusChanged") {
+          this.searchParam.page = 0;
+          this.search();
+        }
+
+        // if (result.responce) {
+        //   if (mode === 'Update Status') {
+        //     console.log('itrStatus array: ', this.itrStatus);
+        //     console.log('client statusId: ', client.statusId)
+        //     console.log('**** ', this.itrStatus.filter((item: any) => item.statusId === client.statusId))
+        //   }
+        // }
+      }
+    });
+  }
+  showNotes(client) {
+    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Notes'], environment.matomoScriptId)
+    let disposable = this.dialog.open(UserNotesComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.name,
+        serviceType: client.serviceType
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+  search(form?) {
+    if (form == 'mobile') {
+      this.searchParam.page = 0;
+      if (this.searchParam.mobileNumber == null || this.searchParam.mobileNumber == '') {
+        this.searchParam.mobileNumber = null
+      }
+      this.searchParam.statusId = null;
+    } else if (form == 'status') {
+      this.searchParam.page = 0;
+      this.searchParam.mobileNumber = null
+    } else if (form == 'agent') {
+      this.searchParam.page = 0;
+    }
+    this.loading = true;
+    let data = this.utilsService.createUrlParams(this.searchParam);
+    let param = `/sme/${this.agentId}/user-list?${data}`;
+    this.userMsService.getMethod(param).subscribe(
+      /* {
+        next: (v) => console.log(v),
+        error: (e) => console.error(e),
+        complete: () => {
+          console.info('complete');
+          this.loading = false;
+        }
+      } */
+      (result: any) => {
+        console.log('result -> ', result);
+        if (result.success) {
+          if (result.data && result.data['content'] instanceof Array) {
+            this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
+            this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
+            this.userInfo = result.data['content'];
+            this.config.totalItems = result.data.totalElements;
+          } else {
+            this.usersGridOptions.api?.setRowData(this.createRowData([]));
+            this.config.totalItems = 0;
+            this._toastMessageService.alert('error', result.message)
+          }
+        }
+        this.loading = false;
+
+      }, error => {
+        this.loading = false;
+        this.config.totalItems = 0;
+        this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
+        console.log('Error during getting Leads data. -> ', error)
+      })
   }
 }
