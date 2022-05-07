@@ -207,7 +207,7 @@ export class CreateSmeComponent implements OnInit {
       this.loading = false;
       this.showSmeDetails = true;
       console.log(res);
-      this.smeDetails = res;
+      this.smeDetails = res.data;
       this.submitJsonForm.patchValue(res.data);
       this.minResignDate = this.convertToYYMMDD(res.data.joiningDate);
       this.submitJsonForm.controls['joiningDate'].setValue(this.convertToYYMMDD(res.data.joiningDate));
