@@ -43,7 +43,7 @@ export class AgentMgntComponent implements OnInit {
       if (res && res instanceof Array) {
         this.agentMgntGridOption.api?.setRowData(this.agentRowData(res));
         res.sort((a, b) => a.name > b.name ? 1 : -1)
-        sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res));
+        // sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res));
       }
     }, error => {
       this.loading = false;
@@ -190,7 +190,7 @@ export class AgentMgntComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Super Lead"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateSuperLead"></i>
@@ -198,7 +198,7 @@ export class AgentMgntComponent implements OnInit {
         },
         width: 80,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',

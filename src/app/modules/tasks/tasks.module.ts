@@ -11,6 +11,7 @@ import { TasksComponent } from './tasks.component';
 import { MaterialModule } from "src/app/modules/shared/material.module";
 import { AgGridModule } from "ag-grid-angular";
 import { NgxPaginationModule } from "ngx-pagination";
+import { ScheduledCallComponent } from './pages/scheduled-call/scheduled-call.component';
 
 @NgModule({
     imports: [
@@ -26,7 +27,8 @@ import { NgxPaginationModule } from "ngx-pagination";
     ],
     declarations: [
         TasksComponent,
-        AssignedUsersComponent
+        AssignedUsersComponent,
+        ScheduledCallComponent
     ],
     entryComponents: []
 

@@ -1,7 +1,7 @@
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { interval } from 'rxjs';  
+import { interval } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -57,10 +57,10 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     window['angularComponentReference'] = {
       component: this, zone: this.ngZone, loadKnowlarityData: (res) => {
-        if (res.Call_Type === 'Incoming'){
+        if (res.Call_Type === 'Incoming') {
           console.log(res);
-          this.matBottomSheet.open(KnowlarityNotificationComponent,{
-            data:res
+          this.matBottomSheet.open(KnowlarityNotificationComponent, {
+            data: res
           });
         }
       }

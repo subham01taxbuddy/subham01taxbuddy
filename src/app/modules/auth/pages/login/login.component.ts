@@ -170,7 +170,7 @@ export class LoginComponent implements OnInit {
       // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
       //   this.router.navigate(['pages/tpa-interested']);
       //   this.utilsService.logAction(jhi.userId, 'login')
-    } else if (['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL'].some(item => jhi.role.includes(item))) {
+    } else if (['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_GST_CALLER', 'ROLE_NOTICE_CALLER'].some(item => jhi.role.includes(item))) {
       this.router.navigate(['/pages/dashboard/calling/calling2']);
     } else {
       if (jhi.role.length > 0)

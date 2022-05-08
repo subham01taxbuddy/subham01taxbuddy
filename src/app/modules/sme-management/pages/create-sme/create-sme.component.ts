@@ -63,7 +63,7 @@ export class CreateSmeComponent implements OnInit {
     { label: 'GST Caller', value: 'ROLE_GST_CALLER' }, // Admin all access
     { label: 'Notice Caller', value: 'ROLE_NOTICE_CALLER' }, // Admin all access
   ];
-  newRoles = ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_ITR_AGENT', 'ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT']
+  newRoles = ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_ITR_AGENT', 'ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_GST_CALLER', 'ROLE_NOTICE_CALLER']
 
   parents = [];
   mobile = new FormControl('', Validators.required);
@@ -90,7 +90,7 @@ export class CreateSmeComponent implements OnInit {
       // botId: ['', [Validators.required]],
       botName: [null],
       imageUrl: [null],
-      displayName: [null],
+      displayName: [null, [Validators.required]],
       active: [false, [Validators.required]],
       joiningDate: [null, [Validators.required]],
       leaveStartDate: [null],
@@ -210,7 +210,7 @@ export class CreateSmeComponent implements OnInit {
       console.log(res);
       this.smeDetails = res.data;
       this.submitJsonForm.patchValue(res.data);
-      this.minResignDate = this.convertToYYMMDD(res.data.joiningDate);
+      this.minResignDate = this.utilsService.isNonEmpty(res.data.joiningDate) ? this.convertToYYMMDD(res.data.joiningDate) : new Date();
       this.submitJsonForm.controls['joiningDate'].setValue(this.convertToYYMMDD(res.data.joiningDate));
       this.submitJsonForm.controls['resigningDate'].setValue(this.convertToYYMMDD(res.data.resigningDate));
       this.submitJsonForm.controls['leaveStartDate'].setValue(this.convertToYYMMDD(res.data.leaveStartDate));

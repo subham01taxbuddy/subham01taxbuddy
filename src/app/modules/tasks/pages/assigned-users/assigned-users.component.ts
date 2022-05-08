@@ -82,7 +82,7 @@ export class AssignedUsersComponent implements OnInit {
   }
   getAgentList() {
     const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserDetails.USER_ROLE, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL']);
+    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserDetails.USER_ROLE, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
     if (isAgentListAvailable) {
       const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
       this.userMsService.getMethod(param).subscribe((result: any) => {
@@ -116,37 +116,11 @@ export class AssignedUsersComponent implements OnInit {
   usersCreateColumnDef(itrStatus) {
     return [
       {
-        headerName: 'User Id',
-        field: 'userId',
-        width: 80,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Created Date',
-        field: 'createdDate',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: (data: any) => {
-          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
-        },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
         headerName: 'Name',
         field: 'name',
         width: 180,
         suppressMovable: true,
+        pinned: 'left',
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -168,55 +142,7 @@ export class AssignedUsersComponent implements OnInit {
       {
         headerName: 'Email',
         field: 'email',
-        width: 180,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'PAN Number',
-        field: 'panNumber',
-        width: 180,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Service Type',
-        field: 'serviceType',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Agent Name',
-        field: 'callerAgentName',
-        width: 180,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Language',
-        field: 'laguage',
-        width: 180,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -228,7 +154,7 @@ export class AssignedUsersComponent implements OnInit {
       {
         headerName: 'Status',
         field: 'statusId',
-        width: 120,
+        width: 100,
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'center' },
@@ -254,6 +180,45 @@ export class AssignedUsersComponent implements OnInit {
         }
       },
       {
+        headerName: 'Language',
+        field: 'laguage',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'PAN Number',
+        field: 'panNumber',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Created Date',
+        field: 'createdDate',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (data: any) => {
+          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+        },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
         headerName: 'Status Updated On',
         field: 'statusUpdatedDate',
         width: 120,
@@ -272,6 +237,18 @@ export class AssignedUsersComponent implements OnInit {
         }
       },
       {
+        headerName: 'Service Type',
+        field: 'serviceType',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
         headerName: 'ERI Client',
         field: 'eriClientValidUpto',
         width: 120,
@@ -283,6 +260,30 @@ export class AssignedUsersComponent implements OnInit {
           else
             return '-';
         },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'User Id',
+        field: 'userId',
+        width: 80,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Agent Name',
+        field: 'callerAgentName',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -501,6 +502,28 @@ export class AssignedUsersComponent implements OnInit {
           }
         },
       },
+      {
+        headerName: 'Chat',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Open Chat"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+              <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
+             </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
     ]
   }
 
@@ -575,6 +598,10 @@ export class AssignedUsersComponent implements OnInit {
         }
         case 'addNotes': {
           this.showNotes(params.data)
+          break;
+        }
+        case 'open-chat': {
+          this.openChat(params.data)
           break;
         }
       }
@@ -707,7 +734,24 @@ export class AssignedUsersComponent implements OnInit {
       console.log('The dialog was closed');
     });
   }
-
+  openChat(client) {
+    console.log('client: ', client);
+    //matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Chat icon'],  environment.matomoScriptId);
+    this.loading = true;
+    let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      console.log('open chat link res: ', response);
+      this.loading = false;
+      if (response.success) {
+        window.open(response.data.chatLink)
+      } else {
+        this._toastMessageService.alert('error', 'User has not initiated chat on kommunicate')
+      }
+    }, error => {
+      this._toastMessageService.alert('error', 'Error during fetching chat, try after some time.')
+      this.loading = false;
+    })
+  }
   search(form?) {
     if (form == 'mobile') {
       this.searchParam.page = 0;
