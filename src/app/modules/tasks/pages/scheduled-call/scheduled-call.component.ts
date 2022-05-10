@@ -8,6 +8,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { environment } from 'src/environments/environment';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 
 @Component({
   selector: 'app-scheduled-call',
@@ -27,7 +28,11 @@ export class ScheduledCallComponent implements OnInit {
   loggedUserId: any;
   showByAdminUserId: boolean = true;
 
-  constructor(private toastMsgService: ToastMessageService, private userMsService: UserMsService, private utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string,
+  constructor(private toastMsgService: ToastMessageService,
+    private userMsService: UserMsService,
+    private utilsService: UtilsService,
+    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+    @Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog, private route: Router) {
     this.scheduleCallGridOptions = <GridOptions>{
       rowData: [],
@@ -45,8 +50,19 @@ export class ScheduledCallComponent implements OnInit {
     this.showScheduleCallList()
   }
 
-  async getAgentList() {
-    this.agentList = await this.utilsService.getStoredAgentList();
+  /* async */ getAgentList() {
+    // this.agentList = await this.utilsService.getStoredAgentList();
+    const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
+    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserDetails.USER_ROLE, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
+    if (isAgentListAvailable) {
+      const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+      this.userMsService.getMethod(param).subscribe((result: any) => {
+        console.log('Agent List', result);
+        if (result.success) {
+          this.agentList = result.data;
+        }
+      })
+    }
   }
 
   showScheduleCallList() {
@@ -236,7 +252,7 @@ export class ScheduledCallComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
@@ -244,7 +260,7 @@ export class ScheduledCallComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -258,7 +274,7 @@ export class ScheduledCallComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to check whats app chat"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
               <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
@@ -266,7 +282,7 @@ export class ScheduledCallComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -280,7 +296,7 @@ export class ScheduledCallComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
               <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
@@ -288,7 +304,7 @@ export class ScheduledCallComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -302,7 +318,7 @@ export class ScheduledCallComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="User Information"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
               <i class="fa fa-mobile" style="font-size:26px" aria-hidden="true" data-action-type="userInfo"></i>
@@ -310,7 +326,7 @@ export class ScheduledCallComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -324,7 +340,7 @@ export class ScheduledCallComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
               <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
@@ -332,7 +348,7 @@ export class ScheduledCallComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -346,13 +362,13 @@ export class ScheduledCallComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Call Status"
             style="font-size: 12px; cursor:pointer;" data-action-type="call-done">Done</button>`;
         },
         width: 80,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -453,7 +469,7 @@ export class ScheduledCallComponent implements OnInit {
     this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
       console.log('Call Result: ', result);
       this.loading = false;
-     this.utilsService.matomoCall('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Call'], environment.matomoScriptId);
+      this.utilsService.matomoCall('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Call'], environment.matomoScriptId);
       if (result.success.status) {
         this.toastMsgService.alert("success", result.success.message)
       }
@@ -526,7 +542,7 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   navigateToWhatsappChat(data) {
-   // matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Whatsapp icon'], environment.matomoScriptId);
+    // matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Whatsapp icon'], environment.matomoScriptId);
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
   }
 }

@@ -29,6 +29,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { RouterModule } from '@angular/router';
 import { DirectCallingComponent } from './components/direct-calling/direct-calling.component';
+import { KnowlarityNotificationComponent } from './components/knowlarity-notification/knowlarity-notification.component';
+import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 
 
 @NgModule({
@@ -54,11 +56,13 @@ import { DirectCallingComponent } from './components/direct-calling/direct-calli
         LayoutComponent,
         SidebarComponent,
         NavbarComponent,
-        DirectCallingComponent
+        DirectCallingComponent,
+        KnowlarityNotificationComponent
     ],
     imports: [
         CommonModule,
         MaterialModule,
+        MatBottomSheetModule,
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
@@ -93,7 +97,8 @@ import { DirectCallingComponent } from './components/direct-calling/direct-calli
         SmeListDropDownComponent,
         CallReassignmentComponent,
         NgxLoadingModule,
-        LayoutComponent
+        LayoutComponent,
+        KnowlarityNotificationComponent
     ],
     providers: [StorageService],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,

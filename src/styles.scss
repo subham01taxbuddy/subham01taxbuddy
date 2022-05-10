@@ -157,5 +157,19 @@ body {
 }
 
 .tbd-btn:hover {
-  background-color: #307E00;
+  background-color: #04a3bc;
+}
+
+.tbd-btn-close {
+  float: right;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 18px;
+  margin-top: -15px;
+  margin-right: -15px;
+}
+
+.tbd-btn-close:hover {
+  color: red;
 }

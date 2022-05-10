@@ -1,6 +1,6 @@
 <label style="font-size: 18px;
 font-weight: bold;">Notes for {{data.clientName}}</label><button mat-dialog-close tabindex="-1"
-    style="float: right; cursor: pointer;"><i class="fa fa-times" aria-hidden="true"></i></button>
+    class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
 
 <!-- <div class="notes">
     <div class="card__row" style="margin-top: 0px;" *ngIf="notes.length > 0">
@@ -82,12 +82,13 @@ font-weight: bold;">Notes for {{data.clientName}}</label><button mat-dialog-clos
     </div>
     <div class="card__col-xs-12 card__col-sm-4">
         <mat-form-field appearance="outline">
+            <mat-label>Note</mat-label>
             <textarea matInput [formControl]="noteDetails" cdkTextareaAutosize cdkAutosizeMinRows="1"
                 cdkAutosizeMaxRows="9" name="noteDetails" placeholder="Enter your note..."></textarea>
             <mat-error class="error-msg" *ngIf="noteDetails.hasError('required') ">Please enter note details</mat-error>
         </mat-form-field>
     </div>
-    <div class="card__col-xs-12 card__col-sm-3" style="padding-top: 10px;">
-        <button type="submit" class="btn" style="border: none;" (click)="addNote()">Add</button>
+    <div class="card__col-xs-12 card__col-sm-3">
+        <button type="submit" class="tbd-btn" (click)="addNote()">Add</button>
     </div>
 </div>

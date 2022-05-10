@@ -4,7 +4,7 @@ import { CallingBoardComponent } from './pages/calling-board/calling-board.compo
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { Calling2dot0Component } from './pages/calling-board/calling2dot0/calling2dot0.component';
-import { ScheduledCallComponent } from './pages/calling-board/scheduled-call/scheduled-call.component';
+// import { ScheduledCallComponent } from './pages/calling-board/scheduled-call/scheduled-call.component';
 import { SignupExceptionComponent } from './pages/calling-board/signup-exception/signup-exception.component';
 import { EngagementStatusComponent } from './pages/status-wise-clients/engagement-status/engagement-status.component';
 import { FilingStatusComponent } from './pages/status-wise-clients/filing-status/filing-status.component';
@@ -41,7 +41,7 @@ const routes: Routes = [
                 children: [
                     { path: 'todays-call', component: TodaysCallsComponent },
                     { path: 'calling2', component: Calling2dot0Component },
-                    { path: 'scheduled-call', component: ScheduledCallComponent },
+                    // { path: 'scheduled-call', component: ScheduledCallComponent },
                     { path: 'signup-exception', component: SignupExceptionComponent },
                     { path: '', redirectTo: 'calling2', pathMatch: 'full' }
                 ]
@@ -58,14 +58,15 @@ const routes: Routes = [
                 ]
             },
             // { path: 'interested-clients', component: InterestedClientsComponent },
-            { path: 'open-status', component: OpenStatusComponent},
-            { path: 'knowlarity', component: KnowlarityComponent,
-               children:[
-                { path:'all', component: MainKnowlarityComponent },
-                { path:'sme-wise', component: SmeWiseInfoComponent },
-                { path:'call-wise', component: CallWiseInfoComponent },
-                { path:'', redirectTo: 'all', pathMatch:'full' }
-              ] 
+            { path: 'open-status', component: OpenStatusComponent },
+            {
+                path: 'knowlarity', component: KnowlarityComponent,
+                children: [
+                    { path: 'all', component: MainKnowlarityComponent },
+                    { path: 'sme-wise', component: SmeWiseInfoComponent },
+                    { path: 'call-wise', component: CallWiseInfoComponent },
+                    { path: '', redirectTo: 'all', pathMatch: 'full' }
+                ]
             },
             { path: '', redirectTo: 'quick-search', pathMatch: 'full' }
         ]

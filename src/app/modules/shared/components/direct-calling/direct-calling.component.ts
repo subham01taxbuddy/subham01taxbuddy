@@ -28,7 +28,7 @@ export class DirectCallingComponent implements OnInit {
       const agentNumber = await this.utilsService.getMyCallingNumber();
       console.log(agentNumber);
       this.loading = true;
-    const param=`/make-call?agentNumber=${agentNumber}&customerNumber=${this.mobileNo.value}`;
+    const param=`/call-management/make-call?agentNumber=${agentNumber}&customerNumber=${this.mobileNo.value}`;
      const param2='';
         this.userService.getMethod(param, param2).subscribe(res => {
           this.loading = false;

@@ -1,0 +1,22 @@
+.container {
+  padding: 4px;
+
+  .heading {
+    display: flex;
+
+    .phone {
+      font-size: 15px;
+      padding: 0 5px;
+    }
+  }
+
+  .sub-head {
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 0;
+  }
+
+  .bottom {
+    text-align: center;
+  }
+}

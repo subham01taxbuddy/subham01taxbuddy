@@ -31,8 +31,7 @@ export class ChangeStatusComponent implements OnInit {
       this.changeStatus.controls['selectStatus'].updateValueAndValidity();
       this.changeStatus.controls['callerAgentUserId'].updateValueAndValidity();
       this.getStatus();
-    }
-    else if (this.data.mode === 'Update Caller') {
+    } else if (this.data.mode === 'Update Caller') {
       this.changeStatus.controls['selectStatus'].setValidators(null);
       this.changeStatus.controls['callerAgentUserId'].setValidators([Validators.required]);
       this.changeStatus.controls['selectStatus'].updateValueAndValidity();
@@ -52,9 +51,6 @@ export class ChangeStatusComponent implements OnInit {
     if (this.data.serviceType === '-' || this.data.serviceType === null || this.data.serviceType === undefined) {
       this.data.serviceType = 'ITR';
     }
-
-
-
     console.log('this.data.userInfo : ', this.data.userInfo);
   }
 
@@ -63,17 +59,16 @@ export class ChangeStatusComponent implements OnInit {
     this.userService.getMethod(param).subscribe(response => {
       console.log('status response: ', response);
       if (response instanceof Array && response.length > 0) {
-        console.log('data: ',this.data)
-        console.log('sorted itr status array: ',response.filter((item:any) => item.applicableServices.includes(this.data.serviceType)))
+        console.log('data: ', this.data)
+        console.log('sorted itr status array: ', response.filter((item: any) => item.applicableServices.includes(this.data.serviceType)))
         this.itrStatus = response;
       }
       else {
         this.itrStatus = [];
       }
-    },
-      error => {
-        console.log('Error during fetching status info.')
-      })
+    }, error => {
+      console.log('Error during fetching status info.')
+    })
   }
 
   getCallers() {
@@ -82,8 +77,8 @@ export class ChangeStatusComponent implements OnInit {
       console.log('status response: ', response);
       if (response instanceof Array && response.length > 0) {
         this.callers = response;
-        this.callers.sort((a:any, b:any) => a.name > b.name ? 1 : -1)
-        this.callers = this.callers.filter((item:any) => item.callerAgentUserId !== this.data.userInfo.callerAgentUserId)
+        this.callers.sort((a: any, b: any) => a.name > b.name ? 1 : -1)
+        this.callers = this.callers.filter((item: any) => item.callerAgentUserId !== this.data.userInfo.callerAgentUserId)
       }
       else {
         this.callers = [];
@@ -96,8 +91,8 @@ export class ChangeStatusComponent implements OnInit {
 
   setCallerName() {
     console.log(this.changeStatus.value.callerAgentUserId);
-    let callerName = this.callers.filter((item:any) => item.callerAgentUserId === this.changeStatus.value.callerAgentUserId)[0].name;
-    let callerNumber = this.callers.filter((item:any) => item.callerAgentUserId === this.changeStatus.value.callerAgentUserId)[0].mobileNumber;
+    let callerName = this.callers.filter((item: any) => item.callerAgentUserId === this.changeStatus.value.callerAgentUserId)[0].name;
+    let callerNumber = this.callers.filter((item: any) => item.callerAgentUserId === this.changeStatus.value.callerAgentUserId)[0].mobileNumber;
     this.data.userInfo.callerAgentName = callerName;
     this.data.userInfo.callerAgentNumber = callerNumber;
 
@@ -115,7 +110,7 @@ export class ChangeStatusComponent implements OnInit {
         let param2 = {
           "statusId": this.changeStatus.controls['selectStatus'].value,
           "userId": this.data.userId,
-          "assessmentYear": "2021-2022",
+          "assessmentYear": "2022-2023",
           "completed": true,
           "serviceType": sType
         }
@@ -127,13 +122,11 @@ export class ChangeStatusComponent implements OnInit {
           setTimeout(() => {
             this.dialogRef.close({ event: 'close', data: 'statusChanged', responce: res })
           }, 4000)
-        },
-          error => {
-            this.loading = false;
-            this._toastMessageService.alert("error", "There is some issue to Update Status information.");
-          })
-      }
-      else if (this.data.mode === 'Update Caller') {
+        }, error => {
+          this.loading = false;
+          this._toastMessageService.alert("error", "There is some issue to Update Status information.");
+        })
+      } else if (this.data.mode === 'Update Caller') {
         let param = `/call-management/customers`;
         let reqBody = Object.assign(this.data.userInfo, this.changeStatus.getRawValue());
         console.log('reqBody: ', reqBody);
@@ -145,13 +138,11 @@ export class ChangeStatusComponent implements OnInit {
           setTimeout(() => {
             this.dialogRef.close({ event: 'close', data: 'statusChanged', responce: res })
           }, 4000)
-        },
-          error => {
-            this.loading = false;
-            this._toastMessageService.alert("error", "There is some issue to Update Caller Agent.");
-          })
+        }, error => {
+          this.loading = false;
+          this._toastMessageService.alert("error", "There is some issue to Update Caller Agent.");
+        })
       }
-
     }
   }
 

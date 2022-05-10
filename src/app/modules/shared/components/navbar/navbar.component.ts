@@ -73,7 +73,8 @@ export class NavbarComponent implements DoCheck {
       data: {
       },
       width: '450px',
-      height: '500px'
+      height: '450px',
+      hasBackdrop:false,
     });
 
     dialogRef.afterClosed().subscribe(result => {

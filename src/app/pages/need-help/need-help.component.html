@@ -1,35 +1,21 @@
-<div class="dialog-sec" [ngClass]="{'dnone': apiSuccess}">
-  <div>
-    <span>
-      <h2>Need Help? Please provide the details below.</h2>
-    </span>
+<div class="dialog-sec" [ngClass]="{'display-none': apiSuccess}">
+  <div class="heading">
+    Need Help? Please provide the details below.
   </div>
-
   <form #form="ngForm" [formGroup]="helpForm">
-
+    <label class="desc">Description</label>
+    <textarea class="textarea" formControlName="description" maxlength="300"></textarea>
     <div>
-      <label class="decr">Description</label>
-      <div>
-        <textarea class="textarea" formControlName="description" maxlength="300"></textarea>
-      </div>
-      <div>
-        <div>
-          <span class="error-msg text-align-right" *ngIf="helpForm.controls['description'].pristine 
+      <span class="error-msg text-align-right" *ngIf="helpForm.controls['description'].pristine 
           && helpForm.controls['description'].touched && helpForm.controls['description'].status == 'INVALID' ">
-            Please enter valid details</span>
-        </div>
-      </div>
+        Please enter valid details</span>
     </div>
-
-    <!-- <div class="det"><label>Details</label>
-      <div><textarea class="textarea" formControlName="details"></textarea></div>
-    </div> -->
-
-    <div class="attch">
-      <div id="lb"><label>Add a file</label></div>
+    <div class="attach">
       <div>
-        <input (change)="onFileSelected($event)" type="file" id="myFile" name="filename" formControlName="filename">
+        <label class="desc">Add a file</label>
       </div>
+      <input (change)="onFileSelected($event)" id="file" type="file" name="filename" formControlName="filename">
+      <label for="file" >choose a file</label>
       <div id="or"><span>or</span></div>
       <div class="scr-shot">
         <a href="https://chrome.google.com/webstore/detail/full-page-screenshot-capt/pojgkmkfincpdkdgjepkmdekcahmckjp"
@@ -37,12 +23,7 @@
           a Screen Shot</a>
       </div>
     </div>
-    <!-- <div>
-      <div style="text-align:center">
-        <button mat-raised-button color="primary" [class.spinner]="loading" [disabled]="loading"
-          (click)="save()">Save</button>
-      </div>
-    </div> -->
+
     <div class="det">
       <mat-dialog-actions align="end">
         <button mat-button color="warn" mat-dialog-close>Cancel</button>
@@ -51,9 +32,7 @@
       </mat-dialog-actions>
     </div>
   </form>
-
 </div>
-<!--success message after ticket creation-->
 <div *ngIf="apiSuccess">
   <div id="sec">
     <div id="sec1"><span>Your ticket has created successfully.</span></div>

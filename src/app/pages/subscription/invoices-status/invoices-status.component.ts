@@ -75,7 +75,7 @@ export class InvoicesStatusComponent implements OnInit {
     };
   }
   setDates() {
-    let data = this.fyDropDown.filter((item:any) => item.value === this.summaryDetailForm.controls['fy'].value);
+    let data = this.fyDropDown.filter((item: any) => item.value === this.summaryDetailForm.controls['fy'].value);
     if (data.length > 0) {
       this.summaryDetailForm.controls['fromDate'].setValue(data[0].startDate);
       this.summaryDetailForm.controls['toDate'].setValue(data[0].endDate);
@@ -140,7 +140,7 @@ export class InvoicesStatusComponent implements OnInit {
   }
 
   getCount(param) {
-    return this.invoiceData.filter((item:any) => item.paymentStatus.toLowerCase() === param).length
+    return this.invoiceData.filter((item: any) => item.paymentStatus.toLowerCase() === param).length
   }
   createRowData(userInvoices) {
     console.log('userInvoices: ', userInvoices)
@@ -180,7 +180,8 @@ export class InvoicesStatusComponent implements OnInit {
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          debounceMs: 0,
+          apply: true
         }
       },
       {
@@ -217,7 +218,7 @@ export class InvoicesStatusComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return {
               textAlign: 'center',
@@ -299,7 +300,7 @@ export class InvoicesStatusComponent implements OnInit {
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd MMM yyyy', this.locale)
         },
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           let currentDate = new Date();
           let dateSent = new Date(params.data.dueDate);
           let diff = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate())) / (1000 * 60 * 60 * 24));
@@ -371,7 +372,7 @@ export class InvoicesStatusComponent implements OnInit {
         },
         valueGetter: function nameFromCode(params) {
           if (smeList.length !== 0) {
-            const nameArray = smeList.filter((item:any) => item.userId.toString() === params.data.invoicePreparedBy);
+            const nameArray = smeList.filter((item: any) => item.userId.toString() === params.data.invoicePreparedBy);
             if (nameArray.length !== 0) {
               return nameArray[0].name;
             }
@@ -405,7 +406,7 @@ export class InvoicesStatusComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return `<button type="button" class="action_icon add_button" title="Paid Invoice" disabled
              style="border: none; background: transparent; font-size: 16px; cursor:not-allowed">
@@ -420,7 +421,7 @@ export class InvoicesStatusComponent implements OnInit {
         },
         width: 55,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return {
               textAlign: 'center',
@@ -446,7 +447,7 @@ export class InvoicesStatusComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Mail notification" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer">
             <i class="fa fa-envelope" aria-hidden="true" data-action-type="send-Mail-Notification"></i>
@@ -466,7 +467,7 @@ export class InvoicesStatusComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Download Invoice" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer">
          <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
@@ -487,7 +488,7 @@ export class InvoicesStatusComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return `<button type="button" class="action_icon add_button" disabled title="Whatsapp reminder"
             style="border: none;
@@ -504,7 +505,7 @@ export class InvoicesStatusComponent implements OnInit {
         },
         width: 55,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return {
               textAlign: 'center', display: 'flex',
@@ -528,7 +529,7 @@ export class InvoicesStatusComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return `<button type="button" class="action_icon add_button" disabled title="Mail reminder"
             style="border: none;
@@ -545,7 +546,7 @@ export class InvoicesStatusComponent implements OnInit {
         },
         width: 55,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return {
               textAlign: 'center', display: 'flex',
@@ -569,7 +570,7 @@ export class InvoicesStatusComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return `<button type="button" class="action_icon add_button" disabled title="Paid Invoice you can not delete" 
             style="border: none;
@@ -586,7 +587,7 @@ export class InvoicesStatusComponent implements OnInit {
         },
         width: 55,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return {
               textAlign: 'center', display: 'flex',
@@ -610,7 +611,7 @@ export class InvoicesStatusComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call." 
             style="border: none;
             background: transparent; font-size: 16px; cursor:pointer">
@@ -626,7 +627,7 @@ export class InvoicesStatusComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
@@ -634,7 +635,7 @@ export class InvoicesStatusComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -705,14 +706,14 @@ export class InvoicesStatusComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result && this.utilService.isNonEmpty(result) && result.msg === 'success') {
-       // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Delete', data.phone], environment.matomoScriptId);
-       if(mode === 'UPDATE'){
-        this.utilService.matomoCall('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Edit', data.phone], environment.matomoScriptId);
-       }
-       else if(mode === 'DELETE'){
-        this.utilService.matomoCall('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Delete', data.phone], environment.matomoScriptId)
-       }
-       
+        // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Delete', data.phone], environment.matomoScriptId);
+        if (mode === 'UPDATE') {
+          this.utilService.matomoCall('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Edit', data.phone], environment.matomoScriptId);
+        }
+        else if (mode === 'DELETE') {
+          this.utilService.matomoCall('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Delete', data.phone], environment.matomoScriptId)
+        }
+
         this.getAllInvoiceInfo();
       }
     });
@@ -757,7 +758,7 @@ export class InvoicesStatusComponent implements OnInit {
     this.userService.postMethodInfo(param, invoiceInfo).subscribe((result: any) => {
       this.loading = false;
       console.log('Email sent response: ', result);
-     // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Reminder', invoiceInfo.phone], environment.matomoScriptId);
+      // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Reminder', invoiceInfo.phone], environment.matomoScriptId);
       this._toastMessageService.alert("success", "Mail Reminder sent successfully.");
     }, error => {
       this.loading = false;
@@ -801,12 +802,12 @@ export class InvoicesStatusComponent implements OnInit {
       let toData = this.datePipe.transform(this.summaryDetailForm.value.toDate, 'yyyy-MM-dd');
       if (this.utilService.isNonEmpty(this.summaryDetailForm.value.status)) {
         let parameter = 'fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.summaryDetailForm.value.status;
-       // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Download Invocie', parameter], environment.matomoScriptId);
+        // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Download Invocie', parameter], environment.matomoScriptId);
         location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.summaryDetailForm.value.status;
       }
       else {
         let parameter = 'fromDate=' + fromData + '&toDate=' + toData;
-       // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Download Invocie', parameter], environment.matomoScriptId);
+        // matomo('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Download Invocie', parameter], environment.matomoScriptId);
         location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData;;
       }
 
@@ -842,7 +843,7 @@ export class InvoicesStatusComponent implements OnInit {
       if (result.success.status) {
         this._toastMessageService.alert("success", result.success.message)
       }
-     this.utilService.matomoCall('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Call', user.phone], environment.matomoScriptId);
+      this.utilService.matomoCall('All Invoices Tab', '/pages/subscription/invoices', ['trackEvent', 'All Invoice', 'Call', user.phone], environment.matomoScriptId);
     }, error => {
       this._toastMessageService.alert('error', 'Error while making call, Please try again.');
       this.loading = false;

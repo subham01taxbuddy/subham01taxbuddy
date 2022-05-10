@@ -432,16 +432,17 @@ export class UtilsService {
                 this.showSnackBar('Error While getting SME list.');
                 return [];
             });
-            if (res && res instanceof Array) {
-                res.sort((a, b) => a.name > b.name ? 1 : -1)
-                sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res));
-                return res;
+            if (res && res.data instanceof Array) {
+                res.data.sort((a, b) => a.name > b.name ? 1 : -1)
+                sessionStorage.setItem(AppConstants.AGENT_LIST, JSON.stringify(res.data));
+                return res.data;
             }
         }
         return [];
     }
     async getAgentList() {
-        const param = `/${ApiEndpoints.userMs.agentDetails}`;
+        const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
+        const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 

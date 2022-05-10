@@ -1,9 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { request } from 'http';
-import { getbaseUrl } from 'ngx-doc-viewer';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { DialogData } from 'src/app/modules/shared/components/navbar/navbar.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
 
@@ -27,8 +24,7 @@ export class NeedHelpComponent implements OnInit {
     public dialogRef: MatDialogRef<NeedHelpComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: FormBuilder,
-    private userMsService: UserMsService,
-    private spinner: NgxSpinnerService
+    private userMsService: UserMsService
   ) { }
   ngOnInit(): void {
     this.helpForm = this.fb.group({

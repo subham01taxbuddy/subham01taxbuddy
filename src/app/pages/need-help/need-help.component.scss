@@ -1,19 +1,21 @@
 .dialog-sec {
-  height: 400px;
-  padding: 20px;
+  padding: 12px;
+
+  .heading {
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .desc {
+    font-size: 14px;
+    display: block;
+    padding-bottom: 10px;
+  }
 }
 
-span h2 {
-  font-size: 20px;
-  padding: 10px;
-  margin-bottom: 20px;
-}
 
-.decr {
-  margin-top: 20px;
-  font-size: 15px;
-  font-weight: 600;
-}
+
 
 .det {
   margin-top: 20px;
@@ -21,11 +23,8 @@ span h2 {
   font-weight: 600;
 }
 
-.attch {
-  padding: 10px;
+.attach {
   margin-top: 20px;
-  font-size: 15px;
-  font-weight: 600;
 }
 
 .scr-shot {
@@ -53,7 +52,7 @@ span h2 {
   color: #FF0000;
 }
 
-.dnone {
+.display-none {
   display: none;
 }
 
@@ -106,4 +105,30 @@ span h2 {
   border: 2px solid #ffffff;
   border-top-color: #000000;
   animation: spinner .8s linear infinite;
+}
+
+[type="file"] {
+  height: 0;
+  overflow: hidden;
+  width: 0;
+}
+
+[type="file"] + label {
+  background: #63b12d;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  outline: none;
+  padding: 1rem 50px;
+  position: relative;
+  transition: all 0.3s;
+  vertical-align: middle;
+  
+  &:hover {
+    background-color: darken(#63b12d, 10%);
+  }
 }

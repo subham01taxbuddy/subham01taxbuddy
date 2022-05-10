@@ -18,7 +18,7 @@ import { InterestedClientsComponent } from './pages/interested-clients/intereste
 import { OpenStatusComponent } from './pages/open-status/open-status.component';
 import { KnowlarityComponent } from './pages/knowlarity/knowlarity.component';
 import { Calling2dot0Component } from './pages/calling-board/calling2dot0/calling2dot0.component';
-import { ScheduledCallComponent } from './pages/calling-board/scheduled-call/scheduled-call.component';
+// import { ScheduledCallComponent } from './pages/calling-board/scheduled-call/scheduled-call.component';
 import { DownloadDialogComponent } from './pages/interested-clients/download-dialog/download-dialog.component';
 import { SignupExceptionComponent } from './pages/calling-board/signup-exception/signup-exception.component';
 import { StatusWiseClientsComponent } from './pages/status-wise-clients/status-wise-clients.component';
@@ -44,7 +44,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
         OpenStatusComponent,
         KnowlarityComponent,
         Calling2dot0Component,
-        ScheduledCallComponent,
+        // ScheduledCallComponent,
         DownloadDialogComponent,
         SignupExceptionComponent,
         StatusWiseClientsComponent,
