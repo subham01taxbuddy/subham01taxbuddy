@@ -56,9 +56,9 @@ export class LoginComponent implements OnInit {
         this.getAgentList();
 
         if (userData.USER_ROLE.indexOf("ROLE_ADMIN") !== -1) {
-          this.router.navigate(['/pages/dashboard/calling/calling2']);
-        } else if (userData.USER_ROLE.indexOf("ROLE_FILING_TEAM") !== -1) {
-          this.router.navigate(['/pages/dashboard/calling/calling2']);
+          this.router.navigate(['/tasks/assigned-users']);
+        } else if (['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_GST_CALLER', 'ROLE_NOTICE_CALLER'].some(item => userData.USER_ROLE.includes(item))) {
+          this.router.navigate(['/tasks/assigned-users']);
         } else if (userData.USER_ROLE.indexOf("ROLE_TPA_SME") !== -1) {
           this.router.navigate(['pages/tpa-interested']);
         } else {
@@ -162,7 +162,7 @@ export class LoginComponent implements OnInit {
     this.getAgentList();
 
     if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
-      this.router.navigate(['/pages/dashboard/calling/calling2']);
+      this.router.navigate(['/tasks/assigned-users']);
       this.utilsService.logAction(jhi.userId, 'login')
       // } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
       //   this.router.navigate(['/pages/dashboard/calling/calling2']);
@@ -171,7 +171,7 @@ export class LoginComponent implements OnInit {
       //   this.router.navigate(['pages/tpa-interested']);
       //   this.utilsService.logAction(jhi.userId, 'login')
     } else if (['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_GST_CALLER', 'ROLE_NOTICE_CALLER'].some(item => jhi.role.includes(item))) {
-      this.router.navigate(['/pages/dashboard/calling/calling2']);
+      this.router.navigate(['/tasks/assigned-users']);
     } else {
       if (jhi.role.length > 0)
         this._toastMessageService.alert("error", "Access Denied.");

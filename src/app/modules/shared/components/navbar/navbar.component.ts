@@ -63,7 +63,7 @@ export class NavbarComponent implements DoCheck {
     }
   }
   navigateToHome() {
-    this.router.navigate(['/pages/dashboard/calling/calling2']);
+    this.router.navigate(['/tasks/assigned-users']);
   }
 
 
@@ -74,7 +74,7 @@ export class NavbarComponent implements DoCheck {
       },
       width: '450px',
       height: '450px',
-      hasBackdrop:false,
+      hasBackdrop: false,
     });
 
     dialogRef.afterClosed().subscribe(result => {
