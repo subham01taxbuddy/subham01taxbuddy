@@ -50,13 +50,13 @@ export class AddNewPlanComponent implements OnInit {
   selectedPromoCode = '';
   serviceType = '';
   subStartDate = new FormControl(new Date(), [Validators.required]);
-  subEndDate = new FormControl(new Date('Mar 31, 2022'), [Validators.required]);
+  subEndDate = new FormControl(new Date('Mar 31, 2023'), [Validators.required]);
   gstType = new FormControl('', []);
   frequency = new FormControl('', []);
   startMonth = new FormControl('', []);
   startYear = new FormControl('', []);
   noOfMonths = new FormControl('', []);
-  subscriptionAssigneeId = new FormControl('', Validators.required);
+  subscriptionAssigneeId = new FormControl('');
   finalPricing = {
     basePrice: null,
     cgst: null,
@@ -205,9 +205,9 @@ export class AddNewPlanComponent implements OnInit {
     let param = '/plans-master';
     this.itrService.getMethod(param).subscribe((plans: any) => {
       if (plans instanceof Array) {
-        const activePlans = plans.filter((item:any) => item.isActive === true);
+        const activePlans = plans.filter((item: any) => item.isActive === true);
         if (this.utilsService.isNonEmpty(serviceType))
-          this.allPlans = activePlans.filter((item:any) => item.servicesType === serviceType);
+          this.allPlans = activePlans.filter((item: any) => item.servicesType === serviceType);
         else
           this.allPlans = activePlans;
       } else {
@@ -268,7 +268,7 @@ export class AddNewPlanComponent implements OnInit {
 
   showPromoCode(code) {
     console.log('selected promo code Id: ', code)
-    this.promoCodeInfo = this.allPromoCodes.filter((item:any) => item.code === code)[0];
+    this.promoCodeInfo = this.allPromoCodes.filter((item: any) => item.code === code)[0];
     console.log('promoCodeInfo: ', this.promoCodeInfo)
   }
 
@@ -319,8 +319,8 @@ export class AddNewPlanComponent implements OnInit {
     this.itrService.putMethod(param, this.userSubscription).subscribe((response: any) => {
       console.log('Subscription Updated Successfully:', response);
       this.utilsService.showSnackBar('Subscription updated successfully!');
-      let userInfo = this.userSubscription.userId+'-'+this.userSubscription.userName;
-      this.utilsService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Update Subscription', 'Add',userInfo], environment.matomoScriptId)
+      let userInfo = this.userSubscription.userId + '-' + this.userSubscription.userName;
+      this.utilsService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Update Subscription', 'Add', userInfo], environment.matomoScriptId)
       if (value !== 'CLEAR_PLAN') {
         this.router.navigate(['/pages/subscription']);
       } else {
