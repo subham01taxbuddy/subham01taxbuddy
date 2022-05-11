@@ -139,11 +139,9 @@ body {
 
 .tbd-btn {
   display: inline-block;
-  /* min-width: 129px; */
   margin: 8px;
   padding: 12px 15px;
   text-align: center;
-  /* font-size: 1.166666667em; */
   font-weight: 600;
   line-height: 1em;
   text-decoration: none;
@@ -172,4 +170,31 @@ body {
 
 .tbd-btn-close:hover {
   color: red;
+}
+
+.tbd-btn-secondary {
+  display: inline-block;
+  margin: 8px;
+  padding: 12px 15px;
+  text-align: center;
+  font-weight: 600;
+  line-height: 1em;
+  // text-decoration: none;
+  border-radius: 5px;
+  transition-property: color, background-color;
+  transition-duration: 0.25s;
+  cursor: pointer;
+  // border: none;
+  // background-color: #22374e;
+  color: #22374e;
+  padding: 10px 15px;
+  border: solid 2px;
+  background-color: #fff;
+}
+
+.tbd-btn-secondary:hover {
+  background-color: #04a3bc;
+  color: #fff;
+  border: solid 2px;
+  border-color: #04a3bc;
 }

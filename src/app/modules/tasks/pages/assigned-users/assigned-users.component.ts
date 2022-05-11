@@ -80,6 +80,11 @@ export class AssignedUsersComponent implements OnInit {
     this.searchParam.page = event - 1
     this.search();
   }
+  fromSme(event) {
+    this.agentId = event;
+    this.search('agent');
+  }
+
   getAgentList() {
     const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
     const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserDetails.USER_ROLE, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);

@@ -20,7 +20,7 @@ export class SmeListComponent implements OnInit {
   constructor(private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private router:Router,
+    private router: Router,
     @Inject(LOCALE_ID) private locale: string) {
     this.smeListGridOptions = <GridOptions>{
       rowData: [],
@@ -98,6 +98,7 @@ export class SmeListComponent implements OnInit {
       {
         headerName: 'Name',
         field: 'name',
+        pinned: 'left',
         width: 180,
         suppressMovable: true,
         filter: "agTextColumnFilter",
@@ -147,15 +148,30 @@ export class SmeListComponent implements OnInit {
         field: 'itrTypes',
         width: 80,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center' ,display: 'flex', 'align-items': 'center',
-        'justify-content': 'center'},
+        cellStyle: {
+          textAlign: 'center', display: 'flex', 'align-items': 'center',
+          'justify-content': 'center'
+        },
       },
       {
         headerName: 'Service Type',
         field: 'serviceType',
         width: 80,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {
+          textAlign: 'center', display: 'flex', 'align-items': 'center',
+          'justify-content': 'center'
+        },
+      },
+      {
+        headerName: 'Roles',
+        field: 'roles',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: {
+          textAlign: 'center', display: 'flex', 'align-items': 'center',
+          'justify-content': 'center'
+        },
       },
       {
         headerName: 'Active',
@@ -168,7 +184,7 @@ export class SmeListComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -182,7 +198,7 @@ export class SmeListComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update SME Details"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-pencil" aria-hidden="true" data-action-type="updateSmeDetails"></i>
@@ -190,7 +206,7 @@ export class SmeListComponent implements OnInit {
         },
         width: 80,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -213,8 +229,9 @@ export class SmeListComponent implements OnInit {
         email: this.utilsService.isNonEmpty(userData[i].email) ? userData[i].email : '-',
         assignmentStart: userData[i].assignmentStart ? 'Yes' : 'No',
         active: userData[i].active ? 'Yes' : 'No',
-        itrTypes: userData[i].serviceType === 'ITR'? userData[i].itrTypes : 'NA',
+        itrTypes: userData[i].serviceType === 'ITR' ? userData[i].itrTypes : 'NA',
         serviceType: userData[i].serviceType,
+        roles: userData[i].roles.filter(item => item !== 'ROLE_USER'),
       })
       userArray.push(smeList);
     }
@@ -228,7 +245,7 @@ export class SmeListComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'updateSmeDetails': {
-          this.router.navigate(['sme-management/create'],{ queryParams: { mobile: params.data.mobileNumber } });
+          this.router.navigate(['sme-management/create'], { queryParams: { mobile: params.data.mobileNumber } });
           // this.redirectTowardInvoice(params.data);
           break;
         }

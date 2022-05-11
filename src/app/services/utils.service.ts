@@ -487,12 +487,15 @@ export class UtilsService {
 
     async getMyCallingNumber() {
         const userObj = JSON.parse(localStorage.getItem('UMD') ?? "");
-        const SME_LIST: any = await this.getStoredSmeList();
-        const sme = SME_LIST.filter((item: any) => item.userId === userObj.USER_UNIQUE_ID);
-        if (sme instanceof Array && sme.length > 0 && (sme[0]['roles'].length > 0 && sme[0]['roles'].includes('ROLE_CALLING_TEAM'))) {
-
-            return sme[0].mobileNumber;
+        if (userObj.USER_MOBILE) {
+            return userObj.USER_MOBILE;
         }
+        // const SME_LIST: any = await this.getStoredSmeList();
+        // const sme = SME_LIST.filter((item: any) => item.userId === userObj.USER_UNIQUE_ID);
+        // if (sme instanceof Array && sme.length > 0 && (sme[0]['roles'].length > 0 && sme[0]['roles'].includes('ROLE_CALLING_TEAM'))) {
+
+        //     return sme[0].mobileNumber;
+        // }
         return false;
     }
 
@@ -503,6 +506,33 @@ export class UtilsService {
         else {
             matomo(mainTabName, path, eventArray, scriptId);
         }
+    }
+
+    async getStoredMyAgentList() {
+        const agentList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST) || null);
+        // console.log('fyList', fyList);
+        if (this.isNonEmpty(agentList) && agentList instanceof Array && agentList.length > 0) {
+            agentList.sort((a, b) => a.name > b.name ? 1 : -1)
+            return agentList;
+        } else {
+            let res: any = await this.getMyAgentList().catch(error => {
+                this.loading = false;
+                console.log(error);
+                this.showSnackBar('Error While getting My Agent list.');
+                return [];
+            });
+            if (res.success && res.data instanceof Array) {
+                res.data.sort((a, b) => a.name > b.name ? 1 : -1)
+                sessionStorage.setItem(AppConstants.MY_AGENT_LIST, JSON.stringify(res.data));
+                return res.data;
+            }
+            return [];
+        }
+    }
+    async getMyAgentList() {
+        const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
+        const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
+        return await this.userMsService.getMethod(param).toPromise();
     }
 
 }

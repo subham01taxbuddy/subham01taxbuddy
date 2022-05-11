@@ -33,6 +33,7 @@ export class AppConstants {
     public static MASTER_STATUS = environment.production ? 'MASTER_STATUS' : 'MASTER_STATUS';
     public static FY_LIST = environment.production ? 'FY_LIST' : 'FY_LIST';
     public static AGENT_LIST = environment.production ? 'AGENT_LIST' : 'AGENT_LIST';
+    public static MY_AGENT_LIST = environment.production ? 'MY_AGENT_LIST' : 'MY_AGENT_LIST';
     public static SELECTED_AGENT = environment.production ? 'SELECTED_AGENT' : 'SELECTED_AGENT';
     public static gstFyList = [
         { financialYear: '2022-23' },

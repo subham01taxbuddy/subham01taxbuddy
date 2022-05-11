@@ -47,7 +47,7 @@ export class SmeListDropDownComponent implements OnInit {
   }
 
   async getSmeList() {
-    this.smeList = await this.utilsService.getStoredSmeList() || [];
+    this.smeList = await this.utilsService.getStoredMyAgentList() || [];
   }
 
   // setFyDropDown() {

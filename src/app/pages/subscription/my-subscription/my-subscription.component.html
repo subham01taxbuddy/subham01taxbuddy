@@ -1,9 +1,15 @@
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
-        <span style="float: right;"> Total Count: <b>{{totalCount}}</b></span>
-        <br>
         <div class="card__row">
-            <app-main-subsciption [tabName]="tabName" [queryParam]="queryParam" from="MY_SUB" (sendTotalCount)="fromSubscription($event)">
+            <div class="card__col-lg-6"
+                *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_ITR_SL','ROLE_GST_SL','ROLE_NOTICE_SL'])">
+                <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>
+            </div>
+            <span style="float: right;"> Total Count: <b>{{totalCount}}</b></span>
+        </div>
+        <div class="card__row">
+            <app-main-subsciption [tabName]="tabName" [queryParam]="queryParam" from="MY_SUB"
+                (sendTotalCount)="fromSubscription($event)">
             </app-main-subsciption>
         </div>
     </div>
