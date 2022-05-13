@@ -485,10 +485,11 @@ export class UtilsService {
         })
     }
 
-    async getMyCallingNumber() {
-        const userObj = JSON.parse(localStorage.getItem('UMD') ?? "");
-        if (userObj.USER_MOBILE) {
-            return userObj.USER_MOBILE;
+    getMyCallingNumber() {
+        // const userObj = JSON.parse(localStorage.getItem('UMD') ?? "");
+        const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
+        if (this.isNonEmpty(loggedInSmeInfo) && this.isNonEmpty(loggedInSmeInfo.mobileNumber)) {
+            return loggedInSmeInfo.mobileNumber;
         }
         // const SME_LIST: any = await this.getStoredSmeList();
         // const sme = SME_LIST.filter((item: any) => item.userId === userObj.USER_UNIQUE_ID);

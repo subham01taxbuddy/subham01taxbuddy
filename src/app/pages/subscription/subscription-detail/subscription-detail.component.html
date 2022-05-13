@@ -23,7 +23,7 @@
                             aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
                 </div>
                 <div class="card__col-md-3 card__col-xs-12 pull-right" *ngIf="selectedUserName">
-                    <button class="btn" (click)="addSubscriptionPlan()">Create subscription</button>
+                    <button class="tbd-btn" (click)="addSubscriptionPlan()">Create subscription</button>
                 </div>
             </div><br><br>
         </div><br><br>
@@ -34,7 +34,8 @@
         <span style="float: right;"> Total Count: <b>{{totalCount}}</b></span>
         <br>
         <div class="card__row">
-            <app-main-subsciption [tabName]="tabName" [queryParam]="queryParam" from="ALL_SUB" (sendTotalCount)="fromSubscription($event)">
+            <app-main-subsciption [tabName]="tabName" [queryParam]="queryParam" from="ALL_SUB"
+                (sendTotalCount)="fromSubscription($event)">
             </app-main-subsciption>
             <!---->
         </div>

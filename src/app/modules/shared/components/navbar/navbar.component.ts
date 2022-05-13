@@ -1,3 +1,4 @@
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { Component, DoCheck } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
@@ -12,7 +13,7 @@ export interface DialogData {
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.sass']
+  styleUrls: ['./navbar.component.sass', './navbar.component.scss']
 })
 export class NavbarComponent implements DoCheck {
 
@@ -116,7 +117,7 @@ export class NavbarComponent implements DoCheck {
   }
 
   getLoggedInUserName() {
-    const userObj = JSON.parse(localStorage.getItem('UMD') || null);
-    return userObj ? (userObj.USER_F_NAME + ' ' + userObj.USER_L_NAME) : ''
+    const userObj = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
+    return userObj ? userObj.name : ''
   }
 }

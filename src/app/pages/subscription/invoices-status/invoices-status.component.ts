@@ -133,12 +133,24 @@ export class InvoicesStatusComponent implements OnInit {
       this.invoiceData = res;
       this.totalInvoice = this.invoiceData.length
       console.log('this.invoiceData ', this.invoiceData)
-      this.invoiceListGridOptions.api?.setRowData(this.createRowData(this.invoiceData))
+      this.invoiceListGridOptions.api?.setRowData(this.createRowData(this.invoiceData));
+      this.setCustomeFilter();
     }, error => {
       this.loading = false;
     })
   }
 
+  setCustomeFilter() {
+    if (this.utilService.isNonEmpty(this.userId)) {
+      const filterInstance = this.invoiceListGridOptions.api.getFilterInstance('userId');
+      filterInstance.setModel({
+        type: "contains",
+        filter: this.userId
+      });
+      // Tell grid to run filter operation again
+      this.invoiceListGridOptions.api.onFilterChanged();
+    }
+  }
   getCount(param) {
     return this.invoiceData.filter((item: any) => item.paymentStatus.toLowerCase() === param).length
   }

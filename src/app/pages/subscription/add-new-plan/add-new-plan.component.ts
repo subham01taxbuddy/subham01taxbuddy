@@ -321,10 +321,12 @@ export class AddNewPlanComponent implements OnInit {
       this.utilsService.showSnackBar('Subscription updated successfully!');
       let userInfo = this.userSubscription.userId + '-' + this.userSubscription.userName;
       this.utilsService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Update Subscription', 'Add', userInfo], environment.matomoScriptId)
-      if (value !== 'CLEAR_PLAN') {
-        this.router.navigate(['/pages/subscription']);
-      } else {
+      if (value === 'CLEAR_PLAN') {
         this.setFinalPricing();
+      } else if (value === 'INVOICE') {
+        this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: this.userSubscription.subscriptionId } });
+      } else {
+        this.router.navigate(['/pages/subscription']);
       }
       this.loading = false;
     }, error => {
@@ -355,7 +357,7 @@ export class AddNewPlanComponent implements OnInit {
     }
   } */
 
-  saveSubscription() {
+  saveSubscription(val) {
     if (this.serviceType !== 'GST') {
       this.subStartDate.setValue(new Date('Apr 1, 2021'));
       this.subEndDate.setValue(new Date('Mar 31, 2022'));
@@ -365,7 +367,7 @@ export class AddNewPlanComponent implements OnInit {
       this.userSubscription.endDate = this.subEndDate.value;
       this.userSubscription.subscriptionAssigneeId = this.subscriptionAssigneeId.value;
       this.userSubscription.isActive = true;
-      this.updateSubscription('');
+      this.updateSubscription(val);
     } else {
       this.toastMessage.alert("error", "Select Start date and End date")
     }

@@ -83,7 +83,7 @@
         <mat-card>
           <b style="font-size: 18px;">SME Selected Plan: </b><br>
           <div class="card__row">
-            <div class="card__col-lg-5">
+            <div class="card__col-lg-8">
               <mat-form-field appearance="outline">
                 <mat-label>Select Plan</mat-label>
                 <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId" autocomplete="off">
@@ -96,12 +96,11 @@
               </mat-form-field>
             </div>
 
-            <div class="card__col-lg-7" *ngIf="smeSelectedPlanId">
-              <button class="plan-btn" (click)="applySmeSelctedPlan(smeSelectedPlanId)">Apply</button> &nbsp;&nbsp;
-
-              <button class="plan-btn" (click)="clearSmePlan()">Clear Plan</button>
-              <!--[disabled]="this.utilsService.isNonEmpty(smeSelectedPlanId) ? false : true"  [class.disableBtn]="this.utilsService.isNonEmpty(smeSelectedPlanId) ? false : true"-->
+            <div class="card__col-lg-4" style="text-align: end;" *ngIf="smeSelectedPlanId">
+              <button class="tbd-btn-small" (click)="applySmeSelctedPlan(smeSelectedPlanId)">Apply</button> &nbsp;
+              <button class="tbd-btn-small-secondary" (click)="clearSmePlan()" type="reset">Clear Plan</button>
             </div>
+
           </div>
           <span *ngIf="smeSelectedPlanId !== userSubscription?.smeSelectedPlan?.planId"><i><b>Note:</b> You have
               selected
@@ -187,9 +186,9 @@
             </div><br><br>
 
           </div>
-          <div style="align-items: center; margin-top: 17px;">
-            <button (click)="applyPromo()">Apply</button> &nbsp;
-            <button (click)="removePromoCode()" type="reset">Remove</button>
+          <div style="text-align: end;">
+            <button class="tbd-btn-small" (click)="applyPromo()">Apply</button> &nbsp;
+            <button class="tbd-btn-small-secondary" (click)="removePromoCode()" type="reset">Remove</button>
           </div>
         </div>
       </div>
@@ -410,12 +409,13 @@
         </div>
       </div>
     </div>
-    <div>
-      <div class="card__row">
-        <button class="btn act-btn" style="margin-left: 180px;" (click)="saveSubscription()">Save</button>
-        <!-- <button class="btn act-btn" (click)="activateSubscription()">Save & Activate</button> -->
-        <button class="btn act-btn" (click)="this.location.back()">Cancel</button>
-      </div>
+    <!-- <div> -->
+    <div class="card__row">
+      <button class="tbd-btn" (click)="saveSubscription('')">Save</button>
+      <button class="tbd-btn" (click)="saveSubscription('INVOICE')">Save and Generate Invoice</button>
+      <!-- <button class="btn act-btn" (click)="activateSubscription()">Save & Activate</button> -->
+      <button class="tbd-btn-secondary" (click)="this.location.back()">Cancel</button>
     </div>
+    <!-- </div> -->
   </div>
 </div>

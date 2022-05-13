@@ -1,3 +1,4 @@
+import { AppConstants } from './../../../shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -160,7 +161,7 @@ export class LoginComponent implements OnInit {
     this.utilsService.getStoredSmeList();
     this.getFyList();
     this.getAgentList();
-
+    this.getSmeInfoDetails(jhi.userId);
     if (jhi.role.indexOf("ROLE_ADMIN") !== -1) {
       this.router.navigate(['/tasks/assigned-users']);
       this.utilsService.logAction(jhi.userId, 'login')
@@ -211,6 +212,17 @@ export class LoginComponent implements OnInit {
   }
   async getFyList() {
     await this.utilsService.getStoredFyList();
+  }
+
+  getSmeInfoDetails(userId) {
+    this.loading = true;
+    const param = `/sme/info?userId=${userId}`;
+    this.userMsService.getMethod(param).subscribe((res: any) => {
+      console.log(res);
+      sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))
+    }, error => {
+      this.loading = false;
+    })
   }
 
   mode: string = 'SIGN_IN';
