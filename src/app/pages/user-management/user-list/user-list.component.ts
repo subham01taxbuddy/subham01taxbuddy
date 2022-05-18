@@ -11,6 +11,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { RoleUpdateComponent } from "../role-update/role-update.component";
+import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -294,6 +295,28 @@ export class UserListComponent implements OnInit {
         },
       },
       {
+        headerName: 'See/Add Notes',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Click see/add notes"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
         headerName: 'User Profile',
         editable: false,
         suppressMenu: true,
@@ -433,7 +456,7 @@ export class UserListComponent implements OnInit {
         city: this.utilsService.isNonEmpty(userData[i].city) ? userData[i].city : '-',
         gender: this.utilsService.isNonEmpty(userData[i].gender) ? userData[i].gender : '-',
         maritalStatus: this.utilsService.isNonEmpty(userData[i].maritalStatus) ? userData[i].maritalStatus : '-',
-        pan: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
+        pan: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
         resident: this.utilsService.isNonEmpty(userData[i].residentialStatus) ? userData[i].residentialStatus : '-',
         isReviewGiven: userData[i].reviewGiven,
         eriClientValidUpto: userData[i].eriClientValidUpto
@@ -476,15 +499,15 @@ export class UserListComponent implements OnInit {
           break;
         }
         case 'add-client': {
-          if (environment.production) {
-            this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan, eriClientValidUpto: params.data.eriClientValidUpto } });
-          } else {
-            this._toastMessageService.alert("error", 'You can not access add client on testing environment');
-          }
+          this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan, eriClientValidUpto: params.data.eriClientValidUpto } });
           break;
         }
         case 'add-role': {
-            this.updateRoles(params.data);
+          this.updateRoles(params.data);
+          break;
+        }
+        case 'addNotes': {
+          this.showNotes(params.data)
           break;
         }
       }
@@ -547,13 +570,29 @@ export class UserListComponent implements OnInit {
     })
   }
 
-  updateRoles(data){
+  updateRoles(data) {
     let disposable = this.dialog.open(RoleUpdateComponent, {
       width: '50%',
       height: 'auto',
       data: {
         userId: data.userId,
         clientName: data.name
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+  showNotes(client) {
+    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Notes'], environment.matomoScriptId)
+    let disposable = this.dialog.open(UserNotesComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.name,
+        serviceType: client.serviceType
       }
     })
 

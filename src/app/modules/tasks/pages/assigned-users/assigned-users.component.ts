@@ -625,7 +625,7 @@ export class AssignedUsersComponent implements OnInit {
         callerAgentNumber: userData[i].callerAgentNumber,
         statusId: userData[i].statusId,
         statusUpdatedDate: userData[i].statusUpdatedDate,
-        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : '-',
+        panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
         eriClientValidUpto: userData[i].eriClientValidUpto,
         laguage: userData[i].laguage
       })
@@ -667,11 +667,11 @@ export class AssignedUsersComponent implements OnInit {
           break;
         }
         case 'add-client': {
-          if (environment.production) {
-            this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.panNumber, eriClientValidUpto: params.data.eriClientValidUpto } });
-          } else {
-            this._toastMessageService.alert("error", 'You can not access add client on testing environment');
-          }
+          // if (environment.production) {
+          this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.panNumber, eriClientValidUpto: params.data.eriClientValidUpto } });
+          // } else {
+          // this._toastMessageService.alert("error", 'You can not access add client on testing environment');
+          // }
           break;
         }
         case 'call': {

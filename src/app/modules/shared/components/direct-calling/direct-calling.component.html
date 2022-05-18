@@ -1,22 +1,20 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <label style="font-size: 18px;
 font-weight: bold;">Call</label>
-<button mat-dialog-close tabindex="-1"
-    style="float: right; cursor: pointer;"><i class="fa fa-times" aria-hidden="true"></i></button>
-    
+<button mat-dialog-close tabindex="-1" class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+
 <div class="card__row">
-  <div class="card__col-xs-8">
-      <mat-form-field appearance="outline">
-          <mat-label>Mobile Number</mat-label>
-          <input matInput placeholder="Mobile Number" [formControl]="mobileNo" maxlength="10"
-          appearance="outline"
-          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-          onkeypress=" event.charCode >= 48 && event.charCode <= 57" required />
-          <mat-error class="error-msg" *ngIf="mobileNo.hasError('required') ">Please enter mobile number
-          </mat-error>
-      </mat-form-field>
-  </div>
-  <div class="card__col-xs-12" style="padding-top: 10px;">
-      <button type="submit" class="btn" style="border: none;" (click)="call()">Call</button>
-  </div>
+    <div class="card__col-xs-8">
+        <mat-form-field appearance="outline">
+            <mat-label>Mobile Number</mat-label>
+            <input matInput placeholder="Mobile Number" [formControl]="mobileNo" maxlength="10" appearance="outline"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                onkeypress=" event.charCode >= 48 && event.charCode <= 57" required />
+            <mat-error class="error-msg" *ngIf="mobileNo.hasError('required') ">Please enter mobile number
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="card__col-xs-4">
+        <button type="submit" class="tbd-btn" (click)="call()">Call</button>
+    </div>
 </div>
