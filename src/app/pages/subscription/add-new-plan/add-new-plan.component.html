@@ -253,16 +253,18 @@
             </mat-form-field>
           </div>
           <div class="card__col-lg-4">
-            Assignee Name: {{ this.userSubscription?.assigneeName}}
-            <!--   <mat-form-field appearance="outline">
+            <p *ngIf="this.serviceType === 'ITR'">Assignee Name: {{ this.userSubscription?.assigneeName}}</p>
+            <!--  <mat-form-field appearance="outline" *ngIf="this.serviceType !== 'ITR'">
               <mat-label>Select SME</mat-label>
-              <mat-select matInput placeholder="Select Filer" [formControl]="subscriptionAssigneeId" autocomplete="off"
-                >
+              <mat-select matInput placeholder="Select Filer" [formControl]="subscriptionAssigneeId" autocomplete="off">
                 <mat-option *ngFor="let sme of smeList" [value]="sme.userId">
                   {{ sme.name }}
                 </mat-option>
               </mat-select>
             </mat-form-field> -->
+            <app-sme-list-drop-down (sendSme)="fromSme($event)" listType="ALL" [serviceType]="this.serviceType"
+              *ngIf="this.serviceType !== 'ITR'">
+            </app-sme-list-drop-down>
           </div>
         </div>
       </mat-card>

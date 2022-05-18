@@ -1,3 +1,4 @@
+import { ReAssignDialogComponent } from './../../components/re-assign-dialog/re-assign-dialog.component';
 import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
@@ -450,6 +451,31 @@ export class AssignedUsersComponent implements OnInit {
         },
       },
       {
+        headerName: 'Re Assign',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          if (params.data.serviceType === 'ITR') {
+            return `<button type="button" class="action_icon add_button" title="Re Assignment"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-refresh" aria-hidden="true" data-action-type="re-assign"></i>
+           </button>`;
+          }
+          return 'NA'
+        },
+        width: 50,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
         headerName: 'Cloud',
         editable: false,
         suppressMenu: true,
@@ -660,6 +686,10 @@ export class AssignedUsersComponent implements OnInit {
           this.openChat(params.data)
           break;
         }
+        case 're-assign': {
+          this.reAssignUser(params.data)
+          break;
+        }
       }
     }
   }
@@ -807,6 +837,25 @@ export class AssignedUsersComponent implements OnInit {
       this._toastMessageService.alert('error', 'Error during fetching chat, try after some time.')
       this.loading = false;
     })
+  }
+
+  reAssignUser(client) {
+    let disposable = this.dialog.open(ReAssignDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.name,
+        serviceType: client.serviceType
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      if (result.data === 'success') {
+        this.search();
+      }
+    });
   }
   search(form?) {
     if (form == 'mobile') {

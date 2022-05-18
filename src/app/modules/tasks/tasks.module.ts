@@ -12,6 +12,7 @@ import { MaterialModule } from "src/app/modules/shared/material.module";
 import { AgGridModule } from "ag-grid-angular";
 import { NgxPaginationModule } from "ngx-pagination";
 import { ScheduledCallComponent } from './pages/scheduled-call/scheduled-call.component';
+import { ReAssignDialogComponent } from './components/re-assign-dialog/re-assign-dialog.component';
 
 @NgModule({
     imports: [
@@ -28,9 +29,10 @@ import { ScheduledCallComponent } from './pages/scheduled-call/scheduled-call.co
     declarations: [
         TasksComponent,
         AssignedUsersComponent,
-        ScheduledCallComponent
+        ScheduledCallComponent,
+        ReAssignDialogComponent
     ],
-    entryComponents: []
+    entryComponents: [ReAssignDialogComponent]
 
 })
 export class TasksModule { }

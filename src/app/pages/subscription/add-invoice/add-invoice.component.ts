@@ -546,9 +546,9 @@ export class AddInvoiceComponent implements OnInit {
   changeService() {
     const serviceArray = [{ service: 'ITR Filing', details: 'ITR-1 filing (FY 21-22)/ (AY 2022-23)' },
     { service: 'ITR Filing', details: 'ITR-2 filing (FY 21-22)/ (AY 2022-23)' },
-    { service: 'ITR Filing', details: 'ITR-3 filing (FY 21-22)/ (AY 2022-22)' },
-    { service: 'ITR Filing', details: 'ITR-4 filing (FY 21-22)/ (AY 2022-22)' },
-    { service: 'ITR Filing', details: 'ITR-5 filing (FY 21-22)/ (AY 2022-22)' },
+    { service: 'ITR Filing', details: 'ITR-3 filing (FY 21-22)/ (AY 2022-23)' },
+    { service: 'ITR Filing', details: 'ITR-4 filing (FY 21-22)/ (AY 2022-23)' },
+    { service: 'ITR Filing', details: 'ITR-5 filing (FY 21-22)/ (AY 2022-23)' },
     { service: 'ITR Filing', details: 'ITR Filing' },
     { service: 'GST Filing', details: 'GST Registration' },
     { service: 'GST Filing', details: 'GST Annual Subscription' },

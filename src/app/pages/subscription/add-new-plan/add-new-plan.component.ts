@@ -372,6 +372,9 @@ export class AddNewPlanComponent implements OnInit {
       this.toastMessage.alert("error", "Select Start date and End date")
     }
   }
+  fromSme(event) {
+    this.subscriptionAssigneeId.setValue(event);
+  }
 
   selectionChangeGstType(gstType: String) {
     if (gstType === 'REGULAR') {

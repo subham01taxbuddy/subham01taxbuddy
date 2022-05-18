@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { UserMsService } from './../../../../services/user-ms.service';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
@@ -10,18 +10,21 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './sme-list-drop-down.component.html',
   styleUrls: ['./sme-list-drop-down.component.scss']
 })
-export class SmeListDropDownComponent implements OnInit {
+export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Output() sendSme = new EventEmitter<any>();
   @Input() serviceType: any;
+  @Input() listType: any;
 
   smeList: any[] = [];
   selectedSme = new FormControl('', Validators.required);
   filteredOptions!: Observable<any[]>;
 
   constructor(public utilsService: UtilsService,
-    private itrMsService: ItrMsService) { }
+    private userMsService: UserMsService) {
+  }
 
   ngOnInit() {
+    console.log('listType in SME Drop down', this.listType);
     this.getSmeList();
 
     this.filteredOptions = this.selectedSme.valueChanges
@@ -47,7 +50,26 @@ export class SmeListDropDownComponent implements OnInit {
   }
 
   async getSmeList() {
+    if (this.listType === 'ALL' && this.utilsService.isNonEmpty(this.serviceType)) {
+      let res: any = await this.getMyAgentList().catch(error => {
+        console.log(error);
+        this.utilsService.showSnackBar('Error While getting My Agent list.');
+        this.smeList = []
+        return;
+      });
+      if (res.success && res.data instanceof Array) {
+        res.data.sort((a, b) => a.name > b.name ? 1 : -1)
+        this.smeList = res.data;
+        return;
+      }
+      return [];
+    }
     this.smeList = await this.utilsService.getStoredMyAgentList() || [];
+  }
+
+  async getMyAgentList() {
+    const param = `/sme/${this.serviceType}?isActive=true&isAssignmentStart=true`;
+    return await this.userMsService.getMethod(param).toPromise();
   }
 
   // setFyDropDown() {
@@ -73,6 +95,11 @@ export class SmeListDropDownComponent implements OnInit {
   //     })
   //   }
   // }
+
+  ngOnChanges() {
+    this.getSmeList();
+  }
+
 
   changeSme(sme: String) {
     console.log('SME in change:', sme, this.selectedSme)
