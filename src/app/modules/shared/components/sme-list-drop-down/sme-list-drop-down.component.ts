@@ -51,7 +51,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
 
   async getSmeList() {
     if (this.listType === 'ALL' && this.utilsService.isNonEmpty(this.serviceType)) {
-      let res: any = await this.getMyAgentList().catch(error => {
+      let res: any = await this.getMyAgentList(this.serviceType).catch(error => {
         console.log(error);
         this.utilsService.showSnackBar('Error While getting My Agent list.');
         this.smeList = []
@@ -67,8 +67,11 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     this.smeList = await this.utilsService.getStoredMyAgentList() || [];
   }
 
-  async getMyAgentList() {
-    const param = `/sme/${this.serviceType}?isActive=true&isAssignmentStart=true`;
+  async getMyAgentList(serviceType) {
+    if (serviceType === 'TPA') {
+      serviceType = 'ITR';
+    }
+    const param = `/sme/${serviceType}?isActive=true&isAssignmentStart=true`;
     return await this.userMsService.getMethod(param).toPromise();
   }
 
