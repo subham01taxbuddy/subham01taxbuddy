@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-direct-filing',
   templateUrl: './direct-filing.component.html',
@@ -8,8 +8,10 @@ import { Router } from '@angular/router';
 })
 export class DirectFilingComponent implements OnInit {
   tabIndex = 0;
-  addClient: any
-  constructor(private router: Router) {
+  addClient: any;
+  itrData: any
+  constructor(private router: Router,
+    public location: Location) {
     this.addClient = this.router.getCurrentNavigation().extras.state;
     console.log('ssssss', this.addClient);
     // this.addClient = {
@@ -22,6 +24,11 @@ export class DirectFilingComponent implements OnInit {
 
   tabChanged(tab) {
     this.tabIndex = tab.selectedIndex;
+  }
+
+  getItrDataFromSummary(event) {
+    console.log('get itr data from summary', event);
+    this.itrData = event;
   }
 
 }

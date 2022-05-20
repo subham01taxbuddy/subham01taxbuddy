@@ -57,7 +57,6 @@ export class ScheduledCallComponent implements OnInit {
     if (isAgentListAvailable) {
       const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
       this.userMsService.getMethod(param).subscribe((result: any) => {
-        console.log('Agent List', result);
         if (result.success) {
           this.agentList = result.data;
         }

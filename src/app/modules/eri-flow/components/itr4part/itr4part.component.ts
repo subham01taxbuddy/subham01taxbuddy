@@ -27,135 +27,135 @@ export class Itr4partComponent implements OnInit, DoCheck {
 
 
   constructor(private userService: UserMsService, private fb: FormBuilder, private utilService: UtilsService) {
-      
+
   }
 
   ngOnInit() {
     this.initialiseForm()
     this.getMastersData();
-   
+
   }
 
-  initialiseForm(){
-    console.log('jsonParse: ',this.jsonParse)
-      if(this.jsonParse){
-        this.natureOfBusinessForm = this.fb.group({
-          natureOfBusiness44AD: [''],
-          natureOfBusiness44ADA: [''],
-          tradeName44AD: [''],  //Validators.pattern(AppConstants.charRegex)
-          tradeName44ADA: [''],
-          recieptRecievedInBank: [''],
-          presumptiveIncomeRecieveBank: [''],
-          recievedinCash: [''],
-          presumptiveIncomeRecievedCash: [''],
-          grossReciept: [''],
-          presumptiveIncome: [''],
-          minimumPresumptiveIncomeRecivedInBank: [],
-          minimumPresumptiveIncomeCashInBank: [],
-          minimumPresumptiveIncome: [],
-          received44ADtaotal: [],
-          presumptive44ADtotal: [],
-          totalCapitalLiabilities: [],
-          totalAssets: [],
-    
-          grossTurnOverAmount: null,
-          membersOwnCapital: [],
-          securedLoans: [],
-          unSecuredLoans: [],
-          advances: [],
-          sundryCreditorsAmount: [],
-          otherLiabilities: [],
-          fixedAssets: [],
-          inventories: [],
-          sundryDebtorsAmount: [],
-          balanceWithBank: [],
-          cashInHand: [],
-          loanAndAdvances: [],
-          otherAssets: [],
-          investment: []
-        })
-      }
-      else{
-        this.natureOfBusinessForm = this.fb.group({
-          natureOfBusiness44AD: ['', Validators.required],
-          natureOfBusiness44ADA: ['', Validators.required],
-          tradeName44AD: ['', [Validators.required]],  //Validators.pattern(AppConstants.charRegex)
-          tradeName44ADA: ['', Validators.required],
-          recieptRecievedInBank: ['', Validators.required],
-          presumptiveIncomeRecieveBank: ['', Validators.required],
-          recievedinCash: ['', Validators.required],
-          presumptiveIncomeRecievedCash: ['', Validators.required],
-          grossReciept: ['', Validators.required],
-          presumptiveIncome: ['', Validators.required],
-          minimumPresumptiveIncomeRecivedInBank: [],
-          minimumPresumptiveIncomeCashInBank: [],
-          minimumPresumptiveIncome: [],
-          received44ADtaotal: [],
-          presumptive44ADtotal: [],
-          totalCapitalLiabilities: [],
-          totalAssets: [],
-    
-          grossTurnOverAmount: null,
-          membersOwnCapital: [],
-          securedLoans: [],
-          unSecuredLoans: [],
-          advances: [],
-          sundryCreditorsAmount: [],
-          otherLiabilities: [],
-          fixedAssets: [],
-          inventories: [],
-          sundryDebtorsAmount: [],
-          balanceWithBank: [],
-          cashInHand: [],
-          loanAndAdvances: [],
-          otherAssets: [],
-          investment: []
-        })
-      }
+  initialiseForm() {
 
-      console.log('natureOfBusinessForm: ',this.natureOfBusinessForm)
+    if (this.jsonParse) {
+      this.natureOfBusinessForm = this.fb.group({
+        natureOfBusiness44AD: [''],
+        natureOfBusiness44ADA: [''],
+        tradeName44AD: [''],  //Validators.pattern(AppConstants.charRegex)
+        tradeName44ADA: [''],
+        recieptRecievedInBank: [''],
+        presumptiveIncomeRecieveBank: [''],
+        recievedinCash: [''],
+        presumptiveIncomeRecievedCash: [''],
+        grossReciept: [''],
+        presumptiveIncome: [''],
+        minimumPresumptiveIncomeRecivedInBank: [],
+        minimumPresumptiveIncomeCashInBank: [],
+        minimumPresumptiveIncome: [],
+        received44ADtaotal: [],
+        presumptive44ADtotal: [],
+        totalCapitalLiabilities: [],
+        totalAssets: [],
+
+        grossTurnOverAmount: null,
+        membersOwnCapital: [],
+        securedLoans: [],
+        unSecuredLoans: [],
+        advances: [],
+        sundryCreditorsAmount: [],
+        otherLiabilities: [],
+        fixedAssets: [],
+        inventories: [],
+        sundryDebtorsAmount: [],
+        balanceWithBank: [],
+        cashInHand: [],
+        loanAndAdvances: [],
+        otherAssets: [],
+        investment: []
+      })
+    }
+    else {
+      this.natureOfBusinessForm = this.fb.group({
+        natureOfBusiness44AD: ['', Validators.required],
+        natureOfBusiness44ADA: ['', Validators.required],
+        tradeName44AD: ['', [Validators.required]],  //Validators.pattern(AppConstants.charRegex)
+        tradeName44ADA: ['', Validators.required],
+        recieptRecievedInBank: ['', Validators.required],
+        presumptiveIncomeRecieveBank: ['', Validators.required],
+        recievedinCash: ['', Validators.required],
+        presumptiveIncomeRecievedCash: ['', Validators.required],
+        grossReciept: ['', Validators.required],
+        presumptiveIncome: ['', Validators.required],
+        minimumPresumptiveIncomeRecivedInBank: [],
+        minimumPresumptiveIncomeCashInBank: [],
+        minimumPresumptiveIncome: [],
+        received44ADtaotal: [],
+        presumptive44ADtotal: [],
+        totalCapitalLiabilities: [],
+        totalAssets: [],
+
+        grossTurnOverAmount: null,
+        membersOwnCapital: [],
+        securedLoans: [],
+        unSecuredLoans: [],
+        advances: [],
+        sundryCreditorsAmount: [],
+        otherLiabilities: [],
+        fixedAssets: [],
+        inventories: [],
+        sundryDebtorsAmount: [],
+        balanceWithBank: [],
+        cashInHand: [],
+        loanAndAdvances: [],
+        otherAssets: [],
+        investment: []
+      })
+    }
+
+
   }
 
-  updateBusinessInfo(){
-    console.log('financialParticulars: ',this.businessData.assesse.business);
+  updateBusinessInfo() {
+
     this.natureOfBusinessForm.patchValue(this.businessData.assesse.business.financialParticulars);
 
-    var businessIncome = this.businessData.assesse.business.presumptiveIncomes.filter((item:any) => item.businessType === "BUSINESS");
-    console.log('businessIncome : ',businessIncome);
-    if(businessIncome.length > 0){
+    var businessIncome = this.businessData.assesse.business.presumptiveIncomes.filter((item: any) => item.businessType === "BUSINESS");
+
+    if (businessIncome.length > 0) {
       let businessNatureCode = businessIncome[0].natureOfBusiness;
-      console.log('businessNatureCode: ',businessNatureCode);
-      let natureLabel:any = this.natureOfBusinessDropdown44AD.filter((item:any) => item.code === businessNatureCode);
-      if(natureLabel.length > 0){
-        console.log('natureLabel: ',natureLabel);
+
+      let natureLabel: any = this.natureOfBusinessDropdown44AD.filter((item: any) => item.code === businessNatureCode);
+      if (natureLabel.length > 0) {
+
         this.natureOfBusinessForm.controls['natureOfBusiness44AD'].setValue(natureLabel[0].label);
       }
-    
+
       this.natureOfBusinessForm.controls['tradeName44AD'].setValue(businessIncome[0].tradeName);
-      let recivedInBank = businessIncome[0].incomes.filter((item:any) => item.incomeType === "BANK");
-      let recivedInCash = businessIncome[0].incomes.filter((item:any) => item.incomeType === "CASH");
+      let recivedInBank = businessIncome[0].incomes.filter((item: any) => item.incomeType === "BANK");
+      let recivedInCash = businessIncome[0].incomes.filter((item: any) => item.incomeType === "CASH");
       this.natureOfBusinessForm.controls['recieptRecievedInBank'].setValue(recivedInBank[0].receipts);
       this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].setValue(recivedInBank[0].presumptiveIncome);
       this.natureOfBusinessForm.controls['recievedinCash'].setValue(recivedInCash[0].receipts);
       this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].setValue(recivedInCash[0].minimumPresumptiveIncome);
       this.calculateTotalAmnt();
     }
-  
-    var presumptiveIncome = this.businessData.assesse.business.presumptiveIncomes.filter((item:any) => item.businessType === "PROFESSIONAL");
-    console.log('presumptiveIncome : ',presumptiveIncome);
-    if(presumptiveIncome.length > 0){
+
+    var presumptiveIncome = this.businessData.assesse.business.presumptiveIncomes.filter((item: any) => item.businessType === "PROFESSIONAL");
+
+    if (presumptiveIncome.length > 0) {
       var presumptiveNatureCode = presumptiveIncome[0].natureOfBusiness;
-      if(presumptiveNatureCode === "00001"){
+      if (presumptiveNatureCode === "00001") {
         presumptiveNatureCode = "Share of income from firm";
       }
-      console.log('presumptiveNatureCode: ',presumptiveNatureCode);
-      let presumptiveLabel:any = this.natureOfBusinessDropdown44ADA.filter((item:any) => item.code === presumptiveNatureCode);
-      if(presumptiveLabel.length > 0){
-      console.log('nature presumptiveLabel Label: ',presumptiveLabel);
-      this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].setValue(presumptiveLabel[0].label);
+
+      let presumptiveLabel: any = this.natureOfBusinessDropdown44ADA.filter((item: any) => item.code === presumptiveNatureCode);
+      if (presumptiveLabel.length > 0) {
+
+        this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].setValue(presumptiveLabel[0].label);
       }
       this.natureOfBusinessForm.controls['tradeName44ADA'].setValue(presumptiveIncome[0].tradeName);
-  
+
       this.natureOfBusinessForm.controls['grossReciept'].setValue(presumptiveIncome[0].incomes[0].receipts);
       this.natureOfBusinessForm.controls['presumptiveIncome'].setValue(presumptiveIncome[0].incomes[0].presumptiveIncome);
     }
@@ -167,17 +167,17 @@ export class Itr4partComponent implements OnInit, DoCheck {
     this.userService.getMethodInfo(param).subscribe((result: any) => {
       var natureOfBusinessInfo = [];
       natureOfBusinessInfo = result.natureOfBusiness;
-      console.log('natureOfBusinessInfo: ', natureOfBusinessInfo)
-      this.natureOfBusinessDropdown44AD = natureOfBusinessInfo.filter((item:any) => item.section === '44AD');
-      this.natureOfBusinessDropdown44ADA = natureOfBusinessInfo.filter((item:any) => item.section === '44ADA');
-      console.log('natureOfBusinessDropdown44AD: ', this.natureOfBusinessDropdown44AD)
-      console.log('natureOfBusinessDropdown44ADA: ', this.natureOfBusinessDropdown44ADA)
+
+      this.natureOfBusinessDropdown44AD = natureOfBusinessInfo.filter((item: any) => item.section === '44AD');
+      this.natureOfBusinessDropdown44ADA = natureOfBusinessInfo.filter((item: any) => item.section === '44ADA');
+
+
       //sessionStorage'].setItem('MASTER', JSON.stringify(result));
 
-      console.log('businessData: ===>>> ',this.businessData);   //Form here we call to updateBusinessInfo method
-      if(this.utilService.isNonEmpty(this.businessData)){
+
+      if (this.utilService.isNonEmpty(this.businessData)) {
         this.updateBusinessInfo();
-      } 
+      }
 
 
       this.filteredOptions = this.natureOfBusinessForm.controls['natureOfBusiness44AD'].valueChanges
@@ -190,7 +190,7 @@ export class Itr4partComponent implements OnInit, DoCheck {
             return name ? this._filter(name) : this.natureOfBusinessDropdown44AD.slice();
           })
         );
-      console.log('filteredOptions: ', this.filteredOptions)
+
 
       this.filteredOptions44ADA = this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].valueChanges
         .pipe(
@@ -202,7 +202,7 @@ export class Itr4partComponent implements OnInit, DoCheck {
             return name ? this._filter44DA(name) : this.natureOfBusinessDropdown44ADA.slice();
           })
         );
-      console.log('filteredOptions44ADA: ', this.filteredOptions44ADA)
+
 
 
 
@@ -211,35 +211,35 @@ export class Itr4partComponent implements OnInit, DoCheck {
 
   }
 
-  displayFn(label:any) {
+  displayFn(label: any) {
     return label ? label : undefined;
   }
 
-  _filter(name:any) {
-    console.log('44AD name: ', name)
+  _filter(name: any) {
+
     const filterValue = name.toLowerCase();
-    return this.natureOfBusinessDropdown44AD.filter((option:any) => option.label.toLowerCase().indexOf(filterValue) === 0);
+    return this.natureOfBusinessDropdown44AD.filter((option: any) => option.label.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  _filter44DA(name:any) {
-    console.log('44ADA name: ', name)
+  _filter44DA(name: any) {
+
     const filterValue = name.toLowerCase();
-    return this.natureOfBusinessDropdown44ADA.filter((option:any) => option.label.toLowerCase().indexOf(filterValue) === 0);
+    return this.natureOfBusinessDropdown44ADA.filter((option: any) => option.label.toLowerCase().indexOf(filterValue) === 0);
   }
 
 
   natureCode: any;
   getCodeFromLabelOnBlur() {
-    
+
     if (this.utilService.isNonEmpty(this.natureOfBusinessForm.controls['natureOfBusiness44AD'].value) && this.utilService.isNonEmpty(this.natureOfBusinessForm.controls['natureOfBusiness44AD'].value)) {
-      this.natureCode = this.natureOfBusinessDropdown44AD.filter((item:any) => item.label.toLowerCase() === this.natureOfBusinessForm.controls['natureOfBusiness44AD'].value.toLowerCase());
+      this.natureCode = this.natureOfBusinessDropdown44AD.filter((item: any) => item.label.toLowerCase() === this.natureOfBusinessForm.controls['natureOfBusiness44AD'].value.toLowerCase());
       if (this.natureCode.length !== 0) {
         this.natureCode = this.natureCode[0].code;
-        console.log('natureCode on blur = ', this.natureCode);
+
       }
       else {
         // this.natureOfBusinessForm.controls['natureOfBusiness44AD'].setErrors(invalid);
-        // console.log('natureCode on blur = ', this.natureCode);
+
       }
       this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].setValidators(null)
       this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].updateValueAndValidity();
@@ -267,14 +267,14 @@ export class Itr4partComponent implements OnInit, DoCheck {
 
   getCodeFromLabelOnBlur44ADA() {
     if (this.utilService.isNonEmpty(this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].value) && this.utilService.isNonEmpty(this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].value)) {
-      this.natureCode = this.natureOfBusinessDropdown44ADA.filter((item:any) => item.label.toLowerCase() === this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].value.toLowerCase());
+      this.natureCode = this.natureOfBusinessDropdown44ADA.filter((item: any) => item.label.toLowerCase() === this.natureOfBusinessForm.controls['natureOfBusiness44ADA'].value.toLowerCase());
       if (this.natureCode.length !== 0) {
         this.natureCode = this.natureCode[0].code;
-        console.log('natureCode on blur = ', this.natureCode);
+
       }
       // else {
       //   this.natureOfBusinessForm'].setErrors(invalid);
-      //   console.log('natureCode on blur = ', this.natureCode);
+
       // }
 
       this.natureOfBusinessForm.controls['natureOfBusiness44AD'].setValidators(null)
@@ -345,7 +345,7 @@ export class Itr4partComponent implements OnInit, DoCheck {
   }
 
 
-  calBankPresumptiveIncome(val:any) {
+  calBankPresumptiveIncome(val: any) {
     if (val !== '' && val !== null && val !== undefined) {
       const cal = {
         assessmentYear: "2019-2020",//this.itrSummaryForm.controls['assessmentYear'].value ,
@@ -365,7 +365,7 @@ export class Itr4partComponent implements OnInit, DoCheck {
       const param = '/itr/buisnessIncome';
       //https://api.taxbuddy.com/itr/buisnessIncome
       this.userService.postMethodInfo(param, cal).subscribe((result: any) => {
-        console.log('result: ', result)
+
         // alert(result.minimumPresumptiveIncome)
         this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.required, Validators.min(result.minimumPresumptiveIncome), Validators.max(val)]));
         this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].setValue(result.minimumPresumptiveIncome);
@@ -395,7 +395,7 @@ export class Itr4partComponent implements OnInit, DoCheck {
   }
 
 
-  calCashPresumptiveIncome(val:any) {
+  calCashPresumptiveIncome(val: any) {
     if (val !== '' && val !== null && val !== undefined) {
       const cal = {
         assessmentYear: "2019-2020",  //this.ITR_JSON.assessmentYear,
@@ -450,7 +450,7 @@ export class Itr4partComponent implements OnInit, DoCheck {
     this.natureOfBusinessForm.controls['presumptive44ADtotal'].setValue(presumptive44ADtotal);
   }
 
-  calprofessionPresumptiveIncome(val:any) {
+  calprofessionPresumptiveIncome(val: any) {
     if (val !== '' && val !== null && val !== undefined) {
       const cal = {
         assessmentYear: "2019-2020",         //this.ITR_JSON.assessmentYear,
@@ -478,9 +478,8 @@ export class Itr4partComponent implements OnInit, DoCheck {
   }
 
   ngDoCheck() {
-    console.log('natureOfBusinessForm valid: ',this.natureOfBusinessForm.valid, this.natureOfBusinessForm)
     if (this.natureOfBusinessForm.valid) {
-      //console.log('natureOfBusinessForm value: ',this.natureOfBusinessForm'].value)
+
       this.getBusinessInfo.emit(this.natureOfBusinessForm)
     }
   }
@@ -494,7 +493,7 @@ export class Itr4partComponent implements OnInit, DoCheck {
   }
 
   calTotalAssets() {
-    console.log('natureOfBusinessForm: ',this.natureOfBusinessForm.value);
+
     let totalAssetsNum = Number(this.natureOfBusinessForm.controls['fixedAssets'].value) + Number(this.natureOfBusinessForm.controls['inventories'].value)
       + Number(this.natureOfBusinessForm.controls['sundryDebtorsAmount'].value) + Number(this.natureOfBusinessForm.controls['balanceWithBank'].value)
       + Number(this.natureOfBusinessForm.controls['cashInHand'].value) + Number(this.natureOfBusinessForm.controls['loanAndAdvances'].value)

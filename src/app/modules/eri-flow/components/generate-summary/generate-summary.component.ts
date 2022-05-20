@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input, OnInit, OnChanges, EventEmitter, Output } from '@angular/core';
+import { result } from 'lodash';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-generate-summary',
@@ -7,22 +9,27 @@ import { Router } from '@angular/router';
   styleUrls: ['./generate-summary.component.scss']
 })
 export class GenerateSummaryComponent implements OnInit {
-  newItrSumChanges: boolean = true;
 
-  constructor(private router: Router) { }
+  @Input() userDetails: any;
+  @Output() getItrData = new EventEmitter<any>();
+
+  newItrSumChanges: boolean = true;
+  itrData: any;
+  loading = false;
+  constructor(private itrMsService: ItrMsService,
+    public utilsService: UtilsService) { }
 
   ngOnInit() {
     // this.router.navigate(['/eri/direct-filing/itrFirst']);
+
+  }
+  async getSummaryDetails() {
+    this.loading = true;
+    this.itrData = await this.utilsService.getCurrentItr(this.userDetails.userId, this.userDetails.assessmentYear, this.userDetails.callerAgentUserId);
+    this.loading = false;
+    this.getItrData.emit(this.itrData);
+    console.log('getSummaryDetails - getCurrentItr:', this.itrData);
   }
 
-   tabClick(tab: any){
-  //     console.log(tab);
-  //     if(tab.index === 0){
-  //       this.router.navigate(['/eri/direct-filing/itrFirst']);
-  //     }
-  //     else{
-  //       this.router.navigate(['/eri/direct-filing/new-summary/itr-one']);
-  //     }
-   }
 
 }

@@ -1,0 +1,28 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<label style="font-size: 18px;
+font-weight: bold;">Update Filing Details</label>
+<button mat-dialog-close tabindex="-1" class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+<div class="card__row">
+    <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+            <mat-label>Ack Number</mat-label>
+            <input matInput placeholder="Ack Number" name="ackNumber" [formControl]="ackNumber" class="input-field"
+                required (blur)="setFilingDate()" maxlength="15" minlength="15">
+            <mat-error *ngIf="ackNumber.hasError('minlength')">Enter 15 digit valid ack number</mat-error>
+            <mat-error *ngIf="ackNumber.hasError('pattern')">Please enter only numbers</mat-error>
+        </mat-form-field>
+    </div>
+    <div class="card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+            <mat-label>E-Filing Date</mat-label>
+            <input matInput [max]="maxDate" [matDatepicker]="picker" class="input-field" placeholder="E-Filing Date"
+                name="dateOfBirth" [formControl]="eFillingDate" required>
+            <mat-hint>Format: DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+</div>
+<!-- <div class="footer__buttons clearfix" style="margin-top: 40px;"> -->
+<button class="tbd-btn pull-right" (click)="updateManualDetails()">Update</button>
+<!-- </div> -->

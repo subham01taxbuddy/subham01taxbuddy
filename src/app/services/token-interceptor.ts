@@ -27,7 +27,6 @@ export class TokenInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         this.userData = JSON.parse(localStorage.getItem('UMD'));
         Auth.currentSession().then(data => {
-            console.log('Auth.currentSession:', data);
             this.userData.id_token = data.getAccessToken().getJwtToken();
             localStorage.setItem('UMD', JSON.stringify(this.userData));
         }).catch(err => console.log('Auth.currentSession err:', err));

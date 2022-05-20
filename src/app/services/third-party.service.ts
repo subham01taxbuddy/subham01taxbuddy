@@ -12,7 +12,6 @@ export class ThirdPartyService {
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
     headers.set('Access-Control-Allow-Origin', '*');
-    console.log('update Param', param);
     return this.http.get(environment.ifsc_url + param[0], {});
   }
 }

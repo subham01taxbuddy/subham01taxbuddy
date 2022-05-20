@@ -444,7 +444,6 @@ export class UserListComponent implements OnInit {
   }
 
   createRowData(userData: any) {
-    console.log('userData -> ', userData);
     var userArray = [];
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
@@ -463,7 +462,6 @@ export class UserListComponent implements OnInit {
       })
       userArray.push(userInfo);
     }
-    console.log('userArray-> ', userArray)
     return userArray;
   }
 

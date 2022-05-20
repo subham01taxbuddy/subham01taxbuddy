@@ -96,12 +96,12 @@ export class SmeUpdateComponent implements OnInit {
   // }
 
 
-  pageChanged(event:any) {
+  pageChanged(event: any) {
     this.config.currentPage = event;
     this.getUserData(event - 1);
   }
 
-  getUserData(pageNo:any) {
+  getUserData(pageNo: any) {
     this.loading = true;
     // https://api.taxbuddy.com/user
     //let param = '/profile?page=' + pageNo + '&pageSize=15'
@@ -140,7 +140,7 @@ export class SmeUpdateComponent implements OnInit {
         width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        cellRenderer: (data:any) => {
+        cellRenderer: (data: any) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
         filter: "agTextColumnFilter",
@@ -201,7 +201,7 @@ export class SmeUpdateComponent implements OnInit {
         field: 'gender',
         width: 100,
         suppressMovable: true,
-        valueGetter: function (params:any) {
+        valueGetter: function (params: any) {
           if (params.data.gender === 'MALE') {
             return 'Male';
           } else if (params.data.gender === 'FEMALE') {
@@ -222,7 +222,7 @@ export class SmeUpdateComponent implements OnInit {
         field: 'resident',
         width: 120,
         suppressMovable: true,
-        valueGetter: function (params:any) {
+        valueGetter: function (params: any) {
           if (params.data.resident === 'RESIDENT') {
             return 'Resident';
           } else if (params.data.resident === 'NON_RESIDENT') {
@@ -288,7 +288,7 @@ export class SmeUpdateComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return ` 
            <button type="button" class="action_icon add_button" title="User Profile" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
@@ -297,7 +297,7 @@ export class SmeUpdateComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -330,10 +330,10 @@ export class SmeUpdateComponent implements OnInit {
     ]
   }
 
-  createRowData(userData:any) {
+  createRowData(userData: any) {
     var userArray = [];
     for (let i = 0; i < userData.length; i++) {
-      let userInfo:any = Object.assign({}, userArray[i], {
+      let userInfo: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
         createdDate: this.utileService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
         name: userData[i].firstName + ' ' + userData[i].lastName,
@@ -347,11 +347,10 @@ export class SmeUpdateComponent implements OnInit {
       })
       userArray.push(userInfo);
     }
-    console.log('userArray-> ', userArray)
     return userArray;
   }
 
-  onUsersRowClicked(params:any) {
+  onUsersRowClicked(params: any) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -379,17 +378,17 @@ export class SmeUpdateComponent implements OnInit {
     }
   }
 
-  redirectTowardInvoice(userInfo:any) {
+  redirectTowardInvoice(userInfo: any) {
     console.log('userInfo for subscription -> ', userInfo);
     this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: userInfo.userId } });
   }
 
-  redirectTowardSubscription(userInfo:any) {
+  redirectTowardSubscription(userInfo: any) {
     console.log('userInfo for subscription -> ', userInfo);
     this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: userInfo.mobileNumber } });
   }
 
-  linkToFinbingo(userId:any) {
+  linkToFinbingo(userId: any) {
     const param = `/partner/create-user`;
     const request = {
       userId: userId

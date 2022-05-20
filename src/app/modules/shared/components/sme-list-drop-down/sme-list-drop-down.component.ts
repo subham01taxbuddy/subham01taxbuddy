@@ -120,6 +120,8 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
         this.selectedSme.setErrors({ invalid: true });
         console.log('smeCode on blur = ', this.smeCode);
       }
+    } else {
+      this.sendSme.emit('');
     }
   }
 }

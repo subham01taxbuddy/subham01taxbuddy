@@ -73,7 +73,6 @@ export class AssignedUsersComponent implements OnInit {
 
   async getMasterStatusList() {
     this.itrStatus = await this.utilsService.getStoredMasterStatusList();
-    console.log('masterStatusList: ', this.itrStatus)
   }
 
   pageChanged(event: any) {
@@ -82,8 +81,16 @@ export class AssignedUsersComponent implements OnInit {
     this.search();
   }
   fromSme(event) {
-    this.agentId = event;
-    this.search('agent');
+    if (event === '') {
+      let loggedInId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
+      if (this.agentId !== loggedInId) {
+        this.agentId = loggedInId;
+        this.search('agent');
+      }
+    } else {
+      this.agentId = event;
+      this.search('agent');
+    }
   }
 
   getAgentList() {
@@ -92,7 +99,6 @@ export class AssignedUsersComponent implements OnInit {
     if (isAgentListAvailable) {
       const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
       this.userMsService.getMethod(param).subscribe((result: any) => {
-        console.log('Agent List', result);
         if (result.success) {
           this.agents = result.data;
         }
@@ -121,6 +127,18 @@ export class AssignedUsersComponent implements OnInit {
 
   usersCreateColumnDef(itrStatus) {
     return [
+      {
+        headerName: 'No',
+        field: 'no',
+        width: 40,
+        suppressMovable: true,
+        pinned: 'left',
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
       {
         headerName: 'Name',
         field: 'name',
@@ -610,10 +628,11 @@ export class AssignedUsersComponent implements OnInit {
   }
 
   createRowData(userData: any) {
-    console.log('userData -> ', userData);
     var userArray = [];
+    let pageNo = this.searchParam.page * 20;
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
+        no: i + 1 + pageNo,
         userId: userData[i].userId,
         createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
         name: userData[i].name,
@@ -623,6 +642,7 @@ export class AssignedUsersComponent implements OnInit {
         assessmentYear: userData[i].assessmentYear,
         callerAgentName: userData[i].callerAgentName,
         callerAgentNumber: userData[i].callerAgentNumber,
+        callerAgentUserId: userData[i].callerAgentUserId,
         statusId: userData[i].statusId,
         statusUpdatedDate: userData[i].statusUpdatedDate,
         panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
@@ -631,12 +651,10 @@ export class AssignedUsersComponent implements OnInit {
       })
       userArray.push(userInfo);
     }
-    console.log('userArray-> ', userArray)
     return userArray;
   }
 
   onUsersRowClicked(params: any) {
-    console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
@@ -667,11 +685,20 @@ export class AssignedUsersComponent implements OnInit {
           break;
         }
         case 'add-client': {
-          // if (environment.production) {
-          this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.panNumber, eriClientValidUpto: params.data.eriClientValidUpto } });
-          // } else {
-          // this._toastMessageService.alert("error", 'You can not access add client on testing environment');
-          // }
+          if (params.data.statusId !== 11) {
+            this.router.navigate(['/eri'], {
+              state:
+              {
+                userId: params.data.userId,
+                panNumber: params.data.panNumber,
+                eriClientValidUpto: params.data.eriClientValidUpto,
+                callerAgentUserId: params.data.callerAgentUserId,
+                assessmentYear: params.data.assessmentYear,
+              }
+            });
+          } else {
+            this._toastMessageService.alert("success", 'This user ITR is filed');
+          }
           break;
         }
         case 'call': {
@@ -696,12 +723,10 @@ export class AssignedUsersComponent implements OnInit {
 
   redirectTowardInvoice(userInfo: any) {
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Invoice'], environment.matomoScriptId);
-    console.log('userInfo for subscription -> ', userInfo);
     this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: userInfo.userId } });
   }
 
   redirectTowardSubscription(userInfo: any) {
-    console.log('userInfo for subscription -> ', userInfo);
     //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Sunscription'], environment.matomoScriptId);
     this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: userInfo.mobileNumber } });
   }
@@ -715,7 +740,6 @@ export class AssignedUsersComponent implements OnInit {
     }
     this.loading = true;
     this.userMsService.postMethod(param, request).subscribe((res: any) => {
-      console.log('Link To Finbingo Response: ', res);
       this.loading = false;
       if (res.success) {
         if (res.data.isFnbVirtualUser) {
@@ -743,7 +767,6 @@ export class AssignedUsersComponent implements OnInit {
     this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Review'], environment.matomoScriptId);
     const param = `/update-itr-userProfile?userId=${data.userId}&isReviewGiven=true`;
     this.itrMsService.putMethod(param, {}).subscribe(result => {
-      console.log(result);
       this.utilsService.showSnackBar('Marked as review given');
     }, error => {
       this.utilsService.showSnackBar('Please try again, failed to mark as review given');
@@ -751,7 +774,6 @@ export class AssignedUsersComponent implements OnInit {
   }
 
   call(data) {
-    console.log('user: ', data);
     // let callInfo = data.customerNumber;
     this.loading = true;
     const param = `/call-management/make-call`;
@@ -761,7 +783,6 @@ export class AssignedUsersComponent implements OnInit {
       "customer_number": data.mobileNumber
     }
     this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
-      console.log('Call Result: ', result);
       this.loading = false;
       if (result.success.status) {
         this._toastMessageService.alert("success", result.success.message)
@@ -786,8 +807,6 @@ export class AssignedUsersComponent implements OnInit {
     })
 
     disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      console.log('result: ', result);
       if (result) {
         if (result.data === "statusChanged") {
           this.searchParam.page = 0;
@@ -817,16 +836,13 @@ export class AssignedUsersComponent implements OnInit {
     })
 
     disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
     });
   }
   openChat(client) {
-    console.log('client: ', client);
     //matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Chat icon'],  environment.matomoScriptId);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
     this.userMsService.getMethod(param).subscribe((response: any) => {
-      console.log('open chat link res: ', response);
       this.loading = false;
       if (response.success) {
         window.open(response.data.chatLink)
@@ -851,7 +867,6 @@ export class AssignedUsersComponent implements OnInit {
     })
 
     disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
       if (result.data === 'success') {
         this.search();
       }
@@ -883,7 +898,6 @@ export class AssignedUsersComponent implements OnInit {
         }
       } */
       (result: any) => {
-        console.log('result -> ', result);
         if (result.success) {
           if (result.data && result.data['content'] instanceof Array) {
             this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
@@ -902,7 +916,6 @@ export class AssignedUsersComponent implements OnInit {
         this.loading = false;
         this.config.totalItems = 0;
         this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-        console.log('Error during getting Leads data. -> ', error)
       })
   }
 }

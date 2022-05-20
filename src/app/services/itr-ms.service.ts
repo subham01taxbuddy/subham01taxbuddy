@@ -15,7 +15,6 @@ export class ItrMsService {
         this.headers = new HttpHeaders();
         this.headers.append('Content-Type', 'application/json');
         // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
-        console.log('update Param', param);
         return this.httpClient.get<T>(environment.url + this.microService + param[0], { headers: this.headers });
         // .map(response => response.json())
     }
@@ -46,7 +45,6 @@ export class ItrMsService {
         this.headers = new HttpHeaders();
         this.headers.append('Content-Type', 'application/json');
         // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
-        console.log('Put Param', param);
         return this.httpClient.put<T>(environment.url + this.microService + param[0], param[1], { headers: this.headers });
         // .map(response => response.json())
     }
@@ -54,7 +52,6 @@ export class ItrMsService {
         this.headers = new HttpHeaders();
         this.headers.append('Content-Type', 'application/json');
         // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
-        console.log('update Param', param);
         return this.httpClient.patch<T>(environment.url + this.microService + param[0], param[1], { headers: this.headers });
         // .map(response => response.json())
     }
@@ -64,7 +61,6 @@ export class ItrMsService {
         this.headers = new HttpHeaders();
         this.headers.append('Content-Type', 'application/json');
         // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
-        console.log('delete Param', param);
         return this.httpClient.delete<T>(environment.url + this.microService + param, { headers: this.headers });
         // .map(response => response.json())
     }
@@ -89,7 +85,6 @@ export class ItrMsService {
         const TOKEN = (userData) ? userData.id_token : null;
         this.headers = new Headers();
         this.headers.append('Authorization', 'Bearer ' + TOKEN);
-        console.log('Headers for get method=', this.headers);
         return this.http.get(environment.url + this.microService + param, { headers: this.headers, responseType: 'blob' })
             .pipe(map((response) => {
                 return new Blob([response], { type: 'application/xhtml+xml' });  //text/json; charset=utf-8
@@ -102,10 +97,8 @@ export class ItrMsService {
         const userData = JSON.parse(localStorage.getItem('UMD') || '');
         const TOKEN = (userData) ? userData.id_token : null;
         // const TOKEN = sessionStorage.getItem(AppConstants.TOKEN);
-        console.log('My logged in usre objecty===', this.userObj);
         this.headers = new Headers();
         this.headers.append('Authorization', 'Bearer ' + TOKEN);
-        console.log('Headers for get method=', this.headers);
         return this.http.get(environment.url + this.microService + param, { headers: this.headers, responseType: 'blob' })
             .pipe(map((response) => {
                 return new Blob([response], { type: fileType });

@@ -5,15 +5,15 @@
     <div class="content__container">
       <div class="card">
         <div class="card__row">
-          <table>
+          <!-- <table>
             <tr *ngFor="let item of smeList | paginate:config"></tr>
-          </table>
+          </table> -->
           <ag-grid-angular class="ag-theme-balham" [gridOptions]="smeListGridOptions"
-            (rowClicked)="onUsersRowClicked($event)">
-            <!--    paginationPageSize=15 pagination=true-->
+            (rowClicked)="onUsersRowClicked($event)" paginationPageSize=30 pagination=true>
+
           </ag-grid-angular>
 
-          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+          <!-- <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> -->
         </div>
       </div>
     </div>

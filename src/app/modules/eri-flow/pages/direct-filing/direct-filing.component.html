@@ -16,23 +16,28 @@
       </mat-step>
       <mat-step>
         <ng-template matStepLabel>Generate Summary</ng-template>
-        <app-generate-summary></app-generate-summary>
+        <app-generate-summary [userDetails]="addClient" (getItrData)="getItrDataFromSummary($event)">
+        </app-generate-summary>
       </mat-step>
-      <mat-step>
-        <ng-template matStepLabel>Submit Filing</ng-template>
-        <app-submit-filing [data]="addClient"></app-submit-filing>
+      <mat-step [stepControl]>
+        <ng-template matStepLabel>Submit / Update Filing</ng-template>
+        <app-submit-filing [itrData]="itrData"></app-submit-filing>
       </mat-step>
 
-      <mat-step>
+      <!--   <mat-step>
         <ng-template matStepLabel>E-Verification</ng-template>
         <app-e-verify></app-e-verify>
-      </mat-step>
+      </mat-step> -->
 
       <ng-template matStepperIcon="create">
         <mat-icon>done</mat-icon>
       </ng-template>
 
     </mat-horizontal-stepper>
+    <div>
+      <button class="tbd-btn" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
+        Back</button>
+    </div>
   </div>
 
 </div>

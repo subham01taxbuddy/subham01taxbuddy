@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, OnChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SumaryDialogComponent } from '../sumary-dialog/sumary-dialog.component';
 import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
@@ -11,6 +11,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -34,12 +35,13 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   ]
 })
-export class TaxSummaryComponent implements OnInit {
+export class TaxSummaryComponent implements OnInit, OnChanges {
 
   @Input() changes!: string;
+  @Input() itrObject!: any;
   newItrSumChanges!: boolean;
   loading!: boolean;
-
+  isSummaryGenerated = false;
   itrSummaryForm!: FormGroup;
   natureOfBusinessForm = new FormControl('', Validators.required);
   natureOfBusinessDropdown44AD: any = [];
@@ -159,12 +161,13 @@ export class TaxSummaryComponent implements OnInit {
 
   constructor(private dialog: MatDialog, public utilService: UtilsService, private fb: FormBuilder, private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
-    private router: Router) {
+    private router: Router,
+    private itrMsService: ItrMsService) {
 
   }
 
   ngOnInit() {
-    console.log("New Itr Summarry Changes: ", this.changes);
+
     if (this.changes) {
       this.newItrSumChanges = true;
     }
@@ -172,11 +175,12 @@ export class TaxSummaryComponent implements OnInit {
       this.newItrSumChanges = false;
     }
 
-    this.initialiseMainForm();
-    this.initialiseNewRegimeTaxSummary();
-
+    this.initializeMainForm();
+    this.initializeNewRegimeTaxSummary();
+    if (this.itrObject)
+      this.fetchSummary();
     // window.addEventListener('beforeunload', function (e) {
-    //   console.log('e: ', e)
+
     //   e.preventDefault();
     //   e.returnValue = `Are you sure, you want to leave page?`;
     // });
@@ -184,30 +188,48 @@ export class TaxSummaryComponent implements OnInit {
     familyData.push(this.createFamilyForm())
   }
 
+  ngOnChanges() {
+    this.ngOnInit();
+  }
+
+  fetchSummary() {
+    const param = `/summary-details?itrId=${this.itrObject.itrId}`
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+
+      if (res.success) {
+        this.isSummaryGenerated = true;
+        this.setSummary(res.data);
+      } else {
+        if (res.message === 'DATA_NOT_FOUND') {
+          this._toastMessageService.alert('error', 'Summary is not created yet please upload the json and parse to proceed')
+        } else {
+          this._toastMessageService.alert('error', res.message)
+        }
+      }
+    })
+  }
 
   upload() {
     document.getElementById("input-file-id")?.click();
   }
 
   selectFile(event: any) {
-    this.initialiseNewRegimeTaxSummary();
-    this.initialiseMainForm();
+    this.initializeNewRegimeTaxSummary();
+    this.initializeMainForm();
 
     const reader = new FileReader();
     reader.onload = (e: any) => {
       let jsonRes = e.target.result;
-      console.log('main json file: ', jsonRes)
+
       this.JSONData = JSON.parse(jsonRes);
     }
     reader.readAsText(event.target.files[0])
   }
 
   parsJson(itrJsonInfo: any) {
-    console.log('itrJsonInfo: ', itrJsonInfo);
     /* Parse personal information */
     var itrData = itrJsonInfo.ITR;
     this.isJsonParse = true;
-    console.log('itrData: ', itrData);
     this.bankData = [];
     this.housingData = [];
     this.donationData = [];
@@ -233,7 +255,6 @@ export class TaxSummaryComponent implements OnInit {
 
     //  if(itrData.hasOwnProperty('ITR1')){
     this.newTaxRegime = itrData.FilingStatus.NewTaxRegime === "Y" ? true : false;
-    console.log(' this.newTaxRegime: ', this.newTaxRegime);
     let panNo = itrData.PersonalInfo.PAN;
     let dob = new Date(itrData.PersonalInfo.DOB);
     (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['panNumber'].setValue(panNo);
@@ -265,20 +286,16 @@ export class TaxSummaryComponent implements OnInit {
     if (assessmentYear === "2022") {
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2022-23');
       this.itrSummaryForm.controls['financialYear'].setValue('2021-22');
-    }else
-    if (assessmentYear === "2021") {
+    } else if (assessmentYear === "2021") {
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2021-22');
       this.itrSummaryForm.controls['financialYear'].setValue('2020-21');
-    }
-    else if (assessmentYear === "2020") {
+    } else if (assessmentYear === "2020") {
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2020-21');
       this.itrSummaryForm.controls['financialYear'].setValue('2019-20');
-    }
-    else if (assessmentYear === "2019") {
+    } else if (assessmentYear === "2019") {
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2019-20');
       this.itrSummaryForm.controls['financialYear'].setValue('2018-19');
-    }
-    else if (assessmentYear === "2018") {
+    } else if (assessmentYear === "2018") {
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2018-19');
       this.itrSummaryForm.controls['financialYear'].setValue('2017-18');
     }
@@ -302,7 +319,6 @@ export class TaxSummaryComponent implements OnInit {
         bankBody.ifsCode = bankInfo[i].IFSCCode;
         bankBody.name = bankInfo[i].BankName;
         bankBody.hasRefund = typeof bankInfo[i].UseForRefund === 'string' ? (bankInfo[i].UseForRefund === "true" ? true : false) : bankInfo[i].UseForRefund;
-        console.log(i + 'th bankBody: ', bankBody)
         this.bankData.push(bankBody);
       }
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['bankDetails'].setValue(this.bankData);
@@ -452,8 +468,7 @@ export class TaxSummaryComponent implements OnInit {
 
     this.employerArray = [];
     for (let i = 0; i < this.salaryItrratedData.length; i++) {
-      
-      console.log('employerArray : ', this.employerArray);
+
 
       let employerObj = {
         address: "",
@@ -481,9 +496,6 @@ export class TaxSummaryComponent implements OnInit {
       }
 
       Object.assign(employerObj, this.salaryItrratedData[i]);
-      console.log('employerObj after salaryItrared basic binding : ', employerObj);
-
-      console.log('employerArray : ', this.employerArray);
       //allowance
       if (this.utilService.isNonEmpty(this.salaryItrratedData[i].houseRentAllow) && this.salaryItrratedData[i].houseRentAllow !== 0) {
         let houceAllowObj = {
@@ -572,9 +584,7 @@ export class TaxSummaryComponent implements OnInit {
         }
         employerObj.profitsInLieuOfSalaryType.push(profitsInLieuObj)
       }
-      console.log('employerArray ', this.employerArray)
       this.employerArray.splice(i, 0, employerObj)
-      console.log('employerArray ' + i + ' position => ', this.employerArray)
     }
 
     (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'].setValue(this.employerArray)
@@ -583,7 +593,6 @@ export class TaxSummaryComponent implements OnInit {
     //Other Source
     if (incomeDeduction.hasOwnProperty('OthersInc')) {
       var otherInfo = incomeDeduction.OthersInc.OthersIncDtlsOthSrc;
-      console.log('Othet info: ', otherInfo)
       this.sourcesOfIncome = {
         interestFromSaving: 0,
         interestFromBank: 0,
@@ -630,7 +639,6 @@ export class TaxSummaryComponent implements OnInit {
           //this.sourcesOfIncome.interestFromOther = otherVal;
         }
       }
-      console.log('sourcesOfIncome: ', this.sourcesOfIncome)
       this.sourcesOfIncome.interestFromOther = incomeDeduction.IncomeOthSrc - (this.sourcesOfIncome.dividend + this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax);
 
       this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax +
@@ -640,15 +648,13 @@ export class TaxSummaryComponent implements OnInit {
     //Exempt Income
     this.exemptIncomeData = [];
     var exemptIncomeInfo;
-    
-    console.log('incomeDeduction: ', incomeDeduction)
+
     if (itrData.hasOwnProperty('ITR1_IncomeDeductions')) {
       exemptIncomeInfo = incomeDeduction.ExemptIncAgriOthUs10;
     }
     else if (itrData.hasOwnProperty('IncomeDeductions')) {
       exemptIncomeInfo = itrData.TaxExmpIntIncDtls;
     }
-    console.log('exemptIncomeInfo Info: ', exemptIncomeInfo);
     var exemptIncData = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? exemptIncomeInfo.ExemptIncAgriOthUs10Dtls : exemptIncomeInfo.OthersInc.OthersIncDtls;
     if (exemptIncData instanceof Array && exemptIncData.length > 0) {
       for (let i = 0; i < exemptIncData.length; i++) {
@@ -765,7 +771,6 @@ export class TaxSummaryComponent implements OnInit {
 
     //Deduction under cha-VI A (sec 80D)
     var sec80DInfo = itrData.Schedule80D;
-    console.log('sec80D Info: ', sec80DInfo);
     this.sec80DobjVal = {
       healthInsuarancePremiumSelf: 0,
       healthInsuarancePremiumParents: 0,
@@ -777,7 +782,6 @@ export class TaxSummaryComponent implements OnInit {
     this.sec80DobjVal.healthInsuarancePremiumSelf = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.HealthInsPremSlfFam);
     this.sec80DobjVal.healthInsuarancePremiumParents = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.ParentsSeniorCitizen) - (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('MedicalExpParentsSrCtzn') ? this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn) : 0);
     var prehealthCheckVal = this.getNumberFormat(sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFam') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFam : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpSlfFamSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpSlfFamSrCtzn : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParents') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents : (sec80DInfo.Sec80DSelfFamSrCtznHealth.hasOwnProperty('PrevHlthChckUpParentsSrCtzn') ? sec80DInfo.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn : 0))));
-    console.log('prehealthCheckVal: ', prehealthCheckVal)
     if (prehealthCheckVal > 5000) {
       this.sec80DobjVal.preventiveHealthCheckupFamily = 5000;
     }
@@ -794,7 +798,6 @@ export class TaxSummaryComponent implements OnInit {
 
     //Section 80G
     var sec80Ginfo = itrData.Schedule80G;
-    console.log('sec80Ginfo Info: ', sec80Ginfo);
     this.donationData = [];
 
     if (sec80Ginfo.hasOwnProperty('Don100Percent')) {
@@ -956,7 +959,6 @@ export class TaxSummaryComponent implements OnInit {
 
     //Values 
     var deductionValues = incomeDeduction.DeductUndChapVIA;
-    console.log('deductionValues Info: ', deductionValues);
 
     this.itrSummaryForm.controls['us80c'].setValue(deductionValues.Section80C);
     this.itrSummaryForm.controls['us80ccc'].setValue(deductionValues.Section80CCC);
@@ -996,7 +998,6 @@ export class TaxSummaryComponent implements OnInit {
 
     //TDS on Salary
     var tdsOnSalInfo = itrData.TDSonSalaries.TDSonSalary;
-    console.log('tdsOnSalInfo Info: ', tdsOnSalInfo);
     this.tdsOnSal = [];
     if (this.newTaxRegime) {
       this.newRegimeTaxesPaid.tdsOnSalary = itrData.TDSonSalaries.TotalTDSonSalaries;
@@ -1033,7 +1034,6 @@ export class TaxSummaryComponent implements OnInit {
       tdsOtherThanSalInfo = itrData.TDSonOthThanSals.TDSonOthThanSalDtls;
     }
 
-    console.log('tdsOtherThanSalInfo Info: ', tdsOtherThanSalInfo);
     this.tdsOtherThanSal = [];
     if (this.newTaxRegime) {
       this.newRegimeTaxesPaid.tdsOtherThanSalary = itrData.TDSonOthThanSals.TotalTDSonOthThanSals;
@@ -1068,8 +1068,6 @@ export class TaxSummaryComponent implements OnInit {
       tds3OtherThanSalInfo = itrData.ScheduleTDS3Dtls.TDS3Details;
     }
 
-    console.log('tds3OtherThanSalInfo Info: ', tds3OtherThanSalInfo);
-    console.log('****', Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals), Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details))
     if (this.newTaxRegime) {
       this.newRegimeTaxesPaid.tdsOtherThanSalary = Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details);
     }
@@ -1098,7 +1096,6 @@ export class TaxSummaryComponent implements OnInit {
 
     //Tax Collected at Sources
     var tcsInfo = itrData.ScheduleTCS.TCS;
-    console.log('tcsInfo Info: ', tcsInfo);
     this.taxCollAtSource = [];
     if (this.newTaxRegime) {
       this.newRegimeTaxesPaid.tcs = itrData.ScheduleTCS.TotalSchTCS;
@@ -1125,11 +1122,8 @@ export class TaxSummaryComponent implements OnInit {
     }
 
     //Advance Tax
-    
+
     var advanceTaxInfo = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.TaxPayments.TaxPayment : itrData.ScheduleIT.TaxPayment;
-    console.log('advanceTaxInfo Info: ', advanceTaxInfo);
-    console.log('newTaxRegime: ', this.newTaxRegime);
-    console.log('itrData: ', itrData);
     this.advanceSelfTax = [];
     if (this.newTaxRegime) {
       this.newRegimeTaxesPaid.advanceSelfAssTax = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.TaxPayments.TotalTaxPayments : itrData.ScheduleIT.TotalTaxPayments;
@@ -1171,7 +1165,6 @@ export class TaxSummaryComponent implements OnInit {
     }
 
 
-    console.log('this.newRegimeTaxesPaid Info: ', this.newRegimeTaxesPaid);
 
     //Computation of Income
 
@@ -1189,7 +1182,6 @@ export class TaxSummaryComponent implements OnInit {
       this.newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR = this.getNumberFormat(this.newRegimeTaxSummary.grossTotalIncome) - this.getNumberFormat(this.newRegimeTaxSummary.totalDeduction);
 
       let computation2Infos = itrData.ITR1_TaxComputation;
-      console.log('computation2Info: ', computation2Infos)
       this.newRegimeTaxSummary.taxOnTotalIncome = this.getNumberFormat(computation2Infos.TotalTaxPayable);
       this.newRegimeTaxSummary.forRebate87Tax = this.getNumberFormat(computation2Infos.Rebate87A);
       this.newRegimeTaxSummary.taxAfterRebate = this.getNumberFormat(computation2Infos.TaxPayableOnRebate);
@@ -1219,7 +1211,6 @@ export class TaxSummaryComponent implements OnInit {
         this.newRegimeTaxSummary.taxpayable = 0;
       }
 
-      console.log('newRegimeTaxSummary: ', this.newRegimeTaxSummary);
       // this.itrSummaryForm.controls['taxSummary'].setValue(this.newRegimeTaxSummary);
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234A'].setValue(this.newRegimeTaxSummary.s234A);
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['s234B'].setValue(this.newRegimeTaxSummary.s234B);
@@ -1244,7 +1235,7 @@ export class TaxSummaryComponent implements OnInit {
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalIncomeAfterDeductionIncludeSR'].setValue(computation1Info.TotalIncome);
 
       // let computation2Info =  itrData.ITR1_TaxComputation;
-      // console.log('computation2Info: ', computation2Info)
+
       // this.itrSummaryForm.controls['taxSummary.controls['taxOnTotalIncome'].setValue(computation2Info.TotalTaxPayable);
       // this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(computation2Info.Rebate87A);
 
@@ -1314,7 +1305,7 @@ export class TaxSummaryComponent implements OnInit {
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['agrigateLiability'].setValue(this.getNumberFormat(computation2Info.TotalIntrstPay));
 
       let taxesPaidInfo = itrData;
-      console.log('taxesPaidInfo: ', taxesPaidInfo)
+
       this.taxesPaid.tdsOnSalary = taxesPaidInfo.hasOwnProperty('TDSonSalaries') ? taxesPaidInfo.TDSonSalaries.TotalTDSonSalaries : 0;
       this.taxesPaid.tdsOtherThanSalary = taxesPaidInfo.hasOwnProperty('TDSonOthThanSals') ? Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details) : 0;
       this.taxesPaid.tdsOnSal26QB = 0;
@@ -1339,7 +1330,7 @@ export class TaxSummaryComponent implements OnInit {
     // this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(computation2Info.Rebate87A);
   }
 
-  businessIncomeBind(itrData:any) {
+  businessIncomeBind(itrData: any) {
     var itr4Summary = {
       assesse: {
         business: {
@@ -1410,7 +1401,6 @@ export class TaxSummaryComponent implements OnInit {
       }
       preBusinessObj.incomes.push(recivedCashObj);
       itr4Summary.assesse.business.presumptiveIncomes.push(preBusinessObj);
-      console.log('preBusinessObj Object :', preBusinessObj);
 
     }
 
@@ -1422,9 +1412,8 @@ export class TaxSummaryComponent implements OnInit {
       tradeName: ''
     }
 
-    console.log('pre44ADAinfo ==> ', pre44ADAinfo)
     if (pre44ADAinfo.hasOwnProperty('NatOfBus44ADA')) {
-      
+
       var nat444Ada = pre44ADAinfo['NatOfBus44ADA'];
       if (nat444Ada instanceof Array && nat444Ada.length > 0) {
         business44AdaInfo.natureOfBusiness = nat444Ada[0]['CodeADA'];
@@ -1436,7 +1425,6 @@ export class TaxSummaryComponent implements OnInit {
       // }
     }
 
-    console.log('pre44ADAinfo: ', pre44ADAinfo);
     let preBusinessObj44ADA = {
       businessType: "PROFESSIONAL",
       exemptIncome: 0,
@@ -1462,15 +1450,12 @@ export class TaxSummaryComponent implements OnInit {
       // preBusinessObj44ADA.incomes.push(recivedInBankObj);
       preBusinessObj44ADA.incomes.push(grossRecipt44ADAObj);
       itr4Summary.assesse.business.presumptiveIncomes.push(preBusinessObj44ADA);
-      console.log('44ADA grossRecipt44ADAObj Object :', grossRecipt44ADAObj);
-      console.log('itr4Summary total object :', itr4Summary);
     }
 
 
     //Financial Information as on 31/03/2020  
     //Liabilities:
     let financialInfo = itrData.ScheduleBP.FinanclPartclrOfBusiness;
-    console.log('financialInfo: -> ', financialInfo)
 
     itr4Summary.assesse.business.financialParticulars.membersOwnCapital = this.getNumberFormat(financialInfo.PartnerMemberOwnCapital);
     itr4Summary.assesse.business.financialParticulars.securedLoans = this.getNumberFormat(financialInfo.SecuredLoans);
@@ -1504,25 +1489,22 @@ export class TaxSummaryComponent implements OnInit {
     this.updatBussinessInfo = itr4Summary;
   }
 
-  getNatureExceptionLabel(keyVal:any) {
+  getNatureExceptionLabel(keyVal: any) {
     return this.exemptIncomes.filter((item: any) => item.value === keyVal)[0].label
   }
 
 
   addExemptIncome() {
-    
-    console.log('exempt values: ', this.exemptInfo.type, this.exemptInfo.amount);
+
     if (this.utilService.isNonEmpty(this.exemptInfo.type) && this.utilService.isNonEmpty(this.exemptInfo.amount)) {
       this.exemptIncomeData.push(this.exemptInfo);
 
     }
-    console.log('exemptIncomeData : ', this.exemptIncomeData);
     this.exemptInfo.type = '';
     this.exemptInfo.amount = 0;
-    console.log('exemptIncomeData 2: ', this.exemptIncomeData);
   }
 
-  deleteExemptRecord(index:any) {
+  deleteExemptRecord(index: any) {
     this.exemptIncomeData.splice(index, 1)
   }
 
@@ -1538,74 +1520,19 @@ export class TaxSummaryComponent implements OnInit {
     this.currentUserId = 0;
   }
 
-  advanceSearch(key:any) {
+  advanceSearch(key: any) {
     // this.user_data = [];
     if (this.searchVal !== "") {
       this.getUerSummary(this.searchVal);
     }
   }
 
-  getUerSummary(mobNum:any) {
+  getUerSummary(mobNum: any) {
     this.loading = true;
     let param = '/itr/summary/contact-number/' + mobNum;
     this.userService.getMethodInfo(param).subscribe((summary: any) => {
       this.loading = false;
-      console.log('User summary: => ', summary)
-      if (summary.assesse.itrType === "1" || summary.assesse.itrType === "4") {
-        this.itrSummaryForm.reset();
-        // this.sourcesOfIncome    sakjdnkasjdkja  
-        this.updatBussinessInfo = summary;
-        this.bankData = [];
-        this.housingData = [];
-        this.donationData = [];
-        this.salaryItrratedData = [];
-        // this.setTotalOfExempt();
-        this.itrSummaryForm.patchValue(summary);
-        console.log('itrSummaryForm: ', this.itrSummaryForm.value);
-        this.setItrType(summary.assesse.itrType)
-
-        if ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['itrType'].value === "4") {
-
-          var businessIncome = summary.assesse.business.presumptiveIncomes.filter((item: any) => item.businessType === "BUSINESS");
-          if (businessIncome.length > 0) {
-            let businessNatureCode = businessIncome[0].natureOfBusiness;
-            let recivedInBank = businessIncome[0].incomes.filter((item: any) => item.incomeType === "BANK");
-            let recivedInCash = businessIncome[0].incomes.filter((item: any) => item.incomeType === "CASH");
-
-            this.businessObject.tradeName44AD = businessIncome[0].tradeName;
-            this.businessObject.received44ADtaotal = this.getNumberFormat(recivedInBank[0].receipt) + this.getNumberFormat(recivedInCash[0].receipts);
-            this.businessObject.presumptive44ADtotal = this.getNumberFormat(recivedInBank[0].presumptiveIncome) + this.getNumberFormat(recivedInCash[0].presumptiveIncome);
-          }
-
-          var presumptiveIncome = summary.assesse.business.presumptiveIncomes.filter((item: any) => item.businessType === "PROFESSIONAL");
-          console.log('presumptiveIncome : ', presumptiveIncome);
-          if (presumptiveIncome.length > 0) {
-            var presumptiveNatureCode = presumptiveIncome[0].natureOfBusiness;
-            if (presumptiveNatureCode === "00001") {
-              presumptiveNatureCode = "Share of income from firm";
-            }
-            console.log('presumptiveNatureCode: ', presumptiveNatureCode);
-            this.businessObject.tradeName44ADA = presumptiveIncome[0].tradeName;
-            this.businessObject.grossReciept = presumptiveIncome[0].incomes[0].receipts;
-            this.businessObject.presumptiveIncome = presumptiveIncome[0].incomes[0].presumptiveIncome;
-          }
-        }
-
-        this.calculateGrossTotalIncome();
-        console.log(this.itrSummaryForm.value)
-        this.bankData = (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['bankDetails'].value;
-        this.housingData = (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].value;
-        //this.salaryItrratedData = this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers.value;
-        this.updateSalatyInfo((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'])
-        this.updateOtherSource((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['incomes'])
-        this.updateInuranceVal((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['insurances'])
-        this.donationData = (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].value;
-        this.updateTaxDeductionAtSourceVal((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid']);
-        this.setTotalOfExempt();
-      }
-      else {
-        this.utilService.showSnackBar('This mobile number ' + mobNum + ' have ITR type = ' + summary.assesse.itrType)
-      }
+      this.setSummary(summary);
 
     },
       error => {
@@ -1619,8 +1546,63 @@ export class TaxSummaryComponent implements OnInit {
       })
   }
 
-  updateSalatyInfo(salaryInfo:any) {
-    console.log("salaryInfo: ", salaryInfo)
+  setSummary(summary) {
+    if (summary.assesse.itrType === "1" || summary.assesse.itrType === "4") {
+      this.itrSummaryForm.reset();
+      // this.sourcesOfIncome    sakjdnkasjdkja  
+      this.updatBussinessInfo = summary;
+      this.bankData = [];
+      this.housingData = [];
+      this.donationData = [];
+      this.salaryItrratedData = [];
+      // this.setTotalOfExempt();
+      this.itrSummaryForm.patchValue(summary);
+      this.setItrType(summary.assesse.itrType)
+
+      if ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['itrType'].value === "4") {
+
+        var businessIncome = summary.assesse.business.presumptiveIncomes.filter((item: any) => item.businessType === "BUSINESS");
+        if (businessIncome.length > 0) {
+          let businessNatureCode = businessIncome[0].natureOfBusiness;
+          let recivedInBank = businessIncome[0].incomes.filter((item: any) => item.incomeType === "BANK");
+          let recivedInCash = businessIncome[0].incomes.filter((item: any) => item.incomeType === "CASH");
+
+          this.businessObject.tradeName44AD = businessIncome[0].tradeName;
+          this.businessObject.received44ADtaotal = this.getNumberFormat(recivedInBank[0].receipt) + this.getNumberFormat(recivedInCash[0].receipts);
+          this.businessObject.presumptive44ADtotal = this.getNumberFormat(recivedInBank[0].presumptiveIncome) + this.getNumberFormat(recivedInCash[0].presumptiveIncome);
+        }
+
+        var presumptiveIncome = summary.assesse.business.presumptiveIncomes.filter((item: any) => item.businessType === "PROFESSIONAL");
+
+        if (presumptiveIncome.length > 0) {
+          var presumptiveNatureCode = presumptiveIncome[0].natureOfBusiness;
+          if (presumptiveNatureCode === "00001") {
+            presumptiveNatureCode = "Share of income from firm";
+          }
+
+          this.businessObject.tradeName44ADA = presumptiveIncome[0].tradeName;
+          this.businessObject.grossReciept = presumptiveIncome[0].incomes[0].receipts;
+          this.businessObject.presumptiveIncome = presumptiveIncome[0].incomes[0].presumptiveIncome;
+        }
+      }
+
+      this.calculateGrossTotalIncome();
+
+      this.bankData = (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['bankDetails'].value;
+      this.housingData = (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].value;
+      //this.salaryItrratedData = this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers.value;
+      this.updateSalatyInfo((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'])
+      this.updateOtherSource((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['incomes'])
+      this.updateInuranceVal((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['insurances'])
+      this.donationData = (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].value;
+      this.updateTaxDeductionAtSourceVal((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid']);
+      this.setTotalOfExempt();
+    }
+    else {
+      this.utilService.showSnackBar('This user have ITR type = ' + summary.assesse.itrType)
+    }
+  }
+  updateSalatyInfo(salaryInfo: any) {
     if (salaryInfo.value) {
       var salaryData = salaryInfo.value;
       for (let i = 0; i < salaryData.length; i++) {
@@ -1652,13 +1634,11 @@ export class TaxSummaryComponent implements OnInit {
 
         this.salaryItrratedData.push(salObj)
       }
-      console.log('this.salaryItrratedData ====>> ', this.salaryItrratedData)
     }
 
   }
 
-  updateOtherSource(otherInfo:any) {
-    console.log('otherInfo: ', otherInfo)
+  updateOtherSource(otherInfo: any) {
     this.sourcesOfIncome = {
       interestFromSaving: 0,
       interestFromBank: 0,
@@ -1671,9 +1651,9 @@ export class TaxSummaryComponent implements OnInit {
     if (otherInfo.value) {
       var otherSource = otherInfo.value;
       for (let i = 0; i < otherSource.length; i++) {
-        
+
         if (otherSource[i].incomeType === "SAVING_INTEREST") {
-          
+
           this.sourcesOfIncome.interestFromSaving = otherSource[i].amount;
         }
         else if (otherSource[i].incomeType === "FD_RD_INTEREST") {
@@ -1691,12 +1671,10 @@ export class TaxSummaryComponent implements OnInit {
         this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank +
           this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther;
       }
-      console.log('sourcesOfIncome: ', this.sourcesOfIncome)
     }
   }
 
-  updateInuranceVal(insuranceInfo:any) {
-    console.log('insuranceInfo: ', insuranceInfo)
+  updateInuranceVal(insuranceInfo: any) {
     this.sec80DobjVal = {
       healthInsuarancePremiumSelf: 0,
       healthInsuarancePremiumParents: 0,
@@ -1707,21 +1685,20 @@ export class TaxSummaryComponent implements OnInit {
     if (insuranceInfo.value) {
       var insuranceVal = insuranceInfo.value;
       for (let i = 0; i < insuranceVal.length; i++) {
-        
+
         if (insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].premium)) {
-          
+
           this.sec80DobjVal.healthInsuarancePremiumSelf = insuranceVal[i].premium;
         }
         if (insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].preventiveCheckUp)) {
-          
+
           this.sec80DobjVal.preventiveHealthCheckupFamily = insuranceVal[i].preventiveCheckUp;
         }
         if (insuranceVal[i].policyFor === "PARENTS" && this.utilService.isNonEmpty(insuranceVal[i].premium)) {
-          
+
           this.sec80DobjVal.healthInsuarancePremiumParents = insuranceVal[i].premium;
         }
       }
-      console.log('sec80DobjVal: ', this.sec80DobjVal)
     }
 
     if (((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['systemFlags'] as FormGroup).controls['hasParentOverSixty'].value) {
@@ -1732,8 +1709,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
 
-  updateTaxDeductionAtSourceVal(taxPaidInfo:any) {
-    console.log('taxPaidInfo: ', taxPaidInfo)
+  updateTaxDeductionAtSourceVal(taxPaidInfo: any) {
     this.taxesPaid = {
       tdsOnSalary: 0,
       tdsOtherThanSalary: 0,
@@ -1806,8 +1782,7 @@ export class TaxSummaryComponent implements OnInit {
   advanceSelfTax: any = [];
 
   showAcknowInput!: boolean;
-  showAcknowData(returnType:any) {
-    console.log('Selected return type: ', returnType)
+  showAcknowData(returnType: any) {
     if (returnType === 'REVISED') {
       this.showAcknowInput = true;
       //this.itrSummaryForm.controls['acknowledgementNumber'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
@@ -1825,7 +1800,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setItrType(itrType:any) {
+  setItrType(itrType: any) {
     if (itrType === "1") {
       this.itrType.itrOne = true;
       this.itrType.itrFour = false;
@@ -1848,10 +1823,10 @@ export class TaxSummaryComponent implements OnInit {
     this.userService.getMethodInfo(param).subscribe((result: any) => {
       var natureOfBusinessInfo = [];
       natureOfBusinessInfo = result.natureOfBusiness;
-      console.log('natureOfBusinessInfo: ', natureOfBusinessInfo)
+
       this.natureOfBusinessDropdown44AD = natureOfBusinessInfo.filter((item: any) => item.section === '44AD');
       this.natureOfBusinessDropdown44ADA = natureOfBusinessInfo.filter((item: any) => item.section === '44ADA');
-      console.log(' this.natureOfBusinessDropdown44AD=> ', this.natureOfBusinessDropdown44AD);
+
 
 
     }, error => {
@@ -1867,11 +1842,11 @@ export class TaxSummaryComponent implements OnInit {
       this.natureCode = this.natureOfBusinessDropdown44AD.filter((item: any) => item.label.toLowerCase() === this.natureOfBusinessForm.value.toLowerCase());
       if (this.natureCode.length !== 0) {
         this.natureCode = this.natureCode[0].code;
-        console.log('natureCode on blur = ', this.natureCode);
+
       }
       // else {
       //   this.natureOfBusinessForm.setErrors(invalid);
-      //   console.log('natureCode on blur = ', this.natureCode);
+
       // }
     }
   }
@@ -1892,12 +1867,12 @@ export class TaxSummaryComponent implements OnInit {
     })
 
     disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+
       // this.animal = result;
       if (result) {
-        console.log('Result: ', result)
+
         if (result.data.type === 'Bank') {
-          console.log('bankData: ', this.bankData)
+
           this.setBankValue(result.data.bankDetails, result.data.action, result.data.index)
         }
         else if (result.data.type === 'House') {
@@ -1909,7 +1884,7 @@ export class TaxSummaryComponent implements OnInit {
           this.setEmployerData(result.data, result.data.action, result.data.index);
         }
         else if (result.data.type === 'donationSec80G') {
-          console.log('result.data: ', result.data)
+
           this.setDonationValue(result.data.donationInfo, result.data.action, result.data.index)
         }
         else if (result.data.type === 'tdsOnSal') {
@@ -1938,11 +1913,11 @@ export class TaxSummaryComponent implements OnInit {
     });
   }
 
-  setBankValue(latestBankInfo:any, action:any, index:any) {
-    console.log('DDAATTAA==>: ', latestBankInfo, action, index)
+  setBankValue(latestBankInfo: any, action: any, index: any) {
+
     if (action === 'Add') {
       if (this.bankData.length !== 0) {
-        console.log('latestBankInfo: ', latestBankInfo)
+
         if (latestBankInfo.hasRefund === true) {
           for (let i = 0; i < this.bankData.length; i++) {
             this.bankData[i].hasRefund = false;
@@ -1965,20 +1940,20 @@ export class TaxSummaryComponent implements OnInit {
           this.bankData[i].hasRefund = false;
         }
         this.bankData.splice(index, 1, latestBankInfo)
-        console.log('After edit data is: ', this.bankData)
+
         //this.bankData.push(latestBankInfo)
       }
       else {
         this.bankData.splice(index, 1, latestBankInfo)
-        console.log('After edit data is: ', this.bankData)
+
         // this.bankData.push(latestBankInfo)
       }
     }
 
-    console.log('this.bankData: ', this.bankData)
+
   }
 
-  setDonationValue(latestDonationInfo:any, action:any, index:any) {
+  setDonationValue(latestDonationInfo: any, action: any, index: any) {
     if (action === 'Add') {
       // this.setDonationValue(result.data.donationInfo, result.data.action, result.data.index)
       this.donationData.push(latestDonationInfo);
@@ -1989,28 +1964,28 @@ export class TaxSummaryComponent implements OnInit {
 
       this.donationData.splice(index, 1, latestDonationInfo);
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].setValue(this.donationData);
-      console.log('Donation sec 80G after update: ', this.donationData)
+
       this.getdeductionTotal(this.donationData)
     }
 
   }
 
-  setTdsOnSalValue(tdsOnSalInfo:any, action:any, index:any) {
+  setTdsOnSalValue(tdsOnSalInfo: any, action: any, index: any) {
     if (action === 'Add') {
       this.tdsOnSal.push(tdsOnSalInfo);
-      console.log('this.tdsOnSal: ', this.tdsOnSal)
+
       this.setTotalTDSVal(this.tdsOnSal, 'tdsOnSal')
       this.setTaxValInObject(tdsOnSalInfo, 'tdsOnSal', action, index)
     }
     else if (action === 'Edit') {
       this.tdsOnSal.splice(index, 1, tdsOnSalInfo);
-      console.log('tdsOnSal after update: ', this.tdsOnSal)
+
       this.setTotalTDSVal(this.tdsOnSal, 'tdsOnSal')
       this.setTaxValInObject(tdsOnSalInfo, 'tdsOnSal', action, index)
     }
   }
 
-  setTdsOnOtherThanSalValue(tdsOnOtherThanSal:any, action:any, index:any) {
+  setTdsOnOtherThanSalValue(tdsOnOtherThanSal: any, action: any, index: any) {
     if (action === 'Add') {
       this.tdsOtherThanSal.push(tdsOnOtherThanSal);
       this.setTotalTDSVal(this.tdsOtherThanSal, 'otherThanSalary16A')
@@ -2023,8 +1998,8 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setTdsOnSal26QValue(tdsOnSal26Q:any, action:any, index:any) {
-    console.log('tdsOnSal26Q CHECK =>', tdsOnSal26Q, action, index)
+  setTdsOnSal26QValue(tdsOnSal26Q: any, action: any, index: any) {
+
     if (action === 'Add') {
       this.tdsSalesPro.push(tdsOnSal26Q);
       this.setTotalTDSVal(this.tdsSalesPro, 'otherThanSalary26QB')
@@ -2037,7 +2012,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setTcsValue(tcs:any, action:any, index:any) {
+  setTcsValue(tcs: any, action: any, index: any) {
     if (action === 'Add') {
       this.taxCollAtSource.push(tcs);
       this.setTotalTCSVal(this.taxCollAtSource);
@@ -2050,7 +2025,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setAdvanSelfAssTaxValue(advanSelfAssTax:any, action:any, index:any) {
+  setAdvanSelfAssTaxValue(advanSelfAssTax: any, action: any, index: any) {
     if (action === 'Add') {
       this.advanceSelfTax.push(advanSelfAssTax);
       this.setTotalAdvSelfTaxVal(this.advanceSelfTax);
@@ -2082,7 +2057,7 @@ export class TaxSummaryComponent implements OnInit {
   setTaxValInObject(taxData: any, type: any, action: any, index: any) {
     if (type === 'tdsOnSal') {
       if (action === 'Add') {
-        console.log('tdsOnSal Data:', taxData)
+
         this.taxPaiObj.onSalary.push(taxData)
       }
       else if (action === 'Edit') {
@@ -2094,7 +2069,7 @@ export class TaxSummaryComponent implements OnInit {
 
     }
     else if (type === 'otherThanSalary16A') {
-      console.log('otherThanSalary16A Data:', taxData)
+
       if (action === 'Add') {
         this.taxPaiObj.otherThanSalary16A.push(taxData)
       }
@@ -2107,7 +2082,7 @@ export class TaxSummaryComponent implements OnInit {
 
     }
     else if (type === 'otherThanSalary26QB') {
-      console.log('otherThanSalary26QB Data:', taxData)
+
       if (action === 'Add') {
         this.taxPaiObj.otherThanSalary26QB.push(taxData)
       }
@@ -2119,7 +2094,7 @@ export class TaxSummaryComponent implements OnInit {
       }
     }
     else if (type === 'taxCollSources') {
-      console.log('taxCollSources Data:', taxData)
+
       if (action === 'Add') {
         this.taxPaiObj.tcs.push(taxData)
       }
@@ -2132,7 +2107,7 @@ export class TaxSummaryComponent implements OnInit {
 
     }
     else if (type === 'advanceSelfAssTax') {
-      console.log('advanceSelfAssTax Data:', taxData)
+
       if (action === 'Add') {
         this.taxPaiObj.otherThanTDSTCS.push(taxData)
       }
@@ -2154,9 +2129,9 @@ export class TaxSummaryComponent implements OnInit {
   // hpStadDeduct: any = [];
   // netHousePro: any = [];
   houseArray: any = [];
-  setHousingData(housingData:any, action:any, index:any) {
+  setHousingData(housingData: any, action: any, index: any) {
     if (action === 'Add') {
-      console.log('Housing Data: ', housingData.house)
+
       //var houseArray = [];
       this.houseArray.push(housingData.house)
         // this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].setValue(this.houseArray);
@@ -2168,11 +2143,11 @@ export class TaxSummaryComponent implements OnInit {
         totalTaxableIncome = totalTaxableIncome + this.houseArray[i].taxableIncome;  //exemptIncome
       }
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].setValue(totalTaxableIncome)    //Here we add total of taxableIncome into housePropertyIncome to show in table 2nd point
-      console.log('totalTaxableIncome value: ', (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].value)
+
 
       this.createHouseDataObj(this.houseArray, action, null);
       this.calculateGrossTotalIncome()
-      console.log('BEFORE SAVE SUMMARY Housing Data:=> ', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].value)
+
     }
     else if (action === 'Edit') {
       this.houseArray.splice(index, 1, housingData.house)
@@ -2193,7 +2168,7 @@ export class TaxSummaryComponent implements OnInit {
 
   }
 
-  createHouseDataObj(houseData:any, action:any, index:any) {
+  createHouseDataObj(houseData: any, action: any, index: any) {
     if (action === 'Add') {
       let flatNo = this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '';
       let building = this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
@@ -2204,8 +2179,8 @@ export class TaxSummaryComponent implements OnInit {
       let state = this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '';
       let address = flatNo + ' ' + building + ' ' + ' ' + street + ' ' + locality + ' ' + city + ' ' + country + ' ' + state;
 
-      console.log("houseData: ", houseData)
-      console.log('Condition: ', houseData[0].coOwners.length > 0);
+
+
 
       this.housingData = [];
 
@@ -2239,7 +2214,7 @@ export class TaxSummaryComponent implements OnInit {
         this.housingData.push(house)
       }
 
-      console.log('Housing:--- ', this.housingData)
+
     }
     else if (action === 'Edit') {
 
@@ -2252,8 +2227,8 @@ export class TaxSummaryComponent implements OnInit {
       let state = this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '';
       let address = flatNo + ' ' + building + ' ' + ' ' + street + ' ' + locality + ' ' + city + ' ' + country + ' ' + state;
 
-      console.log("houseData: ", houseData)
-      console.log('Condition: ', houseData[0].coOwners.length > 0)
+
+
       let house = {
         propertyType: houseData[0].propertyType,
         address: address,
@@ -2282,7 +2257,6 @@ export class TaxSummaryComponent implements OnInit {
         state: this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '',
       }
       this.housingData.splice(index, 1, house)
-      console.log('Housing:--- ', this.housingData)
     }
 
   }
@@ -2297,7 +2271,6 @@ export class TaxSummaryComponent implements OnInit {
   setEmployerData(emplyersData: any, action: any, index: any) {
     if (action === 'Add') {
       this.employersData.push(emplyersData)
-      console.log('employersData: ', this.employersData)
       var employerArray = [];
       var totalTaxableIncome = 0;
       for (let i = (this.employersData.length - 1); i < this.employersData.length; i++) {
@@ -2333,7 +2306,6 @@ export class TaxSummaryComponent implements OnInit {
         // this.taxableSalary.push(this.employersData[i].taxableSalary)
       }
 
-      console.log('totalTaxableIncome Before: ', totalTaxableIncome)
       for (let i = 0; i < this.employersData.length; i++) {
         totalTaxableIncome = totalTaxableIncome + this.employersData[i].employers.taxableIncome;
         employerArray.push(this.employersData[i].employers)
@@ -2350,14 +2322,10 @@ export class TaxSummaryComponent implements OnInit {
       // this.itrSummaryForm.controls['totalSalaryDeduction'].setValue(this.totalSalaryDeduction)
       // this.itrSummaryForm.controls['taxableSalary'].setValue(this.taxableSalary)
 
-      console.log('Salary Data: ', this.salaryItrratedData);
-      console.log('ITR formData: ', this.itrSummaryForm.value);
     }
     else if (action === 'Edit') {
 
-      console.log('employersData: ', emplyersData)
       this.employersData.splice(index, 1, emplyersData)
-      console.log('employersData: ', this.employersData)
       var employerArray = [];
       var totalTaxableIncome = 0;
       // for (let i = (this.employersData.length - 1); i < this.employersData.length; i++) {
@@ -2408,15 +2376,11 @@ export class TaxSummaryComponent implements OnInit {
       // this.itrSummaryForm.controls['netSalary'].setValue(this.netSalary)
       // this.itrSummaryForm.controls['totalSalaryDeduction'].setValue(this.totalSalaryDeduction)
       // this.itrSummaryForm.controls['taxableSalary'].setValue(this.taxableSalary)
-
-      console.log('Salary Data: ', this.salaryItrratedData);
-      console.log('ITR formData: ', this.itrSummaryForm.value);
     }
   }
 
 
-  getCityData(pincode:any, type:any) {
-    console.log(pincode)
+  getCityData(pincode: any, type: any) {
     if (type === 'profile') {
       if (pincode.valid) {
         //this.changeCountry('INDIA');   //91
@@ -2441,10 +2405,8 @@ export class TaxSummaryComponent implements OnInit {
 
   getUserInfoByPan(pan: any, dob?: any, personalInfo?: any) {
     if (pan.valid) {
-      console.log('Pan: ', pan)
       const param = '/itr/api/getPanDetail?panNumber=' + pan.value;
       this.userService.getMethodInfo(param).subscribe((result: any) => {
-        console.log('userInfo by Pan number: ', result)
         const userData = <FormArray>this.itrSummaryForm.controls['assesse'].get('family');
         if (this.utilService.isNonEmpty(dob)) {
           let reqBody = {
@@ -2462,7 +2424,6 @@ export class TaxSummaryComponent implements OnInit {
             reqBody.middleName = personalInfo.Verification.Declaration.FatherName;
             // this.itrSummaryForm.controls['assesse'] as FormGroup).controls['family.controls[0].controls['fathersName'].setValue(reqBody.middleName);
           }
-          console.log('reqBody: ', reqBody);
           userData.insert(0, this.updateFamilyForm(reqBody));
           userData.removeAt(1)
         }
@@ -2471,7 +2432,6 @@ export class TaxSummaryComponent implements OnInit {
           userData.removeAt(1)
         }
 
-        console.log('userData: ', userData)
         // this.itrSummaryForm.controls['firstName'].setValue(result.firstName ? result.firstName : '');   //91
         // this.itrSummaryForm.controls['middleName'].setValue(result.middleName ? result.middleName : '');
         // this.itrSummaryForm.controls['lastName'].setValue(result.lastName ? result.lastName : '');  //stateCode   
@@ -2515,8 +2475,7 @@ export class TaxSummaryComponent implements OnInit {
     toatlIncome: 0
   }
   setOtherSourceIncomeValue(incomeVal: any, type: any) {
-    
-    console.log('incomeVal: ', incomeVal, ' type: ', type)
+
     if (Number(incomeVal) !== 0 && this.utilService.isNonEmpty(incomeVal)) {
       if (type === 'saving') {
         this.sourcesOfIncome.interestFromSaving = Number(incomeVal);
@@ -2533,7 +2492,6 @@ export class TaxSummaryComponent implements OnInit {
       else if (type === 'other') {
         this.sourcesOfIncome.interestFromOther = Number(incomeVal);
       }
-      console.log('this.otherSource: ', this.otherSource)
       this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.dividend;
 
       //this.itrSummaryForm.controls['totalIncomeFromOtherResources'].setValue(this.sourcesOfIncome.toatlIncome)    //otherIncome
@@ -2541,7 +2499,7 @@ export class TaxSummaryComponent implements OnInit {
       this.calculateGrossTotalIncome()
     }
     else {
-      
+
       if (Number(incomeVal) === 0 || incomeVal === '' || incomeVal === 'undefined') {
         if (type === 'saving') {
           this.sourcesOfIncome.interestFromSaving = 0;
@@ -2558,7 +2516,6 @@ export class TaxSummaryComponent implements OnInit {
         else if (type === 'other') {
           this.sourcesOfIncome.interestFromOther = 0;
         }
-        console.log('this.otherSource: ', this.otherSource)
         this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.dividend;
 
         //this.itrSummaryForm.controls['totalIncomeFromOtherResources'].setValue(this.sourcesOfIncome.toatlIncome)
@@ -2586,9 +2543,7 @@ export class TaxSummaryComponent implements OnInit {
 
   mainHousingData: any = [];
   setNetHousingProLoan() {
-    console.log('House Pro Data: ', this.itrSummaryForm.controls['houseProperties'].value);
     this.mainHousingData.push(this.itrSummaryForm.controls['houseProperties'].value[0])
-    console.log('Housh=ging Data=== ', this.mainHousingData)
     // let netHousingProLoan = Number(this.itrSummaryForm.controls['houseProperties.controls['annualValue.value) - Number(this.itrSummaryForm.controls['hpStandardDeduction'].value)
     // this.itrSummaryForm.controls['hpStandardDeduction'].setValue(hpStadDeduct);
     // this.itrSummaryForm.controls['netHousePropertyIncome'].setValue(netHousePro);
@@ -2601,9 +2556,9 @@ export class TaxSummaryComponent implements OnInit {
 
   calculateGrossTotalIncome() {    //Calculate point 4 
     // this.businessObject.prsumptiveIncomeTotal
-    
+
     if (this.itrType.itrOne) {
-      
+
       let gti = Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].value);
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['grossTotalIncome'].setValue(gti);
       this.calculateTotalIncome();
@@ -2629,7 +2584,7 @@ export class TaxSummaryComponent implements OnInit {
     parentAge: '',
     medicalExpendature: 0
   }
-  setDeduction80DVal(insuranceVal:any, type:any) {
+  setDeduction80DVal(insuranceVal: any, type: any) {
     //  alert(insuranceVal)
     if (insuranceVal !== 0 || this.utilService.isNonEmpty(insuranceVal)) {
       if (type === 'forSelf') {
@@ -2647,7 +2602,6 @@ export class TaxSummaryComponent implements OnInit {
       else if (type === 'medicalExpendature') {
         this.sec80DobjVal.medicalExpendature = insuranceVal;
       }
-      // console.log('itr control with sec80DForm---->', this.itrSummaryForm.controls['sec80DForm.controls['insuranceSelf.value)
       let sec80dVal = Number(this.sec80DobjVal.healthInsuarancePremiumSelf) + Number(this.sec80DobjVal.healthInsuarancePremiumParents) + Number(this.sec80DobjVal.preventiveHealthCheckupFamily) + Number(this.sec80DobjVal.medicalExpendature);
       this.itrSummaryForm.controls['us80d'].setValue(sec80dVal);
       this.calculateTotalDeduction()       // this.itrSummaryForm.controls[''].us80d'].setValue(sec80dVal);
@@ -2694,7 +2648,6 @@ export class TaxSummaryComponent implements OnInit {
     //this.itrSummaryForm.controls['deductionUnderChapterVIA'].setValue(deductTotal);
     (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalDeduction'].setValue(deductTotal)
     this.calculateTotalIncome();
-    console.log('jdjdj')
   }
 
   calculateTotalIncome() {  //Calculate point 6
@@ -2715,10 +2668,8 @@ export class TaxSummaryComponent implements OnInit {
     this.calculateRebateus87A()
   }
 
-  roundOf10Val(num:any) {
+  roundOf10Val(num: any) {
     num = parseFloat(num);
-    console.log(num)
-    console.log('num: ', num, ' num/10: ', num / 10, ' Math.round(num / 10): ', Math.round(num / 10), ' (Math.round(num / 10) * 10)', (Math.round(num / 10) * 10))
     return (Math.round(num / 10) * 10);
   }
 
@@ -2828,7 +2779,7 @@ export class TaxSummaryComponent implements OnInit {
     this.calculateNetTaxPayble();        //Calculate point 17
   }
 
-  setTotalTCSVal(tscInfo:any) {
+  setTotalTCSVal(tscInfo: any) {
     var total = 0;
     for (let i = 0; i < tscInfo.length; i++) {
       total = total + Number(tscInfo[i].totalTcsDeposited);
@@ -2841,7 +2792,7 @@ export class TaxSummaryComponent implements OnInit {
     this.calculateNetTaxPayble();        //Calculate point 17
   }
 
-  setTotalAdvSelfTaxVal(advSelfTaxInfo:any) {
+  setTotalAdvSelfTaxVal(advSelfTaxInfo: any) {
     var total = 0;
     for (let i = 0; i < advSelfTaxInfo.length; i++) {
       total = total + Number(advSelfTaxInfo[0].totalTax);
@@ -2857,12 +2808,12 @@ export class TaxSummaryComponent implements OnInit {
     this.totalTDS = this.taxesPaid.tdsOnSalary + this.taxesPaid.tdsOtherThanSalary + this.taxesPaid.tdsOnSal26QB + this.taxesPaid.tcs + this.taxesPaid.advanceSelfAssTax;
     //this.itrSummaryForm.controls['totalTaxPaid'].setValue(this.totalTDS) 
     (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalTaxesPaid'].setValue(this.totalTDS)
-    //console.log('taxesPaid: ', this.taxesPaid)
+
 
     this.calculateNetTaxPayble();        //Calculate point 17
   }
 
-  setValueInLoanObj(interestAmount:any) {
+  setValueInLoanObj(interestAmount: any) {
     if (interestAmount.valid) {
       ((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['loans'] as FormGroup).controls['loanType'].setValue('HOUSING');
     } else {
@@ -2872,19 +2823,14 @@ export class TaxSummaryComponent implements OnInit {
 
   incomeData: any = [];
   saveItrSummary() {
-
-    console.log('this.sourcesOfIncome: ', this.sourcesOfIncome);
-    console.log('itrSummaryForm: ', this.itrSummaryForm)
-    console.log('itrSummaryForm validation: ', this.itrSummaryForm.valid)
-    console.log('itr summary: ', this.itrSummaryForm.valid, ' business form: ', (this.itrType.itrFour ? this.businessFormValid : true))
     if (this.itrSummaryForm.valid && (this.itrType.itrFour ? this.businessFormValid : true)) {
 
-      if (this.newItrSumChanges) {
-        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/new-summary/itr-one', ['trackEvent', 'New Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
-      }
-      else {
-        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/itrFirst', ['trackEvent', 'Old Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
-      }
+      // if (this.newItrSumChanges) {
+      //   this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/new-summary/itr-one', ['trackEvent', 'New Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
+      // }
+      // else {
+      //   this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/itrFirst', ['trackEvent', 'Old Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
+      // }
 
       if (this.utilService.isNonEmpty(this.sourcesOfIncome)) {
         this.incomeData = [];
@@ -2897,6 +2843,7 @@ export class TaxSummaryComponent implements OnInit {
             incomeType: 'SAVING_INTEREST',
             details: ''
           };
+
           this.incomeData.push(obj)
         }
         if (this.sourcesOfIncome.interestFromBank !== 0) {
@@ -2908,6 +2855,7 @@ export class TaxSummaryComponent implements OnInit {
             incomeType: 'FD_RD_INTEREST',
             details: ''
           };
+
           this.incomeData.push(obj)
         }
         if (this.sourcesOfIncome.interestFromIncomeTax !== 0) {
@@ -2919,6 +2867,7 @@ export class TaxSummaryComponent implements OnInit {
             incomeType: 'TAX_REFUND_INTEREST',
             details: ''
           };
+
           this.incomeData.push(obj)
         }
         if (this.sourcesOfIncome.interestFromOther !== 0) {
@@ -2930,6 +2879,7 @@ export class TaxSummaryComponent implements OnInit {
             incomeType: 'ANY_OTHER',
             details: ''
           };
+
           this.incomeData.push(obj)
         }
         if (this.sourcesOfIncome.dividend !== 0) {
@@ -2941,6 +2891,7 @@ export class TaxSummaryComponent implements OnInit {
             incomeType: 'DIVIDEND_INCOME',
             details: ''
           };
+
           this.incomeData.push(obj)
         }
         //   if (this.sourcesOfIncome.toatlIncome !== 0) {
@@ -2977,8 +2928,8 @@ export class TaxSummaryComponent implements OnInit {
           details: ''
         }
 
-        this.incomeData.push(incomeObj)
-          (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['incomes'].setValue(this.incomeData)
+        this.incomeData.push(incomeObj);
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['incomes'].setValue(this.incomeData);
       }
 
 
@@ -3045,14 +2996,14 @@ export class TaxSummaryComponent implements OnInit {
 
       ////// itr 4 part  //////////////////
       if (this.businessFormValid) {
-        console.log("businessObject:=> ", this.businessObject)
-        
-        console.log("natureOfBusinessDropdown44AD:=> ", this.natureOfBusinessDropdown44AD)
+
+
+
         var presumData = [];
         if (this.utilService.isNonEmpty(this.businessObject.natureOfBusiness44AD) && this.utilService.isNonEmpty(this.businessObject.tradeName44AD)) {
 
-          console.log(this.natureOfBusinessDropdown44AD.filter((item: any) => item.label.toLowerCase() === this.businessObject.natureOfBusiness44AD.toLowerCase()).code)
-          console.log(this.natureOfBusinessDropdown44AD.filter((item: any) => item.label.toLowerCase() === this.businessObject.natureOfBusiness44AD.toLowerCase())[0].code)
+
+
 
           this.businessObject.natureOfBusiness44AD = this.natureOfBusinessDropdown44AD.filter((item: any) => item.label.toLowerCase() === this.businessObject.natureOfBusiness44AD.toLowerCase())[0].code;
 
@@ -3098,7 +3049,7 @@ export class TaxSummaryComponent implements OnInit {
           presumData.push(presumptiveBusinessObj)
         }
 
-        
+
         if (this.utilService.isNonEmpty(this.businessObject.natureOfBusiness44ADA) && this.utilService.isNonEmpty(this.businessObject.tradeName44ADA)) {
 
           this.businessObject.natureOfBusiness44ADA = this.natureOfBusinessDropdown44ADA.filter((item: any) => item.label === this.businessObject.natureOfBusiness44ADA)[0].code;
@@ -3128,7 +3079,7 @@ export class TaxSummaryComponent implements OnInit {
 
 
       /////////  taxPaid Bind part////////////////
-      //console.log('itrSummaryForm taxPaid', this.itrSummaryForm.controls['taxPaid'].value)
+
       var blackObj = {};
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid'].value ? (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid'].value : (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid'].setValue(blackObj)
 
@@ -3143,22 +3094,34 @@ export class TaxSummaryComponent implements OnInit {
 
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].value ? (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].value : (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['donations'].setValue(blankArray)
 
-      console.log('ITR summary Data: ', this.itrSummaryForm.value)
 
-      console.log('sumarryObj: ', this.itrSummaryForm.value)
+
+
       this.loading = true;
+      let tempAy = this.itrObject.assessmentYear;
+      Object.assign(this.itrObject, this.itrSummaryForm.controls['assesse'].value);
+      this.itrObject.assessmentYear = tempAy;
+
       const param = '/itr/summary';
       let body = this.itrSummaryForm.value;
       this.userService.postMethodInfo(param, body).subscribe((result: any) => {
-        console.log("result: ", result)
-        this.loading = false;
 
-        this.itrSummaryForm.patchValue(result)
-        console.log('itrSummaryForm value: ', this.itrSummaryForm.value)
-        this._toastMessageService.alert("success", "Summary save succesfully.");
+        this.loading = false;
+        this.itrSummaryForm.patchValue(result);
+        const param1 = '/itr/' + this.itrObject.userId + '/' + this.itrObject.itrId + '/' + this.itrObject.assessmentYear;
+        this.itrMsService.putMethod(param1, this.itrObject).subscribe((result: any) => {
+          // this.updateStatus(); // Update staus automatically
+          this.loading = false;
+          this._toastMessageService.alert("success", "Summary saved and ITR details updated succesfully.");
+        }, error => {
+          this._toastMessageService.alert("error", "Failed to update itr details");
+          this.loading = false;
+        });
+
+
       }, error => {
         this.loading = false;
-        this._toastMessageService.alert("error", "There is some issue save to summary.");
+        this._toastMessageService.alert("error", "Failed to save summary.");
       });
 
     }
@@ -3274,13 +3237,11 @@ export class TaxSummaryComponent implements OnInit {
 
   businessFormValid!: boolean;
   getBusinessData(businessInfo: any) {
-    console.log('businessInfo: ', businessInfo)
     if (businessInfo.valid) {
       this.businessFormValid = true;
 
       ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['business'] as FormGroup).controls['financialParticulars'].patchValue(businessInfo.value);
       Object.assign(this.businessObject, businessInfo.value)
-      console.log('businessObject: ', this.businessObject)
 
       let prsumptTotal = Number(this.businessObject.presumptive44ADtotal) + Number(this.businessObject.presumptiveIncome);
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['presumptiveIncome'].setValue(prsumptTotal);
@@ -3308,7 +3269,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
 
-  initialiseNewRegimeTaxSummary() {
+  initializeNewRegimeTaxSummary() {
     this.newRegimeTaxSummary = {
       salary: 0,
       housePropertyIncome: 0,
@@ -3350,14 +3311,14 @@ export class TaxSummaryComponent implements OnInit {
   }
 
 
-  initialiseMainForm() {
+  initializeMainForm() {
     this.itrSummaryForm = this.fb.group({
       _id: null,
       summaryId: 0,
-      itrId: [0],
-      userId: [0],
+      itrId: [this.itrObject?.itrId],
+      userId: [this.itrObject?.userId],
       returnType: ['ORIGINAL', [Validators.required]],
-      financialYear: ['2019-2020', [Validators.required]],
+      financialYear: ['2021-2022', [Validators.required]],
 
       assesse: this.fb.group({
         passportNumber: [''],
@@ -3370,7 +3331,7 @@ export class TaxSummaryComponent implements OnInit {
         ackNumber: null,//acknowledgmentNumber
         maritalStatus: null,
         assesseeType: null,
-        assessmentYear: ['2020-2021', [Validators.required]],//assessmentYear
+        assessmentYear: ['2022-2023', [Validators.required]],//assessmentYear
         noOfDependents: 0,
 
         // natureOfEmployment: [''],
@@ -3524,13 +3485,13 @@ export class TaxSummaryComponent implements OnInit {
       newTaxRegime: null,
       totalExemptIncome: [0]
     })
-    console.log('itrSummaryForm: ', this.itrSummaryForm)
+
   }
 
   showHouseBtn() {
     if (this.housingData.length > 0) {
       let houseProType = this.housingData[0].propertyType;
-      // console.log(!this.newItrSumChanges , this.housingData.length > 1 , houseProType === 'LOP')
+
       if (!this.newItrSumChanges || this.housingData.length > 1 || houseProType === 'LOP') {
         return true;
       }
@@ -3544,7 +3505,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   getNumberFormat(val: any) {
-    console.log('val & type: ', val, typeof val)
+
     if (typeof val === 'string') {
       val = val.replace(/\,/g, '');
       val = parseInt(val, 10);

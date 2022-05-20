@@ -48,7 +48,8 @@ export class InvoicesStatusComponent implements OnInit {
     { label: 'Unpaid', value: 'Unpaid' }
   ]
   fyDropDown: any = [
-    { label: '2021-2022', value: '2021-2022', startDate: new Date('2021-04-01'), endDate: new Date() },
+    { label: '2022-2023', value: '2022-2023', startDate: new Date('2022-04-01'), endDate: new Date() },
+    { label: '2021-2022', value: '2021-2022', startDate: new Date('2021-04-01'), endDate: new Date('2022-03-31') },
     { label: '2020-2021', value: '2020-2021', startDate: new Date('2020-04-01'), endDate: new Date('2021-03-31') }
   ]
   constructor(private userMsService: UserMsService, private _toastMessageService: ToastMessageService,
@@ -101,10 +102,10 @@ export class InvoicesStatusComponent implements OnInit {
     });
 
     this.summaryDetailForm = this.fb.group({
-      fromDate: [new Date('2021-04-01'), Validators.required],
+      fromDate: [new Date('2022-04-01'), Validators.required],
       toDate: [new Date(), Validators.required],
       status: [''],
-      fy: ['2021-2022']
+      fy: ['2022-2023']
     });
 
     this.getAllInvoiceInfo()

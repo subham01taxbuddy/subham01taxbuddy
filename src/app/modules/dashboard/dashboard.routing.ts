@@ -28,35 +28,35 @@ const routes: Routes = [
         children: [
             { path: 'quick-search', component: NewUserComponent }, //new-user  
             { path: 'quick-search/:mobileNo', component: NewUserComponent },
-            {
-                path: 'engagement', component: EngagementComponent,
-                children: [
-                    { path: 'kommunicate', component: KommunicateComponent },
-                    { path: 'whatsapp', component: WhatsappComponent },
-                    { path: '', redirectTo: 'kommunicate', pathMatch: 'full' }
-                ]
-            },
+            // {
+            //     path: 'engagement', component: EngagementComponent,
+            //     children: [
+            //         { path: 'kommunicate', component: KommunicateComponent },
+            //         { path: 'whatsapp', component: WhatsappComponent },
+            //         { path: '', redirectTo: 'kommunicate', pathMatch: 'full' }
+            //     ]
+            // },
             {
                 path: 'calling', component: CallingBoardComponent,
                 children: [
-                    { path: 'todays-call', component: TodaysCallsComponent },
-                    { path: 'calling2', component: Calling2dot0Component },
+                    // { path: 'todays-call', component: TodaysCallsComponent },
+                    // { path: 'calling2', component: Calling2dot0Component },
                     // { path: 'scheduled-call', component: ScheduledCallComponent },
                     { path: 'signup-exception', component: SignupExceptionComponent },
-                    { path: '', redirectTo: 'calling2', pathMatch: 'full' }
+                    { path: '', redirectTo: 'signup-exception', pathMatch: 'full' }
                 ]
             },
-            {
-                path: 'status-wise', component: StatusWiseClientsComponent,
-                children: [
-                    { path: 'all', component: InterestedClientsComponent },
-                    { path: 'engagement', component: EngagementStatusComponent },
-                    { path: 'filing', component: FilingStatusComponent },
-                    { path: 'payment', component: PaymentStatusComponent },
-                    { path: 'tpa-clients', component: TpaClientsComponent },
-                    { path: '', redirectTo: 'all', pathMatch: 'full' }
-                ]
-            },
+            // {
+            //     path: 'status-wise', component: StatusWiseClientsComponent,
+            //     children: [
+            //         { path: 'all', component: InterestedClientsComponent },
+            //         { path: 'engagement', component: EngagementStatusComponent },
+            //         { path: 'filing', component: FilingStatusComponent },
+            //         { path: 'payment', component: PaymentStatusComponent },
+            //         { path: 'tpa-clients', component: TpaClientsComponent },
+            //         { path: '', redirectTo: 'all', pathMatch: 'full' }
+            //     ]
+            // },
             // { path: 'interested-clients', component: InterestedClientsComponent },
             { path: 'open-status', component: OpenStatusComponent },
             {

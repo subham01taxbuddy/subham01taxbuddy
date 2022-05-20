@@ -1,5 +1,5 @@
 <div class="row">
-  <form [formGroup]="submitJsonForm">
+  <!-- <form [formGroup]="submitJsonForm">
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-4">
         <mat-form-field appearance="outline">
@@ -53,7 +53,24 @@
         <button [disabled]="!isValidateJson" style="float: right;" class="tbd-btn" (click)="submit()">Submit</button>
       </div>
     </div>
-  </form>
+  </form> -->
+  <div class="card__row">
+    <div class="card__col-lg-6">
+      <pre>
+        {{this.manualUpdateForm.value | json}}
+    </pre>
+    </div>
+    <div class="card__col-lg-6">
+      <br><br>
+      <p style="color: red;" *ngIf="!manualUpdateForm.valid"> Note: Please fetch or create/update the summary on
+        previous tab first and
+        then update the manual filing data here. We need some data points here to update manual filing.</p>
+      <p style="color:green" *ngIf="manualUpdateForm.valid"> Note: Cool, you have already updated all the data points,
+        Click on "Update Filing Details" button to add manual filing data</p>
+      <br><br>
+      <button class="tbd-btn" (click)="updateManualFiling()">Update Filing Details</button>
+    </div>
+  </div>
 
 </div>
 <br><br><br><br><br>

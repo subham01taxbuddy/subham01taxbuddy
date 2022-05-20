@@ -32,7 +32,7 @@ export class MyTeamItrsComponent implements OnInit {
   filingTeamMembers = [
   ];
   // myFilingTeamMembers = [];
-  selectedMember: String = '';
+  // selectedMember: String = '';
   selectedMemberId: any;
   selectedPageNo = 0;
   constructor(private itrMsService: ItrMsService,
@@ -101,10 +101,10 @@ export class MyTeamItrsComponent implements OnInit {
     this.loading = true;
     this.selectedMemberId = id;
     this.config.currentPage = pageNo + 1;
-    if (this.utilsService.isNonEmpty(this.selectedMemberId)) {
-      this.selectedMember = this.filingTeamMembers.filter((item:any) => item.userId === id)[0].name;
-      //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Select SME', this.selectedMember], environment.matomoScriptId);
-    }
+    // if (this.utilsService.isNonEmpty(this.selectedMemberId)) {
+    //   this.selectedMember = this.filingTeamMembers.filter((item: any) => item.userId === id)[0].name;
+    //   //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Select SME', this.selectedMember], environment.matomoScriptId);
+    // }
 
     return new Promise((resolve, reject) => {
 
@@ -140,7 +140,7 @@ export class MyTeamItrsComponent implements OnInit {
     });
   }
   getCount(val) {
-    return this.itrDataList.filter((item:any) => item.eFillingCompleted === val).length
+    return this.itrDataList.filter((item: any) => item.eFillingCompleted === val).length
   }
   createOnSalaryRowData(data) {
     const newData = [];
@@ -148,8 +148,8 @@ export class MyTeamItrsComponent implements OnInit {
       newData.push({
         itrId: data[i].itrId,
         userId: data[i].userId,
-        fName: data[i].family !== null ? data[i].family[0].fName : '',
-        lName: data[i].family !== null ? data[i].family[0].lName : '',
+        fName: data[i].family !== null && data[i].family.length > 0 ? data[i].family[0].fName : '',
+        lName: data[i].family !== null && data[i].family.length > 0 ? data[i].family[0].lName : '',
         panNumber: data[i].panNumber,
         contactNumber: data[i].contactNumber,
         email: data[i].email,
@@ -266,7 +266,7 @@ export class MyTeamItrsComponent implements OnInit {
         width: 50,
         sortable: true,
         pinned: 'right',
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           if (params.data.eFillingCompleted && params.data.ackStatus === 'SUCCESS') {
             return `<button type="button" class="action_icon add_button" title="Acknowledgement not received, Contact team lead" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: green">
@@ -286,7 +286,7 @@ export class MyTeamItrsComponent implements OnInit {
            </button>`;
           }
         },
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           if (params.data.eFillingCompleted) {
             return {
               textAlign: 'center', display: 'flex',
@@ -309,7 +309,7 @@ export class MyTeamItrsComponent implements OnInit {
         width: 50,
         sortable: true,
         pinned: 'right',
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Show Kommunicate/Whats app chat" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: blueviolet">
             <i class="fa fa-weixin" aria-hidden="true" data-action-type="filingStatus"></i>
@@ -341,7 +341,7 @@ export class MyTeamItrsComponent implements OnInit {
         width: 50,
         sortable: true,
         pinned: 'right',
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           if (params.data.isEverified) {
             return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; color: green">
@@ -356,7 +356,7 @@ export class MyTeamItrsComponent implements OnInit {
            </button>`;
           }
         },
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           if (params.data.eFillingCompleted) {
             return {
               textAlign: 'center', display: 'flex',
@@ -380,7 +380,7 @@ export class MyTeamItrsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
@@ -388,7 +388,7 @@ export class MyTeamItrsComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -435,7 +435,7 @@ export class MyTeamItrsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
@@ -443,7 +443,7 @@ export class MyTeamItrsComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -456,7 +456,7 @@ export class MyTeamItrsComponent implements OnInit {
         field: "isReviewGiven",
         width: 50,
         pinned: 'right',
-        cellRenderer: (params:any) => {
+        cellRenderer: (params: any) => {
           return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
         },
         cellStyle: params => {
@@ -470,7 +470,7 @@ export class MyTeamItrsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
@@ -478,7 +478,7 @@ export class MyTeamItrsComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -492,7 +492,7 @@ export class MyTeamItrsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
@@ -500,7 +500,7 @@ export class MyTeamItrsComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -561,7 +561,7 @@ export class MyTeamItrsComponent implements OnInit {
   async startFiling(data) {
     //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Actions', data.contactNumber], environment.matomoScriptId);
     this.utilsService.matomoCall('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Actions', data.contactNumber], environment.matomoScriptId);
-    var workingItr = this.itrDataList.filter((item:any) => item.itrId === data.itrId)[0]
+    var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0]
     console.log('data: ', workingItr);
     Object.entries(workingItr).forEach((key, value) => {
       console.log(key, value)
@@ -570,7 +570,7 @@ export class MyTeamItrsComponent implements OnInit {
       }
     });
     const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
       this.utilsService.showSnackBar('There is no any active filing year available')
       return;
@@ -612,9 +612,9 @@ export class MyTeamItrsComponent implements OnInit {
 
   getAcknowledgeDetail(data) {
     console.log('Data for acknowlegement status', data);
-   // matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'E-verification', data.contactNumber], environment.matomoScriptId);
+    // matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'E-verification', data.contactNumber], environment.matomoScriptId);
     this.loading = true;
-    var workingItr = this.itrDataList.filter((item:any) => item.itrId === data.itrId)[0]
+    var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0]
     workingItr['everifiedStatus'] = 'Successfully e-Verified';
     workingItr['isEverified'] = true;
     const param = '/itr/' + workingItr.userId + '/' + workingItr.itrId + '/' + workingItr.assessmentYear;
@@ -670,7 +670,7 @@ export class MyTeamItrsComponent implements OnInit {
   }
 
   updateReviewStatus(data) {
-   // matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Review', data.contactNumber], environment.matomoScriptId);
+    // matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Review', data.contactNumber], environment.matomoScriptId);
     const param = `/update-itr-userProfile?itrId=${data.itrId}&userId=${data.userId}&isReviewGiven=true`;
     this.itrMsService.putMethod(param, {}).subscribe(result => {
       console.log(result);
@@ -684,7 +684,7 @@ export class MyTeamItrsComponent implements OnInit {
 
   async startCalling(user) {
     const agentNumber = await this.utilsService.getMyCallingNumber();
-    
+
     if (!agentNumber) {
       this.toastMsgService.alert("error", 'You dont have calling role.')
       return;

@@ -265,23 +265,23 @@ export class TaxSummaryComponent implements OnInit {
     if (assessmentYear === "2022") {
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2022-23');
       this.itrSummaryForm.controls['financialYear'].setValue('2021-22');
-    }else
-    if (assessmentYear === "2021") {
-      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2021-22');
-      this.itrSummaryForm.controls['financialYear'].setValue('2020-21');
-    }
-    else if (assessmentYear === "2020") {
-      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2020-21');
-      this.itrSummaryForm.controls['financialYear'].setValue('2019-20');
-    }
-    else if (assessmentYear === "2019") {
-      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2019-20');
-      this.itrSummaryForm.controls['financialYear'].setValue('2018-19');
-    }
-    else if (assessmentYear === "2018") {
-      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2018-19');
-      this.itrSummaryForm.controls['financialYear'].setValue('2017-18');
-    }
+    } else
+      if (assessmentYear === "2021") {
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2021-22');
+        this.itrSummaryForm.controls['financialYear'].setValue('2020-21');
+      }
+      else if (assessmentYear === "2020") {
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2020-21');
+        this.itrSummaryForm.controls['financialYear'].setValue('2019-20');
+      }
+      else if (assessmentYear === "2019") {
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2019-20');
+        this.itrSummaryForm.controls['financialYear'].setValue('2018-19');
+      }
+      else if (assessmentYear === "2018") {
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['assessmentYear'].setValue('2018-19');
+        this.itrSummaryForm.controls['financialYear'].setValue('2017-18');
+      }
 
 
     /* bank information */
@@ -452,7 +452,7 @@ export class TaxSummaryComponent implements OnInit {
 
     this.employerArray = [];
     for (let i = 0; i < this.salaryItrratedData.length; i++) {
-      
+
       console.log('employerArray : ', this.employerArray);
 
       let employerObj = {
@@ -640,7 +640,7 @@ export class TaxSummaryComponent implements OnInit {
     //Exempt Income
     this.exemptIncomeData = [];
     var exemptIncomeInfo;
-    
+
     console.log('incomeDeduction: ', incomeDeduction)
     if (itrData.hasOwnProperty('ITR1_IncomeDeductions')) {
       exemptIncomeInfo = incomeDeduction.ExemptIncAgriOthUs10;
@@ -1125,7 +1125,7 @@ export class TaxSummaryComponent implements OnInit {
     }
 
     //Advance Tax
-    
+
     var advanceTaxInfo = itrData.hasOwnProperty('ITR1_IncomeDeductions') ? itrData.TaxPayments.TaxPayment : itrData.ScheduleIT.TaxPayment;
     console.log('advanceTaxInfo Info: ', advanceTaxInfo);
     console.log('newTaxRegime: ', this.newTaxRegime);
@@ -1339,7 +1339,7 @@ export class TaxSummaryComponent implements OnInit {
     // this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(computation2Info.Rebate87A);
   }
 
-  businessIncomeBind(itrData:any) {
+  businessIncomeBind(itrData: any) {
     var itr4Summary = {
       assesse: {
         business: {
@@ -1424,7 +1424,7 @@ export class TaxSummaryComponent implements OnInit {
 
     console.log('pre44ADAinfo ==> ', pre44ADAinfo)
     if (pre44ADAinfo.hasOwnProperty('NatOfBus44ADA')) {
-      
+
       var nat444Ada = pre44ADAinfo['NatOfBus44ADA'];
       if (nat444Ada instanceof Array && nat444Ada.length > 0) {
         business44AdaInfo.natureOfBusiness = nat444Ada[0]['CodeADA'];
@@ -1504,13 +1504,13 @@ export class TaxSummaryComponent implements OnInit {
     this.updatBussinessInfo = itr4Summary;
   }
 
-  getNatureExceptionLabel(keyVal:any) {
+  getNatureExceptionLabel(keyVal: any) {
     return this.exemptIncomes.filter((item: any) => item.value === keyVal)[0].label
   }
 
 
   addExemptIncome() {
-    
+
     console.log('exempt values: ', this.exemptInfo.type, this.exemptInfo.amount);
     if (this.utilService.isNonEmpty(this.exemptInfo.type) && this.utilService.isNonEmpty(this.exemptInfo.amount)) {
       this.exemptIncomeData.push(this.exemptInfo);
@@ -1522,7 +1522,7 @@ export class TaxSummaryComponent implements OnInit {
     console.log('exemptIncomeData 2: ', this.exemptIncomeData);
   }
 
-  deleteExemptRecord(index:any) {
+  deleteExemptRecord(index: any) {
     this.exemptIncomeData.splice(index, 1)
   }
 
@@ -1538,14 +1538,14 @@ export class TaxSummaryComponent implements OnInit {
     this.currentUserId = 0;
   }
 
-  advanceSearch(key:any) {
+  advanceSearch(key: any) {
     // this.user_data = [];
     if (this.searchVal !== "") {
       this.getUerSummary(this.searchVal);
     }
   }
 
-  getUerSummary(mobNum:any) {
+  getUerSummary(mobNum: any) {
     this.loading = true;
     let param = '/itr/summary/contact-number/' + mobNum;
     this.userService.getMethodInfo(param).subscribe((summary: any) => {
@@ -1619,7 +1619,7 @@ export class TaxSummaryComponent implements OnInit {
       })
   }
 
-  updateSalatyInfo(salaryInfo:any) {
+  updateSalatyInfo(salaryInfo: any) {
     console.log("salaryInfo: ", salaryInfo)
     if (salaryInfo.value) {
       var salaryData = salaryInfo.value;
@@ -1657,7 +1657,7 @@ export class TaxSummaryComponent implements OnInit {
 
   }
 
-  updateOtherSource(otherInfo:any) {
+  updateOtherSource(otherInfo: any) {
     console.log('otherInfo: ', otherInfo)
     this.sourcesOfIncome = {
       interestFromSaving: 0,
@@ -1671,9 +1671,9 @@ export class TaxSummaryComponent implements OnInit {
     if (otherInfo.value) {
       var otherSource = otherInfo.value;
       for (let i = 0; i < otherSource.length; i++) {
-        
+
         if (otherSource[i].incomeType === "SAVING_INTEREST") {
-          
+
           this.sourcesOfIncome.interestFromSaving = otherSource[i].amount;
         }
         else if (otherSource[i].incomeType === "FD_RD_INTEREST") {
@@ -1695,7 +1695,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  updateInuranceVal(insuranceInfo:any) {
+  updateInuranceVal(insuranceInfo: any) {
     console.log('insuranceInfo: ', insuranceInfo)
     this.sec80DobjVal = {
       healthInsuarancePremiumSelf: 0,
@@ -1707,17 +1707,17 @@ export class TaxSummaryComponent implements OnInit {
     if (insuranceInfo.value) {
       var insuranceVal = insuranceInfo.value;
       for (let i = 0; i < insuranceVal.length; i++) {
-        
+
         if (insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].premium)) {
-          
+
           this.sec80DobjVal.healthInsuarancePremiumSelf = insuranceVal[i].premium;
         }
         if (insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].preventiveCheckUp)) {
-          
+
           this.sec80DobjVal.preventiveHealthCheckupFamily = insuranceVal[i].preventiveCheckUp;
         }
         if (insuranceVal[i].policyFor === "PARENTS" && this.utilService.isNonEmpty(insuranceVal[i].premium)) {
-          
+
           this.sec80DobjVal.healthInsuarancePremiumParents = insuranceVal[i].premium;
         }
       }
@@ -1732,7 +1732,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
 
-  updateTaxDeductionAtSourceVal(taxPaidInfo:any) {
+  updateTaxDeductionAtSourceVal(taxPaidInfo: any) {
     console.log('taxPaidInfo: ', taxPaidInfo)
     this.taxesPaid = {
       tdsOnSalary: 0,
@@ -1806,7 +1806,7 @@ export class TaxSummaryComponent implements OnInit {
   advanceSelfTax: any = [];
 
   showAcknowInput!: boolean;
-  showAcknowData(returnType:any) {
+  showAcknowData(returnType: any) {
     console.log('Selected return type: ', returnType)
     if (returnType === 'REVISED') {
       this.showAcknowInput = true;
@@ -1825,7 +1825,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setItrType(itrType:any) {
+  setItrType(itrType: any) {
     if (itrType === "1") {
       this.itrType.itrOne = true;
       this.itrType.itrFour = false;
@@ -1938,7 +1938,7 @@ export class TaxSummaryComponent implements OnInit {
     });
   }
 
-  setBankValue(latestBankInfo:any, action:any, index:any) {
+  setBankValue(latestBankInfo: any, action: any, index: any) {
     console.log('DDAATTAA==>: ', latestBankInfo, action, index)
     if (action === 'Add') {
       if (this.bankData.length !== 0) {
@@ -1978,7 +1978,7 @@ export class TaxSummaryComponent implements OnInit {
     console.log('this.bankData: ', this.bankData)
   }
 
-  setDonationValue(latestDonationInfo:any, action:any, index:any) {
+  setDonationValue(latestDonationInfo: any, action: any, index: any) {
     if (action === 'Add') {
       // this.setDonationValue(result.data.donationInfo, result.data.action, result.data.index)
       this.donationData.push(latestDonationInfo);
@@ -1995,7 +1995,7 @@ export class TaxSummaryComponent implements OnInit {
 
   }
 
-  setTdsOnSalValue(tdsOnSalInfo:any, action:any, index:any) {
+  setTdsOnSalValue(tdsOnSalInfo: any, action: any, index: any) {
     if (action === 'Add') {
       this.tdsOnSal.push(tdsOnSalInfo);
       console.log('this.tdsOnSal: ', this.tdsOnSal)
@@ -2010,7 +2010,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setTdsOnOtherThanSalValue(tdsOnOtherThanSal:any, action:any, index:any) {
+  setTdsOnOtherThanSalValue(tdsOnOtherThanSal: any, action: any, index: any) {
     if (action === 'Add') {
       this.tdsOtherThanSal.push(tdsOnOtherThanSal);
       this.setTotalTDSVal(this.tdsOtherThanSal, 'otherThanSalary16A')
@@ -2023,7 +2023,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setTdsOnSal26QValue(tdsOnSal26Q:any, action:any, index:any) {
+  setTdsOnSal26QValue(tdsOnSal26Q: any, action: any, index: any) {
     console.log('tdsOnSal26Q CHECK =>', tdsOnSal26Q, action, index)
     if (action === 'Add') {
       this.tdsSalesPro.push(tdsOnSal26Q);
@@ -2037,7 +2037,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setTcsValue(tcs:any, action:any, index:any) {
+  setTcsValue(tcs: any, action: any, index: any) {
     if (action === 'Add') {
       this.taxCollAtSource.push(tcs);
       this.setTotalTCSVal(this.taxCollAtSource);
@@ -2050,7 +2050,7 @@ export class TaxSummaryComponent implements OnInit {
     }
   }
 
-  setAdvanSelfAssTaxValue(advanSelfAssTax:any, action:any, index:any) {
+  setAdvanSelfAssTaxValue(advanSelfAssTax: any, action: any, index: any) {
     if (action === 'Add') {
       this.advanceSelfTax.push(advanSelfAssTax);
       this.setTotalAdvSelfTaxVal(this.advanceSelfTax);
@@ -2154,7 +2154,7 @@ export class TaxSummaryComponent implements OnInit {
   // hpStadDeduct: any = [];
   // netHousePro: any = [];
   houseArray: any = [];
-  setHousingData(housingData:any, action:any, index:any) {
+  setHousingData(housingData: any, action: any, index: any) {
     if (action === 'Add') {
       console.log('Housing Data: ', housingData.house)
       //var houseArray = [];
@@ -2193,7 +2193,7 @@ export class TaxSummaryComponent implements OnInit {
 
   }
 
-  createHouseDataObj(houseData:any, action:any, index:any) {
+  createHouseDataObj(houseData: any, action: any, index: any) {
     if (action === 'Add') {
       let flatNo = this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '';
       let building = this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
@@ -2415,7 +2415,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
 
-  getCityData(pincode:any, type:any) {
+  getCityData(pincode: any, type: any) {
     console.log(pincode)
     if (type === 'profile') {
       if (pincode.valid) {
@@ -2515,7 +2515,7 @@ export class TaxSummaryComponent implements OnInit {
     toatlIncome: 0
   }
   setOtherSourceIncomeValue(incomeVal: any, type: any) {
-    
+
     console.log('incomeVal: ', incomeVal, ' type: ', type)
     if (Number(incomeVal) !== 0 && this.utilService.isNonEmpty(incomeVal)) {
       if (type === 'saving') {
@@ -2541,7 +2541,7 @@ export class TaxSummaryComponent implements OnInit {
       this.calculateGrossTotalIncome()
     }
     else {
-      
+
       if (Number(incomeVal) === 0 || incomeVal === '' || incomeVal === 'undefined') {
         if (type === 'saving') {
           this.sourcesOfIncome.interestFromSaving = 0;
@@ -2601,9 +2601,9 @@ export class TaxSummaryComponent implements OnInit {
 
   calculateGrossTotalIncome() {    //Calculate point 4 
     // this.businessObject.prsumptiveIncomeTotal
-    
+
     if (this.itrType.itrOne) {
-      
+
       let gti = Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].value) + Number((this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].value);
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['grossTotalIncome'].setValue(gti);
       this.calculateTotalIncome();
@@ -2629,7 +2629,7 @@ export class TaxSummaryComponent implements OnInit {
     parentAge: '',
     medicalExpendature: 0
   }
-  setDeduction80DVal(insuranceVal:any, type:any) {
+  setDeduction80DVal(insuranceVal: any, type: any) {
     //  alert(insuranceVal)
     if (insuranceVal !== 0 || this.utilService.isNonEmpty(insuranceVal)) {
       if (type === 'forSelf') {
@@ -2715,7 +2715,7 @@ export class TaxSummaryComponent implements OnInit {
     this.calculateRebateus87A()
   }
 
-  roundOf10Val(num:any) {
+  roundOf10Val(num: any) {
     num = parseFloat(num);
     console.log(num)
     console.log('num: ', num, ' num/10: ', num / 10, ' Math.round(num / 10): ', Math.round(num / 10), ' (Math.round(num / 10) * 10)', (Math.round(num / 10) * 10))
@@ -2828,7 +2828,7 @@ export class TaxSummaryComponent implements OnInit {
     this.calculateNetTaxPayble();        //Calculate point 17
   }
 
-  setTotalTCSVal(tscInfo:any) {
+  setTotalTCSVal(tscInfo: any) {
     var total = 0;
     for (let i = 0; i < tscInfo.length; i++) {
       total = total + Number(tscInfo[i].totalTcsDeposited);
@@ -2841,7 +2841,7 @@ export class TaxSummaryComponent implements OnInit {
     this.calculateNetTaxPayble();        //Calculate point 17
   }
 
-  setTotalAdvSelfTaxVal(advSelfTaxInfo:any) {
+  setTotalAdvSelfTaxVal(advSelfTaxInfo: any) {
     var total = 0;
     for (let i = 0; i < advSelfTaxInfo.length; i++) {
       total = total + Number(advSelfTaxInfo[0].totalTax);
@@ -2862,7 +2862,7 @@ export class TaxSummaryComponent implements OnInit {
     this.calculateNetTaxPayble();        //Calculate point 17
   }
 
-  setValueInLoanObj(interestAmount:any) {
+  setValueInLoanObj(interestAmount: any) {
     if (interestAmount.valid) {
       ((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['loans'] as FormGroup).controls['loanType'].setValue('HOUSING');
     } else {
@@ -2978,7 +2978,7 @@ export class TaxSummaryComponent implements OnInit {
         }
 
         this.incomeData.push(incomeObj);
-          (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['incomes'].setValue(this.incomeData)
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['incomes'].setValue(this.incomeData)
       }
 
 
@@ -3046,7 +3046,7 @@ export class TaxSummaryComponent implements OnInit {
       ////// itr 4 part  //////////////////
       if (this.businessFormValid) {
         console.log("businessObject:=> ", this.businessObject)
-        
+
         console.log("natureOfBusinessDropdown44AD:=> ", this.natureOfBusinessDropdown44AD)
         var presumData = [];
         if (this.utilService.isNonEmpty(this.businessObject.natureOfBusiness44AD) && this.utilService.isNonEmpty(this.businessObject.tradeName44AD)) {
@@ -3098,7 +3098,7 @@ export class TaxSummaryComponent implements OnInit {
           presumData.push(presumptiveBusinessObj)
         }
 
-        
+
         if (this.utilService.isNonEmpty(this.businessObject.natureOfBusiness44ADA) && this.utilService.isNonEmpty(this.businessObject.tradeName44ADA)) {
 
           this.businessObject.natureOfBusiness44ADA = this.natureOfBusinessDropdown44ADA.filter((item: any) => item.label === this.businessObject.natureOfBusiness44ADA)[0].code;
@@ -3145,7 +3145,8 @@ export class TaxSummaryComponent implements OnInit {
 
       console.log('ITR summary Data: ', this.itrSummaryForm.value)
 
-      console.log('sumarryObj: ', this.itrSummaryForm.value)
+      console.log('sumarryObj: ', this.itrSummaryForm.value);
+      return;
       this.loading = true;
       const param = '/itr/summary';
       let body = this.itrSummaryForm.value;

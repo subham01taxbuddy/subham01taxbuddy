@@ -30,7 +30,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { RouterModule } from '@angular/router';
 import { DirectCallingComponent } from './components/direct-calling/direct-calling.component';
 import { KnowlarityNotificationComponent } from './components/knowlarity-notification/knowlarity-notification.component';
-import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { UpdateManualFilingDialogComponent } from './components/update-manual-filing-dialog/update-manual-filing-dialog.component';
 
 
 @NgModule({
@@ -57,7 +58,8 @@ import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
         SidebarComponent,
         NavbarComponent,
         DirectCallingComponent,
-        KnowlarityNotificationComponent
+        KnowlarityNotificationComponent,
+        UpdateManualFilingDialogComponent
     ],
     imports: [
         CommonModule,
@@ -98,11 +100,13 @@ import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
         CallReassignmentComponent,
         NgxLoadingModule,
         LayoutComponent,
-        KnowlarityNotificationComponent
+        KnowlarityNotificationComponent,
+        UpdateManualFilingDialogComponent
     ],
     providers: [StorageService],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,
-        KommunicateDialogComponent, ItrActionsComponent, ChangeStatusComponent, CallReassignmentComponent]
+        KommunicateDialogComponent, ItrActionsComponent, ChangeStatusComponent, CallReassignmentComponent,
+        UpdateManualFilingDialogComponent]
 })
 export class SharedModule {
     static forRoot(): ModuleWithProviders<SharedModule> {

@@ -18,7 +18,6 @@ export class UserMsService {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
-    console.log('update Param', param);
     return this.httpClient.get<T>(environment.url + this.microService + param[0], { headers: this.headers });
     // .map(response => response.json())
   }
@@ -26,8 +25,6 @@ export class UserMsService {
   getMethodInfo<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-
-    console.log('update Param', param);
     return this.httpClient.get<T>(environment.url + param[0], { headers: this.headers });
     // .map(response => response.json())
   }
@@ -35,8 +32,6 @@ export class UserMsService {
   postMethodInfo<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-
-    console.log('update Param', param);
     return this.httpClient.post<T>(environment.url + param[0], param[1], { headers: this.headers });
     // .map(response => response.json())
   }
@@ -44,14 +39,12 @@ export class UserMsService {
   invoiceDownloadDoc(...params: any) {
     this.headers = new Headers();
     this.headers.append('Content-Type', 'application/json');
-
     return this.http.get(environment.url + params[0], { headers: this.headers, responseType: 'blob' })
     //.map((res) => { return new Blob([res.blob()], { type: 'application/pdf' }) });
   };
 
   postMethodDownloadDoc(...params: any) {
     const userInfo = JSON.parse(localStorage.getItem('UMD') ?? "")
-    console.log('TOKEN ', userInfo)
     this.headers = new Headers();
     this.headers.append('Content-Type', 'application/json');
     this.headers.append('Authorization', 'Bearer ' + userInfo.id_token);
@@ -70,15 +63,12 @@ export class UserMsService {
   sentChatMessage(...param: any) {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-
     return this.httpClient.post(environment.url + param[0], param[1], { headers: this.headers });
   }
 
   patchMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
-    console.log('update Param', param);
     return this.httpClient.patch<T>(environment.url + this.microService + param[0], param[1], { headers: this.headers });
     // .map(response => response.json())
   }
@@ -87,28 +77,24 @@ export class UserMsService {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     this.headers = this.headers.set(InterceptorSkipHeader, '');
-    console.log('put Param', param);
     return this.httpClient.put<T>(`${environment.url}${this.microService}${param[0]}`, {}, { headers: this.headers });
   }
 
   putMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    console.log('put Param', param);
     return this.httpClient.put<T>(`${environment.url}${this.microService}${param[0]}`, param[1], { headers: this.headers });
   }
 
   spamPutMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    console.log('put Param', param);
     return this.httpClient.put<T>(`${environment.url}${param[0]}`, param[1], { headers: this.headers });
   }
 
   postMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    console.log('Post Param', param);
     return this.httpClient.post<T>(`${environment.url}${this.microService}${param[0]}`, param[1], { headers: this.headers });
   }
 
@@ -127,7 +113,6 @@ export class UserMsService {
   postMethodAWSURL<T>(...param: any): Observable<any> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    console.log('Post Param', param);
     return this.httpClient.post<T>(`${environment.amazonaws_url}${param[0]}`, param[1], { headers: this.headers });
   }
 

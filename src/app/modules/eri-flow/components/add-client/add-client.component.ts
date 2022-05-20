@@ -1,4 +1,3 @@
-import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -7,6 +6,8 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { Location } from '@angular/common';
 
 export const MY_FORMATS = {
   parse: {
@@ -40,12 +41,13 @@ export class AddClientComponent implements OnInit, OnDestroy {
     public datePipe: DatePipe,
     private itrMsService: ItrMsService,
     private utilsService: UtilsService,
-    private router: Router) { }
+    public location: Location,) { }
 
   ngOnInit() {
     console.log(this.addClientData);
     if (this.addClientData == undefined || this.addClientData == null) {
-      this.router.navigate(['/pages/user-management/users']);
+      // this.router.navigate(['/pages/user-management/users']);
+      this.location.back();
     }
     this.addClientForm = this.fb.group({
       panNumber: [this.addClientData['panNumber'] || '', [Validators.required]],
@@ -55,53 +57,58 @@ export class AddClientComponent implements OnInit, OnDestroy {
   }
 
   verifyPan() {
-    if (this.addClientForm.valid) {
-      this.loading = true;
-      const param = '/eri/v1/api';
-      this.headers = new HttpHeaders();
-      const request = {
-        "serviceName": "EriAddClientService",
-        "pan": this.addClientForm.controls['panNumber'].value,
-        "dateOfBirth": this.datePipe.transform(this.addClientForm.controls['dateOfBirth'].value, 'yyyy-MM-dd'),
-        "otpSourceFlag": "E"
-      }
-      let headerObj = {
-        'panNumber': this.addClientForm.controls['panNumber'].value,
-        'assessmentYear': '2022-2023',
-        'userId': this.addClientData.userId.toString()
-      }
-      sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
-      this.itrMsService.postMethodForEri(param, request).subscribe((res: any) => {
+    if (environment.production) {
 
-        this.loading = false;
-        console.log(res)
-        if (res && res.successFlag) {
-          if (res.hasOwnProperty('messages')) {
-            if (res.messages instanceof Array && res.messages.length > 0)
-              this.utilsService.showSnackBar(res.messages[0].desc);
-            this.otpSend = true;
-            this.addClientForm.controls['otp'].setValidators([Validators.required])
-          }
+      if (this.addClientForm.valid) {
+        this.loading = true;
+        const param = '/eri/v1/api';
+        this.headers = new HttpHeaders();
+        const request = {
+          "serviceName": "EriAddClientService",
+          "pan": this.addClientForm.controls['panNumber'].value,
+          "dateOfBirth": this.datePipe.transform(this.addClientForm.controls['dateOfBirth'].value, 'yyyy-MM-dd'),
+          "otpSourceFlag": "E"
         }
-        else {
-          if (res.hasOwnProperty('errors')) {
-            if (res.errors instanceof Array && res.errors.length > 0)
-              this.utilsService.showSnackBar(res.errors[0].desc);
-            this.otpSend = false;
-            // if(res.errors[0].desc.includes('is already a client')){
-            //   this.otpSend = true;
-            // }
-            this.addClientForm.controls['otp'].setValidators(null)
-          }
+        let headerObj = {
+          'panNumber': this.addClientForm.controls['panNumber'].value,
+          'assessmentYear': '2022-2023',
+          'userId': this.addClientData.userId.toString()
         }
-      },
-        error => {
-          this.utilsService.showSnackBar('Something went wrong, try after some time.');
+        sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+        this.itrMsService.postMethodForEri(param, request).subscribe((res: any) => {
+
           this.loading = false;
-          this.otpSend = false;
-          this.addClientForm.controls['otp'].setValidators(null)
-        })
+          console.log(res)
+          if (res && res.successFlag) {
+            if (res.hasOwnProperty('messages')) {
+              if (res.messages instanceof Array && res.messages.length > 0)
+                this.utilsService.showSnackBar(res.messages[0].desc);
+              this.otpSend = true;
+              this.addClientForm.controls['otp'].setValidators([Validators.required])
+            }
+          }
+          else {
+            if (res.hasOwnProperty('errors')) {
+              if (res.errors instanceof Array && res.errors.length > 0)
+                this.utilsService.showSnackBar(res.errors[0].desc);
+              this.otpSend = false;
+              // if(res.errors[0].desc.includes('is already a client')){
+              //   this.otpSend = true;
+              // }
+              this.addClientForm.controls['otp'].setValidators(null)
+            }
+          }
+        },
+          error => {
+            this.utilsService.showSnackBar('Something went wrong, try after some time.');
+            this.loading = false;
+            this.otpSend = false;
+            this.addClientForm.controls['otp'].setValidators(null)
+          })
 
+      }
+    } else {
+      this.utilsService.showSnackBar('You can not access add client on testing environment');
     }
   }
 

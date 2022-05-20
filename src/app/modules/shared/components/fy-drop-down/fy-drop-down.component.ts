@@ -12,9 +12,9 @@ import { AppConstants } from '../../constants';
 })
 export class FyDropDownComponent implements OnInit {
   @Output() sendFy = new EventEmitter<any>();
-  @Input() serviceType:any;
+  @Input() serviceType: any;
 
-  financialYear:any[] = [];
+  financialYear: any[] = [];
   selectedFyYear = new FormControl('', Validators.required);
   constructor(public utilsService: UtilsService,
     private itrMsService: ItrMsService) { }
@@ -35,22 +35,22 @@ export class FyDropDownComponent implements OnInit {
     console.log('fyList', fyList);
     if (this.utilsService.isNonEmpty(fyList) && fyList instanceof Array) {
       this.financialYear = fyList;
-      const currentFy = this.financialYear.filter((item:any) => item.isFilingActive);
+      const currentFy = this.financialYear.filter((item: any) => item.isFilingActive);
       this.selectedFyYear.setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
       this.sendFy.emit(this.selectedFyYear.value);
     } else {
-      const param = `${ApiEndpoints.itrMs.filingDates}`;
-      this.itrMsService.getMethod(param).subscribe((res: any) => {
-        if (res && res.success && res.data instanceof Array) {
-          sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
-          this.financialYear = res.data;
-          const currentFy = this.financialYear.filter((item:any) => item.isFilingActive);
-          this.selectedFyYear.setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
-          this.sendFy.emit(this.selectedFyYear.value);
-        }
-      }, error => {
-        console.log('Error during getting all PromoCodes: ', error)
-      })
+      // const param = `${ApiEndpoints.itrMs.filingDates}`;
+      // this.itrMsService.getMethod(param).subscribe((res: any) => {
+      //   if (res && res.success && res.data instanceof Array) {
+      //     sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
+      //     this.financialYear = res.data;
+      //     const currentFy = this.financialYear.filter((item:any) => item.isFilingActive);
+      //     this.selectedFyYear.setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
+      //     this.sendFy.emit(this.selectedFyYear.value);
+      //   }
+      // }, error => {
+      //   console.log('Error during getting all PromoCodes: ', error)
+      // })
     }
   }
 

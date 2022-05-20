@@ -29,10 +29,10 @@ import { TaxSummaryComponent } from "./components/tax-summary/tax-summary.compon
         // TaxSummaryComponent
 
         TaxSummaryComponent,
-        SumaryDialogComponent, 
+        SumaryDialogComponent,
         Itr4partComponent,
         Itr2mainComponent,
-        NewItrSummaryComponent, 
+        NewItrSummaryComponent,
         ItrOneComponent,
         ItrThreeComponent
     ],
