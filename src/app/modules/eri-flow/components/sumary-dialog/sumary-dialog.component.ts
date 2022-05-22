@@ -55,21 +55,21 @@ export class SumaryDialogComponent implements OnInit {
   propertyTypeData: any = [{ label: 'Rented', value: 'LOP' }, { label: 'Self-occupied', value: 'SOP' }, { label: 'Deemed Let Out', value: 'DOP' }];
   ownerships = [{ value: 'SELF', label: 'Self' }, { value: 'MINOR', label: 'Minor' }, { value: 'SPOUSE', label: 'Spouse' }, { value: 'OTHER', label: 'Other' }]
   coOwnwerData = [{ value: 'YES', label: 'Yes' }, { value: 'NO', label: 'No' }];
-  lossesYear = [{value: '2010-2011', label:'2010-2011'},{value: '2011-2012', label:'2011-2012'},{value: '2012-2013', label:'2012-2013'},
-                {value: '2013-2014', label:'2013-2014'},{value: '2014-2015', label:'2014-2015'},{value: '2015-2016', label:'2015-2016'},
-                {value: '2016-2017', label:'2016-2017'},{value: '2017-2018', label:'2017-2018'},{value: '2018-2019', label:'2018-2019'},
-                {value: '2019-2020', label:'2019-2020'}];
+  lossesYear = [{ value: '2010-2011', label: '2010-2011' }, { value: '2011-2012', label: '2011-2012' }, { value: '2012-2013', label: '2012-2013' },
+  { value: '2013-2014', label: '2013-2014' }, { value: '2014-2015', label: '2014-2015' }, { value: '2015-2016', label: '2015-2016' },
+  { value: '2016-2017', label: '2016-2017' }, { value: '2017-2018', label: '2017-2018' }, { value: '2018-2019', label: '2018-2019' },
+  { value: '2019-2020', label: '2019-2020' }];
 
   typeOfDonations: any = [
-    {value: 'NAT_DEF_FUND_CEN_GOVT', label: '100% Deduction without qualifying limit.'},
-    {value: 'JN_MEM_FND', label: '50% Deduction without qualifying limit.'},
-    {value: 'GOVT_APPRVD_FAMLY_PLNG', label: '100% Deduction subject to qualifying limit.'},
-    {value: 'FND_SEC80G', label: '50% Deduction subject to qualifying limit.'}
+    { value: 'NAT_DEF_FUND_CEN_GOVT', label: '100% Deduction without qualifying limit.' },
+    { value: 'JN_MEM_FND', label: '50% Deduction without qualifying limit.' },
+    { value: 'GOVT_APPRVD_FAMLY_PLNG', label: '100% Deduction subject to qualifying limit.' },
+    { value: 'FND_SEC80G', label: '50% Deduction subject to qualifying limit.' }
   ];
 
   categoryData: any = [
-    {value: 'REGULAR', label: 'Regular'},
-    {value: 'AGTI', label: 'Agti'}
+    { value: 'REGULAR', label: 'Regular' },
+    { value: 'AGTI', label: 'Agti' }
   ]
 
   salObjectVal = {
@@ -222,7 +222,7 @@ export class SumaryDialogComponent implements OnInit {
         taxableIncome: [0],       //hpStandardDeduction
         exemptIncome: [0],        //netHousePropertyIncome
         isEligibleFor80EE: [null],
-        ownerOfProperty: ['SELF'], 
+        ownerOfProperty: ['SELF'],
         otherOwnerOfProperty: ['NO'],
         tenant: [],
         coOwners: this.fb.array([]),
@@ -230,16 +230,16 @@ export class SumaryDialogComponent implements OnInit {
       }),
 
       lossesToBeCarriedForword: this.fb.group({
-          year: [''],
-          housePropertyLosses: [0],
-          shortTermCapitalGainLosses:[0],
-          longTermCapitalGainLosses:[0],
-          businessProfessionalLoss:[0],
-          speculativeBusinessLoss: [0],
-          carriedForwardToNextYear:[0],
+        year: [''],
+        housePropertyLosses: [0],
+        shortTermCapitalGainLosses: [0],
+        longTermCapitalGainLosses: [0],
+        businessProfessionalLoss: [0],
+        speculativeBusinessLoss: [0],
+        carriedForwardToNextYear: [0],
       }),
 
-      immovableAsset : this.fb.group({
+      immovableAsset: this.fb.group({
         description: [''],
         area: [''],
         amount: ['']
@@ -263,10 +263,10 @@ export class SumaryDialogComponent implements OnInit {
     console.log("CALLEROBJ: ", this.data.callerObj)
     console.log('MODE:', this.data.mode)
     console.log('userObject: ==>', this.data.userObject)
-    console.log('ITR type => ',this.data.itrType);
+    console.log('ITR type => ', this.data.itrType);
 
     if (this.data.mode === 'House' && this.data.submitBtn === 'Add') {
-      if(this.data.callerObj.newItrSumChanges && this.data.callerObj.housingData[0].propertyType === 'SOP'){
+      if (this.data.callerObj.newItrSumChanges && this.data.callerObj.housingData[0].propertyType === 'SOP') {
         (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['propertyType'].setValue('SOP');
         // this.summaryDialogForm.controls['houseProperties.controls['propertyType.readonly();
       }
@@ -323,9 +323,9 @@ export class SumaryDialogComponent implements OnInit {
     }
   }
 
-  setUserProfileTo(userProfileData:any) {
-    if(this.utilService.isNonEmpty(userProfileData.itrSummaryForm)){
-    if (this.utilService.isNonEmpty(userProfileData.itrSummaryForm.value.assesse.address.pinCode)) {
+  setUserProfileTo(userProfileData: any) {
+    if (this.utilService.isNonEmpty(userProfileData.itrSummaryForm)) {
+      if (this.utilService.isNonEmpty(userProfileData.itrSummaryForm.value.assesse.address.pinCode)) {
         (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['locality'].setValue(userProfileData.itrSummaryForm.value.assesse.address.premisesName);
         (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['pinCode'].setValue(userProfileData.itrSummaryForm.value.assesse.address.pinCode);
         (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['country'].setValue(userProfileData.itrSummaryForm.value.assesse.address.country);
@@ -333,53 +333,53 @@ export class SumaryDialogComponent implements OnInit {
         (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['city'].setValue(userProfileData.itrSummaryForm.value.assesse.address.city);
       }
     }
-    else if(this.utilService.isNonEmpty(userProfileData.personalInfoForm)){
+    else if (this.utilService.isNonEmpty(userProfileData.personalInfoForm)) {
       (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['locality'].setValue(userProfileData.personalInfoForm.value.premisesName);
       (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['pinCode'].setValue(userProfileData.personalInfoForm.value.pinCode);
       (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['country'].setValue(userProfileData.personalInfoForm.value.country);
       (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['state'].setValue(userProfileData.personalInfoForm.value.state);
       (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['city'].setValue(userProfileData.personalInfoForm.value.city);
     }
-  
+
   }
 
-  updateBankData(bankInfo:any) {
-      this.summaryDialogForm.controls['bankDetails'].patchValue(bankInfo)
+  updateBankData(bankInfo: any) {
+    this.summaryDialogForm.controls['bankDetails'].patchValue(bankInfo)
   }
-  updateTdsOnSal(tdsOnSalInfo:any) {
+  updateTdsOnSal(tdsOnSalInfo: any) {
     this.summaryDialogForm.controls['onSalary'].patchValue(tdsOnSalInfo);
   }
-  updateTdsOtherThanSal(tdsOtherThanSal:any) {
-    if(tdsOtherThanSal.isTds3Info){
+  updateTdsOtherThanSal(tdsOtherThanSal: any) {
+    if (tdsOtherThanSal.isTds3Info) {
       (this.summaryDialogForm.controls['otherThanSalary16A'] as FormGroup).controls['deductorTAN'].setValidators(Validators.pattern(AppConstants.panIndividualRegex));
       (this.summaryDialogForm.controls['otherThanSalary16A'] as FormGroup).controls['deductorTAN'].updateValueAndValidity();
       this.summaryDialogForm.controls['otherThanSalary16A'].patchValue(tdsOtherThanSal);
     }
-    else{
+    else {
       this.summaryDialogForm.controls['otherThanSalary16A'].patchValue(tdsOtherThanSal);
     }
-   
+
   }
-  updateTdsOnSalOf26Q(tds26Q:any) {
+  updateTdsOnSalOf26Q(tds26Q: any) {
     this.summaryDialogForm.controls['otherThanSalary26QB'].patchValue(tds26Q)
   }
-  updateTcs(tcsInfo:any) {
+  updateTcs(tcsInfo: any) {
     this.summaryDialogForm.controls['tcs'].patchValue(tcsInfo)
   }
-  updateAdvanceSelfAssTax(assSelfTax:any) {
+  updateAdvanceSelfAssTax(assSelfTax: any) {
     this.summaryDialogForm.controls['otherThanTDSTCS'].patchValue(assSelfTax)
   }
-  updateDonation80G(donationInfo:any) {
+  updateDonation80G(donationInfo: any) {
     console.log('donationInfo: ', donationInfo)
     this.summaryDialogForm.controls['donations'].patchValue(donationInfo);
-}
-  updateHouseInfo(houseInfo:any) {
-    
+  }
+  updateHouseInfo(houseInfo: any) {
+
     console.log('houseInfo: ', houseInfo)
     console.log('houseInfo: ', houseInfo, houseInfo.interestAmount)
     this.summaryDialogForm.controls['houseProperties'].patchValue(houseInfo);
 
-  
+
     this.summaryDialogForm.controls['tenantName'].setValue(houseInfo.tenantName);
     this.summaryDialogForm.controls['tenentPanNumber'].setValue(houseInfo.tenentPanNumber)
     this.summaryDialogForm.controls['loanType'].setValue(houseInfo.loanType)
@@ -387,10 +387,10 @@ export class SumaryDialogComponent implements OnInit {
     this.summaryDialogForm.controls['interestAmount'].setValue(houseInfo.interestAmount)
     // this.summaryDialogForm.controls['houseProperties.controls['taxableIncome'].setValue(houseInfo.taxableIncome)
     // this.summaryDialogForm.controls['houseProperties.controls['exemptIncome'].setValue(houseInfo.exemptIncome)
-    console.log('summaryDialogForm: ',this.summaryDialogForm.value)
+    console.log('summaryDialogForm: ', this.summaryDialogForm.value)
     if (houseInfo.coOwners instanceof Array) {
       const coOwners = <FormArray>this.summaryDialogForm.controls['houseProperties'].get('coOwners');
-      houseInfo.coOwners.forEach((obj:any) => {
+      houseInfo.coOwners.forEach((obj: any) => {
         if (!obj.isSelf) {
           coOwners.push(this.createCoOwnerForm(obj));
         }
@@ -398,7 +398,7 @@ export class SumaryDialogComponent implements OnInit {
       console.log('coOwners: ', coOwners)
     }
 
-    
+
     if ((this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['ownerOfProperty'].value === 'SELF') {
       this.housingShow.ownership = false;
     } else {
@@ -422,7 +422,7 @@ export class SumaryDialogComponent implements OnInit {
 
   }
 
-  updateSalaryInfo(salaryInfo:any) {
+  updateSalaryInfo(salaryInfo: any) {
     this.summaryDialogForm.controls['employers'].patchValue(salaryInfo)
 
     this.summaryDialogForm.controls['salAsPerSec171'].setValue(salaryInfo.salAsPerSec171);
@@ -437,31 +437,34 @@ export class SumaryDialogComponent implements OnInit {
     this.summaryDialogForm.controls['totalSalaryDeduction'].setValue(salaryInfo.totalSalaryDeduction);
   }
 
-  updateLossessInfo(lossesInfo:any){
+  updateLossessInfo(lossesInfo: any) {
     console.log('lossesInfo: ', lossesInfo)
     this.summaryDialogForm.controls['lossesToBeCarriedForword'].patchValue(lossesInfo)
   }
 
-  updateImmovableInfo(immovableInfo:any){
+  updateImmovableInfo(immovableInfo: any) {
     this.summaryDialogForm.controls['immovableAsset'].patchValue(immovableInfo)
   }
 
 
-  getBankInfoFromIfsc(ifscCode:any) {
+  async getBankInfoFromIfsc(ifscCode: FormControl) {
     console.log("ifscCode: ", ifscCode)
     if (ifscCode.valid) {
-      let param = '/' + ifscCode.value;
-      this.thirdPartyService.getBankDetailByIFSCCode(param).subscribe((res: any) => {
-        console.log("Bank details by IFSC:", res)
-        let data = JSON.parse(res._body);
-        let bankName = data.BANK ? data.BANK : "";
-        (this.summaryDialogForm.controls['bankDetails'] as FormGroup).controls['name'].setValue(bankName);
+      // let param = '/' + ifscCode.value;
+      // this.thirdPartyService.getBankDetailByIFSCCode(param).subscribe((res: any) => {
+      //   console.log("Bank details by IFSC:", res)
+      //   let data = JSON.parse(res._body);
+      //   let bankName = data.BANK ? data.BANK : "";
+      //   (this.summaryDialogForm.controls['bankDetails'] as FormGroup).controls['name'].setValue(bankName);
 
-  
-      }, err => {
-        this._toastMessageService.alert("error", "invalid ifsc code entered");
-        (this.summaryDialogForm.controls['bankDetails'] as FormGroup).controls['name'].setValue("");
-      });
+
+      // }, err => {
+      //   this._toastMessageService.alert("error", "invalid ifsc code entered");
+      //   (this.summaryDialogForm.controls['bankDetails'] as FormGroup).controls['name'].setValue("");
+      // });
+      await this.utilService.getBankByIfsc(ifscCode.value).then(res => {
+        (this.summaryDialogForm.controls['bankDetails'] as FormGroup).controls['name'].setValue(res.bankName);
+      })
     }
 
   }
@@ -478,8 +481,8 @@ export class SumaryDialogComponent implements OnInit {
     }
   }
 
-  setTenantValue(propertyType:any, key:any) {
-    
+  setTenantValue(propertyType: any, key: any) {
+
     console.log('propertyType: ', propertyType)
     if (propertyType === 'SOP') {
       this.housingShow.showTenant = false;    //ownership
@@ -498,9 +501,9 @@ export class SumaryDialogComponent implements OnInit {
       (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['propertyTax'].setValue(null);
       (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['annualValue'].setValue(null);
       (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['exemptIncome'].setValue(null);
-      
+
       // this.summaryDialogForm.controls['exemptIncome'].setValue(null);
-      if(key === 'fromDialog'){
+      if (key === 'fromDialog') {
         this.summaryDialogForm.controls['interestAmount'].setValue(null);
         (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['taxableIncome'].setValue(null);
       }
@@ -509,7 +512,7 @@ export class SumaryDialogComponent implements OnInit {
       this.summaryDialogForm.controls['interestAmount'].updateValueAndValidity();
 
     } else if (propertyType === 'LOP') {
-      
+
       this.housingShow.showTenant = true;
       this.housingShow.isSOP = false;
       // this.housingShow.ownership = false;
@@ -537,15 +540,15 @@ export class SumaryDialogComponent implements OnInit {
       (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['grossAnnualRentReceived'].setValidators(Validators.required)
 
     }
-    else if(propertyType === 'DOP'){
+    else if (propertyType === 'DOP') {
       this.housingShow.showTenant = false;    //ownership
-      this.housingShow.isSOP = false;                      
+      this.housingShow.isSOP = false;
 
-      if(key === 'fromDialog'){
+      if (key === 'fromDialog') {
         this.summaryDialogForm.controls['interestAmount'].setValue(null);
         (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['taxableIncome'].setValue(null);
       }
-      
+
 
       this.summaryDialogForm.controls['interestAmount'].setValidators([Validators.max(200000)]);
       this.summaryDialogForm.controls['interestAmount'].updateValueAndValidity();
@@ -553,7 +556,7 @@ export class SumaryDialogComponent implements OnInit {
 
   }
 
-  onOwnerSelfSetVal(ownerOfProperty:any) {
+  onOwnerSelfSetVal(ownerOfProperty: any) {
     console.log('ownerOfProperty: ', ownerOfProperty)
     if (ownerOfProperty === 'SELF') {
       (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['otherOwnerOfProperty'].setValue('NO');
@@ -567,7 +570,7 @@ export class SumaryDialogComponent implements OnInit {
     }
   }
 
-  setCOwnerVal(co_ownerProperty:any) {
+  setCOwnerVal(co_ownerProperty: any) {
     console.log(co_ownerProperty)
     if (co_ownerProperty === 'NO') {
       this.housingShow.showCoOwner = false;
@@ -612,47 +615,47 @@ export class SumaryDialogComponent implements OnInit {
     if (this.utilService.isNonEmpty((this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value) || (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value > 0) {
       let standerdDeduct = Math.round((Number((this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value) * 30) / 100);
       //this.summaryDialogForm.controls['taxableIncome'].setValue(standerdDeduct);
-      (this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['exemptIncome'].setValue(standerdDeduct);
+      (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['exemptIncome'].setValue(standerdDeduct);
 
     } else {
       //this.summaryDialogForm.controls['taxableIncome'].setValue(0);
-      (this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['exemptIncome'].setValue(0);
+      (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['exemptIncome'].setValue(0);
     }
     this.calNetHouseProIncome()
   }
 
-  setValueInLoanObj(interestAmount:any) {
+  setValueInLoanObj(interestAmount: any) {
     if (interestAmount.valid) {
-      ((this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['loans']as FormGroup).controls['loanType'].setValue('HOUSING');
+      ((this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['loans'] as FormGroup).controls['loanType'].setValue('HOUSING');
     } else {
-      ((this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['loans']as FormGroup).controls['loanType'].setValue(null);
+      ((this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['loans'] as FormGroup).controls['loanType'].setValue(null);
     }
     //console.log(this.houseProperties.value)
   }
 
   calNetHouseProIncome() {
     if (this.housingShow.isSOP) {
-      
+
       //this.summaryDialogForm.controls['exemptIncome'].setValue(netHouseProIncome);
-      var netHouseProIncome = Number((this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['annualValue'].value) - Number((this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['exemptIncome'].value) - Number(this.summaryDialogForm.controls['interestAmount'].value);
+      var netHouseProIncome = Number((this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value) - Number((this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['exemptIncome'].value) - Number(this.summaryDialogForm.controls['interestAmount'].value);
     }
     else {
-      
+
       // if (Number(this.summaryDialogForm.controls['interestAmount.value) > 200000) {
       //   var netHouseProIncome = Number(this.summaryDialogForm.controls['houseProperties.controls['annualValue.value) - Number(this.summaryDialogForm.controls['houseProperties.controls['exemptIncome.value) - 200000;
       // } else {
       //   var netHouseProIncome = Number(this.summaryDialogForm.controls['houseProperties.controls['annualValue.value) - Number(this.summaryDialogForm.controls['houseProperties.controls['exemptIncome.value) - Number(this.summaryDialogForm.controls['interestAmount.value);
       // }
-      var netHouseProIncome = Number((this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['annualValue'].value) - Number((this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['exemptIncome'].value) - Number(this.summaryDialogForm.controls['interestAmount'].value);//Number(this.summaryDialogForm.controls['interestAmount.value);
+      var netHouseProIncome = Number((this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value) - Number((this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['exemptIncome'].value) - Number(this.summaryDialogForm.controls['interestAmount'].value);//Number(this.summaryDialogForm.controls['interestAmount.value);
     }
-    (this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['taxableIncome'].setValue(netHouseProIncome);
+    (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['taxableIncome'].setValue(netHouseProIncome);
 
 
   }
 
   deductionData: any = [];
   allowanceData: any = [];
-  addInfo(mode:any) {
+  addInfo(mode: any) {
     console.log('summaryDialogForm:', this.summaryDialogForm)
     if (this.summaryDialogForm.valid) {
 
@@ -668,7 +671,7 @@ export class SumaryDialogComponent implements OnInit {
           }
           var salArray = [];
           salArray.push(salarObj);
-          (this.summaryDialogForm.controls['employers']as FormGroup).controls['salary'].setValue(salArray);
+          (this.summaryDialogForm.controls['employers'] as FormGroup).controls['salary'].setValue(salArray);
         }
         if (this.utilService.isNonEmpty(this.summaryDialogForm.value.valOfPerquisites) && this.summaryDialogForm.value.valOfPerquisites !== 0) {
           let perquisites = {
@@ -679,7 +682,7 @@ export class SumaryDialogComponent implements OnInit {
           }
           var perquArray = [];
           perquArray.push(perquisites);
-          (this.summaryDialogForm.controls['employers']as FormGroup).controls['perquisites'].setValue(perquArray);
+          (this.summaryDialogForm.controls['employers'] as FormGroup).controls['perquisites'].setValue(perquArray);
         }
         if (this.utilService.isNonEmpty(this.summaryDialogForm.value.profitInLieu) && this.summaryDialogForm.value.profitInLieu !== 0) {
           let profitInLieuObj = {
@@ -690,7 +693,7 @@ export class SumaryDialogComponent implements OnInit {
           }
           var profitArray = [];
           profitArray.push(profitInLieuObj);
-          (this.summaryDialogForm.controls['employers']as FormGroup).controls['profitsInLieuOfSalaryType'].setValue(profitArray);
+          (this.summaryDialogForm.controls['employers'] as FormGroup).controls['profitsInLieuOfSalaryType'].setValue(profitArray);
         }
         if (this.utilService.isNonEmpty(this.summaryDialogForm.value.houseRentAllow) && this.summaryDialogForm.value.houseRentAllow !== 0) {
           let houseRentAllowObj = {
@@ -748,15 +751,15 @@ export class SumaryDialogComponent implements OnInit {
           }
           this.deductionData.push(professionalTaxObj)
         }
-        (this.summaryDialogForm.controls['employers']as FormGroup).controls['allowance'].setValue(this.allowanceData);
-        (this.summaryDialogForm.controls['employers']as FormGroup).controls['deductions'].setValue(this.deductionData);
+        (this.summaryDialogForm.controls['employers'] as FormGroup).controls['allowance'].setValue(this.allowanceData);
+        (this.summaryDialogForm.controls['employers'] as FormGroup).controls['deductions'].setValue(this.deductionData);
 
-        var blankArray:any[] = [];
-        (this.summaryDialogForm.controls['employers']as FormGroup).controls['salary'].value ? (this.summaryDialogForm.controls['employers']as FormGroup).controls['salary'].value : (this.summaryDialogForm.controls['employers']as FormGroup).controls['salary'].setValue(blankArray);
-        (this.summaryDialogForm.controls['employers']as FormGroup).controls['allowance'].value ? (this.summaryDialogForm.controls['employers']as FormGroup).controls['allowance'].value : (this.summaryDialogForm.controls['employers']as FormGroup).controls['allowance'].setValue(blankArray);
-        (this.summaryDialogForm.controls['employers']as FormGroup).controls['perquisites'].value ? (this.summaryDialogForm.controls['employers']as FormGroup).controls['perquisites'].value : (this.summaryDialogForm.controls['employers']as FormGroup).controls['perquisites'].setValue(blankArray);
-        (this.summaryDialogForm.controls['employers']as FormGroup).controls['profitsInLieuOfSalaryType'].value ? (this.summaryDialogForm.controls['employers']as FormGroup).controls['profitsInLieuOfSalaryType'].value : (this.summaryDialogForm.controls['employers']as FormGroup).controls['profitsInLieuOfSalaryType'].setValue(blankArray);
-       (this.summaryDialogForm.controls['employers']as FormGroup).controls['deductions'].value ? (this.summaryDialogForm.controls['employers']as FormGroup).controls['deductions'].value : (this.summaryDialogForm.controls['employers']as FormGroup).controls['deductions'].setValue(blankArray);
+        var blankArray: any[] = [];
+        (this.summaryDialogForm.controls['employers'] as FormGroup).controls['salary'].value ? (this.summaryDialogForm.controls['employers'] as FormGroup).controls['salary'].value : (this.summaryDialogForm.controls['employers'] as FormGroup).controls['salary'].setValue(blankArray);
+        (this.summaryDialogForm.controls['employers'] as FormGroup).controls['allowance'].value ? (this.summaryDialogForm.controls['employers'] as FormGroup).controls['allowance'].value : (this.summaryDialogForm.controls['employers'] as FormGroup).controls['allowance'].setValue(blankArray);
+        (this.summaryDialogForm.controls['employers'] as FormGroup).controls['perquisites'].value ? (this.summaryDialogForm.controls['employers'] as FormGroup).controls['perquisites'].value : (this.summaryDialogForm.controls['employers'] as FormGroup).controls['perquisites'].setValue(blankArray);
+        (this.summaryDialogForm.controls['employers'] as FormGroup).controls['profitsInLieuOfSalaryType'].value ? (this.summaryDialogForm.controls['employers'] as FormGroup).controls['profitsInLieuOfSalaryType'].value : (this.summaryDialogForm.controls['employers'] as FormGroup).controls['profitsInLieuOfSalaryType'].setValue(blankArray);
+        (this.summaryDialogForm.controls['employers'] as FormGroup).controls['deductions'].value ? (this.summaryDialogForm.controls['employers'] as FormGroup).controls['deductions'].value : (this.summaryDialogForm.controls['employers'] as FormGroup).controls['deductions'].setValue(blankArray);
 
 
         let employer = {
@@ -788,12 +791,12 @@ export class SumaryDialogComponent implements OnInit {
             "name": this.summaryDialogForm.value.tenantName,
             "panNumber": this.summaryDialogForm.value.tenentPanNumber
           }
-          var tenantArray:any[] = [];
+          var tenantArray: any[] = [];
           tenantArray.push(tenantObj);
-          (this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['tenant'].setValue(tenantArray);
+          (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['tenant'].setValue(tenantArray);
         } else {
-          var tenantArray:any[] = [];
-          (this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['tenant'].setValue(tenantArray);
+          var tenantArray: any[] = [];
+          (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['tenant'].setValue(tenantArray);
         }
 
         // if (this.utilService.isNonEmpty(this.summaryDialogForm.value.name) && this.utilService.isNonEmpty(this.summaryDialogForm.value.panNumber)) {
@@ -818,12 +821,12 @@ export class SumaryDialogComponent implements OnInit {
             "principalAmount": 0,
             "interestAmount": this.summaryDialogForm.value.interestAmount
           }
-          var loanArray:any[] = [];
+          var loanArray: any[] = [];
           loanArray.push(loanObj);
-          (this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['loans'].setValue(loanArray);
+          (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['loans'].setValue(loanArray);
         } else {
-          var loanArray:any[] = [];
-          (this.summaryDialogForm.controls['houseProperties']as FormGroup).controls['loans'].setValue(loanArray);
+          var loanArray: any[] = [];
+          (this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['loans'].setValue(loanArray);
         }
 
 
@@ -938,26 +941,26 @@ export class SumaryDialogComponent implements OnInit {
   //   this.summaryDialogForm.controls['netSalary'].setValue(netSalary);
   // }
 
-  calEligibleDonation(key:any) {
-    let eligibleDonation = Number((this.summaryDialogForm.controls['donations']as FormGroup).controls['amountInCash'].value) + Number((this.summaryDialogForm.controls['donations']as FormGroup).controls['amountOtherThanCash'].value);
-    (this.summaryDialogForm.controls['donations']as FormGroup).controls['eligibleAmount'].setValue(eligibleDonation);
+  calEligibleDonation(key: any) {
+    let eligibleDonation = Number((this.summaryDialogForm.controls['donations'] as FormGroup).controls['amountInCash'].value) + Number((this.summaryDialogForm.controls['donations'] as FormGroup).controls['amountOtherThanCash'].value);
+    (this.summaryDialogForm.controls['donations'] as FormGroup).controls['eligibleAmount'].setValue(eligibleDonation);
 
     //set Amnt-in-cash & Amnt-other-than-cash 'rwquired' validator
     if (key === 'dneeAmountInCash') {
-      if (this.utilService.isNonEmpty((this.summaryDialogForm.controls['donations']as FormGroup).controls['amountInCash'].value)) {
-        (this.summaryDialogForm.controls['donations']as FormGroup).controls['amountInCash'].setValidators([Validators.required]);
-        (this.summaryDialogForm.controls['donations']as FormGroup).controls['amountOtherThanCash'].setValidators(null);
-        (this.summaryDialogForm.controls['donations']as FormGroup).controls['amountOtherThanCash'].updateValueAndValidity();
+      if (this.utilService.isNonEmpty((this.summaryDialogForm.controls['donations'] as FormGroup).controls['amountInCash'].value)) {
+        (this.summaryDialogForm.controls['donations'] as FormGroup).controls['amountInCash'].setValidators([Validators.required]);
+        (this.summaryDialogForm.controls['donations'] as FormGroup).controls['amountOtherThanCash'].setValidators(null);
+        (this.summaryDialogForm.controls['donations'] as FormGroup).controls['amountOtherThanCash'].updateValueAndValidity();
         // this.summaryDialogForm.controls['donations'].controls['dneeAmountOtherThanCash'].setValidators([Validators.required]);
         // this.summaryDialogForm.controls['donations'].controls['amountInCash'].setValidators(null);
       }
     }
 
     else if (key === 'dneeAmountOtherThanCash') {
-      if (this.utilService.isNonEmpty((this.summaryDialogForm.controls['donations']as FormGroup).controls['amountOtherThanCash'].value)) {
-        (this.summaryDialogForm.controls['donations']as FormGroup).controls['amountOtherThanCash'].setValidators([Validators.required]);
-        (this.summaryDialogForm.controls['donations']as FormGroup).controls['amountInCash'].setValidators(null);
-        (this.summaryDialogForm.controls['donations']as FormGroup).controls['amountInCash'].updateValueAndValidity();
+      if (this.utilService.isNonEmpty((this.summaryDialogForm.controls['donations'] as FormGroup).controls['amountOtherThanCash'].value)) {
+        (this.summaryDialogForm.controls['donations'] as FormGroup).controls['amountOtherThanCash'].setValidators([Validators.required]);
+        (this.summaryDialogForm.controls['donations'] as FormGroup).controls['amountInCash'].setValidators(null);
+        (this.summaryDialogForm.controls['donations'] as FormGroup).controls['amountInCash'].updateValueAndValidity();
         // this.summaryDialogForm.controls['dneeAmountInCash'].setValidators([Validators.required]);
         // this.summaryDialogForm.controls['dneeAmountOtherThanCash'].setValidators(null);
       }
@@ -968,7 +971,7 @@ export class SumaryDialogComponent implements OnInit {
   calculateGrossSal() {
     this.salObjectVal.grossSalary = Number(this.summaryDialogForm.controls['salAsPerSec171'].value) + Number(this.summaryDialogForm.controls['valOfPerquisites'].value) + Number(this.summaryDialogForm.controls['profitInLieu'].value);
     //  this.summaryDialogForm.controls['grossSalary'].setValue(this.salObjectVal.grossSalary);
-    (this.summaryDialogForm.controls['employers']as FormGroup).controls['grossSalary'].setValue(this.salObjectVal.grossSalary);
+    (this.summaryDialogForm.controls['employers'] as FormGroup).controls['grossSalary'].setValue(this.salObjectVal.grossSalary);
     this.calNetSalary();
   }
 
@@ -980,14 +983,14 @@ export class SumaryDialogComponent implements OnInit {
 
   calNetSalary() {
     // this.salObjectVal.netSalary = this.salObjectVal.grossSalary - this.salObjectVal.totalExcemptAllowance;
-    this.salObjectVal.netSalary = Number((this.summaryDialogForm.controls['employers']as FormGroup).controls['grossSalary'].value) - Number(this.summaryDialogForm.controls['totalExemptAllow'].value);
+    this.salObjectVal.netSalary = Number((this.summaryDialogForm.controls['employers'] as FormGroup).controls['grossSalary'].value) - Number(this.summaryDialogForm.controls['totalExemptAllow'].value);
     if (this.salObjectVal.netSalary > 0) {
       // this.summaryDialogForm.controls['netSalary'].setValue(this.salObjectVal.netSalary);
-      (this.summaryDialogForm.controls['employers']as FormGroup).controls['netSalary'].setValue(this.salObjectVal.netSalary);
+      (this.summaryDialogForm.controls['employers'] as FormGroup).controls['netSalary'].setValue(this.salObjectVal.netSalary);
 
     } else {
       //this.summaryDialogForm.controls['netSalary'].setValue(0);
-      (this.summaryDialogForm.controls['employers']as FormGroup).controls['netSalary'].setValue(0);
+      (this.summaryDialogForm.controls['employers'] as FormGroup).controls['netSalary'].setValue(0);
     }
 
     this.calStanderdDedtuction();
@@ -1031,7 +1034,7 @@ export class SumaryDialogComponent implements OnInit {
 
   }
 
-  getCityData(pincode:any, mode:any) {
+  getCityData(pincode: any, mode: any) {
     console.log(pincode)
     if (mode === 'Salary') {
       if (pincode.valid) {
@@ -1084,10 +1087,10 @@ export class SumaryDialogComponent implements OnInit {
 
   }
 
-  checkPanDuplicate(panNum:any, type:any, index:any) {
+  checkPanDuplicate(panNum: any, type: any, index: any) {
     console.log('User Profile PAN: ', this.data.callerObj.itrSummaryForm.value.assesse.panNumber)
     if (type === 'donation') {
-      
+
       if (panNum.valid) {
         this.getUserInfoFromPan(panNum.value);                    //get user info & set to doner name
 
@@ -1110,7 +1113,7 @@ export class SumaryDialogComponent implements OnInit {
           } else {
             // this.summaryDialogForm.controls['panNumber'].setErrors(null);
             // this.summaryDialogForm.controls['panNumber'].updateValueAndValidity();
-            
+
             (((this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['coOwners'] as FormGroup).controls[index] as FormGroup).controls['panNumber'].setErrors(null);
             (((this.summaryDialogForm.controls['houseProperties'] as FormGroup).controls['coOwners'] as FormGroup).controls[index] as FormGroup).controls['panNumber'].updateValueAndValidity();
           }
@@ -1133,7 +1136,7 @@ export class SumaryDialogComponent implements OnInit {
     }
   }
 
-  getUserInfoFromPan(panNum:any) {
+  getUserInfoFromPan(panNum: any) {
     const param = '/itr/api/getPanDetail?panNumber=' + panNum;
     this.userService.getMethodInfo(param).subscribe((result: any) => {
       // this.summaryDialogForm.controls['dneeName'].setValue(result.firstName ? result.firstName : '');
@@ -1145,7 +1148,7 @@ export class SumaryDialogComponent implements OnInit {
     })
   }
 
-  setTotalMinValdation(value:any, mode:any) {
+  setTotalMinValdation(value: any, mode: any) {
 
     if (mode === 'tdsOnSal') {
       (this.summaryDialogForm.controls['onSalary'] as FormGroup).controls['totalTdsDeposited'].setValidators([Validators.max(value)]);
@@ -1175,7 +1178,7 @@ export class SumaryDialogComponent implements OnInit {
     }
   }
 
-  removeCoOwner(index:any) {
+  removeCoOwner(index: any) {
     const coOwner = <FormArray>this.summaryDialogForm.controls['houseProperties'].get('coOwners');
     console.log('Befor delete: ', coOwner)
     coOwner.removeAt(index);
@@ -1197,27 +1200,27 @@ export class SumaryDialogComponent implements OnInit {
     });
   }
 
-  calCarryForwardToNxtYrs(){
-    let carryForwatToNxtYrs =  Number((this.summaryDialogForm.controls['lossesToBeCarriedForword'] as FormGroup).controls['housePropertyLosses'].value) + Number((this.summaryDialogForm.controls['lossesToBeCarriedForword'] as FormGroup).controls['shortTermCapitalGainLosses'].value)
-                               + Number((this.summaryDialogForm.controls['lossesToBeCarriedForword'] as FormGroup).controls['longTermCapitalGainLosses'].value) + Number((this.summaryDialogForm.controls['lossesToBeCarriedForword'] as FormGroup).controls['businessProfessionalLoss'].value)
-                               + Number((this.summaryDialogForm.controls['lossesToBeCarriedForword'] as FormGroup).controls['speculativeBusinessLoss'].value);
+  calCarryForwardToNxtYrs() {
+    let carryForwatToNxtYrs = Number((this.summaryDialogForm.controls['lossesToBeCarriedForword'] as FormGroup).controls['housePropertyLosses'].value) + Number((this.summaryDialogForm.controls['lossesToBeCarriedForword'] as FormGroup).controls['shortTermCapitalGainLosses'].value)
+      + Number((this.summaryDialogForm.controls['lossesToBeCarriedForword'] as FormGroup).controls['longTermCapitalGainLosses'].value) + Number((this.summaryDialogForm.controls['lossesToBeCarriedForword'] as FormGroup).controls['businessProfessionalLoss'].value)
+      + Number((this.summaryDialogForm.controls['lossesToBeCarriedForword'] as FormGroup).controls['speculativeBusinessLoss'].value);
 
-     (this.summaryDialogForm.controls['lossesToBeCarriedForword'] as FormGroup).controls['carriedForwardToNextYear'].setValue(carryForwatToNxtYrs);                         
+    (this.summaryDialogForm.controls['lossesToBeCarriedForword'] as FormGroup).controls['carriedForwardToNextYear'].setValue(carryForwatToNxtYrs);
   }
 
-  clarOtherDropdown(donationType:any){
-      if(donationType !== 'OTHER'){
-        (this.summaryDialogForm.controls['donations'] as FormGroup).controls['schemeCode'].setValue(null);
-        (this.summaryDialogForm.controls['donations'] as FormGroup).controls['category'].setValue(null);
-      }
+  clarOtherDropdown(donationType: any) {
+    if (donationType !== 'OTHER') {
+      (this.summaryDialogForm.controls['donations'] as FormGroup).controls['schemeCode'].setValue(null);
+      (this.summaryDialogForm.controls['donations'] as FormGroup).controls['category'].setValue(null);
+    }
   }
 
-  setCategoryVal(typeOfPropertyVal:any){
-    console.log('typeOfPropertyVal: ',typeOfPropertyVal)
-    if(typeOfPropertyVal === 'GOVT_APPRVD_FAMLY_PLNG' || typeOfPropertyVal === 'FND_SEC80G'){
+  setCategoryVal(typeOfPropertyVal: any) {
+    console.log('typeOfPropertyVal: ', typeOfPropertyVal)
+    if (typeOfPropertyVal === 'GOVT_APPRVD_FAMLY_PLNG' || typeOfPropertyVal === 'FND_SEC80G') {
       (this.summaryDialogForm.controls['donations'] as FormGroup).controls['category'].setValue('AGTI')
     }
-    else{
+    else {
       (this.summaryDialogForm.controls['donations'] as FormGroup).controls['category'].setValue('REGULAR')
     }
   }

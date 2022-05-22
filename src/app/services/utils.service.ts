@@ -666,4 +666,29 @@ export class UtilsService {
         const param = '/itr';
         return await this.itrMsService.postMethod(param, this.ITR_JSON).toPromise();
     }
+
+    async getAllBankByIfsc() {
+        const param = '/bankCodeDetails';
+        return await this.userMsService.getMethod(param).toPromise();
+    }
+
+    async getBankByIfsc(ifscCode) {
+        const bankList = JSON.parse(sessionStorage.getItem(AppConstants.BANK_LIST) || null);
+        if (this.isNonEmpty(bankList) && bankList instanceof Array && bankList.length > 0) {
+            const bank = bankList.filter((item: any) => item.ifscCode.substring(0, 4) === ifscCode.substring(0, 4));
+            return bank[0];
+        } else {
+            let res: any = await this.getAllBankByIfsc().catch(error => {
+                console.log(error);
+                this.showSnackBar('Error While getting My Bank list.');
+                return [];
+            });
+            if (res && res instanceof Array) {
+                const bank = res.filter((item: any) => item.ifscCode.substring(0, 4) === ifscCode.substring(0, 4));
+                sessionStorage.setItem(AppConstants.BANK_LIST, JSON.stringify(res));
+                return bank[0];
+            }
+            return [];
+        }
+    }
 }

@@ -1142,8 +1142,8 @@
 
     </mat-dialog-content>
     <mat-dialog-actions align="center">
-        <!-- <label *ngIf="successValue" class="text-success">{{successMsg}}</label> -->
-        <button mat-raised-button color="primary" (click)="addInfo(data.mode)" tabindex="1">{{data.submitBtn}}</button>
-        <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
+        <button class="tbd-btn" (click)="addInfo(data.mode)">{{data.submitBtn}}</button>
+        <!-- <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button> -->
+        <button type="submit" class="tbd-btn-secondary" mat-dialog-close>Cancel</button>
     </mat-dialog-actions>
 </form>

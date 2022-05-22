@@ -3146,7 +3146,6 @@ export class TaxSummaryComponent implements OnInit {
       console.log('ITR summary Data: ', this.itrSummaryForm.value)
 
       console.log('sumarryObj: ', this.itrSummaryForm.value);
-      return;
       this.loading = true;
       const param = '/itr/summary';
       let body = this.itrSummaryForm.value;

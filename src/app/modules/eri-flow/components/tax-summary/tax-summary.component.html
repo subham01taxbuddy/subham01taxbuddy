@@ -135,7 +135,7 @@
                     </mat-error>
                     <mat-error *ngIf="itrSummaryForm.controls['assesse'].controls['panNumber'].hasError('pattern')">
                         Enter valid PAN
-                        (e.g XXXXX1234X)</mat-error>
+                    </mat-error>
                 </mat-form-field>
             </div>
 
@@ -406,7 +406,8 @@
                         <mat-label>Financial Year</mat-label>
                         <mat-select matInput formControlName="financialYear" placeholder="Financial Year"
                             autocomplete="off" required>
-                            <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                            <mat-option *ngFor="let year of financialYear" [value]="year.financialYear"
+                                [disabled]="year.financialYear === '2022-23'">
                                 {{year.financialYear}}
                             </mat-option>
                         </mat-select>
@@ -473,7 +474,7 @@
                 <th>Name of the Bank</th>
                 <th>Account Number</th>
                 <th>Refund</th>
-                <th>Action</th>
+                <th colspan="2">Action</th>
             </tr>
             <tr *ngIf="bankData.length === 0">
                 <td></td>
@@ -491,9 +492,12 @@
                 <td *ngIf="!bank.hasRefund" style="text-align: center;"><i class="fa fa-times fa-lg"
                         aria-hidden="true"></i></td>
                 <td>
-                    <button (click)="openDialog('Edit Bank Info','Edit', i, bankData[i],'Bank')"><i
-                            class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                    <button (click)="deleteData('Bank',i)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                    <button type="button" class="tbd-table-btn-icon"
+                        (click)="openDialog('Edit Bank Info','Edit', i, bankData[i],'Bank')">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="tbd-table-btn-icon" (click)="deleteData('Bank',i)"><i
+                            class="fa fa-trash" aria-hidden="true"></i></button>
                 </td>
             </tr>
 
@@ -518,7 +522,7 @@
                 <th>Interest on Home Loan</th>
                 <th><b>Net House Pro Income</b></th>
 
-                <th>Action</th>
+                <th colspan="2">Action</th>
             </tr>
 
             <tr *ngIf="housingData.length === 0">
@@ -553,10 +557,12 @@
                 <td>{{house.interestAmount}}</td>
                 <td>{{house.taxableIncome}}</td>
                 <td>
-                    <button (click)="openDialog('Edit House Property','Edit', i, housingData[i],'House')"><i
-                            class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                    <button (click)="deleteData('House',i)"><i class="fa fa-trash fa-lg"
-                            aria-hidden="true"></i></button>
+                    <button type="button" class="tbd-table-btn-icon"
+                        (click)="openDialog('Edit House Property','Edit', i, housingData[i],'House')">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="tbd-table-btn-icon" (click)="deleteData('House',i)"><i
+                            class="fa fa-trash" aria-hidden="true"></i></button>
                 </td>
             </tr>
         </table><br><br>
@@ -582,7 +588,7 @@
                 <th colspan="3">Less: Deduction u/s 16(ia)</th>
                 <th>Total deduction</th>
                 <th><b>Taxable Salary</b></th>
-                <th>Action</th>
+                <th colspan="2">Action</th>
             </tr>
             <tr>
                 <th></th>
@@ -643,10 +649,12 @@
                 <td>{{sal.totalSalaryDeduction}}</td>
                 <td><b>{{sal.taxableIncome}}</b></td>
                 <td>
-                    <button (click)="openDialog('Edit Salary Info','Edit', i, salaryItrratedData[i],'Salary')"><i
-                            class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                    <button (click)="deleteData('Salary',i)"><i class="fa fa-trash fa-lg"
-                            aria-hidden="true"></i></button>
+                    <button type="button" class="tbd-table-btn-icon"
+                        (click)="openDialog('Edit Salary Info','Edit', i, salaryItrratedData[i],'Salary')">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="tbd-table-btn-icon" (click)="deleteData('Salary',i)"><i
+                            class="fa fa-trash" aria-hidden="true"></i></button>
                 </td>
             </tr>
         </table><br><br>
@@ -857,11 +865,11 @@
                 <tr>
                     <th>Type of Donation</th>
                     <th *ngIf="newItrSumChanges">Type of Property</th>
-                    <th>Name of Doner</th>
-                    <th>Amont in Cash</th>
+                    <th>Name of Donar</th>
+                    <th>Amount in Cash</th>
                     <th>Amount Other than Cash</th>
-                    <th>Eligibal Amount</th>
-                    <th>Action</th>
+                    <th>Eligible Amount</th>
+                    <th colspan="2">Action</th>
                 </tr>
                 <tr *ngFor="let donation of donationData; let i= index">
                     <td>{{donation.donationType}}</td>
@@ -871,11 +879,12 @@
                     <td>{{donation.amountOtherThanCash}}</td>
                     <td>{{donation.eligibleAmount}}</td>
                     <td>
-                        <button
-                            (click)="openDialog('Edit Donation(Section 80G)','Edit', i, donationData[i],'donationSec80G')"><i
-                                class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                        <button (click)="deleteData('donationSec80G',i)"><i class="fa fa-trash fa-lg"
-                                aria-hidden="true"></i></button>
+                        <button type="button" class="tbd-table-btn-icon"
+                            (click)="openDialog('Edit Donation(Section 80G)','Edit', i, donationData[i],'donationSec80G')">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="tbd-table-btn-icon" (click)="deleteData('donationSec80G',i)"><i
+                                class="fa fa-trash" aria-hidden="true"></i></button>
                     </td>
                 </tr>
                 <tr>
@@ -1075,7 +1084,7 @@
                 <th>Name of Employer</th>
                 <th>Gross Salary</th>
                 <th>Total TDS</th>
-                <th>Action</th>
+                <th colspan="2">Action</th>
             </tr>
             <tr *ngIf="tdsOnSal.length === 0">
                 <td></td>
@@ -1090,10 +1099,12 @@
                 <td>{{tds.totalAmountCredited}}</td>
                 <td>{{tds.totalTdsDeposited}}</td>
                 <td>
-                    <button (click)="openDialog('Edit TDS on Salary','Edit', i, tdsOnSal[i],'tdsOnSal')"><i
-                            class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                    <button (click)="deleteData('tdsOnSal',i)"><i class="fa fa-trash fa-lg"
-                            aria-hidden="true"></i></button>
+                    <button type="button" class="tbd-table-btn-icon"
+                        (click)="openDialog('Edit TDS on Salary','Edit', i, tdsOnSal[i],'tdsOnSal')">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="tbd-table-btn-icon" (click)="deleteData('tdsOnSal',i)"><i
+                            class="fa fa-trash" aria-hidden="true"></i></button>
                 </td>
             </tr>
             <tr>
@@ -1114,7 +1125,7 @@
                 <th>Name of Deductor</th>
                 <th>Gross Salary</th>
                 <th>Total TDS</th>
-                <th>Action</th>
+                <th colspan="2">Action</th>
             </tr>
             <tr *ngIf="tdsOtherThanSal.length === 0">
                 <td></td>
@@ -1129,11 +1140,12 @@
                 <td>{{tds.totalAmountCredited}}</td>
                 <td>{{tds.totalTdsDeposited}}</td>
                 <td>
-                    <button
-                        (click)="openDialog('Edit TDS on Other than Salary','Edit', i, tdsOtherThanSal[i],'tdsOnOtherThanSal')"><i
-                            class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                    <button (click)="deleteData('tdsOnOtherThanSal',i)"><i class="fa fa-trash fa-lg"
-                            aria-hidden="true"></i></button>
+                    <button type="button" class="tbd-table-btn-icon"
+                        (click)="openDialog('Edit TDS on Other than Salary','Edit', i, tdsOtherThanSal[i],'tdsOnOtherThanSal')">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="tbd-table-btn-icon" (click)="deleteData('tdsOnOtherThanSal',i)"><i
+                            class="fa fa-trash" aria-hidden="true"></i></button>
                 </td>
             </tr>
             <tr>
@@ -1153,7 +1165,7 @@
                 <th>Name of Deductor</th>
                 <th>Gross Salary</th>
                 <th>Total TDS</th>
-                <th>Action</th>
+                <th colspan="2">Action</th>
             </tr>
             <tr *ngIf="tdsSalesPro.length === 0">
                 <td></td>
@@ -1168,11 +1180,12 @@
                 <td>{{tds.totalAmountCredited}}</td>
                 <td>{{tds.totalTdsDeposited}}</td>
                 <td>
-                    <button
-                        (click)="openDialog('Edit TDS Sales of property 26QB','Edit', i, tdsSalesPro[i],'tdsOnSalOfPro26Q')"><i
-                            class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                    <button (click)="deleteData('tdsOnSalOfPro26Q',i)"><i class="fa fa-trash fa-lg"
-                            aria-hidden="true"></i></button>
+                    <button type="button" class="tbd-table-btn-icon"
+                        (click)="openDialog('Edit TDS Sales of property 26QB','Edit', i, tdsSalesPro[i],'tdsOnSalOfPro26Q')">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="tbd-table-btn-icon" (click)="deleteData('tdsOnSalOfPro26Q',i)"><i
+                            class="fa fa-trash" aria-hidden="true"></i></button>
                 </td>
             </tr>
             <tr>
@@ -1192,7 +1205,7 @@
                 <th>Name of Collector</th>
                 <th>Gross Income</th>
                 <th>Total TCS</th>
-                <th>Action</th>
+                <th colspan="2">Action</th>
             </tr>
             <tr *ngIf="taxCollAtSource.length === 0">
                 <td></td>
@@ -1207,11 +1220,12 @@
                 <td>{{tcs.totalAmountPaid}}</td>
                 <td>{{tcs.totalTcsDeposited}}</td>
                 <td>
-                    <button
-                        (click)="openDialog('Edit TDS Tax Collected at Sources','Edit', i, taxCollAtSource[i],'taxCollSources')"><i
-                            class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                    <button (click)="deleteData('taxCollSources',i)"><i class="fa fa-trash fa-lg"
-                            aria-hidden="true"></i></button>
+                    <button type="button" class="tbd-table-btn-icon"
+                        (click)="openDialog('Edit TDS Tax Collected at Sources','Edit', i, taxCollAtSource[i],'taxCollSources')">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="tbd-table-btn-icon" (click)="deleteData('taxCollSources',i)"><i
+                            class="fa fa-trash" aria-hidden="true"></i></button>
                 </td>
             </tr>
             <tr>
@@ -1232,7 +1246,7 @@
                 <th>Date</th>
                 <th>Challan No</th>
                 <th>Tax deposited</th>
-                <th>Action</th>
+                <th colspan="2">Action</th>
             </tr>
             <tr *ngIf="advanceSelfTax.length === 0">
                 <td></td>
@@ -1247,11 +1261,12 @@
                 <td>{{advTax.challanNumber}}</td>
                 <td>{{advTax.totalTax}}</td>
                 <td>
-                    <button
-                        (click)="openDialog('Edit Annexures: Advance Tax/ Self-Assessment Tax','Edit', i, advanceSelfTax[i],'advanceSelfAssTax')"><i
-                            class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button> &nbsp;
-                    <button (click)="deleteData('advanceSelfAssTax',i)"><i class="fa fa-trash fa-lg"
-                            aria-hidden="true"></i></button>
+                    <button type="button" class="tbd-table-btn-icon"
+                        (click)="openDialog('Edit Annexures: Advance Tax/ Self-Assessment Tax','Edit', i, advanceSelfTax[i],'advanceSelfAssTax')">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="tbd-table-btn-icon" (click)="deleteData('advanceSelfAssTax',i)"><i
+                            class="fa fa-trash" aria-hidden="true"></i></button>
                 </td>
             </tr>
             <tr>
