@@ -409,10 +409,13 @@ export class AssignedUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Add Client" style="border: none;
+          if (params.data.serviceType === 'ITR') {
+            return `<button type="button" class="action_icon add_button" title="Add Client" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-plus" aria-hidden="true" data-action-type="add-client"></i>
            </button>`;
+          }
+          return 'NA'
         },
         width: 50,
         pinned: 'right',

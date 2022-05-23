@@ -3106,7 +3106,6 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       let body = this.itrSummaryForm.value;
       this.userService.postMethodInfo(param, body).subscribe((result: any) => {
 
-        this.loading = false;
         this.itrSummaryForm.patchValue(result);
         const param1 = '/itr/' + this.itrObject.userId + '/' + this.itrObject.itrId + '/' + this.itrObject.assessmentYear;
         this.itrMsService.putMethod(param1, this.itrObject).subscribe((result: any) => {

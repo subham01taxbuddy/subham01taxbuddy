@@ -8,15 +8,27 @@
           then it will automatically fill all the inputs.</p>
       </div>
       <div class="card__col-xs-12 card__col-sm-4">
-        <button class="tbd-btn" (click)="getSummaryDetails()"> Fetch Summary Details</button>
+        <button class="tbd-btn" (click)="getSummaryDetails('ONE-4')"> Fetch Summary Details</button>
 
       </div>
     </div>
-    <app-tax-summary [changes]="newItrSumChanges" [itrObject]="itrData">
+    <app-tax-summary [changes]="newItrSumChanges" [itrObject]="itrOneAnd4Data">
     </app-tax-summary>
   </mat-tab>
   <mat-tab label="ITR 2/3">
-    <p style="padding: 20px; font-size:large"> Coming Soon ...!!!</p>
+    <!-- <p style="padding: 20px; font-size:large"> Coming Soon ...!!!</p> -->
+    <div class="card__row">
+      <div class="card__col-xs-12 card__col-sm-8">
+        <p style="padding: 10px;">Note: Please fetch the summary first and check if the summary is already generated or
+          not. If it is generated
+          then it will automatically fill all the inputs.</p>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-4">
+        <button class="tbd-btn" (click)="getSummaryDetails('TOW-3')"> Fetch Summary Details</button>
+
+      </div>
+    </div>
+    <app-itr2main [changes]="newItrSumChanges" [itrObject]="itrTwoAnd3Data"></app-itr2main>
   </mat-tab>
 </mat-tab-group>
 

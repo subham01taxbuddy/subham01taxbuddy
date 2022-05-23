@@ -152,8 +152,10 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
   }
   ngOnChanges() {
     console.log('ngOnChanges Submit filing:', this.itrData);
-    this.manualUpdateForm.patchValue(this.itrData);
-    this.findAssesseeType();
+    if (this.itrData) {
+      this.manualUpdateForm.patchValue(this.itrData);
+      this.findAssesseeType();
+    }
   }
   updateManualFiling() {
     if (this.manualUpdateForm.valid) {

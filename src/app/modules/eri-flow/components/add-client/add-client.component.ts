@@ -50,8 +50,8 @@ export class AddClientComponent implements OnInit, OnDestroy {
       this.location.back();
     }
     this.addClientForm = this.fb.group({
-      panNumber: [this.addClientData['panNumber'] || '', [Validators.required]],
-      dateOfBirth: [this.addClientData['dateOfBirth'] || '', [Validators.required]],
+      panNumber: [this.addClientData?.panNumber || '', [Validators.required]],
+      dateOfBirth: [this.addClientData?.dateOfBirth || '', [Validators.required]],
       otp: []
     });
   }

@@ -1,43 +1,46 @@
-.table-responsive{
-    overflow-x: auto;
+.table-responsive {
+  overflow-x: auto;
 }
 
 table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    width: 100%;
-    border: 1px solid #ddd;
-   
-  }
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
 
-  th{
-    text-align: left;
-    padding: 10px;
-    font-size: 15px;
-    border: 1px solid #ddd;
-  }
-  td {
-    text-align: left;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ddd;
-  }
-  
-  tr:nth-child(even){background-color: #f2f2f2}
+}
 
-  .heading{
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-  }
+th {
+  text-align: left;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+}
 
- .tableHead{
-   color: #04a4bc;
+td {
+  text-align: left;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+
+.heading {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.tableHead {
+  color: #04a4bc;
   font-size: 14px;
   font-weight: bold;
 }
 
-.subLabel{
+.subLabel {
   color: #04a4bc;
   font-size: 14px;
   text-decoration: underline;
@@ -57,7 +60,7 @@ thead th {
 tbody {
   float: right;   
 } */
-.disableInput{
+.disableInput {
   height: 40px;
   width: 230px;
   padding: 5px;
@@ -67,25 +70,31 @@ tbody {
   border-radius: 5px;
 }
 
-.header{
-    font-size: 13px;
-    font-weight: bold;
-    padding: 13px;
-    /* margin: 4px 0px 0px 10px; */
-    /* border: 1px solid #e0e0e0;
+.header {
+  font-size: 13px;
+  font-weight: bold;
+  padding: 13px;
+  /* margin: 4px 0px 0px 10px; */
+  /* border: 1px solid #e0e0e0;
     border-radius: 5px; */
 }
 
 
-.verticle{
+.verticle {
   overflow-y: scroll;
   display: block;
 }
 
-.disableBtn{
+.disableBtn {
   pointer-events: none;
   background-color: grey;
 }
-.cursorNotAllow{
+
+.cursorNotAllow {
   cursor: not-allowed;
+}
+
+.tbd-btn-small {
+  margin-bottom: 10px;
+  float: right;
 }

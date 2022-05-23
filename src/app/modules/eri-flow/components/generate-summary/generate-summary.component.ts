@@ -14,7 +14,8 @@ export class GenerateSummaryComponent implements OnInit {
   @Output() getItrData = new EventEmitter<any>();
 
   newItrSumChanges: boolean = true;
-  itrData: any;
+  itrOneAnd4Data: any;
+  itrTwoAnd3Data: any;
   loading = false;
   constructor(private itrMsService: ItrMsService,
     public utilsService: UtilsService) { }
@@ -23,12 +24,19 @@ export class GenerateSummaryComponent implements OnInit {
     // this.router.navigate(['/eri/direct-filing/itrFirst']);
 
   }
-  async getSummaryDetails() {
+  async getSummaryDetails(type) {
     this.loading = true;
-    this.itrData = await this.utilsService.getCurrentItr(this.userDetails.userId, this.userDetails.assessmentYear, this.userDetails.callerAgentUserId);
+    let itrData = await this.utilsService.getCurrentItr(this.userDetails.userId, this.userDetails.assessmentYear, this.userDetails.callerAgentUserId);
     this.loading = false;
-    this.getItrData.emit(this.itrData);
-    console.log('getSummaryDetails - getCurrentItr:', this.itrData);
+    if (type === 'ONE-4') {
+      this.itrOneAnd4Data = itrData;
+      this.itrTwoAnd3Data = null;
+      this.getItrData.emit(this.itrOneAnd4Data);
+    } else if (type === 'TOW-3') {
+      this.itrTwoAnd3Data = itrData;
+      this.itrOneAnd4Data = null;
+      this.getItrData.emit(this.itrTwoAnd3Data);
+    }
   }
 
 
