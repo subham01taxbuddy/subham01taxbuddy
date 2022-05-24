@@ -3,9 +3,9 @@ import { Component, DoCheck } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { NeedHelpComponent } from 'src/app/pages/need-help/need-help.component';
-
+import { Location } from '@angular/common';
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
@@ -30,7 +30,8 @@ export class NavbarComponent implements DoCheck {
 
   constructor(
     private router: Router,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    public location: Location) { }
 
 
 

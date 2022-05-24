@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
 @Component({
   selector: 'app-direct-filing',
   templateUrl: './direct-filing.component.html',
@@ -10,8 +9,7 @@ export class DirectFilingComponent implements OnInit {
   tabIndex = 0;
   addClient: any;
   itrData: any
-  constructor(private router: Router,
-    public location: Location) {
+  constructor(private router: Router) {
     this.addClient = this.router.getCurrentNavigation().extras.state;
     console.log('ssssss', this.addClient);
     // this.addClient = {

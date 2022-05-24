@@ -2,14 +2,17 @@
 <div class="main clearfix" style="padding-top: 0px;">
   <div class="card">
     <div class="card__row">
-      <div class="card__col-xs-4">
+      <div class="filter__col card__col-sm-3 card__col-xs-12">
         <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
       </div>
-      <span style="float: right;">Total Count: <b>{{this.config.totalItems}}</b></span>
+      <div class="filter__col card__col-sm-3 card__col-xs-12" *ngIf="agents.length>0">
+        <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>
+      </div>
     </div>
+    <p><span style="float: right;">Total Count: <b>{{this.config.totalItems}}</b></span></p><br>
     <div class="card__row">
       <table>
-        <tr *ngFor="let item of pageWiseItr | paginate:config"></tr>
+        <tr *ngFor="let item of itrDataList | paginate:config"></tr>
       </table>
       <ag-grid-angular class="ag-theme-balham" [gridOptions]="myItrsGridOptions" (rowClicked)="onRowClicked($event)">
       </ag-grid-angular>
