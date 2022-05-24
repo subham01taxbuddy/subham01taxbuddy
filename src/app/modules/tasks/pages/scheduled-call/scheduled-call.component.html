@@ -3,18 +3,16 @@
 <div class="main clearfix" style="padding-top: 0px;">
     <div class="card">
         <div class="card__row">
-            <div>
-                <div class="filter__col card__col-sm-3 card__col-xs-12">
-                    <mat-form-field appearance="outline" style="margin-top: 10px;">
-                        <mat-label>Select Agent</mat-label>
-                        <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedAgent"
-                            (selectionChange)="searchByAgent()">
-                            <mat-option *ngFor="let agent of agentList" [value]="agent.userId">
-                                {{agent.name}} <span style="font-weight: bold;">{{agent.serviceType}}</span>
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
+            <div class="filter__col card__col-sm-3 card__col-xs-12">
+                <mat-form-field appearance="outline" style="margin-top: 10px;">
+                    <mat-label>Select Agent</mat-label>
+                    <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedAgent"
+                        (selectionChange)="searchByAgent()">
+                        <mat-option *ngFor="let agent of agentList" [value]="agent.userId">
+                            {{agent.name}} <span style="font-weight: bold;">{{agent.serviceType}}</span>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
 
 
@@ -32,24 +30,18 @@
                         aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
             </div> -->
 
-        </div><br>
-        <!-- Total Count: <b>{{config.totalItems}}</b> -->
+        </div>
+        <p style="float: right;"> Total Count: <b>{{scheduleCallsData.length}}</b></p>
+        <br>
+        <div class="card__row">
+            <ag-grid-angular class="ag-theme-balham" [gridOptions]="scheduleCallGridOptions"
+                (rowClicked)="onScheduledCallClicked($event)">
+            </ag-grid-angular>
 
-        <div class="card__row" style="margin-top: 0px;">
-
-            <div class="card__row">
-
-                <ag-grid-angular class="ag-theme-balham" [gridOptions]="scheduleCallGridOptions"
-                    (rowClicked)="onScheduledCallClicked($event)">
-                </ag-grid-angular>
-
-                <div class="col-md-12">
-                    <button class="btn" style="border: none;" *ngIf="pageCount !== 0"
-                        (click)="previous()">Previous</button>
-                    <button class="btn" style="border: none; cursor: pointer;" (click)="next()">Next</button>
-                </div>
+            <div class="col-md-12">
+                <button class="btn" style="border: none;" *ngIf="pageCount !== 0" (click)="previous()">Previous</button>
+                <button class="btn" style="border: none; cursor: pointer;" (click)="next()">Next</button>
             </div>
-
         </div>
     </div>
 </div>

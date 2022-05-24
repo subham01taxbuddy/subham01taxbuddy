@@ -43,8 +43,9 @@
             <button class="tbd-btn" (click)="this.search('mobile')"><i class="fa fa-search"
                 aria-hidden="true"></i>&nbsp;Search</button>
           </div>
-        </div><br><br>
-
+        </div>
+        <p style="float: right;"> Total Count: <b>{{config.totalItems}}</b></p>
+        <br>
         <div class="card__row">
           <table>
             <tr *ngFor="let item of userInfo | paginate:config"></tr>

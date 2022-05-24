@@ -3,6 +3,7 @@ import { TasksComponent } from './tasks.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ScheduledCallComponent } from './pages/scheduled-call/scheduled-call.component';
+import { FilingsComponent } from './pages/filings/filings.component';
 
 const routes: Routes = [
     {
@@ -10,6 +11,7 @@ const routes: Routes = [
         children: [
             { path: 'assigned-users', component: AssignedUsersComponent },
             { path: 'schedule-call', component: ScheduledCallComponent },
+            { path: 'filings', component: FilingsComponent },
             { path: '', redirectTo: '/tasks/assigned-users', pathMatch: 'full' }
         ]
     },

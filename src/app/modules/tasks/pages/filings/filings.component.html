@@ -1,0 +1,19 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="main clearfix" style="padding-top: 0px;">
+  <div class="card">
+    <div class="card__row">
+      <div class="card__col-xs-4">
+        <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
+      </div>
+      <span style="float: right;">Total Count: <b>{{this.config.totalItems}}</b></span>
+    </div>
+    <div class="card__row">
+      <table>
+        <tr *ngFor="let item of pageWiseItr | paginate:config"></tr>
+      </table>
+      <ag-grid-angular class="ag-theme-balham" [gridOptions]="myItrsGridOptions" (rowClicked)="onRowClicked($event)">
+      </ag-grid-angular>
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
+  </div>
+</div>

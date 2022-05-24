@@ -128,18 +128,6 @@ export class AssignedUsersComponent implements OnInit {
   usersCreateColumnDef(itrStatus) {
     return [
       {
-        headerName: 'No',
-        field: 'no',
-        width: 40,
-        suppressMovable: true,
-        pinned: 'left',
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
         headerName: 'Name',
         field: 'name',
         width: 180,
@@ -632,10 +620,8 @@ export class AssignedUsersComponent implements OnInit {
 
   createRowData(userData: any) {
     var userArray = [];
-    let pageNo = this.searchParam.page * 20;
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
-        no: i + 1 + pageNo,
         userId: userData[i].userId,
         createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
         name: userData[i].name,

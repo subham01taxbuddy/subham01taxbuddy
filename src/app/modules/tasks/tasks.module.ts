@@ -13,6 +13,7 @@ import { AgGridModule } from "ag-grid-angular";
 import { NgxPaginationModule } from "ngx-pagination";
 import { ScheduledCallComponent } from './pages/scheduled-call/scheduled-call.component';
 import { ReAssignDialogComponent } from './components/re-assign-dialog/re-assign-dialog.component';
+import { FilingsComponent } from './pages/filings/filings.component';
 
 @NgModule({
     imports: [
@@ -30,7 +31,8 @@ import { ReAssignDialogComponent } from './components/re-assign-dialog/re-assign
         TasksComponent,
         AssignedUsersComponent,
         ScheduledCallComponent,
-        ReAssignDialogComponent
+        ReAssignDialogComponent,
+        FilingsComponent
     ],
     entryComponents: [ReAssignDialogComponent]
 
