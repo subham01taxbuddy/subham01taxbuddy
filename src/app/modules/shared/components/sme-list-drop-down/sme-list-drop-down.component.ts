@@ -14,6 +14,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Output() sendSme = new EventEmitter<any>();
   @Input() serviceType: any;
   @Input() listType: any;
+  @Input() disabled: any;
 
   smeList: any[] = [];
   selectedSme = new FormControl('', Validators.required);
@@ -24,7 +25,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    console.log('listType in SME Drop down', this.listType);
+    console.log('listType in SME Drop down', this.listType, this.disabled);
     this.getSmeList();
 
     this.filteredOptions = this.selectedSme.valueChanges
@@ -100,7 +101,13 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   // }
 
   ngOnChanges() {
-    this.getSmeList();
+    this.ngOnInit();
+    if (this.disabled) {
+      this.selectedSme.disable();
+      this.selectedSme.setValue('');
+      return;
+    }
+    this.selectedSme.enable();
   }
 
 

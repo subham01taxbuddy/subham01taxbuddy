@@ -10,17 +10,13 @@ import { NgxPaginationModule } from "ngx-pagination";
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ProfileDialogComponent } from './profile-dialog/profile-dialog.component';
 import { CreateNewUserComponent } from './create-new-user/create-new-user.component';
-import { OtherUsersComponent } from './other-users/other-users.component';
-import { SmeUpdateComponent } from './other-users/sme-update/sme-update.component';
-import { ChangeAgentDialogComponent } from "./other-users/agent-update/change-agent-dialog/change-agent-dialog.component";
-import { AgentUpdateComponent } from "./other-users/agent-update/agent-update.component";
 import { SharedModule } from "src/app/modules/shared/shared.module";
 import { MaterialModule } from "src/app/modules/shared/material.module";
 import { AgGridModule } from "ag-grid-angular";
 import { RoleUpdateComponent } from './role-update/role-update.component';
 
 @NgModule({
-    declarations: [UserManagementComponent , UserListComponent, UserProfileComponent, ProfileDialogComponent,ChangeAgentDialogComponent, CreateNewUserComponent, OtherUsersComponent, AgentUpdateComponent, SmeUpdateComponent,
+    declarations: [UserManagementComponent, UserListComponent, UserProfileComponent, ProfileDialogComponent, CreateNewUserComponent,
         RoleUpdateComponent],
     imports: [
         CommonModule,
@@ -34,7 +30,7 @@ import { RoleUpdateComponent } from './role-update/role-update.component';
         UserManagementRoutingModule,
         NgxPaginationModule
     ],
-    entryComponents: [ProfileDialogComponent, ChangeAgentDialogComponent,
+    entryComponents: [ProfileDialogComponent,
         RoleUpdateComponent]
 })
 

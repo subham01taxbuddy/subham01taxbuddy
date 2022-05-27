@@ -1,7 +1,7 @@
 import { KommunicateDialogComponent } from '../../pages/itr-filing/kommunicate-dialog/kommunicate-dialog.component';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UpperCaseDirective, InputDataMaskDirective, } from './input-data-mask.directive';
+import { UpperCaseDirective, InputDataMaskDirective, CapitalizeFirstDirective, } from './input-data-mask.directive';
 import { AgGridModule } from 'ag-grid-angular';
 import { CustomDateComponent } from './date.component';
 import { MatSelectComponent } from './mat-select.component';
@@ -37,6 +37,7 @@ import { UpdateManualFilingDialogComponent } from './components/update-manual-fi
 @NgModule({
     declarations: [
         UpperCaseDirective,
+        CapitalizeFirstDirective,
         InputDataMaskDirective,
         CustomDateComponent,
         MatSelectComponent,
@@ -79,6 +80,7 @@ import { UpdateManualFilingDialogComponent } from './components/update-manual-fi
     exports: [
         CommonModule,
         UpperCaseDirective,
+        CapitalizeFirstDirective,
         InputDataMaskDirective,
         MaterialModule,
         CustomDateComponent,

@@ -250,50 +250,50 @@ export class UserListComponent implements OnInit {
           debounceMs: 0
         }
       },
-      {
-        headerName: 'Inv',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Rediredt toward Invoice"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-files-o" aria-hidden="true" data-action-type="invoice"></i>
-           </button>`;
-        },
-        width: 50,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
-      {
-        headerName: 'Sub',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Redirect toward Subscription"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-list-alt" aria-hidden="true" data-action-type="subscription"></i>
-           </button>`;
-        },
-        width: 50,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
+      // {
+      //   headerName: 'Inv',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="Rediredt toward Invoice"
+      //     style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+      //       <i class="fa fa-files-o" aria-hidden="true" data-action-type="invoice"></i>
+      //      </button>`;
+      //   },
+      //   width: 50,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center'
+      //     }
+      //   },
+      // },
+      // {
+      //   headerName: 'Sub',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="Redirect toward Subscription"
+      //     style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+      //       <i class="fa fa-list-alt" aria-hidden="true" data-action-type="subscription"></i>
+      //      </button>`;
+      //   },
+      //   width: 50,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center'
+      //     }
+      //   },
+      // },
       {
         headerName: 'See/Add Notes',
         editable: false,
@@ -316,29 +316,29 @@ export class UserListComponent implements OnInit {
           }
         },
       },
-      {
-        headerName: 'User Profile',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return ` 
-           <button type="button" class="action_icon add_button" title="User Profile" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-user" aria-hidden="true" data-action-type="profile"></i>
-           </button>`;
-        },
-        width: 60,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
+      // {
+      //   headerName: 'User Profile',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return ` 
+      //      <button type="button" class="action_icon add_button" title="User Profile" style="border: none;
+      //       background: transparent; font-size: 16px; cursor:pointer;">
+      //       <i class="fa fa-user" aria-hidden="true" data-action-type="profile"></i>
+      //      </button>`;
+      //   },
+      //   width: 60,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center'
+      //     }
+      //   },
+      // },
       {
         headerName: 'FNB',
         editable: false,
@@ -361,28 +361,28 @@ export class UserListComponent implements OnInit {
           }
         },
       },
-      {
-        headerName: 'Cloud',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
-           </button>`;
-        },
-        width: 50,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
+      // {
+      //   headerName: 'Cloud',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
+      //       background: transparent; font-size: 16px; cursor:pointer;">
+      //       <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
+      //      </button>`;
+      //   },
+      //   width: 50,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center'
+      //     }
+      //   },
+      // },
       {
         headerName: "Review",
         field: "isReviewGiven",
@@ -397,15 +397,15 @@ export class UserListComponent implements OnInit {
         }
       },
       {
-        headerName: 'Add Client',
+        headerName: 'Otp Service',
         editable: false,
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Add Client" style="border: none;
+          return `<button type="button" class="action_icon add_button" title="Click to assign user for other services" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-plus" aria-hidden="true" data-action-type="add-client"></i>
+            <i class="fa fa-user-plus" aria-hidden="true" data-action-type="assign-user"></i>
            </button>`;
         },
         width: 50,
@@ -418,28 +418,50 @@ export class UserListComponent implements OnInit {
           }
         },
       },
-      {
-        headerName: 'Add Role',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Add Role" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-users" aria-hidden="true" data-action-type="add-role"></i>
-           </button>`;
-        },
-        width: 50,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
+      // {
+      //   headerName: 'Add Client',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="Add Client" style="border: none;
+      //       background: transparent; font-size: 16px; cursor:pointer;">
+      //       <i class="fa fa-plus" aria-hidden="true" data-action-type="add-client"></i>
+      //      </button>`;
+      //   },
+      //   width: 50,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center'
+      //     }
+      //   },
+      // },
+      // {
+      //   headerName: 'Add Role',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="Add Role" style="border: none;
+      //       background: transparent; font-size: 16px; cursor:pointer;">
+      //       <i class="fa fa-users" aria-hidden="true" data-action-type="add-role"></i>
+      //      </button>`;
+      //   },
+      //   width: 50,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center'
+      //     }
+      //   },
+      // },
     ]
   }
 

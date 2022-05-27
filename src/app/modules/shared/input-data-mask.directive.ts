@@ -22,12 +22,31 @@ export class InputDataMaskDirective {
 export class UpperCaseDirective {
   constructor(private el: ElementRef, private control: NgControl) { }
 
-  @HostListener('keyup', ['$event']) onEvent($event: any) {
+  @HostListener('keyup', ['$event']) onKeyup($event: any) {
     if (this.el.nativeElement.value) {
       const upper = this.el.nativeElement.value.toUpperCase().trim();
       this.control['control']?.setValue(upper);
     }
   }
+}
+@Directive({
+  selector: 'input[type=text][capitalizeFirst]'
+})
+export class CapitalizeFirstDirective {
+  constructor(private el: ElementRef, private control: NgControl) { }
+
+  @HostListener('blur', ['$event']) onEvent($event: any) {
+    if (this.el.nativeElement.value) {
+      const capitalizeFirst = this.el.nativeElement.value.charAt(0).toUpperCase() + this.el.nativeElement.value.slice(1).toLowerCase();
+      console.log(capitalizeFirst, ':capitalizeFirst')
+      this.control['control']?.setValue(capitalizeFirst.trim());
+    }
+  }
+  // @HostListener('blur', ['$event']) onEvent($event: any) {
+  //   console.log(this.el.nativeElement.value);
+  //   const trim = this.el.nativeElement.value.trim();
+  //   this.control['control']?.setValue(trim);
+  // }
 }
 
 
