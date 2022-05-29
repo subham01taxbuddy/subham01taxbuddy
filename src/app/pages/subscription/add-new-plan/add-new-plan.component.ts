@@ -359,8 +359,8 @@ export class AddNewPlanComponent implements OnInit {
 
   saveSubscription(val) {
     if (this.serviceType !== 'GST') {
-      this.subStartDate.setValue(new Date('Apr 1, 2021'));
-      this.subEndDate.setValue(new Date('Mar 31, 2022'));
+      this.subStartDate.setValue(new Date('Apr 1, 2022'));
+      this.subEndDate.setValue(new Date('Mar 31, 2023'));
     }
     if (this.subStartDate.valid && this.subEndDate.valid) {
       this.userSubscription.startDate = this.subStartDate.value;
