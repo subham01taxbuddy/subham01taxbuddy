@@ -1,0 +1,68 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<label style="font-size: 18px;
+font-weight: bold;">More options for: {{data.name}}</label><button mat-dialog-close tabindex="-1"
+  class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+<div class="card__row">
+  <span>
+    <button type="button" class="tbd-btn-small" title="Go to Invoices" (click)="goToInvoice()">
+      Invoice&nbsp;&nbsp; <i class="fa fa-files-o" aria-hidden="true"></i>
+    </button>
+  </span>
+  &nbsp;&nbsp;
+  <span>
+    <button type="button" class="tbd-btn-small" title="Go to Subscriptions" (click)="goToSubscription()">
+      Subscription&nbsp;&nbsp; <i class="fa fa-list-alt" aria-hidden="true"></i>
+    </button>
+  </span>
+  &nbsp;&nbsp;
+  <span>
+    <button type="button" class="tbd-btn-small" title="View Document cloud" (click)="goToCloud()">
+      Cloud&nbsp;&nbsp; <i class="fa fa-cloud" aria-hidden="true"></i>
+    </button>
+  </span>
+  &nbsp;&nbsp;
+  <span>
+    <button type="button" class="tbd-btn-small" title="Update user profile" (click)="goToProfile()">
+      Profile&nbsp;&nbsp; <i class="fa fa-user" aria-hidden="true"></i>
+    </button>
+  </span>
+  &nbsp;&nbsp;
+  <span>
+    <button type="button" class="tbd-btn-small" title="Re Assignment" (click)="optedServices()">
+      Opt Other service&nbsp;&nbsp; <i class="fa fa-server" aria-hidden="true"></i>
+    </button>
+  </span>
+
+</div>
+<div class="card__row" *ngIf="isOptingOtherService">
+  <table style=" width: 100%;" *ngIf="optedServicesData && optedServicesData.length > 0">
+    <tr>
+      <!-- <th>No</th> -->
+      <th>Service Type</th>
+      <th>Agent Name</th>
+      <th>Agent Mobile</th>
+    </tr>
+    <tr *ngFor="let service of optedServicesData">
+      <td>{{service.serviceType}}</td>
+      <td>{{service.name}}</td>
+      <td>{{service.mobileNumber}}</td>
+    </tr>
+  </table>
+  <br>
+  <div>Note: Please select the service and opt user for another service</div>
+  <div class="card__col-xs-12 card__col-sm-8">
+    <mat-form-field appearance="outline" style="margin-top: 10px;">
+      <mat-label>Select Service</mat-label>
+      <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedService">
+        <mat-option *ngFor="let service of services" [value]="service" [disabled]="isDisabled(service)">
+          {{service}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="card__col-xs-12 card__col-sm-4">
+    <button type="button" class="tbd-btn" (click)="optService()">
+      Mark as Interested
+    </button>
+  </div>
+</div>

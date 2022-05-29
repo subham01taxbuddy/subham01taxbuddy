@@ -14,6 +14,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
+import { MoreOptionsDialogComponent } from '../../components/more-options-dialog/more-options-dialog.component';
 
 @Component({
   selector: 'app-assigned-users',
@@ -415,7 +416,7 @@ export class AssignedUsersComponent implements OnInit {
           }
         },
       },
-      {
+      /* {
         headerName: 'Inv',
         editable: false,
         suppressMenu: true,
@@ -436,8 +437,8 @@ export class AssignedUsersComponent implements OnInit {
             'justify-content': 'center'
           }
         },
-      },
-      {
+      }, */
+      /* {
         headerName: 'Sub',
         editable: false,
         suppressMenu: true,
@@ -458,7 +459,7 @@ export class AssignedUsersComponent implements OnInit {
             'justify-content': 'center'
           }
         },
-      },
+      }, */
       {
         headerName: 'Re Assign',
         editable: false,
@@ -484,7 +485,7 @@ export class AssignedUsersComponent implements OnInit {
           }
         },
       },
-      {
+      /* {
         headerName: 'Cloud',
         editable: false,
         suppressMenu: true,
@@ -505,8 +506,8 @@ export class AssignedUsersComponent implements OnInit {
             'justify-content': 'center'
           }
         },
-      },
-      {
+      }, */
+      /* {
         headerName: 'User Profile',
         editable: false,
         suppressMenu: true,
@@ -528,17 +529,39 @@ export class AssignedUsersComponent implements OnInit {
             'justify-content': 'center'
           }
         },
-      },
+      }, */
+      // {
+      //   headerName: 'FNB',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="Link To Finbingo" style="border: none;
+      //       background: transparent; font-size: 16px; cursor:pointer;">
+      //       <i class="fa fa-link" aria-hidden="true" data-action-type="link-to-finbingo"></i>
+      //      </button>`;
+      //   },
+      //   width: 50,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center'
+      //     }
+      //   },
+      // },
       {
-        headerName: 'FNB',
+        headerName: 'More',
         editable: false,
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Link To Finbingo" style="border: none;
+          return `<button type="button" class="action_icon add_button" title="More Options" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-link" aria-hidden="true" data-action-type="link-to-finbingo"></i>
+            <i class="fa fa-info-circle" aria-hidden="true" data-action-type="more-options"></i>
            </button>`;
         },
         width: 50,
@@ -706,6 +729,10 @@ export class AssignedUsersComponent implements OnInit {
           this.reAssignUser(params.data)
           break;
         }
+        case 'more-options': {
+          this.moreOptions(params.data)
+          break;
+        }
       }
     }
   }
@@ -860,6 +887,20 @@ export class AssignedUsersComponent implements OnInit {
         this.search();
       }
     });
+  }
+
+  moreOptions(client) {
+    let disposable = this.dialog.open(MoreOptionsDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: client
+    })
+
+    // disposable.afterClosed().subscribe(result => {
+    //   if (result.data === 'success') {
+    //     this.search();
+    //   }
+    // });
   }
   search(form?) {
     if (form == 'mobile') {

@@ -14,6 +14,7 @@ import { NgxPaginationModule } from "ngx-pagination";
 import { ScheduledCallComponent } from './pages/scheduled-call/scheduled-call.component';
 import { ReAssignDialogComponent } from './components/re-assign-dialog/re-assign-dialog.component';
 import { FilingsComponent } from './pages/filings/filings.component';
+import { MoreOptionsDialogComponent } from './components/more-options-dialog/more-options-dialog.component';
 
 @NgModule({
     imports: [
@@ -32,9 +33,13 @@ import { FilingsComponent } from './pages/filings/filings.component';
         AssignedUsersComponent,
         ScheduledCallComponent,
         ReAssignDialogComponent,
-        FilingsComponent
+        FilingsComponent,
+        MoreOptionsDialogComponent
     ],
-    entryComponents: [ReAssignDialogComponent]
+    entryComponents: [
+        ReAssignDialogComponent,
+        MoreOptionsDialogComponent
+    ]
 
 })
 export class TasksModule { }
