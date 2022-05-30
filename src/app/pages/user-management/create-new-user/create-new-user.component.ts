@@ -17,6 +17,7 @@ export class CreateNewUserComponent implements OnInit {
   signUpForm!: FormGroup;
   services = ['ITR', 'GST', 'TPA', 'NOTICE'];
   assignedToMe = true;
+  disableAssignedToMe = false;
   constructor(
     private fb: FormBuilder,
     private utilSerive: UtilsService,
@@ -26,7 +27,7 @@ export class CreateNewUserComponent implements OnInit {
   ngOnInit() {
     const loggedInId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID;
     this.signUpForm = this.fb.group({
-      panNumber: [''],
+      panNumber: ['', Validators.pattern(AppConstants.panNumberRegex)],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       middleName: [''],
@@ -101,6 +102,16 @@ export class CreateNewUserComponent implements OnInit {
       }, error => {
         console.log('Error during fetching data using PAN number: ', error)
       })
+    }
+  }
+
+  changeServiceType() {
+    let loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
+    if (loggedInSmeInfo.serviceType !== this.signUpForm.controls['serviceType'].value) {
+      this.assignedToMe = false;
+      this.disableAssignedToMe = true;
+    } else {
+      this.disableAssignedToMe = false;
     }
   }
 }

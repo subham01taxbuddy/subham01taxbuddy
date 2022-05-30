@@ -520,7 +520,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           userId: data.userId,
           panNumber: data.panNumber,
           eriClientValidUpto: data?.eriClientValidUpto,
-          callerAgentUserId: data?.callerAgentUserId,
+          callerAgentUserId: this.selectedFilingTeamMemberId,
           assessmentYear: data?.assessmentYear,
         }
       });

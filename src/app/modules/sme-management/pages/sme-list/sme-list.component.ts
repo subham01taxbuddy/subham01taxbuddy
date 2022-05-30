@@ -50,7 +50,7 @@ export class SmeListComponent implements OnInit {
 
   getSmeList(pageNo: any) {
     this.loading = true;
-    let param = '/sme/all-list';
+    let param = '/sme/all-list?page=0&size=500';
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('result -> ', result);
       this.loading = false;

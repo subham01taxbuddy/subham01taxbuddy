@@ -66,7 +66,8 @@
         <div class="card__col-lg-3">
           <mat-form-field appearance="outline">
             <mat-label>Select Service Type</mat-label>
-            <mat-select placeholder="Select Service Type" formControlName="serviceType" required>
+            <mat-select placeholder="Select Service Type" formControlName="serviceType" required
+              (selectionChange)="changeServiceType()">
               <mat-option *ngFor="let service of services" [value]="service">
                 {{service}}
               </mat-option>
@@ -82,7 +83,7 @@
         </div>
         <div class="card__col-lg-3">
           <mat-checkbox style="padding-top: 14px;" class="example-margin" [(ngModel)]="assignedToMe"
-            [ngModelOptions]="{standalone: true}" (change)="isAssignedToMe()">Assigned
+            [ngModelOptions]="{standalone: true}" [disabled]="disableAssignedToMe" (change)="isAssignedToMe()">Assigned
             to me!</mat-checkbox>
         </div>
 

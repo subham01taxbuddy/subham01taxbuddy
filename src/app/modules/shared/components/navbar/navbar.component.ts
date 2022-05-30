@@ -6,6 +6,7 @@ import Auth from '@aws-amplify/auth/lib';
 import { MatDialog } from '@angular/material/dialog';
 import { NeedHelpComponent } from 'src/app/pages/need-help/need-help.component';
 import { Location } from '@angular/common';
+import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
@@ -120,5 +121,16 @@ export class NavbarComponent implements DoCheck {
   getLoggedInUserName() {
     const userObj = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
     return userObj ? userObj.name : ''
+  }
+
+  openCallDialog() {
+    const disposable = this.dialog.open(DirectCallingComponent, {
+      width: '50%',
+      height: 'auto',
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 }

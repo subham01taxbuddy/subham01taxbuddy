@@ -403,16 +403,16 @@ export class UtilsService {
                 this.showSnackBar('Error While getting SME list.');
                 return [];
             });
-            if (res && res instanceof Array) {
-                res.sort((a, b) => a.name > b.name ? 1 : -1)
-                sessionStorage.setItem(AppConstants.SME_LIST, JSON.stringify(res));
-                return res;
+            if (res.success && res.data && res.data.content instanceof Array) {
+                res.data.content.sort((a, b) => a.name > b.name ? 1 : -1)
+                sessionStorage.setItem(AppConstants.SME_LIST, JSON.stringify(res.data.content));
+                return res.data.content;
             }
             return [];
         }
     }
     async getSmeList() {
-        const param = `/${ApiEndpoints.userMs.smeDetails}`;
+        const param = `/sme/all-list?page=0&size=500`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 
