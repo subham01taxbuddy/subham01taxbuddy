@@ -20,6 +20,7 @@ export class NeedHelpComponent implements OnInit {
   loading: Boolean = false;
   ticket_number = '';
   userData: any;
+  selectedFileName: string;
   constructor(
     public dialogRef: MatDialogRef<NeedHelpComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -71,10 +72,11 @@ export class NeedHelpComponent implements OnInit {
   }
 
   onFileSelected(event: Event) {
+
     this.btnDisabled = true;
     const target = event.target as HTMLInputElement;
     if (target.files.length > 0) {
-      console.log('target.files.item(0)', target.files.item(0));
+      this.selectedFileName=target.files[0].name;
       this.userMsService.uploadFile(target.files.item(0)).subscribe(res => {
         console.log('file upload res:', res);
         this.fileName = res && res.data && res.data.fileName ? res.data.fileName : '';
