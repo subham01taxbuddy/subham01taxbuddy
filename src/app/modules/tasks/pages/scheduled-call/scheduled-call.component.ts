@@ -47,7 +47,11 @@ export class ScheduledCallComponent implements OnInit {
 
   ngOnInit() {
     this.getAgentList();
-    this.showScheduleCallList()
+    // var userInfo = JSON.parse(localStorage.getItem('UMD'));
+    // if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
+    //   this.loggedUserId = userInfo.USER_UNIQUE_ID;
+    // }
+    // this.showScheduleCallList()
   }
 
   /* async */ getAgentList() {
@@ -65,30 +69,11 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   showScheduleCallList() {
-    var userInfo = JSON.parse(localStorage.getItem('UMD'));
-    if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
-      this.loggedUserId = userInfo.USER_UNIQUE_ID;
-    }
-
-    if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
-      // this.isAdmin = true;
-      this.searchMobNo = '';
-      if (this.showByAdminUserId) {
-        this.showByAdminUserId = true;
-      }
-      else {
-        this.showByAdminUserId = false;
-      }
-
-      this.getScheduledCallsInfo(this.loggedUserId, 0);
-    }
-    else {
-      // this.isAdmin = false;
-      this.getScheduledCallsInfo(this.loggedUserId, 0);
-    }
+    this.getScheduledCallsInfo(this.loggedUserId, 0);
   }
 
-  searchByAgent() {
+  fromSme(event) {
+    this.selectedAgent = event;
     if (this.utilsService.isNonEmpty(this.selectedAgent)) {
       this.searchMobNo = '';
       this.showByAdminUserId = false;
@@ -102,22 +87,7 @@ export class ScheduledCallComponent implements OnInit {
 
   getScheduledCallsInfo(id, page) {
     this.loading = true;
-    var param2;
-    // if (this.isAdmin) {
-    //   if(this.showByAdminUserId){
-    //     param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;  
-    //   }
-    //   else{
-    //     param2 = `/schedule-call-details?agentId=${id}&page=${page}&size=30`;  
-    //   } 
-    // } 
-    // else {
-    //     param2 = `/schedule-call-details?smeUserId=${id}&page=${page}&size=30`;
-    //   }
-
-
-    param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;
-
+    var param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       if (result instanceof Array && result.length > 0) {
         this.scheduleCallsData = result;
@@ -125,7 +95,6 @@ export class ScheduledCallComponent implements OnInit {
       } else {
         this.scheduleCallsData = [];
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData(this.scheduleCallsData));
-        // this.utilsService.showSnackBar('You dont have any calls today');
       }
       this.loading = false;
     }, error => {

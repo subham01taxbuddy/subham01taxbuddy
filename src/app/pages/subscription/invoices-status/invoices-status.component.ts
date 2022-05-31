@@ -228,7 +228,7 @@ export class InvoicesStatusComponent implements OnInit {
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ["contains", "notContains"],
+          filterOptions: ["startsWith", "contains", "notContains"],
           debounceMs: 0
         },
         cellStyle: function (params: any) {
