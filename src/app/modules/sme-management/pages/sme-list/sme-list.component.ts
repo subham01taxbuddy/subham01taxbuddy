@@ -109,7 +109,19 @@ export class SmeListComponent implements OnInit {
       {
         headerName: 'Mobile No',
         field: 'mobileNumber',
-        width: 180,
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Parent',
+        field: 'parent',
+        width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -219,6 +231,11 @@ export class SmeListComponent implements OnInit {
   createRowData(userData: any) {
     var userArray = [];
     for (let i = 0; i < userData.length; i++) {
+      let parent = userData.filter(item => item.userId === userData[i].parentId);
+      let parentName = ''
+      if (parent.length > 0) {
+        parentName = parent[0].name;
+      }
       let smeList: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
         joiningDate: this.utilsService.isNonEmpty(userData[i].joiningDate) ? userData[i].joiningDate : '-',
@@ -230,6 +247,7 @@ export class SmeListComponent implements OnInit {
         itrTypes: userData[i].serviceType === 'ITR' ? userData[i].itrTypes : 'NA',
         serviceType: userData[i].serviceType,
         roles: userData[i].roles.filter(item => item !== 'ROLE_USER'),
+        parent: parentName
       })
       userArray.push(smeList);
     }
@@ -249,4 +267,16 @@ export class SmeListComponent implements OnInit {
     }
   }
 
+  downloadCsv() {
+    this.smeListGridOptions.api.exportDataAsCsv(this.getParams());
+  }
+  getFields(id: string) {
+    var field: any = document.querySelector('#' + id);
+    return field;
+  }
+  getParams() {
+    return {
+      allColumns: this.getFields('allColumns'),
+    };
+  }
 }
