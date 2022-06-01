@@ -1,0 +1,83 @@
+.small-box {
+    border-radius: .25rem;
+    box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+    display: block;
+    margin-bottom: 20px;
+    position: relative;
+    cursor: pointer;
+}
+
+.small-box h3 {
+    font-weight: 700;
+    margin: 0 0 10px;
+    padding: 0;
+    white-space: nowrap;
+    font-size: 2rem;
+}
+
+.small-box .inner {
+    padding: 10px;
+    color: #f8f9fa;
+}
+
+.small-box h3,
+.small-box p {
+    z-index: 5;
+}
+
+.small-box p {
+    font-size: 14px;
+}
+
+.badge-light {
+    color: #212529;
+    background-color: #f8f9fa;
+}
+
+.small-box:hover {
+    text-decoration: none;
+}
+
+.bg-info {
+    background-color: #17a2b8 !important;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.badgesClass {
+    border-radius: 25px;
+    padding: 5px 5px;
+    cursor: pointer;
+    background-color: white;
+}
+
+.small-box .small-box-footer {
+    background-color: rgba(0, 0, 0, .1);
+    color: rgba(255, 255, 255, .8);
+    display: block;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+    z-index: 10;
+}
+
+.bg-warning {
+    background-color: #ffc107 !important;
+}
+
+.bg-warning,
+.bg-warning p {
+    color: #1f2d3d !important;
+}

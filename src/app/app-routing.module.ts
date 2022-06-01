@@ -31,6 +31,9 @@ export const appRoutes: Routes = [
   {
     path: 'sme-management', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/sme-management/sme-management.module').then(m => m.SmeManagementModule)
   },
+  {
+    path: 'report-card', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/report-card/report-card.module').then(m => m.ReportCardModule)
+  },
   { path: '**', redirectTo: 'login' },
 ];
 

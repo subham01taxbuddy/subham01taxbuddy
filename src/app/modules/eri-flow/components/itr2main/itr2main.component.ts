@@ -268,8 +268,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       state: ['', [Validators.required]],
       country: ['', [Validators.required]],
       returnType: ['ORIGINAL', [Validators.required]],
-      assessmentYear: ['2020-2021', [Validators.required]],
-      financialYear: ['2019-2020', [Validators.required]],
+      assessmentYear: ['2022-2023', [Validators.required]],
+      financialYear: ['2021-2022', [Validators.required]],
       ackNumber: null,
       eFillingDate: null,
       employerCategory: [''],
@@ -7765,8 +7765,10 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       const param = '/itr/summary';
       let body = this.itr_2_Summary;
       let tempAy = this.itrObject.assessmentYear;
+      let tempFy = this.itrObject.financialYear;
       Object.assign(this.itrObject, this.personalInfoForm.value);
       this.itrObject.assessmentYear = tempAy;
+      this.itrObject.financialYear = tempFy;
 
       this.userService.postMethodInfo(param, body).subscribe((result: any) => {
         console.log("ITR 2 summary result: ", result)

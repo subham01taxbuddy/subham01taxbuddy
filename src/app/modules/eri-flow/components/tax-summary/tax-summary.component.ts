@@ -3099,8 +3099,10 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
       this.loading = true;
       let tempAy = this.itrObject.assessmentYear;
+      let tempFy = this.itrObject.financialYear;
       Object.assign(this.itrObject, this.itrSummaryForm.controls['assesse'].value);
       this.itrObject.assessmentYear = tempAy;
+      this.itrObject.financialYear = tempFy ? tempFy : '2021-2022';
 
       const param = '/itr/summary';
       let body = this.itrSummaryForm.value;

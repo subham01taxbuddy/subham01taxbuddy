@@ -32,6 +32,7 @@ import { DirectCallingComponent } from './components/direct-calling/direct-calli
 import { KnowlarityNotificationComponent } from './components/knowlarity-notification/knowlarity-notification.component';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { UpdateManualFilingDialogComponent } from './components/update-manual-filing-dialog/update-manual-filing-dialog.component';
+import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
 
 
 @NgModule({
@@ -60,7 +61,8 @@ import { UpdateManualFilingDialogComponent } from './components/update-manual-fi
         NavbarComponent,
         DirectCallingComponent,
         KnowlarityNotificationComponent,
-        UpdateManualFilingDialogComponent
+        UpdateManualFilingDialogComponent,
+        CurrencyPipe
     ],
     imports: [
         CommonModule,
@@ -103,7 +105,9 @@ import { UpdateManualFilingDialogComponent } from './components/update-manual-fi
         NgxLoadingModule,
         LayoutComponent,
         KnowlarityNotificationComponent,
-        UpdateManualFilingDialogComponent
+        UpdateManualFilingDialogComponent,
+        CurrencyPipe
+
     ],
     providers: [StorageService],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,

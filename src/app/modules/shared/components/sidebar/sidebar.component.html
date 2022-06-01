@@ -1,13 +1,16 @@
 <div class="left-sidebar fixed" [class.left-sidebar_open]="showSidebar" [class.hideSideMenu]="hideSideBar">
     <nav class="sidebar">
-        <a class="sidebar__item" routerLink="/tasks" [state]="{ example: 'data' }"
-            routerLinkActive="sidebar__item_active" (click)="closeSideBar()">
+        <a class="sidebar__item" routerLink="/report-card" routerLinkActive="sidebar__item_active"
+            (click)="closeSideBar()">
+            <i class="fa fa-flag-checkered" style="font-size: 20px;" aria-hidden="true"></i>
+            <span class="sidebar__name">Report Card</span>
+        </a>
+        <a class="sidebar__item" routerLink="/tasks" routerLinkActive="sidebar__item_active" (click)="closeSideBar()">
             <i class="fa fa-tasks" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">My Tasks</span>
         </a>
-        <a class="sidebar__item" routerLink="/sme-management" [state]="{ example: 'data' }"
-            routerLinkActive="sidebar__item_active" (click)="closeSideBar()"
-            *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_ITR_SL','ROLE_GST_SL','ROLE_NOTICE_SL'])">
+        <a class="sidebar__item" routerLink="/sme-management" routerLinkActive="sidebar__item_active"
+            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_ITR_SL','ROLE_GST_SL','ROLE_NOTICE_SL'])">
             <i class="fa fa-id-badge" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">SME Management</span>
         </a>
