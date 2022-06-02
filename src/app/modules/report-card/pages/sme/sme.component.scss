@@ -71,6 +71,7 @@
     justify-content: space-between;
     text-decoration: none;
     z-index: 10;
+    min-height: 40px;
 }
 
 .bg-warning {
@@ -80,4 +81,12 @@
 .bg-warning,
 .bg-warning p {
     color: #1f2d3d !important;
+}
+
+.report-head {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 900;
+    font-family: fantasy;
+    padding-top: 20px;
 }

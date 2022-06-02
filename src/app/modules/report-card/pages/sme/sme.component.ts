@@ -1,3 +1,4 @@
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { FormControl, Validators } from '@angular/forms';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { Component, OnInit } from '@angular/core';
@@ -24,7 +25,9 @@ export const MY_FORMATS = {
 })
 export class SmeComponent implements OnInit {
   loading = false;
+  knowlarityLoading = false;
   filingDashboard: any
+  knowlarityReport: any
   fromDate = new FormControl(new Date(), Validators.required);
   toDate = new FormControl(new Date(), Validators.required);
   maxDate: any = new Date();
@@ -37,6 +40,7 @@ export class SmeComponent implements OnInit {
   ngOnInit() {
     this.selectedAgent = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID
     this.getFilingDetails();
+    this.getKnowlarityReport();
   }
 
   getFilingDetails() {
@@ -52,10 +56,28 @@ export class SmeComponent implements OnInit {
       this.loading = false;
     })
   }
+
+  getKnowlarityReport() {
+    this.knowlarityLoading = true;
+    let fromDate = this.datePipe.transform(this.fromDate.value, 'yyyy-MM-dd');
+    let toDate = this.datePipe.transform(this.toDate.value, 'yyyy-MM-dd');
+    let SME_LIST: Array<any> = JSON.parse(sessionStorage.getItem(AppConstants.SME_LIST));
+    let getMyNumber = SME_LIST.filter(item => item.userId === this.selectedAgent)[0].mobileNumber;
+    const param = `/call-management/agent-knowlarity-report?agentMobileNumber=${getMyNumber}&from=${fromDate}&to=${toDate}`;
+    this.userMsService.getMethod(param).subscribe(res => {
+      console.log(res)
+      this.knowlarityReport = res;
+      this.knowlarityLoading = false;
+    }, () => {
+      this.knowlarityLoading = false;
+    })
+  }
+
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate)
     this.toDateMin = FromDate;
   }
+
   fromSme(event) {
     if (event !== null && event !== '') {
       this.selectedAgent = event;

@@ -47,11 +47,11 @@ export class ScheduledCallComponent implements OnInit {
 
   ngOnInit() {
     this.getAgentList();
-    // var userInfo = JSON.parse(localStorage.getItem('UMD'));
-    // if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
-    //   this.loggedUserId = userInfo.USER_UNIQUE_ID;
-    // }
-    // this.showScheduleCallList()
+    var userInfo = JSON.parse(localStorage.getItem('UMD'));
+    if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
+      this.loggedUserId = userInfo.USER_UNIQUE_ID;
+    }
+    this.showScheduleCallList()
   }
 
   /* async */ getAgentList() {
@@ -77,17 +77,16 @@ export class ScheduledCallComponent implements OnInit {
     if (this.utilsService.isNonEmpty(this.selectedAgent)) {
       this.searchMobNo = '';
       this.showByAdminUserId = false;
-      this.loggedUserId = this.selectedAgent;
       this.getScheduledCallsInfo(this.selectedAgent, 0);
     }
     else {
-      this.toastMsgService.alert("error", "Select Agent")
+      this.getScheduledCallsInfo(this.loggedUserId, 0);
     }
   }
 
   getScheduledCallsInfo(id, page) {
     this.loading = true;
-    var param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=30`;
+    var param2 = `/schedule-call-details?agentUserId=${id}&page=${page}&size=500`;
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       if (result instanceof Array && result.length > 0) {
         this.scheduleCallsData = result;

@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading> -->
 <div class="main clearfix">
   <div class="card">
     <div class="card__row">
@@ -32,12 +32,15 @@
       </div>
 
       <div class="card__col-lg-3">
-        <button class="tbd-btn" (click)=" getFilingDetails()">Generate</button>
+        <button class="tbd-btn" (click)=" getFilingDetails();getKnowlarityReport();">Generate</button>
       </div>
+    </div>
+    <div class="report-head">
+      <label> Filing / Invoice Report</label>
     </div>
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box bg-info" routerLink="/tasks/assigned-users">
+        <div class="small-box bg-info" routerLink="/tasks/assigned-users" *ngIf="!loading">
           <div class="inner">
             <h3> {{filingDashboard?.totalAssignedMyUsers| currencyPipe}} </h3>
             <p>Assigned Users</p>
@@ -47,12 +50,16 @@
           </div> -->
           <p class="small-box-footer">
             <span>Total Signed-up Users</span>
-            <span class="badge badge-light badgesClass">{{filingDashboard?.totalUsers| currencyPipe}}</span>
+            <span class="badge badge-light badgesClass">{{filingDashboard?.totalUsers|
+              currencyPipe}}</span>
           </p>
+        </div>
+        <div class="small-box" *ngIf="loading">
+          <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box" style=" background-color: #28a745" routerLink="/tasks/filings">
+        <div class="small-box" style=" background-color: #28a745" routerLink="/tasks/filings" *ngIf="!loading">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsTotalFiling| currencyPipe}}
@@ -67,9 +74,12 @@
             <span class="badge badge-light badgesClass">{{filingDashboard?.totalFilings| currencyPipe}}</span>
           </p>
         </div>
+        <div class="small-box" *ngIf="loading">
+          <shimmer height="70px" borderRadius="2px"></shimmer>
+        </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box bg-warning" routerLink="/pages/subscription/invoices">
+        <div class="small-box bg-warning" routerLink="/pages/subscription/invoices" *ngIf="!loading">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsPaidAmount| currencyPipe}}
@@ -84,9 +94,13 @@
             <span class="badge badge-light badgesClass">{{filingDashboard?.totalPaidAmount| currencyPipe}}</span>
           </p>
         </div>
+        <div class="small-box" *ngIf="loading">
+          <shimmer height="70px" borderRadius="2px"></shimmer>
+        </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box" style=" background-color: #dc3545" routerLink="/pages/subscription/invoices">
+        <div class="small-box" style=" background-color: #dc3545" routerLink="/pages/subscription/invoices"
+          *ngIf="!loading">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsUnpaidAmount| currencyPipe}}
@@ -101,9 +115,13 @@
             <span class="badge badge-light badgesClass">{{filingDashboard?.totalUnpaidAmount| currencyPipe}}</span>
           </p>
         </div>
+        <div class="small-box" *ngIf="loading">
+          <shimmer height="70px" borderRadius="2px"></shimmer>
+        </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box" style=" background-color: #22374e" routerLink="/pages/subscription/invoices">
+        <div class="small-box" style=" background-color: #22374e" routerLink="/pages/subscription/invoices"
+          *ngIf="!loading">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsTotalInvoiceAmount | currencyPipe}}
@@ -119,9 +137,13 @@
               currencyPipe}}</span>
           </p>
         </div>
+        <div class="small-box" *ngIf="loading">
+          <shimmer height="70px" borderRadius="2px"></shimmer>
+        </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box" style=" background-color: #ee7f1a" routerLink="/pages/subscription/invoices">
+        <div class="small-box" style=" background-color: #ee7f1a" routerLink="/pages/subscription/invoices"
+          *ngIf="!loading">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsTotalInvoices| currencyPipe}}
@@ -136,9 +158,13 @@
             <span class="badge badge-light badgesClass">{{filingDashboard?.totalInvoices| currencyPipe}}</span>
           </p>
         </div>
+        <div class="small-box" *ngIf="loading">
+          <shimmer height="70px" borderRadius="2px"></shimmer>
+        </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box" style="background-color: #b0cb1f !important;" routerLink="/pages/subscription/invoices">
+        <div class="small-box" style="background-color: #b0cb1f !important;" routerLink="/pages/subscription/invoices"
+          *ngIf="!loading">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsPaidCount| currencyPipe}}
@@ -153,9 +179,13 @@
             <span class="badge badge-light badgesClass">{{filingDashboard?.totalPaidCount| currencyPipe}}</span>
           </p>
         </div>
+        <div class="small-box" *ngIf="loading">
+          <shimmer height="70px" borderRadius="2px"></shimmer>
+        </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box" style=" background-color: #dc3545" routerLink="/pages/subscription/invoices">
+        <div class="small-box" style=" background-color: #dc3545" routerLink="/pages/subscription/invoices"
+          *ngIf="!loading">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsUnpaidCount| currencyPipe}}
@@ -170,9 +200,94 @@
             <span class="badge badge-light badgesClass">{{filingDashboard?.totalUnpaidCount| currencyPipe}}</span>
           </p>
         </div>
+        <div class="small-box" *ngIf="loading">
+          <shimmer height="70px" borderRadius="2px"></shimmer>
+        </div>
       </div>
     </div>
-
+    <div class="report-head">
+      <label> Knowlarity Report</label>
+    </div>
+    <div class="card__row">
+      <div class="card__col-xs-12 card__col-sm-3">
+        <div class="small-box bg-info" routerLink="/tasks/assigned-users" *ngIf="!knowlarityLoading">
+          <div class="inner">
+            <h3> {{knowlarityReport?.totalAnsweredCallsCount| currencyPipe}} </h3>
+            <p>Total Answered Calls</p>
+          </div>
+          <!-- <div class="icon">
+            <i class="fa fa-user"></i>
+          </div> -->
+          <p class="small-box-footer">
+          </p>
+        </div>
+        <div class="small-box" *ngIf="knowlarityLoading">
+          <shimmer height="70px" borderRadius="2px"></shimmer>
+        </div>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-3">
+        <div class="small-box" style=" background-color: #28a745" routerLink="/tasks/filings"
+          *ngIf="!knowlarityLoading">
+          <div class="inner">
+            <h3>
+              {{knowlarityReport?.totalInboundAnsweredCallsCount| currencyPipe}}
+            </h3>
+            <p>Inbound Answered</p>
+          </div>
+          <!-- <div class="icon">
+            <i class="fa fa-user"></i>
+          </div> -->
+          <p class="small-box-footer">
+            <span>Total Inbound Calls</span>
+            <span class="badge badge-light badgesClass">{{knowlarityReport?.totalInboundCallsCount|
+              currencyPipe}}</span>
+          </p>
+        </div>
+        <div class="small-box" *ngIf="knowlarityLoading">
+          <shimmer height="70px" borderRadius="2px"></shimmer>
+        </div>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-3">
+        <div class="small-box bg-warning" routerLink="/pages/subscription/invoices" *ngIf="!knowlarityLoading">
+          <div class="inner">
+            <h3>
+              {{knowlarityReport?.totalOutboundAnsweredCallsCount| currencyPipe}}
+            </h3>
+            <p>Outbound Answered</p>
+          </div>
+          <!-- <div class="icon">
+            <i class="fa fa-user"></i>
+          </div> -->
+          <p class="small-box-footer">
+            <span>Total Outbound Calls</span>
+            <span class="badge badge-light badgesClass">{{knowlarityReport?.totalOutboundCallsCount|
+              currencyPipe}}</span>
+          </p>
+        </div>
+        <div class="small-box" *ngIf="knowlarityLoading">
+          <shimmer height="70px" borderRadius="2px"></shimmer>
+        </div>
+      </div>
+      <div class="card__col-xs-12 card__col-sm-3">
+        <div class="small-box" style=" background-color: #dc3545" routerLink="/pages/subscription/invoices"
+          *ngIf="!knowlarityLoading">
+          <div class="inner">
+            <h3>
+              {{knowlarityReport?.totalMissedCallsCount| currencyPipe}}
+            </h3>
+            <p>Missed Calls</p>
+          </div>
+          <!-- <div class="icon">
+            <i class="fa fa-user"></i>
+          </div> -->
+          <p class="small-box-footer">
+          </p>
+        </div>
+        <div class="small-box" *ngIf="knowlarityLoading">
+          <shimmer height="70px" borderRadius="2px"></shimmer>
+        </div>
+      </div>
+    </div>
   </div>
 
 

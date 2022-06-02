@@ -33,6 +33,7 @@ import { KnowlarityNotificationComponent } from './components/knowlarity-notific
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { UpdateManualFilingDialogComponent } from './components/update-manual-filing-dialog/update-manual-filing-dialog.component';
 import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
+import { ShimmerModule } from '@sreyaj/ng-shimmer';
 
 
 @NgModule({
@@ -78,6 +79,7 @@ import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
         // NgxImageZoomModule.forRoot(),
         NgxDocViewerModule,
         NgxLoadingModule.forRoot({}),
+        ShimmerModule
     ],
     exports: [
         CommonModule,
@@ -106,7 +108,8 @@ import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
         LayoutComponent,
         KnowlarityNotificationComponent,
         UpdateManualFilingDialogComponent,
-        CurrencyPipe
+        CurrencyPipe,
+        ShimmerModule
 
     ],
     providers: [StorageService],
