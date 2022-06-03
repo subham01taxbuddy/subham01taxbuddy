@@ -107,7 +107,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   }
 
   downloadPrefillJson() {
-    const fileURL = `${environment.url}/itr/eri/download-prefill-json-file?userId=${this.userDetails.userId.toString()}&assessmentYear=2021-2022`;
+    const fileURL = `${environment.url}/itr/eri/download-prefill-json-file?userId=${this.userDetails.userId.toString()}&assessmentYear=2022-2023`;
     window.open(fileURL);
     return;
   }

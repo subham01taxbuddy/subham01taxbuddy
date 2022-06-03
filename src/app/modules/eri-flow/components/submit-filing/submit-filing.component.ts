@@ -14,6 +14,7 @@ declare let $: any;
 export class SubmitFilingComponent implements OnInit, OnChanges {
   uploadDoc: any;
   loading = false;
+  selectedOption = 'ERI';
   // ITR_JSON: ITR_JSON;
   isValidateJson = false;
   validateJsonResponse: any;
@@ -30,7 +31,7 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
   ngOnInit() {
     console.log('ITR Object in submit filing:', this.itrData)
     this.submitJsonForm = this.fb.group({
-      assessmentYear: ['', [Validators.required]],
+      assessmentYear: [{ value: '', disabled: true }, [Validators.required]],
       itrType: ['', [Validators.required]],
       returnType: ['', [Validators.required]]
     });
@@ -154,31 +155,17 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
     console.log('ngOnChanges Submit filing:', this.itrData);
     if (this.itrData) {
       this.manualUpdateForm.patchValue(this.itrData);
+      this.submitJsonForm.patchValue(this.itrData);
+      this.submitJsonForm.controls['returnType'].setValue('O');
       this.findAssesseeType();
+      if (this.itrData.isRevised === 'Y') {
+        this.submitJsonForm.controls['returnType'].setValue('R');
+      }
+
     }
   }
   updateManualFiling() {
     if (this.manualUpdateForm.valid) {
-      // let manulFiling = {
-      //   "userId": this.itrData.userId,
-      //   "itrId": this.itrData.itrId,
-      //   "email": this.itrData.email,
-      //   "contactNumber": this.itrData.contactNumber,
-      //   "panNumber": this.itrData.panNumber,
-      //   "aadharNumber": this.itrData.aadharNumber,
-      //   "assesseeType": this.itrData.assesseeType,
-      //   "assessmentYear": this.itrData.assessmentYear,
-      //   "financialYear": this.itrData.financialYear,
-      //   "isRevised": this.itrData.isRevised,
-      //   "eFillingCompleted": true,
-      //   "eFillingDate": "",
-      //   "ackNumber": "",
-      //   "itrType": this.itrData.itrType,
-      //   "itrTokenNumber": "",
-      //   "filingTeamMemberId": this.itrData.filingTeamMemberId,
-      //   "filingSource": "MANUALLY"
-      // }
-
       let disposable = this.dialog.open(UpdateManualFilingDialogComponent, {
         width: '50%',
         height: 'auto',
