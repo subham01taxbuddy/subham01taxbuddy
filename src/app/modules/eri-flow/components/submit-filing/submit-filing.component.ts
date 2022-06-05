@@ -32,8 +32,8 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
     console.log('ITR Object in submit filing:', this.itrData)
     this.submitJsonForm = this.fb.group({
       assessmentYear: [{ value: '', disabled: true }, [Validators.required]],
-      itrType: ['', [Validators.required]],
-      returnType: ['', [Validators.required]]
+      itrType: [{ value: '', disabled: true }, [Validators.required]],
+      returnType: [{ value: '', disabled: true }, [Validators.required]]
     });
     this.manualUpdateForm = this.fb.group({
       userId: ['', [Validators.required]],
@@ -56,14 +56,16 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
     });
   }
   selectJson(file: FileList) {
+    debugger
     console.log("File", file);
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
     }
   }
   upload() {
+    debugger
     console.log('upload')
-    document.getElementById("input-file-id").click();
+    document.getElementById("input-file-id")?.click();
   }
 
   validateJson(document) {

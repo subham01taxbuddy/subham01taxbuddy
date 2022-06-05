@@ -6,12 +6,14 @@ import { ReportCardRoutingModule } from './report-card.routing';
 import { SmeComponent } from './pages/sme/sme.component';
 import { ReportCardComponent } from './report-card.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StatuswiseReportComponent } from './components/statuswise-report/statuswise-report.component';
 
 
 @NgModule({
   declarations: [
     ReportCardComponent,
-    SmeComponent
+    SmeComponent,
+    StatuswiseReportComponent
   ],
   imports: [
     CommonModule,

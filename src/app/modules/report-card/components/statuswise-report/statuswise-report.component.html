@@ -1,0 +1,106 @@
+<div class="card__row">
+  <div class="card__col-xs-12 card__col-sm-3">
+    <div class="small-box bg-info" *ngIf="!statusLoading">
+      <div class="inner">
+        <h3> {{statusWiseReport?.openCount| currencyPipe}} </h3>
+        <p>Open</p>
+      </div>
+    </div>
+    <div class="small-box" *ngIf="statusLoading">
+      <shimmer height="70px" borderRadius="2px"></shimmer>
+    </div>
+  </div>
+  <div class="card__col-xs-12 card__col-sm-3">
+    <div class="small-box" style=" background-color: #28a745" *ngIf="!statusLoading">
+      <div class="inner">
+        <h3>
+          {{statusWiseReport?.documentUploadedCount| currencyPipe}}
+        </h3>
+        <p>Document Uploaded</p>
+      </div>
+    </div>
+    <div class="small-box" *ngIf="statusLoading">
+      <shimmer height="70px" borderRadius="2px"></shimmer>
+    </div>
+  </div>
+  <div class="card__col-xs-12 card__col-sm-3">
+    <div class="small-box bg-warning" *ngIf="!statusLoading">
+      <div class="inner">
+        <h3>
+          {{statusWiseReport?.interestedCount| currencyPipe}}
+        </h3>
+        <p>Interested</p>
+      </div>
+    </div>
+    <div class="small-box" *ngIf="statusLoading">
+      <shimmer height="70px" borderRadius="2px"></shimmer>
+    </div>
+  </div>
+  <div class="card__col-xs-12 card__col-sm-3">
+    <div class="small-box" style=" background-color: #dc3545" *ngIf="!statusLoading">
+      <div class="inner">
+        <h3>
+          {{statusWiseReport?.notInterestedCount| currencyPipe}}
+        </h3>
+        <p>Not Interested</p>
+      </div>
+    </div>
+    <div class="small-box" *ngIf="statusLoading">
+      <shimmer height="70px" borderRadius="2px"></shimmer>
+    </div>
+  </div>
+  <div class="card__col-xs-12 card__col-sm-3">
+    <div class="small-box" style=" background-color: #22374e" *ngIf="!statusLoading">
+      <div class="inner">
+        <h3>
+          {{statusWiseReport?.itrFiledCount | currencyPipe}}
+        </h3>
+        <p>ITR Filed</p>
+      </div>
+    </div>
+    <div class="small-box" *ngIf="statusLoading">
+      <shimmer height="70px" borderRadius="2px"></shimmer>
+    </div>
+  </div>
+  <div class="card__col-xs-12 card__col-sm-3">
+    <div class="small-box" style=" background-color: #ee7f1a" *ngIf="!statusLoading">
+      <div class="inner">
+        <h3>
+          {{statusWiseReport?.paymentReceivedCount| currencyPipe}}
+        </h3>
+        <p>Payment Received</p>
+      </div>
+
+    </div>
+    <div class="small-box" *ngIf="statusLoading">
+      <shimmer height="70px" borderRadius="2px"></shimmer>
+    </div>
+  </div>
+  <div class="card__col-xs-12 card__col-sm-3">
+    <div class="small-box" style="background-color: #b0cb1f !important;" *ngIf="!statusLoading">
+      <div class="inner">
+        <h3>
+          {{statusWiseReport?.invoiceSentCount| currencyPipe}}
+        </h3>
+        <p>Invoice Sent</p>
+      </div>
+
+    </div>
+    <div class="small-box" *ngIf="statusLoading">
+      <shimmer height="70px" borderRadius="2px"></shimmer>
+    </div>
+  </div>
+  <div class="card__col-xs-12 card__col-sm-3">
+    <div class="small-box" style=" background-color: #dc3545" *ngIf="!statusLoading">
+      <div class="inner">
+        <h3>
+          {{statusWiseReport?.followupCount| currencyPipe}}
+        </h3>
+        <p>Follow Up</p>
+      </div>
+    </div>
+    <div class="small-box" *ngIf="statusLoading">
+      <shimmer height="70px" borderRadius="2px"></shimmer>
+    </div>
+  </div>
+</div>

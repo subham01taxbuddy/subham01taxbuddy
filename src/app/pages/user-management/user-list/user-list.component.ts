@@ -519,7 +519,7 @@ export class UserListComponent implements OnInit {
           break;
         }
         case 'add-client': {
-          this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan, eriClientValidUpto: params.data.eriClientValidUpto } });
+          this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan, eriClientValidUpto: params.data.eriClientValidUpto, name: params.data.name } });
           break;
         }
         case 'add-role': {

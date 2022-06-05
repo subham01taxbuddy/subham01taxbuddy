@@ -210,7 +210,7 @@
     </div>
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box bg-info" routerLink="/tasks/assigned-users" *ngIf="!knowlarityLoading">
+        <div class="small-box bg-info" *ngIf="!knowlarityLoading">
           <div class="inner">
             <h3> {{knowlarityReport?.totalAnsweredCallsCount| currencyPipe}} </h3>
             <p>Total Answered Calls</p>
@@ -226,8 +226,7 @@
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box" style=" background-color: #28a745" routerLink="/tasks/filings"
-          *ngIf="!knowlarityLoading">
+        <div class="small-box" style=" background-color: #28a745" *ngIf="!knowlarityLoading">
           <div class="inner">
             <h3>
               {{knowlarityReport?.totalInboundAnsweredCallsCount| currencyPipe}}
@@ -248,7 +247,7 @@
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box bg-warning" routerLink="/pages/subscription/invoices" *ngIf="!knowlarityLoading">
+        <div class="small-box bg-warning" *ngIf="!knowlarityLoading">
           <div class="inner">
             <h3>
               {{knowlarityReport?.totalOutboundAnsweredCallsCount| currencyPipe}}
@@ -269,8 +268,7 @@
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box" style=" background-color: #dc3545" routerLink="/pages/subscription/invoices"
-          *ngIf="!knowlarityLoading">
+        <div class="small-box" style=" background-color: #dc3545" *ngIf="!knowlarityLoading">
           <div class="inner">
             <h3>
               {{knowlarityReport?.totalMissedCallsCount| currencyPipe}}
@@ -288,6 +286,11 @@
         </div>
       </div>
     </div>
+
+    <div class="report-head">
+      <label>Status Wise Report</label>
+    </div>
+    <app-statuswise-report [selectedAgent]="selectedAgent"></app-statuswise-report>
   </div>
 
 

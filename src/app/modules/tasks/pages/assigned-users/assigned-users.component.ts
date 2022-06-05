@@ -706,6 +706,7 @@ export class AssignedUsersComponent implements OnInit {
                 eriClientValidUpto: params.data.eriClientValidUpto,
                 callerAgentUserId: params.data.callerAgentUserId,
                 assessmentYear: params.data.assessmentYear,
+                name: params.data.name
               }
             });
           } else {

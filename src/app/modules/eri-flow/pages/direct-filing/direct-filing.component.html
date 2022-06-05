@@ -1,5 +1,8 @@
 <div class="main clearfix" style="padding-right: 0px; padding-left: 150px;">
   <div class="card">
+    <div style="text-align: center;">
+      <p>Selected Client Name: {{addClient?.name}}</p>
+    </div>
     <mat-horizontal-stepper labelPosition="bottom" linear="true" #stepper (selectionChange)="tabChanged($event)">
       <ng-template matStepperIcon="edit">
         <mat-icon>done</mat-icon>
