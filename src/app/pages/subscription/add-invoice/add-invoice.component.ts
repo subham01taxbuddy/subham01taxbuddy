@@ -628,7 +628,6 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   checkSacCode() {
-    debugger
     if (this.utilsService.isNonEmpty(this.sacCode)) {
       return true;
     }

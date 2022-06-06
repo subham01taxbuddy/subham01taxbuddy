@@ -17,6 +17,7 @@ import { NewItrSummaryComponent } from "./components/new-itr-summary/new-itr-sum
 import { ItrOneComponent } from "./components/new-itr-summary/itr-one/itr-one.component";
 import { ItrThreeComponent } from "./components/new-itr-summary/itr-three/itr-three.component";
 import { TaxSummaryComponent } from "./components/tax-summary/tax-summary.component";
+import { SuccessSubmitFilingComponent } from "./components/success-submit-filing/success-submit-filing.component";
 
 @NgModule({
     declarations: [
@@ -34,7 +35,8 @@ import { TaxSummaryComponent } from "./components/tax-summary/tax-summary.compon
         Itr2mainComponent,
         NewItrSummaryComponent,
         ItrOneComponent,
-        ItrThreeComponent
+        ItrThreeComponent,
+        SuccessSubmitFilingComponent
     ],
     imports: [
         CommonModule,
@@ -44,6 +46,7 @@ import { TaxSummaryComponent } from "./components/tax-summary/tax-summary.compon
         EriFlowRoutingModule,
         NgxLoadingModule.forRoot({}),
     ],
+    entryComponents: [SuccessSubmitFilingComponent]
 })
 
 export class EriFlowModule { }

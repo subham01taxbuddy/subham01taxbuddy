@@ -1,3 +1,4 @@
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UpdateManualFilingDialogComponent } from '../../../shared/components/update-manual-filing-dialog/update-manual-filing-dialog.component';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -5,6 +6,8 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MatDialog } from '@angular/material/dialog';
+import { SuccessSubmitFilingComponent } from '../success-submit-filing/success-submit-filing.component';
+import { Router } from '@angular/router';
 declare let $: any;
 @Component({
   selector: 'app-submit-filing',
@@ -24,14 +27,15 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
   constructor(private itrMsService: ItrMsService,
     private utilsService: UtilsService,
     private fb: FormBuilder,
-    private dialog: MatDialog,) {
+    private dialog: MatDialog,
+    private router: Router) {
     // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
   ngOnInit() {
     console.log('ITR Object in submit filing:', this.itrData)
     this.submitJsonForm = this.fb.group({
-      assessmentYear: [{ value: '', disabled: true }, [Validators.required]],
+      assessmentYear: ['', [Validators.required]],
       itrType: [{ value: '', disabled: true }, [Validators.required]],
       returnType: [{ value: '', disabled: true }, [Validators.required]]
     });
@@ -56,16 +60,10 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
     });
   }
   selectJson(file: FileList) {
-    debugger
     console.log("File", file);
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
     }
-  }
-  upload() {
-    debugger
-    console.log('upload')
-    document.getElementById("input-file-id")?.click();
   }
 
   validateJson(document) {
@@ -79,6 +77,14 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
       formData.append("ay", annualYear);
       formData.append("filingTypeCd", this.submitJsonForm.controls['returnType'].value);
       let param = '/eri/direct-upload-validate-json';
+
+      let headerObj = {
+        'panNumber': this.itrData.panNumber,
+        'assessmentYear': '2022-2023',
+        'userId': this.itrData.userId.toString()
+      }
+      sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+
       this.itrMsService.postMethodForEri(param, formData).subscribe((res: any) => {
         this.loading = false;
         this.isValidateJson = true;
@@ -127,13 +133,25 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
       formData.append("ay", annualYear);
       formData.append("filingTypeCd", this.submitJsonForm.controls['returnType'].value);
       formData.append("userId", this.itrData.userId);
-      // formData.append("filingTeamMemberId", this.ITR_JSON.filingTeamMemberId.toString());
+      formData.append("filingTeamMemberId", this.itrData.filingTeamMemberId);
+      let headerObj = {
+        'panNumber': this.itrData.panNumber,
+        'assessmentYear': '2022-2023',
+        'userId': this.itrData.userId.toString()
+      }
+      sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
       let param = '/eri/direct-upload-submit-json';
       this.itrMsService.postMethodForEri(param, formData).subscribe((res: any) => {
         this.loading = false;
+        // {"messages":[],"errors":[],"arnNumber":"651278200050622","successFlag":true,"transactionNo":"ITR000246149901","httpStatus":"ACCEPTED","header":{"formName":null}}
         this.validateJsonResponse = res;
         console.log('uploadDocument response =>', res);
         if (res && res.successFlag) {
+          if (res.httpStatus === 'ACCEPTED' && res.transactionNo) {
+            this.utilsService.showSnackBar('Successfully filed with transaction no: ' + res.transactionNo);
+            this.openSuccessDialog(res.arnNumber, res.transactionNo);
+            return;
+          }
           if (res.hasOwnProperty('messages')) {
             if (res.messages instanceof Array && res.messages.length > 0)
               this.utilsService.showSnackBar(res.messages[0].desc);
@@ -193,5 +211,21 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
         this.manualUpdateForm.controls['assesseeType'].setValue('INDIVIDUAL');
       }
     }
+  }
+
+  openSuccessDialog(arnNumber, transactionNo) {
+    const param = '/itr/searchByItrId?itrId=' + this.itrData.itrId;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      console.log(res);
+      let disposable = this.dialog.open(SuccessSubmitFilingComponent, {
+        width: '50%',
+        height: 'auto',
+        data: { ITR_JSON: res, arnNumber: arnNumber, transactionNo: transactionNo }
+      })
+
+      disposable.afterClosed().subscribe(result => {
+        this.router.navigate(['/tasks/assigned-users'])
+      });
+    })
   }
 }

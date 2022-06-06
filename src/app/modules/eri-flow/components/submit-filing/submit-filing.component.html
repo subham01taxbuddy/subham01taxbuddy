@@ -54,10 +54,6 @@
           <!-- <input type="file" id="input-file-id" hidden file-model="MeterFile" class="inptfile"
             (change)="selectJson($event.target.files)"> -->
           <input type="file" id="input-file-id" #file (change)="selectJson($event.target.files)" accept=".json">
-          <!--  <button mat-raised-button (click)='upload()'>
-            <mat-icon>attachment</mat-icon> Select JSON File
-          </button>&nbsp;&nbsp; -->
-          <!-- <label *ngIf="uploadDoc">{{uploadDoc.name}}</label>&nbsp; -->
         </div>
         <div class="card__col-xs-12 card__col-sm-2">
           <button mat-raised-button color="primary" style="float: right;" type="submit"
@@ -89,19 +85,4 @@
     </div>
   </div>
 
-</div>
-<br><br><br><br><br>
-<div class="successRes" *ngIf="validateJsonResponse">
-  <b>Congratulations! {{personalInfo.fName}}'s I-T return is successfully filed through TaxBuddy.com.</b><br>
-  <ul>
-    <li>These are your e-filling details:</li>
-    <li><b>Name: </b> {{personalInfo.fName}} {{personalInfo.lName}}</li>
-    <li><b>Phone No: </b> {{ITR_JSON.contactNumber}}</li>
-    <li><b>Assessment Year: </b> {{ITR_JSON.assessmentYear}}</li>
-    <li><b>Financial Year: </b> {{ITR_JSON.financialYear}}</li>
-    <li><b>ITR Form Type: </b> {{ITR_JSON.itrType}}</li>
-    <!-- <li><b>Return Type: </b> {{ITR_JSON.assessmentYear}}</li> -->
-    <li><b>PAN: </b> {{ITR_JSON.panNumber}}</li>
-    <li><b>Acknowledgement No: </b> {{validateJsonResponse.arnNumber}}</li>
-  </ul>
 </div>

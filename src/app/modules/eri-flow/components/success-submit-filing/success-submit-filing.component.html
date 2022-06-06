@@ -1,0 +1,23 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- <label style="font-size: 18px;
+font-weight: bold;">Client Name: {{data.name}}</label> --><button mat-dialog-close tabindex="-1"
+  class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+<div class="card__row">
+  <p class="success-head"><i class="fa fa-check" style="font-size: 18px; color: green;" aria-hidden="true"></i>
+    Congratulations! I-T return is successfully
+    filed through TaxBuddy.com. Thanks for choosing our services. This is
+    a confirmation e-mail. </p><br>
+  <p style="font-size: 16px;">
+    These are your e-filling details:
+  </p>
+  <ul>
+    <li><b>Name: </b> {{data.ITR_JSON?.family[0].fName}} {{data.ITR_JSON?.family[0].lName}}</li>
+    <li><b>Phone No: </b> {{data.ITR_JSON?.contactNumber}}</li>
+    <li><b>Assessment Year: </b> {{data.ITR_JSON?.assessmentYear}}</li>
+    <li><b>Financial Year: </b> {{data.ITR_JSON?.financialYear}}</li>
+    <li><b>ITR Form Type: </b> {{data.ITR_JSON?.itrType}}</li>
+    <!-- <li><b>Return Type: </b> {{data.ITR_JSON?.assessmentYear}}</li> -->
+    <li><b>PAN: </b> {{data.ITR_JSON?.panNumber}}</li>
+    <li><b>Acknowledgement No: </b> {{data.arnNumber}}</li>
+  </ul>
+</div>
