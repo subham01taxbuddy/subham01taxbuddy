@@ -34,6 +34,7 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { UpdateManualFilingDialogComponent } from './components/update-manual-filing-dialog/update-manual-filing-dialog.component';
 import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
 import { ShimmerModule } from '@sreyaj/ng-shimmer';
+import { DigitsOnlyDirective } from './directives/digits-only.directive';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { ShimmerModule } from '@sreyaj/ng-shimmer';
         DirectCallingComponent,
         KnowlarityNotificationComponent,
         UpdateManualFilingDialogComponent,
-        CurrencyPipe
+        CurrencyPipe,
+        DigitsOnlyDirective
     ],
     imports: [
         CommonModule,
@@ -109,7 +111,8 @@ import { ShimmerModule } from '@sreyaj/ng-shimmer';
         KnowlarityNotificationComponent,
         UpdateManualFilingDialogComponent,
         CurrencyPipe,
-        ShimmerModule
+        ShimmerModule,
+        DigitsOnlyDirective
 
     ],
     providers: [StorageService],

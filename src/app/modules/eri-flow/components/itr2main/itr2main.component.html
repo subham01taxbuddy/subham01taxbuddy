@@ -154,8 +154,8 @@
             <div class="card__col-lg-2">
                 <mat-form-field appearance="outline">
                     <mat-label>First Name</mat-label>
-                    <input matInput placeholder="First Name" maxlength="75" autocomplete="off" formControlName="fName"
-                        required>
+                    <input matInput type="text" placeholder="First Name" maxlength="75" autocomplete="off"
+                        formControlName="fName" capitalizeFirst required>
                     <mat-error *ngIf="personalInfoForm.controls['fName'].hasError('required')">
                         Enter first
                         name
@@ -165,7 +165,8 @@
             <div class="card__col-lg-2">
                 <mat-form-field appearance="outline">
                     <mat-label>Middle Name</mat-label>
-                    <input matInput placeholder="Middle Name" formControlName="mName" maxlength="75" autocomplete="off">
+                    <input matInput type="text" placeholder="Middle Name" formControlName="mName" maxlength="75"
+                        autocomplete="off" capitalizeFirst>
                     <!--name="family[i]"-->
                     <mat-error
                         *ngIf="personalInfoForm.controls['mName'] && personalInfoForm.controls['mName'].hasError('required')">
@@ -176,8 +177,8 @@
             <div class="card__col-lg-2">
                 <mat-form-field appearance="outline">
                     <mat-label>Last Name</mat-label>
-                    <input matInput placeholder="Last Name" formControlName="lName" maxlength="75" autocomplete="off"
-                        required>
+                    <input matInput type="text" placeholder="Last Name" formControlName="lName" maxlength="75"
+                        autocomplete="off" capitalizeFirst required>
                     <!--formControlName="lName"  name="family[i]"-->
                     <mat-error *ngIf="personalInfoForm.controls['lName'].hasError('required')">
                         Enter last
@@ -189,8 +190,8 @@
             <div class="card__col-lg-2">
                 <mat-form-field appearance="outline">
                     <mat-label>Father's Name</mat-label>
-                    <input matInput placeholder="Father's Name" formControlName="fathersName" maxlength="75"
-                        autocomplete="off" required>
+                    <input matInput type="text" placeholder="Father's Name" formControlName="fathersName" maxlength="75"
+                        autocomplete="off" capitalizeFirst required>
                     <mat-error *ngIf="personalInfoForm.controls['fathersName'].hasError('required')">
                         Enter
                         father name</mat-error>
@@ -295,10 +296,8 @@
                 <div class="card__col-lg-2">
                     <mat-form-field appearance="outline">
                         <mat-label>Mobile Number</mat-label>
-                        <input matInput maxlength="10" placeholder="Mobile Number" autocomplete="off" type="number"
-                            formControlName="contactNumber"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57" required>
+                        <input matInput maxlength="10" placeholder="Mobile Number" autocomplete="off"
+                            formControlName="contactNumber" digitsOnly required>
                         <mat-error *ngIf="personalInfoForm.controls['contactNumber'].hasError('required')">
                             Enter
                             mobile number</mat-error>
@@ -345,8 +344,8 @@
                     <div>
                         <mat-form-field appearance="outline">
                             <mat-label>Country</mat-label>
-                            <input matInput placeholder="Country" formControlName="country" disabled autocomplete="off"
-                                required>
+                            <input matInput type="text" placeholder="Country" formControlName="country" disabled
+                                autocomplete="off" capitalizeFirst required>
                         </mat-form-field>
                     </div>
                 </div>

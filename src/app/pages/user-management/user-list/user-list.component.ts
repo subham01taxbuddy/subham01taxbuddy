@@ -396,28 +396,28 @@ export class UserListComponent implements OnInit {
             : '';
         }
       },
-      {
-        headerName: 'Otp Service',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click to assign user for other services" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-user-plus" aria-hidden="true" data-action-type="assign-user"></i>
-           </button>`;
-        },
-        width: 50,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center', display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center'
-          }
-        },
-      },
+      // {
+      //   headerName: 'Otp Service',
+      //   editable: false,
+      //   suppressMenu: true,
+      //   sortable: true,
+      //   suppressMovable: true,
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="Click to assign user for other services" style="border: none;
+      //       background: transparent; font-size: 16px; cursor:pointer;">
+      //       <i class="fa fa-user-plus" aria-hidden="true" data-action-type="assign-user"></i>
+      //      </button>`;
+      //   },
+      //   width: 50,
+      //   pinned: 'right',
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center', display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center'
+      //     }
+      //   },
+      // },
       // {
       //   headerName: 'Add Client',
       //   editable: false,

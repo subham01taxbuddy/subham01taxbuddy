@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
-import { GridOptions } from 'ag-grid-community';
+import { GridApi, GridOptions } from 'ag-grid-community';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SumaryDialogComponent } from '../sumary-dialog/sumary-dialog.component';
 import { Observable } from 'rxjs';
@@ -16,11 +16,27 @@ import { AgGridMaterialSelectEditorComponent } from 'src/app/modules/shared/drop
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 @Component({
   selector: 'app-itr2main',
   templateUrl: './itr2main.component.html',
-  styleUrls: ['./itr2main.component.css']
+  styleUrls: ['./itr2main.component.css'],
+  providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+  { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class Itr2mainComponent implements OnInit, OnChanges {
   @Input() changes: string;
@@ -108,14 +124,31 @@ export class Itr2mainComponent implements OnInit, OnChanges {
   businessIncomeForm: FormGroup;
 
   shortTermSlabRate: GridOptions;
+  shortTermSlabRateGridApi: GridApi;
+
   shortTerm15Per: GridOptions;
+  shortTerm15PerGridApi: GridApi;
+
   longTerm10Per: GridOptions;
+  longTerm10PerGridApi: GridApi;
+
   longTerm20Per: GridOptions;
+  longTerm20PerGridApi: GridApi;
+
   tdsOnSal: GridOptions;
+  tdsOnSalGridApi: GridApi;
+
   tdsOtherThanSal: GridOptions;
+  tdsOtherThanSalGridApi: GridApi;
+
   tdsSales26QB: GridOptions;
+  tdsSales26QBGridApi: GridApi;
+
   taxColSource: GridOptions;
+  taxColSourceGridApi: GridApi;
+
   advanceTax: GridOptions;
+  advanceTaxGridApi: GridApi;
 
   bankData: any = [];
   salaryData: any = [];
@@ -4446,7 +4479,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         this.personalInfoForm.controls['fName'].setValue(result.firstName ? result.firstName : '');
         this.personalInfoForm.controls['mName'].setValue(result.middleName ? result.middleName : '');
         this.personalInfoForm.controls['lName'].setValue(result.lastName ? result.lastName : '');
-        this.personalInfoForm.controls['fathersName'].setValue(result.middleName ? result.middleName : '');
+        // this.personalInfoForm.controls['fathersName'].setValue(result.middleName ? result.middleName : '');
       }, error => {
         if (error.status === 404) {
           //   this.itrSummaryForm.controls['city'].setValue(null);
@@ -4507,72 +4540,72 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = 0;
 
 
-    // console.log('shortTermSlabRate: ',this.shortTermSlabRate.api?.getRenderedNodes())
+    // console.log('shortTermSlabRate: ',this.shortTermSlabRateGridApi?.getRenderedNodes())
 
-    if (this.shortTermSlabRate && this.shortTermSlabRate.api && this.shortTermSlabRate.api?.getRenderedNodes()) {
-      for (let i = 0; i < this.shortTermSlabRate.api?.getRenderedNodes().length; i++) {
+    if (this.shortTermSlabRate && this.shortTermSlabRateGridApi && this.shortTermSlabRateGridApi?.getRenderedNodes()) {
+      for (let i = 0; i < this.shortTermSlabRateGridApi?.getRenderedNodes().length; i++) {
         if (this.personalInfoForm.controls['regime'].value === 'N') {
-          this.capital_Gain.shortTermCapitalGain = this.capital_Gain.shortTermCapitalGain + this.shortTermSlabRate.api?.getRenderedNodes()[i].data.netCapitalGain;
+          this.capital_Gain.shortTermCapitalGain = this.capital_Gain.shortTermCapitalGain + this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = Number(this.capital_Gain.shortTermCapitalGain);  //> 0 ? this.capital_Gain.shortTermCapitalGain : 0
         }
         else {
-          this.capital_Gain.shortTermCapitalGain = this.capital_Gain.shortTermCapitalGain + this.shortTermSlabRate.api?.getRenderedNodes()[i].data.netCapitalGain;
+          this.capital_Gain.shortTermCapitalGain = this.capital_Gain.shortTermCapitalGain + this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = Number(this.capital_Gain.shortTermCapitalGain);  //> 0 ? this.capital_Gain.shortTermCapitalGain : 0
 
-          this.newRegimeTaxSummary.shortTermCapitalGainTotal = this.newRegimeTaxSummary.shortTermCapitalGainTotal + this.shortTermSlabRate.api?.getRenderedNodes()[i].data.netCapitalGain;
+          this.newRegimeTaxSummary.shortTermCapitalGainTotal = this.newRegimeTaxSummary.shortTermCapitalGainTotal + this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainTotal = this.newRegimeTaxSummary.shortTermCapitalGainTotal;
         }
 
       }
     }
 
-    // console.log('shortTerm15Per: ',this.shortTerm15Per.api?.getRenderedNodes(), this.shortTerm15Per.api?.getRenderedNodes()[0].data.netCapitalGain);
-    if (this.shortTerm15Per && this.shortTerm15Per.api && this.shortTerm15Per.api?.getRenderedNodes()) {
-      for (let i = 0; i < this.shortTerm15Per.api?.getRenderedNodes().length; i++) {
+    // console.log('shortTerm15Per: ',this.shortTerm15PerGridApi?.getRenderedNodes(), this.shortTerm15PerGridApi?.getRenderedNodes()[0].data.netCapitalGain);
+    if (this.shortTerm15Per && this.shortTerm15PerGridApi && this.shortTerm15PerGridApi?.getRenderedNodes()) {
+      for (let i = 0; i < this.shortTerm15PerGridApi?.getRenderedNodes().length; i++) {
         if (this.personalInfoForm.controls['regime'].value === 'N') {
-          this.capital_Gain.shortTermCapitalGain15 = this.capital_Gain.shortTermCapitalGain15 + this.shortTerm15Per.api?.getRenderedNodes()[i].data.netCapitalGain;
+          this.capital_Gain.shortTermCapitalGain15 = this.capital_Gain.shortTermCapitalGain15 + this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = Number(this.capital_Gain.shortTermCapitalGain15);  //> 0 ? this.capital_Gain.shortTermCapitalGain15 : 0
         }
         else {
-          this.capital_Gain.shortTermCapitalGain15 = this.capital_Gain.shortTermCapitalGain15 + this.shortTerm15Per.api?.getRenderedNodes()[i].data.netCapitalGain;
+          this.capital_Gain.shortTermCapitalGain15 = this.capital_Gain.shortTermCapitalGain15 + this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = Number(this.capital_Gain.shortTermCapitalGain15);  //> 0 ? this.capital_Gain.shortTermCapitalGain15 : 0
 
-          this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal = this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal + this.shortTerm15Per.api?.getRenderedNodes()[i].data.netCapitalGain;
+          this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal = this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal + this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15PercentTotal = this.newRegimeTaxSummary.shortTermCapitalGainAt15PercentTotal;
         }
 
       }
     }
 
-    // console.log('longTerm10Per: ',this.longTerm10Per.api?.getRenderedNodes())
-    if (this.longTerm10Per && this.longTerm10Per.api && this.longTerm10Per.api?.getRenderedNodes()) {
-      for (let i = 0; i < this.longTerm10Per.api?.getRenderedNodes().length; i++) {
+    // console.log('longTerm10Per: ',this.longTerm10PerGridApi?.getRenderedNodes())
+    if (this.longTerm10Per && this.longTerm10PerGridApi && this.longTerm10PerGridApi?.getRenderedNodes()) {
+      for (let i = 0; i < this.longTerm10PerGridApi?.getRenderedNodes().length; i++) {
         if (this.personalInfoForm.controls['regime'].value === 'N') {
-          this.capital_Gain.longTermCapitalGain10 = this.capital_Gain.longTermCapitalGain10 + this.longTerm10Per.api?.getRenderedNodes()[i].data.netCapitalGain;
+          this.capital_Gain.longTermCapitalGain10 = this.capital_Gain.longTermCapitalGain10 + this.longTerm10PerGridApi?.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = Number(this.capital_Gain.longTermCapitalGain10);  //> 0 ? this.capital_Gain.longTermCapitalGain10 : 0
         }
         else {
-          this.capital_Gain.longTermCapitalGain10 = this.capital_Gain.longTermCapitalGain10 + this.longTerm10Per.api?.getRenderedNodes()[i].data.netCapitalGain;
+          this.capital_Gain.longTermCapitalGain10 = this.capital_Gain.longTermCapitalGain10 + this.longTerm10PerGridApi?.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = Number(this.capital_Gain.longTermCapitalGain10);  //> 0 ? this.capital_Gain.longTermCapitalGain10 : 0
 
-          this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal + this.longTerm10Per.api?.getRenderedNodes()[i].data.netCapitalGain;
+          this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal + this.longTerm10PerGridApi?.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt10PercentTotal;
         }
       }
     }
 
-    // console.log('longTerm20Per: ',this.longTerm20Per.api?.getRenderedNodes())
-    if (this.longTerm20Per && this.longTerm20Per.api && this.longTerm20Per.api?.getRenderedNodes()) {
-      for (let i = 0; i < this.longTerm20Per.api?.getRenderedNodes().length; i++) {
+    // console.log('longTerm20Per: ',this.longTerm20PerGridApi?.getRenderedNodes())
+    if (this.longTerm20Per && this.longTerm20PerGridApi && this.longTerm20PerGridApi?.getRenderedNodes()) {
+      for (let i = 0; i < this.longTerm20PerGridApi?.getRenderedNodes().length; i++) {
         if (this.personalInfoForm.controls['regime'].value === 'N') {
-          this.capital_Gain.longTermCapitalGain20 = this.capital_Gain.longTermCapitalGain20 + this.longTerm20Per.api?.getRenderedNodes()[i].data.netCapitalGain;
+          this.capital_Gain.longTermCapitalGain20 = this.capital_Gain.longTermCapitalGain20 + this.longTerm20PerGridApi?.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = Number(this.capital_Gain.longTermCapitalGain20);    // > 0 ? this.capital_Gain.longTermCapitalGain20 : 0
         }
         else {
-          this.capital_Gain.longTermCapitalGain20 = this.capital_Gain.longTermCapitalGain20 + this.longTerm20Per.api?.getRenderedNodes()[i].data.netCapitalGain;
+          this.capital_Gain.longTermCapitalGain20 = this.capital_Gain.longTermCapitalGain20 + this.longTerm20PerGridApi?.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = Number(this.capital_Gain.longTermCapitalGain20);     //> 0 ? this.capital_Gain.longTermCapitalGain20 : 0
 
-          this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal + this.longTerm20Per.api?.getRenderedNodes()[i].data.netCapitalGain;
+          this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal + this.longTerm20PerGridApi?.getRenderedNodes()[i].data.netCapitalGain;
           this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20PercentTotal = this.newRegimeTaxSummary.longTermCapitalGainAt20PercentTotal;
         }
       }
@@ -4602,59 +4635,59 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
 
 
-    if (this.tdsOnSal && this.tdsOnSal.api && this.tdsOnSal.api?.getRenderedNodes()) {
-      for (let i = 0; i < this.tdsOnSal.api?.getRenderedNodes().length; i++) {
+    if (this.tdsOnSal && this.tdsOnSalGridApi && this.tdsOnSalGridApi?.getRenderedNodes()) {
+      for (let i = 0; i < this.tdsOnSalGridApi?.getRenderedNodes().length; i++) {
         if (this.personalInfoForm.controls['regime'].value === 'N') {
-          this.taxesPaid.tdsOnSalary = this.taxesPaid.tdsOnSalary + this.tdsOnSal.api?.getRenderedNodes()[i].data.totalTds;
+          this.taxesPaid.tdsOnSalary = this.taxesPaid.tdsOnSalary + this.tdsOnSalGridApi?.getRenderedNodes()[i].data.totalTds;
         }
         else {
-          this.newRegimeTaxSummary.tdsOnSalary = this.newRegimeTaxSummary.tdsOnSalary + this.tdsOnSal.api?.getRenderedNodes()[i].data.totalTds;
+          this.newRegimeTaxSummary.tdsOnSalary = this.newRegimeTaxSummary.tdsOnSalary + this.tdsOnSalGridApi?.getRenderedNodes()[i].data.totalTds;
         }
       }
     }
 
 
 
-    if (this.tdsOtherThanSal && this.tdsOtherThanSal.api && this.tdsOtherThanSal.api?.getRenderedNodes()) {
-      for (let i = 0; i < this.tdsOtherThanSal.api?.getRenderedNodes().length; i++) {
+    if (this.tdsOtherThanSal && this.tdsOtherThanSalGridApi && this.tdsOtherThanSalGridApi?.getRenderedNodes()) {
+      for (let i = 0; i < this.tdsOtherThanSalGridApi?.getRenderedNodes().length; i++) {
         if (this.personalInfoForm.controls['regime'].value === 'N') {
-          this.taxesPaid.tdsOtherThanSalary = this.taxesPaid.tdsOtherThanSalary + this.tdsOtherThanSal.api?.getRenderedNodes()[i].data.totalTds;
+          this.taxesPaid.tdsOtherThanSalary = this.taxesPaid.tdsOtherThanSalary + this.tdsOtherThanSalGridApi?.getRenderedNodes()[i].data.totalTds;
         }
         else {
-          this.newRegimeTaxSummary.tdsOtherThanSalary = this.newRegimeTaxSummary.tdsOtherThanSalary + this.tdsOtherThanSal.api?.getRenderedNodes()[i].data.totalTds;
+          this.newRegimeTaxSummary.tdsOtherThanSalary = this.newRegimeTaxSummary.tdsOtherThanSalary + this.tdsOtherThanSalGridApi?.getRenderedNodes()[i].data.totalTds;
         }
       }
     }
 
-    if (this.tdsSales26QB && this.tdsSales26QB.api && this.tdsSales26QB.api?.getRenderedNodes()) {
-      for (let i = 0; i < this.tdsSales26QB.api?.getRenderedNodes().length; i++) {
+    if (this.tdsSales26QB && this.tdsSales26QBGridApi && this.tdsSales26QBGridApi?.getRenderedNodes()) {
+      for (let i = 0; i < this.tdsSales26QBGridApi?.getRenderedNodes().length; i++) {
         if (this.personalInfoForm.controls['regime'].value === 'N') {
-          this.taxesPaid.tdsOnSal26QB = this.taxesPaid.tdsOnSal26QB + this.tdsSales26QB.api?.getRenderedNodes()[i].data.totalTds;
+          this.taxesPaid.tdsOnSal26QB = this.taxesPaid.tdsOnSal26QB + this.tdsSales26QBGridApi?.getRenderedNodes()[i].data.totalTds;
         }
         else {
-          this.newRegimeTaxSummary.tdsOnSal26QB = this.newRegimeTaxSummary.tdsOnSal26QB + this.tdsSales26QB.api?.getRenderedNodes()[i].data.totalTds;
+          this.newRegimeTaxSummary.tdsOnSal26QB = this.newRegimeTaxSummary.tdsOnSal26QB + this.tdsSales26QBGridApi?.getRenderedNodes()[i].data.totalTds;
         }
       }
     }
 
-    if (this.taxColSource && this.taxColSource.api && this.taxColSource.api?.getRenderedNodes()) {
-      for (let i = 0; i < this.taxColSource.api?.getRenderedNodes().length; i++) {
+    if (this.taxColSource && this.taxColSourceGridApi && this.taxColSourceGridApi?.getRenderedNodes()) {
+      for (let i = 0; i < this.taxColSourceGridApi?.getRenderedNodes().length; i++) {
         if (this.personalInfoForm.controls['regime'].value === 'N') {
-          this.taxesPaid.tcs = this.taxesPaid.tcs + this.taxColSource.api?.getRenderedNodes()[i].data.totalTcs;
+          this.taxesPaid.tcs = this.taxesPaid.tcs + this.taxColSourceGridApi?.getRenderedNodes()[i].data.totalTcs;
         }
         else {
-          this.newRegimeTaxSummary.tcs = this.newRegimeTaxSummary.tcs + this.taxColSource.api?.getRenderedNodes()[i].data.totalTcs;
+          this.newRegimeTaxSummary.tcs = this.newRegimeTaxSummary.tcs + this.taxColSourceGridApi?.getRenderedNodes()[i].data.totalTcs;
         }
       }
     }
 
-    if (this.advanceTax && this.advanceTax.api && this.advanceTax.api?.getRenderedNodes()) {
-      for (let i = 0; i < this.advanceTax.api?.getRenderedNodes().length; i++) {
+    if (this.advanceTax && this.advanceTaxGridApi && this.advanceTaxGridApi?.getRenderedNodes()) {
+      for (let i = 0; i < this.advanceTaxGridApi?.getRenderedNodes().length; i++) {
         if (this.personalInfoForm.controls['regime'].value === 'N') {
-          this.taxesPaid.advanceSelfAssTax = this.taxesPaid.advanceSelfAssTax + this.advanceTax.api?.getRenderedNodes()[i].data.taxDeposite;
+          this.taxesPaid.advanceSelfAssTax = this.taxesPaid.advanceSelfAssTax + this.advanceTaxGridApi?.getRenderedNodes()[i].data.taxDeposite;
         }
         else {
-          this.newRegimeTaxSummary.advanceSelfAssTax = this.newRegimeTaxSummary.advanceSelfAssTax + this.advanceTax.api?.getRenderedNodes()[i].data.taxDeposite;
+          this.newRegimeTaxSummary.advanceSelfAssTax = this.newRegimeTaxSummary.advanceSelfAssTax + this.advanceTaxGridApi?.getRenderedNodes()[i].data.taxDeposite;
         }
 
       }
@@ -5311,6 +5344,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
+        this.shortTermSlabRateGridApi = params.api;
       },
       frameworkComponents: {
         // numericEditor: NumericEditorComponent,need to remove
@@ -5321,7 +5355,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
   addShortTermCapGain() {
     const data = this.setRowData();
-    const temp = this.shortTermSlabRate.api?.getRenderedNodes();
+    const temp = this.shortTermSlabRateGridApi?.getRenderedNodes();
     let isDataValid = false;
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
@@ -5343,8 +5377,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
 
     if (isDataValid) {
-      this.shortTermSlabRate.api.updateRowData({ add: [data] });
-      //  this.shortTermSlabRate.api.setFocusedCell(this.tdsOnSal.api?.getRenderedNodes().length - 1, 'tanOfEmployer', '');
+      this.shortTermSlabRateGridApi.updateRowData({ add: [data] });
+      //  this.shortTermSlabRateGridApi.setFocusedCell(this.tdsOnSalGridApi?.getRenderedNodes().length - 1, 'tanOfEmployer', '');
     } else {
       this.utilsService.showSnackBar('Please fill current row first.');
     }
@@ -5355,7 +5389,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.shortTermSlabRate.api.updateRowData({ remove: [params.data] });
+          this.shortTermSlabRateGridApi.updateRowData({ remove: [params.data] });
           break;
         }
       }
@@ -5369,6 +5403,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
+        this.shortTerm15PerGridApi = params.api;
       },
       frameworkComponents: {
         // numericEditor: NumericEditorComponent,need to remove
@@ -5379,7 +5414,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
   addShortTermCapGain15() {
     const data = this.setRowData();
-    const temp = this.shortTerm15Per.api?.getRenderedNodes();
+    const temp = this.shortTerm15PerGridApi.getRenderedNodes();
     let isDataValid = false;
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
@@ -5401,8 +5436,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
 
     if (isDataValid) {
-      this.shortTerm15Per.api.updateRowData({ add: [data] });
-      //  this.shortTerm15Per.api.setFocusedCell(this.shortTerm15Per.api?.getRenderedNodes().length - 1, 'tanOfEmployer', '');
+      this.shortTerm15PerGridApi.updateRowData({ add: [data] });
+      //  this.shortTerm15PerGridApi.setFocusedCell(this.shortTerm15PerGridApi?.getRenderedNodes().length - 1, 'tanOfEmployer', '');
     } else {
       this.utilsService.showSnackBar('Please fill current row first.');
     }
@@ -5413,7 +5448,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.shortTerm15Per.api.updateRowData({ remove: [params.data] });
+          this.shortTerm15PerGridApi.updateRowData({ remove: [params.data] });
           break;
         }
       }
@@ -5427,6 +5462,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
+        this.longTerm10PerGridApi = params.api;
       },
       frameworkComponents: {
         // numericEditor: NumericEditorComponent, need to remove
@@ -5437,7 +5473,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
   addLongTermCapGain10() {
     const data = this.setRowData();
-    const temp = this.longTerm10Per.api?.getRenderedNodes();
+    const temp = this.longTerm10PerGridApi?.getRenderedNodes();
     let isDataValid = false;
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
@@ -5458,8 +5494,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
 
     if (isDataValid) {
-      this.longTerm10Per.api.updateRowData({ add: [data] });
-      //  this.longTerm10Per.api.setFocusedCell(this.longTerm10Per.api?.getRenderedNodes().length - 1, 'tanOfEmployer', '');
+      this.longTerm10PerGridApi.updateRowData({ add: [data] });
+      //  this.longTerm10PerGridApi.setFocusedCell(this.longTerm10PerGridApi?.getRenderedNodes().length - 1, 'tanOfEmployer', '');
     } else {
       this.utilsService.showSnackBar('Please fill current row first.');
     }
@@ -5470,7 +5506,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.longTerm10Per.api.updateRowData({ remove: [params.data] });
+          this.longTerm10PerGridApi.updateRowData({ remove: [params.data] });
           break;
         }
       }
@@ -5484,6 +5520,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
+        this.longTerm20PerGridApi = params.api;
       },
       frameworkComponents: {
         // numericEditor: NumericEditorComponent, need to remove
@@ -5494,7 +5531,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
   addLongTermCapGain20() {
     const data = this.setRowData();
-    const temp = this.longTerm20Per.api?.getRenderedNodes();
+    const temp = this.longTerm20PerGridApi?.getRenderedNodes();
     let isDataValid = false;
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
@@ -5516,8 +5553,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
 
     if (isDataValid) {
-      this.longTerm20Per.api.updateRowData({ add: [data] });
-      //  this.longTerm20Per.api.setFocusedCell(this.longTerm20Per.api?.getRenderedNodes().length - 1, 'tanOfEmployer', '');
+      this.longTerm20PerGridApi.updateRowData({ add: [data] });
+      //  this.longTerm20PerGridApi.setFocusedCell(this.longTerm20PerGridApi?.getRenderedNodes().length - 1, 'tanOfEmployer', '');
     } else {
       this.utilsService.showSnackBar('Please fill current row first.');
     }
@@ -5528,7 +5565,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.longTerm20Per.api.updateRowData({ remove: [params.data] });
+          this.longTerm20PerGridApi.updateRowData({ remove: [params.data] });
           break;
         }
       }
@@ -5544,6 +5581,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
+        this.tdsOnSalGridApi = params.api;
       },
       onCellValueChanged: function (event) {
         console.log('cellValueChanged: ==> ', event)
@@ -5572,7 +5610,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
   addTdsSal() {
     const data = this.setTdsOnSalRowData();
-    const temp = this.tdsOnSal.api?.getRenderedNodes();
+    const temp = this.tdsOnSalGridApi?.getRenderedNodes();
     let isDataValid = false;
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
@@ -5595,8 +5633,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
 
     if (isDataValid) {
-      this.tdsOnSal.api.updateRowData({ add: [data] });
-      this.tdsOnSal.api.setFocusedCell(this.tdsOnSal.api?.getRenderedNodes().length - 1, 'tanOfEmployer', '');
+      this.tdsOnSalGridApi.updateRowData({ add: [data] });
+      this.tdsOnSalGridApi.setFocusedCell(this.tdsOnSalGridApi?.getRenderedNodes().length - 1, 'tanOfEmployer', '');
     } else {
       this.utilsService.showSnackBar('Please fill current row first.');
     }
@@ -5608,7 +5646,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.tdsOnSal.api.updateRowData({ remove: [params.data] });
+          this.tdsOnSalGridApi.updateRowData({ remove: [params.data] });
           break;
         }
       }
@@ -5622,6 +5660,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
+        this.tdsOtherThanSalGridApi = params.api;
       },
       onCellEditingStopped: function (event) {
         if (event.column.getColId() === 'tanOfDeductor') {
@@ -5646,7 +5685,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
   addTdsOtherThanSal() {
     const data = this.setTdsOnData();
-    const temp = this.tdsOtherThanSal.api?.getRenderedNodes();
+    const temp = this.tdsOtherThanSalGridApi?.getRenderedNodes();
     let isDataValid = false;
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
@@ -5669,8 +5708,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
 
     if (isDataValid) {
-      this.tdsOtherThanSal.api.updateRowData({ add: [data] });
-      this.tdsOtherThanSal.api.setFocusedCell(this.tdsOtherThanSal.api?.getRenderedNodes().length - 1, 'tanOfDeductor', '');
+      this.tdsOtherThanSalGridApi.updateRowData({ add: [data] });
+      this.tdsOtherThanSalGridApi.setFocusedCell(this.tdsOtherThanSalGridApi?.getRenderedNodes().length - 1, 'tanOfDeductor', '');
     } else {
       this.utilsService.showSnackBar('Please fill current row first.');
     }
@@ -5681,7 +5720,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.tdsOtherThanSal.api.updateRowData({ remove: [params.data] });
+          this.tdsOtherThanSalGridApi.updateRowData({ remove: [params.data] });
           break;
         }
       }
@@ -5695,6 +5734,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
+        this.tdsSales26QBGridApi = params.api;
       },
       onCellEditingStopped: function (event) {
         if (event.column.getColId() === 'tanOfDeductor') {
@@ -5719,7 +5759,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
   addTdsSales26QB() {
     const data = this.setTdsOnData();
-    const temp = this.tdsSales26QB.api?.getRenderedNodes();
+    const temp = this.tdsSales26QBGridApi?.getRenderedNodes();
     let isDataValid = false;
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
@@ -5742,8 +5782,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
 
     if (isDataValid) {
-      this.tdsSales26QB.api.updateRowData({ add: [data] });
-      this.tdsSales26QB.api.setFocusedCell(this.tdsSales26QB.api?.getRenderedNodes().length - 1, 'tanOfDeductor', '');
+      this.tdsSales26QBGridApi.updateRowData({ add: [data] });
+      this.tdsSales26QBGridApi.setFocusedCell(this.tdsSales26QBGridApi?.getRenderedNodes().length - 1, 'tanOfDeductor', '');
     } else {
       this.utilsService.showSnackBar('Please fill current row first.');
     }
@@ -5754,7 +5794,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.tdsSales26QB.api.updateRowData({ remove: [params.data] });
+          this.tdsSales26QBGridApi.updateRowData({ remove: [params.data] });
           break;
         }
       }
@@ -5768,6 +5808,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
+        this.taxColSourceGridApi = params.api;
       },
       onCellEditingStopped: function (event) {
         if (event.column.getColId() === 'tanOfCollector') {
@@ -5792,7 +5833,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
   addTcs() {
     const data = this.setTcsData();
-    const temp = this.taxColSource.api?.getRenderedNodes();
+    const temp = this.taxColSourceGridApi?.getRenderedNodes();
     let isDataValid = false;
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
@@ -5815,8 +5856,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
 
     if (isDataValid) {
-      this.taxColSource.api.updateRowData({ add: [data] });
-      this.taxColSource.api.setFocusedCell(this.taxColSource.api?.getRenderedNodes().length - 1, 'tanOfCollector', '');
+      this.taxColSourceGridApi.updateRowData({ add: [data] });
+      this.taxColSourceGridApi.setFocusedCell(this.taxColSourceGridApi?.getRenderedNodes().length - 1, 'tanOfCollector', '');
     } else {
       this.utilsService.showSnackBar('Please fill current row first.');
     }
@@ -5827,7 +5868,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.taxColSource.api.updateRowData({ remove: [params.data] });
+          this.taxColSourceGridApi.updateRowData({ remove: [params.data] });
           break;
         }
       }
@@ -5841,6 +5882,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
+        this.advanceTaxGridApi = params.api;
       },
       onCellEditingStopped: function (event) {
         if (event.column.getColId() === 'bsrCode') {
@@ -5865,7 +5907,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
   addAdvanceTax() {
     const data = this.setAdvanceTaxData();
-    const temp = this.advanceTax.api?.getRenderedNodes();
+    const temp = this.advanceTaxGridApi?.getRenderedNodes();
     let isDataValid = false;
     if (temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
@@ -5884,8 +5926,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
 
     if (isDataValid) {
-      this.advanceTax.api.updateRowData({ add: [data] });
-      this.advanceTax.api.setFocusedCell(this.advanceTax.api?.getRenderedNodes().length - 1, 'bsrCode', '');
+      this.advanceTaxGridApi.updateRowData({ add: [data] });
+      this.advanceTaxGridApi.setFocusedCell(this.advanceTaxGridApi?.getRenderedNodes().length - 1, 'bsrCode', '');
     } else {
       this.utilsService.showSnackBar('Please enter Advance/ Self assessment tax details');
     }
@@ -5896,7 +5938,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'remove': {
-          this.advanceTax.api.updateRowData({ remove: [params.data] });
+          this.advanceTaxGridApi.updateRowData({ remove: [params.data] });
           break;
         }
       }
@@ -6940,45 +6982,45 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
     if (taxPaidValue) {
       if (taxPaidValue.onSalary.length > 0) {
-        // this.tdsOnSal.api?.setRowData(this.setTdsRowDate(taxPaidValue.onSalary, 'onSalary'))
-        this.tdsOnSal.api?.setRowData(this.setTdsOnSalRowDate(taxPaidValue.onSalary))
+        // this.tdsOnSalGridApi?.setRowData(this.setTdsRowDate(taxPaidValue.onSalary, 'onSalary'))
+        this.tdsOnSalGridApi?.setRowData(this.setTdsOnSalRowDate(taxPaidValue.onSalary))
       } else {
         let tdsInfo = [];
-        this.tdsOnSal.api?.setRowData(tdsInfo);
+        this.tdsOnSalGridApi?.setRowData(tdsInfo);
       }
 
 
       if (taxPaidValue.otherThanSalary16A.length > 0) {
-        // this.tdsOtherThanSal.api?.setRowData(this.setTdsRowDate(taxPaidValue.otherThanSalary16A, 'tdsOtherThanSal'))
-        this.tdsOtherThanSal.api?.setRowData(this.setTdsOtherThanSalRowDate(taxPaidValue.otherThanSalary16A))
+        // this.tdsOtherThanSalGridApi?.setRowData(this.setTdsRowDate(taxPaidValue.otherThanSalary16A, 'tdsOtherThanSal'))
+        this.tdsOtherThanSalGridApi?.setRowData(this.setTdsOtherThanSalRowDate(taxPaidValue.otherThanSalary16A))
       } else {
         let otherSal16 = [];
-        this.tdsOtherThanSal.api?.setRowData(otherSal16);
+        this.tdsOtherThanSalGridApi?.setRowData(otherSal16);
       }
 
       if (taxPaidValue.otherThanSalary26QB.length > 0) {
-        // this.tdsSales26QB.api?.setRowData(this.setTdsRowDate(taxPaidValue.otherThanSalary26QB, 'tdsSales26QB'));
-        this.tdsSales26QB.api?.setRowData(this.setTdson26QbRowDate(taxPaidValue.otherThanSalary26QB))
+        // this.tdsSales26QBGridApi?.setRowData(this.setTdsRowDate(taxPaidValue.otherThanSalary26QB, 'tdsSales26QB'));
+        this.tdsSales26QBGridApi?.setRowData(this.setTdson26QbRowDate(taxPaidValue.otherThanSalary26QB))
       } else {
         let otherSal26 = [];
-        this.tdsSales26QB.api?.setRowData(otherSal26);
+        this.tdsSales26QBGridApi?.setRowData(otherSal26);
       }
 
       if (taxPaidValue.tcs.length > 0) {
-        // this.advanceTax.api?.setRowData(this.setTdsRowDate(taxPaidValue.tcs, 'taxColSource'))
-        this.taxColSource.api?.setRowData(this.setTcsRowDate(taxPaidValue.tcs))
+        // this.advanceTaxGridApi?.setRowData(this.setTdsRowDate(taxPaidValue.tcs, 'taxColSource'))
+        this.taxColSourceGridApi?.setRowData(this.setTcsRowDate(taxPaidValue.tcs))
       } else {
         let tcsInfo = []
-        this.taxColSource.api?.setRowData(tcsInfo)
+        this.taxColSourceGridApi?.setRowData(tcsInfo)
       }
 
       if (taxPaidValue.otherThanTDSTCS.length > 0) {
-        // this.taxColSource.api?.setRowData(this.setTdsRowDate(taxPaidValue.otherThanTDSTCS, 'advanceTax'))
-        this.advanceTax.api?.setRowData(this.setOtherThanTcsRowDate(taxPaidValue.otherThanTDSTCS))
+        // this.taxColSourceGridApi?.setRowData(this.setTdsRowDate(taxPaidValue.otherThanTDSTCS, 'advanceTax'))
+        this.advanceTaxGridApi?.setRowData(this.setOtherThanTcsRowDate(taxPaidValue.otherThanTDSTCS))
       }
       else {
         let advanceInfo = [];
-        this.advanceTax.api?.setRowData(advanceInfo);
+        this.advanceTaxGridApi?.setRowData(advanceInfo);
       }
     }
 
@@ -7080,32 +7122,32 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     console.log('caitalGainData: ', caitalGainData);
     if (this.utilService.isNonEmpty(caitalGainData)) {
       if (caitalGainData.shortTermCapitalGain.length > 0) {
-        this.shortTermSlabRate.api?.setRowData(this.setCapitalGainRowDate(caitalGainData.shortTermCapitalGain))
+        this.shortTermSlabRateGridApi?.setRowData(this.setCapitalGainRowDate(caitalGainData.shortTermCapitalGain))
       }
       else {
         let rowData = [];
-        this.shortTermSlabRate.api?.setRowData(rowData)
+        this.shortTermSlabRateGridApi?.setRowData(rowData)
       }
       if (caitalGainData.shortTermCapitalGainAt15Percent.length > 0) {
-        this.shortTerm15Per.api?.setRowData(this.setCapitalGainRowDate(caitalGainData.shortTermCapitalGainAt15Percent))
+        this.shortTerm15PerGridApi?.setRowData(this.setCapitalGainRowDate(caitalGainData.shortTermCapitalGainAt15Percent))
       }
       else {
         let rowData = [];
-        this.shortTerm15Per.api?.setRowData(rowData);
+        this.shortTerm15PerGridApi?.setRowData(rowData);
       }
       if (caitalGainData.longTermCapitalGainAt10Percent.length > 0) {
-        this.longTerm10Per.api?.setRowData(this.setCapitalGainRowDate(caitalGainData.longTermCapitalGainAt10Percent))
+        this.longTerm10PerGridApi?.setRowData(this.setCapitalGainRowDate(caitalGainData.longTermCapitalGainAt10Percent))
       }
       else {
         let rowData = [];
-        this.longTerm10Per.api?.setRowData(rowData);
+        this.longTerm10PerGridApi?.setRowData(rowData);
       }
       if (caitalGainData.longTermCapitalGainAt20Percent.length > 0) {
-        this.longTerm20Per.api?.setRowData(this.setCapitalGainRowDate(caitalGainData.longTermCapitalGainAt20Percent))
+        this.longTerm20PerGridApi?.setRowData(this.setCapitalGainRowDate(caitalGainData.longTermCapitalGainAt20Percent))
       }
       else {
         let rowData = [];
-        this.longTerm20Per.api?.setRowData(rowData);
+        this.longTerm20PerGridApi?.setRowData(rowData);
       }
     }
     this.getTaxDeductionAtSourceData(itrData);
@@ -7294,61 +7336,61 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       this.longTerm10PerInfo = [];
       this.longTerm20PerInfo = [];
 
-      console.log('shortTermSlabRate data: ', this.shortTermSlabRate.api?.getRenderedNodes())
-      if (this.shortTermSlabRate.api?.getRenderedNodes().length > 0) {
-        for (let i = 0; i < this.shortTermSlabRate.api?.getRenderedNodes().length; i++) {
+      console.log('shortTermSlabRate data: ', this.shortTermSlabRateGridApi?.getRenderedNodes())
+      if (this.shortTermSlabRateGridApi?.getRenderedNodes().length > 0) {
+        for (let i = 0; i < this.shortTermSlabRateGridApi?.getRenderedNodes().length; i++) {
           this.shortTermSlabRateInfo.push({
-            'nameOfTheAsset': this.shortTermSlabRate.api?.getRenderedNodes()[i].data.nameOfAsset ? this.shortTermSlabRate.api?.getRenderedNodes()[i].data.nameOfAsset : null,
-            'netSaleValue': this.shortTermSlabRate.api?.getRenderedNodes()[i].data.netSaleVal !== null ? Number(this.shortTermSlabRate.api?.getRenderedNodes()[i].data.netSaleVal) : null,
-            'purchaseCost': this.shortTermSlabRate.api?.getRenderedNodes()[i].data.purchaseCost !== null ? Number(this.shortTermSlabRate.api?.getRenderedNodes()[i].data.purchaseCost) : null,
-            'capitalGain': this.shortTermSlabRate.api?.getRenderedNodes()[i].data.capitalGain !== null ? Number(this.shortTermSlabRate.api?.getRenderedNodes()[i].data.capitalGain) : null,
-            'deductions': this.shortTermSlabRate.api?.getRenderedNodes()[i].data.deduction !== null ? Number(this.shortTermSlabRate.api?.getRenderedNodes()[i].data.deduction) : null,
-            'netCapitalGain': this.shortTermSlabRate.api?.getRenderedNodes()[i].data.netCapitalGain !== null ? Number(this.shortTermSlabRate.api?.getRenderedNodes()[i].data.netCapitalGain) : null
+            'nameOfTheAsset': this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.nameOfAsset ? this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.nameOfAsset : null,
+            'netSaleValue': this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.netSaleVal !== null ? Number(this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.netSaleVal) : null,
+            'purchaseCost': this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.purchaseCost !== null ? Number(this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.purchaseCost) : null,
+            'capitalGain': this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.capitalGain !== null ? Number(this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.capitalGain) : null,
+            'deductions': this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.deduction !== null ? Number(this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.deduction) : null,
+            'netCapitalGain': this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.netCapitalGain !== null ? Number(this.shortTermSlabRateGridApi?.getRenderedNodes()[i].data.netCapitalGain) : null
           })
         }
         this.itr_2_Summary.capitalGainIncome.shortTermCapitalGain = this.shortTermSlabRateInfo;
       }
 
-      console.log('shortTerm15Per data: ', this.shortTerm15Per.api?.getRenderedNodes())
-      if (this.shortTerm15Per.api?.getRenderedNodes().length > 0) {
-        for (let i = 0; i < this.shortTerm15Per.api?.getRenderedNodes().length; i++) {
+      console.log('shortTerm15Per data: ', this.shortTerm15PerGridApi?.getRenderedNodes())
+      if (this.shortTerm15PerGridApi?.getRenderedNodes().length > 0) {
+        for (let i = 0; i < this.shortTerm15PerGridApi?.getRenderedNodes().length; i++) {
           this.shortTerm15PerInfo.push({
-            'nameOfTheAsset': this.shortTerm15Per.api?.getRenderedNodes()[i].data.nameOfAsset ? this.shortTerm15Per.api?.getRenderedNodes()[i].data.nameOfAsset : null,
-            'netSaleValue': this.shortTerm15Per.api?.getRenderedNodes()[i].data.netSaleVal !== null ? Number(this.shortTerm15Per.api?.getRenderedNodes()[i].data.netSaleVal) : null,
-            'purchaseCost': this.shortTerm15Per.api?.getRenderedNodes()[i].data.purchaseCost !== null ? Number(this.shortTerm15Per.api?.getRenderedNodes()[i].data.purchaseCost) : null,
-            'capitalGain': this.shortTerm15Per.api?.getRenderedNodes()[i].data.capitalGain !== null ? Number(this.shortTerm15Per.api?.getRenderedNodes()[i].data.capitalGain) : null,
-            'deductions': this.shortTerm15Per.api?.getRenderedNodes()[i].data.deduction !== null ? Number(this.shortTerm15Per.api?.getRenderedNodes()[i].data.deduction) : null,
-            'netCapitalGain': this.shortTerm15Per.api?.getRenderedNodes()[i].data.netCapitalGain !== null ? Number(this.shortTerm15Per.api?.getRenderedNodes()[i].data.netCapitalGain) : null
+            'nameOfTheAsset': this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.nameOfAsset ? this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.nameOfAsset : null,
+            'netSaleValue': this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.netSaleVal !== null ? Number(this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.netSaleVal) : null,
+            'purchaseCost': this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.purchaseCost !== null ? Number(this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.purchaseCost) : null,
+            'capitalGain': this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.capitalGain !== null ? Number(this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.capitalGain) : null,
+            'deductions': this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.deduction !== null ? Number(this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.deduction) : null,
+            'netCapitalGain': this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.netCapitalGain !== null ? Number(this.shortTerm15PerGridApi?.getRenderedNodes()[i].data.netCapitalGain) : null
           })
         }
         this.itr_2_Summary.capitalGainIncome.shortTermCapitalGainAt15Percent = this.shortTerm15PerInfo;
       }
 
-      console.log('longTerm10Per data: ', this.longTerm10Per.api?.getRenderedNodes())
-      if (this.longTerm10Per.api?.getRenderedNodes().length > 0) {
-        for (let i = 0; i < this.longTerm10Per.api?.getRenderedNodes().length; i++) {
+      console.log('longTerm10Per data: ', this.longTerm10PerGridApi?.getRenderedNodes())
+      if (this.longTerm10PerGridApi?.getRenderedNodes().length > 0) {
+        for (let i = 0; i < this.longTerm10PerGridApi?.getRenderedNodes().length; i++) {
           this.longTerm10PerInfo.push({
-            'nameOfTheAsset': this.longTerm10Per.api?.getRenderedNodes()[i].data.nameOfAsset ? this.longTerm10Per.api?.getRenderedNodes()[i].data.nameOfAsset : null,
-            'netSaleValue': this.longTerm10Per.api?.getRenderedNodes()[i].data.netSaleVal !== null ? Number(this.longTerm10Per.api?.getRenderedNodes()[i].data.netSaleVal) : null,
-            'purchaseCost': this.longTerm10Per.api?.getRenderedNodes()[i].data.purchaseCost !== null ? Number(this.longTerm10Per.api?.getRenderedNodes()[i].data.purchaseCost) : null,
-            'capitalGain': this.longTerm10Per.api?.getRenderedNodes()[i].data.capitalGain !== null ? Number(this.longTerm10Per.api?.getRenderedNodes()[i].data.capitalGain) : null,
-            'deductions': this.longTerm10Per.api?.getRenderedNodes()[i].data.deduction !== null ? Number(this.longTerm10Per.api?.getRenderedNodes()[i].data.deduction) : null,
-            'netCapitalGain': this.longTerm10Per.api?.getRenderedNodes()[i].data.netCapitalGain !== null ? Number(this.longTerm10Per.api?.getRenderedNodes()[i].data.netCapitalGain) : null
+            'nameOfTheAsset': this.longTerm10PerGridApi?.getRenderedNodes()[i].data.nameOfAsset ? this.longTerm10PerGridApi?.getRenderedNodes()[i].data.nameOfAsset : null,
+            'netSaleValue': this.longTerm10PerGridApi?.getRenderedNodes()[i].data.netSaleVal !== null ? Number(this.longTerm10PerGridApi?.getRenderedNodes()[i].data.netSaleVal) : null,
+            'purchaseCost': this.longTerm10PerGridApi?.getRenderedNodes()[i].data.purchaseCost !== null ? Number(this.longTerm10PerGridApi?.getRenderedNodes()[i].data.purchaseCost) : null,
+            'capitalGain': this.longTerm10PerGridApi?.getRenderedNodes()[i].data.capitalGain !== null ? Number(this.longTerm10PerGridApi?.getRenderedNodes()[i].data.capitalGain) : null,
+            'deductions': this.longTerm10PerGridApi?.getRenderedNodes()[i].data.deduction !== null ? Number(this.longTerm10PerGridApi?.getRenderedNodes()[i].data.deduction) : null,
+            'netCapitalGain': this.longTerm10PerGridApi?.getRenderedNodes()[i].data.netCapitalGain !== null ? Number(this.longTerm10PerGridApi?.getRenderedNodes()[i].data.netCapitalGain) : null
           })
         }
         this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt10Percent = this.longTerm10PerInfo;
       }
 
-      console.log('longTerm20Per data: ', this.longTerm20Per.api?.getRenderedNodes())
-      if (this.longTerm20Per.api?.getRenderedNodes().length > 0) {
-        for (let i = 0; i < this.longTerm20Per.api?.getRenderedNodes().length; i++) {
+      console.log('longTerm20Per data: ', this.longTerm20PerGridApi?.getRenderedNodes())
+      if (this.longTerm20PerGridApi?.getRenderedNodes().length > 0) {
+        for (let i = 0; i < this.longTerm20PerGridApi?.getRenderedNodes().length; i++) {
           this.longTerm20PerInfo.push({
-            'nameOfTheAsset': this.longTerm20Per.api?.getRenderedNodes()[i].data.nameOfAsset ? this.longTerm20Per.api?.getRenderedNodes()[i].data.nameOfAsset : null,
-            'netSaleValue': this.longTerm20Per.api?.getRenderedNodes()[i].data.netSaleVal !== null ? Number(this.longTerm20Per.api?.getRenderedNodes()[i].data.netSaleVal) : null,
-            'purchaseCost': this.longTerm20Per.api?.getRenderedNodes()[i].data.purchaseCost !== null ? Number(this.longTerm20Per.api?.getRenderedNodes()[i].data.purchaseCost) : null,
-            'capitalGain': this.longTerm20Per.api?.getRenderedNodes()[i].data.capitalGain !== null ? Number(this.longTerm20Per.api?.getRenderedNodes()[i].data.capitalGain) : null,
-            'deductions': this.longTerm20Per.api?.getRenderedNodes()[i].data.deduction !== null ? Number(this.longTerm20Per.api?.getRenderedNodes()[i].data.deduction) : null,
-            'netCapitalGain': this.longTerm20Per.api?.getRenderedNodes()[i].data.netCapitalGain !== null ? Number(this.longTerm20Per.api?.getRenderedNodes()[i].data.netCapitalGain) : null
+            'nameOfTheAsset': this.longTerm20PerGridApi?.getRenderedNodes()[i].data.nameOfAsset ? this.longTerm20PerGridApi?.getRenderedNodes()[i].data.nameOfAsset : null,
+            'netSaleValue': this.longTerm20PerGridApi?.getRenderedNodes()[i].data.netSaleVal !== null ? Number(this.longTerm20PerGridApi?.getRenderedNodes()[i].data.netSaleVal) : null,
+            'purchaseCost': this.longTerm20PerGridApi?.getRenderedNodes()[i].data.purchaseCost !== null ? Number(this.longTerm20PerGridApi?.getRenderedNodes()[i].data.purchaseCost) : null,
+            'capitalGain': this.longTerm20PerGridApi?.getRenderedNodes()[i].data.capitalGain !== null ? Number(this.longTerm20PerGridApi?.getRenderedNodes()[i].data.capitalGain) : null,
+            'deductions': this.longTerm20PerGridApi?.getRenderedNodes()[i].data.deduction !== null ? Number(this.longTerm20PerGridApi?.getRenderedNodes()[i].data.deduction) : null,
+            'netCapitalGain': this.longTerm20PerGridApi?.getRenderedNodes()[i].data.netCapitalGain !== null ? Number(this.longTerm20PerGridApi?.getRenderedNodes()[i].data.netCapitalGain) : null
           })
         }
         this.itr_2_Summary.capitalGainIncome.longTermCapitalGainAt20Percent = this.longTerm20PerInfo;
@@ -7415,66 +7457,66 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       this.taxCollSourcesInfo = [];
       this.advanceSelfAssTaxInfo = [];
 
-      console.log('tdsOnSal data: ', this.tdsOnSal.api?.getRenderedNodes())
-      if (this.tdsOnSal.api?.getRenderedNodes().length > 0) {
-        for (let i = 0; i < this.tdsOnSal.api?.getRenderedNodes().length; i++) {
+      console.log('tdsOnSal data: ', this.tdsOnSalGridApi?.getRenderedNodes())
+      if (this.tdsOnSalGridApi?.getRenderedNodes().length > 0) {
+        for (let i = 0; i < this.tdsOnSalGridApi?.getRenderedNodes().length; i++) {
           this.tdsOnSalInfo.push({
-            'deductorName': this.tdsOnSal.api?.getRenderedNodes()[i].data.nameOfEmployer,
-            'deductorTAN': this.tdsOnSal.api?.getRenderedNodes()[i].data.tanOfEmployer,
-            'totalAmountCredited': this.tdsOnSal.api?.getRenderedNodes()[i].data.grossSal,
-            'totalTdsDeposited': this.tdsOnSal.api?.getRenderedNodes()[i].data.totalTds
+            'deductorName': this.tdsOnSalGridApi?.getRenderedNodes()[i].data.nameOfEmployer,
+            'deductorTAN': this.tdsOnSalGridApi?.getRenderedNodes()[i].data.tanOfEmployer,
+            'totalAmountCredited': this.tdsOnSalGridApi?.getRenderedNodes()[i].data.grossSal,
+            'totalTdsDeposited': this.tdsOnSalGridApi?.getRenderedNodes()[i].data.totalTds
           })
         }
         this.taxPaiObj.onSalary = this.tdsOnSalInfo;
       }
 
-      console.log('tdsOtherThanSal data: ', this.tdsOtherThanSal.api?.getRenderedNodes())
-      if (this.tdsOtherThanSal.api?.getRenderedNodes().length > 0) {
-        for (let i = 0; i < this.tdsOtherThanSal.api?.getRenderedNodes().length; i++) {
+      console.log('tdsOtherThanSal data: ', this.tdsOtherThanSalGridApi?.getRenderedNodes())
+      if (this.tdsOtherThanSalGridApi?.getRenderedNodes().length > 0) {
+        for (let i = 0; i < this.tdsOtherThanSalGridApi?.getRenderedNodes().length; i++) {
           this.otherThanSalary16AInfo.push({
-            'deductorName': this.tdsOtherThanSal.api?.getRenderedNodes()[i].data.nameOfDeductor,
-            'deductorTAN': this.tdsOtherThanSal.api?.getRenderedNodes()[i].data.tanOfDeductor,
-            'totalAmountCredited': this.tdsOtherThanSal.api?.getRenderedNodes()[i].data.grossSal,
-            'totalTdsDeposited': this.tdsOtherThanSal.api?.getRenderedNodes()[i].data.totalTds
+            'deductorName': this.tdsOtherThanSalGridApi?.getRenderedNodes()[i].data.nameOfDeductor,
+            'deductorTAN': this.tdsOtherThanSalGridApi?.getRenderedNodes()[i].data.tanOfDeductor,
+            'totalAmountCredited': this.tdsOtherThanSalGridApi?.getRenderedNodes()[i].data.grossSal,
+            'totalTdsDeposited': this.tdsOtherThanSalGridApi?.getRenderedNodes()[i].data.totalTds
           })
         }
         this.taxPaiObj.otherThanSalary16A = this.otherThanSalary16AInfo;
       }
 
-      console.log('tdsSales26QB data: ', this.tdsSales26QB.api?.getRenderedNodes())
-      if (this.tdsSales26QB.api?.getRenderedNodes().length > 0) {
-        for (let i = 0; i < this.tdsSales26QB.api?.getRenderedNodes().length; i++) {
+      console.log('tdsSales26QB data: ', this.tdsSales26QBGridApi?.getRenderedNodes())
+      if (this.tdsSales26QBGridApi?.getRenderedNodes().length > 0) {
+        for (let i = 0; i < this.tdsSales26QBGridApi?.getRenderedNodes().length; i++) {
           this.otherThanSalary26QBInfo.push({
-            'deductorName': this.tdsSales26QB.api?.getRenderedNodes()[i].data.nameOfDeductor,
-            'deductorTAN': this.tdsSales26QB.api?.getRenderedNodes()[i].data.tanOfDeductor,
-            'totalAmountCredited': this.tdsSales26QB.api?.getRenderedNodes()[i].data.grossSal,
-            'totalTdsDeposited': this.tdsSales26QB.api?.getRenderedNodes()[i].data.totalTds
+            'deductorName': this.tdsSales26QBGridApi?.getRenderedNodes()[i].data.nameOfDeductor,
+            'deductorTAN': this.tdsSales26QBGridApi?.getRenderedNodes()[i].data.tanOfDeductor,
+            'totalAmountCredited': this.tdsSales26QBGridApi?.getRenderedNodes()[i].data.grossSal,
+            'totalTdsDeposited': this.tdsSales26QBGridApi?.getRenderedNodes()[i].data.totalTds
           })
         }
         this.taxPaiObj.otherThanSalary26QB = this.otherThanSalary26QBInfo;
       }
 
-      console.log('taxColSource data: ', this.taxColSource.api?.getRenderedNodes())
-      if (this.taxColSource.api?.getRenderedNodes().length > 0) {
-        for (let i = 0; i < this.taxColSource.api?.getRenderedNodes().length; i++) {
+      console.log('taxColSource data: ', this.taxColSourceGridApi?.getRenderedNodes())
+      if (this.taxColSourceGridApi?.getRenderedNodes().length > 0) {
+        for (let i = 0; i < this.taxColSourceGridApi?.getRenderedNodes().length; i++) {
           this.taxCollSourcesInfo.push({
-            'collectorName': this.taxColSource.api?.getRenderedNodes()[i].data.nameOfCollector,
-            'collectorTAN': this.taxColSource.api?.getRenderedNodes()[i].data.tanOfCollector,
-            'totalAmountPaid': this.taxColSource.api?.getRenderedNodes()[i].data.grossIncome,
-            'totalTcsDeposited': this.taxColSource.api?.getRenderedNodes()[i].data.totalTcs
+            'collectorName': this.taxColSourceGridApi?.getRenderedNodes()[i].data.nameOfCollector,
+            'collectorTAN': this.taxColSourceGridApi?.getRenderedNodes()[i].data.tanOfCollector,
+            'totalAmountPaid': this.taxColSourceGridApi?.getRenderedNodes()[i].data.grossIncome,
+            'totalTcsDeposited': this.taxColSourceGridApi?.getRenderedNodes()[i].data.totalTcs
           })
         }
         this.taxPaiObj.tcs = this.taxCollSourcesInfo;
       }
 
-      console.log('advanceTax data: ', this.advanceTax.api?.getRenderedNodes())
-      if (this.advanceTax.api?.getRenderedNodes().length > 0) {
-        for (let i = 0; i < this.advanceTax.api?.getRenderedNodes().length; i++) {
+      console.log('advanceTax data: ', this.advanceTaxGridApi?.getRenderedNodes())
+      if (this.advanceTaxGridApi?.getRenderedNodes().length > 0) {
+        for (let i = 0; i < this.advanceTaxGridApi?.getRenderedNodes().length; i++) {
           this.advanceSelfAssTaxInfo.push({
-            'bsrCode': this.advanceTax.api?.getRenderedNodes()[i].data.bsrCode,
-            'dateOfDeposit': this.advanceTax.api?.getRenderedNodes()[i].data.date,
-            'challanNumber': this.advanceTax.api?.getRenderedNodes()[i].data.challanNo,
-            'totalTax': this.advanceTax.api?.getRenderedNodes()[i].data.taxDeposite
+            'bsrCode': this.advanceTaxGridApi?.getRenderedNodes()[i].data.bsrCode,
+            'dateOfDeposit': this.advanceTaxGridApi?.getRenderedNodes()[i].data.date,
+            'challanNumber': this.advanceTaxGridApi?.getRenderedNodes()[i].data.challanNo,
+            'totalTax': this.advanceTaxGridApi?.getRenderedNodes()[i].data.taxDeposite
           })
         }
         this.taxPaiObj.otherThanTDSTCS = this.advanceSelfAssTaxInfo;
@@ -7879,20 +7921,13 @@ export class Itr2mainComponent implements OnInit, OnChanges {
   }
   businessFormValid: boolean;
   getBusinessData(businessInfo) {
-    // alert('Business 3 part initaited')
-
-    console.log('businessInfo: ', businessInfo)
-    console.log('businessInfo totalCapitalLiabilities: ', businessInfo.value.totalCapitalLiabilities)
-    console.log('businessInfo totalAssets: ', businessInfo.value.totalAssets)
     if (businessInfo.valid) {
       this.businessFormValid = true;
 
       //this.itrSummaryForm.controls['assesse'].controls['business.controls['financialParticulars.patchValue(businessInfo.value);
       // this.itr_2_Summary.assesse.business.financialParticulars.patchValue(businessInfo.value);  ???
       Object.assign(this.itr_2_Summary.assesse.business.financialParticulars, businessInfo.value)
-      console.log('financialParticulars: ', this.itr_2_Summary.assesse.business.financialParticulars)
       Object.assign(this.businessObject, businessInfo.value)
-      console.log('businessObject: ', this.businessObject)
 
       let prsumptTotal = Number(this.businessObject.presumptive44ADtotal) + Number(this.businessObject.presumptiveIncome)
       this.businessObject.prsumptiveIncomeTotal = prsumptTotal;
@@ -7912,7 +7947,6 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       // this.calculateGrossTotalIncome();
       this.itr_2_Summary.assesse.business.financialParticulars.totalCapitalLiabilities = this.businessObject.totalCapitalLiabilities
       this.itr_2_Summary.assesse.business.financialParticulars.totalAssets = this.businessObject.totalAssets
-      console.log('getBusinessData function called...');
       this.calTotalOfIncomeFromBusiness();
     }
     else {
