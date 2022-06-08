@@ -61,156 +61,149 @@
 <div class="card">
     <div class="card__row">
         <form [formGroup]="personalInfoForm" id="personalForm">
-            <div class="card__col-lg-12" style="margin-bottom: 20px;">
-                <div class="top-head">
-                    <div class="card__col-lg-3" style="margin-top: 10px;">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Type of ITR</mat-label>
-                            <mat-select matInput placeholder="Select ITR type" autocomplete="off"
-                                formControlName="itrType" required (selectionChange)="setItrType($event.value)">
-                                <mat-option *ngFor="let itr of itrTypesData" [value]="itr.value">
-                                    {{ itr.label }}
-                                </mat-option>
-                            </mat-select>
-                            <!-- <mat-error
-                                                *ngIf="itrSummaryForm.controls['assesse'].controls['itrType.hasError('required')">
-                                                Select ITR type</mat-error> -->
-                        </mat-form-field>
 
-                    </div>
-                    <div class="card__col-lg-3">
+            <div class="card__row" style="margin-bottom: 10px;">
+                <div class="card__col-lg-3" style="margin-top: 10px;">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Type of ITR</mat-label>
+                        <mat-select matInput placeholder="Select ITR type" autocomplete="off" formControlName="itrType"
+                            required (selectionChange)="setItrType($event.value)">
+                            <mat-option *ngFor="let itr of itrTypesData" [value]="itr.value">
+                                {{ itr.label }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-3">
 
-                    </div>
-                    <div class="card__col-lg-3">
-                        <!--formGroupName="taxSummary"-->
-                        <label>Taxable Income</label>
-                        <div *ngIf="!newTaxRegime">
-                            <input type="number" placeholder="Taxable Income" required disabled
-                                [value]="this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR'].value"
-                                class="disableInput">
-                            <!-- formControlName="totalIncomeAfterDeductionIncludeSR" -->
-                        </div>
-                        <div *ngIf="newTaxRegime">
-                            <input type="number" placeholder="Taxable Income" required disabled
-                                [value]="this.newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR"
-                                class="disableInput">
-                        </div>
-
-                    </div>
-
+                </div>
+                <div class="card__col-lg-3">
+                    <!--formGroupName="taxSummary"-->
+                    <label>Taxable Income</label>
                     <div *ngIf="!newTaxRegime">
-                        <div class="card__col-lg-3"
-                            *ngIf="this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0">
-                            <!-- formGroupName="taxSummary"-->
-                            <label>Tax Payable</label>
-                            <input type="number" placeholder="Tax Payable/ Refund"
-                                [value]="this.computationOfIncomeForm.controls['taxpayable'].value" disabled
-                                class="disableInput">
-                        </div>
-                        <div class="card__col-lg-3"
-                            *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0 || this.computationOfIncomeForm.controls['taxRefund'].value > 0">
-                            <!--formGroupName="taxSummary"-->
-                            <label>Tax Refund</label>
-                            <input type="number" placeholder="Tax Payable/ Refund"
-                                [value]="this.computationOfIncomeForm.controls['taxRefund'].value" disabled
-                                class="disableInput">
-                        </div>
+                        <input type="number" placeholder="Taxable Income" required disabled
+                            [value]="this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR'].value"
+                            class="disableInput">
+                        <!-- formControlName="totalIncomeAfterDeductionIncludeSR" -->
                     </div>
-
                     <div *ngIf="newTaxRegime">
-                        <div class="card__col-lg-3" *ngIf="showTaxPaybleValue()">
-                            <label>Tax Payabled</label>
-                            <input type="number" placeholder="Tax Payable/ Refund"
-                                [value]="this.newRegimeTaxSummary.taxpayable" disabled class="disableInput">
-                        </div>
-                        <div class="card__col-lg-3" *ngIf="showTaxRefundValue()">
-                            <label>Tax Refund</label>
-                            <input type="number" placeholder="Tax Payable/ Refund"
-                                [value]="this.newRegimeTaxSummary.taxRefund" disabled class="disableInput">
-                        </div>
+                        <input type="number" placeholder="Taxable Income" required disabled
+                            [value]="this.newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR" class="disableInput">
                     </div>
 
+                </div>
+
+                <div *ngIf="!newTaxRegime">
+                    <div class="card__col-lg-3"
+                        *ngIf="this.computationOfIncomeForm.controls['taxpayable'].value >= 0 && this.computationOfIncomeForm.controls['taxRefund'].value === 0">
+                        <!-- formGroupName="taxSummary"-->
+                        <label>Tax Payable</label>
+                        <input type="number" placeholder="Tax Payable/ Refund"
+                            [value]="this.computationOfIncomeForm.controls['taxpayable'].value" disabled
+                            class="disableInput">
+                    </div>
+                    <div class="card__col-lg-3"
+                        *ngIf="this.computationOfIncomeForm.controls['taxRefund'].value < 0 || this.computationOfIncomeForm.controls['taxRefund'].value > 0">
+                        <!--formGroupName="taxSummary"-->
+                        <label>Tax Refund</label>
+                        <input type="number" placeholder="Tax Payable/ Refund"
+                            [value]="this.computationOfIncomeForm.controls['taxRefund'].value" disabled
+                            class="disableInput">
+                    </div>
+                </div>
+
+                <div *ngIf="newTaxRegime">
+                    <div class="card__col-lg-3" *ngIf="showTaxPaybleValue()">
+                        <label>Tax Payabled</label>
+                        <input type="number" placeholder="Tax Payable/ Refund"
+                            [value]="this.newRegimeTaxSummary.taxpayable" disabled class="disableInput">
+                    </div>
+                    <div class="card__col-lg-3" *ngIf="showTaxRefundValue()">
+                        <label>Tax Refund</label>
+                        <input type="number" placeholder="Tax Payable/ Refund"
+                            [value]="this.newRegimeTaxSummary.taxRefund" disabled class="disableInput">
+                    </div>
                 </div>
             </div><br><br>
 
 
+            <div class="card__row">
+                <div class="card__col-lg-2">
+                    <!--formGroupName="assesse"-->
+                    <mat-form-field appearance="outline">
+                        <mat-label>PAN</mat-label>
+                        <input matInput placeholder="PAN" autocomplete="off" type="text" maxlength="10" minlength="10"
+                            required formControlName="panNumber" upperCase
+                            (blur)="getUserInfoByPan(personalInfoForm.controls['panNumber'])">
+                        <mat-error *ngIf="personalInfoForm.controls['panNumber'].hasError('required')">
+                            Enter PAN number
+                        </mat-error>
+                        <mat-error *ngIf="personalInfoForm.controls['panNumber'].hasError('pattern')">
+                            Enter valid PAN
+                            (e.g XXXXX1234X)</mat-error>
+                    </mat-form-field>
+                </div>
 
-            <div class="card__col-lg-2">
-                <!--formGroupName="assesse"-->
-                <mat-form-field appearance="outline">
-                    <mat-label>PAN</mat-label>
-                    <input matInput placeholder="PAN" autocomplete="off" type="text" maxlength="10" minlength="10"
-                        required formControlName="panNumber" upperCase
-                        (blur)="getUserInfoByPan(personalInfoForm.controls['panNumber'])">
-                    <mat-error *ngIf="personalInfoForm.controls['panNumber'].hasError('required')">
-                        Enter PAN number
-                    </mat-error>
-                    <mat-error *ngIf="personalInfoForm.controls['panNumber'].hasError('pattern')">
-                        Enter valid PAN
-                        (e.g XXXXX1234X)</mat-error>
-                </mat-form-field>
-            </div>
+                <div class="card__col-lg-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>First Name</mat-label>
+                        <input matInput type="text" placeholder="First Name" maxlength="75" autocomplete="off"
+                            formControlName="fName" capitalizeFirst required>
+                        <mat-error *ngIf="personalInfoForm.controls['fName'].hasError('required')">
+                            Enter first
+                            name
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Middle Name</mat-label>
+                        <input matInput type="text" placeholder="Middle Name" formControlName="mName" maxlength="75"
+                            autocomplete="off" capitalizeFirst>
+                        <!--name="family[i]"-->
+                        <mat-error
+                            *ngIf="personalInfoForm.controls['mName'] && personalInfoForm.controls['mName'].hasError('required')">
+                            Enter middle name
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Last Name</mat-label>
+                        <input matInput type="text" placeholder="Last Name" formControlName="lName" maxlength="75"
+                            autocomplete="off" capitalizeFirst required>
+                        <!--formControlName="lName"  name="family[i]"-->
+                        <mat-error *ngIf="personalInfoForm.controls['lName'].hasError('required')">
+                            Enter last
+                            name
+                        </mat-error>
+                    </mat-form-field>
+                </div>
 
-            <div class="card__col-lg-2">
-                <mat-form-field appearance="outline">
-                    <mat-label>First Name</mat-label>
-                    <input matInput type="text" placeholder="First Name" maxlength="75" autocomplete="off"
-                        formControlName="fName" capitalizeFirst required>
-                    <mat-error *ngIf="personalInfoForm.controls['fName'].hasError('required')">
-                        Enter first
-                        name
-                    </mat-error>
-                </mat-form-field>
+                <div class="card__col-lg-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Father's Name</mat-label>
+                        <input matInput type="text" placeholder="Father's Name" formControlName="fathersName"
+                            maxlength="75" autocomplete="off" capitalizeFirst required>
+                        <mat-error *ngIf="personalInfoForm.controls['fathersName'].hasError('required')">
+                            Enter
+                            father name</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date of Birth</mat-label>
+                        <input matInput placeholder="Date of Birth" formControlName="dateOfBirth" [min]="minDate"
+                            name="family[i]" [max]="maxDate" [matDatepicker]="picker" autocomplete="off" required>
+                        <!---->
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error *ngIf="personalInfoForm.controls['dateOfBirth'].hasError('required')">
+                            Select Date of
+                            Birth</mat-error>
+                    </mat-form-field>
+                </div>
             </div>
-            <div class="card__col-lg-2">
-                <mat-form-field appearance="outline">
-                    <mat-label>Middle Name</mat-label>
-                    <input matInput type="text" placeholder="Middle Name" formControlName="mName" maxlength="75"
-                        autocomplete="off" capitalizeFirst>
-                    <!--name="family[i]"-->
-                    <mat-error
-                        *ngIf="personalInfoForm.controls['mName'] && personalInfoForm.controls['mName'].hasError('required')">
-                        Enter middle name
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="card__col-lg-2">
-                <mat-form-field appearance="outline">
-                    <mat-label>Last Name</mat-label>
-                    <input matInput type="text" placeholder="Last Name" formControlName="lName" maxlength="75"
-                        autocomplete="off" capitalizeFirst required>
-                    <!--formControlName="lName"  name="family[i]"-->
-                    <mat-error *ngIf="personalInfoForm.controls['lName'].hasError('required')">
-                        Enter last
-                        name
-                    </mat-error>
-                </mat-form-field>
-            </div>
-
-            <div class="card__col-lg-2">
-                <mat-form-field appearance="outline">
-                    <mat-label>Father's Name</mat-label>
-                    <input matInput type="text" placeholder="Father's Name" formControlName="fathersName" maxlength="75"
-                        autocomplete="off" capitalizeFirst required>
-                    <mat-error *ngIf="personalInfoForm.controls['fathersName'].hasError('required')">
-                        Enter
-                        father name</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="card__col-lg-2">
-                <mat-form-field appearance="outline">
-                    <mat-label>Date of Birth</mat-label>
-                    <input matInput placeholder="Date of Birth" formControlName="dateOfBirth" [min]="minDate"
-                        name="family[i]" [max]="maxDate" [matDatepicker]="picker" autocomplete="off" required>
-                    <!---->
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <mat-error *ngIf="personalInfoForm.controls['dateOfBirth'].hasError('required')">
-                        Select Date of
-                        Birth</mat-error>
-                </mat-form-field>
-            </div>
-
             <div class="card__row">
                 <div class="card__col-lg-2">
                     <mat-form-field appearance="outline">
@@ -230,7 +223,7 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Aadhaar Number</mat-label>
                         <input matInput placeholder="Aadhaar Number" formControlName="aadharNumber" maxlength="12"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off" required>
+                            digitsOnly [required]="personalInfoForm.controls['residentialStatus'].value === 'RESIDENT'">
                         <mat-error *ngIf="personalInfoForm.controls['aadharNumber'].hasError('required')">
                             Enter
                             Aadhar number</mat-error>
@@ -324,11 +317,10 @@
                     <div>
                         <mat-form-field appearance="outline">
                             <mat-label>Pin code</mat-label>
-                            <input maxlength="6"
-                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                onkeypress=" event.charCode >= 48 && event.charCode <= 57" matInput
-                                placeholder="PIN Code" autocomplete="off" type="number" formControlName="pinCode"
-                                (blur)="getCityData(personalInfoForm.controls['pinCode'], 'profile')" required>
+                            <input maxlength="6" matInput placeholder="PIN Code" autocomplete="off" digitsOnly
+                                formControlName="pinCode"
+                                (blur)="getCityData(personalInfoForm.controls['pinCode'], 'profile')"
+                                [required]="personalInfoForm.controls['residentialStatus'].value === 'RESIDENT'">
                             <mat-error *ngIf="personalInfoForm.controls['pinCode'].hasError('required')">
                                 Enter pin
                             </mat-error>
@@ -360,78 +352,80 @@
                     </div>
                 </div>
             </div>
+            <div class="card__row">
+                <div class="card__col-lg-2">
+                    <div>
+                        <mat-form-field appearance="outline">
+                            <mat-label>City</mat-label>
+                            <input matInput disabled placeholder="City" formControlName="city" autocomplete="off"
+                                required>
+                        </mat-form-field>
+                    </div>
+                </div>
 
-            <div class="card__col-lg-2">
-                <div>
+                <div class="card__col-lg-2">
                     <mat-form-field appearance="outline">
-                        <mat-label>City</mat-label>
-                        <input matInput disabled placeholder="City" formControlName="city" autocomplete="off" required>
+                        <mat-label>Return Type</mat-label>
+                        <mat-select matInput placeholder="Select return type" formControlName="returnType"
+                            (selectionChange)="showAcknowData($event.value)" autocomplete="off" required>
+                            <mat-option *ngFor="let res of returnTypeData" [value]="res.value">
+                                {{ res.label }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="personalInfoForm.controls['returnType'].hasError('required')">Select
+                            return type</mat-error>
                     </mat-form-field>
                 </div>
-            </div>
-
-            <div class="card__col-lg-2">
-                <mat-form-field appearance="outline">
-                    <mat-label>Return Type</mat-label>
-                    <mat-select matInput placeholder="Select return type" formControlName="returnType"
-                        (selectionChange)="showAcknowData($event.value)" autocomplete="off" required>
-                        <mat-option *ngFor="let res of returnTypeData" [value]="res.value">
-                            {{ res.label }}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="personalInfoForm.controls['returnType'].hasError('required')">Select
-                        return type</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="card__col-lg-2">
-                <mat-form-field appearance="outline">
-                    <mat-label>Assessment Year</mat-label>
-                    <mat-select matInput placeholder="Financial Year" formControlName="assessmentYear"
-                        autocomplete="off" required>
-                        <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
-                            {{year.financialYear}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="card__col-lg-2">
-                <mat-form-field appearance="outline">
-                    <mat-label>Financial Year</mat-label>
-                    <mat-select matInput placeholder="Financial Year" formControlName="financialYear" autocomplete="off"
-                        required>
-                        <mat-option *ngFor="let year of financialYear" [value]="year.financialYear"
-                            [disabled]="year.financialYear === '2022-23'">
-                            {{year.financialYear}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="card__col-lg-2" *ngIf="showAcknowInput">
-                <mat-form-field appearance="outline">
-                    <mat-label>Acknowledgement Number</mat-label>
-                    <input matInput maxlength="15" minlength="15"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        disabled placeholder="Acknowledgement Number" formControlName="ackNumber"
-                        onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
-                    <mat-error *ngIf="personalInfoForm.controls['ackNumber'].hasError('required')">
-                        Enter
-                        acknowledgment number</mat-error>
-                    <mat-error *ngIf="personalInfoForm.controls['ackNumber'].hasError('minlength')">
-                        Acknowldegemant number should be 15 digit</mat-error>
-                </mat-form-field>
-            </div>
-            <div class="card__col-lg-2" *ngIf="showAcknowInput">
-                <mat-form-field appearance="outline">
-                    <mat-label>Date of filling</mat-label>
-                    <input matInput placeholder="Date of filling" [max]="fillingMaxDate" [min]="fillingMinDate"
-                        [max]="maxDate" [matDatepicker]="picker1" autocomplete="off" formControlName="eFillingDate">
-                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                    <mat-datepicker #picker1></mat-datepicker>
-                    <mat-error *ngIf="personalInfoForm.controls['eFillingDate'].hasError('required')">
-                        Select
-                        Date of
-                        filling</mat-error>
-                </mat-form-field>
+                <div class="card__col-lg-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Assessment Year</mat-label>
+                        <mat-select matInput placeholder="Financial Year" formControlName="assessmentYear"
+                            autocomplete="off" required>
+                            <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                                {{year.financialYear}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Financial Year</mat-label>
+                        <mat-select matInput placeholder="Financial Year" formControlName="financialYear"
+                            autocomplete="off" required>
+                            <mat-option *ngFor="let year of financialYear" [value]="year.financialYear"
+                                [disabled]="year.financialYear === '2022-23'">
+                                {{year.financialYear}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-2" *ngIf="showAcknowInput">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Acknowledgement Number</mat-label>
+                        <input matInput maxlength="15" minlength="15"
+                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            disabled placeholder="Acknowledgement Number" formControlName="ackNumber"
+                            onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
+                        <mat-error *ngIf="personalInfoForm.controls['ackNumber'].hasError('required')">
+                            Enter
+                            acknowledgment number</mat-error>
+                        <mat-error *ngIf="personalInfoForm.controls['ackNumber'].hasError('minlength')">
+                            Acknowldegemant number should be 15 digit</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-2" *ngIf="showAcknowInput">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date of filling</mat-label>
+                        <input matInput placeholder="Date of filling" [max]="fillingMaxDate" [min]="fillingMinDate"
+                            [max]="maxDate" [matDatepicker]="picker1" autocomplete="off" formControlName="eFillingDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-error *ngIf="personalInfoForm.controls['eFillingDate'].hasError('required')">
+                            Select
+                            Date of
+                            filling</mat-error>
+                    </mat-form-field>
+                </div>
             </div>
         </form>
     </div>
@@ -440,15 +434,13 @@
     <!-- <div class="card__row"> -->
 
     <div class="heading">ANNEXURE</div>
-    <div class="car__row tableHead">
+    <div class="card__row tableHead">
         <div class="card__col-lg-8">Annexure: Bank Details</div>
         <div class="card__col-lg-4">
             <button class="tbd-btn-small " (click)="openDialog('Add Bank Info','Add', null,'','Bank')"><i
                     class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add</button>
         </div>
     </div>
-    <br>
-    <br>
     <table>
         <tr>
             <th>IFSC/ Swiss Code</th>
@@ -484,7 +476,7 @@
 
     </table><br><br>
 
-    <div class="car__row tableHead">
+    <div class="card__row tableHead">
         <div class="card__col-lg-8">Annexure: House Properties</div>
         <div class="card__col-lg-4">
             <button class="tbd-btn-small" [disabled]="housingData.length > 3"
@@ -492,9 +484,7 @@
                     aria-hidden="true"></i>&nbsp;&nbsp;Add</button>
         </div>
     </div>
-    <br>
     <table class="verticle">
-        <!---->
         <tr>
             <th>Property Type</th>
             <th colspan="8" style="text-align: center;"><b>Address</b></th>
@@ -587,7 +577,7 @@
             </td>
         </tr>
     </table><br><br>
-    <div class="car__row tableHead">
+    <div class="card__row tableHead">
         <div class="card__col-lg-8">Annexure: Salary</div>
         <div class="card__col-lg-4">
             <button class="tbd-btn-small" [disabled]="salaryItrratedData.length > 3"
@@ -685,7 +675,7 @@
 
     <div class="tableHead">Annexure: Capital Gain</div><br>
     <mat-card>
-        <div class="car__row">
+        <div class="card__row">
             <div class="card__col-lg-8">
                 <p class="subLabel">Short Term Capital Gain @ Slab Rate</p>
             </div>
@@ -699,7 +689,7 @@
             (rowClicked)="onShortTermCapGainRowClicked($event)">
         </ag-grid-angular><br><br>
 
-        <div class="car__row">
+        <div class="card__row">
             <div class="card__col-lg-8">
                 <p class="subLabel">Short Term Capital Gain @ 15%</p>
             </div>
@@ -713,7 +703,7 @@
             (rowClicked)="onShortTermCapGain15RowClicked($event)">
         </ag-grid-angular><br><br>
 
-        <div class="car__row">
+        <div class="card__row">
             <div class="card__col-lg-8">
                 <p class="subLabel">Long Term Capital Gain @ 10%</p>
             </div>
@@ -726,7 +716,7 @@
             (rowClicked)="onLongTermCapGain10RowClicked($event)">
         </ag-grid-angular><br><br>
 
-        <div class="car__row">
+        <div class="card__row">
             <div class="card__col-lg-8">
                 <p class="subLabel">Long Term Capital Gain @ 20%</p>
             </div>
@@ -1216,7 +1206,7 @@
 
 
     <mat-card>
-        <div class="car__row tableHead">
+        <div class="card__row tableHead">
             <div class="card__col-lg-8">
                 Annexure: Losses To be Carried Forward
             </div>
@@ -1378,7 +1368,7 @@
         </mat-card><br><br>
 
         <mat-card>
-            <div class="car__row">
+            <div class="card__row">
                 <div class="card__col-lg-8">
                     <p class="subLabel">Under Section 80G</p>
                 </div>
@@ -1666,7 +1656,7 @@
 
 
         <div class="tableHead">Annexure: Tax deducted at Sources</div><br>
-        <div class="car__row">
+        <div class="card__row">
             <div class="card__col-lg-8">
                 <p class="subLabel">TDS on Salary</p>
             </div>
@@ -1680,7 +1670,7 @@
             </ag-grid-angular>
         </div>
 
-        <div class="car__row">
+        <div class="card__row">
             <div class="card__col-lg-8">
                 <p class="subLabel">TDS on Other than Salary</p>
             </div>
@@ -1693,7 +1683,7 @@
             (rowClicked)="onTdsOtherThanSalRowClicked($event)">
         </ag-grid-angular><br>
 
-        <div class="car__row">
+        <div class="card__row">
             <div class="card__col-lg-8">
                 <p class="subLabel">TDS Sales of property 26QB</p>
             </div>
@@ -1708,7 +1698,7 @@
 
         <br><br>
 
-        <div class="car__row tableHead">
+        <div class="card__row tableHead">
             <div class="card__col-lg-8">
                 Annexure: Tax Collected at Sources
             </div>
@@ -1721,7 +1711,7 @@
         </ag-grid-angular>
         <br><br>
 
-        <div class="car__row tableHead">
+        <div class="card__row tableHead">
             <div class="card__col-lg-8">
                 Annexure: Advance Tax/ Self-Assessment Tax
             </div>
@@ -1806,7 +1796,7 @@
         <p>Assets and Liabilities at the end of the year (applicable in a case where total income exceeds
             Rs.50 lakh)</p><br><br>
 
-        <div class="car__row">
+        <div class="card__row">
             <div class="card__col-lg-8">
                 <p class="subLabel">Details of immovable assets</p>
             </div>

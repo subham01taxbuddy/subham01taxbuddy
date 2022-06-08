@@ -1,7 +1,4 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div class="main clearfix">
   <div class="content content_full">
@@ -24,8 +21,8 @@
               <div class="input">
                 <label class="input__label" for="attr">Enter value</label>
                 <div class="input__select">
-                  <input type="text" class="select__box ogp_select" style="background-image:none" [(ngModel)]="searchVal"
-                    name="searchVal" />
+                  <input type="text" class="select__box ogp_select" style="background-image:none"
+                    [(ngModel)]="searchVal" name="searchVal" />
                 </div>
               </div>
             </div>
@@ -37,15 +34,16 @@
         </div><br><br>
 
         <div class="card__row">
-            <table>
-                <tr *ngFor="let item of userInfo | paginate:config"></tr>
-            </table>
-            
-            <ag-grid-angular class="ag-theme-balham" [gridOptions]="usersGridOptions"
-            (rowClicked)="onUsersRowClicked($event)">    <!--    paginationPageSize=15 pagination=true-->
-            </ag-grid-angular>
+          <table>
+            <tr *ngFor="let item of userInfo | paginate:config"></tr>
+          </table>
 
-            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+          <ag-grid-angular class="ag-theme-balham" [gridOptions]="usersGridOptions"
+            (rowClicked)="onUsersRowClicked($event)">
+            <!--    paginationPageSize=15 pagination=true-->
+          </ag-grid-angular>
+
+          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
         </div>
       </div>
     </div>
