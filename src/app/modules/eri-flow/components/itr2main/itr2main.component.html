@@ -1356,8 +1356,8 @@
                 <div class="card__col-lg-3"
                     *ngIf="newItrSumChanges && this.deductionAndRemainForm.controls['paraentAge'].value === 'above60'">
                     <mat-form-field appearance="outline">
-                        <mat-label>Medical Expendature</mat-label>
-                        <input matInput placeholder="Medical Expendature" type="number"
+                        <mat-label>Medical Expenditure</mat-label>
+                        <input matInput placeholder="Medical Expenditure" type="number"
                             formControlName="medicalExpendature"
                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             maxlength="8" autocomplete="off" (blur)="setDeduction80DVal()">
@@ -1382,9 +1382,9 @@
                 <tr>
                     <th>Type of Donation</th>
                     <th>Name of Doner</th>
-                    <th>Amont in Cash</th>
+                    <th>Amount in Cash</th>
                     <th>Amount Other than Cash</th>
-                    <th>Eligibal Amount</th>
+                    <th>Eligible Amount</th>
                     <th>Action</th>
                 </tr>
                 <tr *ngFor="let donation of donationData; let i= index">

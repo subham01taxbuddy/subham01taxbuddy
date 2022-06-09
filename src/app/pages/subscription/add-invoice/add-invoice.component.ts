@@ -214,13 +214,13 @@ export class AddInvoiceComponent implements OnInit {
       cin: ['U74999MH2017PT298565', Validators.required],
       billTo: ['', [Validators.required, Validators.pattern(AppConstants.charAndNoRegex)]],
       paymentStatus: ['Unpaid'],
-      addressLine1: ['', Validators.required],
+      addressLine1: [''],
       addressLine2: [''],
       pincode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)]],
       zipCode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)]],
-      state: ['', Validators.required],
-      city: ['', Validators.required],
-      country: ['', Validators.required],
+      state: [''],
+      city: [''],
+      country: [''],
       gstin: [{ value: '', disabled: withinMonth }, [Validators.pattern(AppConstants.GSTNRegex)]],
       countryCode: ['91', [Validators.required]],  //Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex),
       phone: ['', [Validators.required]],  //Validators.maxLength(10), Validators.pattern(AppConstants.mobileNumberRegex),
@@ -339,10 +339,28 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.controls['zipCode'].setValidators(null);
       this.invoiceForm.controls['zipCode'].setValue(null);
       this.invoiceForm.controls['zipCode'].updateValueAndValidity();
+
+      this.invoiceForm.controls['country'].setValue('INDIA');
+
     } else {
       this.invoiceForm.controls['pincode'].setValidators(null);
       this.invoiceForm.controls['pincode'].setValue(null);
       this.invoiceForm.controls['pincode'].updateValueAndValidity();
+
+      this.invoiceForm.controls['addressLine1'].setValidators(null);
+      this.invoiceForm.controls['addressLine1'].setValue(null);
+      this.invoiceForm.controls['addressLine1'].updateValueAndValidity();
+
+      this.invoiceForm.controls['addressLine2'].setValue(null);
+      this.invoiceForm.controls['country'].setValue(null);
+
+      this.invoiceForm.controls['state'].setValidators(null);
+      this.invoiceForm.controls['state'].setValue(null);
+      this.invoiceForm.controls['state'].updateValueAndValidity();
+
+      this.invoiceForm.controls['city'].setValidators(null);
+      this.invoiceForm.controls['city'].setValue(null);
+      this.invoiceForm.controls['city'].updateValueAndValidity();
 
       this.invoiceForm.controls['zipCode'].setValidators(Validators.required);
       this.invoiceForm.controls['zipCode'].updateValueAndValidity();
