@@ -159,7 +159,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     return <FormArray>this.itrSummaryForm.controls['assesse'].get('family');
   }
 
-  constructor(private dialog: MatDialog, public utilService: UtilsService, private fb: FormBuilder, private userService: UserMsService,
+  constructor(private dialog: MatDialog, public utilsService: UtilsService, private fb: FormBuilder, private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private router: Router,
     private itrMsService: ItrMsService) {
@@ -329,8 +329,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
     /* House Property */
     var housingInfo = incomeDeduction;
-    if (this.utilService.isNonZero(housingInfo.GrossRentReceived) || this.utilService.isNonZero(housingInfo.AnnualValue) || this.utilService.isNonZero(housingInfo.TaxPaidlocalAuth) ||
-      this.utilService.isNonZero(housingInfo.InterestPayable) || this.utilService.isNonZero(housingInfo.TotalIncomeOfHP) || this.utilService.isNonZero(housingInfo.StandardDeduction)) {
+    if (this.utilsService.isNonZero(housingInfo.GrossRentReceived) || this.utilsService.isNonZero(housingInfo.AnnualValue) || this.utilsService.isNonZero(housingInfo.TaxPaidlocalAuth) ||
+      this.utilsService.isNonZero(housingInfo.InterestPayable) || this.utilsService.isNonZero(housingInfo.TotalIncomeOfHP) || this.utilsService.isNonZero(housingInfo.StandardDeduction)) {
       var housingObj = {
         propertyType: housingInfo.hasOwnProperty('TypeOfHP') ? (housingInfo.TypeOfHP === "S" ? 'SOP' : 'LOP') : (housingInfo.TotalIncomeOfHP === 0 ? 'SOP' : 'LOP'),
         address: '',
@@ -390,7 +390,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       }
 
       Object.assign(houceObj, this.housingData[i]);
-      if (this.utilService.isNonEmpty(this.housingData[i].interestAmount)) {
+      if (this.utilsService.isNonEmpty(this.housingData[i].interestAmount)) {
         let loanObj = {
           interestAmount: this.getNumberFormat(this.housingData[i].interestAmount),
           loanType: "HOUSING",
@@ -399,7 +399,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         houceObj.loans.push(loanObj);
       }
 
-      if (this.utilService.isNonEmpty(this.housingData[i].tenantName) && this.utilService.isNonEmpty(this.housingData[i].tenentPanNumber)) {
+      if (this.utilsService.isNonEmpty(this.housingData[i].tenantName) && this.utilsService.isNonEmpty(this.housingData[i].tenentPanNumber)) {
         let tenantObj = {
           name: this.housingData[i].tenantName,
           panNumber: this.housingData[i].tenentPanNumber
@@ -435,8 +435,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       }
     }
 
-    if (salaryInfo.hasOwnProperty('Salary') || salaryInfo.hasOwnProperty('PerquisitesValue') || salaryInfo.hasOwnProperty('ProfitsInSalary') || this.utilService.isNonZero(salaryInfo.GrossSalary) || this.utilService.isNonZero(salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10) ||
-      this.utilService.isNonZero(salaryInfo.NetSalary) || this.utilService.isNonZero(salaryInfo.DeductionUs16ia) || this.utilService.isNonZero(salaryInfo.EntertainmentAlw16ii) || this.utilService.isNonZero(salaryInfo.ProfessionalTaxUs16iii) || this.utilService.isNonZero(salaryInfo.IncomeFromSal)) {
+    if (salaryInfo.hasOwnProperty('Salary') || salaryInfo.hasOwnProperty('PerquisitesValue') || salaryInfo.hasOwnProperty('ProfitsInSalary') || this.utilsService.isNonZero(salaryInfo.GrossSalary) || this.utilsService.isNonZero(salaryInfo.AllwncExemptUs10.TotalAllwncExemptUs10) ||
+      this.utilsService.isNonZero(salaryInfo.NetSalary) || this.utilsService.isNonZero(salaryInfo.DeductionUs16ia) || this.utilsService.isNonZero(salaryInfo.EntertainmentAlw16ii) || this.utilsService.isNonZero(salaryInfo.ProfessionalTaxUs16iii) || this.utilsService.isNonZero(salaryInfo.IncomeFromSal)) {
       var salObj = {
         employerName: '',
         address: '',
@@ -497,7 +497,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
       Object.assign(employerObj, this.salaryItrratedData[i]);
       //allowance
-      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].houseRentAllow) && this.salaryItrratedData[i].houseRentAllow !== 0) {
+      if (this.utilsService.isNonEmpty(this.salaryItrratedData[i].houseRentAllow) && this.salaryItrratedData[i].houseRentAllow !== 0) {
         let houceAllowObj = {
           allowanceType: "HOUSE_RENT",
           description: null,
@@ -506,7 +506,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         }
         employerObj.allowance.push(houceAllowObj)
       }
-      // if (this.utilService.isNonEmpty(this.salaryItrratedData[i].leaveTravelExpense) && this.salaryItrratedData[i].leaveTravelExpense !== 0) {
+      // if (this.utilsService.isNonEmpty(this.salaryItrratedData[i].leaveTravelExpense) && this.salaryItrratedData[i].leaveTravelExpense !== 0) {
       //   let ltaAllowObj = {
       //     allowanceType: "LTA",
       //     description: null,
@@ -515,7 +515,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       //   }
       //   employerObj.allowance.push(ltaAllowObj)
       // }
-      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].other) && this.salaryItrratedData[i].other !== 0) {
+      if (this.utilsService.isNonEmpty(this.salaryItrratedData[i].other) && this.salaryItrratedData[i].other !== 0) {
         let otherAllowObj = {
           allowanceType: "ANY_OTHER",
           description: null,
@@ -524,7 +524,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         }
         employerObj.allowance.push(otherAllowObj)
       }
-      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].totalExemptAllow) && this.salaryItrratedData[i].totalExemptAllow !== 0) {
+      if (this.utilsService.isNonEmpty(this.salaryItrratedData[i].totalExemptAllow) && this.salaryItrratedData[i].totalExemptAllow !== 0) {
         let totalExeAllowObj = {
           allowanceType: "ALL_ALLOWANCES",
           description: null,
@@ -535,7 +535,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       }
 
       //deduction
-      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].entertainAllow) && this.salaryItrratedData[i].entertainAllow !== 0) {
+      if (this.utilsService.isNonEmpty(this.salaryItrratedData[i].entertainAllow) && this.salaryItrratedData[i].entertainAllow !== 0) {
         let entertainAllowObj = {
           deductionType: "ENTERTAINMENT_ALLOW",
           description: null,
@@ -544,7 +544,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         }
         employerObj.deductions.push(entertainAllowObj)
       }
-      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].professionalTax) && this.salaryItrratedData[i].professionalTax !== 0) {
+      if (this.utilsService.isNonEmpty(this.salaryItrratedData[i].professionalTax) && this.salaryItrratedData[i].professionalTax !== 0) {
         let professionalTaxObj = {
           deductionType: "PROFESSIONAL_TAX",
           description: null,
@@ -555,7 +555,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       }
 
       //Salary( as per sec 17(1)) 
-      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].salAsPerSec171) && this.salaryItrratedData[i].salAsPerSec171 !== 0) {
+      if (this.utilsService.isNonEmpty(this.salaryItrratedData[i].salAsPerSec171) && this.salaryItrratedData[i].salAsPerSec171 !== 0) {
         let sal17Obj = {
           description: null,
           exemptAmount: 0,
@@ -565,7 +565,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         employerObj.salary.push(sal17Obj)
       }
       //Perquist val( as per sec 17(2)) 
-      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].valOfPerquisites) && this.salaryItrratedData[i].valOfPerquisites !== 0) {
+      if (this.utilsService.isNonEmpty(this.salaryItrratedData[i].valOfPerquisites) && this.salaryItrratedData[i].valOfPerquisites !== 0) {
         let valOfPerqu17Obj = {
           description: null,
           exemptAmount: 0,
@@ -575,7 +575,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         employerObj.perquisites.push(valOfPerqu17Obj)
       }
       //Profit in ilu( as per sec 17(3)) 
-      if (this.utilService.isNonEmpty(this.salaryItrratedData[i].profitInLieu) && this.salaryItrratedData[i].profitInLieu !== 0) {
+      if (this.utilsService.isNonEmpty(this.salaryItrratedData[i].profitInLieu) && this.salaryItrratedData[i].profitInLieu !== 0) {
         let profitsInLieuObj = {
           description: null,
           exemptAmount: 0,
@@ -1496,7 +1496,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
   addExemptIncome() {
 
-    if (this.utilService.isNonEmpty(this.exemptInfo.type) && this.utilService.isNonEmpty(this.exemptInfo.amount)) {
+    if (this.utilsService.isNonEmpty(this.exemptInfo.type) && this.utilsService.isNonEmpty(this.exemptInfo.amount)) {
       this.exemptIncomeData.push(this.exemptInfo);
 
     }
@@ -1599,7 +1599,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       this.setTotalOfExempt();
     }
     else {
-      this.utilService.showSnackBar('This user have ITR type = ' + summary.assesse.itrType)
+      this.utilsService.showSnackBar('This user have ITR type = ' + summary.assesse.itrType)
     }
   }
   updateSalatyInfo(salaryInfo: any) {
@@ -1686,15 +1686,15 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       var insuranceVal = insuranceInfo.value;
       for (let i = 0; i < insuranceVal.length; i++) {
 
-        if (insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].premium)) {
+        if (insuranceVal[i].policyFor === "DEPENDANT" && this.utilsService.isNonEmpty(insuranceVal[i].premium)) {
 
           this.sec80DobjVal.healthInsuarancePremiumSelf = insuranceVal[i].premium;
         }
-        if (insuranceVal[i].policyFor === "DEPENDANT" && this.utilService.isNonEmpty(insuranceVal[i].preventiveCheckUp)) {
+        if (insuranceVal[i].policyFor === "DEPENDANT" && this.utilsService.isNonEmpty(insuranceVal[i].preventiveCheckUp)) {
 
           this.sec80DobjVal.preventiveHealthCheckupFamily = insuranceVal[i].preventiveCheckUp;
         }
-        if (insuranceVal[i].policyFor === "PARENTS" && this.utilService.isNonEmpty(insuranceVal[i].premium)) {
+        if (insuranceVal[i].policyFor === "PARENTS" && this.utilsService.isNonEmpty(insuranceVal[i].premium)) {
 
           this.sec80DobjVal.healthInsuarancePremiumParents = insuranceVal[i].premium;
         }
@@ -1838,7 +1838,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
   natureCode: any;
   getCodeFromLabelOnBlur() {
-    if (this.utilService.isNonEmpty(this.natureOfBusinessForm.value) && this.utilService.isNonEmpty(this.natureOfBusinessForm.value)) {
+    if (this.utilsService.isNonEmpty(this.natureOfBusinessForm.value) && this.utilsService.isNonEmpty(this.natureOfBusinessForm.value)) {
       this.natureCode = this.natureOfBusinessDropdown44AD.filter((item: any) => item.label.toLowerCase() === this.natureOfBusinessForm.value.toLowerCase());
       if (this.natureCode.length !== 0) {
         this.natureCode = this.natureCode[0].code;
@@ -2170,13 +2170,13 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
   createHouseDataObj(houseData: any, action: any, index: any) {
     if (action === 'Add') {
-      let flatNo = this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '';
-      let building = this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
-      let street = this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '';
-      let locality = this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '';
-      let city = this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '';
-      let country = this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '';
-      let state = this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '';
+      let flatNo = this.utilsService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '';
+      let building = this.utilsService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
+      let street = this.utilsService.isNonEmpty(houseData[0].street) ? houseData[0].street : '';
+      let locality = this.utilsService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '';
+      let city = this.utilsService.isNonEmpty(houseData[0].city) ? houseData[0].city : '';
+      let country = this.utilsService.isNonEmpty(houseData[0].country) ? houseData[0].country : '';
+      let state = this.utilsService.isNonEmpty(houseData[0].state) ? houseData[0].state : '';
       let address = flatNo + ' ' + building + ' ' + ' ' + street + ' ' + locality + ' ' + city + ' ' + country + ' ' + state;
 
 
@@ -2202,14 +2202,14 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
           interestAmount: (Array.isArray(houseData[i].loans) && houseData[i].loans.length > i) ? houseData[i].loans[i].interestAmount : '',
           taxableIncome: houseData[i].taxableIncome,
           exemptIncome: houseData[i].exemptIncome,
-          pinCode: this.utilService.isNonEmpty(houseData[i].pinCode) ? houseData[i].pinCode : '',
-          flatNo: this.utilService.isNonEmpty(houseData[i].flatNo) ? houseData[i].flatNo : '',
-          building: this.utilService.isNonEmpty(houseData[i].building) ? houseData[i].building : '',
-          street: this.utilService.isNonEmpty(houseData[i].street) ? houseData[i].street : '',
-          locality: this.utilService.isNonEmpty(houseData[i].locality) ? houseData[i].locality : '',
-          city: this.utilService.isNonEmpty(houseData[i].city) ? houseData[i].city : '',
-          country: this.utilService.isNonEmpty(houseData[i].country) ? houseData[i].country : '',
-          state: this.utilService.isNonEmpty(houseData[i].state) ? houseData[i].state : '',
+          pinCode: this.utilsService.isNonEmpty(houseData[i].pinCode) ? houseData[i].pinCode : '',
+          flatNo: this.utilsService.isNonEmpty(houseData[i].flatNo) ? houseData[i].flatNo : '',
+          building: this.utilsService.isNonEmpty(houseData[i].building) ? houseData[i].building : '',
+          street: this.utilsService.isNonEmpty(houseData[i].street) ? houseData[i].street : '',
+          locality: this.utilsService.isNonEmpty(houseData[i].locality) ? houseData[i].locality : '',
+          city: this.utilsService.isNonEmpty(houseData[i].city) ? houseData[i].city : '',
+          country: this.utilsService.isNonEmpty(houseData[i].country) ? houseData[i].country : '',
+          state: this.utilsService.isNonEmpty(houseData[i].state) ? houseData[i].state : '',
         }
         this.housingData.push(house)
       }
@@ -2218,13 +2218,13 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     }
     else if (action === 'Edit') {
 
-      let flatNo = this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '';
-      let building = this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
-      let street = this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '';
-      let locality = this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '';
-      let city = this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '';
-      let country = this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '';
-      let state = this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '';
+      let flatNo = this.utilsService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '';
+      let building = this.utilsService.isNonEmpty(houseData[0].building) ? houseData[0].building : '';
+      let street = this.utilsService.isNonEmpty(houseData[0].street) ? houseData[0].street : '';
+      let locality = this.utilsService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '';
+      let city = this.utilsService.isNonEmpty(houseData[0].city) ? houseData[0].city : '';
+      let country = this.utilsService.isNonEmpty(houseData[0].country) ? houseData[0].country : '';
+      let state = this.utilsService.isNonEmpty(houseData[0].state) ? houseData[0].state : '';
       let address = flatNo + ' ' + building + ' ' + ' ' + street + ' ' + locality + ' ' + city + ' ' + country + ' ' + state;
 
 
@@ -2247,14 +2247,14 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         interestAmount: (Array.isArray(houseData[0].loans) && houseData[0].loans.length > 0) ? houseData[0].loans[0].interestAmount : '',
         taxableIncome: houseData[0].taxableIncome,
         exemptIncome: houseData[0].exemptIncome,
-        pinCode: this.utilService.isNonEmpty(houseData[0].pinCode) ? houseData[0].pinCode : '',
-        flatNo: this.utilService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '',
-        building: this.utilService.isNonEmpty(houseData[0].building) ? houseData[0].building : '',
-        street: this.utilService.isNonEmpty(houseData[0].street) ? houseData[0].street : '',
-        locality: this.utilService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '',
-        city: this.utilService.isNonEmpty(houseData[0].city) ? houseData[0].city : '',
-        country: this.utilService.isNonEmpty(houseData[0].country) ? houseData[0].country : '',
-        state: this.utilService.isNonEmpty(houseData[0].state) ? houseData[0].state : '',
+        pinCode: this.utilsService.isNonEmpty(houseData[0].pinCode) ? houseData[0].pinCode : '',
+        flatNo: this.utilsService.isNonEmpty(houseData[0].flatNo) ? houseData[0].flatNo : '',
+        building: this.utilsService.isNonEmpty(houseData[0].building) ? houseData[0].building : '',
+        street: this.utilsService.isNonEmpty(houseData[0].street) ? houseData[0].street : '',
+        locality: this.utilsService.isNonEmpty(houseData[0].locality) ? houseData[0].locality : '',
+        city: this.utilsService.isNonEmpty(houseData[0].city) ? houseData[0].city : '',
+        country: this.utilsService.isNonEmpty(houseData[0].country) ? houseData[0].country : '',
+        state: this.utilsService.isNonEmpty(houseData[0].state) ? houseData[0].state : '',
       }
       this.housingData.splice(index, 1, house)
     }
@@ -2408,7 +2408,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       const param = '/itr/api/getPanDetail?panNumber=' + pan.value;
       this.userService.getMethodInfo(param).subscribe((result: any) => {
         const userData = <FormArray>this.itrSummaryForm.controls['assesse'].get('family');
-        if (this.utilService.isNonEmpty(dob)) {
+        if (this.utilsService.isNonEmpty(dob)) {
           let reqBody = {
             firstName: "",
             isValid: "",
@@ -2420,7 +2420,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
           Object.assign(reqBody, result);
 
-          if (!this.utilService.isNonEmpty(result.middleName)) {
+          if (!this.utilsService.isNonEmpty(result.middleName)) {
             reqBody.middleName = personalInfo.Verification.Declaration.FatherName;
             // this.itrSummaryForm.controls['assesse'] as FormGroup).controls['family.controls[0].controls['fathersName'].setValue(reqBody.middleName);
           }
@@ -2476,7 +2476,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
   }
   setOtherSourceIncomeValue(incomeVal: any, type: any) {
 
-    if (Number(incomeVal) !== 0 && this.utilService.isNonEmpty(incomeVal)) {
+    if (Number(incomeVal) !== 0 && this.utilsService.isNonEmpty(incomeVal)) {
       if (type === 'saving') {
         this.sourcesOfIncome.interestFromSaving = Number(incomeVal);
       }
@@ -2531,7 +2531,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
   setAnnualVal() {
     let annualVal = Number((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['grossAnnualRentReceived'].value) - Number((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['propertyTax'].value);
     (this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['annualValue'].setValue(annualVal);
-    if (this.utilService.isNonEmpty((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value) || (this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value > 0) {
+    if (this.utilsService.isNonEmpty((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value) || (this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value > 0) {
       let standerdDeduct = Math.round((Number((this.itrSummaryForm.controls['houseProperties'] as FormGroup).controls['annualValue'].value) * 30) / 100);
       var stadDeuct = [];
       stadDeuct.push(standerdDeduct)
@@ -2586,7 +2586,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
   }
   setDeduction80DVal(insuranceVal: any, type: any) {
     //  alert(insuranceVal)
-    if (insuranceVal !== 0 || this.utilService.isNonEmpty(insuranceVal)) {
+    if (insuranceVal !== 0 || this.utilsService.isNonEmpty(insuranceVal)) {
       if (type === 'forSelf') {
         this.sec80DobjVal.healthInsuarancePremiumSelf = insuranceVal;
       }
@@ -2826,13 +2826,13 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     if (this.itrSummaryForm.valid && (this.itrType.itrFour ? this.businessFormValid : true)) {
 
       // if (this.newItrSumChanges) {
-      //   this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/new-summary/itr-one', ['trackEvent', 'New Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
+      //   this.utilsService.matomoCall('Tax Summary', '/pages/tax-summary/new-summary/itr-one', ['trackEvent', 'New Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
       // }
       // else {
-      //   this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/itrFirst', ['trackEvent', 'Old Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
+      //   this.utilsService.matomoCall('Tax Summary', '/pages/tax-summary/itrFirst', ['trackEvent', 'Old Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
       // }
 
-      if (this.utilService.isNonEmpty(this.sourcesOfIncome)) {
+      if (this.utilsService.isNonEmpty(this.sourcesOfIncome)) {
         this.incomeData = [];
         if (this.sourcesOfIncome.interestFromSaving !== 0) {
           let obj = {
@@ -2918,7 +2918,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       //newRegime Summary bind
       this.itrSummaryForm.controls['newTaxRegime'].setValue(this.newRegimeTaxSummary)
 
-      if (this.utilService.isNonEmpty(this.totalOfExcempt)) {
+      if (this.utilsService.isNonEmpty(this.totalOfExcempt)) {
         let incomeObj = {
           expenses: 0,
           amount: this.totalOfExcempt,
@@ -2934,7 +2934,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
 
 
-      if (this.utilService.isNonEmpty(this.sec80DobjVal)) {
+      if (this.utilsService.isNonEmpty(this.sec80DobjVal)) {
         var insuranceData = [];
         if (this.sec80DobjVal.healthInsuarancePremiumSelf !== 0 || this.sec80DobjVal.preventiveHealthCheckupFamily !== 0) {
           let obj = {
@@ -3000,7 +3000,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
 
         var presumData = [];
-        if (this.utilService.isNonEmpty(this.businessObject.natureOfBusiness44AD) && this.utilService.isNonEmpty(this.businessObject.tradeName44AD)) {
+        if (this.utilsService.isNonEmpty(this.businessObject.natureOfBusiness44AD) && this.utilsService.isNonEmpty(this.businessObject.tradeName44AD)) {
 
 
 
@@ -3015,7 +3015,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
             taxableIncome: Number(this.businessObject.received44ADtaotal),
             exemptIncome: Number(this.businessObject.presumptive44ADtotal)
           }
-          if (this.utilService.isNonEmpty(this.businessObject.recieptRecievedInBank)) {
+          if (this.utilsService.isNonEmpty(this.businessObject.recieptRecievedInBank)) {
 
             let incomeObj = {
               id: null,
@@ -3031,7 +3031,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
             presumptiveBusinessObj.incomes.push(incomeObj)
           }
 
-          if (this.utilService.isNonEmpty(this.businessObject.recievedinCash)) {
+          if (this.utilsService.isNonEmpty(this.businessObject.recievedinCash)) {
             let incomeObj = {
               id: null,
               incomeType: "CASH",
@@ -3050,7 +3050,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         }
 
 
-        if (this.utilService.isNonEmpty(this.businessObject.natureOfBusiness44ADA) && this.utilService.isNonEmpty(this.businessObject.tradeName44ADA)) {
+        if (this.utilsService.isNonEmpty(this.businessObject.natureOfBusiness44ADA) && this.utilsService.isNonEmpty(this.businessObject.tradeName44ADA)) {
 
           this.businessObject.natureOfBusiness44ADA = this.natureOfBusinessDropdown44ADA.filter((item: any) => item.label === this.businessObject.natureOfBusiness44ADA)[0].code;
           var presumptiveProfessionalObj = {
@@ -3060,7 +3060,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
             incomes: [] as any[]
           }
 
-          if (this.utilService.isNonEmpty(this.businessObject.grossReciept)) {
+          if (this.utilsService.isNonEmpty(this.businessObject.grossReciept)) {
             let incomeObj = {
               incomeType: "PROFESSIONAL",
               receipts: Number(this.businessObject.grossReciept),// gross receipts   
@@ -3554,6 +3554,18 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         return false;
       }
     }
+  }
+
+  sendSummary() {
+    this.loading = true;
+    let param = `/summary/send?itrId=${this.itrObject.itrId}&channel=kommunicate&summaryId=${this.itrSummaryForm.value.summaryId}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      this.loading = false;
+      console.log('Responce of send PDF:', res)
+      this.utilsService.showSnackBar(res.message)
+    }, error => {
+      this.loading = false;
+    })
   }
 
 }

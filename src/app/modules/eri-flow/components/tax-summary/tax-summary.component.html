@@ -760,7 +760,7 @@
 
                     <div class="card__col-lg-1">
                         <button
-                            [disabled]="utilService.isNonEmpty(exemptInfo.type) && utilService.isNonEmpty(exemptInfo.amount) ? false: true"
+                            [disabled]="utilsService.isNonEmpty(exemptInfo.type) && utilsService.isNonEmpty(exemptInfo.amount) ? false: true"
                             (click)="addExemptIncome()">Add</button>
                     </div>
                 </div><br>
@@ -1772,9 +1772,10 @@
 
         <!-- </div> -->
         <div class="card__row">
-            <button class="btn" (click)="saveItrSummary()">Save Summary</button> &nbsp;
+            <button class="tbd-btn" (click)="saveItrSummary()">Save Summary</button> &nbsp;
+            <button class="tbd-btn" (click)="sendSummary()">Send Summary On Kommunicate</button> &nbsp;
             <span [class.cursorNotAllow]="itrSummaryForm.value.summaryId === 0">
-                <button class="btn" [class.disableBtn]="itrSummaryForm.value.summaryId === 0"
+                <button class="tbd-btn-secondary" [class.disableBtn]="itrSummaryForm.value.summaryId === 0"
                     (click)="downloadItrSummary()">Download Summary</button>
             </span>
         </div>

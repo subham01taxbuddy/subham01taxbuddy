@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { BankDialogComponent } from 'src/app/modules/itr-shared/dialogs/bank-dialog/bank-dialog.component';
 
 
 export const MY_FORMATS = {
@@ -4725,6 +4726,18 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       this.personalInfoForm.controls['eFillingDate'].updateValueAndValidity();
     }
   }
+  openBankDialog(mode: string, index: any, bank: any) {
+    let disposable = this.dialog.open(BankDialogComponent, {
+      data: {
+        bankDetails: bank,
+        mode: mode,
+      }
+    })
+    disposable.afterClosed().subscribe(result => {
+      console.log('New Bank Dialog', result)
+      this.setBankValue(result.data.bankDetails, mode, index)
+    });
+  }
 
   openDialog(windowTitle: string, windowBtn: string, index: any, myUser: any, mode: string) {
     let disposable = this.dialog.open(SumaryDialogComponent, {
@@ -4775,39 +4788,17 @@ export class Itr2mainComponent implements OnInit, OnChanges {
   }
 
   setBankValue(latestBankInfo, action, index) {
-    console.log('DDAATTAA==>: ', latestBankInfo, action, index)
+    if (latestBankInfo.hasRefund) {
+      for (let i = 0; i < this.bankData.length; i++) {
+        this.bankData[i].hasRefund = false;
+      }
+    }
     if (action === 'Add') {
-      if (this.bankData.length !== 0) {
-        console.log('latestBankInfo: ', latestBankInfo)
-        if (latestBankInfo.hasRefund === true) {
-          for (let i = 0; i < this.bankData.length; i++) {
-            this.bankData[i].hasRefund = false;
-          }
-          this.bankData.push(latestBankInfo)
-        }
-        else {
-          this.bankData.push(latestBankInfo)
-        }
-
-      } else {
-        this.bankData.push(latestBankInfo)
-        // this.itrSummaryForm.controls['assesse'].controls['bankDetails'].setValue(this.bankData)
-      }
+      this.bankData.push(latestBankInfo);
+      return;
     }
-    else if (action === 'Edit') {
-      if (latestBankInfo.hasRefund === true) {
-        for (let i = 0; i < this.bankData.length; i++) {
-          this.bankData[i].hasRefund = false;
-        }
-        this.bankData.splice(index, 1, latestBankInfo)
-        console.log('After edit data is: ', this.bankData)
-      }
-      else {
-        this.bankData.splice(index, 1, latestBankInfo)
-        console.log('After edit data is: ', this.bankData)
-      }
-    }
-    console.log('this.bankData: ', this.bankData)
+    this.bankData.splice(index, 1, latestBankInfo);
+    return;
   }
 
   setLossesValue(latestLossesInfo, action, index) {
@@ -8371,5 +8362,15 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
   }
 
-
+  sendSummary() {
+    this.loading = true;
+    let param = `/summary/send?itrId=${this.itrObject.itrId}&channel=kommunicate&summaryId=${this.personalInfoForm.value.summaryId}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      this.loading = false;
+      console.log('Responce of send PDF:', res)
+      this.utilsService.showSnackBar(res.message)
+    }, error => {
+      this.loading = false;
+    })
+  }
 }

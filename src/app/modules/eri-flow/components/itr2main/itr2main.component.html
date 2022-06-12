@@ -437,8 +437,8 @@
     <div class="card__row tableHead">
         <div class="card__col-lg-8">Annexure: Bank Details</div>
         <div class="card__col-lg-4">
-            <button class="tbd-btn-small " (click)="openDialog('Add Bank Info','Add', null,'','Bank')"><i
-                    class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add</button>
+            <button class="tbd-btn-small " (click)="openBankDialog('Add', null,'')"><i class="fa fa-plus"
+                    aria-hidden="true"></i>&nbsp;&nbsp;Add</button>
         </div>
     </div>
     <table>
@@ -465,8 +465,7 @@
             <td *ngIf="!bank.hasRefund" style="text-align: center;"><i class="fa fa-times fa-lg" aria-hidden="true"></i>
             </td>
             <td>
-                <button type="button" class="tbd-table-btn-icon"
-                    (click)="openDialog('Edit Bank Info','Edit', i, bankData[i],'Bank')">
+                <button type="button" class="tbd-table-btn-icon" (click)="openBankDialog('Update', i, bank)">
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </button>
                 <button type="button" class="tbd-table-btn-icon" (click)="deleteData('Bank',i)"><i class="fa fa-trash"
@@ -2551,6 +2550,7 @@
 
     <div class="card__row">
         <button class="tbd-btn" form="personalForm" (click)="saveItrSummary()">Save Summary</button> &nbsp;
+        <button class="tbd-btn" (click)="sendSummary()">Send Summary On Kommunicate</button> &nbsp;
         <span
             [class.cursorNotAllow]="!utilsService.isNonEmpty(personalInfoForm.value.summaryId) || personalInfoForm.value.summaryId === 0">
             <button class="tbd-btn-secondary" (click)="downloadItrSummary()"
