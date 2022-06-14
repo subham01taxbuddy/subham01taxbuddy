@@ -104,7 +104,7 @@ export class CustomerProfileComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     public location: Location,
-    private roleBaseAuthGuardService:RoleBaseAuthGuardService) {
+    private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
   }
@@ -144,7 +144,7 @@ export class CustomerProfileComponent implements OnInit {
       filingTeamMemberId: [''], // TODO
       // planIdSelectedByUser: [null],
       // planIdSelectedByTaxExpert: [null],
-      
+
     });
   }
 
@@ -169,7 +169,7 @@ export class CustomerProfileComponent implements OnInit {
     //   this.customerProfileForm.controls['planIdSelectedByTaxExpert'].setValue(null);
     // }
     if (this.utilsService.isNonEmpty(this.ITR_JSON.family) && this.ITR_JSON.family instanceof Array) {
-      this.ITR_JSON.family.filter((item:any) => {
+      this.ITR_JSON.family.filter((item: any) => {
         if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
           this.customerProfileForm.patchValue({
             firstName: item.fName,
@@ -185,7 +185,7 @@ export class CustomerProfileComponent implements OnInit {
 
   }
   findAssesseeType() {
-    this.customerProfileForm.controls['panNumber'].setValue(this.utilsService.isNonEmpty(this.customerProfileForm.controls['panNumber'].value) ? this.customerProfileForm.controls['panNumber'].value.toUpperCase() : this.customerProfileForm.controls['panNumber'].value);
+    // this.customerProfileForm.controls['panNumber'].setValue(this.utilsService.isNonEmpty(this.customerProfileForm.controls['panNumber'].value) ? this.customerProfileForm.controls['panNumber'].value.toUpperCase() : this.customerProfileForm.controls['panNumber'].value);
     if (this.utilsService.isNonEmpty(this.customerProfileForm.controls['panNumber'].value)) {
       const pan = this.customerProfileForm.controls['panNumber'].value;
       if (pan.substring(4, 3) === 'P') {
@@ -200,6 +200,7 @@ export class CustomerProfileComponent implements OnInit {
 
   getUserDataByPan(pan) {
     if (this.customerProfileForm.controls['panNumber'].valid) {
+      this.findAssesseeType()
       const token = sessionStorage.getItem(AppConstants.TOKEN);
       let httpOptions: any;
       httpOptions = {
@@ -290,20 +291,19 @@ export class CustomerProfileComponent implements OnInit {
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
         this.loading = false;
         this.utilsService.showSnackBar('Customer profile updated successfully.');
-        if (ref === "CONTINUE") {
-          if (this.customerProfileForm.controls['itrType'].value === '1'
-            || this.customerProfileForm.controls['itrType'].value === '4')
-            this.router.navigate(['/pages/itr-filing/itr']);
-          else
-            this.router.navigate(['/pages/itr-filing/direct-upload']);
-        } else if (ref === "DIRECT") {
+        // if (ref === "CONTINUE") {
+        if (this.customerProfileForm.controls['itrType'].value === '1'
+          || this.customerProfileForm.controls['itrType'].value === '4')
+          this.router.navigate(['/pages/itr-filing/itr']);
+        else
           this.router.navigate(['/pages/itr-filing/direct-upload']);
-        } else if (ref === "MANUALLY") {
-          this.updateManualFiling();
-        }
-        else if(ref === "DIRECT-UPLOAD"){
-          this.router.navigate(['/pages/itr-filing/add-client']);
-        }
+        // } else if (ref === "DIRECT") {
+        //   this.router.navigate(['/pages/itr-filing/direct-upload']);
+        // } else if (ref === "MANUALLY") {
+        //   this.updateManualFiling();
+        // }
+        // else if(ref === "DIRECT-UPLOAD"){
+        //   this.router.navigate(['/pages/itr-filing/add-client']);
         // }
       }, error => {
         this.utilsService.showSnackBar('Fialed to update customer profile.');
@@ -444,7 +444,7 @@ export class CustomerProfileComponent implements OnInit {
     // Auto update status to Preparing ITR 
     console.error('screen Update status call in profile', this.statusId)
     const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
       this.utilsService.showSnackBar('There is no any active filing year available')
       return;
@@ -589,9 +589,9 @@ export class CustomerProfileComponent implements OnInit {
     return `ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/${this.customerProfileForm.controls['isRevised'].value === 'Y' ? 'Revised' : 'Original'}/ITR Filing Docs`
   }
 
-  addClient(){
+  addClient() {
     Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
-   
+
   }
 
   isApplicable(permissionRoles) {

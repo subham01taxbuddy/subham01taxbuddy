@@ -23,10 +23,9 @@
       <div class=" card__col-xs-12 card__col-sm-4">
         <mat-form-field appearance="outline">
           <mat-label>Amount in Cash</mat-label>
-          <input type="number" formControlName="amountInCash" matInput placeholder="Amount in Cash" name="amount"
+          <input formControlName="amountInCash" matInput placeholder="Amount in Cash" name="amount"
             required class="input-field" maxlength="14"
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+            digitsOnly>
           <mat-error *ngIf="generalDonationForm.controls['amountInCash'].hasError('pattern')">
             Enter
             positive amount without decimal.</mat-error>
@@ -36,10 +35,9 @@
       <div class="card__col-xs-12 card__col-sm-4">
         <mat-form-field appearance="outline">
           <mat-label>Amount Other Than Cash</mat-label>
-          <input type="number" formControlName="amountOtherThanCash" matInput placeholder="Amount Other Than Cash"
+          <input  formControlName="amountOtherThanCash" matInput placeholder="Amount Other Than Cash"
             name="amount" required class="input-field" maxlength="14"
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+            digitsOnly>
           <mat-error *ngIf="generalDonationForm.controls['amountOtherThanCash'].hasError('pattern')">
             Enter
             positive amount without decimal.</mat-error>
@@ -69,7 +67,7 @@
         <mat-form-field appearance="outline">
           <mat-label>PIN</mat-label>
           <input formControlName="pinCode" matInput currencyMask placeholder="PIN" name="Pin" class="input-field"
-            maxlength="6" minlength="6" required type="text" trim
+            maxlength="6" minlength="6" required type="text" trim digitsOnly
             (blur)="getData(generalDonationForm.controls['pinCode'].value)">
           <mat-error
             *ngIf="generalDonationForm.controls['pinCode'].hasError('pattern') || generalDonationForm.controls['pinCode'].hasError('minlength') || generalDonationForm.controls['pinCode'].hasError('maxlength')">
@@ -143,8 +141,8 @@
 
   </mat-dialog-content>
   <mat-dialog-actions align="center">
-    <button mat-raised-button color="primary" tabindex="1" (click)="saveGeneralDonation()">Save</button>
-    <button mat-raised-button tabindex="-1" (click)="dialogRef.close()">Cancel</button>
+    <button class="tbd-btn"  (click)="saveGeneralDonation()">Save</button>
+    <button type="submit" class="tbd-btn-secondary" mat-dialog-close>Cancel</button>
   </mat-dialog-actions>
 </form>
 
@@ -179,7 +177,7 @@
           <div class="col-md-4 col-xs-12">
             <mat-form-field appearance="outline">
               <mat-icon matPrefix> &#8377;</mat-icon>
-              <input type="number" formControlName="amountInCash" matInput placeholder="Amount in Cash" name="amount"
+              <input  formControlName="amountInCash" matInput placeholder="Amount in Cash" name="amount"
                 required class="input-field" maxlength="14"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 onkeypress="return event.charCode >= 48 && event.charCode <= 57">
@@ -191,7 +189,7 @@
           <div class="col-md-4 col-xs-12">
             <mat-form-field appearance="outline">
               <mat-icon matPrefix> &#8377;</mat-icon>
-              <input type="number" formControlName="amountOtherThanCash" matInput placeholder="Amount Other Than Cash"
+              <input  formControlName="amountOtherThanCash" matInput placeholder="Amount Other Than Cash"
                 name="amount" required class="input-field" maxlength="14"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 onkeypress="return event.charCode >= 48 && event.charCode <= 57">

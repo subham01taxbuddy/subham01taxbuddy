@@ -96,11 +96,11 @@ export class TaxesPaidComponent implements OnInit {
           event.node.setDataValue(event.column.getColId(), event.value.substr(0, 125));
         }
       },
-      frameworkComponents: {
-        numericEditor: NumericEditorComponent,
-        // agDateInput: CustomDateComponent,
-        // matSelect: AgGridMaterialSelectEditorComponent
-      },
+      // frameworkComponents: {
+      //   numericEditor: NumericEditorComponent,
+      //   // agDateInput: CustomDateComponent,
+      //   // matSelect: AgGridMaterialSelectEditorComponent
+      // },
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       defaultColDef: {
@@ -308,7 +308,7 @@ export class TaxesPaidComponent implements OnInit {
         }
       },
       frameworkComponents: {
-        numericEditor: NumericEditorComponent,
+        // numericEditor: NumericEditorComponent,
         // agDateInput: CustomDateComponent,
         matSelect: AgGridMaterialSelectEditorComponent
       },
@@ -542,7 +542,7 @@ export class TaxesPaidComponent implements OnInit {
         }
       },
       frameworkComponents: {
-        numericEditor: NumericEditorComponent,
+        // numericEditor: NumericEditorComponent,
         // agDateInput: CustomDateComponent,
         matSelect: AgGridMaterialSelectEditorComponent
       },
@@ -774,7 +774,7 @@ export class TaxesPaidComponent implements OnInit {
         }
       },
       frameworkComponents: {
-        numericEditor: NumericEditorComponent,
+        // numericEditor: NumericEditorComponent,
         // agDateInput: CustomDateComponent,
         matSelect: AgGridMaterialSelectEditorComponent
       },
@@ -956,7 +956,7 @@ export class TaxesPaidComponent implements OnInit {
         }
       },
       frameworkComponents: {
-        numericEditor: NumericEditorComponent,
+        // numericEditor: NumericEditorComponent,
         agDateInput: CustomDateComponent,
       },
       enableCellChangeFlash: true,

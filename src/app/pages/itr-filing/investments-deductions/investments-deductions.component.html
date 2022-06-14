@@ -9,45 +9,35 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Under section 80C</mat-label>
                     <input matInput placeholder="Under section 80C" formControlName="ELSS" maxlength="8"
-                        autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        autocomplete="off" digitsOnly>
                 </mat-form-field>
             </div>
             <div class="card__col-lg-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Under section 80CCC</mat-label>
                     <input matInput placeholder="Under section 80CCC" formControlName="PENSION_FUND" maxlength="8"
-                        autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        autocomplete="off" digitsOnly>
                 </mat-form-field>
             </div>
             <div class="card__col-lg-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Under section 80CCD (1)</mat-label>
                     <input matInput placeholder="Under section 80CCD (1)" formControlName="PS_EMPLOYEE" maxlength="8"
-                        autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        autocomplete="off" digitsOnly>
                 </mat-form-field>
             </div>
             <div class="card__col-lg-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Under section 80CCD (2)</mat-label>
                     <input matInput placeholder="Under section 80CCD (2)" maxlength="8" formControlName="PS_EMPLOYER"
-                        autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        autocomplete="off" digitsOnly>
                 </mat-form-field>
             </div>
             <div class="card__col-lg-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Under section 80CCD (1B)</mat-label>
                     <input matInput placeholder="Under section 80CCD (1B)" maxlength="8"
-                        formControlName="PENSION_SCHEME" autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        formControlName="PENSION_SCHEME" autocomplete="off" digitsOnly>
                 </mat-form-field>
             </div>
             <!--  <div class="card__col-lg-4">
@@ -72,9 +62,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Under section 80E</mat-label>
                     <input matInput placeholder="Under section 80E" maxlength="8" formControlName="us80e"
-                        autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        autocomplete="off" digitsOnly>
                 </mat-form-field>
             </div>
 
@@ -82,9 +70,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Under section 80GG</mat-label>
                     <input matInput placeholder="Under section 80GG" maxlength="8" formControlName="us80gg"
-                        autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        autocomplete="off" digitsOnly>
                 </mat-form-field>
             </div>
         </div>
@@ -94,7 +80,7 @@
         <h2><span class="card__title" style="padding:10px; font-size: 20px;">General Donations under sec 80G</span>
             <a href="javascript:;" class="fR action_icon" title="Add"
                 (click)="addDonation('Add General Donation','ADD','','OTHER')">
-                <button type="button" class="btn" style="border: none;">Add <i class="fa fa-plus"></i></button>
+                <button type="button" class="tbd-btn-small">Add <i class="fa fa-plus"></i></button>
             </a>
         </h2>
         <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
@@ -111,18 +97,14 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Health insurance for self, spouse or children</mat-label>
                     <input matInput placeholder="Health insurance for self, spouse or children" maxlength="8"
-                        formControlName="selfPremium" autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        formControlName="selfPremium" autocomplete="off" digitsOnly>
                 </mat-form-field>
             </div>
             <div class="card__col-lg-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Preventive health Check-up</mat-label>
                     <input matInput placeholder="Preventive health Check-up" maxlength="8"
-                        formControlName="selfPreventiveCheckUp" autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" (blur)="max5000Limit('SELF')">
+                        formControlName="selfPreventiveCheckUp" autocomplete="off" digitsOnly (blur)="max5000Limit('SELF')">
                     <mat-error *ngIf="investmentDeductionForm.controls['selfPreventiveCheckUp'].hasError('max')">
                         Max limit is 5k for both self and parents</mat-error>
                 </mat-form-field>
@@ -132,9 +114,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Medical Expenditure for self, spouse or children</mat-label>
                     <input matInput placeholder="Medical Expenditure for self, spouse or children" maxlength="8"
-                        formControlName="selfMedicalExpenditure" autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        formControlName="selfMedicalExpenditure" autocomplete="off" digitsOnly>
                 </mat-form-field>
             </div>
         </div>
@@ -152,18 +132,14 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Health insurance premium paid for parents</mat-label>
                     <input matInput placeholder="Health insurance premium paid for parents" maxlength="8"
-                        formControlName="premium" autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        formControlName="premium" autocomplete="off" digitsOnly>
                 </mat-form-field>
             </div>
             <div class="card__col-lg-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Amount spent on preventive health check-up for parents</mat-label>
                     <input matInput placeholder="Amount spent on preventive health check-up for parents" maxlength="8"
-                        formControlName="preventiveCheckUp" autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                        formControlName="preventiveCheckUp" autocomplete="off" digitsOnly
                         (blur)="max5000Limit('PARENTS')">
                     <mat-error *ngIf="investmentDeductionForm.controls['preventiveCheckUp'].hasError('max')">
                         Max limit is 5k for both self and parents</mat-error>
@@ -174,14 +150,12 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Medical Expenditure for self, spouse or children</mat-label>
                     <input matInput placeholder="Medical expenditure for parents" maxlength="8"
-                        formControlName="medicalExpenditure" autocomplete="off" type="number"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        formControlName="medicalExpenditure" autocomplete="off" digitsOnly>
                 </mat-form-field>
             </div>
         </div>
         <div class="pull-right">
-            <button class="btn long-btn" style="border: none;" (click)="saveInvestmentDeductions()">Save and Continue
+            <button class="tbd-btn" (click)="saveInvestmentDeductions()">Save and Continue
             </button>
         </div>
     </form>
