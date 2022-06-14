@@ -38,73 +38,21 @@
 
 <div class="content" style="width: 65%;">
     <div class="card__title" style="padding:10px; font-size: 20px;">Customer Profile</div>
-    <app-update-status [userId]="ITR_JSON.userId"></app-update-status>
+    <!-- <app-update-status [userId]="ITR_JSON.userId"></app-update-status> -->
     <hr>
     <form [formGroup]="customerProfileForm">
-
         <div class="card__row">
-            <!-- <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>First name</mat-label>
-                    <input matTooltip="First name as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above"
-                        matInput currencyMask placeholder="First name" name="FirstName" formControlName="firstName"
-                        class="input-field" maxlength="25">
-                    <mat-error *ngIf="customerProfileForm.controls['firstName'].hasError('pattern')">Enter
-                        character only</mat-error>
-                </mat-form-field>
-            </div> -->
-            <!-- <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>Middle name</mat-label>
-                    <input matTooltip="Middle name as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above"
-                        matInput currencyMask placeholder="Middle name" name="MiddleName" formControlName="middleName"
-                        class="input-field" maxlength="75">
-                    <mat-error *ngIf="customerProfileForm.controls['middleName'].hasError('pattern')">Enter
-                        character only</mat-error>
-                </mat-form-field>
-            </div> -->
-            <!-- <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>Last name</mat-label>
-                    <input matTooltip="Last name as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above"
-                        matInput currencyMask placeholder="Last name" name="LastName" formControlName="lastName"
-                        class="input-field" maxlength="75" required>
-                    <mat-error *ngIf="customerProfileForm.controls['lastName'].hasError('pattern')">Enter
-                        character only</mat-error>
-                </mat-form-field>
-            </div> -->
-        </div>
-        <div class="card__row">
-            <!-- <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>PAN Number</mat-label>
-                    <input [style.cursor]="ITR_JSON.eFillingCompleted === true ? 'not-allowed':''"
-                        [disabled]="ITR_JSON.eFillingCompleted === true"
-                        matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
-                        matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput placeholder="PAN"
-                        name="panNumber" formControlName="panNumber" class="input-field" maxlength="10" minlength="10"
-                        required (keyup)="findAssesseeType()"
-                        (blur)="getUserDataByPan(customerProfileForm.controls['panNumber'].value)">
-                    <mat-error *ngIf="customerProfileForm.controls['panNumber'].hasError('pattern')">Enter
-                        valid PAN (e.g
-                        XXXXX1234X)</mat-error>
-                </mat-form-field>
-            </div> -->
-            <div class="card__col-xs-12 card__col-sm-8">
+            <div class="card__col-xs-12 card__col-sm-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Father Name</mat-label>
-                    <input matTooltip="Father's name as per PAN" matTooltipClass="tab-tooltip"
-                        matTooltipPosition="above" matInput currencyMask placeholder="Father's name" name="mobile"
+                    <input type="text" matInput placeholder="Father's name" name="mobile"
                         [formControl]="customerProfileForm.controls['fatherName']" class="input-field" maxlength="125"
-                        required>
+                        capitalizeFirst required>
                     <mat-error *ngIf="customerProfileForm.controls['fatherName'].hasError('pattern')">
                         Enter character only</mat-error>
                 </mat-form-field>
             </div>
-        </div>
-
-        <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="card__col-xs-12 card__col-sm-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Residential status</mat-label>
                     <mat-select placeholder="Residential status" name="residentialStatus"
@@ -116,7 +64,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="card__col-xs-12 card__col-sm-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Employer Category</mat-label>
                     <mat-select placeholder="Employer Category" name="employerCategory"
@@ -127,7 +75,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-4">
+            <div class="card__col-xs-12 card__col-sm-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Select Gender</mat-label>
                     <mat-select placeholder="Select Gender" name="gender" formControlName="gender">
@@ -137,31 +85,6 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <!-- <div class="card__col-xs-12 card__col-sm-4">
-                <mat-form-field appearance="outline">
-                    <mat-label>Date Of Birth</mat-label>
-                    <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip"
-                        matTooltipPosition="above" matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
-                        class="input-field" placeholder="Date of birth" name="dateOfBirth"
-                        [formControl]="customerProfileForm.controls['dateOfBirth']" required>
-                    <mat-hint>Format: DD/MM/YYYY</mat-hint>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-            </div> -->
-            <!-- <div class="card__col-xs-12 card__col-sm-8">
-                <mat-form-field appearance="outline">
-                    <mat-label>Aadhaar Number</mat-label>
-                    <input matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
-                        matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
-                        placeholder="Aadhaar" name="aadharNumber" formControlName="aadharNumber" class="input-field"
-                        maxlength="12" [required]="customerProfileForm.controls['assesseeType'].value === 'INDIVIDUAL'">
-                    <mat-error
-                        *ngIf="customerProfileForm.controls['aadharNumber'].hasError('pattern') || customerProfileForm.controls['aadharNumber'].hasError('minLength') || customerProfileForm.controls['aadharNumber'].hasError('maxLength')">
-                        Enter
-                        12 digit aadhar number</mat-error>
-                </mat-form-field>
-            </div> -->
         </div>
         <div formGroupName="seventhProviso139">
             <div class="card__row">
@@ -172,8 +95,8 @@
                 <div class="card__col-xs-12 card__col-sm-4">
                     <mat-form-field appearance="outline">
                         <mat-label>Amount</mat-label>
-                        <input matInput placeholder="Amount" name="depAmtAggAmtExcd1CrPrYrFlg" type="number"
-                            formControlName="depAmtAggAmtExcd1CrPrYrFlg" class="input-field" maxlength="14">
+                        <input matInput placeholder="Amount" name="depAmtAggAmtExcd1CrPrYrFlg"
+                            formControlName="depAmtAggAmtExcd1CrPrYrFlg" class="input-field" maxlength="14" digitsOnly>
                     </mat-form-field>
                 </div>
             </div>
@@ -186,8 +109,8 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Amount</mat-label>
                         <input matInput placeholder="Amount" name="incrExpAggAmt2LkTrvFrgnCntryFlg"
-                            type="number" formControlName="incrExpAggAmt2LkTrvFrgnCntryFlg"
-                            class="input-field" maxlength="14">
+                            formControlName="incrExpAggAmt2LkTrvFrgnCntryFlg" class="input-field" maxlength="14"
+                            digitsOnly>
                     </mat-form-field>
                 </div>
             </div>
@@ -199,8 +122,8 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Amount</mat-label>
                         <input matInput placeholder="Amount" name="incrExpAggAmt1LkElctrctyPrYrFlg"
-                            type="number" formControlName="incrExpAggAmt1LkElctrctyPrYrFlg"
-                            class="input-field" maxlength="14">
+                            formControlName="incrExpAggAmt1LkElctrctyPrYrFlg" class="input-field" maxlength="14"
+                            digitsOnly>
                     </mat-form-field>
                 </div>
 
@@ -221,7 +144,7 @@
                 <div class="card__col-xs-12 card__col-sm-6">
                     <mat-form-field appearance="outline">
                         <mat-label>Premises name</mat-label>
-                        <input type="text" trim matInput currencyMask placeholder="Premises name" name="premisesName"
+                        <input type="text" trim matInput placeholder="Premises name" name="premisesName"
                             formControlName="premisesName" class="input-field" maxlength="50">
                     </mat-form-field>
                 </div>
@@ -230,15 +153,16 @@
                 <div class="card__col-xs-12 card__col-sm-6">
                     <mat-form-field appearance="outline">
                         <mat-label>Area/ Locality</mat-label>
-                        <input type="text" trim matInput currencyMask placeholder="Area/ Locality" name="area"
-                            formControlName="area" class="input-field" maxlength="50" required>
+                        <input type="text" trim matInput placeholder="Area/ Locality" name="area" formControlName="area"
+                            class="input-field" maxlength="50" required>
                     </mat-form-field>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-6">
                     <mat-form-field appearance="outline">
                         <mat-label>PIN Code</mat-label>
                         <input type="text" matInput placeholder="PIN code" name="pinCode" formControlName="pinCode"
-                            class="input-field" maxlength="6" minlength="6" trim required (blur)="getCityData()">
+                            class="input-field" maxlength="6" minlength="6" trim digitsOnly required
+                            (blur)="getCityData()">
                         <mat-error
                             *ngIf="customerProfileForm.controls['address'].controls['pinCode'].hasError('pattern') || customerProfileForm.controls['address'].controls['pinCode'].hasError('minLength') || customerProfileForm.controls['address'].controls['pinCode'].hasError('maxLength')">
                             Enter
@@ -322,7 +246,8 @@
                     <td>
                         <mat-form-field class="input-field-width" style="width: 90% !important;">
                             <input type="text" trim matInput formControlName="accountNumber" placeholder=""
-                                name="accountNumber[i]" class="input-field" maxlength="20" minlength="3" required>
+                                name="accountNumber[i]" class="input-field" maxlength="20" minlength="3" digitsOnly
+                                required>
                             <mat-error
                                 *ngIf="customerProfileForm.controls['bankDetails'].controls[i].controls['accountNumber'].hasError('pattern') || customerProfileForm.controls['bankDetails'].controls[i].controls['accountNumber'].hasError('minlength')">
                                 Account number should be between 3-20 digit</mat-error>
@@ -343,8 +268,10 @@
             </tbody>
         </table>
         <div class="footer__buttons clearfix" style="margin-top: 40px;">
-            <button class="btn long-btn" style="border: none;" (click)="previousRoute()">Back</button>
-            <button class="btn long-btn" style="border: none;" (click)="saveProfile('NEXT')">Save and Continue
+            <button class="tbd-btn-secondary" (click)="previousRoute()"><i class="fa fa-arrow-left"
+                    aria-hidden="true"></i>
+                &nbsp;&nbsp;Back</button>
+            <button class="tbd-btn" (click)="saveProfile('NEXT')">Save and Continue
             </button>
         </div>
     </form>

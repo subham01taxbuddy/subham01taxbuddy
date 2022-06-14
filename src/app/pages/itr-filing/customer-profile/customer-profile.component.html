@@ -43,24 +43,19 @@
         <div class="content__container">
             <div class="card card_main">
                 <div class="card__title">Customer Profile</div>
-                <app-update-status [userId]="ITR_JSON.userId" (sendValue)="getStatusId($event)"></app-update-status>
-                <hr>
+                <!-- <app-update-status [userId]="ITR_JSON.userId" (sendValue)="getStatusId($event)"></app-update-status> -->
+                <br>
                 <form [formGroup]="customerProfileForm">
                     <div class="card__row">
                         <div class="card__col-xs-12 card__col-sm-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>PAN Number</mat-label>
-                                <input [style.cursor]="ITR_JSON.eFillingCompleted === true ? 'not-allowed':''"
-                                    [disabled]="ITR_JSON.eFillingCompleted === true"
-                                    matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
-                                    matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput placeholder="PAN"
-                                    name="panNumber" formControlName="panNumber" class="input-field" maxlength="10"
-                                    minlength="10" required (keyup)="findAssesseeType()"
-                                    (blur)="getUserDataByPan(customerProfileForm.controls['panNumber'].value)">
+                                <input type="text" matInput placeholder="PAN" name="panNumber"
+                                    formControlName="panNumber" class="input-field" maxlength="10" minlength="10"
+                                    (blur)="getUserDataByPan(customerProfileForm.controls['panNumber'].value)" required
+                                    upperCase>
                                 <mat-error *ngIf="customerProfileForm.controls['panNumber'].hasError('pattern')">
-                                    Enter
-                                    valid PAN (e.g
-                                    XXXXX1234X)</mat-error>
+                                    Enter valid PAN (e.g XXXXX1234X)</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="card__col-xs-12 card__col-sm-4">
@@ -68,7 +63,7 @@
                                 <mat-label>Mobile</mat-label>
                                 <input matTooltip="Mobile number should be of 10 digit." matTooltipClass="tab-tooltip"
                                     matTooltipPosition="above" matInput placeholder="Mobile" name="mobile"
-                                    formControlName="contactNumber" class="input-field" required>
+                                    formControlName="contactNumber" class="input-field" digitsOnly required>
                                 <mat-error
                                     *ngIf="customerProfileForm.controls['contactNumber'].hasError('pattern') || customerProfileForm.controls['contactNumber'].hasError('minlength') || customerProfileForm.controls['contactNumber'].hasError('maxlength')">
                                     Enter
@@ -89,9 +84,10 @@
                         <div class="card__col-xs-12 card__col-sm-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>First name</mat-label>
-                                <input matTooltip="First name as per PAN" matTooltipClass="tab-tooltip"
+                                <input type="text" matTooltip="First name as per PAN" matTooltipClass="tab-tooltip"
                                     matTooltipPosition="above" matInput currencyMask placeholder="First name"
-                                    name="FirstName" formControlName="firstName" class="input-field" maxlength="25">
+                                    name="FirstName" formControlName="firstName" class="input-field" maxlength="25"
+                                    capitalizeFirst>
                                 <mat-error *ngIf="customerProfileForm.controls['firstName'].hasError('pattern')">
                                     Enter
                                     character only</mat-error>
@@ -100,9 +96,10 @@
                         <div class="card__col-xs-12 card__col-sm-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>Middle name</mat-label>
-                                <input matTooltip="Middle name as per PAN" matTooltipClass="tab-tooltip"
+                                <input type="text" matTooltip="Middle name as per PAN" matTooltipClass="tab-tooltip"
                                     matTooltipPosition="above" matInput currencyMask placeholder="Middle name"
-                                    name="MiddleName" formControlName="middleName" class="input-field" maxlength="75">
+                                    name="MiddleName" formControlName="middleName" class="input-field" maxlength="75"
+                                    capitalizeFirst>
                                 <mat-error *ngIf="customerProfileForm.controls['middleName'].hasError('pattern')">
                                     Enter
                                     character only</mat-error>
@@ -111,10 +108,10 @@
                         <div class="card__col-xs-12 card__col-sm-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>Last name</mat-label>
-                                <input matTooltip="Last name as per PAN" matTooltipClass="tab-tooltip"
+                                <input type="text" matTooltip="Last name as per PAN" matTooltipClass="tab-tooltip"
                                     matTooltipPosition="above" matInput currencyMask placeholder="Last name"
                                     name="LastName" formControlName="lastName" class="input-field" maxlength="75"
-                                    required>
+                                    capitalizeFirst required>
                                 <mat-error *ngIf="customerProfileForm.controls['lastName'].hasError('pattern')">
                                     Enter
                                     character only</mat-error>
@@ -129,7 +126,7 @@
                                 <input matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
                                     matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
                                     placeholder="Aadhaar" name="aadharNumber" formControlName="aadharNumber"
-                                    class="input-field" maxlength="12">
+                                    class="input-field" maxlength="12" digitsOnly>
                                 <mat-error
                                     *ngIf="customerProfileForm.controls['aadharNumber'].hasError('pattern') || customerProfileForm.controls['aadharNumber'].hasError('minLength') || customerProfileForm.controls['aadharNumber'].hasError('maxLength')">
                                     Enter
@@ -163,67 +160,60 @@
                         </div>
                     </div>
                     <div class="card__row">
-                        <div class="card__col-xs-8">
-                            <div class="card__row">
-                                <div class="card__col-xs-12 card__col-sm-6">
+                        <!--  <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Filing Team</mat-label>
                                         <mat-select placeholder="Filing Team Member Id" name="filingTeamMemberId"
-                                            formControlName="filingTeamMemberId">
+                                            formControlName="filingTeamMemberId" disabled>
                                             <mat-option *ngFor="let member of filingTeamMembers"
                                                 [value]="member.userId">
                                                 {{ member.name }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                </div>
-                                <div class="card__col-xs-12 card__col-sm-6">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Return Type</mat-label>
-                                        <mat-select placeholder="Return Type" name="isRevised"
-                                            formControlName="isRevised" (selectionChange)="changeReviseForm()" required>
-                                            <mat-option *ngFor="let type of returnTypes" [value]="type.value">
-                                                {{ type.label }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="card__row">
-                                <div class="card__col-xs-12 card__col-sm-6"
-                                    *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Acknowledgement number</mat-label>
-                                        <input matTooltip="Acknowledgement number maximum of 15 digit"
-                                            matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
-                                            placeholder="Acknowledgement of Original ITR" name="orgITRAckNum"
-                                            class="input-field" maxlength="15" minlength="15"
-                                            formControlName="orgITRAckNum" />
-                                    </mat-form-field>
-                                </div>
-                                <div class="card__col-xs-12 card__col-sm-6"
-                                    *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Date of filing</mat-label>
-                                        <input [max]="maxDateRevise" matInput [matDatepicker]="revisedPicker"
-                                            placeholder="Date of filing original return" name="orgITRDate"
-                                            formControlName="orgITRDate" />
-                                        <mat-datepicker-toggle matSuffix [for]="revisedPicker"></mat-datepicker-toggle>
-                                        <mat-datepicker #revisedPicker></mat-datepicker>
-                                    </mat-form-field>
-                                </div>
-                            </div>
+                                </div> -->
+                        <div class="card__col-xs-12 card__col-sm-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Return Type</mat-label>
+                                <mat-select placeholder="Return Type" name="isRevised" formControlName="isRevised"
+                                    (selectionChange)="changeReviseForm()" required>
+                                    <mat-option *ngFor="let type of returnTypes" [value]="type.value">
+                                        {{ type.label }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
-                        <div class="card__col-xs-4">
+                        <div class="card__col-xs-12 card__col-sm-4"
+                            *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Acknowledgement number</mat-label>
+                                <input matTooltip="Acknowledgement number maximum of 15 digit"
+                                    matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
+                                    placeholder="Acknowledgement of Original ITR" name="orgITRAckNum"
+                                    class="input-field" maxlength="15" minlength="15" formControlName="orgITRAckNum" />
+                            </mat-form-field>
+                        </div>
+                        <div class="card__col-xs-12 card__col-sm-4"
+                            *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Date of filing</mat-label>
+                                <input [max]="maxDateRevise" matInput [matDatepicker]="revisedPicker"
+                                    placeholder="Date of filing original return" name="orgITRDate"
+                                    formControlName="orgITRDate" />
+                                <mat-datepicker-toggle matSuffix [for]="revisedPicker"></mat-datepicker-toggle>
+                                <mat-datepicker #revisedPicker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <!--  <div class="card__col-xs-4">
                             <a class="sidebar__item" routerLink="/pages/tax-summary"
                                 routerLinkActive="sidebar__item_active"
                                 *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM','ROLE_CALLING_TEAM','ITR_SUPER_LEAD','ITR_TEAM_LEAD'])">
                                 <i class="fa fa-list-alt" style="font-size: 20px;" aria-hidden="true"></i>
                                 <span class="sidebar__name">Tax Summary</span>
                             </a>
-                        </div>
+                        </div> -->
                     </div>
-                    <hr>
+                    <!-- <hr>
                     <div class="card__row">
                         <div class="card__col-xs-12">
                             Summary will be uploaded in- {{getFilePath()}}
@@ -239,27 +229,21 @@
                                 (click)='uploadDocument(uploadDoc)' [disabled]="!uploadDoc">
                                 <mat-icon>upload</mat-icon> Upload Summary
                             </button>
-                            <!-- <div class="row" *ngIf="showProgress">
-                                <div class="col-lg-12">
-                                    <progress id="file" max="100" [value]="uploaded" bufferValue="10"
-                                        style="width:100%">
-                                    </progress>{{uploaded}} %
-                                </div>
-                            </div> -->
                         </div>
-                    </div>
+                    </div> -->
                     <div class="footer__buttons clearfix" style="margin-top: 40px;">
-                        <button class="btn long-btn" style="border: none;" (click)="this.location.back()">Back</button>
+                        <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left"
+                                aria-hidden="true"></i>
+                            &nbsp;&nbsp;Back</button>
                         <!-- <button class="btn long-btn" style="border: none;" (click)="saveProfile('SAVE')">Save
                             Profile</button> -->
-                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('CONTINUE')">Continue
-                            Filing</button>
-                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('MANUALLY')">Manually
-                            Filed</button>
+                        <button class="tbd-btn" (click)="saveProfile('CONTINUE')">Continue </button>
+                        <!--  <button class="btn long-btn" style="border: none;" (click)="saveProfile('MANUALLY')">Manually
+                            Filed</button> -->
                         <!-- <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT')">Direct
                             Upload</button> -->
-                        <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT-UPLOAD')">Direct
-                            Upload</button>
+                        <!--  <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT-UPLOAD')">Direct
+                            Upload</button> -->
 
 
 
