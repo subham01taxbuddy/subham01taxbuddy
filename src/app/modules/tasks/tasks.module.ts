@@ -15,6 +15,7 @@ import { ScheduledCallComponent } from './pages/scheduled-call/scheduled-call.co
 import { ReAssignDialogComponent } from './components/re-assign-dialog/re-assign-dialog.component';
 import { FilingsComponent } from './pages/filings/filings.component';
 import { MoreOptionsDialogComponent } from './components/more-options-dialog/more-options-dialog.component';
+import { SignUpExceptionsComponent } from './pages/sign-up-exceptions/sign-up-exceptions.component';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import { MoreOptionsDialogComponent } from './components/more-options-dialog/mor
         ScheduledCallComponent,
         ReAssignDialogComponent,
         FilingsComponent,
-        MoreOptionsDialogComponent
+        MoreOptionsDialogComponent,
+        SignUpExceptionsComponent
     ],
     entryComponents: [
         ReAssignDialogComponent,
