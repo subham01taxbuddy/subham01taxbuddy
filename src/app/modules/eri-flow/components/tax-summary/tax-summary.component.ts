@@ -2823,7 +2823,6 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
   incomeData: any = [];
   saveItrSummary() {
-    debugger
     console.log(this.itrSummaryForm.valid, this.itrSummaryForm)
     console.log(this.itrType.itrFour, this.businessFormValid)
     if (this.itrSummaryForm.valid && (this.itrType.itrFour ? this.businessFormValid : true)) {
