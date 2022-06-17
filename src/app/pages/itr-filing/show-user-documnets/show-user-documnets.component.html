@@ -37,22 +37,38 @@
                     </div>
                 </span>
                 <div class="listVw" *ngIf="isFile">
-                    <span *ngFor="let folder of folders; let k=index;"><a class="txtLf" href="javascript:void(0)"
-                            (click)="getCommonDocsUrl(folder)">{{folder.fileName}}&nbsp;&nbsp;
-                            <i class="fa fa-info-circle" aria-hidden="true" *ngIf="isFile && folder.isDeleted"
-                                [title]="getInfotext(folder)" style="float: right; font-size: 18px;"></i>
-                            <i class="fa fa-download" aria-hidden="true" *ngIf="isFile && !folder.isDeleted"
-                                (click)="downloadFile(folder.fileName)" style="float: right; font-size: 18px;"></i></a>
+                    <span *ngFor="let folder of folders; let k=index;">
+                        <div class="card__row">
+                            <div class="card__col-xs-9">
+                                <a style="line-height: 16px;
+                                overflow-wrap: break-word;" href="javascript:void(0)"
+                                    (click)="getCommonDocsUrl(folder)">{{folder.fileName}}
+                                </a>
+                            </div>
+                            <div class="card__col-xs-3">
+                                <i class="fa fa-info-circle" aria-hidden="true" *ngIf="isFile && folder.isDeleted"
+                                    style="float: right; font-size: 18px; cursor: pointer;"
+                                    (click)="showDeleteText(folder)"></i>
+                                <i class="fa fa-trash" aria-hidden="true" *ngIf="isFile && !folder.isDeleted"
+                                    (click)="deleteFile(folder.fileName)"
+                                    style="float: right; font-size: 18px; cursor: pointer;"></i>
+                                <i class="fa fa-download" aria-hidden="true" *ngIf="isFile && !folder.isDeleted"
+                                    (click)="downloadFile(folder.fileName)"
+                                    style="float: right; font-size: 18px; padding: inherit; cursor: pointer;"></i>
 
+                            </div>
+                        </div>
+
+                        <!-- <a class="txtLf" *ngIf="isFile" href="javascript:void(0)" (click)="getCommonDocsUrl(folder)">
+                                    {{folder.fileName}}</a> -->
+                        <!-- <p class="txtRt" *ngIf="isFile && folder.isDeleted">Deleted By {{folder.deletedBy === "USER"
+                            ?
+                            'You'
+                            : 'Tax Buddy'}} on {{folder.date | date}}</p> -->
                     </span>
 
-                    <!-- <a class="txtLf" *ngIf="isFile" href="javascript:void(0)" (click)="getCommonDocsUrl(folder)">
-                        {{folder.fileName}}</a>
-                    <p class="txtRt" *ngIf="isFile && folder.isDeleted">Deleted By {{folder.deletedBy === "USER" ?
-                        'You'
-                        : 'Tax Buddy'}} on {{folder.date | date}}</p> -->
 
-                    <!-- <button class="deLdBtn" *ngIf="isFile && !folder.isDeleted" (click)="deleteFile(folder.fileName)"><i class="far fa-trash-alt"></i> Delete</button> -->
+
                     <!-- <button class="dwLdBtn" *ngIf="isFile && !folder.isDeleted"
                         (click)="downloadFile(folder.fileName)"><i class="fal fa-arrow-alt-to-bottom"></i>
                         Download</button> -->

@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -7,7 +8,8 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-show-user-documnets',
   templateUrl: './show-user-documnets.component.html',
-  styleUrls: ['./show-user-documnets.component.css']
+  styleUrls: ['./show-user-documnets.component.css'],
+  providers: [DatePipe]
 })
 export class ShowUserDocumnetsComponent implements OnInit {
   loading: boolean = false;
@@ -18,7 +20,8 @@ export class ShowUserDocumnetsComponent implements OnInit {
   filePath: any = '';
   userId: any;
 
-  constructor(private itrMsService: ItrMsService, private activatedRoute: ActivatedRoute, public utilsService: UtilsService) { }
+  constructor(private itrMsService: ItrMsService, private activatedRoute: ActivatedRoute, public utilsService: UtilsService,
+    private datePipe: DatePipe) { }
 
   ngOnInit() {
     const temp = this.activatedRoute.params.subscribe(params => {
@@ -195,8 +198,10 @@ export class ShowUserDocumnetsComponent implements OnInit {
       console.log(res);
       this.docUrl = res['signedUrl'];
       this.loading = false;
+      this.utilsService.showSnackBar(res.response);
     }, error => {
       this.loading = false;
+      this.utilsService.showSnackBar(error);
     })
   }
 
@@ -206,8 +211,34 @@ export class ShowUserDocumnetsComponent implements OnInit {
     }
   }
 
-  getInfotext(folder) {
-    return `Deleted By ${folder.deletedBy === "USER" ? 'User' : 'Tax Buddy SME'} on ${folder.date}`
+  showDeleteText(folder) {
+    let date = this.datePipe.transform(folder.date, 'medium');
+    this.utilsService.showSnackBar(`Deleted By ${folder.deletedBy === "USER" ? 'User' : 'Tax Buddy SME'} on ${date}`)
+  }
+
+  deleteFile(fileName) {
+
+    // this.utilsService.openLoaderDialog();
+    // console.log('current loaded file path: ', this.userObj.userId + '' + this.filePath + '/' + fileName);
+    // eslint-disable-next-line prefer-const
+    const userData = JSON.parse(localStorage.getItem('UMD') || '');
+    let path = '/itr/cloud/files?actionBy=' + userData.USER_UNIQUE_ID;
+    const filePath = this.userId + '' + this.filePath + '/' + fileName;
+    const body = [filePath];
+    console.log('body: ', body);
+    this.itrMsService.deleteMethodWithRequest(path, body).subscribe((res: any) => {
+      console.log('Responce after delete file: ', res);
+      // this.utilsService.disposable.unsubscribe();
+      this.utilsService.showSnackBar(res.response);
+      const lastBreadcrumb = this.breadcrumbsPart[this.breadcrumbsPart.length - 1];
+      this.getCloudFilePath(lastBreadcrumb);
+    },
+      error => {
+        console.log('There is some erro for deleting file: ', error);
+        // this.utilsService.disposable.unsubscribe();
+        this.utilsService.showSnackBar(error.response);
+      });
+
   }
 
 }
