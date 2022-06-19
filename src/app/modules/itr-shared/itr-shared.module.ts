@@ -1,4 +1,4 @@
-import { UpperCaseDirective } from './../shared/input-data-mask.directive';
+// import { UpperCaseDirective } from './../shared/input-data-mask.directive';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { BankDialogComponent } from './dialogs/bank-dialog/bank-dialog.component
 @NgModule({
     declarations: [
         BankDialogComponent,
-        UpperCaseDirective
+        // UpperCaseDirective
     ],
     imports: [
         CommonModule,

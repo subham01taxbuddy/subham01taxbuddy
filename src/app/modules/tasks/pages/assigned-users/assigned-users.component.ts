@@ -698,17 +698,23 @@ export class AssignedUsersComponent implements OnInit {
         }
         case 'add-client': {
           if (params.data.statusId !== 11) {
-            this.router.navigate(['/eri'], {
-              state:
-              {
-                userId: params.data.userId,
-                panNumber: params.data.panNumber,
-                eriClientValidUpto: params.data.eriClientValidUpto,
-                callerAgentUserId: params.data.callerAgentUserId,
-                assessmentYear: params.data.assessmentYear,
-                name: params.data.name
-              }
-            });
+            const reqParam = `/profile-data?filedNames=panNumber,dateOfBirth&userId=${params.data.userId}`;
+            this.userMsService.getMethod(reqParam).subscribe((res: any) => {
+              console.log('Result DOB:', res);
+              this.router.navigate(['/eri'], {
+                state:
+                {
+                  userId: params.data.userId,
+                  panNumber: params.data.panNumber ? params.data.panNumber : res.data.panNumber,
+                  eriClientValidUpto: params.data.eriClientValidUpto,
+                  callerAgentUserId: params.data.callerAgentUserId,
+                  assessmentYear: params.data.assessmentYear,
+                  name: params.data.name,
+                  dateOfBirth: res.data.dateOfBirth
+                }
+              });
+            })
+
           } else {
             this._toastMessageService.alert("success", 'This user ITR is filed');
           }
