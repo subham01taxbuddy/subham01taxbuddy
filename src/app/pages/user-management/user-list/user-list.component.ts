@@ -12,6 +12,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { RoleUpdateComponent } from "../role-update/role-update.component";
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
+import { MoreOptionsDialogComponent } from 'src/app/modules/tasks/components/more-options-dialog/more-options-dialog.component';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -396,6 +397,28 @@ export class UserListComponent implements OnInit {
             : '';
         }
       },
+      {
+        headerName: 'More',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="More Options" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-info-circle" aria-hidden="true" data-action-type="more-options"></i>
+           </button>`;
+        },
+        width: 50,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
       // {
       //   headerName: 'Otp Service',
       //   editable: false,
@@ -530,6 +553,10 @@ export class UserListComponent implements OnInit {
           this.showNotes(params.data)
           break;
         }
+        case 'more-options': {
+          this.moreOptions(params.data)
+          break;
+        }
       }
     }
   }
@@ -619,5 +646,19 @@ export class UserListComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
+
+  moreOptions(client) {
+    let disposable = this.dialog.open(MoreOptionsDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: client
+    })
+
+    // disposable.afterClosed().subscribe(result => {
+    //   if (result.data === 'success') {
+    //     this.search();
+    //   }
+    // });
   }
 }
