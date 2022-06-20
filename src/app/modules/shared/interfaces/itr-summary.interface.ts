@@ -1,68 +1,69 @@
-export interface ITR_SUMMARY{
-       _id: null,
-      summaryId: number,
-      itrId: number,
-      userId: number,
-      returnType: string,
-      financialYear: string,
-      assesse: Assesse,
-      taxSummary: TaxSummary,
-      capitalGainIncome: CapitalGain,
-      lossesToBeCarriedForward: [],
-      medium: 'BACK OFFICE',
-      us80c: string,
-      us80ccc: string,
-      us80ccc1: string,
-      us80ccd2: string,
-      us80ccd1b: string,
-      us80d: string,
-      us80dd: string,
-      us80ddb: string,
-      us80e: string,
-      us80ee: string,
-      us80g: string,
-      us80gg: string,
-      us80gga: string,
-      us80ggc: string,
-      us80ttaTtb: string,
-      us80u: string,
-      us80jja: string,
-      ppfInterest: string,
-      giftFromRelative: string,
-      anyOtherExcemptIncome: string,
-      netTaxPayable: string,
-      immovableAssetTotal: string,
-      movableAssetTotal: string,
-      totalHeadWiseIncome: string,
-      lossesSetOffDuringTheYear: string,     
-      carriedForwardToNextYear: string, 
-      presumptiveBusinessIncomeUs44AD: string,
-      presumptiveBusinessIncomeUs44ADA: string,
-      speculativeBusinessIncome: string,
-      incomeFromOtherThanSpeculativeAndPresumptive: string,		
-      incomeFromOtherThanSpeculativeAndPresumptiveProfession:  string,
-      futureAndOption: string
-      freezed: false,
-      housePropertyLossesToBeCarriedForward: string,
-      shortTermCapitalGainLossesToBeCarriedForward: string,
-      longTermCapitalGainLossesToBeCarriedForward: string,
-      businessProfessionalLossesToBeCarriedForward: string,
-      speculativeBusinessLossesToBeCarriedForward: string,
-      housePropertyLossesSetOffDuringTheYear: string,
-      shortTermCapitalGainLossesSetOffDuringTheYear: string,
-      longTermCapitalGainLossesSetOffDuringTheYear: string,
-      businessProfessionalLossesSetOffDuringTheYear: string,
-      speculativeBusinessLossesSetOffDuringTheYear: string,
+export interface ITR_SUMMARY {
+    _id: null,
+    summaryId: number,
+    itrId: number,
+    userId: number,
+    returnType: string,
+    financialYear: string,
+    assesse: Assesse,
+    taxSummary: TaxSummary,
+    capitalGainIncome: CapitalGain,
+    lossesToBeCarriedForward: [],
+    medium: 'BACK OFFICE',
+    us80c: string,
+    us80ccc: string,
+    us80ccc1: string,
+    us80ccd2: string,
+    us80ccd1b: string,
+    us80d: string,
+    us80dd: string,
+    us80ddb: string,
+    us80e: string,
+    us80ee: string,
+    us80g: string,
+    us80gg: string,
+    us80gga: string,
+    us80ggc: string,
+    us80ttaTtb: string,
+    us80u: string,
+    us80jja: string,
+    ppfInterest: string,
+    giftFromRelative: string,
+    anyOtherExcemptIncome: string,
+    netTaxPayable: string,
+    immovableAssetTotal: string,
+    movableAssetTotal: string,
+    totalHeadWiseIncome: string,
+    lossesSetOffDuringTheYear: string,
+    carriedForwardToNextYear: string,
+    presumptiveBusinessIncomeUs44AD: string,
+    presumptiveBusinessIncomeUs44ADA: string,
+    speculativeBusinessIncome: string,
+    incomeFromOtherThanSpeculativeAndPresumptive: string,
+    incomeFromOtherThanSpeculativeAndPresumptiveProfession: string,
+    futureAndOption: string
+    freezed: false,
+    housePropertyLossesToBeCarriedForward: string,
+    shortTermCapitalGainLossesToBeCarriedForward: string,
+    longTermCapitalGainLossesToBeCarriedForward: string,
+    businessProfessionalLossesToBeCarriedForward: string,
+    speculativeBusinessLossesToBeCarriedForward: string,
+    housePropertyLossesSetOffDuringTheYear: string,
+    shortTermCapitalGainLossesSetOffDuringTheYear: string,
+    longTermCapitalGainLossesSetOffDuringTheYear: string,
+    businessProfessionalLossesSetOffDuringTheYear: string,
+    speculativeBusinessLossesSetOffDuringTheYear: string,
 
-      newTaxRegime: null,
-      
-      exemptIncomes: [],
-      totalExemptIncome: any
+    newTaxRegime: null,
+
+    exemptIncomes: [],
+    totalExemptIncome: any
 }
 
-export interface Assesse{
+export interface Assesse {
     passportNumber: string,
     email: string,
+    gender?: string,
     contactNumber: string,
     panNumber: string,
     aadharNumber: string,
@@ -76,7 +77,7 @@ export interface Assesse{
     currency: null,
     locale: null,
     eFillingCompleted: boolean,
-    eFillingDate: string,    
+    eFillingDate: string,
     isRevised: null,
     isLate: null,
     employerCategory: null,
@@ -87,7 +88,7 @@ export interface Assesse{
 
     family: Family[],
     address: Address,
- 
+
     disability: null,
     itrProgress: [],
     employers: [],
@@ -117,7 +118,7 @@ export interface Assesse{
     business: Business
 }
 
-export interface Family{
+export interface Family {
     fName: string,
     mName: string,
     lName: string,
@@ -125,7 +126,7 @@ export interface Family{
     fathersName: string
 }
 
-export interface Address{
+export interface Address {
     flatNo: number,
     premisesName: string,
     road: null,
@@ -136,16 +137,16 @@ export interface Address{
     pinCode: string
 }
 
-export interface SystemFlag{
+export interface SystemFlag {
     hasParentOverSixty: boolean;
 }
 
-export interface Business{
+export interface Business {
     presumptiveIncomes: [],
     financialParticulars: FinancilaParticulars
 }
 
-export interface FinancilaParticulars{
+export interface FinancilaParticulars {
     id: null,
     grossTurnOverAmount: null,
     membersOwnCapital: [],
@@ -165,10 +166,10 @@ export interface FinancilaParticulars{
     totalAssets: []
 }
 
-export interface TaxSummary{
-    salary: string,  
+export interface TaxSummary {
+    salary: string,
     housePropertyIncome: string,
-    otherIncome: string,   
+    otherIncome: string,
 
     totalDeduction: string,
     grossTotalIncome: string,
@@ -186,7 +187,7 @@ export interface TaxSummary{
     taxReliefUnder91: string,
     totalTaxRelief: string,
     netTaxLiability: string,
-    interestAndFeesPayable: string,    
+    interestAndFeesPayable: string,
     s234A: string,
     s234B: string,
     s234C: string,
@@ -196,10 +197,10 @@ export interface TaxSummary{
     taxPaidTDS: string,
     taxPaidTCS: string,
     selfassessmentTax: string,
-    totalTaxesPaid: string,												
-    taxpayable: string,			
-    taxRefund: string,			
-    totalTax: string,   
+    totalTaxesPaid: string,
+    taxpayable: string,
+    taxRefund: string,
+    totalTax: string,
     advanceTaxSelfAssessmentTax: string,
     taxAtNormalRate: '',
     taxAtSpecialRate: '',
@@ -213,26 +214,26 @@ export interface TaxSummary{
     presumptiveIncome: ''
 }
 
-export interface AssetsLiabilities{
+export interface AssetsLiabilities {
     cashInHand: null,
-	loanAmount: null,
-	shareAmount: null,
-	bankAmount: null,
-	assetLiability: null,
-	insuranceAmount: null,
-	artWorkAmount: null,
+    loanAmount: null,
+    shareAmount: null,
+    bankAmount: null,
+    assetLiability: null,
+    insuranceAmount: null,
+    artWorkAmount: null,
     jwelleryAmount: null,
     vehicleAmount: null,
     immovable: []
 }
 
-export interface CapitalGain{
+export interface CapitalGain {
     shortTermCapitalGain: [],
     shortTermCapitalGainAt15Percent: [],
     longTermCapitalGainAt10Percent: [],
     longTermCapitalGainAt20Percent: [],
     shortTermCapitalGainTotal: string,
-	shortTermCapitalGainAt15PercentTotal: string,
-	longTermCapitalGainAt10PercentTotal: string,
-	longTermCapitalGainAt20PercentTotal: string
+    shortTermCapitalGainAt15PercentTotal: string,
+    longTermCapitalGainAt10PercentTotal: string,
+    longTermCapitalGainAt20PercentTotal: string
 }

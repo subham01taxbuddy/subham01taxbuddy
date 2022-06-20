@@ -15,6 +15,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Input() serviceType: any;
   @Input() listType: any;
   @Input() disabled: any;
+  @Input() addSelfAll: any;
 
   smeList: any[] = [];
   selectedSme = new FormControl('', Validators.required);
@@ -124,6 +125,10 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
         console.log('smeCode on blur = ', this.smeCode);
         this.sendSme.emit(this.smeCode);
       } else {
+        if (this.selectedSme.value === 'ALL' || this.selectedSme.value === 'SELF') {
+          this.sendSme.emit(this.selectedSme.value);
+          return;
+        }
         this.selectedSme.setErrors({ invalid: true });
         console.log('smeCode on blur = ', this.smeCode);
       }

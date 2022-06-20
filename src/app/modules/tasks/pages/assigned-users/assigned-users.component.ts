@@ -82,12 +82,16 @@ export class AssignedUsersComponent implements OnInit {
     this.search();
   }
   fromSme(event) {
-    if (event === '') {
+    if (event === '' || event === 'ALL') {
       let loggedInId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
       if (this.agentId !== loggedInId) {
         this.agentId = loggedInId;
         this.search('agent');
       }
+    } else if (event === 'SELF') {
+      let loggedInId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID;
+      this.agentId = loggedInId;
+      this.search('agent', true);
     } else {
       this.agentId = event;
       this.search('agent');
@@ -909,7 +913,7 @@ export class AssignedUsersComponent implements OnInit {
     //   }
     // });
   }
-  search(form?) {
+  search(form?, isAgent?) {
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (this.searchParam.mobileNumber == null || this.searchParam.mobileNumber == '') {
@@ -925,6 +929,10 @@ export class AssignedUsersComponent implements OnInit {
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme/${this.agentId}/user-list?${data}`;
+    if (isAgent) {
+      param = param + '&isAgent=true';
+    }
+
     this.userMsService.getMethod(param).subscribe(
       /* {
         next: (v) => console.log(v),
