@@ -58,10 +58,9 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     const data = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
     const smeMobileNumber = '+91' + data.mobileNumber;
-    debugger
     window['angularComponentReference'] = {
       component: this, zone: this.ngZone, loadKnowlarityData: (res) => {
-        if (res.type === "ORIGINATE" && res.call_direction=="Inbound" && res.agent_number == smeMobileNumber) {
+        if (res.type === "ORIGINATE" && res.call_direction == "Inbound" && res.agent_number == smeMobileNumber) {
           console.log(res);
           this.matBottomSheet.open(KnowlarityNotificationComponent, {
             data: res
