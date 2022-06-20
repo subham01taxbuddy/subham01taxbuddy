@@ -444,7 +444,7 @@
                         </div>
 
                         <div style="float: right;" class="card__col-lg-5" *ngIf="isUpdateInvoice">
-                            <input [(ngModel)]="this.invoiceForm.controls['total']"
+                            <input [(ngModel)]="this.invoiceForm.controls['total'].value"
                                 [ngModelOptions]="{standalone: true}"
                                 (blur)="setFinalAmount(this.invoiceForm.controls['total'].value)"
                                 placeholder="Final Amount" autocomplete="off">
