@@ -294,6 +294,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       residentialStatus: ['RESIDENT', [Validators.required]],
       aadharNumber: ['', [Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)]],
       passportNumber: [''],
+      gender: ['', Validators.required],
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
       contactNumber: ['', [Validators.required, Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],
       premisesName: [''],
@@ -2144,7 +2145,6 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
     // Set Revised Return data
     if (filingStatus?.ReturnFileSec === 17) {
-      debugger
       this.personalInfoForm.controls['returnType'].setValue('REVISED');
       this.personalInfoForm.controls['ackNumber'].setValue(filingStatus?.ReceiptNo);
       this.personalInfoForm.controls['eFillingDate'].setValue(filingStatus?.OrigRetFiledDate);
@@ -7803,6 +7803,25 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       let tempAy = this.itrObject.assessmentYear;
       let tempFy = this.itrObject.financialYear;
       Object.assign(this.itrObject, this.personalInfoForm.value);
+      const ageCalculated = this.calAge(this.personalInfoForm.controls['dateOfBirth'].value);
+      this.itrObject.isRevised = 'N'
+      if (this.personalInfoForm.controls['returnType'].value === 'REVISED') {
+        this.itrObject.isRevised = 'Y'
+      }
+      this.itrObject.family = [
+        {
+          pid: null,
+          fName: this.personalInfoForm.controls['fName'].value,
+          mName: this.personalInfoForm.controls['mName'].value,
+          lName: this.personalInfoForm.controls['lName'].value,
+          fatherName: this.personalInfoForm.controls['fathersName'].value,
+          age: ageCalculated,
+          gender: this.personalInfoForm.controls['fName'].value,
+          relationShipCode: 'SELF',
+          relationType: 'SELF',
+          dateOfBirth: this.personalInfoForm.controls['dateOfBirth'].value
+
+        }]
       this.itrObject.assessmentYear = tempAy;
       this.itrObject.financialYear = tempFy;
 
@@ -7832,6 +7851,14 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       $('input.ng-invalid').first().focus();
       return
     }
+  }
+
+  calAge(dob) {
+    const birthday: any = new Date(dob);
+    const currentYear = Number(this.personalInfoForm.controls['assessmentYear'].value.substring(0, 4));
+    const today: any = new Date(currentYear, 2, 31);
+    const timeDiff: any = ((today - birthday) / (31557600000));
+    return Math.floor(timeDiff);
   }
 
   downloadItrSummary() {
@@ -8092,6 +8119,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       assesse: {
         passportNumber: "",
         email: '',
+        gender: '',
         contactNumber: '',
         panNumber: '',
         aadharNumber: '',

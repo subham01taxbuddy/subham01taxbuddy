@@ -268,8 +268,18 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <div class="card__col-lg-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Select Gender</mat-label>
+                        <mat-select matInput placeholder="Old vs New Tax Regime" autocomplete="off"
+                            formControlName="gender" required>
+                            <mat-option value="MALE"> Male </mat-option>
+                            <mat-option value="FEMALE"> Female </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
 
-                <div class="card__col-lg-4">
+                <div class="card__col-lg-2">
                     <mat-form-field appearance="outline">
                         <mat-label>E-mail</mat-label>
                         <input matInput placeholder="E-mail" maxlength="50" autocomplete="off" formControlName="email"
