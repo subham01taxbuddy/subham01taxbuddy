@@ -2,7 +2,7 @@ import { AppConstants } from './../../../shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import Auth from '@aws-amplify/auth';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -13,6 +13,9 @@ import { StorageService } from 'src/app/modules/shared/services/storage.service'
 import { AppSetting } from 'src/app/modules/shared/app.setting';
 import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
+import { environment } from 'src/environments/environment';
+import { MatomoService } from 'src/app/services/matomo.service';
+declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 declare let $: any;
 
@@ -37,7 +40,8 @@ export class LoginComponent implements OnInit {
     private userMsService: UserMsService,
     private dialog: MatDialog,
     public utilsService: UtilsService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private matomoService:MatomoService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
   }
@@ -84,6 +88,7 @@ export class LoginComponent implements OnInit {
           userId: 0
         }
         this.setUserDataInsession(res, temp);
+        this.matomoService.trackMatomoEvents('/login','SIGNIN');         
         if (res.attributes['custom:user_type'] && res.attributes['custom:user_type'] === 'MIGRATED') {
           this.updateCognitoId(res);
         } else {

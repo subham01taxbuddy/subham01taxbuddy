@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MatomoService } from 'src/app/services/matomo.service';
 
 
 export const MY_FORMATS = {
@@ -262,7 +263,13 @@ export class Itr2mainComponent implements OnInit, OnChanges {
   isJsonParse: boolean = false;
   newTaxRegime: boolean;
 
-  constructor(public utilsService: UtilsService, private fb: FormBuilder, private userService: UserMsService, private dialog: MatDialog, private utilService: UtilsService,
+  constructor(
+    public utilsService: UtilsService,
+    private fb: FormBuilder,
+    private userService: UserMsService,
+    private dialog: MatDialog,
+    private utilService: UtilsService,
+    private matomoService: MatomoService,
     private _toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService) {
     this.itr_2_Summary = this.createItrSummaryEmptyJson();
@@ -4727,6 +4734,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
   }
 
   openDialog(windowTitle: string, windowBtn: string, index: any, myUser: any, mode: string) {
+    debugger
+    // this.matomoService.trackMatomoEvents(mode, 'DIALOGOPEN');
     let disposable = this.dialog.open(SumaryDialogComponent, {
       width: (mode === 'Salary' || mode === 'donationSec80G' || mode === 'House' || mode === 'losses' || mode === 'immovableAssets') ? '70%' : '30%',
       height: 'auto',

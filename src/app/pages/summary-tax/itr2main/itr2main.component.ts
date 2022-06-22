@@ -4498,7 +4498,6 @@ export class Itr2mainComponent implements OnInit {
 
       }
     }
-    debugger
     // console.log('shortTerm15Per: ',this.shortTerm15Per.api.getRenderedNodes(), this.shortTerm15Per.api.getRenderedNodes()[0].data.netCapitalGain);
     if (this.shortTerm15Per && this.shortTerm15Per.api && this.shortTerm15Per.api.getRenderedNodes()) {
       for (let i = 0; i < this.shortTerm15Per.api.getRenderedNodes().length; i++) {
