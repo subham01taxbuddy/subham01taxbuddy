@@ -412,7 +412,7 @@ export class UtilsService {
         }
     }
     async getSmeList() {
-        const param = `/sme/all-list?page=0&size=500`;
+        const param = `/sme/all-list?page=0&size=1000`;
         return await this.userMsService.getMethod(param).toPromise();
     }
 

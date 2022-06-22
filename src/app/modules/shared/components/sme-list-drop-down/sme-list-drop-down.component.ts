@@ -16,6 +16,8 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Input() listType: any;
   @Input() disabled: any;
   @Input() addSelfAll: any;
+  @Input() showSme: any;
+
 
   smeList: any[] = [];
   selectedSme = new FormControl('', Validators.required);
@@ -28,6 +30,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   ngOnInit() {
     console.log('listType in SME Drop down', this.listType, this.disabled);
     this.getSmeList();
+
 
     this.filteredOptions = this.selectedSme.valueChanges
       .pipe(
@@ -62,11 +65,23 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       if (res.success && res.data instanceof Array) {
         res.data.sort((a, b) => a.name > b.name ? 1 : -1)
         this.smeList = res.data;
+        if (this.showSme) {
+          let data = this.smeList.find(item =>
+            item.userId === this.showSme
+          );
+          this.selectedSme.setValue(data?.name);
+        }
         return;
       }
       return [];
     }
     this.smeList = await this.utilsService.getStoredMyAgentList() || [];
+    if (this.showSme) {
+      let data = this.smeList.find(item =>
+        item.userId === this.showSme
+      );
+      this.selectedSme.setValue(data?.name);
+    }
   }
 
   async getMyAgentList(serviceType) {
