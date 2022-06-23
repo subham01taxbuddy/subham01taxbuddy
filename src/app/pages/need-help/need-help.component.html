@@ -3,36 +3,46 @@
     Need Help? Please provide the details below.
   </div>
   <form #form="ngForm" [formGroup]="helpForm">
-    <label class="desc">Description</label>
-    <textarea class="textarea" formControlName="description" maxlength="300"></textarea>
-    <div>
-      <span class="error-msg text-align-right" *ngIf="helpForm.controls['description'].pristine 
+    <mat-form-field appearance="outline">
+      <mat-label>Whatsapp Number</mat-label>
+      <input matInput placeholder="Enter Mobile Number" formControlName="mobileNo"
+        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+        onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="10">
+        <mat-error class="error-msg" *ngIf="helpForm.controls['mobileNo'].pristine 
+          && helpForm.controls['mobileNo'].touched && helpForm.controls['mobileNo'].status == 'INVALID' ">
+        Please enter mobile number</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput class="textarea" formControlName="description" maxlength="300"></textarea>
+      <mat-error class="error-msg" *ngIf="helpForm.controls['description'].pristine 
           && helpForm.controls['description'].touched && helpForm.controls['description'].status == 'INVALID' ">
-        Please enter valid details</span>
-    </div>
-    <div class="attach">
-      <div>
-        <label class="desc">Add a file</label>
-      </div>
-      <input (change)="onFileSelected($event)" id="file" type="file" name="filename" formControlName="filename">
-      <label for="file" >choose a file</label>
-      {{selectedFileName}}
-      <div id="or"><span>or</span></div>
-      <div class="scr-shot">
-        <a href="https://chrome.google.com/webstore/detail/full-page-screenshot-capt/pojgkmkfincpdkdgjepkmdekcahmckjp"
-          target="_blank">Take
-          a Screen Shot</a>
-      </div>
-    </div>
+        Please enter valid details</mat-error>
 
-    <div class="det">
-      <mat-dialog-actions align="end">
-        <button mat-button color="warn" mat-dialog-close>Cancel</button>
-        <button mat-button color="primary" [class.spinner]="loading" [disabled]="loading" type="submit"
-          (click)="submitForm()" [disabled]="!helpForm.valid" id="demo" cdkFocusInitial>Submit</button>
-      </mat-dialog-actions>
-    </div>
-  </form>
+</mat-form-field>
+<div class="attach">
+  <div>
+    <label class="desc">Add a file</label>
+  </div>
+  <input (change)="onFileSelected($event)" id="file" type="file" name="filename" formControlName="filename">
+  <label for="file">choose a file</label>
+  {{selectedFileName}}
+  <div id="or"><span>or</span></div>
+  <div class="scr-shot">
+    <a href="https://chrome.google.com/webstore/detail/full-page-screenshot-capt/pojgkmkfincpdkdgjepkmdekcahmckjp"
+      target="_blank">Take
+      a Screen Shot</a>
+  </div>
+</div>
+
+<div class="det">
+  <mat-dialog-actions align="end">
+    <button mat-button color="warn" mat-dialog-close>Cancel</button>
+    <button mat-button color="primary" [class.spinner]="loading" [disabled]="loading" type="submit"
+      (click)="submitForm()" [disabled]="!helpForm.valid" id="demo" cdkFocusInitial>Submit</button>
+  </mat-dialog-actions>
+</div>
+</form>
 </div>
 <div *ngIf="apiSuccess">
   <div id="sec">

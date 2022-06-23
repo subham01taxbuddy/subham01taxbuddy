@@ -28,13 +28,13 @@ export class NeedHelpComponent implements OnInit {
     private userMsService: UserMsService
   ) { }
   ngOnInit(): void {
+    this.userData = JSON.parse(localStorage.getItem('UMD'));
     this.helpForm = this.fb.group({
       description: new FormControl('', Validators.required),
       details: new FormControl(''),
       filename: new FormControl(''),
+      mobileNo: new FormControl(this.userData.USER_MOBILE, Validators.required)
     });
-    this.userData = JSON.parse(localStorage.getItem('UMD'));
-    console.log('user-data', this.userData);
   }
   getURL() {
     return window.location.href;
@@ -51,7 +51,7 @@ export class NeedHelpComponent implements OnInit {
         "description": this.helpForm.controls['description'].value + ' ~ screen url:' + window.location.href,
         "agentName": this.userData.USER_F_NAME + ' ' + this.userData.USER_L_NAME,
         "email": this.userData.USER_EMAIL,
-        "mobile": this.userData.USER_MOBILE,
+        "mobile": this.helpForm.controls['mobileNo'].value,
         "environment": "UAT"
       };
       if (this.fileName) {
