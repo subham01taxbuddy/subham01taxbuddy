@@ -39,6 +39,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
   @Input() changes!: string;
   @Input() itrObject!: any;
+  @Input() userDetails!: any;
+
   newItrSumChanges!: boolean;
   loading!: boolean;
   isSummaryGenerated = false;
@@ -97,11 +99,14 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
   ]
 
   employersDropdown = [
-    { value: 'SGOV', label: 'State Government' },
     { value: 'CGOV', label: 'Central Government' },
+    { value: 'SGOV', label: 'State Government' },
     { value: 'PSU', label: 'Public Sector Unit' },
+    { value: 'PE', label: 'Pensioners - Central Government' },
+    { value: 'PESG', label: 'Pensioners - State Government' },
+    { value: 'PEPS', label: 'Pensioners - Public sector undertaking' },
+    { value: 'PEO', label: 'Pensioners - Others' },
     { value: 'OTH', label: 'Other-Private' },
-    { value: 'PE', label: 'Pensioners' },
     { value: 'NA', label: 'Not-Applicable' }
   ];
   taxRegime: any = [
@@ -257,7 +262,12 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     this.newTaxRegime = itrData.FilingStatus.NewTaxRegime === "Y" ? true : false;
     let panNo = itrData.PersonalInfo.PAN;
     let dob = new Date(itrData.PersonalInfo.DOB);
-    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['panNumber'].setValue(panNo);
+
+    if (panNo !== this.userDetails?.panNUmber) {
+      this._toastMessageService.alert('error', 'PAN Number from profile and PAN number from json are different please confirm once.');
+      return;
+    }
+    // (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['panNumber'].setValue(panNo);
     this.getUserInfoByPan((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['panNumber'], dob, itrData);
 
     (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['aadharNumber'].setValue(itrData.PersonalInfo.AadhaarCardNo);
@@ -269,7 +279,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
     let adress = itrData.PersonalInfo.Address;
     (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['email'].setValue(adress.EmailAddress);
-    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].setValue(adress.MobileNo);
+    // (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].setValue(adress.MobileNo);
     let mainAddress = (adress.hasOwnProperty('ResidenceNo') ? adress.ResidenceNo : '') + ' ,' + (adress.hasOwnProperty('ResidenceName') ? adress.ResidenceName : '') + ' ,' + (adress.hasOwnProperty('RoadOrStreet') ? adress.RoadOrStreet : '') + ' ,' + (adress.hasOwnProperty('LocalityOrArea') ? adress.LocalityOrArea : '');
     ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['premisesName'].setValue(mainAddress);
     ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['pinCode'].setValue(adress.PinCode);
@@ -2826,14 +2836,6 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     console.log(this.itrSummaryForm.valid, this.itrSummaryForm)
     console.log(this.itrType.itrFour, this.businessFormValid)
     if (this.itrSummaryForm.valid && (this.itrType.itrFour ? this.businessFormValid : true)) {
-
-      // if (this.newItrSumChanges) {
-      //   this.utilsService.matomoCall('Tax Summary', '/pages/tax-summary/new-summary/itr-one', ['trackEvent', 'New Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
-      // }
-      // else {
-      //   this.utilsService.matomoCall('Tax Summary', '/pages/tax-summary/itrFirst', ['trackEvent', 'Old Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
-      // }
-
       if (this.utilsService.isNonEmpty(this.sourcesOfIncome)) {
         this.incomeData = [];
         if (this.sourcesOfIncome.interestFromSaving !== 0) {
@@ -3326,8 +3328,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       assesse: this.fb.group({
         passportNumber: [''],
         email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],//email
-        contactNumber: ['', [Validators.required, Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],//mobileNumber
-        panNumber: ['', [Validators.required, Validators.pattern(AppConstants.panNumberRegex)]],//pan
+        contactNumber: [this.userDetails?.mobileNumber || '', [Validators.required, Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],//mobileNumber
+        panNumber: [this.userDetails?.panNumber || '', [Validators.required, Validators.pattern(AppConstants.panNumberRegex)]],//pan
         aadharNumber: ['', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)]],//aadhaarNumber
         itrType: ['', Validators.required],//itrType(String)
         residentialStatus: ['RESIDENT', [Validators.required]],

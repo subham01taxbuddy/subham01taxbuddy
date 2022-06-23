@@ -714,7 +714,8 @@ export class AssignedUsersComponent implements OnInit {
                   callerAgentUserId: params.data.callerAgentUserId,
                   assessmentYear: params.data.assessmentYear,
                   name: params.data.name,
-                  dateOfBirth: res.data.dateOfBirth
+                  dateOfBirth: res.data.dateOfBirth,
+                  mobileNumber: params.data.mobileNumber
                 }
               });
             })

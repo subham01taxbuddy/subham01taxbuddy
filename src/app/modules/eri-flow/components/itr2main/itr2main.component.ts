@@ -42,6 +42,7 @@ export const MY_FORMATS = {
 export class Itr2mainComponent implements OnInit, OnChanges {
   @Input() changes: string;
   @Input() itrObject!: any;
+  @Input() userDetails!: any;
 
   loading!: boolean;
   searchVal: any;
@@ -224,11 +225,14 @@ export class Itr2mainComponent implements OnInit, OnChanges {
   { value: '2019-2020', label: '2019' }, { value: '2020-2021', label: '2020' }, { value: '2021-2022', label: '2021' }]
 
   employersDropdown = [
-    { value: 'SGOV', label: 'State Government' },
     { value: 'CGOV', label: 'Central Government' },
+    { value: 'SGOV', label: 'State Government' },
     { value: 'PSU', label: 'Public Sector Unit' },
+    { value: 'PE', label: 'Pensioners - Central Government' },
+    { value: 'PESG', label: 'Pensioners - State Government' },
+    { value: 'PEPS', label: 'Pensioners - Public sector undertaking' },
+    { value: 'PEO', label: 'Pensioners - Others' },
     { value: 'OTH', label: 'Other-Private' },
-    { value: 'PE', label: 'Pensioners' },
     { value: 'NA', label: 'Not-Applicable' }
   ];
   taxRegime: any = [
@@ -285,7 +289,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       itrId: [this.itrObject?.itrId],
       userId: [this.itrObject?.userId],
       itrType: ["2", Validators.required],
-      panNumber: ['', [Validators.required, Validators.pattern(AppConstants.panIndHUFRegex)]],
+      panNumber: [this.userDetails?.panNumber || '', [Validators.required, Validators.pattern(AppConstants.panIndHUFRegex)]],
       fName: [''],
       mName: [''],
       lName: [''],
@@ -296,7 +300,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       passportNumber: [''],
       gender: ['', Validators.required],
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
-      contactNumber: ['', [Validators.required, Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],
+      contactNumber: [this.userDetails?.mobileNumber || '', [Validators.required, Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],
       premisesName: [''],
       pinCode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)]],
       city: ['', [Validators.required]],
@@ -598,6 +602,11 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
     //let partA_GEN1Data = itrData.filter((item:any) => item === "ITRForm:PartA_GEN1");
     let personalInfo = itrData['ITRForm:PartA_GEN1']['ITRForm:PersonalInfo'];
+    if (personalInfo['ITRForm:PAN']['_text'] !== this.personalInfoForm.controls['panNumber'].value) {
+      this._toastMessageService.alert('error', 'PAN Number from profile and PAN number from json are different please confirm once.');
+      return;
+    }
+
     let fatherName = itrData['ITRForm:Verification']['ITRForm:Declaration']['ITRForm:FatherName']['_text']
     console.log('personalInfo: ', personalInfo);
 
@@ -605,7 +614,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     this.personalInfoForm.controls['mName'].setValue((personalInfo['ITRForm:AssesseeName']).hasOwnProperty('ITRForm:MiddleName') ? personalInfo['ITRForm:AssesseeName']['ITRForm:MiddleName']['_text'] : '');
     this.personalInfoForm.controls['lName'].setValue(personalInfo['ITRForm:AssesseeName']['ITRForm:SurNameOrOrgName']['_text']);
     this.personalInfoForm.controls['fathersName'].setValue(fatherName);
-    this.personalInfoForm.controls['panNumber'].setValue(personalInfo['ITRForm:PAN']['_text']);
+    // this.personalInfoForm.controls['panNumber'].setValue(personalInfo['ITRForm:PAN']['_text']);
     this.personalInfoForm.controls['city'].setValue(personalInfo['ITRForm:Address']['ITRForm:CityOrTownOrDistrict']['_text']);
 
     if (personalInfo['ITRForm:Address'].hasOwnProperty('ITRForm:PinCode')) {
@@ -614,7 +623,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
     this.getCityData(this.personalInfoForm.controls['pinCode'], 'profile');
     this.personalInfoForm.controls['email'].setValue(personalInfo['ITRForm:Address']['ITRForm:EmailAddress']['_text']);
-    this.personalInfoForm.controls['contactNumber'].setValue(personalInfo['ITRForm:Address']['ITRForm:MobileNo']['_text'])
+    // this.personalInfoForm.controls['contactNumber'].setValue(personalInfo['ITRForm:Address']['ITRForm:MobileNo']['_text'])
     if (personalInfo.hasOwnProperty('ITRForm:AadhaarCardNo')) {
       this.personalInfoForm.controls['aadharNumber'].setValue(personalInfo['ITRForm:AadhaarCardNo']['_text']);
     }
@@ -2060,14 +2069,26 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     if (itrData.hasOwnProperty('ITR3')) {
       this.personalInfoForm.controls['itrType'].setValue('3');
       this.itrType.itrThree = true;
-      this.itrType.itrTwo = false
-      this.setJsonData(itrData['ITR3']);
-      this.itr3JSONBind(itrData['ITR3'])
+      this.itrType.itrTwo = false;
+      let itr3Data = itrData['ITR3'];
+      var personalInfo = itr3Data.hasOwnProperty('PartA_GEN1') ? itr3Data.PartA_GEN1 : '';
+      if (personalInfo.PersonalInfo.PAN !== this.personalInfoForm.controls['panNumber'].value) {
+        this._toastMessageService.alert('error', 'PAN Number from profile and PAN number from json are different please confirm once.');
+        return;
+      }
+      this.setJsonData(itr3Data);
+      this.itr3JSONBind(itr3Data)
     }
     else if (itrData.hasOwnProperty('ITR2')) {
       this.personalInfoForm.controls['itrType'].setValue('2');
       this.itrType.itrTwo = true;
       this.itrType.itrThree = false;
+      let itr2Data = itrData['ITR2'];
+      var personalInfo = itr2Data.hasOwnProperty('PartA_GEN1') ? itr2Data.PartA_GEN1 : '';
+      if (personalInfo.PersonalInfo.PAN !== this.personalInfoForm.controls['panNumber'].value) {
+        this._toastMessageService.alert('error', 'PAN Number from profile and PAN number from json are different please confirm once.');
+        return;
+      }
       this.getMastersData();
       this.setJsonData(itrData['ITR2']);
       //  this.businessIncomeBind(itrData['ITR4']);
@@ -2107,7 +2128,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
     this.getCityData(this.personalInfoForm.controls['pinCode'], 'profile');
     this.personalInfoForm.controls['email'].setValue(address.EmailAddress);
-    this.personalInfoForm.controls['contactNumber'].setValue(address.MobileNo);
+    // this.personalInfoForm.controls['contactNumber'].setValue(address.MobileNo);
     this.personalInfoForm.controls['aadharNumber'].setValue(personalInfo.PersonalInfo.AadhaarCardNo);
 
     let dob = new Date(personalInfo.PersonalInfo.DOB);
@@ -7163,14 +7184,6 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     console.log('businessIncomeForm: ', this.businessIncomeForm.value, ' businessFormValid:=> ', this.businessFormValid)
     if (this.personalInfoForm.valid && (this.itrType.itrThree ? this.businessFormValid : true)) {
       console.log('bankData: ', this.bankData);
-
-      if (this.newItrSumChanges) {
-        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/new-summary/itr-three', ['trackEvent', 'New Summary', 'ITR 2/3', this.personalInfoForm.controls['contactNumber'].value], environment.matomoScriptId);
-      }
-      else {
-        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/itrSecond', ['trackEvent', 'Old Summary', 'ITR 2/3', this.personalInfoForm.controls['contactNumber'].value], environment.matomoScriptId);
-      }
-
       this.itr_2_Summary._id = this.personalInfoForm.controls['_id'].value;
       this.itr_2_Summary.summaryId = this.personalInfoForm.controls['summaryId'].value;
       this.itr_2_Summary.returnType = this.personalInfoForm.controls['returnType'].value;
@@ -8115,7 +8128,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       itrId: this.itrObject?.itrId,
       userId: this.itrObject?.userId,
       returnType: 'ORIGINAL',
-      financialYear: "2019-2020",
+      financialYear: "2021-2022",
       assesse: {
         passportNumber: "",
         email: '',
@@ -8128,7 +8141,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         ackNumber: null,
         maritalStatus: null,
         assesseeType: null,
-        assessmentYear: '2020-2021',
+        assessmentYear: '2022-2023',
         noOfDependents: 0,
         currency: null,
         locale: null,
