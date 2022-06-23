@@ -1,4 +1,3 @@
-import { BankDetails } from '../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Validators, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -12,9 +11,6 @@ import { environment } from 'src/environments/environment';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { UserMsService } from 'src/app/services/user-ms.service';
-import Storage from '@aws-amplify/storage';
-import { threadId } from 'worker_threads';
-import { resolve } from 'dns';
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -327,7 +323,7 @@ export class PersonalInformationComponent implements OnInit {
     { value: 'NA', label: 'Not-Applicable' }
   ];
 
-  
+
   genderMaster = [
     { value: 'MALE', label: 'Male' },
     { value: 'FEMALE', label: 'Female' },
@@ -426,11 +422,11 @@ export class PersonalInformationComponent implements OnInit {
 
   getBankListByIfsc(ifsc, i) {
     if (ifsc.valid) {
-      const bank = this.bankList.filter((item:any) => item.ifscCode.substring(0, 4) === ifsc.value.substring(0, 4));
+      const bank = this.bankList.filter((item: any) => item.ifscCode.substring(0, 4) === ifsc.value.substring(0, 4));
       if (bank.length !== 0) {
         ((this.customerProfileForm.controls['bankDetails'] as FormGroup).controls[i] as FormGroup).controls['name'].setValue(bank[0].bankName);
       } else {
-       ( (this.customerProfileForm.controls['bankDetails'] as FormGroup).controls[i] as FormGroup).controls['name'].setValue(null);
+        ((this.customerProfileForm.controls['bankDetails'] as FormGroup).controls[i] as FormGroup).controls['name'].setValue(null);
       }
     } else {
       ((this.customerProfileForm.controls['bankDetails'] as FormGroup).controls[i] as FormGroup).controls['name'].setValue(null);
@@ -481,15 +477,15 @@ export class PersonalInformationComponent implements OnInit {
   getCityData() {
     if ((this.customerProfileForm.controls['address'] as FormGroup).controls['pinCode'].valid) {
       this.changeCountry('91');
-      const param = '/pincode/' + (this.customerProfileForm.controls['address']as FormGroup).controls['pinCode'].value;
+      const param = '/pincode/' + (this.customerProfileForm.controls['address'] as FormGroup).controls['pinCode'].value;
       this.userMsService.getMethod(param).subscribe((result: any) => {
-        (this.customerProfileForm.controls['address']as FormGroup).controls['country'].setValue('91');
-        (this.customerProfileForm.controls['address']as FormGroup).controls['city'].setValue(result.taluka);
-        (this.customerProfileForm.controls['address']as FormGroup).controls['state'].setValue(result.stateCode);
+        (this.customerProfileForm.controls['address'] as FormGroup).controls['country'].setValue('91');
+        (this.customerProfileForm.controls['address'] as FormGroup).controls['city'].setValue(result.taluka);
+        (this.customerProfileForm.controls['address'] as FormGroup).controls['state'].setValue(result.stateCode);
         console.log('Picode Details:', result);
       }, error => {
         if (error.status === 404) {
-          (this.customerProfileForm.controls['address']as FormGroup).controls['city'].setValue(null);
+          (this.customerProfileForm.controls['address'] as FormGroup).controls['city'].setValue(null);
         }
       });
     }
@@ -509,7 +505,7 @@ export class PersonalInformationComponent implements OnInit {
         "stateCode": "99",
         "status": true
       }];
-      (this.customerProfileForm.controls['address']as FormGroup).controls['state'].setValue('99');
+      (this.customerProfileForm.controls['address'] as FormGroup).controls['state'].setValue('99');
     } else {
       this.stateDropdown = this.stateDropdownMaster;
     }
@@ -540,7 +536,7 @@ export class PersonalInformationComponent implements OnInit {
       });
       console.log('Immovable Form===', this.customerProfileForm);
     }
-    this.ITR_JSON.family.filter((item:any) => {
+    this.ITR_JSON.family.filter((item: any) => {
       if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
         this.customerProfileForm.patchValue({
           firstName: item.fName,

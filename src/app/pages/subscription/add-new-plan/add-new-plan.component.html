@@ -262,8 +262,8 @@
                 </mat-option>
               </mat-select>
             </mat-form-field> -->
-            <app-sme-list-drop-down (sendSme)="fromSme($event)" listType="ALL" [serviceType]="this.serviceType"
-              *ngIf="this.serviceType !== 'ITR'">
+            <app-sme-list-drop-down (sendSme)="fromSme($event)" [showSme]="subscriptionAssigneeId.value" listType="ALL"
+              [serviceType]="this.serviceType" *ngIf="this.serviceType !== 'ITR'">
             </app-sme-list-drop-down>
           </div>
         </div>

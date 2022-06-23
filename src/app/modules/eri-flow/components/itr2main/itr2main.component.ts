@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { BankDialogComponent } from 'src/app/modules/itr-shared/dialogs/bank-dialog/bank-dialog.component';
 
 
 export const MY_FORMATS = {
@@ -68,7 +69,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
   minDate = new Date(1900, 0, 1);
   maxDate = new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate());
 
-  fillingMinDate: any = new Date("2019-04-01");
+  // fillingMinDate: any = new Date("2019-04-01");
   fillingMaxDate: any = new Date();
   itrTypesData = [{ value: "2", label: 'ITR 2' }, { value: "3", label: 'ITR 3' }];
   residentialStatus = [
@@ -293,6 +294,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       residentialStatus: ['RESIDENT', [Validators.required]],
       aadharNumber: ['', [Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)]],
       passportNumber: [''],
+      gender: ['', Validators.required],
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
       contactNumber: ['', [Validators.required, Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],
       premisesName: [''],
@@ -628,7 +630,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     this.bankData = [];
     this.housingData = [];
     this.donationData = [];
-    this.salaryItrratedData = [];
+    this.salaryItrData = [];
     this.lossesCarriedForwarInfo = [];
     this.immovableAssetsInfo = [];
 
@@ -873,7 +875,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
             totalSalaryDeduction: i === 0 ? Number(salartInfo['ITRForm:DeductionUnderSection16ia']['_text']) + Number(salartInfo['ITRForm:EntertainmntalwncUs16ii']['_text']) + Number(salartInfo['ITRForm:ProfessionalTaxUs16iii']['_text']) : 0,
             taxableIncome: i === 0 ? (Number(salartInfo['ITRForm:Salaries'][i]['ITRForm:Salarys']['ITRForm:GrossSalary']['_text']) - (Number(hra) + Number(lte) + Number(other))) - (Number(salartInfo['ITRForm:DeductionUnderSection16ia']['_text']) + Number(salartInfo['ITRForm:EntertainmntalwncUs16ii']['_text']) + Number(salartInfo['ITRForm:ProfessionalTaxUs16iii']['_text'])) : Number(salartInfo['ITRForm:Salaries'][i]['ITRForm:Salarys']['ITRForm:GrossSalary']['_text'])
           }
-          this.salaryItrratedData.push(salaryObj);
+          this.salaryItrData.push(salaryObj);
         }
       }
       else {
@@ -896,13 +898,13 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           totalSalaryDeduction: Number(salartInfo['ITRForm:DeductionUnderSection16ia']['_text']) + Number(salartInfo['ITRForm:EntertainmntalwncUs16ii']['_text']) + Number(salartInfo['ITRForm:ProfessionalTaxUs16iii']['_text']),
           taxableIncome: (Number(salartInfo['ITRForm:Salaries']['ITRForm:Salarys']['ITRForm:GrossSalary']['_text']) - (Number(hra) + Number(lte) + Number(other))) - (Number(salartInfo['ITRForm:DeductionUnderSection16ia']['_text']) + Number(salartInfo['ITRForm:EntertainmntalwncUs16ii']['_text']) + Number(salartInfo['ITRForm:ProfessionalTaxUs16iii']['_text']))
         }
-        this.salaryItrratedData.push(salaryObj);
+        this.salaryItrData.push(salaryObj);
       }
 
       //SAGAR
 
       this.employerArray = [];
-      for (let i = 0; i < this.salaryItrratedData.length; i++) {
+      for (let i = 0; i < this.salaryItrData.length; i++) {
 
         let employerObj = {
           address: "",
@@ -935,97 +937,97 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         // employerObj.perquisites = [];
         // employerObj.profitsInLieuOfSalaryType = [];
         // employerObj.salary = [];
-        console.log('salaryItrratedData : ', this.salaryItrratedData);
-        console.log('salaryItrratedData ' + i + ' position: ', this.salaryItrratedData[i]);
-        Object.assign(employerObj, this.salaryItrratedData[i]);
+        console.log('salaryItrData : ', this.salaryItrData);
+        console.log('salaryItrData ' + i + ' position: ', this.salaryItrData[i]);
+        Object.assign(employerObj, this.salaryItrData[i]);
         console.log('employerObj after salaryItrared basic binding : ', employerObj);
 
         console.log('employerArray : ', this.employerArray);
         //allowance
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].houseRentAllow) && this.salaryItrratedData[i].houseRentAllow !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].houseRentAllow) && this.salaryItrData[i].houseRentAllow !== 0) {
           let houceAllowObj = {
             allowanceType: "HOUSE_RENT",
             description: null,
-            exemptAmount: Number(this.salaryItrratedData[i].houseRentAllow),
+            exemptAmount: Number(this.salaryItrData[i].houseRentAllow),
             taxableAmount: 0
           }
           employerObj.allowance.push(houceAllowObj)
         }
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].leaveTravelExpense) && this.salaryItrratedData[i].leaveTravelExpense !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].leaveTravelExpense) && this.salaryItrData[i].leaveTravelExpense !== 0) {
           let ltaAllowObj = {
             allowanceType: "LTA",
             description: null,
-            exemptAmount: Number(this.salaryItrratedData[i].leaveTravelExpense),
+            exemptAmount: Number(this.salaryItrData[i].leaveTravelExpense),
             taxableAmount: 0
           }
           employerObj.allowance.push(ltaAllowObj)
         }
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].other) && this.salaryItrratedData[i].other !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].other) && this.salaryItrData[i].other !== 0) {
           let otherAllowObj = {
             allowanceType: "ANY_OTHER",
             description: null,
-            exemptAmount: Number(this.salaryItrratedData[i].other),
+            exemptAmount: Number(this.salaryItrData[i].other),
             taxableAmount: 0
           }
           employerObj.allowance.push(otherAllowObj)
         }
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].totalExemptAllow) && this.salaryItrratedData[i].totalExemptAllow !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].totalExemptAllow) && this.salaryItrData[i].totalExemptAllow !== 0) {
           let totalExeAllowObj = {
             allowanceType: "ALL_ALLOWANCES",
             description: null,
-            exemptAmount: Number(this.salaryItrratedData[i].totalExemptAllow),
+            exemptAmount: Number(this.salaryItrData[i].totalExemptAllow),
             taxableAmount: 0
           }
           employerObj.allowance.push(totalExeAllowObj)
         }
 
         //deduction
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].entertainAllow) && this.salaryItrratedData[i].entertainAllow !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].entertainAllow) && this.salaryItrData[i].entertainAllow !== 0) {
           let entertainAllowObj = {
             deductionType: "ENTERTAINMENT_ALLOW",
             description: null,
-            exemptAmount: Number(this.salaryItrratedData[i].entertainAllow),
+            exemptAmount: Number(this.salaryItrData[i].entertainAllow),
             taxableAmount: 0
           }
           employerObj.deductions.push(entertainAllowObj)
         }
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].professionalTax) && this.salaryItrratedData[i].professionalTax !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].professionalTax) && this.salaryItrData[i].professionalTax !== 0) {
           let professionalTaxObj = {
             deductionType: "PROFESSIONAL_TAX",
             description: null,
-            exemptAmount: Number(this.salaryItrratedData[i].professionalTax),
+            exemptAmount: Number(this.salaryItrData[i].professionalTax),
             taxableAmount: 0
           }
           employerObj.deductions.push(professionalTaxObj)
         }
 
         //Salary( as per sec 17(1)) 
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].salAsPerSec171) && this.salaryItrratedData[i].salAsPerSec171 !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].salAsPerSec171) && this.salaryItrData[i].salAsPerSec171 !== 0) {
           let sal17Obj = {
             description: null,
             exemptAmount: 0,
             salaryType: "SEC17_1",
-            taxableAmount: Number(this.salaryItrratedData[i].salAsPerSec171)
+            taxableAmount: Number(this.salaryItrData[i].salAsPerSec171)
           }
           employerObj.salary.push(sal17Obj)
         }
         //Perquist val( as per sec 17(2)) 
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].valOfPerquisites) && this.salaryItrratedData[i].valOfPerquisites !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].valOfPerquisites) && this.salaryItrData[i].valOfPerquisites !== 0) {
           let valOfPerqu17Obj = {
             description: null,
             exemptAmount: 0,
             salaryType: "SEC17_2",
-            taxableAmount: Number(this.salaryItrratedData[i].valOfPerquisites)
+            taxableAmount: Number(this.salaryItrData[i].valOfPerquisites)
           }
           employerObj.perquisites.push(valOfPerqu17Obj)
         }
         //Profit in ilu( as per sec 17(3)) 
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].profitInLieu) && this.salaryItrratedData[i].profitInLieu !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].profitInLieu) && this.salaryItrData[i].profitInLieu !== 0) {
           let profitsInLieuObj = {
             description: null,
             exemptAmount: 0,
             salaryType: "SEC17_3",
-            taxableAmount: Number(this.salaryItrratedData[i].profitInLieu)
+            taxableAmount: Number(this.salaryItrData[i].profitInLieu)
           }
           employerObj.profitsInLieuOfSalaryType.push(profitsInLieuObj)
         }
@@ -2053,7 +2055,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     this.bankData = [];
     this.housingData = [];
     this.donationData = [];
-    this.salaryItrratedData = [];
+    this.salaryItrData = [];
 
     if (itrData.hasOwnProperty('ITR3')) {
       this.personalInfoForm.controls['itrType'].setValue('3');
@@ -2084,6 +2086,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     // this.assetsLiabilitiesForm.reset();
 
     var personalInfo = itrData.hasOwnProperty('PartA_GEN1') ? itrData.PartA_GEN1 : '';
+    let filingStatus = personalInfo?.FilingStatus; // Used for revise return data binding
+
     console.log('personalInfo: ', personalInfo)
     this.personalInfoForm.controls['fName'].setValue(personalInfo.PersonalInfo.AssesseeName.FirstName);
     this.personalInfoForm.controls['mName'].setValue(personalInfo.PersonalInfo.AssesseeName.MiddleName);
@@ -2125,23 +2129,26 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     if (assessmentYear === "2022") {
       this.personalInfoForm.controls['assessmentYear'].setValue('2022-23')
       this.personalInfoForm.controls['financialYear'].setValue('2021-22')
-    } else
-      if (assessmentYear === "2021") {
-        this.personalInfoForm.controls['assessmentYear'].setValue('2021-22')
-        this.personalInfoForm.controls['financialYear'].setValue('2020-21')
-      }
-      else if (assessmentYear === "2020") {
-        this.personalInfoForm.controls['assessmentYear'].setValue('2020-21')
-        this.personalInfoForm.controls['financialYear'].setValue('2019-20')
-      }
-      else if (assessmentYear === "2019") {
-        this.personalInfoForm.controls['assessmentYear'].setValue('2019-20')
-        this.personalInfoForm.controls['financialYear'].setValue('2018-19')
-      }
-      else if (assessmentYear === "2018") {
-        this.personalInfoForm.controls['assessmentYear'].setValue('2018-19')
-        this.personalInfoForm.controls['financialYear'].setValue('2017-18')
-      }
+    } else if (assessmentYear === "2021") {
+      this.personalInfoForm.controls['assessmentYear'].setValue('2021-22')
+      this.personalInfoForm.controls['financialYear'].setValue('2020-21')
+    } else if (assessmentYear === "2020") {
+      this.personalInfoForm.controls['assessmentYear'].setValue('2020-21')
+      this.personalInfoForm.controls['financialYear'].setValue('2019-20')
+    } else if (assessmentYear === "2019") {
+      this.personalInfoForm.controls['assessmentYear'].setValue('2019-20')
+      this.personalInfoForm.controls['financialYear'].setValue('2018-19')
+    } else if (assessmentYear === "2018") {
+      this.personalInfoForm.controls['assessmentYear'].setValue('2018-19')
+      this.personalInfoForm.controls['financialYear'].setValue('2017-18')
+    }
+
+    // Set Revised Return data
+    if (filingStatus?.ReturnFileSec === 17) {
+      this.personalInfoForm.controls['returnType'].setValue('REVISED');
+      this.personalInfoForm.controls['ackNumber'].setValue(filingStatus?.ReceiptNo);
+      this.personalInfoForm.controls['eFillingDate'].setValue(filingStatus?.OrigRetFiledDate);
+    }
 
     //Bank Data
     /* bank information */
@@ -2339,7 +2346,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
             city: salaryInfo.Salaries[i].AddressDetail.CityOrTownOrDistrict
           }
 
-          this.salaryItrratedData.push(salObj);
+          this.salaryItrData.push(salObj);
         }
 
         let employer = salaryInfo.Salaries[0].NatureOfEmployment;
@@ -2348,7 +2355,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
 
       this.employerArray = [];
-      for (let i = 0; i < this.salaryItrratedData.length; i++) {
+      for (let i = 0; i < this.salaryItrData.length; i++) {
 
         console.log('employerArray : ', this.employerArray);
 
@@ -2377,95 +2384,95 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           taxableIncome: 0
         }
 
-        Object.assign(employerObj, this.salaryItrratedData[i]);
+        Object.assign(employerObj, this.salaryItrData[i]);
         console.log('employerObj after salaryItrared basic binding : ', employerObj);
 
         console.log('employerArray : ', this.employerArray);
         //allowance
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].houseRentAllow) && this.salaryItrratedData[i].houseRentAllow !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].houseRentAllow) && this.salaryItrData[i].houseRentAllow !== 0) {
           let houceAllowObj = {
             allowanceType: "HOUSE_RENT",
             description: null,
-            exemptAmount: Number(this.salaryItrratedData[i].houseRentAllow),
+            exemptAmount: Number(this.salaryItrData[i].houseRentAllow),
             taxableAmount: 0
           }
           employerObj.allowance.push(houceAllowObj)
         }
-        // if (this.utilService.isNonEmpty(this.salaryItrratedData[i].leaveTravelExpense) && this.salaryItrratedData[i].leaveTravelExpense !== 0) {
+        // if (this.utilService.isNonEmpty(this.salaryItrData[i].leaveTravelExpense) && this.salaryItrData[i].leaveTravelExpense !== 0) {
         //   let ltaAllowObj = {
         //     allowanceType: "LTA",
         //     description: null,
-        //     exemptAmount: Number(this.salaryItrratedData[i].leaveTravelExpense),
+        //     exemptAmount: Number(this.salaryItrData[i].leaveTravelExpense),
         //     taxableAmount: 0
         //   }
         //   employerObj.allowance.push(ltaAllowObj)
         // }
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].other) && this.salaryItrratedData[i].other !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].other) && this.salaryItrData[i].other !== 0) {
           let otherAllowObj = {
             allowanceType: "ANY_OTHER",
             description: null,
-            exemptAmount: Number(this.salaryItrratedData[i].other),
+            exemptAmount: Number(this.salaryItrData[i].other),
             taxableAmount: 0
           }
           employerObj.allowance.push(otherAllowObj)
         }
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].totalExemptAllow) && this.salaryItrratedData[i].totalExemptAllow !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].totalExemptAllow) && this.salaryItrData[i].totalExemptAllow !== 0) {
           let totalExeAllowObj = {
             allowanceType: "ALL_ALLOWANCES",
             description: null,
-            exemptAmount: Number(this.salaryItrratedData[i].totalExemptAllow),
+            exemptAmount: Number(this.salaryItrData[i].totalExemptAllow),
             taxableAmount: 0
           }
           employerObj.allowance.push(totalExeAllowObj)
         }
 
         //deduction
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].entertainAllow) && this.salaryItrratedData[i].entertainAllow !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].entertainAllow) && this.salaryItrData[i].entertainAllow !== 0) {
           let entertainAllowObj = {
             deductionType: "ENTERTAINMENT_ALLOW",
             description: null,
-            exemptAmount: Number(this.salaryItrratedData[i].entertainAllow),
+            exemptAmount: Number(this.salaryItrData[i].entertainAllow),
             taxableAmount: 0
           }
           employerObj.deductions.push(entertainAllowObj)
         }
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].professionalTax) && this.salaryItrratedData[i].professionalTax !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].professionalTax) && this.salaryItrData[i].professionalTax !== 0) {
           let professionalTaxObj = {
             deductionType: "PROFESSIONAL_TAX",
             description: null,
-            exemptAmount: Number(this.salaryItrratedData[i].professionalTax),
+            exemptAmount: Number(this.salaryItrData[i].professionalTax),
             taxableAmount: 0
           }
           employerObj.deductions.push(professionalTaxObj)
         }
 
         //Salary( as per sec 17(1)) 
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].salAsPerSec171) && this.salaryItrratedData[i].salAsPerSec171 !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].salAsPerSec171) && this.salaryItrData[i].salAsPerSec171 !== 0) {
           let sal17Obj = {
             description: null,
             exemptAmount: 0,
             salaryType: "SEC17_1",
-            taxableAmount: Number(this.salaryItrratedData[i].salAsPerSec171)
+            taxableAmount: Number(this.salaryItrData[i].salAsPerSec171)
           }
           employerObj.salary.push(sal17Obj)
         }
         //Perquist val( as per sec 17(2)) 
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].valOfPerquisites) && this.salaryItrratedData[i].valOfPerquisites !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].valOfPerquisites) && this.salaryItrData[i].valOfPerquisites !== 0) {
           let valOfPerqu17Obj = {
             description: null,
             exemptAmount: 0,
             salaryType: "SEC17_2",
-            taxableAmount: Number(this.salaryItrratedData[i].valOfPerquisites)
+            taxableAmount: Number(this.salaryItrData[i].valOfPerquisites)
           }
           employerObj.perquisites.push(valOfPerqu17Obj)
         }
         //Profit in ilu( as per sec 17(3)) 
-        if (this.utilService.isNonEmpty(this.salaryItrratedData[i].profitInLieu) && this.salaryItrratedData[i].profitInLieu !== 0) {
+        if (this.utilService.isNonEmpty(this.salaryItrData[i].profitInLieu) && this.salaryItrData[i].profitInLieu !== 0) {
           let profitsInLieuObj = {
             description: null,
             exemptAmount: 0,
             salaryType: "SEC17_3",
-            taxableAmount: Number(this.salaryItrratedData[i].profitInLieu)
+            taxableAmount: Number(this.salaryItrData[i].profitInLieu)
           }
           employerObj.profitsInLieuOfSalaryType.push(profitsInLieuObj)
         }
@@ -4706,17 +4713,14 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
   }
 
-  showAcknowInput: boolean;
-  showAcknowData(returnType) {
+  showAckNoData(returnType) {
     console.log('Selected return type: ', returnType)
     if (returnType === 'REVISED') {
-      this.showAcknowInput = true;
       //this.itrSummaryForm.controls['acknowledgementNumber'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
       this.personalInfoForm.controls['ackNumber'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
       this.personalInfoForm.controls['eFillingDate'].setValidators([Validators.required]);
     }
     else if (returnType === 'ORIGINAL') {
-      this.showAcknowInput = false;
       this.personalInfoForm.controls['ackNumber'].reset();
       this.personalInfoForm.controls['eFillingDate'].reset();
       this.personalInfoForm.controls['ackNumber'].setValidators(null);
@@ -4724,6 +4728,18 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       this.personalInfoForm.controls['eFillingDate'].setValidators(null);
       this.personalInfoForm.controls['eFillingDate'].updateValueAndValidity();
     }
+  }
+  openBankDialog(mode: string, index: any, bank: any) {
+    let disposable = this.dialog.open(BankDialogComponent, {
+      data: {
+        bankDetails: bank,
+        mode: mode,
+      }
+    })
+    disposable.afterClosed().subscribe(result => {
+      console.log('New Bank Dialog', result)
+      this.setBankValue(result.data.bankDetails, mode, index)
+    });
   }
 
   openDialog(windowTitle: string, windowBtn: string, index: any, myUser: any, mode: string) {
@@ -4775,39 +4791,17 @@ export class Itr2mainComponent implements OnInit, OnChanges {
   }
 
   setBankValue(latestBankInfo, action, index) {
-    console.log('DDAATTAA==>: ', latestBankInfo, action, index)
+    if (latestBankInfo.hasRefund) {
+      for (let i = 0; i < this.bankData.length; i++) {
+        this.bankData[i].hasRefund = false;
+      }
+    }
     if (action === 'Add') {
-      if (this.bankData.length !== 0) {
-        console.log('latestBankInfo: ', latestBankInfo)
-        if (latestBankInfo.hasRefund === true) {
-          for (let i = 0; i < this.bankData.length; i++) {
-            this.bankData[i].hasRefund = false;
-          }
-          this.bankData.push(latestBankInfo)
-        }
-        else {
-          this.bankData.push(latestBankInfo)
-        }
-
-      } else {
-        this.bankData.push(latestBankInfo)
-        // this.itrSummaryForm.controls['assesse'].controls['bankDetails'].setValue(this.bankData)
-      }
+      this.bankData.push(latestBankInfo);
+      return;
     }
-    else if (action === 'Edit') {
-      if (latestBankInfo.hasRefund === true) {
-        for (let i = 0; i < this.bankData.length; i++) {
-          this.bankData[i].hasRefund = false;
-        }
-        this.bankData.splice(index, 1, latestBankInfo)
-        console.log('After edit data is: ', this.bankData)
-      }
-      else {
-        this.bankData.splice(index, 1, latestBankInfo)
-        console.log('After edit data is: ', this.bankData)
-      }
-    }
-    console.log('this.bankData: ', this.bankData)
+    this.bankData.splice(index, 1, latestBankInfo);
+    return;
   }
 
   setLossesValue(latestLossesInfo, action, index) {
@@ -5050,7 +5044,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
   }
 
   employersData: any = [];
-  salaryItrratedData: any = [];
+  salaryItrData: any = [];
   employerArray: any = [];
   setEmployerData(emplyersData, action, index) {
     if (action === 'Add') {
@@ -5084,7 +5078,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           state: this.employersData[i].employers.state,
           city: this.employersData[i].employers.city,
         }
-        this.salaryItrratedData.push(salObj);
+        this.salaryItrData.push(salObj);
       }
 
       console.log('totalTaxableIncome Before: ', totalTaxableIncome)
@@ -5098,7 +5092,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       this.computationOfIncomeForm.controls['salary'].setValue(totalTaxableIncome)
       this.calculateTotalHeadWiseIncome();
 
-      console.log('Salary Data: ', this.salaryItrratedData);
+      console.log('Salary Data: ', this.salaryItrData);
       // console.log('ITR formData: ', this.itrSummaryForm.value);
     }
     else if (action === 'Edit') {
@@ -5133,7 +5127,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         state: emplyersData.employers.state,
         city: emplyersData.employers.city,
       }
-      this.salaryItrratedData.splice(index, 1, salObj);
+      this.salaryItrData.splice(index, 1, salObj);
 
       for (let i = 0; i < this.employersData.length; i++) {
         totalTaxableIncome = totalTaxableIncome + this.employersData[i].employers.taxableIncome;
@@ -5147,7 +5141,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
       //this.itrSummaryForm.controls['assesse'].controls['employers'].setValue(this.employerArray)
 
-      console.log('Salary Data: ', this.salaryItrratedData);
+      console.log('Salary Data: ', this.salaryItrData);
       //console.log('ITR formData: ', this.itrSummaryForm.value);
     }
   }
@@ -6670,7 +6664,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       this.bankData = [];
       this.housingData = [];
       this.donationData = [];
-      this.salaryItrratedData = [];
+      this.salaryItrData = [];
       this.lossesCarriedForwarInfo = [];
 
       this.bankData = summary.assesse.bankDetails.length > 0 ? summary.assesse.bankDetails : [];
@@ -6838,9 +6832,9 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           city: salaryData[i].city,
         }
 
-        this.salaryItrratedData.push(salObj)
+        this.salaryItrData.push(salObj)
       }
-      console.log('this.salaryItrratedData ====>> ', this.salaryItrratedData)
+      console.log('this.salaryItrData ====>> ', this.salaryItrData)
     }
   }
 
@@ -7220,7 +7214,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
       console.log('Compare Houceing part:  -> itrated part: ', this.housingData);
       console.log('Compare Houceing part:  -> pass part: ', this.houseArray)
-      console.log('Compare Salary part:  -> itrated part: ', this.salaryItrratedData);
+      console.log('Compare Salary part:  -> itrated part: ', this.salaryItrData);
       console.log('Compare Salary part:  -> pass part: ', this.employerArray)
       this.itr_2_Summary.assesse.bankDetails = this.bankData;
       this.itr_2_Summary.assesse.houseProperties = this.houseArray;
@@ -7809,6 +7803,25 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       let tempAy = this.itrObject.assessmentYear;
       let tempFy = this.itrObject.financialYear;
       Object.assign(this.itrObject, this.personalInfoForm.value);
+      const ageCalculated = this.calAge(this.personalInfoForm.controls['dateOfBirth'].value);
+      this.itrObject.isRevised = 'N'
+      if (this.personalInfoForm.controls['returnType'].value === 'REVISED') {
+        this.itrObject.isRevised = 'Y'
+      }
+      this.itrObject.family = [
+        {
+          pid: null,
+          fName: this.personalInfoForm.controls['fName'].value,
+          mName: this.personalInfoForm.controls['mName'].value,
+          lName: this.personalInfoForm.controls['lName'].value,
+          fatherName: this.personalInfoForm.controls['fathersName'].value,
+          age: ageCalculated,
+          gender: this.personalInfoForm.controls['fName'].value,
+          relationShipCode: 'SELF',
+          relationType: 'SELF',
+          dateOfBirth: this.personalInfoForm.controls['dateOfBirth'].value
+
+        }]
       this.itrObject.assessmentYear = tempAy;
       this.itrObject.financialYear = tempFy;
 
@@ -7840,6 +7853,14 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
   }
 
+  calAge(dob) {
+    const birthday: any = new Date(dob);
+    const currentYear = Number(this.personalInfoForm.controls['assessmentYear'].value.substring(0, 4));
+    const today: any = new Date(currentYear, 2, 31);
+    const timeDiff: any = ((today - birthday) / (31557600000));
+    return Math.floor(timeDiff);
+  }
+
   downloadItrSummary() {
     location.href = environment.url + '/itr/summary/download/' + this.personalInfoForm.value.summaryId;
   }
@@ -7857,7 +7878,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       var totalTaxableIncome = 0;
       this.employerArray = [];
       this.employersData.splice(index, 1);
-      this.salaryItrratedData.splice(index, 1);
+      this.salaryItrData.splice(index, 1);
 
       for (let i = 0; i < this.employersData.length; i++) {
         totalTaxableIncome = totalTaxableIncome + this.employersData[i].employers.taxableIncome;
@@ -8098,6 +8119,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       assesse: {
         passportNumber: "",
         email: '',
+        gender: '',
         contactNumber: '',
         panNumber: '',
         aadharNumber: '',
@@ -8371,5 +8393,15 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
   }
 
-
+  sendSummary() {
+    this.loading = true;
+    let param = `/summary/send?itrId=${this.itrObject.itrId}&channel=kommunicate&summaryId=${this.personalInfoForm.value.summaryId}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      this.loading = false;
+      console.log('Responce of send PDF:', res)
+      this.utilsService.showSnackBar(res.message)
+    }, error => {
+      this.loading = false;
+    })
+  }
 }

@@ -1,4 +1,4 @@
-import { ITR_JSON, Employer } from '../../../modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from './../../../services/utils.service';
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
@@ -154,7 +154,7 @@ export class SalaryComponent implements OnInit {
     if (this.ITR_JSON.employers === null || this.ITR_JSON.employers === undefined) {
       this.ITR_JSON.employers = [];
     }
-    this.ITR_JSON.employers.forEach((item:any) => {
+    this.ITR_JSON.employers.forEach((item: any) => {
       if (item.deductions instanceof Array) {
         item.deductions.forEach(deductions => {
           if (deductions.deductionType === 'PROFESSIONAL_TAX') {
@@ -193,9 +193,9 @@ export class SalaryComponent implements OnInit {
         this.salaryGridOptions.api.sizeColumnsToFit();
       },
 
-      frameworkComponents: {
-        numericEditor: NumericEditorComponent
-      },
+      // frameworkComponents: {
+      //   numericEditor: NumericEditorComponent
+      // },
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
@@ -214,7 +214,7 @@ export class SalaryComponent implements OnInit {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           if (salaryDropdown.length !== 0) {
-            const nameArray = salaryDropdown.filter((item:any) => item.value === params.data.salaryType);
+            const nameArray = salaryDropdown.filter((item: any) => item.value === params.data.salaryType);
             return nameArray[0].label;
           } else {
             return params.data.salaryType;
@@ -223,7 +223,7 @@ export class SalaryComponent implements OnInit {
         editable: false,
         tooltip: function (params) {
           if (salaryDropdown.length !== 0) {
-            const nameArray = salaryDropdown.filter((item:any) => item.value === params.data.salaryType);
+            const nameArray = salaryDropdown.filter((item: any) => item.value === params.data.salaryType);
             return nameArray[0].label;
           } else {
             return params.data.salaryType;
@@ -297,9 +297,9 @@ export class SalaryComponent implements OnInit {
         this.summaryAllowGridOptions.api.sizeColumnsToFit();
       },
 
-      frameworkComponents: {
-        numericEditor: NumericEditorComponent
-      },
+      // frameworkComponents: {
+      //   numericEditor: NumericEditorComponent
+      // },
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
@@ -317,7 +317,7 @@ export class SalaryComponent implements OnInit {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           if (allowaceDropdownSummary.length !== 0) {
-            const nameArray = allowaceDropdownSummary.filter((item:any) => item.value === params.data.allowanceType);
+            const nameArray = allowaceDropdownSummary.filter((item: any) => item.value === params.data.allowanceType);
             return nameArray[0].label;
           } else {
             return params.data.allowanceType;
@@ -326,7 +326,7 @@ export class SalaryComponent implements OnInit {
         editable: false,
         tooltip: function (params) {
           if (allowaceDropdownSummary.length !== 0) {
-            const nameArray = allowaceDropdownSummary.filter((item:any) => item.value === params.data.allowanceType);
+            const nameArray = allowaceDropdownSummary.filter((item: any) => item.value === params.data.allowanceType);
             return nameArray[0].label;
           } else {
             return params.data.allowanceType;
@@ -426,7 +426,7 @@ export class SalaryComponent implements OnInit {
 
     this.maxPT = 5000;
     this.maxEA = 5000;
-    this.ITR_JSON.employers.forEach((item:any) => {
+    this.ITR_JSON.employers.forEach((item: any) => {
       item.deductions.forEach(deductions => {
         if (deductions.deductionType === 'PROFESSIONAL_TAX') {
           this.maxPT = this.maxPT - Number(deductions.exemptAmount);
@@ -446,7 +446,7 @@ export class SalaryComponent implements OnInit {
 
 
   saveEmployerDetails() {
-    
+
     // this.localEmployer = {
     //   id: Math.random().toString(36).substr(2, 9),
     //   employerName: '',
@@ -530,7 +530,7 @@ export class SalaryComponent implements OnInit {
       if (!this.utilsService.isNonEmpty(this.localEmployer.deductions)) {
         this.localEmployer.deductions = [];
       }
-      this.localEmployer.deductions = this.localEmployer.deductions.filter((item:any) => item.deductionType !== 'PROFESSIONAL_TAX');
+      this.localEmployer.deductions = this.localEmployer.deductions.filter((item: any) => item.deductionType !== 'PROFESSIONAL_TAX');
       if (this.employerDetailsFormGroup.controls['professionalTax'].value !== null && this.employerDetailsFormGroup.controls['professionalTax'].value !== '') {
         this.localEmployer.deductions.push({
           deductionType: 'PROFESSIONAL_TAX',
@@ -538,7 +538,7 @@ export class SalaryComponent implements OnInit {
           exemptAmount: Number(this.employerDetailsFormGroup.controls['professionalTax'].value)
         });
       }
-      this.localEmployer.deductions = this.localEmployer.deductions.filter((item:any) => item.deductionType !== 'ENTERTAINMENT_ALLOW');
+      this.localEmployer.deductions = this.localEmployer.deductions.filter((item: any) => item.deductionType !== 'ENTERTAINMENT_ALLOW');
       if (this.employerDetailsFormGroup.controls['entertainmentAllow'].value !== null && this.employerDetailsFormGroup.controls['entertainmentAllow'].value !== '') {
         this.localEmployer.deductions.push({
           deductionType: 'ENTERTAINMENT_ALLOW',
@@ -588,7 +588,7 @@ export class SalaryComponent implements OnInit {
 
     this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
       this.ITR_JSON = result;
-      this.currentIndex = this.ITR_JSON.employers.findIndex((item:any) => item.id === this.localEmployer.id);
+      this.currentIndex = this.ITR_JSON.employers.findIndex((item: any) => item.id === this.localEmployer.id);
       this.localEmployer = JSON.parse(JSON.stringify(this.ITR_JSON.employers[this.currentIndex]));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
@@ -659,7 +659,7 @@ export class SalaryComponent implements OnInit {
     if (this.localEmployer.salary instanceof Array) {
       // const salary = this.localEmployer.salary.filter((item:any) => item.salaryType !== 'SEC17_1');
       for (let i = 0; i < this.localEmployer.salary.length; i++) {
-        const id = this.salaryGridOptions.rowData.filter((item:any) => item.salaryType === this.localEmployer.salary[i].salaryType)[0].id;
+        const id = this.salaryGridOptions.rowData.filter((item: any) => item.salaryType === this.localEmployer.salary[i].salaryType)[0].id;
         this.salaryGridOptions.rowData.splice(id, 1, {
           id: id,
           salaryType: this.localEmployer.salary[i].salaryType,
@@ -675,7 +675,7 @@ export class SalaryComponent implements OnInit {
     /* Perquisites Set Values */
     if (this.localEmployer.perquisites instanceof Array) {
       for (let i = 0; i < this.localEmployer.perquisites.length; i++) {
-        const id = this.salaryGridOptions.rowData.filter((item:any) => item.salaryType === this.localEmployer.perquisites[i].perquisiteType)[0].id;
+        const id = this.salaryGridOptions.rowData.filter((item: any) => item.salaryType === this.localEmployer.perquisites[i].perquisiteType)[0].id;
         this.salaryGridOptions.rowData.splice(id, 1, {
           id: id,
           salaryType: this.localEmployer.perquisites[i].perquisiteType,
@@ -687,7 +687,7 @@ export class SalaryComponent implements OnInit {
     /* ProfitsInLieuOfSalary Set Values */
     if (this.localEmployer.profitsInLieuOfSalaryType instanceof Array) {
       for (let i = 0; i < this.localEmployer.profitsInLieuOfSalaryType.length; i++) {
-        const id = this.salaryGridOptions.rowData.filter((item:any) => item.salaryType === this.localEmployer.profitsInLieuOfSalaryType[i].salaryType)[0].id;
+        const id = this.salaryGridOptions.rowData.filter((item: any) => item.salaryType === this.localEmployer.profitsInLieuOfSalaryType[i].salaryType)[0].id;
         this.salaryGridOptions.rowData.splice(id, 1, {
           id: id,
           salaryType: this.localEmployer.profitsInLieuOfSalaryType[i].salaryType,
@@ -701,9 +701,9 @@ export class SalaryComponent implements OnInit {
     this.summaryAllowGridOptions.rowData = this.summaryAllowCreateRowData(this.allowanceDropdown);
     this.summaryAllowGridOptions.columnDefs = this.summaryAllowCreateColoumnDef(this.allowanceDropdown);
     if (this.localEmployer.allowance instanceof Array) {
-      const allowance = this.localEmployer.allowance.filter((item:any) => item.allowanceType !== 'ALL_ALLOWANCES');
+      const allowance = this.localEmployer.allowance.filter((item: any) => item.allowanceType !== 'ALL_ALLOWANCES');
       for (let i = 0; i < allowance.length; i++) {
-        const id = this.summaryAllowGridOptions.rowData.filter((item:any) => item.allowanceType === allowance[i].allowanceType)[0].id;
+        const id = this.summaryAllowGridOptions.rowData.filter((item: any) => item.allowanceType === allowance[i].allowanceType)[0].id;
         this.summaryAllowGridOptions.rowData.splice(id, 1, {
           id: id,
           allowanceType: allowance[i].allowanceType,
@@ -729,7 +729,7 @@ export class SalaryComponent implements OnInit {
 
     this.maxPT = 5000;
     this.maxEA = 5000;
-    this.ITR_JSON.employers.forEach((item:any) => {
+    this.ITR_JSON.employers.forEach((item: any) => {
       if (item.deductions instanceof Array) {
         item.deductions.forEach(deductions => {
           if (deductions.deductionType === 'PROFESSIONAL_TAX') {
@@ -762,7 +762,7 @@ export class SalaryComponent implements OnInit {
     }
     if (hraFound) {
       ITR_JSON.systemFlags.hraAvailed = true;
-      ITR_JSON.expenses.filter((item:any) => item.expenseType !== 'HOUSE_RENT_PAID')
+      ITR_JSON.expenses.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID')
     } else {
       ITR_JSON.systemFlags.hraAvailed = false;
     }
@@ -776,9 +776,9 @@ export class SalaryComponent implements OnInit {
         this.employersGridOptions.api.sizeColumnsToFit();
       },
 
-      frameworkComponents: {
-        numericEditor: NumericEditorComponent
-      },
+      // frameworkComponents: {
+      //   numericEditor: NumericEditorComponent
+      // },
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
@@ -855,7 +855,7 @@ export class SalaryComponent implements OnInit {
     }
   }
   deleteEmployer(params) {
-    this.Copy_ITR_JSON.employers = this.Copy_ITR_JSON.employers.filter((item:any) => item.id !== params.data.id);
+    this.Copy_ITR_JSON.employers = this.Copy_ITR_JSON.employers.filter((item: any) => item.id !== params.data.id);
     if (this.Copy_ITR_JSON.employers.length > 0) {
       this.Copy_ITR_JSON.systemFlags.hasSalary = true;
     } else {
@@ -977,7 +977,7 @@ export class SalaryComponent implements OnInit {
   }
 
   getAllForm16s(documentTag) {
-    return this.itrDocuments.filter((item:any) => item.documentTag === documentTag)
+    return this.itrDocuments.filter((item: any) => item.documentTag === documentTag)
 
   }
 

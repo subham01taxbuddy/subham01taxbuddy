@@ -512,22 +512,41 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   }
 
   async startFiling(data) {
-
-    if (data.statusId !== 11) {
-      this.router.navigate(['/eri'], {
-        state:
-        {
-          userId: data.userId,
-          panNumber: data.panNumber,
-          eriClientValidUpto: data?.eriClientValidUpto,
-          callerAgentUserId: this.selectedFilingTeamMemberId,
-          assessmentYear: data?.assessmentYear,
-          name: data?.fName + ' ' + data?.lName
-        }
-      });
-    } else {
-      // this._toastMessageService.alert("success", 'This user ITR is filed');
+    var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0]
+    console.log('data: ', workingItr);
+    Object.entries(workingItr).forEach((key, value) => {
+      console.log(key, value)
+      if (key[1] === null) {
+        delete workingItr[key[0]];
+      }
+    });
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+      this.utilsService.showSnackBar('There is no any active filing year available')
+      return;
     }
+    let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear)
+    Object.assign(obj, workingItr)
+    console.log('obj:', obj)
+    workingItr = JSON.parse(JSON.stringify(obj))
+    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
+    this.router.navigate(['/pages/itr-filing/customer-profile']);
+    // if (data.statusId !== 11) {
+    //   this.router.navigate(['/eri'], {
+    //     state:
+    //     {
+    //       userId: data.userId,
+    //       panNumber: data.panNumber,
+    //       eriClientValidUpto: data?.eriClientValidUpto,
+    //       callerAgentUserId: this.selectedFilingTeamMemberId,
+    //       assessmentYear: data?.assessmentYear,
+    //       name: data?.fName + ' ' + data?.lName
+    //     }
+    //   });
+    // } else {
+    //   // this._toastMessageService.alert("success", 'This user ITR is filed');
+    // }
   }
 
   openFilingStatusDialog(data) {

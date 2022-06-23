@@ -82,12 +82,16 @@ export class AssignedUsersComponent implements OnInit {
     this.search();
   }
   fromSme(event) {
-    if (event === '') {
+    if (event === '' || event === 'ALL') {
       let loggedInId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID
       if (this.agentId !== loggedInId) {
         this.agentId = loggedInId;
         this.search('agent');
       }
+    } else if (event === 'SELF') {
+      let loggedInId = JSON.parse(localStorage.getItem('UMD'))?.USER_UNIQUE_ID;
+      this.agentId = loggedInId;
+      this.search('agent', true);
     } else {
       this.agentId = event;
       this.search('agent');
@@ -698,17 +702,23 @@ export class AssignedUsersComponent implements OnInit {
         }
         case 'add-client': {
           if (params.data.statusId !== 11) {
-            this.router.navigate(['/eri'], {
-              state:
-              {
-                userId: params.data.userId,
-                panNumber: params.data.panNumber,
-                eriClientValidUpto: params.data.eriClientValidUpto,
-                callerAgentUserId: params.data.callerAgentUserId,
-                assessmentYear: params.data.assessmentYear,
-                name: params.data.name
-              }
-            });
+            const reqParam = `/profile-data?filedNames=panNumber,dateOfBirth&userId=${params.data.userId}`;
+            this.userMsService.getMethod(reqParam).subscribe((res: any) => {
+              console.log('Result DOB:', res);
+              this.router.navigate(['/eri'], {
+                state:
+                {
+                  userId: params.data.userId,
+                  panNumber: params.data.panNumber ? params.data.panNumber : res.data.panNumber,
+                  eriClientValidUpto: params.data.eriClientValidUpto,
+                  callerAgentUserId: params.data.callerAgentUserId,
+                  assessmentYear: params.data.assessmentYear,
+                  name: params.data.name,
+                  dateOfBirth: res.data.dateOfBirth
+                }
+              });
+            })
+
           } else {
             this._toastMessageService.alert("success", 'This user ITR is filed');
           }
@@ -903,7 +913,7 @@ export class AssignedUsersComponent implements OnInit {
     //   }
     // });
   }
-  search(form?) {
+  search(form?, isAgent?) {
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (this.searchParam.mobileNumber == null || this.searchParam.mobileNumber == '') {
@@ -919,6 +929,10 @@ export class AssignedUsersComponent implements OnInit {
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme/${this.agentId}/user-list?${data}`;
+    if (isAgent) {
+      param = param + '&isAgent=true';
+    }
+
     this.userMsService.getMethod(param).subscribe(
       /* {
         next: (v) => console.log(v),

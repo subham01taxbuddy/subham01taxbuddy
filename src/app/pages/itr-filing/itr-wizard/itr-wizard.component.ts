@@ -12,7 +12,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./itr-wizard.component.css']
 })
 export class ItrWizardComponent implements OnInit, AfterContentChecked {
-  @ViewChild('stepper', {  read: MatStepper }) private stepper: MatStepper;
+  @ViewChild('stepper', { read: MatStepper }) private stepper: MatStepper;
   personalForm: FormGroup;
   incomeForm: FormGroup;
   taxSavingForm: FormGroup;
@@ -57,7 +57,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
 
   saveAndNext(event) {
     // need to check
-    this.stepper;
+    this.stepper.next();
   }
 
   tabChanged(tab) {

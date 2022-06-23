@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-direct-filing',
   templateUrl: './direct-filing.component.html',
   styleUrls: ['./direct-filing.component.scss']
 })
-export class DirectFilingComponent implements OnInit {
+export class DirectFilingComponent implements OnInit, OnChanges {
   tabIndex = 0;
   addClient: any;
   itrData: any
@@ -16,8 +16,12 @@ export class DirectFilingComponent implements OnInit {
     //   userId: 116, panNumber: 'AUEPP2987M'
     // }
   }
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('PARENT ON CHANGES', changes);
+  }
 
   ngOnInit() {
+    console.log('PARENT ON INIT');
   }
 
   tabChanged(tab) {

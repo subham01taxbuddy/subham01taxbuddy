@@ -8,12 +8,12 @@
             <mat-expansion-panel-header>
                 <div class="card__title" style="font-size: 20px;">TDS on salary</div>
             </mat-expansion-panel-header>
-            <div class="card__row">
+            <div class="card__row" style="padding: 0px 20px;">
                 <div class="card__col-xs-12 card__col-sm-8">This is TDS on salary deducted by your employer. Enter the
                     amount from form 16 or
                     26AS</div>
                 <div class="pull-right">
-                    <button type="button" class="btn" style="border: none;" (click)="onAddRow('ADD')">Add Row <i
+                    <button type="button" class="tbd-btn-small" (click)="onAddRow('ADD')">Add <i
                             class="fa fa-plus"></i></button>
                 </div>
             </div>
@@ -28,12 +28,12 @@
             <mat-expansion-panel-header>
                 <div class="card__title" style="font-size: 20px;">TDS other than salary</div>
             </mat-expansion-panel-header>
-            <div class="card__row">
+            <div class="card__row" style="padding: 0px 20px;">
                 <div class="card__col-xs-12 card__col-sm-8">This is TDS on incomes other than salary. Enter the amount
                     from form 16A or 26AS</div>
                 <div class="pull-right">
-                    <button type="button" class="btn" style="border: none;"
-                        (click)="addTdsOtherThanSalary16A('ADD')">Add Row <i class="fa fa-plus"></i></button>
+                    <button type="button" class="tbd-btn-small"
+                        (click)="addTdsOtherThanSalary16A('ADD')">Add <i class="fa fa-plus"></i></button>
                 </div>
             </div>
             <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
@@ -47,12 +47,12 @@
             <mat-expansion-panel-header>
                 <div class="card__title" style="font-size: 20px;">TDS other than salary 26QB</div>
             </mat-expansion-panel-header>
-            <div class="card__row">
+            <div class="card__row" style="padding: 0px 20px;">
                 <div class="card__col-xs-12 card__col-sm-8">This is TDS on incomes other than salary. Enter the amount
                     from form 16A or 26AS</div>
                 <div class="pull-right">
-                    <button type="button" class="btn" style="border: none;"
-                        (click)="addTdsOtherThanSalary26QB('ADD')">Add Row <i class="fa fa-plus"></i></button>
+                    <button type="button" class="tbd-btn-small"
+                        (click)="addTdsOtherThanSalary26QB('ADD')">Add <i class="fa fa-plus"></i></button>
                 </div>
             </div>
             <div style="height: 100%; padding-top: 5px;padding-bottom: 15px; box-sizing: border-box;">
@@ -66,12 +66,12 @@
             <mat-expansion-panel-header>
                 <div class="card__title" style="font-size: 20px;">TCS</div>
             </mat-expansion-panel-header>
-            <div class="card__row">
+            <div class="card__row" style="padding: 0px 20px;">
                 <div class="card__col-xs-12 card__col-sm-8">In case of some incomes the payer of income collects TCS
                     from you. Enter the amount
                     from form 16A or 26AS</div>
                 <div class="pull-right">
-                    <button type="button" class="btn" style="border: none;" (click)="addTcs('ADD')">Add Row <i
+                    <button type="button" class="tbd-btn-small" (click)="addTcs('ADD')">Add <i
                             class="fa fa-plus"></i></button>
                 </div>
             </div>
@@ -87,11 +87,11 @@
             <mat-expansion-panel-header>
                 <div class="card__title" style="font-size: 20px;">Advance and self assesment tax</div>
             </mat-expansion-panel-header>
-            <div class="card__row">
+            <div class="card__row" style="padding: 0px 20px;">
                 <div class="card__col-xs-12 card__col-sm-8">Please enter the amount of advance tax or self assessment
                     tax paid</div>
                 <div class="pull-right">
-                    <button type="button" class="btn" style="border: none;" (click)="addOtherThanTdsTcs('ADD')">Add Row
+                    <button type="button" class="tbd-btn-small"  (click)="addOtherThanTdsTcs('ADD')">Add
                         <i class="fa fa-plus"></i></button>
                 </div>
             </div>
@@ -104,7 +104,7 @@
     </mat-accordion>
 
     <div class="pull-right">
-        <button class="btn long-btn" style="border: none;" (click)="saveAndContinue()">Save And Continue
+        <button class="tbd-btn" (click)="saveAndContinue()">Save And Continue
         </button>
     </div>
 </div>
