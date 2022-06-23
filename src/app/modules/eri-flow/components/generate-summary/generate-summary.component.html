@@ -12,7 +12,7 @@
 
       </div>
     </div>
-    <app-tax-summary [changes]="newItrSumChanges" [itrObject]="itrOneAnd4Data">
+    <app-tax-summary [userDetails]="userDetails" [changes]="newItrSumChanges" [itrObject]="itrOneAnd4Data">
     </app-tax-summary>
   </mat-tab>
   <mat-tab label="ITR 2/3">
@@ -28,7 +28,7 @@
 
       </div>
     </div>
-    <app-itr2main [changes]="newItrSumChanges" [itrObject]="itrTwoAnd3Data"></app-itr2main>
+    <app-itr2main [userDetails]="userDetails" [changes]="newItrSumChanges" [itrObject]="itrTwoAnd3Data"></app-itr2main>
   </mat-tab>
 </mat-tab-group>
 
