@@ -257,13 +257,14 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
   }
 
   setJsonData(itrData: any) {
-
+    debugger
     //  if(itrData.hasOwnProperty('ITR1')){
     this.newTaxRegime = itrData.FilingStatus.NewTaxRegime === "Y" ? true : false;
     let panNo = itrData.PersonalInfo.PAN;
     let dob = new Date(itrData.PersonalInfo.DOB);
-
-    if (panNo !== this.userDetails?.panNUmber) {
+    console.log('Personal Info: ', itrData.PersonalInfo)
+    console.log(' this.userDetails: ', this.userDetails)
+    if (panNo !== this.userDetails?.panNumber) {
       this._toastMessageService.alert('error', 'PAN Number from profile and PAN number from json are different please confirm once.');
       return;
     }
@@ -609,7 +610,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         interestFromIncomeTax: 0,
         interestFromOther: 0,
         dividend: 0,
-        toatlIncome: 0
+        toatlIncome: 0,
+        familyPension: 0
       }
       if (otherInfo instanceof Array && otherInfo.length > 0) {
         if (otherInfo.filter((item: any) => item.OthSrcNatureDesc === "DIV").length > 0) {
@@ -644,6 +646,14 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
           }
           this.sourcesOfIncome.interestFromIncomeTax = Number(intFromIncoTaxVal);
         }
+        if (otherInfo.filter((item: any) => item.OthSrcNatureDesc === "FAP").length > 0) {
+          let familyPension = otherInfo.filter((item: any) => item.OthSrcNatureDesc === "FAP")[0].OthSrcOthAmount;
+          if (typeof familyPension === 'string') {
+            familyPension = familyPension.replace(/\,/g, '');
+            familyPension = parseInt(familyPension, 10);
+          }
+          this.sourcesOfIncome.familyPension = Number(familyPension) - Number(incomeDeduction.DeductionUs57iia);
+        }
         if (otherInfo.filter((item: any) => item.OthSrcNatureDesc === "OTH").length > 0) {
           // let otherVal = otherInfo.filter(item=> item.OthSrcNatureDesc === "OTH")[0].OthSrcOthAmount;
           //this.sourcesOfIncome.interestFromOther = otherVal;
@@ -652,7 +662,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       this.sourcesOfIncome.interestFromOther = incomeDeduction.IncomeOthSrc - (this.sourcesOfIncome.dividend + this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax);
 
       this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax +
-        this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.dividend;
+        this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.dividend + this.sourcesOfIncome.familyPension;
     }
 
     //Exempt Income
@@ -1655,7 +1665,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       interestFromIncomeTax: 0,
       interestFromOther: 0,
       dividend: 0,
-      toatlIncome: 0
+      toatlIncome: 0,
+      familyPension: 0
     }
 
     if (otherInfo.value) {
@@ -1675,11 +1686,14 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         else if (otherSource[i].incomeType === "ANY_OTHER") {
           this.sourcesOfIncome.interestFromOther = otherSource[i].amount;
         }
+        else if (otherSource[i].incomeType === "FAMILY_PENSION") {
+          this.sourcesOfIncome.familyPension = otherSource[i].amount;
+        }
         // else if(otherSource[i].incomeType === "GIFT_NONTAXABLE"){    //WRONG TOTAL WHEN UASER EDIT
         //   this.sourcesOfIncome.toatlIncome = otherSource[i].amount;
         // }
         this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank +
-          this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther;
+          this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.familyPension;
       }
     }
   }
@@ -2482,7 +2496,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     interestFromIncomeTax: 0,
     interestFromOther: 0,
     dividend: 0,
-    toatlIncome: 0
+    toatlIncome: 0,
+    familyPension: 0
   }
   setOtherSourceIncomeValue(incomeVal: any, type: any) {
 
@@ -2502,7 +2517,10 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       else if (type === 'other') {
         this.sourcesOfIncome.interestFromOther = Number(incomeVal);
       }
-      this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.dividend;
+      else if (type === 'family_pension') {
+        this.sourcesOfIncome.familyPension = Number(incomeVal);
+      }
+      this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.dividend + this.sourcesOfIncome.familyPension;
 
       //this.itrSummaryForm.controls['totalIncomeFromOtherResources'].setValue(this.sourcesOfIncome.toatlIncome)    //otherIncome
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].setValue(this.sourcesOfIncome.toatlIncome)
@@ -2526,7 +2544,10 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         else if (type === 'other') {
           this.sourcesOfIncome.interestFromOther = 0;
         }
-        this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.dividend;
+        else if (type === 'family_pension') {
+          this.sourcesOfIncome.familyPension = 0;
+        }
+        this.sourcesOfIncome.toatlIncome = this.sourcesOfIncome.interestFromSaving + this.sourcesOfIncome.interestFromBank + this.sourcesOfIncome.interestFromIncomeTax + this.sourcesOfIncome.interestFromOther + this.sourcesOfIncome.dividend + this.sourcesOfIncome.familyPension;
 
         //this.itrSummaryForm.controls['totalIncomeFromOtherResources'].setValue(this.sourcesOfIncome.toatlIncome)
         (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['otherIncome'].setValue(this.sourcesOfIncome.toatlIncome);
@@ -2893,6 +2914,18 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
             taxableAmount: 0,
             exemptAmount: 0,
             incomeType: 'DIVIDEND_INCOME',
+            details: ''
+          };
+
+          this.incomeData.push(obj)
+        }
+        if (this.sourcesOfIncome.familyPension !== 0) {
+          let obj = {
+            expenses: 0,
+            amount: this.sourcesOfIncome.familyPension,
+            taxableAmount: 0,
+            exemptAmount: 0,
+            incomeType: 'FAMILY_PENSION',
             details: ''
           };
 

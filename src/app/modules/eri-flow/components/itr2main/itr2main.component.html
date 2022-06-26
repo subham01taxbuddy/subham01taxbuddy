@@ -5,45 +5,12 @@
         <div class="content__container"> -->
 <div class="card">
     <div class="card__row ">
-        <!-- <div class="card__col-xs-12 card__col-sm-12">
-            <div class="filter__col card__col-sm-4 card__col-xs-12">
-                <div class="input">
-                    <label class="input__label" for="attr">Select attribute</label>
-                    <select class="select__box ogp_select" (change)="clearValue()" #advanceSearchKey>
-                        <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
-                            {{drop.name}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="filter__col card__col-sm-4 card__col-xs-10">
-                <div class="input">
-                    <label class="input__label" for="attr">Enter value</label>
-                    <div class="input__select">
-                        <input type="text" class="select__box ogp_select" style="background-image:none"
-                            [(ngModel)]="searchVal" name="searchVal" maxlength="10" />
-                    </div>
-                </div>
-            </div>
-            <div class="card__col-md-3 card__col-xs-12 pull-right">
-                <a class="btn btn_stroke filter__add-link" (click)="advanceSearch(advanceSearchKey.value)"><i
-                        class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
-            </div>
-        </div> -->
         <br>
         <div class="card__col-xs-12 card__col-sm-6" *ngIf="isSummaryGenerated">
             You have already summary created previously, if you want to override upload the new JSON and parse else just
             update the details.
         </div>
         <div class="card__col-xs-12 card__col-sm-6">
-            <div class="card__col-xs-6">
-                <input type="file" id="input-file-id" hidden #file (change)="selectFile($event, 'xml')" accept=".xml" />
-                <button class="sendBtn" style="margin: 15px;" (click)="upload()">Upload XML
-                    File</button>&nbsp;
-
-                <button [disabled]="!JSONData" (click)="xmlJsonUpdate(JSONData)">Parse Xml to ITR
-                    Form</button>
-            </div>
-
             <div class="card__col-xs-6">
                 <input type="file" id="input-json-file-id" hidden #file (change)="selectFile($event, 'json')" />
                 <button class="sendBtn" style="margin: 15px;" (click)="uploadJson()">Upload JSON
@@ -1118,6 +1085,15 @@
                         <mat-label>dividend</mat-label>
                         <input matInput placeholder="dividend" maxlength="8" autocomplete="off" id="dividentAmnt"
                             name="dividentAmnt" formControlName="dividend" (blur)="calculateOtherSourceTotal()"
+                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                        <!--[value]="sourcesOfIncome.interestFromOther"   (blur)="setOtherSourceIncomeValue($event.target.value,'other')"-->
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-3" *ngIf="newItrSumChanges">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Family Pension</mat-label>
+                        <input matInput placeholder="Family Pension" maxlength="8" autocomplete="off" id="FamilyPension"
+                            name="FamilyPension" formControlName="familyPension" (blur)="calculateOtherSourceTotal()"
                             onkeypress=" event.charCode >= 48 && event.charCode <= 57">
                         <!--[value]="sourcesOfIncome.interestFromOther"   (blur)="setOtherSourceIncomeValue($event.target.value,'other')"-->
                     </mat-form-field>
