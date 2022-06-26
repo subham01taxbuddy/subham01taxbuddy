@@ -718,6 +718,15 @@
                             (blur)="setOtherSourceIncomeValue($event.target.value,'dividend')">
                     </mat-form-field>
                 </div>
+                <div class="card__col-lg-3" *ngIf="newItrSumChanges">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Family Pension</mat-label>
+                        <input matInput placeholder="Family Pension" maxlength="8" autocomplete="off"
+                            [value]="sourcesOfIncome.familyPension" id="family_pension" name="family_pension"
+                            onkeypress=" event.charCode >= 48 && event.charCode <= 57"
+                            (blur)="setOtherSourceIncomeValue($event.target.value,'family_pension')">
+                    </mat-form-field>
+                </div>
                 <div class="card__col-lg-3">
                     <mat-form-field appearance="outline">
                         <mat-label><b>Total Income from Other sources</b></mat-label>
