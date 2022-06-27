@@ -1774,11 +1774,12 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
 
 
-  createFamilyForm(obj: { fName?: string, mName?: string, lName?: string, dateOfBirth?: number, fathersName?: string } = {}): FormGroup {
+  createFamilyForm(obj: { fName?: string, mName?: string, lName?: string, dateOfBirth?: number, fathersName?: string, gender?: string } = {}): FormGroup {
     return this.fb.group({
       fName: [obj.fName || ''],
       mName: [obj.mName || ''],
       lName: [obj.lName || '', Validators.required],
+      gender: [obj.gender || '', Validators.required],
       dateOfBirth: [obj.dateOfBirth || '', Validators.required],
       fathersName: [obj.mName || '', Validators.required]
     });
@@ -2474,6 +2475,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       fName: [obj.firstName || ''],
       mName: [obj.middleName || ''],
       lName: [obj.lastName || '', Validators.required],
+      gender: [obj.gender || '', Validators.required],
       dateOfBirth: [obj.dateOfBirth || '', Validators.required],
       fathersName: [obj.middleName || '']
     });

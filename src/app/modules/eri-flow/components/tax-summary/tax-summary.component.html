@@ -50,79 +50,69 @@
 
 <div class="card">
     <form [formGroup]="itrSummaryForm">
-        <div class="card__row">
+        <div class="card__row" style="margin-bottom: 20px;">
+            <!-- <div class="card__col-lg-12" style="margin-bottom: 20px;"> -->
+            <div class="card__col-lg-3" formGroupName="assesse" style="margin-top: 10px;">
+                <mat-form-field appearance="outline">
+                    <mat-label>Type of ITR</mat-label>
+                    <mat-select matInput formControlName="itrType" placeholder="Select ITR type" autocomplete="off"
+                        required (selectionChange)="setItrType($event.value)">
+                        <mat-option *ngFor="let itr of itrTypesData" [value]="itr.value">
+                            {{ itr.label }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="itrSummaryForm.controls['assesse'].controls['itrType'].hasError('required')">
+                        Select ITR type</mat-error>
+                </mat-form-field>
 
-            <div class="card__col-lg-12" style="margin-bottom: 20px;">
-                <div class="">
-                    <div class="card__col-lg-3" formGroupName="assesse" style="margin-top: 10px;">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Type of ITR</mat-label>
-                            <mat-select matInput formControlName="itrType" placeholder="Select ITR type"
-                                autocomplete="off" required (selectionChange)="setItrType($event.value)">
-                                <mat-option *ngFor="let itr of itrTypesData" [value]="itr.value">
-                                    {{ itr.label }}
-                                </mat-option>
-                            </mat-select>
-                            <mat-error
-                                *ngIf="itrSummaryForm.controls['assesse'].controls['itrType'].hasError('required')">
-                                Select ITR type</mat-error>
-                        </mat-form-field>
-
-                    </div>
-                    <div class="card__col-lg-3">
-
-                    </div>
-                    <div class="card__col-lg-3" formGroupName="taxSummary">
-                        <label>Taxable Income</label>
-                        <div *ngIf="!newTaxRegime">
-                            <input type="number" placeholder="Taxable Income"
-                                formControlName="totalIncomeAfterDeductionIncludeSR" required disabled
-                                class="disableInput">
-                        </div>
-                        <div *ngIf="newTaxRegime">
-                            <input type="number" placeholder="Taxable Income"
-                                [value]="newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR" required disabled
-                                class="disableInput">
-                        </div>
-
-                    </div>
-
-                    <div *ngIf="!newTaxRegime">
-                        <div class="card__col-lg-3" formGroupName="taxSummary"
-                            *ngIf="itrSummaryForm.controls['taxSummary'].
-                                        controls['taxpayable'].value >= 0 && itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value === 0">
-                            <label>Tax Payable</label>
-                            <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxpayable" disabled
-                                class="disableInput">
-                        </div>
-                        <div class="card__col-lg-3" formGroupName="taxSummary"
-                            *ngIf="this.itrSummaryForm.controls['taxSummary']controls['taxRefund'].value > 0 || this.itrSummaryForm.controls['taxSummary']controls['taxRefund'].value < 0">
-                            <label>Tax Refund</label>
-                            <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxRefund" disabled
-                                class="disableInput">
-                        </div>
-                    </div>
-
-                    <div *ngIf="newTaxRegime">
-                        <div class="card__col-lg-3" formGroupName="taxSummary"
-                            *ngIf="this.itrSummaryForm.controls['taxSummary'].controls['taxpayable'].value >= 0 && this.itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value === 0">
-                            <label>Tax Payable</label>
-                            <input type="number" placeholder="Tax Payable/ Refund"
-                                [value]="newRegimeTaxSummary.taxpayable" disabled class="disableInput">
-                        </div>
-                        <div class="card__col-lg-3" formGroupName="taxSummary"
-                            *ngIf="this.itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value > 0 || this.itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value < 0">
-                            <label>Tax Refund</label>
-                            <input type="number" placeholder="Tax Payable/ Refund"
-                                [value]="newRegimeTaxSummary.taxRefund" disabled class="disableInput">
-                        </div>
-                    </div>
-
+            </div>
+            <div class="card__col-lg-3" formGroupName="taxSummary">
+                <label>Taxable Income</label>
+                <div *ngIf="!newTaxRegime">
+                    <input type="number" placeholder="Taxable Income"
+                        formControlName="totalIncomeAfterDeductionIncludeSR" required disabled class="disableInput">
                 </div>
-            </div><br><br>
+                <div *ngIf="newTaxRegime">
+                    <input type="number" placeholder="Taxable Income"
+                        [value]="newRegimeTaxSummary.totalIncomeAfterDeductionIncludeSR" required disabled
+                        class="disableInput">
+                </div>
 
+            </div>
 
+            <div *ngIf="!newTaxRegime">
+                <div class="card__col-lg-3" formGroupName="taxSummary"
+                    *ngIf="itrSummaryForm.controls['taxSummary'].
+                                        controls['taxpayable'].value >= 0 && itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value === 0">
+                    <label>Tax Payable</label>
+                    <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxpayable" disabled
+                        class="disableInput">
+                </div>
+                <div class="card__col-lg-3" formGroupName="taxSummary"
+                    *ngIf="this.itrSummaryForm.controls['taxSummary']controls['taxRefund'].value > 0 || this.itrSummaryForm.controls['taxSummary']controls['taxRefund'].value < 0">
+                    <label>Tax Refund</label>
+                    <input type="number" placeholder="Tax Payable/ Refund" formControlName="taxRefund" disabled
+                        class="disableInput">
+                </div>
+            </div>
 
+            <div *ngIf="newTaxRegime">
+                <div class="card__col-lg-3" formGroupName="taxSummary"
+                    *ngIf="this.itrSummaryForm.controls['taxSummary'].controls['taxpayable'].value >= 0 && this.itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value === 0">
+                    <label>Tax Payable</label>
+                    <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxpayable"
+                        disabled class="disableInput">
+                </div>
+                <div class="card__col-lg-3" formGroupName="taxSummary"
+                    *ngIf="this.itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value > 0 || this.itrSummaryForm.controls['taxSummary'].controls['taxRefund'].value < 0">
+                    <label>Tax Refund</label>
+                    <input type="number" placeholder="Tax Payable/ Refund" [value]="newRegimeTaxSummary.taxRefund"
+                        disabled class="disableInput">
+                </div>
+            </div>
+        </div>
+
+        <div class="card__row">
             <div class="card__col-lg-2" formGroupName="assesse">
                 <mat-form-field appearance="outline">
                     <mat-label>PAN</mat-label>
@@ -138,7 +128,6 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-
             <div formGroupName="assesse">
                 <div formArrayName="family">
                     <div *ngFor="let family of getFamilyArray.controls; let i=index" [formGroupName]="i">
@@ -201,12 +190,19 @@
                                     Birth</mat-error>
                             </mat-form-field>
                         </div>
+                        <div class="card__col-lg-2">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Select Gender</mat-label>
+                                <mat-select matInput placeholder="Select Gender" autocomplete="off"
+                                    formControlName="gender" required>
+                                    <mat-option value="MALE"> Male </mat-option>
+                                    <mat-option value="FEMALE"> Female </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="card__row">
-                <div class="card__col-lg-2" formGroupName="assesse">
+                <div class="card__col-lg-2">
                     <mat-form-field appearance="outline">
                         <mat-label>Residential Status</mat-label>
                         <mat-select matInput formControlName="residentialStatus" placeholder="Select Residential Status"
@@ -220,8 +216,7 @@
                             Select Residential Status</mat-error>
                     </mat-form-field>
                 </div>
-
-                <div class="card__col-lg-2" formGroupName="assesse">
+                <div class="card__col-lg-2">
                     <mat-form-field appearance="outline">
                         <mat-label>Aadhaar Number</mat-label>
                         <input matInput placeholder="Aadhaar Number" formControlName="aadharNumber" maxlength="12"
@@ -236,8 +231,7 @@
                             12 digit aadhar number</mat-error>
                     </mat-form-field>
                 </div>
-
-                <div class="card__col-lg-2" formGroupName="assesse" *ngIf="!newItrSumChanges">
+                <div class="card__col-lg-2" *ngIf="!newItrSumChanges">
                     <mat-form-field appearance="outline">
                         <mat-label>Passport No</mat-label>
                         <input matInput placeholder="Passport No" formControlName="passportNumber" minlength="8"
@@ -248,8 +242,7 @@
                             8 digit passport number</mat-error>
                     </mat-form-field>
                 </div>
-
-                <div class="card__col-lg-2" formGroupName="assesse" *ngIf="newItrSumChanges">
+                <div class="card__col-lg-2" *ngIf="newItrSumChanges">
                     <mat-form-field appearance="outline">
                         <mat-label>Nature of Employment</mat-label>
                         <mat-select matInput placeholder="Select Nature of Employment" autocomplete="off"
@@ -261,7 +254,7 @@
                     </mat-form-field>
                 </div>
 
-                <div class="card__col-lg-2" formGroupName="assesse" *ngIf="newItrSumChanges">
+                <div class="card__col-lg-2" *ngIf="newItrSumChanges">
                     <mat-form-field appearance="outline">
                         <mat-label>Old vs New Tax Regime</mat-label>
                         <mat-select matInput placeholder="Select Nature of Employment" autocomplete="off"
@@ -273,7 +266,7 @@
                     </mat-form-field>
                 </div>
 
-                <div class="card__col-lg-4" formGroupName="assesse">
+                <div class="card__col-lg-2">
                     <mat-form-field appearance="outline">
                         <mat-label>E-mail</mat-label>
                         <input matInput placeholder="E-mail" formControlName="email" maxlength="50" autocomplete="off"
@@ -287,8 +280,6 @@
                     </mat-form-field>
                 </div>
             </div>
-
-
             <div class="card__row">
                 <div class="card__col-lg-2" formGroupName="assesse">
                     <mat-form-field appearance="outline">

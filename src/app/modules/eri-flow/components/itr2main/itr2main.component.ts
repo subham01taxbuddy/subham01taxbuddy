@@ -4931,6 +4931,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       this.personalInfoForm.controls['fName'].setValue(summary.assesse.family[0].fName);
       this.personalInfoForm.controls['mName'].setValue(summary.assesse.family[0].mName);
       this.personalInfoForm.controls['lName'].setValue(summary.assesse.family[0].lName);
+      this.personalInfoForm.controls['gender'].setValue(summary.assesse.family[0].gender);
       this.personalInfoForm.controls['dateOfBirth'].setValue(summary.assesse.family[0].dateOfBirth);
       this.personalInfoForm.controls['fathersName'].setValue(summary.assesse.family[0].fathersName);
       console.log('personalInfoForm: ', this.personalInfoForm.value);
@@ -5574,10 +5575,10 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         };
         this.incomeData.push(obj)
       }
-      if (this.utilService.isNonEmpty(this.otherSourceForm.controls['family_pension'].value)) {
+      if (this.utilService.isNonEmpty(this.otherSourceForm.controls['familyPension'].value)) {
         let obj = {
           expenses: 0,
-          amount: this.otherSourceForm.controls['family_pension'].value,
+          amount: this.otherSourceForm.controls['familyPension'].value,
           taxableAmount: 0,
           exemptAmount: 0,
           incomeType: 'FAMILY_PENSION',
@@ -6116,7 +6117,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           lName: this.personalInfoForm.controls['lName'].value,
           fatherName: this.personalInfoForm.controls['fathersName'].value,
           age: ageCalculated,
-          gender: this.personalInfoForm.controls['fName'].value,
+          gender: this.personalInfoForm.controls['gender'].value,
           relationShipCode: 'SELF',
           relationType: 'SELF',
           dateOfBirth: this.personalInfoForm.controls['dateOfBirth'].value
