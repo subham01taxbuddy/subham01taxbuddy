@@ -2878,14 +2878,6 @@ export class TaxSummaryComponent implements OnInit {
     console.log('itrSummaryForm validation: ', this.itrSummaryForm.valid)
     console.log('itr summary: ', this.itrSummaryForm.valid, ' business form: ', (this.itrType.itrFour ? this.businessFormValid : true))
     if (this.itrSummaryForm.valid && (this.itrType.itrFour ? this.businessFormValid : true)) {
-
-      if (this.newItrSumChanges) {
-        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/new-summary/itr-one', ['trackEvent', 'New Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
-      }
-      else {
-        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/itrFirst', ['trackEvent', 'Old Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
-      }
-
       if (this.utilService.isNonEmpty(this.sourcesOfIncome)) {
         this.incomeData = [];
         if (this.sourcesOfIncome.interestFromSaving !== 0) {

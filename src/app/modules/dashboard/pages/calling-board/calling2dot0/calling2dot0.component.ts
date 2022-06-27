@@ -8,7 +8,6 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import * as moment from 'moment'
-//declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 @Component({
   selector: 'app-calling2dot0',
@@ -78,7 +77,7 @@ export class Calling2dot0Component implements OnInit {
     this.searchByQueryParams('PRIORITY');
     this.getStatus();
 
-    
+
   }
 
   async getAgentList() {
@@ -86,11 +85,11 @@ export class Calling2dot0Component implements OnInit {
   }
   async getMasterStatusList() {
     this.masterStatusList = await this.utilsService.getStoredMasterStatusList();
-    
-    this.masterStatusList = this.masterStatusList.filter((item:any) => 
+
+    this.masterStatusList = this.masterStatusList.filter((item: any) =>
       item.applicableServices.includes(this.searchParam.serviceType)
     );
-    console.log('masterStatusList: ',this.masterStatusList)
+    console.log('masterStatusList: ', this.masterStatusList)
   }
   searchByQueryParams(ref) {
     this.searchParam.customerNumber = null;
@@ -99,7 +98,7 @@ export class Calling2dot0Component implements OnInit {
       this.searchParam.statusId = null
     } else if (ref === 'STATUS' || ref === 'CHAT') {
       this.searchParam.priority = null
-    } else */ 
+    } else */
     if (ref === 'SERVICE') {
       return;
     }
@@ -108,7 +107,7 @@ export class Calling2dot0Component implements OnInit {
     }
     this.loading = true;
     this.isServiceDisabled = false;
-    const sType = this.agentList.filter((item:any) => item.agentId === this.searchParam.agentId);
+    const sType = this.agentList.filter((item: any) => item.agentId === this.searchParam.agentId);
     if (sType instanceof Array && sType.length > 0) {
       this.searchParam.serviceType = sType[0].serviceType;
       this.isServiceDisabled = true;
@@ -138,7 +137,6 @@ export class Calling2dot0Component implements OnInit {
   }
 
   showNotes(client) {
-    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Notes'], environment.matomoScriptId)
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -154,7 +152,6 @@ export class Calling2dot0Component implements OnInit {
   }
 
   serchByMobNo() {
-    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Search', this.searchParam.customerNumber], environment.matomoScriptId);
     this.loading = true;
     const param = `/customers-es?customerNumber=${this.searchParam.customerNumber}&serviceType=${this.searchParam.serviceType}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
@@ -265,7 +262,7 @@ export class Calling2dot0Component implements OnInit {
           // console.log('params === ', params, params.data.statusId);
           // console.log('itrStatus array === ', itrStatus);
           if (itrStatus.length !== 0) {
-            const nameArray = itrStatus.filter((item:any) => (item.statusId === params.data.statusId));
+            const nameArray = itrStatus.filter((item: any) => (item.statusId === params.data.statusId));
             if (nameArray.length !== 0) {
               return nameArray[0].statusName;
             }
@@ -309,7 +306,7 @@ export class Calling2dot0Component implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           console.log('params.data', params.data)
           if (params.data.kommunicateLink !== 'NA') {
             return `<button type="button" class="action_icon add_button" title="Open Chat"
@@ -325,7 +322,7 @@ export class Calling2dot0Component implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -339,7 +336,7 @@ export class Calling2dot0Component implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to check whats app chat"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
@@ -347,7 +344,7 @@ export class Calling2dot0Component implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -361,7 +358,7 @@ export class Calling2dot0Component implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
@@ -369,7 +366,7 @@ export class Calling2dot0Component implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -383,7 +380,7 @@ export class Calling2dot0Component implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
@@ -391,7 +388,7 @@ export class Calling2dot0Component implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -405,7 +402,7 @@ export class Calling2dot0Component implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
@@ -413,7 +410,7 @@ export class Calling2dot0Component implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -427,7 +424,7 @@ export class Calling2dot0Component implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Caller SM"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user-o" aria-hidden="true" data-action-type="updateCaller"></i>
@@ -435,7 +432,7 @@ export class Calling2dot0Component implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -483,7 +480,6 @@ export class Calling2dot0Component implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
-    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Chat icon'], environment.matomoScriptId)
     if (client.kommunicateLink !== 'NA')
       window.open(client.kommunicateLink)
   }
@@ -507,17 +503,13 @@ export class Calling2dot0Component implements OnInit {
         this.loading = false;
       })
   }
-  
+
   navigateToWhatsappChat(data) {
-    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Whatsapp icon'], environment.matomoScriptId)
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
   }
 
   startCalling(user) {
     console.log('user: ', user);
-    let callInfo = user.customerNumber;
-    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Call', callInfo], environment.matomoScriptId)
-    this.utilsService.matomoCall('Priority Call', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Call', callInfo], environment.matomoScriptId);
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -566,16 +558,13 @@ export class Calling2dot0Component implements OnInit {
 
         if (result.responce) {
           if (mode === 'Update Status') {
-            console.log('itrStatus array: ',this.itrStatus);
-            console.log('client statusId: ',client.statusId)
-            console.log('**** ',this.itrStatus.filter((item:any) => item.statusId === client.statusId))
-            let changeStatus = client.customerNumber+' - '+this.itrStatus.filter((item:any) => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter((item:any) => item.statusId === result.responce.statusId)[0].statusName; 
-           this.utilsService.matomoCall('Priority Call', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Status', changeStatus], environment.matomoScriptId);
+            console.log('itrStatus array: ', this.itrStatus);
+            console.log('client statusId: ', client.statusId)
+            console.log('**** ', this.itrStatus.filter((item: any) => item.statusId === client.statusId))
+            let changeStatus = client.customerNumber + ' - ' + this.itrStatus.filter((item: any) => item.statusId === client.statusId)[0].statusName + ' to ' + this.itrStatus.filter((item: any) => item.statusId === result.responce.statusId)[0].statusName;
           }
           else if (mode === 'Update Caller') {
             console.log('Update Caller responce: ', result.responce);
-            ////   let updateCaller = client.statusId+' to '+result.responce.statusId;
-            // //   matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Caller', changeStatus])
           }
 
         }

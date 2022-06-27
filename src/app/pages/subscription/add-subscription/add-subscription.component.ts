@@ -18,7 +18,7 @@ export class AddSubscriptionComponent implements OnInit {
   allPlans: any = [];
   filteredPlans: any = [];
   selectedBtn: any = '';
-  servicesType: any = [{value :'ITR'}, {value: 'NOTICE'}, {value: 'GST'}, {value:'TPA'}, {value:'ALL'}];
+  servicesType: any = [{ value: 'ITR' }, { value: 'NOTICE' }, { value: 'GST' }, { value: 'TPA' }, { value: 'ALL' }];
   subscriptionPlan = new FormControl('', Validators.required);
   selectedPlanInfo: any;
   serviceTypeSelected: boolean;
@@ -49,10 +49,10 @@ export class AddSubscriptionComponent implements OnInit {
       //   this.allPlans = gstPlans;
       // }
       // else{
-       
+
       this.allPlans = plans;
-      console.log('all plans -> ',this.allPlans, this.allPlans.length)
-      this.allPlans = this.allPlans.filter(item=> item.isActive === true);
+      console.log('all plans -> ', this.allPlans, this.allPlans.length)
+      this.allPlans = this.allPlans.filter(item => item.isActive === true);
       console.log('appPlans --> ', this.allPlans);
       // }
     },
@@ -89,9 +89,8 @@ export class AddSubscriptionComponent implements OnInit {
         console.log('After subscription plan added res:', res);
         this.dialogRef.close({ event: 'close', data: res });
         this.toastMessage.alert("success", "Subscription created successfully.")
-        let subInfo = this.selectedBtn+' userId: '+this.data.userId;
-        console.log('subInfo: ',subInfo)
-        this.utilService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Create Subscription', 'Add',subInfo], environment.matomoScriptId)
+        let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
+        console.log('subInfo: ', subInfo)
       }, error => {
         console.log('error -> ', error);
         this.toastMessage.alert("error", this.utilService.showErrorMsg(error.error.status))
@@ -103,28 +102,28 @@ export class AddSubscriptionComponent implements OnInit {
   }
 
 
-  showSelectedServicePlans(serviceType){
+  showSelectedServicePlans(serviceType) {
     this.serviceTypeSelected = true;
-    console.log('allPlans : ',this.allPlans)
+    console.log('allPlans : ', this.allPlans)
     this.selectedBtn = serviceType;
-      if(serviceType === 'ITR'){
-        this.filteredPlans = this.allPlans.filter((item:any) => item.servicesType === 'ITR');
-      }
-      else if(serviceType === 'GST'){
-        this.filteredPlans = this.allPlans.filter((item:any) => item.servicesType === 'GST');
-      }
-      else if(serviceType === 'TPA'){
-        this.filteredPlans = this.allPlans.filter((item:any) => item.servicesType === 'TPA');
-      }
-      else if(serviceType === 'NOTICE'){
-        this.filteredPlans = this.allPlans.filter((item:any) => item.servicesType === 'NOTICE');
-      }
-      else if(serviceType === 'ALL'){
-        this.filteredPlans = this.allPlans;
-      }
+    if (serviceType === 'ITR') {
+      this.filteredPlans = this.allPlans.filter((item: any) => item.servicesType === 'ITR');
+    }
+    else if (serviceType === 'GST') {
+      this.filteredPlans = this.allPlans.filter((item: any) => item.servicesType === 'GST');
+    }
+    else if (serviceType === 'TPA') {
+      this.filteredPlans = this.allPlans.filter((item: any) => item.servicesType === 'TPA');
+    }
+    else if (serviceType === 'NOTICE') {
+      this.filteredPlans = this.allPlans.filter((item: any) => item.servicesType === 'NOTICE');
+    }
+    else if (serviceType === 'ALL') {
+      this.filteredPlans = this.allPlans;
+    }
 
-      console.log('LAST filteredPlans : ',this.filteredPlans)
-    }  
+    console.log('LAST filteredPlans : ', this.filteredPlans)
+  }
 
 }
 

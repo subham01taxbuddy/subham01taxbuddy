@@ -27,57 +27,36 @@ export class AddCallerComponent implements OnInit {
   // searchMobNo: any;
 
   constructor(private userMsService: UserMsService,
-     private utileService: UtilsService,
-      private toastMsgService: ToastMessageService,
+    private utileService: UtilsService,
+    private toastMsgService: ToastMessageService,
     private dialog: MatDialog) {
     this.allCallerGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.allCallersColoumnDef(),
+      columnDefs: this.allCallersColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: () => {
       },
       sortable: true,
     };
-
-    // this.addCallerGridOptions = <GridOptions>{
-    //   rowData: [],
-    //   columnDefs: this.callersColoumnDef(),
-    //   enableCellChangeFlash: true,
-    //   onGridReady: params => {
-    //   },
-    //   sortable: true,
-    // };
   }
 
   ngOnInit() {
-    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST)||'');
+    this.agentList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST) || '');
     this.getAllCallerUser();
 
   }
 
   searchByAgent() {
     if (this.utileService.isNonEmpty(this.selectedAgent)) {
-      // this.searchMobNo = '';
-      //matomo('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Agent ', this.selectedAgent], environment.matomoScriptId); 
       this.getCallerUser(this.selectedAgent);
-    }
-    else {
+    } else {
       this.toastMsgService.alert("error", "Select Agent")
     }
   }
 
-  // serchByMobNo() {
-  //   if (this.utileService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
-  //     this.selectedAgent = '';
-  //     this.getAllCallerUser(this.searchMobNo);
-  //   }
-  //   else {
-  //     this.toastMsgService.alert("error", "Enter valid mobile number.")
-  //   }
-  // }
 
-  allCallersColoumnDef() {
+  allCallersColumnDef() {
     return [
       {
         headerName: 'Sme Id',
@@ -96,7 +75,7 @@ export class AddCallerComponent implements OnInit {
         field: 'name',
         width: 180,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -131,7 +110,7 @@ export class AddCallerComponent implements OnInit {
         field: 'serviceType',
         width: 150,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -143,7 +122,7 @@ export class AddCallerComponent implements OnInit {
         field: 'agents',
         width: 200,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -153,7 +132,7 @@ export class AddCallerComponent implements OnInit {
     ]
   }
 
-  callersColoumnDef() {
+  callersColumnDef() {
     return [
       //       {
       //         headerName: 'Sme Id',
@@ -172,7 +151,7 @@ export class AddCallerComponent implements OnInit {
       //         field: 'name',
       //         width: 180,
       //         suppressMovable: true,
-      //         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+      //         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       //         filter: "agTextColumnFilter",
       //         filterParams: {
       //           filterOptions: ["contains", "notContains"],
@@ -207,7 +186,7 @@ export class AddCallerComponent implements OnInit {
       //         field: 'serviceType',
       //         width: 150,
       //         suppressMovable: true,
-      //         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+      //         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       //         filter: "agTextColumnFilter",
       //         filterParams: {
       //           filterOptions: ["contains", "notContains"],
@@ -238,7 +217,7 @@ export class AddCallerComponent implements OnInit {
     ]
   }
 
-  getAllCallerUser(mobMo?:any) {
+  getAllCallerUser(mobMo?: any) {
     this.loading = true;
     var param;
     if (this.utileService.isNonEmpty(mobMo)) {
@@ -253,7 +232,7 @@ export class AddCallerComponent implements OnInit {
       this.showAllUser = true;
       if (res instanceof Array && res.length > 0) {
         this.allCallerData = res;
-        this.allCallerData.sort((a:any, b:any) => a.name > b.name ? 1 : -1)
+        this.allCallerData.sort((a: any, b: any) => a.name > b.name ? 1 : -1)
         this.selectedAgent = '';
         console.log(this.allCallerData, typeof this.allCallerData);
 
@@ -273,7 +252,7 @@ export class AddCallerComponent implements OnInit {
       })
   }
 
-  getCallerUser(id:any) {
+  getCallerUser(id: any) {
     this.loading = true;
     var param;
     if (this.utileService.isNonEmpty(id)) {
@@ -290,7 +269,7 @@ export class AddCallerComponent implements OnInit {
       this.loading = false;
       if (Array.isArray(res) && res.length > 0) {
         this.callerData = res;
-        this.callerData.sort((a:any, b:any) => a.name > b.name ? 1 : -1)
+        this.callerData.sort((a: any, b: any) => a.name > b.name ? 1 : -1)
         this.selectedCallerList = [];
         this.removeCallerList = [];
         // this.addCallerGridOptions.api?.setRowData(this.createRowData(res));
@@ -308,11 +287,11 @@ export class AddCallerComponent implements OnInit {
       })
   }
 
-  createAllRowData(callerData:any) {
+  createAllRowData(callerData: any) {
     console.log('callerData -> ', callerData);
     var callerArray = [];
     for (let i = 0; i < callerData.length; i++) {
-      let couponInfo:any = Object.assign({}, callerArray[i], {
+      let couponInfo: any = Object.assign({}, callerArray[i], {
         smeId: callerData[i].smeId,
         name: this.utileService.isNonEmpty(callerData[i].name) ? callerData[i].name : '-',
         mobileNumber: this.utileService.isNonEmpty(callerData[i].mobileNumber) ? callerData[i].mobileNumber : '-',
@@ -345,45 +324,43 @@ export class AddCallerComponent implements OnInit {
   //   return callerArray;
   // }
 
-  addCaller(event:any, userId:any) {
+  addCaller(event: any, userId: any) {
     if (event.currentTarget.checked) {
       this.selectedCallerList.push(userId)
     }
     else {
-      this.selectedCallerList = this.selectedCallerList.filter((item:any) => item != userId);
+      this.selectedCallerList = this.selectedCallerList.filter((item: any) => item != userId);
     }
     console.log('final selectedCallerList: -> ', this.selectedCallerList)
   }
 
-  removeCaller(event:any, userId:any) {
+  removeCaller(event: any, userId: any) {
     if (event.currentTarget.checked) {
       this.removeCallerList.push(userId)
     }
     else {
-      this.removeCallerList = this.removeCallerList.filter((item:any) => item != userId);
+      this.removeCallerList = this.removeCallerList.filter((item: any) => item != userId);
     }
     console.log('final removeCallerList: -> ', this.removeCallerList)
   }
 
-  saveCaller(action:any) {
+  saveCaller(action: any) {
     this.loading = true;
     var caller;
     if (action === 'add') {
-      caller = this.getCalletList(action)
+      caller = this.getCallerList(action)
       var param = `/call-management/caller-agents?agentId=${this.selectedAgent}&addCallerAgents=${caller}&removeCallerAgent=`;
-      this.utileService.matomoCall('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Add Caller', caller], environment.matomoScriptId);
     }
     else {
-      caller = this.getCalletList(action)
+      caller = this.getCallerList(action)
       var param = `/call-management/caller-agents?agentId=${this.selectedAgent}&addCallerAgents=&removeCallerAgent=${caller}`;
-      this.utileService.matomoCall('Team Management', '/pages/team-management/caller-assign/add-caller', ['trackEvent', 'Add/ remove caller', 'Remove Caller', caller], environment.matomoScriptId);
     }
     console.log('caller -> ', caller)
     console.log('param: ', param)
     this.userMsService.putMethod(param).subscribe(res => {
       console.log('add: -> ', res)
       this.loading = false;
-      this.toastMsgService.alert('success', 'Caller data update succesfully.');
+      this.toastMsgService.alert('success', 'Caller data update successfully.');
       this.getCallerUser(this.selectedAgent);
     },
       error => {
@@ -393,7 +370,7 @@ export class AddCallerComponent implements OnInit {
       })
   }
 
-  getCallerName(callers:any) {
+  getCallerName(callers: any) {
     var match = callers.split(",");
     console.log('match: ', match);
     var callersArray = [];
@@ -406,15 +383,15 @@ export class AddCallerComponent implements OnInit {
     for (let i = 0; i < this.callerData.length; i++) {
       var callerNamesList = '';
       if (i === 0) {
-        let caller = callersArray.filter((item:any) => item === this.callerData[i].callerAgentUserId);
+        let caller = callersArray.filter((item: any) => item === this.callerData[i].callerAgentUserId);
         if (caller.length > 0) {
           callerNamesList = caller[0].name
         }
       }
       else {
-        let caller = callersArray.filter((item:any) => item === this.callerData[i].callerAgentUserId);
+        let caller = callersArray.filter((item: any) => item === this.callerData[i].callerAgentUserId);
         if (caller.length > 0) {
-          callerNamesList = callerNamesList + ',' + callersArray.filter((item:any) => item === this.callerData[i].callerAgentUserId)[0].name;
+          callerNamesList = callerNamesList + ',' + callersArray.filter((item: any) => item === this.callerData[i].callerAgentUserId)[0].name;
         }
       }
       return callerNamesList;
@@ -423,7 +400,7 @@ export class AddCallerComponent implements OnInit {
     return callerNamesList;
   }
 
-  getCalletList(action:any) {
+  getCallerList(action: any) {
     var callerList;
     if (action === 'add') {
       if (this.selectedCallerList.length === 1) {
@@ -460,7 +437,7 @@ export class AddCallerComponent implements OnInit {
 
   }
 
-  getAgents(agents:any) {
+  getAgents(agents: any) {
     var agentInfo;
     if (agents instanceof Array) {
       if (agents.length === 1) {
@@ -480,7 +457,7 @@ export class AddCallerComponent implements OnInit {
     }
   }
 
-  onAllCallersClicked(params:any) {
+  onAllCallersClicked(params: any) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -493,7 +470,7 @@ export class AddCallerComponent implements OnInit {
     }
   }
 
-  addRemoveAgent(agentInfo:any) {
+  addRemoveAgent(agentInfo: any) {
     let disposable = this.dialog.open(AddRemoveAgentDialogComponent, {
       width: '50%',
       height: 'auto',

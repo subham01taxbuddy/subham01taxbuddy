@@ -1,6 +1,5 @@
 
 import { Component } from '@angular/core';
-//declare function matomo(title: any, url: any, event: any, scripdId: any);
 
 @Component({
   selector: 'app-root',
@@ -12,8 +11,8 @@ export class AppComponent {
   title = 'app works!';
 
   constructor() {
-  
+
   }
 
-  
+
 }
