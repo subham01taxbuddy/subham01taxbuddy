@@ -35,7 +35,7 @@ export class AddCouponComponent implements OnInit {
   discountData: any = [{ label: 'Amount', value: 'AMOUNT' }, { label: 'Percentage', value: 'PERCENTAGE' }, { label: 'Fixed Pricing', value: 'FIXED' }];
   couponForm!: FormGroup;
   minEndDate: any = new Date();
-  allPlans:any[] = [];
+  allPlans: any[] = [];
 
   constructor(public dialogRef: MatDialogRef<AddCouponComponent>, private _toastMessageService: ToastMessageService,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder, private itrService: ItrMsService,
@@ -60,7 +60,7 @@ export class AddCouponComponent implements OnInit {
     })
   }
 
-  setValidation(typeVal:any) {
+  setValidation(typeVal: any) {
     console.log('selec val: ', typeVal.value);
     if (typeVal.value === 'PERCENTAGE') {
       this.couponForm.controls['discountPercent'].setValidators([Validators.required]);
@@ -105,7 +105,7 @@ export class AddCouponComponent implements OnInit {
     }
   }
 
-  setEndDateValidate(startDateVal:any) {
+  setEndDateValidate(startDateVal: any) {
     console.log('startDateVal: ', startDateVal);
     this.minEndDate = startDateVal;
   }
@@ -131,7 +131,7 @@ export class AddCouponComponent implements OnInit {
         console.log('Plans -> ', plans);
         this.allPlans = [];
         this.allPlans = plans;
-        this.allPlans = this.allPlans.filter((item:any) => item.isActive === true && item.servicesType === 'ITR');
+        this.allPlans = this.allPlans.filter((item: any) => item.isActive === true && item.servicesType === 'ITR');
         this.getAllPlansInForm();
       }, error => {
         console.log('Error during getting all plans: ', error)
@@ -142,7 +142,7 @@ export class AddCouponComponent implements OnInit {
     this.couponForm.controls['discountDetails'] = this.fb.array([]);
     const fixedPricing = <FormArray>this.couponForm.get('discountDetails');
     for (let i = 0; i < this.allPlans.length; i++) {
-      let obj:any = {
+      let obj: any = {
         planId: this.allPlans[i].planId,
         name: this.allPlans[i].name,
         totalAmount: null,
@@ -159,14 +159,10 @@ export class AddCouponComponent implements OnInit {
   }
 
   addCoupon() {
-    // 
-    // console.log(this.couponForm)
     if (this.couponForm.valid) {
-      console.log('couponForm val: ', this.couponForm.value);
       this.loading = true;
       let param = '/promocodes';
       let promoCodeRequest = this.couponForm.getRawValue();
-      console.log(promoCodeRequest);
       let discountDetails = []
       for (let i = 0; i < promoCodeRequest.discountDetails.length; i++) {
         if (!this.utilsService.isNonZero(promoCodeRequest.discountDetails[i].totalAmount)) {

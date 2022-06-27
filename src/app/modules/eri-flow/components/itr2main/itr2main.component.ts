@@ -268,7 +268,12 @@ export class Itr2mainComponent implements OnInit, OnChanges {
   isJsonParse: boolean = false;
   newTaxRegime: boolean;
 
-  constructor(public utilsService: UtilsService, private fb: FormBuilder, private userService: UserMsService, private dialog: MatDialog, private utilService: UtilsService,
+  constructor(
+    public utilsService: UtilsService,
+    private fb: FormBuilder,
+    private userService: UserMsService,
+    private dialog: MatDialog,
+    private utilService: UtilsService,
     private _toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService) {
     this.itr_2_Summary = this.createItrSummaryEmptyJson();

@@ -1,12 +1,15 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { Component, DoCheck } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
 import { MatDialog } from '@angular/material/dialog';
 import { NeedHelpComponent } from 'src/app/pages/need-help/need-help.component';
 import { Location } from '@angular/common';
 import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
+import { environment } from 'src/environments/environment';
+import { MatomoService } from 'src/app/services/matomo.service';
+declare function matomo(title: any, url: any, event: any, scripdId: any);
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
@@ -32,7 +35,8 @@ export class NavbarComponent implements DoCheck {
   constructor(
     private router: Router,
     public dialog: MatDialog,
-    public location: Location) { }
+    public location: Location,
+    private matomoService: MatomoService) { }
 
 
 
@@ -103,13 +107,11 @@ export class NavbarComponent implements DoCheck {
         this.loading = false;
         sessionStorage.clear();
         NavbarService.getInstance().clearAllSessionData();
-        this.router.navigate(['']);
+        this.matomoService.trackMatomoEvents('', 'SIGNOUT');
         this.router.navigate(['/login']);
-        console.log('sign out data:', data);
       })
       .catch(err => {
         this.loading = false;
-        console.log('sign out err:', err);
       });
 
   }
