@@ -683,8 +683,6 @@ export class AssignedUsersComponent implements OnInit {
           break;
         }
         case 'profile': {
-          //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'User Profile'], environment.matomoScriptId);
-          this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'User Profile'], environment.matomoScriptId)
           this.router.navigate(['pages/user-management/profile/' + params.data.userId])
           break;
         }
@@ -750,18 +748,14 @@ export class AssignedUsersComponent implements OnInit {
   }
 
   redirectTowardInvoice(userInfo: any) {
-    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Invoice'], environment.matomoScriptId);
     this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: userInfo.userId } });
   }
 
   redirectTowardSubscription(userInfo: any) {
-    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Sunscription'], environment.matomoScriptId);
     this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: userInfo.mobileNumber } });
   }
 
   linkToFinbingo(userId: any) {
-    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'FNB'], environment.matomoScriptId); 
-    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'FNB'], environment.matomoScriptId);
     const param = `/partner/create-user`;
     const request = {
       userId: userId
@@ -786,13 +780,10 @@ export class AssignedUsersComponent implements OnInit {
   }
 
   linkToDocumentCloud(userId: any) {
-    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId);
-    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId);
     this.router.navigate(['/pages/itr-filing/user-docs/' + userId]);
   }
 
   updateReviewStatus(data: any) {
-    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Review'], environment.matomoScriptId);
     const param = `/update-itr-userProfile?userId=${data.userId}&isReviewGiven=true`;
     this.itrMsService.putMethod(param, {}).subscribe(result => {
       this.utilsService.showSnackBar('Marked as review given');
@@ -840,19 +831,10 @@ export class AssignedUsersComponent implements OnInit {
           this.searchParam.page = 0;
           this.search();
         }
-
-        // if (result.responce) {
-        //   if (mode === 'Update Status') {
-        //     console.log('itrStatus array: ', this.itrStatus);
-        //     console.log('client statusId: ', client.statusId)
-        //     console.log('**** ', this.itrStatus.filter((item: any) => item.statusId === client.statusId))
-        //   }
-        // }
       }
     });
   }
   showNotes(client) {
-    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Notes'], environment.matomoScriptId)
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -867,7 +849,6 @@ export class AssignedUsersComponent implements OnInit {
     });
   }
   openChat(client) {
-    //matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Chat icon'],  environment.matomoScriptId);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
     this.userMsService.getMethod(param).subscribe((response: any) => {

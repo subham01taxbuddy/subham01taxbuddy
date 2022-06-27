@@ -382,19 +382,18 @@ export class ScheduledCallComponent implements OnInit {
   openWhatsappChat(client) {
     this.loading = true;
     let param = `/kommunicate/WhatsApp-chat-link?userId=${client.userId}`;
-    this.userMsService.getMethod(param).subscribe((responce: any) => {
-      console.log('open chat link res: ', responce);
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      console.log('open chat link res: ', response);
       this.loading = false;
-      if (responce.success) {
-        window.open(responce.data.whatsAppChatLink)
+      if (response.success) {
+        window.open(response.data.whatsAppChatLink)
       }
       else {
         this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
       }
     },
       error => {
-        console.log('Error during feching chat link: ', error);
-        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+        this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
         this.loading = false;
       })
   }
@@ -419,7 +418,7 @@ export class ScheduledCallComponent implements OnInit {
     const agentNumber = await this.utilsService.getMyCallingNumber();
     console.log('agent number', agentNumber)
     if (!agentNumber) {
-      this.toastMsgService.alert("error", 'You dont have calling role.')
+      this.toastMsgService.alert("error", 'You don\'t have calling role.')
       return;
     }
     this.loading = true;
@@ -429,14 +428,9 @@ export class ScheduledCallComponent implements OnInit {
     }
 
     const param = `/call-management/make-call`;
-    // const reqBody = {
-    //   "agent_number": user.smeMobileNumber,
-    //   "customer_number": user.userMobile
-    // }
     this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
       console.log('Call Result: ', result);
       this.loading = false;
-      this.utilsService.matomoCall('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Call'], environment.matomoScriptId);
       if (result.success.status) {
         this.toastMsgService.alert("success", result.success.message)
       }
@@ -448,7 +442,6 @@ export class ScheduledCallComponent implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
-    //matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Chat icon'],  environment.matomoScriptId);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
     this.userMsService.getMethod(param).subscribe((response: any) => {
@@ -485,7 +478,6 @@ export class ScheduledCallComponent implements OnInit {
     let param = `/schedule-call-details`;
     this.userMsService.putMethod(param, reqBody).subscribe((response: any) => {
       console.log('schedule-call Done response: ', response);
-      this.utilsService.matomoCall('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Call Status'], environment.matomoScriptId);
       this.loading = false;
       this.toastMsgService.alert('success', 'Call status update successfully.');
       setTimeout(() => {
@@ -509,7 +501,6 @@ export class ScheduledCallComponent implements OnInit {
   }
 
   navigateToWhatsappChat(data) {
-    // matomo('Scheduled Calls Tab', '/pages/dashboard/calling/scheduled-call', ['trackEvent', 'Scheduled Call', 'Whatsapp icon'], environment.matomoScriptId);
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
   }
 }

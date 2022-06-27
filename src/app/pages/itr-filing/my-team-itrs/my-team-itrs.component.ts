@@ -14,7 +14,6 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
-declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 @Component({
   selector: 'app-my-team-itrs',
@@ -101,13 +100,7 @@ export class MyTeamItrsComponent implements OnInit {
     this.loading = true;
     this.selectedMemberId = id;
     this.config.currentPage = pageNo + 1;
-    // if (this.utilsService.isNonEmpty(this.selectedMemberId)) {
-    //   this.selectedMember = this.filingTeamMembers.filter((item: any) => item.userId === id)[0].name;
-    //   //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Select SME', this.selectedMember], environment.matomoScriptId);
-    // }
-
     return new Promise((resolve, reject) => {
-
       let reqBody = {
         'financialYear': fy,
         'filingTeamMemberId': id
@@ -559,8 +552,6 @@ export class MyTeamItrsComponent implements OnInit {
   }
 
   async startFiling(data) {
-    //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Actions', data.contactNumber], environment.matomoScriptId);
-    this.utilsService.matomoCall('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Actions', data.contactNumber], environment.matomoScriptId);
     var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0]
     console.log('data: ', workingItr);
     Object.entries(workingItr).forEach((key, value) => {
@@ -584,7 +575,6 @@ export class MyTeamItrsComponent implements OnInit {
   }
 
   openFilingStatusDialog(data) {
-    //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Chat', data.contactNumber], environment.matomoScriptId);
     let disposable = this.dialog.open(FilingStatusDialogComponent, {
       width: '50%',
       height: 'auto',
@@ -611,8 +601,6 @@ export class MyTeamItrsComponent implements OnInit {
   }
 
   getAcknowledgeDetail(data) {
-    console.log('Data for acknowlegement status', data);
-    // matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'E-verification', data.contactNumber], environment.matomoScriptId);
     this.loading = true;
     var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0]
     workingItr['everifiedStatus'] = 'Successfully e-Verified';
@@ -627,35 +615,10 @@ export class MyTeamItrsComponent implements OnInit {
       this.utilsService.showSnackBar('Failed to update E-Verification status');
     });
     return;
-    // const param = `/itr-verify-status/${data.itrId}`;
-    this.itrMsService.putMethod(param).subscribe((res: any) => {
-      this.utilsService.showSnackBar(res.status)
-      this.loading = false;
-      setTimeout(() => {
-        this.getMembersItr(this.selectedMemberId, this.selectedFyYear, this.selectedPageNo);
-      }, 5000);
-
-    }, error => {
-      this.loading = false;
-    })
   }
-
-  // interestedForNextYearTpa(data) {
-  //   this.loading = true;
-  //   var workingItr = this.itrDataList.filter((item:any) => item.itrId === data.itrId)[0];
-  //   workingItr['nextYearTpa'] = 'INTERESTED';
-  //   console.log(workingItr);
-  //   const param = '/itr/' + workingItr['userId'] + '/' + workingItr['itrId'] + '/' + workingItr['assessmentYear'];
-  //   this.itrMsService.putMethod(param, workingItr).subscribe((result: ITR_JSON) => {
-  //     this.getMembersItr(this.selectedMemberId);
-  //   }, error => {
-  //     this.getMembersItr(this.selectedMemberId);
-  //   });
-  // }
 
   showUserDocuments(data) {
     console.log(data);
-    //matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Cloud', data.contactNumber], environment.matomoScriptId);
     this.router.navigate(['/pages/itr-filing/user-docs/' + data.userId]);
   }
 
@@ -670,7 +633,6 @@ export class MyTeamItrsComponent implements OnInit {
   }
 
   updateReviewStatus(data) {
-    // matomo('My Team Tab', '/pages/itr-filing/team-itrs', ['trackEvent', 'My Team', 'Review', data.contactNumber], environment.matomoScriptId);
     const param = `/update-itr-userProfile?itrId=${data.itrId}&userId=${data.userId}&isReviewGiven=true`;
     this.itrMsService.putMethod(param, {}).subscribe(result => {
       console.log(result);
@@ -686,11 +648,10 @@ export class MyTeamItrsComponent implements OnInit {
     const agentNumber = await this.utilsService.getMyCallingNumber();
 
     if (!agentNumber) {
-      this.toastMsgService.alert("error", 'You dont have calling role.')
+      this.toastMsgService.alert("error", 'You don\'t have calling role.')
       return;
     }
     console.log('user: ', user);
-    // matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Call', callInfo], environment.matomoScriptId);
     this.loading = true;
     let customerNumber = user.contactNumber;
     const param = `/call-management/make-call`;

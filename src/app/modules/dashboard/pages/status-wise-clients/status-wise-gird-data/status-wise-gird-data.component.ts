@@ -12,7 +12,6 @@ import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment'
 
-declare function matomo(title: any, url: any, event: any, scriptId: any);
 @Component({
   selector: 'app-status-wise-gird-data',
   templateUrl: './status-wise-gird-data.component.html',
@@ -153,7 +152,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         valueGetter: function nameFromCode(params) {
           if (itrStatus.length !== 0) {
             console.log('Status id', params.data.statusId)
-            const nameArray = itrStatus.filter((item:any) => item.statusId === params.data.statusId);
+            const nameArray = itrStatus.filter((item: any) => item.statusId === params.data.statusId);
             if (nameArray.length !== 0) {
               return nameArray[0].statusName;
             }
@@ -191,7 +190,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
           }
           return '';
         },
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           let currentDate = new Date();
           let dateSent = new Date(params.data.statusUpdatedDate);
           let diff = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate())) / (1000 * 60 * 60 * 24));
@@ -262,7 +261,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="User Information"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-mobile" style="font-size:26px" aria-hidden="true" data-action-type="user-info"></i>
@@ -270,7 +269,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -284,7 +283,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
@@ -292,7 +291,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -306,7 +305,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
@@ -314,7 +313,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -328,7 +327,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
@@ -336,7 +335,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -350,7 +349,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
@@ -358,7 +357,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -372,7 +371,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Caller SM"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user-o" aria-hidden="true" data-action-type="updateCaller"></i>
@@ -380,7 +379,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -484,15 +483,6 @@ export class StatusWiseGirdDataComponent implements OnInit {
   }
 
   showNotes(client) {
-    if(this.tabName === 'Engagement'){
-      //matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Notes'], environment.matomoScriptId);
-    }
-    else if(this.tabName === 'Filling'){
-      //matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Notes'], environment.matomoScriptId);
-    }
-    else if(this.tabName === 'Payment'){
-     // matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Notes'], environment.matomoScriptId);
-    }
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -510,16 +500,6 @@ export class StatusWiseGirdDataComponent implements OnInit {
   startCalling(user) {
     console.log('user: ', user)
     this.loading = true;
-    let callInfo = user.customerNumber;
-    if(this.tabName === 'Engagement'){
-      this.utilsService.matomoCall('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Engagement', 'Call', callInfo], environment.matomoScriptId)
-    }
-    else if(this.tabName === 'Filling'){
-      this.utilsService.matomoCall('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Call', callInfo], environment.matomoScriptId);
-    }
-    else if(this.tabName === 'Payment'){
-     this.utilsService.matomoCall('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Call', callInfo], environment.matomoScriptId);
-    }
     const param = `/call-management/make-call`;
     const reqBody = {
       "agent_number": user.callerAgentNumber,
@@ -559,30 +539,7 @@ export class StatusWiseGirdDataComponent implements OnInit {
 
         }
 
-        if(result.responce) {
-          if (mode === 'Update Status') {
-            let changeStatus = client.customerNumber+' - '+this.itrStatus.filter((item:any) => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter((item:any) => item.statusId === result.responce.statusId)[0].statusName; 
-            if(this.tabName === 'Engagement'){
-             this.utilsService.matomoCall('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Engagement', 'Update Status', changeStatus], environment.matomoScriptId);
-            }
-            else if(this.tabName === 'Filling'){
-             this.utilsService.matomoCall('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Update Status', changeStatus], environment.matomoScriptId);
-            }
-            else if(this.tabName === 'Payment'){
-             this.utilsService.matomoCall('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Update Status', changeStatus], environment.matomoScriptId);
-            }
-          }
-          else if(mode === 'Update Caller'){
-           // // if(this.tabName === 'Engagement'){
-            ////   matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Update Caller', changeStatus]);
-            // }
-            // else if(this.tabName === 'Filling'){
-            ////   matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Update Caller', changeStatus]);
-            // }
-            // else if(this.tabName === 'Payment'){
-            ////   matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Update Caller', changeStatus]);
-            // }
-          }
+        if (result.responce) {
         }
       }
     });
@@ -595,16 +552,6 @@ export class StatusWiseGirdDataComponent implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
-    if(this.tabName === 'Engagement'){
-      //matomo('Status Wise Clients Engagement Tab', '/pages/dashboard/status-wise/engagement', ['trackEvent', 'Enagagement', 'Chat icon'], environment.matomoScriptId);
-    }
-    else if(this.tabName === 'Filling'){
-      //matomo('Status Wise Clients Filing Tab', '/pages/dashboard/status-wise/filing', ['trackEvent', 'Filing', 'Chat icon'], environment.matomoScriptId);
-    }
-    else if(this.tabName === 'Payment'){
-     // matomo('Status Wise Clients Payment Tab', '/pages/dashboard/status-wise/payment', ['trackEvent', 'Payment', 'Chat icon'], environment.matomoScriptId);
-    }
-   
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
     this.userMsService.getMethod(param).subscribe((response: any) => {

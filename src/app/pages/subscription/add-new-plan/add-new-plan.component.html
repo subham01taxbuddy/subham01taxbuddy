@@ -87,7 +87,6 @@
               <mat-form-field appearance="outline">
                 <mat-label>Select Plan</mat-label>
                 <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId" autocomplete="off">
-                  <!--(selectionChange)="applySmeSelctedPlan($event)"-->
                   <mat-option *ngFor="let plan of allPlans" [value]="plan.planId">
                     {{ plan.name }}
                   </mat-option>
@@ -97,7 +96,7 @@
             </div>
 
             <div class="card__col-lg-4" style="text-align: end;" *ngIf="smeSelectedPlanId">
-              <button class="tbd-btn-small" (click)="applySmeSelctedPlan(smeSelectedPlanId)">Apply</button> &nbsp;
+              <button class="tbd-btn-small" (click)="applySmeSelectedPlan(smeSelectedPlanId)">Apply</button> &nbsp;
               <button class="tbd-btn-small-secondary" (click)="clearSmePlan()" type="reset">Clear Plan</button>
             </div>
 

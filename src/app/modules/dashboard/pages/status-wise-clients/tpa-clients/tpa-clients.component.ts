@@ -80,31 +80,31 @@ export class TpaClientsComponent implements OnInit {
 
   getTpaClients(page, mobNoSearch?) {
     var param;
-    if(this.utilsService.isNonEmpty(mobNoSearch)){
+    if (this.utilsService.isNonEmpty(mobNoSearch)) {
       param = `/call-management/customers?customerNumber=${mobNoSearch}&serviceType=TPA`;
     }
-    else{
+    else {
       param = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${this.selectedFiler}&serviceType=TPA&page=${page}&pageSize=15`;
     }
     //const param = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${this.selectedFiler}&serviceType=TPA&page=${page}&pageSize=15`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('Call details', result);
-      if(this.utilsService.isNonEmpty(mobNoSearch)){
-          if(result){
-            this.interestedClientInfo = result;
-            this.interestedClientsGridOption.api?.setRowData(this.createRowData(this.interestedClientInfo, 'searchByMobile'));
-            this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
-            this.config.totalItems = 0;
-          }
-          else{
-            this.interestedClientInfo = [];
+      if (this.utilsService.isNonEmpty(mobNoSearch)) {
+        if (result) {
+          this.interestedClientInfo = result;
+          this.interestedClientsGridOption.api?.setRowData(this.createRowData(this.interestedClientInfo, 'searchByMobile'));
+          this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
+          this.config.totalItems = 0;
+        }
+        else {
+          this.interestedClientInfo = [];
           this.interestedClientsGridOption.api?.setRowData(this.createRowData(this.interestedClientInfo));
           this.interestedClientsGridOption.api.setColumnDefs(this.createColumnDef(this.itrStatus));
           this.config.totalItems = 0;
           this.utilsService.showSnackBar('No records found');
-          }
+        }
       }
-      else{
+      else {
         if (result['content'] instanceof Array && result['content'].length > 0) {
           this.interestedClientInfo = result['content'];
           this.interestedClientsGridOption.api?.setRowData(this.createRowData(this.interestedClientInfo));
@@ -118,7 +118,7 @@ export class TpaClientsComponent implements OnInit {
           this.utilsService.showSnackBar('No records found');
         }
       }
-      
+
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -170,7 +170,7 @@ export class TpaClientsComponent implements OnInit {
       this.selectedAgent = this.selectedAgent;
       this.showAllUser = false;
       this.config.currentPage = 1;
-      const sType = this.agentList.filter((item:any) => item.agentId === this.selectedAgent);
+      const sType = this.agentList.filter((item: any) => item.agentId === this.selectedAgent);
       if (sType instanceof Array && sType.length > 0) {
         this.selectedService = sType[0].serviceType;
         this.isServiceDisabled = true;
@@ -200,7 +200,6 @@ export class TpaClientsComponent implements OnInit {
   searchByMobNo() {
     this.selectedStatus = 0;
     if (this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
-      //matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Search', this.searchMobNo], environment.matomoScriptId);
       this.selectedAgent = '';
       this.config.currentPage = 1;
       this.getTpaClients(0, this.searchMobNo);
@@ -294,7 +293,7 @@ export class TpaClientsComponent implements OnInit {
         valueGetter: function nameFromCode(params) {
           if (itrStatus.length !== 0) {
             console.log('Status id', params.data.statusId)
-            const nameArray = itrStatus.filter((item:any) => item.statusId === params.data.statusId);
+            const nameArray = itrStatus.filter((item: any) => item.statusId === params.data.statusId);
             if (nameArray.length !== 0) {
               return nameArray[0].statusName;
             }
@@ -332,7 +331,7 @@ export class TpaClientsComponent implements OnInit {
           }
           return '';
         },
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           let currentDate = new Date();
           let dateSent = new Date(params.data.statusUpdatedDate);
           let diff = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate())) / (1000 * 60 * 60 * 24));
@@ -403,7 +402,7 @@ export class TpaClientsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="User Information"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-mobile" style="font-size:26px" aria-hidden="true" data-action-type="user-info"></i>
@@ -411,7 +410,7 @@ export class TpaClientsComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -425,7 +424,7 @@ export class TpaClientsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
@@ -433,7 +432,7 @@ export class TpaClientsComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -447,7 +446,7 @@ export class TpaClientsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
@@ -455,7 +454,7 @@ export class TpaClientsComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -469,7 +468,7 @@ export class TpaClientsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
@@ -477,7 +476,7 @@ export class TpaClientsComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -491,7 +490,7 @@ export class TpaClientsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
@@ -499,7 +498,7 @@ export class TpaClientsComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -540,41 +539,28 @@ export class TpaClientsComponent implements OnInit {
 
     if (this.isAgentAvailable) {
       if (this.utilsService.isNonEmpty(searchMobNo)) {
-        //matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', searchMobNo], environment.matomoScriptId);
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&page=${page}&pageSize=15`;
       } else {
         this.searchMobNo = '';
-        
-        var itrStatusData = this.itrStatus.filter((item:any) => item.statusId === this.selectedStatus);
+
+        var itrStatusData = this.itrStatus.filter((item: any) => item.statusId === this.selectedStatus);
         if (this.showAllUser) {
-          if (itrStatusData instanceof Array && itrStatusData.length > 0) {
-            let status = this.itrStatus.filter((item:any) => item.statusId === this.selectedStatus)[0].statusName;
-            //matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', status], environment.matomoScriptId);
-          }
           param2 = `/call-management/customers?statusId=${this.selectedStatus}&page=${page}&pageSize=15&serviceType=${this.selectedService}`;
         } else {
-          if (itrStatusData instanceof Array && itrStatusData.length > 0) {
-            let statusAgentId = this.selectedAgent + ' - ' + this.itrStatus.filter((item:any) => item.statusId === this.selectedStatus)[0].statusName;
-            //matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', statusAgentId], environment.matomoScriptId);
-          }
           param2 = `/call-management/customers?statusId=${this.selectedStatus}&agentId=${this.selectedAgent}&page=${page}&pageSize=15`;
         }
       }
     } else {
-      var itrStatusData = this.itrStatus.filter((item:any) => item.statusId === this.selectedStatus);
+      var itrStatusData = this.itrStatus.filter((item: any) => item.statusId === this.selectedStatus);
       if (this.utilsService.isNonEmpty(searchMobNo)) {
-        //matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', searchMobNo], environment.matomoScriptId);
         param2 = `/call-management/customers?customerNumber=${searchMobNo}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
       } else {
         if (itrStatusData instanceof Array && itrStatusData.length > 0) {
           this.searchMobNo = '';
-          let statusAgentId = userInfo.USER_UNIQUE_ID + ' - ' + this.itrStatus.filter((item:any) => item.statusId === this.selectedStatus)[0].statusName;
-          //matomo('Status Wise Client Tab', '/pages/dashboard/interested-clients', ['trackEvent', 'Status Wise Client', 'Search', statusAgentId], environment.matomoScriptId);
         }
         param2 = `/call-management/customers?statusId=${this.selectedStatus}&callerAgentUserId=${userInfo.USER_UNIQUE_ID}&page=${page}&pageSize=15`;
       }
     }
-    // param2 = `/call-management/customer-by-statusids?statusIds=2,3,4,5,6,17`
 
     this.userMsService.getMethod(param2).subscribe((result: any) => {
       console.log('Call details', result);
@@ -601,28 +587,28 @@ export class TpaClientsComponent implements OnInit {
   createRowData(interestedClient, searchBy?) {
     console.log('interestedClient -> ', interestedClient);
     var interestedClientsArray = [];
-    if(this.utilsService.isNonEmpty(searchBy) && searchBy === 'searchByMobile'){
+    if (this.utilsService.isNonEmpty(searchBy) && searchBy === 'searchByMobile') {
       // for (let i = 0; i < interestedClient.length; i++) {
-        let interestedClientsInfo = Object.assign({}, interestedClientsArray[0], {
-          id: interestedClient['id'],
-          createdDate: interestedClient['createdDate'],
-          agentId: interestedClient['agentId'],
-          userId: interestedClient['userId'],
-          name: interestedClient['name'],
-          customerNumber: interestedClient['customerNumber'],
-          statusId: interestedClient['statusId'],
-          serviceType: interestedClient['serviceType'],
-          callerAgentUserId: interestedClient['callerAgentUserId'],
-          callerAgentNumber: interestedClient['callerAgentNumber'],
-          callerAgentName: interestedClient['callerAgentName'],
-          assessmentYear: interestedClient['assessmentYear'],
-          statusUpdatedDate: interestedClient['statusUpdatedDate'],
-          language: interestedClient['laguage']
-        })
-        interestedClientsArray.push(interestedClientsInfo);
+      let interestedClientsInfo = Object.assign({}, interestedClientsArray[0], {
+        id: interestedClient['id'],
+        createdDate: interestedClient['createdDate'],
+        agentId: interestedClient['agentId'],
+        userId: interestedClient['userId'],
+        name: interestedClient['name'],
+        customerNumber: interestedClient['customerNumber'],
+        statusId: interestedClient['statusId'],
+        serviceType: interestedClient['serviceType'],
+        callerAgentUserId: interestedClient['callerAgentUserId'],
+        callerAgentNumber: interestedClient['callerAgentNumber'],
+        callerAgentName: interestedClient['callerAgentName'],
+        assessmentYear: interestedClient['assessmentYear'],
+        statusUpdatedDate: interestedClient['statusUpdatedDate'],
+        language: interestedClient['laguage']
+      })
+      interestedClientsArray.push(interestedClientsInfo);
       // }
     }
-    else{
+    else {
       for (let i = 0; i < interestedClient.length; i++) {
         let interestedClientsInfo = Object.assign({}, interestedClientsArray[i], {
           id: interestedClient[i]['id'],
@@ -643,7 +629,7 @@ export class TpaClientsComponent implements OnInit {
         interestedClientsArray.push(interestedClientsInfo);
       }
     }
-   
+
     console.log('interestedClientsArray-> ', interestedClientsArray)
     return interestedClientsArray;
   }
@@ -690,7 +676,6 @@ export class TpaClientsComponent implements OnInit {
   }
 
   showNotes(client) {
-    //matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Notes'], environment.matomoScriptId);
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -708,8 +693,6 @@ export class TpaClientsComponent implements OnInit {
   startCalling(user) {
     console.log('user: ', user)
     this.loading = true;
-    let callInfo = user.customerNumber;
-    //matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Call', callInfo], environment.matomoScriptId);
     const param = `/call-management/make-call`;
     const reqBody = {
       "agent_number": user.callerAgentNumber,
@@ -749,15 +732,7 @@ export class TpaClientsComponent implements OnInit {
 
         }
       }
-
       if (result.responce) {
-        if (mode === 'Update Status') {
-          let changeStatus = client.customerNumber + ' - ' + this.itrStatus.filter((item:any) => item.statusId === client.statusId)[0].statusName + ' to ' + this.itrStatus.filter((item:any) => item.statusId === result.responce.statusId)[0].statusName;
-          //matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Update Status', changeStatus], environment.matomoScriptId);
-        }
-        else if (mode === 'Update Caller') {
-          //
-        }
       }
     });
   }
@@ -768,8 +743,6 @@ export class TpaClientsComponent implements OnInit {
   }
 
   openChat(client) {
-    console.log('client: ', client);
-    //matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Chat icon'], environment.matomoScriptId);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
     this.userMsService.getMethod(param).subscribe((response: any) => {
@@ -801,13 +774,6 @@ export class TpaClientsComponent implements OnInit {
 
       disposable.afterClosed().subscribe(result => {
         console.log('The dialog was closed');
-
-        if (result.requestBody) {
-          console.log(result.requestBody);
-          let reAssignedInfo = 'from: ' + result.requestBody.from + ' to: ' + result.requestBody.to;
-          console.log('reAssignedInfo: ', reAssignedInfo);
-          //matomo('Status Wise Clients All Tab', '/pages/dashboard/status-wise/all', ['trackEvent', 'All', 'Re-assignment', reAssignedInfo], environment.matomoScriptId);
-        }
       });
     } else {
       this.getStatus('CALL_REASSIGN')

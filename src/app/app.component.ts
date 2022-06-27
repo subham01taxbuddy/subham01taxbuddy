@@ -1,7 +1,6 @@
 
 import { Component } from '@angular/core';
-//declare function matomo(title: any, url: any, event: any, scripdId: any);
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -11,9 +10,15 @@ export class AppComponent {
 
   title = 'app works!';
 
-  constructor() {
-  
+  constructor(
+    private router: Router,
+  ) {
+    // router.events.subscribe((val) => {
+    //   if (val instanceof NavigationEnd) {
+    //     if (val.urlAfterRedirects != '/login') {
+    //       this.matomoService.trackMatomoEvents(val.urlAfterRedirects,'HEARTBEAT');         
+    //     }
+    //   }
+    // });
   }
-
-  
 }

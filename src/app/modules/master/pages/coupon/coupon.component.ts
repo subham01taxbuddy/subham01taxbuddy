@@ -6,7 +6,6 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { AddCouponComponent } from '../add-coupon/add-coupon.component';
-declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 @Component({
   selector: 'app-coupon',
@@ -22,7 +21,7 @@ export class CouponComponent implements OnInit {
     private dialog: MatDialog) {
     this.couponGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.usersCouponColoumnDef(),
+      columnDefs: this.usersCouponColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -36,7 +35,7 @@ export class CouponComponent implements OnInit {
     this.getCoupons()
   }
 
-  usersCouponColoumnDef() {
+  usersCouponColumnDef() {
     return [
       {
         headerName: 'Code',
@@ -44,7 +43,7 @@ export class CouponComponent implements OnInit {
         width: 140,
         pinned: 'left',
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -68,7 +67,7 @@ export class CouponComponent implements OnInit {
         field: 'startDate',
         width: 100,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd MMM yyyy', this.locale)
         },
@@ -83,7 +82,7 @@ export class CouponComponent implements OnInit {
         field: 'endDate',
         width: 100,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd MMM yyyy', this.locale)
         },
@@ -98,7 +97,7 @@ export class CouponComponent implements OnInit {
         field: 'discountType',
         width: 130,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -203,7 +202,6 @@ export class CouponComponent implements OnInit {
       }
     }, error => {
       this.loading = false;
-      console.log('Error during fatching codes data: ', error)
     })
   }
 
@@ -229,12 +227,12 @@ export class CouponComponent implements OnInit {
     return couponArray;
   }
 
-  addCoupon(titile, key, data) {
+  addCoupon(title, key, data) {
     let disposable = this.dialog.open(AddCouponComponent, {
       width: '65%',
       height: 'auto',
       data: {
-        title: titile,
+        title: title,
         // submitBtn: windowBtn,
         leadData: data,
         mode: key
@@ -243,17 +241,9 @@ export class CouponComponent implements OnInit {
 
     disposable.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Afetr dialog close -> ', result);
         if (result.data === "couponAdded") {
           this.getCoupons()
         }
-        // else if(result.data === "leadAdded"){
-
-        //   this.showLeadsInfo('leadAdded');
-        // }
-
-       // matomo('Master', '/pages/master/coupon', ['trackEvent', 'Coupon', 'Add Coupon', result.coupon], environment.matomoScriptId);
-       this.utileService.matomoCall('Master', '/pages/master/coupon', ['trackEvent', 'Coupon', 'Add Coupon', result.coupon], environment.matomoScriptId); 
       }
     })
   }

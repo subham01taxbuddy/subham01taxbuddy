@@ -77,7 +77,6 @@ export class SignupExceptionComponent implements OnInit {
       param = `/sign-up-exceptions`;
     }
     this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('sign-up-exceptions responce: ', result);
       this.loading = false;
       if (result instanceof Array && result.length > 0) {
         this.signupExceptionGridOptions.api?.setRowData(this.createRowData(result))
@@ -102,7 +101,7 @@ export class SignupExceptionComponent implements OnInit {
     console.log('scheduleCalls -> ', signUpExceptionList);
     var signUpExceptionListArray = [];
     for (let i = 0; i < signUpExceptionList.length; i++) {
-      let sceduleCallsInfo = Object.assign({}, signUpExceptionListArray[i], {
+      let scheduleCallsInfo = Object.assign({}, signUpExceptionListArray[i], {
         userId: signUpExceptionList[i]['userId'],
         name: signUpExceptionList[i]['name'],
         mobile: signUpExceptionList[i]['mobile'],
@@ -113,7 +112,7 @@ export class SignupExceptionComponent implements OnInit {
         platform: signUpExceptionList[i]['platform'],
         callerAgentNumber: signUpExceptionList[i]['callerAgentNumber']
       })
-      signUpExceptionListArray.push(sceduleCallsInfo);
+      signUpExceptionListArray.push(scheduleCallsInfo);
     }
     console.log('signUpExceptionListArray-> ', signUpExceptionListArray)
     return signUpExceptionListArray;
@@ -166,7 +165,7 @@ export class SignupExceptionComponent implements OnInit {
         width: 130,
         suppressMovable: true,
         sortable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
@@ -177,7 +176,7 @@ export class SignupExceptionComponent implements OnInit {
         }
       },
       {
-        headerName: 'Serice Type',
+        headerName: 'Service Type',
         field: 'serviceType',
         width: 100,
         suppressMovable: true,
@@ -233,7 +232,7 @@ export class SignupExceptionComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
@@ -241,7 +240,7 @@ export class SignupExceptionComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -255,7 +254,7 @@ export class SignupExceptionComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to check whats app chat"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
@@ -263,7 +262,7 @@ export class SignupExceptionComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -277,7 +276,7 @@ export class SignupExceptionComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="User Information"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-mobile" style="font-size:26px" aria-hidden="true" data-action-type="userInfo"></i>
@@ -285,7 +284,7 @@ export class SignupExceptionComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -299,7 +298,7 @@ export class SignupExceptionComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
@@ -307,7 +306,7 @@ export class SignupExceptionComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -321,7 +320,7 @@ export class SignupExceptionComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
@@ -329,7 +328,7 @@ export class SignupExceptionComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -343,13 +342,13 @@ export class SignupExceptionComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Call Status"
           style="font-size: 12px; cursor:pointer;" data-action-type="call-done">Done</button>`;
         },
         width: 80,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -396,27 +395,25 @@ export class SignupExceptionComponent implements OnInit {
   openWhatsappChat(client) {
     this.loading = true;
     let param = `/kommunicate/WhatsApp-chat-link?userId=${client.userId}`;
-    this.userMsService.getMethod(param).subscribe((responce: any) => {
-      console.log('open chat link res: ', responce);
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      console.log('open chat link res: ', response);
       this.loading = false;
-      if (responce.success) {
-        window.open(responce.data.whatsAppChatLink)
+      if (response.success) {
+        window.open(response.data.whatsAppChatLink)
       }
       else {
         this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
       }
     },
       error => {
-        console.log('Error during feching chat link: ', error);
-        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+        console.log('Error during fetching chat link: ', error);
+        this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
         this.loading = false;
       })
   }
 
   startCalling(user) {
     console.log('user: ', user);
-    let callInfo = user.mobile;
-    this.utilsService.matomoCall('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Call',callInfo], environment.matomoScriptId);
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -449,10 +446,8 @@ export class SignupExceptionComponent implements OnInit {
     this.loading = true;
     //https://uat-api.taxbuddy.com/user/sign-up-exceptions/{customerNumber}
     let param = `/sign-up-exceptions/${callInfo.mobile}`;
-    this.userMsService.putMethod(param).subscribe((responce: any) => {
-      console.log('call Done responce: ', responce);
+    this.userMsService.putMethod(param).subscribe((response: any) => {
       this.loading = false;
-      this.utilsService.matomoCall('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Call Status'], environment.matomoScriptId);
       this.toastMsgService.alert('success', 'Call status update successfully.');
       setTimeout(() => {
         this.getSignUpExceptionList();
@@ -467,7 +462,6 @@ export class SignupExceptionComponent implements OnInit {
   }
 
   showNotes(client) {
-    //matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Notes'], environment.matomoScriptId);
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -483,29 +477,27 @@ export class SignupExceptionComponent implements OnInit {
   }
 
   navigateToWhatsappChat(data) {
-    //matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Whatsapp icon'], environment.matomoScriptId)
     console.log(data);
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['mobile']}`)
   }
 
   openChat(client) {
     console.log('client: ', client);
-    //matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Chat icon'], environment.matomoScriptId)
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
-    this.userMsService.getMethod(param).subscribe((responce: any) => {
-      console.log('open chat link res: ', responce);
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      console.log('open chat link res: ', response);
       this.loading = false;
-      if (responce.success) {
-        window.open(responce.data.chatLink)
+      if (response.success) {
+        window.open(response.data.chatLink)
       }
       else {
         this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
       }
     },
       error => {
-        console.log('Error during feching chat link: ', error);
-        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+        console.log('Error during fetching chat link: ', error);
+        this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
         this.loading = false;
       })
   }
