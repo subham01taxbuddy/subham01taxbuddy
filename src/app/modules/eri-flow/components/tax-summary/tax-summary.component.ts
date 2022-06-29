@@ -257,7 +257,6 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
   }
 
   setJsonData(itrData: any) {
-    debugger
     //  if(itrData.hasOwnProperty('ITR1')){
     this.newTaxRegime = itrData.FilingStatus.NewTaxRegime === "Y" ? true : false;
     let panNo = itrData.PersonalInfo.PAN;

@@ -1,0 +1,151 @@
+<h1 mat-dialog-title>{{data.mode}} No Account Case {{data.type}}</h1>
+<form [formGroup]="caseAForm" *ngIf="this.data.type === 'A'">
+  <mat-dialog-content>
+    <div class="card__row">
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Total Sundry Debtors Amount: </mat-label>
+          <input matInput type="text" placeholder="Total Sundry Debtors Amount"
+            formControlName="totalSundryDebtorsAmount" digitsOnly>
+          <!-- <mat-error *ngIf="bankDetailsForm.controls['ifsCode'].hasError('required')">
+            Enter valid IFSC code.</mat-error>
+          <mat-error *ngIf="bankDetailsForm.controls['ifsCode'].hasError('pattern')">
+            Enter valid IFSC code.</mat-error> -->
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Total Sundry Creditors Amount: </mat-label>
+          <input matInput type="text" placeholder="Total Sundry Creditors Amount"
+            formControlName="totalSundryCreditorsAmount" digitsOnly>
+
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Total Stock In Trade Amount: </mat-label>
+          <input matInput type="text" placeholder="Total Stock In Trade Amount"
+            formControlName="totalStockInTradeAmount" digitsOnly>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Cash Balance Amount: </mat-label>
+          <input matInput type="text" placeholder="Cash Balance Amount" formControlName="cashBalanceAmount" digitsOnly>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button class="tbd-btn" (click)="saveNoCountCaseA()">{{data.mode}}</button>
+    <button type="submit" class="tbd-btn-secondary" mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</form>
+
+<form [formGroup]="caseBForm" *ngIf="this.data.type === 'B'">
+  <mat-dialog-content>
+    <div class="card__row">
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Gross Receipt: </mat-label>
+          <input matInput type="text" placeholder="Gross Receipt" formControlName="grossReceipt" digitsOnly>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Gross ReceiptAcc Payee/Bank Mode: </mat-label>
+          <input matInput type="text" placeholder="Gross ReceiptAcc Payee/Bank Mode"
+            formControlName="grossReceiptAccPayeeOrBankMode" digitsOnly>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Gross Receipt Any Other Mode: </mat-label>
+          <input matInput type="text" placeholder="Gross Receipt Any Other Mode"
+            formControlName="grossReceiptAnyOtherMode" digitsOnly>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Gross Profit: </mat-label>
+          <input matInput type="text" placeholder="Gross Profit" formControlName="grossProfit" digitsOnly>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Expenses: </mat-label>
+          <input matInput type="text" placeholder="expenses" formControlName="expenses" digitsOnly>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Net Profit: </mat-label>
+          <input matInput type="text" placeholder="Net Profit" formControlName="netProfit" digitsOnly>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button class="tbd-btn" (click)="saveNoCountCaseB()">{{data.mode}}</button>
+    <button type="submit" class="tbd-btn-secondary" mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</form>
+
+<form [formGroup]="caseCForm" *ngIf="this.data.type === 'C'">
+  <mat-dialog-content>
+    <div class="card__row">
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Gross Receipt Profession: </mat-label>
+          <input matInput type="text" placeholder="Gross Receipt Profession" formControlName="grossReceiptProfession"
+            digitsOnly>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Gross ReceiptAcc Payee/Bank Mode Profession: </mat-label>
+          <input matInput type="text" placeholder="Gross ReceiptAcc Payee/Bank Mode Profession"
+            formControlName="grossReceiptAccPayeeOrBankModeProfession" digitsOnly>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Gross Receipt Any Other Mode Profession: </mat-label>
+          <input matInput type="text" placeholder="Gross Receipt Any Other Mode Profession"
+            formControlName="grossReceiptAnyOtherModeProfession" digitsOnly>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Gross Profit Profession: </mat-label>
+          <input matInput type="text" placeholder="Gross Profit Profession" formControlName="grossProfitProfession"
+            digitsOnly>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Expenses Profession: </mat-label>
+          <input matInput type="text" placeholder="expenses Profession" formControlName="expensesProfession" digitsOnly>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Net Profit Profession: </mat-label>
+          <input matInput type="text" placeholder="Net Profit Profession" formControlName="netProfitProfession"
+            digitsOnly>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Total Business Profession: </mat-label>
+          <input matInput type="text" placeholder="Total Business Profession" formControlName="totalBusinessProfession"
+            digitsOnly>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button class="tbd-btn" (click)="saveNoCountCaseC()">{{data.mode}}</button>
+    <button type="submit" class="tbd-btn-secondary" mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</form>

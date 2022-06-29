@@ -57,7 +57,10 @@ export interface ITR_SUMMARY {
     newTaxRegime: null,
 
     exemptIncomes: [],
-    totalExemptIncome: any
+    totalExemptIncome: any,
+    noAccountCaseA?: [],
+    noAccountCaseB?: [],
+    noAccountCaseC?: []
 }
 
 export interface Assesse {

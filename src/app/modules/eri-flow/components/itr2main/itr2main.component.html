@@ -715,6 +715,135 @@
                 (getBusinessInfo)="getBusinessData($event)"></app-itr4part>
 
             <br>
+            <div class="card__row tableHead">
+                <div class="card__col-lg-8">No Account Case A</div>
+                <div class="card__col-lg-4">
+                    <button class="tbd-btn-small " (click)="openNoAccountCasesDialog('Add', null,'','A')"><i
+                            class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add</button>
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <th>Total Sundry Debtors Amount</th>
+                    <th>Total Sundry Creditors Amount</th>
+                    <th>Total Stock In Trade Amount</th>
+                    <th>Cash Balance Amount</th>
+                    <th>Action</th>
+                </tr>
+                <tr *ngIf="itr_2_Summary.noAccountCaseA.length === 0">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr *ngFor="let caseA of itr_2_Summary.noAccountCaseA; let i=index">
+                    <td>{{caseA.totalSundryDebtorsAmount}}</td>
+                    <td>{{caseA.totalSundryCreditorsAmount}}</td>
+                    <td>{{caseA.totalStockInTradeAmount}}</td>
+                    <td>{{caseA.cashBalanceAmount}}</td>
+                    <td>
+                        <button type="button" class="tbd-table-btn-icon"
+                            (click)="openNoAccountCasesDialog('Update', i, caseA,'A')">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="tbd-table-btn-icon" (click)="deleteNoAccountCases('A',i)"><i
+                                class="fa fa-trash" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+
+            </table><br>
+            <div class="card__row tableHead">
+                <div class="card__col-lg-8">No Account Case B</div>
+                <div class="card__col-lg-4">
+                    <button class="tbd-btn-small " (click)="openNoAccountCasesDialog('Add', null,'','B')"><i
+                            class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add</button>
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <th>Gross Receipt</th>
+                    <th>Gross ReceiptAcc Payee Or Bank Mode</th>
+                    <th>Gross Receipt Any Other Mode</th>
+                    <th>Gross Profit</th>
+                    <th>Expenses</th>
+                    <th>Net Profit</th>
+                    <th>Action</th>
+                </tr>
+                <tr *ngIf="itr_2_Summary.noAccountCaseB.length === 0">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr *ngFor="let caseB of itr_2_Summary.noAccountCaseB; let i=index">
+                    <td>{{caseB.grossReceipt}}</td>
+                    <td>{{caseB.grossReceiptAccPayeeOrBankMode}}</td>
+                    <td>{{caseB.grossReceiptAnyOtherMode}}</td>
+                    <td>{{caseB.grossProfit}}</td>
+                    <td>{{caseB.expenses}}</td>
+                    <td>{{caseB.netProfit}}</td>
+                    <td>
+                        <button type="button" class="tbd-table-btn-icon"
+                            (click)="openNoAccountCasesDialog('Update', i, caseB,'B')">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="tbd-table-btn-icon" (click)="deleteNoAccountCases('B',i)"><i
+                                class="fa fa-trash" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+
+            </table><br>
+            <div class="card__row tableHead">
+                <div class="card__col-lg-8">No Account Case C</div>
+                <div class="card__col-lg-4">
+                    <button class="tbd-btn-small " (click)="openNoAccountCasesDialog('Add', null,'','C')"><i
+                            class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add</button>
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <th>Gross Receipt Profession</th>
+                    <th>Gross ReceiptAcc Payee Or BankMode Profession</th>
+                    <th>Gross Receipt Any Other Mode Profession</th>
+                    <th>Gross Profit Profession</th>
+                    <th>Expenses Profession</th>
+                    <th>Net Profit Profession</th>
+                    <th>Total Business Profession</th>
+                    <th>Action</th>
+                </tr>
+                <tr *ngIf="itr_2_Summary.noAccountCaseC.length === 0">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr *ngFor="let caseC of itr_2_Summary.noAccountCaseC; let i=index">
+                    <td>{{caseC.grossReceiptProfession}}</td>
+                    <td>{{caseC.grossReceiptAccPayeeOrBankModeProfession}}</td>
+                    <td>{{caseC.grossReceiptAnyOtherModeProfession}}</td>
+                    <td>{{caseC.grossProfitProfession}}</td>
+                    <td>{{caseC.expensesProfession}}</td>
+                    <td>{{caseC.netProfitProfession}}</td>
+                    <td>{{caseC.totalBusinessProfession}}</td>
+                    <td>
+                        <button type="button" class="tbd-table-btn-icon"
+                            (click)="openNoAccountCasesDialog('Update', i, caseC,'C')">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="tbd-table-btn-icon" (click)="deleteNoAccountCases('C',i)"><i
+                                class="fa fa-trash" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+
+            </table><br><br>
 
             <div class="tableHead">Speculative Business Income</div><br>
             <div class="card__row">
