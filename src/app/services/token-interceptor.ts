@@ -56,7 +56,6 @@ export class TokenInterceptor implements HttpInterceptor {
                     Authorization: `Bearer ` + TOKEN
                 }
             });
-            debugger
             this.matomoService.trackMatomoEvents(this.router.url, 'HEARTBEAT');
 
         }

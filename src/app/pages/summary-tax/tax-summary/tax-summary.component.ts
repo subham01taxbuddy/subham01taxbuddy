@@ -1879,7 +1879,6 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   openDialog(windowTitle: string, windowBtn: string, index: any, myUser: any, mode: string) {
-    debugger
     // this.matomoService.trackMatomoEvents(mode, 'DIALOGOPEN');
     let disposable = this.dialog.open(SumaryDialogComponent, {
       width: (mode === 'Salary' || mode === 'donationSec80G' || mode === 'House') ? '70%' : '30%',

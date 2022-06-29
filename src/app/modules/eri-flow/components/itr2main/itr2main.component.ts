@@ -1,3 +1,4 @@
+import { NoAccountCasesComponent } from './../../../itr-shared/dialogs/no-account-cases/no-account-cases.component';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { GridApi, GridOptions } from 'ag-grid-community';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -4948,6 +4949,10 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       this.computationOfIncomeForm.controls['capitalGain'].setValue(summary.taxSummary.capitalGain);
       console.log('computationOfIncomeForm: ', this.computationOfIncomeForm.value);
 
+      this.itr_2_Summary.noAccountCaseA = summary.noAccountCaseA;
+      this.itr_2_Summary.noAccountCaseB = summary.noAccountCaseB;
+      this.itr_2_Summary.noAccountCaseC = summary.noAccountCaseC;
+
       if (this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR'].value > 5000000) {
         if (this.utilService.isNonEmpty(summary.assesse.assetsLiabilities)) {
           this.assetsLiabilitiesForm.patchValue(summary.assesse.assetsLiabilities);
@@ -6633,8 +6638,10 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
       newTaxRegime: null,
       exemptIncomes: [],
-      totalExemptIncome: ''
-
+      totalExemptIncome: '',
+      noAccountCaseA: [],
+      noAccountCaseB: [],
+      noAccountCaseC: []
     }
     return ITR_SUMMARY;
   }
@@ -6709,5 +6716,43 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }, error => {
       this.loading = false;
     })
+  }
+
+  openNoAccountCasesDialog(mode: string, index: any, data: any, type: string) {
+    let disposable = this.dialog.open(NoAccountCasesComponent, {
+      data: {
+        data: data,
+        mode: mode,
+        type: type
+      }
+    })
+    disposable.afterClosed().subscribe(result => {
+      console.log('No Accpunt Cases Dialog', result)
+      if (result?.data?.success) {
+        if (mode === 'Add' && type === 'A') {
+          this.itr_2_Summary.noAccountCaseA.push(result.data.data);
+        } else if (mode === 'Update' && type === 'A') {
+          this.itr_2_Summary.noAccountCaseA.splice(index, 1, result.data.data);
+        } else if (mode === 'Add' && type === 'B') {
+          this.itr_2_Summary.noAccountCaseB.push(result.data.data);
+        } else if (mode === 'Update' && type === 'B') {
+          this.itr_2_Summary.noAccountCaseB.splice(index, 1, result.data.data);
+        } else if (mode === 'Add' && type === 'C') {
+          this.itr_2_Summary.noAccountCaseC.push(result.data.data);
+        } else if (mode === 'Update' && type === 'C') {
+          this.itr_2_Summary.noAccountCaseC.splice(index, 1, result.data.data);
+        }
+      }
+    });
+  }
+
+  deleteNoAccountCases(type, index) {
+    if (type === 'A') {
+      this.itr_2_Summary.noAccountCaseA.splice(index, 1);
+    } else if (type === 'B') {
+      this.itr_2_Summary.noAccountCaseB.splice(index, 1);
+    } else if (type === 'C') {
+      this.itr_2_Summary.noAccountCaseC.splice(index, 1);
+    }
   }
 }
