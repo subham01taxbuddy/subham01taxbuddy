@@ -49,7 +49,8 @@ export class MoreOptionsDialogComponent implements OnInit {
     const param = `/sme/assignee-details?userId=${this.data.userId}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
       console.log(res);
-      this.optedServicesData = res.data
+      if (res.success)
+        this.optedServicesData = res.data
       this.loading = false;
     }, () => {
       this.loading = false;
