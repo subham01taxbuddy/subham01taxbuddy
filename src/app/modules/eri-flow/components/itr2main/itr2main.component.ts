@@ -4949,9 +4949,9 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       this.computationOfIncomeForm.controls['capitalGain'].setValue(summary.taxSummary.capitalGain);
       console.log('computationOfIncomeForm: ', this.computationOfIncomeForm.value);
 
-      this.itr_2_Summary.noAccountCaseA = summary.noAccountCaseA;
-      this.itr_2_Summary.noAccountCaseB = summary.noAccountCaseB;
-      this.itr_2_Summary.noAccountCaseC = summary.noAccountCaseC;
+      this.itr_2_Summary.noAccountCaseA = summary.noAccountCaseA ? summary.noAccountCaseA : [];
+      this.itr_2_Summary.noAccountCaseB = summary.noAccountCaseB ? summary.noAccountCaseB : [];
+      this.itr_2_Summary.noAccountCaseC = summary.noAccountCaseC ? summary.noAccountCaseC : [];
 
       if (this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR'].value > 5000000) {
         if (this.utilService.isNonEmpty(summary.assesse.assetsLiabilities)) {
@@ -5057,10 +5057,10 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       if (natureLabelNotSpeculative.length > 0) {
         this.businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].setValue(natureLabelNotSpeculative[0].label);
       }
-
+      debugger
       this.businessIncomeForm.controls['tradeNameOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].tradeName);
-      this.businessIncomeForm.controls['turnoverOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0].receipts);
-      this.businessIncomeForm.controls['purchaseOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0].presumptiveIncome);
+      this.businessIncomeForm.controls['turnoverOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0]?.receipts);
+      this.businessIncomeForm.controls['purchaseOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0]?.presumptiveIncome);
       this.businessIncomeForm.controls['expenceIncomeOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].exemptIncome);
       this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].taxableIncome);
     }
@@ -5078,8 +5078,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         this.businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].setValue(natureLabelNotSpeculative[0].label);
       }
       this.businessIncomeForm.controls['tradeNameOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].tradeName);
-      this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].incomes[0].receipts);
-      this.businessIncomeForm.controls['purchaseOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].incomes[0].presumptiveIncome);
+      this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].incomes[0]?.receipts);
+      this.businessIncomeForm.controls['purchaseOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].incomes[0]?.presumptiveIncome);
       this.businessIncomeForm.controls['expenceIncomeOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].exemptIncome);
       this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].taxableIncome);
     }
