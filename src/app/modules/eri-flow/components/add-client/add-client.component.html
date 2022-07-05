@@ -6,6 +6,14 @@
     </p>
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-4">
+        <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOtpOption"
+          [ngModelOptions]="{standalone: true}">
+          <mat-radio-button value="A">Aadhaar OTP</mat-radio-button>&nbsp;&nbsp;&nbsp;
+          <mat-radio-button value="E">E portal OTP</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <div class="card__col-xs-12 card__col-sm-3">
         <mat-form-field appearance="outline">
           <mat-label>PAN Number</mat-label>
           <input matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
@@ -17,7 +25,7 @@
         </mat-form-field>
       </div>
 
-      <div class="card__col-xs-12 card__col-sm-4">
+      <div class="card__col-xs-12 card__col-sm-3">
         <mat-form-field appearance="outline">
           <mat-label>Date Of Birth</mat-label>
           <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
@@ -29,7 +37,7 @@
         </mat-form-field>
       </div>
 
-      <div class="card__col-xs-12 card__col-sm-4">
+      <div class="card__col-xs-12 card__col-sm-2">
         <button class="tbd-btn" (click)="verifyPan()">Verify PAN</button>
       </div>
 

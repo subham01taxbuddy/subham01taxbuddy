@@ -5,6 +5,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { ScheduledCallComponent } from './pages/scheduled-call/scheduled-call.component';
 import { FilingsComponent } from './pages/filings/filings.component';
 import { SignUpExceptionsComponent } from './pages/sign-up-exceptions/sign-up-exceptions.component';
+import { ExceptionsComponent } from './pages/exceptions/exceptions.component';
+import { EriExceptionsComponent } from './pages/exceptions/eri-exceptions/eri-exceptions.component';
 
 const routes: Routes = [
     {
@@ -13,7 +15,15 @@ const routes: Routes = [
             { path: 'assigned-users', component: AssignedUsersComponent },
             { path: 'schedule-call', component: ScheduledCallComponent },
             { path: 'filings', component: FilingsComponent },
-            { path: 'sign-up-exceptions', component: SignUpExceptionsComponent },
+            // { path: 'sign-up-exceptions', component: SignUpExceptionsComponent },
+            {
+                path: 'exceptions', component: ExceptionsComponent,
+                children: [
+                    { path: 'signup', component: SignUpExceptionsComponent },
+                    { path: 'eri', component: EriExceptionsComponent },
+                    { path: '', redirectTo: 'signup', pathMatch: 'full' }
+                ]
+            },
             { path: '', redirectTo: '/tasks/assigned-users', pathMatch: 'full' }
         ]
     },
