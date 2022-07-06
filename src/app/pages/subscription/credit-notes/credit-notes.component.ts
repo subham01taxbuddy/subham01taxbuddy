@@ -7,7 +7,6 @@ import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
-declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 export const MY_FORMATS = {
   parse: {
@@ -41,7 +40,7 @@ export class CreditNotesComponent implements OnInit {
   constructor(private fb: FormBuilder, @Inject(LOCALE_ID) private locale: string, private itrService: ItrMsService, private datePipe: DatePipe, private utilService: UtilsService) {
     this.creditNotesGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.creditNotescreateColumnDef(),
+      columnDefs: this.creditNotesCreateColumnDef(),
       enableCellChangeFlash: true,
       onGridReady: params => {
       },
@@ -60,7 +59,6 @@ export class CreditNotesComponent implements OnInit {
 
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate)
-    console.log('formated-1 FrmDate: ', new Date(FromDate))
     this.toDateMin = FromDate;
   }
 
@@ -78,11 +76,11 @@ export class CreditNotesComponent implements OnInit {
 
     this.itrService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
-      if(res instanceof Array && res.length > 0){
+      if (res instanceof Array && res.length > 0) {
         this.totalCount = res.length;
         this.creditNotesGridOptions.api?.setRowData(this.createRowData(res))
       }
-      
+
     },
       error => {
         this.loading = false;
@@ -116,7 +114,7 @@ export class CreditNotesComponent implements OnInit {
     return creditNotesData;
   }
 
-  creditNotescreateColumnDef() {
+  creditNotesCreateColumnDef() {
     return [
       {
         headerName: 'User Id',
@@ -268,14 +266,11 @@ export class CreditNotesComponent implements OnInit {
     var param;
     if (type === 'downloadAll') {
       param = `/itr/credit-note-download`;
-     // matomo('Credit Notes Tab', '/pages/subscription/credit-notes', ['trackEvent', 'Credit Notes', 'Download All'], environment.matomoScriptId);
     }
     else {
       let fromData = this.datePipe.transform(this.creditNotesForm.value.fromDate, 'yyyy-MM-dd');
       let toData = this.datePipe.transform(this.creditNotesForm.value.toDate, 'yyyy-MM-dd');
       param = `/itr/credit-note-download?from=${fromData}&to=${toData}`;
-      let parameter = 'From Date='+fromData+' To date= '+toData;
-    //  matomo('Credit Notes Tab', '/pages/subscription/credit-notes', ['trackEvent', 'Credit Notes', 'Download All', parameter], environment.matomoScriptId);
     }
 
     location.href = environment.url + param;

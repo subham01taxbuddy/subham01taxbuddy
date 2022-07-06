@@ -21,7 +21,7 @@ export class TodaysCallsComponent implements OnInit {
   callingDate = new FormControl(new Date(), Validators.required);
   todaysCallsGridOptions: GridOptions;
   config: any;
-  callDetetialInfo: any = [];
+  callDetailInfo: any = [];
   agentList: any = [];
   isAdmin: boolean;
   selectedAgent: any;
@@ -32,7 +32,7 @@ export class TodaysCallsComponent implements OnInit {
   constructor(private userMsService: UserMsService, private dialog: MatDialog, public utilsService: UtilsService, @Inject(LOCALE_ID) private locale: string, private toastMsgService: ToastMessageService) {
     this.todaysCallsGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.createColoumnDef([]),
+      columnDefs: this.createColumnDef([]),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -69,7 +69,6 @@ export class TodaysCallsComponent implements OnInit {
   getStatus() {
     let param = '/itr-status-master/source/BACK_OFFICE';
     this.userMsService.getMethod(param).subscribe(response => {
-      console.log('status responce: ', response);
       if (response instanceof Array && response.length > 0) {
         this.itrStatus = response;
       } else {
@@ -98,10 +97,9 @@ export class TodaysCallsComponent implements OnInit {
     }
   }
 
-  serchByMobNo() {
+  searchByMobNo() {
     if (this.utilsService.isNonEmpty(this.searchMobNo) && this.searchMobNo.length === 10) {
       var userInfo = JSON.parse(localStorage.getItem('UMD'));
-      //matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Search',this.searchMobNo], environment.matomoScriptId);
       if (userInfo.USER_ROLE.includes("ROLE_ADMIN")) {
         this.getMyTodaysCalls('', 0, this.searchMobNo);
       }
@@ -118,7 +116,6 @@ export class TodaysCallsComponent implements OnInit {
     if (this.utilsService.isNonEmpty(this.selectedAgent)) {
       this.showAllUser = false;
       this.searchMobNo = '';
-      //matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Search',this.selectedAgent], environment.matomoScriptId);
       this.getMyTodaysCalls(this.selectedAgent, 0);
     }
     else {
@@ -126,7 +123,7 @@ export class TodaysCallsComponent implements OnInit {
     }
   }
 
-  createColoumnDef(itrStatus) {
+  createColumnDef(itrStatus) {
     return [
       {
         headerName: 'User Id',
@@ -171,7 +168,7 @@ export class TodaysCallsComponent implements OnInit {
         width: 120,
         suppressMovable: true,
         sortable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
@@ -197,7 +194,7 @@ export class TodaysCallsComponent implements OnInit {
           console.log('params === ', params, params.data.statusId);
           console.log('itrStatus array === ', itrStatus);
           if (itrStatus.length !== 0) {
-            const nameArray = itrStatus.filter((item:any) => (item.statusId === params.data.statusId));
+            const nameArray = itrStatus.filter((item: any) => (item.statusId === params.data.statusId));
             if (nameArray.length !== 0) {
               return nameArray[0].statusName;
             }
@@ -241,7 +238,7 @@ export class TodaysCallsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
@@ -249,7 +246,7 @@ export class TodaysCallsComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -263,7 +260,7 @@ export class TodaysCallsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to check whats app chat"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-chat"></i>
@@ -271,7 +268,7 @@ export class TodaysCallsComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -285,7 +282,7 @@ export class TodaysCallsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
@@ -293,7 +290,7 @@ export class TodaysCallsComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -307,7 +304,7 @@ export class TodaysCallsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Call to user"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-phone" aria-hidden="true" data-action-type="call"></i>
@@ -315,7 +312,7 @@ export class TodaysCallsComponent implements OnInit {
         },
         width: 50,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -329,7 +326,7 @@ export class TodaysCallsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
@@ -337,7 +334,7 @@ export class TodaysCallsComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -351,7 +348,7 @@ export class TodaysCallsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Caller SM"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user-o" aria-hidden="true" data-action-type="updateCaller"></i>
@@ -359,7 +356,7 @@ export class TodaysCallsComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -398,16 +395,16 @@ export class TodaysCallsComponent implements OnInit {
       if (result['content'] instanceof Array && result['content'].length > 0) {
         this.callLogs = result['content'];
         this.todaysCallsGridOptions.api?.setRowData(this.createRowData(this.callLogs));
-        this.todaysCallsGridOptions.api.setColumnDefs(this.createColoumnDef(this.itrStatus));
-        this.callDetetialInfo = result['content'];
+        this.todaysCallsGridOptions.api.setColumnDefs(this.createColumnDef(this.itrStatus));
+        this.callDetailInfo = result['content'];
         this.config.totalItems = result.totalElements;
       } else {
         this.callLogs = [];
         this.todaysCallsGridOptions.api?.setRowData(this.createRowData(this.callLogs));
-        this.todaysCallsGridOptions.api.setColumnDefs(this.createColoumnDef(this.itrStatus));
-        this.callDetetialInfo = [];
+        this.todaysCallsGridOptions.api.setColumnDefs(this.createColumnDef(this.itrStatus));
+        this.callDetailInfo = [];
         this.config.totalItems = 0;
-        this.utilsService.showSnackBar('You dont have any calls today');
+        this.utilsService.showSnackBar('You don\'t have any calls today');
       }
       this.loading = false;
     }, error => {
@@ -441,7 +438,6 @@ export class TodaysCallsComponent implements OnInit {
   }
 
   showNotes(client) {
-    //matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Notes'], environment.matomoScriptId);
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -491,8 +487,6 @@ export class TodaysCallsComponent implements OnInit {
 
   startCalling(user) {
     console.log('user: ', user);
-    let callInfo = user.customerNumber;
-    this.utilsService.matomoCall('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Call', callInfo], environment.matomoScriptId);
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -542,18 +536,10 @@ export class TodaysCallsComponent implements OnInit {
           //   this.getMyTodaysCalls(userInfo.USER_UNIQUE_ID, 0);
           // }
         }
-        
-        if(result.responce){
-          if(mode === 'Update Status'){
-            // let changeStatus = client.statusId+' to '+result.responce.statusId;
-            let changeStatus = client.customerNumber+' - '+this.itrStatus.filter((item:any) => item.statusId === client.statusId)[0].statusName+ ' to ' + this.itrStatus.filter((item:any) => item.statusId === result.responce.statusId)[0].statusName; //result.responce.statusId;
-            this.utilsService.matomoCall('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Update Status',changeStatus], environment.matomoScriptId);
+
+        if (result.responce) {
+          if (mode === 'Update Status') {
           }
-          //// else if(mode === 'Update Caller'){
-          ////   let updateCaller = client.statusId+' to '+result.responce.statusId;
-          ////   matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Update Caller', changeStatus])
-          //// }
-         
         }
       }
     });
@@ -572,22 +558,21 @@ export class TodaysCallsComponent implements OnInit {
 
   openChat(client) {
     console.log('client: ', client);
-    //matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Chat icon'], environment.matomoScriptId);
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
-    this.userMsService.getMethod(param).subscribe((responce: any) => {
-      console.log('open chat link res: ', responce);
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      console.log('open chat link res: ', response);
       this.loading = false;
-      if (responce.success) {
-        window.open(responce.data.chatLink)
+      if (response.success) {
+        window.open(response.data.chatLink)
       }
       else {
         this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
       }
     },
       error => {
-        console.log('Error during feching chat link: ', error);
-        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+        console.log('Error during fetching chat link: ', error);
+        this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
         this.loading = false;
       })
   }
@@ -596,28 +581,23 @@ export class TodaysCallsComponent implements OnInit {
   openWhatsappChat(client) {
     this.loading = true;
     let param = `/kommunicate/WhatsApp-chat-link?userId=${client.userId}`;
-    this.userMsService.getMethod(param).subscribe((responce: any) => {
-      console.log('open chat link res: ', responce);
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      console.log('open chat link res: ', response);
       this.loading = false;
-      if (responce.success) {
-        window.open(responce.data.whatsAppChatLink)
+      if (response.success) {
+        window.open(response.data.whatsAppChatLink)
       }
       else {
         this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
       }
-    },
-      error => {
-        console.log('Error during feching chat link: ', error);
-        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
-        this.loading = false;
-      })
+    }, error => {
+      console.log('Error during fetching chat link: ', error);
+      this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
+      this.loading = false;
+    })
   }
 
   navigateToWhatsappChat(data) {
-    //matomo('My Todays Call', '/pages/dashboard/calling/todays-call', ['trackEvent', 'My Todays Call', 'Whatsapp icon'], environment.matomoScriptId);
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['customerNumber']}`)
   }
-
-  
-
 }

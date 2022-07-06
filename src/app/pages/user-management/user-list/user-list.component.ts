@@ -84,8 +84,6 @@ export class UserListComponent implements OnInit {
   }
 
   getUserSearchList(key: any, searchValue: any) {
-    let searchInfo = key + ': ' + searchValue;
-    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Select attribute', searchInfo], environment.matomoScriptId);
     this.loading = true;
     return new Promise((resolve, reject) => {
       this.user_data = [];
@@ -139,7 +137,7 @@ export class UserListComponent implements OnInit {
         field: 'userId',
         width: 80,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -151,7 +149,7 @@ export class UserListComponent implements OnInit {
         field: 'createdDate',
         width: 120,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: (data: any) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
@@ -177,7 +175,7 @@ export class UserListComponent implements OnInit {
         field: 'mobileNumber',
         width: 100,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -222,7 +220,7 @@ export class UserListComponent implements OnInit {
             return params.data.gender
           }
         },
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -524,8 +522,6 @@ export class UserListComponent implements OnInit {
           break;
         }
         case 'profile': {
-          //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'User Profile'], environment.matomoScriptId);
-          this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'User Profile'], environment.matomoScriptId)
           this.router.navigate(['pages/user-management/profile/' + params.data.userId])
           break;
         }
@@ -562,20 +558,14 @@ export class UserListComponent implements OnInit {
   }
 
   redirectTowardInvoice(userInfo: any) {
-    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Invoice'], environment.matomoScriptId);
-    console.log('userInfo for subscription -> ', userInfo);
     this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: userInfo.userId } });
   }
 
   redirectTowardSubscription(userInfo: any) {
-    console.log('userInfo for subscription -> ', userInfo);
-    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Sunscription'], environment.matomoScriptId);
     this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: userInfo.mobileNumber } });
   }
 
   linkToFinbingo(userId: any) {
-    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'FNB'], environment.matomoScriptId); 
-    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'FNB'], environment.matomoScriptId);
     const param = `/partner/create-user`;
     const request = {
       userId: userId
@@ -601,13 +591,10 @@ export class UserListComponent implements OnInit {
   }
 
   linkToDocumentCloud(userId: any) {
-    //matomo('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId);
-    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Cloud'], environment.matomoScriptId);
     this.router.navigate(['/pages/itr-filing/user-docs/' + userId]);
   }
 
   updateReviewStatus(data: any) {
-    this.utilsService.matomoCall('All Users Tab', '/pages/user-management/users', ['trackEvent', 'All Users', 'Review'], environment.matomoScriptId);
     const param = `/update-itr-userProfile?userId=${data.userId}&isReviewGiven=true`;
     this.itrMsService.putMethod(param, {}).subscribe(result => {
       console.log(result);
@@ -632,7 +619,6 @@ export class UserListComponent implements OnInit {
     });
   }
   showNotes(client) {
-    // matomo('Priority Calling Board', '/pages/dashboard/calling/calling2', ['trackEvent', 'Priority Calling', 'Notes'], environment.matomoScriptId)
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',

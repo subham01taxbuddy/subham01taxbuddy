@@ -11,6 +11,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { MatomoService } from 'src/app/services/matomo.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -159,7 +160,8 @@ export class TaxSummaryComponent implements OnInit {
 
   constructor(private dialog: MatDialog, public utilService: UtilsService, private fb: FormBuilder, private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
-    private router: Router) {
+    private router: Router,
+    private matomoService: MatomoService) {
 
   }
 
@@ -1877,6 +1879,7 @@ export class TaxSummaryComponent implements OnInit {
   }
 
   openDialog(windowTitle: string, windowBtn: string, index: any, myUser: any, mode: string) {
+    // this.matomoService.trackMatomoEvents(mode, 'DIALOGOPEN');
     let disposable = this.dialog.open(SumaryDialogComponent, {
       width: (mode === 'Salary' || mode === 'donationSec80G' || mode === 'House') ? '70%' : '30%',
       height: 'auto',
@@ -2878,14 +2881,6 @@ export class TaxSummaryComponent implements OnInit {
     console.log('itrSummaryForm validation: ', this.itrSummaryForm.valid)
     console.log('itr summary: ', this.itrSummaryForm.valid, ' business form: ', (this.itrType.itrFour ? this.businessFormValid : true))
     if (this.itrSummaryForm.valid && (this.itrType.itrFour ? this.businessFormValid : true)) {
-
-      if (this.newItrSumChanges) {
-        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/new-summary/itr-one', ['trackEvent', 'New Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
-      }
-      else {
-        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/itrFirst', ['trackEvent', 'Old Summary', 'ITR 1/4', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].value], environment.matomoScriptId);
-      }
-
       if (this.utilService.isNonEmpty(this.sourcesOfIncome)) {
         this.incomeData = [];
         if (this.sourcesOfIncome.interestFromSaving !== 0) {

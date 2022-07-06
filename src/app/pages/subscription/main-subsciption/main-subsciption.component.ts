@@ -11,7 +11,6 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { FilingCalendarComponent } from '../filing-calendar/filing-calendar.component';
 import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.component';
-declare function matomo(title: any, url: any, event: any, scriptId: any);
 
 @Component({
   selector: 'app-main-subsciption',
@@ -114,7 +113,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           if (params.data.smeSelected !== 'NA') {
             if (params.data.planAgreedByUserOn !== null && params.data.planAgreedByUserOn !== '') {
               return `<i class="fa fa-circle" style="color: green; font-size: 8px;" title="User Accepted changed amount" aria-hidden="true"></i> ` + params.data.smeSelected;
@@ -209,7 +208,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
           }
           return '';
         },
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           let currentDate = new Date();
           let dateSent = new Date(params.data.endDate);
           let diff = Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate())) / (1000 * 60 * 60 * 24));
@@ -292,7 +291,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Add Subscription plan"
           style="border: none;
             background: transparent; font-size: 16px; cursor:pointer">
@@ -301,7 +300,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -315,7 +314,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           if (params.data.txbdyInvoiceId === 0) {
             return `<button type="button" class="action_icon add_button" title="Generate Invoice" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
@@ -331,7 +330,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -359,7 +358,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Start Filing" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-files-o" aria-hidden="true" data-action-type="start-filing"></i>
@@ -368,7 +367,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -382,7 +381,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="View Filing Calendar" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-calendar" aria-hidden="true" data-action-type="view-filing-calendar"></i>
@@ -391,7 +390,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -486,18 +485,6 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
       switch (actionType) {
         case 'generateInvoice': {
           if (params.data.subscriptionAssigneeId !== 'NA') {
-            if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
-             // matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Invoice', params.data.userId], environment.matomoScriptId);
-             this.utilsService.matomoCall('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Invoice', params.data.userId], environment.matomoScriptId)
-            }
-            else if(this.from === 'MY_SUBSCRIPTION'){
-              //matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Invoice', params.data.userId], environment.matomoScriptId);
-              this.utilsService.matomoCall('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Invoice', params.data.userId], environment.matomoScriptId);
-            }
-            else if(this.from === 'TEAM_SUBSCRIPTION'){
-              //matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Invoice', params.data.userId], environment.matomoScriptId);
-              this.utilsService.matomoCall('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Invoice', params.data.userId], environment.matomoScriptId)
-            }
             this.router.navigate(['/pages/subscription/add-invoice'], { queryParams: { subscriptionId: params.data.subscriptionId } });
           } else {
             this.utilsService.showSnackBar('Please assign this subscription to team member');
@@ -540,15 +527,6 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
 
   addNewPlan(plan) {
     if (this.utilsService.isNonZero(plan.txbdyInvoiceId)) {
-      if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
-        //matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Create Subscription', plan.userId], environment.matomoScriptId);
-      }
-      else if(this.from === 'MY_SUBSCRIPTION'){
-        //matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Create Subscription', plan.userId], environment.matomoScriptId);
-      }
-      else if(this.from === 'TEAM_SUBSCRIPTION'){
-       // matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Create Subscription', plan.userId], environment.matomoScriptId);
-      }
       if (!this.isApplicable('ITR_SUPER_LEAD')) {
         this.utilsService.showSnackBar('This subscriptions invoice is created.');
         return;
@@ -560,7 +538,7 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
   updateSubscription(value) {
     console.log('Subscription;', value);
     this.loading = true;
-    let temp = this.allSubscriptions.filter((item:any) => item.subscriptionId === value.subscriptionId)
+    let temp = this.allSubscriptions.filter((item: any) => item.subscriptionId === value.subscriptionId)
     let request;
     if (temp instanceof Array && temp.length > 0) {
       request = temp[0];
@@ -606,15 +584,6 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
 
   async startFiling(subscription) {
     console.log('subscription: ', subscription);
-    if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
-      //matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'File', subscription.data.userId], environment.matomoScriptId);
-    }
-    else if(this.from === 'MY_SUBSCRIPTION'){
-      //matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'File', subscription.data.userId], environment.matomoScriptId);
-    }
-    else if(this.from === 'TEAM_SUBSCRIPTION'){
-      //matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'File', subscription.data.userId], environment.matomoScriptId);
-    }
     if (subscription.servicesType === 'ITR') {
       if (subscription.subscriptionAssigneeId !== 'NA') {
         this.loading = true;
@@ -638,15 +607,6 @@ export class MainSubsciptionComponent implements OnInit, OnDestroy, OnChanges {
 
   async viewFilingCalendar(subscription) {
     console.log('subscription: ', subscription);
-    if(this.from === 'UNASSIGNED_SUBSCRIPTION'){
-      //matomo('Unassigned Subscriptions Tab', '/pages/subscription/sub', ['trackEvent', 'Unassigned Subscription', 'Calendar', subscription.data.userId], environment.matomoScriptId);
-    }
-    else if(this.from === 'MY_SUBSCRIPTION'){
-      //matomo('My Subscription Tab', '/pages/subscription/my-sub', ['trackEvent', 'My Subscription', 'Calendar', subscription.data.userId], environment.matomoScriptId);
-    }
-    else if(this.from === 'TEAM_SUBSCRIPTION'){
-      //matomo('Team Subscription Tab', '/pages/subscription/team-sub', ['trackEvent', 'All Invoice', 'Calendar', subscription.data.userId], environment.matomoScriptId);
-    }
     this.loading = true;
     const param = `/subscription/filings-calender?subscriptionId=${subscription.subscriptionId}`;
     this.itrService.getMethod(param).subscribe((res: any) => {

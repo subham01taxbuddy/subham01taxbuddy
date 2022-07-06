@@ -7096,15 +7096,6 @@ export class Itr2mainComponent implements OnInit {
     console.log("personalInfoForm: ", this.personalInfoForm);
     console.log('businessIncomeForm: ', this.businessIncomeForm.value, ' businessFormValid:=> ', this.businessFormValid)
     if (this.personalInfoForm.valid && (this.itrType.itrThree ? this.businessFormValid : true)) {
-      console.log('bankData: ', this.bankData);
-
-      if (this.newItrSumChanges) {
-        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/new-summary/itr-three', ['trackEvent', 'New Summary', 'ITR 2/3', this.personalInfoForm.controls['contactNumber'].value], environment.matomoScriptId);
-      }
-      else {
-        this.utilService.matomoCall('Tax Summary', '/pages/tax-summary/itrSecond', ['trackEvent', 'Old Summary', 'ITR 2/3', this.personalInfoForm.controls['contactNumber'].value], environment.matomoScriptId);
-      }
-
       this.itr_2_Summary._id = this.personalInfoForm.controls['_id'].value;
       this.itr_2_Summary.summaryId = this.personalInfoForm.controls['summaryId'].value;
       this.itr_2_Summary.returnType = this.personalInfoForm.controls['returnType'].value;

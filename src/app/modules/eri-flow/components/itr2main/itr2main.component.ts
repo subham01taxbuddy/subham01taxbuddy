@@ -1,3 +1,4 @@
+import { NoAccountCasesComponent } from './../../../itr-shared/dialogs/no-account-cases/no-account-cases.component';
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { GridApi, GridOptions } from 'ag-grid-community';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -268,7 +269,12 @@ export class Itr2mainComponent implements OnInit, OnChanges {
   isJsonParse: boolean = false;
   newTaxRegime: boolean;
 
-  constructor(public utilsService: UtilsService, private fb: FormBuilder, private userService: UserMsService, private dialog: MatDialog, private utilService: UtilsService,
+  constructor(
+    public utilsService: UtilsService,
+    private fb: FormBuilder,
+    private userService: UserMsService,
+    private dialog: MatDialog,
+    private utilService: UtilsService,
     private _toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService) {
     this.itr_2_Summary = this.createItrSummaryEmptyJson();
@@ -4943,6 +4949,10 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       this.computationOfIncomeForm.controls['capitalGain'].setValue(summary.taxSummary.capitalGain);
       console.log('computationOfIncomeForm: ', this.computationOfIncomeForm.value);
 
+      this.itr_2_Summary.noAccountCaseA = summary.noAccountCaseA ? summary.noAccountCaseA : [];
+      this.itr_2_Summary.noAccountCaseB = summary.noAccountCaseB ? summary.noAccountCaseB : [];
+      this.itr_2_Summary.noAccountCaseC = summary.noAccountCaseC ? summary.noAccountCaseC : [];
+
       if (this.computationOfIncomeForm.controls['totalIncomeAfterDeductionIncludeSR'].value > 5000000) {
         if (this.utilService.isNonEmpty(summary.assesse.assetsLiabilities)) {
           this.assetsLiabilitiesForm.patchValue(summary.assesse.assetsLiabilities);
@@ -5047,10 +5057,10 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       if (natureLabelNotSpeculative.length > 0) {
         this.businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].setValue(natureLabelNotSpeculative[0].label);
       }
-
+      debugger
       this.businessIncomeForm.controls['tradeNameOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].tradeName);
-      this.businessIncomeForm.controls['turnoverOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0].receipts);
-      this.businessIncomeForm.controls['purchaseOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0].presumptiveIncome);
+      this.businessIncomeForm.controls['turnoverOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0]?.receipts);
+      this.businessIncomeForm.controls['purchaseOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0]?.presumptiveIncome);
       this.businessIncomeForm.controls['expenceIncomeOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].exemptIncome);
       this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].taxableIncome);
     }
@@ -5068,8 +5078,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         this.businessIncomeForm.controls['natureOfothertThanSpeculativeProfession'].setValue(natureLabelNotSpeculative[0].label);
       }
       this.businessIncomeForm.controls['tradeNameOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].tradeName);
-      this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].incomes[0].receipts);
-      this.businessIncomeForm.controls['purchaseOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].incomes[0].presumptiveIncome);
+      this.businessIncomeForm.controls['turnoverOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].incomes[0]?.receipts);
+      this.businessIncomeForm.controls['purchaseOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].incomes[0]?.presumptiveIncome);
       this.businessIncomeForm.controls['expenceIncomeOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].exemptIncome);
       this.businessIncomeForm.controls['taxableIncomeOfothertThanSpeculativeProfession'].setValue(therThanSpeculaticeProfessionIncome[0].taxableIncome);
     }
@@ -6628,8 +6638,10 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
       newTaxRegime: null,
       exemptIncomes: [],
-      totalExemptIncome: ''
-
+      totalExemptIncome: '',
+      noAccountCaseA: [],
+      noAccountCaseB: [],
+      noAccountCaseC: []
     }
     return ITR_SUMMARY;
   }
@@ -6704,5 +6716,43 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }, error => {
       this.loading = false;
     })
+  }
+
+  openNoAccountCasesDialog(mode: string, index: any, data: any, type: string) {
+    let disposable = this.dialog.open(NoAccountCasesComponent, {
+      data: {
+        data: data,
+        mode: mode,
+        type: type
+      }
+    })
+    disposable.afterClosed().subscribe(result => {
+      console.log('No Accpunt Cases Dialog', result)
+      if (result?.data?.success) {
+        if (mode === 'Add' && type === 'A') {
+          this.itr_2_Summary.noAccountCaseA.push(result.data.data);
+        } else if (mode === 'Update' && type === 'A') {
+          this.itr_2_Summary.noAccountCaseA.splice(index, 1, result.data.data);
+        } else if (mode === 'Add' && type === 'B') {
+          this.itr_2_Summary.noAccountCaseB.push(result.data.data);
+        } else if (mode === 'Update' && type === 'B') {
+          this.itr_2_Summary.noAccountCaseB.splice(index, 1, result.data.data);
+        } else if (mode === 'Add' && type === 'C') {
+          this.itr_2_Summary.noAccountCaseC.push(result.data.data);
+        } else if (mode === 'Update' && type === 'C') {
+          this.itr_2_Summary.noAccountCaseC.splice(index, 1, result.data.data);
+        }
+      }
+    });
+  }
+
+  deleteNoAccountCases(type, index) {
+    if (type === 'A') {
+      this.itr_2_Summary.noAccountCaseA.splice(index, 1);
+    } else if (type === 'B') {
+      this.itr_2_Summary.noAccountCaseB.splice(index, 1);
+    } else if (type === 'C') {
+      this.itr_2_Summary.noAccountCaseC.splice(index, 1);
+    }
   }
 }

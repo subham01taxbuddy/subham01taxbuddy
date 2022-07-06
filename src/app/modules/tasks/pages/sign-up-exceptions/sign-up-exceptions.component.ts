@@ -51,11 +51,8 @@ export class SignUpExceptionsComponent implements OnInit {
 
   getSignUpExceptionList(agentUserId, pageNo) {
     this.loading = true;
-    var fromDate = '';
-    var toDate = '';
     var param = `/sign-up-exceptions/${agentUserId}?page=${pageNo}&size=20`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('sign-up-exceptions responce: ', result);
       this.loading = false;
       if (result && result.content instanceof Array && result.content.length > 0) {
         this.signUpExceptionList = result.content;
@@ -79,7 +76,7 @@ export class SignUpExceptionsComponent implements OnInit {
     console.log('scheduleCalls -> ', signUpExceptionList);
     var signUpExceptionListArray = [];
     for (let i = 0; i < signUpExceptionList.length; i++) {
-      let sceduleCallsInfo = Object.assign({}, signUpExceptionListArray[i], {
+      let scheduleCallsInfo = Object.assign({}, signUpExceptionListArray[i], {
         userId: signUpExceptionList[i]['userId'],
         name: signUpExceptionList[i]['firstName'] + ' ' + signUpExceptionList[i]['lastName'],
         mobile: signUpExceptionList[i]['mobile'],
@@ -91,7 +88,7 @@ export class SignUpExceptionsComponent implements OnInit {
         source: signUpExceptionList[i]['source'],
         callerAgentNumber: signUpExceptionList[i]['callerAgentNumber']
       })
-      signUpExceptionListArray.push(sceduleCallsInfo);
+      signUpExceptionListArray.push(scheduleCallsInfo);
     }
     console.log('signUpExceptionListArray-> ', signUpExceptionListArray)
     return signUpExceptionListArray;
@@ -144,7 +141,7 @@ export class SignUpExceptionsComponent implements OnInit {
         width: 130,
         suppressMovable: true,
         sortable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: (data) => {
           return formatDate(data.value, 'dd/MM/yyyy', this.locale)
         },
@@ -155,7 +152,7 @@ export class SignUpExceptionsComponent implements OnInit {
         }
       },
       {
-        headerName: 'Serice Type',
+        headerName: 'Service Type',
         field: 'serviceType',
         width: 100,
         suppressMovable: true,
@@ -404,27 +401,24 @@ export class SignUpExceptionsComponent implements OnInit {
   openWhatsappChat(client) {
     this.loading = true;
     let param = `/kommunicate/WhatsApp-chat-link?userId=${client.userId}`;
-    this.userMsService.getMethod(param).subscribe((responce: any) => {
-      console.log('open chat link res: ', responce);
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      console.log('open chat link res: ', response);
       this.loading = false;
-      if (responce.success) {
-        window.open(responce.data.whatsAppChatLink)
+      if (response.success) {
+        window.open(response.data.whatsAppChatLink)
       }
       else {
         this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
       }
     },
       error => {
-        console.log('Error during feching chat link: ', error);
-        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+        this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
         this.loading = false;
       })
   }
 
   startCalling(user) {
     console.log('user: ', user);
-    let callInfo = user.mobile;
-    this.utilsService.matomoCall('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Call', callInfo], environment.matomoScriptId);
     this.loading = true;
     const param = `/call-management/make-call`;
     const reqBody = {
@@ -457,10 +451,8 @@ export class SignUpExceptionsComponent implements OnInit {
     this.loading = true;
     //https://uat-api.taxbuddy.com/user/sign-up-exceptions/{customerNumber}
     let param = `/sign-up-exceptions/${callInfo.mobile}`;
-    this.userMsService.putMethod(param).subscribe((responce: any) => {
-      console.log('call Done responce: ', responce);
+    this.userMsService.putMethod(param).subscribe((response: any) => {
       this.loading = false;
-      this.utilsService.matomoCall('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Call Status'], environment.matomoScriptId);
       this.toastMsgService.alert('success', 'Call status update successfully.');
       setTimeout(() => {
         this.config.currentPage = this.selectedPageNo + 1
@@ -476,7 +468,6 @@ export class SignUpExceptionsComponent implements OnInit {
   }
 
   showNotes(client) {
-    //matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Notes'], environment.matomoScriptId);
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',
       height: 'auto',
@@ -492,29 +483,24 @@ export class SignUpExceptionsComponent implements OnInit {
   }
 
   navigateToWhatsappChat(data) {
-    //matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Whatsapp icon'], environment.matomoScriptId)
-    console.log(data);
     window.open(`${environment.portal_url}/pages/chat-corner/mobile/91${data['mobile']}`)
   }
 
   openChat(client) {
-    console.log('client: ', client);
-    //matomo('Sign-Up Exceptions Tab', '/pages/dashboard/calling/signup-exception', ['trackEvent', 'Sign-Up Exception', 'Chat icon'], environment.matomoScriptId)
     this.loading = true;
     let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
-    this.userMsService.getMethod(param).subscribe((responce: any) => {
-      console.log('open chat link res: ', responce);
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      console.log('open chat link res: ', response);
       this.loading = false;
-      if (responce.success) {
-        window.open(responce.data.chatLink)
+      if (response.success) {
+        window.open(response.data.chatLink)
       }
       else {
         this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
       }
     },
       error => {
-        console.log('Error during feching chat link: ', error);
-        this.toastMsgService.alert('error', 'Error during feching chat, try after some time.')
+        this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
         this.loading = false;
       })
   }

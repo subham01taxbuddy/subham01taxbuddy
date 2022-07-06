@@ -237,7 +237,7 @@ export class AddNewPlanComponent implements OnInit {
     this.smeList = await this.utilsService.getStoredSmeList();
   }
 
-  applySmeSelctedPlan(selectedPlan) {
+  applySmeSelectedPlan(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
     const smeInfo = JSON.parse(localStorage.getItem('UMD'));
     const param = '/subscription';
@@ -319,8 +319,6 @@ export class AddNewPlanComponent implements OnInit {
     this.itrService.putMethod(param, this.userSubscription).subscribe((response: any) => {
       console.log('Subscription Updated Successfully:', response);
       this.utilsService.showSnackBar('Subscription updated successfully!');
-      let userInfo = this.userSubscription.userId + '-' + this.userSubscription.userName;
-      this.utilsService.matomoCall('Create Subscription', '/pages/subscription/sub', ['trackEvent', 'Update Subscription', 'Add', userInfo], environment.matomoScriptId)
       if (value === 'CLEAR_PLAN') {
         this.setFinalPricing();
       } else if (value === 'INVOICE') {

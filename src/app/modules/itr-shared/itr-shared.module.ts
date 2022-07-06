@@ -6,12 +6,14 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { ShimmerModule } from '@sreyaj/ng-shimmer';
 import { MaterialModule } from '../shared/material.module';
 import { BankDialogComponent } from './dialogs/bank-dialog/bank-dialog.component';
+import { NoAccountCasesComponent } from './dialogs/no-account-cases/no-account-cases.component';
 
 
 
 @NgModule({
     declarations: [
         BankDialogComponent,
+        NoAccountCasesComponent
         // UpperCaseDirective
     ],
     imports: [
@@ -25,10 +27,11 @@ import { BankDialogComponent } from './dialogs/bank-dialog/bank-dialog.component
         CommonModule,
         MaterialModule,
         ShimmerModule,
-        BankDialogComponent
+        BankDialogComponent,
+        NoAccountCasesComponent
     ],
     providers: [],
-    entryComponents: [BankDialogComponent]
+    entryComponents: [BankDialogComponent, NoAccountCasesComponent]
 })
 export class ItrSharedModule {
     static forRoot(): ModuleWithProviders<ItrSharedModule> {

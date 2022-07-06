@@ -37,6 +37,8 @@ export class AddClientComponent implements OnInit, OnDestroy {
   maxDate = new Date();
   @Input() addClientData: any;
   headers: any;
+  selectedOtpOption = "A";
+
   constructor(private fb: FormBuilder,
     public datePipe: DatePipe,
     private itrMsService: ItrMsService,
@@ -67,7 +69,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
           "serviceName": "EriAddClientService",
           "pan": this.addClientForm.controls['panNumber'].value,
           "dateOfBirth": this.datePipe.transform(this.addClientForm.controls['dateOfBirth'].value, 'yyyy-MM-dd'),
-          "otpSourceFlag": "E"
+          "otpSourceFlag": this.selectedOtpOption
         }
         let headerObj = {
           'panNumber': this.addClientForm.controls['panNumber'].value,
@@ -128,7 +130,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
         "serviceName": "EriValidateClientService",
         "pan": this.addClientForm.controls['panNumber'].value,
         "otp": this.addClientForm.controls['otp'].value,
-        "otpSourceFlag": "E"
+        "otpSourceFlag": this.selectedOtpOption
       }
       let headerObj = {
         'panNumber': this.addClientForm.controls['panNumber'].value,
