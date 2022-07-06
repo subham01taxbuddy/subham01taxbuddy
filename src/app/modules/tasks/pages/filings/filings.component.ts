@@ -94,15 +94,17 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   myItrsList(fy: String, pageNo: any, filingTeamMemberId: number) {
     this.loading = true;
     return new Promise((resolve, reject) => {
-      let param = `/sme/${filingTeamMemberId}/itr-list?page=${pageNo}&size=50&financialYear=${fy}` // OTH_FILTER panNumber,assessmentYearmobileNumber
-      this.userMsService.getMethod(param).subscribe((res: any) => {
+      let param = `/${filingTeamMemberId}/itr-list?page=${pageNo}&size=50&financialYear=${fy}&eFillingCompleted=true` // OTH_FILTER panNumber,assessmentYearmobileNumber
+      this.itrMsService.getMethod(param).subscribe((res: any) => {
         console.log('filingTeamMemberId: ', res);
         // TODO Need to update the api here to get the proper data like user management
         if (res.success && res.data?.content instanceof Array) {
-          this.itrDataList = res.data['content'];;
+          this.itrDataList = res.data['content'];
           this.config.totalItems = res.data.totalElements;
           this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData(res.data['content']));
         } else {
+          this.itrDataList = [];
+          this.config.totalItems = 0;
           this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
         }
         this.loading = false;
@@ -139,7 +141,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         eFillingCompleted: data[i].eFillingCompleted,
         eFillingDate: data[i].eFillingDate,
         nextYearTpa: data[i].nextYearTpa,
-        isReviewGiven: data[i].reviewGiven,
+        // isReviewGiven: data[i].reviewGiven,
         isEverified: data[i].isEverified,
         isRevised: data[i].isRevised,
         assessmentYear: data[i].assessmentYear,
@@ -404,19 +406,19 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           }
         },
       },
-      {
-        headerName: "Review",
-        field: "isReviewGiven",
-        width: 50,
-        pinned: 'right',
-        cellRenderer: params => {
-          return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
-        },
-        cellStyle: params => {
-          return (params.data.isReviewGiven) ? { 'pointer-events': 'none', opacity: '0.4' }
-            : '';
-        }
-      },
+      // {
+      //   headerName: "Review",
+      //   field: "isReviewGiven",
+      //   width: 50,
+      //   pinned: 'right',
+      //   cellRenderer: params => {
+      //     return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
+      //   },
+      //   cellStyle: params => {
+      //     return (params.data.isReviewGiven) ? { 'pointer-events': 'none', opacity: '0.4' }
+      //       : '';
+      //   }
+      // },
       {
         headerName: 'Update Status',
         editable: false,
@@ -491,10 +493,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
           this.showUserDocuments(params.data);
           break;
         }
-        case 'isReviewGiven': {
-          this.updateReviewStatus(params.data);
-          break;
-        }
+        // case 'isReviewGiven': {
+        //   this.updateReviewStatus(params.data);
+        //   break;
+        // }
         case 'call': {
           this.startCalling(params.data)
           break;
@@ -620,17 +622,17 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.router.navigate(['/pages/itr-filing/user-docs/' + data.userId]);
   }
 
-  updateReviewStatus(data) {
-    const param = `/update-itr-userProfile?itrId=${data.itrId}&userId=${data.userId}&isReviewGiven=true`;
-    this.itrMsService.putMethod(param, {}).subscribe(result => {
-      console.log(result);
-      this.utilsService.showSnackBar('Marked as review given');
-      this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
-    }, error => {
-      this.utilsService.showSnackBar('Please try again, failed to mark as review given');
-      this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
-    })
-  }
+  // updateReviewStatus(data) {
+  //   const param = `/update-itr-userProfile?itrId=${data.itrId}&userId=${data.userId}&isReviewGiven=true`;
+  //   this.itrMsService.putMethod(param, {}).subscribe(result => {
+  //     console.log(result);
+  //     this.utilsService.showSnackBar('Marked as review given');
+  //     this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
+  //   }, error => {
+  //     this.utilsService.showSnackBar('Please try again, failed to mark as review given');
+  //     this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
+  //   })
+  // }
 
   async startCalling(user) {
     const agentNumber = await this.utilsService.getMyCallingNumber();
