@@ -16,6 +16,8 @@ import { ReAssignDialogComponent } from './components/re-assign-dialog/re-assign
 import { FilingsComponent } from './pages/filings/filings.component';
 import { MoreOptionsDialogComponent } from './components/more-options-dialog/more-options-dialog.component';
 import { SignUpExceptionsComponent } from './pages/sign-up-exceptions/sign-up-exceptions.component';
+import { ExceptionsComponent } from './pages/exceptions/exceptions.component';
+import { EriExceptionsComponent } from './pages/exceptions/eri-exceptions/eri-exceptions.component';
 
 @NgModule({
     imports: [
@@ -36,7 +38,9 @@ import { SignUpExceptionsComponent } from './pages/sign-up-exceptions/sign-up-ex
         ReAssignDialogComponent,
         FilingsComponent,
         MoreOptionsDialogComponent,
-        SignUpExceptionsComponent
+        SignUpExceptionsComponent,
+        ExceptionsComponent,
+        EriExceptionsComponent
     ],
     entryComponents: [
         ReAssignDialogComponent,

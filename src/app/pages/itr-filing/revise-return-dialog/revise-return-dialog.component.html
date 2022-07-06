@@ -20,14 +20,15 @@
 
 <label style="font-size: 18px;
 font-weight: bold;">Revise return for: {{this.data.fName +' ' +this.data.lName}}</label>
-<button mat-dialog-close tabindex="-1" class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+<button mat-dialog-close tabindex="-1" class="tbd-btn-close" (click)="this.dialogRef.close()"><i class="fa fa-times"
+        aria-hidden="true"></i></button>
 
 <div class="card__row">
     <div class="card__col-xs-12 card__col-sm-12">
         <p style="font-size: 16px;"> Are you sure want to file revise return?</p>
     </div>
     <div class="pull-right">
-        <a class="tbd-btn" mat-dialog-close>No</a>
+        <a class="tbd-btn" mat-dialog-close (click)="this.dialogRef.close()">No</a>
         <button class="tbd-btn-secondary" (click)="startReviseReturn()">Yes </button>
     </div>
 </div>
