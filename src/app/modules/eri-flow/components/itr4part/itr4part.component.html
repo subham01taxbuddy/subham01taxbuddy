@@ -6,12 +6,14 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Nature of business</mat-label> <!-- type="text"-->
                     <input type="text" placeholder="Nature of business" aria-label="Assignee" matInput
-                        formControlName="natureOfBusiness44AD" [matAutocomplete]="auto1" (blur)="getCodeFromLabelOnBlur()">
+                        formControlName="natureOfBusiness44AD" [matAutocomplete]="auto1"
+                        (blur)="getCodeFromLabelOnBlur()">
                     <!-- <i class="material-icons align-arrow-right">arrow_drop_down</i>-->
                     <mat-error *ngIf="natureOfBusinessForm.controls['natureOfBusiness44AD'].invalid">
                         Please select value from dropdown only.
                     </mat-error>
-                    <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn">    <!-- (optionSelected)="getCodeFromLabelOnBlur()"-->
+                    <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn">
+                        <!-- (optionSelected)="getCodeFromLabelOnBlur()"-->
                         <mat-option *ngFor="let option of filteredOptions | async" [value]="option.label">
                             {{option.label}}-{{option.code}}
                         </mat-option>
@@ -21,7 +23,8 @@
             <div class="card__col-lg-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Trade Name</mat-label>
-                    <input matInput placeholder="Trade Name" formControlName="tradeName44AD" (blur)="getCodeFromLabelOnBlur()" maxlength="75" autocomplete="off">
+                    <input matInput placeholder="Trade Name" formControlName="tradeName44AD"
+                        (blur)="getCodeFromLabelOnBlur()" maxlength="75" autocomplete="off">
                     <!-- <mat-error *ngIf="natureOfBusinessForm.controls['tradeName44AD.hasError('pattern')">
                         Name should contain character only
                     </mat-error> -->
@@ -39,26 +42,32 @@
                 <td><b>Gross Receipts-</b> Recived in Bank</td>
                 <td><input type="number"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        maxlength="8"
-                        formControlName="recieptRecievedInBank"
-                        (blur)="calBankPresumptiveIncome(natureOfBusinessForm.controls['recieptRecievedInBank'].value)"></td> <!-- oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        maxlength="8" formControlName="recieptRecievedInBank"
+                        (blur)="calBankPresumptiveIncome(natureOfBusinessForm.controls['recieptRecievedInBank'].value)">
+                </td>
+                <!-- oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             onkeypress="return event.charCode >= 48 && event.charCode <= 57"-->
-                       
+
                 <td></td>
             </tr>
             <tr>
                 <td>Presumptive Income at 6%</td>
                 <td></td>
                 <td>
-                    <input type="number" formControlName="presumptiveIncomeRecieveBank" (blur)="calculateTotalAmnt()" maxlength="8">
+                    <input type="number" formControlName="presumptiveIncomeRecieveBank" (blur)="calculateTotalAmnt()"
+                        maxlength="8">
 
-                    <div style="color: red;"  *ngIf="natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].hasError('min')">
-                        Minimum value must be {{natureOfBusinessForm.controls['minimumPresumptiveIncomeRecivedInBank'].value}}
+                    <div style="color: red;"
+                        *ngIf="natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].hasError('min')">
+                        Minimum value must be
+                        {{natureOfBusinessForm.controls['minimumPresumptiveIncomeRecivedInBank'].value}}
                     </div>
-                    <div style="color: red;"  *ngIf="natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].hasError('max')">
+                    <div style="color: red;"
+                        *ngIf="natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].hasError('max')">
                         Amount can not exceed receipt.
                     </div>
-                </td>  <!--presumptiveIncomeRecievedCash-->
+                </td>
+                <!--presumptiveIncomeRecievedCash-->
             </tr>
             <tr>
                 <td><b>Gross Receipts-</b> Recived in Cash</td>
@@ -74,12 +83,16 @@
                 <td>Presumptive Income at 8%</td>
                 <td></td>
                 <td>
-                    <input type="number" formControlName="presumptiveIncomeRecievedCash" (blur)="calculateTotalAmnt()" maxlength="8">
+                    <input type="number" formControlName="presumptiveIncomeRecievedCash" (blur)="calculateTotalAmnt()"
+                        maxlength="8">
 
-                    <div style="color: red;"  *ngIf="natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].hasError('min')">
-                        Minimum value must be {{natureOfBusinessForm.controls['minimumPresumptiveIncomeCashInBank'].value}}
+                    <div style="color: red;"
+                        *ngIf="natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].hasError('min')">
+                        Minimum value must be
+                        {{natureOfBusinessForm.controls['minimumPresumptiveIncomeCashInBank'].value}}
                     </div>
-                    <div style="color: red;"  *ngIf="natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].hasError('max')">
+                    <div style="color: red;"
+                        *ngIf="natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].hasError('max')">
                         Amount can not exceed receipt.
                     </div>
                 </td>
@@ -100,12 +113,14 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Nature of business</mat-label> <!-- type="text"-->
                     <input placeholder="Nature of business" aria-label="Assignee" matInput
-                        formControlName="natureOfBusiness44ADA" [matAutocomplete]="auto2" (blur)="getCodeFromLabelOnBlur44ADA()">
+                        formControlName="natureOfBusiness44ADA" [matAutocomplete]="auto2"
+                        (blur)="getCodeFromLabelOnBlur44ADA()">
                     <!-- <i class="material-icons align-arrow-right">arrow_drop_down</i>-->
                     <mat-error *ngIf="natureOfBusinessForm.controls['natureOfBusiness44ADA'].invalid">
                         Please select value from dropdown only.
                     </mat-error>
-                    <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">   <!--(optionSelected)="getCodeFromLabelOnBlur()"-->
+                    <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayFn">
+                        <!--(optionSelected)="getCodeFromLabelOnBlur()"-->
                         <mat-option *ngFor="let option of filteredOptions44ADA | async" [value]="option.label">
                             {{option.label}}-{{option.code}}
                         </mat-option>
@@ -115,7 +130,8 @@
             <div class="card__col-lg-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Trade Name</mat-label>
-                    <input matInput placeholder="Trade Name" disabled formControlName="tradeName44ADA" (blur)="getCodeFromLabelOnBlur44ADA()" maxlength="75" autocomplete="off">
+                    <input matInput placeholder="Trade Name" disabled formControlName="tradeName44ADA"
+                        (blur)="getCodeFromLabelOnBlur44ADA()" maxlength="75" autocomplete="off">
                     <!-- <mat-error *ngIf="natureOfBusinessForm.controls['tradeName44ADA.hasError('pattern')">
                         Name should contain character only
                     </mat-error> -->
@@ -131,11 +147,12 @@
             </tr>
             <tr>
                 <td><b>Gross Receipts</b></td>
-                <td>  <input
-                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
-                    formControlName="grossReciept"
-                    (blur)="calprofessionPresumptiveIncome(natureOfBusinessForm.controls['grossReciept'].value)"></td>
+                <td> <input
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8"
+                        formControlName="grossReciept"
+                        (blur)="calprofessionPresumptiveIncome(natureOfBusinessForm.controls['grossReciept'].value)">
+                </td>
                 <td></td>
             </tr>
             <tr>
@@ -143,10 +160,10 @@
                 <td></td>
                 <td>
                     <input type="number" formControlName="presumptiveIncome" maxlength="8">
-                    <div style="color: red;"  *ngIf="natureOfBusinessForm.controls['presumptiveIncome'].hasError('min')">
+                    <div style="color: red;" *ngIf="natureOfBusinessForm.controls['presumptiveIncome'].hasError('min')">
                         Minimum value must be {{natureOfBusinessForm.controls['minimumPresumptiveIncome'].value}}
                     </div>
-                    <div style="color: red;"  *ngIf="natureOfBusinessForm.controls['presumptiveIncome'].hasError('max')">
+                    <div style="color: red;" *ngIf="natureOfBusinessForm.controls['presumptiveIncome'].hasError('max')">
                         Amount can not exceed receipt.
                     </div>
                 </td>
@@ -154,7 +171,7 @@
         </table>
 
     </mat-card><br>
-    
+
     <mat-card>
         <p class="subLabel">Financial Information as on 31/03/2021</p><br>
         <!-- <span style="font-size: 15px;"><b>Liabilities:</b></span>
@@ -309,7 +326,7 @@
             
         </div><br><br> -->
 
-     
+
         <div class="card__row">
             <div class="card__col-lg-6">
                 <span style="font-size: 15px;"><b>Liabilities:</b></span><br>
@@ -324,73 +341,69 @@
                         <td>1</td>
                         <td>Partner's/Members own capitals</td>
                         <td>
-                             <input  placeholder="Pertner's/Member's capital or Own capital" formControlName="membersOwnCapital"
-                               maxlength="8" autocomplete="off"
-                                type="number" (blur)="calTotalLiabilities()"
+                            <input placeholder="Pertner's/Member's capital or Own capital"
+                                formControlName="membersOwnCapital" maxlength="8" autocomplete="off" type="number"
+                                (blur)="calTotalLiabilities()"
                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
                         <td>2</td>
-                        <td>Secured Loans  </td>
+                        <td>Secured Loans </td>
                         <td>
-                            <input placeholder="Secured loan" formControlName="securedLoans"
-                             maxlength="8" autocomplete="off"
-                             type="number" (blur)="calTotalLiabilities()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Secured loan" formControlName="securedLoans" maxlength="8"
+                                autocomplete="off" type="number" (blur)="calTotalLiabilities()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
                         <td>3</td>
                         <td>Unsecured Loans</td>
                         <td>
-                            <input placeholder="Unsecured loan" formControlName="unSecuredLoans"
-                             maxlength="8" autocomplete="off"
-                             type="number" (blur)="calTotalLiabilities()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Unsecured loan" formControlName="unSecuredLoans" maxlength="8"
+                                autocomplete="off" type="number" (blur)="calTotalLiabilities()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
                         <td>4</td>
                         <td>Advances</td>
                         <td>
-                            <input placeholder="Advances" formControlName="advances"
-                             maxlength="8" autocomplete="off"
-                             type="number" (blur)="calTotalLiabilities()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Advances" formControlName="advances" maxlength="8" autocomplete="off"
+                                type="number" (blur)="calTotalLiabilities()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
                         <td>5</td>
                         <td>Sundry creditors</td>
                         <td>
-                            <input  placeholder="Sundry creditors" formControlName="sundryCreditorsAmount"
-                             maxlength="8" autocomplete="off"
-                             type="number"  (blur)="calTotalLiabilities()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Sundry creditors" formControlName="sundryCreditorsAmount" maxlength="8"
+                                autocomplete="off" type="number" (blur)="calTotalLiabilities()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
                         <td>6</td>
                         <td>Other Liabilities</td>
                         <td>
-                            <input placeholder="Other liabilities" formControlName="otherLiabilities"
-                             maxlength="8" autocomplete="off"
-                             type="number" (blur)="calTotalLiabilities()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Other liabilities" formControlName="otherLiabilities" maxlength="8"
+                                autocomplete="off" type="number" (blur)="calTotalLiabilities()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
                         <td></td>
                         <td><b>Total Liabilities</b></td>
                         <td>
-                            <input placeholder="Total liabilities" readonly formControlName="totalCapitalLiabilities" autocomplete="off">
+                            <input placeholder="Total liabilities" readonly formControlName="totalCapitalLiabilities"
+                                autocomplete="off">
                         </td>
                     </tr>
                 </table>
@@ -408,88 +421,80 @@
                         <td>1</td>
                         <td>Fixed Assets</td>
                         <td>
-                            <input placeholder="Fixed assets" formControlName="fixedAssets"
-                             maxlength="8" autocomplete="off"
-                             type="number" (blur)="calTotalAssets()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Fixed assets" formControlName="fixedAssets" maxlength="8"
+                                autocomplete="off" type="number" (blur)="calTotalAssets()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
                         <td>2</td>
                         <td>Inventories</td>
                         <td>
-                            <input placeholder="Inventories" formControlName="inventories"
-                             maxlength="8" autocomplete="off"
-                             type="number" (blur)="calTotalAssets()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Inventories" formControlName="inventories" maxlength="8"
+                                autocomplete="off" type="number" (blur)="calTotalAssets()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
                         <td>3</td>
                         <td>Sundry debtors</td>
                         <td>
-                            <input placeholder="Sundry debtors" formControlName="sundryDebtorsAmount"
-                             maxlength="8" autocomplete="off"
-                             type="number" (blur)="calTotalAssets()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Sundry debtors" formControlName="sundryDebtorsAmount" maxlength="8"
+                                autocomplete="off" type="number" (blur)="calTotalAssets()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
                         <td>4</td>
                         <td>Balance with Bank</td>
                         <td>
-                            <input placeholder="Balance with Bank" formControlName="balanceWithBank"
-                             maxlength="8" autocomplete="off"
-                             type="number" (blur)="calTotalAssets()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Balance with Bank" formControlName="balanceWithBank" maxlength="8"
+                                autocomplete="off" type="number" (blur)="calTotalAssets()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
                         <td>5</td>
                         <td>Cash in Hand</td>
                         <td>
-                            <input placeholder="Cash in hand" formControlName="cashInHand"
-                             maxlength="8" autocomplete="off"
-                             type="number" (blur)="calTotalAssets()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Cash in hand" formControlName="cashInHand" maxlength="8"
+                                autocomplete="off" type="number" (blur)="calTotalAssets()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
                         <td>6</td>
                         <td>Loans and Advance</td>
                         <td>
-                            <input placeholder="Loans and advance" formControlName="loanAndAdvances"
-                             maxlength="8" autocomplete="off"
-                             type="number" (blur)="calTotalAssets()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Loans and advance" formControlName="loanAndAdvances" maxlength="8"
+                                autocomplete="off" type="number" (blur)="calTotalAssets()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
                         <td>7</td>
                         <td>Other assets</td>
                         <td>
-                            <input placeholder="Other assets" formControlName="otherAssets"
-                             maxlength="8" autocomplete="off"
-                             type="number" (blur)="calTotalAssets()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Other assets" formControlName="otherAssets" maxlength="8"
+                                autocomplete="off" type="number" (blur)="calTotalAssets()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr *ngIf="itrType === '3'">
                         <td>8</td>
-                        <td>Invetment</td>
+                        <td>Investment</td>
                         <td>
-                            <input placeholder="Invetment" formControlName="investment"
-                             maxlength="8" autocomplete="off"
-                             type="number" (blur)="calTotalAssets()"
-                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                             onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            <input placeholder="Investment" formControlName="investment" maxlength="8"
+                                autocomplete="off" type="number" (blur)="calTotalAssets()"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         </td>
                     </tr>
                     <tr>
