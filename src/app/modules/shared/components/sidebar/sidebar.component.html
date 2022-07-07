@@ -9,10 +9,25 @@
             <i class="fa fa-tasks" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">My Tasks</span>
         </a>
+        <a class="sidebar__item" routerLink="/pages/subscription" routerLinkActive="sidebar__item_active"
+            (click)="closeSideBar()">
+            <i class="fa fa-rocket" style="font-size: 20px;" aria-hidden="true"></i>
+            <span class="sidebar__name">Subscription & Invoice</span>
+        </a>
         <a class="sidebar__item" routerLink="/sme-management" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_ITR_SL','ROLE_GST_SL','ROLE_NOTICE_SL'])">
             <i class="fa fa-id-badge" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">SME Management</span>
+        </a>
+        <a class="sidebar__item" routerLink="/pages/user-management" routerLinkActive="sidebar__item_active"
+            (click)="closeSideBar()">
+            <i class="fa fa-user" style="font-size: 20px;" aria-hidden="true"></i>
+            <span class="sidebar__name">User Management</span>
+        </a>
+        <a class="sidebar__item" routerLink="/pages/reports" routerLinkActive="sidebar__item_active"
+            (click)="closeSideBar()">
+            <i class="fa fa-bar-chart" style="font-size: 20px;" aria-hidden="true"></i>
+            <span class="sidebar__name"> Reports</span>
         </a>
         <a class="sidebar__item" routerLink="/pages/tax-summary" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()">
@@ -24,16 +39,8 @@
             <i class="fa fa-life-ring" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name"> Engagement</span>
         </a>
-        <a class="sidebar__item" routerLink="/pages/reports" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()">
-            <i class="fa fa-bar-chart" style="font-size: 20px;" aria-hidden="true"></i>
-            <span class="sidebar__name"> Reports</span>
-        </a>
-        <a class="sidebar__item" routerLink="/pages/subscription" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()">
-            <i class="fa fa-rocket" style="font-size: 20px;" aria-hidden="true"></i>
-            <span class="sidebar__name">Subscription & Invoice</span>
-        </a>
+
+
         <!--  <a class="sidebar__item" routerLink="/pages/itr-filing" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()">
             <i class="fa fa-money" style="font-size: 20px;" aria-hidden="true"></i>
@@ -44,11 +51,7 @@
             <i class="fa fa-whatsapp" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Whats app Chat Corner</span>
         </a>
-        <a class="sidebar__item" routerLink="/pages/user-management" routerLinkActive="sidebar__item_active"
-            (click)="closeSideBar()">
-            <i class="fa fa-user" style="font-size: 20px;" aria-hidden="true"></i>
-            <span class="sidebar__name">User Management</span>
-        </a>
+
         <a class="sidebar__item" routerLink="/pages/master" routerLinkActive="sidebar__item_active"
             (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN', 'ROLE_ITR_SL','ROLE_GST_SL','ROLE_NOTICE_SL'])">
             <i class="fa fa-database" style="font-size: 20px;" aria-hidden="true"></i>
