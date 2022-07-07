@@ -593,6 +593,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         return;
       }
       this.setJsonData(itr3Data);
+      this.setNoAccountCasesData(itr3Data);
       this.itr3JSONBind(itr3Data)
     }
     else if (itrData.hasOwnProperty('ITR2')) {
@@ -612,7 +613,37 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       this._toastMessageService.alert('error', 'This is not a ITR 2 or 3 JSON')
     }
   }
+  setNoAccountCasesData(itrData) {
+    if (itrData.hasOwnProperty('PARTA_PL') && itrData.PARTA_PL.hasOwnProperty('NoBooksOfAccPL')) {
+      this.itr_2_Summary.noAccountCaseB = [{
+        grossReceipt: itrData.PARTA_PL.NoBooksOfAccPL?.GrossReceipt,
+        grossReceiptAccPayeeOrBankMode: itrData.PARTA_PL.NoBooksOfAccPL?.GrsRcptAccPayeeOrBankMode,
+        grossReceiptAnyOtherMode: itrData.PARTA_PL.NoBooksOfAccPL?.GrsRcptOtherMode,
+        grossProfit: itrData.PARTA_PL.NoBooksOfAccPL?.GrossProfit,
+        expenses: itrData.PARTA_PL.NoBooksOfAccPL?.Expenses,
+        netProfit: itrData.PARTA_PL.NoBooksOfAccPL?.NetProfit
+      }];
 
+      this.itr_2_Summary.noAccountCaseC = [{
+        grossReceiptProfession: itrData.PARTA_PL.NoBooksOfAccPL?.GrossReceiptPrf,
+        grossReceiptAccPayeeOrBankModeProfession: itrData.PARTA_PL.NoBooksOfAccPL?.GrsRcptAccPayeeOrBankModePrf,
+        grossReceiptAnyOtherModeProfession: itrData.PARTA_PL.NoBooksOfAccPL?.GrsRcptOtherModePrf,
+        grossProfitProfession: itrData.PARTA_PL.NoBooksOfAccPL?.GrossProfitPrf,
+        expensesProfession: itrData.PARTA_PL.NoBooksOfAccPL?.ExpensesPrf,
+        netProfitProfession: itrData.PARTA_PL.NoBooksOfAccPL?.NetProfitPrf,
+        totalBusinessProfession: itrData.PARTA_PL.NoBooksOfAccPL?.TotBusinessProfession
+      }]
+    }
+
+    if (itrData.hasOwnProperty('PARTA_BS') && itrData.PARTA_BS.hasOwnProperty('NoBooksOfAccBS')) {
+      this.itr_2_Summary.noAccountCaseA = [{
+        totalSundryDebtorsAmount: itrData.PARTA_BS.NoBooksOfAccBS?.TotSundryDbtAmt,
+        totalSundryCreditorsAmount: itrData.PARTA_BS.NoBooksOfAccBS?.TotSundryCrdAmt,
+        totalStockInTradeAmount: itrData.PARTA_BS.NoBooksOfAccBS?.TotStkInTradAmt,
+        cashBalanceAmount: itrData.PARTA_BS.NoBooksOfAccBS?.CashBalAmt
+      }];
+    }
+  }
   setJsonData(itrData) {
     console.log('JSON itr Data: ', itrData)
     // this.personalInfoForm.reset();
