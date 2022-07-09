@@ -18,6 +18,7 @@ import { MoreOptionsDialogComponent } from './components/more-options-dialog/mor
 import { SignUpExceptionsComponent } from './pages/sign-up-exceptions/sign-up-exceptions.component';
 import { ExceptionsComponent } from './pages/exceptions/exceptions.component';
 import { EriExceptionsComponent } from './pages/exceptions/eri-exceptions/eri-exceptions.component';
+import { EVerificationDialogComponent } from './components/e-verification-dialog/e-verification-dialog.component';
 
 @NgModule({
     imports: [
@@ -40,11 +41,13 @@ import { EriExceptionsComponent } from './pages/exceptions/eri-exceptions/eri-ex
         MoreOptionsDialogComponent,
         SignUpExceptionsComponent,
         ExceptionsComponent,
-        EriExceptionsComponent
+        EriExceptionsComponent,
+        EVerificationDialogComponent
     ],
     entryComponents: [
         ReAssignDialogComponent,
-        MoreOptionsDialogComponent
+        MoreOptionsDialogComponent,
+        EVerificationDialogComponent
     ]
 
 })
