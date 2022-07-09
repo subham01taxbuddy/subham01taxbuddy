@@ -15,6 +15,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { FilingStatusDialogComponent } from 'src/app/pages/itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ReviseReturnDialogComponent } from 'src/app/pages/itr-filing/revise-return-dialog/revise-return-dialog.component';
+import { EVerificationDialogComponent } from 'src/app/modules/tasks/components/e-verification-dialog/e-verification-dialog.component';
 
 @Component({
   selector: 'app-filings',
@@ -124,7 +125,6 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   }
 
   createOnSalaryRowData(data) {
-    console.log('data: -> ', data)
     const newData = [];
     for (let i = 0; i < data.length; i++) {
       newData.push({
@@ -145,6 +145,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         isEverified: data[i].isEverified,
         isRevised: data[i].isRevised,
         assessmentYear: data[i].assessmentYear,
+        ackNumber: data[i].ackNumber,
       });
     }
     return newData;
@@ -577,31 +578,50 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   }
 
   getAcknowledgeDetail(data) {
-    this.loading = true;
-    var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0]
-    workingItr['everifiedStatus'] = 'Successfully e-Verified';
-    workingItr['isEverified'] = true;
-    const param = '/itr/' + workingItr.userId + '/' + workingItr.itrId + '/' + workingItr.assessmentYear;
-    this.itrMsService.putMethod(param, workingItr).subscribe((result: any) => {
-      this.loading = false;
-      this.utilsService.showSnackBar('E-Verification status updated successfully');
-      this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
-    }, error => {
-      this.loading = false;
-      this.utilsService.showSnackBar('Failed to update E-Verification status');
-    });
-    return;
-    // const param = `${ApiEndpoints.itrMs.itrVerifyStatus}/${data.itrId}`;
-    this.itrMsService.putMethod(param).subscribe((res: any) => {
-      this.utilsService.showSnackBar(res.status)
-      this.loading = false;
-      setTimeout(() => {
-        this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
-      }, 5000);
-
-    }, error => {
-      this.loading = false;
+    console.log(data);
+    let disposable = this.dialog.open(EVerificationDialogComponent, {
+      data: {
+        pan: data.panNumber,
+        Ay: data.assessmentYear.substring(0, 4),
+        ackNum: data.ackNumber,
+        formCode: data.itrType,
+        name: data.fName + ' ' + data.lName,
+        userId: data.userId,
+        assessmentYear: data.assessmentYear,
+      }
     })
+    disposable.afterClosed().subscribe(result => {
+      console.log('New Bank Dialog', result);
+      if (result?.data) {
+        this.utilsService.showSnackBar('E-Verification status updated successfully');
+        this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
+      }
+    });
+    // return
+    // var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0]
+    // workingItr['everifiedStatus'] = 'Successfully e-Verified';
+    // workingItr['isEverified'] = true;
+    // const param = '/itr/' + workingItr.userId + '/' + workingItr.itrId + '/' + workingItr.assessmentYear;
+    // this.itrMsService.putMethod(param, workingItr).subscribe((result: any) => {
+    //   this.loading = false;
+    //   this.utilsService.showSnackBar('E-Verification status updated successfully');
+    //   this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
+    // }, error => {
+    //   this.loading = false;
+    //   this.utilsService.showSnackBar('Failed to update E-Verification status');
+    // });
+    // return;
+    // // const param = `${ApiEndpoints.itrMs.itrVerifyStatus}/${data.itrId}`;
+    // this.itrMsService.putMethod(param).subscribe((res: any) => {
+    //   this.utilsService.showSnackBar(res.status)
+    //   this.loading = false;
+    //   setTimeout(() => {
+    //     this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
+    //   }, 5000);
+
+    // }, error => {
+    //   this.loading = false;
+    // })
   }
   interestedForNextYearTpa(data) {
     this.loading = true;
