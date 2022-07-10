@@ -148,7 +148,7 @@ export class SmewiseReportComponent implements OnInit {
       let tlData = {
         srNo: i + 1,
         smeName: tlReport[i].smeName + ' - ' + tlReport[i].superLeadName,
-        status: tlReport[i].status,
+        assignmentStatus: tlReport[i].assignmentStatus,
         filingCount: tlReport[i].filingCount
       }
       data.push(tlData);
@@ -178,10 +178,11 @@ export class SmewiseReportComponent implements OnInit {
       },
       {
         headerName: 'Status',
-        field: 'status',
+        field: 'assignmentStatus',
         width: 80,
         suppressMovable: true,
         sortable: true,
+        filter: "agTextColumnFilter",
         cellStyle: { textAlign: 'center' },
       },
       {
@@ -445,7 +446,6 @@ export class SmewiseReportComponent implements OnInit {
   }
 
   superLeadCreateRowData(smeReport) {
-    debugger
     var data = [];
     var dataToReturn = [];
     let total = 0;
@@ -465,7 +465,6 @@ export class SmewiseReportComponent implements OnInit {
       data.push(smeData);
     }
     this.totalCount = total;
-    debugger
     let srNo = 0;
     for (let i = 0; i < data.length; i++) {
       let a = dataToReturn.filter((item: any) => item.superLeadName === data[i].superLeadName);
@@ -473,7 +472,6 @@ export class SmewiseReportComponent implements OnInit {
         const aa = data.filter((item: any) => item.superLeadName === data[i].superLeadName);
         let index = 0;
         aa.forEach((item: any) => {
-          debugger
           for (let j = 0; j < aa.length; j++) {
             item.superLeadTotal = item.superLeadTotal + aa[j].filingCount
           }
