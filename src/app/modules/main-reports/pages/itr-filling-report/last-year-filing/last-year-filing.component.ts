@@ -41,7 +41,7 @@ export class LastYearFilingComponent implements OnInit {
   }
   getReport() {
     this.loading = true;
-    const param = `/itr-report-by-financialYear?financialYear=2019-2020`;
+    const param = `/itr-report-by-financialYear?financialYear=2020-2021`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       console.log('SME REPORT: ', res);
       this.loading = false;
@@ -164,7 +164,7 @@ export class LastYearFilingComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call." 
             style="border: none;
             background: transparent; font-size: 16px; cursor:pointer">
@@ -180,7 +180,7 @@ export class LastYearFilingComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
@@ -188,7 +188,7 @@ export class LastYearFilingComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -202,7 +202,7 @@ export class LastYearFilingComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
           style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
@@ -210,7 +210,7 @@ export class LastYearFilingComponent implements OnInit {
         },
         width: 60,
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -248,7 +248,7 @@ export class LastYearFilingComponent implements OnInit {
     const agentNumber = await this.utilsService.getMyCallingNumber();
     console.log('agent number', agentNumber)
     if (!agentNumber) {
-      this._toastMessageService.alert("error", 'You dont have calling role.')
+      this._toastMessageService.alert("error", 'You don\'t have calling role.')
       return;
     }
     this.loading = true;
@@ -310,7 +310,7 @@ export class LastYearFilingComponent implements OnInit {
   }
 
   downloadReport() {
-    const param = `/download-itr-report-by-financialYear?financialYear=2019-2020`
-    location.href = environment.url + `/itr/download-itr-report-by-financialYear?financialYear=2019-2020`;
+    const param = `/download-itr-report-by-financialYear?financialYear=2020-2021`
+    location.href = environment.url + `/itr/download-itr-report-by-financialYear?financialYear=2020-2021`;
   }
 }
