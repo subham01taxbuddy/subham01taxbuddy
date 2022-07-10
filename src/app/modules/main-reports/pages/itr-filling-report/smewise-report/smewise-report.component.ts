@@ -33,7 +33,7 @@ export class SmewiseReportComponent implements OnInit {
   loading!: boolean;
   maxDate: any = new Date();
   minToDate: any;
-  teamLeadReportGridOption: GridOptions;
+  // teamLeadReportGridOption: GridOptions;
   smeReportGridOption: GridOptions;
   superLeadGridOption: GridOptions;
   totalCount = 0;
@@ -44,20 +44,20 @@ export class SmewiseReportComponent implements OnInit {
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
   ) {
-    this.teamLeadReportGridOption = <GridOptions>{
-      rowData: [],
-      columnDefs: this.teamLeadCreateColumnDef(),
-      suppressDragLeaveHidesColumns: true,
-      enableCellChangeFlash: true,
-      enableCellTextSelection: true,
-      defaultColDef: {
-        resizable: true
-      },
-      suppressRowTransform: true
-    };
+    // this.teamLeadReportGridOption = <GridOptions>{
+    //   rowData: [],
+    //   columnDefs: this.teamLeadCreateColumnDef(),
+    //   suppressDragLeaveHidesColumns: true,
+    //   enableCellChangeFlash: true,
+    //   enableCellTextSelection: true,
+    //   defaultColDef: {
+    //     resizable: true
+    //   },
+    //   suppressRowTransform: true
+    // };
     this.smeReportGridOption = <GridOptions>{
       rowData: [],
-      columnDefs: this.smecreateColumnDef(),
+      columnDefs: this.smeCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: params => {
@@ -66,7 +66,7 @@ export class SmewiseReportComponent implements OnInit {
     };
     this.superLeadGridOption = <GridOptions>{
       rowData: [],
-      columnDefs: this.superLeadcreateColumnDef(),
+      columnDefs: this.superLeadCreateColumnDef(),
       suppressDragLeaveHidesColumns: true,
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
@@ -82,14 +82,14 @@ export class SmewiseReportComponent implements OnInit {
       fromDate: [new Date(), Validators.required],
       toDate: [new Date(), Validators.required]
     });
-    this.getReportsbyDate();
+    this.getReportsByDate();
   }
 
   setToDateValidation(fromDate) {
     this.minToDate = fromDate;
   }
 
-  getReportsbyDate() {
+  getReportsByDate() {
     if (this.dateSearchForm.valid) {
       this.loading = true;
       let fromDate = this.datePipe.transform(this.dateSearchForm.value.fromDate, 'yyyy-MM-dd');
@@ -108,15 +108,15 @@ export class SmewiseReportComponent implements OnInit {
         this.reportsData = res;
         res.sort((a, b) => a.smeName > b.smeName ? 1 : -1);
         this.smeReportGridOption.api?.setRowData(this.smeCreateRowData(res))
-        res.sort((a, b) => a.teamLeadName > b.teamLeadName ? 1 : -1);
-        this.teamLeadReportGridOption.api?.setRowData(this.teamLeadCreateRowData(res));
+        // res.sort((a, b) => a.teamLeadName > b.teamLeadName ? 1 : -1);
+        // this.teamLeadReportGridOption.api?.setRowData(this.teamLeadCreateRowData(res));
         // if (this.superLeadView) {
         this.reportsData.sort((a, b) => a.superLeadName > b.superLeadName ? 1 : -1);
         this.superLeadGridOption.api?.setRowData(this.superLeadCreateRowData(this.reportsData));
         // }
       } else {
         this.smeReportGridOption.api?.setRowData(this.smeCreateRowData([]))
-        this.teamLeadReportGridOption.api?.setRowData(this.teamLeadCreateRowData([]))
+        // this.teamLeadReportGridOption.api?.setRowData(this.teamLeadCreateRowData([]))
         this.superLeadGridOption.api?.setRowData(this.superLeadCreateRowData([]))
       }
     }, error => {
@@ -147,7 +147,8 @@ export class SmewiseReportComponent implements OnInit {
     for (let i = 0; i < tlReport.length; i++) {
       let tlData = {
         srNo: i + 1,
-        smeName: tlReport[i].smeName + ' - ' + tlReport[i].teamLeadName,
+        smeName: tlReport[i].smeName + ' - ' + tlReport[i].superLeadName,
+        status: tlReport[i].status,
         filingCount: tlReport[i].filingCount
       }
       data.push(tlData);
@@ -155,7 +156,7 @@ export class SmewiseReportComponent implements OnInit {
     return data;
   }
 
-  smecreateColumnDef() {
+  smeCreateColumnDef() {
     return [
       {
         headerName: 'Sr. No.',
@@ -164,7 +165,7 @@ export class SmewiseReportComponent implements OnInit {
         suppressMovable: true,
       },
       {
-        headerName: 'SME Name - TL',
+        headerName: 'SME Name - SL',
         field: 'smeName',
         width: 300,
         sortable: true,
@@ -176,8 +177,17 @@ export class SmewiseReportComponent implements OnInit {
         }
       },
       {
+        headerName: 'Status',
+        field: 'status',
+        width: 80,
+        suppressMovable: true,
+        sortable: true,
+        cellStyle: { textAlign: 'center' },
+      },
+      {
         headerName: 'Filing Count',
         field: 'filingCount',
+        filter: "agNumberColumnFilter",
         width: 80,
         pinned: 'right',
         suppressMovable: true,
@@ -188,70 +198,160 @@ export class SmewiseReportComponent implements OnInit {
 
   }
 
-  teamLeadCreateRowData(smeReport) {
-    var data = [];
-    var dataToReturn = [];
-    let total = 0;
+  // teamLeadCreateRowData(smeReport) {
+  //   var data = [];
+  //   var dataToReturn = [];
+  //   let total = 0;
 
-    for (let i = 0; i < smeReport.length; i++) {
-      let smeData = {
-        srNo: i + 1,
-        teamLeadName: smeReport[i].teamLeadName,
-        smeName: smeReport[i].smeName,
-        filingCount: smeReport[i].filingCount,
-        isShow: false,
-        rowSpan: 1,
-        teamLeadTotal: 0
-      }
-      total = total + smeReport[i].filingCount
+  //   for (let i = 0; i < smeReport.length; i++) {
+  //     let smeData = {
+  //       srNo: i + 1,
+  //       teamLeadName: smeReport[i].teamLeadName,
+  //       smeName: smeReport[i].smeName,
+  //       filingCount: smeReport[i].filingCount,
+  //       isShow: false,
+  //       rowSpan: 1,
+  //       teamLeadTotal: 0
+  //     }
+  //     total = total + smeReport[i].filingCount
 
-      data.push(smeData);
-    }
-    this.totalCount = total;
-    for (let i = 0; i < data.length; i++) {
-      let a = dataToReturn.filter((item:any) => item.teamLeadName === data[i].teamLeadName)
-      if (a.length === 0) {
-        const aa = data.filter((item:any) => item.teamLeadName === data[i].teamLeadName);
-        let index = 0;
-        aa.forEach((item:any) => {
-          for (let j = 0; j < aa.length; j++) {
-            item.teamLeadTotal = item.teamLeadTotal + aa[j].filingCount
-          }
-          if (index === 0) {
-            item.isShow = true;
-            item.rowSpan = aa.length;
-            index = index + 1;
-          } else {
-            item.isShow = false;
-            item.rowSpan = 1;
+  //     data.push(smeData);
+  //   }
+  //   this.totalCount = total;
+  //   for (let i = 0; i < data.length; i++) {
+  //     let a = dataToReturn.filter((item: any) => item.teamLeadName === data[i].teamLeadName)
+  //     if (a.length === 0) {
+  //       const aa = data.filter((item: any) => item.teamLeadName === data[i].teamLeadName);
+  //       let index = 0;
+  //       aa.forEach((item: any) => {
+  //         for (let j = 0; j < aa.length; j++) {
+  //           item.teamLeadTotal = item.teamLeadTotal + aa[j].filingCount
+  //         }
+  //         if (index === 0) {
+  //           item.isShow = true;
+  //           item.rowSpan = aa.length;
+  //           index = index + 1;
+  //         } else {
+  //           item.isShow = false;
+  //           item.rowSpan = 1;
 
-          }
-          dataToReturn.push(item);
-        });
-      }
-    }
-    return data;
-  }
-  teamLeadCreateColumnDef() {
+  //         }
+  //         dataToReturn.push(item);
+  //       });
+  //     }
+  //   }
+  //   return data;
+  // }
+  // teamLeadCreateColumnDef() {
+  //   return [
+  //     {
+  //       headerName: 'Sr. No.',
+  //       field: 'srNo',
+  //       width: 50,
+  //       suppressMovable: true,
+  //     },
+  //     {
+  //       headerName: 'Team Lead Name',
+  //       field: 'teamLeadName',
+  //       sortable: true,
+  //       // width: 140,
+  //       suppressMovable: true,
+  //       // cellStyle: { textAlign: 'center' },
+  //       filter: "agTextColumnFilter",
+  //       filterParams: {
+  //         filterOptions: ["contains", "notContains"],
+  //         debounceMs: 0
+  //       },
+  //       cellStyle: {
+  //         textAlign: 'center', display: 'flex',
+  //         'align-items': 'center',
+  //         'justify-content': 'center'
+  //       },
+  //       rowSpan: function (params) {
+  //         if (params.data.isShow) {
+  //           return params.data.rowSpan;
+  //         } else {
+  //           return 1;
+  //         }
+  //       },
+  //       cellClassRules: {
+  //         'cell-span': function (params) {
+  //           return (params.data.rowSpan > 1);
+  //         },
+  //       },
+  //     },
+  //     {
+  //       headerName: 'Total',
+  //       field: 'teamLeadTotal',
+  //       sortable: true,
+  //       width: 80,
+  //       suppressMovable: true,
+  //       // cellStyle: { textAlign: 'center' },
+  //       filter: "agTextColumnFilter",
+  //       cellStyle: {
+  //         textAlign: 'center', display: 'flex',
+  //         'align-items': 'center',
+  //         'justify-content': 'center'
+  //       },
+  //       rowSpan: function (params) {
+  //         if (params.data.isShow) {
+  //           return params.data.rowSpan;
+  //         } else {
+  //           return 1;
+  //         }
+  //       },
+  //       cellClassRules: {
+  //         'cell-span': function (params) {
+  //           return (params.data.rowSpan > 1);
+  //         },
+  //       },
+  //     },
+  //     {
+  //       headerName: 'SME Name',
+  //       field: 'smeName',
+  //       // sortable: true,
+  //       suppressMovable: true,
+  //       // cellStyle: { textAlign: 'center' },
+  //       // filter: "agTextColumnFilter",
+  //       // filterParams: {
+  //       //   filterOptions: ["contains", "notContains"],
+  //       //   debounceMs: 0
+  //       // }
+  //     },
+  //     {
+  //       headerName: 'Filing Count',
+  //       field: 'filingCount',
+  //       pinned: 'right',
+  //       // sortable: true,
+  //       width: 80,
+  //       suppressMovable: true,
+  //       cellStyle: { textAlign: 'center' },
+  //     }
+  //   ]
+
+  // }
+
+  // toggleReportView() {
+  //   this.superLeadView = !this.superLeadView;
+  //   if (this.superLeadView) {
+  //     this.reportsData.sort((a, b) => a.superLeadName > b.superLeadName ? 1 : -1);
+  //     this.superLeadGridOption.api?.setRowData(this.superLeadCreateRowData(this.reportsData));
+  //     console.log('reportsData:', this.reportsData);
+  //   } else {
+  //     this.reportsData.sort((a, b) => a.smeName > b.smeName ? 1 : -1);
+  //     this.smeReportGridOption.api?.setRowData(this.smeCreateRowData(this.reportsData))
+  //     this.reportsData.sort((a, b) => a.teamLeadName > b.teamLeadName ? 1 : -1);
+  //     this.teamLeadReportGridOption.api?.setRowData(this.teamLeadCreateRowData(this.reportsData))
+  //   }
+  // }
+
+  superLeadCreateColumnDef() {
     return [
       {
         headerName: 'Sr. No.',
         field: 'srNo',
         width: 50,
         suppressMovable: true,
-      },
-      {
-        headerName: 'Team Lead Name',
-        field: 'teamLeadName',
-        sortable: true,
-        // width: 140,
-        suppressMovable: true,
-        // cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        },
         cellStyle: {
           textAlign: 'center', display: 'flex',
           'align-items': 'center',
@@ -269,79 +369,6 @@ export class SmewiseReportComponent implements OnInit {
             return (params.data.rowSpan > 1);
           },
         },
-      },
-      {
-        headerName: 'Total',
-        field: 'teamLeadTotal',
-        sortable: true,
-        width: 80,
-        suppressMovable: true,
-        // cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-        rowSpan: function (params) {
-          if (params.data.isShow) {
-            return params.data.rowSpan;
-          } else {
-            return 1;
-          }
-        },
-        cellClassRules: {
-          'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
-          },
-        },
-      },
-      {
-        headerName: 'SME Name',
-        field: 'smeName',
-        // sortable: true,
-        suppressMovable: true,
-        // cellStyle: { textAlign: 'center' },
-        // filter: "agTextColumnFilter",
-        // filterParams: {
-        //   filterOptions: ["contains", "notContains"],
-        //   debounceMs: 0
-        // }
-      },
-      {
-        headerName: 'Filing Count',
-        field: 'filingCount',
-        pinned: 'right',
-        // sortable: true,
-        width: 80,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-      }
-    ]
-
-  }
-
-  toggleReportView() {
-    this.superLeadView = !this.superLeadView;
-    if (this.superLeadView) {
-      this.reportsData.sort((a, b) => a.superLeadName > b.superLeadName ? 1 : -1);
-      this.superLeadGridOption.api?.setRowData(this.superLeadCreateRowData(this.reportsData));
-      console.log('reportsData:', this.reportsData);
-    } else {
-      this.reportsData.sort((a, b) => a.smeName > b.smeName ? 1 : -1);
-      this.smeReportGridOption.api?.setRowData(this.smeCreateRowData(this.reportsData))
-      this.reportsData.sort((a, b) => a.teamLeadName > b.teamLeadName ? 1 : -1);
-      this.teamLeadReportGridOption.api?.setRowData(this.teamLeadCreateRowData(this.reportsData))
-    }
-  }
-
-  superLeadcreateColumnDef() {
-    return [
-      {
-        headerName: 'Sr. No.',
-        field: 'srNo',
-        width: 50,
-        suppressMovable: true,
       },
       {
         headerName: 'Super Lead Name',
@@ -377,10 +404,10 @@ export class SmewiseReportComponent implements OnInit {
         headerName: 'Super Lead Total',
         field: 'superLeadTotal',
         sortable: true,
-        // width: 80,
+        width: 120,
         suppressMovable: true,
         // cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: "agNumberColumnFilter",
         cellStyle: {
           textAlign: 'center', display: 'flex',
           'align-items': 'center',
@@ -400,63 +427,6 @@ export class SmewiseReportComponent implements OnInit {
         },
       },
       {
-        headerName: 'Team Lead Name',
-        field: 'teamLeadName',
-        // sortable: true,
-        // width: 140,
-        suppressMovable: true,
-        // cellStyle: { textAlign: 'center' },
-        // filter: "agTextColumnFilter",
-        // filterParams: {
-        //   filterOptions: ["contains", "notContains"],
-        //   debounceMs: 0
-        // },
-        // cellStyle: {
-        //   textAlign: 'center', display: 'flex',
-        //   'align-items': 'center',
-        //   'justify-content': 'center'
-        // },
-        // rowSpan: function (params) {
-        //   if (params.data.isShow) {
-        //     return params.data.rowSpan;
-        //   } else {
-        //     return 1;
-        //   }
-        // },
-        // cellClassRules: {
-        //   'cell-span': function (params) {
-        //     return (params.data.rowSpan > 1);
-        //   },
-        // },
-      },
-
-      // {
-      //   headerName: 'Total',
-      //   field: 'teamLeadTotal',
-      //   sortable: true,
-      //   // width: 80,
-      //   suppressMovable: true,
-      //   // cellStyle: { textAlign: 'center' },
-      //   filter: "agTextColumnFilter",
-      //   cellStyle: {
-      //     textAlign: 'center', display: 'flex',
-      //     'align-items': 'center',
-      //     'justify-content': 'center'
-      //   },
-      //   // rowSpan: function (params) {
-      //   //   if (params.data.isShow) {
-      //   //     return params.data.rowSpan;
-      //   //   } else {
-      //   //     return 1;
-      //   //   }
-      //   // },
-      //   // cellClassRules: {
-      //   //   'cell-span': function (params) {
-      //   //     return (params.data.rowSpan > 1);
-      //   //   },
-      //   // },
-      // },
-      {
         headerName: 'SME Name',
         field: 'smeName',
         suppressMovable: true,
@@ -464,9 +434,9 @@ export class SmewiseReportComponent implements OnInit {
       {
         headerName: 'Filing Count',
         field: 'filingCount',
-        // pinned: 'right',
+        pinned: 'right',
         // sortable: true,
-        // width: 80,
+        width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
       }
@@ -475,6 +445,7 @@ export class SmewiseReportComponent implements OnInit {
   }
 
   superLeadCreateRowData(smeReport) {
+    debugger
     var data = [];
     var dataToReturn = [];
     let total = 0;
@@ -483,7 +454,6 @@ export class SmewiseReportComponent implements OnInit {
       let smeData = {
         srNo: i + 1,
         superLeadName: smeReport[i].superLeadName,
-        teamLeadName: smeReport[i].teamLeadName,
         smeName: smeReport[i].smeName,
         filingCount: smeReport[i].filingCount,
         isShow: false,
@@ -495,18 +465,23 @@ export class SmewiseReportComponent implements OnInit {
       data.push(smeData);
     }
     this.totalCount = total;
+    debugger
+    let srNo = 0;
     for (let i = 0; i < data.length; i++) {
-      let a = dataToReturn.filter((item:any) => item.superLeadName === data[i].superLeadName)
+      let a = dataToReturn.filter((item: any) => item.superLeadName === data[i].superLeadName);
       if (a.length === 0) {
-        const aa = data.filter((item:any) => item.superLeadName === data[i].superLeadName);
+        const aa = data.filter((item: any) => item.superLeadName === data[i].superLeadName);
         let index = 0;
-        aa.forEach((item:any) => {
+        aa.forEach((item: any) => {
+          debugger
           for (let j = 0; j < aa.length; j++) {
             item.superLeadTotal = item.superLeadTotal + aa[j].filingCount
           }
           if (index === 0) {
+            srNo = srNo + 1;
             item.isShow = true;
             item.rowSpan = aa.length;
+            item.srNo = srNo;
             index = index + 1;
           } else {
             item.isShow = false;
