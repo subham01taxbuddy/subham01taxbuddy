@@ -2,7 +2,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GridOptions } from 'ag-grid-community';
+import { AgGridEvent, GridOptions } from 'ag-grid-community';
 import { UtilsService } from 'src/app/services/utils.service';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -60,9 +60,13 @@ export class SmewiseReportComponent implements OnInit {
       columnDefs: this.smeCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
+      suppressDragLeaveHidesColumns: true,
       onGridReady: params => {
       },
       sortable: true,
+      onSortChanged(e: AgGridEvent) {
+        e.api.refreshCells();
+      }
     };
     this.superLeadGridOption = <GridOptions>{
       rowData: [],
@@ -73,7 +77,10 @@ export class SmewiseReportComponent implements OnInit {
       defaultColDef: {
         resizable: true
       },
-      suppressRowTransform: true
+      suppressRowTransform: true,
+      onSortChanged(e: AgGridEvent) {
+        e.api.refreshCells();
+      }
     };
   }
 
@@ -146,8 +153,9 @@ export class SmewiseReportComponent implements OnInit {
     var data = [];
     for (let i = 0; i < tlReport.length; i++) {
       let tlData = {
-        srNo: i + 1,
-        smeName: tlReport[i].smeName + ' - ' + tlReport[i].superLeadName,
+        // srNo: i + 1,
+        smeName: tlReport[i].smeName,
+        superLeadName: tlReport[i].superLeadName,
         assignmentStatus: tlReport[i].assignmentStatus,
         filingCount: tlReport[i].filingCount
       }
@@ -160,21 +168,61 @@ export class SmewiseReportComponent implements OnInit {
     return [
       {
         headerName: 'Sr. No.',
-        field: 'srNo',
+        // field: 'srNo',
         width: 60,
-        suppressMovable: true,
+        valueGetter: "node.rowIndex + 1",
+        // suppressMovable: true,
+        suppressSorting: true,
+        suppressFilter: true,
       },
       {
-        headerName: 'SME Name - SL',
+        headerName: 'SME Name',
         field: 'smeName',
-        width: 300,
+        width: 220,
         sortable: true,
-        cellStyle: { textAlign: 'center' },
+        // cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellStyle: function (params: any) {
+          if (params.data.assignmentStatus === 'On' && params.data.filingCount === 0) {
+            return {
+              // textAlign: 'center',
+              // display: 'flex',
+              // 'align-items': 'center',
+              // 'justify-content': 'center',
+              // backgroundColor: 'green',
+              color: 'red',
+            }
+          } else if (params.data.filingCount >= 5) {
+            return {
+              // textAlign: 'center',
+              // display: 'flex',
+              // 'align-items': 'center',
+              // 'justify-content': 'center',
+              // backgroundColor: 'green',
+              color: 'green',
+            }
+          }
+        },
+        tooltip: function (params) {
+          if (params.data.assignmentStatus === 'On' && params.data.filingCount === 0) {
+            return 'Assignment status is on but haven\'t filed single ITR ';
+          } else if (params.data.filingCount >= 5) {
+            return 'Managed to file more than 5 ITR in selected date range';
+          }
+          return '';
+        },
+      },
+      {
+        headerName: 'SL Name',
+        field: 'superLeadName',
+        width: 220,
+        suppressMovable: true,
+        sortable: true,
+        filter: "agTextColumnFilter",
       },
       {
         headerName: 'Status',
@@ -182,11 +230,12 @@ export class SmewiseReportComponent implements OnInit {
         width: 80,
         suppressMovable: true,
         sortable: true,
+        pinned: 'right',
         filter: "agTextColumnFilter",
         cellStyle: { textAlign: 'center' },
       },
       {
-        headerName: 'Filing Count',
+        headerName: 'Count',
         field: 'filingCount',
         filter: "agNumberColumnFilter",
         width: 80,
@@ -350,32 +399,35 @@ export class SmewiseReportComponent implements OnInit {
     return [
       {
         headerName: 'Sr. No.',
-        field: 'srNo',
+        // field: 'srNo',
+        valueGetter: "node.rowIndex + 1",
         width: 50,
-        suppressMovable: true,
+        // suppressMovable: true,
+        suppressSorting: true,
+        suppressFilter: true,
         cellStyle: {
           textAlign: 'center', display: 'flex',
           'align-items': 'center',
           'justify-content': 'center'
         },
-        rowSpan: function (params) {
-          if (params.data.isShow) {
-            return params.data.rowSpan;
-          } else {
-            return 1;
-          }
-        },
-        cellClassRules: {
-          'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
-          },
-        },
+        // rowSpan: function (params) {
+        //   if (params.data.isShow) {
+        //     return params.data.rowSpan;
+        //   } else {
+        //     return 1;
+        //   }
+        // },
+        // cellClassRules: {
+        //   'cell-span': function (params) {
+        //     return (params.data.rowSpan > 1);
+        //   },
+        // },
       },
       {
         headerName: 'Super Lead Name',
         field: 'superLeadName',
         sortable: true,
-        // width: 140,
+        width: 240,
         suppressMovable: true,
         // cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -388,24 +440,24 @@ export class SmewiseReportComponent implements OnInit {
           'align-items': 'center',
           'justify-content': 'center'
         },
-        rowSpan: function (params) {
-          if (params.data.isShow) {
-            return params.data.rowSpan;
-          } else {
-            return 1;
-          }
-        },
-        cellClassRules: {
-          'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
-          },
-        },
+        // rowSpan: function (params) {
+        //   if (params.data.isShow) {
+        //     return params.data.rowSpan;
+        //   } else {
+        //     return 1;
+        //   }
+        // },
+        // cellClassRules: {
+        //   'cell-span': function (params) {
+        //     return (params.data.rowSpan > 1);
+        //   },
+        // },
       },
       {
         headerName: 'Super Lead Total',
         field: 'superLeadTotal',
         sortable: true,
-        width: 120,
+        width: 150,
         suppressMovable: true,
         // cellStyle: { textAlign: 'center' },
         filter: "agNumberColumnFilter",
@@ -414,33 +466,33 @@ export class SmewiseReportComponent implements OnInit {
           'align-items': 'center',
           'justify-content': 'center'
         },
-        rowSpan: function (params) {
-          if (params.data.isShow) {
-            return params.data.rowSpan;
-          } else {
-            return 1;
-          }
-        },
-        cellClassRules: {
-          'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
-          },
-        },
+        // rowSpan: function (params) {
+        //   if (params.data.isShow) {
+        //     return params.data.rowSpan;
+        //   } else {
+        //     return 1;
+        //   }
+        // },
+        // cellClassRules: {
+        //   'cell-span': function (params) {
+        //     return (params.data.rowSpan > 1);
+        //   },
+        // },
       },
-      {
-        headerName: 'SME Name',
-        field: 'smeName',
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Filing Count',
-        field: 'filingCount',
-        pinned: 'right',
-        // sortable: true,
-        width: 80,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-      }
+      // {
+      //   headerName: 'SME Name',
+      //   field: 'smeName',
+      //   suppressMovable: true,
+      // },
+      // {
+      //   headerName: 'Filing Count',
+      //   field: 'filingCount',
+      //   pinned: 'right',
+      //   // sortable: true,
+      //   width: 80,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      // }
     ]
 
   }
@@ -452,7 +504,7 @@ export class SmewiseReportComponent implements OnInit {
 
     for (let i = 0; i < smeReport.length; i++) {
       let smeData = {
-        srNo: i + 1,
+        // srNo: i + 1,
         superLeadName: smeReport[i].superLeadName,
         smeName: smeReport[i].smeName,
         filingCount: smeReport[i].filingCount,
@@ -465,7 +517,8 @@ export class SmewiseReportComponent implements OnInit {
       data.push(smeData);
     }
     this.totalCount = total;
-    let srNo = 0;
+    // let srNo = 0;
+    let superLeadArray = []
     for (let i = 0; i < data.length; i++) {
       let a = dataToReturn.filter((item: any) => item.superLeadName === data[i].superLeadName);
       if (a.length === 0) {
@@ -476,11 +529,12 @@ export class SmewiseReportComponent implements OnInit {
             item.superLeadTotal = item.superLeadTotal + aa[j].filingCount
           }
           if (index === 0) {
-            srNo = srNo + 1;
+            // srNo = srNo + 1;
             item.isShow = true;
             item.rowSpan = aa.length;
-            item.srNo = srNo;
+            // item.srNo = srNo;
             index = index + 1;
+            superLeadArray.push(item)
           } else {
             item.isShow = false;
             item.rowSpan = 1;
@@ -490,6 +544,17 @@ export class SmewiseReportComponent implements OnInit {
         });
       }
     }
-    return data;
+    console.log('SL Array:', superLeadArray);
+    return superLeadArray;
+    // return data;
+  }
+
+  getCount(val) {
+    if (val === 0) {
+      return this.reportsData.filter(item => item.filingCount === 0).length;
+    } else if (val === 'Active') {
+      return this.reportsData.filter(item => item.assignmentStatus === 'On' && item.filingCount === 0).length;
+    }
+    return this.reportsData.filter(item => item.assignmentStatus === val).length;
   }
 }
