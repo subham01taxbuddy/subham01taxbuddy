@@ -102,11 +102,17 @@ export class EVerificationDialogComponent implements OnInit {
           if (res.messages instanceof Array && res.messages.length > 0) {
             this.utilsService.showSnackBar(res.messages[0].desc);
             this.dialogRef.close({
-              event: 'close', data: true
+              event: 'close', data: 'ONLINE'
             })
           }
         }
       }
+    })
+  }
+
+  markAsEverified() {
+    this.dialogRef.close({
+      event: 'close', data: 'MANUAL'
     })
   }
 }

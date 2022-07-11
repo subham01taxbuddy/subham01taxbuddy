@@ -592,37 +592,31 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     })
     disposable.afterClosed().subscribe(result => {
       console.log('New Bank Dialog', result);
-      if (result?.data) {
+      if (result?.data === 'ONLINE') {
         this.utilsService.showSnackBar('E-Verification status updated successfully');
         this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
+      } else if (result?.data === 'MANUAL') {
+        this.markAsEverified(data);
       }
     });
-    // return
-    // var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0]
-    // workingItr['everifiedStatus'] = 'Successfully e-Verified';
-    // workingItr['isEverified'] = true;
-    // const param = '/itr/' + workingItr.userId + '/' + workingItr.itrId + '/' + workingItr.assessmentYear;
-    // this.itrMsService.putMethod(param, workingItr).subscribe((result: any) => {
-    //   this.loading = false;
-    //   this.utilsService.showSnackBar('E-Verification status updated successfully');
-    //   this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
-    // }, error => {
-    //   this.loading = false;
-    //   this.utilsService.showSnackBar('Failed to update E-Verification status');
-    // });
-    // return;
-    // // const param = `${ApiEndpoints.itrMs.itrVerifyStatus}/${data.itrId}`;
-    // this.itrMsService.putMethod(param).subscribe((res: any) => {
-    //   this.utilsService.showSnackBar(res.status)
-    //   this.loading = false;
-    //   setTimeout(() => {
-    //     this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
-    //   }, 5000);
 
-    // }, error => {
-    //   this.loading = false;
-    // })
   }
+  markAsEverified(data) {
+    this.loading = true;
+    var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0]
+    workingItr['everifiedStatus'] = 'Successfully e-Verified';
+    workingItr['isEverified'] = true;
+    const param = '/itr/' + workingItr.userId + '/' + workingItr.itrId + '/' + workingItr.assessmentYear;
+    this.itrMsService.putMethod(param, workingItr).subscribe((result: any) => {
+      this.loading = false;
+      this.utilsService.showSnackBar('E-Verification status updated successfully');
+      this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
+    }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to update E-Verification status');
+    });
+  }
+
   interestedForNextYearTpa(data) {
     this.loading = true;
     var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0];

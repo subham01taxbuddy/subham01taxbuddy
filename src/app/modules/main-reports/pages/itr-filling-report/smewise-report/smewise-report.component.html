@@ -42,16 +42,23 @@
                         (click)="downloadRepo()">Download</button>
                 </div> -->
       </form>
-      <span style="float:right"> Total Count: <b>{{totalCount}}</b></span>
+      <!-- <span style="float:right"> Total Count: <b>{{totalCount}}</b></span> -->
     </div>
+    <span style="float: right;"> Total ITR Filed: <b>{{totalCount}}</b> | Total SME: <b>{{reportsData.length}}</b> |
+      Active SME:
+      <b>{{getCount('On')}}</b> | Inactive SME: <b>{{getCount('Off')}}</b>| Active with 0 Filing:
+      <b style="color: red;">{{getCount('Active')}}</b>| SME with 0 Filing All:
+      <b>{{getCount(0)}}</b></span>
+    <br>
     <div class="card__row">
-      <div class="card__col-lg-5"><b>SME Report</b></div>
-      <div class="card__col-lg-7"><b>Super Lead Report</b></div>
-      <div class="card__col-lg-5">
-        <ag-grid-angular class="ag-theme-balham" [gridOptions]="smeReportGridOption">
+      <div class="card__col-lg-7"><b>SME Report</b></div>
+      <div class="card__col-lg-5"><b>Super Lead Report</b></div>
+      <div class="card__col-lg-7">
+        <ag-grid-angular class="ag-theme-balham" [gridOptions]="smeReportGridOption" paginationPageSize=50
+          pagination=true>
         </ag-grid-angular>
       </div>
-      <div class="card__col-lg-7">
+      <div class="card__col-lg-5">
         <!-- <ag-grid-angular class="ag-theme-balham" [gridOptions]="teamLeadReportGridOption"></ag-grid-angular> -->
         <ag-grid-angular class="ag-theme-balham" [gridOptions]="superLeadGridOption"></ag-grid-angular>
       </div>
