@@ -38,8 +38,8 @@ export class EVerificationDialogComponent implements OnInit {
       pan: [''],
       verMode: ['', Validators.required],
       Ay: [''],
-      ackNum: [{ value: '', disabled: true }],
-      formCode: [{ value: '', disabled: true }]
+      ackNum: [''],
+      formCode: ['']
     });
     this.eVerifyForm.patchValue(this.data);
     console.log(this.eVerifyForm.value);
