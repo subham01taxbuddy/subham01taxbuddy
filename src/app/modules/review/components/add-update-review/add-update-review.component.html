@@ -1,0 +1,64 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<h1 mat-dialog-title>{{data.title}}</h1>
+
+<form [formGroup]="reviewForm">
+    <mat-dialog-content>
+        <div class="card__row">
+            <div class="card__col-lg-4 card__col-sm-12">
+                <mat-form-field appearance="outline">
+                    <mat-label>Source</mat-label>
+                    <mat-select placeholder="Discount Type" formControlName="sourceName" required>
+                        <mat-option *ngFor="let obj of sourceList" [value]="obj.value">
+                            {{ obj.label }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="reviewForm.controls['sourceName'].hasError('required')">Enter coupon code
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-lg-4 card__col-sm-12">
+                <mat-form-field appearance="outline">
+                    <mat-label>Rating</mat-label>
+                    <input matInput formControlName="rating" type="number" required>
+                    <mat-error *ngIf="reviewForm.controls['rating'].hasError('required')">Enter rating</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-lg-4 card__col-sm-12">
+                <mat-form-field appearance="outline">
+                    <mat-label>Review Date</mat-label>
+                    <input matInput formControlName="reviewDate" [matDatepicker]="picker1" autocomplete="off"
+                       >
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error *ngIf="reviewForm.controls['reviewDate'].hasError('required')">Select review date
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="card__row">
+            <div class="card__col-lg-12 card__col-sm-12">
+                <mat-form-field appearance="outline">
+                    <mat-label>Review</mat-label>
+                    <textarea matInput placeholder="Please add call details" name="review" formControlName="review"
+                        class="input-field" cdkTextareaAutosize cdkAutosizeMinRows="2" cdkAutosizeMaxRows="12"
+                        required></textarea>
+                    <mat-error *ngIf="reviewForm.controls['review'].hasError('required')">Review is required</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__row">
+            </div>
+            <div class="card__col-lg-4 card__col-sm-12">
+                <mat-form-field appearance="outline">
+                    <mat-label>Source user name</mat-label>
+                    <input matInput formControlName="sourceUserName" required>
+                    <mat-error *ngIf="reviewForm.controls['sourceUserName'].hasError('required')">Enter source name</mat-error>
+              </mat-form-field>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="center">
+        <button mat-raised-button style="margin-top: 0px;" color="primary" (click)="addReview()" [disabled]="reviewForm.invalid" tabindex="1">{{data.title}}</button>
+        <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
+    </mat-dialog-actions>
+</form>

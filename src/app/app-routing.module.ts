@@ -23,6 +23,9 @@ export const appRoutes: Routes = [
     path: 'pages/reports', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/main-reports/main-reports.module').then(m => m.MainReportsModule)
   },
   {
+    path: 'pages/review', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/review/review.module').then(m => m.ReviewModule)
+  },
+  {
     path: 'eri', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/eri-flow/eri-flow.module').then(m => m.EriFlowModule)
   },
   {

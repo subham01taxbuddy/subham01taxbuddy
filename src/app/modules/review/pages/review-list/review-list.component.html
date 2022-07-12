@@ -1,0 +1,29 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+<div class="main clearfix">
+  <div class="content content_full">
+    <div class="content__container">
+      <div class="card">
+
+        <div class="card__row">
+          <div class="card__col-xs-12 card__col-sm-12">
+            Total Count: <b>{{totalCount}}</b>
+
+            <div class="card__col-md-3 card__col-xs-12 pull-right">
+              <a class="btn btn_stroke filter__add-link" (click)="addReview('Add Review','Add', '')">Add Review</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card__row">
+          
+          <ag-grid-angular class="ag-theme-balham" [gridOptions]="couponGridOptions"
+            (rowClicked)="onCouponRowClicked($event)" >
+          </ag-grid-angular>
+
+          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
