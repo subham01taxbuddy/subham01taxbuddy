@@ -166,7 +166,8 @@ export interface FinancilaParticulars {
     cashInHand: [],
     loanAndAdvances: [],
     otherAssets: [],
-    totalAssets: []
+    totalAssets: [],
+    investment: []
 }
 
 export interface TaxSummary {
