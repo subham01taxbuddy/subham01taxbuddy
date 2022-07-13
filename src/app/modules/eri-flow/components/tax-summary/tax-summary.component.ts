@@ -160,9 +160,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
   isJsonParse: boolean = false;
 
 
-  get getFamilyArray() {
-    return <FormArray>this.itrSummaryForm.controls['assesse'].get('family');
-  }
+
 
   constructor(private dialog: MatDialog, public utilsService: UtilsService, private fb: FormBuilder, private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -1054,12 +1052,13 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     }
 
     this.tdsOtherThanSal = [];
-    if (this.newTaxRegime) {
-      this.newRegimeTaxesPaid.tdsOtherThanSalary = itrData.TDSonOthThanSals.TotalTDSonOthThanSals;
-    }
-    else {
-      this.taxesPaid.tdsOtherThanSalary = itrData.TDSonOthThanSals.TotalTDSonOthThanSals;
-    }
+    debugger
+    // if (this.newTaxRegime) {
+    //   this.newRegimeTaxesPaid.tdsOtherThanSalary = itrData.TDSonOthThanSals.TotalTDSonOthThanSals;
+    // }
+    // else {
+    //   this.taxesPaid.tdsOtherThanSalary = itrData.TDSonOthThanSals.TotalTDSonOthThanSals;
+    // }
     if (tdsOtherThanSalInfo instanceof Array && tdsOtherThanSalInfo.length > 0) {
       for (let i = 0; i < tdsOtherThanSalInfo.length; i++) {
         let tdsOtherThanSalObj = {
@@ -1079,19 +1078,20 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     }
 
     //TDS3Details   (info bind in tdsOtherThanSalary)
+    debugger
     var tds3OtherThanSalInfo;
-    if (itrData.ScheduleTDS3Dtls.hasOwnProperty('TDS3Details')) {
-      tds3OtherThanSalInfo = itrData.ScheduleTDS3Dtls.TDS3Details;
+    if (itrData?.ScheduleTDS3Dtls?.hasOwnProperty('TDS3Details')) {
+      tds3OtherThanSalInfo = itrData?.ScheduleTDS3Dtls?.TDS3Details;
     }
-    else if (itrData.ScheduleTDS3Dtls.hasOwnProperty('TDS3Details')) {
-      tds3OtherThanSalInfo = itrData.ScheduleTDS3Dtls.TDS3Details;
+    else if (itrData?.ScheduleTDS3Dtls?.hasOwnProperty('TDS3Details')) {
+      tds3OtherThanSalInfo = itrData?.ScheduleTDS3Dtls?.TDS3Details;
     }
 
     if (this.newTaxRegime) {
-      this.newRegimeTaxesPaid.tdsOtherThanSalary = Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details);
+      this.newRegimeTaxesPaid.tdsOtherThanSalary = Number(itrData?.TDSonOthThanSals?.TotalTDSonOthThanSals) + ((itrData?.ScheduleTDS3Dtls?.TotalTDS3Details) ? Number(itrData?.ScheduleTDS3Dtls?.TotalTDS3Details) : 0);
     }
     else {
-      this.taxesPaid.tdsOtherThanSalary = Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details);
+      this.taxesPaid.tdsOtherThanSalary = Number(itrData?.TDSonOthThanSals?.TotalTDSonOthThanSals) + ((itrData?.ScheduleTDS3Dtls?.TotalTDS3Details) ? Number(itrData?.ScheduleTDS3Dtls?.TotalTDS3Details) : 0);
     }
     if (tds3OtherThanSalInfo instanceof Array && tds3OtherThanSalInfo.length > 0) {
       for (let i = 0; i < tds3OtherThanSalInfo.length; i++) {
@@ -1114,13 +1114,13 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
 
     //Tax Collected at Sources
-    var tcsInfo = itrData.ScheduleTCS.TCS;
+    var tcsInfo = itrData?.ScheduleTCS?.TCS;
     this.taxCollAtSource = [];
     if (this.newTaxRegime) {
-      this.newRegimeTaxesPaid.tcs = itrData.ScheduleTCS.TotalSchTCS;
+      this.newRegimeTaxesPaid.tcs = itrData?.ScheduleTCS?.TotalSchTCS;
     }
     else {
-      this.taxesPaid.tcs = itrData.ScheduleTCS.TotalSchTCS;
+      this.taxesPaid.tcs = itrData?.ScheduleTCS?.TotalSchTCS;
     }
 
     if (tcsInfo instanceof Array && tcsInfo.length > 0) {
@@ -1171,6 +1171,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid'].setValue(this.taxPaiObj);
 
     var totalTaxPaidVal;
+    debugger
     if (this.newTaxRegime) {
       this.newRegimeTaxSummary.totalTaxesPaid = Number(this.newRegimeTaxesPaid.tdsOnSalary) + Number(this.newRegimeTaxesPaid.tdsOtherThanSalary) + Number(this.newRegimeTaxesPaid.tdsOnSal26QB) +
         Number(this.newRegimeTaxesPaid.tcs) + Number(this.newRegimeTaxesPaid.advanceSelfAssTax);
@@ -1188,6 +1189,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     //Computation of Income
 
     let computation1Info = incomeDeduction;
+    debugger
     if (this.newTaxRegime) {
       this.newRegimeTaxSummary.salary = computation1Info.GrossSalary;
       this.newRegimeTaxSummary.housePropertyIncome = computation1Info.TotalIncomeOfHP;
@@ -1293,7 +1295,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
     }
     else {
-
+      debugger
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].setValue(computation1Info.IncomeFromSal);
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].setValue(computation1Info.TotalIncomeOfHP);
 
@@ -1326,10 +1328,11 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       let taxesPaidInfo = itrData;
 
       this.taxesPaid.tdsOnSalary = taxesPaidInfo.hasOwnProperty('TDSonSalaries') ? taxesPaidInfo.TDSonSalaries.TotalTDSonSalaries : 0;
-      this.taxesPaid.tdsOtherThanSalary = taxesPaidInfo.hasOwnProperty('TDSonOthThanSals') ? Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + Number(itrData.ScheduleTDS3Dtls.TotalTDS3Details) : 0;
+      this.taxesPaid.tdsOtherThanSalary = taxesPaidInfo.hasOwnProperty('TDSonOthThanSals') ? (Number(itrData.TDSonOthThanSals.TotalTDSonOthThanSals) + ((itrData?.ScheduleTDS3Dtls?.TotalTDS3Details) ? Number(itrData?.ScheduleTDS3Dtls?.TotalTDS3Details) : 0)) : 0;
       this.taxesPaid.tdsOnSal26QB = 0;
-      this.taxesPaid.tcs = taxesPaidInfo.hasOwnProperty('ScheduleTCS') ? taxesPaidInfo.ScheduleTCS.TotalSchTCS : 0;
-      this.taxesPaid.advanceSelfAssTax = taxesPaidInfo.hasOwnProperty('TaxPayments') ? taxesPaidInfo.TaxPayments.TotalTaxPayments : (taxesPaidInfo.hasOwnProperty('ScheduleIT') ? taxesPaidInfo.ScheduleIT.TotalTaxPayments : 0);
+      this.taxesPaid.tcs = taxesPaidInfo.hasOwnProperty('ScheduleTCS') ? taxesPaidInfo?.ScheduleTCS?.TotalSchTCS : 0;
+      // this.taxesPaid.advanceSelfAssTax = taxesPaidInfo.hasOwnProperty('TaxPayments') ? taxesPaidInfo.TaxPayments.TotalTaxPayments : (taxesPaidInfo.hasOwnProperty('ScheduleIT') ? taxesPaidInfo.ScheduleIT.TotalTaxPayments : 0);
+      this.taxesPaid.advanceSelfAssTax = taxesPaidInfo.hasOwnProperty('TaxPaid') ? taxesPaidInfo.TaxPaid.TaxesPaid.SelfAssessmentTax : 0;
 
       if (this.getNumberFormat(taxesPaidInfo.TaxPaid.BalTaxPayable) > 0) {
         let payable = this.getNumberFormat(taxesPaidInfo.TaxPaid.BalTaxPayable);
@@ -3606,4 +3609,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     })
   }
 
+  get getFamilyArray() {
+    return <FormArray>this.itrSummaryForm.controls['assesse'].get('family');
+  }
 }
