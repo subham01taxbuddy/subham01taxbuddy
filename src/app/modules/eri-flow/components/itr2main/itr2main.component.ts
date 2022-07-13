@@ -2505,7 +2505,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
     //For otherAssets val =  OthCurrAsset + (TotCurrLiabilitiesProvision - SundryCred) + TotMiscAdjust
     itr3Summary.assesse.business.financialParticulars.otherAssets = (financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.hasOwnProperty('OthCurrAsset') ? this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.OthCurrAsset) : 0) + (this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.TotCurrLiabilitiesProvision) - (financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.CurrLiabilities.hasOwnProperty('SundryCred') ? this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.CurrLiabilities.SundryCred) : 0)) + this.getNumberFormat(financialInfo.FundApply.MiscAdjust.TotMiscAdjust);
-
+    debugger
     itr3Summary.assesse.business.financialParticulars.investment = this.getNumberFormat(financialInfo.FundApply.Investments.TotInvestments);
     let assetsTotal = itr3Summary.assesse.business.financialParticulars.fixedAssets + itr3Summary.assesse.business.financialParticulars.inventories +
       itr3Summary.assesse.business.financialParticulars.sundryDebtorsAmount + itr3Summary.assesse.business.financialParticulars.balanceWithBank +
@@ -5765,7 +5765,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           healthCover: null,
           details: '',
           preventiveCheckUp: 0,
-          medicalExpenditure: null
+          medicalExpenditure: this.deductionAndRemainForm.controls['medicalExpendature'].value
         }
         insuranceData.push(obj);
 
@@ -6560,7 +6560,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
             cashInHand: null,
             loanAndAdvances: null,
             otherAssets: null,
-            totalAssets: null
+            totalAssets: null,
+            investment: null
           }
         }
       },

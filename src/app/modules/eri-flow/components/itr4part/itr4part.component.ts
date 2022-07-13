@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, DoCheck } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, DoCheck, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
   templateUrl: './itr4part.component.html',
   styleUrls: ['./itr4part.component.css']
 })
-export class Itr4partComponent implements OnInit, DoCheck {
+export class Itr4partComponent implements OnInit, DoCheck, OnChanges {
 
   @Input() itrType!: string;
   @Input() jsonParse: any;
@@ -35,7 +35,11 @@ export class Itr4partComponent implements OnInit, DoCheck {
     this.getMastersData();
 
   }
-
+  ngOnChanges() {
+    if (this.utilService.isNonEmpty(this.businessData)) {
+      this.updateBusinessInfo();
+    }
+  }
   initialiseForm() {
 
     if (this.jsonParse) {
@@ -117,7 +121,7 @@ export class Itr4partComponent implements OnInit, DoCheck {
   }
 
   updateBusinessInfo() {
-
+    debugger
     this.natureOfBusinessForm.patchValue(this.businessData.assesse.business.financialParticulars);
 
     var businessIncome = this.businessData.assesse.business.presumptiveIncomes.filter((item: any) => item.businessType === "BUSINESS");
@@ -134,10 +138,10 @@ export class Itr4partComponent implements OnInit, DoCheck {
       this.natureOfBusinessForm.controls['tradeName44AD'].setValue(businessIncome[0].tradeName);
       let recivedInBank = businessIncome[0].incomes.filter((item: any) => item.incomeType === "BANK");
       let recivedInCash = businessIncome[0].incomes.filter((item: any) => item.incomeType === "CASH");
-      this.natureOfBusinessForm.controls['recieptRecievedInBank'].setValue(recivedInBank[0].receipts);
-      this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].setValue(recivedInBank[0].presumptiveIncome);
-      this.natureOfBusinessForm.controls['recievedinCash'].setValue(recivedInCash[0].receipts);
-      this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].setValue(recivedInCash[0].minimumPresumptiveIncome);
+      this.natureOfBusinessForm.controls['recieptRecievedInBank'].setValue(recivedInBank[0]?.receipts);
+      this.natureOfBusinessForm.controls['presumptiveIncomeRecieveBank'].setValue(recivedInBank[0]?.presumptiveIncome);
+      this.natureOfBusinessForm.controls['recievedinCash'].setValue(recivedInCash[0]?.receipts);
+      this.natureOfBusinessForm.controls['presumptiveIncomeRecievedCash'].setValue(recivedInCash[0]?.minimumPresumptiveIncome);
       this.calculateTotalAmnt();
     }
 
@@ -156,8 +160,8 @@ export class Itr4partComponent implements OnInit, DoCheck {
       }
       this.natureOfBusinessForm.controls['tradeName44ADA'].setValue(presumptiveIncome[0].tradeName);
 
-      this.natureOfBusinessForm.controls['grossReciept'].setValue(presumptiveIncome[0].incomes[0].receipts);
-      this.natureOfBusinessForm.controls['presumptiveIncome'].setValue(presumptiveIncome[0].incomes[0].presumptiveIncome);
+      this.natureOfBusinessForm.controls['grossReciept'].setValue(presumptiveIncome[0].incomes[0]?.receipts);
+      this.natureOfBusinessForm.controls['presumptiveIncome'].setValue(presumptiveIncome[0].incomes[0]?.presumptiveIncome);
     }
 
   }
