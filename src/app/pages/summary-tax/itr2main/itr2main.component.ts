@@ -8109,7 +8109,8 @@ export class Itr2mainComponent implements OnInit {
             cashInHand: null,
             loanAndAdvances: null,
             otherAssets: null,
-            totalAssets: null
+            totalAssets: null,
+            investment: null
           }
         }
       },
