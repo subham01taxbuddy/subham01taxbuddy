@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AppConstants } from 'src/app/modules/shared/constants';
 import { ConfirmModel } from 'src/app/pages/itr-filing/kommunicate-dialog/kommunicate-dialog.component';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ReviewService } from '../../services/review.service';
@@ -30,7 +31,9 @@ export const MY_FORMATS = {
 })
 export class AddUpdateReviewComponent implements OnInit {
 
-  sourceList: any = [{ label: 'Play store', value: 'PLAY_STORE' }, { label: 'Apple store', value: 'APPLE_STORE' }, { label: 'Google workspace', value: 'GOOGLE_WORKSPACE' }];
+  sourceList: any = AppConstants.sourceList;
+  reviewStatusList: any =AppConstants.reviewStatusList;
+  productList: any =AppConstants.productList;
   userData: any;
   reviewForm: FormGroup;
   loading: boolean;
@@ -54,12 +57,20 @@ export class AddUpdateReviewComponent implements OnInit {
 
   initForm() {
     this.reviewForm = this.fb.group({
-      sourceName: ['', Validators.required],
-      rating: ['', Validators.required],
-      review: ['', Validators.required],
-      reviewDate: [new Date(), Validators.required],
+      sourcePlatform: ['', Validators.required],
+      sourceMobile: ['', Validators.required],
+      sourceEmail: ['', [Validators.required, Validators.email]],
+      sourceRating: ['', Validators.required],
+      sourceComment: ['', Validators.required],
+      sourceReviewDateTime: [new Date(), Validators.required],
       sourceUserName: ['', Validators.required],
-      status: ['INPROGRESS'],
+      isReviewNegative: ['', Validators.required],
+      productName: ['', Validators.required],
+      status: ['OPEN'],
+      userId: [this.userData.USER_UNIQUE_ID],
+      smeId: [""],
+      smeNotes: [""],
+      reviewSentiment: [""],
       addedBy: [this.userData.USER_UNIQUE_ID],
     })
   }
@@ -67,15 +78,13 @@ export class AddUpdateReviewComponent implements OnInit {
   addReview() {
     this.loading = true;
     this.isError = false;
-    if (this.reviewForm.valid) {
       const param = `review`;
       this.reviewService.postMethod(param, this.reviewForm.getRawValue()).subscribe(res => {
         this._toastMessageService.alert("success", "Review added successfully");
         this.dialogRef.close();
       }, (error) => {
+        this.loading = true;
         this._toastMessageService.alert("error", "Failed to add review");
       });
-
-    }
   }
 }
