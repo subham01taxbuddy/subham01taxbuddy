@@ -105,6 +105,7 @@ export class AppConstants {
   public static sourceList: any = [{ label: 'Play store', value: 'PLAY_STORE' }, { label: 'Apple store', value: 'APPLE_STORE' }, { label: 'Google workspace', value: 'GOOGLE_WORKSPACE' }];
   public static reviewStatusList: any = [{ label: 'Yes', value: true }, { label: 'No', value: false }];
   public static productList: any = [{ label: 'Taxbuddy', value: 'TAXBUDDY' }, { label: 'Finbingo', value: 'FINBINGO' }];
+  public static sentimentList: any = [{ label: 'Positive', value: 'POSITIVE' }, { label: 'Negative', value: 'NEGATIVE' }];
   
 
 }

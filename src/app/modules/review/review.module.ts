@@ -8,12 +8,16 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxLoadingModule } from 'ngx-loading';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ViewReviewComponent } from './components/view-review/view-review.component';
+import { UpdateSmeNotesComponent } from './components/update-sme-notes/update-sme-notes.component';
 
 
 @NgModule({
   declarations: [
     ReviewListComponent,
-    AddUpdateReviewComponent
+    AddUpdateReviewComponent,
+    ViewReviewComponent,
+    UpdateSmeNotesComponent
   ],
   imports: [
     CommonModule,

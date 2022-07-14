@@ -4,6 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { AddUpdateReviewComponent } from '../../components/add-update-review/add-update-review.component';
+import { UpdateSmeNotesComponent } from '../../components/update-sme-notes/update-sme-notes.component';
+import { ViewReviewComponent } from '../../components/view-review/view-review.component';
 import { ReviewService } from '../../services/review.service';
 
 @Component({
@@ -16,6 +18,7 @@ export class ReviewListComponent implements OnInit {
   loading!: boolean;
   reviewGridOptions: GridOptions;
   totalCount = 0;
+  userInfo = [];
   sourceList: any[] = AppConstants.sourceList;
   reviewStatusList: any[] = AppConstants.reviewStatusList;
   productList: any[] = AppConstants.productList;
@@ -50,9 +53,9 @@ export class ReviewListComponent implements OnInit {
   reviewColumnDef() {
     return [
       {
-        headerName: 'Product Name',
+        headerName: 'Product',
         field: 'productName',
-        width: 140,
+        width: 100,
         pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -65,7 +68,7 @@ export class ReviewListComponent implements OnInit {
       {
         headerName: 'Platform',
         field: 'sourcePlatform',
-        width: 200,
+        width: 140,
         pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -78,7 +81,7 @@ export class ReviewListComponent implements OnInit {
       {
         headerName: 'Rating',
         field: 'sourceRating',
-        width: 200,
+        width: 80,
         pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -91,16 +94,122 @@ export class ReviewListComponent implements OnInit {
       {
         headerName: 'Review Date',
         field: 'sourceReviewDate',
-        width: 100,
+        width: 130,
         suppressMovable: true,
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+          } else {
+            return '-';
+          }
+        },
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
       },
+      {
+        headerName: 'User name',
+        field: 'sourceUserName',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'User Mobile',
+        field: 'sourceMobile',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'User Email',
+        field: 'sourceEmail',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Review type',
+        field: 'isReviewNegative',
+        width: 130,
+        suppressMovable: true,
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return 'Positive';
+          } else {
+            return 'Negative';
+          }
+        },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'View',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="view"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-eye" aria-hidden="true" data-action-type="view"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Add Notes',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Add notes"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+            <i class="fa fa-book" aria-hidden="true" data-action-type="update-sme-notes"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
+          }
+        },
+      },
+     
     ]
   }
 
@@ -116,9 +225,33 @@ export class ReviewListComponent implements OnInit {
     })
   }
 
+  viewReview(title, key, data) {
+    let disposable = this.dialog.open(ViewReviewComponent, {
+      width: '65%',
+      height: 'auto',
+      data: {
+        title: title,
+        leadData: data,
+        mode: key
+      }
+    })
+  }
+
+  updateSmeNote(title, key, data) {
+    let disposable = this.dialog.open(UpdateSmeNotesComponent, {
+      width: '65%',
+      height: 'auto',
+      data: {
+        title: title,
+        leadData: data,
+        mode: key
+      }
+    })
+  }
+
   pageChanged(event: any) {
     this.config.currentPage = event;
-    this.getReview( event - 1);
+    this.getReview(event - 1);
   }
 
   getReview(pageNo) {
@@ -129,15 +262,15 @@ export class ReviewListComponent implements OnInit {
       this.loading = false;
       if (response.content instanceof Array && response.content.length > 0) {
         this.reviewGridOptions.api?.setRowData(this.createRowData(response.content));
-
+        this.userInfo = response.content;
         this.config.totalItems = response.totalElements;
       } else {
-        this.config.totalItems =0;
+        this.config.totalItems = 0;
         this.reviewGridOptions.api?.setRowData(this.createRowData([]));
       }
     },
       error => {
-        this.config.totalItems =0;
+        this.config.totalItems = 0;
         this.loading = false;
       })
   }
@@ -156,26 +289,33 @@ export class ReviewListComponent implements OnInit {
         const filterData = this.sourceList.filter(element => element.value === data[i].sourcePlatform);
         platform = filterData.length ? filterData[0].label : '-'
       }
-      
+
       let userInfo: any = Object.assign({}, userArray[i], {
         productName: productName,
         sourcePlatform: platform,
-        sourceRating:data[i].sourceRating,
-        serviceType: data[i].serviceType,
-        assessmentYear: data[i].assessmentYear,
-        callerAgentName: data[i].callerAgentName,
-        callerAgentNumber: data[i].callerAgentNumber,
-        callerAgentUserId: data[i].callerAgentUserId,
-        statusId: data[i].statusId,
-        statusUpdatedDate: data[i].statusUpdatedDate,
-        eriClientValidUpto: data[i].eriClientValidUpto,
-        laguage: data[i].laguage
+        sourceRating: data[i].sourceRating,
+        sourceReviewDateTime: data[i].sourceReviewDateTime,
+        sourceUserName: data[i].sourceUserName,
+        sourceMobile: data[i].sourceMobile ? data[i].sourceMobile : '-',
+        sourceEmail: data[i].sourceEmail ? data[i].sourceEmail : '-',
+        isReviewNegative: data[i].isReviewNegative,
+
       })
       userArray.push(userInfo);
     }
     return userArray;
   }
 
-  onRowClicked(event) { }
-
+  onRowClicked(params) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'view':
+          this.viewReview('View review', '', params.data);
+          break;
+          case 'update-sme-notes':
+          this.updateSmeNote('Update notes', '', params.data)
+      }
+    }
+  }
 }
