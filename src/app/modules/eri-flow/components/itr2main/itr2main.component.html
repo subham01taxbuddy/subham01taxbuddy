@@ -1713,6 +1713,17 @@
 
                 <div class="card__col-lg-3" *ngIf="newItrSumChanges">
                     <mat-form-field appearance="outline">
+                        <mat-label>Under section 80EEA</mat-label>
+                        <input matInput placeholder="Under section 80EEA" maxlength="8" autocomplete="off" type="number"
+                            formControlName="us80eea"
+                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            onkeypress=" event.charCode >= 48 && event.charCode <= 57"
+                            (blur)="calculateTotalDeduction()">
+
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-3" *ngIf="newItrSumChanges">
+                    <mat-form-field appearance="outline">
                         <mat-label>Under section 80EEB</mat-label>
                         <input matInput placeholder="Under section 80EEB" maxlength="8" autocomplete="off" type="number"
                             formControlName="us80eeb"

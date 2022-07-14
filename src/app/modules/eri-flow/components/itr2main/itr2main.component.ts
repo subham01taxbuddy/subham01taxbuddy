@@ -358,6 +358,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       us80u: [0],
       us80jja: [0],
       us80eeb: [0],
+      us80eea: [0],
       other: [0],
       immovableAssetTotal: [0],
 
@@ -1936,8 +1937,8 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         this.deductionAndRemainForm.controls['us80g'].setValue(deductionValues.hasOwnProperty('Section80G') ? deductionValues.Section80G : 0);
         this.deductionAndRemainForm.controls['us80d'].setValue(deductionValues.hasOwnProperty('Section80D') ? deductionValues.Section80D : 0);
         this.deductionAndRemainForm.controls['us80eeb'].setValue(deductionValues.hasOwnProperty('Section80EEB') ? deductionValues.Section80EEB : 0);
-
-        this.deductionAndRemainForm.controls['other'].setValue(deductionValues.hasOwnProperty('Section80EEA') ? deductionValues.Section80EEA : 0);    //here bind value which not contain in above list
+        this.deductionAndRemainForm.controls['us80eea'].setValue(deductionValues.hasOwnProperty('Section80EEA') ? deductionValues.Section80EEA : 0);
+        this.setAnyotherDeductionValue(deductionValues);
       }
     }
 
@@ -2324,6 +2325,27 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
 
   }
+  setAnyotherDeductionValue(deductionValues) {
+    let total = Number(this.deductionAndRemainForm.controls['us80c'].value) +
+      Number(this.deductionAndRemainForm.controls['us80ccc'].value) +
+      Number(this.deductionAndRemainForm.controls['us80ccc1'].value) +
+      Number(this.deductionAndRemainForm.controls['us80ccd2'].value) +
+      Number(this.deductionAndRemainForm.controls['us80ccd1b'].value) +
+      Number(this.deductionAndRemainForm.controls['us80dd'].value) +
+      Number(this.deductionAndRemainForm.controls['us80ddb'].value) +
+      Number(this.deductionAndRemainForm.controls['us80e'].value) +
+      Number(this.deductionAndRemainForm.controls['us80ee'].value) +
+      Number(this.deductionAndRemainForm.controls['us80gg'].value) +
+      Number(this.deductionAndRemainForm.controls['us80gga'].value) +
+      Number(this.deductionAndRemainForm.controls['us80ggc'].value) +
+      Number(this.deductionAndRemainForm.controls['us80ttaTtb'].value) +
+      Number(this.deductionAndRemainForm.controls['us80u'].value) +
+      Number(this.deductionAndRemainForm.controls['us80g'].value) +
+      Number(this.deductionAndRemainForm.controls['us80d'].value) +
+      Number(this.deductionAndRemainForm.controls['us80eeb'].value) +
+      Number(this.deductionAndRemainForm.controls['us80eea'].value);
+    this.deductionAndRemainForm.controls['other'].setValue(deductionValues['TotalChapVIADeductions'] - total)
+  }
 
   bindCoOwnerInfo(coOwnerInfo) {
     var coOwner = [];
@@ -2505,7 +2527,6 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
     //For otherAssets val =  OthCurrAsset + (TotCurrLiabilitiesProvision - SundryCred) + TotMiscAdjust
     itr3Summary.assesse.business.financialParticulars.otherAssets = (financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.hasOwnProperty('OthCurrAsset') ? this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrAsset.OthCurrAsset) : 0) + (this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.TotCurrLiabilitiesProvision) - (financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.CurrLiabilities.hasOwnProperty('SundryCred') ? this.getNumberFormat(financialInfo.FundApply.CurrAssetLoanAdv.CurrLiabilitiesProv.CurrLiabilities.SundryCred) : 0)) + this.getNumberFormat(financialInfo.FundApply.MiscAdjust.TotMiscAdjust);
-    debugger
     itr3Summary.assesse.business.financialParticulars.investment = this.getNumberFormat(financialInfo.FundApply.Investments.TotInvestments);
     let assetsTotal = itr3Summary.assesse.business.financialParticulars.fixedAssets + itr3Summary.assesse.business.financialParticulars.inventories +
       itr3Summary.assesse.business.financialParticulars.sundryDebtorsAmount + itr3Summary.assesse.business.financialParticulars.balanceWithBank +
@@ -3512,7 +3533,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       Number(this.deductionAndRemainForm.controls['us80ddb'].value) + Number(this.deductionAndRemainForm.controls['us80e'].value) + Number(this.deductionAndRemainForm.controls['us80ee'].value) +
       Number(this.deductionAndRemainForm.controls['us80gg'].value) + Number(this.deductionAndRemainForm.controls['us80gga'].value) + Number(this.deductionAndRemainForm.controls['us80ggc'].value) +
       Number(this.deductionAndRemainForm.controls['us80ttaTtb'].value) + Number(this.deductionAndRemainForm.controls['us80u'].value) + Number(this.deductionAndRemainForm.controls['us80g'].value) +
-      Number(this.deductionAndRemainForm.controls['us80d'].value) + Number(this.deductionAndRemainForm.controls['us80jja'].value) + Number(this.deductionAndRemainForm.controls['us80eeb'].value) +
+      Number(this.deductionAndRemainForm.controls['us80d'].value) + Number(this.deductionAndRemainForm.controls['us80jja'].value) + Number(this.deductionAndRemainForm.controls['us80eea'].value) + Number(this.deductionAndRemainForm.controls['us80eeb'].value) +
       Number(this.deductionAndRemainForm.controls['other'].value);
 
     this.computationOfIncomeForm.controls['totalDeduction'].setValue(deductTotal);
@@ -5088,7 +5109,6 @@ export class Itr2mainComponent implements OnInit, OnChanges {
       if (natureLabelNotSpeculative.length > 0) {
         this.businessIncomeForm.controls['natureOfothertThanSpeculativeBusiness'].setValue(natureLabelNotSpeculative[0].label);
       }
-      debugger
       this.businessIncomeForm.controls['tradeNameOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].tradeName);
       this.businessIncomeForm.controls['turnoverOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0]?.receipts);
       this.businessIncomeForm.controls['purchaseOfothertThanSpeculative'].setValue(therThanSpeculaticeIncome[0].incomes[0]?.presumptiveIncome);
