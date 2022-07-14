@@ -994,8 +994,9 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     this.itrSummaryForm.controls['us80g'].setValue(deductionValues.Section80G);
     this.itrSummaryForm.controls['us80d'].setValue(deductionValues.Section80D);
     this.itrSummaryForm.controls['us80eeb'].setValue(deductionValues.Section80EEB);
+    this.itrSummaryForm.controls['us80eea'].setValue(deductionValues.Section80EEA);
 
-    this.itrSummaryForm.controls['other'].setValue(deductionValues.Section80EEA);    //here bind value which not contain in above list
+    this.setAnyotherDeductionValue(deductionValues);
 
     this.taxesPaid = {
       tdsOnSalary: 0,
@@ -1044,15 +1045,14 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
     //TDS Other Than salary
     var tdsOtherThanSalInfo;
-    if (itrData.TDSonOthThanSals.hasOwnProperty('TDSonOthThanSal')) {
-      tdsOtherThanSalInfo = itrData.TDSonOthThanSals.TDSonOthThanSal;
+    if (itrData?.hasOwnProperty('TDSonOthThanSals').TDSonOthThanSals?.hasOwnProperty('TDSonOthThanSal')) {
+      tdsOtherThanSalInfo = itrData?.TDSonOthThanSals?.TDSonOthThanSal;
     }
-    else if (itrData.TDSonOthThanSals.hasOwnProperty('TDSonOthThanSalDtls')) {
-      tdsOtherThanSalInfo = itrData.TDSonOthThanSals.TDSonOthThanSalDtls;
+    else if (itrData?.TDSonOthThanSals?.hasOwnProperty('TDSonOthThanSalDtls')) {
+      tdsOtherThanSalInfo = itrData?.TDSonOthThanSals?.TDSonOthThanSalDtls;
     }
 
     this.tdsOtherThanSal = [];
-    debugger
     // if (this.newTaxRegime) {
     //   this.newRegimeTaxesPaid.tdsOtherThanSalary = itrData.TDSonOthThanSals.TotalTDSonOthThanSals;
     // }
@@ -1078,7 +1078,6 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     }
 
     //TDS3Details   (info bind in tdsOtherThanSalary)
-    debugger
     var tds3OtherThanSalInfo;
     if (itrData?.ScheduleTDS3Dtls?.hasOwnProperty('TDS3Details')) {
       tds3OtherThanSalInfo = itrData?.ScheduleTDS3Dtls?.TDS3Details;
@@ -1171,7 +1170,6 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['taxPaid'].setValue(this.taxPaiObj);
 
     var totalTaxPaidVal;
-    debugger
     if (this.newTaxRegime) {
       this.newRegimeTaxSummary.totalTaxesPaid = Number(this.newRegimeTaxesPaid.tdsOnSalary) + Number(this.newRegimeTaxesPaid.tdsOtherThanSalary) + Number(this.newRegimeTaxesPaid.tdsOnSal26QB) +
         Number(this.newRegimeTaxesPaid.tcs) + Number(this.newRegimeTaxesPaid.advanceSelfAssTax);
@@ -1189,7 +1187,6 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     //Computation of Income
 
     let computation1Info = incomeDeduction;
-    debugger
     if (this.newTaxRegime) {
       this.newRegimeTaxSummary.salary = computation1Info.GrossSalary;
       this.newRegimeTaxSummary.housePropertyIncome = computation1Info.TotalIncomeOfHP;
@@ -1295,7 +1292,6 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
     }
     else {
-      debugger
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['salary'].setValue(computation1Info.IncomeFromSal);
       (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['housePropertyIncome'].setValue(computation1Info.TotalIncomeOfHP);
 
@@ -1351,7 +1347,29 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     // this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(computation2Info.Rebate87A);
     // this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(computation2Info.Rebate87A);
   }
+  setAnyotherDeductionValue(deductionValues) {
+    let total = Number(this.itrSummaryForm.controls['us80c'].value) +
+      Number(this.itrSummaryForm.controls['us80ccc'].value) +
+      Number(this.itrSummaryForm.controls['us80ccc1'].value) +
+      Number(this.itrSummaryForm.controls['us80ccd2'].value) +
+      Number(this.itrSummaryForm.controls['us80ccd1b'].value) +
+      Number(this.itrSummaryForm.controls['us80dd'].value) +
+      Number(this.itrSummaryForm.controls['us80ddb'].value) +
+      Number(this.itrSummaryForm.controls['us80e'].value) +
+      Number(this.itrSummaryForm.controls['us80ee'].value) +
+      Number(this.itrSummaryForm.controls['us80gg'].value) +
+      Number(this.itrSummaryForm.controls['us80gga'].value) +
+      Number(this.itrSummaryForm.controls['us80ggc'].value) +
+      Number(this.itrSummaryForm.controls['us80ttaTtb'].value) +
+      Number(this.itrSummaryForm.controls['us80u'].value) +
+      Number(this.itrSummaryForm.controls['us80g'].value) +
+      Number(this.itrSummaryForm.controls['us80d'].value) +
+      Number(this.itrSummaryForm.controls['us80eeb'].value) +
+      Number(this.itrSummaryForm.controls['us80eea'].value);
 
+    this.itrSummaryForm.controls['other'].setValue(deductionValues['TotalChapVIADeductions'] - total);
+
+  }
   businessIncomeBind(itrData: any) {
     var itr4Summary = {
       assesse: {
@@ -2678,7 +2696,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       Number(this.itrSummaryForm.controls['us80ddb'].value) + Number(this.itrSummaryForm.controls['us80e'].value) + Number(this.itrSummaryForm.controls['us80ee'].value) +
       Number(this.itrSummaryForm.controls['us80gg'].value) + Number(this.itrSummaryForm.controls['us80gga'].value) + Number(this.itrSummaryForm.controls['us80ggc'].value) +
       Number(this.itrSummaryForm.controls['us80ttaTtb'].value) + Number(this.itrSummaryForm.controls['us80u'].value) + Number(this.itrSummaryForm.controls['us80g'].value) +
-      Number(this.itrSummaryForm.controls['us80d'].value) + Number(this.itrSummaryForm.controls['us80eeb'].value) + Number(this.itrSummaryForm.controls['other'].value);
+      Number(this.itrSummaryForm.controls['us80d'].value) + Number(this.itrSummaryForm.controls['us80eea'].value) + Number(this.itrSummaryForm.controls['us80eeb'].value) + Number(this.itrSummaryForm.controls['other'].value);
 
     //this.itrSummaryForm.controls['deductionUnderChapterVIA'].setValue(deductTotal);
     (this.itrSummaryForm.controls['taxSummary'] as FormGroup).controls['totalDeduction'].setValue(deductTotal)
@@ -3514,6 +3532,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       us80ttaTtb: [0],
       us80u: [0],
 
+      us80eea: [0],
       us80eeb: [0],
       other: [0],
 

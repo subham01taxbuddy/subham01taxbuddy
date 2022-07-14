@@ -843,8 +843,8 @@
 
                 <div class="card__col-lg-3" *ngIf="newItrSumChanges && this.sec80DobjVal.parentAge === 'above60'">
                     <mat-form-field appearance="outline">
-                        <mat-label>Medical Expendature</mat-label>
-                        <input matInput placeholder="Medical Expendature" type="number" id="medicalExpendature"
+                        <mat-label>Medical Expenditure</mat-label>
+                        <input matInput placeholder="Medical Expenditure" type="number" id="medicalExpendature"
                             name="medicalExpendature"
                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             maxlength="8" autocomplete="off" [value]="sec80DobjVal.medicalExpendature"
@@ -904,8 +904,7 @@
                         <mat-label>Under section 80C</mat-label>
                         <input matInput placeholder="Under section 80C" formControlName="us80c"
                             (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off" type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -913,8 +912,7 @@
                         <mat-label>Under section 80CCC</mat-label>
                         <input matInput placeholder="Under section 80CCC" formControlName="us80ccc"
                             (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off" type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -922,8 +920,7 @@
                         <mat-label>Under section 80CCD (1)</mat-label>
                         <input matInput placeholder="Under section 80CCD (1)" formControlName="us80ccc1"
                             (blur)="calculateTotalDeduction()" maxlength="8" autocomplete="off" type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -931,9 +928,7 @@
                         <mat-label>Under section 80CCD (2)</mat-label>
                         <input matInput placeholder="Under section 80CCD (2)" maxlength="8"
                             (blur)="calculateTotalDeduction()" formControlName="us80ccd2" autocomplete="off"
-                            type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            type="number" digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -941,9 +936,7 @@
                         <mat-label>Under section 80CCD (1B)</mat-label>
                         <input matInput placeholder="Under section 80CCD (1B)" maxlength="8"
                             (blur)="calculateTotalDeduction()" formControlName="us80ccd1b" autocomplete="off"
-                            type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            type="number" digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -951,8 +944,7 @@
                         <mat-label>Under section 80DD</mat-label>
                         <input matInput placeholder="Under section 80DD" maxlength="8"
                             (blur)="calculateTotalDeduction()" formControlName="us80dd" autocomplete="off" type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -960,18 +952,14 @@
                         <mat-label>Under section 80DDB</mat-label>
                         <input matInput placeholder="Under section 80DDB" maxlength="8"
                             (blur)="calculateTotalDeduction()" formControlName="us80ddb" autocomplete="off"
-                            type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            type="number" digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
                     <mat-form-field appearance="outline">
                         <mat-label>Under section 80E</mat-label>
                         <input matInput placeholder="Under section 80E" maxlength="8" (blur)="calculateTotalDeduction()"
-                            formControlName="us80e" autocomplete="off" type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            formControlName="us80e" autocomplete="off" type="number" digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -979,8 +967,7 @@
                         <mat-label>Under section 80EE</mat-label>
                         <input matInput placeholder="Under section 80EE" maxlength="8"
                             (blur)="calculateTotalDeduction()" formControlName="us80ee" autocomplete="off" type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -988,8 +975,7 @@
                         <mat-label>Under section 80GG</mat-label>
                         <input matInput placeholder="Under section 80GG" maxlength="8"
                             (blur)="calculateTotalDeduction()" formControlName="us80gg" autocomplete="off" type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -997,9 +983,7 @@
                         <mat-label>Under section 80GGA</mat-label>
                         <input matInput placeholder="Under section 80GGA" maxlength="8"
                             (blur)="calculateTotalDeduction()" formControlName="us80gga" autocomplete="off"
-                            type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            type="number" digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -1007,9 +991,7 @@
                         <mat-label>Under section 80GGC</mat-label>
                         <input matInput placeholder="Under section 80GGC" maxlength="8"
                             (blur)="calculateTotalDeduction()" formControlName="us80ggc" autocomplete="off"
-                            type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            type="number" digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -1017,18 +999,14 @@
                         <mat-label>Under section 80TTA/ 80TTB</mat-label>
                         <input matInput placeholder="Under section 80TTA/ 80TTB" maxlength="8"
                             (blur)="calculateTotalDeduction()" formControlName="us80ttaTtb" autocomplete="off"
-                            type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            type="number" digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
                     <mat-form-field appearance="outline">
                         <mat-label>Under section 80U</mat-label>
                         <input matInput placeholder="Under section 80U" maxlength="8" (blur)="calculateTotalDeduction()"
-                            formControlName="us80u" autocomplete="off" type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            formControlName="us80u" autocomplete="off" type="number" digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -1036,8 +1014,7 @@
                         <mat-label>Under section 80G</mat-label>
                         <input matInput placeholder="Under section 80G" maxlength="8" readonly
                             (blur)="calculateTotalDeduction()" formControlName="us80g" autocomplete="off" type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3">
@@ -1045,28 +1022,30 @@
                         <mat-label>Under section 80D</mat-label>
                         <input matInput placeholder="Under section 80D" maxlength="8" readonly
                             (blur)="calculateTotalDeduction()" formControlName="us80d" autocomplete="off" type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            digitsOnly>
                     </mat-form-field>
                 </div>
 
                 <div class="card__col-lg-3" *ngIf="newItrSumChanges">
                     <mat-form-field appearance="outline">
+                        <mat-label>80EEA</mat-label>
+                        <input matInput placeholder="80EEA" maxlength="8" (blur)="calculateTotalDeduction()"
+                            formControlName="us80eea" autocomplete="off" type="number" digitsOnly>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-3" *ngIf="newItrSumChanges">
+                    <mat-form-field appearance="outline">
                         <mat-label>80EEB - Electric Vehicle</mat-label>
                         <input matInput placeholder="80EEB - Electric Vehicle" maxlength="8"
                             (blur)="calculateTotalDeduction()" formControlName="us80eeb" autocomplete="off"
-                            type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            type="number" digitsOnly>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-3" *ngIf="newItrSumChanges">
                     <mat-form-field appearance="outline">
                         <mat-label>Any Other</mat-label>
                         <input matInput placeholder="Any Other" maxlength="8" (blur)="calculateTotalDeduction()"
-                            formControlName="other" autocomplete="off" type="number"
-                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                            formControlName="other" autocomplete="off" type="number" digitsOnly>
                     </mat-form-field>
                 </div>
                 <!-- </form> -->
