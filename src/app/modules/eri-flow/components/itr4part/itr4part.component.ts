@@ -121,7 +121,6 @@ export class Itr4partComponent implements OnInit, DoCheck, OnChanges {
   }
 
   updateBusinessInfo() {
-    debugger
     this.natureOfBusinessForm.patchValue(this.businessData.assesse.business.financialParticulars);
 
     var businessIncome = this.businessData.assesse.business.presumptiveIncomes.filter((item: any) => item.businessType === "BUSINESS");

@@ -88,8 +88,7 @@ export class RepoBySmeNameComponent implements OnInit {
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          debounceMs: 500
         }
       },
       {
@@ -99,10 +98,9 @@ export class RepoBySmeNameComponent implements OnInit {
         width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: "agNumberColumnFilter",
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          debounceMs: 500
         }
       },
       {
@@ -112,10 +110,9 @@ export class RepoBySmeNameComponent implements OnInit {
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: "agNumberColumnFilter",
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          debounceMs: 500
         }
       },
       {
@@ -125,10 +122,9 @@ export class RepoBySmeNameComponent implements OnInit {
         width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: "agNumberColumnFilter",
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          debounceMs: 500
         }
       },
       {
@@ -138,10 +134,9 @@ export class RepoBySmeNameComponent implements OnInit {
         width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: "agNumberColumnFilter",
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          debounceMs: 500
         }
       },
       {
@@ -151,10 +146,9 @@ export class RepoBySmeNameComponent implements OnInit {
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: "agNumberColumnFilter",
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          debounceMs: 500
         }
       },
       {
@@ -164,10 +158,9 @@ export class RepoBySmeNameComponent implements OnInit {
         width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: "agNumberColumnFilter",
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          debounceMs: 500
         }
       },
       {
@@ -177,10 +170,9 @@ export class RepoBySmeNameComponent implements OnInit {
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: "agNumberColumnFilter",
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          debounceMs: 500
         }
       },
       {
@@ -191,10 +183,9 @@ export class RepoBySmeNameComponent implements OnInit {
         hide: view === 'SL' ? true : false,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: "agNumberColumnFilter",
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          debounceMs: 500
         }
       }, {
         headerName: 'Missed Call',
@@ -203,15 +194,14 @@ export class RepoBySmeNameComponent implements OnInit {
         width: 80,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: "agNumberColumnFilter",
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          debounceMs: 500
         }
       },
       {
-        headerName: 'Team Lead Name',
-        field: 'teamLeadName',
+        headerName: 'Super Lead Name',
+        field: 'superLeadName',
         sortable: true,
         width: 180,
         hide: view === 'SL' ? true : false,
@@ -219,8 +209,7 @@ export class RepoBySmeNameComponent implements OnInit {
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          debounceMs: 500
         }
       }
     ]
@@ -271,7 +260,7 @@ export class RepoBySmeNameComponent implements OnInit {
         outboundCall: smeRepoInfo[i].outboundCall,
         ocPct: smeRepoInfo[i].outboundCall > 0 ? ((smeRepoInfo[i].outboundAnsweredCall / smeRepoInfo[i].outboundCall) * 100).toFixed(2) : 0.00,
         smeName: smeRepoInfo[i].smeName,
-        teamLeadName: smeRepoInfo[i].teamLeadName,
+        superLeadName: smeRepoInfo[i].superLeadName,
         totalAnsweredCall: smeRepoInfo[i].totalAnsweredCall,
         totalDuration: smeRepoInfo[i].totalDuration
       })
@@ -290,7 +279,7 @@ export class RepoBySmeNameComponent implements OnInit {
   }
 
   superLeadCreateRowData(smeReport) {
-    let superLeads = smeReport.map((item:any) => item.superLeadName)
+    let superLeads = smeReport.map((item: any) => item.superLeadName)
       .filter((value, index, self) => self.indexOf(value) === index)
     console.log(superLeads)
 
@@ -299,7 +288,7 @@ export class RepoBySmeNameComponent implements OnInit {
     let total = 0;
 
     for (let i = 0; i < superLeads.length; i++) {
-      let lead = smeReport.filter((item:any) => item.superLeadName === superLeads[i]);
+      let lead = smeReport.filter((item: any) => item.superLeadName === superLeads[i]);
       let smeData = {
         inboundAnsweredCall: this.totalPrice(lead, 'inboundAnsweredCall'),
         inboundCall: this.totalPrice(lead, 'inboundCall'),
