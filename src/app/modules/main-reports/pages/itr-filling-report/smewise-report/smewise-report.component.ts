@@ -1,3 +1,4 @@
+import { environment } from './../../../../../../environments/environment.prod';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
@@ -556,5 +557,11 @@ export class SmewiseReportComponent implements OnInit {
       return this.reportsData.filter(item => item.assignmentStatus === 'On' && item.filingCount === 0).length;
     }
     return this.reportsData.filter(item => item.assignmentStatus === val).length;
+  }
+
+  downloadReportsByDate() {
+    let fromDate = this.datePipe.transform(this.dateSearchForm.value.fromDate, 'yyyy-MM-dd');
+    let toDate = this.datePipe.transform(this.dateSearchForm.value.toDate, 'yyyy-MM-dd');
+    window.open(`${environment.url}/itr/api/itr-filing-report-sme-download?from=${fromDate}&to=${toDate}`)
   }
 }
