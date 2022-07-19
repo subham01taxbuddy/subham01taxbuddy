@@ -179,7 +179,9 @@ export class ScheduledCallComponent implements OnInit {
         sortable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: (data) => {
-          return formatDate(data.value, 'dd/MM/yyyy', this.locale)
+          let firstPoint = data.value.indexOf('T');
+          let myDate = data.value.substring(0, firstPoint)
+          return formatDate(myDate, 'dd/MM/yyyy', this.locale, '+0530')
         },
         filter: "agTextColumnFilter",
         filterParams: {
