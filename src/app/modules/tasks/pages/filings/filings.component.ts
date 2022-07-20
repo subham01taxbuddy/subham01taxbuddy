@@ -31,6 +31,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   selectedFilingTeamMemberId: number;
   config: any;
   selectedPageNo = 0;
+  mobileNumber = '';
   constructor(private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     private userMsService: UserMsService,
@@ -92,10 +93,20 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.myItrsList(this.selectedFyYear, 0, this.selectedFilingTeamMemberId);
 
   }
-  myItrsList(fy: String, pageNo: any, filingTeamMemberId: number) {
+
+  search() {
+    this.myItrsList(this.selectedFyYear, 0, this.selectedFilingTeamMemberId, 'mobile');
+  }
+
+  myItrsList(fy: String, pageNo: any, filingTeamMemberId: number, searchOption?: string) {
     this.loading = true;
     return new Promise((resolve, reject) => {
-      let param = `/${filingTeamMemberId}/itr-list?page=${pageNo}&size=50&financialYear=${fy}&eFillingCompleted=true` // OTH_FILTER panNumber,assessmentYearmobileNumber
+      let param = ''
+      if (searchOption === 'mobile') {
+        param = `/${filingTeamMemberId}/itr-list?mobileNumber=${this.mobileNumber}` // OTH_FILTER panNumber,assessmentYearmobileNumber
+      } else {
+        param = `/${filingTeamMemberId}/itr-list?page=${pageNo}&size=50&financialYear=${fy}&eFillingCompleted=true` // OTH_FILTER panNumber,assessmentYearmobileNumber
+      }
       this.itrMsService.getMethod(param).subscribe((res: any) => {
         console.log('filingTeamMemberId: ', res);
         // TODO Need to update the api here to get the proper data like user management
@@ -357,7 +368,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
             return `<button type="button" class="action_icon add_button" style="border: none;
             background: transparent; font-size: 16px; color: green">
             <i class="fa fa-circle" title="E-Verification is done" 
-            aria-hidden="true"></i>
+            aria-hidden="true"  data-action-type="lifeCycle"></i>
            </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" style="border: none;
@@ -484,6 +495,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         }
         case 'ackDetails': {
           this.getAcknowledgeDetail(params.data);
+          break;
+        }
+        case 'lifeCycle': {
+          this.eriITRLifeCycleStatus(params.data);
           break;
         }
         case 'isTpa': {
@@ -651,7 +666,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   async startCalling(user) {
     const agentNumber = await this.utilsService.getMyCallingNumber();
     if (!agentNumber) {
-      this.toastMsgService.alert("error", 'You dont have calling role.')
+      this.toastMsgService.alert("error", 'You don\'t have calling role.')
       return;
     }
     console.log('user: ', user);
@@ -715,5 +730,32 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.config.currentPage = event;
     this.selectedPageNo = event - 1;
     this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
+  }
+
+  eriITRLifeCycleStatus(data) {
+    console.log(data);
+    const param = `/eri/v1/api`;
+    let headerObj = {
+      'panNumber': data.panNumber,
+      'assessmentYear': data.assessmentYear,
+      'userId': data.userId.toString()
+    }
+    sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+    let req = { "serviceName": "EriITRLifeCycleStatus", "pan": data.panNumber, "ay": "2022" }
+
+    this.itrMsService.postMethodForEri(param, req).subscribe((res: any) => {
+      console.log(res);
+      if (res && res.successFlag) {
+        if (res.hasOwnProperty('messages')) {
+          if (res.messages instanceof Array && res.messages.length > 0)
+            this.utilsService.showSnackBar(res.messages[0].desc);
+        }
+      } else {
+        if (res.hasOwnProperty('errors')) {
+          if (res.errors instanceof Array && res.errors.length > 0)
+            this.utilsService.showSnackBar(res.errors[0].desc);
+        }
+      }
+    })
   }
 }

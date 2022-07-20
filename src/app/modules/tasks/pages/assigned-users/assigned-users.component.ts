@@ -33,7 +33,8 @@ export class AssignedUsersComponent implements OnInit {
     statusId: null,
     page: 0,
     pageSize: 20,
-    mobileNumber: null
+    mobileNumber: null,
+    emailId: null
   }
   agents = [];
   agentId = null;
@@ -895,16 +896,28 @@ export class AssignedUsersComponent implements OnInit {
     //   }
     // });
   }
+  isNumeric(value) {
+    return /^\d+$/.test(value);
+  }
   search(form?, isAgent?) {
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (this.searchParam.mobileNumber == null || this.searchParam.mobileNumber == '') {
-        this.searchParam.mobileNumber = null
+        this.searchParam.mobileNumber = null;
+      } else {
+        this.searchParam.emailId = null;
       }
+      if (this.searchParam.emailId == null || this.searchParam.emailId == '') {
+        this.searchParam.emailId = null;
+      } else {
+        this.searchParam.mobileNumber = null;
+      }
+
       this.searchParam.statusId = null;
     } else if (form == 'status') {
       this.searchParam.page = 0;
       this.searchParam.mobileNumber = null
+      this.searchParam.emailId = null
     } else if (form == 'agent') {
       this.searchParam.page = 0;
     }
