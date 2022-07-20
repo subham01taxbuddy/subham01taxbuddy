@@ -37,7 +37,7 @@ export class EVerificationDialogComponent implements OnInit {
       serviceName: ['EriGenerateEvcService'],
       pan: [''],
       verMode: ['', Validators.required],
-      Ay: [''],
+      ay: [''],
       ackNum: [''],
       formCode: ['']
     });
