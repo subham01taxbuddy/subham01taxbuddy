@@ -1045,7 +1045,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
     //TDS Other Than salary
     var tdsOtherThanSalInfo;
-    if (itrData?.hasOwnProperty('TDSonOthThanSals').TDSonOthThanSals?.hasOwnProperty('TDSonOthThanSal')) {
+    if (itrData?.TDSonOthThanSals?.hasOwnProperty('TDSonOthThanSal')) {
       tdsOtherThanSalInfo = itrData?.TDSonOthThanSals?.TDSonOthThanSal;
     }
     else if (itrData?.TDSonOthThanSals?.hasOwnProperty('TDSonOthThanSalDtls')) {
@@ -2460,13 +2460,14 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
             lastName: "",
             middleName: "",
             pan: "",
-            dateOfBirth: dob
+            dateOfBirth: dob,
+            fathersName: ""
           }
 
           Object.assign(reqBody, result);
 
           if (!this.utilsService.isNonEmpty(result.middleName)) {
-            reqBody.middleName = personalInfo.Verification.Declaration.FatherName;
+            reqBody.fathersName = personalInfo.Verification.Declaration.FatherName;
             // this.itrSummaryForm.controls['assesse'] as FormGroup).controls['family.controls[0].controls['fathersName'].setValue(reqBody.middleName);
           }
           userData.insert(0, this.updateFamilyForm(reqBody));
@@ -2497,7 +2498,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       lName: [obj.lastName || '', Validators.required],
       gender: [obj.gender || '', Validators.required],
       dateOfBirth: [obj.dateOfBirth || '', Validators.required],
-      fathersName: [obj.middleName || '']
+      fathersName: [obj.fathersName || '']
     });
   }
 
