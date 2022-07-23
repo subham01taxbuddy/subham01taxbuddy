@@ -6,7 +6,7 @@ export const environment = {
 	gst_gov_url: "https://devapi.gst.gov.in",
 	ifsc_url: "https://ifsc.razorpay.com",
 	amazonaws_url: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com",
-	matomoScriptId: '4',
+	matomoScriptId: '3',
 	s3_cred: {
 		// user_name: "ashish@ssbainnovations.com",
 		// password: "testPwd8761$",

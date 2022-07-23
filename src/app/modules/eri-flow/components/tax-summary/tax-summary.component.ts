@@ -256,7 +256,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
   setJsonData(itrData: any) {
     //  if(itrData.hasOwnProperty('ITR1')){
-    this.newTaxRegime = itrData.FilingStatus.NewTaxRegime === "Y" ? true : false;
+    this.setTaxRegimeValue(itrData.FilingStatus);
+    // this.newTaxRegime = itrData.FilingStatus.NewTaxRegime === "Y" ? true : false;
     let panNo = itrData.PersonalInfo.PAN;
     let dob = new Date(itrData.PersonalInfo.DOB);
     console.log('Personal Info: ', itrData.PersonalInfo)
@@ -273,7 +274,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     let natureOfEmployer = itrData.PersonalInfo.EmployerCategory;
     (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employerCategory'].setValue(natureOfEmployer);
 
-    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['regime'].setValue(itrData.FilingStatus.NewTaxRegime);
+    // (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['regime'].setValue(itrData.FilingStatus.NewTaxRegime);
 
     let adress = itrData.PersonalInfo.Address;
     (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['email'].setValue(adress.EmailAddress);
@@ -1347,6 +1348,22 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     // this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(computation2Info.Rebate87A);
     // this.itrSummaryForm.controls['taxSummary.controls['forRebate87Tax'].setValue(computation2Info.Rebate87A);
   }
+
+  setTaxRegimeValue(filingStatus) {
+    if (filingStatus.hasOwnProperty('OptingNewTaxRegime')) {
+      if ((filingStatus.NewTaxRegime === "N" && filingStatus.OptingNewTaxRegime == '1') || (filingStatus.NewTaxRegime === "Y" && filingStatus.OptingNewTaxRegime == '3')) {
+        this.newTaxRegime = true;
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['regime'].setValue('Y');
+        return;
+      }
+      this.newTaxRegime = false;
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['regime'].setValue('N');
+      return;
+    }
+    this.newTaxRegime = filingStatus.NewTaxRegime === "Y" ? true : false;
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['regime'].setValue(filingStatus.NewTaxRegime);
+  }
+
   setAnyotherDeductionValue(deductionValues) {
     let total = Number(this.itrSummaryForm.controls['us80c'].value) +
       Number(this.itrSummaryForm.controls['us80ccc'].value) +

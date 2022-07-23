@@ -45,7 +45,7 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
       email: ['', [Validators.required]],
       contactNumber: ['', [Validators.required]],
       panNumber: ['', [Validators.required]],
-      aadharNumber: ['', [Validators.required]],
+      aadharNumber: [''],
       assesseeType: ['', [Validators.required]],
       assessmentYear: ['', [Validators.required]],
       financialYear: ['', [Validators.required]],

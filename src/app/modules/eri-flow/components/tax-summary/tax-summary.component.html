@@ -418,7 +418,7 @@
                             acknowledgment number</mat-error>
                         <mat-error
                             *ngIf="itrSummaryForm.controls['assesse'].controls['ackNumber'].hasError('minlength')">
-                            Acknowldegemant number should be 15 digit</mat-error>
+                            Acknowledgement number should be 15 digit</mat-error>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-2" formGroupName="assesse" *ngIf="showAcknowInput">
@@ -454,9 +454,9 @@
         <!-- <div class="card__row"> -->
 
 
-        <div class="heading">ANNEXURES</div><br>
+        <div class="heading">ANNEXURE</div><br>
 
-        <div class="tableHead">Annexures: Bank Details</div>
+        <div class="tableHead">Annexure: Bank Details</div>
         <button style="float: right;" (click)="openDialog('Add Bank Info','Add', null,'','Bank')">Add</button>
         <br>
         <table>
@@ -494,7 +494,7 @@
 
         </table><br><br>
 
-        <div class="tableHead">Annexures: House Properties</div>
+        <div class="tableHead">Annexure: House Properties</div>
         <button [disabled]="showHouseBtn()" style="float: right;"
             (click)="openDialog('Add House Property','Add', null, '','House')">Add House Info</button><br>
         <table class="verticle">
@@ -505,11 +505,11 @@
                 <!-- <th>Co-owned Name</th>
                             <th>Co-owned PAN</th>
                             <th>Co-owned share</th> -->
-                <th>Tenat name</th>
-                <th>Gross Rent Recived</th>
+                <th>Tenant name</th>
+                <th>Gross Rent Received</th>
                 <th>Less: Taxes Paid</th>
                 <th><b>Annual Value</b></th>
-                <th>Standared deduction</th>
+                <th>Standard deduction</th>
                 <th>Interest on Home Loan</th>
                 <th><b>Net House Pro Income</b></th>
 
@@ -559,7 +559,7 @@
         </table><br><br>
 
 
-        <div class="tableHead">Annexures: Salary</div>
+        <div class="tableHead">Annexure: Salary</div>
         <button style="float: right;" [disabled]="salaryItrratedData.length > 3"
             (click)="openDialog('Add Salary Info','Add', null, '','Salary')">Add Employer
             Salary</button><br>
@@ -658,7 +658,7 @@
         </div>
 
 
-        <div class="tableHead">Annexures: Other Sources</div><br>
+        <div class="tableHead">Annexure: Other Sources</div><br>
 
         <mat-card>
             <div class="card__row">
@@ -729,7 +729,7 @@
         </mat-card><br><br>
 
         <div *ngIf="newItrSumChanges">
-            <div class="tableHead">Annexures: Add Exempt Income</div><br>
+            <div class="tableHead">Annexure: Add Exempt Income</div><br>
             <mat-card>
                 <div class="card__row">
                     <div class="card__col-lg-8">
@@ -789,7 +789,7 @@
         <br><br>
 
 
-        <div class="tableHead">Annexures: Deductions under Chap-VI A</div><br>
+        <div class="tableHead">Annexure: Deductions under Chap-VI A</div><br>
         <p class="subLabel">Under Section 80D</p><br>
         <mat-card>
             <div class="card__row">
@@ -798,7 +798,7 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Health Insurance Premium for Self</mat-label>
                         <input matInput placeholder="Health Insurance Premium for Self" maxlength="8" type="number"
-                            id="healthInsuarancePremiumSelf" name="healthInsuarancePremiumSelf"
+                            id="healthInsuarancePremiumSelf" name="healthInsurancePremiumSelf"
                             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             autocomplete="off" [value]="sec80DobjVal.healthInsuarancePremiumSelf"
                             (blur)="setDeduction80DVal($event.target.value, 'forSelf')">
@@ -1053,7 +1053,7 @@
         </mat-card><br><br>
 
 
-        <div class="tableHead">Annexures: Tax deducted at Sources</div><br>
+        <div class="tableHead">Annexure: Tax deducted at Sources</div><br>
         <p class="subLabel">TDS on Salary</p>
         <button style="float: right;" (click)="openDialog('Add TDS on Salary','Add', null,'','tdsOnSal')">Add TDS
             on Salary</button><br>
@@ -1215,9 +1215,9 @@
 
         </table><br><br>
 
-        <div class="tableHead">Annexures: Advance Tax/ Self-Assessment Tax</div><br>
+        <div class="tableHead">Annexure: Advance Tax/ Self-Assessment Tax</div><br>
         <button style="float: right;"
-            (click)="openDialog('Annexures: Advance Tax/ Self-Assessment Tax','Add', null, '','advanceSelfAssTax')">Add
+            (click)="openDialog('Annexure: Advance Tax/ Self-Assessment Tax','Add', null, '','advanceSelfAssTax')">Add
             Tax Collected at Sources</button><br>
         <table>
             <tr>
@@ -1241,7 +1241,7 @@
                 <td>{{advTax.totalTax}}</td>
                 <td>
                     <button type="button" class="tbd-table-btn-icon"
-                        (click)="openDialog('Edit Annexures: Advance Tax/ Self-Assessment Tax','Edit', i, advanceSelfTax[i],'advanceSelfAssTax')">
+                        (click)="openDialog('Edit Annexure: Advance Tax/ Self-Assessment Tax','Edit', i, advanceSelfTax[i],'advanceSelfAssTax')">
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                     </button>
                     <button type="button" class="tbd-table-btn-icon" (click)="deleteData('advanceSelfAssTax',i)"><i
@@ -1256,7 +1256,7 @@
         </table><br><br>
 
         <div *ngIf="!newItrSumChanges">
-            <div class="tableHead">Annexures: Exempt Income</div><br>
+            <div class="tableHead">Annexure: Exempt Income</div><br>
             <mat-card>
                 <div class="card__row">
                     <!-- <form [formGroup]="exemptIncome"> -->
