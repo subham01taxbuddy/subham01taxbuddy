@@ -667,8 +667,9 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     this.personalInfoForm.controls['panNumber'].setValue(personalInfo.PersonalInfo.PAN);
 
 
-    this.personalInfoForm.controls['regime'].setValue(personalInfo.FilingStatus.NewTaxRegime);
-    this.newTaxRegime = personalInfo.FilingStatus.NewTaxRegime === "Y" ? true : false;
+    // this.personalInfoForm.controls['regime'].setValue(personalInfo.FilingStatus.NewTaxRegime);
+    // this.newTaxRegime = personalInfo.FilingStatus.NewTaxRegime === "Y" ? true : false;
+    this.setTaxRegimeValue(personalInfo.FilingStatus);
 
     let address = personalInfo.PersonalInfo.Address;
     this.personalInfoForm.controls['city'].setValue(address.CityOrTownOrDistrict);
@@ -2325,6 +2326,22 @@ export class Itr2mainComponent implements OnInit, OnChanges {
     }
 
   }
+
+  setTaxRegimeValue(filingStatus) {
+    if (filingStatus.hasOwnProperty('OptingNewTaxRegime')) {
+      if ((filingStatus.NewTaxRegime === "N" && filingStatus.OptingNewTaxRegime == '1') || (filingStatus.NewTaxRegime === "Y" && filingStatus.OptingNewTaxRegime == '3')) {
+        this.personalInfoForm.controls['regime'].setValue('Y');
+        this.newTaxRegime = true;
+        return;
+      }
+      this.newTaxRegime = false;
+      this.personalInfoForm.controls['regime'].setValue('N');
+      return;
+    }
+    this.newTaxRegime = filingStatus.NewTaxRegime === "Y" ? true : false;
+    this.personalInfoForm.controls['regime'].setValue(filingStatus.NewTaxRegime);
+  }
+
   setAnyotherDeductionValue(deductionValues) {
     let total = Number(this.deductionAndRemainForm.controls['us80c'].value) +
       Number(this.deductionAndRemainForm.controls['us80ccc'].value) +
