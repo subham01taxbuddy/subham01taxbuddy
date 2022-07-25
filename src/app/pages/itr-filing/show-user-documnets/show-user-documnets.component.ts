@@ -1,3 +1,4 @@
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -21,7 +22,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
   userId: any;
 
   constructor(private itrMsService: ItrMsService, private activatedRoute: ActivatedRoute, public utilsService: UtilsService,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe, private toastMessageService: ToastMessageService) { }
 
   ngOnInit() {
     const temp = this.activatedRoute.params.subscribe(params => {
@@ -105,6 +106,9 @@ export class ShowUserDocumnetsComponent implements OnInit {
       }, (error) => {
         console.log("error === ", error);
         this.loading = false;
+        if (error.status === 403) {
+          this.toastMessageService.alert('error', error.error.detail)
+        }
         // this.utilsService.disposable.unsubscribe();
         // this.errorHandler(error);
       }
