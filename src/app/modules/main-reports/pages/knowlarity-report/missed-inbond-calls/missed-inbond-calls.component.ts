@@ -192,7 +192,7 @@ export class MissedInbondCallsComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call." 
             style="border: none;
             background: transparent; font-size: 16px; cursor:pointer">
@@ -220,7 +220,7 @@ export class MissedInbondCallsComponent implements OnInit {
 
   async placeCall(user) {
     console.log('user: ', user)
-    const param = `/call-management/make-call`;
+    const param = `/prod/call-support/call`;
     const agentNumber = await this.utilsService.getMyCallingNumber();
     console.log('agent number', agentNumber)
     if (!agentNumber) {
@@ -232,7 +232,7 @@ export class MissedInbondCallsComponent implements OnInit {
       "agent_number": agentNumber,
       "customer_number": user.mobileNumber
     }
-    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
       console.log('Call Result: ', result);
       this.loading = false;
       if (result.success.status) {
