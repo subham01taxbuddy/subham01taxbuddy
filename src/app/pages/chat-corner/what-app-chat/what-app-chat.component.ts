@@ -26,7 +26,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
   loading!: boolean;
   userDetail: any;
   intr: any;
-  userChatData:any[] = [];
+  userChatData: any[] = [];
   backUpChatData: any;
   selectedUser: any;
   smeInfo: any;
@@ -100,7 +100,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
     private router: Router
   ) {
     this.environmentPath = environment.url;
-    this.smeInfo = JSON.parse(localStorage.getItem("UMD") ||'');
+    this.smeInfo = JSON.parse(localStorage.getItem("UMD") || '');
     console.log("SME info: ", this.smeInfo);
 
 
@@ -150,7 +150,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
   async getAgentList() {
     this.agentList = await this.utilsService.getStoredAgentList();
   }
-  getUnreadListByAgentId(agentId:any) {
+  getUnreadListByAgentId(agentId: any) {
     this.showChatUi = true;
     this.selectedAgent = agentId;
     this.utilsService.sendMessage(agentId);
@@ -165,7 +165,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
   searchMyNumber() {
     if (this.searchNumber.value) {
       this.filteredArray = this.userDetail.filter(
-        (item:any) =>
+        (item: any) =>
           item.whatsAppNumber.includes(this.searchNumber.value) ||
           item.name.toLowerCase().trim().includes(this.searchNumber.value)
       );
@@ -236,7 +236,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
             this.filteredArray.push(this.updatedChat[i]);
           }
           console.log("After Data Push filteredArray: ", this.filteredArray);
-          this.filteredArray.sort(function (a:any, b:any) {
+          this.filteredArray.sort(function (a: any, b: any) {
             return b.lastMessageDateTime - a.lastMessageDateTime;
           })
           this.userDetail = this.filteredArray;
@@ -269,7 +269,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
     );
   }
 
-  geUserChatDetail(user:any, key?:any) {
+  geUserChatDetail(user: any, key?: any) {
     if (key === "continuesCall") {
       console.log('user chat data: ', this.userChatData, this.userChatData.length)
       if (this.userChatData.length > 0) {
@@ -312,7 +312,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
       let mNO = 918299224792  //919545428497
       let param = "/whatsapp/chat/" + user;
       this.userMsService.getUserDetail(param).subscribe(
-        (res:any) => {
+        (res: any) => {
           console.log(res, typeof res);
           console.log('CHECK', res.hasOwnProperty('userInfo'))
           this.startConversation = false;
@@ -343,7 +343,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
 
   }
 
-  checkFetchInfoSame(fetchedInfo:any) {
+  checkFetchInfoSame(fetchedInfo: any) {
     if (Object.entries(fetchedInfo).length === this.backUpChatData.length) {
       return true;
     } else {
@@ -399,7 +399,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
         this.isTemplateValid(this.whatsAppForm.controls["sentMessage"].value)
       ) {
         let templateMsgInfo = this.templateInfo.find(
-          (item:any) =>
+          (item: any) =>
             item.templateName ===
             this.whatsAppForm.controls["selectTemplate"].value
         );
@@ -495,7 +495,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
   isTemplateValid(templateMsg: String) {
     this.newAttributes = [];
     let attributes = this.templateInfo.find(
-      (item:any) =>
+      (item: any) =>
         item.templateName === this.whatsAppForm.controls["selectTemplate"].value
     ).attributes;
     console.log("attributes: ", attributes, attributes.length);
@@ -530,17 +530,17 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  showLink(mediaId:any) {
+  showLink(mediaId: any) {
     console.log("mediaId: ", mediaId);
     return `<a (click)="downloadDoc(data.mediaId)">mediaId</a>`;
   }
 
-  downloadDoc(id:any) {
+  downloadDoc(id: any) {
     // window.open(environment.url + "/user/download-media-file?mediaId=" + id);
     window.open(environment.url + "/gateway/download-media-file?mediaId=" + id);
   }
 
-  checkImgType(fileName:any) {
+  checkImgType(fileName: any) {
     if (fileName.includes("ima")) {
       return true;
     } else {
@@ -548,7 +548,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  getServicesAvailed(userId:any) {
+  getServicesAvailed(userId: any) {
     console.log("User Id: ", userId);
     let param = "/itr/api/usersubscription?userId=" + userId;
     this.loading = true;
@@ -577,14 +577,14 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
     );
   }
 
-  showTemplateMsg(event:any) {
+  showTemplateMsg(event: any) {
     //this.sentMessage.disable();
     let tempInfo = this.templateInfo.find(
-      (item:any) => item.templateName === event.value
+      (item: any) => item.templateName === event.value
     );
     this.tempAttributes = this.getTempAttributes(tempInfo);
     console.log('Return tempAttributes: ', this.tempAttributes)
-    var mapObj:any = {
+    var mapObj: any = {
       "1": "",
       "2": "",
       "3": "",
@@ -596,7 +596,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
       mapObj[i + 1] = this.tempAttributes[i];
     }
     let msg = tempInfo.templateContent.replace(/1|2|3|4|5|6/gi, function (
-      matched:any
+      matched: any
     ) {
       return mapObj[matched];
     });
@@ -605,12 +605,12 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
     this.timeExpired = false;
   }
 
-  showQuickReplyMsg(event:any) {
+  showQuickReplyMsg(event: any) {
     console.log('Quick reply message: ', event.value);
     this.whatsAppForm.controls["sentMessage"].setValue(event.value);
   }
 
-  getTempAttributes(tempMessage:any) {
+  getTempAttributes(tempMessage: any) {
     this.oldAttributes = [];
     console.log(tempMessage.attributes);
     for (let i = 0; i < tempMessage.attributes.length; i++) {
@@ -695,9 +695,9 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
     this.whatsAppForm.reset();
   }
 
-  getTimeCount(chatDetail:any) {
+  getTimeCount(chatDetail: any) {
     this.userLastMsgTime = "";
-    let userChatInfo = chatDetail.filter((item:any) => item.isReceived === true);
+    let userChatInfo = chatDetail.filter((item: any) => item.isReceived === true);
     console.log('userChatInfo: ', userChatInfo)
     if (userChatInfo.length === 0) {
       this.timeExpired = true;
@@ -723,7 +723,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  showTimer(remaining:any) {
+  showTimer(remaining: any) {
     this.countDown = timer(0, 1000).pipe(
       take(remaining),
       map(() => {
@@ -743,9 +743,9 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
     );
   }
 
-  startChat(whatsAppNumber:any) {
+  startChat(whatsAppNumber: any) {
     console.log('whatsAppNumber: ', whatsAppNumber);
-     this._toastMessageService.alert("success", 'Please use Kommunicate Dashboard for whatsapp Conversation for all the new chats');
+    this._toastMessageService.alert("success", 'Please use Kommunicate Dashboard for whatsapp Conversation for all the new chats');
     this.startConversation = !this.startConversation;
     if (this.startConversation && this.utilsService.isNonEmpty(whatsAppNumber)) {
       let param = "/whatsapp/unread/remove/" + whatsAppNumber;
@@ -758,7 +758,7 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  blockChatUser(mobNum:any) {
+  blockChatUser(mobNum: any) {
     this.loading = true;
     let param = '/gateway/whatsapp/block/' + mobNum;
     this.userMsService.getMethodInfo(param).subscribe(response => {
@@ -792,12 +792,12 @@ export class WhatAppChatComponent implements OnInit, OnDestroy {
       return
     }
     customerNumber = customerNumber.substring(2);
-    const param = `/call-management/make-call`;
+    const param = `/prod/call-support/call`;
     const reqBody = {
       "agent_number": agentNumber,
       "customer_number": customerNumber
     }
-    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
       console.log('Call Result: ', result);
       this.loading = false;
       if (result.success.status) {

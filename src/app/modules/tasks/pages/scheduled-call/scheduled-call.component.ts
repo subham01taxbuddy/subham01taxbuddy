@@ -429,8 +429,8 @@ export class ScheduledCallComponent implements OnInit {
       "customer_number": user.userMobile
     }
 
-    const param = `/call-management/make-call`;
-    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+    const param = `/prod/call-support/call`;
+    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
       console.log('Call Result: ', result);
       this.loading = false;
       if (result.success.status) {

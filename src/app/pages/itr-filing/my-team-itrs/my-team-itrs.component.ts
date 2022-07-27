@@ -654,13 +654,13 @@ export class MyTeamItrsComponent implements OnInit {
     console.log('user: ', user);
     this.loading = true;
     let customerNumber = user.contactNumber;
-    const param = `/call-management/make-call`;
+    const param = `/prod/call-support/call`;
     const reqBody = {
       "agent_number": agentNumber,
       "customer_number": customerNumber
     }
     console.log('reqBody:', reqBody)
-    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
       console.log('Call Result: ', result);
       this.loading = false;
       if (result.success.status) {
