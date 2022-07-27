@@ -796,13 +796,13 @@ export class AssignedUsersComponent implements OnInit {
   call(data) {
     // let callInfo = data.customerNumber;
     this.loading = true;
-    const param = `/call-management/make-call`;
+    const param = `/prod/call-support/call`;
     // TODO check the caller agent number;
     const reqBody = {
       "agent_number": data.callerAgentNumber,
       "customer_number": data.mobileNumber
     }
-    this.userMsService.postMethod(param, reqBody).subscribe((result: any) => {
+    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
       this.loading = false;
       if (result.success.status) {
         this._toastMessageService.alert("success", result.success.message)
