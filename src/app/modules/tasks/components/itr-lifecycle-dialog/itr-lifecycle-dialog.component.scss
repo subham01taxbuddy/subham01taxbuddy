@@ -1,0 +1,718 @@
+html {
+    overflow-y: hidden;
+}
+
+
+.hrLine {
+    margin-top: 0;
+}
+
+.cc-rockmenu {
+    display: none;
+}
+
+.AchBx {
+    background-color: #fafbff;
+    border-bottom: 2px solid #6d6d6d;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    display: block;
+    margin-top: -15px;
+    padding: 10px;
+}
+
+.mdClr {
+    color: #00a4bf;
+    display: block;
+    font-size: 50px;
+    margin-top: -8px;
+    text-align: center;
+    width: 100%;
+}
+
+.AchTx {
+    border-bottom: 1px dashed #cac7c7;
+    color: #6d6d6d !important;
+    font-size: 15px;
+    line-height: 22px;
+    margin-top: 10px;
+    padding: 5px 0 15px 10px;
+    text-indent: 1px;
+}
+
+.AchTx1 {
+    color: #6d6d6d !important;
+    font-size: 15px;
+    line-height: 22px;
+    margin-top: 10px;
+    padding: 5px 0 10px 10px;
+    text-indent: 1px;
+}
+
+.gogRat {
+    width: 71%;
+}
+
+
+// New Steps
+.whtStp {
+    background-color: #fff;
+    padding: 15px;
+}
+
+.step {
+    border-bottom: 1px dashed #ccc;
+    margin-bottom: 10px;
+    padding: 5px 0 5px 0;
+}
+
+.date {
+    color: #28a745;
+    float: right;
+    font-size: 12px;
+    font-style: italic;
+    margin-top: -26px;
+}
+
+.off {
+    color: #ccc;
+}
+
+.on {
+    color: #28a745;
+}
+
+.txStp {
+    font-size: 15px;
+    font-style: normal;
+    margin-bottom: 5px;
+}
+
+// New Steps Ends
+
+.ClrTx {
+    color: #1cc88a;
+    font-weight: 500;
+}
+
+.icoApl {
+    color: #007bff;
+    float: left;
+    font-family: Roboto;
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.icoApl:hover {
+    color: hsl(241, 41%, 52%);
+}
+
+.txIc {
+    font-size: 16px;
+    font-weight: 100;
+    padding-left: 5px;
+}
+
+.mobTx {
+    float: left;
+    font-size: 14px;
+    font-weight: 100;
+    margin-left: 76px;
+    margin-top: -39px;
+}
+
+.achvSpc {
+    margin-top: 15px;
+    margin-left: -10px;
+}
+
+.icoPlay {
+    color: #007bff;
+    float: left;
+    font-family: Roboto;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.icoPlay:hover {
+    color: #5553b7;
+}
+
+.CATx {
+    color: #7a7c7f !important;
+    font-size: 15px;
+    margin-left: 63px;
+    margin-top: -49px;
+}
+
+.resImgCA {
+    float: left;
+    height: auto;
+    margin-top: -20px;
+    width: 32%;
+}
+
+.CAParaTx {
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+.chatTx {
+    color: #b8b8b8;
+    float: right;
+    font-size: 18px;
+    margin-right: 109px;
+    margin-top: -60px;
+}
+
+.ImgHow1 {
+    margin-left: -6px;
+}
+
+.smSpc {
+    margin-left: 10px !important;
+}
+
+.achv {
+    color: #28a745;
+    float: left !important;
+    font-size: 23px !important;
+    margin-left: -10px;
+    margin-right: 10px;
+    margin-top: -11px !important;
+}
+
+.TxAchv {
+    color: #28a745 !important;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    margin-top: -12px !important;
+    text-transform: uppercase !important;
+}
+
+.border-left-primary {
+    border-left: 0.25rem solid #4e73df !important;
+}
+
+.border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+
+.topA {
+    float: left;
+    margin-top: 10px;
+}
+
+.topA1 {
+    float: left;
+    margin-top: 5px;
+}
+
+.topA2 {
+    float: left;
+    margin-top: 15px;
+}
+
+.StatTx {
+    margin-bottom: 15px !important;
+    color: #00B0CB;
+}
+
+.rtImg {
+    width: 315px;
+}
+
+.txAch {
+    font-size: 15px;
+    padding-top: 10px;
+}
+
+.txAch1 {
+    font-size: 15px;
+    padding-top: 0;
+}
+
+.txCA {
+    font-size: 18px;
+}
+
+
+.icoRev {
+    transform: rotate(100deg);
+}
+
+.caBx {
+    height: 155px !important;
+}
+
+.caBxDell {
+    height: 214px;
+}
+
+
+.caBx1 {
+    height: auto;
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+    pointer-events: none !important;
+}
+
+::ng-deep .mat-vertical-stepper-header {
+    pointer-events: none !important;
+}
+
+
+.topA {
+    float: left;
+    margin-top: 10px;
+}
+
+.schedule-icon {
+    background-color: #00B0CB;
+    border-radius: 10px;
+    top: 310px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    height: auto;
+    margin-left: 14px;
+    padding: 5px;
+    position: absolute;
+    text-align: center;
+    width: 300px;
+    z-index: 10;
+}
+
+.wh-chat-icon {
+    background-color: #0dbf42;
+    border-radius: 10px;
+    top: 240px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    height: auto;
+    position: absolute;
+    text-align: center;
+    width: 300px;
+    z-index: 10;
+    margin-left: 14px;
+    padding: 5px;
+}
+
+.wh-img {
+    height: 40px;
+    width: 40px;
+}
+
+a {
+    color: #ffffff !important;
+}
+
+input.mat-input-element {
+    margin-top: 0.9375em;
+}
+
+@media screen and (min-width: 1200px) {
+    .topK {
+        margin-top: 16px !important;
+
+    }
+
+    .km-script-container {
+        float: left;
+        height: 585px;
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 992px) {
+    .achv {
+        color: #28a745;
+        float: left !important;
+        font-size: 23px !important;
+        margin-left: -22px;
+        margin-right: 10px;
+        margin-top: -11px !important;
+    }
+
+
+
+    .mobTx {
+        margin-left: 62px;
+    }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 992px) {}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+
+
+    .TxAchv {
+        font-size: 14px;
+    }
+
+    .hrLine {
+        margin-top: 0;
+    }
+
+    .CATx {
+        color: #7a7c7f !important;
+        font-size: 15px;
+        margin-left: 0;
+        margin-top: 9px;
+    }
+
+    .CAParaTx {
+        font-size: 14px;
+        margin-top: 0;
+    }
+
+    .resImgCA {
+        float: left;
+        height: auto;
+        margin-left: 40px;
+        margin-top: -18px !important;
+        width: 40%;
+    }
+
+
+    .caBxDell {
+        height: 302px;
+    }
+
+    .km-script-container {
+        height: 632px;
+        width: 100%;
+    }
+}
+
+
+
+@media screen and (max-width: 1199px) {
+
+    .topK {
+        margin-top: 10px !important;
+
+    }
+
+    .resImgCA {
+        margin-top: -46px;
+    }
+}
+
+@media only screen and (max-width:1199px) and (min-width:0px) {
+    .caBx {
+        display: none;
+    }
+}
+
+@media only screen and (max-width:1199px) and (min-width:992px) {
+    .achvSpc {
+        margin-top: 15px;
+        margin-left: -90px;
+    }
+}
+
+@media only screen and (max-width:991px) and (min-width:959px) {
+    .achvSpc {
+        display: none;
+    }
+}
+
+
+@media only screen and (max-width:958px) and (min-width:0px) {
+    .rtImg {
+        display: none;
+    }
+
+    .wh-chat-icon {
+        display: none;
+    }
+
+    .schedule-icon {
+        display: none;
+    }
+}
+
+
+
+@media only screen and (max-width: 768px) and (min-width:0px) {
+    .cc-rockmenu {
+        display: none !important;
+    }
+
+    .rolling {
+        display: none !important;
+    }
+
+}
+
+
+
+
+
+
+@media screen and (max-width: 991px) {
+    .caBxDell {
+        height: auto !important;
+    }
+}
+
+@media only screen and (max-width: 1198px) and (min-width: 992px) {
+    .AchBx {
+        margin-top: 0 !important;
+    }
+}
+
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+    .AchBx {
+        background-color: #fafbff;
+        border: 1px solid #eeeded;
+        border-bottom: 0;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        box-shadow: 3px 6px 23px #eeeded;
+        margin-left: 240px;
+        margin-top: 20px !important;
+        padding: 10px;
+    }
+
+    .gogRat {
+        width: 47%;
+    }
+}
+
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+
+
+    .icoPlay {
+        float: left !important;
+        margin-left: 5px !important;
+        margin-top: -10px !important;
+    }
+
+    .icoApl {
+        float: left;
+        margin-left: 190px;
+        margin-top: -31px;
+    }
+
+    .hrLine {
+        margin-top: 7px;
+    }
+
+    .resImgCA {
+        float: left;
+        height: auto;
+        margin-left: 0;
+        margin-top: -18px !important;
+        width: 15%;
+    }
+}
+
+@media only screen and (max-width: 767px) and (min-width: 500px) {
+    .gogRat {
+        width: 215px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+
+
+    .mobTx {
+        margin-top: -31px !important;
+    }
+
+    .icoPlay {
+        float: left;
+        margin-left: 5px;
+        margin-top: -10px;
+    }
+
+    .hrLine {
+        margin-top: 0;
+    }
+
+    .icoApl {
+        float: left;
+        margin-left: 74px;
+        margin-top: 1px;
+    }
+
+    .km-script-container {
+        height: 585px;
+        width: 100%;
+    }
+
+    .AchBx {
+        background-color: #fafbff;
+        border: 1px solid #eeeded;
+        border-bottom: 0;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        box-shadow: 3px 6px 23px #eeeded;
+        display: block;
+        margin-top: 0;
+        padding: 10px;
+    }
+
+    .resImgCA {
+        float: left;
+        height: 70px;
+        margin: -40px 10px 0 5px;
+        width: 70px;
+    }
+
+    .CATx {
+        color: #7a7c7f !important;
+        font-size: 15px;
+        margin-left: 0;
+        margin-top: -20px;
+    }
+
+    .topA1 {
+        float: left;
+        margin-top: 23px;
+    }
+}
+
+.stars-container {
+    color: transparent;
+    display: inline-block;
+    font-size: 20px;
+    position: relative;
+}
+
+.stars-container:before {
+    color: #d3d3d3;
+    content: '★★★★★';
+    font-size: 20px;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+}
+
+.stars-container:after {
+    color: #ef7300;
+    content: '★★★★★';
+    font-size: 20px;
+    height: 25px;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+}
+
+.stars-10:after {
+    width: 10%;
+}
+
+.stars-20:after {
+    width: 20%;
+}
+
+.stars-30:after {
+    width: 30%;
+}
+
+.stars-40:after {
+    width: 40%;
+}
+
+.stars-50:after {
+    width: 50%;
+}
+
+.stars-60:after {
+    width: 60%;
+}
+
+.stars-70:after {
+    width: 70%;
+}
+
+.stars-80:after {
+    width: 80%;
+}
+
+.stars-90:after {
+    width: 90%;
+}
+
+.stars-100:after {
+    width: 100;
+}
+
+@media screen and (max-width: 767px) {
+    .caBx {
+        display: none !important;
+    }
+
+
+
+
+    // Button Hover
+    .cc-rockmenu {
+        // color:fff;
+        bottom: 30px;
+        display: block;
+        position: fixed;
+        text-align: center;
+        // right: 45px;
+        z-index: 1;
+    }
+
+    .cc-rockmenu .rolling {
+        background: #019f5d;
+        border-radius: 26px;
+        cursor: pointer;
+        display: inline-block;
+        height: 52px;
+        overflow: hidden;
+        text-align: left;
+        transition: all 0.3s ease-out;
+        white-space: nowrap;
+        width: 52px;
+    }
+
+    .cc-rockmenu .rolling:hover {
+        width: 200px;
+    }
+
+    .cc-rockmenu .rolling .rolling_icon {
+        background: #00854d;
+        border-radius: 26px;
+        box-sizing: border-box;
+        display: inline-block;
+        float: left;
+        height: 52px;
+        margin: 0 10px 0 0;
+        width: 52px;
+        z-index: 9;
+    }
+
+    .cc-rockmenu .rolling .rolling_icon:hover .rolling {
+        width: 100px;
+    }
+
+    .imMv {
+        margin-left: 8px;
+        margin-top: 9px;
+        width: 35px;
+    }
+
+    .txSp {
+        color: #fff;
+        display: block;
+        font-size: 16px;
+        font-weight: 500;
+        padding-top: 12px;
+    }
+}

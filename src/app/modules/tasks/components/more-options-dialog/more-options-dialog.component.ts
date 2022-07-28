@@ -3,6 +3,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { Router } from '@angular/router';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -20,6 +21,7 @@ export class MoreOptionsDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private router: Router,
     private userMsService: UserMsService,
+    private itrMsService: ItrMsService,
     public utilsService: UtilsService) { }
 
   ngOnInit() {
@@ -71,5 +73,18 @@ export class MoreOptionsDialogComponent implements OnInit {
         this.loading = false;
       });
     }
+  }
+
+  giveInsurance() {
+    this.loading = true;
+    const param = `/user-reward/insurance/purchase?userId=${this.data.userId}`;
+    this.itrMsService.postMethod(param, {}).subscribe(res => {
+      console.log(res);
+      this.loading = false;
+      this.utilsService.showSnackBar('Insurance given successfully');
+    }, () => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to give insurance, please try again');
+    })
   }
 }

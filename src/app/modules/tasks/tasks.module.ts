@@ -19,6 +19,7 @@ import { SignUpExceptionsComponent } from './pages/sign-up-exceptions/sign-up-ex
 import { ExceptionsComponent } from './pages/exceptions/exceptions.component';
 import { EriExceptionsComponent } from './pages/exceptions/eri-exceptions/eri-exceptions.component';
 import { EVerificationDialogComponent } from './components/e-verification-dialog/e-verification-dialog.component';
+import { ItrLifecycleDialogComponent } from './components/itr-lifecycle-dialog/itr-lifecycle-dialog.component';
 
 @NgModule({
     imports: [
@@ -42,12 +43,14 @@ import { EVerificationDialogComponent } from './components/e-verification-dialog
         SignUpExceptionsComponent,
         ExceptionsComponent,
         EriExceptionsComponent,
-        EVerificationDialogComponent
+        EVerificationDialogComponent,
+        ItrLifecycleDialogComponent
     ],
     entryComponents: [
         ReAssignDialogComponent,
         MoreOptionsDialogComponent,
-        EVerificationDialogComponent
+        EVerificationDialogComponent,
+        ItrLifecycleDialogComponent
     ]
 
 })
