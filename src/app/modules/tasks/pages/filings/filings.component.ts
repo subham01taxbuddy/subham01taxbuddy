@@ -1,3 +1,4 @@
+import { ItrLifecycleDialogComponent } from './../../components/itr-lifecycle-dialog/itr-lifecycle-dialog.component';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ChangeDetectorRef, Component, OnInit, AfterContentChecked } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
@@ -746,7 +747,14 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.itrMsService.postMethodForEri(param, req).subscribe((res: any) => {
       console.log(res);
       if (res && res.successFlag) {
-        if (res.hasOwnProperty('messages')) {
+        if (res.hasOwnProperty('itrsFiled') && res.itrsFiled instanceof Array) {
+          let input = {
+            name: data.fName + ' ' + data.lName,
+            pan: data.panNumber,
+            itrsFiled: res.itrsFiled[0]
+          }
+          this.openLifeCycleDialog(input);
+        } else if (res.hasOwnProperty('messages')) {
           if (res.messages instanceof Array && res.messages.length > 0)
             this.utilsService.showSnackBar(res.messages[0].desc);
         }
@@ -758,4 +766,16 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       }
     })
   }
+
+  openLifeCycleDialog(data) {
+    let disposable = this.dialog.open(ItrLifecycleDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: data
+    })
+    disposable.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
 }
+
