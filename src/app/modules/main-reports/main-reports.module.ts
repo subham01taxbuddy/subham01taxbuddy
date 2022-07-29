@@ -22,6 +22,7 @@ import { SpamTableComponent } from "./pages/spam-table/spam-table.component";
 import { UserChatsComponent } from "./pages/spam-table/user-chats/user-chats.component";
 import { MissedInbondCallsComponent } from "./pages/knowlarity-report/missed-inbond-calls/missed-inbond-calls.component";
 import { LastYearFilingComponent } from "./pages/itr-filling-report/last-year-filing/last-year-filing.component";
+import { StatusWiseCountComponent } from "./pages/status-wise-count/status-wise-count.component";
 
 @NgModule({
     declarations: [MainReportsComponent,
@@ -40,7 +41,8 @@ import { LastYearFilingComponent } from "./pages/itr-filling-report/last-year-fi
         UserChatsComponent,
         MissedInbondCallsComponent,
         LastYearFilingComponent,
-        EmailReportsComponent
+        EmailReportsComponent,
+        StatusWiseCountComponent
     ],
     imports: [
         CommonModule,
