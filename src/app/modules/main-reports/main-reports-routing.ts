@@ -17,6 +17,7 @@ import { RepoBySmeNameComponent } from "./pages/knowlarity-report/repo-by-sme-na
 import { MainReportsComponent } from "./pages/main-reports/main-reports.component";
 import { MissedChatReportComponent } from "./pages/missed-chat-report/missed-chat-report.component";
 import { SpamTableComponent } from "./pages/spam-table/spam-table.component";
+import { StatusWiseCountComponent } from "./pages/status-wise-count/status-wise-count.component";
 
 const routes: Routes = [
     {
@@ -28,7 +29,7 @@ const routes: Routes = [
                     { path: 'sme-wise', component: RepoBySmeNameComponent },
                     { path: 'agent-wise', component: RepoByAgentNameComponent },
                     { path: 'missed-inbond-calls', component: MissedInbondCallsComponent },
-                     { path: '', redirectTo: 'sme-wise', pathMatch: '' }
+                    { path: '', redirectTo: 'sme-wise', pathMatch: '' }
                 ]
             },
             {
@@ -52,6 +53,7 @@ const routes: Routes = [
             { path: 'missed-chat', component: MissedChatReportComponent },
             { path: 'spam-report', component: SpamTableComponent },
             { path: 'email-me', component: EmailReportsComponent },
+            { path: 'status-wise-count', component: StatusWiseCountComponent },
             { path: '', redirectTo: 'knowlarity-repo', pathMatch: '' }
         ]
     }
