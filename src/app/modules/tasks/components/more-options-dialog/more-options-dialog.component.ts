@@ -80,7 +80,7 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   giveInsurance() {
     this.loading = true;
-    const param = `/user-reward/insurance/purchase?userId=${this.data.userId}`;
+    const param = `/user-reward/insurance/purchase?userId=${this.data.userId}&source=BACKOFFICE`;
     this.itrMsService.postMethod(param, {}).subscribe((res: any) => {
       console.log(res);
       this.loading = false;
