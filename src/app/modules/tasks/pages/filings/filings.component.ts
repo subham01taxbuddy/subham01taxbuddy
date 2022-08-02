@@ -598,7 +598,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     let disposable = this.dialog.open(EVerificationDialogComponent, {
       data: {
         pan: data.panNumber,
-        Ay: data.assessmentYear.substring(0, 4),
+        ay: data.assessmentYear.substring(0, 4),
         ackNum: data.ackNumber,
         formCode: data.itrType,
         name: data.fName + ' ' + data.lName,
