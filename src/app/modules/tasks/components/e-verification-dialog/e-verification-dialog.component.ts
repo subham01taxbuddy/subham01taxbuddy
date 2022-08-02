@@ -81,7 +81,7 @@ export class EVerificationDialogComponent implements OnInit {
       'userId': this.data.userId.toString()
     }
     let request = {
-      serviceName: "verifyEvcService",
+      serviceName: "EriVerifyEvcService",
       otpValue: null,
       evcValue: null
     }
