@@ -1,6 +1,7 @@
+import { map, startWith } from 'rxjs/operators';
 import { AppConstants } from '../../../modules/shared/constants';
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -12,6 +13,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { FilingCalendarComponent } from '../filing-calendar/filing-calendar.component';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 
 export const MY_FORMATS = {
   parse: {
@@ -35,12 +37,16 @@ export const MY_FORMATS = {
   ]
 })
 export class AddNewPlanComponent implements OnInit {
+  searchedPromoCode = new FormControl('', Validators.required);
+  filteredOptions!: Observable<any[]>;
+
+
   userSubscription: any;
   loading!: boolean;
   userSelectedPlan: any;
   allPlans: any;
   smeList = [];
-  allPromoCodes: any;
+  allPromoCodes: any[] = [];
   smeSelectedPlan: any;
   maxEndDate: any;
   minEndDate: any;
@@ -86,11 +92,24 @@ export class AddNewPlanComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getAllPromoCode();
+
+    this.filteredOptions = this.searchedPromoCode.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => {
+          console.log(value, this.allPromoCodes)
+          return value;
+        }),
+        map(code => {
+          return code ? this._filter(code) : this.allPromoCodes.slice();
+        })
+      );
+
     this.activatedRoute.params.subscribe(params => {
       this.getUserPlanInfo(params['subscriptionId']);
       this.getSubscriptionFilingsCalender(params['subscriptionId']);
     });
-    this.getAllPromoCode();
     this.getSmeList();
     var today = new Date();
     console.log(today.getMonth(), '............', today.getFullYear());
@@ -98,6 +117,27 @@ export class AddNewPlanComponent implements OnInit {
     this.startMonth.setValue(this.monthsMaster[today.getMonth()].value);
 
     this.getSmeList();
+  }
+
+  displayFn(label: any) {
+    return label ? label : undefined;
+  }
+
+  _filter(title: any) {
+    const filterValue = title.toLowerCase();
+    return this.allPromoCodes.filter(option => option.title.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  getCodeFromLabelOnBlur() {
+    if (this.utilsService.isNonEmpty(this.searchedPromoCode.value) && this.utilsService.isNonEmpty(this.searchedPromoCode.value)) {
+      let pCode = this.allPromoCodes.filter((item: any) => item.title.toLowerCase() === this.searchedPromoCode.value.toLowerCase());
+      if (pCode.length !== 0) {
+        this.selectedPromoCode = pCode[0].code;
+        console.log('smeCode on blur = ', pCode);
+      } else {
+        this.searchedPromoCode.setErrors({ invalid: true });
+      }
+    }
   }
 
   getUserPlanInfo(id) {

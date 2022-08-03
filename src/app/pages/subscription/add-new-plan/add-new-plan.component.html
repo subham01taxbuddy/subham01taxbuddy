@@ -55,7 +55,7 @@
 
             <div class="card__col-lg-5">
               <span class="head">Plan Name:</span><br>
-              <!-- <span class="head">Desciption:</span><br> -->
+              <!-- <span class="head">Description:</span><br> -->
               <span class="head">Validation For Days:</span><br>
               <span class="head">Base Price:</span><br>
               <span class="head">CGST:</span><br>
@@ -107,7 +107,7 @@
           <div class="card__row">
             <div class="card__col-lg-5">
               <span class="head">Plan Name:</span><br>
-              <!-- <span class="head">Desciption:</span><br> -->
+              <!-- <span class="head">Description:</span><br> -->
               <span class="head">Validation For Days:</span><br>
               <span class="head">Base Price:</span><br>
               <span class="head">CGST:</span><br>
@@ -138,7 +138,23 @@
           <b style="font-size: 18px;">Promo Code: </b><br>
           <div class="card__row">
             <div class="card__col-lg-6">
-              <mat-form-field appearance="outline">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Search & Select Promo Code</mat-label>
+                <input type="text" placeholder="Start typing..." aria-label="Assignee" matInput
+                  [formControl]="searchedPromoCode" [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()" required>
+                <mat-error *ngIf="searchedPromoCode.invalid">
+                  Please select value from dropdown only.
+                </mat-error>
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                  <!-- <mat-option *ngIf="addSelfAll" value="ALL">All</mat-option> -->
+                  <!-- <mat-option *ngIf="addSelfAll" value="SELF">My Self</mat-option> -->
+                  <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
+                    {{option.title}}
+                    <!-- - {{option.serviceType}} -->
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <!-- <mat-form-field appearance="outline">
                 <mat-label>Select Promo Code</mat-label>
                 <mat-select matInput placeholder="Select Promo Code" [(ngModel)]="selectedPromoCode"
                   (selectionChange)="showPromoCode($event.value)" autocomplete="off">
@@ -146,7 +162,7 @@
                     {{ plan.title }}
                   </mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field> -->
             </div>
 
             <div class="card__col-lg-6">
@@ -245,7 +261,6 @@
               <mat-label>End Date</mat-label>
               <input matInput placeholder="End Date" [max]="maxEndDate" [min]="minEndDate" [formControl]="subEndDate"
                 [matDatepicker]="picker2" autocomplete="off" required>
-              <!--[max]="EmaxDate"-->
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
               <mat-error *ngIf="subEndDate.hasError('required')">Select End Date</mat-error>
@@ -337,7 +352,7 @@
           </div>
           <div class="card__row" *ngIf="filingCalendar.length > 0">
             <div class="card__col-lg-12">
-              <b>Upcomming filing</b>
+              <b>Upcoming filing</b>
             </div>
             <div class="tab-panel items-tab card__col-lg-9">
               <div class="tab-panel__content tab-panel__content_visible">

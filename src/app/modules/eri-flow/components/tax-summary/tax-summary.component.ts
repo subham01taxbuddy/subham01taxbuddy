@@ -3163,7 +3163,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       //
       var blankArray: any[] = [];
       //this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].setValue([]);
-      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].value ? (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].value : (this.itrSummaryForm.controls['assesse'] as FormGroup).controls[''].setValue(blankArray);
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].value ? (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].value : (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['houseProperties'].setValue(blankArray);
 
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['bankDetails'].value ? (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['bankDetails'].value : (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['bankDetails'].setValue(blankArray);
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'].value ? (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'].value : (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['employers'].setValue(blankArray);
