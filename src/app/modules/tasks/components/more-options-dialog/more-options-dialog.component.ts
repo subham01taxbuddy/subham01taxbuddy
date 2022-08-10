@@ -1,9 +1,11 @@
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { Router } from '@angular/router';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { GridOptions } from 'ag-grid-community';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -11,18 +13,33 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
   styleUrls: ['./more-options-dialog.component.scss']
 })
 export class MoreOptionsDialogComponent implements OnInit {
-  isOptingOtherService = false;
+  showDetails = '';
   services = ['ITR', 'TPA', 'NOTICE', 'GST'];
   selectedService = '';
   optedServicesData = [];
   loading = false;
-
+  myItrsGridOptions: GridOptions;
+  initialData = {};
+  statusList = [];
   constructor(public dialogRef: MatDialogRef<MoreOptionsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private router: Router,
     private userMsService: UserMsService,
     private itrMsService: ItrMsService,
-    public utilsService: UtilsService) { }
+    public utilsService: UtilsService) {
+    this.myItrsGridOptions = <GridOptions>{
+      rowData: this.createRowData([]),
+      columnDefs: this.columnDef(),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      onGridReady: params => {
+        // params.api.sizeColumnsToFit();
+      },
+      sortable: true,
+      filter: true,
+      floatingFilter: true
+    };
+  }
 
   ngOnInit() {
     console.log(this.data)
@@ -47,7 +64,7 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   optedServices() {
     this.loading = false;
-    this.isOptingOtherService = true;
+    this.showDetails = 'OPT_SERVICE';
     const param = `/sme/assignee-details?userId=${this.data.userId}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
       console.log(res);
@@ -93,5 +110,67 @@ export class MoreOptionsDialogComponent implements OnInit {
       this.loading = false;
       this.utilsService.showSnackBar('Failed to give insurance, please try again');
     })
+  }
+
+
+  getUserJourney() {
+    const params = `/status-info/${this.data.mobileNumber}`;
+    this.userMsService.getMethod(params).subscribe((res: any) => {
+      console.log(res);
+      this.showDetails = 'JOURNEY'
+      this.initialData = res.data.initialData;
+      this.statusList = res.data.statusList;
+      this.myItrsGridOptions.api?.setRowData(this.createRowData(res.data.statusList));
+      console.log(this.initialData)
+    }, () => {
+
+    })
+
+  }
+
+  createRowData(data) {
+    return data;
+  }
+
+  columnDef() {
+    return [
+      {
+        headerName: 'Service Type',
+        field: 'serviceType',
+        sortable: true,
+        width: 100,
+        filterParams: {
+          defaultOption: "startsWith",
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: "Status Name",
+        field: "statusName",
+        sortable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          defaultOption: "startsWith",
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: "Assessment Year",
+        field: "assessmentYear",
+        width: 100,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          defaultOption: "startsWith",
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: "Date",
+        field: "createdDate",
+        sortable: true,
+        width: 100,
+        valueFormatter: (data) => data.value ? moment(data.value).format('DD MMM YYYY') : null,
+      },
+    ];
   }
 }

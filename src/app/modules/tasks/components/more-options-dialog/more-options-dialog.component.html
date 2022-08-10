@@ -34,13 +34,19 @@ font-weight: bold;">More options for: {{data.name}}</label><button mat-dialog-cl
   </span>
   &nbsp;&nbsp;
   <span *ngIf="this.data.serviceType === 'ITR'">
-    <button type="button" class="tbd-btn-small" title="Re Assignment" (click)="giveInsurance()">
+    <button type="button" class="tbd-btn-small" title="Insurance" (click)="giveInsurance()">
       Insurance&nbsp;&nbsp; <i class="fa fa-ambulance" aria-hidden="true"></i>
+    </button>
+  </span>
+  &nbsp;&nbsp;
+  <span>
+    <button type="button" class="tbd-btn-small" title="User Journey" (click)="getUserJourney()">
+      Journey&nbsp;&nbsp; <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
     </button>
   </span>
 
 </div>
-<div class="card__row" *ngIf="isOptingOtherService">
+<div class="card__row" *ngIf="showDetails === 'OPT_SERVICE'">
   <table style=" width: 100%;" *ngIf="optedServicesData && optedServicesData.length > 0">
     <tr>
       <!-- <th>No</th> -->
@@ -71,4 +77,27 @@ font-weight: bold;">More options for: {{data.name}}</label><button mat-dialog-cl
       Mark as Interested
     </button>
   </div>
+</div>
+<div class="card__row" *ngIf="showDetails === 'JOURNEY'">
+  <!-- <ag-grid-angular class="ag-theme-balham" [gridOptions]="myItrsGridOptions">
+  </ag-grid-angular> -->
+  <table style=" width: 100%;">
+    <tr>
+      <!-- <th>No</th> -->
+      <th>Service Type</th>
+      <th>Status Name</th>
+      <th>Assessment Year</th>
+      <th>Created Date</th>
+    </tr>
+    <tr *ngFor="let service of statusList">
+      <td>{{service.serviceType}}</td>
+      <td>{{service.statusName}}</td>
+      <td>{{service.assessmentYear}}</td>
+      <td>{{service.createdDate | date:'dd MMM yyyy'}}</td>
+    </tr>
+  </table>
+  <br>
+  <pre *ngIf="initialData">
+    {{initialData | json}}
+</pre>
 </div>
