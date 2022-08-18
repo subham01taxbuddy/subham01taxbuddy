@@ -54,11 +54,13 @@ font-weight: bold;">More options for: {{data.name}}</label><button mat-dialog-cl
       <th>Agent Name</th>
       <th>Agent Mobile</th>
     </tr>
-    <tr *ngFor="let service of optedServicesData">
-      <td>{{service.serviceType}}</td>
-      <td>{{service.name}}</td>
-      <td>{{service.mobileNumber}}</td>
-    </tr>
+    <tbody>
+      <tr *ngFor="let service of optedServicesData">
+        <td>{{service.serviceType}}</td>
+        <td>{{service.name}}</td>
+        <td>{{service.mobileNumber}}</td>
+      </tr>
+    </tbody>
   </table>
   <br>
   <div>Note: Please select the service and opt user for another service</div>

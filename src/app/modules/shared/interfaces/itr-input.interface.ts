@@ -61,6 +61,7 @@ export interface ITR_JSON {
     lastVisitedURL: string;
     seventhProviso139: SeventhProviso139,
     depPayInvClmUndDednVIA: string;
+    regime: string;
 }
 export interface DirectorInCompany {
     companyName: string;

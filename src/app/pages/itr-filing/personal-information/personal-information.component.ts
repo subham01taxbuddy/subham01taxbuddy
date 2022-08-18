@@ -363,6 +363,7 @@ export class PersonalInformationComponent implements OnInit {
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
       employerCategory: [''],
+      regime: ['', Validators.required],
       address: this.fb.group({
         flatNo: ['', Validators.required],
         premisesName: [''],
@@ -553,6 +554,8 @@ export class PersonalInformationComponent implements OnInit {
 
   async saveProfile(ref) {
     this.findAssesseeType();
+    if (this.customerProfileForm.controls['regime'].value === 'NEW')
+      this.removeOldRegimeData();
     if (this.customerProfileForm.valid) {
       this.loading = true;
       const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
@@ -593,6 +596,34 @@ export class PersonalInformationComponent implements OnInit {
         this.utilsService.showSnackBar('We are not supporting Assessee Type except Individual and HUF.')
       }
     }
+  }
+
+  removeOldRegimeData() {
+    if (!(this.ITR_JSON.loans instanceof Array))
+      this.ITR_JSON.loans = [];
+    if (!(this.ITR_JSON.investments instanceof Array))
+      this.ITR_JSON.investments = [];
+    if (!(this.ITR_JSON.houseProperties instanceof Array))
+      this.ITR_JSON.houseProperties = [];
+    if (!(this.ITR_JSON.expenses instanceof Array))
+      this.ITR_JSON.expenses = [];
+
+    this.ITR_JSON.houseProperties = this.ITR_JSON.houseProperties.filter(item => item.propertyType !== 'SOP');
+    this.ITR_JSON.investments = this.ITR_JSON.investments.filter(item => item.investmentType !== 'ELSS' && item.investmentType !== 'PENSION_FUND' && item.investmentType !== 'PS_EMPLOYEE' && item.investmentType !== 'PENSION_SCHEME');
+
+    this.ITR_JSON.loans = this.ITR_JSON.loans.filter(item => item.loanType !== 'EDUCATION');
+    this.ITR_JSON.expenses = this.ITR_JSON.expenses.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID')
+    this.ITR_JSON.donations = [];
+
+    // let newRegimeEmployer = []
+    for (let i = 0; i < this.ITR_JSON.employers.length; i++) {
+      this.ITR_JSON.employers[i].allowance = this.ITR_JSON.employers[i].allowance.filter(item => item.allowanceType !== 'HOUSE_RENT' && item.allowanceType !== 'LTA' && item.allowanceType !== 'CHILDREN_EDUCATION' && item.allowanceType !== 'HOSTEL_EXPENDITURE');
+      // newRegimeEmployer.push(this.ITR_JSON.employers[i])
+    }
+
+
+    console.log(this.ITR_JSON)
+
   }
 
   async verifyAllBanks() {

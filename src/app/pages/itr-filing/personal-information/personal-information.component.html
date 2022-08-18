@@ -267,6 +267,22 @@
                 </tr>
             </tbody>
         </table>
+        <hr>
+        <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-8" style="padding-top: 10px;">
+                Are you opting for New Tax Regime?
+            </div>
+            <div class="card__col-xs-12 card__col-sm-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Select One</mat-label>
+                    <mat-select name="regime" formControlName="regime" required>
+                        <!-- formControlName="employerCategory" TODO -->
+                        <mat-option value="NEW"> Yes </mat-option>
+                        <mat-option value="OLD"> No </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
         <div class="footer__buttons clearfix" style="margin-top: 40px;">
             <button class="tbd-btn-secondary" (click)="previousRoute()"><i class="fa fa-arrow-left"
                     aria-hidden="true"></i>

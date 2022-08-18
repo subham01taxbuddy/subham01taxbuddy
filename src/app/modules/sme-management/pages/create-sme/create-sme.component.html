@@ -40,7 +40,7 @@
     </div>
   </div>
   <div class="card" *ngIf="showSmeDetails">
-    <form [formGroup]="submitJsonForm">
+    <form [formGroup]="createSmeForm">
       <div class="card__row">
         <div class="card__col-xs-12 card__col-sm-3">
           <mat-form-field appearance="outline">
@@ -83,11 +83,11 @@
             <mat-label>SME Languages</mat-label>
             <mat-select formControlName="languages" multiple>
               <mat-select-trigger>
-                {{submitJsonForm.controls['languages'].value ? submitJsonForm.controls['languages'].value : ''}}
-                <!--  <span *ngIf="submitJsonForm.controls['languages'].value?.length > 1"
+                {{createSmeForm.controls['languages'].value ? createSmeForm.controls['languages'].value : ''}}
+                <!--  <span *ngIf="createSmeForm.controls['languages'].value?.length > 1"
                   class="example-additional-selection">
-                  (+{{submitJsonForm.controls['languages'].value.length - 1}}
-                  {{submitJsonForm.controls['languages'].value?.length === 2 ? 'other'
+                  (+{{createSmeForm.controls['languages'].value.length - 1}}
+                  {{createSmeForm.controls['languages'].value?.length === 2 ? 'other'
                   : 'others'}})
                 </span> -->
               </mat-select-trigger>
@@ -132,7 +132,7 @@
             <mat-label>Joining Date</mat-label>
             <input matInput [matDatepicker]="joinPicker" [max]="maxJoinDate" class="input-field"
               placeholder="Joining Date" name="joiningDate" formControlName="joiningDate"
-              (dateChange)="changeJoinDate(submitJsonForm.controls['joiningDate'].value)" required>
+              (dateChange)="changeJoinDate(createSmeForm.controls['joiningDate'].value)" required>
             <mat-hint>Format: DD/MM/YYYY</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="joinPicker"></mat-datepicker-toggle>
             <mat-datepicker #joinPicker></mat-datepicker>
@@ -168,16 +168,16 @@
             <mat-datepicker #leaveEPicker></mat-datepicker>
           </mat-form-field>
         </div>
-        <div class="card__col-xs-12 card__col-sm-3" *ngIf="submitJsonForm.controls['serviceType'].value === 'ITR'">
+        <div class="card__col-xs-12 card__col-sm-3" *ngIf="createSmeForm.controls['serviceType'].value === 'ITR'">
           <mat-form-field appearance="fill">
             <mat-label>Select ITR Types</mat-label>
             <mat-select formControlName="itrTypes" multiple>
               <mat-select-trigger>
-                {{submitJsonForm.controls['itrTypes'].value ? submitJsonForm.controls['itrTypes'].value : ''}}
-                <!--  <span *ngIf="submitJsonForm.controls['itrTypes'].value?.length > 1"
+                {{createSmeForm.controls['itrTypes'].value ? createSmeForm.controls['itrTypes'].value : ''}}
+                <!--  <span *ngIf="createSmeForm.controls['itrTypes'].value?.length > 1"
                   class="example-additional-selection">
-                  (+{{submitJsonForm.controls['itrTypes'].value.length - 1}}
-                  {{submitJsonForm.controls['itrTypes'].value?.length === 2 ? 'other'
+                  (+{{createSmeForm.controls['itrTypes'].value.length - 1}}
+                  {{createSmeForm.controls['itrTypes'].value?.length === 2 ? 'other'
                   : 'others'}})
                 </span> -->
               </mat-select-trigger>
@@ -208,12 +208,12 @@
             <mat-label>Select Assessment Year</mat-label>
             <mat-select formControlName="assessmentYears" multiple>
               <mat-select-trigger>
-                {{submitJsonForm.controls['assessmentYears'].value ? submitJsonForm.controls['assessmentYears'].value :
+                {{createSmeForm.controls['assessmentYears'].value ? createSmeForm.controls['assessmentYears'].value :
                 ''}}
-                <!--  <span *ngIf="submitJsonForm.controls['assessmentYears'].value?.length > 1"
+                <!--  <span *ngIf="createSmeForm.controls['assessmentYears'].value?.length > 1"
                   class="example-additional-selection">
-                  (+{{submitJsonForm.controls['assessmentYears'].value.length - 1}}
-                  {{submitJsonForm.controls['assessmentYears'].value?.length === 2 ? 'other'
+                  (+{{createSmeForm.controls['assessmentYears'].value.length - 1}}
+                  {{createSmeForm.controls['assessmentYears'].value?.length === 2 ? 'other'
                   : 'others'}})
                 </span> -->
               </mat-select-trigger>
@@ -233,6 +233,7 @@
       </div>
       <button type="submit" class="tbd-btn" (click)="updateSmeDetails()">Update SME</button>
       <button type="submit" class="tbd-btn-secondary" routerLink="/sme-management/sme-list">Cancel</button>
+      <button type="submit" class="tbd-btn-secondary pull-right" (click)="agentReassignment()">Re - Assignment</button>
     </form>
   </div>
 

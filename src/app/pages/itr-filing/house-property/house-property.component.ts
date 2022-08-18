@@ -33,6 +33,9 @@ export class HousePropertyComponent implements OnInit {
     public utilsService: UtilsService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    if (this.ITR_JSON.regime === 'NEW') {
+      this.propertyTypeDropdown = this.propertyTypeDropdown.filter(item => item.value !== 'SOP')
+    }
   }
 
   ngOnInit() {
@@ -50,11 +53,11 @@ export class HousePropertyComponent implements OnInit {
         this.housePropertyForm.controls['isEligibleFor80EE'].setValue('')
       }
     }
-    console.log('HOUSING deletedFileData LENGTH ---> ',this.deletedFileData.length)
+    console.log('HOUSING deletedFileData LENGTH ---> ', this.deletedFileData.length)
   }
 
   checkEligibility() {
-    if (Number(((this.housePropertyForm.controls['loans'] as FormGroup).controls[0]  as FormGroup).controls['interestAmount'].value) < 200000) {
+    if (Number(((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].value) < 200000) {
       this.housePropertyForm.controls['isEligibleFor80EE'].setValue('')
     }
   }
@@ -94,8 +97,8 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['grossAnnualRentReceived'].updateValueAndValidity();
       this.housePropertyForm.controls['propertyTax'].setValue(null);
 
-      ((this.housePropertyForm.controls['loans']  as FormGroup).controls[0]  as FormGroup).controls['interestAmount'].setValidators([Validators.required, Validators.min(1)]);
-      ((this.housePropertyForm.controls['loans']  as FormGroup).controls[0] as FormGroup).controls['interestAmount'].updateValueAndValidity();
+      ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].setValidators([Validators.required, Validators.min(1)]);
+      ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].updateValueAndValidity();
     } else {
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.min(1)]);
       this.housePropertyForm.controls['grossAnnualRentReceived'].updateValueAndValidity();
@@ -174,41 +177,41 @@ export class HousePropertyComponent implements OnInit {
     })
   }
 
-  deleteFile(fileName){
+  deleteFile(fileName) {
     let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy='+adminId.USER_UNIQUE_ID;
+    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
     let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
     var reqBody = [filePath];
-    console.log('URL path: ',path, ' filePath: ',filePath,' Request body: ',reqBody);
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any)=>{
-        console.log('Doc delete responce: ',responce); 
-        this.utilsService.showSnackBar(responce.response);
-        this.getItrDocuments();
+    console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
+    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
+      console.log('Doc delete responce: ', responce);
+      this.utilsService.showSnackBar(responce.response);
+      this.getItrDocuments();
     },
-    error=>{
-     console.log('Doc delete ERROR responce: ',error.responce); 
-     this.utilsService.showSnackBar(error.response);
-    })
-   }
+      error => {
+        console.log('Doc delete ERROR responce: ', error.responce);
+        this.utilsService.showSnackBar(error.response);
+      })
+  }
 
-  deletedFileInfo(cloudFileId){
+  deletedFileInfo(cloudFileId) {
     this.deletedFileData = [];
     this.loading = true;
-    let param = '/cloud/log?cloudFileId='+cloudFileId;
-    this.itrMsService.getMethod(param).subscribe((res: any)=>{
+    let param = '/cloud/log?cloudFileId=' + cloudFileId;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
       this.deletedFileData = res;
-      console.log('Deleted file detail info: ',this.deletedFileData);
+      console.log('Deleted file detail info: ', this.deletedFileData);
     },
-    error=>{
-      this.loading = false;
-    })
+      error => {
+        this.loading = false;
+      })
   }
 
-  closeDialog(){
+  closeDialog() {
     this.deletedFileData = [];
   }
-   
+
 
   afterUploadDocs(fileUpload) {
     if (fileUpload === 'File uploaded successfully') {
@@ -217,7 +220,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   getAllHpDocs(documentTag) {
-    return this.itrDocuments.filter((item:any) => item.documentTag === documentTag)
+    return this.itrDocuments.filter((item: any) => item.documentTag === documentTag)
 
   }
   zoom: number = 1.0;
@@ -230,7 +233,7 @@ export class HousePropertyComponent implements OnInit {
     docType: ''
   };
   getHpDocsUrl(index) {
-    const doc = this.itrDocuments.filter((item:any) => item.documentTag === 'LOAN_STATEMENT')
+    const doc = this.itrDocuments.filter((item: any) => item.documentTag === 'LOAN_STATEMENT')
     if (doc.length > 0) {
       const docType = doc[index].fileName.split('.').pop();
       if (doc[index].isPasswordProtected) {

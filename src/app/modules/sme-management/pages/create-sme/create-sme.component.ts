@@ -30,7 +30,7 @@ export const MY_FORMATS = {
   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class CreateSmeComponent implements OnInit {
-  submitJsonForm: FormGroup;
+  createSmeForm: FormGroup;
   trueVal = true;
   falseVal = false;
   loading = false;
@@ -78,7 +78,7 @@ export class CreateSmeComponent implements OnInit {
 
   ngOnInit() {
     // let momentVariable = moment('15/12/2022', 'DD/MM/YYYY').format('YYYY/MM/DD');
-    this.submitJsonForm = this.fb.group({
+    this.createSmeForm = this.fb.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
       mobileNumber: ['', [Validators.required]],
@@ -130,13 +130,13 @@ export class CreateSmeComponent implements OnInit {
 
   updateSmeDetails() {
     const param = `/sme/update`;
-    if (this.submitJsonForm.valid) {
+    if (this.createSmeForm.valid) {
       this.loading = true;
-      let requestBody = this.submitJsonForm.getRawValue();
-      requestBody.joiningDate = this.convertToDDMMYY(this.submitJsonForm.controls['joiningDate'].value);
-      requestBody.leaveStartDate = this.convertToDDMMYY(this.submitJsonForm.controls['leaveStartDate'].value);
-      requestBody.leaveEndDate = this.convertToDDMMYY(this.submitJsonForm.controls['leaveEndDate'].value);
-      requestBody.resigningDate = this.convertToDDMMYY(this.submitJsonForm.controls['resigningDate'].value);
+      let requestBody = this.createSmeForm.getRawValue();
+      requestBody.joiningDate = this.convertToDDMMYY(this.createSmeForm.controls['joiningDate'].value);
+      requestBody.leaveStartDate = this.convertToDDMMYY(this.createSmeForm.controls['leaveStartDate'].value);
+      requestBody.leaveEndDate = this.convertToDDMMYY(this.createSmeForm.controls['leaveEndDate'].value);
+      requestBody.resigningDate = this.convertToDDMMYY(this.createSmeForm.controls['resigningDate'].value);
       console.log(requestBody);
       Object.assign(this.smeDetails, requestBody);
       let requestData = JSON.parse(JSON.stringify(this.smeDetails));
@@ -209,12 +209,12 @@ export class CreateSmeComponent implements OnInit {
       this.showSmeDetails = true;
       console.log(res);
       this.smeDetails = res.data;
-      this.submitJsonForm.patchValue(res.data);
+      this.createSmeForm.patchValue(res.data);
       this.minResignDate = this.utilsService.isNonEmpty(res.data.joiningDate) ? this.convertToYYMMDD(res.data.joiningDate) : new Date();
-      this.submitJsonForm.controls['joiningDate'].setValue(this.convertToYYMMDD(res.data.joiningDate));
-      this.submitJsonForm.controls['resigningDate'].setValue(this.convertToYYMMDD(res.data.resigningDate));
-      this.submitJsonForm.controls['leaveStartDate'].setValue(this.convertToYYMMDD(res.data.leaveStartDate));
-      this.submitJsonForm.controls['leaveEndDate'].setValue(this.convertToYYMMDD(res.data.leaveEndDate));
+      this.createSmeForm.controls['joiningDate'].setValue(this.convertToYYMMDD(res.data.joiningDate));
+      this.createSmeForm.controls['resigningDate'].setValue(this.convertToYYMMDD(res.data.resigningDate));
+      this.createSmeForm.controls['leaveStartDate'].setValue(this.convertToYYMMDD(res.data.leaveStartDate));
+      this.createSmeForm.controls['leaveEndDate'].setValue(this.convertToYYMMDD(res.data.leaveEndDate));
     }, error => {
       this.loading = false;
       this.showSmeDetails = false
@@ -225,11 +225,11 @@ export class CreateSmeComponent implements OnInit {
     let data = ['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT'].some(item => this.userRole.value.includes(item))
     console.log('My roles : ', data);
     if (data) {
-      this.submitJsonForm.controls['parentId'].setValidators(Validators.required);
-      this.submitJsonForm.controls['parentId'].updateValueAndValidity();
+      this.createSmeForm.controls['parentId'].setValidators(Validators.required);
+      this.createSmeForm.controls['parentId'].updateValueAndValidity();
     } else {
-      this.submitJsonForm.controls['parentId'].setValidators(null);
-      this.submitJsonForm.controls['parentId'].updateValueAndValidity();
+      this.createSmeForm.controls['parentId'].setValidators(null);
+      this.createSmeForm.controls['parentId'].updateValueAndValidity();
     }
     const param = `/sme/parent-list-by-role?role=${this.userRole.value.toString()}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
@@ -241,16 +241,31 @@ export class CreateSmeComponent implements OnInit {
   }
 
   changeServiceType() {
-    if (this.submitJsonForm.controls['serviceType'].value === 'ITR') {
-      this.submitJsonForm.controls['itrTypes'].setValidators(Validators.required);
-      this.submitJsonForm.controls['itrTypes'].updateValueAndValidity();
+    if (this.createSmeForm.controls['serviceType'].value === 'ITR') {
+      this.createSmeForm.controls['itrTypes'].setValidators(Validators.required);
+      this.createSmeForm.controls['itrTypes'].updateValueAndValidity();
     } else {
-      this.submitJsonForm.controls['itrTypes'].setValidators(null);
-      this.submitJsonForm.controls['itrTypes'].updateValueAndValidity();
+      this.createSmeForm.controls['itrTypes'].setValidators(null);
+      this.createSmeForm.controls['itrTypes'].updateValueAndValidity();
     }
   }
 
   changeJoinDate(date) {
     this.minResignDate = date;
+  }
+
+  agentReassignment() {
+    const param = `/sme/agent-reassignment?agentUserId=${this.smeDetails.userId}`;
+    this.loading = true;
+    this.userMsService.getMethod(param).subscribe((res: any) => {
+      this.loading = false;
+      if (res.success)
+        this.utilsService.showSnackBar('Re - Assignment done successfully.')
+      else
+        this.utilsService.showSnackBar('Failed to re assign please try again')
+    }, () => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to re assign please try again')
+    })
   }
 }
