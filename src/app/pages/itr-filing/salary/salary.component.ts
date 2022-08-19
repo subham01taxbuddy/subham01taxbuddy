@@ -167,6 +167,10 @@ export class SalaryComponent implements OnInit {
         });
       }
     });
+    if (this.ITR_JSON.regime === 'NEW') {
+      this.employerDetailsFormGroup.controls['professionalTax'].disable();
+      this.employerDetailsFormGroup.controls['entertainmentAllow'].disable();
+    }
     this.employerDetailsFormGroup.controls['professionalTax'].setValidators(Validators.compose([Validators.max(this.maxPT), Validators.pattern(AppConstants.numericRegex)]));
     this.employerDetailsFormGroup.controls['professionalTax'].updateValueAndValidity();
     this.employerDetailsFormGroup.controls['entertainmentAllow'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(this.maxEA)]));
@@ -246,13 +250,14 @@ export class SalaryComponent implements OnInit {
         editable: false,
         suppressMenu: true,
         sortable: true,
-        template:
-          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+        width: 75,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
           background: transparent; font-size: 16px; cursor:pointer;color: red">
         <i class="fa fa-times-circle" aria-hidden="true" data-action-type="remove"></i>
-       </button>`,
-        width: 75,
-        cellStyle: { textAlign: 'center' }
+       </button>`;
+        },
       },
 
     ];
@@ -346,13 +351,14 @@ export class SalaryComponent implements OnInit {
         suppressMovable: true,
         suppressMenu: true,
         sortable: true,
-        template:
-          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+        width: 75,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
           background: transparent; font-size: 16px; cursor:pointer;color: red">
           <i class="fa fa-times-circle" aria-hidden="true" data-action-type="remove"></i>
-         </button>`,
-        width: 75,
-        cellStyle: { textAlign: 'center' }
+         </button>`;
+        },
       },
     ];
   }
@@ -820,17 +826,18 @@ export class SalaryComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         pinned: 'right',
-        template:
-          `<button type="button" class="action_icon add_button" title="Delete Employer" style="border: none;
+        width: 100,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Delete Employer" style="border: none;
           background: transparent; font-size: 16px; cursor:pointer;color: red">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
          </button>
           <button type="button" class="action_icon add_button"  title="Update Employer details" style="border: none;
           background: transparent; font-size: 16px; cursor:pointer;color: green">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
-         </button>`,
-        width: 100,
-        cellStyle: { textAlign: 'center' }
+         </button>`;
+        },
       },
     ];
   }

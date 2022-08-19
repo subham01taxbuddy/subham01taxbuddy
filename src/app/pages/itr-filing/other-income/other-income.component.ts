@@ -76,7 +76,7 @@ export class OtherIncomeComponent implements OnInit {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           if (otherIncomeDropdown.length !== 0) {
-            const nameArray = otherIncomeDropdown.filter((item:any) => item.value === params.data.incomeType);
+            const nameArray = otherIncomeDropdown.filter((item: any) => item.value === params.data.incomeType);
             return nameArray[0].label;
           } else {
             return params.data.incomeType;
@@ -85,7 +85,7 @@ export class OtherIncomeComponent implements OnInit {
         editable: false,
         tooltip: function (params) {
           if (otherIncomeDropdown.length !== 0) {
-            const nameArray = otherIncomeDropdown.filter((item:any) => item.value === params.data.incomeType);
+            const nameArray = otherIncomeDropdown.filter((item: any) => item.value === params.data.incomeType);
             return nameArray[0].label;
           } else {
             return params.data.incomeType;
@@ -150,10 +150,10 @@ export class OtherIncomeComponent implements OnInit {
   }
 
   saveOtherIncome() {
-    
+
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
-    this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes.filter((item:any) => item.incomeType !== 'SAVING_INTEREST' &&
+    this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes.filter((item: any) => item.incomeType !== 'SAVING_INTEREST' &&
       item.incomeType !== 'FD_RD_INTEREST' && item.incomeType !== 'TAX_REFUND_INTEREST' &&
       item.incomeType !== 'ANY_OTHER')
     for (let i = 0; i < this.otherIncomeGridOptions.rowData.length; i++) {
@@ -188,7 +188,7 @@ export class OtherIncomeComponent implements OnInit {
     this.otherIncomeGridOptions.columnDefs = this.otherIncomeCreateColoumnDef(this.otherIncomeDropdown);
     if (this.ITR_JSON.incomes instanceof Array) {
       for (let i = 0; i < this.ITR_JSON.incomes.length; i++) {
-        const id = this.otherIncomeGridOptions.rowData.filter((item:any) => item.incomeType === this.ITR_JSON.incomes[i].incomeType)[0].id;
+        const id = this.otherIncomeGridOptions.rowData.filter((item: any) => item.incomeType === this.ITR_JSON.incomes[i].incomeType)[0].id;
         this.otherIncomeGridOptions.rowData.splice(id, 1, {
           id: id,
           incomeType: this.ITR_JSON.incomes[i].incomeType,
@@ -263,9 +263,9 @@ export class OtherIncomeComponent implements OnInit {
   };
   getDocsUrl(index) {
 
-    
+
     if (this.itrDocuments.length > 0) {
-      
+
       const docType = this.itrDocuments[index].fileName.split('.').pop();
       if (this.itrDocuments[index].isPasswordProtected) {
         this.docDetails.docUrl = this.itrDocuments[index].passwordProtectedFileUrl;
