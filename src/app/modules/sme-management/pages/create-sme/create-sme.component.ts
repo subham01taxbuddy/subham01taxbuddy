@@ -262,7 +262,7 @@ export class CreateSmeComponent implements OnInit {
       if (res.success)
         this.utilsService.showSnackBar('Re - Assignment done successfully.')
       else
-        this.utilsService.showSnackBar('Failed to re assign please try again')
+        this.utilsService.showSnackBar(res.message)
     }, () => {
       this.loading = false;
       this.utilsService.showSnackBar('Failed to re assign please try again')

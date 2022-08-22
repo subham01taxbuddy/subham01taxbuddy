@@ -72,7 +72,7 @@
               <mat-option value="ITR"> ITR </mat-option>
               <mat-option value="GST"> GST </mat-option>
               <mat-option value="NOTICE"> Notice </mat-option>
-              <mat-option value="TPA"> TPA </mat-option>
+              <mat-option value="TPA" disabled> TPA </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -233,7 +233,11 @@
       </div>
       <button type="submit" class="tbd-btn" (click)="updateSmeDetails()">Update SME</button>
       <button type="submit" class="tbd-btn-secondary" routerLink="/sme-management/sme-list">Cancel</button>
-      <button type="submit" class="tbd-btn-secondary pull-right" (click)="agentReassignment()">Re - Assignment</button>
+      <button type="submit" class="tbd-btn-secondary pull-right"
+        [disabled]="smeDetails.active || smeDetails.assignmentStart"
+        [ngStyle]="(smeDetails.active || smeDetails.assignmentStart)?{'cursor': 'not-allowed'} : {'cursor': 'pointer'}"
+        (click)="agentReassignment()">Re -
+        Assignment</button>
     </form>
   </div>
 
