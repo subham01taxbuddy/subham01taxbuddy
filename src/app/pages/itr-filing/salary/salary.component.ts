@@ -201,7 +201,7 @@ export class SalaryComponent implements OnInit {
       //   numericEditor: NumericEditorComponent
       // },
       suppressDragLeaveHidesColumns: true,
-      enableCellChangeFlash: true,
+      // enableCellChangeFlash: true,
       enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
@@ -306,7 +306,7 @@ export class SalaryComponent implements OnInit {
       //   numericEditor: NumericEditorComponent
       // },
       suppressDragLeaveHidesColumns: true,
-      enableCellChangeFlash: true,
+      // enableCellChangeFlash: true,
       enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
@@ -382,7 +382,6 @@ export class SalaryComponent implements OnInit {
   }
 
   summaryAllowCreateRowData(allowaceDropdownSummary) {
-    debugger
     // HOUSE_RENT,LTA,CHILDREN_EDUCATION,HOSTEL_EXPENDITURE
     if (this.ITR_JSON.regime === 'NEW')
       allowaceDropdownSummary = allowaceDropdownSummary.filter(item => item.value !== 'HOUSE_RENT' && item.value !== 'LTA' && item.value !== 'CHILDREN_EDUCATION' && item.value !== 'HOSTEL_EXPENDITURE');
@@ -790,7 +789,7 @@ export class SalaryComponent implements OnInit {
       //   numericEditor: NumericEditorComponent
       // },
       suppressDragLeaveHidesColumns: true,
-      enableCellChangeFlash: true,
+      // enableCellChangeFlash: true,
       enableCellTextSelection: true,
       defaultColDef: {
         resizable: true

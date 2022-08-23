@@ -54,8 +54,11 @@ export class SmeListComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('result -> ', result);
       this.loading = false;
-      this.smeListGridOptions.api?.setRowData(this.createRowData(result.data['content']));
-      this.smeList = result.data['content'];
+      if (result.data['content'] instanceof Array) {
+        let activeSme = result.data['content'].filter(item => item.active)
+        this.smeListGridOptions.api?.setRowData(this.createRowData(activeSme));
+        this.smeList = activeSme;
+      }
       // this.config.totalItems = result.data.totalElements;
     },
       error => {

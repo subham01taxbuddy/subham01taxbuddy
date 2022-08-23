@@ -405,9 +405,10 @@ export class UtilsService {
                 return [];
             });
             if (res.success && res.data && res.data.content instanceof Array) {
-                res.data.content.sort((a, b) => a.name > b.name ? 1 : -1)
-                sessionStorage.setItem(AppConstants.SME_LIST, JSON.stringify(res.data.content));
-                return res.data.content;
+                let activeSme = res.data.content.filter(item => item.active)
+                activeSme.sort((a, b) => a.name > b.name ? 1 : -1)
+                sessionStorage.setItem(AppConstants.SME_LIST, JSON.stringify(activeSme));
+                return activeSme;
             }
             return [];
         }

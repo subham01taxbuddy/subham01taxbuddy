@@ -101,7 +101,7 @@ export class TaxesPaidComponent implements OnInit {
       //   // agDateInput: CustomDateComponent,
       //   // matSelect: AgGridMaterialSelectEditorComponent
       // },
-      enableCellChangeFlash: true,
+      // enableCellChangeFlash: true,
       enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
@@ -163,7 +163,7 @@ export class TaxesPaidComponent implements OnInit {
         field: 'totalAmountCredited',
         editable: true,
         suppressMovable: true,
-        cellEditor: 'numericEditor',
+        // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
             if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
@@ -184,7 +184,7 @@ export class TaxesPaidComponent implements OnInit {
         field: 'totalTdsDeposited',
         editable: true,
         suppressMovable: true,
-        cellEditor: 'numericEditor',
+        // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
             if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
@@ -206,11 +206,12 @@ export class TaxesPaidComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        template:
-          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: red">
-      <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-     </button>`,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+      background: transparent; font-size: 16px; cursor:pointer;color: red">
+  <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
+ </button>`;
+        },
         width: 70,
         pinned: 'right',
         cellStyle: { textAlign: 'center' }
@@ -312,7 +313,7 @@ export class TaxesPaidComponent implements OnInit {
         // agDateInput: CustomDateComponent,
         matSelect: AgGridMaterialSelectEditorComponent
       },
-      enableCellChangeFlash: true,
+      // enableCellChangeFlash: true,
       enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
@@ -390,7 +391,7 @@ export class TaxesPaidComponent implements OnInit {
         field: 'totalAmountCredited',
         editable: true,
         suppressMovable: true,
-        cellEditor: 'numericEditor',
+        // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
             if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
@@ -410,7 +411,7 @@ export class TaxesPaidComponent implements OnInit {
         field: 'totalTdsDeposited',
         editable: true,
         suppressMovable: true,
-        cellEditor: 'numericEditor',
+        // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
             if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
@@ -431,11 +432,12 @@ export class TaxesPaidComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        template:
-          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
           background: transparent; font-size: 16px; cursor:pointer;color: red">
       <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-     </button>`,
+     </button>`;
+        },
         width: 70,
         pinned: 'right',
         cellStyle: { textAlign: 'center' }
@@ -546,7 +548,7 @@ export class TaxesPaidComponent implements OnInit {
         // agDateInput: CustomDateComponent,
         matSelect: AgGridMaterialSelectEditorComponent
       },
-      enableCellChangeFlash: true,
+      // enableCellChangeFlash: true,
       enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
@@ -624,7 +626,7 @@ export class TaxesPaidComponent implements OnInit {
         field: 'totalAmountCredited',
         editable: true,
         suppressMovable: true,
-        cellEditor: 'numericEditor',
+        // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
             if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
@@ -644,7 +646,7 @@ export class TaxesPaidComponent implements OnInit {
         field: 'totalTdsDeposited',
         editable: true,
         suppressMovable: true,
-        cellEditor: 'numericEditor',
+        // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
             if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
@@ -668,11 +670,12 @@ export class TaxesPaidComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        template:
-          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
           background: transparent; font-size: 16px; cursor:pointer;color: red">
       <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-     </button>`,
+     </button>`;
+        },
         width: 70,
         pinned: 'right',
         cellStyle: { textAlign: 'center' }
@@ -778,7 +781,7 @@ export class TaxesPaidComponent implements OnInit {
         // agDateInput: CustomDateComponent,
         matSelect: AgGridMaterialSelectEditorComponent
       },
-      enableCellChangeFlash: true,
+      // enableCellChangeFlash: true,
       enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
@@ -840,7 +843,7 @@ export class TaxesPaidComponent implements OnInit {
         field: 'totalAmountPaid',
         editable: true,
         suppressMovable: true,
-        cellEditor: 'numericEditor',
+        // cellEditor: 'numericEditor',
         tooltip: function (params) {
           return ('Amount paid should be numeric, no decimal, upto 14 digit.');
         },
@@ -850,7 +853,7 @@ export class TaxesPaidComponent implements OnInit {
         field: 'totalTcsDeposited',
         editable: true,
         suppressMovable: true,
-        cellEditor: 'numericEditor',
+        // cellEditor: 'numericEditor',
         tooltip: function (params) {
           return ('Total TCS deposited should be numeric, no decimal, upto 14 digit.');
         },
@@ -861,11 +864,12 @@ export class TaxesPaidComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        template:
-          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
           background: transparent; font-size: 16px; cursor:pointer;color: red">
         <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-       </button>`,
+       </button>`;
+        },
         width: 70,
         pinned: 'right',
         cellStyle: { textAlign: 'center' }
@@ -959,7 +963,7 @@ export class TaxesPaidComponent implements OnInit {
         // numericEditor: NumericEditorComponent,
         agDateInput: CustomDateComponent,
       },
-      enableCellChangeFlash: true,
+      // enableCellChangeFlash: true,
       enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
@@ -1032,7 +1036,7 @@ export class TaxesPaidComponent implements OnInit {
         field: 'totalTax',
         editable: true,
         suppressMovable: true,
-        cellEditor: 'numericEditor',
+        // cellEditor: 'numericEditor',
         tooltip: function (params) {
           return ('Total tax paid should be numeric, no decimal, upto 14 digit.');
         },
@@ -1043,11 +1047,12 @@ export class TaxesPaidComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        template:
-          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
           background: transparent; font-size: 16px; cursor:pointer;color: red">
         <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-       </button>`,
+       </button>`;
+        },
         width: 70,
         pinned: 'right',
         cellStyle: { textAlign: 'center' }

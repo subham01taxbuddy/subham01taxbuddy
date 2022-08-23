@@ -55,11 +55,11 @@ export class OtherIncomeComponent implements OnInit {
       onGridReady: () => {
         this.otherIncomeGridOptions.api.sizeColumnsToFit();
       },
-      frameworkComponents: {
-        numericEditor: NumericEditorComponent
-      },
+      // frameworkComponents: {
+      //   numericEditor: NumericEditorComponent
+      // },
       suppressDragLeaveHidesColumns: true,
-      enableCellChangeFlash: true,
+      // enableCellChangeFlash: true,
       enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
@@ -98,7 +98,7 @@ export class OtherIncomeComponent implements OnInit {
         field: 'amount',
         suppressMovable: true,
         editable: true,
-        cellEditor: 'numericEditor',
+        // cellEditor: 'numericEditor',
         headerComponentParams: { menuIcon: 'fa-external-link-alt' }
       },
 
@@ -108,13 +108,14 @@ export class OtherIncomeComponent implements OnInit {
         editable: false,
         suppressMenu: true,
         sortable: true,
-        template:
-          `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+        width: 75,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
           background: transparent; font-size: 16px; cursor:pointer;color: red">
         <i class="fa fa-times-circle" aria-hidden="true" data-action-type="remove"></i>
-       </button>`,
-        width: 75,
-        cellStyle: { textAlign: 'center' }
+       </button>`;
+        },
       },
 
     ];
