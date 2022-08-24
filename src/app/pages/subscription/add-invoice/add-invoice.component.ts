@@ -341,7 +341,7 @@ export class AddInvoiceComponent implements OnInit {
       this.invoiceForm.controls['zipCode'].updateValueAndValidity();
 
       this.invoiceForm.controls['country'].setValue('INDIA');
-
+      this.showTaxRelatedState(this.invoiceForm.controls['state'].value);
     } else {
       this.invoiceForm.controls['pincode'].setValidators(null);
       this.invoiceForm.controls['pincode'].setValue(null);
