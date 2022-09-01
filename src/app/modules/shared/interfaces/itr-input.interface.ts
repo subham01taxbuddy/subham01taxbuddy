@@ -62,6 +62,7 @@ export interface ITR_JSON {
     seventhProviso139: SeventhProviso139,
     depPayInvClmUndDednVIA: string;
     regime: string;
+    dividendIncomes?: any[]
 }
 export interface DirectorInCompany {
     companyName: string;
@@ -309,7 +310,7 @@ export interface PastYearLosses {
 
 export interface OtherIncome {
     incomeType: string;
-    details: number;
+    details: string;
     amount: number;
     expenses: number;
 }

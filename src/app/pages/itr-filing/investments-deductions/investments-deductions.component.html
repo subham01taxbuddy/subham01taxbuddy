@@ -75,6 +75,32 @@
             </div>
         </div>
 
+        <div style="padding-top: 20px;">
+            Other Deductions
+            <div class="card__row">
+                <div class="card__col-lg-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Under section 80GGC</mat-label>
+                        <input matInput placeholder="Under section 80GGC" maxlength="8" formControlName="us80ggc"
+                            autocomplete="off" digitsOnly>
+                    </mat-form-field>
+                </div>
+                <div class="card__col-lg-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Under section 80EEB</mat-label>
+                        <input matInput placeholder="Under section 80EEB" maxlength="8" formControlName="us80eeb"
+                            autocomplete="off" digitsOnly>
+                    </mat-form-field>
+                </div>
+                <!--  <div class="card__col-lg-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Under section 80TTB</mat-label>
+                        <input matInput placeholder="Under section 80TTB" maxlength="8" formControlName="us80ttb"
+                            autocomplete="off" digitsOnly>
+                    </mat-form-field>
+                </div> -->
+            </div>
+        </div>
         <hr>
         <ng-container *ngIf="ITR_JSON.regime === 'OLD'">
             <h2><span class="card__title" style="padding:10px; font-size: 20px;">General Donations under sec 80G</span>
