@@ -1,16 +1,12 @@
-import { TCS, OtherThanTDSTCS } from '../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { GridOptions, GridApi } from 'ag-grid-community';
+import { GridOptions } from 'ag-grid-community';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
-import { NumericEditorComponent } from 'src/app/modules/shared/numeric-editor.component';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { AgGridMaterialSelectEditorComponent } from 'src/app/modules/shared/dropdown.component';
 import { CustomDateComponent } from 'src/app/modules/shared/date.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import * as moment from 'moment';
-import { debug } from 'console';
-
 @Component({
   selector: 'app-taxes-paid',
   templateUrl: './taxes-paid.component.html',
@@ -86,7 +82,7 @@ export class TaxesPaidComponent implements OnInit {
   onSalaryCallInConstructor() {
     this.onSalaryGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData(),
-      columnDefs: this.createOnSalaryColoumnDef(),
+      columnDefs: this.createOnSalaryColumnDef(),
       onGridReady: () => {
       },
       onCellEditingStopped: function (event) {
@@ -96,12 +92,6 @@ export class TaxesPaidComponent implements OnInit {
           event.node.setDataValue(event.column.getColId(), event.value.substr(0, 125));
         }
       },
-      // frameworkComponents: {
-      //   numericEditor: NumericEditorComponent,
-      //   // agDateInput: CustomDateComponent,
-      //   // matSelect: AgGridMaterialSelectEditorComponent
-      // },
-      // enableCellChangeFlash: true,
       enableCellTextSelection: true,
       defaultColDef: {
         resizable: true
@@ -112,7 +102,7 @@ export class TaxesPaidComponent implements OnInit {
     };
   }
 
-  createOnSalaryColoumnDef() {
+  createOnSalaryColumnDef() {
     return [
       {
         headerName: 'TAN of employer',
@@ -263,7 +253,7 @@ export class TaxesPaidComponent implements OnInit {
             isDataValid = true;
           }
           else {
-            return this.utilsService.showSnackBar('Total amount credited is should be greater then Total tax deduction in TDS on salary table.');  //SAGAR
+            return this.utilsService.showSnackBar('Total amount credited is should be greater then Total tax deduction in TDS on salary table.');
           }
         } else {
           isDataValid = false;
@@ -297,8 +287,8 @@ export class TaxesPaidComponent implements OnInit {
   // tdsOtherThanSalary16A
   tdsOtherThanSalary16ACallInConstructor() {
     this.tdsOtherThanSalary16AGridOptions = <GridOptions>{
-      rowData: this.createTdsotherThanSalary16ARowData(),
-      columnDefs: this.createTdsotherThanSalary16AColoumnDef(),
+      rowData: this.createTdsOtherThanSalary16ARowData(),
+      columnDefs: this.createTdsOtherThanSalary16AColumnDef(),
       onGridReady: () => {
       },
       onCellEditingStopped: function (event) {
@@ -324,7 +314,7 @@ export class TaxesPaidComponent implements OnInit {
     };
   }
 
-  createTdsotherThanSalary16AColoumnDef() {
+  createTdsOtherThanSalary16AColumnDef() {
     return [
       {
         headerName: 'TAN of deductor',
@@ -445,7 +435,7 @@ export class TaxesPaidComponent implements OnInit {
     ];
   }
 
-  createTdsotherThanSalary16ARowData() {
+  createTdsOtherThanSalary16ARowData() {
     const newData = [];
     newData.push({
       srNo: null,
@@ -509,7 +499,7 @@ export class TaxesPaidComponent implements OnInit {
     }
     if (val === 'ADD') {
       if (isDataValid) {
-        const data = this.createTdsotherThanSalary16ARowData();
+        const data = this.createTdsOtherThanSalary16ARowData();
         this.tdsOtherThanSalary16AGridOptions.api.updateRowData({ add: data });
         this.tdsOtherThanSalary16AGridOptions.api.setFocusedCell(this.tdsOtherThanSalary16AGridOptions.api.getRenderedNodes().length - 1, 'deductorTAN', '');
       } else {
@@ -532,8 +522,8 @@ export class TaxesPaidComponent implements OnInit {
   // tdsOtherThanSalary16A
   tdsOtherThanSalary26QBCallInConstructor() {
     this.tdsOtherThanSalary26QBGridOptions = <GridOptions>{
-      rowData: this.createTdsotherThanSalary26QBRowData(),
-      columnDefs: this.createTdsotherThanSalary26QBColoumnDef(),
+      rowData: this.createTdsOtherThanSalary26QBRowData(),
+      columnDefs: this.createTdsOtherThanSalary26QBColumnDef(),
       onGridReady: () => {
       },
       onCellEditingStopped: function (event) {
@@ -559,7 +549,7 @@ export class TaxesPaidComponent implements OnInit {
     };
   }
 
-  createTdsotherThanSalary26QBColoumnDef() {
+  createTdsOtherThanSalary26QBColumnDef() {
     return [
       {
         headerName: 'PAN of deductor',
@@ -683,7 +673,7 @@ export class TaxesPaidComponent implements OnInit {
     ];
   }
 
-  createTdsotherThanSalary26QBRowData() {
+  createTdsOtherThanSalary26QBRowData() {
     const newData = [];
     newData.push({
       srNo: null,
@@ -731,7 +721,7 @@ export class TaxesPaidComponent implements OnInit {
             isDataValid = true;
           }
           else {
-            return this.utilsService.showSnackBar('Total amount credited is should be greater then Total tax deduction in TDS other than salary 26QB table.');  //SAGAR
+            return this.utilsService.showSnackBar('Total amount credited is should be greater then Total tax deduction in TDS other than salary 26QB table.');
           }
 
         } else {
@@ -744,7 +734,7 @@ export class TaxesPaidComponent implements OnInit {
     }
     if (val === 'ADD') {
       if (isDataValid) {
-        const data = this.createTdsotherThanSalary26QBRowData();
+        const data = this.createTdsOtherThanSalary26QBRowData();
         this.tdsOtherThanSalary26QBGridOptions.api.updateRowData({ add: data });
         this.tdsOtherThanSalary26QBGridOptions.api.setFocusedCell(this.tdsOtherThanSalary26QBGridOptions.api.getRenderedNodes().length - 1, 'deductorPAN', '');
       } else {
@@ -766,7 +756,7 @@ export class TaxesPaidComponent implements OnInit {
   tcsCallInConstructor() {
     this.tcsGridOptions = <GridOptions>{
       rowData: this.createTcsRowData(),
-      columnDefs: this.createTcsColoumnDef(),
+      columnDefs: this.createTcsColumnDef(),
       onGridReady: () => {
       },
       onCellEditingStopped: function (event) {
@@ -792,7 +782,7 @@ export class TaxesPaidComponent implements OnInit {
     };
   }
 
-  createTcsColoumnDef() {
+  createTcsColumnDef() {
     return [
       {
         headerName: 'TAN of collector',
@@ -949,7 +939,7 @@ export class TaxesPaidComponent implements OnInit {
   otherThanTdsTcsCallInConstructor() {
     this.otherThanTdsTcsGridOptions = <GridOptions>{
       rowData: this.createOtherThanTdsTcsRowData(),
-      columnDefs: this.createOtherThanTdsTcsColoumnDef(),
+      columnDefs: this.createOtherThanTdsTcsColumnDef(),
       onGridReady: () => {
       },
       onCellEditingStopped: function (event) {
@@ -974,7 +964,7 @@ export class TaxesPaidComponent implements OnInit {
     };
   }
 
-  createOtherThanTdsTcsColoumnDef() {
+  createOtherThanTdsTcsColumnDef() {
     return [
       {
         headerName: 'BSR code',
@@ -1234,13 +1224,11 @@ export class TaxesPaidComponent implements OnInit {
     var reqBody = [filePath];
     console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
     // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
-      console.log('Doc delete responce: ', responce);
-      this.utilsService.showSnackBar(responce.response);
+    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((response: any) => {
+      this.utilsService.showSnackBar(response.response);
       this.getItrDocuments();
     },
       error => {
-        console.log('Doc delete ERROR responce: ', error.responce);
         this.utilsService.showSnackBar(error.response);
       })
   }

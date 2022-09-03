@@ -29,16 +29,9 @@ import { InputTagsComponent } from '../additional-components/input-tags/input-ta
 import { InputTagsViewComponent } from '../additional-components/input-tags-view/input-tags-view.component';
 import { ToggleComponent } from '../additional-components/toggle/toggle.component';
 import { AttributesFilterComponent } from '../additional-components/attributes-filter/attributes-filter.component';
-
 import { ModalModule } from 'ngx-bootstrap/modal';
 
-//helpers
-
-// Simulate Web API
-import { HomeComponent } from './home/home.component';
-
 //Pages Component
-import { ListComponent } from './list/list.component';
 import { BusinessComponent } from './business/business.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
 import { GSTCloudComponent } from './business/gst-cloud/gst-cloud.component';
@@ -51,23 +44,12 @@ import { GST3BComputationComponent } from './business/gst-3b-computation/gst-3b-
 
 
 import { routes } from './pages.routing';
-
-import { NavbarComponent } from '../modules/shared/components/navbar/navbar.component';
-import { SidebarComponent } from '../modules/shared/components/sidebar/sidebar.component';
-
 import { environment } from '../../environments/environment';
-
 import Auth from '@aws-amplify/auth';
 import Storage from '@aws-amplify/storage';
 import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { AssignComponent } from './assign/assign.component';
-import { CSVParseTemplateComponent } from './assign/csv-parse-template/csv-parse-template.component';
-import { GstRegistrationClientComponent } from './assign/gst-registration-client/gst-registration-client.component';
-import { ActivePackagePartComponent } from './active-package-part/active-package-part.component';
-import { FcmDetailComponent } from './active-package-part/fcm-detail/fcm-detail.component';
-import { ActivatePackageComponent } from './active-package-part/activate-package/activate-package.component';
 import { ValidateOtpByWhatAppComponent } from '../modules/auth/components/validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { AgGridCheckboxComponent } from '../additional-components/ag-grid-checkbox/ag-grid-checkbox.component';
 import { SharedModule } from '../modules/shared/shared.module';
@@ -100,7 +82,6 @@ export const MY_FORMATS = {
 };
 @NgModule({
   declarations: [
-    ListComponent,
     BusinessComponent,
     BusinessProfileComponent,
     GSTCloudComponent,
@@ -110,7 +91,6 @@ export const MY_FORMATS = {
     PartyListComponent,
     ImportPartyListComponent,
     GST3BComputationComponent,
-    HomeComponent,
     SelectObjectFilterPipe,
     SelectFilterPipe,
     SelectObjFilterPipe,
@@ -133,39 +113,27 @@ export const MY_FORMATS = {
     InputTagsViewComponent,
     ToggleComponent,
     AttributesFilterComponent,
-    ActivatePackageComponent,
     AgGridCheckboxComponent,
-    AssignComponent,
-    CSVParseTemplateComponent,
-    GstRegistrationClientComponent,
-    ActivePackagePartComponent,
-    FcmDetailComponent,
     ValidateOtpByWhatAppComponent,
     NeedHelpComponent,
 
   ],
   entryComponents: [
-    HomeComponent,
     ConfirmationModalComponent,
     AgGridCheckboxComponent,
     ValidateOtpByWhatAppComponent,
   ],
   imports: [
     CommonModule,
-    // BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forChild(routes),
     NgxLoadingModule.forRoot({}),
     ModalModule.forRoot(),
-    // NgxImageZoomModule.forRoot(),
     PdfViewerModule,
     NgxExtendedPdfViewerModule,
-    // AgGridModule.withComponents([]),
-    //MaterialModule,
     SharedModule,
-    // NgxDocViewerModule
   ],
   providers: [
     SelectObjectFilterPipe,
