@@ -48,6 +48,13 @@ export class OtherIncomeComponent implements OnInit {
     private itrMsService: ItrMsService, public fb: FormBuilder,) { }
 
   ngOnInit() {
+    this.dividendIncomes = this.fb.group({
+      quarter1: [null],
+      quarter2: [null],
+      quarter3: [null],
+      quarter4: [null],
+      quarter5: [null],
+    })
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.otherIncomeCallInConstructor(this.otherIncomeDropdown);
@@ -55,13 +62,7 @@ export class OtherIncomeComponent implements OnInit {
     this.getItrDocuments();
 
     console.log('OTHERE deletedFileData LENGTH ---> ', this.deletedFileData.length);
-    this.dividendIncomes = this.fb.group({
-      quarter1: [''],
-      quarter2: [''],
-      quarter3: [''],
-      quarter4: [''],
-      quarter5: [''],
-    })
+
   }
 
   // Salary Grid Start
@@ -175,27 +176,27 @@ export class OtherIncomeComponent implements OnInit {
       {
         "income": this.dividendIncomes.controls['quarter1'].value,
         "date": "2022-04-28T18:30:00.000Z",
-        quarter: '1'
+        quarter: 1
       },
       {
         "income": this.dividendIncomes.controls['quarter2'].value,
         "date": "2022-07-28T18:30:00.000Z",
-        quarter: '2'
+        quarter: 2
       },
       {
         "income": this.dividendIncomes.controls['quarter3'].value,
         "date": "2022-09-28T18:30:00.000Z",
-        quarter: '3'
+        quarter: 3
       },
       {
         "income": this.dividendIncomes.controls['quarter4'].value,
         "date": "2022-12-28T18:30:00.000Z",
-        quarter: '4'
+        quarter: 4
       },
       {
         "income": this.dividendIncomes.controls['quarter5'].value,
         "date": "2023-03-20T18:30:00.000Z",
-        quarter: '5'
+        quarter: 5
       }
     ]
     console.log('Copy ITR JSON', this.Copy_ITR_JSON)
@@ -242,7 +243,6 @@ export class OtherIncomeComponent implements OnInit {
     this.otherIncomeGridOptions.rowData = this.otherIncomeCreateRowData(this.otherIncomeDropdown);
     this.otherIncomeGridOptions.columnDefs = this.otherIncomeCreateColumnDef(this.otherIncomeDropdown);
     if (this.ITR_JSON.incomes instanceof Array) {
-      debugger
       let otherIncomes = this.ITR_JSON.incomes.filter(item => item.incomeType === 'SAVING_INTEREST' || item.incomeType === 'FD_RD_INTEREST' || item.incomeType === 'TAX_REFUND_INTEREST' || item.incomeType === 'ANY_OTHER');
       for (let i = 0; i < otherIncomes.length; i++) {
         const id = this.otherIncomeGridOptions.rowData.filter((item: any) => item.incomeType === otherIncomes[i].incomeType)[0].id;
@@ -268,23 +268,23 @@ export class OtherIncomeComponent implements OnInit {
     if (this.ITR_JSON.dividendIncomes instanceof Array) {
       for (let i = 0; i < this.ITR_JSON.dividendIncomes.length; i++) {
         switch (this.ITR_JSON.dividendIncomes[i].quarter) {
-          case '1': {
+          case 1: {
             this.dividendIncomes.controls['quarter1'].setValue(this.ITR_JSON.dividendIncomes[i].income);
             break;
           }
-          case '2': {
+          case 2: {
             this.dividendIncomes.controls['quarter2'].setValue(this.ITR_JSON.dividendIncomes[i].income);
             break;
           }
-          case '3': {
+          case 3: {
             this.dividendIncomes.controls['quarter3'].setValue(this.ITR_JSON.dividendIncomes[i].income);
             break;
           }
-          case '4': {
+          case 4: {
             this.dividendIncomes.controls['quarter4'].setValue(this.ITR_JSON.dividendIncomes[i].income);
             break;
           }
-          case '5': {
+          case 5: {
             this.dividendIncomes.controls['quarter5'].setValue(this.ITR_JSON.dividendIncomes[i].income);
             break;
           }

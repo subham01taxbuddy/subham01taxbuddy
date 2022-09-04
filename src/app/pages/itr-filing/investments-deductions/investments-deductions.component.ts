@@ -1,5 +1,5 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, DoCheck } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -15,7 +15,7 @@ declare let $: any;
   templateUrl: './investments-deductions.component.html',
   styleUrls: ['./investments-deductions.component.css']
 })
-export class InvestmentsDeductionsComponent implements OnInit {
+export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   @Output() saveAndNext = new EventEmitter<any>();
 
   loading: boolean = false;
@@ -29,6 +29,12 @@ export class InvestmentsDeductionsComponent implements OnInit {
   userAge: number = 0;
   itrDocuments = [];
   deletedFileData: any = [];
+  maxLimit80u = 75000
+  selected80u = '';
+  maxLimit80dd = 75000
+  selected80dd = '';
+  maxLimit80ddb = 40000
+  selected80ddb = '';
 
   otherDonationToDropdown = [{
     "id": null,
@@ -566,6 +572,9 @@ export class InvestmentsDeductionsComponent implements OnInit {
       medicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ggc: [null, Validators.pattern(AppConstants.numericRegex)],
       us80eeb: [null, Validators.pattern(AppConstants.numericRegex)],
+      us80u: [null, Validators.pattern(AppConstants.numericRegex)],
+      us80dd: [null, Validators.pattern(AppConstants.numericRegex)],
+      us80ddb: [null, Validators.pattern(AppConstants.numericRegex)],
     });
     this.setInvestmentsDeductionsValues();
     this.donationCallInConstructor(this.otherDonationToDropdown, this.stateDropdown);
@@ -678,6 +687,25 @@ export class InvestmentsDeductionsComponent implements OnInit {
           healthCover: null
         });
       }
+      this.ITR_JSON.disabilities = [];
+      if (this.selected80u !== '' && this.utilsService.isNonZero(this.investmentDeductionForm.controls['us80u'].value)) {
+        this.ITR_JSON.disabilities.push({
+          typeOfDisability: this.selected80u,
+          amount: this.investmentDeductionForm.controls['us80u'].value
+        })
+      }
+      if (this.selected80dd !== '' && this.utilsService.isNonZero(this.investmentDeductionForm.controls['us80dd'].value)) {
+        this.ITR_JSON.disabilities.push({
+          typeOfDisability: this.selected80dd,
+          amount: this.investmentDeductionForm.controls['us80dd'].value
+        })
+      }
+      if (this.selected80ddb !== '' && this.utilsService.isNonZero(this.investmentDeductionForm.controls['us80ddb'].value)) {
+        this.ITR_JSON.disabilities.push({
+          typeOfDisability: this.selected80ddb,
+          amount: this.investmentDeductionForm.controls['us80ddb'].value
+        })
+      }
       this.serviceCall('NEXT', this.ITR_JSON);
     } else {
       $('input.ng-invalid').first().focus();
@@ -730,6 +758,24 @@ export class InvestmentsDeductionsComponent implements OnInit {
         this.investmentDeductionForm.controls['preventiveCheckUp'].setValue(this.ITR_JSON.insurances[i].preventiveCheckUp);
         this.investmentDeductionForm.controls['medicalExpenditure'].setValue(this.ITR_JSON.insurances[i].medicalExpenditure);
       }
+    }
+    let sec80u = this.ITR_JSON.disabilities?.filter(item => item.typeOfDisability === 'SELF_WITH_DISABILITY' || item.typeOfDisability === 'SELF_WITH_SEVERE_DISABILITY');
+    if (sec80u.length > 0) {
+      this.selected80u = sec80u[0].typeOfDisability;
+      this.investmentDeductionForm.controls['us80u'].setValue(sec80u[0].amount);
+      this.radioChange80u();
+    }
+    let sec80dd = this.ITR_JSON.disabilities?.filter(item => item.typeOfDisability === 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY' || item.typeOfDisability === 'DEPENDENT_PERSON_WITH_DISABILITY');
+    if (sec80dd.length > 0) {
+      this.selected80dd = sec80dd[0].typeOfDisability;
+      this.investmentDeductionForm.controls['us80dd'].setValue(sec80dd[0].amount);
+      this.radioChange80dd();
+    }
+    let sec80ddb = this.ITR_JSON.disabilities?.filter(item => item.typeOfDisability === 'SELF_OR_DEPENDENT' || item.typeOfDisability === 'SELF_OR_DEPENDENT_SENIOR_CITIZEN');
+    if (sec80ddb.length > 0) {
+      this.selected80ddb = sec80ddb[0].typeOfDisability;
+      this.investmentDeductionForm.controls['us80ddb'].setValue(sec80ddb[0].amount);
+      this.radioChange80ddb();
     }
     this.max5000Limit('SELF');
   }
@@ -1082,5 +1128,48 @@ export class InvestmentsDeductionsComponent implements OnInit {
     }
 
     console.log('Doc URL: ', this.docDetails.docUrl)
+  }
+
+  radioChange80u() {
+    if (this.selected80u === 'SELF_WITH_DISABILITY') {
+      this.maxLimit80u = 75000
+    } else if (this.selected80u === 'SELF_WITH_SEVERE_DISABILITY') {
+      this.maxLimit80u = 125000
+    }
+  }
+  radioChange80dd() {
+    if (this.selected80dd === 'DEPENDENT_PERSON_WITH_DISABILITY') {
+      this.maxLimit80dd = 75000
+    } else if (this.selected80dd === 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY') {
+      this.maxLimit80dd = 125000
+    }
+  }
+  radioChange80ddb() {
+    if (this.selected80ddb === 'SELF_OR_DEPENDENT') {
+      this.maxLimit80ddb = 40000
+    } else if (this.selected80ddb === 'SELF_OR_DEPENDENT_SENIOR_CITIZEN') {
+      this.maxLimit80ddb = 100000
+    }
+  }
+
+  ngDoCheck() {
+    if (this.selected80u !== '') {
+      this.investmentDeductionForm.controls['us80u'].enable();
+      this.investmentDeductionForm.controls['us80u'].setValidators([Validators.max(this.maxLimit80u)]);
+    } else {
+      this.investmentDeductionForm.controls['us80u'].disable();
+    }
+    if (this.selected80dd !== '') {
+      this.investmentDeductionForm.controls['us80dd'].enable();
+      this.investmentDeductionForm.controls['us80dd'].setValidators([Validators.max(this.maxLimit80dd)]);
+    } else {
+      this.investmentDeductionForm.controls['us80dd'].disable();
+    }
+    if (this.selected80ddb !== '') {
+      this.investmentDeductionForm.controls['us80ddb'].enable();
+      this.investmentDeductionForm.controls['us80ddb'].setValidators([Validators.max(this.maxLimit80ddb)]);
+    } else {
+      this.investmentDeductionForm.controls['us80ddb'].disable();
+    }
   }
 }

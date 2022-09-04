@@ -36,6 +36,7 @@ export interface ITR_JSON {
     address: Address;
     declaration: Declaration;
     disability: Disability;
+    disabilities?: Disabilities[];
     upload: Upload[];
     employers: Employer[];
     houseProperties: HouseProperties[];
@@ -121,6 +122,10 @@ export interface Disability {
     percentSelf: string;
     dependentDisabilityPercent: string;
     dependentRelation: string;
+}
+export interface Disabilities {
+    typeOfDisability: string;
+    amount: number;
 }
 export interface HouseProperties {
     propertyType: string;
