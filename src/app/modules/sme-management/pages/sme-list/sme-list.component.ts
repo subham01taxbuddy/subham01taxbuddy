@@ -271,7 +271,26 @@ export class SmeListComponent implements OnInit {
   }
 
   downloadCsv() {
-    this.smeListGridOptions.api.exportDataAsCsv(this.getParams());
+    console.log(this.smeListGridOptions.api.getDataAsCsv(this.getParams()));
+    let content = this.smeListGridOptions.api.getDataAsCsv(this.getParams());
+    var blobObject = new Blob(["\ufeff", content], {
+      type: "text/csv;charset=utf-8;"
+    });
+
+    if (window.navigator.msSaveBlob) {
+      window.navigator.msSaveBlob(blobObject, 'SME-list.csv');
+    }
+    else {
+      // Chrome
+      var downloadLink = document.createElement("a");
+      downloadLink.href = (window.webkitURL || window.URL).createObjectURL(blobObject);
+      downloadLink.download = 'SME-list.csv';
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }      
+    this.smeListGridOptions.api.hideOverlay();
+    //this.smeListGridOptions.api.exportDataAsCsv(this.getParams());
   }
   getFields(id: string) {
     var field: any = document.querySelector('#' + id);
