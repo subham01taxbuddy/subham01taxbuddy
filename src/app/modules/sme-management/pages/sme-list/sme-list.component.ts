@@ -271,7 +271,7 @@ export class SmeListComponent implements OnInit {
   }
 
   downloadCsv() {
-    console.log(this.smeListGridOptions.api.getDataAsCsv(this.getParams()));
+    // console.log(this.smeListGridOptions.api.getDataAsCsv(this.getParams()));
     let content = this.smeListGridOptions.api.getDataAsCsv(this.getParams());
     var blobObject = new Blob(["\ufeff", content], {
       type: "text/csv;charset=utf-8;"
