@@ -1,3 +1,4 @@
+import { PauseInvoiceReminderComponent } from './pages/pause-invoice-reminder/pause-invoice-reminder.component';
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -55,7 +56,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
         TpaClientsComponent,
         MainKnowlarityComponent,
         SmeWiseInfoComponent,
-        CallWiseInfoComponent
+        CallWiseInfoComponent,
+        PauseInvoiceReminderComponent
     ],
     imports: [
         CommonModule,
