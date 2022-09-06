@@ -7,15 +7,15 @@
               <div class="input">
                 <label class="input__label" for="attr">Enter Invoice Number</label>
                 <div class="input__select">
-                  <input maxlength="10" class="select__box ogp_select" style="background-image:none" [(ngModel)]="mobileNo"
-                  type="number"
+                  <input maxlength="100" class="select__box ogp_select" style="background-image:none" [(ngModel)]="invoiceNo"
+                  type="text" pattern="^SSBA\/2022\/([1-9]?[0-9]*)"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   onkeypress=" event.charCode >= 48 && event.charCode <= 57" />
                 </div>
               </div>
             </div>
             <div class="filter__col card__col-sm-2 card__col-xs-10">
-              <a class="btn btn_stroke filter__add-link" (click)="advanceSearch(mobileNo)"><i
+              <a class="btn btn_stroke filter__add-link" (click)="invoiceSearch(invoiceNo)"><i
                   class="fa fa-search" aria-hidden="true" style="color: #2ed13b;"></i>&nbsp;Search</a>
             </div>
 
@@ -38,9 +38,11 @@
             <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>     -->
 
             <div class="card__row" style="margin-top: 0px;">
-              <ag-grid-angular class="ag-theme-balham" [gridOptions]="openStatusClientsGridOption"
-                (rowClicked)="onOpenStatusClicked($event)">  
-               </ag-grid-angular>
+              <div class="card__row">
+                <ag-grid-angular class="ag-theme-balham" [gridOptions]="invoiceGridOptions"
+                    (rowClicked)="onInvoiceRowClicked($event)" paginationPageSize=15 pagination=true>
+                </ag-grid-angular>
+            </div>
 
             <br>
             <!-- <div *ngIf="utilService.isNonEmpty(selectedAgent)">
