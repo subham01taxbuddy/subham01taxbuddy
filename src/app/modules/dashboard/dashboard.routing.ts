@@ -1,3 +1,4 @@
+import { PauseInvoiceReminderComponent } from './pages/pause-invoice-reminder/pause-invoice-reminder.component';
 import { CallingBoardComponent } from './pages/calling-board/calling-board.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -56,6 +57,7 @@ const routes: Routes = [
                     { path: '', redirectTo: 'all', pathMatch: 'full' }
                 ]
             },
+            { path: 'pause-invoice-reminder', component: PauseInvoiceReminderComponent },
             { path: '', redirectTo: 'quick-search', pathMatch: 'full' }
         ]
     },
