@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { Auth } from 'aws-amplify';
+import { Auth } from '@aws-amplify/auth';
 declare let $: any;
 
 @Component({

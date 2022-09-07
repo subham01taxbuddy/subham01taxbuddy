@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ThirdPartyService } from 'src/app/services/third-party.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { Storage } from 'aws-amplify';
+import { Storage } from '@aws-amplify/storage';
 import * as $ from 'jquery';
 
 export const MY_FORMATS = {
