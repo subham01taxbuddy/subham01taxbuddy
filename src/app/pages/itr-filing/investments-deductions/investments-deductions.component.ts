@@ -645,15 +645,13 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
             });
           } else if (item === 'us80eeb') {
             this.ITR_JSON.expenses = this.ITR_JSON.expenses.filter((item: any) => item.expenseType !== 'ELECTRIC_VEHICLE')
-            if (!this.ITR_JSON.systemFlags.hraAvailed) {
-              this.ITR_JSON.expenses.push({
-                expenseType: 'ELECTRIC_VEHICLE',
-                expenseFor: null,
-                details: null,
-                amount: Number(this.investmentDeductionForm.controls['us80eeb'].value),
-                noOfMonths: 0
-              });
-            }
+            this.ITR_JSON.expenses.push({
+              expenseType: 'ELECTRIC_VEHICLE',
+              expenseFor: null,
+              details: null,
+              amount: Number(this.investmentDeductionForm.controls['us80eeb'].value),
+              noOfMonths: 0
+            });
           }
         }
       });

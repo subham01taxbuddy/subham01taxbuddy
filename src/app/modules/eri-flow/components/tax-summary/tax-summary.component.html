@@ -425,8 +425,7 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Date of filling</mat-label>
                         <input matInput formControlName="eFillingDate" placeholder="Date of filling"
-                            [max]="fillingMaxDate" [min]="fillingMinDate" [max]="maxDate" [matDatepicker]="picker1"
-                            autocomplete="off">
+                            [max]="fillingMaxDate" [min]="fillingMinDate" [matDatepicker]="picker1" autocomplete="off">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                         <mat-error
