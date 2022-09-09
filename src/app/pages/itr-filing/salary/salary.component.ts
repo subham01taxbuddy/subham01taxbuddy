@@ -169,6 +169,8 @@ export class SalaryComponent implements OnInit {
     });
     if (this.ITR_JSON.regime === 'NEW') {
       this.employerDetailsFormGroup.controls['professionalTax'].disable();
+    }
+    if ((this.ITR_JSON.employerCategory !== 'GOVERNMENT' && this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT') || this.ITR_JSON.regime === 'NEW') {
       this.employerDetailsFormGroup.controls['entertainmentAllow'].disable();
     }
     this.employerDetailsFormGroup.controls['professionalTax'].setValidators(Validators.compose([Validators.max(this.maxPT), Validators.pattern(AppConstants.numericRegex)]));
@@ -446,6 +448,9 @@ export class SalaryComponent implements OnInit {
         }
       });
     });
+    if ((this.ITR_JSON.employerCategory !== 'GOVERNMENT' && this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT') || this.ITR_JSON.regime === 'NEW') {
+      this.employerDetailsFormGroup.controls['entertainmentAllow'].disable();
+    }
     this.employerDetailsFormGroup.controls['professionalTax'].setValidators(Validators.compose([Validators.max(this.maxPT), Validators.pattern(AppConstants.numericRegex)]));
     this.employerDetailsFormGroup.controls['professionalTax'].updateValueAndValidity();
     this.employerDetailsFormGroup.controls['entertainmentAllow'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(this.maxEA)]));

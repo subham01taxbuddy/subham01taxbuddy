@@ -571,7 +571,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       preventiveCheckUp: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)]],
       medicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ggc: [null, Validators.pattern(AppConstants.numericRegex)],
-      us80eeb: [null, Validators.pattern(AppConstants.numericRegex)],
+      us80eeb: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(150000)]],
       us80u: [null, Validators.pattern(AppConstants.numericRegex)],
       us80dd: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ddb: [null, Validators.pattern(AppConstants.numericRegex)],
@@ -761,19 +761,19 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     if (sec80u.length > 0) {
       this.selected80u = sec80u[0].typeOfDisability;
       this.investmentDeductionForm.controls['us80u'].setValue(sec80u[0].amount);
-      this.radioChange80u();
+      this.radioChange80u(false);
     }
     let sec80dd = this.ITR_JSON.disabilities?.filter(item => item.typeOfDisability === 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY' || item.typeOfDisability === 'DEPENDENT_PERSON_WITH_DISABILITY');
     if (sec80dd.length > 0) {
       this.selected80dd = sec80dd[0].typeOfDisability;
       this.investmentDeductionForm.controls['us80dd'].setValue(sec80dd[0].amount);
-      this.radioChange80dd();
+      this.radioChange80dd(false);
     }
     let sec80ddb = this.ITR_JSON.disabilities?.filter(item => item.typeOfDisability === 'SELF_OR_DEPENDENT' || item.typeOfDisability === 'SELF_OR_DEPENDENT_SENIOR_CITIZEN');
     if (sec80ddb.length > 0) {
       this.selected80ddb = sec80ddb[0].typeOfDisability;
       this.investmentDeductionForm.controls['us80ddb'].setValue(sec80ddb[0].amount);
-      this.radioChange80ddb();
+      this.radioChange80ddb(false);
     }
     this.max5000Limit('SELF');
   }
@@ -1128,26 +1128,33 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     console.log('Doc URL: ', this.docDetails.docUrl)
   }
 
-  radioChange80u() {
+  radioChange80u(setDefault) {
     if (this.selected80u === 'SELF_WITH_DISABILITY') {
-      this.maxLimit80u = 75000
+      this.maxLimit80u = 75000;
     } else if (this.selected80u === 'SELF_WITH_SEVERE_DISABILITY') {
       this.maxLimit80u = 125000
     }
+    if (setDefault)
+      this.investmentDeductionForm.controls['us80u'].setValue(this.maxLimit80u)
+
   }
-  radioChange80dd() {
+  radioChange80dd(setDefault) {
     if (this.selected80dd === 'DEPENDENT_PERSON_WITH_DISABILITY') {
       this.maxLimit80dd = 75000
     } else if (this.selected80dd === 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY') {
       this.maxLimit80dd = 125000
     }
+    if (setDefault)
+      this.investmentDeductionForm.controls['us80dd'].setValue(this.maxLimit80dd)
   }
-  radioChange80ddb() {
+  radioChange80ddb(setDefault) {
     if (this.selected80ddb === 'SELF_OR_DEPENDENT') {
       this.maxLimit80ddb = 40000
     } else if (this.selected80ddb === 'SELF_OR_DEPENDENT_SENIOR_CITIZEN') {
       this.maxLimit80ddb = 100000
     }
+    if (setDefault)
+      this.investmentDeductionForm.controls['us80ddb'].setValue(this.maxLimit80ddb)
   }
 
   ngDoCheck() {
