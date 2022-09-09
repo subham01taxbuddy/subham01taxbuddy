@@ -83,6 +83,7 @@
                         <mat-label>Under section 80GGC</mat-label>
                         <input matInput placeholder="Under section 80GGC" maxlength="8" formControlName="us80ggc"
                             autocomplete="off" digitsOnly>
+                        <mat-hint>Donation is in other than cash mode</mat-hint>
                     </mat-form-field>
                 </div>
                 <div class="card__col-lg-4">
@@ -90,6 +91,8 @@
                         <mat-label>Under section 80EEB</mat-label>
                         <input matInput placeholder="Under section 80EEB" maxlength="8" formControlName="us80eeb"
                             autocomplete="off" digitsOnly>
+                        <mat-error *ngIf="investmentDeductionForm.controls['us80eeb'].hasError('max')">
+                            Max limit is 1,50,000</mat-error>
                     </mat-form-field>
                 </div>
                 <!--  <div class="card__col-lg-4">
@@ -186,7 +189,7 @@
             <div class="card__row">
                 <div class="card__col-lg-6">
                     <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80u"
-                        [ngModelOptions]="{standalone: true}" (change)="radioChange80u()">
+                        [ngModelOptions]="{standalone: true}" (change)="radioChange80u(true)">
                         <mat-radio-button value="SELF_WITH_DISABILITY">Self with disability</mat-radio-button><br><br>
                         <mat-radio-button value="SELF_WITH_SEVERE_DISABILITY">Self with severe disability
                         </mat-radio-button>
@@ -208,7 +211,7 @@
             <div class="card__row">
                 <div class="card__col-lg-6">
                     <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80dd"
-                        [ngModelOptions]="{standalone: true}" (change)="radioChange80dd()">
+                        [ngModelOptions]="{standalone: true}" (change)="radioChange80dd(true)">
                         <mat-radio-button value="DEPENDENT_PERSON_WITH_DISABILITY">Dependent person with disability
                         </mat-radio-button><br><br>
                         <mat-radio-button value="DEPENDENT_PERSON_WITH_SEVERE_DISABILITY">Dependent person with severe
@@ -232,7 +235,7 @@
             <div class="card__row">
                 <div class="card__col-lg-6">
                     <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80ddb"
-                        [ngModelOptions]="{standalone: true}" (change)="radioChange80ddb()">
+                        [ngModelOptions]="{standalone: true}" (change)="radioChange80ddb(true)">
                         <mat-radio-button value="SELF_OR_DEPENDENT">Self or dependent
                         </mat-radio-button><br><br>
                         <mat-radio-button value="SELF_OR_DEPENDENT_SENIOR_CITIZEN">Self or dependent - Senior
