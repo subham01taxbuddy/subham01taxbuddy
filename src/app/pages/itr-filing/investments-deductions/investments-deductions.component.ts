@@ -1176,5 +1176,51 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     } else {
       this.investmentDeductionForm.controls['us80ddb'].disable();
     }
+
+    if (this.investmentDeductionForm.controls['selfPremium'].value > 0) {
+      this.investmentDeductionForm.controls['selfMedicalExpenditure'].setValue(null)
+      this.investmentDeductionForm.controls['selfMedicalExpenditure'].disable();
+    } else if (this.investmentDeductionForm.controls['selfMedicalExpenditure'].value > 0) {
+      this.investmentDeductionForm.controls['selfPremium'].setValue(null)
+      this.investmentDeductionForm.controls['selfPremium'].disable();
+    }
+    if (this.investmentDeductionForm.controls['premium'].value > 0) {
+      this.investmentDeductionForm.controls['medicalExpenditure'].setValue(null)
+      this.investmentDeductionForm.controls['medicalExpenditure'].disable();
+    } else if (this.investmentDeductionForm.controls['medicalExpenditure'].value > 0) {
+      this.investmentDeductionForm.controls['premium'].setValue(null)
+      this.investmentDeductionForm.controls['premium'].disable();
+    }
+  }
+
+  disableSelf(value) {
+    if (value === 'HEALTH') {
+      this.investmentDeductionForm.controls['selfMedicalExpenditure'].enable();
+      if (this.investmentDeductionForm.controls['selfPremium'].value > 0) {
+        this.investmentDeductionForm.controls['selfMedicalExpenditure'].setValue(null)
+        this.investmentDeductionForm.controls['selfMedicalExpenditure'].disable();
+      }
+    } else if (value === 'MEDICAL') {
+      this.investmentDeductionForm.controls['selfPremium'].enable();
+      if (this.investmentDeductionForm.controls['selfMedicalExpenditure'].value > 0) {
+        this.investmentDeductionForm.controls['selfPremium'].setValue(null)
+        this.investmentDeductionForm.controls['selfPremium'].disable();
+      }
+    }
+  }
+  disableParent(value) {
+    if (value === 'HEALTH') {
+      this.investmentDeductionForm.controls['medicalExpenditure'].enable();
+      if (this.investmentDeductionForm.controls['premium'].value > 0) {
+        this.investmentDeductionForm.controls['medicalExpenditure'].setValue(null)
+        this.investmentDeductionForm.controls['medicalExpenditure'].disable();
+      }
+    } else if (value === 'MEDICAL') {
+      this.investmentDeductionForm.controls['premium'].enable();
+      if (this.investmentDeductionForm.controls['medicalExpenditure'].value > 0) {
+        this.investmentDeductionForm.controls['premium'].setValue(null)
+        this.investmentDeductionForm.controls['premium'].disable();
+      }
+    }
   }
 }

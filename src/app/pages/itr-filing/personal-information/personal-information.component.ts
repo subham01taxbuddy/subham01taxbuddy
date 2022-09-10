@@ -315,11 +315,14 @@ export class PersonalInformationComponent implements OnInit {
   ];
 
   employersDropdown = [
-    { value: 'GOVERNMENT', label: 'State Government' },
     { value: 'CENTRAL_GOVT', label: 'Central Government' },
+    { value: 'GOVERNMENT', label: 'State Government' },
     { value: 'PRIVATE', label: 'Public Sector Unit' },
+    { value: 'PE', label: 'Pensioners - Central Government' },
+    { value: 'PESG', label: 'Pensioners - State Government' },
+    { value: 'PEPS', label: 'Pensioners - Public sector undertaking' },
+    { value: 'PENSIONERS', label: 'Pensioners - Others' },
     { value: 'OTHER', label: 'Other-Private' },
-    { value: 'PENSIONERS', label: 'Pensioners' },
     { value: 'NA', label: 'Not-Applicable' }
   ];
 
