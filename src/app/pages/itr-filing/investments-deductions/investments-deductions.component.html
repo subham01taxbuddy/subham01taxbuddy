@@ -188,7 +188,7 @@
                         <mat-label>Medical Expenditure for Senior Citizen</mat-label>
                         <input matInput placeholder="Medical Expenditure for Senior Citizen" maxlength="8"
                             formControlName="medicalExpenditure" autocomplete="off" digitsOnly
-                            (blur)="disableParent('HEALTH')">
+                            (blur)="disableParent('MEDICAL')">
                         <mat-hint *ngIf="this.investmentDeductionForm.controls['premium'].value > 0">
                             Note: You have claimed medical insurance</mat-hint>
                     </mat-form-field>

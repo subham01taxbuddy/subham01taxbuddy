@@ -15,6 +15,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 })
 export class OtherIncomeComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
+  public exemptIncomesGridOptions: GridOptions;
 
   public otherIncomeGridOptions: GridOptions;
   loading: boolean = false;
@@ -42,6 +43,99 @@ export class OtherIncomeComponent implements OnInit {
     "label": "Any Other Income",
   } */];
 
+  exemptIncomesDropdown = [{
+    id: null,
+    seqNum: 1,
+    value: "AGIR",
+    label: "Agriculture Income (less than or equal to RS. 5000)",
+    detailed: false
+  }, {
+    id: null,
+    seqNum: 2,
+    value: "10(10D)",
+    label: "Sec 10 (10D)",
+    detailed: false
+  }, {
+    "id": null,
+    "seqNum": 3,
+    "value": "10(11)",
+    "label": "Sec 10(11) - Statutory Provident Fund received) ",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 4,
+    "value": "10(12)",
+    "label": "Sec 10(12) - Recognized Provident Fund received",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 5,
+    "value": "10(13)",
+    "label": "Sec 10(13) - Approved superannuation fund received",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 6,
+    "value": "10(16)",
+    "label": "Sec 10(16) - Scholarships granted to meet the cost of education",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 7,
+    "value": "DMDP",
+    "label": "Defense Medical disability pension",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 8,
+    "value": "10(17)",
+    "label": "Sec 10(17) - Allowance MP/MLA/MLC ",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 9,
+    "value": "10(17A)",
+    "label": "Sec 10(17A) - Award instituted by government",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 10,
+    "value": "10(18)",
+    "label": "Sec 10(18) - Pension received by winner of Param Vir Chakra or Maha-Vir Chakra or such other gallantry award",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 11,
+    "value": "10(10BC)",
+    "label": "Sec 10(10BC) - Any amount from the Central/State Govt/Local authority by way of compensation on account of any disaster ",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 12,
+    "value": "10(19)",
+    "label": "Sec 10(19) - Armed Forces Family Pension in case of death during operational duty ",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 13,
+    "value": "10(26)",
+    "label": "Sec 10 (26) - Any Income as referred to in section 10(26)",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 14,
+    "value": "10(26AAA)",
+    "label": "Sec 10(26AAA) - Any income as referred to in section 10(26",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 10,
+    "value": "OTH",
+    "label": "Any other ",
+    "detailed": false
+  }]
+
+
   familyPension = new FormControl(null)
   dividendIncomes: FormGroup;
   constructor(public utilsService: UtilsService,
@@ -57,11 +151,14 @@ export class OtherIncomeComponent implements OnInit {
     })
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.exemptIncomesCallInConstructor(this.exemptIncomesDropdown);
+
     this.otherIncomeCallInConstructor(this.otherIncomeDropdown);
     this.setOtherIncomeValues();
     this.getItrDocuments();
 
     console.log('OTHERE deletedFileData LENGTH ---> ', this.deletedFileData.length);
+
 
   }
 
@@ -223,6 +320,21 @@ export class OtherIncomeComponent implements OnInit {
       })
     }
 
+    if (!this.Copy_ITR_JSON?.exemptIncomes || !(this.Copy_ITR_JSON.exemptIncomes instanceof Array)) {
+      this.Copy_ITR_JSON.exemptIncomes = []
+    }
+    for (let i = 0; i < this.exemptIncomesGridOptions.rowData.length; i++) {
+      if (this.utilsService.isNonZero(this.exemptIncomesGridOptions.rowData[i].amount)) {
+        this.Copy_ITR_JSON.exemptIncomes.push({
+          natureDesc: this.exemptIncomesGridOptions.rowData[i].natureDesc,
+          OthNatOfInc: '',
+          amount: Number(this.exemptIncomesGridOptions.rowData[i].amount)
+        });
+        // totalAllowExempt = totalAllowExempt + Number(this.exemptIncomesGridOptions.rowData[i].amount);
+      }
+    }
+
+
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
     this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
       this.ITR_JSON = result;
@@ -260,7 +372,7 @@ export class OtherIncomeComponent implements OnInit {
       }
       // const sec17_1 = this.ITR_JSON.incomes.filter((item:any) => item.incomeType === 'SEC17_1');
       // if (sec17_1.length > 0) {
-      //   this.summarySalaryForm.controls['sec17_1'].setValue(sec17_1[0].taxableAmount);
+      //   this.summarySalaryForm.controls['sec17_1'].setValue(sec17_1[0].OthNatOfInc);
       // }
     }
 
@@ -291,6 +403,22 @@ export class OtherIncomeComponent implements OnInit {
         }
       }
     }
+
+    this.exemptIncomesGridOptions.rowData = this.exemptIncomesCreateRowData(this.exemptIncomesDropdown);
+    this.exemptIncomesGridOptions.columnDefs = this.summaryAllowCreateColumnDef(this.exemptIncomesDropdown);
+    if (this.ITR_JSON.exemptIncomes instanceof Array) {
+      // const allowance = this.localEmployer.allowance.filter((item: any) => item.natureDesc !== 'ALL_ALLOWANCES');
+      for (let i = 0; i < this.ITR_JSON.exemptIncomes.length; i++) {
+        const id = this.exemptIncomesGridOptions.rowData.filter((item: any) => item.natureDesc === this.ITR_JSON.exemptIncomes[i].natureDesc)[0].id;
+        this.exemptIncomesGridOptions.rowData.splice(id, 1, {
+          id: id,
+          natureDesc: this.ITR_JSON.exemptIncomes[i].natureDesc,
+          OthNatOfInc: this.ITR_JSON.exemptIncomes[i].OthNatOfInc,
+          amount: this.ITR_JSON.exemptIncomes[i].amount
+        });
+      }
+    }
+
   }
 
   getItrDocuments() {
@@ -380,5 +508,106 @@ export class OtherIncomeComponent implements OnInit {
       this.famPenDeduction = (this.familyPension.value / 3 > 15000 ? 15000 : this.familyPension.value / 3).toFixed()
       this.totalFamPenDeduction = (this.familyPension.value - this.famPenDeduction).toFixed();
     }
+  }
+
+  exemptIncomesCallInConstructor(exemptIncomesDropdown) {
+    this.exemptIncomesGridOptions = <GridOptions>{
+      rowData: this.exemptIncomesCreateRowData(exemptIncomesDropdown),
+      columnDefs: this.summaryAllowCreateColumnDef(exemptIncomesDropdown),
+      onGridReady: () => {
+        this.exemptIncomesGridOptions.api.sizeColumnsToFit();
+      },
+
+      // frameworkComponents: {
+      //   numericEditor: NumericEditorComponent
+      // },
+      suppressDragLeaveHidesColumns: true,
+      // enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      defaultColDef: {
+        resizable: true
+      },
+    };
+  }
+
+  summaryAllowCreateColumnDef(exemptIncomesDropdown) {
+    return [
+      {
+        headerName: 'Income Type',
+        field: 'natureDesc',
+        suppressMovable: true,
+        valueGetter: function nameFromCode(params) {
+          if (exemptIncomesDropdown.length !== 0) {
+            const nameArray = exemptIncomesDropdown.filter((item: any) => item.value === params.data.natureDesc);
+            return nameArray[0].label;
+          } else {
+            return params.data.natureDesc;
+          }
+        },
+        editable: false,
+        tooltip: function (params) {
+          if (exemptIncomesDropdown.length !== 0) {
+            const nameArray = exemptIncomesDropdown.filter((item: any) => item.value === params.data.natureDesc);
+            return nameArray[0].label;
+          } else {
+            return params.data.natureDesc;
+          }
+        },
+      },
+      {
+        headerName: 'Exempt Amount',
+        field: 'amount',
+        editable: true,
+        suppressMovable: true,
+        cellEditor: 'numericEditor',
+        width: 150,
+      },
+      {
+        headerName: 'Clear',
+        editable: false,
+        suppressMovable: true,
+        suppressMenu: true,
+        sortable: true,
+        width: 60,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Clear" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: red">
+          <i class="fa fa-times-circle" aria-hidden="true" data-action-type="remove"></i>
+         </button>`;
+        },
+      },
+    ];
+  }
+
+  public onExemptIncomesRowClicked(params) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'remove': {
+          this.exemptIncomesGridOptions.rowData.splice(params.rowIndex, 1, {
+            id: params.data.id,
+            natureDesc: params.data.natureDesc,
+            OthNatOfInc: '',
+            amount: 0
+          });
+          this.exemptIncomesGridOptions.api?.setRowData(this.exemptIncomesGridOptions.rowData);
+          break;
+        }
+      }
+    }
+  }
+
+  exemptIncomesCreateRowData(exemptIncomesDropdown) {
+    const data = [];
+    for (let i = 0; i < exemptIncomesDropdown.length; i++) {
+      data.push({
+        id: i,
+        natureDesc: exemptIncomesDropdown[i].value,
+        OthNatOfInc: '',
+        amount: null
+      });
+    }
+    return data;
   }
 }
