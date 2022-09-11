@@ -268,7 +268,12 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     }
     // (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['panNumber'].setValue(panNo);
     this.getUserInfoByPan((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['panNumber'], dob, itrData);
-
+    if (itrData.FilingStatus.ReturnFileSec === 17) {
+      this.itrSummaryForm.controls['returnType'].setValue('REVISED');
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['ackNumber'].setValue(itrData.FilingStatus.ReceiptNo);
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['eFillingDate'].setValue(itrData.FilingStatus.OrigRetFiledDate)
+      this.showAcknowData('REVISED')
+    }
     (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['aadharNumber'].setValue(itrData.PersonalInfo.AadhaarCardNo);
 
     let natureOfEmployer = itrData.PersonalInfo.EmployerCategory;
@@ -276,12 +281,12 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
     // (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['regime'].setValue(itrData.FilingStatus.NewTaxRegime);
 
-    let adress = itrData.PersonalInfo.Address;
-    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['email'].setValue(adress.EmailAddress);
+    let address = itrData.PersonalInfo.Address;
+    (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['email'].setValue(address.EmailAddress);
     // (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['contactNumber'].setValue(adress.MobileNo);
-    let mainAddress = (adress.hasOwnProperty('ResidenceNo') ? adress.ResidenceNo : '') + ' ,' + (adress.hasOwnProperty('ResidenceName') ? adress.ResidenceName : '') + ' ,' + (adress.hasOwnProperty('RoadOrStreet') ? adress.RoadOrStreet : '') + ' ,' + (adress.hasOwnProperty('LocalityOrArea') ? adress.LocalityOrArea : '');
+    let mainAddress = (address.hasOwnProperty('ResidenceNo') ? address.ResidenceNo : '') + ' ,' + (address.hasOwnProperty('ResidenceName') ? address.ResidenceName : '') + ' ,' + (address.hasOwnProperty('RoadOrStreet') ? address.RoadOrStreet : '') + ' ,' + (address.hasOwnProperty('LocalityOrArea') ? address.LocalityOrArea : '');
     ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['premisesName'].setValue(mainAddress);
-    ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['pinCode'].setValue(adress.PinCode);
+    ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['pinCode'].setValue(address.PinCode);
     this.getCityData(((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['address'] as FormGroup).controls['pinCode'], 'profile');
 
     var assessmentYear;
