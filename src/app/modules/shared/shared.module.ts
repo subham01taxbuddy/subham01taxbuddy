@@ -35,6 +35,7 @@ import { UpdateManualFilingDialogComponent } from './components/update-manual-fi
 import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
 import { ShimmerModule } from '@sreyaj/ng-shimmer';
 import { DigitsOnlyDirective } from './directives/digits-only.directive';
+import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component';
 
 
 @NgModule({
@@ -65,7 +66,8 @@ import { DigitsOnlyDirective } from './directives/digits-only.directive';
         KnowlarityNotificationComponent,
         UpdateManualFilingDialogComponent,
         CurrencyPipe,
-        DigitsOnlyDirective
+        DigitsOnlyDirective,
+        AgTooltipComponent
     ],
     imports: [
         CommonModule,
@@ -75,7 +77,7 @@ import { DigitsOnlyDirective } from './directives/digits-only.directive';
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
-        AgGridModule.withComponents([CustomDateComponent, AgGridMaterialSelectEditorComponent, MatInputComponent,
+        AgGridModule.withComponents([CustomDateComponent, AgGridMaterialSelectEditorComponent, MatInputComponent, AgTooltipComponent
             /* CheckboxRenderer */]),  //MatSelectComponent,
         NgxPaginationModule,
         // NgxImageZoomModule.forRoot(),
@@ -112,13 +114,14 @@ import { DigitsOnlyDirective } from './directives/digits-only.directive';
         UpdateManualFilingDialogComponent,
         CurrencyPipe,
         ShimmerModule,
-        DigitsOnlyDirective
+        DigitsOnlyDirective,
+        AgTooltipComponent
 
     ],
     providers: [StorageService],
     entryComponents: [WhatsAppDialogComponent, UserNotesComponent, AddCallLogComponent, FilingStatusDialogComponent,
         KommunicateDialogComponent, ItrActionsComponent, ChangeStatusComponent, CallReassignmentComponent,
-        UpdateManualFilingDialogComponent]
+        UpdateManualFilingDialogComponent, AgTooltipComponent]
 })
 export class SharedModule {
     static forRoot(): ModuleWithProviders<SharedModule> {
