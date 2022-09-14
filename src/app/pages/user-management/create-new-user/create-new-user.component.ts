@@ -107,9 +107,13 @@ export class CreateNewUserComponent implements OnInit {
 
   changeServiceType() {
     let loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
-    if (loggedInSmeInfo.serviceType !== this.signUpForm.controls['serviceType'].value) {
-      this.assignedToMe = false;
-      this.disableAssignedToMe = true;
+    if(this.signUpForm.controls['serviceType'].value === 'GST') {
+      if (loggedInSmeInfo.serviceType !== this.signUpForm.controls['serviceType'].value) {
+        this.assignedToMe = false;
+        this.disableAssignedToMe = true;
+      } else {
+        this.disableAssignedToMe = false;
+      }
     } else {
       this.disableAssignedToMe = false;
     }

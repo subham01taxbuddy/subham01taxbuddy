@@ -64,20 +64,18 @@
           </mat-form-field>
         </div>
 
-        <div class="card__col-xs-12 card__col-sm-3">
+        <!-- <div class="card__col-xs-12 card__col-sm-3">
           <mat-form-field appearance="outline">
             <mat-label>Service Type</mat-label>
             <mat-select matInput formControlName="serviceType" placeholder="Select Service Type"
-              (selectionChange)="changeServiceType()" required>
+              (selectionChange)="changeServiceType()" multiple required>
               <mat-option value="ITR"> ITR </mat-option>
               <mat-option value="GST"> GST </mat-option>
               <mat-option value="NOTICE"> Notice </mat-option>
               <mat-option value="TPA" disabled> TPA </mat-option>
             </mat-select>
           </mat-form-field>
-        </div>
-      </div>
-      <div class="card__row">
+        </div> -->
         <div class="card__col-xs-12 card__col-sm-3">
           <mat-form-field appearance="fill">
             <mat-label>SME Languages</mat-label>
@@ -95,6 +93,8 @@
             </mat-select>
           </mat-form-field>
         </div>
+      </div>
+      <div class="card__row">
         <div class="card__col-xs-12 card__col-sm-3">
           <mat-form-field appearance="outline">
             <mat-label>Bot Name</mat-label>
@@ -168,7 +168,7 @@
             <mat-datepicker #leaveEPicker></mat-datepicker>
           </mat-form-field>
         </div>
-        <div class="card__col-xs-12 card__col-sm-3" *ngIf="createSmeForm.controls['serviceType'].value === 'ITR'">
+        <div class="card__col-xs-12 card__col-sm-3" *ngIf="isItrAvailable">
           <mat-form-field appearance="fill">
             <mat-label>Select ITR Types</mat-label>
             <mat-select formControlName="itrTypes" multiple>
@@ -239,6 +239,61 @@
         (click)="agentReassignment()">Re -
         Assignment</button>
     </form>
+
+    <div>
+      <div class="tbd-btn" >Assignment</div>
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <div type="button" class="tbd-btn" >ITR Filing & TPA</div>
+          <mat-checkbox class="chk-allign"  color="primary" [(ngModel)]="isItrAvailable" 
+          (change)="updateServiceType('ITR')"></mat-checkbox>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <div type="button" class="tbd-btn" >Notice Management</div>
+          <mat-checkbox class="chk-allign"  color="primary" [(ngModel)]="isNoticeAvailable" 
+          (change)="updateServiceType('NOTICE')"></mat-checkbox>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <div type="button" class="tbd-btn" >GST Filing</div>
+          <mat-checkbox class="chk-allign" color="primary" [(ngModel)]="isGstAvailable" 
+          (change)="updateServiceType('GST')"></mat-checkbox>
+        </div>
+      </div> 
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4" >
+          <mat-form-field appearance="outline">
+            <mat-label>Assignment Start</mat-label>
+            <mat-select matInput placeholder="Assignment Start" [(ngModel)]="isItrAssignment" 
+            (selectionChange)="changeAssignment(isItrAssignment, 'ITR')" [disabled]="!isItrAvailable" required>
+              <mat-option [value]="trueVal"> Yes </mat-option>
+              <mat-option [value]="falseVal"> No </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Assignment Start</mat-label>
+            <mat-select matInput placeholder="Assignment Start" [(ngModel)]="isNoticeAssignment"
+            (selectionChange)="changeAssignment(isNoticeAssignment, 'NOTICE')" [disabled]="!isNoticeAvailable" required>
+              <mat-option [value]="trueVal"> Yes </mat-option>
+              <mat-option [value]="falseVal"> No </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Assignment Start</mat-label>
+            <mat-select matInput placeholder="Assignment Start" [(ngModel)]="isGstAssignment"
+            (selectionChange)="changeAssignment(isGstAssignment, 'GST')" [disabled]="!isGstAvailable" required>
+              <mat-option [value]="trueVal"> Yes </mat-option>
+              <mat-option [value]="falseVal"> No </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div> 
+    </div>
   </div>
+
+  
 
 </div>

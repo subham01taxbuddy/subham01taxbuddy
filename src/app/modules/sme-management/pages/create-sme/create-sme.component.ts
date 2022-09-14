@@ -36,6 +36,7 @@ export class CreateSmeComponent implements OnInit {
   loading = false;
   showSmeDetails = false;
   smeDetails: any;
+  smeDetailsList: any[];
   maxJoinDate = new Date();
   maxResignDate = new Date();
   minResignDate = new Date();
@@ -64,6 +65,12 @@ export class CreateSmeComponent implements OnInit {
     { label: 'Notice Caller', value: 'ROLE_NOTICE_CALLER' }, // Admin all access
   ];
   newRoles = ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_ITR_AGENT', 'ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_GST_CALLER', 'ROLE_NOTICE_CALLER']
+  isItrAvailable = false;
+  isNoticeAvailable = false;
+  isGstAvailable = false;
+  isItrAssignment = false;
+  isNoticeAssignment = false;
+  isGstAssignment = false;
 
   parents = [];
   mobile = new FormControl('', Validators.required);
@@ -82,7 +89,7 @@ export class CreateSmeComponent implements OnInit {
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
       mobileNumber: ['', [Validators.required]],
-      serviceType: ['', [Validators.required]],
+      // serviceType: ['', [Validators.required]],
       // roles: [[], [Validators.required]],
       languages: [[], [Validators.required]],
       parentId: [null],
@@ -137,17 +144,21 @@ export class CreateSmeComponent implements OnInit {
       requestBody.leaveStartDate = this.convertToDDMMYY(this.createSmeForm.controls['leaveStartDate'].value);
       requestBody.leaveEndDate = this.convertToDDMMYY(this.createSmeForm.controls['leaveEndDate'].value);
       requestBody.resigningDate = this.convertToDDMMYY(this.createSmeForm.controls['resigningDate'].value);
-      console.log(requestBody);
-      Object.assign(this.smeDetails, requestBody);
-      let requestData = JSON.parse(JSON.stringify(this.smeDetails));
-      this.userMsService.putMethod(param, requestData).subscribe(res => {
-        console.log('SME details updated', res);
-        this.loading = false;
-        this._toastMessageService.alert("success", this.smeData.firstName + "'s SME details updated successfully.");
-      }, error => {
-        this._toastMessageService.alert("error", this.smeData.firstName + "'s SME details failed to update.");
-        this.loading = false;
-      })
+      
+      this.smeDetailsList.forEach((details) => {
+        Object.assign(details, requestBody);
+        console.log(details.serviceType);
+        console.log(requestBody);
+        let requestData = JSON.parse(JSON.stringify(details));
+        this.userMsService.putMethod(param, requestData).subscribe(res => {
+          console.log('SME details updated', res);
+          this.loading = false;
+          this._toastMessageService.alert("success", this.smeData.firstName + "'s SME details updated successfully.");
+        }, error => {
+          this._toastMessageService.alert("error", this.smeData.firstName + "'s SME details failed to update.");
+          this.loading = false;
+        })
+      });
     }
   }
 
@@ -207,9 +218,25 @@ export class CreateSmeComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
       this.showSmeDetails = true;
-      console.log(res);
-      this.smeDetails = res.data;
-      this.createSmeForm.patchValue(res.data);
+      console.log('SME details' + JSON.stringify(res.data));
+      this.smeDetailsList = res.data;
+      this.smeDetails = res.data[0];
+      this.smeDetailsList.forEach((details) => {
+        //console.log(JSON.stringify(details));
+        if(details.serviceType === 'ITR') {  
+          this.isItrAvailable = true;
+          this.isItrAssignment = details.assignmentStart;
+        }
+        if(details.serviceType === 'NOTICE') {
+          this.isNoticeAvailable = true;
+          this.isNoticeAssignment = details.assignmentStart;
+        }
+        if(details.serviceType === 'GST') {
+          this.isGstAvailable = true;
+          this.isGstAssignment = details.assignmentStart;
+        }
+      });
+      this.createSmeForm.patchValue(res.data[0]);
       this.minResignDate = this.utilsService.isNonEmpty(res.data.joiningDate) ? this.convertToYYMMDD(res.data.joiningDate) : new Date();
       this.createSmeForm.controls['joiningDate'].setValue(this.convertToYYMMDD(res.data.joiningDate));
       this.createSmeForm.controls['resigningDate'].setValue(this.convertToYYMMDD(res.data.resigningDate));
@@ -267,5 +294,80 @@ export class CreateSmeComponent implements OnInit {
       this.loading = false;
       this.utilsService.showSnackBar('Failed to re assign please try again')
     })
+  }
+
+  changeAssignment(assignment, serviceType) {
+    const param = `/sme/update`;
+    
+    if(assignment) {
+      this.utilsService.showSnackBar('Changing assignment for service ' + serviceType
+        + ' will remove assignment for other services');
+      this.smeDetailsList.forEach((details) => {
+        if(details.serviceType  !== serviceType) {
+          details.assignmentStart = false;
+          let requestData = JSON.parse(JSON.stringify(details));
+          this.userMsService.putMethod(param, requestData).subscribe(res => {
+            console.log('SME details updated', res);
+            this.loading = false;
+            this._toastMessageService.alert("success", details.serviceType + " assignment updated successfully.");
+            if(details.serviceType === 'GST') {
+              this.isGstAssignment = false;
+            } else if(details.serviceType === 'NOTICE') {
+              this.isNoticeAssignment = false;
+            } else {
+              this.isItrAssignment =false;
+            }
+          }, error => {
+            this._toastMessageService.alert("error", details.serviceType + " assignment failed to update.");
+            this.loading = false;
+          })
+        }
+      }); 
+    }
+
+    var details = this.smeDetailsList.filter(details => details.serviceType  === serviceType)[0];
+    
+    details.assignmentStart = assignment;
+    let requestData = JSON.parse(JSON.stringify(details));
+    this.userMsService.putMethod(param, requestData).subscribe(res => {
+      console.log('SME assignment updated', res);
+      this.loading = false;
+      this._toastMessageService.alert("success", serviceType + " assignment updated successfully.");
+    }, error => {
+      this._toastMessageService.alert("error", serviceType + " assignment failed to update.");
+      this.loading = false;
+    })
+    
+  }
+
+  updateServiceType(serviceType) {
+    const param = `/sme/update`;
+    if ((this.isItrAvailable && serviceType === 'ITR') || 
+      (this.isNoticeAvailable && serviceType === 'NOTICE') ||
+       (this.isGstAvailable && serviceType === 'GST')) {
+      this.loading = true;
+      let requestBody = this.createSmeForm.getRawValue();
+      requestBody.joiningDate = this.convertToDDMMYY(this.createSmeForm.controls['joiningDate'].value);
+      requestBody.leaveStartDate = this.convertToDDMMYY(this.createSmeForm.controls['leaveStartDate'].value);
+      requestBody.leaveEndDate = this.convertToDDMMYY(this.createSmeForm.controls['leaveEndDate'].value);
+      requestBody.resigningDate = this.convertToDDMMYY(this.createSmeForm.controls['resigningDate'].value);
+      this.smeDetails.serviceType = serviceType;
+      this.smeDetails.assignmentStart = false;
+      Object.assign(this.smeDetails, requestBody);
+      console.log(requestBody);
+      let requestData = JSON.parse(JSON.stringify(this.smeDetails));
+      this.userMsService.putMethod(param, requestData).subscribe(res => {
+        console.log('SME service type updated', res);
+        this.loading = false;
+        if((res as any).success) {
+          this._toastMessageService.alert("success", serviceType + " updated to SME profile successfully.");
+        } else {
+          this._toastMessageService.alert("error", (res as any).message);
+        }
+      }, error => {
+        this._toastMessageService.alert("error", serviceType + " failed to update to SME profile.");
+        this.loading = false;
+      })
+    }
   }
 }
