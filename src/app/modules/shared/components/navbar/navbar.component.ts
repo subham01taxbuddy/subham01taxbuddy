@@ -122,7 +122,7 @@ export class NavbarComponent implements DoCheck {
 
   getLoggedInUserName() {
     const userObj = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
-    return userObj ? userObj.name : ''
+    return userObj ? userObj[0].name : ''
   }
 
   openCallDialog() {
