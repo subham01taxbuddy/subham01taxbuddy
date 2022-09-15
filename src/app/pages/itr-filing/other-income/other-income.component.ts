@@ -620,4 +620,14 @@ export class OtherIncomeComponent implements OnInit {
     }
     return data;
   }
+
+  getTotalExemptIncome() {
+    let total = 0;
+    for (let i = 0; i < this.exemptIncomesGridOptions.rowData.length; i++) {
+      if (this.utilsService.isNonZero(this.exemptIncomesGridOptions.rowData[i].amount)) {
+        total = total + Number(this.exemptIncomesGridOptions.rowData[i].amount);
+      }
+    }
+    return total;
+  }
 }
