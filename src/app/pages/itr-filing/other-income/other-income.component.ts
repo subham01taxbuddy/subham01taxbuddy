@@ -1,12 +1,13 @@
 import { FormControl } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { GridOptions } from 'ag-grid-community';
+import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { NumericEditorComponent } from 'src/app/modules/shared/numeric-editor.component';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 
 @Component({
   selector: 'app-other-income',
@@ -53,7 +54,7 @@ export class OtherIncomeComponent implements OnInit {
     id: null,
     seqNum: 2,
     value: "10(10D)",
-    label: "Sec 10 (10D)",
+    label: "Sec 10 (10D) - Any sum received under a life insurance policy, including the sum allocated by way of bonus on such policy except sum as mentioned in sub-clause (a) to (d) of Sec.10 (10D)",
     detailed: false
   }, {
     "id": null,
@@ -320,9 +321,7 @@ export class OtherIncomeComponent implements OnInit {
       })
     }
 
-    if (!this.Copy_ITR_JSON?.exemptIncomes || !(this.Copy_ITR_JSON.exemptIncomes instanceof Array)) {
-      this.Copy_ITR_JSON.exemptIncomes = []
-    }
+    this.Copy_ITR_JSON.exemptIncomes = []
     for (let i = 0; i < this.exemptIncomesGridOptions.rowData.length; i++) {
       if (this.utilsService.isNonZero(this.exemptIncomesGridOptions.rowData[i].amount)) {
         this.Copy_ITR_JSON.exemptIncomes.push({
@@ -405,7 +404,7 @@ export class OtherIncomeComponent implements OnInit {
     }
 
     this.exemptIncomesGridOptions.rowData = this.exemptIncomesCreateRowData(this.exemptIncomesDropdown);
-    this.exemptIncomesGridOptions.columnDefs = this.summaryAllowCreateColumnDef(this.exemptIncomesDropdown);
+    this.exemptIncomesGridOptions.columnDefs = this.exemptIncomeCreateColumnDef(this.exemptIncomesDropdown);
     if (this.ITR_JSON.exemptIncomes instanceof Array) {
       // const allowance = this.localEmployer.allowance.filter((item: any) => item.natureDesc !== 'ALL_ALLOWANCES');
       for (let i = 0; i < this.ITR_JSON.exemptIncomes.length; i++) {
@@ -436,13 +435,11 @@ export class OtherIncomeComponent implements OnInit {
     var reqBody = [filePath];
     console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
     // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
-      console.log('Doc delete responce: ', responce);
-      this.utilsService.showSnackBar(responce.response);
+    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((response: any) => {
+      this.utilsService.showSnackBar(response.response);
       this.getItrDocuments();
     },
       error => {
-        console.log('Doc delete ERROR responce: ', error.responce);
         this.utilsService.showSnackBar(error.response);
       })
   }
@@ -513,7 +510,7 @@ export class OtherIncomeComponent implements OnInit {
   exemptIncomesCallInConstructor(exemptIncomesDropdown) {
     this.exemptIncomesGridOptions = <GridOptions>{
       rowData: this.exemptIncomesCreateRowData(exemptIncomesDropdown),
-      columnDefs: this.summaryAllowCreateColumnDef(exemptIncomesDropdown),
+      columnDefs: this.exemptIncomeCreateColumnDef(exemptIncomesDropdown),
       onGridReady: () => {
         this.exemptIncomesGridOptions.api.sizeColumnsToFit();
       },
@@ -525,18 +522,30 @@ export class OtherIncomeComponent implements OnInit {
       // enableCellChangeFlash: true,
       enableCellTextSelection: true,
       defaultColDef: {
-        resizable: true
+        resizable: true,
+        cellRendererFramework: AgTooltipComponent,
+        cellRendererParams: (params: ICellRendererParams) => {
+          this.formatToolTip(params.data)
+        }
       },
     };
   }
 
-  summaryAllowCreateColumnDef(exemptIncomesDropdown) {
+  formatToolTip(params: any) {
+    const nameArray = this.exemptIncomesDropdown.filter((item: any) => item.value === params.natureDesc);
+    let temp = nameArray[0].label;
+    const lineBreak = false;
+    return { temp, lineBreak }
+  }
+
+  exemptIncomeCreateColumnDef(exemptIncomesDropdown) {
     return [
       {
         headerName: 'Income Type',
         field: 'natureDesc',
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
+          console.log('AAAA', params);
           if (exemptIncomesDropdown.length !== 0) {
             const nameArray = exemptIncomesDropdown.filter((item: any) => item.value === params.data.natureDesc);
             return nameArray[0].label;
@@ -546,6 +555,7 @@ export class OtherIncomeComponent implements OnInit {
         },
         editable: false,
         tooltip: function (params) {
+          console.log('AAAA', params);
           if (exemptIncomesDropdown.length !== 0) {
             const nameArray = exemptIncomesDropdown.filter((item: any) => item.value === params.data.natureDesc);
             return nameArray[0].label;
@@ -560,7 +570,7 @@ export class OtherIncomeComponent implements OnInit {
         editable: true,
         suppressMovable: true,
         cellEditor: 'numericEditor',
-        width: 150,
+        width: 100,
       },
       {
         headerName: 'Clear',
@@ -609,5 +619,15 @@ export class OtherIncomeComponent implements OnInit {
       });
     }
     return data;
+  }
+
+  getTotalExemptIncome() {
+    let total = 0;
+    for (let i = 0; i < this.exemptIncomesGridOptions.rowData.length; i++) {
+      if (this.utilsService.isNonZero(this.exemptIncomesGridOptions.rowData[i].amount)) {
+        total = total + Number(this.exemptIncomesGridOptions.rowData[i].amount);
+      }
+    }
+    return total;
   }
 }

@@ -1,16 +1,20 @@
 .btn-right {
   float: right;
 }
+
 .disable-label {
   color: black;
 }
+
 .top_padding_heading {
   padding-top: 11px;
 }
+
 .left_padding_tb_cnt {
   padding-left: 0;
   padding-right: 0px;
 }
+
 /* // .lbl-right{
 //     float: right;
 //     padding-right: 20px
@@ -19,21 +23,26 @@
   float: right;
   padding-right: 10px;
 }
+
 .active-card-wrapper {
   display: flex;
   position: relative;
   justify-content: space-around;
 }
+
 .section-sm-90 {
   padding-top: 90px;
   padding-bottom: 50px;
 }
+
 .tbl-lbl-right {
   text-align: right;
 }
+
 .accordion-border {
   border-bottom: 1px solid #211f1f14;
 }
+
 .content-center-align {
   width: 100%;
   margin-left: auto;
@@ -46,35 +55,43 @@
   width: 50%;
   padding: 10px;
 }
+
 .row:after {
   content: "";
   display: table;
   clear: both;
 }
+
 #main {
   width: 100%;
   display: flex;
 }
+
 #main .div1 {
   width: 50%;
   display: flex;
 }
+
 a:focus {
   text-decoration: none;
 }
+
 table {
   border-bottom: none;
   border-top: none;
 }
+
 /*Rizwan 15 May 2019*/
 .accoTab {
   width: 100%;
   margin-top: 20px;
   overflow-x: scroll;
 }
+
 .tpOfBx {
   margin-top: -34px !important;
 }
+
 .txHdLf {
   font-size: 18px;
   text-align: left;
@@ -82,30 +99,37 @@ table {
   margin-bottom: 15px;
   margin-left: -14px;
 }
+
 .whieTx {
   font-size: 17px !important;
   color: #2f2b31 !important;
   padding: 0px 0px 0px 0px !important;
 }
+
 .arRigt {
   float: right;
   margin-right: 0px;
 }
+
 .AdjAr1 {
   float: right;
   margin-right: -15px !important;
 }
+
 .AdjAr {
   float: right;
   margin-right: -7px !important;
 }
+
 .AdjAr2 {
   position: relative;
   left: 30px;
 }
+
 .mat-expansion-indicator {
   display: none !important;
 }
+
 .rtNumb {
   font-size: 17px !important;
   color: #2f2b31 !important;
@@ -115,6 +139,7 @@ table {
   text-align: right;
   /*  background-color: #cccccc; */
 }
+
 .rtNumb1 {
   font-size: 17px !important;
   color: #2f2b31 !important;
@@ -132,15 +157,18 @@ table {
   background-color: #e9f5ff !important;
   height: auto !important;
 }
+
 .mat-expansion-panel-header.mat-expanded,
 .mat-expansion-panel-header.mat-expanded:hover {
   background: #cbe7ff !important;
   height: 45px !important;
 }
+
 .mat-expansion-panel-body {
   padding: 0 24px 16px;
   background-color: #ffffff !important;
 }
+
 .icRup {
   font-size: 20px !important;
 }
@@ -169,9 +197,10 @@ table {
   font-weight: 500;
   letter-spacing: 0.3px;
   margin-bottom: 15px;
+  cursor: pointer;
 }
 
-.kommBut{
+.kommBut {
   line-height: 24px;
   border-radius: 0px;
   background: #5553b7;
@@ -189,9 +218,10 @@ table {
   font-weight: 500;
   letter-spacing: 0.3px;
   margin-bottom: 15px;
+  cursor: pointer;
 }
 
-.whatsAppBut{
+.whatsAppBut {
   line-height: 24px;
   border-radius: 0px;
   background: #4FCE5D;
@@ -209,6 +239,7 @@ table {
   font-weight: 500;
   letter-spacing: 0.3px;
   margin-bottom: 15px;
+  cursor: pointer;
 }
 
 .prvBut {
@@ -229,7 +260,9 @@ table {
   font-family: Avenir Book;
   font-weight: 500;
   letter-spacing: 0.3px;
+  cursor: pointer;
 }
+
 .pri {
   font-size: 14px;
   font-weight: 700;
@@ -237,30 +270,37 @@ table {
   color: #01a2fe;
   margin: 20px 0px 0px 25px;
 }
+
 .perBx {
   background-color: #f8f8f8 !important;
   padding: 10px !important;
   padding-top: 15px !important;
 }
+
 .tItX {
   margin: 79px 0px 13px 0px !important;
 }
+
 .mvBtU {
   margin: -10px 0px 0px 0px !important;
 }
+
 .txBt {
   padding: 10px 0px 10px 0px;
   border-bottom: 1px solid #dcdada;
 }
+
 .txLf {
   font-weight: bold;
   float: left;
 }
+
 .txMuLf {
   margin: 0px 0px 0px 138px;
   font-size: 16.5px;
   display: block;
 }
+
 .incBx {
   width: 100%;
   background-color: #ffffff;
@@ -268,6 +308,7 @@ table {
   padding: 2%;
   margin-top: -16px;
 }
+
 .incBx1 {
   width: 89%;
   background-color: #ffffff;
@@ -275,6 +316,7 @@ table {
   padding: 2%;
   margin: 5px 0px 20px 5px;
 }
+
 .inTex {
   font-size: 17px;
   font-weight: bold;
@@ -282,6 +324,7 @@ table {
   margin: 5px 0px -10px 46px;
   display: block;
 }
+
 .inNo {
   font-size: 22px;
   font-weight: bold;
@@ -297,6 +340,7 @@ table {
   margin: -6px 0px 10px 57px;
   display: block;
 }
+
 .paIncTx {
   padding: 2%;
   /* margin-right: 119px; */
@@ -304,6 +348,7 @@ table {
   color: #000000;
   line-height: 25px;
 }
+
 .paIncTx1 {
   color: #000000;
   white-space: normal;
@@ -312,13 +357,16 @@ table {
   // font-size:18px;
   // padding-top:20px; */
 }
+
 .LkTx {
   font-weight: bold;
   color: #0f8cf8;
 }
+
 .lwBtDn {
   margin: 25px 41px 0px 0px;
 }
+
 .bxHed {
   padding: 8px;
   background-color: #e2eaec;
@@ -331,13 +379,16 @@ table {
   .pri {
     margin: 20px 0px 0px -21px;
   }
+
   .txBt {
     padding: 10px 0px 10px 0px;
     border-bottom: 1px solid #dcdada;
   }
+
   .txMuLf {
     margin: 0px 0px 0px 140px;
   }
+
   .inTex {
     font-size: 17px;
     font-weight: bold;
@@ -345,6 +396,7 @@ table {
     margin: 5px 0px -10px 11px;
     display: block;
   }
+
   .inNo {
     font-size: 22px;
     font-weight: bold;
@@ -352,6 +404,7 @@ table {
     margin: -6px 0px 5px 30px;
     display: block;
   }
+
   .inRef {
     font-size: 22px;
     font-weight: bold;
@@ -365,10 +418,12 @@ table {
   .pri {
     margin: 20px 0px 0px -76px;
   }
+
   .txBt {
     padding: 10px 0px 10px 0px;
     border-bottom: 1px solid #dcdada;
   }
+
   .incBx {
     width: 82%;
     background-color: #ffffff;
@@ -376,6 +431,7 @@ table {
     padding: 2%;
     margin-top: 21px;
   }
+
   .inTex {
     font-size: 17px;
     font-weight: bold;
@@ -383,6 +439,7 @@ table {
     margin: 0px 0px -10px 11px;
     display: block;
   }
+
   .inNo {
     font-size: 22px;
     font-weight: bold;
@@ -390,6 +447,7 @@ table {
     margin: -6px 0px 0px 24px;
     display: block;
   }
+
   .inRef {
     font-size: 22px;
     font-weight: bold;
@@ -398,10 +456,12 @@ table {
     display: block;
   }
 }
+
 @media only screen and (max-width: 767px) and (min-width: 0px) {
   .pri {
     margin: 10px 0px 15px 11px;
   }
+
   .txHdLf {
     font-size: 18px;
     text-align: left;
@@ -410,10 +470,12 @@ table {
     margin-left: 12px;
     margin-top: 40px;
   }
+
   .txBt {
     padding: 10px 0px 10px 0px;
     border-bottom: 1px solid #dcdada;
   }
+
   .incBx {
     width: 100%;
     background-color: #ffffff;
@@ -421,6 +483,7 @@ table {
     padding: 2%;
     margin-top: 21px;
   }
+
   .inTex {
     font-size: 17px;
     font-weight: bold;
@@ -428,6 +491,7 @@ table {
     margin: 0px 0px -10px 11px;
     display: block;
   }
+
   .inNo {
     font-size: 22px;
     font-weight: bold;
@@ -435,6 +499,7 @@ table {
     margin: -6px 0px 0px 24px;
     display: block;
   }
+
   .inRef {
     font-size: 22px;
     font-weight: bold;
@@ -442,6 +507,7 @@ table {
     margin: -6px 0px 0px 24px;
     display: block;
   }
+
   .paIncTx {
     padding: 2%;
     margin-right: 119px;
@@ -450,23 +516,27 @@ table {
     line-height: 30px;
     width: 100%;
   }
+
   .mvBtU {
     margin: -41px 22px 0px 0px !important;
     float: right;
   }
 }
+
 @media only screen and (max-width: 500px) and (min-width: 0px) {
   .txLf {
     font-weight: bold;
     float: left;
     font-size: 14px;
   }
+
   .txMuLf {
     margin: 0px 0px 0px 119px;
     font-size: 14.5px;
     display: block;
     word-break: break-all;
   }
+
   .mat-expansion-panel {
     display: block;
     overflow-x: scroll;
