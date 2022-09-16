@@ -4,7 +4,7 @@ font-weight: bold;">Re-Assign: {{data.clientName}}</label><button mat-dialog-clo
   class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
 <div class="card__row">
   <div class="card__col-xs-12 card__col-sm-8">
-    <app-sme-list-drop-down (sendSme)="fromSme($event)" listType="ALL" serviceType="ITR">
+    <app-sme-list-drop-down (sendSme)="fromSme($event)" listType="ALL" serviceType={{data.serviceType}}>
     </app-sme-list-drop-down>
   </div>
   <div class="card__col-xs-12 card__col-sm-4">

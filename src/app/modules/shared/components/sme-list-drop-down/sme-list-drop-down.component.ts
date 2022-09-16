@@ -88,7 +88,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     if (serviceType === 'TPA') {
       serviceType = 'ITR';
     }
-    const param = `/sme/${serviceType}?isActive=true&isAssignmentStart=true`;
+    const param = `/sme/${serviceType}?isActive=true`;//&isAssignmentStart=true`;
     return await this.userMsService.getMethod(param).toPromise();
   }
 
