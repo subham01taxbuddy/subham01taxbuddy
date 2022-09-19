@@ -787,8 +787,11 @@
                                                     <th colspan="2">Other Income </th>
                                                 </tr>
                                                 <tr *ngIf="getOtherIncome('DIVIDEND')">
-                                                    <td>Dividend on share & mutual fund/UTI
+                                                    <!-- <td>Dividend on share & mutual fund/UTI
+                                                    </td> -->
+                                                    <td>Dividend Income
                                                     </td>
+
                                                     <td>Rs {{getOtherIncome('DIVIDEND')}}</td>
                                                 </tr>
                                                 <!-- <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
@@ -1889,6 +1892,49 @@
                                                 </div>
                                             </div>
                                         </mat-expansion-panel-header>
+                                    </mat-expansion-panel>
+
+
+
+                                    <!-- *********************** Exempt Income ************************ -->
+                                    <mat-expansion-panel class="color-panel accordion-border"
+                                        [disabled]="[ITR_JSON.exemptIncomes.length > 0 ? false : true]" #exemptIncome>
+                                        <mat-expansion-panel-header class="newclass">
+                                            <div class="font80" style="width: 100%;" cellpadding="0" cellspacing="0">
+                                                <div class="nav nav-stacked">
+                                                    <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
+                                                        <b> 30. Exempt Income</b>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                        <div class="AdjAr1">
+                                                            <mat-icon *ngIf="!exemptIncome.expanded">keyboard_arrow_down
+                                                            </mat-icon>
+                                                            <mat-icon *ngIf="exemptIncome.expanded">keyboard_arrow_up
+                                                            </mat-icon>
+                                                        </div>
+                                                        <label class="rtNumb1">
+                                                            <i
+                                                                class="material-icons icRup">&#8377;</i>&nbsp;{{getExemptIncomeTotal()}}</label>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </mat-expansion-panel-header>
+                                        <table class="table table-bordered table-striped table-hover accoTab">
+                                            <tbody>
+                                                <tr>
+                                                    <td><b>Particular</b></td>
+                                                    <td><b>Amount</b></td>
+                                                </tr>
+                                                <tr *ngFor="let exempt of ITR_JSON.exemptIncomes">
+                                                    <td>{{getExemptDescription(exempt)}}</td>
+                                                    <td class=""><i class="material-icons"
+                                                            style="font-size:15px;">₹</i>&nbsp;{{utilsService.currencyFormatter(exempt.amount)}}
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
                                     </mat-expansion-panel>
                                 </mat-accordion>
                             </td>

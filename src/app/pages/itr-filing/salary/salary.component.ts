@@ -568,6 +568,7 @@ export class SalaryComponent implements OnInit {
   }
 
   serviceCall() {
+    debugger
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
     if (this.employerMode === 'ADD') {
@@ -921,7 +922,7 @@ export class SalaryComponent implements OnInit {
   }
   getSalaryTaxableIncome() {
     let taxable = 0
-    for (let i = 0; i < this.ITR_JSON.employers.length; i++) {
+    for (let i = 0; i < this.ITR_JSON?.employers?.length; i++) {
       taxable = taxable + this.ITR_JSON.employers[i].taxableIncome;
     }
     return this.utilsService.currencyFormatter(taxable);
