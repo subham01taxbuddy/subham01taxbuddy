@@ -21,69 +21,57 @@ export class AssignmentComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getAssignmentToggle()
+    this.getAssignmentToggle();
   }
 
   titles = [
     {
       title: 'Assign To'
     }
-  ]
-  cards = [
-    {
-      option1: 'Internal Users',
-      option2: 'External Users',
-      option3: 'Both',
-      serviceType: 'ITR'
-      
-     
-    },
-    {
-      
-      option1: 'Internal Users',
-      option2: 'External Users',
-      option3: 'Both',
-      serviceType: 'Notice'
-    },
-    {
-
-      option1: 'Internal Users',
-      option2: 'External Users',
-      option3: 'Both',
-      serviceType: 'GST'
-    },
   ];
+  cards = [];
 
-  
-    
-  
-
-    updateAssignmentToggle(serviceType, value){
-      const param = '/sme/assignment-logic-toggle'
-      const selectionRequest={
-        serviceType: serviceType,
-        userAssignmentLogicSmeType: value.value
+  updateAssignmentToggle(serviceType, value){
+    const param = '/sme/assignment-logic-toggle';
+    const selectionRequest = {
+      serviceType: serviceType,
+      userAssignmentLogicSmeType: value
+    };
+    console.log(value);
+    this.userMsService.postMethod(param, selectionRequest).subscribe((assignmentToggleResponse: any) => {
+      console.log(assignmentToggleResponse);
+      if(assignmentToggleResponse.success) {
+        this.toastMessageService.alert("success", "Assignment for " + serviceType + " updated successfully");
       }
-      this.userMsService.postMethod(param, selectionRequest).subscribe((assignmentToggleResponse) => {
-        console.log(assignmentToggleResponse)
-        console.log(selectionRequest)
-      })
+    });
+    if(serviceType === 'ITR') {
+      this.updateAssignmentToggle('TPA', value);
     }
+  }
 
-    getAssignmentToggle(){
-      const param = '/sme/assignment-logic-toggle'
-      this.userMsService.getMethod(param).subscribe((assignmentToggleResponse: any) => {
-        console.log(assignmentToggleResponse)
-
-        
-        // console.log(this.assignmentToggleData.success)
-
-        if(assignmentToggleResponse.success == true){
-          this.assignmentToggleData = assignmentToggleResponse
-        }
-        else{
-          this.toastMessageService.alert("error", assignmentToggleResponse.message)
-        }
-      })
-    }
+  async getAssignmentToggle(){
+    const param = '/sme/assignment-logic-toggle'
+    this.userMsService.getMethod(param).subscribe((assignmentToggleResponse: any) => {
+      console.log(assignmentToggleResponse.data);
+      if(assignmentToggleResponse.success == true){
+        this.assignmentToggleData = assignmentToggleResponse.data;
+        this.assignmentToggleData.forEach(toggleData => {
+          if(toggleData.serviceType !== 'TPA') {
+            this.cards.push(
+              {
+                option1: 'INTERNAL_SME',
+                option2: 'EXTERNAL_SME',
+                option3: 'BOTH',
+                serviceType: toggleData.serviceType,
+                selected: toggleData.userAssignmentLogicSmeType
+              }
+            );
+          }
+        });
+      }
+      else{
+        this.toastMessageService.alert("error", assignmentToggleResponse.message);
+      }
+    })
+  }
 }
