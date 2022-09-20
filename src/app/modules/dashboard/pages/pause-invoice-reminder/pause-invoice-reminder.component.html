@@ -8,7 +8,7 @@
                 <label class="input__label" for="attr">Enter Invoice Number</label>
                 <div class="input__select">
                   <input maxlength="100" class="select__box ogp_select" style="background-image:none" [(ngModel)]="invoiceNo"
-                  type="text" pattern="^SSBA\/2022\/([1-9]?[0-9]*)"
+                  type="text" pattern="^SSBA\/2021|2022\/([1-9]?[0-9]*)"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   onkeypress=" event.charCode >= 48 && event.charCode <= 57" />
                 </div>
