@@ -357,14 +357,20 @@ export class SummaryComponent implements OnInit {
     if (income.length > 0) {
       if (incomeType === 'DIVIDEND') {
         return this.utilsService.currencyFormatter(this.losses.summaryIncome.summaryOtherIncome.bucketDividend.taxableAmount);
+      } else if (incomeType === 'FAMILLY_PENSION') {
+        let income = this.losses.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
+        if (income.length > 0) {
+          return this.utilsService.currencyFormatter(income[0].taxableAmount);
+        }
+        return false;
       } else {
         return this.utilsService.currencyFormatter(income[0].amount);
       }
     } else {
       if (incomeType === 'DIVIDEND') {
-        let dividend = this.losses.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === 'DIVIDEND');
-        if (dividend.length > 0) {
-          return this.utilsService.currencyFormatter(dividend[0].taxableAmount);
+        let income = this.losses.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
+        if (income.length > 0) {
+          return this.utilsService.currencyFormatter(income[0].taxableAmount);
         }
         return false;
       }

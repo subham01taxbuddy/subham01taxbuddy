@@ -794,6 +794,12 @@
 
                                                     <td>Rs {{getOtherIncome('DIVIDEND')}}</td>
                                                 </tr>
+                                                <tr *ngIf="getOtherIncome('FAMILLY_PENSION')">
+                                                    <td>Family Pension
+                                                    </td>
+
+                                                    <td>Rs {{getOtherIncome('FAMILLY_PENSION')}}</td>
+                                                </tr>
                                                 <!-- <tr *ngIf="getOtherIncome('SAVING_INTEREST')">
                             <td>UTI Divided : 890
                             </td>
