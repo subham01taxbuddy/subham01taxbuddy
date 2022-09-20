@@ -1,3 +1,5 @@
+// import { environment } from './../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
@@ -10,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from '../modules/shared/constants';
 import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
+import { Environment } from 'ag-grid-community';
 declare function matomo(title: any, url: any, event: any, subscribeId: any);
 
 @Injectable()
@@ -693,4 +696,12 @@ export class UtilsService {
             return [];
         }
     }
+
+    // updateAssignmentToggle(assignmentToggleData) :Observable<any>{
+    //     return this.httpClient.post('environment.url' + '/user/sme/assignment-logic-toggle', assignmentToggleData)
+    // }
+
+    // getAssignmentToggle() :Observable<any>{
+    //     return this.httpClient.get('environment.url' + '/user/sme/assignment-logic-toggle')
+    // }
 }

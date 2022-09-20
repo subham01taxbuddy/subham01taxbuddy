@@ -1,3 +1,4 @@
+import { AssignmentComponent } from './pages/assignment/assignment.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CreateSmeComponent } from './pages/create-sme/create-sme.component';
@@ -10,6 +11,7 @@ const routes: Routes = [
         children: [
             { path: 'sme-list', component: SmeListComponent },
             { path: 'create', component: CreateSmeComponent },
+            { path: 'assignment', component: AssignmentComponent },
             { path: '', redirectTo: '/sme-management/sme-list', pathMatch: 'full' }
         ]
     },
