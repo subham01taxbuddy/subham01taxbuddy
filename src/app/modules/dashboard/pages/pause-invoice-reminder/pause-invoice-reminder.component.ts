@@ -38,7 +38,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
 
   invoiceSearch() {
     console.log('invoice:' + this.invoiceNo);
-    const regex = new RegExp('^SSBA\\/2022\\/([1-9]?[0-9]*)')
+    const regex = new RegExp('^SSBA\\/2021|2022\\/([1-9]?[0-9]*)')
     if (this.utilService.isNonEmpty(this.invoiceNo) &&
       regex.test(this.invoiceNo)) {
       this.getSearchInfo(this.invoiceNo);
