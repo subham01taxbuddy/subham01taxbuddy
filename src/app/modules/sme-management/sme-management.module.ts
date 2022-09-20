@@ -1,3 +1,5 @@
+import { MatCardModule } from '@angular/material/card';
+import { AssignmentComponent } from './pages/assignment/assignment.component';
 import { SmeManagementComponent } from './sme-management.component';
 import { CreateSmeComponent } from './pages/create-sme/create-sme.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -22,12 +24,14 @@ import { SmeListComponent } from './pages/sme-list/sme-list.component';
         AgGridModule,
         MaterialModule,
         NgxPaginationModule,
-        SmeManagementRoutingModule
+        SmeManagementRoutingModule,
+        MatCardModule
     ],
     declarations: [
         SmeManagementComponent,
         SmeListComponent,
-        CreateSmeComponent
+        CreateSmeComponent,
+        AssignmentComponent
     ],
     entryComponents: []
 
