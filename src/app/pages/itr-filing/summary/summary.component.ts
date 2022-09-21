@@ -36,13 +36,105 @@ export class SummaryComponent implements OnInit {
   stLoss = 0;
   ltLoss = 0;
   natureOfBusinessDropdown = [];
-  assestTypesDropdown = [];
+  assetsTypesDropdown = [];
+  exemptIncomesDropdown = [{
+    id: null,
+    seqNum: 1,
+    value: "AGIR",
+    label: "Agriculture Income (less than or equal to RS. 5000)",
+    detailed: false
+  }, {
+    id: null,
+    seqNum: 2,
+    value: "10(10D)",
+    label: "Sec 10 (10D) - Any sum received under a life insurance policy, including the sum allocated by way of bonus on such policy except sum as mentioned in sub-clause (a) to (d) of Sec.10 (10D)",
+    detailed: false
+  }, {
+    "id": null,
+    "seqNum": 3,
+    "value": "10(11)",
+    "label": "Sec 10(11) - Statutory Provident Fund received) ",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 4,
+    "value": "10(12)",
+    "label": "Sec 10(12) - Recognized Provident Fund received",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 5,
+    "value": "10(13)",
+    "label": "Sec 10(13) - Approved superannuation fund received",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 6,
+    "value": "10(16)",
+    "label": "Sec 10(16) - Scholarships granted to meet the cost of education",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 7,
+    "value": "DMDP",
+    "label": "Defense Medical disability pension",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 8,
+    "value": "10(17)",
+    "label": "Sec 10(17) - Allowance MP/MLA/MLC ",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 9,
+    "value": "10(17A)",
+    "label": "Sec 10(17A) - Award instituted by government",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 10,
+    "value": "10(18)",
+    "label": "Sec 10(18) - Pension received by winner of Param Vir Chakra or Maha-Vir Chakra or such other gallantry award",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 11,
+    "value": "10(10BC)",
+    "label": "Sec 10(10BC) - Any amount from the Central/State Govt/Local authority by way of compensation on account of any disaster ",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 12,
+    "value": "10(19)",
+    "label": "Sec 10(19) - Armed Forces Family Pension in case of death during operational duty ",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 13,
+    "value": "10(26)",
+    "label": "Sec 10 (26) - Any Income as referred to in section 10(26)",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 14,
+    "value": "10(26AAA)",
+    "label": "Sec 10(26AAA) - Any income as referred to in section 10(26",
+    "detailed": false
+  }, {
+    "id": null,
+    "seqNum": 10,
+    "value": "OTH",
+    "label": "Any other ",
+    "detailed": false
+  }]
+
   constructor(private itrMsService: ItrMsService,
     public utilsService: UtilsService, private router: Router) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    const mybank = this.ITR_JSON.bankDetails.filter((item: any) => item.hasRefund === true);
-    if (mybank instanceof Array && mybank.length > 0) {
-      this.bankArray = mybank[0];
+    const bank = this.ITR_JSON.bankDetails.filter((item: any) => item.hasRefund === true);
+    if (bank instanceof Array && bank.length > 0) {
+      this.bankArray = bank[0];
     }
     const self = this.ITR_JSON.family.filter((item: any) => item.relationShipCode === 'SELF');
     if (self instanceof Array && self.length > 0) {
@@ -242,8 +334,8 @@ export class SummaryComponent implements OnInit {
 
   }
   getNameFromCode(assetType) {
-    if (this.assestTypesDropdown.length !== 0) {
-      const nameArray = this.assestTypesDropdown.filter((item: any) => item.assetCode === assetType);
+    if (this.assetsTypesDropdown.length !== 0) {
+      const nameArray = this.assetsTypesDropdown.filter((item: any) => item.assetCode === assetType);
       return nameArray[0].assetName;
     } else {
       return assetType;
@@ -265,10 +357,23 @@ export class SummaryComponent implements OnInit {
     if (income.length > 0) {
       if (incomeType === 'DIVIDEND') {
         return this.utilsService.currencyFormatter(this.losses.summaryIncome.summaryOtherIncome.bucketDividend.taxableAmount);
+      } else if (incomeType === 'FAMILLY_PENSION') {
+        let income = this.losses.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
+        if (income.length > 0) {
+          return this.utilsService.currencyFormatter(income[0].taxableAmount);
+        }
+        return false;
       } else {
         return this.utilsService.currencyFormatter(income[0].amount);
       }
     } else {
+      if (incomeType === 'DIVIDEND') {
+        let income = this.losses.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
+        if (income.length > 0) {
+          return this.utilsService.currencyFormatter(income[0].taxableAmount);
+        }
+        return false;
+      }
       return false;
     }
   }
@@ -338,7 +443,7 @@ export class SummaryComponent implements OnInit {
     let param = '/summary/send?itrId=' + itrId + '&channel=' + channel;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
-      console.log('Responce of send PDF:', res)
+      console.log('Response of send PDF:', res)
       this.utilsService.showSnackBar(res.response)
     }, error => {
       this.loading = false;
@@ -354,7 +459,7 @@ export class SummaryComponent implements OnInit {
       window.open(fileURL);
 
       this.loading = false;
-      // Commented both routes as its currenly option is for download xml file
+      // Commented both routes as its currently option is for download xml file
       // this.router.navigate(['itr-result/success']);
     }, error => {
       this.loading = false;
@@ -370,7 +475,7 @@ export class SummaryComponent implements OnInit {
     this.loading = true;
     const validateParam = `/api/validateXML?itrId=${this.ITR_JSON.itrId}`;
     this.itrMsService.getMethod(validateParam).subscribe((result: any) => {
-      console.log('Rsult: ', result);
+      console.log('Result: ', result);
       this.loading = false;
     }, error => {
       console.log('ITR filled error===', error);
@@ -397,7 +502,7 @@ export class SummaryComponent implements OnInit {
             // this.router.navigate(['ack/delay']);
             this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'delay' } })
           } else {
-            alert('Unexpected Error occured')
+            alert('Unexpected Error occurred')
           }
           // this.router.navigate(['/pages/itr-filing/acknowledgement'])
         }, error => {
@@ -423,5 +528,19 @@ export class SummaryComponent implements OnInit {
   downloadJson() {
     let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
     window.open(url)
+  }
+
+  getExemptIncomeTotal() {
+    let total = 0;
+    if (this.ITR_JSON.exemptIncomes.length > 0) {
+      for (let i = 0; i < this.ITR_JSON.exemptIncomes.length; i++) {
+        total = total + this.ITR_JSON.exemptIncomes[i].amount
+      }
+    }
+    return total;
+  }
+
+  getExemptDescription(exempt) {
+    return this.exemptIncomesDropdown.filter(item => item.value === exempt.natureDesc)[0].label
   }
 }
