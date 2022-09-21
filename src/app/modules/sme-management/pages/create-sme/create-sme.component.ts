@@ -298,35 +298,14 @@ export class CreateSmeComponent implements OnInit {
 
   changeAssignment(assignment, serviceType) {
     const param = `/sme/update`;
-    
-    if(assignment) {
-      this.utilsService.showSnackBar('Changing assignment for service ' + serviceType
-        + ' will remove assignment for other services');
-      this.smeDetailsList.forEach((details) => {
-        if(details.serviceType  !== serviceType) {
-          details.assignmentStart = false;
-          let requestData = JSON.parse(JSON.stringify(details));
-          this.userMsService.putMethod(param, requestData).subscribe(res => {
-            console.log('SME details updated', res);
-            this.loading = false;
-            this._toastMessageService.alert("success", details.serviceType + " assignment updated successfully.");
-            if(details.serviceType === 'GST') {
-              this.isGstAssignment = false;
-            } else if(details.serviceType === 'NOTICE') {
-              this.isNoticeAssignment = false;
-            } else {
-              this.isItrAssignment =false;
-            }
-          }, error => {
-            this._toastMessageService.alert("error", details.serviceType + " assignment failed to update.");
-            this.loading = false;
-          })
-        }
-      }); 
-    }
+
+    console.log(this.smeDetailsList);
 
     var details = this.smeDetailsList.filter(details => details.serviceType  === serviceType)[0];
     
+    console.log(serviceType);
+    console.log(details);
+
     details.assignmentStart = assignment;
     let requestData = JSON.parse(JSON.stringify(details));
     this.userMsService.putMethod(param, requestData).subscribe(res => {
@@ -351,17 +330,24 @@ export class CreateSmeComponent implements OnInit {
       requestBody.leaveStartDate = this.convertToDDMMYY(this.createSmeForm.controls['leaveStartDate'].value);
       requestBody.leaveEndDate = this.convertToDDMMYY(this.createSmeForm.controls['leaveEndDate'].value);
       requestBody.resigningDate = this.convertToDDMMYY(this.createSmeForm.controls['resigningDate'].value);
-      this.smeDetails.serviceType = serviceType;
-      this.smeDetails.assignmentStart = false;
-      Object.assign(this.smeDetails, requestBody);
+      requestBody.serviceType = serviceType;
+      requestBody.assignmentStart = false;
+      // Object.assign(requestBody, this.smeDetails);
       console.log(requestBody);
-      let requestData = JSON.parse(JSON.stringify(this.smeDetails));
+      let requestData = JSON.parse(JSON.stringify(requestBody));
       this.userMsService.putMethod(param, requestData).subscribe(res => {
         console.log('SME service type updated', res);
         this.loading = false;
         if((res as any).success) {
           this._toastMessageService.alert("success", serviceType + " updated to SME profile successfully.");
         } else {
+          if(serviceType === 'ITR') {
+            this.isItrAvailable = false;
+          } else if(serviceType === 'NOTICE') {
+            this.isNoticeAvailable = false;
+          } else {
+            this.isGstAvailable = false;
+          }
           this._toastMessageService.alert("error", (res as any).message);
         }
       }, error => {
