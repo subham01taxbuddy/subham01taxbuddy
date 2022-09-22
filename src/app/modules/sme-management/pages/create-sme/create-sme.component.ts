@@ -176,7 +176,9 @@ export class CreateSmeComponent implements OnInit {
         let isNewRole = this.roleBaseAuthGuardService.checkHasPermission(this.smeData.role, this.newRoles);
         if (this.smeData.role instanceof Array && isNewRole) {
           this.getSmeInfoDetails();
-          this.getParentList();
+          if(this.smeDetailsList) {
+            this.getParentList();
+          }
         }
       }, error => {
         this.smeData = null;
@@ -203,7 +205,9 @@ export class CreateSmeComponent implements OnInit {
         }
         this._toastMessageService.alert("success", this.smeData.firstName + " User role updated successfully.");
         this.getSmeInfoDetails();
-        this.getParentList();
+        if(this.smeDetailsList) {
+          this.getParentList();
+        }
       }, error => {
         console.log("there is error : ", error);
         this._toastMessageService.alert("error", this.smeData.firstName + "User role not update, try after some time.");
@@ -217,31 +221,36 @@ export class CreateSmeComponent implements OnInit {
     const param = `/sme/info?userId=${this.smeData.userId}`;
     this.userMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
-      this.showSmeDetails = true;
       console.log('SME details' + JSON.stringify(res.data));
-      this.smeDetailsList = res.data;
-      this.smeDetails = res.data[0];
-      this.smeDetailsList.forEach((details) => {
-        //console.log(JSON.stringify(details));
-        if(details.serviceType === 'ITR') {  
-          this.isItrAvailable = true;
-          this.isItrAssignment = details.assignmentStart;
-        }
-        if(details.serviceType === 'NOTICE') {
-          this.isNoticeAvailable = true;
-          this.isNoticeAssignment = details.assignmentStart;
-        }
-        if(details.serviceType === 'GST') {
-          this.isGstAvailable = true;
-          this.isGstAssignment = details.assignmentStart;
-        }
-      });
-      this.createSmeForm.patchValue(res.data[0]);
-      this.minResignDate = this.utilsService.isNonEmpty(res.data.joiningDate) ? this.convertToYYMMDD(res.data.joiningDate) : new Date();
-      this.createSmeForm.controls['joiningDate'].setValue(this.convertToYYMMDD(res.data.joiningDate));
-      this.createSmeForm.controls['resigningDate'].setValue(this.convertToYYMMDD(res.data.resigningDate));
-      this.createSmeForm.controls['leaveStartDate'].setValue(this.convertToYYMMDD(res.data.leaveStartDate));
-      this.createSmeForm.controls['leaveEndDate'].setValue(this.convertToYYMMDD(res.data.leaveEndDate));
+      if(res.success) {
+        this.showSmeDetails = true;
+        this.smeDetailsList = res.data;
+        this.smeDetails = res.data[0];
+        this.smeDetailsList.forEach((details) => {
+          //console.log(JSON.stringify(details));
+          if(details.serviceType === 'ITR') {  
+            this.isItrAvailable = true;
+            this.isItrAssignment = details.assignmentStart;
+          }
+          if(details.serviceType === 'NOTICE') {
+            this.isNoticeAvailable = true;
+            this.isNoticeAssignment = details.assignmentStart;
+          }
+          if(details.serviceType === 'GST') {
+            this.isGstAvailable = true;
+            this.isGstAssignment = details.assignmentStart;
+          }
+        });
+        this.createSmeForm.patchValue(res.data[0]);
+        this.minResignDate = this.utilsService.isNonEmpty(res.data.joiningDate) ? this.convertToYYMMDD(res.data.joiningDate) : new Date();
+        this.createSmeForm.controls['joiningDate'].setValue(this.convertToYYMMDD(res.data.joiningDate));
+        this.createSmeForm.controls['resigningDate'].setValue(this.convertToYYMMDD(res.data.resigningDate));
+        this.createSmeForm.controls['leaveStartDate'].setValue(this.convertToYYMMDD(res.data.leaveStartDate));
+        this.createSmeForm.controls['leaveEndDate'].setValue(this.convertToYYMMDD(res.data.leaveEndDate));
+      } else {
+        this.showSmeDetails = false;
+        this.utilsService.showSnackBar('User does not have enough roles for SME');
+      }
     }, error => {
       this.loading = false;
       this.showSmeDetails = false
@@ -321,9 +330,9 @@ export class CreateSmeComponent implements OnInit {
 
   updateServiceType(serviceType) {
     const param = `/sme/update`;
-    if ((this.isItrAvailable && serviceType === 'ITR') || 
-      (this.isNoticeAvailable && serviceType === 'NOTICE') ||
-       (this.isGstAvailable && serviceType === 'GST')) {
+    // if ((this.isItrAvailable && serviceType === 'ITR') || 
+    //   (this.isNoticeAvailable && serviceType === 'NOTICE') ||
+    //    (this.isGstAvailable && serviceType === 'GST')) {
       this.loading = true;
       let requestBody = this.createSmeForm.getRawValue();
       requestBody.joiningDate = this.convertToDDMMYY(this.createSmeForm.controls['joiningDate'].value);
@@ -353,7 +362,7 @@ export class CreateSmeComponent implements OnInit {
       }, error => {
         this._toastMessageService.alert("error", serviceType + " failed to update to SME profile.");
         this.loading = false;
-      })
-    }
+      });
+    // }
   }
 }
