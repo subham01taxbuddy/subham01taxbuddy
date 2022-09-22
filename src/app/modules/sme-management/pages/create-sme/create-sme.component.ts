@@ -146,11 +146,13 @@ export class CreateSmeComponent implements OnInit {
       requestBody.resigningDate = this.convertToDDMMYY(this.createSmeForm.controls['resigningDate'].value);
       
       this.smeDetailsList.forEach((details) => {
-        Object.assign(details, requestBody);
         console.log(details.serviceType);
         console.log(requestBody);
-        let requestData = JSON.parse(JSON.stringify(details));
+        requestBody.serviceType = details.serviceType;
+        requestBody.assignmentStart = details.assignmentStart;
+        let requestData = JSON.parse(JSON.stringify(requestBody));
         this.userMsService.putMethod(param, requestData).subscribe(res => {
+          Object.assign(details, requestBody);
           console.log('SME details updated', res);
           this.loading = false;
           this._toastMessageService.alert("success", this.smeData.firstName + "'s SME details updated successfully.");
