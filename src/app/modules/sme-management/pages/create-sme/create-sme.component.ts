@@ -235,12 +235,13 @@ export class CreateSmeComponent implements OnInit {
             this.isGstAssignment = details.assignmentStart;
           }
         });
+        
         this.createSmeForm.patchValue(res.data[0]);
-        this.minResignDate = this.utilsService.isNonEmpty(res.data.joiningDate) ? this.convertToYYMMDD(res.data.joiningDate) : new Date();
-        this.createSmeForm.controls['joiningDate'].setValue(this.convertToYYMMDD(res.data.joiningDate));
-        this.createSmeForm.controls['resigningDate'].setValue(this.convertToYYMMDD(res.data.resigningDate));
-        this.createSmeForm.controls['leaveStartDate'].setValue(this.convertToYYMMDD(res.data.leaveStartDate));
-        this.createSmeForm.controls['leaveEndDate'].setValue(this.convertToYYMMDD(res.data.leaveEndDate));
+        this.minResignDate = this.utilsService.isNonEmpty(this.smeDetails.joiningDate) ? this.convertToYYMMDD(res.data.joiningDate) : new Date();
+        this.createSmeForm.controls['joiningDate'].setValue(this.convertToYYMMDD(this.smeDetails.joiningDate));
+        this.createSmeForm.controls['resigningDate'].setValue(this.convertToYYMMDD(this.smeDetails.resigningDate));
+        this.createSmeForm.controls['leaveStartDate'].setValue(this.convertToYYMMDD(this.smeDetails.leaveStartDate));
+        this.createSmeForm.controls['leaveEndDate'].setValue(this.convertToYYMMDD(this.smeDetails.leaveEndDate));
         
         this.getParentList();
       } else {
