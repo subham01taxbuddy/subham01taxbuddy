@@ -176,9 +176,6 @@ export class CreateSmeComponent implements OnInit {
         let isNewRole = this.roleBaseAuthGuardService.checkHasPermission(this.smeData.role, this.newRoles);
         if (this.smeData.role instanceof Array && isNewRole) {
           this.getSmeInfoDetails();
-          if(this.smeDetailsList) {
-            this.getParentList();
-          }
         }
       }, error => {
         this.smeData = null;
@@ -205,9 +202,6 @@ export class CreateSmeComponent implements OnInit {
         }
         this._toastMessageService.alert("success", this.smeData.firstName + " User role updated successfully.");
         this.getSmeInfoDetails();
-        if(this.smeDetailsList) {
-          this.getParentList();
-        }
       }, error => {
         console.log("there is error : ", error);
         this._toastMessageService.alert("error", this.smeData.firstName + "User role not update, try after some time.");
@@ -247,6 +241,8 @@ export class CreateSmeComponent implements OnInit {
         this.createSmeForm.controls['resigningDate'].setValue(this.convertToYYMMDD(res.data.resigningDate));
         this.createSmeForm.controls['leaveStartDate'].setValue(this.convertToYYMMDD(res.data.leaveStartDate));
         this.createSmeForm.controls['leaveEndDate'].setValue(this.convertToYYMMDD(res.data.leaveEndDate));
+        
+        this.getParentList();
       } else {
         this.showSmeDetails = false;
         this.utilsService.showSnackBar('User does not have enough roles for SME');
