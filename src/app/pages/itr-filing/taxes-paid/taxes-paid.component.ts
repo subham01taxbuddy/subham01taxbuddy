@@ -156,7 +156,7 @@ export class TaxesPaidComponent implements OnInit {
         // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
-            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+            if (Number(params.data.totalAmountCredited) < Number(params.data.totalTdsDeposited)) {
               return true;
             }
             else {
@@ -177,7 +177,7 @@ export class TaxesPaidComponent implements OnInit {
         // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
-            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+            if (Number(params.data.totalAmountCredited) < Number(params.data.totalTdsDeposited)) {
               return true;
             }
             else {
@@ -249,10 +249,9 @@ export class TaxesPaidComponent implements OnInit {
             return this.utilsService.showSnackBar('Please enter valid TAN Number');
           }
 
-          if (temp[i].data.totalAmountCredited > temp[i].data.totalTdsDeposited) {
+          if (Number(temp[i].data.totalAmountCredited) > Number(temp[i].data.totalTdsDeposited)) {
             isDataValid = true;
-          }
-          else {
+          } else {
             return this.utilsService.showSnackBar('Total amount credited is should be greater then Total tax deduction in TDS on salary table.');
           }
         } else {
@@ -384,7 +383,7 @@ export class TaxesPaidComponent implements OnInit {
         // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
-            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+            if (Number(params.data.totalAmountCredited) < Number(params.data.totalTdsDeposited)) {
               return true;
             }
             else {
@@ -404,7 +403,7 @@ export class TaxesPaidComponent implements OnInit {
         // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
-            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+            if (Number(params.data.totalAmountCredited) < Number(params.data.totalTdsDeposited)) {
               return true;
             }
             else {
@@ -482,7 +481,7 @@ export class TaxesPaidComponent implements OnInit {
             return this.utilsService.showSnackBar('Please enter valid TAN Number');
           }
 
-          if (temp[i].data.totalAmountCredited > temp[i].data.totalTdsDeposited) {
+          if (Number(temp[i].data.totalAmountCredited) > Number(temp[i].data.totalTdsDeposited)) {
             isDataValid = true;
           }
           else {
@@ -619,7 +618,7 @@ export class TaxesPaidComponent implements OnInit {
         // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
-            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+            if (Number(params.data.totalAmountCredited) < Number(params.data.totalTdsDeposited)) {
               return true;
             }
             else {
@@ -639,7 +638,7 @@ export class TaxesPaidComponent implements OnInit {
         // cellEditor: 'numericEditor',
         cellClassRules: {
           'invalid-row': function (params) {
-            if (params.data.totalAmountCredited < params.data.totalTdsDeposited) {
+            if (Number(params.data.totalAmountCredited) < Number(params.data.totalTdsDeposited)) {
               return true;
             }
             else {
