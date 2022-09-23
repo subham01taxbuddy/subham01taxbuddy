@@ -56,8 +56,8 @@ export class SmeListComponent implements OnInit {
       this.loading = false;
       if (result.data['content'] instanceof Array) {
         let activeSme = result.data['content'].filter(item => item.active)
-        this.smeListGridOptions.api?.setRowData(this.createRowData(activeSme));
-        this.smeList = activeSme;
+        this.smeList = this.createRowData(activeSme);
+        this.smeListGridOptions.api?.setRowData(this.smeList);
       }
       // this.config.totalItems = result.data.totalElements;
     },
@@ -146,8 +146,8 @@ export class SmeListComponent implements OnInit {
         }
       },
       {
-        headerName: 'Assignment',
-        field: 'assignmentStart',
+        headerName: 'ITR & TPA Assignment',
+        field: 'assignmentStartITR',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -158,31 +158,60 @@ export class SmeListComponent implements OnInit {
         }
       },
       {
-        headerName: 'ITR Types',
-        field: 'itrTypes',
-        width: 80,
+        headerName: 'Notice Assignment',
+        field: 'assignmentStartNotice',
+        width: 100,
         suppressMovable: true,
-        cellStyle: {
-          textAlign: 'center', display: 'flex', 'align-items': 'center',
-          'justify-content': 'center'
-        },
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
       },
       {
-        headerName: 'Service Type',
-        field: 'serviceType',
-        width: 80,
+        headerName: 'GST Assignment',
+        field: 'assignmentStartGST',
+        width: 100,
         suppressMovable: true,
-        cellStyle: {
-          textAlign: 'center', display: 'flex', 'align-items': 'center',
-          'justify-content': 'center'
-        },
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
       },
+      // {
+      //   headerName: 'ITR Types',
+      //   field: 'itrTypes',
+      //   width: 80,
+      //   suppressMovable: true,
+      //   cellStyle: {
+      //     textAlign: 'center', display: 'flex', 'align-items': 'center',
+      //     'justify-content': 'center'
+      //   },
+      // },
+      // {
+      //   headerName: 'Service Type',
+      //   field: 'serviceType',
+      //   width: 80,
+      //   suppressMovable: true,
+      //   cellStyle: {
+      //     textAlign: 'center', display: 'flex', 'align-items': 'center',
+      //     'justify-content': 'center'
+      //   },
+      // },
       {
         headerName: 'Roles',
         field: 'roles',
         width: 180,
+        display: 'flex',
         suppressMovable: true,
+        wrapText: true,
+        autoHeight: true,
         cellStyle: {
+          'white-space': 'normal',
+          'overflow-wrap': 'break-word',
           textAlign: 'center', display: 'flex', 'align-items': 'center',
           'justify-content': 'center'
         },
@@ -231,30 +260,82 @@ export class SmeListComponent implements OnInit {
     ]
   }
 
-  createRowData(userData: any) {
+  createRowData(userData: Array<any>) {
     var userArray = [];
+
     for (let i = 0; i < userData.length; i++) {
       let parent = userData.filter(item => item.userId === userData[i].parentId);
       let parentName = ''
       if (parent.length > 0) {
         parentName = parent[0].name;
       }
-      let smeList: any = Object.assign({}, userArray[i], {
-        userId: userData[i].userId,
-        joiningDate: this.utilsService.isNonEmpty(userData[i].joiningDate) ? userData[i].joiningDate : '-',
-        name: userData[i].name,
-        mobileNumber: this.utilsService.isNonEmpty(userData[i].mobileNumber) ? userData[i].mobileNumber : '-',
-        email: this.utilsService.isNonEmpty(userData[i].email) ? userData[i].email : '-',
-        assignmentStart: userData[i].assignmentStart ? 'Yes' : 'No',
-        active: userData[i].active ? 'Yes' : 'No',
-        itrTypes: userData[i].serviceType === 'ITR' ? userData[i].itrTypes : 'NA',
-        serviceType: userData[i].serviceType,
-        roles: userData[i].roles.filter(item => item !== 'ROLE_USER'),
-        parent: parentName
-      })
-      userArray.push(smeList);
+
+      let filtered = userData.filter(data => data.userId === userData[i].userId);
+      if(filtered.length > 1) {
+        // console.log('filtered' + userData[i].userId);
+        var assignmentStartITR = false;
+        var assignmentStartNotice = false;
+        var assignmentStartGST = false;
+        filtered.forEach(object => {
+          if(object.serviceType === 'ITR') { assignmentStartITR = object.assignmentStart;}
+          if(object.serviceType === 'NOTICE') { assignmentStartNotice = object.assignmentStart;}
+          if(object.serviceType === 'GST') { assignmentStartGST = object.assignmentStart;}
+        });
+        let sme = {
+          userId: userData[i].userId,
+          joiningDate: this.utilsService.isNonEmpty(userData[i].joiningDate) ? userData[i].joiningDate : '-',
+          name: userData[i].name,
+          mobileNumber: this.utilsService.isNonEmpty(userData[i].mobileNumber) ? userData[i].mobileNumber : '-',
+          email: this.utilsService.isNonEmpty(userData[i].email) ? userData[i].email : '-',
+          assignmentStartITR: assignmentStartITR ? 'Yes' : 'No',
+          assignmentStartNotice: assignmentStartNotice ? 'Yes' : 'No',
+          assignmentStartGST: assignmentStartGST ? 'Yes' : 'No',
+          active: userData[i].active ? 'Yes' : 'No',
+          // itrTypes: userData[i].serviceType === 'ITR' ? userData[i].itrTypes : 'NA',
+          // serviceType: userData[i].serviceType,
+          roles: userData[i].roles.filter(item => item !== 'ROLE_USER'),
+          parent: parentName
+        };
+        let existing = userArray.filter(user => user.userId === sme.userId);
+        // console.log(existing);
+        if(existing.length === 0) {
+          userArray.push(sme);
+        }
+        
+      } else {
+        // console.log('non filtered' + userData[i].userId);
+        let sme = {
+          userId: userData[i].userId,
+          joiningDate: this.utilsService.isNonEmpty(userData[i].joiningDate) ? userData[i].joiningDate : '-',
+          name: userData[i].name,
+          mobileNumber: this.utilsService.isNonEmpty(userData[i].mobileNumber) ? userData[i].mobileNumber : '-',
+          email: this.utilsService.isNonEmpty(userData[i].email) ? userData[i].email : '-',
+          assignmentStartITR: userData[i].assignmentStart ? 'Yes' : 'No',
+          assignmentStartNotice: userData[i].assignmentStart ? 'Yes' : 'No',
+          assignmentStartGST: userData[i].assignmentStart ? 'Yes' : 'No',
+          active: userData[i].active ? 'Yes' : 'No',
+          // itrTypes: userData[i].serviceType === 'ITR' ? userData[i].itrTypes : 'NA',
+          // serviceType: userData[i].serviceType,
+          roles: userData[i].roles.filter(item => item !== 'ROLE_USER'),
+          parent: parentName
+        }
+        userArray.push(sme);
+      }
     }
+
     return userArray;
+  }
+
+  getAssignmentStartITR(user: any) {
+    return (user.serviceType === 'ITR') ? user.assignmentStart : false;
+  }
+
+  getAssignmentStartNotice(user: any) {
+    return (user.serviceType === 'NOTICE') ? user.assignmentStart : false;
+  }
+
+  getAssignmentStartGST(user: any) {
+    return (user.serviceType === 'GST') ? user.assignmentStart : false;
   }
 
   onUsersRowClicked(params: any) {
