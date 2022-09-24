@@ -1093,7 +1093,7 @@ export class TaxesPaidComponent implements OnInit {
           break;
         }
       }
-      return true;
+      // return true;
     } else {
       isDataValid = true;
     }
