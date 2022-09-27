@@ -17,6 +17,8 @@ export class PauseInvoiceReminderComponent implements OnInit {
   invoiceNo: string;
   loading = false;
   invoiceGridOptions: any;
+  existingInvoicesGridOptions: any;
+  existingReminders: Array<any>;
   
   constructor(private itrMsService: ItrMsService, public utilService: UtilsService, private router: Router,
     private dialog: MatDialog, @Inject(LOCALE_ID) private locale: string,
@@ -28,12 +30,41 @@ export class PauseInvoiceReminderComponent implements OnInit {
     this.invoiceNo = '';
     this.invoiceGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.invoicesCreateColumnDef(smeList),
+      columnDefs: this.invoicesCreateColumnDef(smeList, true),
       enableCellChangeFlash: true,
       onGridReady: params => {
       },
       sortable: true,
     };
+    this.existingInvoicesGridOptions = <GridOptions>{
+      rowData: [],
+      columnDefs: this.invoicesCreateColumnDef(smeList, false),
+      enableCellChangeFlash: true,
+      onGridReady: params => {
+      },
+      sortable: true,
+    };
+    this.existingPausedRemindersList();
+  }
+
+  existingPausedRemindersList() {
+    this.loading = true;
+    let param = '/invoice/stop-reminder';
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      this.loading = false;
+      console.log('Invoice ', result);
+      if(result.success) {
+        this.existingReminders = this.createExistingReminderRowData(result.data);
+        this.existingInvoicesGridOptions.api?.setRowData(this.existingReminders);
+      } else {
+        this.toastMsgService.alert("warning", result.message);
+      }
+    },
+      error => {
+        this.loading = false;
+        console.log('Error during getting paused reminders list', error);
+        this.toastMsgService.alert("error", "Unable to get paused reminders list.")
+      })
   }
 
   invoiceSearch() {
@@ -83,6 +114,19 @@ export class PauseInvoiceReminderComponent implements OnInit {
     }
   }
 
+  onExistingInvoiceRowClicked(params: any) {
+    console.log(params)
+    // if (params.event.target !== undefined) {
+    //   const actionType = params.event.target.getAttribute('data-action-type');
+    //   switch (actionType) {
+    //     case 'pauseReminder': {
+    //       this.pauseReminder();
+    //       break;
+    //     }
+    //   }
+    // }
+  }
+
   pauseReminder() {
     this.loading = true;
     let param = '/invoice/stop-reminder';
@@ -93,6 +137,9 @@ export class PauseInvoiceReminderComponent implements OnInit {
       this.loading = false;
       console.log('Result ', result);
       this.toastMsgService.alert(result.success ? "success" : "error", result.message);
+      if(result.success) {
+        this.existingPausedRemindersList();
+      }
     },
       error => {
         this.loading = false;
@@ -101,6 +148,34 @@ export class PauseInvoiceReminderComponent implements OnInit {
       })
   }
  
+  createExistingReminderRowData(invoiceList: Array<any>) {
+    let invoices = [];
+    invoiceList.forEach(userInvoice => {
+      let updateInvoice = Object.assign({}, userInvoice,
+        {
+          userId: userInvoice.userId,
+          billTo: userInvoice.billTo,
+          phone: userInvoice.phone,
+          email: userInvoice.email,
+          invoiceNo: userInvoice.invoiceNo,
+          txbdyInvoiceId: userInvoice.txbdyInvoiceId,
+          invoiceDate: userInvoice.invoiceDate,
+          dueDate: userInvoice.dueDate,
+          modeOfPayment: userInvoice.modeOfPayment,
+          paymentDate: userInvoice.paymentDate,
+          paymentStatus: userInvoice.paymentStatus,
+          purpose: userInvoice.itemList[0].itemDescription,
+          invoicePreparedBy: userInvoice.inovicePreparedBy,
+          ifaLeadClient: userInvoice.ifaLeadClient,
+          total: userInvoice.total
+        });
+      invoices.push(updateInvoice);
+    });
+    
+    console.log('paused invoices: ', invoices);
+    return invoices;
+  }
+
   createRowData(userInvoice) {
     let invoices = [];
     let updateInvoice = Object.assign({}, userInvoice,
@@ -127,7 +202,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
     return invoices;
   }
 
-  invoicesCreateColumnDef(smeList) {
+  invoicesCreateColumnDef(smeList, includePauseAction) {
     console.log(JSON.stringify(smeList));
     return [
       {
@@ -364,6 +439,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
+        hide: !includePauseAction,
         cellRenderer: function (params: any) {
           if(params.data.paymentStatus === 'Paid') {
             return `<button type="button" class="action_icon add_button" title="Pause Invoice Reminder"
