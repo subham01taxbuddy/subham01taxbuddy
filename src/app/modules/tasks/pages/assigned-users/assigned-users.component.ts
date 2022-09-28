@@ -1,3 +1,4 @@
+import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { ReAssignDialogComponent } from './../../components/re-assign-dialog/re-assign-dialog.component';
 import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -850,19 +851,19 @@ export class AssignedUsersComponent implements OnInit {
     });
   }
   openChat(client) {
-    this.loading = true;
-    let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
-    this.userMsService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-        window.open(response.data.chatLink)
-      } else {
-        this._toastMessageService.alert('error', 'User has not initiated chat on kommunicate')
+    let disposable = this.dialog.open(ChatOptionsDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.name,
+        serviceType: client.serviceType
       }
-    }, error => {
-      this._toastMessageService.alert('error', 'Error during fetching chat, try after some time.')
-      this.loading = false;
     })
+
+    disposable.afterClosed().subscribe(result => {
+    });
+    
   }
 
   reAssignUser(client) {
