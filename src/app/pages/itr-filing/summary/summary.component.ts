@@ -416,7 +416,7 @@ export class SummaryComponent implements OnInit {
       console.log('XML Result', result);
       var FileSaver = require('file-saver');
       //const fileURL = URL.createObjectURL(result);
-      const fileURL = URL.createObjectURL(result);
+      const fileURL = webkitURL.createObjectURL(result);
       window.open(fileURL);
       let fileName = this.getUserName('download') + '' + '.xml';
       console.log('fileName: ', fileName)
@@ -455,7 +455,7 @@ export class SummaryComponent implements OnInit {
     const param = '/api/txbdyReport?userId=' + this.ITR_JSON.userId + '&itrId=' + this.ITR_JSON.itrId + '&assessmentYear=' + this.ITR_JSON.assessmentYear;
     this.itrMsService.downloadFile(param, 'application/pdf').subscribe(result => {
       console.log('PDF Result', result);
-      const fileURL = URL.createObjectURL(result);
+      const fileURL = webkitURL.createObjectURL(result);
       window.open(fileURL);
 
       this.loading = false;
