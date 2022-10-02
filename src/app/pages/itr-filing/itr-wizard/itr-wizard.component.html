@@ -1,29 +1,42 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="main clearfix" style="padding-left: 0px;">
   <div class="card" style="padding: 0 !important;">
-    <!-- <div class="col-md-12 col-sm-12 col-12"> -->
     <mat-horizontal-stepper labelPosition="bottom" linear="true" #stepper (selectionChange)="tabChanged($event)">
       <ng-template matStepperIcon="edit">
         <mat-icon>done</mat-icon>
       </ng-template>
       <mat-step [stepControl]="personalForm">
-        <!-- <div class="tx1014">Personal Information</div> -->
+        <mat-tab-group [selectedIndex]="personalInfoSubTab">
+          <mat-tab label="Customer Profile">
+            <app-customer-profile (saveAndNext)="saveAndNext($event)"></app-customer-profile>
+          </mat-tab>
+          <mat-tab label="Personal Information">
+            <app-personal-information (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 0">
+            </app-personal-information>
+          </mat-tab>
+        </mat-tab-group>
         <ng-template matStepLabel>Personal Information</ng-template>
-
-        <app-personal-information (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 0">
-        </app-personal-information>
-        <!-- <hr> -->
-        <!-- <div class="rightBt">
-            <button class="backBt" mat-button (click)="previousTab('taxPlaner')" matStepperPrevious>Back</button>
-            <button class="nextBt" mat-button matStepperNext>Next</button>
-          </div> -->
       </mat-step>
-
       <mat-step [stepControl]="incomeForm">
-
         <ng-template matStepLabel>Income Details</ng-template>
-
-        <div class="content" style="width: 60%;padding-right: 10px;">
+        <mat-tab-group [selectedIndex]="personalInfoSubTab">
+          <mat-tab label="Salary Income">
+            <app-salary *ngIf="tabIndex=== 1"></app-salary>
+          </mat-tab>
+          <mat-tab label="House Property">
+            <app-house-property *ngIf="tabIndex=== 1"></app-house-property>
+          </mat-tab>
+          <mat-tab label="Business Income">
+            <app-business *ngIf="tabIndex === 1"></app-business>
+          </mat-tab>
+          <mat-tab label="Other Sources">
+            <app-other-income (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-other-income>
+          </mat-tab>
+          <mat-tab label="Capital Gain">
+            Coming Soon !!!
+          </mat-tab>
+        </mat-tab-group>
+        <!--  <div class="content" style="width: 60%;padding-right: 10px;">
           <app-document-upload (uploadDocument)="afterUploadDocs($event)"></app-document-upload>
           <br>
           <div>
@@ -57,16 +70,15 @@
             </div>
           </div>
           <app-document-viewer [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer>
-        </div>
-
-        <div class="content" style="width: 40%;">
+        </div> -->
+        <!--  <div class="content" style="width: 40%;">
           <app-update-status *ngIf="tabIndex=== 1" [userId]="ITR_JSON.userId"></app-update-status>
           <hr>
           <app-salary *ngIf="tabIndex=== 1"></app-salary>
           <app-house-property *ngIf="tabIndex=== 1"></app-house-property>
           <app-business *ngIf="tabIndex === 1 && ITR_JSON.itrType === '4'"></app-business>
           <app-other-income (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-other-income>
-        </div>
+        </div> -->
       </mat-step>
 
       <mat-step [stepControl]="taxSavingForm">

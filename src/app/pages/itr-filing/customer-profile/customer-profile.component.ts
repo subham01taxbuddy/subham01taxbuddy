@@ -3,7 +3,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { UtilsService } from './../../../services/utils.service';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { HttpHeaders, HttpClient, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
@@ -50,6 +50,8 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class CustomerProfileComponent implements OnInit {
+  @Output() saveAndNext = new EventEmitter<any>();
+
   loading: boolean = false;
   imageLoader: boolean = false;
   customerProfileForm: FormGroup;
@@ -90,7 +92,29 @@ export class CustomerProfileComponent implements OnInit {
     { value: 26, label: 'Future and Options Plan' },
     { value: 28, label: 'NRI Plan' },
   ];
+  residentialStatus = [
+    { value: 'RESIDENT', label: 'Resident' },
+    { value: 'NON_RESIDENT', label: 'Non Resident' },
+    { value: 'NON_ORDINARY', label: 'Non Ordinary Resident' }
+  ];
 
+  employersDropdown = [
+    { value: 'CENTRAL_GOVT', label: 'Central Government' },
+    { value: 'GOVERNMENT', label: 'State Government' },
+    { value: 'PRIVATE', label: 'Public Sector Unit' },
+    { value: 'PE', label: 'Pensioners - Central Government' },
+    { value: 'PESG', label: 'Pensioners - State Government' },
+    { value: 'PEPS', label: 'Pensioners - Public sector undertaking' },
+    { value: 'PENSIONERS', label: 'Pensioners - Others' },
+    { value: 'OTHER', label: 'Other-Private' },
+    { value: 'NA', label: 'Not-Applicable' }
+  ];
+
+
+  genderMaster = [
+    { value: 'MALE', label: 'Male' },
+    { value: 'FEMALE', label: 'Female' },
+  ]
 
   filePath = 'ITR/';
   loggedInUserData: any;
@@ -294,7 +318,8 @@ export class CustomerProfileComponent implements OnInit {
         // if (ref === "CONTINUE") {
         if (this.customerProfileForm.controls['itrType'].value === '1'
           || this.customerProfileForm.controls['itrType'].value === '4')
-          this.router.navigate(['/pages/itr-filing/itr']);
+          // this.router.navigate(['/pages/itr-filing/itr']);
+          this.saveAndNext.emit({ subTab: true, tabName: 'PERSONAL' });
         else
           this.router.navigate(['/pages/itr-filing/direct-upload']);
         // } else if (ref === "DIRECT") {

@@ -1,6 +1,6 @@
 <!-- <div class="row"> -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="content" style="width: 35%; padding-right: 20px;">
+<!-- <div class="content" style="width: 35%; padding-right: 20px;">
     <app-document-upload (uploadDocument)="afterUploadDocs($event)"></app-document-upload>
     <br>
     <div>
@@ -34,14 +34,14 @@
         </div>
     </div>
     <app-document-viewer [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer>
-</div>
+</div> -->
 
-<div class="content" style="width: 65%;">
-    <div class="card__title" style="padding:10px; font-size: 20px;">Customer Profile</div>
+<div class="card">
+    <!-- <div class="card__title" style="padding:10px; font-size: 20px;">Customer Profile</div> -->
     <!-- <app-update-status [userId]="ITR_JSON.userId"></app-update-status> -->
-    <hr>
+    <!-- <hr> -->
     <form [formGroup]="customerProfileForm">
-        <div class="card__row">
+        <!--  <div class="card__row">
             <div class="card__col-xs-12 card__col-sm-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Father Name</mat-label>
@@ -85,7 +85,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-        </div>
+        </div> -->
         <!--  <div formGroupName="seventhProviso139">
             <div class="card__row">
                 <div class="card__col-xs-12 card__col-sm-8">
@@ -130,34 +130,34 @@
             </div>
 
         </div> -->
-        <hr>
+        <!-- <hr> -->
         <div class="card__title" style="padding:10px; font-size: 20px;">Address Details</div>
         <div formGroupName="address">
             <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-6">
+                <div class="card__col-xs-12 card__col-sm-4">
                     <mat-form-field appearance="outline">
                         <mat-label>Flat/Door/Block No.</mat-label>
                         <input type="text" trim matInput placeholder="Flat/Door/Block No." name="flatNo"
                             formControlName="flatNo" class="input-field" maxlength="50" required>
                     </mat-form-field>
                 </div>
-                <div class="card__col-xs-12 card__col-sm-6">
+                <div class="card__col-xs-12 card__col-sm-4">
                     <mat-form-field appearance="outline">
                         <mat-label>Premises name</mat-label>
                         <input type="text" trim matInput placeholder="Premises name" name="premisesName"
                             formControlName="premisesName" class="input-field" maxlength="50">
                     </mat-form-field>
                 </div>
-            </div>
-            <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-6">
+                <div class="card__col-xs-12 card__col-sm-4">
                     <mat-form-field appearance="outline">
                         <mat-label>Area/ Locality</mat-label>
                         <input type="text" trim matInput placeholder="Area/ Locality" name="area" formControlName="area"
                             class="input-field" maxlength="50" required>
                     </mat-form-field>
                 </div>
-                <div class="card__col-xs-12 card__col-sm-6">
+            </div>
+            <div class="card__row">
+                <div class="card__col-xs-12 card__col-sm-3">
                     <mat-form-field appearance="outline">
                         <mat-label>PIN Code</mat-label>
                         <input type="text" matInput placeholder="PIN code" name="pinCode" formControlName="pinCode"
@@ -169,9 +169,7 @@
                             6 digit PIN code.</mat-error>
                     </mat-form-field>
                 </div>
-            </div>
-            <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-4">
+                <div class="card__col-xs-12 card__col-sm-3">
                     <mat-form-field appearance="outline">
                         <mat-label>Select country</mat-label>
                         <mat-select placeholder="Select country" name="country" formControlName="country"
@@ -183,7 +181,7 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="card__col-xs-12 card__col-sm-4">
+                <div class="card__col-xs-12 card__col-sm-3">
                     <mat-form-field appearance="outline">
                         <mat-label>Select state</mat-label>
                         <mat-select placeholder="Select state" name="state" formControlName="state" required>
@@ -193,7 +191,7 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="card__col-xs-12 card__col-sm-4">
+                <div class="card__col-xs-12 card__col-sm-3">
                     <mat-form-field appearance="outline">
                         <mat-label>City</mat-label>
                         <input type="text" trim matInput placeholder="City/Taluka/District" name="city"
@@ -283,10 +281,10 @@
                 </mat-form-field>
             </div>
         </div>
-        <div class="footer__buttons clearfix" style="margin-top: 40px;">
-            <button class="tbd-btn-secondary" (click)="previousRoute()"><i class="fa fa-arrow-left"
+        <div class="footer__buttons clearfix">
+            <!--  <button class="tbd-btn-secondary" (click)="previousRoute()"><i class="fa fa-arrow-left"
                     aria-hidden="true"></i>
-                &nbsp;&nbsp;Back</button>
+                &nbsp;&nbsp;Back</button> -->
             <button class="tbd-btn" (click)="saveProfile('NEXT')">Save and Continue
             </button>
         </div>

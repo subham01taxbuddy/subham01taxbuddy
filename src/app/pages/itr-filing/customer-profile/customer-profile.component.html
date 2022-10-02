@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="main clearfix">
-    <div class="content" style="width: 35%">
+<!-- <div class="main clearfix"> -->
+<!--  <div class="content" style="width: 35%">
         <div class="card card_main" style="position: relative;">
             <div>
                 <span *ngFor="let docs of documents; let i=index">
@@ -36,131 +36,173 @@
             </div>
             <app-document-viewer [docUrl]="docUrl" [viewer]="viewer"></app-document-viewer>
         </div>
-    </div>
+    </div> -->
 
 
-    <div class="content" style="width: 65%">
-        <div class="content__container">
-            <div class="card card_main">
-                <div class="card__title">Customer Profile</div>
-                <!-- <app-update-status [userId]="ITR_JSON.userId" (sendValue)="getStatusId($event)"></app-update-status> -->
-                <br>
-                <form [formGroup]="customerProfileForm">
-                    <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>PAN Number</mat-label>
-                                <input type="text" matInput placeholder="PAN" name="panNumber"
-                                    formControlName="panNumber" class="input-field" maxlength="10" minlength="10"
-                                    (blur)="getUserDataByPan(customerProfileForm.controls['panNumber'].value)" required
-                                    upperCase>
-                                <mat-error *ngIf="customerProfileForm.controls['panNumber'].hasError('pattern')">
-                                    Enter valid PAN (e.g XXXXX1234X)</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Mobile</mat-label>
-                                <input matTooltip="Mobile number should be of 10 digit." matTooltipClass="tab-tooltip"
-                                    matTooltipPosition="above" matInput placeholder="Mobile" name="mobile"
-                                    formControlName="contactNumber" class="input-field" digitsOnly required>
-                                <mat-error
-                                    *ngIf="customerProfileForm.controls['contactNumber'].hasError('pattern') || customerProfileForm.controls['contactNumber'].hasError('minlength') || customerProfileForm.controls['contactNumber'].hasError('maxlength')">
-                                    Enter
-                                    10 digit mobile number</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Email</mat-label>
-                                <input matInput placeholder="Email address" name="email" formControlName="email"
-                                    class="input-field" maxlength="50" required>
-                                <mat-error *ngIf="customerProfileForm.controls['email'].hasError('pattern')">Enter
-                                    valid email</mat-error>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>First name</mat-label>
-                                <input type="text" matTooltip="First name as per PAN" matTooltipClass="tab-tooltip"
-                                    matTooltipPosition="above" matInput currencyMask placeholder="First name"
-                                    name="FirstName" formControlName="firstName" class="input-field" maxlength="25"
-                                    capitalizeFirst>
-                                <mat-error *ngIf="customerProfileForm.controls['firstName'].hasError('pattern')">
-                                    Enter
-                                    character only</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Middle name</mat-label>
-                                <input type="text" matTooltip="Middle name as per PAN" matTooltipClass="tab-tooltip"
-                                    matTooltipPosition="above" matInput currencyMask placeholder="Middle name"
-                                    name="MiddleName" formControlName="middleName" class="input-field" maxlength="75"
-                                    capitalizeFirst>
-                                <mat-error *ngIf="customerProfileForm.controls['middleName'].hasError('pattern')">
-                                    Enter
-                                    character only</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Last name</mat-label>
-                                <input type="text" matTooltip="Last name as per PAN" matTooltipClass="tab-tooltip"
-                                    matTooltipPosition="above" matInput currencyMask placeholder="Last name"
-                                    name="LastName" formControlName="lastName" class="input-field" maxlength="75"
-                                    capitalizeFirst required>
-                                <mat-error *ngIf="customerProfileForm.controls['lastName'].hasError('pattern')">
-                                    Enter
-                                    character only</mat-error>
-                            </mat-form-field>
-                        </div>
-                    </div>
+<!-- <div class="content">
+    <div class="content__container"> -->
+<div class="card">
+    <!-- <div class="card__title">Customer Profile</div> -->
+    <!-- <app-update-status [userId]="ITR_JSON.userId" (sendValue)="getStatusId($event)"></app-update-status> -->
+    <!-- <br> -->
+    <form [formGroup]="customerProfileForm">
+        <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>PAN Number</mat-label>
+                    <input type="text" matInput placeholder="PAN" name="panNumber" formControlName="panNumber"
+                        class="input-field" maxlength="10" minlength="10"
+                        (blur)="getUserDataByPan(customerProfileForm.controls['panNumber'].value)" required upperCase>
+                    <mat-error *ngIf="customerProfileForm.controls['panNumber'].hasError('pattern')">
+                        Enter valid PAN (e.g XXXXX1234X)</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Mobile</mat-label>
+                    <input matTooltip="Mobile number should be of 10 digit." matTooltipClass="tab-tooltip"
+                        matTooltipPosition="above" matInput placeholder="Mobile" name="mobile"
+                        formControlName="contactNumber" class="input-field" digitsOnly required>
+                    <mat-error
+                        *ngIf="customerProfileForm.controls['contactNumber'].hasError('pattern') || customerProfileForm.controls['contactNumber'].hasError('minlength') || customerProfileForm.controls['contactNumber'].hasError('maxlength')">
+                        Enter
+                        10 digit mobile number</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input matInput placeholder="Email address" name="email" formControlName="email" class="input-field"
+                        maxlength="50" required>
+                    <mat-error *ngIf="customerProfileForm.controls['email'].hasError('pattern')">Enter
+                        valid email</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Aadhaar Number</mat-label>
+                    <input matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
+                        matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
+                        placeholder="Aadhaar" name="aadharNumber" formControlName="aadharNumber" class="input-field"
+                        maxlength="12" digitsOnly>
+                    <mat-error
+                        *ngIf="customerProfileForm.controls['aadharNumber'].hasError('pattern') || customerProfileForm.controls['aadharNumber'].hasError('minLength') || customerProfileForm.controls['aadharNumber'].hasError('maxLength')">
+                        Enter
+                        12 digit aadhar number</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>First name</mat-label>
+                    <input type="text" matTooltip="First name as per PAN" matTooltipClass="tab-tooltip"
+                        matTooltipPosition="above" matInput currencyMask placeholder="First name" name="FirstName"
+                        formControlName="firstName" class="input-field" maxlength="25" capitalizeFirst>
+                    <mat-error *ngIf="customerProfileForm.controls['firstName'].hasError('pattern')">
+                        Enter
+                        character only</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Middle name</mat-label>
+                    <input type="text" matTooltip="Middle name as per PAN" matTooltipClass="tab-tooltip"
+                        matTooltipPosition="above" matInput currencyMask placeholder="Middle name" name="MiddleName"
+                        formControlName="middleName" class="input-field" maxlength="75" capitalizeFirst>
+                    <mat-error *ngIf="customerProfileForm.controls['middleName'].hasError('pattern')">
+                        Enter
+                        character only</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Last name</mat-label>
+                    <input type="text" matTooltip="Last name as per PAN" matTooltipClass="tab-tooltip"
+                        matTooltipPosition="above" matInput currencyMask placeholder="Last name" name="LastName"
+                        formControlName="lastName" class="input-field" maxlength="75" capitalizeFirst required>
+                    <mat-error *ngIf="customerProfileForm.controls['lastName'].hasError('pattern')">
+                        Enter
+                        character only</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Date Of Birth</mat-label>
+                    <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip"
+                        matTooltipPosition="above" matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
+                        class="input-field" placeholder="Date of birth" name="dateOfBirth"
+                        [formControl]="customerProfileForm.controls['dateOfBirth']" required>
+                    <mat-hint>Format: DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="customerProfileForm.controls['dateOfBirth'].hasError('required')">
+                        Select date of birth</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
 
-                    <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Aadhaar Number</mat-label>
-                                <input matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
-                                    matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
-                                    placeholder="Aadhaar" name="aadharNumber" formControlName="aadharNumber"
-                                    class="input-field" maxlength="12" digitsOnly>
-                                <mat-error
-                                    *ngIf="customerProfileForm.controls['aadharNumber'].hasError('pattern') || customerProfileForm.controls['aadharNumber'].hasError('minLength') || customerProfileForm.controls['aadharNumber'].hasError('maxLength')">
-                                    Enter
-                                    12 digit aadhar number</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Date Of Birth</mat-label>
-                                <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip"
-                                    matTooltipPosition="above" matInput [min]="minDate" [max]="maxDate"
-                                    [matDatepicker]="picker" class="input-field" placeholder="Date of birth"
-                                    name="dateOfBirth" [formControl]="customerProfileForm.controls['dateOfBirth']"
-                                    required>
-                                <mat-hint>Format: DD/MM/YYYY</mat-hint>
-                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker #picker></mat-datepicker>
-                                <mat-error *ngIf="customerProfileForm.controls['dateOfBirth'].hasError('required')">
-                                    Select date of birth</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>ITR Form</mat-label>
-                                <mat-select placeholder="ITR Form" name="itrForm" formControlName="itrType" required>
-                                    <mat-option *ngFor="let type of itrTypes" [value]="type.value">
-                                        {{ type.label }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="card__row">
-                        <!--  <div class="card__col-xs-12 card__col-sm-6">
+        <!-- <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>ITR Form</mat-label>
+                    <mat-select placeholder="ITR Form" name="itrForm" formControlName="itrType" required>
+                        <mat-option *ngFor="let type of itrTypes" [value]="type.value">
+                            {{ type.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div> -->
+
+
+        <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Father Name</mat-label>
+                    <input type="text" matInput placeholder="Father's name" name="mobile"
+                        [formControl]="customerProfileForm.controls['fatherName']" class="input-field" maxlength="125"
+                        capitalizeFirst required>
+                    <mat-error *ngIf="customerProfileForm.controls['fatherName'].hasError('pattern')">
+                        Enter character only</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Residential status</mat-label>
+                    <mat-select placeholder="Residential status" name="residentialStatus"
+                        (selectionChange)="onSelectRecidencial(customerProfileForm.controls['residentialStatus'].value)"
+                        [formControl]="customerProfileForm.controls['residentialStatus']" required>
+                        <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
+                            {{ res.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Employer Category</mat-label>
+                    <mat-select placeholder="Employer Category" name="employerCategory"
+                        formControlName="employerCategory">
+                        <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
+                            {{ emp.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Select Gender</mat-label>
+                    <mat-select placeholder="Select Gender" name="gender" formControlName="gender">
+                        <mat-option *ngFor="let gender of genderMaster" [value]="gender.value">
+                            {{ gender.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="card__row">
+            <!--  <div class="card__col-xs-12 card__col-sm-6">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Filing Team</mat-label>
                                         <mat-select placeholder="Filing Team Member Id" name="filingTeamMemberId"
@@ -172,39 +214,36 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div> -->
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Return Type</mat-label>
-                                <mat-select placeholder="Return Type" name="isRevised" formControlName="isRevised"
-                                    (selectionChange)="changeReviseForm()" required>
-                                    <mat-option *ngFor="let type of returnTypes" [value]="type.value">
-                                        {{ type.label }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4"
-                            *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Acknowledgement number</mat-label>
-                                <input matTooltip="Acknowledgement number maximum of 15 digit"
-                                    matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
-                                    placeholder="Acknowledgement of Original ITR" name="orgITRAckNum"
-                                    class="input-field" maxlength="15" minlength="15" formControlName="orgITRAckNum" />
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4"
-                            *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Date of filing</mat-label>
-                                <input [max]="maxDateRevise" matInput [matDatepicker]="revisedPicker"
-                                    placeholder="Date of filing original return" name="orgITRDate"
-                                    formControlName="orgITRDate" />
-                                <mat-datepicker-toggle matSuffix [for]="revisedPicker"></mat-datepicker-toggle>
-                                <mat-datepicker #revisedPicker></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-                        <!--  <div class="card__col-xs-4">
+            <div class="card__col-xs-12 card__col-sm-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Return Type</mat-label>
+                    <mat-select placeholder="Return Type" name="isRevised" formControlName="isRevised"
+                        (selectionChange)="changeReviseForm()" required>
+                        <mat-option *ngFor="let type of returnTypes" [value]="type.value">
+                            {{ type.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-3" *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
+                <mat-form-field appearance="outline">
+                    <mat-label>Acknowledgement number</mat-label>
+                    <input matTooltip="Acknowledgement number maximum of 15 digit" matTooltipClass="tab-tooltip"
+                        matTooltipPosition="above" matInput placeholder="Acknowledgement of Original ITR"
+                        name="orgITRAckNum" class="input-field" maxlength="15" minlength="15"
+                        formControlName="orgITRAckNum" />
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-3" *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
+                <mat-form-field appearance="outline">
+                    <mat-label>Date of filing</mat-label>
+                    <input [max]="maxDateRevise" matInput [matDatepicker]="revisedPicker"
+                        placeholder="Date of filing original return" name="orgITRDate" formControlName="orgITRDate" />
+                    <mat-datepicker-toggle matSuffix [for]="revisedPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #revisedPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <!--  <div class="card__col-xs-4">
                             <a class="sidebar__item" routerLink="/pages/tax-summary"
                                 routerLinkActive="sidebar__item_active"
                                 *ngIf="isApplicable(['ROLE_ADMIN','ROLE_FILING_TEAM','ROLE_CALLING_TEAM','ITR_SUPER_LEAD','ITR_TEAM_LEAD'])">
@@ -212,8 +251,8 @@
                                 <span class="sidebar__name">Tax Summary</span>
                             </a>
                         </div> -->
-                    </div>
-                    <!-- <hr>
+        </div>
+        <!-- <hr>
                     <div class="card__row">
                         <div class="card__col-xs-12">
                             Summary will be uploaded in- {{getFilePath()}}
@@ -231,25 +270,25 @@
                             </button>
                         </div>
                     </div> -->
-                    <div class="footer__buttons clearfix" style="margin-top: 40px;">
-                        <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left"
-                                aria-hidden="true"></i>
-                            &nbsp;&nbsp;Back</button>
-                        <!-- <button class="btn long-btn" style="border: none;" (click)="saveProfile('SAVE')">Save
+        <div class="footer__buttons pull-right">
+            <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left"
+                    aria-hidden="true"></i>
+                &nbsp;&nbsp;Back</button>
+            <!-- <button class="btn long-btn" style="border: none;" (click)="saveProfile('SAVE')">Save
                             Profile</button> -->
-                        <button class="tbd-btn" (click)="saveProfile('CONTINUE')">Continue </button>
-                        <!--  <button class="btn long-btn" style="border: none;" (click)="saveProfile('MANUALLY')">Manually
+            <button class="tbd-btn" (click)="saveProfile('CONTINUE')">Save and Continue </button>
+            <!--  <button class="btn long-btn" style="border: none;" (click)="saveProfile('MANUALLY')">Manually
                             Filed</button> -->
-                        <!-- <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT')">Direct
+            <!-- <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT')">Direct
                             Upload</button> -->
-                        <!--  <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT-UPLOAD')">Direct
+            <!--  <button class="btn long-btn" style="border: none;" (click)="saveProfile('DIRECT-UPLOAD')">Direct
                             Upload</button> -->
 
 
 
-                    </div>
-                </form>
-            </div>
         </div>
-    </div>
+    </form>
 </div>
+<!-- </div>
+</div> -->
+<!-- </div> -->
