@@ -80,6 +80,8 @@
                             <mat-label>(-) Deduction u/s 57(iia)</mat-label>
                             <input type="number" trim matInput name="quarter2" class="input-field"
                                 [(ngModel)]="famPenDeduction" digitsOnly disabled>
+                            <mat-hint *ngIf="ITR_JSON.regime === 'NEW'">Note: This is only applicable in old tax regime
+                            </mat-hint>
                         </mat-form-field>
                     </div>
                     <div class="card__col-xs-12 card__col-sm-4">
