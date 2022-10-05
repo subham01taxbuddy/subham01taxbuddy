@@ -501,7 +501,9 @@ export class OtherIncomeComponent implements OnInit {
     return this.dividendIncomes.controls['quarter1'].value + this.dividendIncomes.controls['quarter2'].value + this.dividendIncomes.controls['quarter3'].value + this.dividendIncomes.controls['quarter4'].value + this.dividendIncomes.controls['quarter5'].value;
   }
   calFamPension() {
-    if (this.familyPension.valid) {
+    this.famPenDeduction = 0;
+    this.totalFamPenDeduction = this.familyPension.value;
+    if (this.familyPension.valid && this.ITR_JSON.regime === 'OLD') {
       this.famPenDeduction = (this.familyPension.value / 3 > 15000 ? 15000 : this.familyPension.value / 3).toFixed()
       this.totalFamPenDeduction = (this.familyPension.value - this.famPenDeduction).toFixed();
     }
