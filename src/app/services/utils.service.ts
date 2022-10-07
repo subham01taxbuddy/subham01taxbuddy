@@ -33,7 +33,7 @@ export class UtilsService {
     * @returns this will return boolean value
     */
     isNonEmpty(param: any): boolean {
-        if (param !== null && param !== undefined && param !== "")
+        if (param)
             return true
         else
             return false
@@ -492,8 +492,8 @@ export class UtilsService {
     getMyCallingNumber() {
         // const userObj = JSON.parse(localStorage.getItem('UMD') ?? "");
         const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
-        if (this.isNonEmpty(loggedInSmeInfo) && this.isNonEmpty(loggedInSmeInfo.mobileNumber)) {
-            return loggedInSmeInfo.mobileNumber;
+        if ((this.isNonEmpty(loggedInSmeInfo)) && (this.isNonEmpty(loggedInSmeInfo[0].mobileNumber))) {
+            return loggedInSmeInfo[0].mobileNumber;
         }
         // const SME_LIST: any = await this.getStoredSmeList();
         // const sme = SME_LIST.filter((item: any) => item.userId === userObj.USER_UNIQUE_ID);
