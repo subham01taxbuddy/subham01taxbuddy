@@ -1,3 +1,4 @@
+import { ReviseReturnDialogComponent } from './../../../../pages/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { ReAssignDialogComponent } from './../../components/re-assign-dialog/re-assign-dialog.component';
 import { formatDate } from '@angular/common';
@@ -133,6 +134,8 @@ export class AssignedUsersComponent implements OnInit {
   // }
 
   usersCreateColumnDef(itrStatus) {
+    console.log(itrStatus);
+    var statusSequence = 0;
     return [
       {
         headerName: 'Name',
@@ -188,6 +191,7 @@ export class AssignedUsersComponent implements OnInit {
           if (itrStatus.length !== 0) {
             const nameArray = itrStatus.filter((item: any) => (item.statusId === params.data.statusId));
             if (nameArray.length !== 0) {
+              statusSequence = nameArray[0].sequence;
               return nameArray[0].statusName;
             }
             else {
@@ -419,6 +423,35 @@ export class AssignedUsersComponent implements OnInit {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
             'justify-content': 'center'
+          }
+        },
+      },
+      {
+        headerName: 'Actions',
+        width: 50,
+        sortable: true,
+        pinned: 'right',
+        cellRenderer: function (params: any) {
+          if (statusSequence >= 1 && statusSequence <= 7) { // From open till Document uploaded)
+            return `<button type="button" class="action_icon add_button" style="border: none;
+            background: transparent; font-size: 16px; cursor:not-allowed;color: blue">
+            <i class="fa fa-circle" title="No action taken yet" aria-hidden="true"></i>
+            </button>`;
+          } else if (params.data.statusId === 14) { //backed out
+            return `<button type="button" class="action_icon add_button" style="border: none;
+            background: transparent; font-size: 16px; cursor:not-allowed;color: red">
+            <i class="fa fa-circle" title="User Backed out" aria-hidden="true"></i>
+            </button>`;
+          } else if (params.data.statusId === 11) { // ITR filed
+            return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
+            background: transparent; font-size: 16px; cursor:not-allowed;color: green">
+            <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
+           </button>`;
+          } else {
+            return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer;color: orange">
+            <i class="fa fa-edit" aria-hidden="true" data-action-type="startFiling"></i>
+           </button>`;
           }
         },
       },
@@ -745,8 +778,54 @@ export class AssignedUsersComponent implements OnInit {
           this.moreOptions(params.data)
           break;
         }
+        case 'startFiling': {
+          this.startFiling(params.data);
+          break;
+        }
+        case 'startRevise': {
+          this.openReviseReturnDialog(params.data);
+          break;
+        }
       }
     }
+  }
+
+  async startFiling(data) {
+    // var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0]
+    // console.log('data: ', workingItr);
+    // Object.entries(workingItr).forEach((key, value) => {
+    //   console.log(key, value)
+    //   if (key[1] === null) {
+    //     delete workingItr[key[0]];
+    //   }
+    // });
+    // const fyList = await this.utilsService.getStoredFyList();
+    // const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+    // if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+    //   this.utilsService.showSnackBar('There is no any active filing year available')
+    //   return;
+    // }
+    // let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear)
+    // Object.assign(obj, workingItr)
+    // console.log('obj:', obj)
+    // workingItr = JSON.parse(JSON.stringify(obj))
+    // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
+    this.router.navigate(['/pages/itr-filing/itr'])
+  }
+
+  openReviseReturnDialog(data) {
+    console.log('Data for revise return ', data);
+    let disposable = this.dialog.open(ReviseReturnDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: data
+    })
+    disposable.afterClosed().subscribe(result => {
+      if (result === 'reviseReturn') {
+        this.router.navigate(['/pages/itr-filing/customer-profile'])
+      }
+      console.log('The dialog was closed', result);
+    });
   }
 
   redirectTowardInvoice(userInfo: any) {
