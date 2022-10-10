@@ -53,7 +53,7 @@ export class ChatOptionsDialogComponent implements OnInit {
     this.userMsService.getMethod(paramWa).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
-        this.waChatLink = response.data.chatLink;
+        this.waChatLink = response.data.whatsAppChatLink;
       } else {
         // this.utilsService.showErrorMsg('User has not initiated chat on kommunicate');
       }
