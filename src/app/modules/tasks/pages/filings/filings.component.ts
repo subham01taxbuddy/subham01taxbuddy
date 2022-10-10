@@ -30,9 +30,11 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   agents = [];
   selectedFyYear = '';
   selectedFilingTeamMemberId: number;
+  selectedStatusId: null;
   config: any;
   selectedPageNo = 0;
   mobileNumber = '';
+  itrStatus: any = [];
   constructor(private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     private userMsService: UserMsService,
@@ -65,9 +67,28 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     };
     this.selectedFilingTeamMemberId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID
     this.getAgentList();
+    this.getMasterStatusList();
   }
   ngAfterContentChecked() {
     this.cdRef.detectChanges();
+  }
+
+  async getMasterStatusList() {
+    //this.itrStatus = await this.utilsService.getStoredMasterStatusList();
+    this.itrStatus = [
+      {
+        'statusId' : 6,
+        'statusName' : 'WIP'
+      },
+      {
+        'statusId' : 11,
+        'statusName' : 'ITR Filed'
+      },
+      {
+        'statusId' : -1,
+        'statusName' : 'All'
+      }
+    ];
   }
 
   getAgentList() {
@@ -99,6 +120,10 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     this.myItrsList(this.selectedFyYear, 0, this.selectedFilingTeamMemberId, 'mobile');
   }
 
+  filter() {
+    this.myItrsList(this.selectedFyYear, 0, this.selectedFilingTeamMemberId);
+  }
+
   myItrsList(fy: String, pageNo: any, filingTeamMemberId: number, searchOption?: string) {
     this.loading = true;
     return new Promise((resolve, reject) => {
@@ -106,7 +131,9 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       if (searchOption === 'mobile') {
         param = `/${filingTeamMemberId}/itr-list?mobileNumber=${this.mobileNumber}` // OTH_FILTER panNumber,assessmentYearmobileNumber
       } else {
-        param = `/${filingTeamMemberId}/itr-list?page=${pageNo}&size=50&financialYear=${fy}&eFillingCompleted=true` // OTH_FILTER panNumber,assessmentYearmobileNumber
+        this.mobileNumber = '';
+        let statusIds = this.selectedStatusId && this.selectedStatusId > 0 ? `&statusIds=${this.selectedStatusId}` : '';
+        param = `/${filingTeamMemberId}/itr-list?page=${pageNo}&size=50&financialYear=${fy}&eFillingCompleted=true` + statusIds;// OTH_FILTER panNumber,assessmentYearmobileNumber
       }
       this.itrMsService.getMethod(param).subscribe((res: any) => {
         console.log('filingTeamMemberId: ', res);
