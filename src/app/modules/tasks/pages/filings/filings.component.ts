@@ -77,18 +77,19 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     //this.itrStatus = await this.utilsService.getStoredMasterStatusList();
     this.itrStatus = [
       {
-        'statusId' : 6,
-        'statusName' : 'WIP'
+        'statusId' : [5, 7, 8],
+        'statusName' : 'WIP'//WIP - Preparing ITR, Waiting for confirmation, Confirmation received
       },
       {
         'statusId' : 11,
         'statusName' : 'ITR Filed'
       },
       {
-        'statusId' : -1,
-        'statusName' : 'All'
+        'statusId' : [5,7,8,11],
+        'statusName' : 'All'//Preparing ITR, Waiting for confirmation, Confirmation received, ITR Filed 
       }
     ];
+    this.selectedStatusId = this.itrStatus[2].statusId;
   }
 
   getAgentList() {
@@ -132,7 +133,8 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         param = `/${filingTeamMemberId}/itr-list?mobileNumber=${this.mobileNumber}` // OTH_FILTER panNumber,assessmentYearmobileNumber
       } else {
         this.mobileNumber = '';
-        let statusIds = this.selectedStatusId && this.selectedStatusId > 0 ? `&statusIds=${this.selectedStatusId}` : '';
+        console.log(this.selectedStatusId);
+        let statusIds = this.selectedStatusId ? `&statusIds=${this.selectedStatusId}` : '';
         param = `/${filingTeamMemberId}/itr-list?page=${pageNo}&size=50&financialYear=${fy}&eFillingCompleted=true` + statusIds;// OTH_FILTER panNumber,assessmentYearmobileNumber
       }
       this.itrMsService.getMethod(param).subscribe((res: any) => {
@@ -577,7 +579,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     console.log('obj:', obj)
     workingItr = JSON.parse(JSON.stringify(obj))
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-    this.router.navigate(['/pages/itr-filing/customer-profile']);
+    this.router.navigate(['/pages/itr-filing/itr']);
     // if (data.statusId !== 11) {
     //   this.router.navigate(['/eri'], {
     //     state:
