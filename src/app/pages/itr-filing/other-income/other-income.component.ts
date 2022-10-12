@@ -190,6 +190,7 @@ export class OtherIncomeComponent implements OnInit {
         headerName: 'Salary Type',
         field: 'incomeType',
         suppressMovable: true,
+        width: 380,
         valueGetter: function nameFromCode(params) {
           if (otherIncomeDropdown.length !== 0) {
             const nameArray = otherIncomeDropdown.filter((item: any) => item.value === params.data.incomeType);
@@ -544,6 +545,7 @@ export class OtherIncomeComponent implements OnInit {
         headerName: 'Income Type',
         field: 'natureDesc',
         suppressMovable: true,
+        width: 400,
         valueGetter: function nameFromCode(params) {
           console.log('AAAA', params);
           if (exemptIncomesDropdown.length !== 0) {
@@ -570,7 +572,7 @@ export class OtherIncomeComponent implements OnInit {
         editable: true,
         suppressMovable: true,
         cellEditor: 'numericEditor',
-        width: 100,
+        // width: 100,
       },
       {
         headerName: 'Clear',

@@ -697,6 +697,26 @@ export class UtilsService {
         }
     }
 
+    checkDuplicateInObject(propertyName, inputArray) {
+        let seenDuplicate = false,
+            // eslint-disable-next-line prefer-const
+            testObject = {};
+
+        inputArray.map(function (item) {
+            const itemPropertyName = item[propertyName];
+            if (itemPropertyName in testObject) {
+                testObject[itemPropertyName].duplicate = true;
+                item.duplicate = true;
+                seenDuplicate = true;
+            } else {
+                testObject[itemPropertyName] = item;
+                delete item.duplicate;
+            }
+        });
+
+        return seenDuplicate;
+    }
+
     // updateAssignmentToggle(assignmentToggleData) :Observable<any>{
     //     return this.httpClient.post('environment.url' + '/user/sme/assignment-logic-toggle', assignmentToggleData)
     // }

@@ -42,6 +42,7 @@ import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-docu
 import { UpdateManualFilingComponent } from './update-manual-filing/update-manual-filing.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AddClientComponent } from './add-client/add-client.component';
+import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -93,9 +94,11 @@ import { AddClientComponent } from './add-client/add-client.component';
         UpdateManualFilingComponent,
         AddClientComponent,
         // InputUploadComponent
+        CoOwnerComponent
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
-        /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent]
+        /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,
+        CoOwnerComponent]
 
 })
 export class ItrFilingModule { }

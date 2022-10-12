@@ -1,3 +1,4 @@
+import { Employer } from './../../../modules/shared/interfaces/itr-input.interface';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from './../../../services/utils.service';
 import { Component, OnInit } from '@angular/core';
@@ -20,7 +21,7 @@ export class SalaryComponent implements OnInit {
   public salaryGridOptions: GridOptions;
   public summaryAllowGridOptions: GridOptions;
   public employersGridOptions: GridOptions;
-  localEmployer: any;
+  localEmployer: Employer;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   maxPT = 5000;
@@ -28,10 +29,10 @@ export class SalaryComponent implements OnInit {
   salaryView: string = "FORM";
   employerMode = "ADD";
   currentIndex: number = null;
-  itrDocuments = [];
-  deletedFileData: any = [];
-  viewer = 'DOC';
-  docUrl = '';
+  // itrDocuments = [];
+  // deletedFileData: any = [];
+  // viewer = 'DOC';
+  // docUrl = '';
   salaryDropdown = [{
     "value": "SEC17_1",
     "label": "Salary as per section 17(1)",
@@ -103,7 +104,8 @@ export class SalaryComponent implements OnInit {
     "value": "ANY_OTHER",
     "label": "Any Other Allowance",
     "detailed": false
-  }]
+  }];
+  stateDropdown = AppConstants.stateDropdown;
   constructor(private router: Router,
     private fb: FormBuilder,
     public utilsService: UtilsService,
@@ -142,7 +144,7 @@ export class SalaryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getDocuments();
+    // this.getDocuments();
     this.utilsService.smoothScrollToTop();
     this.employerDetailsFormGroup = this.createEmployerDetailsFormGroup();
     this.salaryCallInConstructor(this.salaryDropdown);
@@ -182,7 +184,10 @@ export class SalaryComponent implements OnInit {
   createEmployerDetailsFormGroup() {
     return this.fb.group({
       employerName: [''],
-      // address: [''],
+      address: [''],
+      city: [''],
+      state: [''],
+      pinCode: [''],
       // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
       employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
       entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
@@ -487,9 +492,11 @@ export class SalaryComponent implements OnInit {
     //   calculators: null
     // };
     if (this.employerDetailsFormGroup.valid) {
-      // this.localEmployer.address = this.employerDetailsFormGroup.controls['address'].value
+      this.localEmployer.address = this.employerDetailsFormGroup.controls['address'].value
       this.localEmployer.employerName = this.employerDetailsFormGroup.controls['employerName'].value
-      // this.localEmployer.employerPAN = this.employerDetailsFormGroup.controls['employerPAN'].value
+      this.localEmployer.state = this.employerDetailsFormGroup.controls['state'].value
+      this.localEmployer.pinCode = this.employerDetailsFormGroup.controls['pinCode'].value
+      this.localEmployer.city = this.employerDetailsFormGroup.controls['city'].value
       this.localEmployer.employerTAN = this.employerDetailsFormGroup.controls['employerTAN'].value
       this.localEmployer.salary = [];
       this.localEmployer.perquisites = [];
@@ -944,60 +951,61 @@ export class SalaryComponent implements OnInit {
   }
 
   documents = []
-  getDocuments() {
-    const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
-    this.itrMsService.getMethod(param).subscribe((result: any) => {
-      this.documents = result;
-    })
-  }
+  //  !! deprecated 
+  // getDocuments() {
+  //   const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
+  //   this.itrMsService.getMethod(param).subscribe((result: any) => {
+  //     this.documents = result;
+  //   })
+  // }
+  //  !! deprecated 
+  // deleteFile(fileName) {
+  //   let adminId = JSON.parse(localStorage.getItem("UMD"));
+  //   var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
+  //   let filePath = `${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs/${fileName}`;
+  //   var reqBody = [filePath];
+  //   console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
+  //   this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
+  //     console.log('Doc delete responce: ', responce);
+  //     this.utilsService.showSnackBar(responce.response);
+  //     this.getDocuments();
+  //   },
+  //     error => {
+  //       console.log('Doc delete ERROR responce: ', error.responce);
+  //       this.utilsService.showSnackBar(error.response);
+  //     })
+  // }
+  //  !! deprecated 
+  // deletedFileInfo(cloudFileId) {
+  //   this.deletedFileData = [];
+  //   this.loading = true;
+  //   let param = '/cloud/log?cloudFileId=' + cloudFileId;
+  //   this.itrMsService.getMethod(param).subscribe((res: any) => {
+  //     this.loading = false;
+  //     this.deletedFileData = res;
+  //     console.log('Deleted file detail info: ', this.deletedFileData);
+  //   },
+  //     error => {
+  //       this.loading = false;
+  //     })
+  // }
 
-  deleteFile(fileName) {
-    let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
-    let filePath = `${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs/${fileName}`;
-    var reqBody = [filePath];
-    console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
-      console.log('Doc delete responce: ', responce);
-      this.utilsService.showSnackBar(responce.response);
-      this.getDocuments();
-    },
-      error => {
-        console.log('Doc delete ERROR responce: ', error.responce);
-        this.utilsService.showSnackBar(error.response);
-      })
-  }
+  // closeDialog() {
+  //   this.deletedFileData = [];
+  // }
+  //  !! deprecated 
+  // afterUploadDocs(fileUpload) {
+  //   if (fileUpload === 'File uploaded successfully') {
+  //     this.getDocuments();
+  //   }
+  // }
 
-  deletedFileInfo(cloudFileId) {
-    this.deletedFileData = [];
-    this.loading = true;
-    let param = '/cloud/log?cloudFileId=' + cloudFileId;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
-      this.loading = false;
-      this.deletedFileData = res;
-      console.log('Deleted file detail info: ', this.deletedFileData);
-    },
-      error => {
-        this.loading = false;
-      })
-  }
+  // getAllForm16s(documentTag) {
+  //   return this.itrDocuments.filter((item: any) => item.documentTag === documentTag)
 
-  closeDialog() {
-    this.deletedFileData = [];
-  }
-
-  afterUploadDocs(fileUpload) {
-    if (fileUpload === 'File uploaded successfully') {
-      this.getDocuments();
-    }
-  }
-
-  getAllForm16s(documentTag) {
-    return this.itrDocuments.filter((item: any) => item.documentTag === documentTag)
-
-  }
-
-  getSignedUrl(document) {
+  // }
+  //  !! deprecated 
+  /* getSignedUrl(document) {
     console.log('document selected', document);
     const ext = document.fileName.split('.').pop();
     console.log('this.viewer', this.viewer);
@@ -1020,5 +1028,5 @@ export class SalaryComponent implements OnInit {
     }, error => {
       this.loading = false;
     })
-  }
+  } */
 }
