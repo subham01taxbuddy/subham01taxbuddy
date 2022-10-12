@@ -121,11 +121,11 @@
               [disabled]="taxable && taxable > 0" [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"> <i
                 class="fas fa-download"></i> Download XML</button> -->
         <!-- TODO -->
-        <button *ngIf="!ITR_JSON.eFillingCompleted && ITR_JSON.isDefective !== 'Y'" type="button" (click)="fileITR()"
+        <button type="button" (click)="fileITR()"
             class="btn grBut pull-right" [disabled]="true" [style.cursor]="true ? 'not-allowed':'pointer'"
-            style="background-color: red;"> File
+            style="background-color: red;" [disabled]="!isValidateJson"> File
             ITR</button>
-        <!-- <button *ngIf="!ITR_JSON.eFillingCompleted && ITR_JSON.isDefective !== 'Y'" type="button" (click)="fileITR()"
+        <!-- <button *ngIf="isValidateJson" type="button" (click)="fileITR()"
             class="btn grBut pull-right" [disabled]="(taxable && taxable > 0) || isPreviousAvailable()"
             [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"
             style="background-color: red;"> File
@@ -139,6 +139,9 @@
         <button type="button" class="btn whatsAppBut" (click)="sendPdf('whatsapp')">Send PDF to WhatsApp</button>
         <button type="button" class="btn whatsAppBut" style="background-color: #05a3bc; border: #05a3bc solid 1px;"
             (click)="downloadJson()">Download JSON</button>
+        <button type="button" (click)="validateITR()" class="btn grBut" style="background-color: orange;">
+            Validate ITR
+        </button>
     </div>
     <br>
     <h3 class="txHdLf tItX" *ngIf="show">Computation of Income and Tax</h3>
@@ -2001,9 +2004,9 @@
     </div>
     <!-- </div> -->
     <div class="sub_btn lwBtDn" *ngIf="show">
-        <button *ngIf="!ITR_JSON.eFillingCompleted && ITR_JSON.isDefective !== 'Y'" type="button" (click)="fileITR()"
+        <button type="button" (click)="fileITR()"
             class="btn grBut pull-right" [disabled]="true" [style.cursor]="true ? 'not-allowed':'pointer'"
-            style="background-color: red;"> File
+            style="background-color: red;" [disabled]="!isValidateJson"> File
             ITR</button>
         <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
             <!--  [disabled]="taxable && taxable > 0" [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"-->
