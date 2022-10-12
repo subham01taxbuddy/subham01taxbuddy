@@ -5,6 +5,7 @@ import { BankDetails, ITR_JSON, Family } from 'src/app/modules/shared/interfaces
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-summary',
@@ -35,6 +36,7 @@ export class SummaryComponent implements OnInit {
   hpLoss = 0;
   stLoss = 0;
   ltLoss = 0;
+  isValidateJson = false;
   natureOfBusinessDropdown = [];
   assetsTypesDropdown = [];
   exemptIncomesDropdown = [{
@@ -130,7 +132,7 @@ export class SummaryComponent implements OnInit {
   }]
 
   constructor(private itrMsService: ItrMsService,
-    public utilsService: UtilsService, private router: Router) {
+    public utilsService: UtilsService, private router: Router, private http: HttpClient) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     const bank = this.ITR_JSON.bankDetails.filter((item: any) => item.hasRefund === true);
     if (bank instanceof Array && bank.length > 0) {
@@ -523,6 +525,65 @@ export class SummaryComponent implements OnInit {
       }
     });
 
+  }
+
+  validateITR() {
+    let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
+    console.log(url);
+    this.http.get(url, {responseType: "json"}).subscribe((data) => {
+      console.log(data);
+    
+      // https://api.taxbuddy.com/itr/eri/validate-itr-json?formCode={formCode}&ay={ay}&filingTypeCd={filingTypeCd}
+      this.loading = true;
+      let formCode = this.ITR_JSON.itrType;
+      let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
+      let filingTypeCD = this.ITR_JSON.isRevised === 'N' ? 'O' : 'R';
+      const param = `/eri/validate-itr-json?formCode=${formCode}&ay=${ay}&filingTypeCd=${filingTypeCD}`;
+      
+      let headerObj = {
+        'panNumber': this.ITR_JSON.panNumber,
+        'assessmentYear': this.ITR_JSON.assessmentYear,
+        'userId': this.ITR_JSON.userId.toString()
+      }
+      sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+
+      this.itrMsService.postMethodForEri(param, data).subscribe((res: any) => {
+        this.loading = false;
+        console.log('validate ITR response =>', res);
+        if (this.utilsService.isNonEmpty(res)) {
+          if (res && res.success) {
+            let data = JSON.parse(res.data);
+            console.log(data);
+            if (data.messages && data.messages.length > 0) {
+              this.utilsService.showSnackBar(data.messages[0].desc);
+            } else {
+              this.isValidateJson = true;
+              this.utilsService.showSnackBar('ITR JSON validated successfully.');
+            }
+          }
+          else {
+            if (res.errors instanceof Array && res.errors.length > 0) {
+              this.utilsService.showSnackBar(res.errors[0].desc);
+            }
+            else if (res.data.messages instanceof Array && res.data.messages.length > 0) {
+              this.utilsService.showSnackBar(res.data.messages[0].desc);
+            }
+          }
+        }
+        else {
+          this.utilsService.showSnackBar('Response is null, try after some time.');
+        }
+
+      }, error => {
+        this.loading = false;
+        this.isValidateJson = false;
+        this.utilsService.showSnackBar('Something went wrong, try after some time.');
+      });
+    }, error => {
+      this.loading = false;
+      this.isValidateJson = false;
+      this.utilsService.showSnackBar('Something went wrong, try after some time.');
+    });
   }
 
   downloadJson() {
