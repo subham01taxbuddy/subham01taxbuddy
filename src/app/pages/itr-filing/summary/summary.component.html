@@ -130,8 +130,8 @@
             [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"
             style="background-color: red;"> File
             ITR</button> -->
-        <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
-            Download XML</button>
+        <!-- <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
+            Download XML</button> -->
         <!--  [disabled]="taxable && taxable > 0"  [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"  *ngIf="ITR_JSON.isDefective === 'Y'" -->
         <button type="button" (click)="downloadPDF()" class="btn grBut"> Download PDF</button>
         <button type="button" class="btn kommBut" (click)="sendPdf('kommunicate')">Send PDF to Kommunicate chat</button>
@@ -2008,10 +2008,9 @@
             class="btn grBut pull-right" [disabled]="true" [style.cursor]="true ? 'not-allowed':'pointer'"
             style="background-color: red;" [disabled]="!isValidateJson"> File
             ITR</button>
-        <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
-            <!--  [disabled]="taxable && taxable > 0" [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"-->
+        <!-- <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
             Download XML
-        </button><!-- *ngIf="ITR_JSON.isDefective === 'Y'" -->
+        </button> -->
         <button type="button" (click)="downloadPDF()" class="btn grBut"> Download PDF</button>
 
     </div>
