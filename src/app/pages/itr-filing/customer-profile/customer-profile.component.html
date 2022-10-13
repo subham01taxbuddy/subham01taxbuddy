@@ -126,11 +126,15 @@
                                 <input matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
                                     matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput currencyMask
                                     placeholder="Aadhaar" name="aadharNumber" formControlName="aadharNumber"
-                                    class="input-field" maxlength="12" digitsOnly>
+                                    class="input-field" maxlength="12" digitsOnly required>
                                 <mat-error
                                     *ngIf="customerProfileForm.controls['aadharNumber'].hasError('pattern') || customerProfileForm.controls['aadharNumber'].hasError('minLength') || customerProfileForm.controls['aadharNumber'].hasError('maxLength')">
                                     Enter
                                     12 digit aadhar number</mat-error>
+                                <mat-error
+                                    *ngIf="customerProfileForm.controls['aadharNumber'].hasError('required')">
+                                    Enter
+                                    the aadhar number</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="card__col-xs-12 card__col-sm-4">

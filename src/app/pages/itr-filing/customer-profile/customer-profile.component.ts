@@ -133,7 +133,7 @@ export class CustomerProfileComponent implements OnInit {
       contactNumber: ['', Validators.compose([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required])],
       email: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.emailRegex)])],
       panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex)])],
-      aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
+      aadharNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
       employerCategory: [''],
