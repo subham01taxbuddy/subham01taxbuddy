@@ -77,15 +77,15 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     //this.itrStatus = await this.utilsService.getStoredMasterStatusList();
     this.itrStatus = [
       {
-        'statusId' : [5, 7, 8],
+        'statusId' : 'WIP',
         'statusName' : 'WIP'//WIP - Preparing ITR, Waiting for confirmation, Confirmation received
       },
       {
-        'statusId' : 11,
+        'statusId' : 'ITR_FILED',
         'statusName' : 'ITR Filed'
       },
       {
-        'statusId' : [5,7,8,11],
+        'statusId' : 'ALL',
         'statusName' : 'All'//Preparing ITR, Waiting for confirmation, Confirmation received, ITR Filed 
       }
     ];
@@ -134,7 +134,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       } else {
         this.mobileNumber = '';
         console.log(this.selectedStatusId);
-        let statusIds = this.selectedStatusId ? `&statusIds=${this.selectedStatusId}` : '';
+        let statusIds = this.selectedStatusId ? `&status=${this.selectedStatusId}` : '';
         param = `/${filingTeamMemberId}/itr-list?page=${pageNo}&size=50&financialYear=${fy}&eFillingCompleted=true` + statusIds;// OTH_FILTER panNumber,assessmentYearmobileNumber
       }
       this.itrMsService.getMethod(param).subscribe((res: any) => {
