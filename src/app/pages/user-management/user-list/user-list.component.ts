@@ -18,7 +18,7 @@ import { MoreOptionsDialogComponent } from 'src/app/modules/tasks/components/mor
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent /*implements OnInit*/ {
 
   loading!: boolean;
   usersGridOptions: GridOptions;
@@ -67,9 +67,9 @@ export class UserListComponent implements OnInit {
     };
   }
 
-  ngOnInit() {
-    this.getUserData(0);
-  }
+  // ngOnInit() {
+    //this.getUserData(0);
+  // }
 
   clearValue() {
     this.searchVal = "";
