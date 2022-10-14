@@ -121,9 +121,9 @@
               [disabled]="taxable && taxable > 0" [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"> <i
                 class="fas fa-download"></i> Download XML</button> -->
         <!-- TODO -->
-        <button type="button" (click)="fileITR()"
-            class="btn grBut pull-right" [disabled]="true" [style.cursor]="true ? 'not-allowed':'pointer'"
-            style="background-color: red;" [disabled]="!isValidateJson"> File
+        <button type="button"  *ngIf="isValidItr" (click)="fileITR()" class="btn grBut pull-right"
+            [style.cursor]="!isValidateJson ? 'not-allowed':'pointer'" style="background-color: red;" [disabled]="!isValidateJson">
+            File
             ITR</button>
         <!-- <button *ngIf="isValidateJson" type="button" (click)="fileITR()"
             class="btn grBut pull-right" [disabled]="(taxable && taxable > 0) || isPreviousAvailable()"
@@ -2004,9 +2004,9 @@
     </div>
     <!-- </div> -->
     <div class="sub_btn lwBtDn" *ngIf="show">
-        <button type="button" (click)="fileITR()"
-            class="btn grBut pull-right" [disabled]="true" [style.cursor]="true ? 'not-allowed':'pointer'"
-            style="background-color: red;" [disabled]="!isValidateJson"> File
+        <button type="button" *ngIf="isValidItr" (click)="fileITR()" class="btn grBut pull-right"
+            [style.cursor]="!isValidateJson ? 'not-allowed':'pointer'" style="background-color: red;" [disabled]="!isValidateJson">
+            File
             ITR</button>
         <!-- <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
             Download XML
