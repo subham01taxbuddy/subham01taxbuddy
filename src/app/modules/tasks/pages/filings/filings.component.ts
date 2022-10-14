@@ -56,6 +56,13 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       floatingFilter: true
     };
     this.selectedFilingTeamMemberId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID
+
+    if(this.router.getCurrentNavigation().extras.state) {
+      this.mobileNumber = this.router.getCurrentNavigation().extras.state['mobileNumber'];
+      console.log(this.router.getCurrentNavigation().extras.state);
+      this.search();  
+    }
+    
   }
 
   ngOnInit() {
@@ -77,19 +84,21 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     //this.itrStatus = await this.utilsService.getStoredMasterStatusList();
     this.itrStatus = [
       {
-        'statusId' : [5, 7, 8],
+        'statusId' : 'WIP',
         'statusName' : 'WIP'//WIP - Preparing ITR, Waiting for confirmation, Confirmation received
       },
       {
-        'statusId' : 11,
+        'statusId' : 'ITR_FILED',
         'statusName' : 'ITR Filed'
       },
       {
-        'statusId' : [5,7,8,11],
+        'statusId' : 'ALL',
         'statusName' : 'All'//Preparing ITR, Waiting for confirmation, Confirmation received, ITR Filed 
       }
     ];
-    this.selectedStatusId = this.itrStatus[2].statusId;
+    if(!this.mobileNumber) {
+      this.selectedStatusId = this.itrStatus[2].statusId;
+    } 
   }
 
   getAgentList() {
@@ -106,6 +115,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   }
 
   fromSme(event) {
+    console.log('found it');
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     if (event === '') {
@@ -134,7 +144,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       } else {
         this.mobileNumber = '';
         console.log(this.selectedStatusId);
-        let statusIds = this.selectedStatusId ? `&statusIds=${this.selectedStatusId}` : '';
+        let statusIds = this.selectedStatusId ? `&status=${this.selectedStatusId}` : '';
         param = `/${filingTeamMemberId}/itr-list?page=${pageNo}&size=50&financialYear=${fy}&eFillingCompleted=true` + statusIds;// OTH_FILTER panNumber,assessmentYearmobileNumber
       }
       this.itrMsService.getMethod(param).subscribe((res: any) => {
@@ -158,11 +168,14 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     });
   }
   fromFy(event) {
+    console.log('fromFy');
     this.selectedFyYear = event;
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     console.log(event);
-    this.myItrsList(event, this.selectedPageNo, this.selectedFilingTeamMemberId);
+    if(!this.mobileNumber) {
+      this.myItrsList(event, this.selectedPageNo, this.selectedFilingTeamMemberId);
+    } 
   }
 
   createOnSalaryRowData(data) {
