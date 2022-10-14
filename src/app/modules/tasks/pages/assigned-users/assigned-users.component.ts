@@ -832,17 +832,23 @@ export class AssignedUsersComponent implements OnInit {
         //update status to WIP
         this.updateITRtoWIP(data, currentFyDetails[0].assessmentYear);
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result[0]));
-        this.router.navigate(['/pages/itr-filing/itr']);
+        this.router.navigate(['/pages/itr-filing/customer-profile']);
       } else {
         //multiple ITRs found, navigate to ITR tab with the results
         this.router.navigateByUrl('/tasks/filings', 
           {state: {'mobileNumber': data.mobileNumber}});
       }
       
-    }, (error:any) => {
+    }, async (error:any) => {
       console.log('Error:', error);
       if (error.status === 404) {
-        let ITR_JSON = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+        let profile = await this.getUserProfile(data.userId).catch(error => {
+          this.loading = false;
+          console.log(error);
+          this.utilsService.showSnackBar(error.error.detail);
+          return;
+        });
+        let ITR_JSON = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
         ITR_JSON.filingTeamMemberId = this.agentId;//filingTeamMemberId;
         const param = '/itr';
         this.itrMsService.postMethod(param, ITR_JSON).subscribe((result: any) => {
