@@ -592,7 +592,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     console.log('obj:', obj)
     workingItr = JSON.parse(JSON.stringify(obj))
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-    this.router.navigate(['/pages/itr-filing/itr']);
+    this.router.navigate(['/pages/itr-filing/customer-profile']);
     // if (data.statusId !== 11) {
     //   this.router.navigate(['/eri'], {
     //     state:
