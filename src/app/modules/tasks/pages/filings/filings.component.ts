@@ -56,6 +56,13 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       floatingFilter: true
     };
     this.selectedFilingTeamMemberId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID
+
+    if(this.router.getCurrentNavigation().extras.state) {
+      this.mobileNumber = this.router.getCurrentNavigation().extras.state['mobileNumber'];
+      console.log(this.router.getCurrentNavigation().extras.state);
+      this.search();  
+    }
+    
   }
 
   ngOnInit() {
@@ -89,7 +96,9 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         'statusName' : 'All'//Preparing ITR, Waiting for confirmation, Confirmation received, ITR Filed 
       }
     ];
-    this.selectedStatusId = this.itrStatus[2].statusId;
+    if(!this.mobileNumber) {
+      this.selectedStatusId = this.itrStatus[2].statusId;
+    } 
   }
 
   getAgentList() {
@@ -106,6 +115,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   }
 
   fromSme(event) {
+    console.log('found it');
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     if (event === '') {
@@ -158,11 +168,14 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     });
   }
   fromFy(event) {
+    console.log('fromFy');
     this.selectedFyYear = event;
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     console.log(event);
-    this.myItrsList(event, this.selectedPageNo, this.selectedFilingTeamMemberId);
+    if(!this.mobileNumber) {
+      this.myItrsList(event, this.selectedPageNo, this.selectedFilingTeamMemberId);
+    } 
   }
 
   createOnSalaryRowData(data) {

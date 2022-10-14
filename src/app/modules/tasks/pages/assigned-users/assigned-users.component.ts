@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 import { ReviseReturnDialogComponent } from './../../../../pages/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { ReAssignDialogComponent } from './../../components/re-assign-dialog/re-assign-dialog.component';
@@ -17,6 +18,8 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { MoreOptionsDialogComponent } from '../../components/more-options-dialog/more-options-dialog.component';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { param } from 'jquery';
 
 @Component({
   selector: 'app-assigned-users',
@@ -432,26 +435,37 @@ export class AssignedUsersComponent implements OnInit {
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
-          if (statusSequence >= 1 && statusSequence <= 7) { // From open till Document uploaded)
-            return `<button type="button" class="action_icon add_button" style="border: none;
-            background: transparent; font-size: 16px; cursor:not-allowed;color: blue">
-            <i class="fa fa-circle" title="No action taken yet" aria-hidden="true"></i>
+          if(params.data.serviceType === 'ITR') {
+            if (statusSequence >= 1 && statusSequence <= 7) { // From open till Document uploaded)
+              return `<button type="button" class="action_icon add_button" style="border: none;
+              background: transparent; font-size: 16px; cursor:pointer;color: blue">
+              <i class="fa fa-circle" title="No action taken yet" aria-hidden="true" data-action-type="startFiling"></i>
+              </button>`;
+            } else if (params.data.statusId === 14) { //backed out
+              return `<button type="button" class="action_icon add_button" style="border: none;
+              background: transparent; font-size: 16px; cursor:pointer;color: red">
+              <i class="fa fa-circle" title="User Backed out" aria-hidden="true" data-action-type="startFiling"></i>
+              </button>`;
+            } else if (params.data.statusId === 11) { // ITR filed
+              return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
+              background: transparent; font-size: 16px; cursor:pointer;color: green">
+              <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
             </button>`;
-          } else if (params.data.statusId === 14) { //backed out
-            return `<button type="button" class="action_icon add_button" style="border: none;
-            background: transparent; font-size: 16px; cursor:not-allowed;color: red">
-            <i class="fa fa-circle" title="User Backed out" aria-hidden="true"></i>
+            } else {
+              return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
+              background: transparent; font-size: 16px; cursor:pointer;color: orange">
+              <i class="fa fa-edit" aria-hidden="true" data-action-type="startFiling"></i>
             </button>`;
-          } else if (params.data.statusId === 11) { // ITR filed
-            return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
-            background: transparent; font-size: 16px; cursor:not-allowed;color: green">
-            <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
-           </button>`;
+            }
           } else {
-            return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;color: orange">
-            <i class="fa fa-edit" aria-hidden="true" data-action-type="startFiling"></i>
-           </button>`;
+            return 'NA';
+          }
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center', display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center'
           }
         },
       },
@@ -791,26 +805,87 @@ export class AssignedUsersComponent implements OnInit {
   }
 
   async startFiling(data) {
-    // var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0]
-    // console.log('data: ', workingItr);
-    // Object.entries(workingItr).forEach((key, value) => {
-    //   console.log(key, value)
-    //   if (key[1] === null) {
-    //     delete workingItr[key[0]];
-    //   }
-    // });
-    // const fyList = await this.utilsService.getStoredFyList();
-    // const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
-    // if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
-    //   this.utilsService.showSnackBar('There is no any active filing year available')
-    //   return;
-    // }
-    // let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear)
-    // Object.assign(obj, workingItr)
-    // console.log('obj:', obj)
-    // workingItr = JSON.parse(JSON.stringify(obj))
-    // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-    this.router.navigate(['/pages/itr-filing/itr'])
+    console.log(data);
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+    
+    //https://uat-api.taxbuddy.com/itr/itr-data?userId={userId}&assessmentYear={assessmentYear}&isRevised={isRevised}
+    let isRevised = false;
+    const param = `/itr?userId=${data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}&isRevised=${isRevised}`;
+    this.itrMsService.getMethod(param).subscribe(async (result: any) => {
+      console.log('My ITR by user Id and Assessment Years=', result);
+      if(result == null || result.length == 0) {
+        //no ITR found, create a new one
+        //update status to WIP
+        this.updateITRtoWIP(data, currentFyDetails[0].assessmentYear);
+        
+        this.loading = true;
+        let profile = await this.getUserProfile(data.userId).catch(error => {
+          this.loading = false;
+          console.log(error);
+          this.utilsService.showSnackBar(error.error.detail);
+          return;
+        });
+        this.loading = false;
+        this.utilsService.getITRByUserIdAndAssesmentYear(profile, '', this.agentId);
+      } else if(result.length == 1) {
+        //update status to WIP
+        this.updateITRtoWIP(data, currentFyDetails[0].assessmentYear);
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result[0]));
+        this.router.navigate(['/pages/itr-filing/itr']);
+      } else {
+        //multiple ITRs found, navigate to ITR tab with the results
+        this.router.navigateByUrl('/tasks/filings', 
+          {state: {'mobileNumber': data.mobileNumber}});
+      }
+      
+    }, (error:any) => {
+      console.log('Error:', error);
+      if (error.status === 404) {
+        let ITR_JSON = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+        ITR_JSON.filingTeamMemberId = this.agentId;//filingTeamMemberId;
+        const param = '/itr';
+        this.itrMsService.postMethod(param, ITR_JSON).subscribe((result: any) => {
+            console.log('My iTR Json successfully created-==', result);
+            this.loading = false;
+            ITR_JSON = result;
+            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(ITR_JSON));
+            this.router.navigate(['/pages/itr-filing/customer-profile'])
+        }, error => {
+            this.loading = false;
+        });
+    } else {
+        // Handle another error conditions like 500 etc.
+        this.loading = false;
+    }
+    });
+   
+  }
+
+  async getUserProfile(userId) {
+    const param = `/profile/${userId}`;
+    return await this.userMsService.getMethod(param).toPromise();
+  }
+
+  updateITRtoWIP(data, assessmentYear) {
+    if(data.statusId) {
+      const param = '/itr'
+      const request = {
+        'userId':data.userId,
+        'assessmentYear':assessmentYear,
+        'isRevised': 'N',
+        'status':'PREPARING_ITR'
+      };
+
+      this.loading = true;
+      this.itrMsService.patchMethod(param, request).subscribe(result => {
+        console.log('##########################', result['statusId']);
+        this.loading = false;
+      }, err => {
+        this.loading = false;
+        // this.utilsService.showSnackBar('Failed to update Filing status.')
+      });
+    }
   }
 
   openReviseReturnDialog(data) {
