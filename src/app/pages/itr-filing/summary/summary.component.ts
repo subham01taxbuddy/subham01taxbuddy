@@ -130,6 +130,8 @@ export class SummaryComponent implements OnInit {
     "label": "Any other ",
     "detailed": false
   }]
+  itrJsonForFileItr: any;
+  isValidItr: boolean;
 
   constructor(private itrMsService: ItrMsService,
     public utilsService: UtilsService, private router: Router, private http: HttpClient) {
@@ -142,6 +144,7 @@ export class SummaryComponent implements OnInit {
     if (self instanceof Array && self.length > 0) {
       this.selfObj = self[0];
     }
+    this.isValidItr = environment.isValidItr;
   }
 
   ngOnInit() {
@@ -474,72 +477,75 @@ export class SummaryComponent implements OnInit {
     });
   }
   fileITR() {
-    this.loading = true;
-    const validateParam = `/api/validateXML?itrId=${this.ITR_JSON.itrId}`;
-    this.itrMsService.getMethod(validateParam).subscribe((result: any) => {
-      console.log('Result: ', result);
-      this.loading = false;
-    }, error => {
-      console.log('ITR filled error===', error);
-      if (error['status'] === 200) {
-        const param = '/api/efillingItr?itrId=' + this.ITR_JSON.itrId
-        // const param = '/api/efillingItr?userId=' + this.ITR_JSON.userId + '&itrId=' + this.ITR_JSON.itrId + '&assessmentYear=' + this.ITR_JSON.assessmentYear; // + '&action=efile'
-        this.itrMsService.getMethod(param).subscribe((result: ITR_JSON) => {
-          console.log('ITR filled result===', result);
-          this.ITR_JSON = JSON.parse(JSON.stringify(result));
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-          /* console.log('XML Result', result)
-          let fileURL = URL.createObjectURL(result);
-          window.open(fileURL); */
+    let formCode = this.ITR_JSON.itrType;
+    let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
+    let filingTypeCD = this.ITR_JSON.isRevised === 'N' ? 'O' : 'R';
+    const param = `/eri/itr-json/submit?formCode=${formCode}&ay=${ay}&filingTypeCd=${filingTypeCD}&userId=${this.ITR_JSON.userId}&filingTeamMemberId=${this.ITR_JSON.filingTeamMemberId}`;
 
-          this.loading = false;
-          // Commented both routes as its currenly option is for download xml file
-          // this.router.navigate(['itr-result/success']);
-          // TODO
-          if (this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'SUCCESS') {
-            // this.router.navigate(['ack/success']);
-            // this.router.navigate(['/pages/itr-filing/acknowledgement?status=success'])
-            this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'success' } })
-          } else if (!this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'DELAY') {
-            // this.router.navigate(['ack/delay']);
-            this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'delay' } })
-          } else {
-            alert('Unexpected Error occurred')
-          }
-          // this.router.navigate(['/pages/itr-filing/acknowledgement'])
-        }, error => {
-          console.log('ITR filled error===', error);
-          this.loading = false;
-          this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'fail' } })
-
-          // TODO
-          /* if (error.error.status === 400 && error.error.detail === 'ERROR') {
-            this.router.navigate(['ack/failure']);
-          } else if (error.error.status === 403 && error.error.detail === 'PLAN_NOT_ACTIVATED') {
-            this.dialogForalert();
-          } */
-        });
+    let headerObj = {
+      'panNumber': this.ITR_JSON.panNumber,
+      'assessmentYear': this.ITR_JSON.assessmentYear,
+      'userId': this.ITR_JSON.userId.toString()
+    }
+    sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+    this.itrMsService.postMethod(param, this.itrJsonForFileItr).subscribe((res: any) => {
+      if (res.successFlag) {
+        this.utilsService.showSnackBar('ITR JSON submitted successfully.');
       } else {
-        this.utilsService.showSnackBar(error['error']['detail']);
-        this.loading = false;
+        if (res.errors instanceof Array && res.errors.length > 0) {
+          this.utilsService.showSnackBar(res.errors[0].errFld);
+        } else {
+          this.utilsService.showSnackBar('Failed to file ITR.');
+        }
       }
     });
+    // this.loading = true;
+    // const validateParam = `/api/validateXML?itrId=${this.ITR_JSON.itrId}`;
+    // this.itrMsService.getMethod(validateParam).subscribe((result: any) => {
+    //   console.log('Result: ', result);
+    //   this.loading = false;
+    // }, error => {
+    //   console.log('ITR filled error===', error);
+    //   if (error['status'] === 200) {
+    //     const param = '/api/efillingItr?itrId=' + this.ITR_JSON.itrId
+    //     this.itrMsService.getMethod(param).subscribe((result: ITR_JSON) => {
+    //       console.log('ITR filled result===', result);
+    //       this.ITR_JSON = JSON.parse(JSON.stringify(result));
+    //       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+    //       this.loading = false;
+    //       if (this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'SUCCESS') {
+    //         this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'success' } })
+    //       } else if (!this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'DELAY') {
+    //         this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'delay' } })
+    //       } else {
+    //         alert('Unexpected Error occurred')
+    //       }
+    //     }, error => {
+    //       console.log('ITR filled error===', error);
+    //       this.loading = false;
+    //       this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'fail' } })
+    //     });
+    //   } else {
+    //     this.utilsService.showSnackBar(error['error']['detail']);
+    //     this.loading = false;
+    //   }
+    // });
 
   }
 
   validateITR() {
     let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
     console.log(url);
-    this.http.get(url, {responseType: "json"}).subscribe((data) => {
+    this.http.get(url, { responseType: "json" }).subscribe((data: any) => {
       console.log(data);
-    
+      this.itrJsonForFileItr = data;
       // https://api.taxbuddy.com/itr/eri/validate-itr-json?formCode={formCode}&ay={ay}&filingTypeCd={filingTypeCd}
       this.loading = true;
       let formCode = this.ITR_JSON.itrType;
       let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
       let filingTypeCD = this.ITR_JSON.isRevised === 'N' ? 'O' : 'R';
       const param = `/eri/validate-itr-json?formCode=${formCode}&ay=${ay}&filingTypeCd=${filingTypeCD}`;
-      
+
       let headerObj = {
         'panNumber': this.ITR_JSON.panNumber,
         'assessmentYear': this.ITR_JSON.assessmentYear,
@@ -565,8 +571,8 @@ export class SummaryComponent implements OnInit {
             if (res.errors instanceof Array && res.errors.length > 0) {
               this.utilsService.showSnackBar(res.errors[0].desc);
             }
-            else if (res.data.messages instanceof Array && res.data.messages.length > 0) {
-              this.utilsService.showSnackBar(res.data.messages[0].desc);
+            else if (res.messages instanceof Array && res.messages.length > 0) {
+              this.utilsService.showSnackBar(res.messages[0].desc);
             }
           }
         }
