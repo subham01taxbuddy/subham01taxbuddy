@@ -168,6 +168,7 @@ export class SalaryComponent implements OnInit {
       }
     });
     if (this.ITR_JSON.regime === 'NEW') {
+      this.employerDetailsFormGroup.controls['professionalTax'].setValue(null)
       this.employerDetailsFormGroup.controls['professionalTax'].disable();
     }
     if ((this.ITR_JSON.employerCategory !== 'GOVERNMENT' && this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT') || this.ITR_JSON.regime === 'NEW') {
@@ -738,6 +739,10 @@ export class SalaryComponent implements OnInit {
           this.employerDetailsFormGroup.controls['entertainmentAllow'].setValue(this.localEmployer.deductions[i].exemptAmount);
         } else if (this.localEmployer.deductions[i].deductionType === 'PROFESSIONAL_TAX') {
           this.employerDetailsFormGroup.controls['professionalTax'].setValue(this.localEmployer.deductions[i].exemptAmount);
+          if (this.ITR_JSON.regime === 'NEW') {
+            this.employerDetailsFormGroup.controls['professionalTax'].setValue(null)
+            this.employerDetailsFormGroup.controls['professionalTax'].disable();
+          }
         }
       }
     }
