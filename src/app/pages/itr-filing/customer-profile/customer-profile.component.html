@@ -171,7 +171,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Residential status</mat-label>
                     <mat-select placeholder="Residential status" name="residentialStatus"
-                        (selectionChange)="onSelectRecidencial(customerProfileForm.controls['residentialStatus'].value)"
+                        (selectionChange)="onSelectResidential(customerProfileForm.controls['residentialStatus'].value)"
                         [formControl]="customerProfileForm.controls['residentialStatus']" required>
                         <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
                             {{ res.label }}

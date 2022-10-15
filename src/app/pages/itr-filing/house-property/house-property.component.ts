@@ -1,4 +1,3 @@
-import { CoOwnerComponent } from './co-owner/co-owner.component';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,6 +6,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON, HouseProperties } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { DeleteConfirmationDialogComponent } from '../components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 
 @Component({
   selector: 'app-house-property',
@@ -33,6 +33,9 @@ export class HousePropertyComponent implements OnInit {
     "label": "Deemed Let Out",
   }]
   stateDropdown = AppConstants.stateDropdown;
+  thirtyPctOfAnnualValue = 0;
+  annualValue = 0;
+
   constructor(private fb: FormBuilder,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
@@ -76,7 +79,7 @@ export class HousePropertyComponent implements OnInit {
   createHousePropertyForm(): FormGroup {
     return this.fb.group({
       propertyType: ['', Validators.required],
-      locality: [''],
+      address: [''],
       city: [''],
       state: [''],
       country: [''],
@@ -431,7 +434,7 @@ export class HousePropertyComponent implements OnInit {
   isSelfOccupied: boolean;
   serviceCall(ref, request) {
     // this.utilsService.openLoaderDialog();
-
+    this.loading = true
     const param = '/taxitr?type=houseProperties';
     this.itrMsService.postMethod(param, request).subscribe((result: ITR_JSON) => {
       this.ITR_JSON = result;
@@ -475,12 +478,13 @@ export class HousePropertyComponent implements OnInit {
       if (ref === 'DELETE') {
         this.utilsService.showSnackBar('House Property income deleted successfully.');
       }
-
+      this.loading = false;
     }, error => {
       this.utilsService.smoothScrollToTop();
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       // this.utilsService.disposable.unsubscribe();
       this.utilsService.showSnackBar('Failed to update Rental income.');
+      this.loading = false;
     });
   }
 
@@ -501,12 +505,25 @@ export class HousePropertyComponent implements OnInit {
   }
 
   deleteHpDetails(index) {
+
+    let disposable = this.matDialog.open(DeleteConfirmationDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      disableClose: true
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      console.info('Dialog Close result', result);
+      if (result) {
+        this.Copy_ITR_JSON.houseProperties.splice(index, 1);
+        this.serviceCall('DELETE', this.Copy_ITR_JSON);
+      }
+    })
+
     // this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON.houseProperties.splice(index, 1);
 
     // this.Copy_ITR_JSON.houseProperties = [];
     // this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
-    this.serviceCall('DELETE', this.Copy_ITR_JSON);
   }
   // serviceCall(request, ref) {
   //   this.loading = true;
@@ -535,83 +552,12 @@ export class HousePropertyComponent implements OnInit {
     }
     return this.utilsService.currencyFormatter(taxable);
   }
-  getItrDocuments() {
-    const param1 =
-      `/cloud/signed-s3-urls?currentPath=${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs`;
-    this.itrMsService.getMethod(param1).subscribe((result: any) => {
-      this.itrDocuments = result;
-      this.getHpDocsUrl(0);
-    })
-  }
 
-  deleteFile(fileName) {
-    let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
-    let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
-    var reqBody = [filePath];
-    console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
-      console.log('Doc delete responce: ', responce);
-      this.utilsService.showSnackBar(responce.response);
-      this.getItrDocuments();
-    },
-      error => {
-        console.log('Doc delete ERROR responce: ', error.responce);
-        this.utilsService.showSnackBar(error.response);
-      })
-  }
-
-  deletedFileInfo(cloudFileId) {
-    this.deletedFileData = [];
-    this.loading = true;
-    let param = '/cloud/log?cloudFileId=' + cloudFileId;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
-      this.loading = false;
-      this.deletedFileData = res;
-      console.log('Deleted file detail info: ', this.deletedFileData);
-    },
-      error => {
-        this.loading = false;
-      })
-  }
-
-  closeDialog() {
-    this.deletedFileData = [];
-  }
-
-
-  afterUploadDocs(fileUpload) {
-    if (fileUpload === 'File uploaded successfully') {
-      this.getItrDocuments();
+  calAnnualValue() {
+    if (this.housePropertyForm.controls['grossAnnualRentReceived'].valid && this.housePropertyForm.controls['propertyTax'].valid) {
+      this.annualValue = Number(this.housePropertyForm.controls['grossAnnualRentReceived'].value) - Number(this.housePropertyForm.controls['propertyTax'].value);
+      this.thirtyPctOfAnnualValue = this.annualValue * 0.3;
     }
   }
 
-  getAllHpDocs(documentTag) {
-    return this.itrDocuments.filter((item: any) => item.documentTag === documentTag)
-
-  }
-  zoom: number = 1.0;
-  incrementZoom(amount: number) {
-    this.zoom += amount;
-  }
-
-  hpDocDetails = {
-    docUrl: '',
-    docType: ''
-  };
-  getHpDocsUrl(index) {
-    const doc = this.itrDocuments.filter((item: any) => item.documentTag === 'LOAN_STATEMENT')
-    if (doc.length > 0) {
-      const docType = doc[index].fileName.split('.').pop();
-      if (doc[index].isPasswordProtected) {
-        this.hpDocDetails.docUrl = doc[index].passwordProtectedFileUrl;
-      } else {
-        this.hpDocDetails.docUrl = doc[index].signedUrl;
-      }
-      this.hpDocDetails.docType = docType;
-    } else {
-      this.hpDocDetails.docUrl = '';
-      this.hpDocDetails.docType = '';
-    }
-  }
 }

@@ -793,7 +793,7 @@ export class SalaryComponent implements OnInit {
   employerCallInConstructor() {
     this.employersGridOptions = <GridOptions>{
       rowData: this.employerCreateRowData(),
-      columnDefs: this.employercreateColumnDef(),
+      columnDefs: this.employerCreateColumnDef(),
       onGridReady: () => {
         this.employersGridOptions.api.sizeColumnsToFit();
       },
@@ -810,7 +810,7 @@ export class SalaryComponent implements OnInit {
     };
   }
 
-  employercreateColumnDef() {
+  employerCreateColumnDef() {
     return [
       {
         headerName: 'No',
@@ -824,6 +824,24 @@ export class SalaryComponent implements OnInit {
         field: 'employerName',
         suppressMovable: true,
         editable: false,
+      },
+      {
+        headerName: 'Gross Salary',
+        field: 'grossSalary',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Exemptions',
+        field: 'exemptions',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Total Deductions',
+        field: 'total',
+        editable: false,
+        suppressMovable: true,
       },
       {
         headerName: 'Taxable Income',

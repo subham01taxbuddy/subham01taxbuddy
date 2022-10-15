@@ -65,6 +65,8 @@ export interface ITR_JSON {
     regime: string;
     dividendIncomes?: any[];
     exemptIncomes?: any[];
+    jurisdictions?: Jurisdictions[],
+    conditionsResStatus?: any
 }
 export interface DirectorInCompany {
     companyName: string;
@@ -130,10 +132,7 @@ export interface Disabilities {
 }
 export interface HouseProperties {
     propertyType: string;
-    building: string;
-    flatNo: string;
-    street: string;
-    locality: string;
+    address: string;
     city: string;
     state: string;
     pinCode: string;
@@ -528,4 +527,8 @@ export interface SeventhProviso139 {
     depAmtAggAmtExcd1CrPrYrFlg: number;
     incrExpAggAmt2LkTrvFrgnCntryFlg: number;
     incrExpAggAmt1LkElctrctyPrYrFlg: number;
+}
+export interface Jurisdictions {
+    jurisdictionResidence: any;
+    Tin: any;
 }

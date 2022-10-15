@@ -30,7 +30,7 @@
                                             house.propertyType==="LOP"?"Let
                                             out":house.propertyType==="DLOP"?"Vacant":""}}</td>
                                         <td class="report-table__cell report-table__cell_day">
-                                            {{house.flatNo}}, {{house.building}},
+                                            {{house.address}},
                                             {{house.city}}
                                         </td>
                                         <td class="report-table__cell report-table__cell_day">
@@ -72,6 +72,8 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
+                </div>
+                <div class="card__row">
                     <span formArrayName="loans">
                         <span *ngFor="let coOwn of getLoansArray.controls;let i=index" [formGroupName]="i">
                             <div class="card__col-xs-12 card__col-sm-4">
@@ -104,19 +106,7 @@
                         </span>
                     </span>
                 </div>
-                <mat-radio-group name="isEligibleFor80EE" formControlName="isEligibleFor80EE"
-                    *ngIf="housePropertyForm.controls['loans'].controls[0].controls['interestAmount'].value >= 200000">
-                    <div class="customradiobtn bdr_btm">
-                        <mat-radio-button value="80EE" class="right-mrgn">Interest on loan taken for residential
-                            house
-                            property (80EE)</mat-radio-button>
-                    </div>
-                    <div class="customradiobtn">
-                        <mat-radio-button value="80EEA" class="right-mrgn">Deduction in respect of interest on
-                            loan
-                            taken for certain house property (80EEA)</mat-radio-button>&nbsp;&nbsp;
-                    </div>
-                </mat-radio-group>
+
                 <div class="card__row"
                     *ngIf="housePropertyForm.controls['propertyType'].value === 'LOP' || housePropertyForm.controls['propertyType'].value === 'DLOP'">
                     <div class="card__col-xs-12 card__col-sm-4">
@@ -134,7 +124,8 @@
                                 matTooltipClass="tab-tooltip"
                                 matTooltip="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of rent received during the year?':
                                         (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}"
-                                name="rentAmount" class="input-field" maxlength="11" digitsOnly required>
+                                name="rentAmount" class="input-field" maxlength="11" digitsOnly required
+                                (blur)="calAnnualValue()">
                             <mat-error
                                 *ngIf="housePropertyForm.controls['grossAnnualRentReceived'].hasError('pattern')">
                                 Enter
@@ -149,13 +140,50 @@
                             <mat-label>Amount of property tax paid during the year?</mat-label>
                             <input formControlName="propertyTax" matInput currencyMask
                                 placeholder="Amount of property tax paid during the year?" name="propertyTax"
-                                class="input-field" maxlength="11" digitsOnly>
+                                class="input-field" maxlength="11" digitsOnly (blur)="calAnnualValue()">
                             <mat-error *ngIf="housePropertyForm.controls['propertyTax'].hasError('pattern')">
                                 Enter
                                 positive amount without decimal.</mat-error>
                         </mat-form-field>
                     </div>
                 </div>
+                <div class="card__row"
+                    *ngIf="housePropertyForm.controls['propertyType'].value === 'LOP' || housePropertyForm.controls['propertyType'].value === 'DLOP'">
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label> Annual Value </mat-label>
+                            <input matInput placeholder="Annual Value" [(ngModel)]="annualValue"
+                                [ngModelOptions]="{standalone: true}" matTooltipClass="tab-tooltip"
+                                matTooltip="Gross rent received - Tax paid on local authorities" name="annualValue"
+                                class="input-field" maxlength="11" digitsOnly disabled>
+                            <mat-hint>Gross rent received - Tax paid on local authorities</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>30% of Annual value</mat-label>
+                            <input matInput placeholder="30% of Annual value" [(ngModel)]="thirtyPctOfAnnualValue"
+                                [ngModelOptions]="{standalone: true}" name="thirtyPctOfAV" class="input-field"
+                                maxlength="11" digitsOnly disabled>
+                            <mat-hint>30% of Annual value</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <br>
+                <mat-radio-group name="isEligibleFor80EE" formControlName="isEligibleFor80EE"
+                    *ngIf="housePropertyForm.controls['loans'].controls[0].controls['interestAmount'].value >= 200000">
+                    <div class="customradiobtn bdr_btm">
+                        <mat-radio-button value="80EE" class="right-mrgn">Interest on loan taken for residential
+                            house
+                            property (80EE)</mat-radio-button>
+                    </div>
+                    <br>
+                    <div class="customradiobtn">
+                        <mat-radio-button value="80EEA" class="right-mrgn">Deduction in respect of interest on
+                            loan
+                            taken for certain house property (80EEA)</mat-radio-button>&nbsp;&nbsp;
+                    </div>
+                </mat-radio-group>
                 <hr>
 
 
@@ -174,7 +202,7 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Address of Property</mat-label>
                             <input type="text" trim matInput placeholder="Address of Property" name="address"
-                                class="input-field" formControlName="locality">
+                                class="input-field" formControlName="address">
                         </mat-form-field>
                     </div>
                     <div class="card__col-xs-12 card__col-sm-4">
@@ -307,8 +335,6 @@
                             <th class="text-center">No</th>
                             <th class="text-center">Tenant name</th>
                             <th class="text-center">PAN</th>
-                            <th class="text-center">Aadhar</th>
-                            <th class="text-center">PAN/TAN (If TDS credited is claimed)</th>
                             <th class="action-th ">
                                 <button mat-icon-button color="warn" class="table-add-remove-button text-left"
                                     (click)="addMoreTenants()">
@@ -335,8 +361,7 @@
                                 <mat-form-field class="input-field-width">
                                     <input matInput class="input-field" name="ten[i]"
                                         matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
-                                        formControlName="panNumber" maxlength="10"
-                                        (keyup)="makePanUppercase(ten.get('panNumber')['controls'])" type="text" trim
+                                        formControlName="panNumber" maxlength="10" type="text" trim
                                         [class.invalid]="isduplicatePAN(i,'tenant')"
                                         [matTooltip]="isduplicatePAN(i,'tenant') ? 'Duplicate PAN':''"
                                         matTooltipPosition="above" matTooltipClass="error-tooltip">
@@ -347,21 +372,6 @@
                                     <!-- <mat-error *ngIf="tenantPanValidation()">qwerty</mat-error> -->
                                 </mat-form-field>
                             </td>
-                            <td>
-                                <!--  <mat-form-field class="input-field-width" style="width: 90% !important;">
-                                            <input matInput class="input-field" name="ten[i]"
-                                                formControlName="percentage" maxlength="2" type="number"
-                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                                onkeypress="event.charCode >= 48 && event.charCode <= 57"
-                                                (blur)="calPercentage()">
-                                            <mat-error
-                                                *ngIf="housePropertyForm.controls['coOwners'].controls[i].controls['percentage'].hasError('pattern')">
-                                                Enter positive number without decimal.</mat-error>
-                                        </mat-form-field> -->
-                            </td>
-                            <td></td>
-
-
                             <td style="white-space: nowrap;padding: 0%;border:none;justify-content: center;">
                                 <button mat-icon-button color="warn" class="table-add-remove-button text-left"
                                     (click)="removeTenant(i)">

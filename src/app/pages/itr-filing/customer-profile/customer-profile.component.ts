@@ -1,3 +1,4 @@
+import { NriDetailsDialogComponent } from './../components/nri-details-dialog/nri-details-dialog.component';
 import { UpdateManualFilingComponent } from './../update-manual-filing/update-manual-filing.component';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
@@ -126,7 +127,7 @@ export class CustomerProfileComponent implements OnInit {
     private itrMsService: ItrMsService,
     private userMsService: UserMsService,
     private router: Router,
-    private dialog: MatDialog,
+    private matDialog: MatDialog,
     public location: Location,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -530,7 +531,7 @@ export class CustomerProfileComponent implements OnInit {
       "filingSource": "MANUALLY"
     }
 
-    let disposable = this.dialog.open(UpdateManualFilingComponent, {
+    let disposable = this.matDialog.open(UpdateManualFilingComponent, {
       width: '50%',
       height: 'auto',
       data: manulFiling
@@ -599,14 +600,35 @@ export class CustomerProfileComponent implements OnInit {
     })
   }
 
-  onSelectRecidencial(status) {
+  onSelectResidential(status) {
     if (status === 'RESIDENT') {
       this.customerProfileForm.controls['contactNumber'].setValidators([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required]);
-    }
-    else if (status === 'NON_RESIDENT' || status === 'NON_ORDINARY') {
+    } else if (status === 'NON_RESIDENT' || status === 'NON_ORDINARY') {
       this.customerProfileForm.controls['contactNumber'].setValidators([Validators.pattern(AppConstants.numericRegex), Validators.maxLength(20), Validators.required]);
     }
     this.customerProfileForm.controls['contactNumber'].updateValueAndValidity();
+    if (status === 'NON_RESIDENT') {
+      let disposable = this.matDialog.open(NriDetailsDialogComponent, {
+        width: '50%',
+        height: 'auto',
+        disableClose: true,
+        // data: { residentialStatus: this.ITR_JSON.residentialStatus }
+      })
+
+      disposable.afterClosed().subscribe(result => {
+        console.info('Dialog Close result', result);
+        if (result.success) {
+          console.log('JUR:', result)
+          this.ITR_JSON.jurisdictions = result.data.jurisdictions
+          this.ITR_JSON.conditionsResStatus = result.data.conditionsResStatus
+        } else {
+          this.customerProfileForm.controls['residentialStatus'].setValue(this.ITR_JSON.residentialStatus)
+        }
+      })
+    } else {
+      this.ITR_JSON.jurisdictions = []
+      this.ITR_JSON.conditionsResStatus = null
+    }
   }
 
 
