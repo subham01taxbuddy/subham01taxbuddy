@@ -163,7 +163,7 @@ export class HousePropertyComponent implements OnInit {
   }
   getHpTaxableIncome() {
     let taxable = 0
-    for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
+    for (let i = 0; i < this.ITR_JSON.houseProperties?.length; i++) {
       taxable = taxable + this.ITR_JSON.houseProperties[i].taxableIncome;
     }
     return this.utilsService.currencyFormatter(taxable);
