@@ -26,7 +26,9 @@ export const MY_FORMATS = {
 export class SmeComponent implements OnInit {
   loading = false;
   knowlarityLoading = false;
-  filingDashboard: any
+  filingDashboard: any;
+  tpaDashboard: any;
+  noticeDashboard: any;
   knowlarityReport: any
   fromDate = new FormControl(new Date(), Validators.required);
   toDate = new FormControl(new Date(), Validators.required);
@@ -39,7 +41,13 @@ export class SmeComponent implements OnInit {
 
   ngOnInit() {
     this.selectedAgent = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID
+    this.getAllDashboardReports();
+  }
+
+  getAllDashboardReports() {
     this.getFilingDetails();
+    this.getTPAReportDetails();
+    this.getNoticeReportDetails();
     this.getKnowlarityReport();
   }
 
@@ -47,10 +55,40 @@ export class SmeComponent implements OnInit {
     this.loading = true;
     let fromDate = this.datePipe.transform(this.fromDate.value, 'yyyy-MM-dd');
     let toDate = this.datePipe.transform(this.toDate.value, 'yyyy-MM-dd');
-    const param = `/call-management/agent-filing-report?agentUserId=${this.selectedAgent}&from=${fromDate}&to=${toDate}`;
+    const param = `/call-management/agent-filing-report?agentUserId=${this.selectedAgent}&from=${fromDate}&to=${toDate}&serviceType=ITR`;
     this.userMsService.getMethod(param).subscribe(res => {
       console.log(res)
       this.filingDashboard = res;
+      this.loading = false;
+    }, () => {
+      this.loading = false;
+    })
+  }
+
+  getTPAReportDetails() {
+    this.loading = true;
+    let fromDate = this.datePipe.transform(this.fromDate.value, 'yyyy-MM-dd');
+    let toDate = this.datePipe.transform(this.toDate.value, 'yyyy-MM-dd');
+    ///call-management/agent-filing-report?agentUserId=5650&from=2022-04-01&to=2022-10-17&serviceType=TPA
+    const param = `/call-management/agent-filing-report?agentUserId=${this.selectedAgent}&from=${fromDate}&to=${toDate}&serviceType=TPA`;
+    this.userMsService.getMethod(param).subscribe(res => {
+      console.log(res);
+      this.tpaDashboard = res;
+      this.loading = false;
+    }, () => {
+      this.loading = false;
+    })
+  }
+
+  getNoticeReportDetails() {
+    this.loading = true;
+    let fromDate = this.datePipe.transform(this.fromDate.value, 'yyyy-MM-dd');
+    let toDate = this.datePipe.transform(this.toDate.value, 'yyyy-MM-dd');
+    ///call-management/agent-filing-report?agentUserId=5650&from=2022-04-01&to=2022-10-17&serviceType=NOTICE
+    const param = `/call-management/agent-filing-report?agentUserId=${this.selectedAgent}&from=${fromDate}&to=${toDate}&serviceType=NOTICE`;
+    this.userMsService.getMethod(param).subscribe(res => {
+      console.log(res);
+      this.noticeDashboard = res;
       this.loading = false;
     }, () => {
       this.loading = false;
