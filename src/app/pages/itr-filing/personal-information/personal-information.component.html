@@ -1,7 +1,7 @@
 <!-- <div class="row"> -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="content" style="width: 35%; padding-right: 20px;">
-    <app-document-upload (uploadDocument)="afterUploadDocs($event)"></app-document-upload>
+    <app-document-upload (uploadDocument)="afterUploadDocs($event)" [userId]="this.ITR_JSON.userId"></app-document-upload>
     <br>
     <div>
         <span *ngFor="let docs of documents; let i=index">
