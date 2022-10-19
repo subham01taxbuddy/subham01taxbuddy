@@ -624,6 +624,8 @@ export class PersonalInformationComponent implements OnInit {
     for (let i = 0; i < this.ITR_JSON.employers.length; i++) {
       this.ITR_JSON.employers[i].allowance = this.ITR_JSON.employers[i].allowance.filter(item => item.allowanceType !== 'HOUSE_RENT' && item.allowanceType !== 'LTA' && item.allowanceType !== 'CHILDREN_EDUCATION' && item.allowanceType !== 'HOSTEL_EXPENDITURE');
       // newRegimeEmployer.push(this.ITR_JSON.employers[i])
+
+      this.ITR_JSON.employers[i].deductions = this.ITR_JSON.employers[i].deductions.filter((item: any) => item.deductionType !== 'PROFESSIONAL_TAX');
     }
 
     // Removing 80U,80DD,80DDB

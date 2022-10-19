@@ -711,13 +711,13 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   setInvestmentsDeductionsValues() {
-    this.ITR_JSON.investments.forEach(investment => {
+    this.ITR_JSON.investments?.forEach(investment => {
       if (investment.investmentType === 'ELSS' || investment.investmentType === 'PENSION_FUND' || investment.investmentType === 'PS_EMPLOYEE' ||
         investment.investmentType === 'PS_EMPLOYER' || investment.investmentType === 'PENSION_SCHEME')
         this.investmentDeductionForm.controls[investment.investmentType].setValue(investment.amount);
     });
 
-    for (let i = 0; i < this.ITR_JSON.loans.length; i++) {
+    for (let i = 0; i < this.ITR_JSON.loans?.length; i++) {
       switch (this.ITR_JSON.loans[i].loanType) {
         case 'EDUCATION': {
           this.investmentDeductionForm.controls['us80e'].setValue(this.ITR_JSON.loans[i].interestPaidPerAnum);
@@ -725,7 +725,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       }
     }
 
-    for (let j = 0; j < this.ITR_JSON.expenses.length; j++) {
+    for (let j = 0; j < this.ITR_JSON.expenses?.length; j++) {
       switch (this.ITR_JSON.expenses[j].expenseType) {
         case 'HOUSE_RENT_PAID': {
           this.investmentDeductionForm.controls['us80gg'].setValue(this.ITR_JSON.expenses[j].amount);
@@ -738,7 +738,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       }
     }
 
-    for (let j = 0; j < this.ITR_JSON.donations.length; j++) {
+    for (let j = 0; j < this.ITR_JSON.donations?.length; j++) {
       switch (this.ITR_JSON.donations[j].donationType) {
         case 'POLITICAL': {
           this.investmentDeductionForm.controls['us80ggc'].setValue(this.ITR_JSON.donations[j].amountOtherThanCash);
@@ -746,7 +746,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         }
       }
     }
-    for (let i = 0; i < this.ITR_JSON.insurances.length; i++) {
+    for (let i = 0; i < this.ITR_JSON.insurances?.length; i++) {
       if (this.ITR_JSON.insurances[i].policyFor === 'DEPENDANT') {
         this.investmentDeductionForm.controls['selfPremium'].setValue(this.ITR_JSON.insurances[i].premium);
         this.investmentDeductionForm.controls['selfPreventiveCheckUp'].setValue(this.ITR_JSON.insurances[i].preventiveCheckUp);
@@ -997,8 +997,8 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
 
   createRowData(donationType) {
     const newData = [];
-    const donations = this.ITR_JSON.donations.filter((item: any) => item.donationType === donationType);
-    for (let i = 0; i < donations.length; i++) {
+    const donations = this.ITR_JSON.donations?.filter((item: any) => item.donationType === donationType);
+    for (let i = 0; i < donations?.length; i++) {
       newData.push({
         srNo: i + 1,
         identifier: donations[i].identifier,
