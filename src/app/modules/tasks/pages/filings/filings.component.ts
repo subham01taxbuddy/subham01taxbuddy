@@ -145,7 +145,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
         this.mobileNumber = '';
         console.log(this.selectedStatusId);
         let statusIds = this.selectedStatusId ? `&status=${this.selectedStatusId}` : '';
-        param = `/${filingTeamMemberId}/itr-list?page=${pageNo}&size=50&financialYear=${fy}&eFillingCompleted=true` + statusIds;// OTH_FILTER panNumber,assessmentYearmobileNumber
+        param = `/${filingTeamMemberId}/itr-list?page=${pageNo}&size=50&financialYear=${fy}&` + statusIds;// OTH_FILTER panNumber,assessmentYearmobileNumber
       }
       this.itrMsService.getMethod(param).subscribe((res: any) => {
         console.log('filingTeamMemberId: ', res);
