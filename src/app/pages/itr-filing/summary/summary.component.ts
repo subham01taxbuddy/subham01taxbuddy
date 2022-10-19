@@ -557,10 +557,8 @@ export class SummaryComponent implements OnInit {
         this.loading = false;
         console.log('validate ITR response =>', res);
         if (this.utilsService.isNonEmpty(res)) {
-          if (res && res.success) {
-            let data = JSON.parse(res.data);
-            console.log(data);
-            if (data.messages && data.messages.length > 0) {
+          if (res && res.successFlag) {
+            if (data.messages instanceof Array && data.messages.length > 0) {
               this.utilsService.showSnackBar(data.messages[0].desc);
             } else {
               this.isValidateJson = true;
