@@ -603,6 +603,10 @@ export class SalaryComponent implements OnInit {
     // this.employerCallInConstructor();
 
     this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+      if (!this.utilsService.isNonEmpty(result)) {
+        this.utilsService.showSnackBar('Failed to save salary detail, Please try again');
+        return
+      }
       this.ITR_JSON = result;
       this.currentIndex = this.ITR_JSON.employers.findIndex((item: any) => item.id === this.localEmployer.id);
       this.localEmployer = JSON.parse(JSON.stringify(this.ITR_JSON.employers[this.currentIndex]));
