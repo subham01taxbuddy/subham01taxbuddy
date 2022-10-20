@@ -735,8 +735,8 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   previousRoute() {
-    this.router.navigate(['/tasks/filings']);
-    // this.router.navigate(['/pages/itr-filing/customer-profile']);
+    // this.router.navigate(['/tasks/filings']);
+    this.router.navigate(['/pages/itr-filing/customer-profile']);
   }
 
   afterUploadDocs(fileUpload) {
