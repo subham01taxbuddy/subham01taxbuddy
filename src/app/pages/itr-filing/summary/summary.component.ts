@@ -6,6 +6,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { AckSuccessComponent } from '../acknowledgement/ack-success/ack-success.component';
 
 @Component({
   selector: 'app-summary',
@@ -134,7 +136,9 @@ export class SummaryComponent implements OnInit {
   isValidItr: boolean;
 
   constructor(private itrMsService: ItrMsService,
-    public utilsService: UtilsService, private router: Router, private http: HttpClient) {
+    public utilsService: UtilsService, private router: Router, private http: HttpClient,
+    private dialog: MatDialog,
+  ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     const bank = this.ITR_JSON.bankDetails.filter((item: any) => item.hasRefund === true);
     if (bank instanceof Array && bank.length > 0) {
@@ -490,7 +494,12 @@ export class SummaryComponent implements OnInit {
     sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
     this.itrMsService.postMethod(param, this.itrJsonForFileItr).subscribe((res: any) => {
       if (res.successFlag) {
-        this.utilsService.showSnackBar('ITR JSON submitted successfully.');
+        let disposable = this.dialog.open(AckSuccessComponent, {
+          height: '80%',
+          data: {
+            acknowledgementNo: res.arnNumber
+          }
+        });
       } else {
         if (res.errors instanceof Array && res.errors.length > 0) {
           this.utilsService.showSnackBar(res.errors[0].errFld);
@@ -499,38 +508,6 @@ export class SummaryComponent implements OnInit {
         }
       }
     });
-    // this.loading = true;
-    // const validateParam = `/api/validateXML?itrId=${this.ITR_JSON.itrId}`;
-    // this.itrMsService.getMethod(validateParam).subscribe((result: any) => {
-    //   console.log('Result: ', result);
-    //   this.loading = false;
-    // }, error => {
-    //   console.log('ITR filled error===', error);
-    //   if (error['status'] === 200) {
-    //     const param = '/api/efillingItr?itrId=' + this.ITR_JSON.itrId
-    //     this.itrMsService.getMethod(param).subscribe((result: ITR_JSON) => {
-    //       console.log('ITR filled result===', result);
-    //       this.ITR_JSON = JSON.parse(JSON.stringify(result));
-    //       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-    //       this.loading = false;
-    //       if (this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'SUCCESS') {
-    //         this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'success' } })
-    //       } else if (!this.ITR_JSON.eFillingCompleted && this.ITR_JSON.ackStatus === 'DELAY') {
-    //         this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'delay' } })
-    //       } else {
-    //         alert('Unexpected Error occurred')
-    //       }
-    //     }, error => {
-    //       console.log('ITR filled error===', error);
-    //       this.loading = false;
-    //       this.router.navigate(['/pages/itr-filing/acknowledgement'], { queryParams: { status: 'fail' } })
-    //     });
-    //   } else {
-    //     this.utilsService.showSnackBar(error['error']['detail']);
-    //     this.loading = false;
-    //   }
-    // });
-
   }
 
   validateITR() {
