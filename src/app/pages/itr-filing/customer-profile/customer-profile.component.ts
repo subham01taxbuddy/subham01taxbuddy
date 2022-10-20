@@ -262,6 +262,12 @@ export class CustomerProfileComponent implements OnInit {
       //   this.ITR_JSON.planIdSelectedByTaxExpert = null
       // }
 
+      if (this.ITR_JSON.itrType === '1') {
+        this.ITR_JSON.business.presumptiveIncomes = [];
+        this.ITR_JSON.systemFlags.hasBusinessProfessionIncome = false;
+        this.ITR_JSON.business.financialParticulars = null;
+      }
+
       this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
         this.ITR_JSON = result;
         this.updateStatus(); // Update staus automatically

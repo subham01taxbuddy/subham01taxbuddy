@@ -40,7 +40,7 @@ export class SummaryComponent implements OnInit {
   exemptIncomesDropdown = [{
     id: null,
     seqNum: 1,
-    value: "AGIR",
+    value: "AGRI",
     label: "Agriculture Income (less than or equal to RS. 5000)",
     detailed: false
   }, {
