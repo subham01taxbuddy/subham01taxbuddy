@@ -892,6 +892,29 @@ export class AssignedUsersComponent implements OnInit {
         // this.utilsService.showSnackBar('Failed to update Filing status.')
       });
     }
+
+    //also update user status
+    let param = '/itr-status';
+    let sType = data.serviceType;
+    if (data.serviceType === '-' || data.serviceType === null || data.serviceType === undefined) {
+      sType = 'ITR';
+    }
+    let param2 = {
+      "statusId": 5,//preparing ITR
+      "userId": data.userId,
+      "assessmentYear": assessmentYear,
+      "completed": false,
+      "serviceType": sType
+    }
+    console.log("param2: ", param2);
+    this.userMsService.postMethod(param, param2).subscribe(res => {
+      console.log("Status update response: ", res)
+      this.loading = false;
+      //this._toastMessageService.alert("success", "Status update successfully.");
+    }, error => {
+      this.loading = false;
+      //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
+    });
   }
 
   openReviseReturnDialog(data) {
