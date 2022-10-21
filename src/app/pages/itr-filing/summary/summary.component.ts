@@ -516,6 +516,13 @@ export class SummaryComponent implements OnInit {
       }
     });
   }
+
+  confirmSubmitITR() {
+    if(confirm('Are you sure you want to file the ITR?')) {
+      this.fileITR();
+    }
+  }
+
   fileITR() {
     let formCode = this.ITR_JSON.itrType;
     let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
@@ -597,9 +604,14 @@ export class SummaryComponent implements OnInit {
         this.utilsService.showSnackBar('Something went wrong, try after some time.');
       });
     }, error => {
+      console.log(error.error.message);
       this.loading = false;
       this.isValidateJson = false;
-      this.utilsService.showSnackBar('Something went wrong, try after some time.');
+      if(error.error.message){
+        this.utilsService.showSnackBar(error.error.message);
+      } else {
+        this.utilsService.showSnackBar('Something went wrong, try after some time.');
+      }
     });
   }
 

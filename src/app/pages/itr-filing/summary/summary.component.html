@@ -121,11 +121,11 @@
               [disabled]="taxable && taxable > 0" [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"> <i
                 class="fas fa-download"></i> Download XML</button> -->
         <!-- TODO -->
-        <button type="button"  *ngIf="isValidItr" (click)="fileITR()" class="btn grBut pull-right"
+        <button type="button"  *ngIf="isValidItr" (click)="confirmSubmitITR()" class="btn grBut pull-right"
             [style.cursor]="!isValidateJson ? 'not-allowed':'pointer'" style="background-color: red;" [disabled]="!isValidateJson">
             File
             ITR</button>
-        <!-- <button *ngIf="isValidateJson" type="button" (click)="fileITR()"
+        <!-- <button *ngIf="isValidateJson" type="button" (click)="confirmSubmitITR()"
             class="btn grBut pull-right" [disabled]="(taxable && taxable > 0) || isPreviousAvailable()"
             [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"
             style="background-color: red;"> File
@@ -283,7 +283,7 @@
                                                 <tr>
                                                     <th>Particulars</th>
                                                     <th
-                                                        *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
+                                                        *ngFor="let hp of losses?.summaryIncome?.summaryHpIncome?.houseProperties; let i=index">
                                                         {{hp.propertyType}}</th>
                                                 </tr>
                                                 <!-- <tr>
@@ -302,7 +302,7 @@
                                                 <tr>
                                                     <td>1. Gross Rent Received</td>
                                                     <td
-                                                        *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
+                                                        *ngFor="let hp of losses?.summaryIncome?.summaryHpIncome?.houseProperties; let i=index">
                                                         Rs
                                                         {{utilsService.currencyFormatter(hp.grossAnnualRentReceived)}}
                                                     </td>
@@ -310,31 +310,31 @@
                                                 <tr>
                                                     <td>2. Taxes Paid</td>
                                                     <td
-                                                        *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
+                                                        *ngFor="let hp of losses?.summaryIncome?.summaryHpIncome?.houseProperties; let i=index">
                                                         Rs {{utilsService.currencyFormatter(hp.propertyTax)}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>3. Annual Value (1-2)</td>
                                                     <td
-                                                        *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
+                                                        *ngFor="let hp of losses?.summaryIncome?.summaryHpIncome?.houseProperties; let i=index">
                                                         Rs {{utilsService.currencyFormatter(hp.annualValue)}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>4. Standard Deduction @30%</td>
                                                     <td
-                                                        *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
+                                                        *ngFor="let hp of losses?.summaryIncome?.summaryHpIncome?.houseProperties; let i=index">
                                                         Rs {{utilsService.currencyFormatter(hp.exemptIncome)}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>5. Interest On Home Loan</td>
                                                     <td
-                                                        *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
+                                                        *ngFor="let hp of losses?.summaryIncome?.summaryHpIncome?.houseProperties; let i=index">
                                                         Rs {{getHomeLoan(hp.loans)}}</td>
                                                 </tr>
                                                 <tr>
                                                     <th>6. Net Income (3-4-5)</th>
                                                     <td
-                                                        *ngFor="let hp of losses.summaryIncome.summaryHpIncome.houseProperties; let i=index">
+                                                        *ngFor="let hp of losses?.summaryIncome?.summaryHpIncome?.houseProperties; let i=index">
                                                         Rs {{utilsService.currencyFormatter(hp.taxableIncome)}}</td>
                                                 </tr>
 
@@ -466,7 +466,7 @@
                                                     <th>Taxable Income</th>
                                                 </tr>
 
-                                                <tr *ngFor="let business of ITR_JSON.business.presumptiveIncomes">
+                                                <tr *ngFor="let business of ITR_JSON.business?.presumptiveIncomes">
                                                     <td>
                                                         {{(business.businessType === 'TRANSPORT') ? 'Section 44AE' :
                                                         (business.businessType === 'BUSINESS' ? 'Section 44AD' :
@@ -1299,7 +1299,7 @@
                                                     <td><b>Losses Set Off During The Year</b></td>
                                                     <td><b>Carried Forward To Next Year</b></td>
                                                 </tr>
-                                                <tr *ngFor="let losses of losses.carryForwordLosses;let i =index">
+                                                <tr *ngFor="let losses of losses?.carryForwordLosses;let i =index">
                                                     <td>{{losses.assessmentPastYear}}</td>
                                                     <td>{{utilsService.currencyFormatter(losses.housePropertyLoss)}}
                                                     </td>
@@ -1656,10 +1656,10 @@
                                             </div>
                                         </mat-expansion-panel-header>
                                         <div class="bxHed"
-                                            *ngIf="ITR_JSON.taxPaid.onSalary && ITR_JSON.taxPaid.onSalary.length > 0">
+                                            *ngIf="ITR_JSON?.taxPaid?.onSalary && ITR_JSON?.taxPaid?.onSalary?.length > 0">
                                             TDS (On Salary)</div>
                                         <table class="table table-bordered table-striped table-hover"
-                                            *ngIf="ITR_JSON.taxPaid.onSalary && ITR_JSON.taxPaid.onSalary.length > 0">
+                                            *ngIf="ITR_JSON?.taxPaid?.onSalary && ITR_JSON?.taxPaid?.onSalary?.length > 0">
                                             <thead>
                                                 <tr>
                                                     <th style="font-weight:bold; width:20%;">Name Of Deductor</th>
@@ -1670,7 +1670,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr *ngFor="let onSalary of ITR_JSON.taxPaid.onSalary">
+                                                <tr *ngFor="let onSalary of ITR_JSON?.taxPaid?.onSalary">
                                                     <td>{{onSalary.deductorName}}</td>
                                                     <td>{{onSalary.deductorTAN}}</td>
                                                     <td>Rs.
@@ -1698,11 +1698,11 @@
                                         </table>
 
                                         <div class="bxHed"
-                                            *ngIf="ITR_JSON.taxPaid.otherThanSalary16A && ITR_JSON.taxPaid.otherThanSalary16A.length > 0">
+                                            *ngIf="ITR_JSON?.taxPaid?.otherThanSalary16A && ITR_JSON?.taxPaid?.otherThanSalary16A?.length > 0">
                                             TDS (Other
                                             Than Salary)</div>
                                         <table class="table table-bordered table-striped table-hover"
-                                            *ngIf="ITR_JSON.taxPaid.otherThanSalary16A && ITR_JSON.taxPaid.otherThanSalary16A.length > 0">
+                                            *ngIf="ITR_JSON?.taxPaid?.otherThanSalary16A && ITR_JSON?.taxPaid?.otherThanSalary16A?.length > 0">
                                             <thead>
                                                 <tr>
                                                     <th style="font-weight:bold; width:20%;">Name Of Deductor</th>
@@ -1714,7 +1714,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr
-                                                    *ngFor="let otherThanSalary16A of ITR_JSON.taxPaid.otherThanSalary16A">
+                                                    *ngFor="let otherThanSalary16A of ITR_JSON?.taxPaid?.otherThanSalary16A">
                                                     <td>{{otherThanSalary16A.deductorName}}</td>
                                                     <td>{{otherThanSalary16A.deductorTAN}}</td>
                                                     <td>Rs.
@@ -1736,11 +1736,11 @@
                                         </table>
 
                                         <div class="bxHed"
-                                            *ngIf="ITR_JSON.taxPaid.otherThanSalary26QB && ITR_JSON.taxPaid.otherThanSalary26QB.length > 0">
+                                            *ngIf="ITR_JSON?.taxPaid?.otherThanSalary26QB && ITR_JSON?.taxPaid?.otherThanSalary26QB?.length > 0">
                                             TDS (Other
                                             Than Salary 26QB)</div>
                                         <table class="table table-bordered table-striped table-hover"
-                                            *ngIf="ITR_JSON.taxPaid.otherThanSalary26QB && ITR_JSON.taxPaid.otherThanSalary26QB.length > 0">
+                                            *ngIf="ITR_JSON?.taxPaid?.otherThanSalary26QB && ITR_JSON?.taxPaid?.otherThanSalary26QB?.length > 0">
                                             <thead>
                                                 <tr>
                                                     <th style="font-weight:bold; width:20%;">Name Of Deductor</th>
@@ -1752,7 +1752,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr
-                                                    *ngFor="let otherThanSalary26QB of ITR_JSON.taxPaid.otherThanSalary26QB">
+                                                    *ngFor="let otherThanSalary26QB of ITR_JSON?.taxPaid?.otherThanSalary26QB">
                                                     <td>{{otherThanSalary26QB.deductorName}}</td>
                                                     <td>{{otherThanSalary26QB.deductorPAN}}</td>
                                                     <td>Rs.
@@ -1774,9 +1774,9 @@
                                         </table>
 
                                         <div class="bxHed"
-                                            *ngIf="ITR_JSON.taxPaid.tcs && ITR_JSON.taxPaid.tcs.length > 0">TCS</div>
+                                            *ngIf="ITR_JSON?.taxPaid?.tcs && ITR_JSON?.taxPaid?.tcs?.length > 0">TCS</div>
                                         <table class="table table-bordered table-striped table-hover"
-                                            *ngIf="ITR_JSON.taxPaid.tcs && ITR_JSON.taxPaid.tcs.length > 0">
+                                            *ngIf="ITR_JSON?.taxPaid?.tcs && ITR_JSON?.taxPaid?.tcs?.length > 0">
                                             <thead>
                                                 <tr>
                                                     <th style="font-weight:bold; width:20%;">Name Of Collector</th>
@@ -1787,7 +1787,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr *ngFor="let tcs of ITR_JSON.taxPaid.tcs">
+                                                <tr *ngFor="let tcs of ITR_JSON?.taxPaid?.tcs">
                                                     <td>{{tcs.collectorName}}</td>
                                                     <td>{{tcs.collectorTAN}}</td>
                                                     <td>Rs. {{utilsService.currencyFormatter(tcs.totalAmountPaid)}}</td>
@@ -1844,11 +1844,11 @@
                       </table> -->
 
                                         <div class="bxHed"
-                                            *ngIf="ITR_JSON.taxPaid.otherThanTDSTCS && ITR_JSON.taxPaid.otherThanTDSTCS.length > 0">
+                                            *ngIf="ITR_JSON?.taxPaid?.otherThanTDSTCS && ITR_JSON?.taxPaid?.otherThanTDSTCS?.length > 0">
                                             Advance / Self
                                             Assessment Tax Paid</div>
                                         <table class="table table-bordered table-striped table-hover"
-                                            *ngIf="ITR_JSON.taxPaid.otherThanTDSTCS && ITR_JSON.taxPaid.otherThanTDSTCS.length > 0">
+                                            *ngIf="ITR_JSON?.taxPaid?.otherThanTDSTCS && ITR_JSON?.taxPaid?.otherThanTDSTCS?.length > 0">
                                             <thead>
                                                 <tr>
                                                     <th style="font-weight:bold; width:20%;">BRS Code</th>
@@ -1858,7 +1858,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr *ngFor="let advance of ITR_JSON.taxPaid.otherThanTDSTCS">
+                                                <tr *ngFor="let advance of ITR_JSON?.taxPaid?.otherThanTDSTCS">
                                                     <td>{{advance.bsrCode}}</td>
                                                     <td>{{advance.dateOfDeposit | date : 'dd MMM yyyy'}}</td>
                                                     <td>{{advance.challanNumber}}</td>
@@ -1907,7 +1907,7 @@
 
                                     <!-- *********************** Exempt Income ************************ -->
                                     <mat-expansion-panel class="color-panel accordion-border"
-                                        [disabled]="[ITR_JSON.exemptIncomes.length > 0 ? false : true]" #exemptIncome>
+                                        [disabled]="[ITR_JSON?.exemptIncomes?.length > 0 ? false : true]" #exemptIncome>
                                         <mat-expansion-panel-header class="newclass">
                                             <div class="font80" style="width: 100%;" cellpadding="0" cellspacing="0">
                                                 <div class="nav nav-stacked">
@@ -2004,7 +2004,7 @@
     </div>
     <!-- </div> -->
     <div class="sub_btn lwBtDn" *ngIf="show">
-        <button type="button" *ngIf="isValidItr" (click)="fileITR()" class="btn grBut pull-right"
+        <button type="button" *ngIf="isValidItr" (click)="confirmSubmitITR()" class="btn grBut pull-right"
             [style.cursor]="!isValidateJson ? 'not-allowed':'pointer'" style="background-color: red;" [disabled]="!isValidateJson">
             File
             ITR</button>
