@@ -4,7 +4,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { TitleCasePipe } from '@angular/common';
+import { TitleCasePipe, Location } from '@angular/common';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
@@ -332,7 +332,7 @@ export class PersonalInformationComponent implements OnInit {
     { value: 'FEMALE', label: 'Female' },
   ]
 
-  constructor(public fb: FormBuilder,
+  constructor(private location: Location, public fb: FormBuilder,
     public utilsService: UtilsService,
     public httpClient: HttpClient,
     private titlecasePipe: TitleCasePipe,
@@ -736,7 +736,8 @@ export class PersonalInformationComponent implements OnInit {
 
   previousRoute() {
     // this.router.navigate(['/tasks/filings']);
-    this.router.navigate(['/pages/itr-filing/customer-profile']);
+    // this.router.navigate(['/pages/itr-filing/customer-profile']);
+    this.location.back();
   }
 
   afterUploadDocs(fileUpload) {
