@@ -41,7 +41,7 @@
     </div>
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box bg-info" routerLink="/tasks/assigned-users" *ngIf="!loading">
+        <div class="small-box bg-info" routerLink="/tasks/assigned-users" *ngIf="!loadingFiling">
           <div class="inner">
             <h3> {{filingDashboard?.totalAssignedMyUsers| currencyPipe}} </h3>
             <p>Assigned Users</p>
@@ -55,12 +55,12 @@
               currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingFiling">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box" style=" background-color: #28a745" routerLink="/tasks/filings" *ngIf="!loading">
+        <div class="small-box" style=" background-color: #28a745" routerLink="/tasks/filings" *ngIf="!loadingFiling">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsTotalFiling| currencyPipe}}
@@ -75,12 +75,12 @@
             <span class="badge badge-light badgesClass">{{filingDashboard?.totalFilings| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingFiling">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box bg-warning" routerLink="/pages/subscription/invoices" *ngIf="!loading">
+        <div class="small-box bg-warning" routerLink="/pages/subscription/invoices" *ngIf="!loadingFiling">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsPaidAmount| currencyPipe}}
@@ -95,13 +95,13 @@
             <span class="badge badge-light badgesClass">{{filingDashboard?.totalPaidAmount| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingFiling">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style=" background-color: #dc3545" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingFiling">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsUnpaidAmount| currencyPipe}}
@@ -116,13 +116,13 @@
             <span class="badge badge-light badgesClass">{{filingDashboard?.totalUnpaidAmount| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingFiling">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style=" background-color: #22374e" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingFiling">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsTotalInvoiceAmount | currencyPipe}}
@@ -138,13 +138,13 @@
               currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingFiling">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style=" background-color: #ee7f1a" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingFiling">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsTotalInvoices| currencyPipe}}
@@ -159,13 +159,13 @@
             <span class="badge badge-light badgesClass">{{filingDashboard?.totalInvoices| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingFiling">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style="background-color: #b0cb1f !important;" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingFiling">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsPaidCount| currencyPipe}}
@@ -180,13 +180,13 @@
             <span class="badge badge-light badgesClass">{{filingDashboard?.totalPaidCount| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingFiling">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style=" background-color: #dc3545" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingFiling">
           <div class="inner">
             <h3>
               {{filingDashboard?.agentsUnpaidCount| currencyPipe}}
@@ -201,7 +201,7 @@
             <span class="badge badge-light badgesClass">{{filingDashboard?.totalUnpaidCount| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingFiling">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
@@ -212,7 +212,7 @@
     </div>
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box bg-info" routerLink="/tasks/assigned-users" *ngIf="!loading">
+        <div class="small-box bg-info" routerLink="/tasks/assigned-users" *ngIf="!loadingTPA">
           <div class="inner">
             <h3> {{tpaDashboard?.totalAssignedMyUsers| currencyPipe}} </h3>
             <p>Assigned Users</p>
@@ -226,13 +226,13 @@
               currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingTPA">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style=" background-color: #22374e" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingTPA">
           <div class="inner">
             <h3>
               {{tpaDashboard?.agentsTotalInvoiceAmount | currencyPipe}}
@@ -248,12 +248,12 @@
               currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingTPA">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box bg-warning" routerLink="/pages/subscription/invoices" *ngIf="!loading">
+        <div class="small-box bg-warning" routerLink="/pages/subscription/invoices" *ngIf="!loadingTPA">
           <div class="inner">
             <h3>
               {{tpaDashboard?.agentsPaidAmount| currencyPipe}}
@@ -268,13 +268,13 @@
             <span class="badge badge-light badgesClass">{{tpaDashboard?.totalPaidAmount| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingTPA">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style=" background-color: #dc3545" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingTPA">
           <div class="inner">
             <h3>
               {{tpaDashboard?.agentsUnpaidAmount| currencyPipe}}
@@ -289,12 +289,12 @@
             <span class="badge badge-light badgesClass">{{tpaDashboard?.totalUnpaidAmount| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingTPA">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box" style=" background-color: #28a745" routerLink="/tasks/filings" *ngIf="!loading">
+        <div class="small-box" style=" background-color: #28a745" routerLink="/tasks/filings" *ngIf="!loadingTPA">
           <div class="inner">
             <h3>
               {{tpaDashboard?.agentsTotalFiling| currencyPipe}}
@@ -309,13 +309,13 @@
             <span class="badge badge-light badgesClass">{{tpaDashboard?.totalFilings| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingTPA">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style=" background-color: #ee7f1a" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingTPA">
           <div class="inner">
             <h3>
               {{tpaDashboard?.agentsTotalInvoices| currencyPipe}}
@@ -330,13 +330,13 @@
             <span class="badge badge-light badgesClass">{{tpaDashboard?.totalInvoices| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingTPA">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style="background-color: #b0cb1f !important;" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingTPA">
           <div class="inner">
             <h3>
               {{tpaDashboard?.agentsPaidCount| currencyPipe}}
@@ -351,13 +351,13 @@
             <span class="badge badge-light badgesClass">{{tpaDashboard?.totalPaidCount| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingTPA">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style=" background-color: #dc3545" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingTPA">
           <div class="inner">
             <h3>
               {{tpaDashboard?.agentsUnpaidCount| currencyPipe}}
@@ -372,7 +372,7 @@
             <span class="badge badge-light badgesClass">{{tpaDashboard?.totalUnpaidCount| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingTPA">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
@@ -383,7 +383,7 @@
     </div>
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box bg-info" routerLink="/tasks/assigned-users" *ngIf="!loading">
+        <div class="small-box bg-info" routerLink="/tasks/assigned-users" *ngIf="!loadingNotice">
           <div class="inner">
             <h3> {{noticeDashboard?.totalAssignedMyUsers| currencyPipe}} </h3>
             <p>Assigned Users</p>
@@ -397,13 +397,13 @@
               currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingNotice">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style=" background-color: #22374e" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingNotice">
           <div class="inner">
             <h3>
               {{noticeDashboard?.agentsTotalInvoiceAmount | currencyPipe}}
@@ -419,12 +419,12 @@
               currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingNotice">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box bg-warning" routerLink="/pages/subscription/invoices" *ngIf="!loading">
+        <div class="small-box bg-warning" routerLink="/pages/subscription/invoices" *ngIf="!loadingNotice">
           <div class="inner">
             <h3>
               {{noticeDashboard?.agentsPaidAmount| currencyPipe}}
@@ -439,13 +439,13 @@
             <span class="badge badge-light badgesClass">{{noticeDashboard?.totalPaidAmount| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingNotice">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style=" background-color: #dc3545" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingNotice">
           <div class="inner">
             <h3>
               {{noticeDashboard?.agentsUnpaidAmount| currencyPipe}}
@@ -460,12 +460,12 @@
             <span class="badge badge-light badgesClass">{{noticeDashboard?.totalUnpaidAmount| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingNotice">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
-        <div class="small-box" style=" background-color: #28a745" routerLink="/tasks/filings" *ngIf="!loading">
+        <div class="small-box" style=" background-color: #28a745" routerLink="/tasks/filings" *ngIf="!loadingNotice">
           <div class="inner">
             <h3>
               {{noticeDashboard?.agentsTotalFiling| currencyPipe}}
@@ -480,13 +480,13 @@
             <span class="badge badge-light badgesClass">{{noticeDashboard?.totalFilings| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingNotice">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style=" background-color: #ee7f1a" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingNotice">
           <div class="inner">
             <h3>
               {{noticeDashboard?.agentsTotalInvoices| currencyPipe}}
@@ -501,13 +501,13 @@
             <span class="badge badge-light badgesClass">{{noticeDashboard?.totalInvoices| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingNotice">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style="background-color: #b0cb1f !important;" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingNotice">
           <div class="inner">
             <h3>
               {{noticeDashboard?.agentsPaidCount| currencyPipe}}
@@ -522,13 +522,13 @@
             <span class="badge badge-light badgesClass">{{noticeDashboard?.totalPaidCount| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingNotice">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
       <div class="card__col-xs-12 card__col-sm-3">
         <div class="small-box" style=" background-color: #dc3545" routerLink="/pages/subscription/invoices"
-          *ngIf="!loading">
+          *ngIf="!loadingNotice">
           <div class="inner">
             <h3>
               {{noticeDashboard?.agentsUnpaidCount| currencyPipe}}
@@ -543,7 +543,7 @@
             <span class="badge badge-light badgesClass">{{noticeDashboard?.totalUnpaidCount| currencyPipe}}</span>
           </p>
         </div>
-        <div class="small-box" *ngIf="loading">
+        <div class="small-box" *ngIf="loadingNotice">
           <shimmer height="70px" borderRadius="2px"></shimmer>
         </div>
       </div>
