@@ -372,7 +372,7 @@ export class InvoicesStatusComponent implements OnInit {
         }
       },
       {
-        headerName: 'Prepared by',
+        headerName: 'Assigned to',
         field: 'invoicePreparedBy',
         width: 140,
         suppressMovable: true,
