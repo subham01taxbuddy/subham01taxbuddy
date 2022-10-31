@@ -45,6 +45,9 @@ import { AddClientComponent } from './add-client/add-client.component';
 import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
 import { DeleteConfirmationDialogComponent } from './components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { NriDetailsDialogComponent } from './components/nri-details-dialog/nri-details-dialog.component';
+import { OtherInformationComponent } from './other-information/other-information.component';
+import { UnlistedSharesComponent } from './other-information/unlisted-shares/unlisted-shares.component';
+import { DirectorInCompanyComponent } from './other-information/director-in-company/director-in-company.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -98,13 +101,18 @@ import { NriDetailsDialogComponent } from './components/nri-details-dialog/nri-d
         // InputUploadComponent
         CoOwnerComponent,
         DeleteConfirmationDialogComponent,
-        NriDetailsDialogComponent
+        NriDetailsDialogComponent,
+        OtherInformationComponent,
+        UnlistedSharesComponent,
+        DirectorInCompanyComponent
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
         /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,
         CoOwnerComponent,
         DeleteConfirmationDialogComponent,
-        NriDetailsDialogComponent]
+        NriDetailsDialogComponent,
+        UnlistedSharesComponent,
+        DirectorInCompanyComponent]
 
 })
 export class ItrFilingModule { }

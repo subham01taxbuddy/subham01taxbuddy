@@ -1,0 +1,62 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<label style="font-size: 18px;
+font-weight: bold;">{{data.title}}</label>
+<button mat-dialog-close tabindex="-1" class="tbd-btn-close" (click)="this.dialogRef.close()"><i class="fa fa-times"
+    aria-hidden="true"></i></button>
+
+<ng-container>
+  <mat-dialog-content>
+    <form [formGroup]="directorForm">
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-form-field class="input-field-width">
+            <input type="text" trim matInput formControlName="companyName" placeholder="Name of company"
+              name="companyName" class="input-field" maxlength="125" required>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-form-field class="input-field-width">
+            <mat-select placeholder="Type of Company" name="typeOfCompany" formControlName="typeOfCompany" required>
+              <mat-option *ngFor="let type of typeOfCompanies" [value]="type.value">
+                {{ type.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-form-field class="input-field-width">
+            <input type="text" trim upperCase matInput formControlName="companyPAN" placeholder="PAN of company"
+              name="companyPAN" class="input-field" maxlength="10"
+              [required]="directorForm.controls['typeOfCompany'].value === 'D'">
+            <mat-error *ngIf="directorForm.controls['companyPAN'].hasError('pattern')">Enter valid PAN number.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-form-field class="input-field-width">
+            <mat-select placeholder="Select shares type" name="country" formControlName="sharesType" required>
+              <mat-option *ngFor="let type of sharesTypes" [value]="type.value">
+                {{ type.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-form-field class="input-field-width">
+            <input type="text" matInput formControlName="din" placeholder="Director identification number(DIN)"
+              name="din" class="input-field" maxlength="8" minlength="8"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              [required]="directorForm.controls['typeOfCompany'].value === 'D'">
+            <mat-error
+              *ngIf="directorForm.controls['din'].hasError('pattern') || directorForm.controls['din'].hasError('minLength') || directorForm.controls['din'].hasError('maxLength')">
+              Enter 8 digit DIN.</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="pull-right">
+        <button class="tbd-btn" (click)="saveDirectorDetials()">Save </button>
+        <button class="tbd-btn-secondary" mat-dialog-close (click)="this.dialogRef.close()">Cancel</button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</ng-container>

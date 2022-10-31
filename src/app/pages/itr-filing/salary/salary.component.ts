@@ -839,7 +839,7 @@ export class SalaryComponent implements OnInit {
       },
       {
         headerName: 'Total Deductions',
-        field: 'total',
+        field: 'totalDeductions',
         editable: false,
         suppressMovable: true,
       },
@@ -956,10 +956,18 @@ export class SalaryComponent implements OnInit {
     const data = [];
     if (this.utilsService.isNonEmpty(this.ITR_JSON) && this.utilsService.isNonEmpty(this.ITR_JSON.employers) && this.ITR_JSON.employers instanceof Array) {
       for (let i = 0; i < this.ITR_JSON.employers.length; i++) {
+        let exemptions = this.ITR_JSON.employers[i].allowance.filter(item => item.allowanceType === 'ALL_ALLOWANCES');
+        let salary = this.ITR_JSON.employers[i].salary.filter(item => item.salaryType === 'SEC17_1');
+        let profitsInLieuOfSalary = this.ITR_JSON.employers[i].profitsInLieuOfSalaryType.filter(item => item.salaryType === 'SEC17_3');
+        let perquisites = this.ITR_JSON.employers[i].perquisites.filter(item => item.perquisiteType === 'SEC17_2');
+        let pt = this.ITR_JSON.employers[i].deductions.filter(item => item.deductionType === 'PROFESSIONAL_TAX');
         data.push({
           index: i + 1,
           id: this.ITR_JSON.employers[i].id,
           employerName: this.utilsService.isNonEmpty(this.ITR_JSON.employers[i].employerName) ? this.ITR_JSON.employers[i].employerName : `Employer ${i + 1}`,
+          grossSalary: (salary.length > 0 ? salary[0].taxableAmount : 0) + (profitsInLieuOfSalary.length > 0 ? profitsInLieuOfSalary[0].taxableAmount : 0) + (perquisites.length > 0 ? perquisites[0].taxableAmount : 0),
+          exemptions: exemptions.length > 0 ? exemptions[0].exemptAmount : 0,
+          totalDeductions: this.ITR_JSON.employers[i].standardDeduction + (pt.length > 0 ? pt[0].exemptAmount : 0),
           taxableIncome: this.ITR_JSON.employers[i].taxableIncome,
           // exemptAmount: null
         });

@@ -1,0 +1,166 @@
+<!-- <div class="modal-header header-common-style">
+  <button type="button" class="close" style="cursor: pointer" (click)="dialogRef.close()">&times;</button>
+  <h4 class="modal-title">{{data.title}}</h4>
+</div> -->
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<label style="font-size: 18px;
+font-weight: bold;">{{data.title}}</label>
+<button mat-dialog-close tabindex="-1" class="tbd-btn-close" (click)="this.dialogRef.close()"><i class="fa fa-times"
+    aria-hidden="true"></i></button>
+
+<ng-container>
+  <mat-dialog-content>
+    <form [formGroup]="sharesForm">
+      <!-- <div style="padding-bottom: 10px;
+        margin-top: -15px;
+        float: right;color: brown">
+        <p>Note: You can enter either issue price per share or purchase price per share.</p>
+      </div> -->
+
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="text" trim matInput formControlName="companyName" placeholder="Name of company"
+              name="companyName" class="input-field" maxlength="125" required>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <mat-select placeholder="Type of Company" name="typeOfCompany" formControlName="typeOfCompany" required>
+              <mat-option *ngFor="let type of typeOfCompanies" [value]="type.value">
+                {{ type.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="text" trim upperCase matInput formControlName="companyPAN" placeholder="PAN of company"
+              name="companyPAN" class="input-field" maxlength="10"
+              [required]="sharesForm.controls['typeOfCompany'].value === 'D'">
+            <mat-error *ngIf="sharesForm.controls['companyPAN'].hasError('pattern')">Enter valid PAN number.</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="card__row">
+        <!-- Opening -->
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="number" matInput formControlName="openingShares" placeholder="Opening No. of shares"
+              name="openingShares" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="event.charCode >= 48 && event.charCode <= 57" required>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="number" matInput formControlName="openingCOA" placeholder="Opening Cost of acquisition"
+              name="openingCOA" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)" required>
+          </mat-form-field>
+        </div>
+        <!-- Opening End -->
+        <!-- Shares Aquired -->
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="number" matInput formControlName="acquiredShares" placeholder="No. of shares acquired"
+              name="acquiredShares" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="event.charCode >= 48 && event.charCode <= 57" [required]="isSharesFeildsRequired()">
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field>
+            <input matInput [min]="minPurchaseDate" [max]="maxPurchaseDate" formControlName="purchaseDate"
+              name="purchaseDate" [matDatepicker]="purchaseDate" placeholder="Date of purchase"
+              [required]="isSharesFeildsRequired()">
+            <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+            <mat-datepicker #purchaseDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="number" matInput formControlName="faceValuePerShare" placeholder="Face value per share"
+              name="faceValuePerShare" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
+              [required]="isSharesFeildsRequired()">
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="number" matInput formControlName="issuePricePerShare" placeholder="Issue price per share"
+              name="issuePricePerShare" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="event.charCode >= 48 && event.charCode <= 57" [required]="isSharesFeildsRequired()"
+              (blur)="setIssueOrPurchase('I')">
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="number" matInput formControlName="purchasePricePerShare" placeholder="Purchase price per share"
+              name="purchasePricePerShare" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
+              [required]="isSharesFeildsRequired()" (blur)="setIssueOrPurchase('P')">
+          </mat-form-field>
+        </div>
+        <!-- Shares Quired End -->
+        <!-- Shares Transferred -->
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="number" matInput formControlName="transferredShares" placeholder="No. of shares transferred"
+              name="transferredShares" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="event.charCode >= 48 && event.charCode <= 57"
+              [required]="sharesForm.controls['saleConsideration'].value">
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="number" matInput formControlName="saleConsideration" placeholder="Sale consideration"
+              name="saleConsideration" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
+              [required]="sharesForm.controls['transferredShares'].value">
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- Shares Transferred End -->
+      <!-- Closing -->
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="number" matInput formControlName="closingShares" placeholder="Closing no of shares"
+              name="closingShares" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="event.charCode >= 48 && event.charCode <= 57" required>
+          </mat-form-field>
+        </div>
+        <div class="card__col-xs-12 card__col-sm-4">
+          <mat-form-field class="input-field-width">
+            <input type="number" matInput formControlName="closingCOA" placeholder="Closing cost of acquisition"
+              name="closingCOA" class="input-field" maxlength="14"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)" required>
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- Closing End -->
+
+      <!-- <div class="sub_btn">
+        <button type="submit" class="btn save" (click)="saveShareDetials()">Save</button>
+        <button type="button" class="btn cancel" (click)="dialogRef.close()">Cancel</button>
+      </div> -->
+      <div class="pull-right">
+        <button class="tbd-btn" (click)="saveShareDetials()">Save </button>
+        <button class="tbd-btn-secondary" mat-dialog-close (click)="this.dialogRef.close()">Cancel</button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</ng-container>
