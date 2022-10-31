@@ -157,10 +157,10 @@ export class SummaryComponent implements OnInit {
     this.loading = true;
     const param = '/tax';
     if (this.ITR_JSON.itrType !== '4') {
-      if(this.ITR_JSON.business) {
+      if (this.ITR_JSON.business) {
         this.ITR_JSON.business.financialParticulars = null;
         this.ITR_JSON.business.presumptiveIncomes = [];
-      } 
+      }
     }
     this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
       // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
@@ -169,7 +169,7 @@ export class SummaryComponent implements OnInit {
       const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
       this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
         console.log('SUMMARY Result=> ', summary);
-        if(summary) {
+        if (summary) {
           this.losses = summary.assessment;
           for (let i = 0; i < this.losses?.carryForwordLosses?.length; i++) {
             this.totalCarryForword = this.totalCarryForword + this.losses.carryForwordLosses[i].totalLoss;
@@ -375,7 +375,7 @@ export class SummaryComponent implements OnInit {
     if (income?.length > 0) {
       if (incomeType === 'DIVIDEND') {
         return this.utilsService.currencyFormatter(this.losses?.summaryIncome.summaryOtherIncome.bucketDividend.taxableAmount);
-      } else if (incomeType === 'FAMILLY_PENSION') {
+      } else if (incomeType === 'FAMILY_PENSION') {
         let income = this.losses?.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
         if (income?.length > 0) {
           return this.utilsService.currencyFormatter(income[0].taxableAmount);
@@ -462,14 +462,14 @@ export class SummaryComponent implements OnInit {
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
       console.log('Response of send PDF:', res)
-      if(!res.success) {
+      if (!res.success) {
         this.utilsService.showSnackBar(res.message);
       } else {
         this.utilsService.showSnackBar(res.message);
         //also update user status
         let statusParam = '/itr-status';
         let sType = 'ITR';
-        
+
         let param2 = {
           "statusId": 7,//waiting for confirmation
           "userId": this.ITR_JSON.userId,
@@ -518,7 +518,7 @@ export class SummaryComponent implements OnInit {
   }
 
   confirmSubmitITR() {
-    if(confirm('Are you sure you want to file the ITR?')) {
+    if (confirm('Are you sure you want to file the ITR?')) {
       this.fileITR();
     }
   }
@@ -607,7 +607,7 @@ export class SummaryComponent implements OnInit {
       console.log(error.error.message);
       this.loading = false;
       this.isValidateJson = false;
-      if(error.error.message){
+      if (error.error.message) {
         this.utilsService.showSnackBar(error.error.message);
       } else {
         this.utilsService.showSnackBar('Something went wrong, try after some time.');
