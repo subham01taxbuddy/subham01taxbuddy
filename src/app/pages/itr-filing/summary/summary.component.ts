@@ -374,10 +374,10 @@ export class SummaryComponent implements OnInit {
     const income = this.ITR_JSON.incomes?.filter((item: any) => item.incomeType === incomeType);
     if (income?.length > 0) {
       if (incomeType === 'DIVIDEND') {
-        return this.utilsService.currencyFormatter(this.losses?.summaryIncome.summaryOtherIncome.bucketDividend.taxableAmount);
-      } else if (incomeType === 'FAMILLY_PENSION') {
-        let income = this.losses?.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
-        if (income?.length > 0) {
+        return this.utilsService.currencyFormatter(this.losses.summaryIncome.summaryOtherIncome.bucketDividend.taxableAmount);
+      } else if (incomeType === 'FAMILY_PENSION') {
+        let income = this.losses.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
+        if (income.length > 0) {
           return this.utilsService.currencyFormatter(income[0].taxableAmount);
         }
         return false;
