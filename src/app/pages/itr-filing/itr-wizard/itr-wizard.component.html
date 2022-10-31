@@ -23,7 +23,7 @@
       </mat-step>
       <mat-step [stepControl]="incomeForm">
         <ng-template matStepLabel>Income Details</ng-template>
-        <mat-tab-group [selectedIndex]="personalInfoSubTab">
+        <mat-tab-group>
           <mat-tab label="Salary Income">
             <app-salary *ngIf="tabIndex=== 1"></app-salary>
           </mat-tab>

@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ItrMsService } from './../../../services/itr-ms.service';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { DirectorInCompanyComponent } from './director-in-company/director-in-company.component';
 import { UnlistedSharesComponent } from './unlisted-shares/unlisted-shares.component';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-other-information',
@@ -12,19 +14,25 @@ import { UnlistedSharesComponent } from './unlisted-shares/unlisted-shares.compo
   styleUrls: ['./other-information.component.scss']
 })
 export class OtherInformationComponent implements OnInit {
+  @Output() saveAndNext = new EventEmitter<any>();
+
   ITR_JSON: ITR_JSON;
+  Copy_ITR_JSON: ITR_JSON;
+  loading = false;
   public sharesGridOptions: GridOptions;
   public directorGridOptions: GridOptions;
 
-  constructor(public matDialog: MatDialog,) {
+  constructor(public matDialog: MatDialog,
+    private itrMsService: ItrMsService,
+    public utilsService: UtilsService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // this.Copy_ITR_JSON = JSON.parse(this.encrDecrService.get(AppConstants.ITR_JSON));
     if (this.ITR_JSON.unlistedSharesDetails === null || this.ITR_JSON.unlistedSharesDetails === undefined) {
       this.ITR_JSON.unlistedSharesDetails = [];
     }
     if (this.ITR_JSON.directorInCompany === null || this.ITR_JSON.directorInCompany === undefined) {
       this.ITR_JSON.directorInCompany = [];
     }
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON))
     this.sharesCallInConstructor();
     this.directorCallInConstructor();
   }
@@ -38,7 +46,9 @@ export class OtherInformationComponent implements OnInit {
       this.addSharesDetails('Add unlisted shares details', 'ADD', null);
     } else {
       if (this.ITR_JSON.unlistedSharesDetails.length > 0) {
-        // this.deleteDetails('SHARE', 'ALL');
+        this.Copy_ITR_JSON.unlistedSharesDetails = [];
+        this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = false;
+        this.serviceCall('Unlisted shares')
       }
     }
   }
@@ -268,7 +278,11 @@ export class OtherInformationComponent implements OnInit {
           break;
         }
         case 'remove': {
-          // this.deleteDetails('SHARE', (params.data.id - 1));
+          this.Copy_ITR_JSON.unlistedSharesDetails.splice(params.data.id - 1, 1);
+          if (this.Copy_ITR_JSON.unlistedSharesDetails.length === 0) {
+            this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = false;
+          }
+          this.serviceCall('Unlisted shares')
           break;
         }
       }
@@ -281,7 +295,9 @@ export class OtherInformationComponent implements OnInit {
       this.addDirectorDetails('Add director details', 'ADD', null);
     } else {
       if (this.ITR_JSON.directorInCompany.length > 0) {
-        // this.deleteDetails('DIRECTOR', 'ALL');
+        this.Copy_ITR_JSON.directorInCompany = [];
+        this.Copy_ITR_JSON.systemFlags.directorInCompany = false;
+        this.serviceCall('Director in company')
       }
     }
     console.log('Remove shares data here');
@@ -303,9 +319,10 @@ export class OtherInformationComponent implements OnInit {
       console.log('Result add directors =', result);
       if (result !== undefined) {
         this.ITR_JSON = result;
+        this.Copy_ITR_JSON = result;
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
         this.directorGridOptions?.api.setRowData(this.directorCreateRowData());
-        this.directorGridOptions?.api.setColumnDefs(this.directorCreateColoumnDef());
+        this.directorGridOptions?.api.setColumnDefs(this.directorCreateColumnDef());
       } else {
         if (this.ITR_JSON.directorInCompany.length === 0) {
           this.ITR_JSON.systemFlags.directorInCompany = false;
@@ -317,7 +334,7 @@ export class OtherInformationComponent implements OnInit {
   directorCallInConstructor() {
     this.directorGridOptions = <GridOptions>{
       rowData: this.directorCreateRowData(),
-      columnDefs: this.directorCreateColoumnDef(),
+      columnDefs: this.directorCreateColumnDef(),
       onGridReady: () => {
         // this.sharesGridOptions.api.sizeColumnsToFit();
       },
@@ -332,7 +349,7 @@ export class OtherInformationComponent implements OnInit {
   }
 
 
-  directorCreateColoumnDef() {
+  directorCreateColumnDef() {
     return [
       {
         headerName: 'No.',
@@ -423,6 +440,11 @@ export class OtherInformationComponent implements OnInit {
           break;
         }
         case 'remove': {
+          this.Copy_ITR_JSON.directorInCompany.splice(params.data.id - 1, 1);
+          if (this.Copy_ITR_JSON.directorInCompany.length === 0) {
+            this.Copy_ITR_JSON.systemFlags.directorInCompany = false;
+          }
+          this.serviceCall('Director in company')
           // this.deleteDetails('DIRECTOR', (params.data.id - 1));
           break;
         }
@@ -446,6 +468,30 @@ export class OtherInformationComponent implements OnInit {
     }
 
     return dataToReturn;
+  }
+
+  serviceCall(msg) {
+    this.loading = true;
+    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
+    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe(result => {
+      debugger
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
+      this.ITR_JSON = JSON.parse(JSON.stringify(result));
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(result));
+      this.loading = false;
+      this.utilsService.showSnackBar(msg + ' details removed successfully');
+      if (this.ITR_JSON.systemFlags.directorInCompany)
+        this.directorGridOptions?.api.setRowData(this.directorCreateRowData());
+      if (this.ITR_JSON.systemFlags.haveUnlistedShares)
+        this.sharesGridOptions.api.setRowData(this.sharesCreateRowData());
+      // this.saveAndNext.emit(true);
+    }, error => {
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      this.loading = false;
+    });
+  }
+  saveAndContinue() {
+    this.saveAndNext.emit(true);
   }
 
 }

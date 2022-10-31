@@ -586,7 +586,7 @@ export class PersonalInformationComponent implements OnInit {
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
         this.loading = false;
         this.utilsService.showSnackBar('Customer profile updated successfully.');
-        this.saveAndNext.emit(true);
+        this.saveAndNext.emit({ subTab: true, tabName: 'OTHER' });
 
       }, error => {
         this.utilsService.showSnackBar('Failed to update customer profile.');

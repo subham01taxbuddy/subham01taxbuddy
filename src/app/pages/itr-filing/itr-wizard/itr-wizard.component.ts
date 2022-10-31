@@ -62,6 +62,8 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     if (event.subTab) {
       if (event.tabName === 'PERSONAL') {
         this.personalInfoSubTab = this.personalInfoSubTab + 1
+      } else if (event.tabName === 'OTHER') {
+        this.personalInfoSubTab = this.personalInfoSubTab + 1
       }
     } else {
       this.stepper.next();
