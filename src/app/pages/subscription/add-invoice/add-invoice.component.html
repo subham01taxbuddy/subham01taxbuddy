@@ -290,8 +290,7 @@
                         <mat-form-field appearance="outline">
                             <mat-label>GSTIN:</mat-label>
                             <input type="text" formControlName="gstin" maxlength="15" matInput placeholder="GSTIN"
-                                autocomplete="off" upperCase
-                                [required]="this.invoiceForm.controls['serviceType'].value === 'GST'">
+                                autocomplete="off" upperCase>
                             <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('required')">Enter GSTIN
                                 number</mat-error>
                             <mat-error *ngIf="invoiceForm.controls['gstin'].hasError('pattern')">Enter valid
@@ -361,8 +360,9 @@
                     <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Service Detail</mat-label>
-                            <mat-select [(ngModel)]="serviceDetail" [ngModelOptions]="{standalone: true}" matInput
-                                placeholder="Select Service Detail" autocomplete="off" required>
+                            <mat-select [(ngModel)]="serviceDetail" [ngModelOptions]="{standalone: true}"
+                                (selectionChange)="onUpdateGstNoValidation()" placeholder="Select Service Detail"
+                                autocomplete="off" required>
                                 <mat-option *ngFor="let details of serviceDetails" [value]="details.details">
                                     {{details.details}} </mat-option>
                             </mat-select>
