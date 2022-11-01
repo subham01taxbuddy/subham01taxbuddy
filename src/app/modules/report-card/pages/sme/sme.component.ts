@@ -24,7 +24,9 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class SmeComponent implements OnInit {
-  loading = false;
+  loadingFiling = false;
+  loadingTPA = false;
+  loadingNotice = false;
   knowlarityLoading = false;
   filingDashboard: any;
   tpaDashboard: any;
@@ -52,21 +54,21 @@ export class SmeComponent implements OnInit {
   }
 
   getFilingDetails() {
-    this.loading = true;
+    this.loadingFiling = true;
     let fromDate = this.datePipe.transform(this.fromDate.value, 'yyyy-MM-dd');
     let toDate = this.datePipe.transform(this.toDate.value, 'yyyy-MM-dd');
     const param = `/call-management/agent-filing-report?agentUserId=${this.selectedAgent}&from=${fromDate}&to=${toDate}&serviceType=ITR`;
     this.userMsService.getMethod(param).subscribe(res => {
       console.log(res)
       this.filingDashboard = res;
-      this.loading = false;
+      this.loadingFiling = false;
     }, () => {
-      this.loading = false;
+      this.loadingFiling = false;
     })
   }
 
   getTPAReportDetails() {
-    this.loading = true;
+    this.loadingTPA = true;
     let fromDate = this.datePipe.transform(this.fromDate.value, 'yyyy-MM-dd');
     let toDate = this.datePipe.transform(this.toDate.value, 'yyyy-MM-dd');
     ///call-management/agent-filing-report?agentUserId=5650&from=2022-04-01&to=2022-10-17&serviceType=TPA
@@ -74,14 +76,14 @@ export class SmeComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe(res => {
       console.log(res);
       this.tpaDashboard = res;
-      this.loading = false;
+      this.loadingTPA = false;
     }, () => {
-      this.loading = false;
+      this.loadingTPA = false;
     })
   }
 
   getNoticeReportDetails() {
-    this.loading = true;
+    this.loadingNotice = true;
     let fromDate = this.datePipe.transform(this.fromDate.value, 'yyyy-MM-dd');
     let toDate = this.datePipe.transform(this.toDate.value, 'yyyy-MM-dd');
     ///call-management/agent-filing-report?agentUserId=5650&from=2022-04-01&to=2022-10-17&serviceType=NOTICE
@@ -89,9 +91,9 @@ export class SmeComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe(res => {
       console.log(res);
       this.noticeDashboard = res;
-      this.loading = false;
+      this.loadingNotice = false;
     }, () => {
-      this.loading = false;
+      this.loadingNotice = false;
     })
   }
 

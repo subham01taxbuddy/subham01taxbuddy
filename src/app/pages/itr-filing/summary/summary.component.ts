@@ -1,3 +1,4 @@
+import { UserMsService } from 'src/app/services/user-ms.service';
 import { environment } from './../../../../environments/environment';
 import { ItrMsService } from './../../../services/itr-ms.service';
 import { Component, OnInit } from '@angular/core';
@@ -44,7 +45,7 @@ export class SummaryComponent implements OnInit {
   exemptIncomesDropdown = [{
     id: null,
     seqNum: 1,
-    value: "AGIR",
+    value: "AGRI",
     label: "Agriculture Income (less than or equal to RS. 5000)",
     detailed: false
   }, {
@@ -135,17 +136,17 @@ export class SummaryComponent implements OnInit {
   itrJsonForFileItr: any;
   isValidItr: boolean;
 
-  constructor(private itrMsService: ItrMsService,
+  constructor(private itrMsService: ItrMsService, private userMsService: UserMsService,
     public utilsService: UtilsService, private router: Router, private http: HttpClient,
     private dialog: MatDialog,
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    const bank = this.ITR_JSON.bankDetails.filter((item: any) => item.hasRefund === true);
-    if (bank instanceof Array && bank.length > 0) {
+    const bank = this.ITR_JSON.bankDetails?.filter((item: any) => item.hasRefund === true);
+    if (bank instanceof Array && bank?.length > 0) {
       this.bankArray = bank[0];
     }
-    const self = this.ITR_JSON.family.filter((item: any) => item.relationShipCode === 'SELF');
-    if (self instanceof Array && self.length > 0) {
+    const self = this.ITR_JSON.family?.filter((item: any) => item.relationShipCode === 'SELF');
+    if (self instanceof Array && self?.length > 0) {
       this.selfObj = self[0];
     }
     this.isValidItr = environment.isValidItr;
@@ -156,10 +157,10 @@ export class SummaryComponent implements OnInit {
     this.loading = true;
     const param = '/tax';
     if (this.ITR_JSON.itrType !== '4') {
-      if(this.ITR_JSON.business) {
+      if (this.ITR_JSON.business) {
         this.ITR_JSON.business.financialParticulars = null;
         this.ITR_JSON.business.presumptiveIncomes = [];
-      } 
+      }
     }
     this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
       // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
@@ -168,22 +169,22 @@ export class SummaryComponent implements OnInit {
       const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
       this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
         console.log('SUMMARY Result=> ', summary);
-        if(summary) {
+        if (summary) {
           this.losses = summary.assessment;
-          for (let i = 0; i < this.losses.carryForwordLosses.length; i++) {
+          for (let i = 0; i < this.losses?.carryForwordLosses?.length; i++) {
             this.totalCarryForword = this.totalCarryForword + this.losses.carryForwordLosses[i].totalLoss;
           }
           this.summaryDetail = summary.assessment.taxSummary;
           this.taxable = this.summaryDetail.taxpayable;
 
           this.refund = this.summaryDetail.taxRefund;
-          this.deductionDetail = summary.assessment.summaryDeductions.filter((item: any) => item.sectionType !== '80C' && item.sectionType !== '80CCC' && item.sectionType !== '80CCD1' && item.sectionType !== '80GAGTI');
-          this.capitalGain = summary.assessment.summaryIncome.cgIncomeN;
+          this.deductionDetail = summary.assessment.summaryDeductions?.filter((item: any) => item.sectionType !== '80C' && item.sectionType !== '80CCC' && item.sectionType !== '80CCD1' && item.sectionType !== '80GAGTI');
+          this.capitalGain = summary.assessment.summaryIncome?.cgIncomeN;
           this.totalLoss = summary.assessment.currentYearLosses;
           this.show = true;
           sessionStorage.setItem('ITR_SUMMARY_JSON', JSON.stringify(this.summaryDetail));
 
-          this.losses.pastYearLosses.forEach((item: any) => {
+          this.losses?.pastYearLosses?.forEach((item: any) => {
             this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
             this.stLoss = this.stLoss + item.setOffWithCurrentYearSTCGIncome;
             this.ltLoss = this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
@@ -208,8 +209,8 @@ export class SummaryComponent implements OnInit {
   }
 
   getUserName(type) {
-    const self = this.ITR_JSON.family.filter((item: any) => item.relationShipCode === 'SELF');
-    if (self instanceof Array && self.length > 0) {
+    const self = this.ITR_JSON.family?.filter((item: any) => item.relationShipCode === 'SELF');
+    if (self instanceof Array && self?.length > 0) {
       if (type === 'personal') {
         return self[0].fName + ' ' + (this.utilsService.isNonEmpty(self[0].mName) ? self[0].mName : '') + ' ' + self[0].lName;
       }
@@ -222,23 +223,23 @@ export class SummaryComponent implements OnInit {
   }
   totalGross(emp) {
     let grossTotal = 0;
-    const sal17_1 = emp.salary.filter((item: any) => item.salaryType === 'SEC17_1');
-    if (sal17_1.length > 0) {
+    const sal17_1 = emp.salary?.filter((item: any) => item.salaryType === 'SEC17_1');
+    if (sal17_1?.length > 0) {
       grossTotal = grossTotal + sal17_1[0].taxableAmount;
     }
-    const sal17_2 = emp.perquisites.filter((item: any) => item.perquisiteType === 'SEC17_2');
-    if (sal17_2.length > 0) {
+    const sal17_2 = emp.perquisites?.filter((item: any) => item.perquisiteType === 'SEC17_2');
+    if (sal17_2?.length > 0) {
       grossTotal = grossTotal + sal17_2[0].taxableAmount;
     }
-    const sal17_3 = emp.profitsInLieuOfSalaryType.filter((item: any) => item.salaryType === 'SEC17_3');
-    if (sal17_3.length > 0) {
+    const sal17_3 = emp.profitsInLieuOfSalaryType?.filter((item: any) => item.salaryType === 'SEC17_3');
+    if (sal17_3?.length > 0) {
       grossTotal = grossTotal + sal17_3[0].taxableAmount;
     }
     return this.utilsService.currencyFormatter(grossTotal);
   }
   totalExpAllow(allowance) {
     const total = allowance.filter((item: any) => item.allowanceType === 'ALL_ALLOWANCES');
-    if (total.length > 0) {
+    if (total?.length > 0) {
       return this.utilsService.currencyFormatter(total[0].exemptAmount);
     } else {
       return 0;
@@ -246,7 +247,7 @@ export class SummaryComponent implements OnInit {
   }
   totalPT(deductions) {
     const total = deductions.filter((item: any) => item.deductionType === 'PROFESSIONAL_TAX');
-    if (total.length > 0) {
+    if (total?.length > 0) {
       return this.utilsService.currencyFormatter(total[0].exemptAmount);
     } else {
       return 0;
@@ -255,7 +256,7 @@ export class SummaryComponent implements OnInit {
 
   totalEA(deductions) {
     const total = deductions.filter((item: any) => item.deductionType === 'ENTERTAINMENT_ALLOW');
-    if (total.length > 0) {
+    if (total?.length > 0) {
       return this.utilsService.currencyFormatter(total[0].exemptAmount);
     } else {
       return 0;
@@ -264,13 +265,13 @@ export class SummaryComponent implements OnInit {
 
   getHomeLoan(loans) {
     let interestAmount = 0;
-    for (let i = 0; i < loans.length; i++) {
+    for (let i = 0; i < loans?.length; i++) {
       interestAmount = interestAmount + loans[i].interestAmount;
     }
     return this.utilsService.currencyFormatter(interestAmount);
   }
   natureOfBusinessFromCode(natureOfBusiness) {
-    if (this.natureOfBusinessDropdown.length !== 0) {
+    if (this.natureOfBusinessDropdown?.length !== 0) {
       const nameArray = this.natureOfBusinessDropdown.filter((item: any) => item.code === natureOfBusiness);
       console.log('nameArray = ', nameArray);
       return natureOfBusiness + '- ' + nameArray[0].label;
@@ -280,14 +281,14 @@ export class SummaryComponent implements OnInit {
   }
   calReceipts(income) {
     let receipts = 0;
-    for (let i = 0; i < income.length; i++) {
+    for (let i = 0; i < income?.length; i++) {
       receipts = receipts + income[i].receipts;
     }
     return this.utilsService.currencyFormatter(receipts);
   }
   calPresumptiveIncome(income) {
     let presumptiveIncome = 0;
-    for (let i = 0; i < income.length; i++) {
+    for (let i = 0; i < income?.length; i++) {
       presumptiveIncome = presumptiveIncome + income[i].presumptiveIncome;
     }
     return this.utilsService.currencyFormatter(presumptiveIncome);
@@ -305,7 +306,7 @@ export class SummaryComponent implements OnInit {
     //   total = total + this.ITR_JSON.capitalGain[i].cgOutput[0].cgIncome /* + (Math.abs(this.capitalGain.capitalGain[i].belAdjustmentAmount)) + (Math.abs(this.capitalGain.capitalGain[i].setOffAmount)) +
     //     (Math.abs(this.capitalGain.capitalGain[i].hpSetOff)) + (Math.abs(this.capitalGain.capitalGain[i].pastYearSetOffAmount)) */
     // }
-    this.losses.summaryIncome.cgIncomeN.capitalGain.forEach((item: any) => {
+    this.losses?.summaryIncome.cgIncomeN.capitalGain.forEach((item: any) => {
       total = total + item.cgIncome;
     });
 
@@ -318,7 +319,7 @@ export class SummaryComponent implements OnInit {
 
   slab(rate, input) {
     if (input === 'INPUT') {
-      return this.ITR_JSON.capitalGain.filter((item: any) => item.cgOutput[0].taxRate === rate);
+      return this.ITR_JSON.capitalGain?.filter((item: any) => item.cgOutput[0].taxRate === rate);
     } else {
       if (this.utilsService.isNonEmpty(this.losses.summaryIncome) && this.utilsService.isNonEmpty(this.losses.summaryIncome.cgIncomeN)
         && this.losses.summaryIncome.cgIncomeN.capitalGain instanceof Array) {
@@ -331,7 +332,7 @@ export class SummaryComponent implements OnInit {
     let incomeTotal = 0;
     const deductionTotal = 0;
     const slabs = this.slab(rate, 'OP');
-    if (slabs.length > 0) {
+    if (slabs?.length > 0) {
       slabs.forEach(income => {
         /* incomeTotal = incomeTotal + income.cgOutput[0].cgIncome;
         income.investments.forEach(deduction=>{
@@ -351,7 +352,7 @@ export class SummaryComponent implements OnInit {
 
   }
   getNameFromCode(assetType) {
-    if (this.assetsTypesDropdown.length !== 0) {
+    if (this.assetsTypesDropdown?.length !== 0) {
       const nameArray = this.assetsTypesDropdown.filter((item: any) => item.assetCode === assetType);
       return nameArray[0].assetName;
     } else {
@@ -361,7 +362,7 @@ export class SummaryComponent implements OnInit {
   getTotalInvestments(cg) {
     if (cg.investments instanceof Array) {
       let total = 0;
-      cg.investments.forEach((item: any) => {
+      cg?.investments?.forEach((item: any) => {
         total = total + item.totalDeductionClaimed;
       });
       return total;
@@ -370,13 +371,13 @@ export class SummaryComponent implements OnInit {
     }
   }
   getOtherIncome(incomeType) {
-    const income = this.ITR_JSON.incomes.filter((item: any) => item.incomeType === incomeType);
-    if (income.length > 0) {
+    const income = this.ITR_JSON.incomes?.filter((item: any) => item.incomeType === incomeType);
+    if (income?.length > 0) {
       if (incomeType === 'DIVIDEND') {
-        return this.utilsService.currencyFormatter(this.losses.summaryIncome.summaryOtherIncome.bucketDividend.taxableAmount);
-      } else if (incomeType === 'FAMILLY_PENSION') {
-        let income = this.losses.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
-        if (income.length > 0) {
+        return this.utilsService.currencyFormatter(this.losses?.summaryIncome.summaryOtherIncome.bucketDividend.taxableAmount);
+      } else if (incomeType === 'FAMILY_PENSION') {
+        let income = this.losses?.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
+        if (income?.length > 0) {
           return this.utilsService.currencyFormatter(income[0].taxableAmount);
         }
         return false;
@@ -385,8 +386,8 @@ export class SummaryComponent implements OnInit {
       }
     } else {
       if (incomeType === 'DIVIDEND') {
-        let income = this.losses.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
-        if (income.length > 0) {
+        let income = this.losses?.summaryIncome.summaryOtherIncome.incomes.filter((item: any) => item.incomeType === incomeType);
+        if (income?.length > 0) {
           return this.utilsService.currencyFormatter(income[0].taxableAmount);
         }
         return false;
@@ -396,7 +397,7 @@ export class SummaryComponent implements OnInit {
   }
   getTaxPaidTotal(obj, key) {
     let total = 0;
-    obj.forEach((item: any) => {
+    obj?.forEach((item: any) => {
       total = total + item[key];
     });
     return this.utilsService.currencyFormatter(total);
@@ -461,11 +462,38 @@ export class SummaryComponent implements OnInit {
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
       console.log('Response of send PDF:', res)
-      this.utilsService.showSnackBar(res.response)
+      if (!res.success) {
+        this.utilsService.showSnackBar(res.message);
+      } else {
+        this.utilsService.showSnackBar(res.message);
+        //also update user status
+        let statusParam = '/itr-status';
+        let sType = 'ITR';
+
+        let param2 = {
+          "statusId": 7,//waiting for confirmation
+          "userId": this.ITR_JSON.userId,
+          "assessmentYear": this.ITR_JSON.assessmentYear,
+          "completed": false,
+          "serviceType": sType
+        }
+        console.log("param2: ", param2);
+        this.userMsService.postMethod(statusParam, param2).subscribe(res => {
+          console.log("Status update response: ", res)
+          this.loading = false;
+          //this._toastMessageService.alert("success", "Status update successfully.");
+        }, error => {
+          this.loading = false;
+          //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
+        });
+      }
     }, error => {
       this.loading = false;
-    })
+      this.utilsService.showSnackBar(error);
+    });
   }
+
+
   downloadPDF() {
     // http://uat-api.taxbuddy.com/txbdyitr/txbdyReport?userId={userId}&itrId={itrId}&assessmentYear={assessmentYear}
     this.loading = true;
@@ -488,6 +516,13 @@ export class SummaryComponent implements OnInit {
       }
     });
   }
+
+  confirmSubmitITR() {
+    if (confirm('Are you sure you want to file the ITR?')) {
+      this.fileITR();
+    }
+  }
+
   fileITR() {
     let formCode = this.ITR_JSON.itrType;
     let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
@@ -569,9 +604,14 @@ export class SummaryComponent implements OnInit {
         this.utilsService.showSnackBar('Something went wrong, try after some time.');
       });
     }, error => {
+      console.log(error.error.message);
       this.loading = false;
       this.isValidateJson = false;
-      this.utilsService.showSnackBar('Something went wrong, try after some time.');
+      if (error.error.message) {
+        this.utilsService.showSnackBar(error.error.message);
+      } else {
+        this.utilsService.showSnackBar('Something went wrong, try after some time.');
+      }
     });
   }
 
@@ -582,8 +622,8 @@ export class SummaryComponent implements OnInit {
 
   getExemptIncomeTotal() {
     let total = 0;
-    if (this.ITR_JSON.exemptIncomes.length > 0) {
-      for (let i = 0; i < this.ITR_JSON.exemptIncomes.length; i++) {
+    if (this.ITR_JSON.exemptIncomes?.length > 0) {
+      for (let i = 0; i < this.ITR_JSON.exemptIncomes?.length; i++) {
         total = total + this.ITR_JSON.exemptIncomes[i].amount
       }
     }
