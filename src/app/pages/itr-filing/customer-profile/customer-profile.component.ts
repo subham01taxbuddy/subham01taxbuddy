@@ -263,9 +263,38 @@ export class CustomerProfileComponent implements OnInit {
       // }
 
       if (this.ITR_JSON.itrType === '1') {
-        this.ITR_JSON.business.presumptiveIncomes = [];
-        this.ITR_JSON.systemFlags.hasBusinessProfessionIncome = false;
-        this.ITR_JSON.business.financialParticulars = null;
+        if(this.ITR_JSON.business) {
+          this.ITR_JSON.business.presumptiveIncomes = [];
+          this.ITR_JSON.business.financialParticulars = null;
+        } else {
+          this.ITR_JSON.business = {
+            presumptiveIncomes: [],
+            financialParticulars: null
+          };
+        }
+        if(this.ITR_JSON.systemFlags) {
+          this.ITR_JSON.systemFlags.hasBusinessProfessionIncome = false;
+        } else {
+          this.ITR_JSON.systemFlags = {
+            hasSalary: false,
+            hasHouseProperty: false,
+            hasMultipleProperties: false,
+            hasForeignAssets: false,
+            hasCapitalGain: false,
+            hasBroughtForwardLosses: false,
+            hasAgricultureIncome: false,
+            hasOtherIncome: false,
+            hasParentOverSixty: false,
+            hasBusinessProfessionIncome: false,
+            hasFutureOptionsIncome: false,
+            hasNRIIncome: false,
+            hraAvailed: false,
+            directorInCompany: false,
+            haveUnlistedShares: false
+          };
+        }
+        
+        
       }
 
       this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
