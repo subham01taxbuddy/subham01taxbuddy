@@ -554,10 +554,10 @@ export class AddInvoiceComponent implements OnInit {
   }
 
   onUpdateGstNoValidation() {
-    if (this.serviceDetail === 'GST Registration') {
-      this.invoiceForm.controls['gstin'].setValidators(Validators.pattern(AppConstants.GSTNRegex));
-    } else {
+    if (this.service == 'GST Filing' && this.serviceDetail !== 'GST Registration') {
       this.invoiceForm.controls['gstin'].setValidators([Validators.required, Validators.pattern(AppConstants.GSTNRegex)]);
+    } else {
+      this.invoiceForm.controls['gstin'].setValidators(Validators.pattern(AppConstants.GSTNRegex));
     }
     this.invoiceForm.controls['gstin'].updateValueAndValidity();
   }
