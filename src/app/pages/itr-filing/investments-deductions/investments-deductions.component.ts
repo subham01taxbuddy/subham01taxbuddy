@@ -607,8 +607,8 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
           this.addAndUpdateInvestment(item);
         } else {
           if (item === 'us80e') {
-            this.ITR_JSON.loans = this.ITR_JSON.loans.filter((item: any) => item.loanType !== 'EDUCATION')
-            this.ITR_JSON.loans.push({
+            this.ITR_JSON.loans = this.ITR_JSON.loans?.filter((item: any) => item.loanType !== 'EDUCATION')
+            this.ITR_JSON.loans?.push({
               loanType: 'EDUCATION',
               name: null,
               interestPaidPerAnum: Number(this.investmentDeductionForm.controls['us80e'].value),
@@ -617,9 +617,9 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
               details: null
             });
           } else if (item === 'us80gg') {
-            this.ITR_JSON.expenses = this.ITR_JSON.expenses.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID')
+            this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID')
             if (!this.ITR_JSON.systemFlags.hraAvailed) {
-              this.ITR_JSON.expenses.push({
+              this.ITR_JSON.expenses?.push({
                 expenseType: 'HOUSE_RENT_PAID',
                 expenseFor: null,
                 details: null,
@@ -628,8 +628,8 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
               });
             }
           } else if (item === 'us80ggc') {
-            this.ITR_JSON.donations = this.ITR_JSON.donations.filter((item: any) => item.donationType !== 'POLITICAL')
-            this.ITR_JSON.donations.push({
+            this.ITR_JSON.donations = this.ITR_JSON.donations?.filter((item: any) => item.donationType !== 'POLITICAL')
+            this.ITR_JSON.donations?.push({
               details: '',
               identifier: '',
               panNumber: '',
@@ -644,8 +644,8 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
               state: '',
             });
           } else if (item === 'us80eeb') {
-            this.ITR_JSON.expenses = this.ITR_JSON.expenses.filter((item: any) => item.expenseType !== 'ELECTRIC_VEHICLE')
-            this.ITR_JSON.expenses.push({
+            this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'ELECTRIC_VEHICLE')
+            this.ITR_JSON.expenses?.push({
               expenseType: 'ELECTRIC_VEHICLE',
               expenseFor: null,
               details: null,
@@ -655,11 +655,11 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
           }
         }
       });
-      this.ITR_JSON.insurances = this.ITR_JSON.insurances.filter((item: any) => item.policyFor !== "DEPENDANT");
+      this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter((item: any) => item.policyFor !== "DEPENDANT");
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPremium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value)) {
-        this.ITR_JSON.insurances.push({
+        this.ITR_JSON.insurances?.push({
           insuranceType: 'HEALTH',
           typeOfPolicy: null,
           policyFor: 'DEPENDANT',
@@ -670,11 +670,11 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
           healthCover: null
         });
       }
-      this.ITR_JSON.insurances = this.ITR_JSON.insurances.filter((item: any) => item.policyFor !== "PARENTS");
+      this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter((item: any) => item.policyFor !== "PARENTS");
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['premium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['preventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['medicalExpenditure'].value)) {
-        this.ITR_JSON.insurances.push({
+        this.ITR_JSON.insurances?.push({
           insuranceType: 'HEALTH',
           typeOfPolicy: null,
           policyFor: 'PARENTS',
@@ -687,19 +687,19 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       }
       this.ITR_JSON.disabilities = [];
       if (this.selected80u !== '' && this.utilsService.isNonZero(this.investmentDeductionForm.controls['us80u'].value)) {
-        this.ITR_JSON.disabilities.push({
+        this.ITR_JSON.disabilities?.push({
           typeOfDisability: this.selected80u,
           amount: this.investmentDeductionForm.controls['us80u'].value
         })
       }
       if (this.selected80dd !== '' && this.utilsService.isNonZero(this.investmentDeductionForm.controls['us80dd'].value)) {
-        this.ITR_JSON.disabilities.push({
+        this.ITR_JSON.disabilities?.push({
           typeOfDisability: this.selected80dd,
           amount: this.investmentDeductionForm.controls['us80dd'].value
         })
       }
       if (this.selected80ddb !== '' && this.utilsService.isNonZero(this.investmentDeductionForm.controls['us80ddb'].value)) {
-        this.ITR_JSON.disabilities.push({
+        this.ITR_JSON.disabilities?.push({
           typeOfDisability: this.selected80ddb,
           amount: this.investmentDeductionForm.controls['us80ddb'].value
         })
@@ -803,7 +803,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         });
       }
     } else {
-      this.ITR_JSON.investments = this.ITR_JSON.investments.filter((item: any) => item.investmentType !== controlName);
+      this.ITR_JSON.investments = this.ITR_JSON.investments?.filter((item: any) => item.investmentType !== controlName);
     }
   }
 
