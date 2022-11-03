@@ -5,6 +5,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { isArray } from 'lodash';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -75,7 +76,10 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   getDocuments() {
     const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
-      this.documents = result;
+      if(isArray(result)) {
+        this.documents = result;
+      }
+      console.log('documents:' , this.documents);
     })
   }
 

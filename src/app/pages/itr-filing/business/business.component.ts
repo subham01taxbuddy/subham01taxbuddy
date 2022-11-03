@@ -63,6 +63,7 @@ export class BusinessComponent implements OnInit {
       this.businessMode = 'FORM';
       this.mode = 'ADD';
     }
+    console.log(this.ITR_JSON.business?.presumptiveIncomes);
   }
 
   ngOnInit() {
@@ -708,7 +709,7 @@ export class BusinessComponent implements OnInit {
 
   calTotalPresumptiveIncome() {
     let sum = 0;
-    for (let i = 0; i < this.ITR_JSON.business.presumptiveIncomes.length; i++) {
+    for (let i = 0; i < this.ITR_JSON.business?.presumptiveIncomes.length; i++) {
       for (let j = 0; j < this.ITR_JSON.business.presumptiveIncomes[i].incomes.length; j++) {
         sum = sum + this.ITR_JSON.business.presumptiveIncomes[i].incomes[j].presumptiveIncome;
       }
