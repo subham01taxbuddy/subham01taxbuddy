@@ -301,7 +301,10 @@ export class OtherIncomeComponent implements OnInit {
     this.loading = true;
     this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes?.filter((item: any) => item.incomeType !== 'SAVING_INTEREST' &&
       item.incomeType !== 'FD_RD_INTEREST' && item.incomeType !== 'TAX_REFUND_INTEREST' &&
-      item.incomeType !== 'ANY_OTHER' && item.incomeType !== 'FAMILY_PENSION')
+      item.incomeType !== 'ANY_OTHER' && item.incomeType !== 'FAMILY_PENSION');
+    if(!this.Copy_ITR_JSON.incomes) {
+      this.Copy_ITR_JSON.incomes = [];
+    }
     for (let i = 0; i < this.otherIncomeGridOptions.rowData.length; i++) {
       if (this.utilsService.isNonEmpty(this.otherIncomeGridOptions.rowData[i].amount)) {
         this.Copy_ITR_JSON.incomes.push({
