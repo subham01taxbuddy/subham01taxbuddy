@@ -1619,7 +1619,12 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       this.salaryItrratedData = [];
       // this.setTotalOfExempt();
       this.itrSummaryForm.patchValue(summary);
-      this.setItrType(summary.assesse.itrType)
+      this.setItrType(summary.assesse.itrType);
+      if(summary.returnType === 'REVISED') {
+        this.itrObject.isRevised = 'Y';
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['isRevised'].setValue('Y');
+        console.log('summary', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['isRevised'].value);
+      }
 
       if ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['itrType'].value === "4") {
 
