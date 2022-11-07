@@ -318,14 +318,22 @@ export class SummaryComponent implements OnInit {
   }
 
   slab(rate, input) {
+    let slabs = [];
     if (input === 'INPUT') {
-      return this.ITR_JSON.capitalGain?.filter((item: any) => item.cgOutput[0].taxRate === rate);
+      let inputSlabs = this.ITR_JSON.capitalGain?.filter((item: any) => item.cgOutput[0].taxRate === rate);
+      if(inputSlabs) {
+        slabs = inputSlabs;
+      }
     } else {
       if (this.utilsService.isNonEmpty(this.losses.summaryIncome) && this.utilsService.isNonEmpty(this.losses.summaryIncome.cgIncomeN)
         && this.losses.summaryIncome.cgIncomeN.capitalGain instanceof Array) {
-        return this.losses.summaryIncome.cgIncomeN.capitalGain.filter((item: any) => item.taxRate === rate);
+        let lossSlabs = this.losses.summaryIncome.cgIncomeN.capitalGain.filter((item: any) => item.taxRate === rate);
+        if(lossSlabs) {
+          slabs = lossSlabs;
+        }
       }
     }
+    return slabs;
     // return currSlabs.filter(item=>item.cgOutput[0].cgIncome > 0)
   }
   getSlabWiseTotal(rate) {
