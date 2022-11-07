@@ -580,6 +580,25 @@ export class SalaryComponent implements OnInit {
       this.Copy_ITR_JSON.employers.splice(this.currentIndex, 1, myEmp);
     }
 
+    if(!this.Copy_ITR_JSON.systemFlags) {
+      this.Copy_ITR_JSON.systemFlags = {
+        hasSalary: false,
+        hasHouseProperty: false,
+        hasMultipleProperties: false,
+        hasForeignAssets: false,
+        hasCapitalGain: false,
+        hasBroughtForwardLosses: false,
+        hasAgricultureIncome: false,
+        hasOtherIncome: false,
+        hasParentOverSixty: false,
+        hasBusinessProfessionIncome: false,
+        hasFutureOptionsIncome: false,
+        hasNRIIncome: false,
+        hraAvailed: false,
+        directorInCompany: false,
+        haveUnlistedShares: false
+      };
+    }
     this.Copy_ITR_JSON.systemFlags.hasSalary = true;
     this.Copy_ITR_JSON = this.claimEitherHraOr80GG(this.Copy_ITR_JSON);
     // this.ITR_JSON.employers = [];
@@ -776,8 +795,8 @@ export class SalaryComponent implements OnInit {
   }
   claimEitherHraOr80GG(ITR_JSON: ITR_JSON) {
     let hraFound = false;
-    for (let i = 0; i < ITR_JSON.employers.length; i++) {
-      for (let j = 0; j < ITR_JSON.employers[i].allowance.length; j++) {
+    for (let i = 0; i < ITR_JSON.employers?.length; i++) {
+      for (let j = 0; j < ITR_JSON.employers[i].allowance?.length; j++) {
         if (ITR_JSON.employers[i].allowance[j].allowanceType === 'HOUSE_RENT') {
           hraFound = true;
           break;
@@ -786,7 +805,7 @@ export class SalaryComponent implements OnInit {
     }
     if (hraFound) {
       ITR_JSON.systemFlags.hraAvailed = true;
-      ITR_JSON.expenses.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID')
+      ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID')
     } else {
       ITR_JSON.systemFlags.hraAvailed = false;
     }

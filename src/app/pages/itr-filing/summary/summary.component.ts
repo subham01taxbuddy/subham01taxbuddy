@@ -158,8 +158,8 @@ export class SummaryComponent implements OnInit {
     const param = '/tax';
     if (this.ITR_JSON.itrType !== '4') {
       if (this.ITR_JSON.business) {
-        this.ITR_JSON.business.financialParticulars = null;
-        this.ITR_JSON.business.presumptiveIncomes = [];
+      this.ITR_JSON.business.financialParticulars = null;
+      this.ITR_JSON.business.presumptiveIncomes = [];
       }
     }
     this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
@@ -170,26 +170,26 @@ export class SummaryComponent implements OnInit {
       this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
         console.log('SUMMARY Result=> ', summary);
         if (summary) {
-          this.losses = summary.assessment;
+        this.losses = summary.assessment;
           for (let i = 0; i < this.losses?.carryForwordLosses?.length; i++) {
-            this.totalCarryForword = this.totalCarryForword + this.losses.carryForwordLosses[i].totalLoss;
-          }
-          this.summaryDetail = summary.assessment.taxSummary;
-          this.taxable = this.summaryDetail.taxpayable;
+          this.totalCarryForword = this.totalCarryForword + this.losses.carryForwordLosses[i].totalLoss;
+        }
+        this.summaryDetail = summary.assessment.taxSummary;
+        this.taxable = this.summaryDetail.taxpayable;
 
-          this.refund = this.summaryDetail.taxRefund;
+        this.refund = this.summaryDetail.taxRefund;
           this.deductionDetail = summary.assessment.summaryDeductions?.filter((item: any) => item.sectionType !== '80C' && item.sectionType !== '80CCC' && item.sectionType !== '80CCD1' && item.sectionType !== '80GAGTI');
           this.capitalGain = summary.assessment.summaryIncome?.cgIncomeN;
-          this.totalLoss = summary.assessment.currentYearLosses;
-          this.show = true;
-          sessionStorage.setItem('ITR_SUMMARY_JSON', JSON.stringify(this.summaryDetail));
+        this.totalLoss = summary.assessment.currentYearLosses;
+        this.show = true;
+        sessionStorage.setItem('ITR_SUMMARY_JSON', JSON.stringify(this.summaryDetail));
 
           this.losses?.pastYearLosses?.forEach((item: any) => {
-            this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
-            this.stLoss = this.stLoss + item.setOffWithCurrentYearSTCGIncome;
-            this.ltLoss = this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
-          });
-          this.loading = false;
+          this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
+          this.stLoss = this.stLoss + item.setOffWithCurrentYearSTCGIncome;
+          this.ltLoss = this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
+        });
+        this.loading = false;
         } else {
           this.loading = false;
           this.errorMessage = 'We are unable to display your summary,Please try again later.';
@@ -462,14 +462,14 @@ export class SummaryComponent implements OnInit {
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       this.loading = false;
       console.log('Response of send PDF:', res)
-      if (!res.success) {
+      if(!res.success) {
         this.utilsService.showSnackBar(res.message);
       } else {
         this.utilsService.showSnackBar(res.message);
         //also update user status
         let statusParam = '/itr-status';
         let sType = 'ITR';
-
+        
         let param2 = {
           "statusId": 7,//waiting for confirmation
           "userId": this.ITR_JSON.userId,
@@ -518,7 +518,7 @@ export class SummaryComponent implements OnInit {
   }
 
   confirmSubmitITR() {
-    if (confirm('Are you sure you want to file the ITR?')) {
+    if(confirm('Are you sure you want to file the ITR?')) {
       this.fileITR();
     }
   }
@@ -607,7 +607,7 @@ export class SummaryComponent implements OnInit {
       console.log(error.error.message);
       this.loading = false;
       this.isValidateJson = false;
-      if (error.error.message) {
+      if(error.error.message){
         this.utilsService.showSnackBar(error.error.message);
       } else {
         this.utilsService.showSnackBar('Something went wrong, try after some time.');
