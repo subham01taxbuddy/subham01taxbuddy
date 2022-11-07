@@ -782,7 +782,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     if (this.utilsService.isNonEmpty(this.investmentDeductionForm.controls[controlName].value)) {
       let i: number;
       let isAdded = false;
-      for (i = 0; i < this.ITR_JSON.investments.length; i++) {
+      for (i = 0; i < this.ITR_JSON.investments?.length; i++) {
         if (this.ITR_JSON.investments[i].investmentType === controlName) {
           isAdded = true;
           break;
@@ -790,7 +790,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       }
 
       if (!isAdded) {
-        this.ITR_JSON.investments.push({
+        this.ITR_JSON.investments?.push({
           investmentType: controlName,
           amount: Number(this.investmentDeductionForm.controls[controlName].value),
           details: controlName
