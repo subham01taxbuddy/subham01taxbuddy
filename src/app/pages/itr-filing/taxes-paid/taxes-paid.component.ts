@@ -466,9 +466,9 @@ export class TaxesPaidComponent implements OnInit {
 
   addTdsOtherThanSalary16A(val) {
 
-    const temp = this.tdsOtherThanSalary16AGridOptions.api.getRenderedNodes();
+    const temp = this.tdsOtherThanSalary16AGridOptions?.api.getRenderedNodes();
     let isDataValid = false;
-    if (temp.length !== 0) {
+    if (temp && temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
         if (this.utilsService.isNonEmpty(temp[i].data.deductorTAN) &&
           this.utilsService.isNonEmpty(temp[i].data.headOfIncome) &&
@@ -701,9 +701,9 @@ export class TaxesPaidComponent implements OnInit {
 
   addTdsOtherThanSalary26QB(val) {
 
-    const temp = this.tdsOtherThanSalary26QBGridOptions.api.getRenderedNodes();
+    const temp = this.tdsOtherThanSalary26QBGridOptions?.api.getRenderedNodes();
     let isDataValid = false;
-    if (temp.length !== 0) {
+    if (temp && temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
         if (this.utilsService.isNonEmpty(temp[i].data.deductorPAN) &&
           this.utilsService.isNonEmpty(temp[i].data.headOfIncome) &&
@@ -893,9 +893,9 @@ export class TaxesPaidComponent implements OnInit {
 
   addTcs(val) {
 
-    const temp = this.tcsGridOptions.api.getRenderedNodes();
+    const temp = this.tcsGridOptions?.api.getRenderedNodes();
     let isDataValid = false;
-    if (temp.length !== 0) {
+    if (temp && temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
         if (this.utilsService.isNonEmpty(temp[i].data.collectorTAN) &&
           this.utilsService.isNonEmpty(temp[i].data.collectorName) &&
@@ -1074,9 +1074,9 @@ export class TaxesPaidComponent implements OnInit {
   }
 
   addOtherThanTdsTcs(val) {
-    const temp = this.otherThanTdsTcsGridOptions.api.getRenderedNodes();
+    const temp = this.otherThanTdsTcsGridOptions?.api.getRenderedNodes();
     let isDataValid = false;
-    if (temp.length !== 0) {
+    if (temp && temp.length !== 0) {
       for (let i = 0; i < temp.length; i++) {
         if (this.utilsService.isNonEmpty(temp[i].data.bsrCode) &&
           this.utilsService.isNonEmpty(temp[i].data.dateOfDeposit) &&
@@ -1126,14 +1126,24 @@ export class TaxesPaidComponent implements OnInit {
     var tdsOtherThanSalary26QB = []
     var tcs = []
     var otherThanTdsTcs = []
+    if(!this.ITR_JSON.taxPaid) {
+      this.ITR_JSON.taxPaid = {
+        onSalary: [],
+        otherThanSalary16A: [],
+        otherThanSalary26QB: [],
+        tcs: [],
+        otherThanTDSTCS: [],
+        paidRefund: []
+      };
+    }
     this.ITR_JSON.taxPaid.onSalary = []
     this.ITR_JSON.taxPaid.otherThanSalary16A = []
     this.ITR_JSON.taxPaid.otherThanSalary26QB = []
     this.ITR_JSON.taxPaid.tcs = []
     this.ITR_JSON.taxPaid.otherThanTDSTCS = []
     if (this.onAddRow('SAVE')) {
-      if (this.onSalaryGridOptions.api.getRenderedNodes().length > 0) {
-        let data = this.onSalaryGridOptions.api.getRenderedNodes();
+      if (this.onSalaryGridOptions?.api.getRenderedNodes().length > 0) {
+        let data = this.onSalaryGridOptions?.api.getRenderedNodes();
         for (let i = 0; i < data.length; i++) {
           onSalary.push(data[i].data);
         }
@@ -1144,8 +1154,8 @@ export class TaxesPaidComponent implements OnInit {
       return
     }
     if (this.addTdsOtherThanSalary16A('SAVE')) {
-      if (this.tdsOtherThanSalary16AGridOptions.api.getRenderedNodes().length > 0) {
-        let data = this.tdsOtherThanSalary16AGridOptions.api.getRenderedNodes();
+      if (this.tdsOtherThanSalary16AGridOptions?.api.getRenderedNodes().length > 0) {
+        let data = this.tdsOtherThanSalary16AGridOptions?.api.getRenderedNodes();
         for (let i = 0; i < data.length; i++) {
           tdsOtherThanSalary16A.push(data[i].data);
         }
@@ -1157,8 +1167,8 @@ export class TaxesPaidComponent implements OnInit {
     }
 
     if (this.addTdsOtherThanSalary26QB('SAVE')) {
-      if (this.tdsOtherThanSalary26QBGridOptions.api.getRenderedNodes().length > 0) {
-        let data = this.tdsOtherThanSalary26QBGridOptions.api.getRenderedNodes();
+      if (this.tdsOtherThanSalary26QBGridOptions?.api.getRenderedNodes().length > 0) {
+        let data = this.tdsOtherThanSalary26QBGridOptions?.api.getRenderedNodes();
         for (let i = 0; i < data.length; i++) {
           tdsOtherThanSalary26QB.push(data[i].data);
         }
@@ -1170,8 +1180,8 @@ export class TaxesPaidComponent implements OnInit {
     }
 
     if (this.addTcs('SAVE')) {
-      if (this.tcsGridOptions.api.getRenderedNodes().length > 0) {
-        let data = this.tcsGridOptions.api.getRenderedNodes();
+      if (this.tcsGridOptions?.api.getRenderedNodes().length > 0) {
+        let data = this.tcsGridOptions?.api.getRenderedNodes();
         for (let i = 0; i < data.length; i++) {
           tcs.push(data[i].data);
         }
@@ -1183,8 +1193,8 @@ export class TaxesPaidComponent implements OnInit {
     }
 
     if (this.addOtherThanTdsTcs('SAVE')) {
-      if (this.otherThanTdsTcsGridOptions.api.getRenderedNodes().length > 0) {
-        let data = this.otherThanTdsTcsGridOptions.api.getRenderedNodes();
+      if (this.otherThanTdsTcsGridOptions?.api.getRenderedNodes().length > 0) {
+        let data = this.otherThanTdsTcsGridOptions?.api.getRenderedNodes();
         for (let i = 0; i < data.length; i++) {
           otherThanTdsTcs.push(data[i].data);
         }
