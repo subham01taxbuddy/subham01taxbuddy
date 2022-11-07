@@ -180,8 +180,11 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
     this.initializeMainForm();
     this.initializeNewRegimeTaxSummary();
-    if (this.itrObject)
+    if (this.itrObject) {
       this.fetchSummary();
+    } else {
+      this.itrObject = this.utilsService.createEmptyJson(this.userDetails, '2022-2023', '2021-2022');
+    }
     // window.addEventListener('beforeunload', function (e) {
 
     //   e.preventDefault();
