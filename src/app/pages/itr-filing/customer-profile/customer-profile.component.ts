@@ -295,6 +295,13 @@ export class CustomerProfileComponent implements OnInit {
         }
         
         
+      }else if (this.ITR_JSON.itrType === '4') {
+        if(!this.ITR_JSON.business) {
+          this.ITR_JSON.business = {
+            presumptiveIncomes: [],
+            financialParticulars: null
+          };
+        }
       }
 
       this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
