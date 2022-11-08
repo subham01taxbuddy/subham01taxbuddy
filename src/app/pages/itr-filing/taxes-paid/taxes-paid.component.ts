@@ -65,16 +65,29 @@ export class TaxesPaidComponent implements OnInit {
   ngOnInit() {
     this.getItrDocuments();
 
+    if(!this.ITR_JSON.taxPaid) {
+      this.ITR_JSON.taxPaid = {
+        onSalary: [],
+        otherThanSalary16A: [],
+        otherThanSalary26QB: [],
+        tcs: [],
+        otherThanTDSTCS: [],
+        paidRefund: []
+      };
+    }
+
     this.onSalaryCallInConstructor();
-    this.onSalaryGridOptions.rowData = this.ITR_JSON.taxPaid.onSalary;
+    console.log('onsalary',this.ITR_JSON.taxPaid?.onSalary);
+    
+    this.onSalaryGridOptions.rowData = this.ITR_JSON.taxPaid?.onSalary;
     this.tdsOtherThanSalary16ACallInConstructor();
-    this.tdsOtherThanSalary16AGridOptions.rowData = this.ITR_JSON.taxPaid.otherThanSalary16A;
+    this.tdsOtherThanSalary16AGridOptions.rowData = this.ITR_JSON.taxPaid?.otherThanSalary16A;
     this.tdsOtherThanSalary26QBCallInConstructor();
-    this.tdsOtherThanSalary26QBGridOptions.rowData = this.ITR_JSON.taxPaid.otherThanSalary26QB;
+    this.tdsOtherThanSalary26QBGridOptions.rowData = this.ITR_JSON.taxPaid?.otherThanSalary26QB;
     this.tcsCallInConstructor();
-    this.tcsGridOptions.rowData = this.ITR_JSON.taxPaid.tcs;
+    this.tcsGridOptions.rowData = this.ITR_JSON.taxPaid?.tcs;
     this.otherThanTdsTcsCallInConstructor();
-    this.otherThanTdsTcsGridOptions.rowData = this.ITR_JSON.taxPaid.otherThanTDSTCS;
+    this.otherThanTdsTcsGridOptions.rowData = this.ITR_JSON.taxPaid?.otherThanTDSTCS;
 
     console.log('TAX_PAID deletedFileData LENGTH ---> ', this.deletedFileData.length)
   }
