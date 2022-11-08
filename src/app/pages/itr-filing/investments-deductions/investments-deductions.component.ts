@@ -656,6 +656,9 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         }
       });
       this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter((item: any) => item.policyFor !== "DEPENDANT");
+      if(!this.ITR_JSON.insurances) {
+        this.ITR_JSON.insurances = [];
+      }
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPremium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value)) {
@@ -671,6 +674,9 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         });
       }
       this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter((item: any) => item.policyFor !== "PARENTS");
+      if(!this.ITR_JSON.insurances) {
+        this.ITR_JSON.insurances = [];
+      }
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['premium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['preventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['medicalExpenditure'].value)) {
