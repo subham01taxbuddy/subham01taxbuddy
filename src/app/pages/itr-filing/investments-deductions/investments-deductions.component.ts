@@ -790,6 +790,9 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       }
 
       if (!isAdded) {
+        if(!this.ITR_JSON.investments) {
+          this.ITR_JSON.investments = [];
+        }
         this.ITR_JSON.investments?.push({
           investmentType: controlName,
           amount: Number(this.investmentDeductionForm.controls[controlName].value),
