@@ -274,7 +274,9 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     if (itrData.FilingStatus.ReturnFileSec === 17) {
       this.itrSummaryForm.controls['returnType'].setValue('REVISED');
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['ackNumber'].setValue(itrData.FilingStatus.ReceiptNo);
-      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['eFillingDate'].setValue(itrData.FilingStatus.OrigRetFiledDate)
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['eFillingDate'].setValue(itrData.FilingStatus.OrigRetFiledDate);
+      //set itr isRevised to true
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['isRevised'].setValue('Y');
       this.showAcknowData('REVISED')
     }
     (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['aadharNumber'].setValue(itrData.PersonalInfo.AadhaarCardNo);
@@ -3190,6 +3192,9 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       this.loading = true;
       let tempAy = this.itrObject.assessmentYear;
       let tempFy = this.itrObject.financialYear;
+
+      console.log(this.itrSummaryForm.controls['assesse'].value);
+
       Object.assign(this.itrObject, this.itrSummaryForm.controls['assesse'].value);
       this.itrObject.assessmentYear = tempAy;
       this.itrObject.financialYear = tempFy ? tempFy : '2021-2022';
@@ -3204,6 +3209,9 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
           // this.updateStatus(); // Update staus automatically
           this.loading = false;
           this._toastMessageService.alert("success", "Summary saved and ITR details updated succesfully.");
+          //save the ITR object into session for next page
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.itrObject));
+
         }, error => {
           this._toastMessageService.alert("error", "Failed to update itr details");
           this.loading = false;
