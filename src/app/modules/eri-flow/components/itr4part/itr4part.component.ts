@@ -37,6 +37,7 @@ export class Itr4partComponent implements OnInit, DoCheck, OnChanges {
   }
   ngOnChanges() {
     if (this.utilService.isNonEmpty(this.businessData)) {
+      this.initialiseForm();
       this.updateBusinessInfo();
     }
   }
@@ -483,7 +484,7 @@ export class Itr4partComponent implements OnInit, DoCheck, OnChanges {
   ngDoCheck() {
     if (this.natureOfBusinessForm.valid) {
 
-      this.getBusinessInfo.emit(this.natureOfBusinessForm)
+      this.getBusinessInfo.emit(this.natureOfBusinessForm);
     }
   }
 
