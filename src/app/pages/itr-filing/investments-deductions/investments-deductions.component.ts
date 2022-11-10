@@ -607,7 +607,10 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
           this.addAndUpdateInvestment(item);
         } else {
           if (item === 'us80e') {
-            this.ITR_JSON.loans = this.ITR_JSON.loans?.filter((item: any) => item.loanType !== 'EDUCATION')
+            this.ITR_JSON.loans = this.ITR_JSON.loans?.filter((item: any) => item.loanType !== 'EDUCATION');
+            if(!this.ITR_JSON.loans){
+              this.ITR_JSON.loans = [];
+            }
             this.ITR_JSON.loans?.push({
               loanType: 'EDUCATION',
               name: null,
@@ -617,7 +620,10 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
               details: null
             });
           } else if (item === 'us80gg') {
-            this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID')
+            this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID');
+            if(!this.ITR_JSON.expenses) {
+              this.ITR_JSON.expenses = [];
+            }
             if (!this.ITR_JSON.systemFlags.hraAvailed) {
               this.ITR_JSON.expenses?.push({
                 expenseType: 'HOUSE_RENT_PAID',
@@ -628,7 +634,10 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
               });
             }
           } else if (item === 'us80ggc') {
-            this.ITR_JSON.donations = this.ITR_JSON.donations?.filter((item: any) => item.donationType !== 'POLITICAL')
+            this.ITR_JSON.donations = this.ITR_JSON.donations?.filter((item: any) => item.donationType !== 'POLITICAL');
+            if(!this.ITR_JSON.donations) {
+              this.ITR_JSON.donations = [];
+            }
             this.ITR_JSON.donations?.push({
               details: '',
               identifier: '',
@@ -644,7 +653,10 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
               state: '',
             });
           } else if (item === 'us80eeb') {
-            this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'ELECTRIC_VEHICLE')
+            this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'ELECTRIC_VEHICLE');
+            if(!this.ITR_JSON.expenses) {
+              this.ITR_JSON.expenses = [];
+            }
             this.ITR_JSON.expenses?.push({
               expenseType: 'ELECTRIC_VEHICLE',
               expenseFor: null,
@@ -656,6 +668,9 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         }
       });
       this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter((item: any) => item.policyFor !== "DEPENDANT");
+      if(!this.ITR_JSON.insurances) {
+        this.ITR_JSON.insurances = [];
+      }
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPremium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value)) {
@@ -671,6 +686,9 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         });
       }
       this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter((item: any) => item.policyFor !== "PARENTS");
+      if(!this.ITR_JSON.insurances) {
+        this.ITR_JSON.insurances = [];
+      }
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['premium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['preventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['medicalExpenditure'].value)) {
@@ -790,6 +808,9 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       }
 
       if (!isAdded) {
+        if(!this.ITR_JSON.investments) {
+          this.ITR_JSON.investments = [];
+        }
         this.ITR_JSON.investments?.push({
           investmentType: controlName,
           amount: Number(this.investmentDeductionForm.controls[controlName].value),

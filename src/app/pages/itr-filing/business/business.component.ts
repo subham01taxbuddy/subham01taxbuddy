@@ -496,6 +496,25 @@ export class BusinessComponent implements OnInit {
         this.Copy_ITR_JSON.business.presumptiveIncomes.splice(this.currentIndex, 1, myPresumptiveIncome);
         // this.ITR_JSON.business.presumptiveIncomes.splice(this.currentIndex, 1, myPresumptiveIncome);
       }
+      if(!this.Copy_ITR_JSON.systemFlags) {
+        this.Copy_ITR_JSON.systemFlags = {
+          hasSalary: false,
+          hasHouseProperty: false,
+          hasMultipleProperties: false,
+          hasForeignAssets: false,
+          hasCapitalGain: false,
+          hasBroughtForwardLosses: false,
+          hasAgricultureIncome: false,
+          hasOtherIncome: false,
+          hasParentOverSixty: false,
+          hasBusinessProfessionIncome: false,
+          hasFutureOptionsIncome: false,
+          hasNRIIncome: false,
+          hraAvailed: false,
+          directorInCompany: false,
+          haveUnlistedShares: false
+        };
+      }
       this.Copy_ITR_JSON.systemFlags.hasBusinessProfessionIncome = true;
       // this.utilsService.openLoaderDialog();
       this.loading = true;
