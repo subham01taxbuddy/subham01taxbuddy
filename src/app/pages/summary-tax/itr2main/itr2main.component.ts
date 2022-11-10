@@ -8026,7 +8026,7 @@ export class Itr2mainComponent implements OnInit {
         eFillingCompleted: false,
         eFillingDate: null,
         isRevised: null,
-        isLate: null,
+        isLate: 'N',
         employerCategory: null,
         regime: '',
         dateOfNotice: null,
