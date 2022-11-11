@@ -1,3 +1,4 @@
+import { AddClientDialogComponent } from './../add-client-dialog/add-client-dialog.component';
 import { UpdateManualFilingComponent } from './../update-manual-filing/update-manual-filing.component';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
@@ -16,6 +17,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
+import { PrefillDataComponent } from '../prefill-data/prefill-data.component';
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -107,6 +109,10 @@ export class CustomerProfileComponent implements OnInit {
     private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+    console.log(this.router.getCurrentNavigation().extras.state);
+    if(this.router.getCurrentNavigation().extras.state) {
+      console.log(this.router.getCurrentNavigation().extras.state);
+    }
   }
 
   ngOnInit() {
@@ -116,6 +122,7 @@ export class CustomerProfileComponent implements OnInit {
     this.changeReviseForm();
     this.getDocuments();
     this.getSmeList();
+    
 
   }
   zoom: number = 1.0;
@@ -625,8 +632,47 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   addClient() {
-    Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+    //Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+    let disposable = this.dialog.open(AddClientDialogComponent, {
+      width: '500',
+      height: '100',
+      data: {
+        userId: this.ITR_JSON.userId,
+        panNumber: this.customerProfileForm.controls['panNumber'].value,
+        eriClientValidUpto: '',
+        callerAgentUserId: this.ITR_JSON.filingTeamMemberId,
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        name: this.customerProfileForm.controls['firstName'].value + ' ' + this.customerProfileForm.controls['lastName'].value,
+        dateOfBirth: this.customerProfileForm.controls['panNumber'].value,
+        mobileNumber: this.ITR_JSON.contactNumber
+      }
+    })
 
+    disposable.afterClosed().subscribe(result => {
+      console.log('The add client dialog was closed');
+    });
+  }
+
+  getPrefillData() {
+    //Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+    let disposable = this.dialog.open(PrefillDataComponent, {
+      width: '70%',
+      height: 'auto',
+      data: {
+        userId: this.ITR_JSON.userId,
+        panNumber: this.customerProfileForm.controls['panNumber'].value,
+        eriClientValidUpto: '',
+        callerAgentUserId: this.ITR_JSON.filingTeamMemberId,
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        name: this.customerProfileForm.controls['firstName'].value + ' ' + this.customerProfileForm.controls['lastName'].value,
+        dateOfBirth: this.customerProfileForm.controls['panNumber'].value,
+        mobileNumber: this.ITR_JSON.contactNumber
+      }
+    });
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The add client dialog was closed');
+    });
   }
 
   isApplicable(permissionRoles) {
