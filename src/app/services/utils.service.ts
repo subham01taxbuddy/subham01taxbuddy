@@ -138,7 +138,13 @@ export class UtilsService {
                     this.ITR_JSON.filingTeamMemberId = filingTeamMemberId;
                     console.log('this.ITR_JSONthis.ITR_JSONthis.ITR_JSON', this.ITR_JSON);
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/customer-profile'])
+                    this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+                        state: { 
+                          userId: this.ITR_JSON.userId, 
+                          panNumber: this.ITR_JSON.panNumber, 
+                          eriClientValidUpto: profile.eriClientValidUpto, 
+                          name: profile.name } 
+                        });
                     /* if (this.utilsService.isNonEmpty(profile.panNumber)) {
                       if (this.utilsService.isNonEmpty(this.ITR_JSON.panNumber) ? (this.ITR_JSON.panNumber !== profile.panNumber) : false) {
                         this.openConformationDialog(this.ITR_JSON, profile, assessmentYear, financialYear);
@@ -185,7 +191,13 @@ export class UtilsService {
                     this.ITR_JSON = result;
                     this.loading = false;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/customer-profile'])
+                    this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+                        state: { 
+                          userId: this.ITR_JSON.userId, 
+                          panNumber: this.ITR_JSON.panNumber, 
+                          eriClientValidUpto: profile.eriClientValidUpto, 
+                          name: profile.name } 
+                        });
                 }, error => {
                     this.loading = false;
                 });

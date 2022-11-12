@@ -817,7 +817,7 @@ export class AssignedUsersComponent implements OnInit {
       if(result == null || result.length == 0) {
         //no ITR found, create a new one
         //update status to WIP
-        this.updateITRtoWIP(data, currentFyDetails[0].assessmentYear);
+        this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
         
         this.loading = true;
         let profile = await this.getUserProfile(data.userId).catch(error => {
@@ -830,9 +830,17 @@ export class AssignedUsersComponent implements OnInit {
         this.utilsService.getITRByUserIdAndAssesmentYear(profile, '', this.agentId);
       } else if(result.length == 1) {
         //update status to WIP
-        this.updateITRtoWIP(data, currentFyDetails[0].assessmentYear);
+        //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result[0]));
-        this.router.navigate(['/pages/itr-filing/customer-profile']);
+        console.log('b4');
+        this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+          state: { 
+            userId: data.userId, 
+            panNumber: data.panNumber, 
+            eriClientValidUpto: data.eriClientValidUpto, 
+            name: data.name } 
+          });
+          console.log('after');
       } else {
         //multiple ITRs found, navigate to ITR tab with the results
         this.router.navigateByUrl('/tasks/filings', 
@@ -856,7 +864,13 @@ export class AssignedUsersComponent implements OnInit {
             this.loading = false;
             ITR_JSON = result;
             sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(ITR_JSON));
-            this.router.navigate(['/pages/itr-filing/customer-profile'])
+            this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+              state: { 
+                userId: data.userId, 
+                panNumber: data.panNumber, 
+                eriClientValidUpto: data.eriClientValidUpto, 
+                name: data.name } 
+              });
         }, error => {
             this.loading = false;
         });
@@ -873,13 +887,14 @@ export class AssignedUsersComponent implements OnInit {
     return await this.userMsService.getMethod(param).toPromise();
   }
 
-  updateITRtoWIP(data, assessmentYear) {
+  updateITRtoWIP(data, itr, assessmentYear) {
+    console.log('data', itr);
     if(data.statusId) {
       const param = '/itr'
       const request = {
         'userId':data.userId,
         'assessmentYear':assessmentYear,
-        'isRevised': 'N',
+        'isRevised': itr.isRevised,
         'status':'PREPARING_ITR'
       };
 
@@ -909,10 +924,10 @@ export class AssignedUsersComponent implements OnInit {
     console.log("param2: ", param2);
     this.userMsService.postMethod(param, param2).subscribe(res => {
       console.log("Status update response: ", res)
-      this.loading = false;
+      // this.loading = false;
       //this._toastMessageService.alert("success", "Status update successfully.");
     }, error => {
-      this.loading = false;
+      // this.loading = false;
       //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
     });
   }
