@@ -241,11 +241,11 @@
                             <div style="text-align: left;">
                                 <div class="card__col-xs-12 card__col-sm-4" style="text-align: left;">
                                     <button class="tbd-btn" (click)="addClient()">Add Client </button>
-                                    <!-- <div style="margin-left: 15px;">Last client date</div> -->
+                                    <div style="margin-left: 15px;" *ngIf="navigationData?.eriClientValidUpto">Client added, valid upto {{navigationData?.eriClientValidUpto | date}}</div>
                                 </div>
                                 <div class="card__col-xs-12 card__col-sm-4" style="text-align: left;">
                                     <button class="tbd-btn" (click)="getPrefillData()">Get Prefill Data </button>
-                                    <!-- <div style="margin-left: 15px;">Last prefill date</div> -->
+                                    <div style="margin-left: 15px;" *ngIf="this.ITR_JSON?.prefillDate">Last generated on {{this.ITR_JSON?.prefillDate | date}}</div>
                                 </div>
                                 
                             </div>

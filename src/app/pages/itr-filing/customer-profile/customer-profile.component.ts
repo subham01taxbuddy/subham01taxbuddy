@@ -96,6 +96,7 @@ export class CustomerProfileComponent implements OnInit {
 
   filePath = 'ITR/';
   loggedInUserData: any;
+  navigationData: any;
 
   constructor(public fb: FormBuilder,
     public utilsService: UtilsService,
@@ -109,10 +110,8 @@ export class CustomerProfileComponent implements OnInit {
     private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
-    console.log(this.router.getCurrentNavigation().extras.state);
-    if(this.router.getCurrentNavigation().extras.state) {
-      console.log(this.router.getCurrentNavigation().extras.state);
-    }
+    console.log('nav data', this.router.getCurrentNavigation().extras.state);
+    this.navigationData = this.router.getCurrentNavigation().extras.state;
   }
 
   ngOnInit() {
