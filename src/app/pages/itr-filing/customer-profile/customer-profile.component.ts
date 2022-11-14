@@ -248,7 +248,6 @@ export class CustomerProfileComponent implements OnInit {
         this.loading = false;
         let itrType = JSON.parse(result.data.itrType);
         console.log('res', itrType as string);
-        debugger;
         if (selectedType != itrType) {
           isTypeCorrect = false;
           let message = (itrType == 1 || itrType == 4) ? `For this user ITR ${itrType} needs to be filed. Please select correct ITR type and continue.`
