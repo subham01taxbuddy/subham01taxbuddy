@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({
   selector: 'app-prefill-data',
@@ -120,16 +121,16 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
     this.loading = true;
     const formData = new FormData();
     formData.append("file", this.uploadDoc);
-    let annualYear = this.data.assessmentYear.toString().slice(0, 4);
-    // console.log('annualYear: ', annualYear);
-    formData.append("assessmentYear", annualYear);
+    formData.append("assessmentYear", this.data.assessmentYear);
     formData.append("userId", this.data.userId.toString());
     let param = '/eri/prefill-json/upload';
-    this.itrMsService.postMethodForEri(param, formData).subscribe((res: any) => {
+    this.itrMsService.postMethod(param, formData).subscribe((res: any) => {
       this.loading = false;
       console.log('uploadDocument response =>', res);
       if (res && res.success) {
         this.utilsService.showSnackBar(res.message);
+        //prefill uploaded successfully, fetch ITR again
+        this.fetchUpdatedITR();
       }
       else {
         if (res.errors instanceof Array && res.errors.length > 0) {
@@ -160,4 +161,33 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     sessionStorage.removeItem('ERI-Request-Header');
   }
+
+  async fetchUpdatedITR() {
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+    
+    //https://uat-api.taxbuddy.com/itr/itr-data?userId={userId}&assessmentYear={assessmentYear}&isRevised={isRevised}
+    let isRevised = false;
+    const param = `/itr?userId=${this.data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}&isRevised=${isRevised}`;
+    this.itrMsService.getMethod(param).subscribe(async (result: any) => {
+      console.log('My ITR by user Id and Assessment Years=', result);
+      if(result == null || result.length == 0) {
+        //invalid case here
+        this.utilsService.showErrorMsg('Something went wrong. Please try again.');
+      } else if(result.length == 1) {
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result[0]));
+      } else {
+        //multiple ITRs found, invalid case
+        this.utilsService.showErrorMsg('Something went wrong. Please try again.');
+      }
+      
+    }, async (error:any) => {
+      console.log('Error:', error);
+      this.loading = false;
+      this.utilsService.showErrorMsg('Something went wrong. Please try again.');
+    });
+    
+  }
+  
 }
+

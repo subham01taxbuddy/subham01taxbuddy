@@ -670,7 +670,8 @@ export class CustomerProfileComponent implements OnInit {
     });
 
     disposable.afterClosed().subscribe(result => {
-      console.log('The add client dialog was closed');
+      console.log('The prefill data dialog was closed');
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     });
   }
 
