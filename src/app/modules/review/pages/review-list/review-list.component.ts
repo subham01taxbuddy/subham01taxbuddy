@@ -357,7 +357,7 @@ export class ReviewListComponent implements OnInit {
   createRowData(data: any) {
     var userArray = [];
     for (let i = 0; i < data.length; i++) {
-
+     
       let platform = '-';
       if (data[i].sourcePlatform) {
         const filterData = this.sourceList.filter(element => element.value === data[i].sourcePlatform);
