@@ -232,12 +232,43 @@ export class CustomerProfileComponent implements OnInit {
     }
 
   }
-  saveProfile(ref) {
+
+  async validateITRType() : Promise<boolean>{
+    this.loading = true;
+      //check & confirm if correct ITR type is selected
+      let isTypeCorrect = true;
+      let url = `/itr-type?itrId=${this.ITR_JSON.itrId}`;
+      this.itrMsService.getMethod(url, this.ITR_JSON).subscribe((result: any) => {
+        if(result.success) {
+          this.loading = false;
+          let itrType = JSON.parse(result.data.itrType);
+          console.log('res', itrType as string);
+          if(this.customerProfileForm.controls['itrType'].value !== itrType) {
+            isTypeCorrect = false;
+            let message = (itrType == 1 || itrType == 4) ? `For this user ITR ${itrType} needs to be filed. Please select correct ITR type and continue”.`
+              : `For this user ITR ${itrType} needs to be filed. Please proceed filing with the Income tax Utility”.`;
+            this.utilsService.showSnackBar(message);
+            Promise.resolve(isTypeCorrect);
+          }
+        }
+      }, error => {
+        this.utilsService.showSnackBar('Failed to get ITR type for user');
+        this.loading = false;
+        Promise.resolve(true);
+      });
+      return;
+  }
+
+  async saveProfile(ref) {
     console.log('customerProfileForm: ', this.customerProfileForm);
     this.findAssesseeType();
     // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
       this.loading = true;
+      let isTypeCorrect = await this.validateITRType();
+      if(!isTypeCorrect) {
+        return;
+      }
       const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
       this.ITR_JSON.family = [
         {
