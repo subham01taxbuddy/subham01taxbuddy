@@ -32,8 +32,8 @@ export const MY_FORMATS = {
 export class AddUpdateReviewComponent implements OnInit {
 
   sourceList: any = AppConstants.sourceList;
-  reviewStatusList: any =AppConstants.reviewStatusList;
-  productList: any =AppConstants.productList;
+  reviewStatusList: any = AppConstants.reviewStatusList;
+  ratingList: any = AppConstants.ratingList;
   userData: any;
   reviewForm: FormGroup;
   loading: boolean;
@@ -58,14 +58,14 @@ export class AddUpdateReviewComponent implements OnInit {
   initForm() {
     this.reviewForm = this.fb.group({
       sourcePlatform: ['', Validators.required],
-      sourceMobile: ['', Validators.required],
-      sourceEmail: ['', [Validators.required, Validators.email]],
+      sourceMobile: [''],
+      sourceEmail: ['', [Validators.email]],
       sourceRating: ['', Validators.required],
-      sourceComment: ['', Validators.required],
+      sourceComment: [''],
       sourceReviewDateTime: [new Date(), Validators.required],
       sourceUserName: ['', Validators.required],
       isReviewNegative: ['', Validators.required],
-      productName: ['', Validators.required],
+      productName: ['Taxbuddy', Validators.required],
       status: ['OPEN'],
       userId: [this.userData.USER_UNIQUE_ID],
       smeId: [""],
@@ -78,13 +78,13 @@ export class AddUpdateReviewComponent implements OnInit {
   addReview() {
     this.loading = true;
     this.isError = false;
-      const param = `review`;
-      this.reviewService.postMethod(param, this.reviewForm.getRawValue()).subscribe(res => {
-        this._toastMessageService.alert("success", "Review added successfully");
-        this.dialogRef.close();
-      }, (error) => {
-        this.loading = true;
-        this._toastMessageService.alert("error", "Failed to add review");
-      });
+    const param = `review`;
+    this.reviewService.postMethod(param, this.reviewForm.getRawValue()).subscribe(res => {
+      this._toastMessageService.alert("success", "Review added successfully");
+      this.dialogRef.close();
+    }, (error) => {
+      this.loading = true;
+      this._toastMessageService.alert("error", "Failed to add review");
+    });
   }
 }

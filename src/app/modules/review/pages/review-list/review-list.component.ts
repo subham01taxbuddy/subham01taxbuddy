@@ -21,7 +21,6 @@ export class ReviewListComponent implements OnInit {
   userInfo = [];
   sourceList: any[] = AppConstants.sourceList;
   reviewStatusList: any[] = AppConstants.reviewStatusList;
-  productList: any[] = AppConstants.productList;
 
   constructor(@Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog,
@@ -278,12 +277,7 @@ export class ReviewListComponent implements OnInit {
   createRowData(data: any) {
     var userArray = [];
     for (let i = 0; i < data.length; i++) {
-      let productName = '-';
-      if (data[i].productName) {
-        const filterData = this.productList.filter(element => element.value === data[i].productName);
-        productName = filterData.length ? filterData[0].label : '-'
-      }
-
+     
       let platform = '-';
       if (data[i].sourcePlatform) {
         const filterData = this.sourceList.filter(element => element.value === data[i].sourcePlatform);
@@ -291,7 +285,7 @@ export class ReviewListComponent implements OnInit {
       }
 
       let userInfo: any = Object.assign({}, userArray[i], {
-        productName: productName,
+        productName: data[i].productName,
         sourcePlatform: platform,
         sourceRating: data[i].sourceRating,
         sourceReviewDateTime: data[i].sourceReviewDateTime,
