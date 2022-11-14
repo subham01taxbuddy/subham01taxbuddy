@@ -113,6 +113,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   downloadPrefillJson() {
     const fileURL = `${environment.url}/itr/eri/download-prefill-json-file?userId=${this.data.userId.toString()}&assessmentYear=2022-2023`;
     window.open(fileURL);
+    this.dialogRef.close();
     return;
   }
 
@@ -131,6 +132,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
         this.utilsService.showSnackBar(res.message);
         //prefill uploaded successfully, fetch ITR again
         this.fetchUpdatedITR();
+        this.dialogRef.close();
       }
       else {
         if (res.errors instanceof Array && res.errors.length > 0) {
