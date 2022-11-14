@@ -1,3 +1,4 @@
+import { AddClientDialogComponent } from './add-client-dialog/add-client-dialog.component';
 import { AckFailureComponent } from './acknowledgement/ack-failure/ack-failure.component';
 import { AckDelayComponent } from './acknowledgement/ack-delay/ack-delay.component';
 import { AckSuccessComponent } from './acknowledgement/ack-success/ack-success.component';
@@ -42,6 +43,7 @@ import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-docu
 import { UpdateManualFilingComponent } from './update-manual-filing/update-manual-filing.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AddClientComponent } from './add-client/add-client.component';
+import { PrefillDataComponent } from './prefill-data/prefill-data.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -92,6 +94,8 @@ import { AddClientComponent } from './add-client/add-client.component';
         ShowUserDocumnetsComponent,
         UpdateManualFilingComponent,
         AddClientComponent,
+        AddClientDialogComponent,
+        PrefillDataComponent
         // InputUploadComponent
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
