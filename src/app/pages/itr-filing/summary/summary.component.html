@@ -73,8 +73,8 @@
 
                     <!-- Bank  -->
                     <div class="txBt" style="border-bottom: none">
-                        <span class="txLf">Bank Name:</span><span class="txMuLf">{{bankArray.name}}</span>
-                        <span class="txLf">Account Number:</span><span class="txMuLf">{{bankArray.accountNumber}}</span>
+                        <span class="txLf">Bank Name:</span><span class="txMuLf">{{bankArray?.name}}</span>
+                        <span class="txLf">Account Number:</span><span class="txMuLf">{{bankArray?.accountNumber}}</span>
                     </div>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-4 card__col-md-4" *ngIf="taxable && taxable > 0">
