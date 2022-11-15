@@ -1,3 +1,4 @@
+import { ToastMessageService } from './../../../services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -19,7 +20,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   validateOtpForm: FormGroup;
   uploadDoc: any;
   constructor(private itrMsService: ItrMsService,
-    private utilsService: UtilsService,
+    private utilsService: UtilsService, private toastMessageService: ToastMessageService,
     private router: Router, public dialogRef: MatDialogRef<PrefillDataComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder) { }
@@ -152,7 +153,28 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
     console.log("File", file);
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
-      this.uploadPrefillJson();
+
+      //read the file to get details upload and validate
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        let jsonRes = e.target.result;
+        let JSONData = JSON.parse(jsonRes);
+
+        let panNo = JSONData.personalInfo?.pan;
+        let mobileNo = new Date(JSONData.personalInfo?.address?.mobileNo);
+        if (panNo !== this.data?.panNumber) {
+          this.toastMessageService.alert('error', 'PAN Number from profile and PAN number from json are different please confirm once.');
+          console.log('PAN mismatch');
+          return;
+        } else if (mobileNo !== this.data?.mobileNumber) {
+          this.toastMessageService.alert('error', 'Mobile Number from profile and mobile number from json are different please confirm once.');
+          console.log('mobile mismatch');
+          return;
+        } else{
+          this.uploadPrefillJson();
+        }
+      }
+      reader.readAsText(this.uploadDoc);
     }
   }
 
