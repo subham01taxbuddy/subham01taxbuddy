@@ -193,7 +193,7 @@
                                 <mat-label>Acknowledgement number</mat-label>
                                 <input matTooltip="Acknowledgement number maximum of 15 digit"
                                     matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
-                                    placeholder="Acknowledgement of Original ITR" name="orgITRAckNum"
+                                    placeholder="Acknowledgement of Original ITR" name="orgITRAckNum" (blur)="setFilingDate()"
                                     class="input-field" maxlength="15" minlength="15" formControlName="orgITRAckNum" />
                             </mat-form-field>
                         </div>
