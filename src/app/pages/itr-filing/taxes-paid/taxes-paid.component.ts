@@ -74,6 +74,25 @@ export class TaxesPaidComponent implements OnInit {
         otherThanTDSTCS: [],
         paidRefund: []
       };
+    } else {
+      if(!this.ITR_JSON.taxPaid.onSalary) {
+        this.ITR_JSON.taxPaid.onSalary = [];
+      } 
+      if(!this.ITR_JSON.taxPaid.otherThanSalary16A) {
+        this.ITR_JSON.taxPaid.otherThanSalary16A = [];
+      } 
+      if(!this.ITR_JSON.taxPaid.otherThanSalary26QB) {
+        this.ITR_JSON.taxPaid.otherThanSalary26QB = [];
+      } 
+      if(!this.ITR_JSON.taxPaid.tcs) {
+        this.ITR_JSON.taxPaid.tcs = [];
+      } 
+      if(!this.ITR_JSON.taxPaid.otherThanTDSTCS) {
+        this.ITR_JSON.taxPaid.otherThanTDSTCS = [];
+      } 
+      if(!this.ITR_JSON.taxPaid.paidRefund) {
+        this.ITR_JSON.taxPaid.paidRefund = [];
+      } 
     }
 
     this.onSalaryCallInConstructor();
