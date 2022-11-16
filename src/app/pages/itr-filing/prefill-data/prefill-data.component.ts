@@ -161,14 +161,14 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
         let JSONData = JSON.parse(jsonRes);
 
         let panNo = JSONData.personalInfo?.pan;
-        let mobileNo = new Date(JSONData.personalInfo?.address?.mobileNo);
+        let mobileNo = JSONData.personalInfo?.address?.mobileNo;
         if (panNo !== this.data?.panNumber) {
           this.toastMessageService.alert('error', 'PAN Number from profile and PAN number from json are different please confirm once.');
           console.log('PAN mismatch');
           return;
-        } else if (mobileNo !== this.data?.mobileNumber) {
+        } else if (mobileNo != this.data?.mobileNumber) {
           this.toastMessageService.alert('error', 'Mobile Number from profile and mobile number from json are different please confirm once.');
-          console.log('mobile mismatch');
+          console.log(mobileNo, this.data?.mobileNumber, 'mobile mismatch');
           return;
         } else{
           this.uploadPrefillJson();
