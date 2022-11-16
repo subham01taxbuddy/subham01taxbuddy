@@ -817,7 +817,7 @@ export class AssignedUsersComponent implements OnInit {
       if(result == null || result.length == 0) {
         //no ITR found, create a new one
         //update status to WIP
-        this.updateITRtoWIP(data, currentFyDetails[0].assessmentYear);
+        this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
         
         this.loading = true;
         let profile = await this.getUserProfile(data.userId).catch(error => {
@@ -830,7 +830,7 @@ export class AssignedUsersComponent implements OnInit {
         this.utilsService.getITRByUserIdAndAssesmentYear(profile, '', this.agentId);
       } else if(result.length == 1) {
         //update status to WIP
-        this.updateITRtoWIP(data, currentFyDetails[0].assessmentYear);
+        // this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result[0]));
         this.router.navigate(['/pages/itr-filing/customer-profile']);
       } else {
@@ -873,13 +873,13 @@ export class AssignedUsersComponent implements OnInit {
     return await this.userMsService.getMethod(param).toPromise();
   }
 
-  updateITRtoWIP(data, assessmentYear) {
+  updateITRtoWIP(data,itr, assessmentYear) {
     if(data.statusId) {
       const param = '/itr'
       const request = {
         'userId':data.userId,
         'assessmentYear':assessmentYear,
-        'isRevised': 'N',
+        'isRevised': itr.isRevised,
         'status':'PREPARING_ITR'
       };
 
