@@ -370,6 +370,7 @@ export class CustomerProfileComponent implements OnInit {
       this.customerProfileForm.controls['orgITRDate'].setValidators(null);
       this.customerProfileForm.controls['orgITRDate'].updateValueAndValidity();
     } else {
+      this.customerProfileForm.controls['isRevised'].disable();
       // this.customerProfileForm.controls['reviseReturnYear'].setValidators(Validators.required);
       // this.customerProfileForm.controls['reviseReturnYear'].updateValueAndValidity();
       this.customerProfileForm.controls['orgITRAckNum'].setValidators(Validators.required);
