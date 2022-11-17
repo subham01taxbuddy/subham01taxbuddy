@@ -741,7 +741,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       data: {
         userId: client.userId,
         clientName: client.fName + ' ' + client.lName,
-        serviceType: 'TPA',
+        serviceType: 'ITR',
         mode: mode,
         userInfo: client
       }
