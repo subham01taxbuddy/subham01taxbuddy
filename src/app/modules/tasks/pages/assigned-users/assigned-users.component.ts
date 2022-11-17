@@ -831,8 +831,18 @@ export class AssignedUsersComponent implements OnInit {
       } else if(result.length == 1) {
         //update status to WIP
         //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result[0]));
-        console.log('b4');
+        let workingItr = result[0];
+        Object.entries(workingItr).forEach((key, value) => {
+          console.log(key, value)
+          if (key[1] === null) {
+            delete workingItr[key[0]];
+          }
+        });
+        let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+        Object.assign(obj, workingItr);
+        console.log('obj:', obj);
+        workingItr = JSON.parse(JSON.stringify(obj));
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
         this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
           state: { 
             userId: data.userId, 
@@ -840,7 +850,6 @@ export class AssignedUsersComponent implements OnInit {
             eriClientValidUpto: data.eriClientValidUpto, 
             name: data.name } 
           });
-          console.log('after');
       } else {
         //multiple ITRs found, navigate to ITR tab with the results
         this.router.navigateByUrl('/tasks/filings', 
@@ -941,7 +950,13 @@ export class AssignedUsersComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       if (result === 'reviseReturn') {
-        this.router.navigate(['/pages/itr-filing/customer-profile'])
+        this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+          state: { 
+            userId: data.userId, 
+            panNumber: data.panNumber, 
+            eriClientValidUpto: data.eriClientValidUpto, 
+            name: data.name } 
+          });
       }
       console.log('The dialog was closed', result);
     });

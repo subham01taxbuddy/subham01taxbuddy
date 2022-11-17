@@ -213,7 +213,13 @@ export class UtilsService {
                     this.loading = false;
                     this.ITR_JSON = result;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/customer-profile'])
+                    this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+                        state: { 
+                          userId: this.ITR_JSON.userId, 
+                          panNumber: this.ITR_JSON.panNumber, 
+                          eriClientValidUpto: profile.eriClientValidUpto, 
+                          name: profile.name } 
+                        });
                 }, error => {
                     this.loading = false;
                 });
