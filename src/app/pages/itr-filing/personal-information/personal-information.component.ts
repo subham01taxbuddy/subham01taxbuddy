@@ -764,8 +764,8 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   onRegimeChanged() {
-    if (this.customerProfileForm.controls['regime'].value === 'NEW' || 
-      this.customerProfileForm.controls['previousYearRegime'].value === 'NEW') {
+    if ((this.customerProfileForm.controls['regime'].value === 'NEW' || 
+      this.customerProfileForm.controls['previousYearRegime'].value === 'NEW') && this.customerProfileForm.controls['previousYearRegime'].value !== '') {
         this.lastFilingDetailsNeeded = true;
         this.customerProfileForm.controls['form10IEAckNo'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
         this.customerProfileForm.controls['form10IEDate'].setValidators([Validators.required]);
