@@ -291,7 +291,7 @@
             <div class="card__col-xs-12 card__col-sm-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Select One</mat-label>
-                    <mat-select name="previousYearRegime" formControlName="previousYearRegime" required (selectionChange)="onRegimeChanged()">
+                    <mat-select name="previousYearRegime" formControlName="previousYearRegime" (selectionChange)="onRegimeChanged()">
                         <!-- formControlName="employerCategory" TODO -->
                         <mat-option value="NEW"> Yes </mat-option>
                         <mat-option value="OLD"> No </mat-option>
