@@ -232,135 +232,127 @@ export class CustomerProfileComponent implements OnInit {
     }
 
   }
-  saveProfile(ref) {
+
+  async saveProfile(ref) {
     console.log('customerProfileForm: ', this.customerProfileForm);
     this.findAssesseeType();
     // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
       this.loading = true;
-      const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
-      this.ITR_JSON.family = [
-        {
-          pid: null,
-          fName: this.customerProfileForm.controls['firstName'].value,
-          mName: this.customerProfileForm.controls['middleName'].value,
-          lName: this.customerProfileForm.controls['lastName'].value,
-          fatherName: this.customerProfileForm.controls['fatherName'].value,
-          age: ageCalculated,
-          gender: this.customerProfileForm.controls['gender'].value,
-          relationShipCode: 'SELF',
-          relationType: 'SELF',
-          dateOfBirth: this.customerProfileForm.controls['dateOfBirth'].value
-        }
-      ];
-      let param;
-      if (this.ITR_JSON.filingTeamMemberId !== Number(this.customerProfileForm.controls['filingTeamMemberId'].value)) {
-        param = '/zoho-contact'
-      } else {
-        param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-      }
-      // let isPlanChanged = false;
-      // if (this.ITR_JSON.planIdSelectedByTaxExpert !== Number(this.customerProfileForm.controls['planIdSelectedByTaxExpert'].value)) {
-      //   isPlanChanged = true;
-      // }
-      Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
-      // if (isPlanChanged) {
-      //   this.ITR_JSON.planIdSelectedByTaxExpert = null
-      // }
-
-      if (this.ITR_JSON.itrType === '1') {
-        if(this.ITR_JSON.business) {
-          this.ITR_JSON.business.presumptiveIncomes = [];
-          this.ITR_JSON.business.financialParticulars = null;
-        } else {
-          this.ITR_JSON.business = {
-            presumptiveIncomes: [],
-            financialParticulars: null
-          };
-        }
-        if(this.ITR_JSON.systemFlags) {
-          this.ITR_JSON.systemFlags.hasBusinessProfessionIncome = false;
-        } else {
-          this.ITR_JSON.systemFlags = {
-            hasSalary: false,
-            hasHouseProperty: false,
-            hasMultipleProperties: false,
-            hasForeignAssets: false,
-            hasCapitalGain: false,
-            hasBroughtForwardLosses: false,
-            hasAgricultureIncome: false,
-            hasOtherIncome: false,
-            hasParentOverSixty: false,
-            hasBusinessProfessionIncome: false,
-            hasFutureOptionsIncome: false,
-            hasNRIIncome: false,
-            hraAvailed: false,
-            directorInCompany: false,
-            haveUnlistedShares: false
-          };
-        }
-        
-        
-      }else if (this.ITR_JSON.itrType === '4') {
-        if(!this.ITR_JSON.business) {
-          this.ITR_JSON.business = {
-            presumptiveIncomes: [],
-            financialParticulars: null
-          };
-        }
-      }
-
-      this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
-        this.ITR_JSON = result;
-        this.updateStatus(); // Update staus automatically
-        // if (isPlanChanged) {
-        //   const planParam = '/change-plan-by-expert';
-        //   this.ITR_JSON.planIdSelectedByTaxExpert = Number(this.customerProfileForm.controls['planIdSelectedByTaxExpert'].value)
-        //   this.itrMsService.putMethod(planParam, this.ITR_JSON).subscribe((result: any) => {
-        //     this.ITR_JSON = result;
-        //     console.log('Plan changed successfully by tax expert', result);
-        //     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-        //     this.loading = false;
-        //     this.utilsService.showSnackBar('Customer profile updated successfully.');
-        //     if (ref === "CONTINUE") {
-        //       if (this.customerProfileForm.controls['itrType'].value === '1'
-        //         || this.customerProfileForm.controls['itrType'].value === '4')
-        //         this.router.navigate(['/pages/itr-filing/itr']);
-        //       else
-        //         this.router.navigate(['/pages/itr-filing/direct-upload']);
-        //     } else if (ref === "DIRECT") {
-        //       this.router.navigate(['/pages/itr-filing/direct-upload']);
-        //     }
-        //   }, error => {
-        //     this.utilsService.showSnackBar('Fialed to update customer profile.');
-        //     this.loading = false;
-        //   });
-        // } else {
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+      //check & confirm if correct ITR type is selected
+      let isTypeCorrect = true;
+      let selectedType = this.customerProfileForm.controls['itrType'].value;
+      let url = `/itr-type?itrId=${this.ITR_JSON.itrId}`;
+      this.itrMsService.getMethod(url, this.ITR_JSON).subscribe((result: any) => {
+      if (result.success) {
         this.loading = false;
-        this.utilsService.showSnackBar('Customer profile updated successfully.');
-        // if (ref === "CONTINUE") {
-        if (this.customerProfileForm.controls['itrType'].value === '1'
-          || this.customerProfileForm.controls['itrType'].value === '4')
-          this.router.navigate(['/pages/itr-filing/itr']);
-        else
-          this.router.navigate(['/pages/itr-filing/direct-upload']);
-        // } else if (ref === "DIRECT") {
-        //   this.router.navigate(['/pages/itr-filing/direct-upload']);
-        // } else if (ref === "MANUALLY") {
-        //   this.updateManualFiling();
-        // }
-        // else if(ref === "DIRECT-UPLOAD"){
-        //   this.router.navigate(['/pages/itr-filing/add-client']);
-        // }
-      }, error => {
-        this.utilsService.showSnackBar('Fialed to update customer profile.');
-        this.loading = false;
-      });
+        let itrType = JSON.parse(result.data.itrType);
+        console.log('res', itrType as string);
+        if (itrType && selectedType != itrType) {
+          isTypeCorrect = false;
+          let message = (itrType == 1 || itrType == 4) ? `For this user ITR ${itrType} needs to be filed. Please select correct ITR type and continue.`
+            : `For this user ITR ${itrType} needs to be filed. Please proceed filing with the Income tax Utility.`;
+          this.utilsService.showSnackBar(message);
+        } else {
+          //continue to save profile
+          const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
+          this.ITR_JSON.family = [
+            {
+              pid: null,
+              fName: this.customerProfileForm.controls['firstName'].value,
+              mName: this.customerProfileForm.controls['middleName'].value,
+              lName: this.customerProfileForm.controls['lastName'].value,
+              fatherName: this.customerProfileForm.controls['fatherName'].value,
+              age: ageCalculated,
+              gender: this.customerProfileForm.controls['gender'].value,
+              relationShipCode: 'SELF',
+              relationType: 'SELF',
+              dateOfBirth: this.customerProfileForm.controls['dateOfBirth'].value
+            }
+          ];
+          let param;
+          if (this.ITR_JSON.filingTeamMemberId !== Number(this.customerProfileForm.controls['filingTeamMemberId'].value)) {
+            param = '/zoho-contact'
+          } else {
+            param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
+          }
+
+          Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+      
+          if (this.ITR_JSON.itrType === '1') {
+            if(this.ITR_JSON.business) {
+              this.ITR_JSON.business.presumptiveIncomes = [];
+              this.ITR_JSON.business.financialParticulars = null;
+            } else {
+              this.ITR_JSON.business = {
+                presumptiveIncomes: [],
+                financialParticulars: null
+              };
+            }
+            if(this.ITR_JSON.systemFlags) {
+              this.ITR_JSON.systemFlags.hasBusinessProfessionIncome = false;
+            } else {
+              this.ITR_JSON.systemFlags = {
+                hasSalary: false,
+                hasHouseProperty: false,
+                hasMultipleProperties: false,
+                hasForeignAssets: false,
+                hasCapitalGain: false,
+                hasBroughtForwardLosses: false,
+                hasAgricultureIncome: false,
+                hasOtherIncome: false,
+                hasParentOverSixty: false,
+                hasBusinessProfessionIncome: false,
+                hasFutureOptionsIncome: false,
+                hasNRIIncome: false,
+                hraAvailed: false,
+                directorInCompany: false,
+                haveUnlistedShares: false
+              };
+            }
+            
+            
+          }else if (this.ITR_JSON.itrType === '4') {
+            if(!this.ITR_JSON.business) {
+              this.ITR_JSON.business = {
+                presumptiveIncomes: [],
+                financialParticulars: null
+              };
+            }
+          }
+
+          this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
+            this.ITR_JSON = result;
+            this.updateStatus(); // Update staus automatically
+            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+            this.loading = false;
+            this.utilsService.showSnackBar('Customer profile updated successfully.');
+            // if (ref === "CONTINUE") {
+            if (this.customerProfileForm.controls['itrType'].value === '1'
+              || this.customerProfileForm.controls['itrType'].value === '4')
+              this.router.navigate(['/pages/itr-filing/itr']);
+            else
+              this.router.navigate(['/pages/itr-filing/direct-upload']);
+            
+          }, error => {
+            this.utilsService.showSnackBar('Failed to update customer profile.');
+            this.loading = false;
+          });
+        }
+      }
+    }, error => {
+      this.utilsService.showSnackBar('Failed to get ITR type for user');
+      this.loading = false;
+      
+    });
+      
+      
+      
     } else {
       $('input.ng-invalid').first().focus();
     }
   }
+
   calAge(dob) {
     const birthday: any = new Date(dob);
     const currentYear = Number(this.ITR_JSON.assessmentYear.substring(0, 4));
@@ -384,6 +376,9 @@ export class CustomerProfileComponent implements OnInit {
       this.customerProfileForm.controls['orgITRAckNum'].updateValueAndValidity();
       this.customerProfileForm.controls['orgITRDate'].setValidators(Validators.required);
       this.customerProfileForm.controls['orgITRDate'].updateValueAndValidity();
+    }
+    if (this.customerProfileForm.controls['isRevised'].value === 'Y') {
+      this.customerProfileForm.controls['isRevised'].disable();
     }
   }
 
@@ -679,10 +674,22 @@ export class CustomerProfileComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       console.log('The prefill data dialog was closed');
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      this.setCustomerProfileValues();
     });
   }
 
   isApplicable(permissionRoles) {
     return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
+  }
+
+  setFilingDate() {
+    var id = this.customerProfileForm.controls['orgITRAckNum'].value;
+    var lastSix = id.substr(id.length - 6);
+    var day = lastSix.slice(0, 2);
+    var month = lastSix.slice(2, 4);
+    var year = lastSix.slice(4, 6);
+    let dateString = `20${year}-${month}-${day}`;
+    console.log(dateString, year, month, day)
+    this.customerProfileForm.controls['orgITRDate'].setValue(dateString);
   }
 }

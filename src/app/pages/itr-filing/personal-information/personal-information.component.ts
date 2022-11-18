@@ -369,7 +369,7 @@ export class PersonalInformationComponent implements OnInit {
       residentialStatus: ['RESIDENT', Validators.required],
       employerCategory: [''],
       regime: ['', Validators.required],
-      previousYearRegime: ['', Validators.required],
+      previousYearRegime: [''],
       address: this.fb.group({
         flatNo: ['', Validators.required],
         premisesName: [''],

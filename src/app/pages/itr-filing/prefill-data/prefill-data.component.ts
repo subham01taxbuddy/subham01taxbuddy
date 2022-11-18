@@ -1,3 +1,4 @@
+import { ToastMessageService } from './../../../services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -19,7 +20,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   validateOtpForm: FormGroup;
   uploadDoc: any;
   constructor(private itrMsService: ItrMsService,
-    private utilsService: UtilsService,
+    private utilsService: UtilsService, private toastMessageService: ToastMessageService,
     private router: Router, public dialogRef: MatDialogRef<PrefillDataComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder) { }
@@ -113,6 +114,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   downloadPrefillJson() {
     const fileURL = `${environment.url}/itr/eri/download-prefill-json-file?userId=${this.data.userId.toString()}&assessmentYear=2022-2023`;
     window.open(fileURL);
+    this.dialogRef.close();
     return;
   }
 
@@ -131,6 +133,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
         this.utilsService.showSnackBar(res.message);
         //prefill uploaded successfully, fetch ITR again
         this.fetchUpdatedITR();
+        this.dialogRef.close();
       }
       else {
         if (res.errors instanceof Array && res.errors.length > 0) {
@@ -150,7 +153,24 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
     console.log("File", file);
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
-      this.uploadPrefillJson();
+
+      //read the file to get details upload and validate
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        let jsonRes = e.target.result;
+        let JSONData = JSON.parse(jsonRes);
+
+        let panNo = JSONData.personalInfo?.pan;
+        // let mobileNo = JSONData.personalInfo?.address?.mobileNo;
+        if (panNo !== this.data?.panNumber) {
+          this.toastMessageService.alert('error', 'PAN Number from profile and PAN number from json are different please confirm once.');
+          console.log('PAN mismatch');
+          return;
+        } else{
+          this.uploadPrefillJson();
+        }
+      }
+      reader.readAsText(this.uploadDoc);
     }
   }
 
