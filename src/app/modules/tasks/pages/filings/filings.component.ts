@@ -587,12 +587,19 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
       this.utilsService.showSnackBar('There is no any active filing year available')
       return;
     }
-    let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear)
+    let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
     Object.assign(obj, workingItr)
     console.log('obj:', obj)
     workingItr = JSON.parse(JSON.stringify(obj))
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-    this.router.navigate(['/pages/itr-filing/customer-profile']);
+    this.router.navigate(['/pages/itr-filing/customer-profile'], { 
+        state: { 
+          userId: data.userId, 
+          panNumber: data.panNumber, 
+          eriClientValidUpto: data?.eriClientValidUpto, 
+          name: data?.fName + ' ' + data?.lName 
+        } 
+      });
     // if (data.statusId !== 11) {
     //   this.router.navigate(['/eri'], {
     //     state:
@@ -629,7 +636,14 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     })
     disposable.afterClosed().subscribe(result => {
       if (result === 'reviseReturn') {
-        this.router.navigate(['/pages/itr-filing/customer-profile'])
+        this.router.navigate(['/pages/itr-filing/customer-profile'], { 
+          state: { 
+            userId: data.userId, 
+            panNumber: data.panNumber, 
+            eriClientValidUpto: data?.eriClientValidUpto, 
+            name: data?.fName + ' ' + data?.lName 
+          } 
+        });
       }
       console.log('The dialog was closed', result);
     });
