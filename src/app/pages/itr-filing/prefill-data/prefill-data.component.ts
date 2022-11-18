@@ -93,8 +93,12 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
         if (res && res.successFlag) {
           if (res.hasOwnProperty('messages')) {
             if (res.messages instanceof Array && res.messages.length > 0)
-              this.utilsService.showSnackBar(res.messages[0].desc);
+              //this.utilsService.showSnackBar(res.messages[0].desc);
+              this.utilsService.showSnackBar('Prefill data fetched successfully');
             // this.changePage();
+            //verified successfully, fetch ITR again
+            this.fetchUpdatedITR();
+            this.dialogRef.close();
           }
         } else {
           if (res.errors instanceof Array && res.errors.length > 0) {
