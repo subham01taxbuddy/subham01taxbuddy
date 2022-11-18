@@ -1,7 +1,8 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <label style="font-size: 18px;
-font-weight: bold;">More options for: {{data.name}}</label><button mat-dialog-close tabindex="-1"
-  class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+font-weight: bold;">More options for: {{data.name}}</label>
+<button mat-dialog-close tabindex="-1" class="tbd-btn-close" (click)="closeDialog()"><i class="fa fa-times"
+    aria-hidden="true"></i></button>
 <div class="card__row">
   <span>
     <button type="button" class="tbd-btn-small" title="Go to Invoices" (click)="goToInvoice()">
@@ -42,6 +43,14 @@ font-weight: bold;">More options for: {{data.name}}</label><button mat-dialog-cl
   <span>
     <button type="button" class="tbd-btn-small" title="User Journey" (click)="getUserJourney()">
       Journey&nbsp;&nbsp; <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
+    </button>
+  </span>
+  &nbsp;&nbsp;
+  <span>
+    <button type="button" title="Delete User" [disabled]="isDisable"
+   class="delete-user tbd-btn-small" [style.cursor]="isDisable ? 'no-drop': 'pointer'"
+      (click)="deleteUser()">
+      Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
     </button>
   </span>
 

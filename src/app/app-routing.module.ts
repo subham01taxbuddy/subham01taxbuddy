@@ -26,6 +26,9 @@ export const appRoutes: Routes = [
     path: 'pages/review', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/review/review.module').then(m => m.ReviewModule)
   },
   {
+    path: 'pages/delete-user', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/delete-user/delete-user.module').then(m => m.DeleteUserModule)
+  },
+  {
     path: 'eri', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/eri-flow/eri-flow.module').then(m => m.EriFlowModule)
   },
   {

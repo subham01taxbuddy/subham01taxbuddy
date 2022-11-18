@@ -72,6 +72,11 @@
             <i class="fa fa-comments-o" style="font-size: 20px;" aria-hidden="true"></i>
             <span class="sidebar__name">Review (Beta)</span>
         </a>
+        <a class="sidebar__item" routerLink="/pages/delete-user" routerLinkActive="sidebar__item_active"
+            (click)="closeSideBar()" *ngIf="isApplicable(['ROLE_ADMIN','ROLE_GST_CALLER','ROLE_GST_SL','GST_FILER'])">
+            <i class="fa fa-trash" style="font-size: 20px;" aria-hidden="true"></i>
+            <span class="sidebar__name">Delete User Account List</span>
+        </a>
         <!-- <a class="sidebar__item" routerLink="/pages/team-management/caller-assign"
             routerLinkActive="sidebar__item_active"
             *ngIf="isApplicable(['ROLE_ADMIN','ITR_SUPER_LEAD','GST_SUPER_LEAD','ITR_TEAM_LEAD'])">

@@ -42,7 +42,7 @@ export class NavbarService {
 	saveBusinessProfile: boolean = false;
 	saveGSTBillInvoice: boolean = false;
 
-	private id_token!:any;
+	private id_token!: any;
 
 	//API header parameters
 	public static DEFAULT_TOKEN = '00000000000000000000000000000000';
@@ -103,7 +103,7 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gateway/account/logout', 'method': 'DELETE' }, null);
 	}
 
-	getInvoiceSummary(businessId:any, params: any) {
+	getInvoiceSummary(businessId: any, params: any) {
 		// TODO: [IP-9] Here Financial year is hardcoded currently we dont have mastr for FY.
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoice-summary/' + businessId + '?year=2019-2020', 'method': 'GET' }, params);
 	}
@@ -112,11 +112,15 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/getAdminList', 'method': 'GET' }, {});
 	}
 
-	getUserSearchList(key:string, searchValue:any) {
+	getUserSearchList(key: string, searchValue: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/search/userprofile/query?' + key + "=" + searchValue, 'method': 'GET' }, {});
 	}
 
-	getUserSubscriptions(userId:string) {
+	getDeleteUserList(dynamicUrl) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/user-deletion-request-detail?' + dynamicUrl, 'method': 'GET' }, {});
+	}
+
+	getUserSubscriptions(userId: string) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/api/usersubscription?userId=' + userId, 'method': 'GET' }, {});
 	}
 
@@ -128,7 +132,7 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/order', 'method': 'POST' }, params);
 	}
 
-	getUserEligiblePlans(userId:any) {
+	getUserEligiblePlans(userId: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/eligiblePlan?userId=' + userId + '&itrId=0', 'method': 'GET' }, {});
 	}
 
@@ -136,7 +140,7 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/getGSTDetail', 'method': 'GET' }, {});
 	}
 
-	getGetGSTMerchantDetail(userId:any) {
+	getGetGSTMerchantDetail(userId: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/profile/' + userId, 'method': 'GET' }, {});
 	}
 
@@ -160,27 +164,27 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoice-status-masters', 'method': 'GET' }, {});
 	}
 
-	updatePartyInfo(params:any) {
+	updatePartyInfo(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/parties', 'method': 'PUT' }, params);
 	}
 
-	createParty(params:any) {
+	createParty(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/parties', 'method': 'POST' }, params);
 	}
 
-	importParties(params:any) {
+	importParties(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/import-parties', 'method': 'POST' }, params);
 	}
 
-	getPartyInfoByGSTIN(params:any) {
+	getPartyInfoByGSTIN(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/partiesByGstin', 'method': 'GET' }, params);
 	}
 
-	getPartyInfoByNoOfGSTIN(params:any) {
+	getPartyInfoByNoOfGSTIN(params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/partiesByGstin', 'method': 'GET' }, params);
 	}
 
-	getPartyInfoByPartyRole(businessId:any, params:any) {
+	getPartyInfoByPartyRole(businessId: any, params: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/party-list/' + businessId, 'method': 'GET' }, params);
 	}
 
@@ -204,15 +208,15 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoices', 'method': 'GET' }, params);
 	}
 
-	getInvoiceByInvoiceId(inv_id:any) {
+	getInvoiceByInvoiceId(inv_id: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoices/' + inv_id, 'method': 'GET' }, {});
 	}
 
-	getInvoiceWithItemsByInvoiceId(inv_id:any) {
+	getInvoiceWithItemsByInvoiceId(inv_id: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoicewithInvoiceItems', 'method': 'GET' }, { 'id.equals': inv_id });
 	}
 
-	deleteInvoiceByInvoiceId(inv_id:any) {
+	deleteInvoiceByInvoiceId(inv_id: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoices/' + inv_id, 'method': 'DELETE' }, {});
 	}
 
@@ -258,11 +262,11 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/creditdebitnotesWithNoteItems', 'method': 'PUT' }, params);
 	}
 
-	deleteCreditDebitNoteInvoiceByInvoiceId(inv_id:any) {
+	deleteCreditDebitNoteInvoiceByInvoiceId(inv_id: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/credit-debit-notes/' + inv_id, 'method': 'DELETE' }, {});
 	}
 
-	getCreditDebitNoteInvoiceWithItemsByInvoiceId(inv_id:any) {
+	getCreditDebitNoteInvoiceWithItemsByInvoiceId(inv_id: any) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/creditdebitnotesWithNoteItems', 'method': 'GET' }, { 'id.equals': inv_id });
 	}
 
@@ -341,7 +345,7 @@ export class NavbarService {
 
 	getHeaders(): HttpHeaders {
 		if (!this.id_token) {
-			let userData = JSON.parse(localStorage.getItem('UMD')??'');
+			let userData = JSON.parse(localStorage.getItem('UMD') ?? '');
 			if (userData && userData.id_token) { this.id_token = userData.id_token; }
 			console.log("ssss", userData)
 		}
@@ -372,7 +376,7 @@ export class NavbarService {
 
 	// check session validity based on time(in minutes)
 	isSessionValid(validityMinutes: number = 1440): boolean {
-		var sessionDate = new Date(localStorage.getItem('session_time')??0).getTime();
+		var sessionDate = new Date(localStorage.getItem('session_time') ?? 0).getTime();
 		var now = (new Date()).getTime();
 		var timeDiff = Math.abs(sessionDate - now);
 		timeDiff = Math.ceil(timeDiff / (1000 * 60));

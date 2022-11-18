@@ -9,7 +9,6 @@ import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { environment } from 'src/environments/environment';
 import { RoleUpdateComponent } from "../role-update/role-update.component";
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { MoreOptionsDialogComponent } from 'src/app/modules/tasks/components/more-options-dialog/more-options-dialog.component';
@@ -18,7 +17,7 @@ import { MoreOptionsDialogComponent } from 'src/app/modules/tasks/components/mor
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
-export class UserListComponent /*implements OnInit*/ {
+export class UserListComponent implements OnInit {
 
   loading!: boolean;
   usersGridOptions: GridOptions;
@@ -40,7 +39,7 @@ export class UserListComponent /*implements OnInit*/ {
   searchVal: string = "";
   currentUserId: number = 0;
   user_data: any = [];
-
+  key: any;
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
@@ -67,9 +66,8 @@ export class UserListComponent /*implements OnInit*/ {
     };
   }
 
-  // ngOnInit() {
-    //this.getUserData(0);
-  // }
+  ngOnInit() {
+  }
 
   clearValue() {
     this.searchVal = "";
@@ -99,9 +97,10 @@ export class UserListComponent /*implements OnInit*/ {
         this.loading = false;
         return resolve(true)
       }, err => {
-        //let errorMessage = (err.error && err.error.detail) ? err.error.detail : "Internal server error.";
         this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
         this.loading = false;
+        this.user_data = [];
+        this.userInfo=[];
         return resolve(false)
       });
     });
@@ -249,50 +248,7 @@ export class UserListComponent /*implements OnInit*/ {
           debounceMs: 0
         }
       },
-      // {
-      //   headerName: 'Inv',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Rediredt toward Invoice"
-      //     style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-      //       <i class="fa fa-files-o" aria-hidden="true" data-action-type="invoice"></i>
-      //      </button>`;
-      //   },
-      //   width: 50,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center'
-      //     }
-      //   },
-      // },
-      // {
-      //   headerName: 'Sub',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Redirect toward Subscription"
-      //     style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-      //       <i class="fa fa-list-alt" aria-hidden="true" data-action-type="subscription"></i>
-      //      </button>`;
-      //   },
-      //   width: 50,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center'
-      //     }
-      //   },
-      // },
+      
       {
         headerName: 'See/Add Notes',
         editable: false,
@@ -315,29 +271,7 @@ export class UserListComponent /*implements OnInit*/ {
           }
         },
       },
-      // {
-      //   headerName: 'User Profile',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return ` 
-      //      <button type="button" class="action_icon add_button" title="User Profile" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer;">
-      //       <i class="fa fa-user" aria-hidden="true" data-action-type="profile"></i>
-      //      </button>`;
-      //   },
-      //   width: 60,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center'
-      //     }
-      //   },
-      // },
+      
       {
         headerName: 'FNB',
         editable: false,
@@ -640,11 +574,10 @@ export class UserListComponent /*implements OnInit*/ {
       height: 'auto',
       data: client
     })
-
-    // disposable.afterClosed().subscribe(result => {
-    //   if (result.data === 'success') {
-    //     this.search();
-    //   }
-    // });
+    disposable.afterClosed().subscribe(result => {
+      if (result) {
+        this.getUserSearchList(this.key, this.searchVal);
+      }
+    });
   }
 }
