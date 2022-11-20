@@ -40,12 +40,12 @@ export class AddInvestmentDialogComponent implements OnInit {
   }
   investmentForm: FormGroup;
 
-  InvestSectionDropdown = [
-    { investmentName: '54', investmentSection: '54' },
-    { investmentName: '54B', investmentSection: '54B' },
-    { investmentName: '54EC', investmentSection: '54EC' },
-    { investmentName: '54F', investmentSection: '54F' },
-  ];
+  // InvestSectionDropdown = [
+  //   { investmentName: '54', investmentSection: '54' },
+  //   { investmentName: '54B', investmentSection: '54B' },
+  //   { investmentName: '54EC', investmentSection: '54EC' },
+  //   { investmentName: '54F', investmentSection: '54F' },
+  // ];
 
   minPurchaseDate: any;
   calMinPurchaseDate = new Date();
@@ -67,7 +67,7 @@ export class AddInvestmentDialogComponent implements OnInit {
   // investIndex: number = null;
   ngOnInit() {
     // this.InvestSectionDropdown = this.data.investmentSections;
-    console.log('Applied Section Details===', this.InvestSectionDropdown);
+    // console.log('Applied Section Details===', this.InvestSectionDropdown);
     console.log('Applied Section Details===', this.data);
     this.ITR_JSON = JSON.parse(JSON.stringify(this.data.ITR_JSON));
     this.investmentForm = this.createInvestmentForm();
@@ -96,7 +96,7 @@ export class AddInvestmentDialogComponent implements OnInit {
   }
 
   changeInvestmentSection(ref) {
-    const investDetails = this.InvestSectionDropdown.filter(item => item.investmentSection === this.investmentForm.controls['underSection'].value);
+    // const investDetails = this.InvestSectionDropdown.filter(item => item.investmentSection === this.investmentForm.controls['underSection'].value);
     // this.calMinPurchaseDate = new Date(this.data.assetSelected.sellDate);
     // if (investDetails.length > 0) {
     //   this.calMinPurchaseDate.setMonth(this.calMinPurchaseDate.getMonth() - investDetails[0].minInvestmentDate);

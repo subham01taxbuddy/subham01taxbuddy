@@ -29,28 +29,7 @@ export class CapitalGainComponent implements OnInit {
 
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
-    // this.getBothMenus();
-    // this.utilsService.updateLastVisitedURL(this.ITR_JSON, 'incomes/income/capitalgain');
   }
-
-
-  routeNext() {
-    // TODO  Add routing here
-
-    // const route = this.utilsService.routeNext(this.leftMenus, 'INCOME', 'CG', 'ROUTE');
-    // this.router.navigate([route]);
-  }
-
-  /**
-    * @function previousRoute()
-    * @param none
-    * @description This method is used to navigate back page
-    * @author Ashish Hulwan
-    */
-  // previousRoute() {
-  //   const route = this.utilsService.previousRoute(this.leftMenus, 'INCOME', 'CG', 'ROUTE');
-  //   this.router.navigate([route]);
-  // }
 
   canDeactivate() {
     return true;

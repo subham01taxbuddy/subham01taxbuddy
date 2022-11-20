@@ -66,47 +66,6 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       mode: mode,
       assetSelected: assetSelected,
     };
-    return
-
-    this.loading = true;
-    const param = '/assetDetails';
-    this.itrMsService.getMethod(param).subscribe(result => {
-      console.log('Asset Details =', result);
-      const data = {
-        assestDetails: result,
-        ITR_JSON: this.ITR_JSON,
-        mode: mode,
-        assetSelected: assetSelected,
-      };
-      this.loading = false;
-      this.openDialogForCG(data);
-    }, error => {
-      this.loading = false;
-      this.utilsService.showSnackBar('Something went wrong, please try again.');
-    });
-
-
-  }
-
-  openDialogForCG(data) {
-    // const dialogRef = this.matDialog.open(AddCgDialogComponent, {
-    //   data: data,
-    //   closeOnNavigation: true,
-    //   // width:'700px'
-    // });
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log('Result add CG=', result);
-    //   if (result !== undefined) {
-    //     this.ITR_JSON = result;
-    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    this.capitalGainGridOptions.api.setRowData(this.cgCreateRowData());
-    if (this.ITR_JSON.capitalGain.length > 0) {
-      //TODO // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
-      //TODO  // this.investmentGridOptions.api.setColumnDefs(this.investmentsCreateColoumnDef(this.assestTypesDropdown));
-    }
-    //     }
-    //   });
   }
 
   cgCreateRowData() {
@@ -119,47 +78,6 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       if (this.utilsService.isNonEmpty(this.ITR_JSON.capitalGain[i].cgOutput)) {
         cgIncome = this.ITR_JSON.capitalGain[i].cgOutput.filter(item => item.assetType === this.ITR_JSON.capitalGain[i].assetType);
       }
-
-      // let tCost: number;
-      // if (this.getUITemplate(this.ITR_JSON.capitalGain[i].assetType) !== 'SHARES') {
-      //   if (this.ITR_JSON.capitalGain[i].gainType === 'LONG') {
-      //     tCost = cgIncome.length > 0 ? cgIncome[0].indexCostOfAcquisition : 0;
-
-      //     if (cgIncome.length > 0 && cgIncome[0].indexCostOfImprovement.length > 0) {
-      //       cgIncome[0].indexCostOfImprovement.forEach(item => {
-      //         tCost = tCost + item.improvementCost;
-      //       });
-      //     }
-      //   } else if (this.ITR_JSON.capitalGain[i].gainType === 'SHORT') {
-      //     tCost = this.ITR_JSON.capitalGain[i].purchaseCost;
-      //     if (this.ITR_JSON.capitalGain[i].improvement.length > 0) {
-      //       this.ITR_JSON.capitalGain[i].improvement.forEach(item => {
-      //         tCost = tCost + item.costOfImprovement;
-      //       });
-      //     }
-      //   }
-      // } else {
-      //   if ((this.ITR_JSON.capitalGain[i].assetType === 'MF_EQUITY' && this.ITR_JSON.capitalGain[i].gainType === 'LONG') || this.ITR_JSON.capitalGain[i].assetType === 'MF_HYBRID' && this.ITR_JSON.capitalGain[i].gainType === 'LONG' || this.ITR_JSON.capitalGain[i].assetType === 'EQUITY_SHARES_LISTED' && this.ITR_JSON.capitalGain[i].gainType === 'LONG') {
-      //     tCost = Math.max(Math.min(this.ITR_JSON.capitalGain[i].fmvAsOn31Jan2018, this.ITR_JSON.capitalGain[i].sellValue),
-      //       this.ITR_JSON.capitalGain[i].purchaseCost);
-      //   } else {
-      //     tCost = this.ITR_JSON.capitalGain[i].purchaseCost;
-      //   }
-      // }
-
-      // const temp = this.getUITemplate(this.ITR_JSON.capitalGain[i].assetType);
-      // let value = 0; // = temp !== "SHARES" ? this.ITR_JSON.capitalGain[i].valueInConsideration : this.ITR_JSON.capitalGain[i].sellValue;
-      // if (cgIncome.length > 0 && cgIncome[0].isExemptionApplied) {
-      //   this.isExmptAvail = true;
-      // }
-
-      // if (temp === 'IMMOVABLE_PROPERTY') {
-      //   value = Number(this.ITR_JSON.capitalGain[i].valueInConsideration) - Number(this.ITR_JSON.capitalGain[i].sellExpense);
-      // } else if (temp === 'OTHERS') {
-      //   value = Number(this.ITR_JSON.capitalGain[i].sellValue) - Number(this.ITR_JSON.capitalGain[i].sellExpense);
-      // } else {
-      //   value = Number(this.ITR_JSON.capitalGain[i].sellValue);
-      // }
 
       let costOfImprovement = 0;
       for (let j = 0; j < this.ITR_JSON.capitalGain[i].improvement.length; j++) {
@@ -210,16 +128,6 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
   }
 
 
-  getUITemplate(assetType) {
-    if (this.assestTypesDropdown.length > 0 && this.utilsService.isNonEmpty(assetType)) {
-      return this.assestTypesDropdown.filter(item => item.assetCode === assetType)[0].uiClassification;
-    } else {
-      return '';
-    }
-  }
-
-
-
   getAssetDetails() {
     // todo
     const param = '/assetDetails';
@@ -247,69 +155,6 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         width: 70,
         pinned: 'left',
       },
-      // {
-      //   headerName: 'Asset Type',
-      //   field: 'address',
-      //   editable: false,
-      //   suppressMovable: true,
-      //   suppressMenu: true,
-      //   valueGetter: function nameFromCode(params) {
-      //     if (assestTypesDropdown.length !== 0) {
-      //       const nameArray = assestTypesDropdown.filter(item => item.assetCode === params.data.assetType);
-      //       return nameArray[0].assetName;
-      //     } else {
-      //       return params.data.assetType;
-      //     }
-      //   },
-      //   tooltip: function (params) {
-      //     if (assestTypesDropdown.length !== 0) {
-      //       const nameArray = assestTypesDropdown.filter(item => item.assetCode === params.data.assetType);
-      //       return nameArray[0].assetName;
-      //     } else {
-      //       return params.data.assetType;
-      //     }
-      //   },
-      //   cellStyle: {
-      //     textAlign: 'center', display: 'flex',
-      //     'align-items': 'center',
-      //     'justify-content': 'center'
-      //   },
-      //   rowSpan: function (params) {
-      //     if (params.data.isShow) {
-      //       return params.data.rowSpan;
-      //     } else {
-      //       return 1;
-      //     }
-      //   },
-      //   cellClassRules: {
-      //     'cell-span': function (params) {
-      //       return (params.data.rowSpan > 1);
-      //     },
-      //   },
-      // },
-      // {
-      //   headerName: 'Description',
-      //   field: 'description',
-      //   editable: false,
-      //   suppressMovable: true,
-      //   cellStyle: {
-      //     textAlign: 'center', display: 'flex',
-      //     'align-items': 'center',
-      //     'justify-content': 'center'
-      //   },
-      //   rowSpan: function (params) {
-      //     if (params.data.isShow) {
-      //       return params.data.rowSpan;
-      //     } else {
-      //       return 1;
-      //     }
-      //   },
-      //   cellClassRules: {
-      //     'cell-span': function (params) {
-      //       return (params.data.rowSpan > 1);
-      //     },
-      //   },
-      // },
       {
         headerName: 'Address Of property',
         field: 'address',

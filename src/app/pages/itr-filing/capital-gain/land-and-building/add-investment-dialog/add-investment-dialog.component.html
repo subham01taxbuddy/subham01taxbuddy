@@ -19,9 +19,10 @@
         <mat-form-field class="input-field-width">
           <mat-select placeholder="Investment Under Section" name="underSection" formControlName="underSection"
             (selectionChange)="changeInvestmentSection('HTML')">
-            <mat-option *ngFor="let section of InvestSectionDropdown" [value]="section.investmentSection">
-              {{section.investmentSection}} - {{ section.investmentName }}
-            </mat-option>
+            <mat-option value="54" *ngIf="data.gainType === 'LONG'"> 54 </mat-option>
+            <mat-option value="54B"> 54B </mat-option>
+            <mat-option value="54EC" *ngIf="data.gainType === 'LONG'"> 54EC </mat-option>
+            <mat-option value="54F" *ngIf="data.gainType === 'LONG'"> 54F </mat-option>
           </mat-select>
         </mat-form-field>
       </div>

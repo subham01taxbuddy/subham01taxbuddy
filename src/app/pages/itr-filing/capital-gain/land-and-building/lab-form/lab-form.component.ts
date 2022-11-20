@@ -67,8 +67,6 @@ export class LabFormComponent implements OnInit {
       capitalGain: []
     };
     this.investmentsCallInConstructor([]);
-    // this.improvementYears = JSON.parse(sessionStorage.getItem('improvementYears'));
-    // if (!this.utilsService.isNonEmpty(this.improvementYears))
     this.getImprovementYears();
   }
 
@@ -80,18 +78,11 @@ export class LabFormComponent implements OnInit {
     return <FormArray>this.immovableForm.get('buyersDetails');
   }
 
-  // get getImprovementsArrayForOther() {
-  //   return <FormArray>this.goldAndOtherForm.get('improvement');
-  // }
-
   assetType = new FormControl('PLOT_OF_LAND', Validators.required);
   indexCostOfAcquisition = new FormControl('');
   isImprovements = new FormControl(false);
   sharesDescriptionControl = new FormControl('', Validators.required);
   immovableForm: FormGroup;
-  // sharesShortTermForm: FormGroup;
-  // sharesLongTermForm: FormGroup;
-  // goldAndOtherForm: FormGroup;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   minSellDate: any;
@@ -155,19 +146,12 @@ export class LabFormComponent implements OnInit {
 
 
   ngOnInit() {
-    // this.assestTypesDropdown = this.data.assestDetails;
-    // console.log('assetType=======', this.assestTypesDropdown);
     if (this.data.mode === 'EDIT') {
       console.log('immovable = ', this.data);
-      // this.assetType.setValue(this.data.assetSelected.assetType);
-
-      // const uiClassification = this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].uiClassification;
       const dataToPatch = this.data.ITR_JSON.capitalGain.filter(item => item.assetType === this.data.assetSelected.assetType && item.description === this.data.assetSelected.description);
-      // if (uiClassification === 'IMMOVABLE_PROPERTY') {
       console.log('immovable = ', dataToPatch[0]);
       this.cgArrayElement = dataToPatch[0];
       this.investmentsCallInConstructor(this.investmentsCreateRowData());
-      //  this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
       this.immovableForm = this.createImmovableForm();
       const cgOutPut = dataToPatch.filter(item => item.assesseeType === this.assetType.value);
       this.amount = cgOutPut.cgIncome;
@@ -187,7 +171,6 @@ export class LabFormComponent implements OnInit {
           buyersDetails.push(this.createBuyersDetailsForm(obj));
         });
       }
-      // this.calFullValue('TS', this.immovableForm);
       this.calMaxPurchaseDate(this.immovableForm.value.sellDate, this.immovableForm);
       this.calMinImproveDate(this.immovableForm.value.purchaseDate, this.immovableForm);
     } else if (this.data.mode === 'ADD') {
@@ -195,17 +178,10 @@ export class LabFormComponent implements OnInit {
       this.immovableForm = this.createImmovableForm();
       this.calMaxPurchaseDate(this.immovableForm.value.sellDate, this.immovableForm);
       this.calMinImproveDate(this.immovableForm.value.purchaseDate, this.immovableForm);
-      // this.sharesForm.reset();
-
       const buyersDetails = <FormArray>this.immovableForm.get('buyersDetails');
       buyersDetails.push(this.createBuyersDetailsForm());
     }
-    // }
   }
-
-  // getControls(){
-  // return (this.immovableForm.get('i') as FormArray).controls;
-  // }
 
   createImmovableForm(): FormGroup {
     let des = (Math.floor(Math.random() * (999999 - 100000)) + 2894).toString();
@@ -314,15 +290,6 @@ export class LabFormComponent implements OnInit {
     return panRepeat;
   }
 
-  isduplicatePAN(i, formArrayName) {
-    const formArray = <FormArray>this.immovableForm.get(formArrayName);
-    const dup = formArray.controls.filter(item => (item['controls'].pan.value) === (formArray.controls[i]['controls'].pan.value));
-    if (dup.length > 1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
   makePanUppercase(control) {
     if (this.utilsService.isNonEmpty(control.value)) {
       control.setValue(control.value.toUpperCase());
@@ -611,12 +578,13 @@ export class LabFormComponent implements OnInit {
       ITR_JSON: this.ITR_JSON,
       mode: mode,
       investment: investment,
+      gainType: this.cgArrayElement.gainType,
       assetClassName: 'Plot of Land'//name.length > 0 ? name[0].assetName : assetSelected.assetType
     };
     const dialogRef = this.matDialog.open(AddInvestmentDialogComponent, {
       data: data,
       closeOnNavigation: true,
-      disableClose: true,
+      disableClose: false,
       width: '700px'
     });
 
@@ -643,108 +611,7 @@ export class LabFormComponent implements OnInit {
 
   investmentsCreateColoumnDef(assestTypesDropdown) {
     return [
-      // {
-      //   headerName: 'Sr. No.',
-      //   field: 'id',
-      //   suppressMovable: true,
-      //   width: 70,
-      //   pinned: 'left',
-      // },
-      /* {
-        headerName: 'Asset Type',
-        field: 'assetType',
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          if (assestTypesDropdown.length !== 0) {
-            const nameArray = assestTypesDropdown.filter(item => item.assetCode === params.data.assetType);
-            return nameArray[0].assetName;
-          } else {
-            return params.data.assetType;
-          }
-        },
-        tooltip: function (params) {
-          if (assestTypesDropdown.length !== 0) {
-            const nameArray = assestTypesDropdown.filter(item => item.assetCode === params.data.assetType);
-            return nameArray[0].assetName;
-          } else {
-            return params.data.assetType;
-          }
-        },
-        rowSpan: function (params) {
-          if (params.data.isShow) {
-            return params.data.rowSpan;
-          } else {
-            return 1;
-          }
-        },
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-        cellClassRules: {
-          'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
-          },
-        },
-      }, */
-      /* {
-        headerName: 'Description',
-        field: 'description',
-        suppressMovable: true,
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-        rowSpan: function (params) {
-          if (params.data.isShow) {
-            return params.data.rowSpan;
-          } else {
-            return 1;
-          }
-        },
-        cellClassRules: {
-          'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
-          },
-        },
-      },
-      {
-        headerName: 'Type of Gain',
-        field: 'gainType',
-        suppressMovable: true,
-        editable: false,
-        valueGetter: function nameFromCode(params) {
-          return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
-        },
-        rowSpan: function (params) {
-          if (params.data.isShow) {
-            return params.data.rowSpan;
-          } else {
-            return 1;
-          }
-        },
-        cellClassRules: {
-          'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
-          },
-        },
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-      }, */
-      /* {
-        headerName: 'Date of Sale',
-        field: 'sellDate',
-        editable: false,
-        suppressMovable: true,
-        cellRenderer: (params) => {
-          return params.data.sellDate ? (new Date(params.data.sellDate)).toLocaleDateString('en-IN') : '';
-        }
-      }, */
+
       {
         headerName: 'Section',
         field: 'underSection',
@@ -760,32 +627,7 @@ export class LabFormComponent implements OnInit {
           return params.data.purchaseDate ? (new Date(params.data.purchaseDate)).toLocaleDateString('en-IN') : '';
         }
       },
-      /* {
-        headerName: 'Gain Amount',
-        field: 'cgIncome',
-        editable: false,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.cgIncome ? params.data.cgIncome.toLocaleString('en-IN') : params.data.cgIncome;
-        },
-        rowSpan: function (params) {
-          if (params.data.isShow) {
-            return params.data.rowSpan;
-          } else {
-            return 1;
-          }
-        },
-        cellClassRules: {
-          'cell-span': function (params) {
-            return (params.data.rowSpan > 1);
-          },
-        },
-        cellStyle: {
-          textAlign: 'center', display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center'
-        },
-      }, */
+
       {
         headerName: 'Cost of New Asset',
         field: 'costOfNewAssets',
@@ -885,82 +727,6 @@ export class LabFormComponent implements OnInit {
   investmentsCreateRowData() {
     return this.cgArrayElement.investments;
     // TODO Need to modify this method
-    const data = [];
-    const dataToReturn = [];
-    let srNo = 0;
-    for (let i = 0; i < this.ITR_JSON.capitalGain.length; i++) {
-      let cgIncome = [];
-      if (this.utilsService.isNonEmpty(this.ITR_JSON.capitalGain[i].cgOutput)) {
-        cgIncome = this.ITR_JSON.capitalGain[i].cgOutput.filter(item => item.assetType === this.ITR_JSON.capitalGain[i].assetType);
-      }
-      if (this.ITR_JSON.capitalGain[i].investments.length > 0) {
-        for (let j = 0; j < this.ITR_JSON.capitalGain[i].investments.length; j++) {
-          if (cgIncome.length > 0 && cgIncome[0].cgIncome > 0) {
-            data.push({
-              id: srNo + 1,
-              assetType: this.ITR_JSON.capitalGain[i].assetType,
-              description: this.ITR_JSON.capitalGain[i].description,
-              cgIncome: cgIncome.length > 0 ? cgIncome[0].cgIncome : 0,
-              gainType: this.ITR_JSON.capitalGain[i].gainType,
-              underSection: this.ITR_JSON.capitalGain[i].investments[j].underSection,
-              sellDate: this.ITR_JSON.capitalGain[i].sellDate,
-              costOfNewAssets: this.ITR_JSON.capitalGain[i].investments[j].costOfNewAssets,
-              purchaseDate: this.ITR_JSON.capitalGain[i].investments[j].purchaseDate,
-              investmentInCGAccount: this.ITR_JSON.capitalGain[i].investments[j].investmentInCGAccount,
-              totalDeductionClaimed: this.ITR_JSON.capitalGain[i].investments[j].totalDeductionClaimed,
-              isShow: false,
-              rowSpan: 0
-            });
-            srNo = srNo + 1;
-          }
-        }
-      } else {
-        if (cgIncome.length > 0 && cgIncome[0].cgIncome > 0) {
-          data.push({
-            id: srNo + 1,
-            assetType: this.ITR_JSON.capitalGain[i].assetType,
-            description: this.ITR_JSON.capitalGain[i].description,
-            cgIncome: cgIncome.length > 0 ? cgIncome[0].cgIncome : 0,
-            gainType: this.ITR_JSON.capitalGain[i].gainType,
-            underSection: '',
-            sellDate: this.ITR_JSON.capitalGain[i].sellDate,
-            costOfNewAssets: '',
-            purchaseDate: '',
-            investmentInCGAccount: null,
-            totalDeductionClaimed: null,
-            isShow: false,
-            rowSpan: 0
-          });
-          srNo = srNo + 1;
-        }
-      }
-    }
-
-    for (let i = 0; i < data.length; i++) {
-      const a = dataToReturn.filter(item => item.assetType === data[i].assetType && item.description === data[i].description && item.gainType === data[i].gainType);
-      if (a.length === 0) {
-        const aa = data.filter(item => item.assetType === data[i].assetType && item.description === data[i].description && item.gainType === data[i].gainType);
-        let index = 0;
-        aa.forEach(item => {
-          if (index === 0) {
-            item.isShow = true;
-            item.rowSpan = aa.length;
-            index = index + 1;
-          } else {
-            item.isShow = false;
-            item.rowSpan = 1;
-          }
-          dataToReturn.push(item);
-        });
-      }
-    }
-    console.log('dataToReturn==========', dataToReturn);
-    // if (dataToReturn.length > 0) {
-    //   this.showInvestmentTable = true;
-    // } else {
-    //   this.showInvestmentTable = false;
-    // }
-    return dataToReturn;
   }
 
   getImprovementYears() {
@@ -1020,8 +786,6 @@ export class LabFormComponent implements OnInit {
   }
 
   deleteInvestment(index) {
-    debugger
-    // TODO
     this.cgArrayElement.investments.splice(index, 1);
     console.log(this.cgArrayElement.investments);
     this.investmentGridOptions.api.setRowData(this.cgArrayElement.investments)

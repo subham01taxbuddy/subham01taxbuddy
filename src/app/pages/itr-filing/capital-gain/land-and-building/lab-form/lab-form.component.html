@@ -24,7 +24,8 @@
 </div> -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <form [formGroup]="immovableForm">
-  <b>Add details of capital gain from Land / Building / Property?</b> <!-- <span style="float: right;">STCG</span> -->
+  <b>Add details of capital gain from Land / Building / Property?</b> <span style="float: right;"> Capital Gain Type:
+    {{cgArrayElement.gainType}}</span>
   <br>
   <div class="card__row">
     <div class="card__col-lg-4">
@@ -291,10 +292,7 @@
 
           <td class="kids-age-td">
             <mat-form-field class="input-field-width">
-              <input matInput formControlName="pan" name="buyer[i]" class="input-field" maxlength="10" required trim
-                [class.invalid]="isduplicatePAN(i,'buyersDetails')"
-                [matTooltip]="isduplicatePAN(i,'buyersDetails') ? 'Duplicate PAN Number':''" matTooltipPosition="above"
-                matTooltipClass="error-tooltip">
+              <input matInput formControlName="pan" name="buyer[i]" class="input-field" maxlength="10" required trim>
               <mat-error
                 *ngIf="immovableForm.controls['buyersDetails'].controls[i].controls['pan'].hasError('pattern')">
                 Enter valid PAN.</mat-error>
