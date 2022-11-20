@@ -1,0 +1,12 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<mat-tab-group>
+  <mat-tab label="Land And Building">
+    <app-land-and-building (saveAndNext)="saveAndNext($event)"></app-land-and-building>
+  </mat-tab>
+  <mat-tab label="Shares and Equity">
+    Coming Soon !!!
+  </mat-tab>
+  <mat-tab label="Other">
+    Coming Soon !!!
+  </mat-tab>
+</mat-tab-group>

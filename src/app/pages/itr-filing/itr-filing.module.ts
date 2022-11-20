@@ -48,6 +48,10 @@ import { NriDetailsDialogComponent } from './components/nri-details-dialog/nri-d
 import { OtherInformationComponent } from './other-information/other-information.component';
 import { UnlistedSharesComponent } from './other-information/unlisted-shares/unlisted-shares.component';
 import { DirectorInCompanyComponent } from './other-information/director-in-company/director-in-company.component';
+import { CapitalGainComponent } from './capital-gain/capital-gain.component';
+import { LandAndBuildingComponent } from './capital-gain/land-and-building/land-and-building.component';
+import { LabFormComponent } from './capital-gain/land-and-building/lab-form/lab-form.component';
+import { AddInvestmentDialogComponent } from './capital-gain/land-and-building/add-investment-dialog/add-investment-dialog.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -104,7 +108,11 @@ import { DirectorInCompanyComponent } from './other-information/director-in-comp
         NriDetailsDialogComponent,
         OtherInformationComponent,
         UnlistedSharesComponent,
-        DirectorInCompanyComponent
+        DirectorInCompanyComponent,
+        CapitalGainComponent,
+        LandAndBuildingComponent,
+        LabFormComponent,
+        AddInvestmentDialogComponent
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
         /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,
@@ -112,7 +120,8 @@ import { DirectorInCompanyComponent } from './other-information/director-in-comp
         DeleteConfirmationDialogComponent,
         NriDetailsDialogComponent,
         UnlistedSharesComponent,
-        DirectorInCompanyComponent]
+        DirectorInCompanyComponent,
+        AddInvestmentDialogComponent]
 
 })
 export class ItrFilingModule { }
