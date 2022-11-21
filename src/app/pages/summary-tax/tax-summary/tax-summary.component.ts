@@ -3377,7 +3377,7 @@ export class TaxSummaryComponent implements OnInit {
         eFillingCompleted: false,
         eFillingDate: null,    //dateOfFiling
         isRevised: null,
-        isLate: null,
+        isLate: 'N',
 
         dateOfNotice: null,
         noticeIdentificationNo: null,

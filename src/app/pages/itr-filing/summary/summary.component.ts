@@ -158,8 +158,8 @@ export class SummaryComponent implements OnInit {
     const param = '/tax';
     if (this.ITR_JSON.itrType !== '4') {
       if (this.ITR_JSON.business) {
-      this.ITR_JSON.business.financialParticulars = null;
-      this.ITR_JSON.business.presumptiveIncomes = [];
+        this.ITR_JSON.business.financialParticulars = null;
+        this.ITR_JSON.business.presumptiveIncomes = [];
       }
     }
     this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
@@ -170,26 +170,26 @@ export class SummaryComponent implements OnInit {
       this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
         console.log('SUMMARY Result=> ', summary);
         if (summary) {
-        this.losses = summary.assessment;
+          this.losses = summary.assessment;
           for (let i = 0; i < this.losses?.carryForwordLosses?.length; i++) {
-          this.totalCarryForword = this.totalCarryForword + this.losses.carryForwordLosses[i].totalLoss;
-        }
-        this.summaryDetail = summary.assessment.taxSummary;
-        this.taxable = this.summaryDetail.taxpayable;
+            this.totalCarryForword = this.totalCarryForword + this.losses.carryForwordLosses[i].totalLoss;
+          }
+          this.summaryDetail = summary.assessment.taxSummary;
+          this.taxable = this.summaryDetail.taxpayable;
 
-        this.refund = this.summaryDetail.taxRefund;
+          this.refund = this.summaryDetail.taxRefund;
           this.deductionDetail = summary.assessment.summaryDeductions?.filter((item: any) => item.sectionType !== '80C' && item.sectionType !== '80CCC' && item.sectionType !== '80CCD1' && item.sectionType !== '80GAGTI');
           this.capitalGain = summary.assessment.summaryIncome?.cgIncomeN;
-        this.totalLoss = summary.assessment.currentYearLosses;
-        this.show = true;
-        sessionStorage.setItem('ITR_SUMMARY_JSON', JSON.stringify(this.summaryDetail));
+          this.totalLoss = summary.assessment.currentYearLosses;
+          this.show = true;
+          sessionStorage.setItem('ITR_SUMMARY_JSON', JSON.stringify(this.summaryDetail));
 
           this.losses?.pastYearLosses?.forEach((item: any) => {
-          this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
-          this.stLoss = this.stLoss + item.setOffWithCurrentYearSTCGIncome;
-          this.ltLoss = this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
-        });
-        this.loading = false;
+            this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
+            this.stLoss = this.stLoss + item.setOffWithCurrentYearSTCGIncome;
+            this.ltLoss = this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
+          });
+          this.loading = false;
         } else {
           this.loading = false;
           this.errorMessage = 'We are unable to display your summary,Please try again later.';
