@@ -2968,7 +2968,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
             amount: this.sourcesOfIncome.dividend,
             taxableAmount: 0,
             exemptAmount: 0,
-            incomeType: 'DIVIDEND_INCOME',
+            incomeType: 'DIVIDEND',
             details: ''
           };
 

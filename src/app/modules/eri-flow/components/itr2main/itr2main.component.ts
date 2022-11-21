@@ -5078,7 +5078,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
             // this.sourcesOfIncome.agricultureIncome = incomePart[i].amount;
             this.deductionAndRemainForm.controls['agricultureIncome'].setValue(incomePart[i].amount);
           }
-          else if (incomePart[i].incomeType === "DIVIDEND_INCOME") {
+          else if (incomePart[i].incomeType === "DIVIDEND") {
             // this.sourcesOfIncome.dividendIncome = incomePart[i].amount;
             this.deductionAndRemainForm.controls['dividendIncome'].setValue(incomePart[i].amount);
           }
@@ -5284,7 +5284,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         // else if(otherSource[i].incomeType === "AGRICULTURE_INCOME"){
         //   this.sourcesOfIncome.agricultureIncome = otherSource[i].amount;
         // }
-        // else if(otherSource[i].incomeType === "DIVIDEND_INCOME"){
+        // else if(otherSource[i].incomeType === "DIVIDEND"){
         //   this.sourcesOfIncome.dividendIncome = otherSource[i].amount;
         // }
 
@@ -5648,7 +5648,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           amount: this.otherSourceForm.controls['dividend'].value,
           taxableAmount: 0,
           exemptAmount: 0,
-          incomeType: 'DIVIDEND_INCOME',
+          incomeType: 'DIVIDEND',
           details: ''
         };
         this.incomeData.push(obj)
@@ -5682,7 +5682,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
           amount: this.deductionAndRemainForm.controls['dividendIncome'].value,
           taxableAmount: 0,
           exemptAmount: 0,
-          incomeType: 'DIVIDEND_INCOME',
+          incomeType: 'DIVIDEND',
           details: ''
         };
         this.incomeData.push(obj)
