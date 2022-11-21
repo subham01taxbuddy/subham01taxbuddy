@@ -18,6 +18,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { PrefillDataComponent } from '../prefill-data/prefill-data.component';
+import * as moment from 'moment';
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -689,7 +690,9 @@ export class CustomerProfileComponent implements OnInit {
     var month = lastSix.slice(2, 4);
     var year = lastSix.slice(4, 6);
     let dateString = `20${year}-${month}-${day}`;
-    console.log(dateString, year, month, day)
-    this.customerProfileForm.controls['orgITRDate'].setValue(dateString);
+    console.log(dateString, year, month, day);
+
+    this.customerProfileForm.controls['orgITRDate'].setValue(moment(dateString).toDate());
   }
+  
 }
