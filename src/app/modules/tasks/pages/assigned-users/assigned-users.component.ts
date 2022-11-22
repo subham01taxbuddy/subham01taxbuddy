@@ -806,6 +806,8 @@ export class AssignedUsersComponent implements OnInit {
 
   async startFiling(data) {
     console.log(data);
+
+    const loggedInId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID;
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     
@@ -825,9 +827,10 @@ export class AssignedUsersComponent implements OnInit {
         });
         let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
         //Object.assign(obj, this.ITR_JSON)
-        console.log('obj:', objITR);
+        objITR.filingTeamMemberId = loggedInId;
         //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
-        objITR.filingTeamMemberId = this.agentId;//filingTeamMemberId;
+        console.log('obj:', objITR);
+        
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
         //update status to WIP
         //this.updateITRtoWIP(data, objITR, currentFyDetails[0].assessmentYear);
@@ -856,6 +859,7 @@ export class AssignedUsersComponent implements OnInit {
         });
         let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
         Object.assign(obj, workingItr);
+        workingItr.filingTeamMemberId = loggedInId;
         console.log('obj:', obj);
         workingItr = JSON.parse(JSON.stringify(obj));
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
@@ -882,7 +886,7 @@ export class AssignedUsersComponent implements OnInit {
           return;
         });
         let ITR_JSON = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
-        ITR_JSON.filingTeamMemberId = this.agentId;//filingTeamMemberId;
+        ITR_JSON.filingTeamMemberId = loggedInId;
         const param = '/itr';
         this.itrMsService.postMethod(param, ITR_JSON).subscribe((result: any) => {
             console.log('My iTR Json successfully created-==', result);
