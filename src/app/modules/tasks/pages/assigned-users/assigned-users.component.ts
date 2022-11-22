@@ -812,8 +812,8 @@ export class AssignedUsersComponent implements OnInit {
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     
     //https://uat-api.taxbuddy.com/itr/itr-data?userId={userId}&assessmentYear={assessmentYear}&isRevised={isRevised}
-    let isRevised = 'N';
-    const param = `/itr?userId=${data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}&isRevised=${isRevised}`;
+    //let isRevised = 'N';
+    const param = `/itr?userId=${data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}`;//&isRevised=${isRevised}`;
     this.itrMsService.getMethod(param).subscribe(async (result: any) => {
       console.log('My ITR by user Id and Assessment Years=', result);
       if(result == null || result.length == 0) {
