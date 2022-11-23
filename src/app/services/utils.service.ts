@@ -248,6 +248,7 @@ export class UtilsService {
             itrType: '',
             planName: '',
             regime: '',
+            previousYearRegime: '',
             family: [
                 {
                     pid: null,
