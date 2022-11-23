@@ -131,11 +131,11 @@ export class DeclarationComponent implements OnInit {
             this.ITR_JSON = ITR_RESULT;
             sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
             if (result.taxSummary.totalIncomeAfterDeductionIncludeSR > 5000000) {
-              alert('Applicable for ITR 2')
-            } else {
+              this.utilsService.showSnackBar('Applicable for ITR 2')
+            } //else {
               this.loading = false;
               this.saveAndNext.emit(true);
-            }
+            //}
           }, error => {
             this.loading = false;
             this.utilsService.showSnackBar('Unable to update details, Please try again.');
