@@ -180,8 +180,11 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
     this.initializeMainForm();
     this.initializeNewRegimeTaxSummary();
-    if (this.itrObject)
+    if (this.itrObject) {
       this.fetchSummary();
+    } else {
+      this.itrObject = this.utilsService.createEmptyJson(this.userDetails, '2022-2023', '2021-2022');
+    }
     // window.addEventListener('beforeunload', function (e) {
 
     //   e.preventDefault();
@@ -271,7 +274,9 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
     if (itrData.FilingStatus.ReturnFileSec === 17) {
       this.itrSummaryForm.controls['returnType'].setValue('REVISED');
       (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['ackNumber'].setValue(itrData.FilingStatus.ReceiptNo);
-      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['eFillingDate'].setValue(itrData.FilingStatus.OrigRetFiledDate)
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['eFillingDate'].setValue(itrData.FilingStatus.OrigRetFiledDate);
+      //set itr isRevised to true
+      (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['isRevised'].setValue('Y');
       this.showAcknowData('REVISED')
     }
     (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['aadharNumber'].setValue(itrData.PersonalInfo.AadhaarCardNo);
@@ -1619,7 +1624,12 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       this.salaryItrratedData = [];
       // this.setTotalOfExempt();
       this.itrSummaryForm.patchValue(summary);
-      this.setItrType(summary.assesse.itrType)
+      this.setItrType(summary.assesse.itrType);
+      if(summary.returnType === 'REVISED') {
+        this.itrObject.isRevised = 'Y';
+        (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['isRevised'].setValue('Y');
+        console.log('summary', (this.itrSummaryForm.controls['assesse'] as FormGroup).controls['isRevised'].value);
+      }
 
       if ((this.itrSummaryForm.controls['assesse'] as FormGroup).controls['itrType'].value === "4") {
 
@@ -1630,8 +1640,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
           let recivedInCash = businessIncome[0].incomes.filter((item: any) => item.incomeType === "CASH");
 
           this.businessObject.tradeName44AD = businessIncome[0].tradeName;
-          this.businessObject.received44ADtaotal = this.getNumberFormat(recivedInBank[0].receipt) + this.getNumberFormat(recivedInCash[0].receipts);
-          this.businessObject.presumptive44ADtotal = this.getNumberFormat(recivedInBank[0].presumptiveIncome) + this.getNumberFormat(recivedInCash[0].presumptiveIncome);
+          this.businessObject.received44ADtaotal = this.getNumberFormat(recivedInBank[0]?.receipt) + this.getNumberFormat(recivedInCash[0]?.receipts);
+          this.businessObject.presumptive44ADtotal = this.getNumberFormat(recivedInBank[0]?.presumptiveIncome) + this.getNumberFormat(recivedInCash[0]?.presumptiveIncome);
         }
 
         var presumptiveIncome = summary.assesse.business.presumptiveIncomes.filter((item: any) => item.businessType === "PROFESSIONAL");
@@ -1643,8 +1653,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
           }
 
           this.businessObject.tradeName44ADA = presumptiveIncome[0].tradeName;
-          this.businessObject.grossReciept = presumptiveIncome[0].incomes[0].receipts;
-          this.businessObject.presumptiveIncome = presumptiveIncome[0].incomes[0].presumptiveIncome;
+          this.businessObject.grossReciept = presumptiveIncome[0].incomes[0]?.receipts;
+          this.businessObject.presumptiveIncome = presumptiveIncome[0].incomes[0]?.presumptiveIncome;
         }
       }
 
@@ -2958,11 +2968,54 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
             amount: this.sourcesOfIncome.dividend,
             taxableAmount: 0,
             exemptAmount: 0,
-            incomeType: 'DIVIDEND_INCOME',
+            incomeType: 'DIVIDEND',
             details: ''
           };
 
-          this.incomeData.push(obj)
+          this.incomeData.push(obj);
+
+          //add these to ITR object dividend values, default to quarter 1
+          let dividendObj = {
+            income: this.sourcesOfIncome.dividend, 
+            date: "2022-04-28T18:30:00.000Z", 
+            quarter: 1
+          };
+          if(!this.itrObject.dividendIncomes) {
+            this.itrObject.dividendIncomes = [
+              {
+                "income": 0,
+                "date": "2022-04-28T18:30:00.000Z",
+                quarter: 1
+              },
+              {
+                "income": 0,
+                "date": "2022-07-28T18:30:00.000Z",
+                quarter: 2
+              },
+              {
+                "income": 0,
+                "date": "2022-09-28T18:30:00.000Z",
+                quarter: 3
+              },
+              {
+                "income": 0,
+                "date": "2022-12-28T18:30:00.000Z",
+                quarter: 4
+              },
+              {
+                "income": 0,
+                "date": "2023-03-20T18:30:00.000Z",
+                quarter: 5
+              }
+            ];
+            // this.itrObject.dividendIncomes.push(dividendObj);
+          } 
+          //check existing data, and replace the value of income
+          let dividends = this.itrObject.dividendIncomes.filter((item: any) => item.quarter != 1);
+          this.itrObject.dividendIncomes = [];
+          this.itrObject.dividendIncomes.push(dividendObj);
+          this.itrObject.dividendIncomes.concat(dividends);
+
         }
         if (this.sourcesOfIncome.familyPension !== 0) {
           let obj = {
@@ -3182,6 +3235,9 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
       this.loading = true;
       let tempAy = this.itrObject.assessmentYear;
       let tempFy = this.itrObject.financialYear;
+
+      console.log(this.itrSummaryForm.controls['assesse'].value);
+
       Object.assign(this.itrObject, this.itrSummaryForm.controls['assesse'].value);
       this.itrObject.assessmentYear = tempAy;
       this.itrObject.financialYear = tempFy ? tempFy : '2021-2022';
@@ -3196,6 +3252,9 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
           // this.updateStatus(); // Update staus automatically
           this.loading = false;
           this._toastMessageService.alert("success", "Summary saved and ITR details updated succesfully.");
+          //save the ITR object into session for next page
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.itrObject));
+
         }, error => {
           this._toastMessageService.alert("error", "Failed to update itr details");
           this.loading = false;
@@ -3426,7 +3485,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         eFillingCompleted: false,
         eFillingDate: null,    //dateOfFiling
         isRevised: null,
-        isLate: null,
+        isLate: 'N',
 
         dateOfNotice: null,
         noticeIdentificationNo: null,

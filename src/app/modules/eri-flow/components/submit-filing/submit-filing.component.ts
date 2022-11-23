@@ -8,6 +8,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SuccessSubmitFilingComponent } from '../success-submit-filing/success-submit-filing.component';
 import { Router } from '@angular/router';
+import { AppConstants } from 'src/app/modules/shared/constants';
 declare let $: any;
 @Component({
   selector: 'app-submit-filing',
@@ -29,7 +30,7 @@ export class SubmitFilingComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private dialog: MatDialog,
     private router: Router) {
-    // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.itrData = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
   ngOnInit() {

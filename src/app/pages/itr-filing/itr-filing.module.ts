@@ -1,3 +1,5 @@
+import { MoreInfoComponent } from './capital-gain/more-info/more-info.component';
+import { AddClientDialogComponent } from './add-client-dialog/add-client-dialog.component';
 import { AckFailureComponent } from './acknowledgement/ack-failure/ack-failure.component';
 import { AckDelayComponent } from './acknowledgement/ack-delay/ack-delay.component';
 import { AckSuccessComponent } from './acknowledgement/ack-success/ack-success.component';
@@ -42,6 +44,7 @@ import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-docu
 import { UpdateManualFilingComponent } from './update-manual-filing/update-manual-filing.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AddClientComponent } from './add-client/add-client.component';
+import { PrefillDataComponent } from './prefill-data/prefill-data.component';
 import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
 import { DeleteConfirmationDialogComponent } from './components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { NriDetailsDialogComponent } from './components/nri-details-dialog/nri-details-dialog.component';
@@ -102,6 +105,8 @@ import { AddInvestmentDialogComponent } from './capital-gain/land-and-building/a
         ShowUserDocumnetsComponent,
         UpdateManualFilingComponent,
         AddClientComponent,
+        AddClientDialogComponent,
+        PrefillDataComponent,
         // InputUploadComponent
         CoOwnerComponent,
         DeleteConfirmationDialogComponent,
@@ -112,7 +117,8 @@ import { AddInvestmentDialogComponent } from './capital-gain/land-and-building/a
         CapitalGainComponent,
         LandAndBuildingComponent,
         LabFormComponent,
-        AddInvestmentDialogComponent
+        AddInvestmentDialogComponent,
+        MoreInfoComponent
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
         /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,

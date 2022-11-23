@@ -63,6 +63,7 @@ export interface ITR_JSON {
     seventhProviso139: SeventhProviso139,
     depPayInvClmUndDednVIA: string;
     regime: string;
+    previousYearRegime: string;
     dividendIncomes?: any[];
     exemptIncomes?: any[];
     jurisdictions?: Jurisdictions[],
