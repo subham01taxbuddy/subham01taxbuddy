@@ -17,6 +17,9 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
+import { AddClientDialogComponent } from './../add-client-dialog/add-client-dialog.component';
+import { PrefillDataComponent } from '../prefill-data/prefill-data.component';
+import * as moment from 'moment';
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -119,6 +122,7 @@ export class CustomerProfileComponent implements OnInit {
 
   filePath = 'ITR/';
   loggedInUserData: any;
+  navigationData: any;
 
   constructor(public fb: FormBuilder,
     public utilsService: UtilsService,
@@ -132,6 +136,8 @@ export class CustomerProfileComponent implements OnInit {
     private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
+    console.log('nav data', this.router.getCurrentNavigation().extras.state);
+    this.navigationData = this.router.getCurrentNavigation().extras.state;
   }
 
   ngOnInit() {
@@ -158,7 +164,7 @@ export class CustomerProfileComponent implements OnInit {
       contactNumber: ['', Validators.compose([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required])],
       email: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.emailRegex)])],
       panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex)])],
-      aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
+      aadharNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
       employerCategory: [''],
@@ -362,6 +368,9 @@ export class CustomerProfileComponent implements OnInit {
       this.customerProfileForm.controls['orgITRAckNum'].updateValueAndValidity();
       this.customerProfileForm.controls['orgITRDate'].setValidators(Validators.required);
       this.customerProfileForm.controls['orgITRDate'].updateValueAndValidity();
+    }
+    if (this.customerProfileForm.controls['isRevised'].value === 'Y') {
+      this.customerProfileForm.controls['isRevised'].disable();
     }
   }
 
@@ -637,11 +646,65 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   addClient() {
-    Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+    //Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+    let disposable = this.matDialog.open(AddClientDialogComponent, {
+      width: '500',
+      height: '100',
+      data: {
+        userId: this.ITR_JSON.userId,
+        panNumber: this.customerProfileForm.controls['panNumber'].value,
+        eriClientValidUpto: '',
+        callerAgentUserId: this.ITR_JSON.filingTeamMemberId,
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        name: this.customerProfileForm.controls['firstName'].value + ' ' + this.customerProfileForm.controls['lastName'].value,
+        dateOfBirth: this.customerProfileForm.controls['panNumber'].value,
+        mobileNumber: this.ITR_JSON.contactNumber
+      }
+    })
 
+    disposable.afterClosed().subscribe(result => {
+      console.log('The add client dialog was closed');
+    });
+  }
+  
+  getPrefillData() {
+    //Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+    let disposable = this.matDialog.open(PrefillDataComponent, {
+      width: '70%',
+      height: 'auto',
+      data: {
+        userId: this.ITR_JSON.userId,
+        panNumber: this.customerProfileForm.controls['panNumber'].value,
+        eriClientValidUpto: '',
+        callerAgentUserId: this.ITR_JSON.filingTeamMemberId,
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        name: this.customerProfileForm.controls['firstName'].value + ' ' + this.customerProfileForm.controls['lastName'].value,
+        dateOfBirth: this.customerProfileForm.controls['panNumber'].value,
+        mobileNumber: this.ITR_JSON.contactNumber
+      }
+    });
+
+    disposable.afterClosed().subscribe(result => {
+      console.log('The prefill data dialog was closed');
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      this.setCustomerProfileValues();
+    });
   }
 
   isApplicable(permissionRoles) {
     return this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserData.USER_ROLE, permissionRoles);
   }
+
+  setFilingDate() {
+    var id = this.customerProfileForm.controls['orgITRAckNum'].value;
+    var lastSix = id.substr(id.length - 6);
+    var day = lastSix.slice(0, 2);
+    var month = lastSix.slice(2, 4);
+    var year = lastSix.slice(4, 6);
+    let dateString = `20${year}-${month}-${day}`;
+    console.log(dateString, year, month, day);
+
+    this.customerProfileForm.controls['orgITRDate'].setValue(moment(dateString).toDate());
+  }
+  
 }
