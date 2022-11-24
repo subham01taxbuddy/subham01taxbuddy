@@ -47,9 +47,12 @@ font-weight: bold;">More options for: {{data.name}}</label>
   </span>
   &nbsp;&nbsp;
   <span>
-    <button type="button" title="Delete User" [disabled]="isDisable"
+    <!-- <button type="button" title="Delete User" [disabled]="isDisable"
    class="delete-user tbd-btn-small" [style.cursor]="isDisable ? 'no-drop': 'pointer'"
       (click)="deleteUser()">
+      Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
+    </button> -->
+    <button type="button" title="Delete User" class="delete-user tbd-btn-small" (click)="deleteUser()">
       Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
     </button>
   </span>

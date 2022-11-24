@@ -21,7 +21,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   myItrsGridOptions: GridOptions;
   initialData = {};
   statusList = [];
-  isDisable = true;
+  // isDisable = true;
   constructor(
     public dialogRef: MatDialogRef<MoreOptionsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -43,40 +43,40 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getStatus();
+    // this.getStatus();
   }
 
   closeDialog() {
     this.dialogRef.close();
   }
 
-  getStatus() {
-    const param = `/user-status?userId=` + this.data.userId + `&currentStatus=OPEN`;
-    this.userMsService.getMethod(param).subscribe((res: any) => {
-      if (res.success) {
-        this.isDisable = false;
-      } else {
-        this.isDisable = true;
-      }
-    }, error => {
-      this.utilsService.showSnackBar(error.message);
-    })
-  }
+  // getStatus() {
+  //   const param = `/user-status?userId=` + this.data.userId + `&currentStatus=OPEN`;
+  //   this.userMsService.getMethod(param).subscribe((res: any) => {
+  //     if (res.success) {
+  //       this.isDisable = false;
+  //     } else {
+  //       this.isDisable = true;
+  //     }
+  //   }, error => {
+  //     this.utilsService.showSnackBar(error.message);
+  //   })
+  // }
 
   deleteUser() {
-    this.isDisable = true;
+    // this.isDisable = true;
     const param = `/user/account/delete/` + this.data.mobileNumber + `?reason=Test`;
     this.userMsService.deleteMethod(param).subscribe((res: any) => {
       if (res.success) {
         this.utilsService.showSnackBar(`User deleted successfully!`);
-        this.isDisable = true;
+        // this.isDisable = true;
         this.dialogRef.close(true);
       } else {
         this.utilsService.showSnackBar(res.message);
-        this.isDisable = false;
+        // this.isDisable = false;
       }
     }, error => {
-      this.isDisable = false;
+      // this.isDisable = false;
       this.utilsService.showSnackBar(error.message);
     })
   }
