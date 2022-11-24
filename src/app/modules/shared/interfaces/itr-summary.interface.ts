@@ -82,7 +82,7 @@ export interface Assesse {
     eFillingCompleted: boolean,
     eFillingDate: string,
     isRevised: null,
-    isLate: null,
+    isLate: 'N',
     employerCategory: null,
     regime: string,
     dateOfNotice: null,

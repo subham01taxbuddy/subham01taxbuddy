@@ -1640,8 +1640,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
           let recivedInCash = businessIncome[0].incomes.filter((item: any) => item.incomeType === "CASH");
 
           this.businessObject.tradeName44AD = businessIncome[0].tradeName;
-          this.businessObject.received44ADtaotal = this.getNumberFormat(recivedInBank[0].receipt) + this.getNumberFormat(recivedInCash[0].receipts);
-          this.businessObject.presumptive44ADtotal = this.getNumberFormat(recivedInBank[0].presumptiveIncome) + this.getNumberFormat(recivedInCash[0].presumptiveIncome);
+          this.businessObject.received44ADtaotal = this.getNumberFormat(recivedInBank[0]?.receipt) + this.getNumberFormat(recivedInCash[0]?.receipts);
+          this.businessObject.presumptive44ADtotal = this.getNumberFormat(recivedInBank[0]?.presumptiveIncome) + this.getNumberFormat(recivedInCash[0]?.presumptiveIncome);
         }
 
         var presumptiveIncome = summary.assesse.business.presumptiveIncomes.filter((item: any) => item.businessType === "PROFESSIONAL");
@@ -1653,8 +1653,8 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
           }
 
           this.businessObject.tradeName44ADA = presumptiveIncome[0].tradeName;
-          this.businessObject.grossReciept = presumptiveIncome[0].incomes[0].receipts;
-          this.businessObject.presumptiveIncome = presumptiveIncome[0].incomes[0].presumptiveIncome;
+          this.businessObject.grossReciept = presumptiveIncome[0].incomes[0]?.receipts;
+          this.businessObject.presumptiveIncome = presumptiveIncome[0].incomes[0]?.presumptiveIncome;
         }
       }
 
@@ -2968,11 +2968,54 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
             amount: this.sourcesOfIncome.dividend,
             taxableAmount: 0,
             exemptAmount: 0,
-            incomeType: 'DIVIDEND_INCOME',
+            incomeType: 'DIVIDEND',
             details: ''
           };
 
-          this.incomeData.push(obj)
+          this.incomeData.push(obj);
+
+          //add these to ITR object dividend values, default to quarter 1
+          let dividendObj = {
+            income: this.sourcesOfIncome.dividend, 
+            date: "2022-04-28T18:30:00.000Z", 
+            quarter: 1
+          };
+          if(!this.itrObject.dividendIncomes) {
+            this.itrObject.dividendIncomes = [
+              {
+                "income": 0,
+                "date": "2022-04-28T18:30:00.000Z",
+                quarter: 1
+              },
+              {
+                "income": 0,
+                "date": "2022-07-28T18:30:00.000Z",
+                quarter: 2
+              },
+              {
+                "income": 0,
+                "date": "2022-09-28T18:30:00.000Z",
+                quarter: 3
+              },
+              {
+                "income": 0,
+                "date": "2022-12-28T18:30:00.000Z",
+                quarter: 4
+              },
+              {
+                "income": 0,
+                "date": "2023-03-20T18:30:00.000Z",
+                quarter: 5
+              }
+            ];
+            // this.itrObject.dividendIncomes.push(dividendObj);
+          } 
+          //check existing data, and replace the value of income
+          let dividends = this.itrObject.dividendIncomes.filter((item: any) => item.quarter != 1);
+          this.itrObject.dividendIncomes = [];
+          this.itrObject.dividendIncomes.push(dividendObj);
+          this.itrObject.dividendIncomes.concat(dividends);
+
         }
         if (this.sourcesOfIncome.familyPension !== 0) {
           let obj = {
@@ -3442,7 +3485,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
         eFillingCompleted: false,
         eFillingDate: null,    //dateOfFiling
         isRevised: null,
-        isLate: null,
+        isLate: 'N',
 
         dateOfNotice: null,
         noticeIdentificationNo: null,

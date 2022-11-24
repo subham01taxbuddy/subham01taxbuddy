@@ -2933,7 +2933,7 @@ export class TaxSummaryComponent implements OnInit {
             amount: this.sourcesOfIncome.dividend,
             taxableAmount: 0,
             exemptAmount: 0,
-            incomeType: 'DIVIDEND_INCOME',
+            incomeType: 'DIVIDEND',
             details: ''
           };
           this.incomeData.push(obj)
@@ -3377,7 +3377,7 @@ export class TaxSummaryComponent implements OnInit {
         eFillingCompleted: false,
         eFillingDate: null,    //dateOfFiling
         isRevised: null,
-        isLate: null,
+        isLate: 'N',
 
         dateOfNotice: null,
         noticeIdentificationNo: null,

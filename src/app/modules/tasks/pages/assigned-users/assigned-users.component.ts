@@ -806,19 +806,18 @@ export class AssignedUsersComponent implements OnInit {
 
   async startFiling(data) {
     console.log(data);
+
+    const loggedInId = JSON.parse(localStorage.getItem('UMD')).USER_UNIQUE_ID;
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     
     //https://uat-api.taxbuddy.com/itr/itr-data?userId={userId}&assessmentYear={assessmentYear}&isRevised={isRevised}
-    let isRevised = false;
+    let isRevised = 'N';
     const param = `/itr?userId=${data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}&isRevised=${isRevised}`;
     this.itrMsService.getMethod(param).subscribe(async (result: any) => {
       console.log('My ITR by user Id and Assessment Years=', result);
       if(result == null || result.length == 0) {
         //no ITR found, create a new one
-        //update status to WIP
-        this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
-        
         this.loading = true;
         let profile = await this.getUserProfile(data.userId).catch(error => {
           this.loading = false;
@@ -826,8 +825,28 @@ export class AssignedUsersComponent implements OnInit {
           this.utilsService.showSnackBar(error.error.detail);
           return;
         });
+        let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+        //Object.assign(obj, this.ITR_JSON)
+        objITR.filingTeamMemberId = loggedInId;
+        //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
+        console.log('obj:', objITR);
+        
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
+        //update status to WIP
+        //this.updateITRtoWIP(data, objITR, currentFyDetails[0].assessmentYear);
+        
+        
         this.loading = false;
-        this.utilsService.getITRByUserIdAndAssesmentYear(profile, '', this.agentId);
+        this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+          state: { 
+            userId: data.userId, 
+            panNumber: data.panNumber, 
+            eriClientValidUpto: data.eriClientValidUpto, 
+            name: data.name } 
+          });
+        
+        
+        //this.utilsService.getITRByUserIdAndAssesmentYear(profile, '', this.agentId);
       } else if(result.length == 1) {
         //update status to WIP
         //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
@@ -840,6 +859,7 @@ export class AssignedUsersComponent implements OnInit {
         });
         let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
         Object.assign(obj, workingItr);
+        workingItr.filingTeamMemberId = loggedInId;
         console.log('obj:', obj);
         workingItr = JSON.parse(JSON.stringify(obj));
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
@@ -866,7 +886,7 @@ export class AssignedUsersComponent implements OnInit {
           return;
         });
         let ITR_JSON = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
-        ITR_JSON.filingTeamMemberId = this.agentId;//filingTeamMemberId;
+        ITR_JSON.filingTeamMemberId = loggedInId;
         const param = '/itr';
         this.itrMsService.postMethod(param, ITR_JSON).subscribe((result: any) => {
             console.log('My iTR Json successfully created-==', result);

@@ -40,7 +40,7 @@ export class OtherIncomeComponent implements OnInit {
     "value": "ANY_OTHER",
     "label": "Any Other Income",
   }, /* {
-    "value": "FAMILLY_PENSION",
+    "value": "FAMILY_PENSION",
     "label": "Any Other Income",
   } */];
 

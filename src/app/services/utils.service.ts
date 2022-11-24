@@ -136,14 +136,15 @@ export class UtilsService {
                     console.log('obj:', obj)
                     this.ITR_JSON = JSON.parse(JSON.stringify(obj))
                     this.ITR_JSON.filingTeamMemberId = filingTeamMemberId;
-                    console.log('this.ITR_JSONthis.ITR_JSONthis.ITR_JSON', this.ITR_JSON);
+                    console.log('this.ITR_JSON in utils', this.ITR_JSON);
+                    console.log('profile', profile);
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
                     this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
                         state: { 
                           userId: this.ITR_JSON.userId, 
-                          panNumber: this.ITR_JSON.panNumber, 
+                          panNumber: profile.panNumber, 
                           eriClientValidUpto: profile.eriClientValidUpto, 
-                          name: profile.name } 
+                          name: profile.fName + ' ' + profile.lName } 
                         });
                     /* if (this.utilsService.isNonEmpty(profile.panNumber)) {
                       if (this.utilsService.isNonEmpty(this.ITR_JSON.panNumber) ? (this.ITR_JSON.panNumber !== profile.panNumber) : false) {
@@ -194,9 +195,9 @@ export class UtilsService {
                     this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
                         state: { 
                           userId: this.ITR_JSON.userId, 
-                          panNumber: this.ITR_JSON.panNumber, 
+                          panNumber: profile.panNumber, 
                           eriClientValidUpto: profile.eriClientValidUpto, 
-                          name: profile.name } 
+                          name: profile.fName + ' ' + profile.lName } 
                         });
                 }, error => {
                     this.loading = false;
@@ -216,9 +217,9 @@ export class UtilsService {
                     this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
                         state: { 
                           userId: this.ITR_JSON.userId, 
-                          panNumber: this.ITR_JSON.panNumber, 
+                          panNumber: profile.panNumber, 
                           eriClientValidUpto: profile.eriClientValidUpto, 
-                          name: profile.name } 
+                          name: profile.fName + ' ' + profile.lName } 
                         });
                 }, error => {
                     this.loading = false;
