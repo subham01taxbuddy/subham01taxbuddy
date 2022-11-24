@@ -289,7 +289,7 @@
                                         matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
                                         matTooltipClass="tab-tooltip" matTooltipPosition="above"
                                         formControlName="panNumber" maxlength="10" required type="text" trim
-                                        [class.invalid]="isduplicatePAN(i,'coOwners')"
+                                        [class.invalid]="isduplicatePAN(i,'coOwners')" upperCase
                                         [matTooltip]="isduplicatePAN(i,'coOwners') ? 'Duplicate PAN Number':''"
                                         matTooltipPosition="above" matTooltipClass="error-tooltip">
                                     <mat-error
