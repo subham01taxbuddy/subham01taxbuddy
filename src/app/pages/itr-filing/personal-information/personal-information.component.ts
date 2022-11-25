@@ -565,8 +565,30 @@ export class PersonalInformationComponent implements OnInit {
 
   async saveProfile(ref) {
     this.findAssesseeType();
-    if (this.customerProfileForm.controls['regime'].value === 'NEW')
+    if (this.customerProfileForm.controls['regime'].value === 'NEW') {
       this.removeOldRegimeData();
+    }
+
+    //check if at least one account is selected for refund
+    var isBankSelected = false;
+    this.ITR_JSON.bankDetails.forEach(bank => {
+      if(bank.hasRefund){
+        isBankSelected = true;
+      }
+    });
+    if(!isBankSelected){
+      this.utilsService.showSnackBar('Please select atleast one bank account in which you prefer to get refund.');
+      return;
+    }
+
+    Object.keys(this.customerProfileForm.controls).forEach(key => {
+      const controlErrors: ValidationErrors = this.customerProfileForm.get(key).errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+        });
+      }
+    });
     if (this.customerProfileForm.valid) {
       this.loading = true;
       const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
