@@ -668,7 +668,8 @@ export class CustomerProfileComponent implements OnInit {
         assessmentYear: this.ITR_JSON.assessmentYear,
         name: this.customerProfileForm.controls['firstName'].value + ' ' + this.customerProfileForm.controls['lastName'].value,
         dateOfBirth: this.customerProfileForm.controls['panNumber'].value,
-        mobileNumber: this.ITR_JSON.contactNumber
+        mobileNumber: this.ITR_JSON.contactNumber,
+        itrId: this.ITR_JSON.itrId
       }
     });
 

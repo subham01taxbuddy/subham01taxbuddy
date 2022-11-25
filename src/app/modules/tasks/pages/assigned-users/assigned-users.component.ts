@@ -436,7 +436,8 @@ export class AssignedUsersComponent implements OnInit {
         pinned: 'right',
         cellRenderer: function (params: any) {
           if(params.data.serviceType === 'ITR') {
-            if (statusSequence >= 1 && statusSequence <= 7) { // From open till Document uploaded)
+            console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
+            if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" style="border: none;
               background: transparent; font-size: 16px; cursor:pointer;color: blue">
               <i class="fa fa-circle" title="No action taken yet" aria-hidden="true" data-action-type="startFiling"></i>
@@ -446,7 +447,7 @@ export class AssignedUsersComponent implements OnInit {
               background: transparent; font-size: 16px; cursor:pointer;color: red">
               <i class="fa fa-circle" title="User Backed out" aria-hidden="true" data-action-type="startFiling"></i>
               </button>`;
-            } else if (params.data.statusId === 11) { // ITR filed
+            } else if (params.data.itrObjectStatus === 'ITR_FILED') { // ITR filed
               return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
               background: transparent; font-size: 16px; cursor:pointer;color: green">
               <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
@@ -712,7 +713,10 @@ export class AssignedUsersComponent implements OnInit {
         statusUpdatedDate: userData[i].statusUpdatedDate,
         panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
         eriClientValidUpto: userData[i].eriClientValidUpto,
-        laguage: userData[i].laguage
+        laguage: userData[i].laguage,
+        itrObjectStatus: userData[i].itrObjectStatus,
+        openItrId: userData[i].openItrId,
+        lastFiledItrId: userData[i].lastFiledItrId
       })
       userArray.push(userInfo);
     }
@@ -811,103 +815,87 @@ export class AssignedUsersComponent implements OnInit {
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     
-    //https://uat-api.taxbuddy.com/itr/itr-data?userId={userId}&assessmentYear={assessmentYear}&isRevised={isRevised}
-    let isRevised = 'N';
-    const param = `/itr?userId=${data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}&isRevised=${isRevised}`;
-    this.itrMsService.getMethod(param).subscribe(async (result: any) => {
-      console.log('My ITR by user Id and Assessment Years=', result);
-      if(result == null || result.length == 0) {
-        //no ITR found, create a new one
-        this.loading = true;
-        let profile = await this.getUserProfile(data.userId).catch(error => {
-          this.loading = false;
-          console.log(error);
-          this.utilsService.showSnackBar(error.error.detail);
-          return;
-        });
-        let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
-        //Object.assign(obj, this.ITR_JSON)
-        objITR.filingTeamMemberId = loggedInId;
-        //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
-        console.log('obj:', objITR);
-        
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
-        //update status to WIP
-        //this.updateITRtoWIP(data, objITR, currentFyDetails[0].assessmentYear);
-        
-        
+    if(data.itrObjectStatus === 'CREATE') {
+      //no ITR object found, create a new ITR object
+      this.loading = true;
+      let profile = await this.getUserProfile(data.userId).catch(error => {
         this.loading = false;
-        this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
-          state: { 
-            userId: data.userId, 
-            panNumber: data.panNumber, 
-            eriClientValidUpto: data.eriClientValidUpto, 
-            name: data.name } 
-          });
-        
-        
-        //this.utilsService.getITRByUserIdAndAssesmentYear(profile, '', this.agentId);
-      } else if(result.length == 1) {
-        //update status to WIP
-        //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
-        let workingItr = result[0];
-        Object.entries(workingItr).forEach((key, value) => {
-          console.log(key, value)
-          if (key[1] === null) {
-            delete workingItr[key[0]];
-          }
-        });
-        let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
-        Object.assign(obj, workingItr);
-        workingItr.filingTeamMemberId = loggedInId;
-        console.log('obj:', obj);
-        workingItr = JSON.parse(JSON.stringify(obj));
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-        this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
-          state: { 
-            userId: data.userId, 
-            panNumber: data.panNumber, 
-            eriClientValidUpto: data.eriClientValidUpto, 
-            name: data.name } 
-          });
-      } else {
-        //multiple ITRs found, navigate to ITR tab with the results
-        this.router.navigateByUrl('/tasks/filings', 
-          {state: {'mobileNumber': data.mobileNumber}});
-      }
+        console.log(error);
+        this.utilsService.showSnackBar(error.error.detail);
+        return;
+      });
+      let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+      //Object.assign(obj, this.ITR_JSON)
+      objITR.filingTeamMemberId = loggedInId;
+      //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
+      console.log('obj:', objITR);
       
-    }, async (error:any) => {
-      console.log('Error:', error);
-      if (error.status === 404) {
-        let profile = await this.getUserProfile(data.userId).catch(error => {
+      //update status to WIP
+      //this.updateITRtoWIP(data, objITR, currentFyDetails[0].assessmentYear);
+      
+      const param = '/itr';
+      this.itrMsService.postMethod(param, objITR).subscribe((result: any) => {
+          console.log('My iTR Json successfully created-==', result);
           this.loading = false;
-          console.log(error);
-          this.utilsService.showSnackBar(error.error.detail);
-          return;
-        });
-        let ITR_JSON = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
-        ITR_JSON.filingTeamMemberId = loggedInId;
-        const param = '/itr';
-        this.itrMsService.postMethod(param, ITR_JSON).subscribe((result: any) => {
-            console.log('My iTR Json successfully created-==', result);
-            this.loading = false;
-            ITR_JSON = result;
-            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(ITR_JSON));
-            this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
-              state: { 
-                userId: data.userId, 
-                panNumber: data.panNumber, 
-                eriClientValidUpto: data.eriClientValidUpto, 
-                name: data.name } 
-              });
-        }, error => {
-            this.loading = false;
-        });
+          objITR = result;
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
+          this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+            state: { 
+              userId: data.userId, 
+              panNumber: data.panNumber, 
+              eriClientValidUpto: data.eriClientValidUpto, 
+              name: data.name } 
+            });
+      }, error => {
+          this.loading = false;
+      });
+      this.loading = false;
+      console.log('end');
+      
     } else {
-        // Handle another error conditions like 500 etc.
-        this.loading = false;
+      //one more ITR objects in place, use existing ITR object
+      let itrFilter = data.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${data.openItrId}` : '';
+      const param = `/itr?userId=${data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}` + itrFilter;
+      this.itrMsService.getMethod(param).subscribe(async (result: any) => {
+        console.log(`My ITR by ${param}`, result);
+        if(result == null || result.length == 0) {
+          //no ITR found, error case
+          this.utilsService.showErrorMsg('Something went wrong. Please try again');
+        } else if(result.length == 1) {
+          //update status to WIP
+          //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
+          let workingItr = result[0];
+          // Object.entries(workingItr).forEach((key, value) => {
+          //   console.log(key, value)
+          //   if (key[1] === null) {
+          //     delete workingItr[key[0]];
+          //   }
+          // });
+          let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+          Object.assign(obj, workingItr);
+          workingItr.filingTeamMemberId = loggedInId;
+          console.log('obj:', obj);
+          workingItr = JSON.parse(JSON.stringify(obj));
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
+          this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+            state: { 
+              userId: data.userId, 
+              panNumber: data.panNumber, 
+              eriClientValidUpto: data.eriClientValidUpto, 
+              name: data.name 
+            } 
+          });
+        } else {
+          //multiple ITRs found, navigate to ITR tab with the results
+          this.router.navigateByUrl('/tasks/filings', 
+            {state: {'mobileNumber': data.mobileNumber}});
+        }
+      }, async (error:any) => {
+        console.log('Error:', error);
+        this.utilsService.showErrorMsg('Something went wrong. Please try again');
+      });
+
     }
-    });
    
   }
 
