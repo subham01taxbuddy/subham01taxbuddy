@@ -361,13 +361,13 @@ export class PersonalInformationComponent implements OnInit {
       middleName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
       lastName: ['', Validators.compose([Validators.required, /* Validators.pattern(AppConstants.charRegex) */])],
       fatherName: [''],
-      gender: [''],
+      gender: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
       panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex)])],
       aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
-      employerCategory: [''],
+      employerCategory: ['', Validators.required],
       regime: ['', Validators.required],
       previousYearRegime: [''],
       address: this.fb.group({
@@ -557,8 +557,8 @@ export class PersonalInformationComponent implements OnInit {
         });
       }
     });
-    
-    this.lastFilingDetailsNeeded = this.ITR_JSON.regime === 'NEW' || 
+
+    this.lastFilingDetailsNeeded = this.ITR_JSON.regime === 'NEW' ||
       this.ITR_JSON.previousYearRegime === 'NEW';
     this.onRegimeChanged();
   }
@@ -568,14 +568,14 @@ export class PersonalInformationComponent implements OnInit {
     if (this.customerProfileForm.controls['regime'].value === 'NEW')
       this.removeOldRegimeData();
 
-      Object.keys(this.customerProfileForm.controls).forEach(key => {
-        const controlErrors: ValidationErrors = this.customerProfileForm.get(key).errors;
-        if (controlErrors != null) {
-          Object.keys(controlErrors).forEach(keyError => {
-           console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-          });
-        }
-      });
+    Object.keys(this.customerProfileForm.controls).forEach(key => {
+      const controlErrors: ValidationErrors = this.customerProfileForm.get(key).errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+        });
+      }
+    });
     if (this.customerProfileForm.valid) {
       this.loading = true;
       const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
@@ -764,11 +764,11 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   onRegimeChanged() {
-    if (this.customerProfileForm.controls['regime'].value === 'NEW' || 
+    if (this.customerProfileForm.controls['regime'].value === 'NEW' ||
       this.customerProfileForm.controls['previousYearRegime'].value === 'NEW') {
-        this.lastFilingDetailsNeeded = true;
-        this.customerProfileForm.controls['form10IEAckNo'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
-        this.customerProfileForm.controls['form10IEDate'].setValidators([Validators.required]);
+      this.lastFilingDetailsNeeded = true;
+      this.customerProfileForm.controls['form10IEAckNo'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
+      this.customerProfileForm.controls['form10IEDate'].setValidators([Validators.required]);
     } else {
       this.lastFilingDetailsNeeded = false;
       this.lastFilingDetailsNeeded = false;
