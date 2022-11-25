@@ -588,7 +588,7 @@ export class AddInvoiceComponent implements OnInit {
     { service: 'TDS filing', details: 'TDS (27Q ) filing' },
     { service: 'TDS filing', details: 'TDS Notice' },
     { service: 'TDS filing', details: 'Any other services' },
-    { service: 'Other Services', details: 'TPA' },
+    { service: 'TPA', details: 'TPA' },
     { service: 'Other Services', details: 'Advance tax' },
     { service: 'Other Services', details: 'ROC filing' },
     { service: 'Other Services', details: 'Tax Audit' },
@@ -606,6 +606,9 @@ export class AddInvoiceComponent implements OnInit {
     { service: 'Other Services', details: 'PF Registration' },
     { service: 'Other Services', details: 'TAN Registration' }];
     this.serviceDetails = serviceArray.filter((item: any) => item.service === this.service);
+    if (this.service === "TPA") {
+      this.serviceDetail = "TPA";
+    }
   }
 
   getExactPromoDiscount() {
