@@ -571,8 +571,8 @@ export class PersonalInformationComponent implements OnInit {
 
     //check if at least one account is selected for refund
     var isBankSelected = false;
-    this.ITR_JSON.bankDetails.forEach(bank => {
-      if(bank.hasRefund){
+    this.customerProfileForm.controls['bankDetails'].value.forEach(bank => {
+      if(bank['hasRefund']){
         isBankSelected = true;
       }
     });
