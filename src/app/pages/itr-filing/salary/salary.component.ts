@@ -57,21 +57,9 @@ export class SalaryComponent implements OnInit {
     detailed: false
   }, {
     "id": null,
-    "seqNum": 3,
-    "value": "REMUNERATION_REC",
-    "label": "Renumeration received u/s 10(6)",
-    "detailed": false
-  }, {
-    "id": null,
     "seqNum": 4,
     "value": "CHILDREN_EDUCATION",
     "label": "Children education allowance",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 5,
-    "value": "HOSTEL_EXPENDITURE",
-    "label": "Hostel expenditure allowance",
     "detailed": false
   }, {
     "id": null,
@@ -90,12 +78,6 @@ export class SalaryComponent implements OnInit {
     "seqNum": 8,
     "value": "LEAVE_ENCASHMENT",
     "label": "Leave Encashment u/s 10(10AA)",
-    "detailed": false
-  }, {
-    "id": null,
-    "seqNum": 9,
-    "value": "COMPENSATION_ON_VRS",
-    "label": "Voluntary Retirement Scheme u/s 10(10C)",
     "detailed": false
   }, {
     "id": null,
