@@ -106,6 +106,7 @@ export class AppConstants {
   public static reviewStatusList: any = [{ label: 'Yes', value: true }, { label: 'No', value: false }];
   public static ratingList: any = [{ label: '1', value: 'One' }, { label: '2', value: 'Two' }, { label: '3', value: 'Three' }, { label: '4', value: 'Four' }, { label: '5', value: 'Five' }];
   public static sentimentList: any = [{ label: 'Positive', value: 'POSITIVE' }, { label: 'Negative', value: 'NEGATIVE' }];
-  
+  public static defaultCountry='91';
+
 
 }
