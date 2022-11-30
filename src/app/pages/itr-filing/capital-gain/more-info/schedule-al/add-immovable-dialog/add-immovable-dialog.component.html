@@ -64,8 +64,7 @@
           <mat-form-field appearance="outline">
               <mat-label>PIN Code</mat-label>
               <input type="text" matInput placeholder="PIN code" name="pinCode" formControlName="pinCode"
-                  class="input-field" maxlength="6" minlength="6" trim digitsOnly required
-                  (blur)="getCityData()">
+                  class="input-field" maxlength="6" minlength="6" trim digitsOnly required>
               <mat-error
                   *ngIf="assetForm.controls['pinCode'].hasError('pattern') || assetForm.controls['pinCode'].hasError('minLength') || assetForm.controls['pinCode'].hasError('maxLength')">
                   Enter

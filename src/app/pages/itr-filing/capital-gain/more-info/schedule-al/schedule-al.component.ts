@@ -48,6 +48,7 @@ export class ScheduleALComponent implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   
   saveBusy = false;
+  countriesDropdown = AppConstants.countriesDropdown;
   stateDropdown = AppConstants.stateDropdown;
   // data: any; // TODO use input output to decide view edit or add
   @Input() data: any;
@@ -118,14 +119,26 @@ export class ScheduleALComponent implements OnInit {
     this.immovableAssetsForm = this.createImmovableAssetsForm(immovable);
 
     const immovableAssetsArray = <FormArray>this.immovableAssetsForm.get('immovableAssetsArray');
+
+    this.immovableAssets = [];
     if(this.Copy_ITR_JSON.immovableAsset) {
       this.Copy_ITR_JSON.immovableAsset.forEach(obj => {
         immovableAssetsArray.push(this.createImmovableAssetsForm(obj));
       });
-    } else {
-      this.immovableAssets = [];
-    }
+    } 
 
+  }
+
+  getState(stateCode) {
+    console.log('state called', stateCode);
+    let state = this.stateDropdown.filter(state => state.stateCode === stateCode)[0];
+    return state ? state.stateName : '';
+  }
+
+  getCountry(countryCode) {
+    console.log('country called', countryCode);
+    let country = this.countriesDropdown.filter(country => country.countryCode === countryCode)[0];
+    return country ? country.countryName : '';
   }
 
   createImmovableAssetsForm(obj: Immovable): FormGroup {
@@ -136,8 +149,8 @@ export class ScheduleALComponent implements OnInit {
       road: [obj.road || null],
       area: [obj.area || null],
       city: [obj.city || null],
-      state: [obj.state || null],
-      country: [obj.country || null],
+      state: [this.getState(obj.state)|| null],
+      country: [this.getCountry(obj.country) || null],
       pinCode: [obj.pinCode || '', [Validators.required, Validators.pattern(AppConstants.PINCode), Validators.maxLength(6), Validators.minLength(6)]],
       amount: [obj.amount || null, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
       immovableAssetsArray: this.fb.array([])
@@ -147,6 +160,12 @@ export class ScheduleALComponent implements OnInit {
   removeMovableAssets() {
     this.movableAssets = null;
     this.createMovableAssetsForm();
+  }
+
+  removeImmovableAsset(index) {
+    const immovable = <FormArray>this.immovableAssetsForm.get('immovableAssetsArray');
+    immovable.removeAt(index);
+    this.immovableAssets.splice(index,1);
   }
 
   saveAssets() {

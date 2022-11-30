@@ -283,7 +283,7 @@
           <td> {{i+1}}</td>
           <td class="kids-name-td table-first-td">
             <mat-form-field class="input-field-width">
-              <input matInput formControlName="name" name="buyer[i]" class="input-field" maxlength="25" required>
+              <input matInput formControlName="name" name="buyer[i]" class="input-field" maxlength="25" capitalizeFirst required>
               <mat-error
                 *ngIf="immovableForm.controls['buyersDetails'].controls[i].controls['name'].hasError('pattern')">
                 Enter valid name.</mat-error>
@@ -292,7 +292,7 @@
 
           <td class="kids-age-td">
             <mat-form-field class="input-field-width">
-              <input matInput formControlName="pan" name="buyer[i]" class="input-field" maxlength="10" required trim>
+              <input matInput formControlName="pan" name="buyer[i]" class="input-field" maxlength="10" upperCase required trim>
               <mat-error
                 *ngIf="immovableForm.controls['buyersDetails'].controls[i].controls['pan'].hasError('pattern')">
                 Enter valid PAN.</mat-error>
@@ -300,7 +300,7 @@
           </td>
           <td class="kids-age-td">
             <mat-form-field class="input-field-width">
-              <input matInput formControlName="aadhar" name="buyer[i]" class="input-field" maxlength="12" trim>
+              <input matInput formControlName="aadhar" name="buyer[i]" type="number" class="input-field" maxlength="12" trim>
             </mat-form-field>
           </td>
           <td class="kids-name-td table-first-td">
