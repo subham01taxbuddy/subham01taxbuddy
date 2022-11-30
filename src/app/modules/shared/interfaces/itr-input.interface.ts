@@ -67,7 +67,9 @@ export interface ITR_JSON {
     dividendIncomes?: any[];
     exemptIncomes?: any[];
     jurisdictions?: Jurisdictions[],
-    conditionsResStatus?: any
+    conditionsResStatus?: any,
+    movableAsset?: MovableAsset[],
+    immovableAsset?: Immovable[]
 }
 export interface DirectorInCompany {
     companyName: string;
@@ -532,4 +534,16 @@ export interface SeventhProviso139 {
 export interface Jurisdictions {
     jurisdictionResidence: any;
     Tin: any;
+}
+
+export interface MovableAsset {
+    jwelleryAmount: number;
+    artWorkAmount:number;
+    vehicleAmount:number;
+    bankAmount:number;
+    shareAmount:number;
+    insuranceAmount:number;
+    loanAmount:number;
+    cashInHand:number;
+    assetLiability:number;
 }

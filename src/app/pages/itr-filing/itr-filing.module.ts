@@ -1,3 +1,5 @@
+import { AddImmovableDialogComponent } from './capital-gain/more-info/schedule-al/add-immovable-dialog/add-immovable-dialog.component';
+import { ScheduleALComponent } from './capital-gain/more-info/schedule-al/schedule-al.component';
 import { MoreInfoComponent } from './capital-gain/more-info/more-info.component';
 import { AddClientDialogComponent } from './add-client-dialog/add-client-dialog.component';
 import { AckFailureComponent } from './acknowledgement/ack-failure/ack-failure.component';
@@ -118,7 +120,9 @@ import { AddInvestmentDialogComponent } from './capital-gain/land-and-building/a
         LandAndBuildingComponent,
         LabFormComponent,
         AddInvestmentDialogComponent,
-        MoreInfoComponent
+        MoreInfoComponent,
+        ScheduleALComponent,
+        AddImmovableDialogComponent
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
         /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,

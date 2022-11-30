@@ -322,7 +322,9 @@ export class UtilsService {
             seventhProviso139: null,
             depPayInvClmUndDednVIA: 'N',
             declaration: undefined,
-            disability: undefined
+            disability: undefined,
+            movableAsset: [],
+            immovableAsset: []
         };
 
         return ITR_JSON;
