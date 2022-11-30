@@ -486,7 +486,6 @@ export class CustomerProfileComponent implements OnInit {
 
   async updateStatus() {
     // Auto update status to Preparing ITR 
-    console.error('screen Update status call in profile', this.statusId)
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
