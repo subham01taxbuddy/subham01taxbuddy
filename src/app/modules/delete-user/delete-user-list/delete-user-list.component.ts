@@ -9,6 +9,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ConfirmationModalComponent } from 'src/app/additional-components/confirmation-popup/confirmation-popup.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs/internal/Subscription';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-delete-user-list',
@@ -68,14 +69,14 @@ export class DeleteUserListComponent implements OnInit {
       this.deleteUserData = [];
       let dynamicUrl: string = "";
       if (this.mobileNumber) {
-        dynamicUrl += "mobileNumber=" + this.mobileNumber
+        dynamicUrl += "mobileNumber=" + this.mobileNumber + "&"
       }
       if (this.fromDate) {
-        dynamicUrl += "&from=" + this.fromDate.toISOString()
+        dynamicUrl += "from=" + moment(this.fromDate).format('YYYY-MM-DD') + "&"
       } if (this.toDate) {
-        dynamicUrl += "&to=" + this.toDate.toISOString()
+        dynamicUrl += "to=" + moment(this.toDate).format('YYYY-MM-DD') + "&"
       }
-      dynamicUrl += '&page=' + pageNo + '&pageSize=5'
+      dynamicUrl += 'page=' + pageNo + '&pageSize=5'
       NavbarService.getInstance(this.http).getDeleteUserList(dynamicUrl).subscribe(res => {
         if (Array.isArray(res.content)) {
           this.deleteUserData = res.content;
