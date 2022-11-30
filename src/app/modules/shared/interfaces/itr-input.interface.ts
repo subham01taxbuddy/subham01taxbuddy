@@ -69,7 +69,8 @@ export interface ITR_JSON {
     jurisdictions?: Jurisdictions[],
     conditionsResStatus?: any,
     movableAsset?: MovableAsset[],
-    immovableAsset?: Immovable[]
+    immovableAsset?: Immovable[],
+    carryForwordLosses?: CarryForwardLosses[],
 }
 export interface DirectorInCompany {
     companyName: string;
@@ -538,12 +539,26 @@ export interface Jurisdictions {
 
 export interface MovableAsset {
     jwelleryAmount: number;
-    artWorkAmount:number;
-    vehicleAmount:number;
-    bankAmount:number;
-    shareAmount:number;
-    insuranceAmount:number;
-    loanAmount:number;
-    cashInHand:number;
-    assetLiability:number;
+    artWorkAmount: number;
+    vehicleAmount: number;
+    bankAmount: number;
+    shareAmount: number;
+    insuranceAmount: number;
+    loanAmount: number;
+    cashInHand: number;
+    assetLiability: number;
+}
+
+export interface CarryForwardLosses {
+    assessmentPastYear: string;
+    dateofFilling: string;
+    housePropertyLoss: number;
+    STCGLoss: number;
+    LTCGLoss: number;
+    pastYear: number;
+    totalLoss: number;
+    speculativeBusinessLoss: number;
+    broughtForwordBusinessLoss: number;
+    setOffDuringTheYear: number;
+    adjustedAmount: number;
 }

@@ -155,7 +155,7 @@ body {
 }
 
 .tbd-btn:disabled,
-.tbd-btn[disabled]{
+.tbd-btn[disabled] {
   border: 1px solid #999999;
   background-color: #cccccc;
   color: #666666;
@@ -246,4 +246,25 @@ body {
   background: transparent;
   font-size: 16px;
   cursor: pointer;
+}
+
+.cg-table {
+  &.ag-theme-balham {
+    .ag-ltr {
+      .ag-cell {
+        border-right: 1px solid #423f3f2e !important;
+      }
+    }
+  }
+
+  .ag-cell-value,
+  .ag-group-value {
+    white-space: normal;
+  }
+}
+
+.container {
+  .mat-tab-body-content {
+    overflow: hidden !important;
+  }
 }
