@@ -97,10 +97,10 @@ export class UserListComponent implements OnInit {
         this.loading = false;
         return resolve(true)
       }, err => {
+        this.user_data = [];
+        this.userInfo = [];
         this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
         this.loading = false;
-        this.user_data = [];
-        this.userInfo=[];
         return resolve(false)
       });
     });
@@ -248,7 +248,7 @@ export class UserListComponent implements OnInit {
           debounceMs: 0
         }
       },
-      
+
       {
         headerName: 'See/Add Notes',
         editable: false,
@@ -271,7 +271,7 @@ export class UserListComponent implements OnInit {
           }
         },
       },
-      
+
       {
         headerName: 'FNB',
         editable: false,

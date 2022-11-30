@@ -105,7 +105,6 @@
                         </mat-form-field>
                     </div>
                     <div class="card__col-lg-4">
-                        <!-- <label><b>Due Date: </b></label> -->
                         <mat-form-field appearance="outline">
                             <mat-label>Due Date</mat-label>
                             <input matInput formControlName="dueDate" [matDatepicker]="picker1" [max]="maxDate"
@@ -116,13 +115,6 @@
                                 date</mat-error>
                         </mat-form-field>
                     </div>
-                    <!-- <div class="card__col-lg-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>SAC Code</mat-label>
-                            <input matInput formControlName="sacCode" readonly placeholder="SAC Code"
-                                autocomplete="off">
-                        </mat-form-field>
-                    </div> -->
                     <div class="card__col-lg-4">
                         <mat-form-field appearance="outline">
                             <mat-label>CIN</mat-label>
@@ -134,9 +126,6 @@
                             <mat-label>IFA / Lead client</mat-label>
                             <input matInput formControlName="ifaLeadClient" placeholder="IFA / Lead client"
                                 autocomplete="off" maxlength="30">
-                            <!-- <mat-error *ngIf="invoiceForm.controls['ifaLeadClient'].hasError('required')">Enter
-                                IFA / Lead client info
-                            </mat-error> -->
                         </mat-form-field>
                     </div>
                     <div class="card__col-lg-4" *ngIf="this.invoiceForm.controls['paymentStatus'].value === 'Paid'">
@@ -226,18 +215,6 @@
                         </mat-form-field>
                     </div>
 
-                    <!--  <div class="card__col-lg-4" *ngIf="!invoiceForm.controls['zipCode'].value">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Country</mat-label>
-                            <mat-select formControlName="country" matInput placeholder="Country" autocomplete="off"
-                                (selectionChange)="changeCountry(invoiceForm.controls['country'].value)" required>
-                                <mat-option value="INDIA"> India </mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="invoiceForm.controls['country'].hasError('required')">Select
-                                country</mat-error>
-                        </mat-form-field>
-                    </div> -->
-
                     <div class="card__col-lg-4" *ngIf="invoiceForm.controls['countryCode'].value === '91'">
                         <mat-form-field appearance="outline">
                             <mat-label>State</mat-label>
@@ -245,7 +222,6 @@
                                 (selectionChange)="showTaxRelatedState(invoiceForm.controls['state'].value)"
                                 [required]="invoiceForm.controls['countryCode'].value === '91'">
                                 <mat-option *ngFor="let state of stateDropdown" [value]="state.stateName">
-                                    <!--stateCode-->
                                     {{state.stateName | titlecase}}
                                 </mat-option>
                             </mat-select>
@@ -269,7 +245,6 @@
                             <mat-label>Phone</mat-label>
                             <input formControlName="phone" matInput placeholder="Phone" autocomplete="off" digitsOnly
                                 required pattern="[0-9]*">
-                            <!--maxlength="10"-->
                             <mat-error *ngIf="invoiceForm.controls['phone'].hasError('required')">Enter phone
                                 number</mat-error>
                             <mat-error *ngIf="invoiceForm.controls['phone'].hasError('pattern')">Enter valid
@@ -302,43 +277,6 @@
 
                 </div>
             </mat-card><br><br>
-
-            <!-- <mat-accordion>
-                <mat-expansion-panel [expanded]="false" style="padding: 0px 20px 0px 20px;">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            <label>Filling Estimation</label>
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <div class="card__row">
-                        <div class="card__col-lg-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Schedule call Date & Time</mat-label>
-                                <input matInput formControlName="estimatedDateTime" [owlDateTimeTrigger]="dtPicker2"
-                                    [owlDateTime]="dtPicker2">
-                                <owl-date-time #dtPicker2></owl-date-time>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Itr type</mat-label>
-                                <mat-select formControlName="itrType" matInput placeholder="Itr type"
-                                    autocomplete="off">
-                                    <mat-option *ngFor="let itr of itrTypes" [value]="itr.value">
-                                        {{itr.label}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-lg-8">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Comment</mat-label>
-                                <textarea matInput formControlName="comment" matTextareaAutosize matAutosizeMinRows=6
-                                    maxlength="300"></textarea>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <br><br> -->
 
             <mat-card>
                 <label>Invoice table:</label><br><br>
@@ -384,9 +322,6 @@
                             <th style="width: 50px;">SAC Code</th>
                             <th>Qty</th>
                             <th>Rate</th>
-                            <!-- <th *ngIf="isMaharashtraState" colspan="2">CGST</th>
-                            <th *ngIf="isMaharashtraState" colspan="2">SGST</th>
-                            <th *ngIf="!isMaharashtraState" colspan="2">IGST</th> -->
                             <th>Total</th>
                         </tr>
                         <tr>
@@ -394,12 +329,6 @@
                             <th style="width: 50px;"></th>
                             <th></th>
                             <th></th>
-                            <!-- <th *ngIf="isMaharashtraState">%</th>
-                            <th *ngIf="isMaharashtraState">Amount</th>
-                            <th *ngIf="isMaharashtraState">%</th>
-                            <th *ngIf="isMaharashtraState">Amount</th>
-                            <th *ngIf="!isMaharashtraState">%</th>
-                            <th *ngIf="!isMaharashtraState">Amount</th> -->
                             <th></th>
                         </tr>
                         <tr *ngFor="let item of itemList">
@@ -410,12 +339,6 @@
                             </td>
                             <td>1</td>
                             <td>{{item.rate}}</td>
-                            <!--<td *ngIf="isMaharashtraState">9</td>
-                            <td *ngIf="isMaharashtraState">{{item.cgstAmount}}</td>
-                            <td *ngIf="isMaharashtraState">9</td>
-                            <td *ngIf="isMaharashtraState">{{item.sgstAmount}}</td>
-                            <td *ngIf="!isMaharashtraState">18</td>
-                            <td *ngIf="!isMaharashtraState">{{item.igstAmount}}</td> -->
                             <td>{{item.amount}}</td>
                         </tr>
                     </table>
@@ -425,20 +348,11 @@
                         <div class="card__col-lg-7"
                             *ngIf="(this.utilsService.isNonEmpty(userSubscription) && this.utilsService.isNonEmpty(userSubscription.promoCode)) || isUpdateInvoice">
                             Discount Total
-                            <!-- <span>({{userSubscription.promoCode}})</span> -->
                         </div>
                         <div style="float: right;" class="card__col-lg-5"
                             *ngIf="(this.utilsService.isNonEmpty(userSubscription) && this.utilsService.isNonEmpty(userSubscription.promoCode)) ||isUpdateInvoice">
                             ₹{{this.invoiceForm.controls['discountTotal'].value}}
-                            <!-- ₹{{ getExactPromoDiscount() }} -->
                         </div>
-
-                        <!-- <div class="card__col-lg-7">Sub Total
-                            <span>(Tax Exclusive)</span>
-                        </div>
-                        <div style="float: right;" class="card__col-lg-5">₹
-                            {{this.invoiceForm.controls['subTotal.value}}
-                        </div> -->
 
                         <div class="card__col-lg-7">Final Price
                             <span>(Incl of GST)</span>
@@ -456,7 +370,6 @@
 
                         <div class="card__col-lg-7">Taxable Value</div>
                         <div style="float: right;" class="card__col-lg-5">₹
-                            <!-- {{this.utilsService.isNonEmpty(this.userSubscription.promoApplied) ? this.userSubscription.promoApplied.basePrice : this.getTaxableValue()}} -->
                             {{this.invoiceForm.controls['subTotal'].value}}
                         </div>
 
