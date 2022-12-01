@@ -23,7 +23,7 @@ export class SalaryComponent implements OnInit {
   localEmployer: any;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  maxPT = 5000;
+  maxPT = 2500;
   maxEA = 5000;
   salaryView: string = "FORM";
   employerMode = "ADD";
@@ -149,7 +149,7 @@ export class SalaryComponent implements OnInit {
     this.summaryAllowCallInConstructor(this.allowanceDropdown);
     this.employerCallInConstructor();
 
-    this.maxPT = 5000;
+    //this.maxPT = 5000;
     this.maxEA = 5000;
     if (this.ITR_JSON.employers === null || this.ITR_JSON.employers === undefined) {
       this.ITR_JSON.employers = [];
@@ -187,7 +187,7 @@ export class SalaryComponent implements OnInit {
       // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
       employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
       entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
-      professionalTax: [null, Validators.compose([Validators.max(5000), Validators.pattern(AppConstants.numericRegex)])],
+      professionalTax: [null, Validators.compose([Validators.max(this.maxPT), Validators.pattern(AppConstants.numericRegex)])],
     });
   }
 
@@ -436,7 +436,7 @@ export class SalaryComponent implements OnInit {
     this.employerDetailsFormGroup.controls['employerName'].setValue(this.utilsService.isNonEmpty(data) ? data.deductorName : '');
     this.employerDetailsFormGroup.controls['employerTAN'].setValue(this.utilsService.isNonEmpty(data) ? data.deductorTAN : '');
 
-    this.maxPT = 5000;
+    // this.maxPT = 5000;
     this.maxEA = 5000;
     this.ITR_JSON.employers.forEach((item: any) => {
       item.deductions.forEach(deductions => {
@@ -770,7 +770,7 @@ export class SalaryComponent implements OnInit {
       }
     }
 
-    this.maxPT = 5000;
+    // this.maxPT = 5000;
     this.maxEA = 5000;
     this.ITR_JSON.employers.forEach((item: any) => {
       if (item.deductions instanceof Array) {
