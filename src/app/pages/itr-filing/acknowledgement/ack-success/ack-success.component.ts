@@ -51,6 +51,7 @@ export class AckSuccessComponent implements OnInit, OnDestroy {
   
   closeDialog(){
     this.dialogRef.close();
+    this.router.navigate(['/tasks/filings']);
   }
 }
 
