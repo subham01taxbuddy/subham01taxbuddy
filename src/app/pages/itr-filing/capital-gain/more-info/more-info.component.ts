@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
-import { GridOptions } from 'ag-grid-community';
+import { GridOptions, IsColumnFuncParams } from 'ag-grid-community';
 import { MatDialog } from '@angular/material/dialog'
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { color } from 'highcharts';
 
 
 @Component({
@@ -53,15 +54,28 @@ export class MoreInfoComponent implements OnInit {
       {
         headerName: 'Date of Filing',
         field: 'dateofFilling',
-        editable: true,
+        editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
         suppressMovable: true,
+        cellStyle: function (params) {
+          if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
+            return { backgroundColor: '#cecec8bd' };
+          }
+          return null;
+        }
       },
 
       {
         headerName: 'House property Loss',
         field: 'housePropertyLoss',
         suppressMovable: true,
-        editable: true,
+        editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
+        cellStyle: function (params) {
+          if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
+            return { backgroundColor: '#cecec8bd' };
+          }
+          return null;
+        }
+
       },
 
       {
@@ -71,23 +85,44 @@ export class MoreInfoComponent implements OnInit {
           {
             headerName: 'a. Brought Forward Business Loss',
             field: 'broughtForwordBusinessLoss',
-            editable: true,
+            editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
             suppressMovable: true,
+            cellStyle: function (params) {
+              if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
+                return { backgroundColor: '#cecec8bd' };
+              }
+              return null;
+            }
+
           },
           {
             headerName: 'b. Amount as adjusted on account of opting for taxation u/s 115BAC',
             field: 'adjustedAmount',
-            editable: true,
+            editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
             width: 300,
             suppressMovable: true,
+            cellStyle: function (params) {
+              if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
+                return { backgroundColor: '#cecec8bd' };
+              }
+              return null;
+            }
+
           },
 
           {
             headerName: 'c. Brought forward Business loss available for set off during the year [c=a-b]',
             field: 'setOffDuringTheYear',
             suppressMovable: true,
-            editable: true,
+            editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
             width: 300,
+            cellStyle: function (params) {
+              if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
+                return { backgroundColor: '#cecec8bd' };
+              }
+              return null;
+            }
+
           }
         ],
         suppressMovable: true,
@@ -95,20 +130,42 @@ export class MoreInfoComponent implements OnInit {
       {
         headerName: 'Short Term Capital Loss',
         field: 'STCGLoss',
-        editable: true,
+        editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
         suppressMovable: true,
+        cellStyle: function (params) {
+          if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
+            return { backgroundColor: '#cecec8bd' };
+          }
+          return null;
+        }
+
       },
       {
         headerName: 'Long Term Capital Loss',
         field: 'LTCGLoss',
-        editable: true,
+        editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
         suppressMovable: true,
+        cellStyle: function (params) {
+          if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
+            return { backgroundColor: '#cecec8bd' };
+          }
+          return null;
+        }
+
       },
       {
         headerName: 'Loss from Speculative Business',
         field: 'speculativeBusinessLoss',
-        editable: true,
+        editable: (params: IsColumnFuncParams) => { return (this.canCellBeEdited(params) && this.canLastCellBeEdited(params)) },
         suppressMovable: true,
+        cellStyle: function (params) {
+          if ((params.node.rowIndex == '0' || params.node.rowIndex == '1' || params.node.rowIndex == '2' || params.node.rowIndex == '3') || (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11')) {
+            return { backgroundColor: '#cecec8bd' };
+          }
+          return null;
+        }
+
+
       },
 
       {
@@ -128,6 +185,21 @@ export class MoreInfoComponent implements OnInit {
         cellStyle: { textAlign: 'center' }
       }
     ];
+  }
+
+  canCellBeEdited(params) {
+    if (params.node.rowIndex == '0' || params.node.rowIndex == '1' || params.node.rowIndex == '2' || params.node.rowIndex == '3') {
+      return false;
+    }
+    return true;
+  }
+
+
+  canLastCellBeEdited(params) {
+    if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
+      return false;
+    }
+    return true;
   }
 
   getTableData() {
@@ -205,3 +277,4 @@ export class MoreInfoComponent implements OnInit {
     });
   }
 }
+

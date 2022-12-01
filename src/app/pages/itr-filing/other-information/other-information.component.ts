@@ -474,7 +474,6 @@ export class OtherInformationComponent implements OnInit {
     this.loading = true;
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
     this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe(result => {
-      debugger
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
       this.ITR_JSON = JSON.parse(JSON.stringify(result));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(result));
