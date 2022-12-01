@@ -494,7 +494,6 @@ export class CustomerProfileComponent implements OnInit {
 
   async updateStatus() {
     // Auto update status to Preparing ITR 
-    console.error('screen Update status call in profile', this.statusId)
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
@@ -676,7 +675,8 @@ export class CustomerProfileComponent implements OnInit {
         assessmentYear: this.ITR_JSON.assessmentYear,
         name: this.customerProfileForm.controls['firstName'].value + ' ' + this.customerProfileForm.controls['lastName'].value,
         dateOfBirth: this.customerProfileForm.controls['panNumber'].value,
-        mobileNumber: this.ITR_JSON.contactNumber
+        mobileNumber: this.ITR_JSON.contactNumber,
+        itrId: this.ITR_JSON.itrId
       }
     });
 
@@ -698,7 +698,9 @@ export class CustomerProfileComponent implements OnInit {
     var month = lastSix.slice(2, 4);
     var year = lastSix.slice(4, 6);
     let dateString = `20${year}-${month}-${day}`;
-    console.log(dateString, year, month, day)
+    console.log(dateString, year, month, day);
+
     this.customerProfileForm.controls['orgITRDate'].setValue(moment(dateString).toDate());
   }
+  
 }

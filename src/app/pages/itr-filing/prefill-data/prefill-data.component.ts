@@ -190,9 +190,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     
-    //https://uat-api.taxbuddy.com/itr/itr-data?userId={userId}&assessmentYear={assessmentYear}&isRevised={isRevised}
-    let isRevised = false;
-    const param = `/itr?userId=${this.data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}&isRevised=${isRevised}`;
+    const param = `/itr?userId=${this.data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}&itrId=${this.data.itrId}`;
     this.itrMsService.getMethod(param).subscribe(async (result: any) => {
       console.log('My ITR by user Id and Assessment Years=', result);
       if(result == null || result.length == 0) {
