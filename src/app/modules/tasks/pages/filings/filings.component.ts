@@ -633,13 +633,13 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     disposable.afterClosed().subscribe(result => {
       if (result === 'reviseReturn') {
         this.router.navigate(['/pages/itr-filing/itr'], { 
-        state: { 
-          userId: data.userId, 
-          panNumber: data.panNumber, 
-          eriClientValidUpto: data?.eriClientValidUpto, 
-          name: data?.fName + ' ' + data?.lName 
-        } 
-      });
+          state: { 
+            userId: data.userId, 
+            panNumber: data.panNumber, 
+            eriClientValidUpto: data?.eriClientValidUpto, 
+            name: data?.fName + ' ' + data?.lName 
+          } 
+        });
       }
       console.log('The dialog was closed', result);
     });

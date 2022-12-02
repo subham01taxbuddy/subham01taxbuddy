@@ -93,8 +93,12 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
         if (res && res.successFlag) {
           if (res.hasOwnProperty('messages')) {
             if (res.messages instanceof Array && res.messages.length > 0)
-              this.utilsService.showSnackBar(res.messages[0].desc);
+              //this.utilsService.showSnackBar(res.messages[0].desc);
+              this.utilsService.showSnackBar('Prefill data fetched successfully');
             // this.changePage();
+            //verified successfully, fetch ITR again
+            this.fetchUpdatedITR();
+            this.dialogRef.close();
           }
         } else {
           if (res.errors instanceof Array && res.errors.length > 0) {
@@ -186,9 +190,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     
-    //https://uat-api.taxbuddy.com/itr/itr-data?userId={userId}&assessmentYear={assessmentYear}&isRevised={isRevised}
-    let isRevised = false;
-    const param = `/itr?userId=${this.data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}&isRevised=${isRevised}`;
+    const param = `/itr?userId=${this.data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}&itrId=${this.data.itrId}`;
     this.itrMsService.getMethod(param).subscribe(async (result: any) => {
       console.log('My ITR by user Id and Assessment Years=', result);
       if(result == null || result.length == 0) {

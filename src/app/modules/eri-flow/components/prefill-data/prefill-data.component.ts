@@ -88,7 +88,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
         if (res && res.successFlag) {
           if (res.hasOwnProperty('messages')) {
             if (res.messages instanceof Array && res.messages.length > 0)
-              this.utilsService.showSnackBar(res.messages[0].desc);
+              this.utilsService.showSnackBar("Prefill JSON validated successfully");
             // this.changePage();
           }
         } else {

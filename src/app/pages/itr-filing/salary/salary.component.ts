@@ -24,7 +24,7 @@ export class SalaryComponent implements OnInit {
   localEmployer: Employer;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  maxPT = 5000;
+  maxPT = 2500;
   maxEA = 5000;
   salaryView: string = "FORM";
   employerMode = "ADD";
@@ -133,7 +133,7 @@ export class SalaryComponent implements OnInit {
     this.summaryAllowCallInConstructor(this.allowanceDropdown);
     this.employerCallInConstructor();
 
-    this.maxPT = 5000;
+    //this.maxPT = 5000;
     this.maxEA = 5000;
     if (this.ITR_JSON.employers === null || this.ITR_JSON.employers === undefined) {
       this.ITR_JSON.employers = [];
@@ -152,6 +152,7 @@ export class SalaryComponent implements OnInit {
       }
     });
     if (this.ITR_JSON.regime === 'NEW') {
+      this.employerDetailsFormGroup.controls['professionalTax'].setValue(null)
       this.employerDetailsFormGroup.controls['professionalTax'].disable();
     }
     if ((this.ITR_JSON.employerCategory !== 'GOVERNMENT' && this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT') || this.ITR_JSON.regime === 'NEW') {
@@ -173,7 +174,7 @@ export class SalaryComponent implements OnInit {
       // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
       employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
       entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
-      professionalTax: [null, Validators.compose([Validators.max(5000), Validators.pattern(AppConstants.numericRegex)])],
+      professionalTax: [null, Validators.compose([Validators.max(this.maxPT), Validators.pattern(AppConstants.numericRegex)])],
     });
   }
 
@@ -422,7 +423,7 @@ export class SalaryComponent implements OnInit {
     this.employerDetailsFormGroup.controls['employerName'].setValue(this.utilsService.isNonEmpty(data) ? data.deductorName : '');
     this.employerDetailsFormGroup.controls['employerTAN'].setValue(this.utilsService.isNonEmpty(data) ? data.deductorTAN : '');
 
-    this.maxPT = 5000;
+    // this.maxPT = 5000;
     this.maxEA = 5000;
     this.ITR_JSON.employers.forEach((item: any) => {
       item.deductions.forEach(deductions => {
@@ -568,6 +569,25 @@ export class SalaryComponent implements OnInit {
       this.Copy_ITR_JSON.employers.splice(this.currentIndex, 1, myEmp);
     }
 
+    if(!this.Copy_ITR_JSON.systemFlags) {
+      this.Copy_ITR_JSON.systemFlags = {
+        hasSalary: false,
+        hasHouseProperty: false,
+        hasMultipleProperties: false,
+        hasForeignAssets: false,
+        hasCapitalGain: false,
+        hasBroughtForwardLosses: false,
+        hasAgricultureIncome: false,
+        hasOtherIncome: false,
+        hasParentOverSixty: false,
+        hasBusinessProfessionIncome: false,
+        hasFutureOptionsIncome: false,
+        hasNRIIncome: false,
+        hraAvailed: false,
+        directorInCompany: false,
+        haveUnlistedShares: false
+      };
+    }
     this.Copy_ITR_JSON.systemFlags.hasSalary = true;
     this.Copy_ITR_JSON = this.claimEitherHraOr80GG(this.Copy_ITR_JSON);
     // this.ITR_JSON.employers = [];
@@ -591,6 +611,10 @@ export class SalaryComponent implements OnInit {
     // this.employerCallInConstructor();
 
     this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+      if (!this.utilsService.isNonEmpty(result)) {
+        this.utilsService.showSnackBar('Failed to save salary detail, Please try again');
+        return
+      }
       this.ITR_JSON = result;
       this.currentIndex = this.ITR_JSON.employers.findIndex((item: any) => item.id === this.localEmployer.id);
       this.localEmployer = JSON.parse(JSON.stringify(this.ITR_JSON.employers[this.currentIndex]));
@@ -727,11 +751,15 @@ export class SalaryComponent implements OnInit {
           this.employerDetailsFormGroup.controls['entertainmentAllow'].setValue(this.localEmployer.deductions[i].exemptAmount);
         } else if (this.localEmployer.deductions[i].deductionType === 'PROFESSIONAL_TAX') {
           this.employerDetailsFormGroup.controls['professionalTax'].setValue(this.localEmployer.deductions[i].exemptAmount);
+          if (this.ITR_JSON.regime === 'NEW') {
+            this.employerDetailsFormGroup.controls['professionalTax'].setValue(null)
+            this.employerDetailsFormGroup.controls['professionalTax'].disable();
+          }
         }
       }
     }
 
-    this.maxPT = 5000;
+    // this.maxPT = 5000;
     this.maxEA = 5000;
     this.ITR_JSON.employers.forEach((item: any) => {
       if (item.deductions instanceof Array) {
@@ -756,8 +784,8 @@ export class SalaryComponent implements OnInit {
   }
   claimEitherHraOr80GG(ITR_JSON: ITR_JSON) {
     let hraFound = false;
-    for (let i = 0; i < ITR_JSON.employers.length; i++) {
-      for (let j = 0; j < ITR_JSON.employers[i].allowance.length; j++) {
+    for (let i = 0; i < ITR_JSON.employers?.length; i++) {
+      for (let j = 0; j < ITR_JSON.employers[i].allowance?.length; j++) {
         if (ITR_JSON.employers[i].allowance[j].allowanceType === 'HOUSE_RENT') {
           hraFound = true;
           break;
@@ -766,7 +794,7 @@ export class SalaryComponent implements OnInit {
     }
     if (hraFound) {
       ITR_JSON.systemFlags.hraAvailed = true;
-      ITR_JSON.expenses.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID')
+      ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID')
     } else {
       ITR_JSON.systemFlags.hraAvailed = false;
     }
@@ -775,7 +803,7 @@ export class SalaryComponent implements OnInit {
   employerCallInConstructor() {
     this.employersGridOptions = <GridOptions>{
       rowData: this.employerCreateRowData(),
-      columnDefs: this.employerCreateColumnDef(),
+      columnDefs: this.employercreateColumnDef(),
       onGridReady: () => {
         this.employersGridOptions.api.sizeColumnsToFit();
       },
@@ -792,7 +820,7 @@ export class SalaryComponent implements OnInit {
     };
   }
 
-  employerCreateColumnDef() {
+  employercreateColumnDef() {
     return [
       {
         headerName: 'No',
