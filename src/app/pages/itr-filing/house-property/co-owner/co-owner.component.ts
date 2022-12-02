@@ -25,14 +25,12 @@ export class CoOwnerComponent implements OnInit {
   }
 
   addCoOwner() {
-    debugger
     if (!this.isDuplicatePAN() && !this.calPercentage()) {
       console.info(this.coOwnerForm.getRawValue())
     }
   }
 
   isDuplicatePAN() {
-    debugger
     const dup = this.data.coOwners.filter(item => item.panNumber === (this.coOwnerForm.controls['panNumber'].value));
     if (dup.length > 1) {
       return true;
@@ -41,7 +39,6 @@ export class CoOwnerComponent implements OnInit {
     }
   }
   calPercentage() {
-    debugger
     // const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
     let sum = 0;
     this.data.coOwners.forEach(controlName => {
