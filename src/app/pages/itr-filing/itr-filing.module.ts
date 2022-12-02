@@ -57,6 +57,12 @@ import { CapitalGainComponent } from './capital-gain/capital-gain.component';
 import { LandAndBuildingComponent } from './capital-gain/land-and-building/land-and-building.component';
 import { LabFormComponent } from './capital-gain/land-and-building/lab-form/lab-form.component';
 import { AddInvestmentDialogComponent } from './capital-gain/land-and-building/add-investment-dialog/add-investment-dialog.component';
+import { BondsDebentureComponent } from './capital-gain/bonds-and-coupan/bonds-debenture/bonds-debenture.component';
+import { BondsAndCoupanComponent } from './capital-gain/bonds-and-coupan/bonds-and-coupan.component';
+import { AddDeductionComponent } from './capital-gain/bonds-and-coupan/add-deduction/add-deduction.component';
+import { ZeroCouponBondsComponent } from './capital-gain/bonds-and-coupan/zero-coupon-bonds/zero-coupon-bonds.component';
+import { AddDeductionSecondComponent } from './capital-gain/bonds-and-coupan/add-deduction-second/add-deduction-second.component';
+import { MatDatePickerDirective } from './capital-gain/bonds-and-coupan/mat-date-picker.directive';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -122,7 +128,13 @@ import { AddInvestmentDialogComponent } from './capital-gain/land-and-building/a
         AddInvestmentDialogComponent,
         MoreInfoComponent,
         ScheduleALComponent,
-        AddImmovableDialogComponent
+        AddImmovableDialogComponent,
+        BondsDebentureComponent,
+        BondsAndCoupanComponent,
+        AddDeductionComponent,
+        ZeroCouponBondsComponent,
+        AddDeductionSecondComponent,
+        MatDatePickerDirective
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
         /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,
