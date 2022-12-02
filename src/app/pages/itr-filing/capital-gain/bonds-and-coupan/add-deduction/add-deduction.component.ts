@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GridOptions } from 'ag-grid-community';
@@ -16,7 +16,7 @@ export class AddDeductionComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   frameworkComponents;
-
+  deduction = true;
   constructor(
     public utilsService: UtilsService,
     public matDialog: MatDialog,
@@ -106,7 +106,7 @@ export class AddDeductionComponent implements OnInit {
 
 
       {
-        headerName: 'Type of deduction',
+        headerName: this.deduction ? 'Type of deduction *' : 'Type of deduction',
         field: 'typeOfDeduction',
         suppressMovable: true,
         editable: false,
@@ -116,7 +116,7 @@ export class AddDeductionComponent implements OnInit {
         },
       },
       {
-        headerName: 'Purchase date of new asset',
+        headerName: this.deduction ? 'Purchase date of new asset *' : 'Purchase date of new asset',
         field: 'purchaseDate',
         editable: true,
         width: 200,
@@ -128,7 +128,7 @@ export class AddDeductionComponent implements OnInit {
       },
 
       {
-        headerName: 'Cost of new Asset',
+        headerName: this.deduction ? 'Cost of new Asset *' : 'Cost of new Asset',
         field: 'costOfNewAsset',
         editable: true,
         suppressMovable: true,
@@ -139,7 +139,7 @@ export class AddDeductionComponent implements OnInit {
       },
 
       {
-        headerName: 'Amount deposited in CGAS before due date',
+        headerName: this.deduction ? 'Amount deposited in CGAS before due date *' : 'Amount deposited in CGAS before due date',
         field: 'depositedAmount',
         editable: true,
         width: 235,
@@ -177,5 +177,87 @@ export class AddDeductionComponent implements OnInit {
     ];
   }
 
+  updateColumn() {
+    this.bondsGridOptions.api.setColumnDefs([
 
+      {
+        headerName: 'Sr. No',
+        field: 'srNo',
+        editable: true,
+        suppressMovable: true,
+        width: 100,
+      },
+
+
+      {
+        headerName: this.deduction ? 'Type of deduction *' : 'Type of deduction',
+        field: 'typeOfDeduction',
+        suppressMovable: true,
+        editable: false,
+        width: 190,
+        valueGetter: function nameFromCode(params) {
+          return params.data.typeOfDeduction ? params.data.typeOfDeduction.toLocaleString('en-IN') : params.data.typeOfDeduction;
+        },
+      },
+      {
+        headerName: this.deduction ? 'Purchase date of new asset *' : 'Purchase date of new asset',
+        field: 'purchaseDate',
+        editable: true,
+        width: 200,
+        suppressMovable: true,
+        cellEditor: "datePicker",
+        valueGetter: function nameFromCode(params) {
+          return params.data.purchaseDate ? (new Date(params.data.purchaseDate)).toLocaleDateString('en-IN') : '';
+        },
+      },
+
+      {
+        headerName: this.deduction ? 'Cost of new Asset *' : 'Cost of new Asset',
+        field: 'costOfNewAsset',
+        editable: true,
+        suppressMovable: true,
+        width: 200,
+        valueGetter: function nameFromCode(params) {
+          return params.data.costOfNewAsset ? params.data.costOfNewAsset.toLocaleString('en-IN') : params.data.costOfNewAsset;
+        },
+      },
+
+      {
+        headerName: this.deduction ? 'Amount deposited in CGAS before due date *' : 'Amount deposited in CGAS before due date',
+        field: 'depositedAmount',
+        editable: true,
+        width: 235,
+        suppressMovable: true,
+        valueGetter: function nameFromCode(params) {
+          return params.data.depositedAmount ? params.data.depositedAmount.toLocaleString('en-IN') : params.data.depositedAmount;
+        },
+      },
+      {
+        headerName: 'Amount of deduction claimed',
+        field: 'deductionAmount',
+        editable: true,
+        width: 200,
+        suppressMovable: true,
+        valueGetter: function nameFromCode(params) {
+          return params.data.deductionAmount ? params.data.deductionAmount.toLocaleString('en-IN') : params.data.deductionAmount;
+        },
+      },
+      {
+        headerName: 'Actions',
+        editable: false,
+        suppressMovable: true,
+        suppressMenu: true,
+        sortable: true,
+        pinned: 'right',
+        width: 80,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Delete Employer" style="border: none;
+          background: transparent; font-size: 16px; cursor:pointer;color: red">
+          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
+         </button>`;
+        },
+      },
+    ]);
+  }
 }
