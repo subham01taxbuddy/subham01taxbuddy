@@ -1,18 +1,14 @@
 import { MovableAsset, Immovable } from './../../../../../modules/shared/interfaces/itr-input.interface';
-import { Component, HostListener, AfterViewInit, Inject, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, FormArray } from '@angular/forms';
-// import { ITRService } from 'src/app/services/itr.service';
-// import { AppConstants } from 'src/app/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-// import { CapitalGain } from 'src/app/shared/interfaces';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { CapitalGain, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { GridOptions } from 'ag-grid-community';
 import { AddImmovableDialogComponent } from './add-immovable-dialog/add-immovable-dialog.component';
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {

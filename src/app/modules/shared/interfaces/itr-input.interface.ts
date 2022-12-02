@@ -40,7 +40,7 @@ export interface ITR_JSON {
     upload: Upload[];
     employers: Employer[];
     houseProperties: HouseProperties[];
-    capitalGain: CapitalGain[];
+    capitalGain: NewCapitalGain[];
     business: Business;
     pastYearLosses: PastYearLosses[];
     foreignIncome: null;
@@ -223,6 +223,38 @@ export interface CapitalGain {
     cgOutput: any[];
     investments: Investments[];
     buyersDetails: BuyersDetails[];
+}
+
+export interface NewCapitalGain {
+    assetType: string;
+    assetDetails?: AssetDetails[];
+    improvement: Improvement[];
+    deduction?: Investments[];
+    buyersDetails: BuyersDetails[];
+}
+
+export interface AssetDetails {
+    srn: string;
+    id: string;
+    description: string;
+    gainType: string;
+    sellDate: string;
+    sellValue: number;
+    stampDutyValue: number;
+    valueInConsideration: number;
+    sellExpense: number;
+    purchaseDate: string;
+    purchaseCost: number;
+    isinCode: string;
+    nameOfTheUnits: string;
+    sellOrBuyQuantity: number;
+    sellValuePerUnit: number;
+    purchaseValuePerUnit: number;
+    isUploaded: boolean;
+    hasIndexation: boolean;
+    algorithm: string;
+    fmvAsOn31Jan2018: string;
+    indexCostOfAcquisition: number;
 }
 export interface Improvement {
     id: number;
