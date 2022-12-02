@@ -295,7 +295,7 @@
           <td class="kids-age-td">
             <mat-form-field class="input-field-width">
               <input matInput formControlName="pan" name="buyer[i]" class="input-field" maxlength="10" upperCase required trim
-              (blur)="makePanUppercase(immovableForm.controls['buyersDetails'].controls[i].controls['pan'])">
+              (keyup)="makePanUppercase(immovableForm.controls['buyersDetails'].controls[i].controls['pan'])">
               <mat-error
                 *ngIf="immovableForm.controls['buyersDetails'].controls[i].controls['pan'].hasError('pattern')">
                 Enter valid PAN.</mat-error>
