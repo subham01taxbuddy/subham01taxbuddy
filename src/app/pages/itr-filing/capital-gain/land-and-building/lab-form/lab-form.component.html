@@ -334,7 +334,8 @@
           </td>
           <td class="kids-name-td table-first-td">
             <mat-form-field class="input-field-width">
-              <input matInput formControlName="pin" name="buyer[i]" class="input-field" maxlength="6" required>
+              <input matInput formControlName="pin" name="buyer[i]" class="input-field" maxlength="6" 
+              (blur)="updateDataByPincode(i)" required>
               <mat-error
                 *ngIf="immovableForm.controls['buyersDetails'].controls[i].controls['pin'].hasError('pattern')">
                 Enter valid PIN code.</mat-error>

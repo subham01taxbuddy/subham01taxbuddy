@@ -313,6 +313,18 @@ export class LabFormComponent implements OnInit {
     }
   }
 
+  async updateDataByPincode(index) {
+    const buyersDetails = (this.immovableForm.controls['buyersDetails'] as FormArray).controls[index] as FormGroup;
+    await this.utilsService.getPincodeData(buyersDetails.controls['pin']).then(result => {
+      console.log('pindata', result);
+      // debugger
+      // buyersDetails.controls['city'].setValue(result.city);
+      buyersDetails.controls['country'].setValue(result.countryCode);
+      buyersDetails.controls['state'].setValue(result.stateCode);
+    });
+    
+  }
+
 
   /**
   * @function calMaxPurchaseDate()

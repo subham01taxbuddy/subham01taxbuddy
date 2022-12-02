@@ -720,6 +720,30 @@ export class UtilsService {
         return seenDuplicate;
     }
 
+    async getPincodeData(pinCode) {
+        const promise = new Promise<any>((resolve, reject) => {
+            let data = null;
+            if (pinCode.valid) {
+                const param = '/pincode/' + pinCode.value;
+                // return await this.userMsService.getMethod(param).toPromise();
+                this.userMsService.getMethod(param).subscribe((result: any) => {
+                    data = {
+                        country: 'INDIA',
+                        countryCode: '91',
+                        city: result.taluka,
+                        stateCode: result.stateCode
+                    }
+                    resolve(data);
+                }, error => {
+                if (error.status === 404) {
+                    reject(error);
+                }
+                });
+            }
+        });
+        return promise;
+    }
+
     // updateAssignmentToggle(assignmentToggleData) :Observable<any>{
     //     return this.httpClient.post('environment.url' + '/user/sme/assignment-logic-toggle', assignmentToggleData)
     // }
