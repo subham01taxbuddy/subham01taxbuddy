@@ -201,7 +201,63 @@ export interface Loans {
     interestAmount: number;
 }
 export interface CapitalGain {
+    // assetType: string;
+    description?: string;
+    gainType?: string;
+    sellDate?: string;
+    sellValue?: number;
+    stampDutyValue?: number;
+    valueInConsideration?: number;
+    sellExpense?: number;
+    purchaseDate?: string;
+    purchaseCost?: number;
+    // improvement?: Improvement[];
+    isUploaded?: boolean;
+    hasIndexation?: boolean;
+    algorithm?: string;
+    fmvAsOn31Jan2018?: number;
+    cgOutput?: any[];
+    investments?: Investments[];
+    // buyersDetails: BuyersDetails[];
+
     assetType: string;
+    assetDetails?: AssetDetails[];
+    improvement: Improvement[];
+    deduction?: Investments[];
+    buyersDetails: BuyersDetails[];
+}
+
+export interface NewCapitalGain {
+    // TODO Need to remove these keys
+    // assetType: string;
+    description?: string;
+    gainType?: string;
+    sellDate?: string;
+    sellValue?: number;
+    stampDutyValue?: number;
+    valueInConsideration?: number;
+    sellExpense?: number;
+    purchaseDate?: string;
+    purchaseCost?: number;
+    //? improvement: Improvement[];
+    isUploaded?: boolean;
+    hasIndexation?: boolean;
+    algorithm?: string;
+    fmvAsOn31Jan2018?: number;
+    cgOutput?: any[];
+    investments?: Investments[];
+    // buyersDetails: BuyersDetails[];
+
+    assetType: string;
+    assetDetails?: AssetDetails[];
+    improvement: Improvement[];
+    deduction?: Investments[];
+    buyersDetails: BuyersDetails[];
+}
+
+export interface AssetDetails {
+    srn: string;
+    id: string;
     description: string;
     gainType: string;
     sellDate: string;
@@ -211,17 +267,20 @@ export interface CapitalGain {
     sellExpense: number;
     purchaseDate: string;
     purchaseCost: number;
-    improvement: Improvement[];
+    isinCode: string;
+    nameOfTheUnits: string;
+    sellOrBuyQuantity: number;
+    sellValuePerUnit: number;
+    purchaseValuePerUnit: number;
     isUploaded: boolean;
     hasIndexation: boolean;
     algorithm: string;
-    fmvAsOn31Jan2018: number;
-    cgOutput: any[];
-    investments: Investments[];
-    buyersDetails: BuyersDetails[];
+    fmvAsOn31Jan2018: string;
+    indexCostOfAcquisition: number;
 }
 export interface Improvement {
     id: number;
+    srn: string;
     dateOfImprovement: string;
     costOfImprovement: number;
     indexCostOfImprovement: number;
@@ -233,6 +292,10 @@ export interface Investments {
     purchaseDate: string;
     investmentInCGAccount: number;
     totalDeductionClaimed: number;
+
+    // "panOfEligibleCompany":"",
+    // "purchaseDatePlantMachine":"",
+    // "costOfPlantMachinary":0
 }
 export interface BuyersDetails {
     name: string;

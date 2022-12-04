@@ -1,0 +1,1050 @@
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { GridOptions } from 'ag-grid-community';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { ITR_JSON, CapitalGain, NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { InvestmentDialogComponent } from '../investment-dialog/investment-dialog.component';
+import { ListedUnlistedDialogComponent } from './listed-unlisted-dialog/listed-unlisted-dialog.component';
+
+@Component({
+  selector: 'app-equity-mf',
+  templateUrl: './equity-mf.component.html',
+  styleUrls: ['./equity-mf.component.scss']
+})
+export class EquityMfComponent implements OnInit {
+  ITR_JSON: ITR_JSON;
+  capitalGain = {
+    "assetType": '',
+    "deduction": [],
+    "improvement": [],
+    "buyersDetails": [],
+    "assetDetails": []
+  }
+
+  // cgArray = []
+  public listedGridOptions: GridOptions;
+  public unListedGridOptions: GridOptions;
+  public listedDeductionGridOptions: GridOptions;
+  public unlistedDeductionGridOptions: GridOptions;
+  listedCg: NewCapitalGain;
+  unlistedCg: NewCapitalGain;
+  loading = false;
+  constructor(private utilsService: UtilsService,
+    public matDialog: MatDialog,
+    public snackBar: MatSnackBar,
+    private itrMsService: ItrMsService) {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    let listedData = this.ITR_JSON.capitalGain.filter(item => item.assetType === 'EQUITY_SHARES_LISTED');
+    if (listedData.length > 0) {
+      this.listedCg = listedData[0];
+    } else {
+      this.listedCg = {
+        assetType: 'EQUITY_SHARES_LISTED',
+        assetDetails: [],
+        improvement: [],
+        deduction: [],
+        buyersDetails: []
+      }
+    }
+
+    let unlistedData = this.ITR_JSON.capitalGain.filter(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
+    if (unlistedData.length > 0) {
+      this.unlistedCg = unlistedData[0];
+    } else {
+      this.unlistedCg = {
+        assetType: 'EQUITY_SHARES_UNLISTED',
+        assetDetails: [],
+        improvement: [],
+        deduction: [],
+        buyersDetails: []
+      }
+    }
+    this.listedCallInConstructor();
+    this.unListedCallInConstructor();
+    this.listedDeductionCallInConstructor();
+    this.unlistedDeductionCallInConstructor();
+  }
+
+  ngOnInit() {
+    console.log('INSIDE EQUITY')
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+  }
+
+  listedCallInConstructor() {
+    this.listedGridOptions = <GridOptions>{
+      rowData: this.listedCreateRowData(),
+      columnDefs: this.listedCreateColumnDef(),
+      onGridReady: () => {
+        this.listedGridOptions.api.sizeColumnsToFit();
+      },
+      suppressDragLeaveHidesColumns: true,
+      enableCellChangeFlash: true,
+      defaultColDef: {
+        resizable: true
+      },
+      suppressRowTransform: true
+    };
+  }
+
+  listedCreateRowData() {
+    return this.listedCg.assetDetails;
+  }
+
+  listedCreateColumnDef() {
+    return [
+      {
+        headerName: 'Buy/Sale Quantity',
+        field: 'sellOrBuyQuantity',
+        suppressMovable: true,
+        width: 70,
+      },
+      {
+        headerName: 'Sale Date',
+        field: 'sellDate',
+        editable: false,
+        suppressMovable: true,
+        cellRenderer: (params) => {
+          return params.data.sellDate ? (new Date(params.data.sellDate)).toLocaleDateString('en-IN') : '';
+        }
+      },
+      {
+        headerName: 'Sale Price',
+        field: 'sellValuePerUnit',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Sale Value',
+        field: 'sellValue',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Buy Date',
+        field: 'purchaseDate',
+        editable: false,
+        suppressMovable: true,
+        cellRenderer: (params) => {
+          return params.data.purchaseDate ? (new Date(params.data.purchaseDate)).toLocaleDateString('en-IN') : '';
+        }
+      },
+      {
+        headerName: 'Buy Price',
+        field: 'purchaseValuePerUnit',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Buy Value',
+        field: 'purchaseCost',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Expenses',
+        field: 'sellExpense',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Type of Gain',
+        field: 'gainType',
+        editable: false,
+        suppressMovable: true,
+        valueGetter: function nameFromCode(params) {
+          return params.data.gainType === 'LONG_TERM_CAPITAL_GAIN' ? 'Long Term' : 'Short Term';
+        },
+      },
+      {
+        headerName: 'ISIN Code',
+        field: 'isinCode',
+        editable: false,
+        suppressMovable: true,
+        valueGetter: function nameFromCode(params) {
+          return params.data.valueInConsideration ? params.data.valueInConsideration.toLocaleString('en-IN') : params.data.valueInConsideration;
+        },
+      },
+      {
+        headerName: 'name Of the Shares/Units',
+        field: 'nameOfTheUnits',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'FMV as on 31st Jan 2018',
+        field: 'fmvAsOn31Jan2018',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Gain Amount',
+        field: 'capitalGain',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Edit',
+        editable: false,
+        suppressMovable: true,
+        suppressMenu: true,
+        sortable: true,
+        width: 70,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Edit">
+          <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
+         </button>`;
+
+        },
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
+        },
+        rowSpan: function (params) {
+          if (params.data.isShow) {
+            return params.data.rowSpan;
+          } else {
+            return 1;
+          }
+        },
+        cellClassRules: {
+          'cell-span': function (params) {
+            return (params.data.rowSpan > 1);
+          },
+        },
+      },
+      {
+        headerName: 'Delete',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        width: 70,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Delete">
+          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
+         </button>`;
+
+        },
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
+        },
+        rowSpan: function (params) {
+          if (params.data.isShow) {
+            return params.data.rowSpan;
+          } else {
+            return 1;
+          }
+        },
+        cellClassRules: {
+          'cell-span': function (params) {
+            return (params.data.rowSpan > 1);
+          },
+        },
+      }
+    ];
+  }
+
+
+  addEquityAndMf(mode, type, assetDetails?) {
+    const dialogRef = this.matDialog.open(ListedUnlistedDialogComponent, {
+      data: { mode: mode, assetType: type, assetDetails: assetDetails },
+      closeOnNavigation: true,
+      disableClose: false,
+      width: '700px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Result add CG=', result);
+      if (result !== undefined) {
+        if (mode === 'ADD') {
+          if (type === 'EQUITY_SHARES_LISTED') {
+            this.listedCg.assetDetails.push(result);
+            this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
+          } else if (type === 'EQUITY_SHARES_UNLISTED') {
+            this.unlistedCg.assetDetails.push(result);
+            this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails);
+          }
+          // let currObj = this.cgArray.filter(item => item.assetType === type);
+          // if (currObj.length > 0 && currObj[0].assetDetails instanceof Array) {
+          //   currObj[0].assetDetails.push(result);
+          //   this.cgArray = this.cgArray.filter(item => item.assetType !== type);
+          //   this.cgArray.push(currObj[0]);
+          // } else {
+          //   let capitalGain = {
+          //     "assetType": type,
+          //     "deduction": [],
+          //     "improvement": [],
+          //     "buyersDetails": [],
+          //     "assetDetails": [result]
+          //   }
+          //   this.cgArray.push(capitalGain);
+          // }
+          // // TODO Add api calls here after adding
+          // console.log('CG Array:', this.cgArray);
+          // if (type === 'EQUITY_SHARES_UNLISTED') {
+          //   let assets = this.cgArray.filter(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
+          //   if (assets.length > 0 && assets[0].assetDetails instanceof Array)
+          //     this.unListedGridOptions.api?.setRowData(assets[0].assetDetails)
+          // } else if (type === 'EQUITY_SHARES_LISTED') {
+          //   let assets = this.cgArray.filter(item => item.assetType === 'EQUITY_SHARES_LISTED');
+          //   if (assets.length > 0 && assets[0].assetDetails instanceof Array)
+          //     this.listedGridOptions.api?.setRowData(assets[0].assetDetails)
+          // }
+        } else {
+
+          if (type === 'EQUITY_SHARES_LISTED') {
+            this.listedCg.assetDetails.splice((assetDetails.id - 1), 1, result);
+            this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
+          } else if (type === 'EQUITY_SHARES_UNLISTED') {
+            this.unlistedCg.assetDetails.splice((assetDetails.id - 1), 1, result);
+            this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails);
+          }
+
+          // let currObj = this.cgArray.filter(item => item.assetType === type);
+          // if (currObj.length > 0 && currObj[0].assetDetails instanceof Array) {
+          //   currObj[0].assetDetails.splice((assetDetails.id - 1), 1, result);
+          // }
+          // // TODO Add api calls here after update
+          // if (type === 'EQUITY_SHARES_LISTED') {
+          //   let assets = this.cgArray.filter(item => item.assetType === 'EQUITY_SHARES_LISTED');
+          //   if (assets.length > 0 && assets[0].assetDetails instanceof Array)
+          //     this.listedGridOptions.api?.setRowData(assets[0].assetDetails)
+          // } else if (type === 'EQUITY_SHARES_UNLISTED') {
+          //   let assets = this.cgArray.filter(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
+          //   if (assets.length > 0 && assets[0].assetDetails instanceof Array)
+          //     this.unListedGridOptions.api?.setRowData(assets[0].assetDetails)
+          // }
+        }
+        this.calculateCg(type)
+      }
+    });
+
+
+  }
+
+
+  public onListedRowClicked(params) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'remove': {
+          console.log('DATA FOR DELETE INVESTMENT:', params.data)
+          this.deleteAsset('EQUITY_SHARES_LISTED', params.rowIndex);
+          break;
+        }
+        case 'edit': {
+          this.addEquityAndMf('EDIT', 'EQUITY_SHARES_LISTED', params.data)
+          break;
+        }
+      }
+    }
+  }
+
+  public onListedDeductionRowClicked(params) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'remove': {
+          console.log('DATA FOR DELETE INVESTMENT:', params.data)
+          this.deleteDeduction('EQUITY_SHARES_LISTED', params.rowIndex);
+          break;
+        }
+        case 'edit': {
+          this.addListedDeduction('EDIT', params.data)
+          break;
+        }
+      }
+    }
+  }
+
+  public onUnListedDeductionRowClicked(params) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'remove': {
+          console.log('DATA FOR DELETE INVESTMENT:', params.data)
+          this.deleteDeduction('EQUITY_SHARES_UNLISTED', params.rowIndex);
+          break;
+        }
+        case 'edit': {
+          this.addUnListedDeduction('EDIT', params.data)
+          break;
+        }
+      }
+    }
+  }
+
+
+  public onUnListedRowClicked(params) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'remove': {
+          console.log('DATA FOR DELETE INVESTMENT:', params.data)
+          this.deleteAsset('EQUITY_SHARES_UNLISTED', params.rowIndex);
+          break;
+        }
+        case 'edit': {
+          this.addEquityAndMf('EDIT', 'EQUITY_SHARES_UNLISTED', params.data)
+          break;
+        }
+      }
+    }
+  }
+
+  unListedCallInConstructor() {
+    this.unListedGridOptions = <GridOptions>{
+      rowData: this.unListedCreateRowData(),
+      columnDefs: this.unListedCreateColumnDef(),
+      onGridReady: () => {
+        this.unListedGridOptions.api.sizeColumnsToFit();
+      },
+      suppressDragLeaveHidesColumns: true,
+      enableCellChangeFlash: true,
+      defaultColDef: {
+        resizable: true
+      },
+      suppressRowTransform: true
+    };
+  }
+
+  unListedCreateRowData() {
+    return this.unlistedCg.assetDetails;
+  }
+
+  unListedCreateColumnDef() {
+    return [
+      {
+        headerName: 'Buy/Sale Quantity',
+        field: 'sellOrBuyQuantity',
+        suppressMovable: true,
+        width: 70,
+      },
+      {
+        headerName: 'Sale Date',
+        field: 'sellDate',
+        editable: false,
+        suppressMovable: true,
+        cellRenderer: (params) => {
+          return params.data.sellDate ? (new Date(params.data.sellDate)).toLocaleDateString('en-IN') : '';
+        }
+      },
+      {
+        headerName: 'Sale Price',
+        field: 'sellValuePerUnit',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Sale Value',
+        field: 'sellValue',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Buy Date',
+        field: 'purchaseDate',
+        editable: false,
+        suppressMovable: true,
+        cellRenderer: (params) => {
+          return params.data.purchaseDate ? (new Date(params.data.sellDate)).toLocaleDateString('en-IN') : '';
+        }
+      },
+      {
+        headerName: 'Buy Price',
+        field: 'purchaseValuePerUnit',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Buy Value',
+        field: 'purchaseCost',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Expenses',
+        field: 'sellExpense',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Type of Gain',
+        field: 'gainType',
+        editable: false,
+        suppressMovable: true,
+        valueGetter: function nameFromCode(params) {
+          return params.data.gainType === 'LONG_TERM_CAPITAL_GAIN' ? 'Long Term' : 'Short Term';
+        },
+      },
+      {
+        headerName: 'Cost of Acquisition with indexation',
+        field: 'indexCostOfAcquisition',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Gain Amount',
+        field: 'capitalGain',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Edit',
+        editable: false,
+        suppressMovable: true,
+        suppressMenu: true,
+        sortable: true,
+        width: 70,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Edit">
+          <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
+         </button>`;
+
+        },
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
+        },
+        rowSpan: function (params) {
+          if (params.data.isShow) {
+            return params.data.rowSpan;
+          } else {
+            return 1;
+          }
+        },
+        cellClassRules: {
+          'cell-span': function (params) {
+            return (params.data.rowSpan > 1);
+          },
+        },
+      },
+      {
+        headerName: 'Delete',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        width: 70,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Delete">
+          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
+         </button>`;
+
+        },
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
+        },
+        rowSpan: function (params) {
+          if (params.data.isShow) {
+            return params.data.rowSpan;
+          } else {
+            return 1;
+          }
+        },
+        cellClassRules: {
+          'cell-span': function (params) {
+            return (params.data.rowSpan > 1);
+          },
+        },
+      }
+    ];
+  }
+
+  listedDeductionCallInConstructor() {
+    this.listedDeductionGridOptions = <GridOptions>{
+      rowData: this.listedDeductionCreateRowData(),
+      columnDefs: this.listedDeductionCreateColumnDef(),
+      onGridReady: () => {
+        this.listedDeductionGridOptions.api.sizeColumnsToFit();
+      },
+      suppressDragLeaveHidesColumns: true,
+      enableCellChangeFlash: true,
+      defaultColDef: {
+        resizable: true
+      },
+      suppressRowTransform: true
+    };
+  }
+
+
+  listedDeductionCreateRowData() {
+    return this.listedCg.deduction;
+    // let dataToReturn = [];
+    // let unlisted = [];
+    // let listed = [];
+    // if (this.cgArray.length > 0) {
+    //   let index = this.cgArray.findIndex(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
+    //   if (index !== -1 && this.cgArray[index].deduction instanceof Array) {
+    //     for (let i = 0; i < this.cgArray[index].deduction.length; i++) {
+    //       let data = { assetType: 'EQUITY_SHARES_UNLISTED' }
+    //       Object.assign(data, this.cgArray[index].deduction[i])
+    //       unlisted.push(data);
+    //     }
+    //   }
+
+    //   let ind = this.cgArray.findIndex(item => item.assetType === 'EQUITY_SHARES_LISTED');
+    //   if (ind !== -1 && this.cgArray[ind].deduction instanceof Array) {
+    //     for (let i = 0; i < this.cgArray[ind].deduction.length; i++) {
+    //       let data = { assetType: 'EQUITY_SHARES_LISTED' }
+    //       Object.assign(data, this.cgArray[ind].deduction[i])
+    //       listed.push(data);
+    //     }
+    //   }
+    // }
+    // return dataToReturn.concat(listed, unlisted);
+  }
+
+  listedDeductionCreateColumnDef() {
+    return [
+      {
+        headerName: 'Type of Deduction',
+        field: 'underSection',
+        suppressMovable: true,
+      },
+      // {
+      //   headerName: 'Type of Asset',
+      //   field: 'assetType',
+      //   editable: false,
+      //   suppressMovable: true,
+      //   cellRenderer: (params) => {
+      //     return params.data.assetType === 'EQUITY_SHARES_LISTED' ? 'Listed' : 'Un Listed';
+      //   }
+      // },
+      {
+        headerName: 'Purchase Date of New asset',
+        field: 'purchaseDate',
+        editable: false,
+        suppressMovable: true,
+        cellRenderer: (params) => {
+          return params.data.purchaseDate ? (new Date(params.data.purchaseDate)).toLocaleDateString('en-IN') : '';
+        }
+      },
+      {
+        headerName: 'Cost of New Asset',
+        field: 'costOfNewAssets',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Amount deposited in CGAS before due date',
+        field: 'investmentInCGAccount',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Amount of Deduction Claimed',
+        field: 'totalDeductionClaimed',
+        editable: false,
+        suppressMovable: true,
+      },
+
+      {
+        headerName: 'Edit',
+        editable: false,
+        suppressMovable: true,
+        suppressMenu: true,
+        sortable: true,
+        width: 70,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Edit">
+          <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
+         </button>`;
+
+        },
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
+        },
+      },
+      {
+        headerName: 'Delete',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        width: 70,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Delete">
+          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
+         </button>`;
+
+        },
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
+        },
+      }
+    ];
+  }
+
+  unlistedDeductionCallInConstructor() {
+    this.unlistedDeductionGridOptions = <GridOptions>{
+      rowData: this.unlistedDeductionCreateRowData(),
+      columnDefs: this.unlistedDeductionCreateColumnDef(),
+      onGridReady: () => {
+        this.unlistedDeductionGridOptions.api.sizeColumnsToFit();
+      },
+      suppressDragLeaveHidesColumns: true,
+      enableCellChangeFlash: true,
+      defaultColDef: {
+        resizable: true
+      },
+      suppressRowTransform: true
+    };
+  }
+
+
+  unlistedDeductionCreateRowData() {
+    return this.unlistedCg.deduction;
+    // let dataToReturn = [];
+    // let unlisted = [];
+    // let listed = [];
+    // if (this.cgArray.length > 0) {
+    //   let index = this.cgArray.findIndex(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
+    //   if (index !== -1 && this.cgArray[index].deduction instanceof Array) {
+    //     for (let i = 0; i < this.cgArray[index].deduction.length; i++) {
+    //       let data = { assetType: 'EQUITY_SHARES_UNLISTED' }
+    //       Object.assign(data, this.cgArray[index].deduction[i])
+    //       unlisted.push(data);
+    //     }
+    //   }
+
+    //   let ind = this.cgArray.findIndex(item => item.assetType === 'EQUITY_SHARES_LISTED');
+    //   if (ind !== -1 && this.cgArray[ind].deduction instanceof Array) {
+    //     for (let i = 0; i < this.cgArray[ind].deduction.length; i++) {
+    //       let data = { assetType: 'EQUITY_SHARES_LISTED' }
+    //       Object.assign(data, this.cgArray[ind].deduction[i])
+    //       listed.push(data);
+    //     }
+    //   }
+    // }
+    // return dataToReturn.concat(listed, unlisted);
+  }
+
+  unlistedDeductionCreateColumnDef() {
+    return [
+      {
+        headerName: 'Type of Deduction',
+        field: 'underSection',
+        suppressMovable: true,
+      },
+      // {
+      //   headerName: 'Type of Asset',
+      //   field: 'assetType',
+      //   editable: false,
+      //   suppressMovable: true,
+      //   cellRenderer: (params) => {
+      //     return params.data.assetType === 'EQUITY_SHARES_LISTED' ? 'Listed' : 'Un Listed';
+      //   }
+      // },
+      {
+        headerName: 'Purchase Date of New asset',
+        field: 'purchaseDate',
+        editable: false,
+        suppressMovable: true,
+        cellRenderer: (params) => {
+          return params.data.purchaseDate ? (new Date(params.data.purchaseDate)).toLocaleDateString('en-IN') : '';
+        }
+      },
+      {
+        headerName: 'Cost of New Asset',
+        field: 'costOfNewAssets',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Amount deposited in CGAS before due date',
+        field: 'investmentInCGAccount',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Amount of Deduction Claimed',
+        field: 'totalDeductionClaimed',
+        editable: false,
+        suppressMovable: true,
+      },
+
+      {
+        headerName: 'Edit',
+        editable: false,
+        suppressMovable: true,
+        suppressMenu: true,
+        sortable: true,
+        width: 70,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Edit">
+          <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
+         </button>`;
+
+        },
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
+        },
+      },
+      {
+        headerName: 'Delete',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        width: 70,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Delete">
+          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
+         </button>`;
+
+        },
+        cellStyle: {
+          textAlign: 'center', display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center'
+        },
+      }
+    ];
+  }
+
+
+  addListedDeduction(mode, investment?) {
+    if (this.listedCg.assetDetails.length > 0) {
+      const data = {
+        assetType: 'EQUITY_SHARES_LISTED',
+        mode: mode,
+        investment: investment,
+      };
+      const dialogRef = this.matDialog.open(InvestmentDialogComponent, {
+        data: data,
+        closeOnNavigation: true,
+        disableClose: false,
+        width: '700px'
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('Result add CG=', result);
+        if (result !== undefined) {
+          if (mode === 'ADD') {
+            this.listedCg.deduction.push(result);
+            this.listedDeductionGridOptions.api?.setRowData(this.listedCg.deduction);
+
+          } else if (mode === 'EDIT') {
+            this.listedCg.deduction.splice((investment.id - 1), 1, result);
+            this.listedDeductionGridOptions.api?.setRowData(this.listedCg.deduction)
+          }
+          // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
+        }
+      });
+    } else {
+      this.utilsService.showSnackBar('Please add asset details first against this deduction')
+    }
+  }
+  addUnListedDeduction(mode, investment?) {
+    if (this.unlistedCg.assetDetails.length > 0) {
+      const data = {
+        assetType: 'EQUITY_SHARES_UNLISTED',
+        mode: mode,
+        investment: investment,
+      };
+      const dialogRef = this.matDialog.open(InvestmentDialogComponent, {
+        data: data,
+        closeOnNavigation: true,
+        disableClose: false,
+        width: '700px'
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('Result add CG=', result);
+        if (result !== undefined) {
+          if (mode === 'ADD') {
+            this.unlistedCg.deduction.push(result);
+            this.unlistedDeductionGridOptions.api?.setRowData(this.unlistedCg.deduction);
+
+          } else if (mode === 'EDIT') {
+            this.unlistedCg.deduction.splice((investment.id - 1), 1, result);
+            this.unlistedDeductionGridOptions.api?.setRowData(this.unlistedCg.deduction)
+          }
+          // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
+        }
+      });
+    } else {
+      this.utilsService.showSnackBar('Please add asset details first against this deduction')
+    }
+  }
+
+  deleteAsset(type, i) {
+    if (type === 'EQUITY_SHARES_LISTED') {
+      this.listedCg.assetDetails.splice(i, 1);
+      this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails)
+    } else if (type === 'EQUITY_SHARES_UNLISTED') {
+      this.unlistedCg.assetDetails.splice(i, 1);
+      this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails)
+    }
+    // let index = this.cgArray.findIndex(item => item.assetType === type);
+    // if (index !== -1) {
+    //   this.cgArray[index].assetDetails.splice(i, 1)
+    // }
+
+    // // TODO Add api calls here after delete
+    // if (type === 'EQUITY_SHARES_LISTED') {
+    //   let assets = this.cgArray.filter(item => item.assetType === 'EQUITY_SHARES_LISTED');
+    //   if (assets.length > 0 && assets[0].assetDetails instanceof Array)
+    //     this.listedGridOptions.api?.setRowData(assets[0].assetDetails)
+    // } else if (type === 'EQUITY_SHARES_UNLISTED') {
+    //   let assets = this.cgArray.filter(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
+    //   if (assets.length > 0 && assets[0].assetDetails instanceof Array)
+    //     this.unListedGridOptions.api?.setRowData(assets[0].assetDetails)
+    // }
+    // this.investmentsCallInConstructor(this.investmentsCreateRowData());
+    // this.serviceCall();
+  }
+  deleteDeduction(type, i) {
+    if (type === 'EQUITY_SHARES_LISTED') {
+      this.listedCg.deduction.splice(i, 1);
+      this.listedDeductionGridOptions.api?.setRowData(this.listedCg.deduction)
+    } else if (type === 'EQUITY_SHARES_UNLISTED') {
+      this.unlistedCg.deduction.splice(i, 1);
+      this.unlistedDeductionGridOptions.api?.setRowData(this.unlistedCg.deduction)
+    }
+  }
+  calculateSingleCg(request) {
+    request = {
+      "assessmentYear": "2022-2023",
+      "assesseeType": "INDIVIDUAL",
+      "residentialStatus": "RESIDENT",
+      "assetType": "EQUITY_SHARES_LISTED",
+      "deduction": [{
+        "underSection": "",
+        "orgAssestTransferDate": "",
+        "purchaseDate": "",
+        "panOfEligibleCompany": "",
+        "purchaseDatePlantMachine": "",
+        "costOfNewAssets": 0,
+        "investmentInCGAccount": 0,
+        "totalDeductionClaimed": 0,
+        "costOfPlantMachinary": 0
+      }
+      ],
+      "improvement": [
+        {
+          "srn": 0,
+          "dateOfImprovement": " ",
+          "costOfImprovement": 0
+        }
+      ],
+      "buyersDetails": [{
+        "name": "Ashish",
+        "pan": "AKRPH1618L",
+        "share": 100,
+        "amount": 1000,
+        "address": "majale",
+        "pin": "416109"
+      }],
+      "assetDetails": [{
+        "srn": 0,
+        "id": null,
+        "description": "",
+        "gainType": "LONG",
+        "sellDate": "2021-12-31T18:30:00.000Z",
+        "sellValue": 200000,
+        "stampDutyValue": 0,
+        "valueInConsideration": 0,
+        "sellExpense": 0,
+        "purchaseDate": "2021-07-04T18:30:00.000Z",
+        "purchaseCost": 122222,
+        "isinCode": "",
+        "nameOfTheUnits": "",
+        "sellOrBuyQuantity": 0,
+        "sellValuePerUnit": 0,
+        "purchaseValuePerUnit": 0,
+        "isUploaded": false,
+        "hasIndexation": false,
+        "algorithm": "cgProperty",
+        "fmvAsOn31Jan2018": null,
+        "indexCostOfAcquisition": 0
+      }
+      ]
+    }
+    const param = '/singleCgCalculate';
+    this.itrMsService.postMethod(param, request).subscribe((result: any) => {
+      console.log('Single CG Result:', result)
+
+    }, error => {
+      this.utilsService.showSnackBar('Calculate gain failed please try again.');
+    });
+  }
+
+  saveCg() {
+    if (this.listedCg.assetDetails.length > 0) {
+      this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'EQUITY_SHARES_LISTED')
+      this.ITR_JSON.capitalGain.push(this.listedCg)
+    }
+    if (this.unlistedCg.assetDetails.length > 0) {
+      this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'EQUITY_SHARES_UNLISTED')
+      this.ITR_JSON.capitalGain.push(this.unlistedCg)
+    }
+    console.log('CG:', this.ITR_JSON.capitalGain);
+    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
+    this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
+      console.log(result);
+      this.ITR_JSON = result;
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON))
+    })
+    console.log('LISTED:', this.listedCg);
+    console.log('UN-LISTED:', this.unlistedCg);
+  }
+
+  calculateCg(type) {
+    this.loading = true;
+    const param = '/singleCgCalculate';
+    let request = {
+      assessmentYear: "2022-2023",
+      assesseeType: "INDIVIDUAL",
+      residentialStatus: "RESIDENT",
+      assetType: type,
+      assetDetails: type === 'EQUITY_SHARES_LISTED' ? this.listedCg.assetDetails : this.unlistedCg.assetDetails,
+      "improvement": [
+        {
+          "srn": 0,
+          "dateOfImprovement": " ",
+          "costOfImprovement": 0
+        }
+      ],
+    }
+
+    this.itrMsService.postMethod(param, request).subscribe((res: any) => {
+      this.loading = false;
+      console.log('Single CG result:', res);
+      if (type === 'EQUITY_SHARES_LISTED') {
+        this.listedCg.assetDetails = res.assetDetails;
+        this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
+      };
+      if (type === 'EQUITY_SHARES_UNLISTED') {
+        this.unlistedCg.assetDetails = res.assetDetails;
+        this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails);
+      };
+    }, error => {
+      this.loading = false;
+    })
+  }
+}
