@@ -290,30 +290,6 @@ export interface NewCapitalGain {
     deduction?: Investments[];
     buyersDetails: BuyersDetails[];
 }
-
-export interface AssetDetails {
-    srn: number;
-    id: string;
-    description: string;
-    gainType: string;
-    sellDate: string;
-    sellValue: number;
-    stampDutyValue: number;
-    valueInConsideration: number;
-    sellExpense: number;
-    purchaseDate: string;
-    purchaseCost: number;
-    isinCode: string;
-    nameOfTheUnits: string;
-    sellOrBuyQuantity: number;
-    sellValuePerUnit: number;
-    purchaseValuePerUnit: number;
-    isUploaded: boolean;
-    hasIndexation: boolean;
-    algorithm: string;
-    fmvAsOn31Jan2018: string;
-    indexCostOfAcquisition: number;
-}
 export interface Improvement {
     id: number;
     srn: string;

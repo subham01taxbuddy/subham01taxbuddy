@@ -1008,7 +1008,8 @@ export class EquityMfComponent implements OnInit {
     this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
       console.log(result);
       this.ITR_JSON = result;
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON))
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+      this.utilsService.showSnackBar('Shares added successfully');
     })
     console.log('LISTED:', this.listedCg);
     console.log('UN-LISTED:', this.unlistedCg);

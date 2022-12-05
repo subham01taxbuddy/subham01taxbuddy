@@ -408,7 +408,7 @@ export class LabFormComponent implements OnInit {
       && formGroupName.controls['assetDetails'].controls[index].controls['purchaseCost'].valid && formGroupName.controls['improvement'].valid) {
       Object.assign(this.cgArrayElement, formGroupName.getRawValue());
       this.cgArrayElement.assetType = this.assetType.value;
-      this.cgArrayElement.assetDetails[0].srn = 0;
+      this.cgArrayElement.assetDetails[0].srn = '0'; //TODO for Ashwini
       this.cgArrayElement.assetDetails[0].algorithm = 'cgProperty';
       this.cgArrayElement.assetDetails[0].gainType = '';
       console.log('Calculate capital gain here', this.cgArrayElement, formGroupName.getRawValue());
