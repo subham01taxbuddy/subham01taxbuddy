@@ -453,24 +453,27 @@ export class LabFormComponent implements OnInit {
 
   isImprovementValid(formGroupName, index) {
     if (formGroupName.controls['improvement'].valid) {
-      // let req = {
-      //   "cost": 1000000,
-      //   "purchaseOrImprovementFinancialYear": "2002-2003",
-      //   "assetType": "EQUITY_SHARES_LISTED",
-      //   "buyDate": "2020-08-01",
-      //   "sellDate": "2021-08-01"
-      // }
-      // const param = `/calculate/indexed-cost`;
-      // this.itrMsService.postMethod(param, req).subscribe(res => {
-      //   console.log('INDEX COST:', res);
-      //   const improve = <FormArray>formGroupName.get('improvement');
-      //   for (let i = 0; i < improve.length; i++) {
-      //     // this.cgArrayElement.improvement[i].indexCostOfImprovement = output.indexCostOfImprovement.filter(item => item.id === this.cgArrayElement.improvement[i].id)[0].improvementCost;
-      //     improve.push(this.createImprovementForm(this.cgArrayElement.improvement[i]));
-      //   }
-      // })
-      // return
-      this.calculateCapitalGain(formGroupName, '', index);
+      console.log(this.immovableForm);
+      let assetDetails = (this.immovableForm.controls['assetDetails'] as FormArray).controls[0] as FormGroup;
+      let improvementDetails = (this.immovableForm.controls['improvement'] as FormArray).controls[index] as FormGroup;
+      let req = {
+        "cost": assetDetails.controls['purchaseCost'].value,
+        "purchaseOrImprovementFinancialYear": improvementDetails.controls['dateOfImprovement'].value,
+        "assetType": "PLOT_OF_LAND",
+        "buyDate": assetDetails.controls['purchaseDate'].value,
+        "sellDate": assetDetails.controls['sellDate'].value
+      }
+      const param = `/calculate/indexed-cost`;
+      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+        console.log('INDEX COST:', res);
+        improvementDetails.controls['indexCostOfImprovement'].setValue(res.data.costOfAcquisitionOrImprovement);
+        // const improve = <FormArray>formGroupName.get('improvement');
+        // for (let i = 0; i < improve.length; i++) {
+        //   // this.cgArrayElement.improvement[i].indexCostOfImprovement = output.indexCostOfImprovement.filter(item => item.id === this.cgArrayElement.improvement[i].id)[0].improvementCost;
+        //   improve.push(this.createImprovementForm(this.cgArrayElement.improvement[i]));
+        // }
+      });
+      //this.calculateCapitalGain(formGroupName, '', index);
     }
   }
 

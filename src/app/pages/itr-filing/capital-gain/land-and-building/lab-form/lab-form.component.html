@@ -191,7 +191,7 @@
 
             <mat-form-field class="input-field-width">
               <mat-select placeholder="Year of Improvement" name="improve[i]" formControlName="dateOfImprovement"
-                (selectionChange)="isImprovementValid(this.immovableForm)" required>
+                required>
                 <mat-option [value]="year" *ngFor="let year of improvementYears"> {{year}} </mat-option>
               </mat-select>
             </mat-form-field>
@@ -211,7 +211,7 @@
           <td class="kids-age-td">
             <mat-form-field class="input-field-width">
               <input matInput currencyMask type="number" [pattern]="amountRegex" formControlName="costOfImprovement"
-                name="improve[i]" class="input-field" maxlength="14" (blur)="isImprovementValid(this.immovableForm)"
+                name="improve[i]" class="input-field" maxlength="14" (blur)="isImprovementValid(this.immovableForm, i)"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 required>
               <mat-error
