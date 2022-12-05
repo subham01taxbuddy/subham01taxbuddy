@@ -302,8 +302,9 @@
           </td>
           <td class="kids-age-td">
             <mat-form-field class="input-field-width">
-              <input matInput formControlName="aadhar" name="buyer[i]" type="number" class="input-field" maxlength="12" digitsOnly 
-              onkeypress=" event.charCode >= 48 && event.charCode <= 57" required>
+              <input matInput formControlName="aadhar" name="buyer[i]" type="number" class="input-field" 
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              maxlength="12" onkeypress=" event.charCode >= 48 && event.charCode <= 57" required>
             </mat-form-field>
           </td>
           <td class="kids-name-td table-first-td">
