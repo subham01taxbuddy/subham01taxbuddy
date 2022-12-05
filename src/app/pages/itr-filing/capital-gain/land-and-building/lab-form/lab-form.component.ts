@@ -424,8 +424,8 @@ export class LabFormComponent implements OnInit {
         if (this.cgOutput.assetDetails instanceof Array && this.cgOutput.assetDetails.length > 0) {
           const output = this.cgOutput.assetDetails.filter(item => item.srn === this.cgArrayElement.assetDetails[0].srn)[0];
           // this.amount = output.cgIncome;
-          this.cgArrayElement.assetDetails[0].gainType = output.gainType;
-          this.indexCostOfAcquisition.setValue(output.indexCostOfAcquisition);
+          this.cgArrayElement.assetDetails[0].gainType = output?.gainType;
+          this.indexCostOfAcquisition.setValue(output?.indexCostOfAcquisition);
           formGroupName.controls['improvement'] = this.fb.array([]);
           const improve = <FormArray>formGroupName.get('improvement');
           for (let i = 0; i < this.cgArrayElement.improvement.length; i++) {
