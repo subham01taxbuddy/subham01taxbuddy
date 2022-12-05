@@ -61,8 +61,7 @@ export class LabFormComponent implements OnInit {
       itrId: this.ITR_JSON.itrId,
       assessmentYear: this.ITR_JSON.assessmentYear,
       assesseeType: this.ITR_JSON.assesseeType,
-      residentialStatus: this.ITR_JSON.residentialStatus,
-      capitalGain: []
+      residentialStatus: this.ITR_JSON.residentialStatus
     };
     this.investmentsCallInConstructor([]);
     this.getImprovementYears();
@@ -103,8 +102,7 @@ export class LabFormComponent implements OnInit {
     itrId: null,
     assessmentYear: '',
     assesseeType: '',
-    residentialStatus: '',
-    capitalGain: []
+    residentialStatus: ''
   };
 
   cgArrayElement: NewCapitalGain = {
@@ -293,7 +291,7 @@ export class LabFormComponent implements OnInit {
     return this.fb.group({
       name: [obj.name || '', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
       pan: [obj.pan || null, [Validators.required, Validators.pattern(AppConstants.panIndHUFRegex)]],
-      aadhar: [obj.aadhar || null, [Validators.pattern(AppConstants.numericRegex)]],
+      aadhar: [obj.aadhar || '', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       share: [obj.share || null, [Validators.required, Validators.max(100), Validators.min(0.01), Validators.pattern(AppConstants.amountWithDecimal)]],
       amount: [obj.amount || null, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
       address: [obj.address || '', [Validators.required]],
@@ -395,10 +393,11 @@ export class LabFormComponent implements OnInit {
       && formGroupName.controls['assetDetails'].controls[index].controls['purchaseCost'].valid && formGroupName.controls['improvement'].valid) {
       Object.assign(this.cgArrayElement, formGroupName.getRawValue());
       this.cgArrayElement.assetType = this.assetType.value;
+      this.cgArrayElement.assetDetails[0].srn = 0;
       this.cgArrayElement.assetDetails[0].algorithm = 'cgProperty';
       this.cgArrayElement.assetDetails[0].gainType = '';
       console.log('Calculate capital gain here', this.cgArrayElement, formGroupName.getRawValue());
-      this.calculateCGRequest.capitalGain = [this.cgArrayElement];
+      Object.assign(this.calculateCGRequest, this.cgArrayElement);
       console.log('cg request', this.calculateCGRequest);
       // this.utilsService.openLoaderDialog();
       const param = '/singleCgCalculate';
@@ -406,10 +405,11 @@ export class LabFormComponent implements OnInit {
       this.busyGain = true;
       this.itrMsService.postMethod(param, this.calculateCGRequest).subscribe((result: any) => {
         console.log('Drools Result=', result);
-        this.cgOutput = result.cgOutput;
-        if (result.cgOutput instanceof Array && result.cgOutput.length > 0) {
-          const output = result.cgOutput.filter(item => item.assetType === this.cgArrayElement.assetType)[0];
-          this.amount = output.cgIncome;
+        this.cgOutput = result;
+        if (this.cgOutput.assetDetails instanceof Array && this.cgOutput.assetDetails.length > 0) {
+          debugger
+          const output = this.cgOutput.assetDetails.filter(item => item.srn === this.cgArrayElement.assetDetails[0].srn)[0];
+          // this.amount = output.cgIncome;
           this.cgArrayElement.assetDetails[0].gainType = output.gainType;
           this.indexCostOfAcquisition.setValue(output.indexCostOfAcquisition);
           formGroupName.controls['improvement'] = this.fb.array([]);
@@ -536,7 +536,7 @@ export class LabFormComponent implements OnInit {
     console.log('saveImmovableCG',formGroupName, formGroupName.getRawValue());
     if (formGroupName.valid && (!this.panValidation()) && (!this.calPercentage())) {
       this.saveBusy = true;
-      if (this.utilsService.isNonEmpty(this.cgOutput) && this.cgOutput.length > 0) {
+      if (this.utilsService.isNonEmpty(this.cgOutput)) {
         Object.assign(this.cgArrayElement, formGroupName.getRawValue());
         this.cgArrayElement.assetType = this.assetType.value;
         this.cgArrayElement.assetDetails[0].algorithm = 'cgProperty';//this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].algorithm;
@@ -587,7 +587,7 @@ export class LabFormComponent implements OnInit {
       ITR_JSON: this.ITR_JSON,
       mode: mode,
       investment: investment,
-      gainType: this.cgArrayElement.assetDetails[0].gainType,
+      // gainType: this.cgArrayElement.assetDetails[0].gainType,
       assetClassName: 'Plot of Land'//name.length > 0 ? name[0].assetName : assetSelected.assetType
     };
     const dialogRef = this.matDialog.open(AddInvestmentDialogComponent, {
