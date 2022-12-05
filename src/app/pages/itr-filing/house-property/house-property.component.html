@@ -227,15 +227,19 @@
                     <div class="card__col-xs-12 card__col-sm-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Country</mat-label>
+                            <mat-select name="country" formControlName="country" required>
+                                <mat-option value="91"> India </mat-option>
+                            </mat-select>
+                            <!-- <mat-label>Country</mat-label>
                             <input type="text" trim matInput placeholder="Country" name="country" class="input-field"
-                                formControlName="country">
+                                formControlName="country"> -->
                         </mat-form-field>
                     </div>
                     <div class="card__col-xs-12 card__col-sm-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Pin Code</mat-label>
                             <input type="text" trim matInput placeholder="Pin Code" name="pinCode" class="input-field"
-                                formControlName="pinCode">
+                                formControlName="pinCode" (blur)="updateDataByPincode()">
                         </mat-form-field>
                     </div>
                 </div>
@@ -362,7 +366,7 @@
                                     <input matInput class="input-field" name="ten[i]"
                                         matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
                                         formControlName="panNumber" maxlength="10" type="text" trim
-                                        [class.invalid]="isduplicatePAN(i,'tenant')"
+                                        [class.invalid]="isduplicatePAN(i,'tenant')" upperCase
                                         [matTooltip]="isduplicatePAN(i,'tenant') ? 'Duplicate PAN':''"
                                         matTooltipPosition="above" matTooltipClass="error-tooltip">
                                     <mat-error

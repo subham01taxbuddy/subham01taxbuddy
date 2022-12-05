@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/cor
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { ITR_JSON, CapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON, NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -14,7 +14,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class LandAndBuildingComponent implements OnInit, OnChanges {
   loading = false;
   ITR_JSON: ITR_JSON;
-  labData: CapitalGain[] = [];
+  labData: NewCapitalGain[] = [];
   Copy_ITR_JSON: ITR_JSON;
   isExmptAvail = false;
   assestTypesDropdown = [];
@@ -75,26 +75,52 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
     const dataToReturn = [];
     for (let i = 0; i < this.ITR_JSON.capitalGain.length; i++) {
       let cgIncome = [];
-      if (this.utilsService.isNonEmpty(this.ITR_JSON.capitalGain[i].cgOutput)) {
-        cgIncome = this.ITR_JSON.capitalGain[i].cgOutput.filter(item => item.assetType === this.ITR_JSON.capitalGain[i].assetType);
-      }
+      // if (this.utilsService.isNonEmpty(this.ITR_JSON.capitalGain[i].cgOutput)) {
+      //   cgIncome = this.ITR_JSON.capitalGain[i].cgOutput.filter(item => item.assetType === this.ITR_JSON.capitalGain[i].assetType);
+      // }
 
       let costOfImprovement = 0;
       for (let j = 0; j < this.ITR_JSON.capitalGain[i].improvement.length; j++) {
         costOfImprovement = costOfImprovement + this.ITR_JSON.capitalGain[i].improvement[j].costOfImprovement;
       }
 
+      //By Ashwini: need to be updated for new structure
+      
+      let assetDetails = this.ITR_JSON.capitalGain[i].assetDetails[0];
+      // {
+      //   srn: i,
+      //   id: i+1,
+      //   description: string;
+      //   gainType: string;
+      //   sellDate: string;
+      //   sellValue: number;
+      //   stampDutyValue: number;
+      //   valueInConsideration: number;
+      //   sellExpense: number;
+      //   purchaseDate: string;
+      //   purchaseCost: number;
+      //   isinCode: string;
+      //   nameOfTheUnits: string;
+      //   sellOrBuyQuantity: number;
+      //   sellValuePerUnit: number;
+      //   purchaseValuePerUnit: number;
+      //   isUploaded: boolean;
+      //   hasIndexation: boolean;
+      //   algorithm: string;
+      //   fmvAsOn31Jan2018: string;
+      //   indexCostOfAcquisition: number;
+      // }
       data.push({
         id: i + 1,
         assetType: this.ITR_JSON.capitalGain[i].assetType,
-        description: this.ITR_JSON.capitalGain[i].description,
-        sellDate: this.ITR_JSON.capitalGain[i].sellDate,
-        valueInConsideration: /* value */this.ITR_JSON.capitalGain[i].valueInConsideration,
+        description: assetDetails.description,
+        sellDate: assetDetails.sellDate,
+        valueInConsideration: /* value */assetDetails.valueInConsideration,
         // totalCost: tCost,
-        gainType: this.ITR_JSON.capitalGain[i].gainType,
+        gainType: assetDetails.gainType,
         cgIncome: cgIncome.length > 0 ? cgIncome[0].cgIncome : 0,
         deductions: 0,//TODO
-        sellExpense: this.ITR_JSON.capitalGain[i].sellExpense,
+        sellExpense: assetDetails.sellExpense,
         improvements: costOfImprovement,
         address: this.ITR_JSON.capitalGain[i].buyersDetails[0].address,
         pin: this.ITR_JSON.capitalGain[i].buyersDetails[0].pin,
@@ -386,7 +412,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
   deleteCapitalGain(assetSelected) {
     this.loading = true;
     this.Copy_ITR_JSON.capitalGain = this.Copy_ITR_JSON.capitalGain.filter(item =>
-      !((item.description === assetSelected.description) && (item.assetType === assetSelected.assetType))
+      !((item.assetDetails[0].description === assetSelected.description) && (item.assetType === assetSelected.assetType))
     );
 
     const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;

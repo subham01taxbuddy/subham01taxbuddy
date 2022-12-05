@@ -76,6 +76,16 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
+  async updateDataByPincode() {
+    await this.utilsService.getPincodeData(this.housePropertyForm.controls['pinCode']).then(result => {
+      console.log('pindata', result);
+      this.housePropertyForm.controls['city'].setValue(result.city);
+      this.housePropertyForm.controls['country'].setValue(result.countryCode);
+      this.housePropertyForm.controls['state'].setValue(result.stateCode);
+    });
+    
+  }
+
   createHousePropertyForm(): FormGroup {
     return this.fb.group({
       propertyType: ['', Validators.required],

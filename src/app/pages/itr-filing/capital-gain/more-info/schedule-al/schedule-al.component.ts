@@ -1,18 +1,14 @@
 import { MovableAsset, Immovable } from './../../../../../modules/shared/interfaces/itr-input.interface';
-import { Component, HostListener, AfterViewInit, Inject, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, FormArray } from '@angular/forms';
-// import { ITRService } from 'src/app/services/itr.service';
-// import { AppConstants } from 'src/app/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-// import { CapitalGain } from 'src/app/shared/interfaces';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { CapitalGain, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { GridOptions } from 'ag-grid-community';
 import { AddImmovableDialogComponent } from './add-immovable-dialog/add-immovable-dialog.component';
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
@@ -48,6 +44,7 @@ export class ScheduleALComponent implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   
   saveBusy = false;
+  countriesDropdown = AppConstants.countriesDropdown;
   stateDropdown = AppConstants.stateDropdown;
   // data: any; // TODO use input output to decide view edit or add
   @Input() data: any;
@@ -118,14 +115,26 @@ export class ScheduleALComponent implements OnInit {
     this.immovableAssetsForm = this.createImmovableAssetsForm(immovable);
 
     const immovableAssetsArray = <FormArray>this.immovableAssetsForm.get('immovableAssetsArray');
+
+    this.immovableAssets = [];
     if(this.Copy_ITR_JSON.immovableAsset) {
       this.Copy_ITR_JSON.immovableAsset.forEach(obj => {
         immovableAssetsArray.push(this.createImmovableAssetsForm(obj));
       });
-    } else {
-      this.immovableAssets = [];
-    }
+    } 
 
+  }
+
+  getState(stateCode) {
+    console.log('state called', stateCode);
+    let state = this.stateDropdown.filter(state => state.stateCode === stateCode)[0];
+    return state ? state.stateName : '';
+  }
+
+  getCountry(countryCode) {
+    console.log('country called', countryCode);
+    let country = this.countriesDropdown.filter(country => country.countryCode === countryCode)[0];
+    return country ? country.countryName : '';
   }
 
   createImmovableAssetsForm(obj: Immovable): FormGroup {
@@ -136,8 +145,8 @@ export class ScheduleALComponent implements OnInit {
       road: [obj.road || null],
       area: [obj.area || null],
       city: [obj.city || null],
-      state: [obj.state || null],
-      country: [obj.country || null],
+      state: [this.getState(obj.state)|| null],
+      country: [this.getCountry(obj.country) || null],
       pinCode: [obj.pinCode || '', [Validators.required, Validators.pattern(AppConstants.PINCode), Validators.maxLength(6), Validators.minLength(6)]],
       amount: [obj.amount || null, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
       immovableAssetsArray: this.fb.array([])
@@ -147,6 +156,12 @@ export class ScheduleALComponent implements OnInit {
   removeMovableAssets() {
     this.movableAssets = null;
     this.createMovableAssetsForm();
+  }
+
+  removeImmovableAsset(index) {
+    const immovable = <FormArray>this.immovableAssetsForm.get('immovableAssetsArray');
+    immovable.removeAt(index);
+    this.immovableAssets.splice(index,1);
   }
 
   saveAssets() {
