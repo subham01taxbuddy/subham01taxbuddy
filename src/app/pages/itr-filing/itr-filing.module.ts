@@ -57,6 +57,12 @@ import { CapitalGainComponent } from './capital-gain/capital-gain.component';
 import { LandAndBuildingComponent } from './capital-gain/land-and-building/land-and-building.component';
 import { LabFormComponent } from './capital-gain/land-and-building/lab-form/lab-form.component';
 import { AddInvestmentDialogComponent } from './capital-gain/land-and-building/add-investment-dialog/add-investment-dialog.component';
+import { EquityMfComponent } from './capital-gain/equity-mf/equity-mf.component';
+import { ListedUnlistedDialogComponent } from './capital-gain/equity-mf/listed-unlisted-dialog/listed-unlisted-dialog.component';
+import { InvestmentDialogComponent } from './capital-gain/investment-dialog/investment-dialog.component';
+// import { OtherAssetsDialogComponent } from './capital-gain/other-assets/other-assets-dialog/other-assets-dialog.component';
+import { OtherAssetsComponent } from './capital-gain/other-assets/other-assets.component';
+// import { OtherImprovementDialogComponent } from './capital-gain/other-assets/other-improvement-dialog/other-improvement-dialog.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -120,6 +126,12 @@ import { AddInvestmentDialogComponent } from './capital-gain/land-and-building/a
         LandAndBuildingComponent,
         LabFormComponent,
         AddInvestmentDialogComponent,
+        EquityMfComponent,
+        ListedUnlistedDialogComponent,
+        InvestmentDialogComponent,
+        OtherAssetsComponent,
+        // OtherAssetsDialogComponent,
+        // OtherImprovementDialogComponent,
         MoreInfoComponent,
         ScheduleALComponent,
         AddImmovableDialogComponent
@@ -131,7 +143,11 @@ import { AddInvestmentDialogComponent } from './capital-gain/land-and-building/a
         NriDetailsDialogComponent,
         UnlistedSharesComponent,
         DirectorInCompanyComponent,
-        AddInvestmentDialogComponent]
+        AddInvestmentDialogComponent,
+        ListedUnlistedDialogComponent,
+        InvestmentDialogComponent,
+        // OtherAssetsDialogComponent,
+        /* OtherImprovementDialogComponent */]
 
 })
 export class ItrFilingModule { }
