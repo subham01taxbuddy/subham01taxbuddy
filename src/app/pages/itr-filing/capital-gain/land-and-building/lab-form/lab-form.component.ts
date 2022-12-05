@@ -180,7 +180,8 @@ export class LabFormComponent implements OnInit {
   createAssetDetailsForm(obj?: AssetDetails): FormGroup {
     let des = (Math.floor(Math.random() * (999999 - 100000)) + 2894).toString();
     return this.fb.group({
-      description: [des, Validators.required], // TODO commented
+      description: [des, Validators.required], // TODO commented,
+      gainType: [obj?.gainType],
       sellDate: [null, Validators.required],
       valueInConsideration: [null, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal), Validators.min(1)]],
       indexCostOfAcquisition: [{ value: null, disabled: true }], // TODO Newly added
@@ -764,9 +765,17 @@ export class LabFormComponent implements OnInit {
       console.log('INDEX COST : ', res);
       assetDetails.controls['indexCostOfAcquisition'].setValue(res.data.costOfAcquisitionOrImprovement);
       if(this.cgArrayElement.assetDetails && this.cgArrayElement.assetDetails.length > 0){
+        console.log('in if', res.data.capitalGainType);
         this.cgArrayElement.assetDetails[0].gainType = res.data.capitalGainType;
+      } else {
+        console.log('in else');
+        this.cgArrayElement.assetDetails.push(assetDetails.getRawValue());
+        this.cgArrayElement.assetDetails[0].gainType = res.data.capitalGainType;
+        console.log('gain type in else', this.cgArrayElement.assetDetails);
       }
-    })
+      console.log('gain type', this.cgArrayElement.assetDetails);
+    });
+    
   }
 
   cancelCgForm() {

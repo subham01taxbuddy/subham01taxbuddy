@@ -25,7 +25,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <form [formGroup]="immovableForm">
   <b>Add details of capital gain from Land / Building / Property?</b> <span style="float: right;"> Capital Gain Type:
-    {{cgArrayElement.gainType}}</span>
+    {{cgArrayElement?.assetDetails[0]?.gainType ? cgArrayElement?.assetDetails[0]?.gainType  : 'NA'}}</span>
   <br>
   <div formArrayName="assetDetails">
     <div class="card__row" *ngFor="let asset of getAssetDetailsArrayForImmovable.controls;let i=index" [formGroupName]="i">
@@ -62,7 +62,7 @@
           <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
           <input matInput currencyMask type="number" [pattern]="amountRegex" formControlName="purchaseCost"
             placeholder="Cost of Acquisition" name="asset[i]" class="input-field" maxlength="14"
-            (blur)="calculateCapitalGain(this.immovableForm,'', i); this.calculateIndexCost(i)"
+            (blur)="this.calculateIndexCost(i)"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
             required>
           <mat-error *ngIf="immovableForm.controls['assetDetails'].controls[i].controls['purchaseCost'].hasError('pattern')">Enter
@@ -131,10 +131,9 @@
 
       <div class="card__col-lg-4">
         <mat-form-field class="input-field-width">
-          <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
+          <!-- <mat-icon matPrefix> &#8377;</mat-icon> --><!-- (blur)="calculateCapitalGain(this.immovableForm,'', i)" -->
           <input matInput currencyMask type="number" [pattern]="amountRegex" formControlName="sellExpense"
             placeholder="Transfer Expenses" name="asset[i]" class="input-field" maxlength="14"
-            (blur)="calculateCapitalGain(this.immovableForm,'', i)"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="immovableForm.controls['assetDetails'].controls[i].controls['sellExpense'].hasError('pattern')">Enter
             valid amount upto 2 decimal in case of shares.</mat-error>
