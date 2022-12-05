@@ -89,29 +89,19 @@ export class AddDeductionSecondComponent implements OnInit {
   createRowData() {
     return [
       {
-        srNo: '', typeOfDeduction: 'Deduction 54F', purchaseDate: new Date(), costOfNewAsset: '', depositedAmount: '', deductionAmount: '', Actions: ''
+        typeOfDeduction: 'Deduction 54F', purchaseDate: new Date(), costOfNewAsset: '', depositedAmount: '', deductionAmount: '', Actions: ''
       }
     ];
   }
 
   createColumnDef() {
     return [
-
-      {
-        headerName: 'Sr. No',
-        field: 'srNo',
-        editable: true,
-        suppressMovable: true,
-        width: 100,
-      },
-
-
       {
         headerName: this.deduction ? 'Type of deduction *' : 'Type of deduction',
         field: 'typeOfDeduction',
         suppressMovable: true,
         editable: false,
-        width: 190,
+        width: 210,
         valueGetter: function nameFromCode(params) {
           return params.data.typeOfDeduction ? params.data.typeOfDeduction.toLocaleString('en-IN') : params.data.typeOfDeduction;
         },
@@ -120,7 +110,7 @@ export class AddDeductionSecondComponent implements OnInit {
         headerName: this.deduction ? 'Purchase date of new asset *' : 'Purchase date of new asset',
         field: 'purchaseDate',
         editable: true,
-        width: 200,
+        width: 220,
         suppressMovable: true,
         cellEditor: "datePicker",
         valueGetter: function nameFromCode(params) {
@@ -133,7 +123,7 @@ export class AddDeductionSecondComponent implements OnInit {
         field: 'costOfNewAsset',
         editable: true,
         suppressMovable: true,
-        width: 200,
+        width: 220,
         valueGetter: function nameFromCode(params) {
           return params.data.costOfNewAsset ? params.data.costOfNewAsset.toLocaleString('en-IN') : params.data.costOfNewAsset;
         },
@@ -143,7 +133,7 @@ export class AddDeductionSecondComponent implements OnInit {
         headerName: this.deduction ? 'Amount deposited in CGAS before due date *' : 'Amount deposited in CGAS before due date',
         field: 'depositedAmount',
         editable: true,
-        width: 235,
+        width: 250,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.depositedAmount ? params.data.depositedAmount.toLocaleString('en-IN') : params.data.depositedAmount;
@@ -153,7 +143,7 @@ export class AddDeductionSecondComponent implements OnInit {
         headerName: 'Amount of deduction claimed',
         field: 'deductionAmount',
         editable: true,
-        width: 200,
+        width: 226,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.deductionAmount ? params.data.deductionAmount.toLocaleString('en-IN') : params.data.deductionAmount;
@@ -180,22 +170,12 @@ export class AddDeductionSecondComponent implements OnInit {
 
   updateColumn() {
     this.bondsGridOptions.api.setColumnDefs([
-
-      {
-        headerName: 'Sr. No',
-        field: 'srNo',
-        editable: true,
-        suppressMovable: true,
-        width: 100,
-      },
-
-
       {
         headerName: this.deduction ? 'Type of deduction *' : 'Type of deduction',
         field: 'typeOfDeduction',
         suppressMovable: true,
         editable: false,
-        width: 190,
+        width: 210,
         valueGetter: function nameFromCode(params) {
           return params.data.typeOfDeduction ? params.data.typeOfDeduction.toLocaleString('en-IN') : params.data.typeOfDeduction;
         },
@@ -204,7 +184,7 @@ export class AddDeductionSecondComponent implements OnInit {
         headerName: this.deduction ? 'Purchase date of new asset *' : 'Purchase date of new asset',
         field: 'purchaseDate',
         editable: true,
-        width: 200,
+        width: 220,
         suppressMovable: true,
         cellEditor: "datePicker",
         valueGetter: function nameFromCode(params) {
@@ -217,7 +197,7 @@ export class AddDeductionSecondComponent implements OnInit {
         field: 'costOfNewAsset',
         editable: true,
         suppressMovable: true,
-        width: 200,
+        width: 220,
         valueGetter: function nameFromCode(params) {
           return params.data.costOfNewAsset ? params.data.costOfNewAsset.toLocaleString('en-IN') : params.data.costOfNewAsset;
         },
@@ -227,7 +207,7 @@ export class AddDeductionSecondComponent implements OnInit {
         headerName: this.deduction ? 'Amount deposited in CGAS before due date *' : 'Amount deposited in CGAS before due date',
         field: 'depositedAmount',
         editable: true,
-        width: 235,
+        width: 250,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.depositedAmount ? params.data.depositedAmount.toLocaleString('en-IN') : params.data.depositedAmount;
@@ -237,7 +217,7 @@ export class AddDeductionSecondComponent implements OnInit {
         headerName: 'Amount of deduction claimed',
         field: 'deductionAmount',
         editable: true,
-        width: 200,
+        width: 226,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.deductionAmount ? params.data.deductionAmount.toLocaleString('en-IN') : params.data.deductionAmount;

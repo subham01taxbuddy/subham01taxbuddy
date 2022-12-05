@@ -1,13 +1,12 @@
 <div style="overflow: hidden;">
-    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-    <app-bonds-debenture (saveAndNext)="saveAndNext($event)"></app-bonds-debenture>
-    <app-add-deduction (saveAndNext)="saveAndNext($event)"></app-add-deduction>
-    <app-zero-coupon-bonds (saveAndNext)="saveAndNext($event)"></app-zero-coupon-bonds>
-    <app-add-deduction-second (saveAndNext)="saveAndNext($event)"></app-add-deduction-second>
-    <div class="btn-cfl">
-        <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left"
-            aria-hidden="true"></i>
-          &nbsp;&nbsp;Back</button>
-        <button class="tbd-btn" (click)="continue()">&nbsp;&nbsp;Continue </button>
-      </div>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+  <app-bonds-debenture (saveAndNext)="saveAndNext($event)"></app-bonds-debenture>
+  <app-add-deduction (saveAndNext)="saveAndNext($event)"></app-add-deduction>
+  <app-zero-coupon-bonds (saveAndNext)="saveAndNext($event)"></app-zero-coupon-bonds>
+  <app-add-deduction-second (saveAndNext)="saveAndNext($event)"></app-add-deduction-second>
+  <div class="btn-cfl">
+    <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
+      &nbsp;&nbsp;Back</button>
+    <button class="tbd-btn" (click)="continue()">&nbsp;&nbsp;Continue </button>
+  </div>
 </div>
