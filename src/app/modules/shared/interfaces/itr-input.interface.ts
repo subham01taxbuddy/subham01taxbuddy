@@ -234,7 +234,7 @@ export interface NewCapitalGain {
 }
 
 export interface AssetDetails {
-    srn: string;
+    srn: number;
     id: string;
     description: string;
     gainType: string;
