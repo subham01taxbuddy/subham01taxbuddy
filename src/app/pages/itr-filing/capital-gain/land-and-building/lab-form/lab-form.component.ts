@@ -308,14 +308,14 @@ export class LabFormComponent implements OnInit {
   }
 
   createBuyersDetailsForm(obj: {
-    name?: String, pan?: String, aadhar?: String, share?: number, amount?: number, address?: String, pin?: String,
+    name?: String, pan?: String, aadhaarNumber?: String, share?: number, amount?: number, address?: String, pin?: String,
     state?: String, country?: String
   } = {}): FormGroup {
     console.log('buyer form', obj);
     return this.fb.group({
       name: [obj.name || '', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
       pan: [obj.pan || null, [Validators.required, Validators.pattern(AppConstants.panIndHUFRegex)]],
-      aadhar: [obj.aadhar || '', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
+      aadhaarNumber: [obj.aadhaarNumber || '', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       share: [obj.share || null, [Validators.required, Validators.max(100), Validators.min(0.01), Validators.pattern(AppConstants.amountWithDecimal)]],
       amount: [obj.amount || null, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
       address: [obj.address || '', [Validators.required]],
@@ -584,8 +584,9 @@ export class LabFormComponent implements OnInit {
         if (this.data.mode === 'ADD') {
           this.Copy_ITR_JSON.capitalGain.push(this.cgArrayElement);
         } else {
-          console.log('editing property details');
+          console.log('editing property details', this.cgArrayElement);
           this.Copy_ITR_JSON.capitalGain.splice(this.currentCgIndex, 1, this.cgArrayElement);
+          console.log('copy', this.Copy_ITR_JSON);
         }
 
         this.saveCG();

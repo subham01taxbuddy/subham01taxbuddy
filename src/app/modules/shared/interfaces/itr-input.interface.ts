@@ -312,6 +312,7 @@ export interface Investments {
 export interface BuyersDetails {
     name: string;
     pan: string;
+    aadhaarNumber: string;
     share: number;
     amount: number;
     address: string;
