@@ -145,8 +145,8 @@ export class LabFormComponent implements OnInit {
       const assetDetails = <FormArray>this.immovableForm.get('assetDetails');
       //assetDetailsForm.controls['description'].setValue('test1') //need to check this
       assetDetails.push(this.createAssetDetailsForm(this.data.assetSelected.assetDetails[0]));
-      this.calMaxPurchaseDate((assetDetails.getRawValue() as AssetDetails[])[0].sellDate, this.immovableForm, 0);
-      this.calMinImproveDate((assetDetails.getRawValue() as AssetDetails[])[0].purchaseDate, this.immovableForm, 0);
+      // this.calMaxPurchaseDate((assetDetails.getRawValue() as AssetDetails[])[0].sellDate, this.immovableForm, 0);
+      // this.calMinImproveDate((assetDetails.getRawValue() as AssetDetails[])[0].purchaseDate, this.immovableForm, 0);
       this.calculateIndexCost(0);
       
       // const cgOutPut = dataToPatch.filter(item => item.assetType === this.assetType.value);
@@ -157,11 +157,12 @@ export class LabFormComponent implements OnInit {
         this.isImprovements.setValue(true);
         const improvement = <FormArray>this.immovableForm.get('improvement');
         dataToPatch[0].improvement.forEach(obj => {
-          improvement.push(this.createImprovementForm(obj));
+          let improvementForm = this.createImprovementForm(obj);
+          improvement.push(improvementForm);
+          this.isImprovementValid(this.immovableForm, dataToPatch[0].improvement.indexOf(obj));
         });
         console.log('Immovable Form===', this.immovableForm);
 
-        this.calculateCapitalGain(this.immovableForm, '', 0);
       }
       if (dataToPatch[0].buyersDetails instanceof Array) {
         console.log('in buyer if', dataToPatch[0].buyersDetails.length);
@@ -173,6 +174,7 @@ export class LabFormComponent implements OnInit {
       }
       this.calMaxPurchaseDate(this.immovableForm.value.sellDate, this.immovableForm, 0);
       this.calMinImproveDate(this.immovableForm.value.purchaseDate, this.immovableForm, 0);
+      // this.calculateCapitalGain(this.immovableForm, '', 0);
     } else if (this.data.mode === 'ADD') {
       this.amountRegex = AppConstants.amountWithoutDecimal;
       this.immovableForm = this.createImmovableForm();
@@ -384,7 +386,7 @@ export class LabFormComponent implements OnInit {
     if (this.data.mode === 'ADD') {
       const cgAdd = this.ITR_JSON.capitalGain.filter(item => (item.assetType === this.assetType.value && item.assetDetails[0].description === formGroupName.controls['description'].value.toString().trim()));
       if (cgAdd.length === 0) {
-        this.calculateCapitalGain(formGroupName, '', index);
+        //this.calculateCapitalGain(formGroupName, '', index);
       } else {
         this.duplicateDescription = true;
         this.ErrorMsg = 'Description should be unique.';
@@ -403,7 +405,7 @@ export class LabFormComponent implements OnInit {
       }
 
       if (typeChanged ? (singleCG.length === 0) : (descriptionChanged ? (singleCG.length === 0) : (singleCG.length <= 1))) {
-        this.calculateCapitalGain(formGroupName, '', index);
+        // this.calculateCapitalGain(formGroupName, '', index);
       } else {
         this.duplicateDescription = true;
         this.ErrorMsg = 'Description should be unique.';
@@ -481,6 +483,7 @@ export class LabFormComponent implements OnInit {
       this.itrMsService.postMethod(param, req).subscribe((res: any) => {
         console.log('INDEX COST:', res);
         improvementDetails.controls['indexCostOfImprovement'].setValue(res.data.costOfAcquisitionOrImprovement);
+        this.cgArrayElement.improvement[index].indexCostOfImprovement = res.data.costOfAcquisitionOrImprovement;
         // const improve = <FormArray>formGroupName.get('improvement');
         // for (let i = 0; i < improve.length; i++) {
         //   // this.cgArrayElement.improvement[i].indexCostOfImprovement = output.indexCostOfImprovement.filter(item => item.id === this.cgArrayElement.improvement[i].id)[0].improvementCost;
@@ -533,7 +536,7 @@ export class LabFormComponent implements OnInit {
         // this.sellValueReq = true
         this.immovableForm.controls['sellValue'].setValidators([Validators.required, Validators.pattern(this.amountRegex), ])
       } */
-      this.calculateCapitalGain(formGroupName, '', index);
+      // this.calculateCapitalGain(formGroupName, '', index);
     }
   }
 
@@ -563,7 +566,7 @@ export class LabFormComponent implements OnInit {
     } else {
       this.isImprovements.setValue(false);
       formGroupName.controls['improvement'] = this.fb.array([]);
-      this.calculateCapitalGain(formGroupName, '', index);
+      //this.calculateCapitalGain(formGroupName, '', index);
     }
   }
 
