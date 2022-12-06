@@ -57,11 +57,11 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
   }
 
   addCapitalGain(mode, assetSelected) {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     console.log('Edit CG:', assetSelected);
     this.labView = 'FORM';
     this.data = {
-      assestDetails: [],
+      assetDetails: [],
       ITR_JSON: this.ITR_JSON,
       mode: mode,
       assetSelected: assetSelected,
@@ -69,7 +69,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
   }
 
   cgCreateRowData() {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.isExmptAvail = false;
     const data = [];
     const dataToReturn = [];
@@ -87,6 +87,14 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       //By Ashwini: need to be updated for new structure
       
       let assetDetails = this.ITR_JSON.capitalGain[i].assetDetails[0];
+      let cgObject:NewCapitalGain = {
+        assetType: this.ITR_JSON.capitalGain[i].assetType,
+        assetDetails: this.ITR_JSON.capitalGain[i].assetDetails,
+        buyersDetails: this.ITR_JSON.capitalGain[i].buyersDetails,
+        improvement: this.ITR_JSON.capitalGain[i].improvement,
+        deduction: this.ITR_JSON.capitalGain[i].deduction
+      }
+      // Object.assign(cgObject, this.ITR_JSON.capitalGain[i]);
       // {
       //   srn: i,
       //   id: i+1,
@@ -126,8 +134,10 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         pin: this.ITR_JSON.capitalGain[i].buyersDetails[0].pin,
         // isExemptionApplied: cgIncome.length > 0 ? cgIncome[0].isExemptionApplied : false,
         isShow: true,
-        rowSpan: 1
+        rowSpan: 1,
+        cgObject: JSON.stringify(cgObject)
       });
+      console.log('row', cgObject);
     }
 
     // for (let i = 0; i < data.length; i++) {
@@ -378,7 +388,9 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
           break;
         }
         case 'edit': {
-          this.addCapitalGain('EDIT', params.data);
+          //let cgObject = this.ITR_JSON.capitalGain[params.data.id-1];
+          console.log('dtaa', params.data);
+          this.addCapitalGain('EDIT', JSON.parse(params.data.cgObject));
           break;
         }
       }

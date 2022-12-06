@@ -122,6 +122,7 @@ export class AddInvestmentDialogComponent implements OnInit {
       }
     }
     // this.setTotalDeductionValidation();
+    this.calculateDeduction();
   }
 
   blurCostOfNewAssets() {
@@ -130,6 +131,7 @@ export class AddInvestmentDialogComponent implements OnInit {
       this.investmentForm.controls['investmentInCGAccount'].updateValueAndValidity();
     }
     // this.setTotalDeductionValidation();
+    this.calculateDeduction();
   }
 
   blurCGASAccount() {
@@ -138,6 +140,28 @@ export class AddInvestmentDialogComponent implements OnInit {
       this.investmentForm.controls['costOfNewAssets'].updateValueAndValidity();
     }
     // this.setTotalDeductionValidation();
+    this.calculateDeduction();
+  }
+
+  calculateDeduction() {
+    //itr/calculate/capital-gain/deduction
+    if(!this.investmentForm.controls['costOfNewAssets'].value || !this.investmentForm.controls['investmentInCGAccount'].value){
+      return;
+    }
+    const param = '/calculate/capital-gain/deduction';
+    let request = {
+      capitalGain: 0,
+      capitalGainDeductions: [{
+      deductionSection: `SECTION_${this.investmentForm.controls['underSection'].value}`,
+      costOfNewAsset: this.investmentForm.controls['costOfNewAssets'].value,
+      cgasDepositedAmount: this.investmentForm.controls['investmentInCGAccount'].value,
+    }]};
+    this.itrMsService.postMethod(param, request).subscribe((result: any) => {
+      console.log('Deductions result=', result);
+      // this.investmentForm.controls['totalDeductionClaimed'].setValue();
+    }, error => { 
+      this.utilsService.showSnackBar('Failed to get deductions.');
+    });
   }
 
   /* setTotalDeductionValidation() {
