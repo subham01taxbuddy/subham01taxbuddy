@@ -1,3 +1,5 @@
+import { AnyTxtRecord } from "dns";
+
 export interface ITR_JSON {
     ackStatus: string;
     acknowledgementReceived: boolean;
@@ -70,6 +72,8 @@ export interface ITR_JSON {
     conditionsResStatus?: any,
     movableAsset?: MovableAsset[],
     immovableAsset?: Immovable[],
+    bonds?: Bonds[],
+    bondsDeduction?: Deduction[],
     carryForwordLosses?: CarryForwardLosses[],
 }
 export interface DirectorInCompany {
@@ -407,6 +411,44 @@ export interface Immovable {
     country: string;
     pinCode: string;
     amount: number;
+}
+
+export interface Bonds {
+    srn: Number;
+    id: any,
+    description: any;
+    purchaseDate: any;
+    stampDutyValue: any;
+    valueInConsideration: any;
+    indexCostOfAcquisition: Number;
+    costOfImprovement: Number;
+    sellDate: any;
+    sellValue: Number;
+    sellExpense: Number;
+    gainType: any;
+    totalCapitalGain: Number;
+    purchaseCost: any;
+    isinCode: any;
+    nameOfTheUnits: any;
+    sellOrBuyQuantity: any;
+    sellValuePerUnit: any;
+    purchaseValuePerUnit: any;
+    isUploaded: any;
+    algorithm: any;
+    hasIndexation: any;
+    fmvAsOn31Jan2018: any;
+}
+
+export interface Deduction {
+    underSection: any;
+    orgAssestTransferDate: any;
+    panOfEligibleCompany: any;
+    purchaseDatePlantMachine: any;
+    purchaseDate: any;
+    costOfNewAssets: Number;
+    investmentInCGAccount: Number;
+    totalDeductionClaimed: Number;
+    costOfPlantMachinary: any;
 }
 export interface BankDetails {
     bankType: string;
