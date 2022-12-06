@@ -115,6 +115,7 @@ export class LabFormComponent implements OnInit {
   amount = 0;
   longTermCgAmount = 0;
   shortTermCgAmount = 0;
+  currentCgIndex = 0;
 
   duplicateDescription = false;
   ErrorMsg = '';
@@ -135,6 +136,8 @@ export class LabFormComponent implements OnInit {
       // let dataToPatch = [];
       // dataToPatch.push(this.data.assetSelected);
       //const dataToPatch = filtered[0].assetDetails.filter(item => item.description === this.data.assetSelected.description);
+      this.currentCgIndex = this.ITR_JSON.capitalGain.indexOf(dataToPatch[0]);
+      console.log('selected index=', this.ITR_JSON.capitalGain.indexOf(dataToPatch[0]));
       console.log('dataToPatch = ', dataToPatch, this.ITR_JSON.capitalGain);
       this.cgArrayElement = this.data.assetSelected;//dataToPatch[0];
       this.investmentsCallInConstructor(this.investmentsCreateRowData());
@@ -144,6 +147,7 @@ export class LabFormComponent implements OnInit {
       assetDetails.push(this.createAssetDetailsForm(this.data.assetSelected.assetDetails[0]));
       this.calMaxPurchaseDate((assetDetails.getRawValue() as AssetDetails[])[0].sellDate, this.immovableForm, 0);
       this.calMinImproveDate((assetDetails.getRawValue() as AssetDetails[])[0].purchaseDate, this.immovableForm, 0);
+      this.calculateIndexCost(0);
       
       // const cgOutPut = dataToPatch.filter(item => item.assetType === this.assetType.value);
       // this.amount = cgOutPut.cgIncome;
@@ -156,6 +160,8 @@ export class LabFormComponent implements OnInit {
           improvement.push(this.createImprovementForm(obj));
         });
         console.log('Immovable Form===', this.immovableForm);
+
+        this.calculateCapitalGain(this.immovableForm, '', 0);
       }
       if (dataToPatch[0].buyersDetails instanceof Array) {
         console.log('in buyer if', dataToPatch[0].buyersDetails.length);
@@ -192,8 +198,11 @@ export class LabFormComponent implements OnInit {
   createAssetDetailsForm(obj?: AssetDetails): FormGroup {
     console.log('obj', obj);
     let des = (Math.floor(Math.random() * (999999 - 100000)) + 2894).toString();
+    if(!this.utilsService.isNonEmpty(obj?.description)){
+      obj.description = des;
+    }
     return this.fb.group({
-      description: [obj?.description ? obj?.description : des, Validators.required], // TODO commented,
+      description: [obj ? obj?.description : des, Validators.required], // TODO commented,
       gainType: [obj?.gainType],
       sellDate: [obj?.sellDate, Validators.required],
       valueInConsideration: [obj?.valueInConsideration, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal), Validators.min(1)]],
@@ -350,7 +359,7 @@ export class LabFormComponent implements OnInit {
     if (this.utilsService.isNonEmpty(sellDate)) {
       this.maxPurchaseDate = new Date(sellDate);
       this.maxImprovementDate = new Date(sellDate);
-      this.calculateCapitalGain(formGroupName, '', index);
+      //this.calculateCapitalGain(formGroupName, '', index);
       this.calculateIndexCost(index);
     }
     // this.calIndexedCOA()
@@ -359,7 +368,7 @@ export class LabFormComponent implements OnInit {
   calMinImproveDate(purchaseDate, formGroupName, index) {
     if (this.utilsService.isNonEmpty(purchaseDate)) {
       this.minImprovementDate = new Date(purchaseDate);
-      this.calculateCapitalGain(formGroupName, '', index);
+      //this.calculateCapitalGain(formGroupName, '', index);
       this.calculateIndexCost(index);
     }
   }
@@ -410,7 +419,6 @@ export class LabFormComponent implements OnInit {
       this.cgArrayElement.assetType = this.assetType.value;
       this.cgArrayElement.assetDetails[0].srn = '0'; //TODO for Ashwini
       this.cgArrayElement.assetDetails[0].algorithm = 'cgProperty';
-      this.cgArrayElement.assetDetails[0].gainType = '';
       console.log('Calculate capital gain here', this.cgArrayElement, formGroupName.getRawValue());
       Object.assign(this.calculateCGRequest, this.cgArrayElement);
       console.log('cg request', this.calculateCGRequest);
@@ -429,7 +437,7 @@ export class LabFormComponent implements OnInit {
           formGroupName.controls['improvement'] = this.fb.array([]);
           const improve = <FormArray>formGroupName.get('improvement');
           for (let i = 0; i < this.cgArrayElement.improvement.length; i++) {
-            this.cgArrayElement.improvement[i].indexCostOfImprovement = output.indexCostOfImprovement.filter(item => item.id === this.cgArrayElement.improvement[i].id)[0].improvementCost;
+            this.cgArrayElement.improvement[i].indexCostOfImprovement = output?.indexCostOfImprovement.filter(item => item.id === this.cgArrayElement.improvement[i].id)[0].improvementCost;
             improve.push(this.createImprovementForm(this.cgArrayElement.improvement[i]));
           }
         }
@@ -554,24 +562,40 @@ export class LabFormComponent implements OnInit {
     if (formGroupName.valid && (!this.panValidation()) && (!this.calPercentage())) {
       this.saveBusy = true;
       if (this.utilsService.isNonEmpty(this.cgOutput)) {
+        console.log('cgOutput is non empty');
         Object.assign(this.cgArrayElement, formGroupName.getRawValue());
         this.cgArrayElement.assetType = this.assetType.value;
         this.cgArrayElement.assetDetails[0].algorithm = 'cgProperty';//this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].algorithm;
         this.cgArrayElement.assetDetails[0].hasIndexation = false;//this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].hasIndexation;
         // this.cgArrayElement.assetDetails[0].cgOutput = this.cgOutput;
-
+        if(!this.cgArrayElement.improvement || this.cgArrayElement.improvement.length == 0) {
+          //add empty improvement object
+          this.cgArrayElement.improvement = [];
+          let improvement = {
+            indexCostOfImprovement: 0,
+            id: 0,
+            dateOfImprovement:" ",
+            costOfImprovement:0,
+            financialYearOfImprovement:null,
+            srn:'0'
+          }
+          this.cgArrayElement.improvement.push(improvement);
+        }
         if (this.data.mode === 'ADD') {
           this.Copy_ITR_JSON.capitalGain.push(this.cgArrayElement);
         } else {
-          this.Copy_ITR_JSON.capitalGain.splice(this.data.assetSelected.id - 1, 1, this.cgArrayElement);
+          console.log('editing property details');
+          this.Copy_ITR_JSON.capitalGain.splice(this.currentCgIndex, 1, this.cgArrayElement);
         }
 
         this.saveCG();
       } else {
+        console.log('cgOutput is empty');
         this.calculateCapitalGain(formGroupName, 'SAVE', index);
         // this.utilsService.showSnackBar("Calculate gain failed please try again.");
       }
     } else {
+      this.utilsService.showErrorMsg('Please fill all mandatory details.');
       $('input.ng-invalid').first().focus();
     }
   }

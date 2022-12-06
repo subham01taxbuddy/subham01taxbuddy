@@ -30,8 +30,9 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
     public matDialog: MatDialog) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    this.getAssetDetails();
     this.cgCallInConstructor([]);
+    this.getAssetDetails();
+    
 
     // TODO Add this in edit or add section
     this.data = {
@@ -130,8 +131,8 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         deductions: 0,//TODO
         sellExpense: assetDetails.sellExpense,
         improvements: costOfImprovement,
-        address: this.ITR_JSON.capitalGain[i].buyersDetails[0].address,
-        pin: this.ITR_JSON.capitalGain[i].buyersDetails[0].pin,
+        address: this.ITR_JSON.capitalGain[i].buyersDetails[0]?.address,
+        pin: this.ITR_JSON.capitalGain[i].buyersDetails[0]?.pin,
         // isExemptionApplied: cgIncome.length > 0 ? cgIncome[0].isExemptionApplied : false,
         isShow: true,
         rowSpan: 1,
@@ -414,9 +415,9 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
   }
 
   cancelForm(event) {
-    this.cgCallInConstructor([]);
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    this.cgCallInConstructor([]);
     this.capitalGainGridOptions.api?.setRowData(this.cgCreateRowData());
     this.labView = event.view;
   }
