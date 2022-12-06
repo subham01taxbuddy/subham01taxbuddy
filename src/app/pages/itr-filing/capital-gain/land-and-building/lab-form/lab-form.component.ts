@@ -1,4 +1,4 @@
-import { AssetDetails } from './../../../../../modules/shared/interfaces/itr-input.interface';
+import { AssetDetails, Improvement } from './../../../../../modules/shared/interfaces/itr-input.interface';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -221,8 +221,13 @@ export class LabFormComponent implements OnInit {
   */
   addMoreImprovements(formGroupName) {
     const improve = <FormArray>formGroupName.get('improvement');
+    let srn = this.cgArrayElement.improvement.length;
     const obj = {
-      id: Math.floor(Math.random() * (999999 - 100000)) + 2894
+      id: Math.floor(Math.random() * (999999 - 100000)) + 2894,
+      srn: srn.toString(),
+      dateOfImprovement: null,
+      costOfImprovement: null,
+      indexCostOfImprovement: null,
     };
     if (improve.valid) {
       improve.push(this.createImprovementForm(obj));
@@ -231,9 +236,10 @@ export class LabFormComponent implements OnInit {
     }
   }
 
-  createImprovementForm(obj: { id?: number, dateOfImprovement?: String, costOfImprovement?: number, indexCostOfImprovement?: number } = {}): FormGroup {
+  createImprovementForm(obj: Improvement): FormGroup {
     return this.fb.group({
       id: [obj.id || null],
+      srn: [obj.srn || '0'],
       dateOfImprovement: [obj.dateOfImprovement || null, [Validators.required]],
       costOfImprovement: [obj.costOfImprovement || null, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
       indexCostOfImprovement: [{ value: obj.indexCostOfImprovement || null, disabled: true }],
@@ -465,7 +471,7 @@ export class LabFormComponent implements OnInit {
       let assetDetails = (this.immovableForm.controls['assetDetails'] as FormArray).controls[0] as FormGroup;
       let improvementDetails = (this.immovableForm.controls['improvement'] as FormArray).controls[index] as FormGroup;
       let req = {
-        "cost": assetDetails.controls['purchaseCost'].value,
+        "cost": improvementDetails.controls['costOfImprovement'].value,
         "purchaseOrImprovementFinancialYear": improvementDetails.controls['dateOfImprovement'].value,
         "assetType": "PLOT_OF_LAND",
         "buyDate": assetDetails.controls['purchaseDate'].value,
@@ -544,9 +550,14 @@ export class LabFormComponent implements OnInit {
 
   haveImprovements(formGroupName, index) {
     const improve = <FormArray>formGroupName.get('improvement');
+    let srn = this.cgArrayElement.improvement.length;
     if (this.isImprovements.value) {
       const obj = {
-        id: Math.floor(Math.random() * (999999 - 100000)) + 2894
+        id: Math.floor(Math.random() * (999999 - 100000)) + 2894,
+        srn: srn.toString(),
+        dateOfImprovement: null,
+        costOfImprovement: null,
+        indexCostOfImprovement: null,
       };
       improve.push(this.createImprovementForm(obj));
     } else {
