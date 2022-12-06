@@ -24,7 +24,7 @@ export class BondsDebentureComponent implements OnInit {
     sellDate: null,
     sellValue: null,
     gainType: null,
-    totalCapitalGain: null,
+    capitalGain: null,
     id: null,
     description: null,
     purchaseDate: null,
@@ -54,7 +54,10 @@ export class BondsDebentureComponent implements OnInit {
     purchaseDatePlantMachine: null,
     costOfPlantMachinary: null
   }
-  capitalGainType: any;
+
+  gain = [
+    { name: 'LTCG', value: 'LONG' }, { name: 'STCG', value: 'SHORT' }
+  ]
   constructor(
     public utilsService: UtilsService,
     public matDialog: MatDialog,
@@ -66,6 +69,7 @@ export class BondsDebentureComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
   }
 
   ngOnInit(): void {
@@ -76,40 +80,32 @@ export class BondsDebentureComponent implements OnInit {
     this.addNewZeroBondEntry();
 
     const bondsArray = this.bonds;
-
-    if (this.Copy_ITR_JSON.bonds) {
-      this.Copy_ITR_JSON.bonds.forEach((obj: any) => {
-        bondsArray.push(this.createBondsForm(obj));
-      });
-    }
-
-
-    const bondsDeductionArray = this.bondsDeduction;
-
-    if (this.Copy_ITR_JSON.bondsDeduction) {
-      this.Copy_ITR_JSON.bondsDeduction.forEach((obj: any) => {
-        bondsDeductionArray.push(this.createBondsDeductionForm(obj));
-      });
-
-    }
-
-    const zeroDeductionArray = this.zeroBonds;
-
-    if (this.Copy_ITR_JSON.bondsDeduction) {
-      this.Copy_ITR_JSON.bondsDeduction.forEach((obj: any) => {
-        zeroDeductionArray.push(this.createZeroBondsForm(obj));
+    const deductionArray = this.bondsDeduction;
+    const zeroBondsArray = this.zeroBonds;
+    const zeroDeductionArray = this.zeroBondsDeduction;
+    if (this.Copy_ITR_JSON.capitalGain) {
+      const data = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "BONDS");
+      data.forEach((obj: any) => {
+        obj.assetDetails.forEach((element: any) => {
+          bondsArray.push(this.createBondsForm(element));
+        });
+        obj.deduction.forEach((element: any) => {
+          deductionArray.push(this.createBondsDeductionForm(element));
+        })
       });
 
-    }
-
-    const zeroBondsDeductionArray = this.zeroBondsDeduction;
-
-    if (this.Copy_ITR_JSON.bondsDeduction) {
-      this.Copy_ITR_JSON.bondsDeduction.forEach((obj: any) => {
-        zeroBondsDeductionArray.push(this.createZeroBondsDeductionForm(obj));
+      const zeroData = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "ZERO_COUPON_BONDS");
+      zeroData.forEach((obj: any) => {
+        obj.assetDetails.forEach((element: any) => {
+          zeroBondsArray.push(this.createZeroBondsForm(element));
+        })
+        obj.deduction.forEach((element: any) => {
+          zeroDeductionArray.push(this.createZeroBondsDeductionForm(element));
+        })
       });
 
     }
+
   }
 
   initForm() {
@@ -182,7 +178,7 @@ export class BondsDebentureComponent implements OnInit {
       sellValue: [obj.sellValue || null],
       sellExpense: [obj.sellExpense || null, Validators.required],
       gainType: [obj.gainType || null, Validators.required],
-      totalCapitalGain: [obj.totalCapitalGain || null],
+      capitalGain: [obj.capitalGain || null],
       purchaseValuePerUnit: [obj.purchaseValuePerUnit || null],
       isUploaded: [obj.isUploaded || null],
       hasIndexation: [obj.hasIndexation || null],
@@ -227,7 +223,7 @@ export class BondsDebentureComponent implements OnInit {
       sellValue: [obj.sellValue || null],
       sellExpense: [obj.sellExpense || null, Validators.required],
       gainType: [obj.gainType || null, Validators.required],
-      totalCapitalGain: [obj.totalCapitalGain || null],
+      capitalGain: [obj.capitalGain || null],
       purchaseValuePerUnit: [obj.purchaseValuePerUnit || null],
       isUploaded: [obj.isUploaded || null],
       hasIndexation: [obj.hasIndexation || null],
@@ -286,7 +282,6 @@ export class BondsDebentureComponent implements OnInit {
       };
       this.itrMsService.postMethod(param, request).subscribe((result: any) => {
         if (result.success) {
-          this.capitalGainType = result.data.capitalGainType;
           assets.controls.gainType.setValue(result.data.capitalGainType);
         }
       },
@@ -316,7 +311,7 @@ export class BondsDebentureComponent implements OnInit {
       }
 
       this.itrMsService.postMethod(param, request).subscribe((res: any) => {
-        assets.controls.totalCapitalGain.setValue(res.assetDetails[0].capitalGain)
+        assets.controls.capitalGain.setValue(res.assetDetails[0].capitalGain)
       }, error => {
         this.toastMsgService.alert("error", "Something went wrong please try again.")
       })
@@ -330,13 +325,13 @@ export class BondsDebentureComponent implements OnInit {
       let expenses = 0;
       if (type === 'BONDS') {
         this.bonds.controls.forEach((element: FormGroup) => {
-          capitalGain += parseInt(element.controls['totalCapitalGain'].value);
+          capitalGain += parseInt(element.controls['capitalGain'].value);
           saleValue += parseInt(element.controls['valueInConsideration'].value);
           expenses += parseInt(element.controls['sellExpense'].value);
         });
       } else {
         this.zeroBonds.controls.forEach((element: FormGroup) => {
-          capitalGain += parseInt(element.controls['totalCapitalGain'].value);
+          capitalGain += parseInt(element.controls['capitalGain'].value);
           saleValue += parseInt(element.controls['valueInConsideration'].value);
           expenses += parseInt(element.controls['sellExpense'].value);
         });
@@ -426,7 +421,6 @@ export class BondsDebentureComponent implements OnInit {
   }
 
   onContinue() {
-
     const formData = this.bondDebtForm.getRawValue();
     const bondImprovement = [];
     formData.bonds.forEach(element => {

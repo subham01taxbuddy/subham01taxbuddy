@@ -466,7 +466,7 @@ export interface Bonds {
     sellValue: Number;
     sellExpense: Number;
     gainType: any;
-    totalCapitalGain: Number;
+    capitalGain: Number;
     purchaseCost: any;
     isinCode: any;
     nameOfTheUnits: any;

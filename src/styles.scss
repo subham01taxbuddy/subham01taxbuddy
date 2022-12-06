@@ -263,6 +263,14 @@ body {
   }
 }
 
+.hide {
+  .mat-select-trigger {
+    .mat-select-arrow-wrapper {
+      display: none;
+    }
+  }
+}
+
 .container {
   .mat-tab-body-content {
     overflow: hidden !important;
