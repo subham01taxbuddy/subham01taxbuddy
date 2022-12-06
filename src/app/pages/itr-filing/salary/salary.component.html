@@ -150,7 +150,7 @@
                                 <mat-label>Professional Tax</mat-label>
                                 <input type="number" trim class="input-field" matInput
                                     placeholder="Professional Tax u/s 16(iii)" name="professionalTax"
-                                    formControlName="professionalTax" maxlength="10">
+                                    formControlName="professionalTax" (keyup)="validatePT()">
                             </mat-form-field>
                         </div>
                     </div>

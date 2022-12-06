@@ -23,7 +23,8 @@ export class SalaryComponent implements OnInit {
   localEmployer: any;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  maxPT = 2500;
+  readonly limitPT = 2500;
+  maxPT = this.limitPT;
   maxEA = 5000;
   salaryView: string = "FORM";
   employerMode = "ADD";
@@ -156,8 +157,8 @@ export class SalaryComponent implements OnInit {
     if ((this.ITR_JSON.employerCategory !== 'GOVERNMENT' && this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT') || this.ITR_JSON.regime === 'NEW') {
       this.employerDetailsFormGroup.controls['entertainmentAllow'].disable();
     }
-    this.employerDetailsFormGroup.controls['professionalTax'].setValidators(Validators.compose([Validators.max(this.maxPT), Validators.pattern(AppConstants.numericRegex)]));
-    this.employerDetailsFormGroup.controls['professionalTax'].updateValueAndValidity();
+    // this.employerDetailsFormGroup.controls['professionalTax'].setValidators(Validators.compose([Validators.max(this.limitPT), Validators.pattern(AppConstants.numericRegex)]));
+    // this.employerDetailsFormGroup.controls['professionalTax'].updateValueAndValidity();
     this.employerDetailsFormGroup.controls['entertainmentAllow'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(this.maxEA)]));
     this.employerDetailsFormGroup.controls['entertainmentAllow'].updateValueAndValidity();
   }
@@ -169,7 +170,7 @@ export class SalaryComponent implements OnInit {
       // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
       employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
       entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
-      professionalTax: [null, Validators.compose([Validators.max(this.maxPT), Validators.pattern(AppConstants.numericRegex)])],
+      professionalTax: [null, {validators: Validators.compose([Validators.max(this.limitPT), Validators.pattern(AppConstants.numericRegex)]), updateOn: 'change'}],
     });
   }
 
@@ -434,13 +435,16 @@ export class SalaryComponent implements OnInit {
     if ((this.ITR_JSON.employerCategory !== 'GOVERNMENT' && this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT') || this.ITR_JSON.regime === 'NEW') {
       this.employerDetailsFormGroup.controls['entertainmentAllow'].disable();
     }
-    this.employerDetailsFormGroup.controls['professionalTax'].setValidators(Validators.compose([Validators.max(this.maxPT), Validators.pattern(AppConstants.numericRegex)]));
+    this.employerDetailsFormGroup.controls['professionalTax'].setValidators(Validators.compose([Validators.max(this.limitPT), Validators.pattern(AppConstants.numericRegex)]));
     this.employerDetailsFormGroup.controls['professionalTax'].updateValueAndValidity();
     this.employerDetailsFormGroup.controls['entertainmentAllow'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(this.maxEA)]));
     this.employerDetailsFormGroup.controls['entertainmentAllow'].updateValueAndValidity();
     /* Using End */
   }
 
+  validatePT() {
+    this.employerDetailsFormGroup.controls['professionalTax'].markAllAsTouched();
+  }
 
   saveEmployerDetails() {
 
@@ -768,8 +772,8 @@ export class SalaryComponent implements OnInit {
     });
     this.maxPT = this.maxPT + Number(this.employerDetailsFormGroup.controls['professionalTax'].value);
     this.maxEA = this.maxEA + Number(this.employerDetailsFormGroup.controls['entertainmentAllow'].value);
-    this.employerDetailsFormGroup.controls['professionalTax'].setValidators(Validators.compose([Validators.max(this.maxPT), Validators.pattern(AppConstants.numericRegex)]));
-    this.employerDetailsFormGroup.controls['professionalTax'].updateValueAndValidity();
+    // this.employerDetailsFormGroup.controls['professionalTax'].setValidators(Validators.compose([Validators.max(this.limitPT), Validators.pattern(AppConstants.numericRegex)]));
+    // this.employerDetailsFormGroup.controls['professionalTax'].updateValueAndValidity();
     this.employerDetailsFormGroup.controls['entertainmentAllow'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(this.maxEA)]));
     this.employerDetailsFormGroup.controls['entertainmentAllow'].updateValueAndValidity();
 
