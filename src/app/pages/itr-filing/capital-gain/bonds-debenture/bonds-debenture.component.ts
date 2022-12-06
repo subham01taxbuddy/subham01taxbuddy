@@ -43,6 +43,7 @@ export class BondsDebentureComponent implements OnInit {
     fmvAsOn31Jan2018: null
   }
   bondsDeductionData: Deduction = {
+    srn: null,
     underSection: null,
     purchaseDate: null,
     costOfNewAssets: null,
@@ -53,6 +54,7 @@ export class BondsDebentureComponent implements OnInit {
     purchaseDatePlantMachine: null,
     costOfPlantMachinary: null
   }
+  capitalGainType: any;
   constructor(
     public utilsService: UtilsService,
     public matDialog: MatDialog,
@@ -68,10 +70,10 @@ export class BondsDebentureComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.addNewBondEntry();
     this.addNewBondDeductionEntry();
-    this.addNewZeroBondEntry();
     this.addNewZeroBondDeductionEntry();
+    this.addNewBondEntry();
+    this.addNewZeroBondEntry();
 
     const bondsArray = this.bonds;
 
@@ -140,6 +142,7 @@ export class BondsDebentureComponent implements OnInit {
   addNewBondEntry() {
     const bondFormArray = this.bonds;
     bondFormArray.push(this.createBondsForm(this.bondsData));
+    this.getDeductionCapitalGain(this.bondsDeduction.controls[0], 'BONDS')
   }
 
   addNewBondDeductionEntry() {
@@ -150,6 +153,7 @@ export class BondsDebentureComponent implements OnInit {
   addNewZeroBondEntry() {
     const bondFormArray = this.zeroBonds;
     bondFormArray.push(this.createZeroBondsForm(this.bondsData));
+    this.getDeductionCapitalGain(this.zeroBondsDeduction.controls[0], 'ZERO_COUPON_BONDS')
   }
 
   addNewZeroBondDeductionEntry() {
@@ -165,7 +169,7 @@ export class BondsDebentureComponent implements OnInit {
       id: [obj.id || null],
       description: [obj.description || null],
       stampDutyValue: [obj.stampDutyValue || null],
-      valueInConsideration: [obj.valueInConsideration || null],
+      valueInConsideration: [obj.valueInConsideration || null, Validators.required],
       purchaseCost: [obj.purchaseCost || null],
       isinCode: [obj.isinCode || null],
       nameOfTheUnits: [obj.nameOfTheUnits || null],
@@ -175,14 +179,14 @@ export class BondsDebentureComponent implements OnInit {
       indexCostOfAcquisition: [obj.indexCostOfAcquisition || null, Validators.required],
       costOfImprovement: [obj.costOfImprovement || null, Validators.required],
       sellDate: [obj.sellDate || null, Validators.required],
-      sellValue: [obj.sellValue || null, Validators.required],
+      sellValue: [obj.sellValue || null],
       sellExpense: [obj.sellExpense || null, Validators.required],
       gainType: [obj.gainType || null, Validators.required],
-      totalCapitalGain: [obj.totalCapitalGain || null, Validators.required],
+      totalCapitalGain: [obj.totalCapitalGain || null],
       purchaseValuePerUnit: [obj.purchaseValuePerUnit || null],
       isUploaded: [obj.isUploaded || null],
       hasIndexation: [obj.hasIndexation || null],
-      algorithm: [obj.algorithm || null],
+      algorithm: [obj.algorithm || 'null'],
       fmvAsOn31Jan2018: [obj.fmvAsOn31Jan2018 || null],
 
     });
@@ -190,7 +194,8 @@ export class BondsDebentureComponent implements OnInit {
 
   createBondsDeductionForm(obj?: Deduction): FormGroup {
     return this.formBuilder.group({
-      underSection: [obj.underSection || null],
+      srn: [obj.srn || null],
+      underSection: [obj.underSection || 'Deduction 54F'],
       orgAssestTransferDate: [obj.orgAssestTransferDate || null],
       panOfEligibleCompany: [obj.panOfEligibleCompany || null],
       purchaseDatePlantMachine: [obj.purchaseDatePlantMachine || null],
@@ -209,7 +214,7 @@ export class BondsDebentureComponent implements OnInit {
       id: [obj.id || null],
       description: [obj.description || null],
       stampDutyValue: [obj.stampDutyValue || null],
-      valueInConsideration: [obj.valueInConsideration || null],
+      valueInConsideration: [obj.valueInConsideration || null, Validators.required],
       purchaseCost: [obj.purchaseCost || null],
       isinCode: [obj.isinCode || null],
       nameOfTheUnits: [obj.nameOfTheUnits || null],
@@ -219,10 +224,10 @@ export class BondsDebentureComponent implements OnInit {
       indexCostOfAcquisition: [obj.indexCostOfAcquisition || null, Validators.required],
       costOfImprovement: [obj.costOfImprovement || null, Validators.required],
       sellDate: [obj.sellDate || null, Validators.required],
-      sellValue: [obj.sellValue || null, Validators.required],
+      sellValue: [obj.sellValue || null],
       sellExpense: [obj.sellExpense || null, Validators.required],
       gainType: [obj.gainType || null, Validators.required],
-      totalCapitalGain: [obj.totalCapitalGain || null, Validators.required],
+      totalCapitalGain: [obj.totalCapitalGain || null],
       purchaseValuePerUnit: [obj.purchaseValuePerUnit || null],
       isUploaded: [obj.isUploaded || null],
       hasIndexation: [obj.hasIndexation || null],
@@ -234,7 +239,8 @@ export class BondsDebentureComponent implements OnInit {
 
   createZeroBondsDeductionForm(obj?: Deduction): FormGroup {
     return this.formBuilder.group({
-      underSection: [obj.underSection || null],
+      srn: [obj.srn || null],
+      underSection: [obj.underSection || 'Deduction 54F'],
       orgAssestTransferDate: [obj.orgAssestTransferDate || null],
       panOfEligibleCompany: [obj.panOfEligibleCompany || null],
       purchaseDatePlantMachine: [obj.purchaseDatePlantMachine || null],
@@ -249,6 +255,7 @@ export class BondsDebentureComponent implements OnInit {
   removeBonds(index) {
     const immovable = this.bonds;
     immovable.removeAt(index);
+    this.getDeductionCapitalGain(this.bondsDeduction.controls[0], 'BONDS')
   }
 
   removeBondsDeduction(index) {
@@ -259,6 +266,7 @@ export class BondsDebentureComponent implements OnInit {
   removeZeroBonds(index) {
     const immovable = this.zeroBonds;
     immovable.removeAt(index);
+    this.getDeductionCapitalGain(this.zeroBondsDeduction.controls[0], 'ZERO_COUPON_BONDS')
   }
 
   removeZeroBondsDeduction(index) {
@@ -278,7 +286,8 @@ export class BondsDebentureComponent implements OnInit {
       };
       this.itrMsService.postMethod(param, request).subscribe((result: any) => {
         if (result.success) {
-          assets.controls.gainType.setValue(result.data.capitalGainType === "SHORT" ? "STCG" : "LTCG");
+          this.capitalGainType = result.data.capitalGainType;
+          assets.controls.gainType.setValue(result.data.capitalGainType);
         }
       },
         error => {
@@ -287,29 +296,78 @@ export class BondsDebentureComponent implements OnInit {
     }
   }
 
-  getCapitalGain(assets, type) {
-    let param = '/calculate/capital-gain/deduction';
-    let request = {
-      "capitalGain": '',
-      "capitalGainDeductions": [
-        {
-          "deductionSection": "SECTION_54F",
-          "costOfNewAsset": assets.controls.costOfNewAssets.value,
-          "cgasDepositedAmount": assets.controls.investmentInCGAccount.value,
-          "saleValue": '',
-          "expenses": ''
-        },
-      ]
+  getSingleCGGain(assets, type) {
+    if (assets.valid) {
+      const param = '/singleCgCalculate';
+      let request = {
+        assessmentYear: "2022-2023",
+        assesseeType: "INDIVIDUAL",
+        residentialStatus: "RESIDENT",
+        assetType: type,
+        assetDetails: [assets.getRawValue()],
 
-    };
-    this.itrMsService.postMethod(param, request).subscribe((result: any) => {
-      if (result.success) {
-        debugger
+        "improvement": [
+          {
+            "srn": assets.controls.srn.value,
+            "dateOfImprovement": " ",
+            "costOfImprovement": assets.controls.costOfImprovement.value,
+          }
+        ],
       }
-    },
-      error => {
+
+      this.itrMsService.postMethod(param, request).subscribe((res: any) => {
+        assets.controls.totalCapitalGain.setValue(res.assetDetails[0].capitalGain)
+      }, error => {
         this.toastMsgService.alert("error", "Something went wrong please try again.")
       })
+    }
+  }
+
+  getDeductionCapitalGain(assets, type) {
+    if (assets.valid) {
+      let capitalGain = 0;
+      let saleValue = 0;
+      let expenses = 0;
+      if (type === 'BONDS') {
+        this.bonds.controls.forEach((element: FormGroup) => {
+          capitalGain += parseInt(element.controls['totalCapitalGain'].value);
+          saleValue += parseInt(element.controls['valueInConsideration'].value);
+          expenses += parseInt(element.controls['sellExpense'].value);
+        });
+      } else {
+        this.zeroBonds.controls.forEach((element: FormGroup) => {
+          capitalGain += parseInt(element.controls['totalCapitalGain'].value);
+          saleValue += parseInt(element.controls['valueInConsideration'].value);
+          expenses += parseInt(element.controls['sellExpense'].value);
+        });
+      }
+      let param = '/calculate/capital-gain/deduction';
+      let request = {
+        "capitalGain": capitalGain,
+        "capitalGainDeductions": [
+          {
+            "deductionSection": "SECTION_54F",
+            "costOfNewAsset": parseInt(assets.controls.costOfNewAssets.value),
+            "cgasDepositedAmount": parseInt(assets.controls.investmentInCGAccount.value),
+            "saleValue": saleValue,
+            "expenses": expenses
+          },
+        ]
+
+      };
+      this.itrMsService.postMethod(param, request).subscribe((result: any) => {
+        if (result.success) {
+          if (result.data.length > 0) {
+            assets.controls.totalDeductionClaimed.setValue(result.data[0].deductionAmount)
+          } else {
+            assets.controls.totalDeductionClaimed.setValue(0)
+          }
+        }
+      },
+        error => {
+          this.toastMsgService.alert("error", "Something went wrong please try again.")
+        })
+    }
   }
 
   addDeductionValidators() {
@@ -368,11 +426,12 @@ export class BondsDebentureComponent implements OnInit {
   }
 
   onContinue() {
+
     const formData = this.bondDebtForm.getRawValue();
     const bondImprovement = [];
     formData.bonds.forEach(element => {
       bondImprovement.push({
-        "srn": null,
+        "srn": element.srn,
         "dateOfImprovement": null,
         "costOfImprovement": element.costOfImprovement
       })
@@ -381,7 +440,7 @@ export class BondsDebentureComponent implements OnInit {
     const zeroBondImprovement = [];
     formData.zeroBonds.forEach(element => {
       zeroBondImprovement.push({
-        "srn": null,
+        "srn": element.srn,
         "dateOfImprovement": null,
         "costOfImprovement": element.costOfImprovement
       })
@@ -409,7 +468,25 @@ export class BondsDebentureComponent implements OnInit {
       "buyersDetails": [],
       "assetDetails": formData.zeroBonds
     }
-    console.log(zeroBondData)
+    console.log(zeroBondData);
+    this.Copy_ITR_JSON.capitalGain.push(bondData)
+    this.Copy_ITR_JSON.capitalGain.push(zeroBondData)
+    console.log(this.Copy_ITR_JSON);
+
+    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
+    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+      this.ITR_JSON = result;
+      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+      this.utilsService.showSnackBar('Bonds and zero coupon bonds data added successfully');
+      console.log('Bonds=', result);
+      this.utilsService.smoothScrollToTop();
+    }, error => {
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      this.utilsService.showSnackBar('Failed to add bonds and zero coupon bonds data, please try again.');
+      this.utilsService.smoothScrollToTop();
+    });
   }
+
+
 
 }

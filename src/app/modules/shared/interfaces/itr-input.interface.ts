@@ -1,6 +1,8 @@
 import { AnyTxtRecord } from "dns";
 
 export interface ITR_JSON {
+    zeroBonds?: any;
+    bonds?: any;
     ackStatus: string;
     acknowledgementReceived: boolean;
     userId: number;
@@ -72,7 +74,6 @@ export interface ITR_JSON {
     conditionsResStatus?: any,
     movableAsset?: MovableAsset[],
     immovableAsset?: Immovable[],
-    bonds?: Bonds[],
     bondsDeduction?: Deduction[],
     carryForwordLosses?: CarryForwardLosses[],
 }
@@ -479,6 +480,7 @@ export interface Bonds {
 }
 
 export interface Deduction {
+    srn: any;
     underSection: any;
     orgAssestTransferDate: any;
     panOfEligibleCompany: any;

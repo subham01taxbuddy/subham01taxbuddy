@@ -40,36 +40,44 @@
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" [matDatepicker]="picker1" name="assets[i]"
-                                    formControlName="purchaseDate" (change)="getCGType(assets, 'BONDS')" maxlength="14">
+                                    formControlName="purchaseDate"
+                                    (change)="getCGType(assets, 'BONDS');getSingleCGGain(assets, 'BONDS')"
+                                    maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" name="assets[i]"
-                                    formControlName="indexCostOfAcquisition" maxlength="14">
+                                    formControlName="indexCostOfAcquisition" (change)="getSingleCGGain(assets, 'BONDS')"
+                                    maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" name="assets[i]" formControlName="costOfImprovement"
+                                <input matInput class="input-field" name="assets[i]"
+                                    (change)="getSingleCGGain(assets, 'BONDS')" formControlName="costOfImprovement"
                                     maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" [matDatepicker]="picker2" name="assets[i]"
-                                    formControlName="sellDate" (change)="getCGType(assets,'BONDS')" maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" name="assets[i]" formControlName="sellValue"
+                                    formControlName="sellDate"
+                                    (change)="getCGType(assets,'BONDS'); getSingleCGGain(assets,'BONDS')"
                                     maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" name="assets[i]" formControlName="sellExpense"
+                                <input matInput class="input-field" name="assets[i]"
+                                    (change)="getSingleCGGain(assets, 'BONDS')" formControlName="valueInConsideration"
+                                    maxlength="14">
+                            </mat-form-field>
+                        </td>
+                        <td class="kids-name-td table-first-td">
+                            <mat-form-field class="input-field-width">
+                                <input matInput class="input-field" name="assets[i]"
+                                    (change)="getSingleCGGain(assets, 'BONDS')" formControlName="sellExpense"
                                     maxlength="14">
                             </mat-form-field>
                         </td>
@@ -77,6 +85,12 @@
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" name="assets[i]" formControlName="gainType"
                                     [disabled] maxlength="14">
+                                <!-- <mat-select placeholder="" name="assets[i]" formControlName="gainType">
+                                    <mat-option> Clear Selection</mat-option>
+                                    <mat-option *ngFor="let agent of agentList" [value]="agent.agentId">
+                                        {{agent.name}} <span style="font-weight: bold;">{{agent.serviceType}}</span>
+                                    </mat-option>
+                                </mat-select> -->
                             </mat-form-field>
                         </td>
                         <td class="kids-age-td">
@@ -84,7 +98,7 @@
                                 <input matInput currencyMask type="number" [pattern]="amountRegex"
                                     formControlName="totalCapitalGain" name="assets[i]" class="input-field"
                                     maxlength="14"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                    (change)="getDeductionCapitalGain(bondsDeduction.controls[0],'BONDS')">
 
                             </mat-form-field>
                         </td>
@@ -141,25 +155,27 @@
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" name="assets[i]" formControlName="underSection"
-                                    required maxlength="14"  (change)="getCapitalGain(assets,'BONDS')">
+                                    required maxlength="14" (change)="getDeductionCapitalGain(assets,'BONDS')">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" [matDatepicker]="picker1" name="assets[i]"
-                                    formControlName="purchaseDate" required (change)="getCapitalGain(assets,'BONDS')"
-                                    maxlength="14">
+                                    formControlName="purchaseDate" required
+                                    (change)="getDeductionCapitalGain(assets,'BONDS')" maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" name="assets[i]"  (change)="getCapitalGain(assets,'BONDS')" formControlName="costOfNewAssets"
+                                <input matInput class="input-field" name="assets[i]"
+                                    (change)="getDeductionCapitalGain(assets,'BONDS')" formControlName="costOfNewAssets"
                                     required maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" name="assets[i]"  (change)="getCapitalGain(assets,'BONDS')"
+                                <input matInput class="input-field" name="assets[i]"
+                                    (change)="getDeductionCapitalGain(assets,'BONDS')"
                                     formControlName="investmentInCGAccount" required maxlength="14">
                             </mat-form-field>
                         </td>
@@ -221,53 +237,59 @@
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" [matDatepicker]="picker1" name="assets[i]"
-                                    formControlName="purchaseDate" (change)="getCGType(assets,'ZERO_COUPON_BONDS')"
+                                    formControlName="purchaseDate"
+                                    (change)="getCGType(assets,'ZERO_COUPON_BONDS'); getSingleCGGain(assets, 'ZERO_COUPON_BONDS')"
                                     maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" name="assets[i]"
-                                    formControlName="indexCostOfAcquisition" maxlength="14">
+                                    formControlName="indexCostOfAcquisition"
+                                    (change)="getSingleCGGain(assets, 'ZERO_COUPON_BONDS')" maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" name="assets[i]" formControlName="costOfImprovement"
-                                    maxlength="14">
+                                    (change)="getSingleCGGain(assets, 'ZERO_COUPON_BONDS')" maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" [matDatepicker]="picker2" name="assets[i]"
-                                    formControlName="sellDate" (change)="getCGType(assets,'ZERO_COUPON_BONDS')"
+                                    formControlName="sellDate"
+                                    (change)="getCGType(assets,'ZERO_COUPON_BONDS');getSingleCGGain(assets, 'ZERO_COUPON_BONDS')"
                                     maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" name="assets[i]" formControlName="sellValue"
-                                    maxlength="14">
+                                <input matInput class="input-field" name="assets[i]"
+                                    (change)="getSingleCGGain(assets, 'ZERO_COUPON_BONDS')"
+                                    formControlName="valueInConsideration" maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" name="assets[i]" formControlName="sellExpense"
-                                    maxlength="14">
+                                <input matInput class="input-field" name="assets[i]"
+                                    (change)="getSingleCGGain(assets, 'ZERO_COUPON_BONDS')"
+                                    formControlName="sellExpense" maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" name="assets[i]" formControlName="gainType"
-                                    [disabled] maxlength="14">
+                                <input matInput class="input-field"
+                                    (change)="getSingleCGGain(assets, 'ZERO_COUPON_BONDS')" name="assets[i]"
+                                    formControlName="gainType" [disabled] maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-age-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput currencyMask type="number" [pattern]="amountRegex"
-                                    formControlName="totalCapitalGain" name="assets[i]" class="input-field"
+                                    formControlName="totalCapitalGain" name="assets[i]" class="input-field" [disabled]
                                     maxlength="14"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                    (change)="getDeductionCapitalGain(zeroBondsDeduction.controls[0],'ZERO_COUPON_BONDS')">
 
                             </mat-form-field>
                         </td>
@@ -324,27 +346,30 @@
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" name="assets[i]" formControlName="underSection"
-                                (change)="getCapitalGain(assets,'ZERO_COUPON_BONDS')" required maxlength="14">
+                                    (change)="getDeductionCapitalGain(assets,'ZERO_COUPON_BONDS')" required
+                                    maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" [matDatepicker]="picker1" name="assets[i]"
                                     formControlName="purchaseDate" required
-                                    (change)="getCapitalGain(assets,'ZERO_COUPON_BONDS')" maxlength="14">
+                                    (change)="getDeductionCapitalGain(assets,'ZERO_COUPON_BONDS')" maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" name="assets[i]" formControlName="costOfNewAssets"
-                                (change)="getCapitalGain(assets,'ZERO_COUPON_BONDS')" required maxlength="14">
+                                    (change)="getDeductionCapitalGain(assets,'ZERO_COUPON_BONDS')" required
+                                    maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
                             <mat-form-field class="input-field-width">
                                 <input matInput class="input-field" name="assets[i]"
                                     formControlName="investmentInCGAccount"
-                                    (change)="getCapitalGain(assets,'ZERO_COUPON_BONDS')" required maxlength="14">
+                                    (change)="getDeductionCapitalGain(assets,'ZERO_COUPON_BONDS')" required
+                                    maxlength="14">
                             </mat-form-field>
                         </td>
                         <td class="kids-name-td table-first-td">
