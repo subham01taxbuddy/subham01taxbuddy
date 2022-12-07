@@ -6,6 +6,10 @@
   <mat-tab label="Shares and Equity">
     <app-equity-mf></app-equity-mf>
   </mat-tab>
+  <mat-tab label="Bonds or Debentures (other than capital indexed bonds), ZCB's">
+    <app-bonds-debenture (saveAndNext)="saveAndNext($event)"></app-bonds-debenture>
+  </mat-tab>
+
   <mat-tab label="Other">
     <!-- <app-other-assets></app-other-assets> -->
   </mat-tab>
