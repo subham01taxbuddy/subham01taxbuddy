@@ -1,0 +1,56 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
+<div style="padding-top: 20px;">
+  <div class="card__title" style="padding:10px; font-size: 20px;">Other Assets
+    <span style="float: right;">
+      <button class="tbd-btn-small" (click)="addMore('ADD','GOLD')">Add More&nbsp;&nbsp; <i class="fa fa-plus"
+          aria-hidden="true"></i>
+      </button>
+    </span>
+  </div>
+
+  <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
+    <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham" [gridOptions]="otherAssetsGridOptions"
+      (rowClicked)="onOtherAssetsRowClicked($event)">
+    </ag-grid-angular>
+  </div>
+</div>
+
+<div style="padding-top: 20px;">
+  <div class="card__title" style="padding:10px; font-size: 20px;">Add Details of cost of Improvement?
+    <span style="float: right;">
+      <button class="tbd-btn-small" (click)="addImprovement('ADD')">Add More&nbsp;&nbsp; <i class="fa fa-plus"
+          aria-hidden="true"></i>
+      </button>
+    </span>
+  </div>
+
+  <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
+    <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham" [gridOptions]="improvementGridOptions"
+      (rowClicked)="onImprovementRowClicked($event)">
+    </ag-grid-angular>
+  </div>
+</div>
+
+<div style="padding-top: 20px;">
+  <div class="card__title" style="padding:10px; font-size: 20px;">Add deduction under section 54F <i
+      class="fa fa-info-circle" aria-hidden="true"
+      title="Applicable for any capital assets other than residential HP"></i>
+    <span style="float: right;">
+      <button class="tbd-btn-small" (click)="addDeduction('ADD')">Add More&nbsp;&nbsp; <i class="fa fa-plus"
+          aria-hidden="true"></i>
+      </button>
+    </span>
+  </div>
+
+  <div style="height: 100%; padding-top: 10px; box-sizing: border-box;">
+    <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham" [gridOptions]="deductionGridOptions"
+      (rowClicked)="onDeductionRowClicked($event)">
+    </ag-grid-angular>
+  </div>
+</div>
+
+<div class="pull-right">
+  <button class="tbd-btn" (click)="saveCg()">Save
+  </button>
+</div>
