@@ -1,3 +1,4 @@
+import { result } from 'lodash';
 import { ItrMsService } from './../../../../../services/itr-ms.service';
 import { Component, OnInit, HostListener, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -90,7 +91,7 @@ export class AddInvestmentDialogComponent implements OnInit {
       costOfNewAssets: ['', [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
       purchaseDate: ['', Validators.required],
       investmentInCGAccount: ['', Validators.pattern(AppConstants.amountWithoutDecimal)],
-      totalDeductionClaimed: ['', [/* Validators.required,  */Validators.pattern(AppConstants.amountWithoutDecimal)]],
+      totalDeductionClaimed: [{value:'', disabled:true}, [/* Validators.required,  */Validators.pattern(AppConstants.amountWithoutDecimal)]],
       // costOfPlantMachinary: ['', Validators.pattern(AppConstants.amountWithoutDecimal)],
     });
   }
@@ -150,7 +151,7 @@ export class AddInvestmentDialogComponent implements OnInit {
     }
     const param = '/calculate/capital-gain/deduction';
     let request = {
-      capitalGain: 0,
+      capitalGain: this.data.capitalGain,
       capitalGainDeductions: [{
       deductionSection: `SECTION_${this.investmentForm.controls['underSection'].value}`,
       costOfNewAsset: this.investmentForm.controls['costOfNewAssets'].value,
@@ -158,7 +159,12 @@ export class AddInvestmentDialogComponent implements OnInit {
     }]};
     this.itrMsService.postMethod(param, request).subscribe((result: any) => {
       console.log('Deductions result=', result);
-      // this.investmentForm.controls['totalDeductionClaimed'].setValue();
+      if(result?.success) {
+        let finalResult = result.data.filter(item => item.deductionSection === `SECTION_${this.investmentForm.controls['underSection'].value}`)[0];
+        this.investmentForm.controls['totalDeductionClaimed'].setValue(finalResult?.deductionAmount);
+      } else {
+        this.investmentForm.controls['totalDeductionClaimed'].setValue(0);
+      }
     }, error => { 
       this.utilsService.showSnackBar('Failed to get deductions.');
     });
@@ -240,10 +246,14 @@ export class AddInvestmentDialogComponent implements OnInit {
     if (this.investmentForm.valid) {
       console.log('Investment form:', this.investmentForm.value)
       if (this.data.mode === 'ADD') {
-        this.dialogRef.close(this.investmentForm.value)
+        this.dialogRef.close(this.investmentForm.getRawValue());
         // this.currentCapitalGainObj.investments.push(this.investmentForm.getRawValue());
       } else if (this.data.mode === 'EDIT') {
-        this.dialogRef.close(this.investmentForm.value)
+        let result = {
+          deduction: this.investmentForm.getRawValue(),
+          'rowIndex': this.data.rowIndex
+        };
+        this.dialogRef.close(result);
         // this.currentCapitalGainObj.investments.splice(this.investIndex, 1, this.investmentForm.getRawValue());
       }
       // this.serviceCall();

@@ -42,6 +42,9 @@ export class EquityMfComponent implements OnInit {
       this.listedCg = listedData[0];
     } else {
       this.listedCg = {
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        assesseeType: this.ITR_JSON.assesseeType,
+        residentialStatus: this.ITR_JSON.residentialStatus,
         assetType: 'EQUITY_SHARES_LISTED',
         assetDetails: [],
         improvement: [],
@@ -55,6 +58,9 @@ export class EquityMfComponent implements OnInit {
       this.unlistedCg = unlistedData[0];
     } else {
       this.unlistedCg = {
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        assesseeType: this.ITR_JSON.assesseeType,
+        residentialStatus: this.ITR_JSON.residentialStatus,
         assetType: 'EQUITY_SHARES_UNLISTED',
         assetDetails: [],
         improvement: [],

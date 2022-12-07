@@ -89,6 +89,9 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       
       let assetDetails = this.ITR_JSON.capitalGain[i].assetDetails[0];
       let cgObject:NewCapitalGain = {
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        assesseeType: this.ITR_JSON.assesseeType,
+        residentialStatus: this.ITR_JSON.residentialStatus,
         assetType: this.ITR_JSON.capitalGain[i].assetType,
         assetDetails: this.ITR_JSON.capitalGain[i].assetDetails,
         buyersDetails: this.ITR_JSON.capitalGain[i].buyersDetails,

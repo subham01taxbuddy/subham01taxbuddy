@@ -252,6 +252,9 @@ export interface NewCapitalGain {
     investments?: Investments[];
     // buyersDetails: BuyersDetails[];
 
+    assessmentYear: string;
+    assesseeType: string;
+    residentialStatus: string;
     assetType: string;
     assetDetails?: AssetDetails[];
     improvement: Improvement[];
@@ -298,6 +301,7 @@ export interface Improvement {
     indexCostOfImprovement: number;
 }
 export interface Investments {
+    srn: string;
     underSection: string;
     orgAssestTransferDate: string;
     costOfNewAssets: number;

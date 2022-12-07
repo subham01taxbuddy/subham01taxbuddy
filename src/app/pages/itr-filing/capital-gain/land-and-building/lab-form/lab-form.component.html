@@ -134,7 +134,7 @@
           <!-- <mat-icon matPrefix> &#8377;</mat-icon> --><!-- (blur)="calculateCapitalGain(this.immovableForm,'', i)" -->
           <input matInput currencyMask type="number" [pattern]="amountRegex" formControlName="sellExpense"
             placeholder="Transfer Expenses" name="asset[i]" class="input-field" maxlength="14"
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" (blur)="calculateCapitalGain(this.immovableForm,'', i)">
           <mat-error *ngIf="immovableForm.controls['assetDetails'].controls[i].controls['sellExpense'].hasError('pattern')">Enter
             valid amount upto 2 decimal in case of shares.</mat-error>
         </mat-form-field>
