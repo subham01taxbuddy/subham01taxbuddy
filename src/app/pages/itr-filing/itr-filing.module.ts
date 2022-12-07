@@ -55,9 +55,9 @@ import { AddInvestmentDialogComponent } from './capital-gain/land-and-building/a
 import { EquityMfComponent } from './capital-gain/equity-mf/equity-mf.component';
 import { ListedUnlistedDialogComponent } from './capital-gain/equity-mf/listed-unlisted-dialog/listed-unlisted-dialog.component';
 import { InvestmentDialogComponent } from './capital-gain/investment-dialog/investment-dialog.component';
-// import { OtherAssetsDialogComponent } from './capital-gain/other-assets/other-assets-dialog/other-assets-dialog.component';
+import { OtherAssetsDialogComponent } from './capital-gain/other-assets/other-assets-dialog/other-assets-dialog.component';
 import { OtherAssetsComponent } from './capital-gain/other-assets/other-assets.component';
-// import { OtherImprovementDialogComponent } from './capital-gain/other-assets/other-improvement-dialog/other-improvement-dialog.component';
+import { OtherImprovementDialogComponent } from './capital-gain/other-assets/other-improvement-dialog/other-improvement-dialog.component';
 // import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
 
 @NgModule({
@@ -123,8 +123,8 @@ import { OtherAssetsComponent } from './capital-gain/other-assets/other-assets.c
         ListedUnlistedDialogComponent,
         InvestmentDialogComponent,
         OtherAssetsComponent,
-        // OtherAssetsDialogComponent,
-        // OtherImprovementDialogComponent
+        OtherAssetsDialogComponent,
+        OtherImprovementDialogComponent
     ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
         /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,
@@ -136,8 +136,8 @@ import { OtherAssetsComponent } from './capital-gain/other-assets/other-assets.c
         AddInvestmentDialogComponent,
         ListedUnlistedDialogComponent,
         InvestmentDialogComponent,
-        // OtherAssetsDialogComponent,
-        /* OtherImprovementDialogComponent */]
+        OtherAssetsDialogComponent,
+        OtherImprovementDialogComponent]
 
 })
 export class ItrFilingModule { }
