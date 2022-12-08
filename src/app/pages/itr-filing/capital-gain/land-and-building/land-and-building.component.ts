@@ -86,84 +86,43 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
       }
 
       //By Ashwini: need to be updated for new structure
-      
-      let assetDetails = this.ITR_JSON.capitalGain[i].assetDetails[0];
-      let cgObject:NewCapitalGain = {
-        assessmentYear: this.ITR_JSON.assessmentYear,
-        assesseeType: this.ITR_JSON.assesseeType,
-        residentialStatus: this.ITR_JSON.residentialStatus,
-        assetType: this.ITR_JSON.capitalGain[i].assetType,
-        assetDetails: this.ITR_JSON.capitalGain[i].assetDetails,
-        buyersDetails: this.ITR_JSON.capitalGain[i].buyersDetails,
-        improvement: this.ITR_JSON.capitalGain[i].improvement,
-        deduction: this.ITR_JSON.capitalGain[i].deduction
+      if(this.ITR_JSON.capitalGain[i]?.assetDetails){
+        let assetDetails = this.ITR_JSON.capitalGain[i]?.assetDetails[0];
+        let cgObject:NewCapitalGain = {
+          assessmentYear: this.ITR_JSON.assessmentYear,
+          assesseeType: this.ITR_JSON.assesseeType,
+          residentialStatus: this.ITR_JSON.residentialStatus,
+          assetType: this.ITR_JSON.capitalGain[i].assetType,
+          assetDetails: this.ITR_JSON.capitalGain[i].assetDetails,
+          buyersDetails: this.ITR_JSON.capitalGain[i].buyersDetails,
+          improvement: this.ITR_JSON.capitalGain[i].improvement,
+          deduction: this.ITR_JSON.capitalGain[i].deduction
+        }
+        
+        data.push({
+          id: i + 1,
+          assetType: this.ITR_JSON.capitalGain[i].assetType,
+          description: assetDetails.description,
+          sellDate: assetDetails.sellDate,
+          valueInConsideration: /* value */assetDetails.valueInConsideration,
+          // totalCost: tCost,
+          gainType: assetDetails.gainType,
+          cgIncome: cgIncome.length > 0 ? cgIncome[0].cgIncome : 0,
+          deductions: 0,//TODO
+          sellExpense: assetDetails.sellExpense,
+          improvements: costOfImprovement,
+          address: this.ITR_JSON.capitalGain[i].buyersDetails[0]?.address,
+          pin: this.ITR_JSON.capitalGain[i].buyersDetails[0]?.pin,
+          // isExemptionApplied: cgIncome.length > 0 ? cgIncome[0].isExemptionApplied : false,
+          isShow: true,
+          rowSpan: 1,
+          cgObject: JSON.stringify(cgObject)
+        });
+        console.log('row', cgObject);
       }
-      // Object.assign(cgObject, this.ITR_JSON.capitalGain[i]);
-      // {
-      //   srn: i,
-      //   id: i+1,
-      //   description: string;
-      //   gainType: string;
-      //   sellDate: string;
-      //   sellValue: number;
-      //   stampDutyValue: number;
-      //   valueInConsideration: number;
-      //   sellExpense: number;
-      //   purchaseDate: string;
-      //   purchaseCost: number;
-      //   isinCode: string;
-      //   nameOfTheUnits: string;
-      //   sellOrBuyQuantity: number;
-      //   sellValuePerUnit: number;
-      //   purchaseValuePerUnit: number;
-      //   isUploaded: boolean;
-      //   hasIndexation: boolean;
-      //   algorithm: string;
-      //   fmvAsOn31Jan2018: string;
-      //   indexCostOfAcquisition: number;
-      // }
-      data.push({
-        id: i + 1,
-        assetType: this.ITR_JSON.capitalGain[i].assetType,
-        description: assetDetails.description,
-        sellDate: assetDetails.sellDate,
-        valueInConsideration: /* value */assetDetails.valueInConsideration,
-        // totalCost: tCost,
-        gainType: assetDetails.gainType,
-        cgIncome: cgIncome.length > 0 ? cgIncome[0].cgIncome : 0,
-        deductions: 0,//TODO
-        sellExpense: assetDetails.sellExpense,
-        improvements: costOfImprovement,
-        address: this.ITR_JSON.capitalGain[i].buyersDetails[0]?.address,
-        pin: this.ITR_JSON.capitalGain[i].buyersDetails[0]?.pin,
-        // isExemptionApplied: cgIncome.length > 0 ? cgIncome[0].isExemptionApplied : false,
-        isShow: true,
-        rowSpan: 1,
-        cgObject: JSON.stringify(cgObject)
-      });
-      console.log('row', cgObject);
     }
 
-    // for (let i = 0; i < data.length; i++) {
-    //   const a = dataToReturn.filter(item => item.assetType === data[i].assetType && item.description === data[i].description);
-    //   if (a.length === 0) {
-    //     const aa = data.filter(item => item.assetType === data[i].assetType && item.description === data[i].description);
-    //     let index = 0;
-    //     aa.forEach(item => {
-    //       if (index === 0) {
-    //         item.isShow = true;
-    //         item.rowSpan = aa.length;
-    //         index = index + 1;
-    //       } else {
-    //         item.isShow = false;
-    //         item.rowSpan = 1;
-
-    //       }
-    //       dataToReturn.push(item);
-    //     });
-    //   }
-    // }
-    console.log('dataToReturn==========', dataToReturn);
+    
     return data;
   }
 
