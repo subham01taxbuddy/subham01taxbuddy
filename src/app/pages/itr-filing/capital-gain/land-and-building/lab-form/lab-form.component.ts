@@ -528,7 +528,9 @@ export class LabFormComponent implements OnInit {
           const output = this.cgOutput.assetDetails.filter(item => item.srn === this.cgArrayElement.assetDetails[0].srn)[0];
           // this.amount = output.cgIncome;
           Object.assign(this.cgArrayElement.assetDetails[0], this.cgOutput.assetDetails[0]);
-          Object.assign(this.cgArrayElement.deduction, this.cgOutput.deduction);
+          if(this.cgOutput.deduction) {
+            Object.assign(this.cgArrayElement.deduction, this.cgOutput.deduction);
+          }
           this.createAssetDetailsForm(this.cgArrayElement.assetDetails[0]);
           this.investmentsCallInConstructor(this.investmentsCreateRowData());
           // this.cgArrayElement.assetDetails[0].gainType = output?.gainType;
