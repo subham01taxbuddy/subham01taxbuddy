@@ -418,6 +418,12 @@ export class LabFormComponent implements OnInit {
     
   }
 
+  updateSaleValue(index) {
+    const buyersDetails = (this.immovableForm.controls['buyersDetails'] as FormArray).controls[index] as FormGroup;
+    if(buyersDetails.controls['share'].value === 100) {
+      buyersDetails.controls['amount'].setValue(this.cgArrayElement.assetDetails[this.currentCgIndex].valueInConsideration);
+    }
+  }
 
   /**
   * @function calMaxPurchaseDate()
@@ -439,6 +445,7 @@ export class LabFormComponent implements OnInit {
   calMinImproveDate(purchaseDate, formGroupName, index) {
     if (this.utilsService.isNonEmpty(purchaseDate)) {
       this.minImprovementDate = new Date(purchaseDate);
+      this.getImprovementYears();
       //this.calculateCapitalGain(formGroupName, '', index);
       this.calculateIndexCost(index);
     }
@@ -892,10 +899,17 @@ export class LabFormComponent implements OnInit {
   getImprovementYears() {
     const param = `/capital-gain/improvement/financial-years`;
     this.itrMsService.getMethod(param).subscribe((res: any) => {
-      if (res.success)
-        console.log('FY : ', res);
-      this.improvementYears = res.data;
-      // sessionStorage.setItem('improvementYears', res.data)
+      if (res.success){
+        const assetDetails = <FormArray>this.immovableForm.get('assetDetails');
+        let purchaseDate = (assetDetails.controls[0] as FormGroup).getRawValue().purchaseDate;
+        let purchaseYear = new Date(purchaseDate).getFullYear();
+        this.improvementYears = res.data;
+        console.log(this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear+1)));
+        console.log('FY : ', purchaseYear + '-' + (purchaseYear+1));
+        this.improvementYears = this.improvementYears.splice(this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear+1)));
+        
+        // sessionStorage.setItem('improvementYears', res.data)
+      }
     })
   }
 
