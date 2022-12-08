@@ -37,21 +37,9 @@
 </div> -->
 
 <div class="card">
-    <!-- <div class="card__title" style="padding:10px; font-size: 20px;">Customer Profile</div> -->
-    <!-- <app-update-status [userId]="ITR_JSON.userId"></app-update-status> -->
-    <!-- <hr> -->
     <form [formGroup]="customerProfileForm">
         <!--  <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-3">
-                <mat-form-field appearance="outline">
-                    <mat-label>Father Name</mat-label>
-                    <input type="text" matInput placeholder="Father's name" name="mobile"
-                        [formControl]="customerProfileForm.controls['fatherName']" class="input-field" maxlength="125"
-                        capitalizeFirst required>
-                    <mat-error *ngIf="customerProfileForm.controls['fatherName'].hasError('pattern')">
-                        Enter character only</mat-error>
-                </mat-form-field>
-            </div>
+           
             <div class="card__col-xs-12 card__col-sm-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Residential status</mat-label>
@@ -64,27 +52,8 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-3">
-                <mat-form-field appearance="outline">
-                    <mat-label>Employer Category</mat-label>
-                    <mat-select placeholder="Employer Category" name="employerCategory"
-                        formControlName="employerCategory">
-                        <mat-option *ngFor="let emp of employersDropdown" [value]="emp.value">
-                            {{ emp.label }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-3">
-                <mat-form-field appearance="outline">
-                    <mat-label>Select Gender</mat-label>
-                    <mat-select placeholder="Select Gender" name="gender" formControlName="gender">
-                        <mat-option *ngFor="let gender of genderMaster" [value]="gender.value">
-                            {{ gender.label }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
+           
+                    
         </div> -->
         <!--  <div formGroupName="seventhProviso139">
             <div class="card__row">
@@ -139,6 +108,10 @@
                         <mat-label>Flat/Door/Block No.</mat-label>
                         <input type="text" trim matInput placeholder="Flat/Door/Block No." name="flatNo"
                             formControlName="flatNo" class="input-field" maxlength="50" required>
+                        <mat-error
+                            *ngIf="customerProfileForm.controls['address'].controls['flatNo'].hasError('required')">
+                            Enter
+                            flat/door/block no.</mat-error>
                     </mat-form-field>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-4">
@@ -151,8 +124,13 @@
                 <div class="card__col-xs-12 card__col-sm-4">
                     <mat-form-field appearance="outline">
                         <mat-label>Area/ Locality</mat-label>
-                        <input type="text" trim matInput placeholder="Area/ Locality" name="area" formControlName="area"
-                            class="input-field" maxlength="50" required>
+                        <input type="text" trim matInput placeholder="Area/ Locality" [pattern]="charRegex" name="area"
+                            formControlName="area" class="input-field" maxlength="50" required>
+                        <mat-error
+                            *ngIf="customerProfileForm.controls['address'].controls['area'].hasError('required')">
+                            Enter area/ Locality</mat-error>
+                        <mat-error *ngIf="customerProfileForm.controls['address'].controls['area'].hasError('pattern')">
+                            Enter character only</mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -164,7 +142,7 @@
                             class="input-field" maxlength="6" minlength="6" trim digitsOnly required
                             (blur)="getCityData()">
                         <mat-error
-                            *ngIf="customerProfileForm.controls['address'].controls['pinCode'].hasError('pattern') || customerProfileForm.controls['address'].controls['pinCode'].hasError('minLength') || customerProfileForm.controls['address'].controls['pinCode'].hasError('maxLength')">
+                            *ngIf="customerProfileForm.controls['address'].controls['pinCode'].hasError('required') || customerProfileForm.controls['address'].controls['pinCode'].hasError('pattern') || customerProfileForm.controls['address'].controls['pinCode'].hasError('minLength') || customerProfileForm.controls['address'].controls['pinCode'].hasError('maxLength')">
                             Enter
                             6 digit PIN code.</mat-error>
                     </mat-form-field>
@@ -197,7 +175,11 @@
                         <input type="text" trim matInput placeholder="City/Taluka/District" name="city"
                             formControlName="city" class="input-field" maxlength="50" required>
                         <mat-error *ngIf="customerProfileForm.controls['address'].controls['city'].hasError('pattern')">
-                            Enter valid
+                            Enter character
+                            only sa.</mat-error>
+                        <mat-error
+                            *ngIf="customerProfileForm.controls['address'].controls['city'].hasError('required')">
+                            Enter
                             city name.</mat-error>
                     </mat-form-field>
                 </div>
@@ -209,10 +191,10 @@
             <thead style="background:#eaeaea">
                 <tr class="table-head" style="border-left: 1px solid #e0e0e0;border-right: 2px solid #f2f0f0;">
                     <th class="text-center">No</th>
-                    <th class="text-center">IFSC Code</th>
-                    <th class="text-center">Name of Bank</th>
-                    <th class="text-center">Account Number</th>
-                    <th class="text-center">Refund Acc.</th>
+                    <th class="text-center">IFSC Code*</th>
+                    <th class="text-center">Name of Bank*</th>
+                    <th class="text-center">Account Number*</th>
+                    <th class="text-center">Refund Acc.*</th>
                     <th class="action-th ">
                         <button mat-icon-button color="warn" class="table-add-remove-button text-left"
                             (click)="addMoreBanks(this.customerProfileForm)">
@@ -239,6 +221,9 @@
                         <mat-form-field class="input-field-width" style="width: 90% !important;">
                             <input type="text" trim matInput formControlName="name" placeholder="" name="name[i]"
                                 class="input-field" maxlength="125" required>
+                                <mat-error
+                                *ngIf="customerProfileForm.controls['bankDetails'].controls[i].controls['name'].hasError('pattern')">
+                                Enter character only.</mat-error>
                         </mat-form-field>
                     </td>
                     <td>
@@ -289,11 +274,14 @@
             <div class="card__col-xs-12 card__col-sm-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Select One</mat-label>
-                    <mat-select name="previousYearRegime" formControlName="previousYearRegime" (selectionChange)="onRegimeChanged()">
+                    <mat-select name="previousYearRegime" formControlName="previousYearRegime"
+                        (selectionChange)="onRegimeChanged()">
                         <!-- formControlName="employerCategory" TODO -->
                         <mat-option value="NEW"> Yes </mat-option>
                         <mat-option value="OLD"> No </mat-option>
                     </mat-select>
+                    <mat-error *ngIf="customerProfileForm.controls['previousYearRegime'].hasError('required')">
+                        Select One</mat-error>
                 </mat-form-field>
             </div>
         </div>
@@ -303,35 +291,35 @@
             </div>
             <div class="card__col-xs-12">
                 <div class="card__col-xs-12 card__col-sm-4" style="padding-top: 10px;">
-                <mat-form-field appearance="outline">
-                    <mat-label>Acknowledgement Number</mat-label>
-                    <input matInput maxlength="15" minlength="15"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        disabled placeholder="Acknowledgement Number" formControlName="form10IEAckNo"
-                        onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
-                    <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">
-                        Enter
-                        acknowledgement number</mat-error>
-                    <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('minlength')">
-                        Acknowledgement number should be 15 digit</mat-error>
-                </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Acknowledgement Number</mat-label>
+                        <input matInput maxlength="15" minlength="15"
+                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            disabled placeholder="Acknowledgement Number" digitsOnly formControlName="form10IEAckNo"
+                            onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off">
+                        <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">
+                            Enter
+                            acknowledgement number</mat-error>
+                        <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('minlength')">
+                            Acknowledgement number should be 15 digit</mat-error>
+                    </mat-form-field>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-4" style="padding-top: 10px;">
-                <mat-form-field appearance="outline">
-                    <mat-label>Date of filling</mat-label>
-                    <input matInput placeholder="Date of filling" [max]="fillingMaxDate" [matDatepicker]="picker1"
-                        autocomplete="off" formControlName="form10IEDate">
-                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                    <mat-datepicker #picker1></mat-datepicker>
-                    <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">
-                        Select
-                        Date of
-                        filling</mat-error>
-                </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date of filling</mat-label>
+                        <input matInput placeholder="Date of filling" [max]="fillingMaxDate"  readonly [matDatepicker]="picker1"
+                            autocomplete="off" formControlName="form10IEDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">
+                            Select
+                            Date of
+                            filling</mat-error>
+                    </mat-form-field>
                 </div>
             </div>
-            </div>
-            <!--  <div class="card__col-xs-12 card__col-sm-7">
+        </div>
+        <!--  <div class="card__col-xs-12 card__col-sm-7">
                 <div class="card__col-xs-12 card__col-sm-12" style="padding-bottom: 10px;">
                     Please furnish the date of filing of from 10-IE along with Acknowledgement number
                 </div>

@@ -75,16 +75,26 @@ export class UnlistedSharesComponent implements OnInit {
       companyPAN: ['', Validators.compose([Validators.pattern(AppConstants.panNumberRegex)])],
       openingShares: [null, Validators.compose([Validators.pattern(AppConstants.amountWithoutDecimal)])],
       openingCOA: [null, Validators.compose([Validators.pattern(AppConstants.amountWithDecimal)])],
-      acquiredShares: [null, Validators.compose([Validators.pattern(AppConstants.amountWithoutDecimal)])],
-      purchaseDate: [null],
-      faceValuePerShare: [null, Validators.compose([Validators.pattern(AppConstants.amountWithDecimal)])],
-      issuePricePerShare: [null, Validators.compose([Validators.pattern(AppConstants.amountWithoutDecimal)])],
-      purchasePricePerShare: [null, Validators.compose([Validators.pattern(AppConstants.amountWithDecimal)])],
+      acquiredShares: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)])],
+      purchaseDate: [null, Validators.required],
+      faceValuePerShare: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)])],
+      issuePricePerShare: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)])],
+      purchasePricePerShare: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)])],
       transferredShares: [null, Validators.compose([Validators.pattern(AppConstants.amountWithoutDecimal)])],
       saleConsideration: [null, Validators.compose([Validators.pattern(AppConstants.amountWithDecimal)])],
-      closingShares: [null, Validators.compose([Validators.pattern(AppConstants.amountWithoutDecimal)])],
-      closingCOA: [null, Validators.compose([Validators.pattern(AppConstants.amountWithDecimal)])]
+      closingShares: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)])],
+      closingCOA: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)])]
     });
+  }
+
+  addPanValidator() {
+    if (this.sharesForm.controls['typeOfCompany'].value === 'D') {
+      this.sharesForm.controls['companyPAN'].setValidators([Validators.required, Validators.pattern(AppConstants.panNumberRegex)]);
+      this.sharesForm.controls['companyPAN'].updateValueAndValidity();
+    } else {
+      this.sharesForm.controls['companyPAN'].setValidators([Validators.pattern(AppConstants.panNumberRegex)]);
+      this.sharesForm.controls['companyPAN'].updateValueAndValidity();
+    }
   }
 
   serviceCall() {
@@ -131,17 +141,6 @@ export class UnlistedSharesComponent implements OnInit {
     }
   }
 
-  isSharesFeildsRequired() {
-    // if (this.utilsService.isNonEmpty(this.sharesForm.controls['acquiredShares'].value) ||
-    //   this.utilsService.isNonEmpty(this.sharesForm.controls['purchaseDate'].value) ||
-    //   this.utilsService.isNonEmpty(this.sharesForm.controls['faceValuePerShare'].value) ||
-    //   this.utilsService.isNonEmpty(this.sharesForm.controls['issuePricePerShare'].value) ||
-    //   this.utilsService.isNonEmpty(this.sharesForm.controls['purchasePricePerShare'].value)) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
-  }
 
   setIssueOrPurchase(val) {
     // if (val === 'P' && this.utilsService.isNonZero(this.sharesForm.controls['purchasePricePerShare'].value)) {
