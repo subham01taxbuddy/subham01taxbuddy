@@ -255,7 +255,8 @@ export class LabFormComponent implements OnInit {
       isUploaded: false,
       hasIndexation: false,
       algorithm: 'cgProperty',
-      capitalGain: 0
+      capitalGain: 0,
+      grandFatheredValue: 0
     };
     if(cgObject.assetDetails && cgObject.assetDetails.length > 0) {
       Object.assign(assetDetails, cgObject.assetDetails[this.currentCgIndex]);

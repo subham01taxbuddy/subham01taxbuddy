@@ -88,10 +88,11 @@
       </div>
       <!-- ------------------ -->
       <ng-container
-        *ngIf="this.assetDetailsForm.controls['gainType'].value === 'LONG_TERM_CAPITAL_GAIN' && buyDateBefore31stJan && this.data.assetType === 'EQUITY_SHARES_LISTED'">
+        *ngIf="buyDateBefore31stJan && this.data.assetType === 'EQUITY_SHARES_LISTED'">
         <div class="card__col-xs-12 card__col-sm-6">
           <mat-form-field class="input-field-width">
-            <input matInput formControlName="isinCode" placeholder="ISIN Code" name="isinCode" class="input-field">
+            <input matInput formControlName="isinCode" placeholder="ISIN Code" name="isinCode" class="input-field"
+            (blur)="calculateFMV()">
           </mat-form-field>
         </div>
         <div class="card__col-xs-12 card__col-sm-6">

@@ -227,6 +227,7 @@ export interface AssetDetails {
     id: string;
     description: string;
     gainType: string;
+    grandFatheredValue: number;
     sellDate: string;
     sellValue: number;
     stampDutyValue: number;

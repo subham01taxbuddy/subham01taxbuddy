@@ -161,7 +161,7 @@ export class EquityMfComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.gainType === 'LONG_TERM_CAPITAL_GAIN' ? 'Long Term' : 'Short Term';
+          return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
         },
       },
       {
@@ -170,11 +170,11 @@ export class EquityMfComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.valueInConsideration ? params.data.valueInConsideration.toLocaleString('en-IN') : params.data.valueInConsideration;
+          return params.data.isinCode;
         },
       },
       {
-        headerName: 'name Of the Shares/Units',
+        headerName: 'Name Of the Shares/Units',
         field: 'nameOfTheUnits',
         editable: false,
         suppressMovable: true,
@@ -182,6 +182,12 @@ export class EquityMfComponent implements OnInit {
       {
         headerName: 'FMV as on 31st Jan 2018',
         field: 'fmvAsOn31Jan2018',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Cost of acquisition(as per grandfathering)',
+        field: 'grandFatheredValue',
         editable: false,
         suppressMovable: true,
       },
@@ -488,7 +494,7 @@ export class EquityMfComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.gainType === 'LONG_TERM_CAPITAL_GAIN' ? 'Long Term' : 'Short Term';
+          return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
         },
       },
       {
