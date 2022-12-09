@@ -167,7 +167,7 @@ export class CustomerProfileComponent implements OnInit {
       aadharNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
-      employerCategory: [''],
+      employerCategory: ['', Validators.required],
       itrType: ['1', Validators.required],
       isRevised: ['N', Validators.required],
       orgITRAckNum: [''],
