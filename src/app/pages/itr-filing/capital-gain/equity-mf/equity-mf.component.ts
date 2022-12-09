@@ -467,7 +467,7 @@ export class EquityMfComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         cellRenderer: (params) => {
-          return params.data.purchaseDate ? (new Date(params.data.sellDate)).toLocaleDateString('en-IN') : '';
+          return params.data.purchaseDate ? (new Date(params.data.purchaseDate)).toLocaleDateString('en-IN') : '';
         }
       },
       {
