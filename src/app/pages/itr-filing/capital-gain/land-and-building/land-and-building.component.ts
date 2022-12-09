@@ -75,7 +75,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
     const data = [];
     const dataToReturn = [];
     let labData = this.ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND');
-    for (let i = 0; i < labData[0].assetDetails.length; i++) {
+    for (let i = 0; i < labData[0]?.assetDetails.length; i++) {
       let assetDetails = labData[0].assetDetails[i];
       let buyerDetails = labData[0].buyersDetails.filter(buyer => (buyer.srn === assetDetails.srn))[0];
       // if (this.utilsService.isNonEmpty(this.ITR_JSON.capitalGain[i].cgOutput)) {
