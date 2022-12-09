@@ -265,9 +265,9 @@ export class EquityMfComponent implements OnInit {
   }
 
 
-  addEquityAndMf(mode, type, assetDetails?) {
+  addEquityAndMf(mode, type, rowIndex, assetDetails?) {
     const dialogRef = this.matDialog.open(ListedUnlistedDialogComponent, {
-      data: { mode: mode, assetType: type, assetDetails: assetDetails },
+      data: { mode: mode, assetType: type, rowIndex:rowIndex, assetDetails: assetDetails },
       closeOnNavigation: true,
       disableClose: false,
       width: '700px'
@@ -313,10 +313,10 @@ export class EquityMfComponent implements OnInit {
         } else {
 
           if (type === 'EQUITY_SHARES_LISTED') {
-            this.listedCg.assetDetails.splice((assetDetails.id - 1), 1, result);
+            this.listedCg.assetDetails.splice(result.rowIndex, 1, result.cgObject);
             this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
           } else if (type === 'EQUITY_SHARES_UNLISTED') {
-            this.unlistedCg.assetDetails.splice((assetDetails.id - 1), 1, result);
+            this.unlistedCg.assetDetails.splice(result.rowIndex, 1, result.cgObject);
             this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails);
           }
 
@@ -353,7 +353,7 @@ export class EquityMfComponent implements OnInit {
           break;
         }
         case 'edit': {
-          this.addEquityAndMf('EDIT', 'EQUITY_SHARES_LISTED', params.data)
+          this.addEquityAndMf('EDIT', 'EQUITY_SHARES_LISTED', params.rowIndex, params.data)
           break;
         }
       }
@@ -370,7 +370,7 @@ export class EquityMfComponent implements OnInit {
           break;
         }
         case 'edit': {
-          this.addListedDeduction('EDIT', params.data)
+          this.addListedDeduction('EDIT', params.rowIndex, params.data)
           break;
         }
       }
@@ -387,7 +387,7 @@ export class EquityMfComponent implements OnInit {
           break;
         }
         case 'edit': {
-          this.addUnListedDeduction('EDIT', params.data)
+          this.addUnListedDeduction('EDIT', params.rowIndex, params.data)
           break;
         }
       }
@@ -405,7 +405,7 @@ export class EquityMfComponent implements OnInit {
           break;
         }
         case 'edit': {
-          this.addEquityAndMf('EDIT', 'EQUITY_SHARES_UNLISTED', params.data)
+          this.addEquityAndMf('EDIT', 'EQUITY_SHARES_UNLISTED', params.rowIndex, params.data)
           break;
         }
       }
@@ -839,11 +839,12 @@ export class EquityMfComponent implements OnInit {
   }
 
 
-  addListedDeduction(mode, investment?) {
+  addListedDeduction(mode, rowIndex, investment?) {
     if (this.listedCg.assetDetails.length > 0) {
       const data = {
         assetType: 'EQUITY_SHARES_LISTED',
         mode: mode,
+        rowIndex: rowIndex,
         investment: investment,
       };
       const dialogRef = this.matDialog.open(InvestmentDialogComponent, {
@@ -857,11 +858,11 @@ export class EquityMfComponent implements OnInit {
         console.log('Result add CG=', result);
         if (result !== undefined) {
           if (mode === 'ADD') {
-            this.listedCg.deduction.push(result);
+            this.listedCg.deduction.push(result.deduction);
             this.listedDeductionGridOptions.api?.setRowData(this.listedCg.deduction);
 
           } else if (mode === 'EDIT') {
-            this.listedCg.deduction.splice((investment.id - 1), 1, result);
+            this.listedCg.deduction.splice(result.rowIndex, 1, result.deduction);
             this.listedDeductionGridOptions.api?.setRowData(this.listedCg.deduction)
           }
           // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
@@ -871,11 +872,12 @@ export class EquityMfComponent implements OnInit {
       this.utilsService.showSnackBar('Please add asset details first against this deduction')
     }
   }
-  addUnListedDeduction(mode, investment?) {
+  addUnListedDeduction(mode, rowIndex, investment?) {
     if (this.unlistedCg.assetDetails.length > 0) {
       const data = {
         assetType: 'EQUITY_SHARES_UNLISTED',
         mode: mode,
+        rowIndex: rowIndex,
         investment: investment,
       };
       const dialogRef = this.matDialog.open(InvestmentDialogComponent, {
@@ -889,11 +891,11 @@ export class EquityMfComponent implements OnInit {
         console.log('Result add CG=', result);
         if (result !== undefined) {
           if (mode === 'ADD') {
-            this.unlistedCg.deduction.push(result);
+            this.unlistedCg.deduction.push(result.deduction);
             this.unlistedDeductionGridOptions.api?.setRowData(this.unlistedCg.deduction);
 
           } else if (mode === 'EDIT') {
-            this.unlistedCg.deduction.splice((investment.id - 1), 1, result);
+            this.unlistedCg.deduction.splice(result.rowIndex, 1, result.deduction);
             this.unlistedDeductionGridOptions.api?.setRowData(this.unlistedCg.deduction)
           }
           // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());

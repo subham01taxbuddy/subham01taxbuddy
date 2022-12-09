@@ -94,7 +94,11 @@ export class ListedUnlistedDialogComponent implements OnInit {
 
 
   saveDetails() {
-    this.dialogRef.close(this.assetDetailsForm.value)
+    let result = {
+      cgObject: this.assetDetailsForm.value,
+      'rowIndex': this.data.rowIndex
+    };
+    this.dialogRef.close(result);
   }
 
   cancelInvestments() {

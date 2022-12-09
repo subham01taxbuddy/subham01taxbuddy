@@ -368,11 +368,12 @@ export class OtherAssetsComponent implements OnInit {
   }
 
 
-  addDeduction(mode, investment?) {
+  addDeduction(mode, gridApi, rowIndex, investment?) {
     if (this.goldCg.assetDetails.length > 0) {
       const data = {
         assetType: 'GOLD',
         mode: mode,
+        rowIndex: rowIndex,
         investment: investment,
       };
       const dialogRef = this.matDialog.open(InvestmentDialogComponent, {
@@ -386,12 +387,12 @@ export class OtherAssetsComponent implements OnInit {
         console.log('Result add CG=', result);
         if (result !== undefined) {
           if (mode === 'ADD') {
-            this.goldCg.deduction.push(result);
+            this.goldCg.deduction.push(result.deduction);
             this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
 
           } else if (mode === 'EDIT') {
-            this.goldCg.deduction.splice((investment.id - 1), 1, result);
-            this.deductionGridOptions.api?.setRowData(this.goldCg.deduction)
+            this.goldCg.deduction.splice(result.rowIndex, 1, result.deduction);
+            gridApi.setRowData(this.goldCg.deduction)
           }
           // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
         }
@@ -510,7 +511,7 @@ export class OtherAssetsComponent implements OnInit {
           break;
         }
         case 'edit': {
-          this.addDeduction('EDIT', params.data)
+          this.addDeduction('EDIT', params.api, params.rowIndex, params.data)
           break;
         }
       }
