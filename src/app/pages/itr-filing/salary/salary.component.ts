@@ -5,8 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { GridOptions } from 'ag-grid-community';
-import { NumericEditorComponent } from 'src/app/modules/shared/numeric-editor.component';
+import { GridOptions, ValueSetterParams } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 declare let $: any;
 
@@ -166,11 +165,11 @@ export class SalaryComponent implements OnInit {
 
   createEmployerDetailsFormGroup() {
     return this.fb.group({
-      employerName: [''],
-      address: [''],
-      city: [''],
-      state: [''],
-      pinCode: [''],
+      employerName: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+      address: ['', Validators.required],
+      city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+      state: ['', Validators.compose([Validators.required])],
+      pinCode: ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])],
       // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
       employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
       entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
@@ -182,7 +181,7 @@ export class SalaryComponent implements OnInit {
   salaryCallInConstructor(salaryDropdown) {
     this.salaryGridOptions = <GridOptions>{
       rowData: this.salaryCreateRowData(salaryDropdown),
-      columnDefs: this.salaryCreateColoumnDef(salaryDropdown),
+      columnDefs: this.salaryCreateColumnDef(salaryDropdown),
       onGridReady: () => {
         this.salaryGridOptions.api.sizeColumnsToFit();
       },
@@ -200,7 +199,7 @@ export class SalaryComponent implements OnInit {
   }
 
   // Using 280994
-  salaryCreateColoumnDef(salaryDropdown) {
+  salaryCreateColumnDef(salaryDropdown) {
     return [
       {
         headerName: 'Salary Type',
@@ -231,7 +230,15 @@ export class SalaryComponent implements OnInit {
         suppressMovable: true,
         editable: true,
         cellEditor: 'numericEditor',
-        headerComponentParams: { menuIcon: 'fa-external-link-alt' }
+        headerComponentParams: { menuIcon: 'fa-external-link-alt' },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.taxableAmount !== newValInt;
+          if (valueChanged) {
+            params.data.taxableAmount = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
       },
 
       {
@@ -284,10 +291,10 @@ export class SalaryComponent implements OnInit {
     return data;
   }
 
-  summaryAllowCallInConstructor(allowaceDropdownSummary) {
+  summaryAllowCallInConstructor(allowanceDropdownSummary) {
     this.summaryAllowGridOptions = <GridOptions>{
-      rowData: this.summaryAllowCreateRowData(allowaceDropdownSummary),
-      columnDefs: this.summaryAllowCreateColoumnDef(allowaceDropdownSummary),
+      rowData: this.summaryAllowCreateRowData(allowanceDropdownSummary),
+      columnDefs: this.summaryAllowCreateColumnDef(allowanceDropdownSummary),
       onGridReady: () => {
         this.summaryAllowGridOptions.api.sizeColumnsToFit();
       },
@@ -304,15 +311,15 @@ export class SalaryComponent implements OnInit {
     };
   }
 
-  summaryAllowCreateColoumnDef(allowaceDropdownSummary) {
+  summaryAllowCreateColumnDef(allowanceDropdownSummary) {
     return [
       {
         headerName: 'Allowance Type',
         field: 'allowanceType',
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          if (allowaceDropdownSummary.length !== 0) {
-            const nameArray = allowaceDropdownSummary.filter((item: any) => item.value === params.data.allowanceType);
+          if (allowanceDropdownSummary.length !== 0) {
+            const nameArray = allowanceDropdownSummary.filter((item: any) => item.value === params.data.allowanceType);
             return nameArray[0].label;
           } else {
             return params.data.allowanceType;
@@ -320,8 +327,8 @@ export class SalaryComponent implements OnInit {
         },
         editable: false,
         tooltip: function (params) {
-          if (allowaceDropdownSummary.length !== 0) {
-            const nameArray = allowaceDropdownSummary.filter((item: any) => item.value === params.data.allowanceType);
+          if (allowanceDropdownSummary.length !== 0) {
+            const nameArray = allowanceDropdownSummary.filter((item: any) => item.value === params.data.allowanceType);
             return nameArray[0].label;
           } else {
             return params.data.allowanceType;
@@ -334,6 +341,14 @@ export class SalaryComponent implements OnInit {
         editable: true,
         suppressMovable: true,
         cellEditor: 'numericEditor',
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.exemptAmount !== newValInt;
+          if (valueChanged) {
+            params.data.exemptAmount = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
       },
       {
         headerName: 'Clear',
@@ -371,15 +386,14 @@ export class SalaryComponent implements OnInit {
     }
   }
 
-  summaryAllowCreateRowData(allowaceDropdownSummary) {
-    // HOUSE_RENT,LTA,CHILDREN_EDUCATION,HOSTEL_EXPENDITURE
+  summaryAllowCreateRowData(allowanceDropdownSummary) {
     if (this.ITR_JSON.regime === 'NEW')
-      allowaceDropdownSummary = allowaceDropdownSummary.filter(item => item.value !== 'HOUSE_RENT' && item.value !== 'LTA' && item.value !== 'CHILDREN_EDUCATION' && item.value !== 'HOSTEL_EXPENDITURE');
+    allowanceDropdownSummary = allowanceDropdownSummary.filter(item => item.value !== 'HOUSE_RENT' && item.value !== 'LTA' && item.value !== 'CHILDREN_EDUCATION' && item.value !== 'HOSTEL_EXPENDITURE');
     const data = [];
-    for (let i = 0; i < allowaceDropdownSummary.length; i++) {
+    for (let i = 0; i < allowanceDropdownSummary.length; i++) {
       data.push({
         id: i,
-        allowanceType: allowaceDropdownSummary[i].value,
+        allowanceType: allowanceDropdownSummary[i].value,
         taxableAmount: 0,
         exemptAmount: null
       });
@@ -568,7 +582,7 @@ export class SalaryComponent implements OnInit {
       this.Copy_ITR_JSON.employers.splice(this.currentIndex, 1, myEmp);
     }
 
-    if(!this.Copy_ITR_JSON.systemFlags) {
+    if (!this.Copy_ITR_JSON.systemFlags) {
       this.Copy_ITR_JSON.systemFlags = {
         hasSalary: false,
         hasHouseProperty: false,
@@ -682,7 +696,7 @@ export class SalaryComponent implements OnInit {
 
     // this.getData(this.localEmployer.pinCode);
     this.salaryGridOptions.rowData = this.salaryCreateRowData(this.salaryDropdown);
-    this.salaryGridOptions.columnDefs = this.salaryCreateColoumnDef(this.salaryDropdown);
+    this.salaryGridOptions.columnDefs = this.salaryCreateColumnDef(this.salaryDropdown);
     if (this.localEmployer.salary instanceof Array) {
       // const salary = this.localEmployer.salary.filter((item:any) => item.salaryType !== 'SEC17_1');
       for (let i = 0; i < this.localEmployer.salary.length; i++) {
@@ -726,7 +740,7 @@ export class SalaryComponent implements OnInit {
 
     // Set Allowance
     this.summaryAllowGridOptions.rowData = this.summaryAllowCreateRowData(this.allowanceDropdown);
-    this.summaryAllowGridOptions.columnDefs = this.summaryAllowCreateColoumnDef(this.allowanceDropdown);
+    this.summaryAllowGridOptions.columnDefs = this.summaryAllowCreateColumnDef(this.allowanceDropdown);
     if (this.localEmployer.allowance instanceof Array) {
       const allowance = this.localEmployer.allowance.filter((item: any) => item.allowanceType !== 'ALL_ALLOWANCES');
       for (let i = 0; i < allowance.length; i++) {
@@ -802,7 +816,7 @@ export class SalaryComponent implements OnInit {
   employerCallInConstructor() {
     this.employersGridOptions = <GridOptions>{
       rowData: this.employerCreateRowData(),
-      columnDefs: this.employercreateColumnDef(),
+      columnDefs: this.employerCreateColumnDef(),
       onGridReady: () => {
         this.employersGridOptions.api.sizeColumnsToFit();
       },
@@ -819,7 +833,7 @@ export class SalaryComponent implements OnInit {
     };
   }
 
-  employercreateColumnDef() {
+  employerCreateColumnDef() {
     return [
       {
         headerName: 'No',

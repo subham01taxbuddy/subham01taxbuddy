@@ -155,16 +155,16 @@ export class CustomerProfileComponent implements OnInit {
   }
   createCustomerProfileForm() {
     return this.fb.group({
-      firstName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
-      middleName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
-      lastName: ['', Validators.compose([Validators.required, /* Validators.pattern(AppConstants.charRegex) */])],
-      fatherName: [''],
+      firstName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)])],
+      middleName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)])],
+      lastName: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+      fatherName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)])],
       dateOfBirth: ['', Validators.required],
-      gender: [''],
+      gender: ['', Validators.required],
       contactNumber: ['', Validators.compose([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required])],
       email: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.emailRegex)])],
       panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex)])],
-      aadharNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
+      aadharNumber: ['', Validators.compose([Validators.required, Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
       employerCategory: ['', Validators.required],
@@ -284,9 +284,9 @@ export class CustomerProfileComponent implements OnInit {
       } else {
         param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
       }
-      
+
       Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
-      
+
 
       this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
         this.ITR_JSON = result;
@@ -296,9 +296,9 @@ export class CustomerProfileComponent implements OnInit {
         this.utilsService.showSnackBar('Customer profile updated successfully.');
         // if (ref === "CONTINUE") {
         // if (this.customerProfileForm.controls['itrType'].value === '1'
-          // || this.customerProfileForm.controls['itrType'].value === '4')
-          // this.router.navigate(['/pages/itr-filing/itr']);
-          this.saveAndNext.emit({ subTab: true, tabName: 'PERSONAL' });
+        // || this.customerProfileForm.controls['itrType'].value === '4')
+        // this.router.navigate(['/pages/itr-filing/itr']);
+        this.saveAndNext.emit({ subTab: true, tabName: 'PERSONAL' });
         // else
         //   this.router.navigate(['/pages/itr-filing/direct-upload']);
       }, error => {
@@ -629,7 +629,7 @@ export class CustomerProfileComponent implements OnInit {
       console.log('The add client dialog was closed');
     });
   }
-  
+
   getPrefillData() {
     //Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
     let disposable = this.matDialog.open(PrefillDataComponent, {
@@ -670,5 +670,5 @@ export class CustomerProfileComponent implements OnInit {
 
     this.customerProfileForm.controls['orgITRDate'].setValue(moment(dateString).toDate());
   }
-  
+
 }

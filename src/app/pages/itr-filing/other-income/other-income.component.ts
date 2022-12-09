@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { GridOptions, ICellRendererParams } from 'ag-grid-community';
+import { GridOptions, ICellRendererParams, ValueSetterParams } from 'ag-grid-community';
 import { NumericEditorComponent } from 'src/app/modules/shared/numeric-editor.component';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -216,7 +216,15 @@ export class OtherIncomeComponent implements OnInit {
         suppressMovable: true,
         editable: true,
         // cellEditor: 'numericEditor',
-        headerComponentParams: { menuIcon: 'fa-external-link-alt' }
+        headerComponentParams: { menuIcon: 'fa-external-link-alt' },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.amount !== newValInt;
+          if (valueChanged) {
+            params.data.amount = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
       },
 
       {
@@ -572,6 +580,14 @@ export class OtherIncomeComponent implements OnInit {
         editable: true,
         suppressMovable: true,
         cellEditor: 'numericEditor',
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.amount !== newValInt;
+          if (valueChanged) {
+            params.data.amount = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
         // width: 100,
       },
       {

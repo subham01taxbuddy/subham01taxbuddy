@@ -368,15 +368,15 @@ export class PersonalInformationComponent implements OnInit {
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
       regime: ['', Validators.required],
-      previousYearRegime: [''],
+      previousYearRegime: ['', Validators.required],
       address: this.fb.group({
         flatNo: ['', Validators.required],
         premisesName: [''],
         road: [''],
-        area: ['', Validators.required],
+        area: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
         state: ['91', Validators.required],
         country: ['91', Validators.required],
-        city: ['', Validators.required],
+        city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
         pinCode: ['', Validators.compose([Validators.minLength(6), Validators.maxLength(6), Validators.required, Validators.pattern(AppConstants.PINCode)])]
       }),
       seventhProviso139: this.fb.group({
@@ -394,7 +394,7 @@ export class PersonalInformationComponent implements OnInit {
     return this.fb.group({
       ifsCode: [obj.ifsCode || '', Validators.compose([Validators.required, Validators.pattern(AppConstants.IFSCRegex)])],
       countryName: ['91', Validators.required],
-      name: [obj.name || '', Validators.compose([Validators.required, /* Validators.pattern(AppConstants.charRegex) */])],
+      name: [obj.name || '', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
       accountNumber: [obj.accountNumber || '', Validators.compose([Validators.minLength(3), Validators.maxLength(20), Validators.required, Validators.pattern(AppConstants.numericRegex)])],
       hasRefund: [obj.hasRefund || false]
     });
@@ -556,8 +556,8 @@ export class PersonalInformationComponent implements OnInit {
         });
       }
     });
-    
-    this.lastFilingDetailsNeeded = this.ITR_JSON.regime === 'NEW' || 
+
+    this.lastFilingDetailsNeeded = this.ITR_JSON.regime === 'NEW' ||
       this.ITR_JSON.previousYearRegime === 'NEW';
     this.onRegimeChanged();
   }
@@ -571,11 +571,11 @@ export class PersonalInformationComponent implements OnInit {
     //check if at least one account is selected for refund
     var isBankSelected = false;
     this.customerProfileForm.controls['bankDetails'].value.forEach(bank => {
-      if(bank['hasRefund']){
+      if (bank['hasRefund']) {
         isBankSelected = true;
       }
     });
-    if(!isBankSelected){
+    if (!isBankSelected) {
       this.utilsService.showSnackBar('Please select atleast one bank account in which you prefer to get refund.');
       return;
     }
@@ -764,11 +764,11 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   onRegimeChanged() {
-    if (this.customerProfileForm.controls['regime'].value === 'NEW' || 
+    if (this.customerProfileForm.controls['regime'].value === 'NEW' ||
       this.customerProfileForm.controls['previousYearRegime'].value === 'NEW') {
-        this.lastFilingDetailsNeeded = true;
-        this.customerProfileForm.controls['form10IEAckNo'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
-        this.customerProfileForm.controls['form10IEDate'].setValidators([Validators.required]);
+      this.lastFilingDetailsNeeded = true;
+      this.customerProfileForm.controls['form10IEAckNo'].setValidators([Validators.required, Validators.minLength(15), Validators.maxLength(15)]);
+      this.customerProfileForm.controls['form10IEDate'].setValidators([Validators.required]);
     } else {
       this.lastFilingDetailsNeeded = false;
       this.lastFilingDetailsNeeded = false;
