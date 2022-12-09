@@ -367,7 +367,6 @@ export class PersonalInformationComponent implements OnInit {
       aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
-      employerCategory: ['', Validators.required],
       regime: ['', Validators.required],
       previousYearRegime: ['', Validators.required],
       address: this.fb.group({

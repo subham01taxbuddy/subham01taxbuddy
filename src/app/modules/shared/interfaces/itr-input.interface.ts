@@ -1,3 +1,4 @@
+import { state } from '@angular/animations';
 import { AnyTxtRecord } from "dns";
 
 export interface ITR_JSON {
@@ -209,54 +210,7 @@ export interface Loans {
     principalAmount: number;
     interestAmount: number;
 }
-export interface CapitalGain {
-    // assetType: string;
-    description?: string;
-    gainType?: string;
-    sellDate?: string;
-    sellValue?: number;
-    stampDutyValue?: number;
-    valueInConsideration?: number;
-    sellExpense?: number;
-    purchaseDate?: string;
-    purchaseCost?: number;
-    // improvement?: Improvement[];
-    isUploaded?: boolean;
-    hasIndexation?: boolean;
-    algorithm?: string;
-    fmvAsOn31Jan2018?: number;
-    cgOutput?: any[];
-    investments?: Investments[];
-    // buyersDetails: BuyersDetails[];
-
-    assetType: string;
-    assetDetails?: AssetDetails[];
-    improvement: Improvement[];
-    deduction?: Investments[];
-    buyersDetails: BuyersDetails[];
-}
-
 export interface NewCapitalGain {
-    // TODO Need to remove these keys
-    // assetType: string;
-    description?: string;
-    gainType?: string;
-    sellDate?: string;
-    sellValue?: number;
-    stampDutyValue?: number;
-    valueInConsideration?: number;
-    sellExpense?: number;
-    purchaseDate?: string;
-    purchaseCost?: number;
-    //? improvement: Improvement[];
-    isUploaded?: boolean;
-    hasIndexation?: boolean;
-    algorithm?: string;
-    fmvAsOn31Jan2018?: number;
-    cgOutput?: any[];
-    investments?: Investments[];
-    // buyersDetails: BuyersDetails[];
-
     assessmentYear: string;
     assesseeType: string;
     residentialStatus: string;
@@ -268,10 +222,12 @@ export interface NewCapitalGain {
 }
 
 export interface AssetDetails {
-    srn: string;
+    capitalGain: number;
+    srn: number;
     id: string;
     description: string;
     gainType: string;
+    grandFatheredValue: number;
     sellDate: string;
     sellValue: number;
     stampDutyValue: number;
@@ -300,7 +256,7 @@ export interface NewCapitalGain {
 }
 export interface Improvement {
     id: number;
-    srn: string;
+    srn: number;
     dateOfImprovement: string;
     costOfImprovement: number;
     indexCostOfImprovement: number;
@@ -319,6 +275,8 @@ export interface Investments {
     // "costOfPlantMachinary":0
 }
 export interface BuyersDetails {
+    id: string;
+    srn: number;
     name: string;
     pan: string;
     aadhaarNumber: string;
@@ -326,6 +284,8 @@ export interface BuyersDetails {
     amount: number;
     address: string;
     pin: string;
+    state: string;
+    country: string;
 }
 
 export interface Employer {

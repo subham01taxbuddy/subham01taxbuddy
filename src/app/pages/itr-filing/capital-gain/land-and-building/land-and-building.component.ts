@@ -74,96 +74,44 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
     this.isExmptAvail = false;
     const data = [];
     const dataToReturn = [];
-    for (let i = 0; i < this.ITR_JSON.capitalGain.length; i++) {
-      let cgIncome = [];
+    let labData = this.ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND');
+    for (let i = 0; i < labData[0]?.assetDetails.length; i++) {
+      let assetDetails = labData[0].assetDetails[i];
+      let buyerDetails = labData[0].buyersDetails.filter(buyer => (buyer.srn === assetDetails.srn))[0];
       // if (this.utilsService.isNonEmpty(this.ITR_JSON.capitalGain[i].cgOutput)) {
       //   cgIncome = this.ITR_JSON.capitalGain[i].cgOutput.filter(item => item.assetType === this.ITR_JSON.capitalGain[i].assetType);
       // }
 
       let costOfImprovement = 0;
-      for (let j = 0; j < this.ITR_JSON.capitalGain[i].improvement.length; j++) {
-        costOfImprovement = costOfImprovement + this.ITR_JSON.capitalGain[i].improvement[j].costOfImprovement;
+      let improvements = labData[0].improvement.filter(imp => (imp.srn == assetDetails.srn));
+      for (let j = 0; j < improvements.length; j++) {
+        costOfImprovement = costOfImprovement + improvements[j].costOfImprovement;
       }
+      console.log('cost', improvements.length, costOfImprovement);
 
-      //By Ashwini: need to be updated for new structure
-      
-      let assetDetails = this.ITR_JSON.capitalGain[i].assetDetails[0];
-      let cgObject:NewCapitalGain = {
-        assessmentYear: this.ITR_JSON.assessmentYear,
-        assesseeType: this.ITR_JSON.assesseeType,
-        residentialStatus: this.ITR_JSON.residentialStatus,
-        assetType: this.ITR_JSON.capitalGain[i].assetType,
-        assetDetails: this.ITR_JSON.capitalGain[i].assetDetails,
-        buyersDetails: this.ITR_JSON.capitalGain[i].buyersDetails,
-        improvement: this.ITR_JSON.capitalGain[i].improvement,
-        deduction: this.ITR_JSON.capitalGain[i].deduction
-      }
-      // Object.assign(cgObject, this.ITR_JSON.capitalGain[i]);
-      // {
-      //   srn: i,
-      //   id: i+1,
-      //   description: string;
-      //   gainType: string;
-      //   sellDate: string;
-      //   sellValue: number;
-      //   stampDutyValue: number;
-      //   valueInConsideration: number;
-      //   sellExpense: number;
-      //   purchaseDate: string;
-      //   purchaseCost: number;
-      //   isinCode: string;
-      //   nameOfTheUnits: string;
-      //   sellOrBuyQuantity: number;
-      //   sellValuePerUnit: number;
-      //   purchaseValuePerUnit: number;
-      //   isUploaded: boolean;
-      //   hasIndexation: boolean;
-      //   algorithm: string;
-      //   fmvAsOn31Jan2018: string;
-      //   indexCostOfAcquisition: number;
-      // }
       data.push({
         id: i + 1,
-        assetType: this.ITR_JSON.capitalGain[i].assetType,
+        assetType: labData[0].assetType,
         description: assetDetails.description,
         sellDate: assetDetails.sellDate,
         valueInConsideration: /* value */assetDetails.valueInConsideration,
         // totalCost: tCost,
         gainType: assetDetails.gainType,
-        cgIncome: cgIncome.length > 0 ? cgIncome[0].cgIncome : 0,
+        cgIncome: assetDetails.capitalGain,
         deductions: 0,//TODO
         sellExpense: assetDetails.sellExpense,
         improvements: costOfImprovement,
-        address: this.ITR_JSON.capitalGain[i].buyersDetails[0]?.address,
-        pin: this.ITR_JSON.capitalGain[i].buyersDetails[0]?.pin,
+        address: buyerDetails?.address,
+        pin: buyerDetails?.pin,
         // isExemptionApplied: cgIncome.length > 0 ? cgIncome[0].isExemptionApplied : false,
         isShow: true,
         rowSpan: 1,
-        cgObject: JSON.stringify(cgObject)
+        assetSelected: JSON.stringify(assetDetails)
       });
-      console.log('row', cgObject);
+      console.log('row', assetDetails, costOfImprovement);
     }
 
-    // for (let i = 0; i < data.length; i++) {
-    //   const a = dataToReturn.filter(item => item.assetType === data[i].assetType && item.description === data[i].description);
-    //   if (a.length === 0) {
-    //     const aa = data.filter(item => item.assetType === data[i].assetType && item.description === data[i].description);
-    //     let index = 0;
-    //     aa.forEach(item => {
-    //       if (index === 0) {
-    //         item.isShow = true;
-    //         item.rowSpan = aa.length;
-    //         index = index + 1;
-    //       } else {
-    //         item.isShow = false;
-    //         item.rowSpan = 1;
-
-    //       }
-    //       dataToReturn.push(item);
-    //     });
-    //   }
-    // }
-    console.log('dataToReturn==========', dataToReturn);
+    
     return data;
   }
 
@@ -394,7 +342,7 @@ export class LandAndBuildingComponent implements OnInit, OnChanges {
         case 'edit': {
           //let cgObject = this.ITR_JSON.capitalGain[params.data.id-1];
           console.log('dtaa', params.data);
-          this.addCapitalGain('EDIT', JSON.parse(params.data.cgObject));
+          this.addCapitalGain('EDIT', JSON.parse(params.data.assetSelected));
           break;
         }
       }

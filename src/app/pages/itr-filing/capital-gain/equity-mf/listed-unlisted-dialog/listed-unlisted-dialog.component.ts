@@ -34,6 +34,7 @@ export class ListedUnlistedDialogComponent implements OnInit {
       nameOfTheUnits: [''],
       fmvAsOn31Jan2018: [null],
       gainType: [''],
+      grandFatheredValue: [0],
       indexCostOfAcquisition: [0],
       algorithm: ['cgSharesMF'],
       stampDutyValue: 0,
@@ -41,13 +42,13 @@ export class ListedUnlistedDialogComponent implements OnInit {
     });
     if (this.data.mode === 'EDIT') {
       this.assetDetailsForm.patchValue(this.data.assetDetails);
-      this.buyDateBefore31stJan = new Date(this.assetDetailsForm.controls['purchaseDate'].value) < new Date('01/31/2018');
+      this.buyDateBefore31stJan = new Date(this.assetDetailsForm.controls['purchaseDate'].value) < new Date('02/01/2018');
     }
   }
 
   calculateGainType() {
     if (this.assetDetailsForm.controls['purchaseDate'].valid) {
-      this.buyDateBefore31stJan = new Date(this.assetDetailsForm.controls['purchaseDate'].value) < new Date('01/31/2018');
+      this.buyDateBefore31stJan = new Date(this.assetDetailsForm.controls['purchaseDate'].value) < new Date('02/01/2018');
       if (!this.buyDateBefore31stJan) {
         this.assetDetailsForm.controls['isinCode'].setValue('');
         this.assetDetailsForm.controls['nameOfTheUnits'].setValue('');
@@ -63,7 +64,7 @@ export class ListedUnlistedDialogComponent implements OnInit {
     this.itrMsService.postMethod(param, req).subscribe((res: any) => {
       console.log('GAIN Type : ', res);
       this.assetDetailsForm.controls['gainType'].setValue(res.data.capitalGainType);
-      if (res.data.capitalGainType === 'SHORT_TERM_CAPITAL_GAIN') {
+      if (res.data.capitalGainType === 'SHORT') {
         this.assetDetailsForm.controls['isinCode'].setValue('');
         this.assetDetailsForm.controls['nameOfTheUnits'].setValue('');
         this.assetDetailsForm.controls['fmvAsOn31Jan2018'].setValue('');
@@ -71,6 +72,25 @@ export class ListedUnlistedDialogComponent implements OnInit {
     })
   }
 
+  calculateFMV() {
+    if (this.assetDetailsForm.controls['isinCode'].valid) {
+      
+      let req = {
+        "assetType": this.data.assetType,
+        "buyDate": this.assetDetailsForm.controls['purchaseDate'].value,
+        "sellDate": this.assetDetailsForm.controls['sellDate'].value
+      }
+      //https://dev-api.taxbuddy.com/itr/capital-gain/fmv?isinCode=
+      const param = `/capital-gain/fmv?isinCode=${this.assetDetailsForm.controls['isinCode'].value}`;
+      this.itrMsService.getMethod(param, req).subscribe((res: any) => {
+        console.log('FMV : ', res);
+        if (res.success) {
+          this.assetDetailsForm.controls['nameOfTheUnits'].setValue(res.data.name);
+          this.assetDetailsForm.controls['fmvAsOn31Jan2018'].setValue(res.data.fmvAsOn31stJan2018);
+        }
+      })
+    }
+  }
 
 
   saveDetails() {

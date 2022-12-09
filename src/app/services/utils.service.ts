@@ -739,6 +739,8 @@ export class UtilsService {
                     reject(error);
                 }
                 });
+            } else {
+                console.log('pinCode invalid', pinCode);
             }
         });
         return promise;

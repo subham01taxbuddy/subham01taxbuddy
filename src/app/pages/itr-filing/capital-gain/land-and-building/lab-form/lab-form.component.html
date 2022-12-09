@@ -263,8 +263,8 @@
       <thead style="background:#eaeaea">
         <tr class="table-head" style="border-left: 1px solid #e0e0e0;border-right: 2px solid #f2f0f0;">
           <th class="text-center">No</th>
-          <th class="text-center">Name</th>
           <th class="text-center">PAN</th>
+          <th class="text-center">Name</th>
           <th class="text-center">Aadhar</th>
           <th class="text-center">Shares (%)</th>
           <th class="text-center">Amount</th>
@@ -282,15 +282,7 @@
       <tbody formArrayName="buyersDetails">
         <tr *ngFor="let buyer of getBuyersDetailsArrayForImmovable.controls;let i=index" [formGroupName]="i">
           <td> {{i+1}}</td>
-          <td class="kids-name-td table-first-td">
-            <mat-form-field class="input-field-width">
-              <input matInput formControlName="name" name="buyer[i]" class="input-field" maxlength="25" capitalizeFirst required>
-              <mat-error
-                *ngIf="immovableForm.controls['buyersDetails'].controls[i].controls['name'].hasError('pattern')">
-                Enter valid name.</mat-error>
-            </mat-form-field>
-          </td>
-
+          
           <td class="kids-age-td">
             <mat-form-field class="input-field-width">
               <input matInput formControlName="pan" name="buyer[i]" class="input-field" maxlength="10" upperCase required trim
@@ -300,6 +292,16 @@
                 Enter valid PAN.</mat-error>
             </mat-form-field>
           </td>
+          <td class="kids-name-td table-first-td">
+            <mat-form-field class="input-field-width">
+              <input matInput formControlName="name" name="buyer[i]" class="input-field" maxlength="25" capitalizeFirst required>
+              <mat-error
+                *ngIf="immovableForm.controls['buyersDetails'].controls[i].controls['name'].hasError('pattern')">
+                Enter valid name.</mat-error>
+            </mat-form-field>
+          </td>
+
+          
           <td class="kids-age-td">
             <mat-form-field class="input-field-width">
               <input matInput formControlName="aadhaarNumber" name="buyer[i]" type="number" class="input-field" 
@@ -311,7 +313,7 @@
             <mat-form-field class="input-field-width">
               <input matInput class="input-field" name="buyer[i]" type="number" formControlName="share" maxlength="3"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                onkeypress="event.charCode >= 48 && event.charCode <= 57" required>
+                onkeypress="event.charCode >= 48 && event.charCode <= 57" (blur)="updateSaleValue(i)" required>
               <mat-error
                 *ngIf="immovableForm.controls['buyersDetails'].controls[i].controls['share'].hasError('pattern') || immovableForm.controls['buyersDetails'].controls[i].controls['share'].hasError('max')
                                               || immovableForm.controls['buyersDetails'].controls[i].controls['share'].hasError('min')">
