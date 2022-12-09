@@ -7,7 +7,7 @@ import { GridOptions } from 'ag-grid-community';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CapitalGain, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
@@ -86,6 +86,7 @@ export class AddInvestmentDialogComponent implements OnInit {
   }
   createInvestmentForm() {
     return this.fb.group({
+      srn: [null],
       underSection: ['', Validators.required],
       orgAssestTransferDate: [''],
       costOfNewAssets: ['', [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
@@ -144,11 +145,11 @@ export class AddInvestmentDialogComponent implements OnInit {
     this.calculateDeduction();
   }
 
-  calculateDeduction() {
+  async calculateDeduction() {
     //itr/calculate/capital-gain/deduction
-    if(!this.investmentForm.controls['costOfNewAssets'].value || !this.investmentForm.controls['investmentInCGAccount'].value){
-      return;
-    }
+    // if(!this.investmentForm.controls['costOfNewAssets'].value || !this.investmentForm.controls['investmentInCGAccount'].value){
+    //   return;
+    // }
     const param = '/calculate/capital-gain/deduction';
     let request = {
       capitalGain: this.data.capitalGain,
@@ -241,9 +242,10 @@ export class AddInvestmentDialogComponent implements OnInit {
     }
   } */
 
-  saveInvestments() {
+  async saveInvestments() {
     // TODO
     if (this.investmentForm.valid) {
+      await this.calculateDeduction();
       console.log('Investment form:', this.investmentForm.value)
       if (this.data.mode === 'ADD') {
         this.dialogRef.close(this.investmentForm.getRawValue());

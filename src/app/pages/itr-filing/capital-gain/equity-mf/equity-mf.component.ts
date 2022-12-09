@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { ITR_JSON, CapitalGain, NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON, NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { InvestmentDialogComponent } from '../investment-dialog/investment-dialog.component';
