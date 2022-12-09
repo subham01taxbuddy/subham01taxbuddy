@@ -20,9 +20,9 @@
           <th class="text-center">Name of Premises / Building / Village</th>
           <th class="text-center">Road / Street / Post Office</th>
           <th class="text-center">Area / Locality</th>
+          <th class="text-center"> PIN Code</th>
           <th class="text-center"> Town / City / District</th>
           <th class="text-center"> State</th>
-          <th class="text-center"> PIN Code</th>
           <th class="text-center"> Amount(cost)</th>
           <th class="text-center"> Description</th>
           <th class="action-th"> Actions </th>
@@ -32,9 +32,14 @@
         <tr *ngFor="let assets of getImmovableAssetsArrayForImmovable.controls;let i=index" [formGroupName]="i">
           
           <td class="kids-name-td table-first-td">
-            <mat-form-field class="input-field-width">
-              <input matInput class="input-field" name="assets[i]" formControlName="country"
-                maxlength="14" [disabled]>
+            <mat-form-field>
+              <mat-label>Country</mat-label>
+              <mat-select name="country" formControlName="country">
+                  <mat-option value="91"> India </mat-option>
+              </mat-select>
+              <!-- <mat-label>Country</mat-label>
+              <input type="text" trim matInput placeholder="Country" name="country" class="input-field"
+                  formControlName="country"> -->
             </mat-form-field>
           </td>
           <td class="kids-name-td table-first-td">
@@ -63,20 +68,22 @@
           </td>
           <td class="kids-name-td table-first-td">
             <mat-form-field class="input-field-width">
+              <input matInput class="input-field" name="assets[i]" formControlName="pinCode"
+                maxlength="14" (blur)="updateDataByPincode(i)" [disabled]>
+            </mat-form-field>
+          </td>
+          <td class="kids-name-td table-first-td">
+            <mat-form-field class="input-field-width">
               <input matInput class="input-field" name="assets[i]" formControlName="city"
                 maxlength="14" [disabled]>
             </mat-form-field>
           </td>
           <td class="kids-name-td table-first-td">
             <mat-form-field class="input-field-width">
-              <input matInput class="input-field" name="assets[i]" formControlName="state"
-                maxlength="14" [disabled]>
-            </mat-form-field>
-          </td>
-          <td class="kids-name-td table-first-td">
-            <mat-form-field class="input-field-width">
-              <input matInput class="input-field" name="assets[i]" formControlName="pinCode"
-                maxlength="14" [disabled]>
+              <mat-select name="assets[i]" formControlName="state" required>
+                <mat-option [value]="state.stateCode" *ngFor="let state of stateDropdown"> {{state.stateName}}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
           </td>
           <td class="kids-age-td">
@@ -86,7 +93,7 @@
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 required>
               <mat-error
-                *ngIf="immovableAssetsForm.controls['amount'].hasError('pattern')">
+                *ngIf="getImmovableAssetsArrayForImmovable.controls[i].controls['amount'].hasError('pattern')">
                 Enter
                 valid amount.</mat-error>
             </mat-form-field>

@@ -112,17 +112,35 @@ export class ScheduleALComponent implements OnInit {
       pinCode: null,
       amount: null
     }
-    this.immovableAssetsForm = this.createImmovableAssetsForm(immovable);
-
-    const immovableAssetsArray = <FormArray>this.immovableAssetsForm.get('immovableAssetsArray');
+    
+    this.immovableAssetsForm = this.createFormArray();
+    const immovableAssetsArray = <FormArray>this.immovableAssetsForm.controls['immovableAssetsArray'];
 
     this.immovableAssets = [];
     if(this.Copy_ITR_JSON.immovableAsset) {
       this.Copy_ITR_JSON.immovableAsset.forEach(obj => {
+        // this.immovableAssetsForm = this.createImmovableAssetsForm(obj);
         immovableAssetsArray.push(this.createImmovableAssetsForm(obj));
+        // this.updateDataByPincode(this.Copy_ITR_JSON.immovableAsset.indexOf(obj));
       });
     } 
 
+    
+  }
+
+  async updateDataByPincode(index) {
+    console.log('pin index',index);
+    const assetDetails = (this.immovableAssetsForm.controls['immovableAssetsArray'] as FormArray).controls[index] as FormGroup;
+    let pincode = assetDetails.controls['pinCode'];
+    console.log('pin', pincode.value);
+    await this.utilsService.getPincodeData(pincode).then(result => {
+      console.log('pindata', result);
+      // debugger
+      assetDetails.controls['city'].setValue(result.city);
+      assetDetails.controls['country'].setValue(result.countryCode);
+      assetDetails.controls['state'].setValue(result.stateCode);
+    });
+    
   }
 
   getState(stateCode) {
@@ -137,6 +155,12 @@ export class ScheduleALComponent implements OnInit {
     return country ? country.countryName : '';
   }
 
+  createFormArray() {
+    return this.fb.group({
+      immovableAssetsArray: this.fb.array([])
+    });
+  }
+
   createImmovableAssetsForm(obj: Immovable): FormGroup {
     return this.fb.group({
       description: [obj.description || null],
@@ -145,11 +169,10 @@ export class ScheduleALComponent implements OnInit {
       road: [obj.road || null],
       area: [obj.area || null],
       city: [obj.city || null],
-      state: [this.getState(obj.state)|| null],
-      country: [this.getCountry(obj.country) || null],
+      state: [obj.state|| null],
+      country: [obj.country || '91'],
       pinCode: [obj.pinCode || '', [Validators.required, Validators.pattern(AppConstants.PINCode), Validators.maxLength(6), Validators.minLength(6)]],
-      amount: [obj.amount || null, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]],
-      immovableAssetsArray: this.fb.array([])
+      amount: [obj.amount || null, [Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]]
     });
   }
 
