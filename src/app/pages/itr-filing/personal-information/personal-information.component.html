@@ -176,7 +176,7 @@
                             formControlName="city" class="input-field" maxlength="50" required>
                         <mat-error *ngIf="customerProfileForm.controls['address'].controls['city'].hasError('pattern')">
                             Enter character
-                            only sa.</mat-error>
+                            only.</mat-error>
                         <mat-error
                             *ngIf="customerProfileForm.controls['address'].controls['city'].hasError('required')">
                             Enter
@@ -221,7 +221,7 @@
                         <mat-form-field class="input-field-width" style="width: 90% !important;">
                             <input type="text" trim matInput formControlName="name" placeholder="" name="name[i]"
                                 class="input-field" maxlength="125" required>
-                                <mat-error
+                            <mat-error
                                 *ngIf="customerProfileForm.controls['bankDetails'].controls[i].controls['name'].hasError('pattern')">
                                 Enter character only.</mat-error>
                         </mat-form-field>
@@ -307,8 +307,8 @@
                 <div class="card__col-xs-12 card__col-sm-4" style="padding-top: 10px;">
                     <mat-form-field appearance="outline">
                         <mat-label>Date of filling</mat-label>
-                        <input matInput placeholder="Date of filling" [max]="fillingMaxDate"  readonly [matDatepicker]="picker1"
-                            autocomplete="off" formControlName="form10IEDate">
+                        <input matInput placeholder="Date of filling" [max]="fillingMaxDate" readonly
+                            [matDatepicker]="picker1" autocomplete="off" formControlName="form10IEDate">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                         <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">
