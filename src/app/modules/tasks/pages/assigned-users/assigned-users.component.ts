@@ -521,13 +521,14 @@ export class AssignedUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          // if (params.data.serviceType === 'ITR' || params.data.serviceType === 'TPA') {
+          if ((params.data.serviceType === 'ITR' && params.data.itrObjectStatus != 'ITR_FILED') 
+              ||  params.data.serviceType != 'ITR') {
             return `<button type="button" class="action_icon add_button" title="Re Assignment"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-            <i class="fa fa-refresh" aria-hidden="true" data-action-type="re-assign"></i>
-           </button>`;
-          // }
-          // return 'NA'
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+              <i class="fa fa-refresh" aria-hidden="true" data-action-type="re-assign"></i>
+            </button>`;
+          }
+          return 'NA'
         },
         width: 50,
         pinned: 'right',
