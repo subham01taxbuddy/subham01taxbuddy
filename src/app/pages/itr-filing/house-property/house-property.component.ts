@@ -83,17 +83,17 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['country'].setValue(result.countryCode);
       this.housePropertyForm.controls['state'].setValue(result.stateCode);
     });
-    
+
   }
 
   createHousePropertyForm(): FormGroup {
     return this.fb.group({
       propertyType: ['', Validators.required],
-      address: [''],
-      city: [''],
-      state: [''],
-      country: [''],
-      pinCode: [''],
+      address: ['', Validators.required],
+      city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+      state: ['', Validators.required],
+      country: ['', Validators.required],
+      pinCode: ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])],
       grossAnnualRentReceived: [null, [Validators.pattern(AppConstants.numericRegex), Validators.min(1)]],
       propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
       isEligibleFor80EE: [''],
@@ -109,7 +109,7 @@ export class HousePropertyComponent implements OnInit {
   }
   createTenantForm(obj: { name?: string, panNumber?: string } = {}): FormGroup {
     return this.fb.group({
-      name: [obj.name || '', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
+      name: [obj.name || '', [Validators.required]],
       panNumber: [obj.panNumber || '', Validators.pattern(AppConstants.panNumberRegex)],
     });
   }
@@ -341,13 +341,13 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['grossAnnualRentReceived'].updateValueAndValidity();
       this.housePropertyForm.controls['propertyTax'].setValue(null);
       this.housePropertyForm.controls['tenant'] = this.fb.array([]);
-      ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].setValidators([Validators.required, Validators.min(1)]);
+      ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].setValidators([Validators.min(1)]);
       ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].updateValueAndValidity();
     } else if (type === 'LOP') {
       const tenant = <FormArray>this.housePropertyForm.get('tenant');
       tenant.push(this.createTenantForm());
 
-      this.housePropertyForm.controls['grossAnnualRentReceived'].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.min(1)]);
+      this.housePropertyForm.controls['grossAnnualRentReceived'].setValidators([Validators.pattern(AppConstants.numericRegex), Validators.min(1)]);
       this.housePropertyForm.controls['grossAnnualRentReceived'].updateValueAndValidity();
 
       ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].setValidators(null);
@@ -357,7 +357,7 @@ export class HousePropertyComponent implements OnInit {
       // this.housePropertyForm.controls['isEligibleFor80EE'].setValue(false);
 
 
-      this.housePropertyForm.controls['grossAnnualRentReceived'].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.min(1)]);
+      this.housePropertyForm.controls['grossAnnualRentReceived'].setValidators([Validators.pattern(AppConstants.numericRegex), Validators.min(1)]);
       this.housePropertyForm.controls['grossAnnualRentReceived'].updateValueAndValidity();
 
       ((this.housePropertyForm.controls['loans'] as FormGroup).controls[0] as FormGroup).controls['interestAmount'].setValidators(null);

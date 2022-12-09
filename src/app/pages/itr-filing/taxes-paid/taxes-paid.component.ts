@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { GridOptions } from 'ag-grid-community';
+import { GridOptions, ValueSetterParams } from 'ag-grid-community';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -105,7 +105,7 @@ export class TaxesPaidComponent implements OnInit {
   createOnSalaryColumnDef() {
     return [
       {
-        headerName: 'TAN of employer',
+        headerName: 'TAN of employer*',
         field: 'deductorTAN',
         editable: true,
         suppressMovable: true,
@@ -127,7 +127,7 @@ export class TaxesPaidComponent implements OnInit {
         },
       },
       {
-        headerName: 'Name of employer',
+        headerName: 'Name of employer*',
         field: 'deductorName',
         editable: true,
         suppressMovable: true,
@@ -149,11 +149,19 @@ export class TaxesPaidComponent implements OnInit {
         },
       },
       {
-        headerName: 'Total amount credited',
+        headerName: 'Total amount credited*',
         field: 'totalAmountCredited',
         editable: true,
         suppressMovable: true,
         // cellEditor: 'numericEditor',
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.totalAmountCredited !== newValInt;
+          if (valueChanged) {
+            params.data.totalAmountCredited = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
         cellClassRules: {
           'invalid-row': function (params) {
             if (Number(params.data.totalAmountCredited) < Number(params.data.totalTdsDeposited)) {
@@ -170,11 +178,19 @@ export class TaxesPaidComponent implements OnInit {
         },
       },
       {
-        headerName: 'Total tax deducted',
+        headerName: 'Total tax deducted*',
         field: 'totalTdsDeposited',
         editable: true,
         suppressMovable: true,
         // cellEditor: 'numericEditor',
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.totalTdsDeposited !== newValInt;
+          if (valueChanged) {
+            params.data.totalTdsDeposited = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
         cellClassRules: {
           'invalid-row': function (params) {
             if (Number(params.data.totalAmountCredited) < Number(params.data.totalTdsDeposited)) {
@@ -394,6 +410,14 @@ export class TaxesPaidComponent implements OnInit {
         tooltip: function (params) {
           return ('Total amount credited should be numeric, no decimal, upto 14 digit.');
         },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.totalAmountCredited !== newValInt;
+          if (valueChanged) {
+            params.data.totalAmountCredited = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
       },
       {
         headerName: 'Total tax deducted',
@@ -413,6 +437,14 @@ export class TaxesPaidComponent implements OnInit {
         },
         tooltip: function (params) {
           return ('Total tax deducted should be numeric, no decimal, upto 14 digit.');
+        },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.totalTdsDeposited !== newValInt;
+          if (valueChanged) {
+            params.data.totalTdsDeposited = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
         },
       },
       {
@@ -629,6 +661,14 @@ export class TaxesPaidComponent implements OnInit {
         tooltip: function (params) {
           return ('Total amount credited should be numeric, no decimal, upto 14 digit.');
         },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.totalAmountCredited !== newValInt;
+          if (valueChanged) {
+            params.data.totalAmountCredited = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
       },
       {
         headerName: 'Total tax deducted',
@@ -652,7 +692,16 @@ export class TaxesPaidComponent implements OnInit {
         tooltip: function (params) {
           return ('Total tax deducted should be numeric, no decimal, upto 14 digit.');
         },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.totalTdsDeposited !== newValInt;
+          if (valueChanged) {
+            params.data.totalTdsDeposited = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
       },
+
       {
         headerName: 'Clear',
         editable: false,
@@ -784,7 +833,7 @@ export class TaxesPaidComponent implements OnInit {
   createTcsColumnDef() {
     return [
       {
-        headerName: 'TAN of collector',
+        headerName: 'TAN of collector*',
         field: 'collectorTAN',
         editable: true,
         suppressMovable: true,
@@ -806,7 +855,7 @@ export class TaxesPaidComponent implements OnInit {
         },
       },
       {
-        headerName: 'Collector name',
+        headerName: 'Collector name*',
         field: 'collectorName',
         editable: true,
         suppressMovable: true,
@@ -828,7 +877,7 @@ export class TaxesPaidComponent implements OnInit {
         },
       },
       {
-        headerName: 'Amount paid',
+        headerName: 'Amount*',
         field: 'totalAmountPaid',
         editable: true,
         suppressMovable: true,
@@ -836,15 +885,31 @@ export class TaxesPaidComponent implements OnInit {
         tooltip: function (params) {
           return ('Amount paid should be numeric, no decimal, upto 14 digit.');
         },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.totalAmountPaid !== newValInt;
+          if (valueChanged) {
+            params.data.totalAmountPaid = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
       },
       {
-        headerName: 'Total TCS deposited',
+        headerName: 'Total TCS deposited*',
         field: 'totalTcsDeposited',
         editable: true,
         suppressMovable: true,
         // cellEditor: 'numericEditor',
         tooltip: function (params) {
           return ('Total TCS deposited should be numeric, no decimal, upto 14 digit.');
+        },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.totalTcsDeposited !== newValInt;
+          if (valueChanged) {
+            params.data.totalTcsDeposited = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
         },
       },
       {
@@ -966,7 +1031,7 @@ export class TaxesPaidComponent implements OnInit {
   createOtherThanTdsTcsColumnDef() {
     return [
       {
-        headerName: 'BSR code',
+        headerName: 'BSR code*',
         field: 'bsrCode',
         editable: true,
         suppressMovable: true,
@@ -986,9 +1051,17 @@ export class TaxesPaidComponent implements OnInit {
           }
           return '';
         },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.bsrCode !== newValInt;
+          if (valueChanged) {
+            params.data.bsrCode = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
       },
       {
-        headerName: 'Date of deposit',
+        headerName: 'Date of deposit*',
         field: 'dateOfDeposit',
         editable: true,
         suppressMovable: true,
@@ -1011,7 +1084,7 @@ export class TaxesPaidComponent implements OnInit {
         // },
       },
       {
-        headerName: 'Serial number of challan',
+        headerName: 'Serial number of challan*',
         field: 'challanNumber',
         editable: true,
         suppressMovable: true,
@@ -1019,15 +1092,31 @@ export class TaxesPaidComponent implements OnInit {
         tooltip: function (params) {
           return ('Serial number of challan should be numeric, upto 5 digit.');
         },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.challanNumber !== newValInt;
+          if (valueChanged) {
+            params.data.challanNumber = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
       },
       {
-        headerName: 'Total tax paid',
+        headerName: 'Total tax paid*',
         field: 'totalTax',
         editable: true,
         suppressMovable: true,
         // cellEditor: 'numericEditor',
         tooltip: function (params) {
           return ('Total tax paid should be numeric, no decimal, upto 14 digit.');
+        },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.totalTax !== newValInt;
+          if (valueChanged) {
+            params.data.totalTax = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
         },
       },
       {
