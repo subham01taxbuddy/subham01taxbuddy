@@ -27,7 +27,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   docUrl = '';
   loading = false;
   personalInfoSubTab = 0;
-  incomeSubTab = 3; //init with other sources tab, as tabs before this don't have save button
+  incomeSubTab = 0; 
   constructor(private itrMsService: ItrMsService, public utilsService: UtilsService) { }
 
   ngOnInit() {
@@ -66,7 +66,8 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
       } else if (event.tabName === 'OTHER') {
         this.personalInfoSubTab = this.personalInfoSubTab + 1
       } else if (event.tabName === 'CAPITAL') {
-        this.incomeSubTab = this.incomeSubTab + 1
+        //other sources tab is 3, as tabs before this don't have save button
+        this.incomeSubTab = 4
       }
     } else {
       this.stepper.next();
