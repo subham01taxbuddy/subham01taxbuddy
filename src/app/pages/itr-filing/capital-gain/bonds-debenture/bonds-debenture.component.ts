@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as moment from 'moment';
 import { Bonds, Deduction, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -55,56 +55,32 @@ export class BondsDebentureComponent implements OnInit {
     costOfPlantMachinary: null
   }
 
-  gain = [
-    { name: 'LTCG', value: 'LONG' }, { name: 'STCG', value: 'SHORT' }
-  ]
+
+  bondsForm: FormGroup;
+  deductionForm: FormGroup;
   constructor(
     public utilsService: UtilsService,
     public matDialog: MatDialog,
     public snackBar: MatSnackBar,
     private formBuilder: FormBuilder,
     private toastMsgService: ToastMessageService,
-    private itrMsService: ItrMsService
+    private itrMsService: ItrMsService,
+    public dialogRef: MatDialogRef<BondsDebentureComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
 
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    if (this.data.type === 'BONDS') {
+      this.initBondForm(this.data.data);
+    }
+    if (this.data.type === 'DEDUCTION') {
+      this.initDeductionForm(this.data.data);
+    }
   }
 
   ngOnInit(): void {
-    this.initForm();
-    this.addNewBondDeductionEntry();
-    this.addNewZeroBondDeductionEntry();
-    this.addNewBondEntry();
-    this.addNewZeroBondEntry();
-
-    const bondsArray = this.bonds;
-    const deductionArray = this.bondsDeduction;
-    const zeroBondsArray = this.zeroBonds;
-    const zeroDeductionArray = this.zeroBondsDeduction;
-    if (this.Copy_ITR_JSON.capitalGain) {
-      const data = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "BONDS");
-      data.forEach((obj: any) => {
-        obj.assetDetails.forEach((element: any) => {
-          bondsArray.push(this.createBondsForm(element));
-        });
-        obj.deduction.forEach((element: any) => {
-          deductionArray.push(this.createBondsDeductionForm(element));
-        })
-      });
-
-      const zeroData = this.Copy_ITR_JSON.capitalGain.filter((item: any) => item.assetType === "ZERO_COUPON_BONDS");
-      zeroData.forEach((obj: any) => {
-        obj.assetDetails.forEach((element: any) => {
-          zeroBondsArray.push(this.createZeroBondsForm(element));
-        })
-        obj.deduction.forEach((element: any) => {
-          zeroDeductionArray.push(this.createZeroBondsDeductionForm(element));
-        })
-      });
-
-    }
 
   }
 
@@ -118,50 +94,9 @@ export class BondsDebentureComponent implements OnInit {
       zeroBondsDeduction: new FormArray([])
     })
   }
-
-  get bonds() {
-    return this.bondDebtForm.get('bonds') as FormArray;
-  }
-
-  get bondsDeduction() {
-    return this.bondDebtForm.get('bondsDeduction') as FormArray;
-  }
-
-  get zeroBonds() {
-    return this.bondDebtForm.get('zeroBonds') as FormArray;
-  }
-
-  get zeroBondsDeduction() {
-    return this.bondDebtForm.get('zeroBondsDeduction') as FormArray;
-  }
-
-  addNewBondEntry() {
-    const bondFormArray = this.bonds;
-    bondFormArray.push(this.createBondsForm(this.bondsData));
-    this.getDeductionCapitalGain(this.bondsDeduction.controls[0], 'BONDS')
-  }
-
-  addNewBondDeductionEntry() {
-    const bondFormArray = this.bondsDeduction;
-    bondFormArray.push(this.createBondsDeductionForm(this.bondsDeductionData));
-  }
-
-  addNewZeroBondEntry() {
-    const bondFormArray = this.zeroBonds;
-    bondFormArray.push(this.createZeroBondsForm(this.bondsData));
-    this.getDeductionCapitalGain(this.zeroBondsDeduction.controls[0], 'ZERO_COUPON_BONDS')
-  }
-
-  addNewZeroBondDeductionEntry() {
-    const bondFormArray = this.zeroBondsDeduction;
-    bondFormArray.push(this.createZeroBondsDeductionForm(this.bondsDeductionData));
-  }
-
-  createBondsForm(obj?: Bonds): FormGroup {
-    const length = this.bonds.length;
-
-    return this.formBuilder.group({
-      srn: [obj.srn || length + 1, Validators.required],
+  initBondForm(obj: Bonds) {
+    this.bondsForm = this.formBuilder.group({
+      srn: [obj.srn],
       id: [obj.id || null],
       description: [obj.description || null],
       stampDutyValue: [obj.stampDutyValue || null],
@@ -177,7 +112,7 @@ export class BondsDebentureComponent implements OnInit {
       sellDate: [obj.sellDate || null, Validators.required],
       sellValue: [obj.sellValue || null],
       sellExpense: [obj.sellExpense || null, Validators.required],
-      gainType: [obj.gainType || null, Validators.required],
+      gainType: [obj.gainType || null],
       capitalGain: [obj.capitalGain || null],
       purchaseValuePerUnit: [obj.purchaseValuePerUnit || null],
       isUploaded: [obj.isUploaded || null],
@@ -188,236 +123,19 @@ export class BondsDebentureComponent implements OnInit {
     });
   }
 
-  createBondsDeductionForm(obj?: Deduction): FormGroup {
-    return this.formBuilder.group({
+  initDeductionForm(obj: Deduction) {
+    this.deductionForm = this.formBuilder.group({
       srn: [obj.srn || null],
       underSection: [obj.underSection || 'Deduction 54F'],
       orgAssestTransferDate: [obj.orgAssestTransferDate || null],
       panOfEligibleCompany: [obj.panOfEligibleCompany || null],
       purchaseDatePlantMachine: [obj.purchaseDatePlantMachine || null],
-      purchaseDate: [obj.purchaseDate || null],
-      costOfNewAssets: [obj.costOfNewAssets || null],
-      investmentInCGAccount: [obj.investmentInCGAccount || null],
-      totalDeductionClaimed: [obj.totalDeductionClaimed || null],
-      costOfPlantMachinary: [obj.costOfPlantMachinary || null],
-    });
-  }
-
-  createZeroBondsForm(obj?: Bonds): FormGroup {
-    const length = this.zeroBonds.length;
-    return this.formBuilder.group({
-      srn: [obj.srn || length + 1, Validators.required],
-      id: [obj.id || null],
-      description: [obj.description || null],
-      stampDutyValue: [obj.stampDutyValue || null],
-      valueInConsideration: [obj.valueInConsideration || null, Validators.required],
-      purchaseCost: [obj.purchaseCost || null],
-      isinCode: [obj.isinCode || null],
-      nameOfTheUnits: [obj.nameOfTheUnits || null],
-      sellOrBuyQuantity: [obj.sellOrBuyQuantity || null],
-      sellValuePerUnit: [obj.sellValuePerUnit || null],
       purchaseDate: [obj.purchaseDate || null, Validators.required],
-      indexCostOfAcquisition: [obj.indexCostOfAcquisition || null, Validators.required],
-      costOfImprovement: [obj.costOfImprovement || null, Validators.required],
-      sellDate: [obj.sellDate || null, Validators.required],
-      sellValue: [obj.sellValue || null],
-      sellExpense: [obj.sellExpense || null, Validators.required],
-      gainType: [obj.gainType || null, Validators.required],
-      capitalGain: [obj.capitalGain || null],
-      purchaseValuePerUnit: [obj.purchaseValuePerUnit || null],
-      isUploaded: [obj.isUploaded || null],
-      hasIndexation: [obj.hasIndexation || null],
-      algorithm: [obj.algorithm || null],
-      fmvAsOn31Jan2018: [obj.fmvAsOn31Jan2018 || null],
-
-    });
-  }
-
-  createZeroBondsDeductionForm(obj?: Deduction): FormGroup {
-    return this.formBuilder.group({
-      srn: [obj.srn || null],
-      underSection: [obj.underSection || 'Deduction 54F'],
-      orgAssestTransferDate: [obj.orgAssestTransferDate || null],
-      panOfEligibleCompany: [obj.panOfEligibleCompany || null],
-      purchaseDatePlantMachine: [obj.purchaseDatePlantMachine || null],
-      purchaseDate: [obj.purchaseDate || null],
-      costOfNewAssets: [obj.costOfNewAssets || null],
-      investmentInCGAccount: [obj.investmentInCGAccount || null],
+      costOfNewAssets: [obj.costOfNewAssets || null , Validators.required],
+      investmentInCGAccount: [obj.investmentInCGAccount || null, Validators.required],
       totalDeductionClaimed: [obj.totalDeductionClaimed || null],
       costOfPlantMachinary: [obj.costOfPlantMachinary || null],
     });
-  }
-
-  removeBonds(index) {
-    const immovable = this.bonds;
-    immovable.removeAt(index);
-    this.getDeductionCapitalGain(this.bondsDeduction.controls[0], 'BONDS')
-  }
-
-  removeBondsDeduction(index) {
-    const immovable = this.bondsDeduction;
-    immovable.removeAt(index);
-  }
-
-  removeZeroBonds(index) {
-    const immovable = this.zeroBonds;
-    immovable.removeAt(index);
-    this.getDeductionCapitalGain(this.zeroBondsDeduction.controls[0], 'ZERO_COUPON_BONDS')
-  }
-
-  removeZeroBondsDeduction(index) {
-    const immovable = this.zeroBondsDeduction;
-    immovable.removeAt(index);
-  }
-
-  getCGType(assets, type) {
-    if (assets.controls.purchaseDate.value && assets.controls.sellDate.value) {
-      let param = '/calculate/indexed-cost';
-      let purchaseDate = assets.controls.purchaseDate.value;
-      let sellDate = assets.controls.sellDate.value;
-      let request = {
-        "assetType": type,
-        "buyDate": moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
-        "sellDate": moment(new Date(sellDate)).format('YYYY-MM-DD')
-      };
-      this.itrMsService.postMethod(param, request).subscribe((result: any) => {
-        if (result.success) {
-          assets.controls.gainType.setValue(result.data.capitalGainType);
-        }
-      },
-        error => {
-          this.toastMsgService.alert("error", "Something went wrong please try again.")
-        })
-    }
-  }
-
-  getSingleCGGain(assets, type) {
-    if (assets.valid) {
-      const param = '/singleCgCalculate';
-      let request = {
-        assessmentYear: "2022-2023",
-        assesseeType: "INDIVIDUAL",
-        residentialStatus: "RESIDENT",
-        assetType: type,
-        assetDetails: [assets.getRawValue()],
-
-        "improvement": [
-          {
-            "srn": assets.controls.srn.value,
-            "dateOfImprovement": " ",
-            "costOfImprovement": assets.controls.costOfImprovement.value,
-          }
-        ],
-      }
-
-      this.itrMsService.postMethod(param, request).subscribe((res: any) => {
-        assets.controls.capitalGain.setValue(res.assetDetails[0].capitalGain)
-      }, error => {
-        this.toastMsgService.alert("error", "Something went wrong please try again.")
-      })
-    }
-  }
-
-  getDeductionCapitalGain(assets, type) {
-    if (assets.valid) {
-      let capitalGain = 0;
-      let saleValue = 0;
-      let expenses = 0;
-      if (type === 'BONDS') {
-        this.bonds.controls.forEach((element: FormGroup) => {
-          capitalGain += parseInt(element.controls['capitalGain'].value);
-          saleValue += parseInt(element.controls['valueInConsideration'].value);
-          expenses += parseInt(element.controls['sellExpense'].value);
-        });
-      } else {
-        this.zeroBonds.controls.forEach((element: FormGroup) => {
-          capitalGain += parseInt(element.controls['capitalGain'].value);
-          saleValue += parseInt(element.controls['valueInConsideration'].value);
-          expenses += parseInt(element.controls['sellExpense'].value);
-        });
-      }
-      let param = '/calculate/capital-gain/deduction';
-      let request = {
-        "capitalGain": capitalGain,
-        "capitalGainDeductions": [
-          {
-            "deductionSection": "SECTION_54F",
-            "costOfNewAsset": parseInt(assets.controls.costOfNewAssets.value),
-            "cgasDepositedAmount": parseInt(assets.controls.investmentInCGAccount.value),
-            "saleValue": saleValue,
-            "expenses": expenses
-          },
-        ]
-
-      };
-      this.itrMsService.postMethod(param, request).subscribe((result: any) => {
-        if (result.success) {
-          if (result.data.length > 0) {
-            assets.controls.totalDeductionClaimed.setValue(result.data[0].deductionAmount)
-          } else {
-            assets.controls.totalDeductionClaimed.setValue(0)
-          }
-        }
-      },
-        error => {
-          this.toastMsgService.alert("error", "Something went wrong please try again.")
-        })
-    }
-  }
-
-  addDeductionValidators() {
-    if (this.bondDebtForm.controls['deduction'].value === true) {
-      this.bondsDeduction.controls.forEach((element: any) => {
-        element.controls.underSection.setValidators([Validators.required]);
-        element.controls.underSection.updateValueAndValidity();
-        element.controls.purchaseDate.setValidators([Validators.required]);
-        element.controls.purchaseDate.updateValueAndValidity();
-        element.controls.costOfNewAssets.setValidators([Validators.required]);
-        element.controls.costOfNewAssets.updateValueAndValidity();
-        element.controls.investmentInCGAccount.setValidators([Validators.required]);
-        element.controls.investmentInCGAccount.updateValueAndValidity();
-
-      });
-    } else {
-      this.bondsDeduction.controls.forEach((element: any) => {
-        element.controls.underSection.removeValidators(null);
-        element.controls.underSection.updateValueAndValidity();
-        element.controls.purchaseDate.removeValidators(null);
-        element.controls.purchaseDate.updateValueAndValidity();
-        element.controls.costOfNewAssets.removeValidators(null);
-        element.controls.costOfNewAssets.updateValueAndValidity();
-        element.controls.investmentInCGAccount.removeValidators(null);
-        element.controls.investmentInCGAccount.updateValueAndValidity();
-      });
-    }
-  }
-
-  addZeroDeductionValidators() {
-    if (this.bondDebtForm.controls['zeroDeduction'].value === true) {
-      this.zeroBondsDeduction.controls.forEach((element: any) => {
-        element.controls.underSection.setValidators([Validators.required]);
-        element.controls.underSection.updateValueAndValidity();
-        element.controls.purchaseDate.setValidators([Validators.required]);
-        element.controls.purchaseDate.updateValueAndValidity();
-        element.controls.costOfNewAssets.setValidators([Validators.required]);
-        element.controls.costOfNewAssets.updateValueAndValidity();
-        element.controls.investmentInCGAccount.setValidators([Validators.required]);
-        element.controls.investmentInCGAccount.updateValueAndValidity();
-
-      });
-    } else {
-      this.zeroBondsDeduction.controls.forEach((element: any) => {
-        element.controls.underSection.removeValidators(null);
-        element.controls.underSection.updateValueAndValidity();
-        element.controls.purchaseDate.removeValidators(null);
-        element.controls.purchaseDate.updateValueAndValidity();
-        element.controls.costOfNewAssets.removeValidators(null);
-        element.controls.costOfNewAssets.updateValueAndValidity();
-        element.controls.investmentInCGAccount.removeValidators(null);
-        element.controls.investmentInCGAccount.updateValueAndValidity();
-
-      });
-    }
   }
 
   onContinue() {
@@ -481,6 +199,87 @@ export class BondsDebentureComponent implements OnInit {
     });
   }
 
+  cancel() {
+    this.dialogRef.close()
+  }
 
+  saveBondDetails() {
+    let param = '/calculate/indexed-cost';
+    let purchaseDate = this.bondsForm.controls['purchaseDate'].value;
+    let sellDate = this.bondsForm.controls['sellDate'].value;
+    let request = {
+      "assetType": 'BONDS',
+      "buyDate": moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
+      "sellDate": moment(new Date(sellDate)).format('YYYY-MM-DD')
+    };
+    this.itrMsService.postMethod(param, request).subscribe((result: any) => {
+      if (result.success) {
+        this.bondsForm.controls['gainType'].setValue(result.data.capitalGainType);
 
+        const param = '/singleCgCalculate';
+        let request = {
+          assessmentYear: "2022-2023",
+          assesseeType: "INDIVIDUAL",
+          residentialStatus: "RESIDENT",
+          assetType: 'BONDS',
+          assetDetails: [this.bondsForm.getRawValue()],
+
+          "improvement": [
+            {
+              "srn": this.bondsForm.controls['srn'].value,
+              "dateOfImprovement": "",
+              "costOfImprovement": this.bondsForm.controls['costOfImprovement'].value,
+            }
+          ],
+        }
+        this.itrMsService.postMethod(param, request).subscribe((res: any) => {
+          this.bondsForm.controls['capitalGain'].setValue(res.assetDetails[0].capitalGain);
+          this.dialogRef.close(this.bondsForm.value)
+        }, error => {
+          this.toastMsgService.alert("error", "Something went wrong please try again.")
+        })
+      }
+    },
+      error => {
+        this.toastMsgService.alert("error", "Something went wrong please try again.")
+      })
+  }
+
+  saveDeductionDetails() {
+    let capitalGain = 0;
+    let saleValue = 0;
+    let expenses = 0;
+    this.data.rowData.forEach((element: any) => {
+      capitalGain += parseInt(element.capitalGain);
+      saleValue += parseInt(element.valueInConsideration);
+      expenses += parseInt(element.sellExpense);
+    });
+
+    let param = '/calculate/capital-gain/deduction';
+    let request = {
+      "capitalGain": capitalGain,
+      "capitalGainDeductions": [
+        {
+          "deductionSection": "SECTION_54F",
+          "costOfNewAsset": parseInt(this.deductionForm.controls['costOfNewAssets'].value),
+          "cgasDepositedAmount": parseInt(this.deductionForm.controls['investmentInCGAccount'].value),
+          "saleValue": saleValue,
+          "expenses": expenses
+        },
+      ]
+    };
+    this.itrMsService.postMethod(param, request).subscribe((result: any) => {
+      if (result.success) {
+        if (result.data.length > 0) {
+          this.deductionForm.controls['totalDeductionClaimed'].setValue(result.data[0].deductionAmount)
+        } else {
+          this.deductionForm.controls['totalDeductionClaimed'].setValue(0)
+        }
+        this.dialogRef.close(this.deductionForm.value)
+      }
+    },
+      error => {
+        this.toastMsgService.alert("error", "Something went wrong please try again.")
+      })
+  }
 }

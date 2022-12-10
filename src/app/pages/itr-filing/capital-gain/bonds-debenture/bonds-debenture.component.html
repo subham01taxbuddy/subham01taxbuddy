@@ -1,395 +1,121 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-
-<form [formGroup]="bondDebtForm" style="margin-top: 20px">
-    <div>
-        <div>
-            <div class="card__col-xs-12 card__col-sm-10">
-                <b>Bonds or debentures (other than capital indexed bonds issued by Government)</b>
+<div *ngIf="data.type==='BONDS'">
+    <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Bonds':'Update Bonds'}}</div>
+    <form [formGroup]="bondsForm" style="margin-top: 20px">
+        <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" placeholder="Buy Date" formControlName="purchaseDate"
+                        name="purchaseDate" [matDatepicker]="purchaseDate">
+                    <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+                    <mat-datepicker #purchaseDate></mat-datepicker>
+                    <mat-error *ngIf="bondsForm.controls['purchaseDate'].hasError('required')">Please select
+                        date</mat-error>
+                </mat-form-field>
             </div>
-            <div class="card__col-xs-12 card__col-sm-2" style="text-align: right;">
-                <button class="tbd-btn-small" style="text-align: right;" (click)="addNewBondEntry()">Add
-                    More&nbsp;&nbsp;
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
+
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput digitsOnly class="input-field"
+                        placeholder="Cost of Acquisition without indexation (Purchase value)"
+                        formControlName="indexCostOfAcquisition" maxlength="14">
+                    <mat-error *ngIf="bondsForm.controls['indexCostOfAcquisition'].hasError('required')">Please enter
+                        cost of acquisition</mat-error>
+                </mat-form-field>
             </div>
-        </div><br>
-        <div class="table-responsive" style="margin-top: 40px; margin-left: 10px;">
-            <table class="table table-bordered" style="border: 1px solid #bdc3c7; width: 100%;">
-                <thead class="table-header">
-                    <tr class="table-head">
-                        <th class="text-center">Sr. No</th>
-                        <th class="text-center">Buy Date</th>
-                        <th class="text-center">Cost of Acquisition without indexation (Purchase value)'</th>
-                        <th class="text-center">Cost of improvement without indexation</th>
-                        <th class="text-center">Sale Date</th>
-                        <th class="text-center"> Sale value/Full value consideration</th>
-                        <th class="text-center"> Expenses</th>
-                        <th class="text-center"> Type of capital gain</th>
-                        <th class="text-center"> Total capital gain</th>
-                        <th class="action-th"> Actions </th>
-                    </tr>
-                </thead>
-                <tbody formArrayName="bonds">
-                    <tr *ngFor="let assets of bonds.controls;let i=index" [formGroupName]="i">
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" type="number" name="assets[i]" formControlName="srn"
-                                    maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" [matDatepicker]="picker1" name="assets[i]"
-                                    formControlName="purchaseDate"
-                                    (change)="getCGType(assets, 'BONDS');getSingleCGGain(assets, 'BONDS')"
-                                    maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" class="input-field" name="assets[i]"
-                                    formControlName="indexCostOfAcquisition" (change)="getSingleCGGain(assets, 'BONDS')"
-                                    maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" type="number" name="assets[i]"
-                                    (change)="getSingleCGGain(assets, 'BONDS')" formControlName="costOfImprovement"
-                                    maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" [matDatepicker]="picker2" name="assets[i]"
-                                    formControlName="sellDate"
-                                    (change)="getCGType(assets,'BONDS'); getSingleCGGain(assets,'BONDS')"
-                                    maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" name="assets[i]" type="number"
-                                    (change)="getSingleCGGain(assets, 'BONDS');getDeductionCapitalGain(bondsDeduction.controls[0],'BONDS')"
-                                    formControlName="valueInConsideration" maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" name="assets[i]" type="number"
-                                    (change)="getSingleCGGain(assets, 'BONDS'); getDeductionCapitalGain(bondsDeduction.controls[0],'BONDS')"
-                                    formControlName="sellExpense" maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <mat-select class="hide" name="assets[i]" formControlName="gainType" disabled>
-                                    <mat-option *ngFor="let type of gain" [value]="type.value">
-                                        {{type.name}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-age-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" formControlName="capitalGain" name="assets[i]"
-                                    class="input-field" maxlength="14" readonly
-                                    (change)="getDeductionCapitalGain(bondsDeduction.controls[0],'BONDS')">
 
-                            </mat-form-field>
-                        </td>
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" digitsOnly placeholder="Cost of improvement without indexation"
+                        formControlName="costOfImprovement" maxlength="14">
+                    <mat-error *ngIf="bondsForm.controls['costOfImprovement'].hasError('required')">Please enter
+                        cost of improvement</mat-error>
+                </mat-form-field>
+            </div>
 
-                        <td class="action-th "
-                            style="white-space: nowrap;padding: 0%;border:none;justify-content: center;">
-                            <button mat-icon-button color="warn" class="table-add-remove-button text-left"
-                                (click)="removeBonds(i)">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" [matDatepicker]="sellDate" placeholder="Sale Date"
+                        formControlName="sellDate" name="sellDate" maxlength="14">
+                    <mat-datepicker-toggle matSuffix [for]="sellDate"></mat-datepicker-toggle>
+                    <mat-datepicker #sellDate></mat-datepicker>
+                    <mat-error *ngIf="bondsForm.controls['sellDate'].hasError('required')">Please select
+                        sale date</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" name="assets[i]" digitsOnly
+                        placeholder="Sale value/Full value consideration" formControlName="valueInConsideration"
+                        maxlength="14">
+                    <mat-error *ngIf="bondsForm.controls['valueInConsideration'].hasError('required')">Please enter
+                        sale value</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" name="assets[i]" placeholder="Expense"
+                        formControlName="sellExpense" maxlength="14" digitsOnly>
+                    <mat-error *ngIf="bondsForm.controls['sellExpense'].hasError('required')">Please enter
+                        Expense</mat-error>
+                </mat-form-field>
+            </div>
         </div>
-    </div>
-    <div style="margin-top: 20px">
-        <div>
-            <div class="card__col-xs-12 card__col-sm-10">
-                <b>Add deduction under section 54F? </b>
-                <i class="fa fa-info-circle" aria-hidden="true"
-                    matTooltip="Applicable for any capital assets other than residential HP"
-                    matTooltipClass="tab-tooltip" matTooltipPosition="above" data-action-type="redirectUrl"></i>
+        <div class="row dialog-button">
+            <div class="sub_btn top-space">
+                <button type="submit" class="tbd-btn" [disabled]="bondsForm.invalid" (click)="saveBondDetails()">Save</button>
+                <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
             </div>
-            <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
-                <mat-radio-group formControlName="deduction" (change)="addDeductionValidators()">
-                    <mat-radio-button [value]="true" style="margin-left:0px;margin-right:2px" labelPosition='before'>Yes
-                    </mat-radio-button>
-                    <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
-                </mat-radio-group>
-            </div>
-            <!-- <div class="card__col-xs-12 card__col-sm-2" style="text-align: right;">
-                <button class="tbd-btn-small" style="text-align: right;" (click)="addNewBondDeductionEntry()">Add
-                    More&nbsp;&nbsp;
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-            </div> -->
-
-        </div><br>
-        <div class="table-responsive" style="margin-top: 40px; margin-left: 10px;">
-            <table class="table table-bordered" style="border: 1px solid #bdc3c7; width: 100%;">
-                <thead class="table-header">
-                    <tr class="table-head">
-                        <th class="text-center">Type of deduction</th>
-                        <th class="text-center">Purchase date of new asset</th>
-                        <th class="text-center">Cost of new Asset</th>
-                        <th class="text-center">Amount deposited in CGAS before due date</th>
-                        <th class="text-center">Amount of deduction claimed</th>
-                        <!-- <th class="action-th"> Actions </th> -->
-                    </tr>
-                </thead>
-                <tbody formArrayName="bondsDeduction">
-                    <tr *ngFor="let assets of bondsDeduction.controls;let i=index" [formGroupName]="i">
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" name="assets[i]" formControlName="underSection"
-                                    required maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" [matDatepicker]="picker1" name="assets[i]"
-                                    formControlName="purchaseDate" required maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" class="input-field" name="assets[i]"
-                                    (change)="getDeductionCapitalGain(assets,'BONDS')" formControlName="costOfNewAssets"
-                                    required maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" class="input-field" name="assets[i]"
-                                    (change)="getDeductionCapitalGain(assets,'BONDS')"
-                                    formControlName="investmentInCGAccount" required maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" class="input-field" name="assets[i]"
-                                    formControlName="totalDeductionClaimed" readonly maxlength="14">
-                            </mat-form-field>
-                        </td>
-
-                        <!-- <td class="action-th "
-                            style="white-space: nowrap;padding: 0%;border:none;justify-content: center;">
-                            <button mat-icon-button color="warn" class="table-add-remove-button text-left"
-                                (click)="removeBondsDeduction(i)">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </button>
-                        </td> -->
-                    </tr>
-                </tbody>
-            </table>
         </div>
-    </div>
-    <div style="margin-top: 20px">
-        <div>
-            <div class="card__col-xs-12 card__col-sm-10">
-                <b>Zero Coupon Bonds </b>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-2" style="text-align: right;">
-                <button class="tbd-btn-small" style="text-align: right;" (click)="addNewZeroBondEntry()">Add
-                    More&nbsp;&nbsp;
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-            </div>
-        </div><br>
-        <div class="table-responsive" style="margin-top: 40px; margin-left: 10px;">
-            <table class="table table-bordered" style="border: 1px solid #bdc3c7; width: 100%;">
-                <thead class="table-header">
-                    <tr class="table-head">
-                        <th class="text-center">Sr. No</th>
-                        <th class="text-center">Buy Date</th>
-                        <th class="text-center">Cost of Acquisition without indexation (Purchase value)'</th>
-                        <th class="text-center">Cost of improvement without indexation</th>
-                        <th class="text-center">Sale Date</th>
-                        <th class="text-center"> Sale value/Full value consideration</th>
-                        <th class="text-center"> Expenses</th>
-                        <th class="text-center"> Type of capital gain</th>
-                        <th class="text-center"> Total capital gain</th>
-                        <th class="action-th"> Actions </th>
-                    </tr>
-                </thead>
-                <tbody formArrayName="zeroBonds">
-                    <tr *ngFor="let assets of zeroBonds.controls;let i=index" [formGroupName]="i">
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" class="input-field" name="assets[i]" formControlName="srn"
-                                    maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" [matDatepicker]="picker1" name="assets[i]"
-                                    formControlName="purchaseDate"
-                                    (change)="getCGType(assets,'ZERO_COUPON_BONDS'); getSingleCGGain(assets, 'ZERO_COUPON_BONDS')"
-                                    maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" class="input-field" name="assets[i]"
-                                    formControlName="indexCostOfAcquisition"
-                                    (change)="getSingleCGGain(assets, 'ZERO_COUPON_BONDS')" maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" class="input-field" name="assets[i]"
-                                    formControlName="costOfImprovement"
-                                    (change)="getSingleCGGain(assets, 'ZERO_COUPON_BONDS')" maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" [matDatepicker]="picker2" name="assets[i]"
-                                    formControlName="sellDate"
-                                    (change)="getCGType(assets,'ZERO_COUPON_BONDS');getSingleCGGain(assets, 'ZERO_COUPON_BONDS')"
-                                    maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" class="input-field" name="assets[i]"
-                                    (change)="getSingleCGGain(assets, 'ZERO_COUPON_BONDS');getDeductionCapitalGain(zeroBondsDeduction.controls[0],'ZERO_COUPON_BONDS')"
-                                    formControlName="valueInConsideration" maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" class="input-field" name="assets[i]"
-                                    (change)="getSingleCGGain(assets, 'ZERO_COUPON_BONDS');getDeductionCapitalGain(zeroBondsDeduction.controls[0],'ZERO_COUPON_BONDS')"
-                                    formControlName="sellExpense" maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <mat-select class="hide" name="assets[i]" formControlName="gainType" disabled>
-                                    <mat-option *ngFor="let type of gain" [value]="type.value">
-                                        {{type.name}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-age-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" formControlName="capitalGain" name="assets[i]"
-                                    class="input-field" readonly maxlength="14"
-                                    (change)="getDeductionCapitalGain(zeroBondsDeduction.controls[0],'ZERO_COUPON_BONDS')">
+    </form>
+</div>
 
-                            </mat-form-field>
-                        </td>
+<div *ngIf="data.type==='DEDUCTION'">
+    <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Deduction':'Update Deduction'}}</div>
 
-                        <td class="action-th "
-                            style="white-space: nowrap;padding: 0%;border:none;justify-content: center;">
-                            <button mat-icon-button color="warn" class="table-add-remove-button text-left"
-                                (click)="removeZeroBonds(i)">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <form [formGroup]="deductionForm" style="margin-top: 20px">
+        <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" placeholder="Purchase date of new asset"
+                        formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate">
+                    <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+                    <mat-datepicker #purchaseDate></mat-datepicker>
+                    <mat-error *ngIf="deductionForm.controls['purchaseDate'].hasError('required')">Please select
+                        date</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-6">
+
+                <mat-form-field class="input-field-width">
+                    <input matInput digitsOnly class="input-field" placeholder="cost of new asset"
+                        formControlName="costOfNewAssets" required maxlength="14">
+                    <mat-error *ngIf="deductionForm.controls['costOfNewAssets'].hasError('required')">Please enter cost of
+                        new assets</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput digitsOnly class="input-field"
+                        placeholder="Amount deposited on CGAS before due date" formControlName="investmentInCGAccount"
+                        required maxlength="14">
+                    <mat-error *ngIf="deductionForm.controls['investmentInCGAccount'].hasError('required')">Please enter
+                        amount</mat-error>
+                </mat-form-field>
+            </div>
         </div>
-    </div>
-    <div style="margin-top: 20px">
-        <div>
-            <div class="card__col-xs-12 card__col-sm-10">
-                <b>Add deduction under section 54F? </b>
-                <i class="fa fa-info-circle" aria-hidden="true"
-                    matTooltip="Applicable for any capital assets other than residential HP"
-                    matTooltipClass="tab-tooltip" matTooltipPosition="above" data-action-type="redirectUrl"></i>
+        <div class="row dialog-button">
+            <div class="sub_btn top-space">
+                <button type="submit" class="tbd-btn" [disabled]="deductionForm.invalid" (click)="saveDeductionDetails()">Save</button>
+                <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
             </div>
-            <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
-                <mat-radio-group formControlName="zeroDeduction" (change)="addZeroDeductionValidators()">
-                    <mat-radio-button [value]="true" style="margin-left:0px;margin-right:2px" labelPosition='before'>Yes
-                    </mat-radio-button>
-                    <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
-                </mat-radio-group>
-            </div>
-            <!-- <div class="card__col-xs-12 card__col-sm-2" style="text-align: right;">
-                <button class="tbd-btn-small" style="text-align: right;" (click)="addNewZeroBondDeductionEntry()">Add
-                    More&nbsp;&nbsp;
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                </button>
-            </div> -->
-
-        </div><br>
-        <div class="table-responsive" style="margin-top: 40px; margin-left: 10px;">
-            <table class="table table-bordered" style="border: 1px solid #bdc3c7; width: 100%;">
-                <thead class="table-header">
-                    <tr class="table-head">
-                        <th class="text-center">Type of deduction</th>
-                        <th class="text-center">Purchase date of new asset</th>
-                        <th class="text-center">Cost of new Asset</th>
-                        <th class="text-center">Amount deposited in CGAS before due date</th>
-                        <th class="text-center">Amount of deduction claimed</th>
-                        <!-- <th class="action-th"> Actions </th> -->
-                    </tr>
-                </thead>
-                <tbody formArrayName="zeroBondsDeduction">
-                    <tr *ngFor="let assets of zeroBondsDeduction.controls;let i=index" [formGroupName]="i">
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" name="assets[i]" formControlName="underSection"
-                                    required maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput class="input-field" [matDatepicker]="picker1" name="assets[i]"
-                                    formControlName="purchaseDate" required maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" class="input-field" name="assets[i]"
-                                    formControlName="costOfNewAssets"
-                                    (change)="getDeductionCapitalGain(assets,'ZERO_COUPON_BONDS')" required
-                                    maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" class="input-field" name="assets[i]"
-                                    formControlName="investmentInCGAccount"
-                                    (change)="getDeductionCapitalGain(assets,'ZERO_COUPON_BONDS')" required
-                                    maxlength="14">
-                            </mat-form-field>
-                        </td>
-                        <td class="kids-name-td table-first-td">
-                            <mat-form-field class="input-field-width">
-                                <input matInput type="number" class="input-field" name="assets[i]"
-                                    formControlName="totalDeductionClaimed" readonly maxlength="14">
-                            </mat-form-field>
-                        </td>
-
-                        <!-- <td class="action-th "
-                            style="white-space: nowrap;padding: 0%;border:none;justify-content: center;">
-                            <button mat-icon-button color="warn" class="table-add-remove-button text-left"
-                                (click)="removeZeroBondsDeduction(i)">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </button>
-                        </td> -->
-                    </tr>
-                </tbody>
-            </table>
         </div>
-    </div>
-</form>
-<div class="btn-cfl">
+    </form>
+</div>
+
     <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
         &nbsp;&nbsp;Back</button>
     <button class="tbd-btn" (click)="onContinue()">&nbsp;&nbsp;Continue </button>
-</div>
+</div>  -->

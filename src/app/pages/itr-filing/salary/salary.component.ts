@@ -388,7 +388,7 @@ export class SalaryComponent implements OnInit {
 
   summaryAllowCreateRowData(allowanceDropdownSummary) {
     if (this.ITR_JSON.regime === 'NEW')
-    allowanceDropdownSummary = allowanceDropdownSummary.filter(item => item.value !== 'HOUSE_RENT' && item.value !== 'LTA' && item.value !== 'CHILDREN_EDUCATION' && item.value !== 'HOSTEL_EXPENDITURE');
+      allowanceDropdownSummary = allowanceDropdownSummary.filter(item => item.value !== 'HOUSE_RENT' && item.value !== 'LTA' && item.value !== 'CHILDREN_EDUCATION' && item.value !== 'HOSTEL_EXPENDITURE');
     const data = [];
     for (let i = 0; i < allowanceDropdownSummary.length; i++) {
       data.push({
