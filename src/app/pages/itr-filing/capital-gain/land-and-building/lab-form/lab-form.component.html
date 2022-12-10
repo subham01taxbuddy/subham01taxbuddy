@@ -244,7 +244,7 @@
 
       <div>
         <b>Add Deduction details </b>
-        <button class="tbd-btn-small" style="text-align: right;" (click)="addInvestment('ADD','')">Add More&nbsp;&nbsp;
+        <button class="tbd-btn-small" style="text-align: right;" [disabled]="totalCg<=0" (click)="addInvestment('ADD','')">Add More&nbsp;&nbsp;
           <i class="fa fa-plus" aria-hidden="true"></i>
         </button>
       </div>

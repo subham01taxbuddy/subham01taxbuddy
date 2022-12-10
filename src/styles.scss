@@ -222,6 +222,12 @@ body {
   background-color: #04a3bc;
 }
 
+.tbd-btn-small:disabled {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
 .tbd-btn-small-secondary {
   padding: 4px 9px;
   text-align: center;

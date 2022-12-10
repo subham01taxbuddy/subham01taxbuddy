@@ -127,6 +127,7 @@ export class LabFormComponent implements OnInit {
   ErrorMsg = '';
 
   cgOutput: any = [];
+  totalCg = 0;
 
   saveBusy = false;
 
@@ -570,6 +571,12 @@ export class LabFormComponent implements OnInit {
           //   this.cgArrayElement.improvement[i].indexCostOfImprovement = output?.indexCostOfImprovement.filter(item => item.id === this.cgArrayElement.improvement[i].id)[0].improvementCost;
           //   improve.push(this.createImprovementForm(this.cgArrayElement.improvement[i]));
           // }
+
+          //calculate total capital Gain
+          this.totalCg = 0;
+          this.cgArrayElement.assetDetails.forEach(item => {
+            this.totalCg += item.capitalGain;
+          });
         }
         this.busyGain = false;
 

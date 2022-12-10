@@ -20,7 +20,8 @@ export class OtherAssetsComponent implements OnInit {
   public deductionGridOptions: GridOptions;
   loading = false;
   goldCg: NewCapitalGain;
-  ITR_JSON: ITR_JSON
+  ITR_JSON: ITR_JSON;
+  totalCg = 0;
 
   constructor(public matDialog: MatDialog,
     public utilsService: UtilsService,
@@ -94,6 +95,10 @@ export class OtherAssetsComponent implements OnInit {
   }
 
   otherAssetsCreateRowData() {
+    this.totalCg = 0;
+    this.goldCg.assetDetails.forEach(item => {
+      this.totalCg += item.capitalGain;
+    });
     return this.goldCg.assetDetails;
   }
 

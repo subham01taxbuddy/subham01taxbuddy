@@ -32,6 +32,10 @@ export class EquityMfComponent implements OnInit {
   listedCg: NewCapitalGain;
   unlistedCg: NewCapitalGain;
   loading = false;
+
+  totalListedCg = 0;
+  totalUnlistedCg = 0;
+
   constructor(private utilsService: UtilsService,
     public matDialog: MatDialog,
     public snackBar: MatSnackBar,
@@ -96,6 +100,10 @@ export class EquityMfComponent implements OnInit {
   }
 
   listedCreateRowData() {
+    this.totalListedCg = 0;
+    this.listedCg.assetDetails.forEach(item => {
+      this.totalListedCg += item.capitalGain;
+    });
     return this.listedCg.assetDetails;
   }
 
@@ -429,6 +437,10 @@ export class EquityMfComponent implements OnInit {
   }
 
   unListedCreateRowData() {
+    this.totalUnlistedCg = 0;
+    this.unlistedCg.assetDetails.forEach(item => {
+      this.totalUnlistedCg += item.capitalGain;
+    });
     return this.unlistedCg.assetDetails;
   }
 
