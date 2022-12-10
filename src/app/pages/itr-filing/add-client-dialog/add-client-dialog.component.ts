@@ -113,7 +113,7 @@ export class AddClientDialogComponent implements OnInit, OnDestroy {
               if (res.messages instanceof Array && res.messages.length > 0)
                 this.utilsService.showSnackBar(res.messages[0].desc);
               this.otpSend = true;
-              this.addClientForm.controls['otp'].setValidators([Validators.required])
+              this.addClientForm.controls['otp'].setValidators([Validators.required]);
             }
           }
           else {
@@ -124,7 +124,8 @@ export class AddClientDialogComponent implements OnInit, OnDestroy {
               // if(res.errors[0].desc.includes('is already a client')){
               //   this.otpSend = true;
               // }
-              this.addClientForm.controls['otp'].setValidators(null)
+              this.addClientForm.controls['otp'].setValidators(null);
+              this.dialogRef.close();
             }
           }
         },
@@ -167,7 +168,7 @@ export class AddClientDialogComponent implements OnInit, OnDestroy {
             if (res.messages instanceof Array && res.messages.length > 0)
               this.utilsService.showSnackBar(res.messages[0].desc);
             // this.changePage();
-
+            this.dialogRef.close();
             // Show success message depends upon following paramaters
             //             errors: []
             // httpStatus: "ACCEPTED"

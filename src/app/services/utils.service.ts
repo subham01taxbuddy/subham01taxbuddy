@@ -33,7 +33,7 @@ export class UtilsService {
     * @returns this will return boolean value
     */
     isNonEmpty(param: any): boolean {
-        if (param)
+        if (param !== null && param !== undefined && param !== "")
             return true
         else
             return false
@@ -341,7 +341,9 @@ export class UtilsService {
             seventhProviso139: null,
             depPayInvClmUndDednVIA: 'N',
             declaration: undefined,
-            disability: undefined
+            disability: undefined,
+            movableAsset: [],
+            immovableAsset: []
         };
 
         return ITR_JSON;
@@ -715,6 +717,52 @@ export class UtilsService {
             }
             return [];
         }
+    }
+
+    checkDuplicateInObject(propertyName, inputArray) {
+        let seenDuplicate = false,
+            // eslint-disable-next-line prefer-const
+            testObject = {};
+
+        inputArray.map(function (item) {
+            const itemPropertyName = item[propertyName];
+            if (itemPropertyName in testObject) {
+                testObject[itemPropertyName].duplicate = true;
+                item.duplicate = true;
+                seenDuplicate = true;
+            } else {
+                testObject[itemPropertyName] = item;
+                delete item.duplicate;
+            }
+        });
+
+        return seenDuplicate;
+    }
+
+    async getPincodeData(pinCode) {
+        const promise = new Promise<any>((resolve, reject) => {
+            let data = null;
+            if (pinCode.valid) {
+                const param = '/pincode/' + pinCode.value;
+                // return await this.userMsService.getMethod(param).toPromise();
+                this.userMsService.getMethod(param).subscribe((result: any) => {
+                    data = {
+                        country: 'INDIA',
+                        countryCode: '91',
+                        city: result.taluka,
+                        stateCode: result.stateCode
+                    }
+                    resolve(data);
+                }, error => {
+                if (error.status === 404) {
+                    reject(error);
+                }
+                });
+            } else {
+                console.log('pinCode invalid', pinCode);
+            }
+        });
+        return promise;
     }
 
     // updateAssignmentToggle(assignmentToggleData) :Observable<any>{

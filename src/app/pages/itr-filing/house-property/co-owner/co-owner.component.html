@@ -1,0 +1,44 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<h1 mat-dialog-title> {{data.mode}} {{data.title}}</h1>
+<form [formGroup]="coOwnerForm">
+  <mat-dialog-content>
+    <div class="row">
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Co-Owner Name</mat-label>
+          <input formControlName="name" matInput placeholder="Co-Owner Name" name="amount" required class="input-field"
+            pattern="[a-zA-Z ]*" maxlength="40" type="text" trim>
+          <mat-error *ngIf="coOwnerForm.controls['name'].hasError('pattern')">
+            Enter
+            valid name.</mat-error>
+        </mat-form-field>
+      </div>
+      <div class=" card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Co-Owner PAN</mat-label>
+          <input formControlName="panNumber" matInput placeholder="Co-Owner PAN" name="panNumber" required
+            class="input-field" maxlength="10" type="text" trim>
+          <mat-error *ngIf="coOwnerForm.controls['panNumber'].hasError('pattern')">
+            Enter valid PAN.</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Co-Owner Shares (%)</mat-label>
+          <input formControlName="percentage" matInput placeholder="Co-Owner Shares (%)" name="percentage" required
+            class="input-field" maxlength="2" type="number" trim digitsOnly
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            onkeypress="event.charCode >= 48 && event.charCode <= 57">
+          <mat-error *ngIf="coOwnerForm.controls['percentage'].hasError('pattern')">
+            Enter positive number without decimal.</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button class="tbd-btn" (click)="addCoOwner()">Add</button>
+    <button type="submit" class="tbd-btn-secondary" mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</form>

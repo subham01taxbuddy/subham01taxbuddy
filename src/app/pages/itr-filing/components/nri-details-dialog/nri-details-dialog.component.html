@@ -1,0 +1,80 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<h1 mat-dialog-title> For Non-Residents</h1>
+<form [formGroup]="nriDetailsForm">
+  <mat-dialog-content>
+    <div class="card__row">
+      <div class=" card__col-xs-12 card__col-sm-12">
+        Please specify the country / jurisdiction of Residence during the previous year* <span
+          style="float: right;"><button class="tbd-btn-small" (click)="addMore()">Add More &nbsp;&nbsp;
+            <i class="fa fa-plus" aria-hidden="true"></i></button></span>
+      </div>
+      <br>
+      <table class="table table-bordered" style="width: 100%;margin-top: 30px;">
+        <thead style="background:#eaeaea">
+          <tr class="table-head" style="border-left: 1px solid #e0e0e0;border-right: 2px solid #f2f0f0;">
+            <th class="text-center">Sr. No</th>
+            <th class="text-center">Jurisdiction (s) of Residence</th>
+            <th class="text-center">Taxpayer Identification Number</th>
+            <th class="action-th ">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody formArrayName="jurisdictions">
+          <tr *ngFor="let jur of geJurisdictionsArray.controls;let i=index" [formGroupName]="i">
+            <td> {{i+1}}</td>
+            <td>
+              <mat-form-field class="input-field-width">
+                <!--  <input matInput class="input-field" name="jur[i]" formControlName="jurisdictionResidence"
+                  pattern="[a-zA-Z ]*" required maxlength="40" type="text" trim> -->
+
+                <mat-select placeholder="" name="jur[i]" formControlName="jurisdictionResidence" required>
+                  <mat-option *ngFor="let country of countryList" [value]="country.value">
+                    {{ country.label | titlecase}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+
+            <td>
+              <mat-form-field class="input-field-width">
+                <input matInput class="input-field" name="jur[i]" formControlName="tin" required type="text">
+                <mat-error
+                  *ngIf="nriDetailsForm.controls['jurisdictions'].controls[i].controls['tin'].hasError('pattern')">
+                  Enter valid tin.</mat-error>
+              </mat-form-field>
+            </td>
+            <td style="white-space: nowrap;padding: 0%;border:none;justify-content: center;">
+              <button mat-icon-button color="warn" class="table-add-remove-button text-left" (click)="removeData(i)">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card__row">
+      <div class=" card__col-xs-12 card__col-sm-12">
+        Total period of stay in india during the previous year
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="card__col-xs-12 card__col-sm-4">
+        <mat-form-field appearance="outline">
+          <!-- <mat-label>Father Name</mat-label> -->
+          <input type="text" matInput placeholder="" name="conditionsResStatus" formControlName="conditionsResStatus"
+            class="input-field" maxlength="125" required>
+          <!-- <mat-error *ngIf="customerProfileForm.controls['fatherName'].hasError('pattern')">
+            Enter character only</mat-error> -->
+          <mat-hint>In Days</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button class="tbd-btn" (click)="saveJurisdictions()">Save</button>
+    <button type="submit" class="tbd-btn-secondary" mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</form>

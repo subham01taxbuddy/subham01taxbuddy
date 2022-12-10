@@ -1,11 +1,11 @@
+import { Employer } from './../../../modules/shared/interfaces/itr-input.interface';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from './../../../services/utils.service';
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { GridOptions } from 'ag-grid-community';
-import { NumericEditorComponent } from 'src/app/modules/shared/numeric-editor.component';
+import { GridOptions, ValueSetterParams } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 declare let $: any;
 
@@ -20,7 +20,7 @@ export class SalaryComponent implements OnInit {
   public salaryGridOptions: GridOptions;
   public summaryAllowGridOptions: GridOptions;
   public employersGridOptions: GridOptions;
-  localEmployer: any;
+  localEmployer: Employer;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   readonly limitPT = 2500;
@@ -29,10 +29,10 @@ export class SalaryComponent implements OnInit {
   salaryView: string = "FORM";
   employerMode = "ADD";
   currentIndex: number = null;
-  itrDocuments = [];
-  deletedFileData: any = [];
-  viewer = 'DOC';
-  docUrl = '';
+  // itrDocuments = [];
+  // deletedFileData: any = [];
+  // viewer = 'DOC';
+  // docUrl = '';
   salaryDropdown = [{
     "value": "SEC17_1",
     "label": "Salary as per section 17(1)",
@@ -86,7 +86,8 @@ export class SalaryComponent implements OnInit {
     "value": "ANY_OTHER",
     "label": "Any Other Allowance",
     "detailed": false
-  }]
+  }];
+  stateDropdown = AppConstants.stateDropdown;
   constructor(private router: Router,
     private fb: FormBuilder,
     public utilsService: UtilsService,
@@ -125,7 +126,7 @@ export class SalaryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getDocuments();
+    // this.getDocuments();
     this.utilsService.smoothScrollToTop();
     this.employerDetailsFormGroup = this.createEmployerDetailsFormGroup();
     this.salaryCallInConstructor(this.salaryDropdown);
@@ -165,8 +166,11 @@ export class SalaryComponent implements OnInit {
 
   createEmployerDetailsFormGroup() {
     return this.fb.group({
-      employerName: [''],
-      // address: [''],
+      employerName: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+      address: ['', Validators.required],
+      city: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+      state: ['', Validators.compose([Validators.required])],
+      pinCode: ['', Validators.compose([Validators.required, Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])],
       // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
       employerTAN: ['', Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)])],
       entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000)])],
@@ -178,7 +182,7 @@ export class SalaryComponent implements OnInit {
   salaryCallInConstructor(salaryDropdown) {
     this.salaryGridOptions = <GridOptions>{
       rowData: this.salaryCreateRowData(salaryDropdown),
-      columnDefs: this.salaryCreateColoumnDef(salaryDropdown),
+      columnDefs: this.salaryCreateColumnDef(salaryDropdown),
       onGridReady: () => {
         this.salaryGridOptions.api.sizeColumnsToFit();
       },
@@ -196,7 +200,7 @@ export class SalaryComponent implements OnInit {
   }
 
   // Using 280994
-  salaryCreateColoumnDef(salaryDropdown) {
+  salaryCreateColumnDef(salaryDropdown) {
     return [
       {
         headerName: 'Salary Type',
@@ -227,7 +231,15 @@ export class SalaryComponent implements OnInit {
         suppressMovable: true,
         editable: true,
         cellEditor: 'numericEditor',
-        headerComponentParams: { menuIcon: 'fa-external-link-alt' }
+        headerComponentParams: { menuIcon: 'fa-external-link-alt' },
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.taxableAmount !== newValInt;
+          if (valueChanged) {
+            params.data.taxableAmount = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
       },
 
       {
@@ -280,10 +292,10 @@ export class SalaryComponent implements OnInit {
     return data;
   }
 
-  summaryAllowCallInConstructor(allowaceDropdownSummary) {
+  summaryAllowCallInConstructor(allowanceDropdownSummary) {
     this.summaryAllowGridOptions = <GridOptions>{
-      rowData: this.summaryAllowCreateRowData(allowaceDropdownSummary),
-      columnDefs: this.summaryAllowCreateColoumnDef(allowaceDropdownSummary),
+      rowData: this.summaryAllowCreateRowData(allowanceDropdownSummary),
+      columnDefs: this.summaryAllowCreateColumnDef(allowanceDropdownSummary),
       onGridReady: () => {
         this.summaryAllowGridOptions.api.sizeColumnsToFit();
       },
@@ -300,15 +312,15 @@ export class SalaryComponent implements OnInit {
     };
   }
 
-  summaryAllowCreateColoumnDef(allowaceDropdownSummary) {
+  summaryAllowCreateColumnDef(allowanceDropdownSummary) {
     return [
       {
         headerName: 'Allowance Type',
         field: 'allowanceType',
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          if (allowaceDropdownSummary.length !== 0) {
-            const nameArray = allowaceDropdownSummary.filter((item: any) => item.value === params.data.allowanceType);
+          if (allowanceDropdownSummary.length !== 0) {
+            const nameArray = allowanceDropdownSummary.filter((item: any) => item.value === params.data.allowanceType);
             return nameArray[0].label;
           } else {
             return params.data.allowanceType;
@@ -316,8 +328,8 @@ export class SalaryComponent implements OnInit {
         },
         editable: false,
         tooltip: function (params) {
-          if (allowaceDropdownSummary.length !== 0) {
-            const nameArray = allowaceDropdownSummary.filter((item: any) => item.value === params.data.allowanceType);
+          if (allowanceDropdownSummary.length !== 0) {
+            const nameArray = allowanceDropdownSummary.filter((item: any) => item.value === params.data.allowanceType);
             return nameArray[0].label;
           } else {
             return params.data.allowanceType;
@@ -330,6 +342,14 @@ export class SalaryComponent implements OnInit {
         editable: true,
         suppressMovable: true,
         cellEditor: 'numericEditor',
+        valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
+          var newValInt = parseInt(params.newValue);
+          var valueChanged = params.data.exemptAmount !== newValInt;
+          if (valueChanged) {
+            params.data.exemptAmount = newValInt ? newValInt : params.oldValue;
+          }
+          return valueChanged;
+        },
       },
       {
         headerName: 'Clear',
@@ -367,15 +387,14 @@ export class SalaryComponent implements OnInit {
     }
   }
 
-  summaryAllowCreateRowData(allowaceDropdownSummary) {
-    // HOUSE_RENT,LTA,CHILDREN_EDUCATION,HOSTEL_EXPENDITURE
+  summaryAllowCreateRowData(allowanceDropdownSummary) {
     if (this.ITR_JSON.regime === 'NEW')
-      allowaceDropdownSummary = allowaceDropdownSummary.filter(item => item.value !== 'HOUSE_RENT' && item.value !== 'LTA' && item.value !== 'CHILDREN_EDUCATION' && item.value !== 'HOSTEL_EXPENDITURE');
+      allowanceDropdownSummary = allowanceDropdownSummary.filter(item => item.value !== 'HOUSE_RENT' && item.value !== 'LTA' && item.value !== 'CHILDREN_EDUCATION' && item.value !== 'HOSTEL_EXPENDITURE');
     const data = [];
-    for (let i = 0; i < allowaceDropdownSummary.length; i++) {
+    for (let i = 0; i < allowanceDropdownSummary.length; i++) {
       data.push({
         id: i,
-        allowanceType: allowaceDropdownSummary[i].value,
+        allowanceType: allowanceDropdownSummary[i].value,
         taxableAmount: 0,
         exemptAmount: null
       });
@@ -474,9 +493,11 @@ export class SalaryComponent implements OnInit {
     //   calculators: null
     // };
     if (this.employerDetailsFormGroup.valid) {
-      // this.localEmployer.address = this.employerDetailsFormGroup.controls['address'].value
+      this.localEmployer.address = this.employerDetailsFormGroup.controls['address'].value
       this.localEmployer.employerName = this.employerDetailsFormGroup.controls['employerName'].value
-      // this.localEmployer.employerPAN = this.employerDetailsFormGroup.controls['employerPAN'].value
+      this.localEmployer.state = this.employerDetailsFormGroup.controls['state'].value
+      this.localEmployer.pinCode = this.employerDetailsFormGroup.controls['pinCode'].value
+      this.localEmployer.city = this.employerDetailsFormGroup.controls['city'].value
       this.localEmployer.employerTAN = this.employerDetailsFormGroup.controls['employerTAN'].value
       this.localEmployer.salary = [];
       this.localEmployer.perquisites = [];
@@ -555,7 +576,6 @@ export class SalaryComponent implements OnInit {
   }
 
   serviceCall() {
-    debugger
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
     if (this.employerMode === 'ADD') {
@@ -566,7 +586,7 @@ export class SalaryComponent implements OnInit {
       this.Copy_ITR_JSON.employers.splice(this.currentIndex, 1, myEmp);
     }
 
-    if(!this.Copy_ITR_JSON.systemFlags) {
+    if (!this.Copy_ITR_JSON.systemFlags) {
       this.Copy_ITR_JSON.systemFlags = {
         hasSalary: false,
         hasHouseProperty: false,
@@ -680,7 +700,7 @@ export class SalaryComponent implements OnInit {
 
     // this.getData(this.localEmployer.pinCode);
     this.salaryGridOptions.rowData = this.salaryCreateRowData(this.salaryDropdown);
-    this.salaryGridOptions.columnDefs = this.salaryCreateColoumnDef(this.salaryDropdown);
+    this.salaryGridOptions.columnDefs = this.salaryCreateColumnDef(this.salaryDropdown);
     if (this.localEmployer.salary instanceof Array) {
       // const salary = this.localEmployer.salary.filter((item:any) => item.salaryType !== 'SEC17_1');
       for (let i = 0; i < this.localEmployer.salary.length; i++) {
@@ -724,7 +744,7 @@ export class SalaryComponent implements OnInit {
 
     // Set Allowance
     this.summaryAllowGridOptions.rowData = this.summaryAllowCreateRowData(this.allowanceDropdown);
-    this.summaryAllowGridOptions.columnDefs = this.summaryAllowCreateColoumnDef(this.allowanceDropdown);
+    this.summaryAllowGridOptions.columnDefs = this.summaryAllowCreateColumnDef(this.allowanceDropdown);
     if (this.localEmployer.allowance instanceof Array) {
       const allowance = this.localEmployer.allowance.filter((item: any) => item.allowanceType !== 'ALL_ALLOWANCES');
       for (let i = 0; i < allowance.length; i++) {
@@ -800,7 +820,7 @@ export class SalaryComponent implements OnInit {
   employerCallInConstructor() {
     this.employersGridOptions = <GridOptions>{
       rowData: this.employerCreateRowData(),
-      columnDefs: this.employercreateColumnDef(),
+      columnDefs: this.employerCreateColumnDef(),
       onGridReady: () => {
         this.employersGridOptions.api.sizeColumnsToFit();
       },
@@ -817,7 +837,7 @@ export class SalaryComponent implements OnInit {
     };
   }
 
-  employercreateColumnDef() {
+  employerCreateColumnDef() {
     return [
       {
         headerName: 'No',
@@ -831,6 +851,24 @@ export class SalaryComponent implements OnInit {
         field: 'employerName',
         suppressMovable: true,
         editable: false,
+      },
+      {
+        headerName: 'Gross Salary',
+        field: 'grossSalary',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Exemptions',
+        field: 'exemptions',
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Total Deductions',
+        field: 'totalDeductions',
+        editable: false,
+        suppressMovable: true,
       },
       {
         headerName: 'Taxable Income',
@@ -945,10 +983,18 @@ export class SalaryComponent implements OnInit {
     const data = [];
     if (this.utilsService.isNonEmpty(this.ITR_JSON) && this.utilsService.isNonEmpty(this.ITR_JSON.employers) && this.ITR_JSON.employers instanceof Array) {
       for (let i = 0; i < this.ITR_JSON.employers.length; i++) {
+        let exemptions = this.ITR_JSON.employers[i].allowance?.filter(item => item.allowanceType === 'ALL_ALLOWANCES');
+        let salary = this.ITR_JSON.employers[i].salary?.filter(item => item.salaryType === 'SEC17_1');
+        let profitsInLieuOfSalary = this.ITR_JSON.employers[i].profitsInLieuOfSalaryType?.filter(item => item.salaryType === 'SEC17_3');
+        let perquisites = this.ITR_JSON.employers[i].perquisites?.filter(item => item.perquisiteType === 'SEC17_2');
+        let pt = this.ITR_JSON.employers[i].deductions?.filter(item => item.deductionType === 'PROFESSIONAL_TAX');
         data.push({
           index: i + 1,
           id: this.ITR_JSON.employers[i].id,
           employerName: this.utilsService.isNonEmpty(this.ITR_JSON.employers[i].employerName) ? this.ITR_JSON.employers[i].employerName : `Employer ${i + 1}`,
+          grossSalary: (salary?.length > 0 ? salary[0].taxableAmount : 0) + (profitsInLieuOfSalary?.length > 0 ? profitsInLieuOfSalary[0].taxableAmount : 0) + (perquisites?.length > 0 ? perquisites[0].taxableAmount : 0),
+          exemptions: exemptions?.length > 0 ? exemptions[0].exemptAmount : 0,
+          totalDeductions: this.ITR_JSON.employers[i].standardDeduction + (pt?.length > 0 ? pt[0].exemptAmount : 0),
           taxableIncome: this.ITR_JSON.employers[i].taxableIncome,
           // exemptAmount: null
         });
@@ -958,60 +1004,61 @@ export class SalaryComponent implements OnInit {
   }
 
   documents = []
-  getDocuments() {
-    const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
-    this.itrMsService.getMethod(param).subscribe((result: any) => {
-      this.documents = result;
-    })
-  }
+  //  !! deprecated 
+  // getDocuments() {
+  //   const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
+  //   this.itrMsService.getMethod(param).subscribe((result: any) => {
+  //     this.documents = result;
+  //   })
+  // }
+  //  !! deprecated 
+  // deleteFile(fileName) {
+  //   let adminId = JSON.parse(localStorage.getItem("UMD"));
+  //   var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
+  //   let filePath = `${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs/${fileName}`;
+  //   var reqBody = [filePath];
+  //   console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
+  //   this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
+  //     console.log('Doc delete responce: ', responce);
+  //     this.utilsService.showSnackBar(responce.response);
+  //     this.getDocuments();
+  //   },
+  //     error => {
+  //       console.log('Doc delete ERROR responce: ', error.responce);
+  //       this.utilsService.showSnackBar(error.response);
+  //     })
+  // }
+  //  !! deprecated 
+  // deletedFileInfo(cloudFileId) {
+  //   this.deletedFileData = [];
+  //   this.loading = true;
+  //   let param = '/cloud/log?cloudFileId=' + cloudFileId;
+  //   this.itrMsService.getMethod(param).subscribe((res: any) => {
+  //     this.loading = false;
+  //     this.deletedFileData = res;
+  //     console.log('Deleted file detail info: ', this.deletedFileData);
+  //   },
+  //     error => {
+  //       this.loading = false;
+  //     })
+  // }
 
-  deleteFile(fileName) {
-    let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
-    let filePath = `${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs/${fileName}`;
-    var reqBody = [filePath];
-    console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
-      console.log('Doc delete responce: ', responce);
-      this.utilsService.showSnackBar(responce.response);
-      this.getDocuments();
-    },
-      error => {
-        console.log('Doc delete ERROR responce: ', error.responce);
-        this.utilsService.showSnackBar(error.response);
-      })
-  }
+  // closeDialog() {
+  //   this.deletedFileData = [];
+  // }
+  //  !! deprecated 
+  // afterUploadDocs(fileUpload) {
+  //   if (fileUpload === 'File uploaded successfully') {
+  //     this.getDocuments();
+  //   }
+  // }
 
-  deletedFileInfo(cloudFileId) {
-    this.deletedFileData = [];
-    this.loading = true;
-    let param = '/cloud/log?cloudFileId=' + cloudFileId;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
-      this.loading = false;
-      this.deletedFileData = res;
-      console.log('Deleted file detail info: ', this.deletedFileData);
-    },
-      error => {
-        this.loading = false;
-      })
-  }
+  // getAllForm16s(documentTag) {
+  //   return this.itrDocuments.filter((item: any) => item.documentTag === documentTag)
 
-  closeDialog() {
-    this.deletedFileData = [];
-  }
-
-  afterUploadDocs(fileUpload) {
-    if (fileUpload === 'File uploaded successfully') {
-      this.getDocuments();
-    }
-  }
-
-  getAllForm16s(documentTag) {
-    return this.itrDocuments.filter((item: any) => item.documentTag === documentTag)
-
-  }
-
-  getSignedUrl(document) {
+  // }
+  //  !! deprecated 
+  /* getSignedUrl(document) {
     console.log('document selected', document);
     const ext = document.fileName.split('.').pop();
     console.log('this.viewer', this.viewer);
@@ -1034,5 +1081,5 @@ export class SalaryComponent implements OnInit {
     }, error => {
       this.loading = false;
     })
-  }
+  } */
 }

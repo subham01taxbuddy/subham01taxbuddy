@@ -1,10 +1,10 @@
-import { AddClientDialogComponent } from './../add-client-dialog/add-client-dialog.component';
+import { NriDetailsDialogComponent } from './../components/nri-details-dialog/nri-details-dialog.component';
 import { UpdateManualFilingComponent } from './../update-manual-filing/update-manual-filing.component';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { UtilsService } from './../../../services/utils.service';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { HttpHeaders, HttpClient, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
@@ -17,6 +17,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
+import { AddClientDialogComponent } from './../add-client-dialog/add-client-dialog.component';
 import { PrefillDataComponent } from '../prefill-data/prefill-data.component';
 import * as moment from 'moment';
 
@@ -53,6 +54,8 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class CustomerProfileComponent implements OnInit {
+  @Output() saveAndNext = new EventEmitter<any>();
+
   loading: boolean = false;
   imageLoader: boolean = false;
   customerProfileForm: FormGroup;
@@ -93,7 +96,29 @@ export class CustomerProfileComponent implements OnInit {
     { value: 26, label: 'Future and Options Plan' },
     { value: 28, label: 'NRI Plan' },
   ];
+  residentialStatus = [
+    { value: 'RESIDENT', label: 'Resident' },
+    { value: 'NON_RESIDENT', label: 'Non Resident' },
+    { value: 'NON_ORDINARY', label: 'Non Ordinary Resident' }
+  ];
 
+  employersDropdown = [
+    { value: 'CENTRAL_GOVT', label: 'Central Government' },
+    { value: 'GOVERNMENT', label: 'State Government' },
+    { value: 'PRIVATE', label: 'Public Sector Unit' },
+    { value: 'PE', label: 'Pensioners - Central Government' },
+    { value: 'PESG', label: 'Pensioners - State Government' },
+    { value: 'PEPS', label: 'Pensioners - Public sector undertaking' },
+    { value: 'PENSIONERS', label: 'Pensioners - Others' },
+    { value: 'OTHER', label: 'Other-Private' },
+    { value: 'NA', label: 'Not-Applicable' }
+  ];
+
+
+  genderMaster = [
+    { value: 'MALE', label: 'Male' },
+    { value: 'FEMALE', label: 'Female' },
+  ]
 
   filePath = 'ITR/';
   loggedInUserData: any;
@@ -106,13 +131,13 @@ export class CustomerProfileComponent implements OnInit {
     private itrMsService: ItrMsService,
     private userMsService: UserMsService,
     private router: Router,
-    private dialog: MatDialog,
+    private matDialog: MatDialog,
     public location: Location,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loggedInUserData = JSON.parse(localStorage.getItem("UMD")) || {};
-    console.log('nav data', this.router.getCurrentNavigation().extras.state);
-    this.navigationData = this.router.getCurrentNavigation().extras.state;
+    console.log('nav data', this.router.getCurrentNavigation()?.extras?.state);
+    this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
 
   ngOnInit() {
@@ -122,7 +147,6 @@ export class CustomerProfileComponent implements OnInit {
     this.changeReviseForm();
     this.getDocuments();
     this.getSmeList();
-    
 
   }
   zoom: number = 1.0;
@@ -131,19 +155,19 @@ export class CustomerProfileComponent implements OnInit {
   }
   createCustomerProfileForm() {
     return this.fb.group({
-      firstName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
-      middleName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
-      lastName: ['', Validators.compose([Validators.required, /* Validators.pattern(AppConstants.charRegex) */])],
-      fatherName: [''],
+      firstName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)])],
+      middleName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)])],
+      lastName: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex)])],
+      fatherName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)])],
       dateOfBirth: ['', Validators.required],
-      gender: [''],
+      gender: ['', Validators.required],
       contactNumber: ['', Validators.compose([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required])],
       email: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.emailRegex)])],
       panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex)])],
-      aadharNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
+      aadharNumber: ['', Validators.compose([Validators.required, Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
-      employerCategory: [''],
+      employerCategory: ['', Validators.required],
       itrType: ['1', Validators.required],
       isRevised: ['N', Validators.required],
       orgITRAckNum: [''],
@@ -233,127 +257,58 @@ export class CustomerProfileComponent implements OnInit {
     }
 
   }
-
-  async saveProfile(ref) {
+  saveProfile(ref) {
     console.log('customerProfileForm: ', this.customerProfileForm);
     this.findAssesseeType();
     // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
       this.loading = true;
-      //check & confirm if correct ITR type is selected
-      let isTypeCorrect = true;
-      let selectedType = this.customerProfileForm.controls['itrType'].value;
-      let url = `/itr-type?itrId=${this.ITR_JSON.itrId}`;
-      this.itrMsService.getMethod(url, this.ITR_JSON).subscribe((result: any) => {
-      if (result.success) {
-        this.loading = false;
-        let itrType = JSON.parse(result.data.itrType);
-        console.log('res', itrType as string);
-        if (itrType && selectedType != itrType) {
-          isTypeCorrect = false;
-          let message = (itrType == 1 || itrType == 4) ? `For this user ITR ${itrType} needs to be filed. Please select correct ITR type and continue.`
-            : `For this user ITR ${itrType} needs to be filed. Please proceed filing with the Income tax Utility.`;
-          this.utilsService.showSnackBar(message);
-        } else {
-          //continue to save profile
-          const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
-          this.ITR_JSON.family = [
-            {
-              pid: null,
-              fName: this.customerProfileForm.controls['firstName'].value,
-              mName: this.customerProfileForm.controls['middleName'].value,
-              lName: this.customerProfileForm.controls['lastName'].value,
-              fatherName: this.customerProfileForm.controls['fatherName'].value,
-              age: ageCalculated,
-              gender: this.customerProfileForm.controls['gender'].value,
-              relationShipCode: 'SELF',
-              relationType: 'SELF',
-              dateOfBirth: this.customerProfileForm.controls['dateOfBirth'].value
-            }
-          ];
-          let param;
-          if (this.ITR_JSON.filingTeamMemberId !== Number(this.customerProfileForm.controls['filingTeamMemberId'].value)) {
-            param = '/zoho-contact'
-          } else {
-            param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-          }
-
-          Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
-      
-          if (this.ITR_JSON.itrType === '1') {
-            if(this.ITR_JSON.business) {
-              this.ITR_JSON.business.presumptiveIncomes = [];
-              this.ITR_JSON.business.financialParticulars = null;
-            } else {
-              this.ITR_JSON.business = {
-                presumptiveIncomes: [],
-                financialParticulars: null
-              };
-            }
-            if(this.ITR_JSON.systemFlags) {
-              this.ITR_JSON.systemFlags.hasBusinessProfessionIncome = false;
-            } else {
-              this.ITR_JSON.systemFlags = {
-                hasSalary: false,
-                hasHouseProperty: false,
-                hasMultipleProperties: false,
-                hasForeignAssets: false,
-                hasCapitalGain: false,
-                hasBroughtForwardLosses: false,
-                hasAgricultureIncome: false,
-                hasOtherIncome: false,
-                hasParentOverSixty: false,
-                hasBusinessProfessionIncome: false,
-                hasFutureOptionsIncome: false,
-                hasNRIIncome: false,
-                hraAvailed: false,
-                directorInCompany: false,
-                haveUnlistedShares: false
-              };
-            }
-            
-            
-          }else if (this.ITR_JSON.itrType === '4') {
-            if(!this.ITR_JSON.business) {
-              this.ITR_JSON.business = {
-                presumptiveIncomes: [],
-                financialParticulars: null
-              };
-            }
-          }
-
-          this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
-            this.ITR_JSON = result;
-            this.updateStatus(); // Update staus automatically
-            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-            this.loading = false;
-            this.utilsService.showSnackBar('Customer profile updated successfully.');
-            // if (ref === "CONTINUE") {
-            if (this.customerProfileForm.controls['itrType'].value === '1'
-              || this.customerProfileForm.controls['itrType'].value === '4')
-              this.router.navigate(['/pages/itr-filing/itr']);
-            else
-              this.router.navigate(['/pages/itr-filing/direct-upload']);
-            
-          }, error => {
-            this.utilsService.showSnackBar('Failed to update customer profile.');
-            this.loading = false;
-          });
+      const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
+      this.ITR_JSON.family = [
+        {
+          pid: null,
+          fName: this.customerProfileForm.controls['firstName'].value,
+          mName: this.customerProfileForm.controls['middleName'].value,
+          lName: this.customerProfileForm.controls['lastName'].value,
+          fatherName: this.customerProfileForm.controls['fatherName'].value,
+          age: ageCalculated,
+          gender: this.customerProfileForm.controls['gender'].value,
+          relationShipCode: 'SELF',
+          relationType: 'SELF',
+          dateOfBirth: this.customerProfileForm.controls['dateOfBirth'].value
         }
+      ];
+      let param;
+      if (this.ITR_JSON.filingTeamMemberId !== Number(this.customerProfileForm.controls['filingTeamMemberId'].value)) {
+        param = '/zoho-contact'
+      } else {
+        param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
       }
-    }, error => {
-      this.utilsService.showSnackBar('Failed to get ITR type for user');
-      this.loading = false;
-      
-    });
-      
-      
-      
+
+      Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+
+
+      this.itrMsService.putMethod(param, this.ITR_JSON).subscribe((result: any) => {
+        this.ITR_JSON = result;
+        this.updateStatus(); // Update staus automatically
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+        this.utilsService.showSnackBar('Customer profile updated successfully.');
+        // if (ref === "CONTINUE") {
+        // if (this.customerProfileForm.controls['itrType'].value === '1'
+        // || this.customerProfileForm.controls['itrType'].value === '4')
+        // this.router.navigate(['/pages/itr-filing/itr']);
+        this.saveAndNext.emit({ subTab: true, tabName: 'PERSONAL' });
+        // else
+        //   this.router.navigate(['/pages/itr-filing/direct-upload']);
+      }, error => {
+        this.utilsService.showSnackBar('Fialed to update customer profile.');
+        this.loading = false;
+      });
     } else {
       $('input.ng-invalid').first().focus();
     }
   }
-
   calAge(dob) {
     const birthday: any = new Date(dob);
     const currentYear = Number(this.ITR_JSON.assessmentYear.substring(0, 4));
@@ -548,7 +503,7 @@ export class CustomerProfileComponent implements OnInit {
       "filingSource": "MANUALLY"
     }
 
-    let disposable = this.dialog.open(UpdateManualFilingComponent, {
+    let disposable = this.matDialog.open(UpdateManualFilingComponent, {
       width: '50%',
       height: 'auto',
       data: manulFiling
@@ -617,14 +572,35 @@ export class CustomerProfileComponent implements OnInit {
     })
   }
 
-  onSelectRecidencial(status) {
+  onSelectResidential(status) {
     if (status === 'RESIDENT') {
       this.customerProfileForm.controls['contactNumber'].setValidators([Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10), Validators.required]);
-    }
-    else if (status === 'NON_RESIDENT' || status === 'NON_ORDINARY') {
+    } else if (status === 'NON_RESIDENT' || status === 'NON_ORDINARY') {
       this.customerProfileForm.controls['contactNumber'].setValidators([Validators.pattern(AppConstants.numericRegex), Validators.maxLength(20), Validators.required]);
     }
     this.customerProfileForm.controls['contactNumber'].updateValueAndValidity();
+    if (status === 'NON_RESIDENT') {
+      let disposable = this.matDialog.open(NriDetailsDialogComponent, {
+        width: '50%',
+        height: 'auto',
+        disableClose: true,
+        // data: { residentialStatus: this.ITR_JSON.residentialStatus }
+      })
+
+      disposable.afterClosed().subscribe(result => {
+        console.info('Dialog Close result', result);
+        if (result.success) {
+          console.log('JUR:', result)
+          this.ITR_JSON.jurisdictions = result.data.jurisdictions
+          this.ITR_JSON.conditionsResStatus = result.data.conditionsResStatus
+        } else {
+          this.customerProfileForm.controls['residentialStatus'].setValue(this.ITR_JSON.residentialStatus)
+        }
+      })
+    } else {
+      this.ITR_JSON.jurisdictions = []
+      this.ITR_JSON.conditionsResStatus = null
+    }
   }
 
 
@@ -634,7 +610,7 @@ export class CustomerProfileComponent implements OnInit {
 
   addClient() {
     //Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
-    let disposable = this.dialog.open(AddClientDialogComponent, {
+    let disposable = this.matDialog.open(AddClientDialogComponent, {
       width: '500',
       height: '100',
       data: {
@@ -656,7 +632,7 @@ export class CustomerProfileComponent implements OnInit {
 
   getPrefillData() {
     //Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
-    let disposable = this.dialog.open(PrefillDataComponent, {
+    let disposable = this.matDialog.open(PrefillDataComponent, {
       width: '70%',
       height: 'auto',
       data: {
@@ -694,5 +670,5 @@ export class CustomerProfileComponent implements OnInit {
 
     this.customerProfileForm.controls['orgITRDate'].setValue(moment(dateString).toDate());
   }
-  
+
 }

@@ -1,0 +1,119 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div *ngIf="data.type==='BONDS'">
+    <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Bonds':'Update Bonds'}}</div>
+    <form [formGroup]="bondsForm" style="margin-top: 20px">
+        <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" placeholder="Buy Date" formControlName="purchaseDate"
+                        name="purchaseDate" [matDatepicker]="purchaseDate">
+                    <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+                    <mat-datepicker #purchaseDate></mat-datepicker>
+                    <mat-error *ngIf="bondsForm.controls['purchaseDate'].hasError('required')">Please select
+                        date</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput digitsOnly class="input-field"
+                        placeholder="Cost of Acquisition without indexation (Purchase value)"
+                        formControlName="indexCostOfAcquisition" maxlength="14">
+                    <mat-error *ngIf="bondsForm.controls['indexCostOfAcquisition'].hasError('required')">Please enter
+                        cost of acquisition</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" digitsOnly placeholder="Cost of improvement without indexation"
+                        formControlName="costOfImprovement" maxlength="14">
+                    <mat-error *ngIf="bondsForm.controls['costOfImprovement'].hasError('required')">Please enter
+                        cost of improvement</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" [matDatepicker]="sellDate" placeholder="Sale Date"
+                        formControlName="sellDate" name="sellDate" maxlength="14">
+                    <mat-datepicker-toggle matSuffix [for]="sellDate"></mat-datepicker-toggle>
+                    <mat-datepicker #sellDate></mat-datepicker>
+                    <mat-error *ngIf="bondsForm.controls['sellDate'].hasError('required')">Please select
+                        sale date</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" name="assets[i]" digitsOnly
+                        placeholder="Sale value/Full value consideration" formControlName="valueInConsideration"
+                        maxlength="14">
+                    <mat-error *ngIf="bondsForm.controls['valueInConsideration'].hasError('required')">Please enter
+                        sale value</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" name="assets[i]" placeholder="Expense"
+                        formControlName="sellExpense" maxlength="14" digitsOnly>
+                    <mat-error *ngIf="bondsForm.controls['sellExpense'].hasError('required')">Please enter
+                        Expense</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row dialog-button">
+            <div class="sub_btn top-space">
+                <button type="submit" class="tbd-btn" [disabled]="bondsForm.invalid"
+                    (click)="saveBondDetails()">Save</button>
+                <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div *ngIf="data.type==='DEDUCTION'">
+    <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Deduction':'Update Deduction'}}</div>
+
+    <form [formGroup]="deductionForm" style="margin-top: 20px">
+        <div class="card__row">
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput class="input-field" placeholder="Purchase date of new asset"
+                        formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate">
+                    <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+                    <mat-datepicker #purchaseDate></mat-datepicker>
+                    <mat-error *ngIf="deductionForm.controls['purchaseDate'].hasError('required')">Please select
+                        date</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-6">
+
+                <mat-form-field class="input-field-width">
+                    <input matInput digitsOnly class="input-field" placeholder="cost of new asset"
+                        formControlName="costOfNewAssets" required maxlength="14">
+                    <mat-error *ngIf="deductionForm.controls['costOfNewAssets'].hasError('required')">Please enter cost
+                        of
+                        new assets</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-6">
+                <mat-form-field class="input-field-width">
+                    <input matInput digitsOnly class="input-field"
+                        placeholder="Amount deposited on CGAS before due date" formControlName="investmentInCGAccount"
+                        required maxlength="14">
+                    <mat-error *ngIf="deductionForm.controls['investmentInCGAccount'].hasError('required')">Please enter
+                        amount</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row dialog-button">
+            <div class="sub_btn top-space">
+                <button type="submit" class="tbd-btn" [disabled]="deductionForm.invalid"
+                    (click)="saveDeductionDetails()">Save</button>
+                <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>

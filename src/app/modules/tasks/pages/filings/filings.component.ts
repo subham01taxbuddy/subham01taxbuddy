@@ -115,7 +115,6 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
   }
 
   fromSme(event) {
-    console.log('found it');
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     if (event === '') {
@@ -168,7 +167,6 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     });
   }
   fromFy(event) {
-    console.log('fromFy');
     this.selectedFyYear = event;
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
@@ -574,9 +572,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
 
   async startFiling(data) {
     var workingItr = this.itrDataList.filter((item: any) => item.itrId === data.itrId)[0]
-    console.log('data: ', workingItr);
     Object.entries(workingItr).forEach((key, value) => {
-      console.log(key, value)
       if (key[1] === null) {
         delete workingItr[key[0]];
       }
@@ -592,7 +588,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     console.log('obj:', obj)
     workingItr = JSON.parse(JSON.stringify(obj))
     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-    this.router.navigate(['/pages/itr-filing/customer-profile'], { 
+    this.router.navigate(['/pages/itr-filing/itr'], { 
         state: { 
           userId: data.userId, 
           panNumber: data.panNumber, 
@@ -636,7 +632,7 @@ export class FilingsComponent implements OnInit, AfterContentChecked {
     })
     disposable.afterClosed().subscribe(result => {
       if (result === 'reviseReturn') {
-        this.router.navigate(['/pages/itr-filing/customer-profile'], { 
+        this.router.navigate(['/pages/itr-filing/itr'], { 
           state: { 
             userId: data.userId, 
             panNumber: data.panNumber, 

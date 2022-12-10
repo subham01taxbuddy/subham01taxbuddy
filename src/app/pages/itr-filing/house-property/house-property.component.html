@@ -1,168 +1,406 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div>
+<div style="padding-top: 20px;">
     <form [formGroup]="housePropertyForm">
-        <mat-accordion>
-            <mat-expansion-panel class="color-panel accordion-border" [expanded]="true"
-                style="display: contents !important;">
-                <mat-expansion-panel-header>
-                    <div class="card__title" style="font-size: 20px;">House Property Income: {{getHpTaxableIncome()}}
-                    </div>
-                </mat-expansion-panel-header>
+        <div class="card__row" *ngIf="hpView === 'TABLE'">
+            <div style="text-align: right;">
+                <button class="tbd-btn-small" style="margin-right: 10px;" (click)="addHousingIncome()">Add House
+                    Property&nbsp;&nbsp; <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="card__col-xs-12" style="padding-top: 10px;">
+                <div class="report-table-container">
+                    <div class="report-table-wrapper">
+                        <table class="report-table">
+                            <thead class="report-table__head">
+                                <tr class="report-table__row report-table__row_head">
+                                    <th class="report-table__cell report-table__cell_name">Property type</th>
+                                    <th class="report-table__cell report-table__cell_name">Address</th>
+                                    <th class="report-table__cell report-table__cell_name">Income</th>
+                                    <th class="report-table__cell report-table__cell_name"></th>
+                                    <th class="report-table__cell report-table__cell_name"></th>
 
-                <!--  <div class="content vertLine" style="width: 60%; padding-right: 10px;">
-                    <app-document-upload (uploadDocument)="afterUploadDocs($event)"></app-document-upload>
-                    <br>
-                    <div>
-                        <span *ngFor="let hpDocs of getAllHpDocs('LOAN_STATEMENT'); let i=index">
-                            <div style="padding: 5px; display: block; text-decoration:underline;">
-                                <a *ngIf="!hpDocs.isDeleted" href="javascript:;" (click)="getHpDocsUrl(i)">{{hpDocs.fileName}}</a>
-                                <button *ngIf="!hpDocs.isDeleted" (click)="deleteFile(hpDocs.fileName)" style="float: right;"><i class="fa fa-trash" aria-hidden="true"></i></button>
-
-                                <a *ngIf="hpDocs.isDeleted" >{{hpDocs.fileName}}</a> &nbsp;&nbsp;
-                                <button *ngIf="hpDocs.isDeleted" (click)="deletedFileInfo(hpDocs.cloudFileId)" style="float: right;" title="Deleted file information"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
-                            </div>
-                           
-                        </span>
-                        <div *ngIf="deletedFileData.length > 0" class="userInfo">
-                            <button style="float: right; margin-bottom: 3px;" (click)="closeDialog()"><i class="fa fa-times-circle" aria-hidden="true"></i></button>
-                            <table>
-                                <tr>
-                                    <th><b>Doc Deleted By</b></th>
-                                    <th><b>Action</b></th>
-                                    <th><b>Date</b></th>
                                 </tr>
-                                <tr *ngFor="let data of deletedFileData">
-                                    <td>{{data.actionBy === ITR_JSON.userId ? 'User' : 'Tax Buddy'}}</td>
-                                    <td>{{data.action}}</td>
-                                    <td>{{data.date | date}}</td>
-                                </tr>
-                            </table>
-                        </div> 
-                    </div>
-                    <br><br><br>
-                    <ngx-image-zoom *ngIf="hpDocDetails.docType.toLowerCase() !== 'pdf' || hpDocDetails.docType.toLowerCase() !== 'xls' || hpDocDetails.docType.toLowerCase() !== 'doc' || hpDocDetails.docType.toLowerCase() !== 'xlsx' || hpDocDetails.docType.toLowerCase() !== 'docx'" [thumbImage]="hpDocDetails.docUrl"
-                        [fullImage]="hpDocDetails.docUrl" [magnification]="1" [enableScrollZoom]="true"
-                        [enableLens]="true" [lensWidth]="200">
-                    </ngx-image-zoom>
+                            </thead>
+                            <tbody class="report-table__body">
+                                <ng-template ngFor let-house [ngForOf]="ITR_JSON.houseProperties" let-i="index">
+                                    <tr class="report-table__row">
+                                        <td class="report-table__cell report-table__cell_day">
+                                            {{house.propertyType==="SOP"?"Self
+                                            occupied":
+                                            house.propertyType==="LOP"?"Let
+                                            out":house.propertyType==="DLOP"?"Vacant":""}}</td>
+                                        <td class="report-table__cell report-table__cell_day">
+                                            {{house.address}},
+                                            {{house.city}}
+                                        </td>
+                                        <td class="report-table__cell report-table__cell_day">
+                                            {{utilsService.currencyFormatter(house.taxableIncome)}}
+                                        </td>
 
-                    <ngx-doc-viewer *ngIf="hpDocDetails.docType.toLowerCase() === 'pdf' || hpDocDetails.docType.toLowerCase() === 'xls' || hpDocDetails.docType.toLowerCase() !== 'Pdf' || hpDocDetails.docType.toLowerCase() === 'doc' || hpDocDetails.docType.toLowerCase() === 'xlsx' || hpDocDetails.docType.toLowerCase() === 'docx'"
-                      [url]="hpDocDetails.docUrl" viewer="google"  style="width:100%;height:93vh;">
-                   </ngx-doc-viewer>
-
-                    <div *ngIf="hpDocDetails.docUrl ===''">
-                        House property documents not uploaded/Selected
-                    </div>
-                </div> -->
-
-                <div>
-                    <div class="card__row">
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Select Property Type</mat-label>
-                                <mat-select placeholder="Select Property Type" name="propertyType"
-                                    formControlName="propertyType"
-                                    (selectionChange)="changePropType(housePropertyForm.controls['propertyType'].value)"
-                                    required>
-                                    <mat-option *ngFor="let propertyType of propertyTypeDropdown"
-                                        [value]="propertyType.value">
-                                        {{ propertyType.label | titlecase}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <span formArrayName="loans">
-                            <span *ngFor="let coOwn of getLoansArray.controls;let i=index" [formGroupName]="i">
-                                <div class="card__col-xs-12 card__col-sm-4">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Principal amount repaid during the year</mat-label>
-                                        <input matTooltip="Principal amount repaid during the year"
-                                            matTooltipClass="tab-tooltip" matTooltipPosition="above"
-                                            formControlName="principalAmount" matInput
-                                            placeholder="Principal amount repaid during the year"
-                                            name="Total principle amount" class="input-field" maxlength="14" digitsOnly>
-                                        <mat-error
-                                            *ngIf="housePropertyForm.controls['loans'].controls[i].controls['principalAmount'].hasError('pattern')">
-                                            Enter
-                                            positive number without decimal.</mat-error>
-                                    </mat-form-field>
-                                </div>
-                                <div class="card__col-xs-12 card__col-sm-4">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Interest payable on borrowed capital</mat-label>
-                                        <input formControlName="interestAmount" matInput
-                                            placeholder="Interest amount for this year" name="Total interest amount"
-                                            class="input-field" maxlength="14" (blur)="checkEligibility()" digitsOnly
-                                            required>
-                                        <mat-error
-                                            *ngIf="housePropertyForm.controls['loans'].controls[i].controls['interestAmount'].hasError('pattern')">
-                                            Enter positive number without decimal.
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
-                            </span>
-                        </span>
-                    </div>
-                    <mat-radio-group name="isEligibleFor80EE" formControlName="isEligibleFor80EE"
-                        *ngIf="housePropertyForm.controls['loans'].controls[0].controls['interestAmount'].value >= 200000">
-                        <div class="customradiobtn bdr_btm">
-                            <mat-radio-button value="80EE" class="right-mrgn">Interest on loan taken for residential
-                                house
-                                property (80EE)</mat-radio-button>
-                        </div>
-                        <div class="customradiobtn">
-                            <mat-radio-button value="80EEA" class="right-mrgn">Deduction in respect of interest on loan
-                                taken for certain house property (80EEA)</mat-radio-button>&nbsp;&nbsp;
-                        </div>
-                    </mat-radio-group>
-                    <div class="card__row"
-                        *ngIf="housePropertyForm.controls['propertyType'].value === 'LOP' || housePropertyForm.controls['propertyType'].value === 'DLOP'">
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>
-                                    {{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of rent
-                                    received during the year?':
-                                    (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the
-                                    expected rent amount from said property?' :'')}}
-                                </mat-label>
-                                <input formControlName="grossAnnualRentReceived" matInput
-                                    placeholder="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of rent received during the year?':
-                                        (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}"
-                                    matTooltipClass="tab-tooltip"
-                                    matTooltip="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of rent received during the year?':
-                                        (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}"
-                                    name="rentAmount" class="input-field" maxlength="11" digitsOnly required>
-                                <mat-error
-                                    *ngIf="housePropertyForm.controls['grossAnnualRentReceived'].hasError('pattern')">
-                                    Enter
-                                    positive amount without decimal.</mat-error>
-                                <mat-error
-                                    *ngIf="housePropertyForm.controls['grossAnnualRentReceived'].hasError('min')">Amount
-                                    can not be 0.</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="card__col-xs-12 card__col-sm-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Amount of property tax paid during the year?</mat-label>
-                                <input formControlName="propertyTax" matInput currencyMask
-                                    placeholder="Amount of property tax paid during the year?" name="propertyTax"
-                                    class="input-field" maxlength="11" digitsOnly>
-                                <mat-error *ngIf="housePropertyForm.controls['propertyTax'].hasError('pattern')">Enter
-                                    positive amount without decimal.</mat-error>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <hr>
-
-
-                    <div class="pull-right">
-                        <!-- <a class="btn btn-cancel">Cancel</a> -->
-                        <button class="tbd-btn-secondary" (click)="deleteHpDetails()">Delete
-                        </button>
-                        <button class="tbd-btn" (click)="saveHpDetails()">Save
-                        </button>
+                                        <td class="report-table__cell report-table__cell_day">
+                                            <i class="fa fa-pencil" aria-hidden="true" style="cursor: pointer;"
+                                                (click)="editHouseProperty(i)"></i>
+                                        </td>
+                                        <td class="report-table__cell report-table__cell_day">
+                                            <i class="fa fa-trash" aria-hidden="true" style="cursor: pointer;"
+                                                (click)="deleteHpDetails(i)"></i>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </mat-expansion-panel>
-        </mat-accordion>
+            </div>
+        </div>
+
+        <div class="card__row" *ngIf="hpView === 'FORM'">
+            <div class="card__col-xs-12 card__col-sm-6">
+                <div class="card__title" style="padding:10px; font-size: 20px;">House property details</div>
+                <div class="card__row">
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Select Property Type</mat-label>
+                            <mat-select placeholder="Select Property Type" name="propertyType"
+                                formControlName="propertyType"
+                                (selectionChange)="changePropType(housePropertyForm.controls['propertyType'].value)"
+                                required>
+                                <mat-option *ngFor="let propertyType of propertyTypeDropdown"
+                                    [value]="propertyType.value">
+                                    {{ propertyType.label | titlecase}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="card__row">
+                    <span formArrayName="loans">
+                        <span *ngFor="let coOwn of getLoansArray.controls;let i=index" [formGroupName]="i">
+                            <div class="card__col-xs-12 card__col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Principal amount repaid during the year</mat-label>
+                                    <input matTooltip="Principal amount repaid during the year"
+                                        matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                        formControlName="principalAmount" matInput
+                                        placeholder="Principal amount repaid during the year"
+                                        name="Total principle amount" class="input-field" maxlength="14" digitsOnly>
+                                    <mat-error
+                                        *ngIf="housePropertyForm.controls['loans'].controls[i].controls['principalAmount'].hasError('pattern')">
+                                        Enter
+                                        positive number without decimal.</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="card__col-xs-12 card__col-sm-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Interest payable on borrowed capital</mat-label>
+                                    <input formControlName="interestAmount" matInput
+                                        placeholder="Interest amount for this year" name="Total interest amount"
+                                        class="input-field" maxlength="14" (blur)="checkEligibility()" digitsOnly>
+                                    <mat-error
+                                        *ngIf="housePropertyForm.controls['loans'].controls[i].controls['interestAmount'].hasError('pattern')">
+                                        Enter positive number without decimal.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </span>
+                    </span>
+                </div>
+
+                <div class="card__row"
+                    *ngIf="housePropertyForm.controls['propertyType'].value === 'LOP' || housePropertyForm.controls['propertyType'].value === 'DLOP'">
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>
+                                {{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of
+                                rent
+                                received during the year?':
+                                (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the
+                                expected rent amount from said property?' :'')}}
+                            </mat-label>
+                            <input formControlName="grossAnnualRentReceived" matInput
+                                placeholder="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of rent received during the year?':
+                                        (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}"
+                                matTooltipClass="tab-tooltip"
+                                matTooltip="{{housePropertyForm.controls['propertyType'].value === 'LOP' ? 'Total amount of rent received during the year?':
+                                        (housePropertyForm.controls['propertyType'].value === 'DLOP' ? 'What was the expected rent amount from said property?' :'')}}"
+                                name="rentAmount" class="input-field" maxlength="11" digitsOnly
+                                (blur)="calAnnualValue()">
+                            <mat-error
+                                *ngIf="housePropertyForm.controls['grossAnnualRentReceived'].hasError('pattern')">
+                                Enter
+                                positive amount without decimal.</mat-error>
+                            <mat-error *ngIf="housePropertyForm.controls['grossAnnualRentReceived'].hasError('min')">
+                                Amount
+                                can not be 0.</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Amount of property tax paid during the year?</mat-label>
+                            <input formControlName="propertyTax" matInput currencyMask
+                                placeholder="Amount of property tax paid during the year?" name="propertyTax"
+                                class="input-field" maxlength="11" digitsOnly (blur)="calAnnualValue()">
+                            <mat-error *ngIf="housePropertyForm.controls['propertyTax'].hasError('pattern')">
+                                Enter
+                                positive amount without decimal.</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="card__row"
+                    *ngIf="housePropertyForm.controls['propertyType'].value === 'LOP' || housePropertyForm.controls['propertyType'].value === 'DLOP'">
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label> Annual Value </mat-label>
+                            <input matInput placeholder="Annual Value" [(ngModel)]="annualValue"
+                                [ngModelOptions]="{standalone: true}" matTooltipClass="tab-tooltip"
+                                matTooltip="Gross rent received - Tax paid on local authorities" name="annualValue"
+                                class="input-field" maxlength="11" digitsOnly disabled>
+                            <mat-hint>Gross rent received - Tax paid on local authorities</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>30% of Annual value</mat-label>
+                            <input matInput placeholder="30% of Annual value" [(ngModel)]="thirtyPctOfAnnualValue"
+                                [ngModelOptions]="{standalone: true}" name="thirtyPctOfAV" class="input-field"
+                                maxlength="11" digitsOnly disabled>
+                            <mat-hint>30% of Annual value</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <br>
+                <mat-radio-group name="isEligibleFor80EE" formControlName="isEligibleFor80EE"
+                    *ngIf="housePropertyForm.controls['loans'].controls[0].controls['interestAmount'].value >= 200000">
+                    <div class="customradiobtn bdr_btm">
+                        <mat-radio-button value="80EE" class="right-mrgn">Interest on loan taken for residential
+                            house
+                            property (80EE)</mat-radio-button>
+                    </div>
+                    <br>
+                    <div class="customradiobtn">
+                        <mat-radio-button value="80EEA" class="right-mrgn">Deduction in respect of interest on
+                            loan
+                            taken for certain house property (80EEA)</mat-radio-button>&nbsp;&nbsp;
+                    </div>
+                </mat-radio-group>
+                <hr>
+
+
+                <div class="pull-right">
+                    <!-- <a class="btn btn-cancel">Cancel</a> -->
+                    <button class="tbd-btn-secondary" (click)="cancelHpForm()">Cancel
+                    </button>
+                    <button class="tbd-btn" (click)="saveHouseProperty()">Save
+                    </button>
+                </div>
+            </div>
+            <div class="card__col-xs-12 card__col-sm-6">
+                <div class="card__title" style="padding:10px; font-size: 20px;">Property Details</div>
+                <div class="card__row">
+                    <div class="card__col-xs-12 card__col-sm-8">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Address of Property</mat-label>
+                            <input type="text" trim matInput placeholder="Address of Property" name="address"
+                                class="input-field" formControlName="address" required>
+                            <mat-error *ngIf="housePropertyForm.controls['address'].hasError('required')">
+                                Enter address of property
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Town/City</mat-label>
+                            <input type="text" trim matInput placeholder="Town/City" name="city" class="input-field"
+                                formControlName="city" required>
+                            <mat-error *ngIf="housePropertyForm.controls['city'].hasError('required')">
+                                Enter town/city
+                            </mat-error>
+                            <mat-error *ngIf="housePropertyForm.controls['city'].hasError('pattern')">
+                                Enter character
+                                only.</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="card__row">
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Select state</mat-label>
+                            <mat-select placeholder="Select state" name="state" formControlName="state" required>
+                                <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
+                                    {{ state.stateName | titlecase}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="housePropertyForm.controls['state'].hasError('required')">
+                                Select the state
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Country</mat-label>
+                            <mat-select name="country" formControlName="country" required>
+                                <mat-option value="91"> India </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="housePropertyForm.controls['country'].hasError('required')">
+                                select the country
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Pin Code</mat-label>
+                            <input type="text" trim matInput placeholder="Pin Code" name="pinCode" class="input-field"
+                                formControlName="pinCode" (blur)="updateDataByPincode()" required>
+                            <mat-error *ngIf="housePropertyForm.controls['pinCode'].hasError('required')">
+                                Enter pincode
+                            </mat-error>
+                            <mat-error *ngIf="housePropertyForm.controls['pinCode'].hasError('pattern')">
+                                Enter valid
+                                pin
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <hr>
+                <div class="card__title" style="padding:10px; font-size: 20px;">Co - Ownership Details</div>
+                <div class="card__row">
+                    <div class="card__col-xs-12 card__col-sm-8">
+                        Is the property jointly owned? *
+                    </div>
+                    <div class="card__col-xs-12 card__col-sm-4">
+                        <mat-radio-group name="isCoOwners" (change)="haveCoOwners()" [formControl]="isCoOwners">
+                            <mat-radio-button [value]="true" style="margin-left:0px;" labelPosition='before'>Yes
+                            </mat-radio-button>&nbsp;&nbsp;&nbsp;
+                            <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+                <table class="table table-bordered" style="width: 100%;" *ngIf="isCoOwners.value">
+                    <thead style="background:#eaeaea">
+                        <tr class="table-head" style="border-left: 1px solid #e0e0e0;border-right: 2px solid #f2f0f0;">
+                            <th class="text-center">No</th>
+                            <th class="text-center">Co-owner name</th>
+                            <th class="text-center">PAN</th>
+                            <th class="text-center">Shares (%) *</th>
+                            <!-- <th class="text-center">Refund Acc.</th> -->
+                            <th class="action-th ">
+                                <button mat-icon-button color="warn" class="table-add-remove-button text-left"
+                                    (click)="addMoreCoOwner()">
+                                    <i class="fa fa-plus-square" aria-hidden="true"></i> Add
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="coOwners">
+                        <tr *ngFor="let coOwn of getCoOwnersArray.controls;let i=index" [formGroupName]="i">
+                            <td> {{i+1}}</td>
+                            <td>
+                                <mat-form-field class="input-field-width">
+                                    <input matInput class="input-field" name="coOwn[i]" formControlName="name"
+                                        pattern="[a-zA-Z ]*" required maxlength="40" type="text" trim>
+                                    <mat-error
+                                        *ngIf="housePropertyForm.controls['coOwners'].controls[i].controls['name'].hasError('pattern')">
+                                        Enter
+                                        valid name.</mat-error>
+                                </mat-form-field>
+                            </td>
+
+                            <td>
+                                <mat-form-field class="input-field-width">
+                                    <input matInput class="input-field" name="coOwn[i]"
+                                        matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
+                                        matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                        formControlName="panNumber" maxlength="10" required type="text" trim
+                                        [class.invalid]="isduplicatePAN(i,'coOwners')" upperCase
+                                        [matTooltip]="isduplicatePAN(i,'coOwners') ? 'Duplicate PAN Number':''"
+                                        matTooltipPosition="above" matTooltipClass="error-tooltip">
+                                    <mat-error
+                                        *ngIf="housePropertyForm.controls['coOwners'].controls[i].controls['panNumber'].hasError('pattern')">
+                                        Enter
+                                        valid PAN.</mat-error>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field class="input-field-width" style="width: 90% !important;">
+                                    <input matInput class="input-field" name="coOwn[i]" formControlName="percentage"
+                                        maxlength="2" digitsOnly
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        onkeypress="event.charCode >= 48 && event.charCode <= 57"
+                                        (blur)="calPercentage()">
+                                    <mat-error
+                                        *ngIf="housePropertyForm.controls['coOwners'].controls[i].controls['percentage'].hasError('pattern')">
+                                        Enter positive number without decimal.</mat-error>
+                                </mat-form-field>
+                            </td>
+
+                            <td style="white-space: nowrap;padding: 0%;border:none;justify-content: center;">
+                                <button mat-icon-button color="warn" class="table-add-remove-button text-left"
+                                    (click)="removeCoOwner(i)">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+                <div class="card__title" style="padding:10px; font-size: 20px;"
+                    *ngIf="housePropertyForm.controls['propertyType'].value === 'LOP'">Tenant Details</div>
+
+                <table class="table table-bordered" style="width: 100%;"
+                    *ngIf="housePropertyForm.controls['propertyType'].value === 'LOP'">
+                    <thead style="background:#eaeaea">
+                        <tr class="table-head" style="border-left: 1px solid #e0e0e0;border-right: 2px solid #f2f0f0;">
+                            <th class="text-center">No</th>
+                            <th class="text-center">Tenant name</th>
+                            <th class="text-center">PAN</th>
+                            <th class="action-th ">
+                                <button mat-icon-button color="warn" class="table-add-remove-button text-left"
+                                    (click)="addMoreTenants()">
+                                    <i class="fa fa-plus-square" aria-hidden="true"></i> Add
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="tenant">
+                        <tr *ngFor="let ten of getTenantArray.controls;let i=index" [formGroupName]="i">
+                            <td> {{i+1}}</td>
+                            <td>
+                                <mat-form-field class="input-field-width">
+                                    <input matInput class="input-field" name="ten[i]" formControlName="name" required
+                                        maxlength="40" type="text" trim>
+                                    <mat-error
+                                        *ngIf="housePropertyForm.controls['tenant'].controls[i].controls['name'].hasError('required')">
+                                        Enter
+                                        tenant name.</mat-error>
+                                </mat-form-field>
+                            </td>
+
+                            <td>
+                                <mat-form-field class="input-field-width">
+                                    <input matInput class="input-field" name="ten[i]"
+                                        matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
+                                        formControlName="panNumber" maxlength="10" type="text" trim
+                                        [class.invalid]="isduplicatePAN(i,'tenant')" upperCase
+                                        [matTooltip]="isduplicatePAN(i,'tenant') ? 'Duplicate PAN':''"
+                                        matTooltipPosition="above" matTooltipClass="error-tooltip">
+                                    <mat-error
+                                        *ngIf="housePropertyForm.controls['tenant'].controls[i].controls['panNumber'].hasError('pattern')">
+                                        Enter
+                                        valid PAN.</mat-error>
+                                    <!-- <mat-error *ngIf="tenantPanValidation()">qwerty</mat-error> -->
+                                </mat-form-field>
+                            </td>
+                            <td style="white-space: nowrap;padding: 0%;border:none;justify-content: center;">
+                                <button mat-icon-button color="warn" class="table-add-remove-button text-left"
+                                    (click)="removeTenant(i)">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </form>
 </div>

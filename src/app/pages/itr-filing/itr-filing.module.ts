@@ -1,3 +1,6 @@
+import { AddImmovableDialogComponent } from './capital-gain/more-info/schedule-al/add-immovable-dialog/add-immovable-dialog.component';
+import { ScheduleALComponent } from './capital-gain/more-info/schedule-al/schedule-al.component';
+import { MoreInfoComponent } from './capital-gain/more-info/more-info.component';
 import { AddClientDialogComponent } from './add-client-dialog/add-client-dialog.component';
 import { AckFailureComponent } from './acknowledgement/ack-failure/ack-failure.component';
 import { AckDelayComponent } from './acknowledgement/ack-delay/ack-delay.component';
@@ -44,7 +47,24 @@ import { UpdateManualFilingComponent } from './update-manual-filing/update-manua
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AddClientComponent } from './add-client/add-client.component';
 import { PrefillDataComponent } from './prefill-data/prefill-data.component';
-// import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
+import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
+import { DeleteConfirmationDialogComponent } from './components/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import { NriDetailsDialogComponent } from './components/nri-details-dialog/nri-details-dialog.component';
+import { OtherInformationComponent } from './other-information/other-information.component';
+import { UnlistedSharesComponent } from './other-information/unlisted-shares/unlisted-shares.component';
+import { DirectorInCompanyComponent } from './other-information/director-in-company/director-in-company.component';
+import { CapitalGainComponent } from './capital-gain/capital-gain.component';
+import { LandAndBuildingComponent } from './capital-gain/land-and-building/land-and-building.component';
+import { LabFormComponent } from './capital-gain/land-and-building/lab-form/lab-form.component';
+import { AddInvestmentDialogComponent } from './capital-gain/land-and-building/add-investment-dialog/add-investment-dialog.component';
+import { EquityMfComponent } from './capital-gain/equity-mf/equity-mf.component';
+import { ListedUnlistedDialogComponent } from './capital-gain/equity-mf/listed-unlisted-dialog/listed-unlisted-dialog.component';
+import { InvestmentDialogComponent } from './capital-gain/investment-dialog/investment-dialog.component';
+import { OtherAssetsDialogComponent } from './capital-gain/other-assets/other-assets-dialog/other-assets-dialog.component';
+import { OtherAssetsComponent } from './capital-gain/other-assets/other-assets.component';
+import { OtherImprovementDialogComponent } from './capital-gain/other-assets/other-improvement-dialog/other-improvement-dialog.component';
+import { BondsDebentureComponent } from './capital-gain/bonds-debenture/bonds-debenture.component';
+import { BondsComponent } from './capital-gain/bonds/bonds.component';
 
 @NgModule({
     imports: [
@@ -95,11 +115,42 @@ import { PrefillDataComponent } from './prefill-data/prefill-data.component';
         UpdateManualFilingComponent,
         AddClientComponent,
         AddClientDialogComponent,
-        PrefillDataComponent
+        PrefillDataComponent,
         // InputUploadComponent
-    ],
+        CoOwnerComponent,
+        DeleteConfirmationDialogComponent,
+        NriDetailsDialogComponent,
+        OtherInformationComponent,
+        UnlistedSharesComponent,
+        DirectorInCompanyComponent,
+        CapitalGainComponent,
+        LandAndBuildingComponent,
+        LabFormComponent,
+        AddInvestmentDialogComponent,
+        EquityMfComponent,
+        ListedUnlistedDialogComponent,
+        InvestmentDialogComponent,
+        OtherAssetsComponent,
+        OtherAssetsDialogComponent,
+        OtherImprovementDialogComponent,
+        MoreInfoComponent,
+        ScheduleALComponent,
+        AddImmovableDialogComponent,
+        BondsDebentureComponent,
+        BondsComponent,
+       ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
-        /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent]
+        /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,
+        CoOwnerComponent,
+        DeleteConfirmationDialogComponent,
+        NriDetailsDialogComponent,
+        UnlistedSharesComponent,
+        DirectorInCompanyComponent,
+        AddInvestmentDialogComponent,
+        ListedUnlistedDialogComponent,
+        InvestmentDialogComponent,
+        OtherAssetsDialogComponent,
+        OtherImprovementDialogComponent]
 
 })
 export class ItrFilingModule { }

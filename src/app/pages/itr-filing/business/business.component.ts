@@ -149,46 +149,46 @@ export class BusinessComponent implements OnInit {
     })
   }
 
-  deleteFile(fileName) {
+  deleteFile(fileName){
     let adminId = JSON.parse(localStorage.getItem("UMD"));
-    var path = '/itr/cloud/files?actionBy=' + adminId.USER_UNIQUE_ID;
+    var path = '/itr/cloud/files?actionBy='+adminId.USER_UNIQUE_ID;
     let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
     var reqBody = [filePath];
-    console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
-    // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
-      console.log('Doc delete responce: ', responce);
-      this.utilsService.showSnackBar(responce.response);
-      this.getItrDocuments();
+    console.log('URL path: ',path, ' filePath: ',filePath,' Request body: ',reqBody);
+   // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
+    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any)=>{
+        console.log('Doc delete responce: ',responce); 
+        this.utilsService.showSnackBar(responce.response);
+        this.getItrDocuments();
     },
-      error => {
-        console.log('Doc delete ERROR responce: ', error.responce);
-        this.utilsService.showSnackBar(error.response);
-      })
-  }
+    error=>{
+     console.log('Doc delete ERROR responce: ',error.responce); 
+     this.utilsService.showSnackBar(error.response);
+    })
+   }
 
-  deletedFileInfo(cloudFileId) {
-    this.deletedFileData = [];
-    this.loading = true;
-    let param = '/cloud/log?cloudFileId=' + cloudFileId;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
-      this.loading = false;
-      this.deletedFileData = res;
-      console.log('Deleted file detail info: ', this.deletedFileData);
-    },
-      error => {
-        this.loading = false;
-      })
-  }
+   deletedFileInfo(cloudFileId){
+     this.deletedFileData = [];
+     this.loading = true;
+     let param = '/cloud/log?cloudFileId='+cloudFileId;
+     this.itrMsService.getMethod(param).subscribe((res: any)=>{
+       this.loading = false;
+       this.deletedFileData = res;
+       console.log('Deleted file detail info: ',this.deletedFileData);
+     },
+     error=>{
+       this.loading = false;
+     })
+   }
+ 
+   closeDialog(){
+     this.deletedFileData = [];
+   }
+   
 
-  closeDialog() {
-    this.deletedFileData = [];
-  }
-
-
-  afterUploadDocs(fileUpload) {
-    if (fileUpload === 'File uploaded successfully') {
-      this.getItrDocuments();
+  afterUploadDocs(fileUpload){
+    if(fileUpload === 'File uploaded successfully'){
+       this.getItrDocuments();
     }
   }
 
@@ -227,7 +227,7 @@ export class BusinessComponent implements OnInit {
 
   getCodeFromLabelOnBlur() {
     if (this.utilsService.isNonEmpty(this.natureOfBusinessForm.value) && this.utilsService.isNonEmpty(this.natureOfBusinessForm.value)) {
-      this.natureCode = this.natureOfBusinessDropdown.filter((item: any) => item.label.toLowerCase() === this.natureOfBusinessForm.value.toLowerCase());
+      this.natureCode = this.natureOfBusinessDropdown.filter((item:any) => item.label.toLowerCase() === this.natureOfBusinessForm.value.toLowerCase());
       if (this.natureCode.length !== 0) {
         this.natureCode = this.natureCode[0].code;
         console.log('natureCode on blur = ', this.natureCode);
@@ -237,12 +237,12 @@ export class BusinessComponent implements OnInit {
       }
     }
   }
-
+  
   getMastersData() {
     const param = '/itrmaster';
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       this.natureOfBusinessDropdownAll = result.natureOfBusiness;
-      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44AD');
+      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item:any) => item.section === '44AD');
       sessionStorage.setItem('MASTER', JSON.stringify(result));
     }, error => {
     });
@@ -347,7 +347,7 @@ export class BusinessComponent implements OnInit {
 
     if (val === 'BUSINESS') {
       this.natureOfBusinessPlaceholder = 'Nature of business';
-      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44AD');
+      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item:any) => item.section === '44AD');
       // this.businesTypeString = 'BUSINESS';
       this.businessIncomeBankForm.controls['recieptRecievedInBank'].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex)]);
       this.businessIncomeBankForm.controls['recieptRecievedInBank'].updateValueAndValidity();
@@ -359,7 +359,7 @@ export class BusinessComponent implements OnInit {
       this.businessIncomeCashForm.controls['presumptiveIncomeRecievedCash'].updateValueAndValidity();
     } else if (val === 'PROFESSIONAL') {
       this.natureOfBusinessPlaceholder = 'Nature of profession';
-      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44ADA');
+      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item:any) => item.section === '44ADA');
       // this.businesTypeString = 'PROFESSIONAL';
       this.professionIncomeForm.controls['grossReciept'].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex)]);
       this.professionIncomeForm.controls['grossReciept'].updateValueAndValidity();
@@ -567,7 +567,7 @@ export class BusinessComponent implements OnInit {
 
   natureOfBusinessFromCode(natureOfBusiness) {
     if (this.natureOfBusinessDropdownAll.length !== 0) {
-      const nameArray = this.natureOfBusinessDropdownAll.filter((item: any) => item.code === natureOfBusiness);
+      const nameArray = this.natureOfBusinessDropdownAll.filter((item:any) => item.code === natureOfBusiness);
       return nameArray[0].label;
     } else {
       return natureOfBusiness;
@@ -588,13 +588,13 @@ export class BusinessComponent implements OnInit {
     this.localPresumptiveIncome = this.ITR_JSON.business.presumptiveIncomes[index];
     this.businessMode = 'FORM';
     console.log('this.localPresumptiveIncome =', this.localPresumptiveIncome);
-    const name = this.natureOfBusinessDropdownAll.filter((item: any) => item.code === this.localPresumptiveIncome.natureOfBusiness);
+    const name = this.natureOfBusinessDropdownAll.filter((item:any) => item.code === this.localPresumptiveIncome.natureOfBusiness);
     this.natureOfBusinessForm.setValue(name[0].label);
     this.natureCode = this.localPresumptiveIncome.natureOfBusiness;
     this.tradeName.setValue(this.localPresumptiveIncome.tradeName);
 
     if (this.localPresumptiveIncome.businessType === 'BUSINESS') {
-      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44AD');
+      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item:any) => item.section === '44AD');
 
       // this.businesTypeString = 'BUSINESS';
       this.businessType.setValue('BUSINESS');
@@ -617,7 +617,7 @@ export class BusinessComponent implements OnInit {
     } else if (this.localPresumptiveIncome.businessType === 'PROFESSIONAL') {
       // this.businesTypeString = 'PROFESSIONAL';
       this.businessType.setValue('PROFESSIONAL');
-      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44ADA');
+      this.natureOfBusinessDropdown = this.natureOfBusinessDropdownAll.filter((item:any) => item.section === '44ADA');
       for (let i = 0; i < this.localPresumptiveIncome.incomes.length; i++) {
         this.professionIncomeForm.controls['grossReciept'].setValue(this.localPresumptiveIncome.incomes[i].receipts);
         this.professionIncomeForm.controls['presumptiveIncome'].setValue(this.localPresumptiveIncome.incomes[i].presumptiveIncome);

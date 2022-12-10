@@ -5,7 +5,6 @@ import { MatStepper } from '@angular/material/stepper';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { isArray } from 'lodash';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -27,11 +26,13 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   viewer = 'DOC';
   docUrl = '';
   loading = false;
-
+  personalInfoSubTab = 0;
+  incomeSubTab = 0; 
   constructor(private itrMsService: ItrMsService, public utilsService: UtilsService) { }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    console.log('Inside on init itr wizard')
   }
   ngAfterContentChecked() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -58,13 +59,25 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
 
   saveAndNext(event) {
     // need to check
-    this.stepper.next();
+    console.log('save and next function', event)
+    if (event.subTab) {
+      if (event.tabName === 'PERSONAL') {
+        this.personalInfoSubTab = this.personalInfoSubTab + 1
+      } else if (event.tabName === 'OTHER') {
+        this.personalInfoSubTab = this.personalInfoSubTab + 1
+      } else if (event.tabName === 'CAPITAL') {
+        //other sources tab is 3, as tabs before this don't have save button
+        this.incomeSubTab = 4
+      }
+    } else {
+      this.stepper.next();
+    }
   }
 
   tabChanged(tab) {
     this.tabIndex = tab.selectedIndex;
     this.getDocuments();
-    console.log('tabchanged', this.tabIndex)
+    console.log('tab changed', this.tabIndex)
   }
 
   afterUploadDocs(fileUpload) {
@@ -76,10 +89,7 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
   getDocuments() {
     const param = `/cloud/file-info?currentPath=${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
-      if(isArray(result)) {
-        this.documents = result;
-      }
-      console.log('documents:' , this.documents);
+      this.documents = result;
     })
   }
 
@@ -114,13 +124,13 @@ export class ItrWizardComponent implements OnInit, AfterContentChecked {
     let filePath = `${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs/${fileName}`;
     var reqBody = [filePath];
     console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((responce: any) => {
-      console.log('Doc delete responce: ', responce);
-      this.utilsService.showSnackBar(responce.response);
+    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((response: any) => {
+      console.log('Doc delete response: ', response);
+      this.utilsService.showSnackBar(response.response);
       this.getDocuments();
     },
       error => {
-        console.log('Doc delete ERROR responce: ', error.responce);
+        console.log('Doc delete ERROR response: ', error.response);
         this.utilsService.showSnackBar(error.response);
       })
   }
