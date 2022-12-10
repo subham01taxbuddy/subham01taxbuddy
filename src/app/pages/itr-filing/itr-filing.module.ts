@@ -64,7 +64,7 @@ import { OtherAssetsDialogComponent } from './capital-gain/other-assets/other-as
 import { OtherAssetsComponent } from './capital-gain/other-assets/other-assets.component';
 import { OtherImprovementDialogComponent } from './capital-gain/other-assets/other-improvement-dialog/other-improvement-dialog.component';
 import { BondsDebentureComponent } from './capital-gain/bonds-debenture/bonds-debenture.component';
-// import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
+import { BondsComponent } from './capital-gain/bonds/bonds.component';
 
 @NgModule({
     imports: [
@@ -137,7 +137,8 @@ import { BondsDebentureComponent } from './capital-gain/bonds-debenture/bonds-de
         ScheduleALComponent,
         AddImmovableDialogComponent,
         BondsDebentureComponent,
-    ],
+        BondsComponent,
+       ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
         /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,
         CoOwnerComponent,
