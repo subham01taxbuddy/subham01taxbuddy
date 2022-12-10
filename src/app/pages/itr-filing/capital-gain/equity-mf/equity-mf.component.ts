@@ -99,11 +99,15 @@ export class EquityMfComponent implements OnInit {
     };
   }
 
-  listedCreateRowData() {
+  calculatedTotalListedCg(){
     this.totalListedCg = 0;
     this.listedCg.assetDetails.forEach(item => {
       this.totalListedCg += item.capitalGain;
     });
+  }
+
+  listedCreateRowData() {
+    this.calculatedTotalListedCg();
     return this.listedCg.assetDetails;
   }
 
@@ -286,11 +290,13 @@ export class EquityMfComponent implements OnInit {
       if (result !== undefined) {
         if (mode === 'ADD') {
           if (type === 'EQUITY_SHARES_LISTED') {
-            this.listedCg.assetDetails.push(result);
+            this.listedCg.assetDetails.push(result.cgObject);
             this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
+            this.calculatedTotalListedCg();
           } else if (type === 'EQUITY_SHARES_UNLISTED') {
-            this.unlistedCg.assetDetails.push(result);
+            this.unlistedCg.assetDetails.push(result.cgObject);
             this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails);
+            this.calculateTotalUnlistedCg();
           }
           // let currObj = this.cgArray.filter(item => item.assetType === type);
           // if (currObj.length > 0 && currObj[0].assetDetails instanceof Array) {
@@ -323,9 +329,11 @@ export class EquityMfComponent implements OnInit {
           if (type === 'EQUITY_SHARES_LISTED') {
             this.listedCg.assetDetails.splice(result.rowIndex, 1, result.cgObject);
             this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
+            this.calculatedTotalListedCg();
           } else if (type === 'EQUITY_SHARES_UNLISTED') {
             this.unlistedCg.assetDetails.splice(result.rowIndex, 1, result.cgObject);
             this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails);
+            this.calculateTotalUnlistedCg();
           }
 
           // let currObj = this.cgArray.filter(item => item.assetType === type);
@@ -436,11 +444,15 @@ export class EquityMfComponent implements OnInit {
     };
   }
 
-  unListedCreateRowData() {
+  calculateTotalUnlistedCg() {
     this.totalUnlistedCg = 0;
     this.unlistedCg.assetDetails.forEach(item => {
       this.totalUnlistedCg += item.capitalGain;
     });
+  }
+
+  unListedCreateRowData() {
+    this.calculateTotalUnlistedCg();
     return this.unlistedCg.assetDetails;
   }
 
@@ -921,10 +933,12 @@ export class EquityMfComponent implements OnInit {
   deleteAsset(type, i) {
     if (type === 'EQUITY_SHARES_LISTED') {
       this.listedCg.assetDetails.splice(i, 1);
-      this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails)
+      this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
+      this.calculatedTotalListedCg();
     } else if (type === 'EQUITY_SHARES_UNLISTED') {
       this.unlistedCg.assetDetails.splice(i, 1);
       this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails)
+      this.calculateTotalUnlistedCg();
     }
     // let index = this.cgArray.findIndex(item => item.assetType === type);
     // if (index !== -1) {
@@ -1065,6 +1079,8 @@ export class EquityMfComponent implements OnInit {
       if (type === 'EQUITY_SHARES_LISTED') {
         this.listedCg.assetDetails = res.assetDetails;
         this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
+        this.calculatedTotalListedCg();
+        this.calculateTotalUnlistedCg();
       };
       if (type === 'EQUITY_SHARES_UNLISTED') {
         this.unlistedCg.assetDetails = res.assetDetails;
