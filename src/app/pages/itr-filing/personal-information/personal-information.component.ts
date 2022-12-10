@@ -361,12 +361,9 @@ export class PersonalInformationComponent implements OnInit {
       middleName: ['', /* Validators.compose([Validators.pattern(AppConstants.charRegex)]) */],
       lastName: ['', Validators.compose([Validators.required, /* Validators.pattern(AppConstants.charRegex) */])],
       fatherName: [''],
-      gender: ['', Validators.required],
-      dateOfBirth: ['', Validators.required],
       panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex)])],
       aadharNumber: ['', Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)])],
       assesseeType: ['', Validators.required],
-      residentialStatus: ['RESIDENT', Validators.required],
       regime: ['', Validators.required],
       previousYearRegime: ['', Validators.required],
       address: this.fb.group({
