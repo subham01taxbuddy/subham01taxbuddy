@@ -55,7 +55,7 @@ export class BondsDebentureComponent implements OnInit {
     costOfPlantMachinary: null
   }
 
-
+  loading = false;
   bondsForm: FormGroup;
   deductionForm: FormGroup;
   constructor(
@@ -108,10 +108,10 @@ export class BondsDebentureComponent implements OnInit {
       sellValuePerUnit: [obj.sellValuePerUnit || null],
       purchaseDate: [obj.purchaseDate || null, Validators.required],
       indexCostOfAcquisition: [obj.indexCostOfAcquisition || null, Validators.required],
-      costOfImprovement: [obj.costOfImprovement || null, Validators.required],
+      costOfImprovement: [obj.costOfImprovement || null],
       sellDate: [obj.sellDate || null, Validators.required],
       sellValue: [obj.sellValue || null],
-      sellExpense: [obj.sellExpense || null, Validators.required],
+      sellExpense: [obj.sellExpense || null],
       gainType: [obj.gainType || null],
       capitalGain: [obj.capitalGain || null],
       purchaseValuePerUnit: [obj.purchaseValuePerUnit || null],
@@ -143,6 +143,7 @@ export class BondsDebentureComponent implements OnInit {
   }
 
   saveBondDetails() {
+    this.loading = true;
     let param = '/calculate/indexed-cost';
     let purchaseDate = this.bondsForm.controls['purchaseDate'].value;
     let sellDate = this.bondsForm.controls['sellDate'].value;
@@ -172,6 +173,7 @@ export class BondsDebentureComponent implements OnInit {
           ],
         }
         this.itrMsService.postMethod(param, request).subscribe((res: any) => {
+          this.loading = false;
           if (res.assetDetails[0].capitalGain) {
             this.bondsForm.controls['capitalGain'].setValue(res.assetDetails[0].capitalGain);
           } else {
@@ -179,16 +181,19 @@ export class BondsDebentureComponent implements OnInit {
           }
           this.dialogRef.close(this.bondsForm.value)
         }, error => {
+          this.loading = false;
           this.toastMsgService.alert("error", "Something went wrong please try again.")
         })
       }
     },
       error => {
+        this.loading = false;
         this.toastMsgService.alert("error", "Something went wrong please try again.")
       })
   }
 
   saveDeductionDetails() {
+    this.loading = true;
     let capitalGain = 0;
     let saleValue = 0;
     let expenses = 0;
@@ -212,6 +217,7 @@ export class BondsDebentureComponent implements OnInit {
       ]
     };
     this.itrMsService.postMethod(param, request).subscribe((result: any) => {
+      this.loading = false;
       if (result.success) {
         if (result.data.length > 0) {
           this.deductionForm.controls['totalDeductionClaimed'].setValue(result.data[0].deductionAmount)
@@ -222,6 +228,7 @@ export class BondsDebentureComponent implements OnInit {
       }
     },
       error => {
+        this.loading = false;
         this.toastMsgService.alert("error", "Something went wrong please try again.")
       })
   }

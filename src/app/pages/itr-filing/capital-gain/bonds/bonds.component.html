@@ -81,7 +81,8 @@
                     matTooltipClass="tab-tooltip" matTooltipPosition="above" data-action-type="redirectUrl"></i>
             </div>
             <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
-                <mat-radio-group [(ngModel)]="zeroDeduction" [disabled]="isZeroDisable" (change)="onZeroDeductionChanged()">
+                <mat-radio-group [(ngModel)]="zeroDeduction" [disabled]="isZeroDisable"
+                    (change)="onZeroDeductionChanged()">
                     <mat-radio-button [value]="true" style="margin-left:0px;margin-right:2px" labelPosition='before'>Yes
                     </mat-radio-button>
                     <mat-radio-button [value]="false" labelPosition='before'>No</mat-radio-button>
