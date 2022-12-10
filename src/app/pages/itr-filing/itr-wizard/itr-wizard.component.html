@@ -39,6 +39,9 @@
           <mat-tab label="Capital Gain">
             <app-capital-gain (saveAndNext)="saveAndNext($event)" *ngIf="tabIndex=== 1"></app-capital-gain>
           </mat-tab>
+          <mat-tab label="More Information">
+            <app-more-info (saveAndNext)="saveAndNext($event)"></app-more-info>
+          </mat-tab>
         </mat-tab-group>
         <!--  <div class="content" style="width: 60%;padding-right: 10px;">
           <app-document-upload (uploadDocument)="afterUploadDocs($event)"></app-document-upload>
