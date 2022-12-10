@@ -589,7 +589,7 @@ export class LabFormComponent implements OnInit {
   }
   
   mergeImprovements() {
-    let otherImprovements = this.cgArrayElement.improvement.filter(imp => (imp.srn != this.data.assetSelected.srn));
+    let otherImprovements = this.cgArrayElement.improvement.filter(imp => (imp.srn != this.data.assetSelected?.srn));
     if(otherImprovements == null){
       otherImprovements = [];
     }
@@ -716,7 +716,11 @@ export class LabFormComponent implements OnInit {
       if (this.utilsService.isNonEmpty(this.cgOutput)) {
         console.log('cgOutput is non empty');
         let formValue = formGroupName.getRawValue();
-        Object.assign(this.cgArrayElement.buyersDetails[this.currentCgIndex], formValue.buyersDetails);
+        if(this.cgArrayElement.buyersDetails[this.currentCgIndex]){
+          Object.assign(this.cgArrayElement.buyersDetails[this.currentCgIndex], formValue.buyersDetails);
+        } else{
+          this.cgArrayElement.buyersDetails = formValue.buyersDetails;
+        }
         // Object.assign(this.cgArrayElement, formGroupName.getRawValue());
         this.cgArrayElement.assetType = this.assetType.value;
         this.cgArrayElement.assetDetails[this.currentCgIndex].algorithm = 'cgProperty';//this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].algorithm;
@@ -736,7 +740,12 @@ export class LabFormComponent implements OnInit {
           this.cgArrayElement.improvement.push(improvement);
         }
         if (this.data.mode === 'ADD') {
-          this.Copy_ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND')[0] = this.cgArrayElement;
+          let labData = this.Copy_ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND')[0];
+          if(labData) {
+            this.Copy_ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND')[0] = this.cgArrayElement;
+          } else{
+            this.Copy_ITR_JSON.capitalGain.push(this.cgArrayElement);
+          }
         } else {
           console.log('editing property details', this.cgArrayElement);
           //this.Copy_ITR_JSON.capitalGain.splice(this.currentCgIndex, 1, this.cgArrayElement);
@@ -940,7 +949,7 @@ export class LabFormComponent implements OnInit {
 
   investmentsCreateRowData() {
     //return this.cgArrayElement.deduction;
-    return this.cgArrayElement.deduction.filter(deduction => (deduction.srn == this.data.assetSelected.srn));
+    return this.cgArrayElement.deduction?.filter(deduction => (deduction.srn == this.data.assetSelected?.srn));
   }
 
   getImprovementYears() {
