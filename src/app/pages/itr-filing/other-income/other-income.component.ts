@@ -350,7 +350,7 @@ export class OtherIncomeComponent implements OnInit {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.loading = false;
       this.utilsService.showSnackBar('Other Income updated successfully.');
-      this.saveAndNext.emit(true);
+      this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
     }, error => {
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       this.utilsService.showSnackBar('Failed to update other income.');
