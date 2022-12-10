@@ -8,6 +8,7 @@ export const environment = {
 	amazonaws_url: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com",
 	reviewUrl: "https://dfxi9rg1pf.execute-api.us-east-1.amazonaws.com/dev/",
 	matomoScriptId: '5',
+	isValidItr:false,
 	s3_cred: {
 		// user_name: "ashish@ssbainnovations.com",
 		// password: "testPwd8761$",

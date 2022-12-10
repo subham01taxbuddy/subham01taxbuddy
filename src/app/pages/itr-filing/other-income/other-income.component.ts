@@ -40,14 +40,14 @@ export class OtherIncomeComponent implements OnInit {
     "value": "ANY_OTHER",
     "label": "Any Other Income",
   }, /* {
-    "value": "FAMILLY_PENSION",
+    "value": "FAMILY_PENSION",
     "label": "Any Other Income",
   } */];
 
   exemptIncomesDropdown = [{
     id: null,
     seqNum: 1,
-    value: "AGIR",
+    value: "AGRI",
     label: "Agriculture Income (less than or equal to RS. 5000)",
     detailed: false
   }, {
@@ -308,9 +308,12 @@ export class OtherIncomeComponent implements OnInit {
     ]
     console.log('Copy ITR JSON', this.Copy_ITR_JSON)
     this.loading = true;
-    this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes.filter((item: any) => item.incomeType !== 'SAVING_INTEREST' &&
+    this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes?.filter((item: any) => item.incomeType !== 'SAVING_INTEREST' &&
       item.incomeType !== 'FD_RD_INTEREST' && item.incomeType !== 'TAX_REFUND_INTEREST' &&
-      item.incomeType !== 'ANY_OTHER' && item.incomeType !== 'FAMILLY_PENSION')
+      item.incomeType !== 'ANY_OTHER' && item.incomeType !== 'FAMILY_PENSION');
+    if(!this.Copy_ITR_JSON.incomes){
+      this.Copy_ITR_JSON.incomes = [];
+    }
     for (let i = 0; i < this.otherIncomeGridOptions.rowData.length; i++) {
       if (this.utilsService.isNonEmpty(this.otherIncomeGridOptions.rowData[i].amount)) {
         this.Copy_ITR_JSON.incomes.push({
@@ -324,8 +327,8 @@ export class OtherIncomeComponent implements OnInit {
     if (this.utilsService.isNonZero(this.familyPension.value)) {
       this.Copy_ITR_JSON.incomes.push({
         "amount": this.familyPension.value,
-        "incomeType": "FAMILLY_PENSION",
-        "details": "FAMILLY_PENSION",
+        "incomeType": "FAMILY_PENSION",
+        "details": "FAMILY_PENSION",
         "expenses": 0
       })
     }
@@ -373,7 +376,7 @@ export class OtherIncomeComponent implements OnInit {
         });
       }
 
-      let famPension = this.ITR_JSON.incomes.filter(item => item.incomeType === 'FAMILLY_PENSION');
+      let famPension = this.ITR_JSON.incomes.filter(item => item.incomeType === 'FAMILY_PENSION');
       if (famPension.length > 0) {
         this.familyPension.setValue(famPension[0].amount);
         this.calFamPension();
@@ -510,7 +513,9 @@ export class OtherIncomeComponent implements OnInit {
     return this.dividendIncomes.controls['quarter1'].value + this.dividendIncomes.controls['quarter2'].value + this.dividendIncomes.controls['quarter3'].value + this.dividendIncomes.controls['quarter4'].value + this.dividendIncomes.controls['quarter5'].value;
   }
   calFamPension() {
-    if (this.familyPension.valid) {
+    this.famPenDeduction = 0;
+    this.totalFamPenDeduction = this.familyPension.value;
+    if (this.familyPension.valid && this.ITR_JSON.regime === 'OLD') {
       this.famPenDeduction = (this.familyPension.value / 3 > 15000 ? 15000 : this.familyPension.value / 3).toFixed()
       this.totalFamPenDeduction = (this.familyPension.value - this.famPenDeduction).toFixed();
     }

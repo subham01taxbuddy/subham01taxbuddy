@@ -607,8 +607,11 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
           this.addAndUpdateInvestment(item);
         } else {
           if (item === 'us80e') {
-            this.ITR_JSON.loans = this.ITR_JSON.loans.filter((item: any) => item.loanType !== 'EDUCATION')
-            this.ITR_JSON.loans.push({
+            this.ITR_JSON.loans = this.ITR_JSON.loans?.filter((item: any) => item.loanType !== 'EDUCATION');
+            if(!this.ITR_JSON.loans){
+              this.ITR_JSON.loans = [];
+            }
+            this.ITR_JSON.loans?.push({
               loanType: 'EDUCATION',
               name: null,
               interestPaidPerAnum: Number(this.investmentDeductionForm.controls['us80e'].value),
@@ -617,9 +620,12 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
               details: null
             });
           } else if (item === 'us80gg') {
-            this.ITR_JSON.expenses = this.ITR_JSON.expenses.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID')
+            this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'HOUSE_RENT_PAID');
+            if(!this.ITR_JSON.expenses) {
+              this.ITR_JSON.expenses = [];
+            }
             if (!this.ITR_JSON.systemFlags.hraAvailed) {
-              this.ITR_JSON.expenses.push({
+              this.ITR_JSON.expenses?.push({
                 expenseType: 'HOUSE_RENT_PAID',
                 expenseFor: null,
                 details: null,
@@ -628,8 +634,11 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
               });
             }
           } else if (item === 'us80ggc') {
-            this.ITR_JSON.donations = this.ITR_JSON.donations.filter((item: any) => item.donationType !== 'POLITICAL')
-            this.ITR_JSON.donations.push({
+            this.ITR_JSON.donations = this.ITR_JSON.donations?.filter((item: any) => item.donationType !== 'POLITICAL');
+            if(!this.ITR_JSON.donations) {
+              this.ITR_JSON.donations = [];
+            }
+            this.ITR_JSON.donations?.push({
               details: '',
               identifier: '',
               panNumber: '',
@@ -644,8 +653,11 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
               state: '',
             });
           } else if (item === 'us80eeb') {
-            this.ITR_JSON.expenses = this.ITR_JSON.expenses.filter((item: any) => item.expenseType !== 'ELECTRIC_VEHICLE')
-            this.ITR_JSON.expenses.push({
+            this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter((item: any) => item.expenseType !== 'ELECTRIC_VEHICLE');
+            if(!this.ITR_JSON.expenses) {
+              this.ITR_JSON.expenses = [];
+            }
+            this.ITR_JSON.expenses?.push({
               expenseType: 'ELECTRIC_VEHICLE',
               expenseFor: null,
               details: null,
@@ -655,11 +667,14 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
           }
         }
       });
-      this.ITR_JSON.insurances = this.ITR_JSON.insurances.filter((item: any) => item.policyFor !== "DEPENDANT");
+      this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter((item: any) => item.policyFor !== "DEPENDANT");
+      if(!this.ITR_JSON.insurances) {
+        this.ITR_JSON.insurances = [];
+      }
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPremium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value)) {
-        this.ITR_JSON.insurances.push({
+        this.ITR_JSON.insurances?.push({
           insuranceType: 'HEALTH',
           typeOfPolicy: null,
           policyFor: 'DEPENDANT',
@@ -670,11 +685,14 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
           healthCover: null
         });
       }
-      this.ITR_JSON.insurances = this.ITR_JSON.insurances.filter((item: any) => item.policyFor !== "PARENTS");
+      this.ITR_JSON.insurances = this.ITR_JSON.insurances?.filter((item: any) => item.policyFor !== "PARENTS");
+      if(!this.ITR_JSON.insurances) {
+        this.ITR_JSON.insurances = [];
+      }
       if (this.utilsService.isNonZero(this.investmentDeductionForm.controls['premium'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['preventiveCheckUp'].value)
         || this.utilsService.isNonZero(this.investmentDeductionForm.controls['medicalExpenditure'].value)) {
-        this.ITR_JSON.insurances.push({
+        this.ITR_JSON.insurances?.push({
           insuranceType: 'HEALTH',
           typeOfPolicy: null,
           policyFor: 'PARENTS',
@@ -687,19 +705,19 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       }
       this.ITR_JSON.disabilities = [];
       if (this.selected80u !== '' && this.utilsService.isNonZero(this.investmentDeductionForm.controls['us80u'].value)) {
-        this.ITR_JSON.disabilities.push({
+        this.ITR_JSON.disabilities?.push({
           typeOfDisability: this.selected80u,
           amount: this.investmentDeductionForm.controls['us80u'].value
         })
       }
       if (this.selected80dd !== '' && this.utilsService.isNonZero(this.investmentDeductionForm.controls['us80dd'].value)) {
-        this.ITR_JSON.disabilities.push({
+        this.ITR_JSON.disabilities?.push({
           typeOfDisability: this.selected80dd,
           amount: this.investmentDeductionForm.controls['us80dd'].value
         })
       }
       if (this.selected80ddb !== '' && this.utilsService.isNonZero(this.investmentDeductionForm.controls['us80ddb'].value)) {
-        this.ITR_JSON.disabilities.push({
+        this.ITR_JSON.disabilities?.push({
           typeOfDisability: this.selected80ddb,
           amount: this.investmentDeductionForm.controls['us80ddb'].value
         })
@@ -711,13 +729,13 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
   }
 
   setInvestmentsDeductionsValues() {
-    this.ITR_JSON.investments.forEach(investment => {
+    this.ITR_JSON.investments?.forEach(investment => {
       if (investment.investmentType === 'ELSS' || investment.investmentType === 'PENSION_FUND' || investment.investmentType === 'PS_EMPLOYEE' ||
         investment.investmentType === 'PS_EMPLOYER' || investment.investmentType === 'PENSION_SCHEME')
         this.investmentDeductionForm.controls[investment.investmentType].setValue(investment.amount);
     });
 
-    for (let i = 0; i < this.ITR_JSON.loans.length; i++) {
+    for (let i = 0; i < this.ITR_JSON.loans?.length; i++) {
       switch (this.ITR_JSON.loans[i].loanType) {
         case 'EDUCATION': {
           this.investmentDeductionForm.controls['us80e'].setValue(this.ITR_JSON.loans[i].interestPaidPerAnum);
@@ -725,7 +743,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       }
     }
 
-    for (let j = 0; j < this.ITR_JSON.expenses.length; j++) {
+    for (let j = 0; j < this.ITR_JSON.expenses?.length; j++) {
       switch (this.ITR_JSON.expenses[j].expenseType) {
         case 'HOUSE_RENT_PAID': {
           this.investmentDeductionForm.controls['us80gg'].setValue(this.ITR_JSON.expenses[j].amount);
@@ -738,7 +756,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       }
     }
 
-    for (let j = 0; j < this.ITR_JSON.donations.length; j++) {
+    for (let j = 0; j < this.ITR_JSON.donations?.length; j++) {
       switch (this.ITR_JSON.donations[j].donationType) {
         case 'POLITICAL': {
           this.investmentDeductionForm.controls['us80ggc'].setValue(this.ITR_JSON.donations[j].amountOtherThanCash);
@@ -746,7 +764,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         }
       }
     }
-    for (let i = 0; i < this.ITR_JSON.insurances.length; i++) {
+    for (let i = 0; i < this.ITR_JSON.insurances?.length; i++) {
       if (this.ITR_JSON.insurances[i].policyFor === 'DEPENDANT') {
         this.investmentDeductionForm.controls['selfPremium'].setValue(this.ITR_JSON.insurances[i].premium);
         this.investmentDeductionForm.controls['selfPreventiveCheckUp'].setValue(this.ITR_JSON.insurances[i].preventiveCheckUp);
@@ -782,7 +800,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
     if (this.utilsService.isNonEmpty(this.investmentDeductionForm.controls[controlName].value)) {
       let i: number;
       let isAdded = false;
-      for (i = 0; i < this.ITR_JSON.investments.length; i++) {
+      for (i = 0; i < this.ITR_JSON.investments?.length; i++) {
         if (this.ITR_JSON.investments[i].investmentType === controlName) {
           isAdded = true;
           break;
@@ -790,7 +808,10 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       }
 
       if (!isAdded) {
-        this.ITR_JSON.investments.push({
+        if(!this.ITR_JSON.investments) {
+          this.ITR_JSON.investments = [];
+        }
+        this.ITR_JSON.investments?.push({
           investmentType: controlName,
           amount: Number(this.investmentDeductionForm.controls[controlName].value),
           details: controlName
@@ -803,7 +824,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
         });
       }
     } else {
-      this.ITR_JSON.investments = this.ITR_JSON.investments.filter((item: any) => item.investmentType !== controlName);
+      this.ITR_JSON.investments = this.ITR_JSON.investments?.filter((item: any) => item.investmentType !== controlName);
     }
   }
 
@@ -997,8 +1018,8 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
 
   createRowData(donationType) {
     const newData = [];
-    const donations = this.ITR_JSON.donations.filter((item: any) => item.donationType === donationType);
-    for (let i = 0; i < donations.length; i++) {
+    const donations = this.ITR_JSON.donations?.filter((item: any) => item.donationType === donationType);
+    for (let i = 0; i < donations?.length; i++) {
       newData.push({
         srNo: i + 1,
         identifier: donations[i].identifier,

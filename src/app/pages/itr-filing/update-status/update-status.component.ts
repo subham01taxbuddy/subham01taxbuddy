@@ -307,7 +307,7 @@ export class UpdateStatusComponent implements OnInit, AfterContentChecked {
       console.log('User data: ', result);
       if (Array.isArray(result.records)) {
         var userInfo = result.records;
-        this.userName = userInfo[0].fName+' '+userInfo[0].lName;
+        this.userName = userInfo[0]?.fName+' '+userInfo[0]?.lName;
       }
       else{
         this.userName = '';

@@ -639,6 +639,8 @@ export class PersonalInformationComponent implements OnInit {
       this.ITR_JSON.houseProperties = [];
     if (!(this.ITR_JSON.expenses instanceof Array))
       this.ITR_JSON.expenses = [];
+    if (!(this.ITR_JSON.donations instanceof Array))
+      this.ITR_JSON.donations = [];
 
     this.ITR_JSON.houseProperties = this.ITR_JSON.houseProperties.filter(item => item.propertyType !== 'SOP');
     this.ITR_JSON.investments = this.ITR_JSON.investments.filter(item => item.investmentType !== 'ELSS' && item.investmentType !== 'PENSION_FUND' && item.investmentType !== 'PS_EMPLOYEE' && item.investmentType !== 'PENSION_SCHEME');
@@ -649,8 +651,10 @@ export class PersonalInformationComponent implements OnInit {
 
     // let newRegimeEmployer = []
     for (let i = 0; i < this.ITR_JSON.employers.length; i++) {
-      this.ITR_JSON.employers[i].allowance = this.ITR_JSON.employers[i].allowance.filter(item => item.allowanceType !== 'HOUSE_RENT' && item.allowanceType !== 'LTA' && item.allowanceType !== 'CHILDREN_EDUCATION' && item.allowanceType !== 'HOSTEL_EXPENDITURE');
+      this.ITR_JSON.employers[i].allowance = this.ITR_JSON.employers[i].allowance?.filter(item => item.allowanceType !== 'HOUSE_RENT' && item.allowanceType !== 'LTA' && item.allowanceType !== 'CHILDREN_EDUCATION' && item.allowanceType !== 'HOSTEL_EXPENDITURE');
       // newRegimeEmployer.push(this.ITR_JSON.employers[i])
+
+      this.ITR_JSON.employers[i].deductions = this.ITR_JSON.employers[i].deductions?.filter((item: any) => item.deductionType !== 'PROFESSIONAL_TAX');
     }
 
 

@@ -63,6 +63,7 @@ export class BusinessComponent implements OnInit {
       this.businessMode = 'FORM';
       this.mode = 'ADD';
     }
+    console.log(this.ITR_JSON.business?.presumptiveIncomes);
   }
 
   ngOnInit() {
@@ -486,11 +487,33 @@ export class BusinessComponent implements OnInit {
     if (totalProfessionalIncome <= 5000000 && totalBusinessIncome <= 20000000) {
       const myPresumptiveIncome = JSON.parse(JSON.stringify(this.localPresumptiveIncome));
       if (this.mode === 'ADD') {
+        if(!this.Copy_ITR_JSON.business.presumptiveIncomes) {
+          this.Copy_ITR_JSON.business.presumptiveIncomes = [];
+        }
         this.Copy_ITR_JSON.business.presumptiveIncomes.push(myPresumptiveIncome);
         // this.ITR_JSON.business.presumptiveIncomes.push(myPresumptiveIncome);
       } else if (this.mode === 'UPDATE') {
         this.Copy_ITR_JSON.business.presumptiveIncomes.splice(this.currentIndex, 1, myPresumptiveIncome);
         // this.ITR_JSON.business.presumptiveIncomes.splice(this.currentIndex, 1, myPresumptiveIncome);
+      }
+      if(!this.Copy_ITR_JSON.systemFlags) {
+        this.Copy_ITR_JSON.systemFlags = {
+          hasSalary: false,
+          hasHouseProperty: false,
+          hasMultipleProperties: false,
+          hasForeignAssets: false,
+          hasCapitalGain: false,
+          hasBroughtForwardLosses: false,
+          hasAgricultureIncome: false,
+          hasOtherIncome: false,
+          hasParentOverSixty: false,
+          hasBusinessProfessionIncome: false,
+          hasFutureOptionsIncome: false,
+          hasNRIIncome: false,
+          hraAvailed: false,
+          directorInCompany: false,
+          haveUnlistedShares: false
+        };
       }
       this.Copy_ITR_JSON.systemFlags.hasBusinessProfessionIncome = true;
       // this.utilsService.openLoaderDialog();
@@ -708,7 +731,7 @@ export class BusinessComponent implements OnInit {
 
   calTotalPresumptiveIncome() {
     let sum = 0;
-    for (let i = 0; i < this.ITR_JSON.business.presumptiveIncomes.length; i++) {
+    for (let i = 0; i < this.ITR_JSON.business?.presumptiveIncomes.length; i++) {
       for (let j = 0; j < this.ITR_JSON.business.presumptiveIncomes[i].incomes.length; j++) {
         sum = sum + this.ITR_JSON.business.presumptiveIncomes[i].incomes[j].presumptiveIncome;
       }

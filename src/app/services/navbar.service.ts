@@ -116,7 +116,11 @@ export class NavbarService {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/search/userprofile/query?' + key + "=" + searchValue, 'method': 'GET' }, {});
 	}
 
-	getUserSubscriptions(userId:string) {
+	getDeleteUserList(dynamicUrl) {
+		return NavbarService.getInstance(this.http).apiCall({ 'url': '/user/user-deletion-request-detail?' + dynamicUrl, 'method': 'GET' }, {});
+	}
+
+	getUserSubscriptions(userId: string) {
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/itr/api/usersubscription?userId=' + userId, 'method': 'GET' }, {});
 	}
 

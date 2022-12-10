@@ -136,9 +136,16 @@ export class UtilsService {
                     console.log('obj:', obj)
                     this.ITR_JSON = JSON.parse(JSON.stringify(obj))
                     this.ITR_JSON.filingTeamMemberId = filingTeamMemberId;
-                    console.log('this.ITR_JSONthis.ITR_JSONthis.ITR_JSON', this.ITR_JSON);
+                    console.log('this.ITR_JSON in utils', this.ITR_JSON);
+                    console.log('profile', profile);
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/customer-profile'])
+                    this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+                        state: { 
+                          userId: this.ITR_JSON.userId, 
+                          panNumber: profile.panNumber, 
+                          eriClientValidUpto: profile.eriClientValidUpto, 
+                          name: profile.fName + ' ' + profile.lName } 
+                        });
                     /* if (this.utilsService.isNonEmpty(profile.panNumber)) {
                       if (this.utilsService.isNonEmpty(this.ITR_JSON.panNumber) ? (this.ITR_JSON.panNumber !== profile.panNumber) : false) {
                         this.openConformationDialog(this.ITR_JSON, profile, assessmentYear, financialYear);
@@ -185,7 +192,13 @@ export class UtilsService {
                     this.ITR_JSON = result;
                     this.loading = false;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/customer-profile'])
+                    this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+                        state: { 
+                          userId: this.ITR_JSON.userId, 
+                          panNumber: profile.panNumber, 
+                          eriClientValidUpto: profile.eriClientValidUpto, 
+                          name: profile.fName + ' ' + profile.lName } 
+                        });
                 }, error => {
                     this.loading = false;
                 });
@@ -201,7 +214,13 @@ export class UtilsService {
                     this.loading = false;
                     this.ITR_JSON = result;
                     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-                    this.router.navigate(['/pages/itr-filing/customer-profile'])
+                    this.router.navigate(['/pages/itr-filing/customer-profile'],{ 
+                        state: { 
+                          userId: this.ITR_JSON.userId, 
+                          panNumber: profile.panNumber, 
+                          eriClientValidUpto: profile.eriClientValidUpto, 
+                          name: profile.fName + ' ' + profile.lName } 
+                        });
                 }, error => {
                     this.loading = false;
                 });
@@ -495,8 +514,8 @@ export class UtilsService {
     getMyCallingNumber() {
         // const userObj = JSON.parse(localStorage.getItem('UMD') ?? "");
         const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
-        if (this.isNonEmpty(loggedInSmeInfo) && this.isNonEmpty(loggedInSmeInfo.mobileNumber)) {
-            return loggedInSmeInfo.mobileNumber;
+        if ((this.isNonEmpty(loggedInSmeInfo)) && (this.isNonEmpty(loggedInSmeInfo[0].mobileNumber))) {
+            return loggedInSmeInfo[0].mobileNumber;
         }
         // const SME_LIST: any = await this.getStoredSmeList();
         // const sme = SME_LIST.filter((item: any) => item.userId === userObj.USER_UNIQUE_ID);

@@ -598,6 +598,9 @@ export class AddDonationDialogComponent implements OnInit {
           const index = this.Copy_ITR_JSON.donations.findIndex((item:any) => item.identifier === this.data.selectedData.identifier);
           this.Copy_ITR_JSON.donations.splice(index, 1, this.generalDonationForm.getRawValue());
         } else {
+          if(!this.Copy_ITR_JSON.donations){
+            this.Copy_ITR_JSON.donations = [];
+          }
           this.Copy_ITR_JSON.donations.push(this.generalDonationForm.getRawValue());
         }
         this.serviceCall();
