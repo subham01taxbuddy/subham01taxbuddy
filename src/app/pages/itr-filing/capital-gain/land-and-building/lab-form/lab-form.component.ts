@@ -949,7 +949,11 @@ export class LabFormComponent implements OnInit {
 
   investmentsCreateRowData() {
     //return this.cgArrayElement.deduction;
-    return this.cgArrayElement.deduction?.filter(deduction => (deduction.srn == this.data.assetSelected?.srn));
+    let deductions = this.cgArrayElement.deduction?.filter(deduction => (deduction.srn == this.data.assetSelected?.srn));
+    if(deductions)
+      return this.cgArrayElement.deduction?.filter(deduction => (deduction.srn == this.data.assetSelected?.srn));
+    else
+      return [];
   }
 
   getImprovementYears() {
