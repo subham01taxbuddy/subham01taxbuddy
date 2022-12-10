@@ -758,19 +758,19 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       }
     }
     let sec80u = this.ITR_JSON.disabilities?.filter(item => item.typeOfDisability === 'SELF_WITH_DISABILITY' || item.typeOfDisability === 'SELF_WITH_SEVERE_DISABILITY');
-    if (sec80u.length > 0) {
+    if (sec80u?.length > 0) {
       this.selected80u = sec80u[0].typeOfDisability;
       this.investmentDeductionForm.controls['us80u'].setValue(sec80u[0].amount);
       this.radioChange80u(false);
     }
     let sec80dd = this.ITR_JSON.disabilities?.filter(item => item.typeOfDisability === 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY' || item.typeOfDisability === 'DEPENDENT_PERSON_WITH_DISABILITY');
-    if (sec80dd.length > 0) {
+    if (sec80dd?.length > 0) {
       this.selected80dd = sec80dd[0].typeOfDisability;
       this.investmentDeductionForm.controls['us80dd'].setValue(sec80dd[0].amount);
       this.radioChange80dd(false);
     }
     let sec80ddb = this.ITR_JSON.disabilities?.filter(item => item.typeOfDisability === 'SELF_OR_DEPENDENT' || item.typeOfDisability === 'SELF_OR_DEPENDENT_SENIOR_CITIZEN');
-    if (sec80ddb.length > 0) {
+    if (sec80ddb?.length > 0) {
       this.selected80ddb = sec80ddb[0].typeOfDisability;
       this.investmentDeductionForm.controls['us80ddb'].setValue(sec80ddb[0].amount);
       this.radioChange80ddb(false);
@@ -1015,7 +1015,7 @@ export class InvestmentsDeductionsComponent implements OnInit, DoCheck {
       });
     }
 
-    return newData;
+    return newData ? newData : [];
   }
 
   serviceCall(val, ITR_JSON) {

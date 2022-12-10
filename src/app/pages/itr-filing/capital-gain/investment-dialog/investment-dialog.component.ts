@@ -64,7 +64,11 @@ export class InvestmentDialogComponent implements OnInit {
   saveInvestments() {
     if (this.investmentForm.valid) {
       console.log('Investment form:', this.investmentForm.value)
-      this.dialogRef.close(this.investmentForm.value)
+      let result = {
+        deduction: this.investmentForm.value,
+        'rowIndex': this.data.rowIndex
+      };
+      this.dialogRef.close(result);
     }
   }
 

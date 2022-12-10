@@ -20,7 +20,8 @@ export class OtherAssetsComponent implements OnInit {
   public deductionGridOptions: GridOptions;
   loading = false;
   goldCg: NewCapitalGain;
-  ITR_JSON: ITR_JSON
+  ITR_JSON: ITR_JSON;
+  totalCg = 0;
 
   constructor(public matDialog: MatDialog,
     public utilsService: UtilsService,
@@ -50,9 +51,9 @@ export class OtherAssetsComponent implements OnInit {
     console.log('INSIDE OTHER')
   }
 
-  addMore(mode, type, assetDetails?) {
+  addMore(mode, type, rowIndex, assetDetails?) {
     const dialogRef = this.matDialog.open(OtherAssetsDialogComponent, {
-      data: { mode: mode, assetType: type, assetDetails: assetDetails },
+      data: { mode: mode, assetType: type, rowIndex:rowIndex, assetDetails: assetDetails },
       closeOnNavigation: true,
       disableClose: false,
       width: '700px'
@@ -62,12 +63,12 @@ export class OtherAssetsComponent implements OnInit {
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
-          this.goldCg.assetDetails.push(result);
+          this.goldCg.assetDetails.push(result.cgObject);
           this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails)
 
         } else {
 
-          this.goldCg.assetDetails.splice((assetDetails.id - 1), 1, result);
+          this.goldCg.assetDetails.splice(result.rowIndex, 1, result.cgObject);
           this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails)
         }
         this.calculateCg()
@@ -94,6 +95,10 @@ export class OtherAssetsComponent implements OnInit {
   }
 
   otherAssetsCreateRowData() {
+    this.totalCg = 0;
+    this.goldCg.assetDetails.forEach(item => {
+      this.totalCg += item.capitalGain;
+    });
     return this.goldCg.assetDetails;
   }
 
@@ -157,7 +162,7 @@ export class OtherAssetsComponent implements OnInit {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.capitalGain ? params.data.capitalGain.toLocaleString('en-IN') : params.data.capitalGain;
+          return params.data.capitalGain ? params.data.capitalGain.toLocaleString('en-IN') : 0;
         },
       },
       {
@@ -213,7 +218,7 @@ export class OtherAssetsComponent implements OnInit {
           break;
         }
         case 'edit': {
-          this.addMore('EDIT', 'GOLD', params.data)
+          this.addMore('EDIT', 'GOLD', params.rowIndex, params.data)
           break;
         }
       }
@@ -368,11 +373,12 @@ export class OtherAssetsComponent implements OnInit {
   }
 
 
-  addDeduction(mode, investment?) {
+  addDeduction(mode, gridApi, rowIndex, investment?) {
     if (this.goldCg.assetDetails.length > 0) {
       const data = {
         assetType: 'GOLD',
         mode: mode,
+        rowIndex: rowIndex,
         investment: investment,
       };
       const dialogRef = this.matDialog.open(InvestmentDialogComponent, {
@@ -386,12 +392,12 @@ export class OtherAssetsComponent implements OnInit {
         console.log('Result add CG=', result);
         if (result !== undefined) {
           if (mode === 'ADD') {
-            this.goldCg.deduction.push(result);
+            this.goldCg.deduction.push(result.deduction);
             this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
 
           } else if (mode === 'EDIT') {
-            this.goldCg.deduction.splice((investment.id - 1), 1, result);
-            this.deductionGridOptions.api?.setRowData(this.goldCg.deduction)
+            this.goldCg.deduction.splice(result.rowIndex, 1, result.deduction);
+            gridApi.setRowData(this.goldCg.deduction)
           }
           // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
         }
@@ -510,7 +516,7 @@ export class OtherAssetsComponent implements OnInit {
           break;
         }
         case 'edit': {
-          this.addDeduction('EDIT', params.data)
+          this.addDeduction('EDIT', params.api, params.rowIndex, params.data)
           break;
         }
       }
