@@ -64,11 +64,7 @@ import { OtherAssetsDialogComponent } from './capital-gain/other-assets/other-as
 import { OtherAssetsComponent } from './capital-gain/other-assets/other-assets.component';
 import { OtherImprovementDialogComponent } from './capital-gain/other-assets/other-improvement-dialog/other-improvement-dialog.component';
 import { BondsDebentureComponent } from './capital-gain/bonds-debenture/bonds-debenture.component';
-import { BondsAndCouponsComponent } from './capital-gain/bonds-and-coupons/bonds-and-coupons.component';
-import { BondsComponent } from './capital-gain/bonds-and-coupons/bonds/bonds.component';
-import { ZeroCouponBondsComponent } from './capital-gain/bonds-and-coupons/zero-coupon-bonds/zero-coupon-bonds.component';
-import { MatDatePickerDirective } from './capital-gain/bonds-and-coupons/mat-date-picker.directive';
-// import { InputUploadComponent } from 'app/additional-components/input-upload/input-upload.component';
+import { BondsComponent } from './capital-gain/bonds/bonds.component';
 
 @NgModule({
     imports: [
@@ -141,11 +137,8 @@ import { MatDatePickerDirective } from './capital-gain/bonds-and-coupons/mat-dat
         ScheduleALComponent,
         AddImmovableDialogComponent,
         BondsDebentureComponent,
-        BondsAndCouponsComponent,
         BondsComponent,
-        ZeroCouponBondsComponent,
-        MatDatePickerDirective,
-    ],
+       ],
     entryComponents: [AddDonationDialogComponent, /* WhatsAppDialogComponent, */ /* KommunicateDialogComponent, */
         /* FilingStatusDialogComponent, */ ReviseReturnDialogComponent, UpdateManualFilingComponent,
         CoOwnerComponent,

@@ -4,7 +4,8 @@ import { GridOptions } from 'ag-grid-community';
 import { Bonds, Deduction, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Component, OnInit } from '@angular/core';
-import { BondsDebentureComponent } from '../../bonds-debenture/bonds-debenture.component';
+import { BondsDebentureComponent } from '../bonds-debenture/bonds-debenture.component';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 
 @Component({
   selector: 'app-bonds',
@@ -64,6 +65,7 @@ export class BondsComponent implements OnInit {
     public utilsService: UtilsService,
     public matDialog: MatDialog,
     public snackBar: MatSnackBar,
+    private itrMsService:ItrMsService
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -542,6 +544,66 @@ export class BondsComponent implements OnInit {
         },
       },
     ];
+  }
+
+  onContinue() {
+    const bondImprovement = [];
+    this.bondsGridOptions.rowData.forEach(element => {
+      bondImprovement.push({
+        "srn": element.srn,
+        "dateOfImprovement": null,
+        "costOfImprovement": element.costOfImprovement
+      })
+    });
+
+    const zeroBondImprovement = [];
+    this.zeroBondsGridOptions.rowData.forEach(element => {
+      zeroBondImprovement.push({
+        "srn": element.srn,
+        "dateOfImprovement": null,
+        "costOfImprovement": element.costOfImprovement
+      })
+    });
+
+    const bondData = {
+      "assessmentYear": "",
+      "assesseeType": "",
+      "residentialStatus": "",
+      "assetType": "BONDS",
+      "deduction": this.deductionGridOptions.rowData,
+      "improvement": bondImprovement,
+      "buyersDetails": [],
+      "assetDetails": this.bondsGridOptions.rowData
+    }
+    console.log(bondData)
+
+    const zeroBondData = {
+      "assessmentYear": "",
+      "assesseeType": "",
+      "residentialStatus": "",
+      "assetType": "ZERO_COUPON_BONDS",
+      "deduction":  this.zeroDeductionGridOptions.rowData,
+      "improvement": zeroBondImprovement,
+      "buyersDetails": [],
+      "assetDetails": this.zeroBondsGridOptions.rowData
+    }
+    console.log(zeroBondData);
+    this.Copy_ITR_JSON.capitalGain.push(bondData)
+    this.Copy_ITR_JSON.capitalGain.push(zeroBondData)
+    console.log(this.Copy_ITR_JSON);
+
+    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
+    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
+      this.ITR_JSON = result;
+      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+      this.utilsService.showSnackBar('Bonds and zero coupon bonds data added successfully');
+      console.log('Bonds=', result);
+      this.utilsService.smoothScrollToTop();
+    }, error => {
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      this.utilsService.showSnackBar('Failed to add bonds and zero coupon bonds data, please try again.');
+      this.utilsService.smoothScrollToTop();
+    });
   }
 
 }

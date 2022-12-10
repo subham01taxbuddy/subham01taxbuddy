@@ -138,67 +138,6 @@ export class BondsDebentureComponent implements OnInit {
     });
   }
 
-  onContinue() {
-    const formData = this.bondDebtForm.getRawValue();
-    const bondImprovement = [];
-    formData.bonds.forEach(element => {
-      bondImprovement.push({
-        "srn": element.srn,
-        "dateOfImprovement": null,
-        "costOfImprovement": element.costOfImprovement
-      })
-    });
-
-    const zeroBondImprovement = [];
-    formData.zeroBonds.forEach(element => {
-      zeroBondImprovement.push({
-        "srn": element.srn,
-        "dateOfImprovement": null,
-        "costOfImprovement": element.costOfImprovement
-      })
-    });
-
-    const bondData = {
-      "assessmentYear": "",
-      "assesseeType": "",
-      "residentialStatus": "",
-      "assetType": "BONDS",
-      "deduction": formData.bondsDeduction,
-      "improvement": bondImprovement,
-      "buyersDetails": [],
-      "assetDetails": formData.bonds
-    }
-    console.log(bondData)
-
-    const zeroBondData = {
-      "assessmentYear": "",
-      "assesseeType": "",
-      "residentialStatus": "",
-      "assetType": "ZERO_COUPON_BONDS",
-      "deduction": formData.zeroBondsDeduction,
-      "improvement": zeroBondImprovement,
-      "buyersDetails": [],
-      "assetDetails": formData.zeroBonds
-    }
-    console.log(zeroBondData);
-    this.Copy_ITR_JSON.capitalGain.push(bondData)
-    this.Copy_ITR_JSON.capitalGain.push(zeroBondData)
-    console.log(this.Copy_ITR_JSON);
-
-    const param = '/itr/' + this.ITR_JSON.userId + '/' + this.ITR_JSON.itrId + '/' + this.ITR_JSON.assessmentYear;
-    this.itrMsService.putMethod(param, this.Copy_ITR_JSON).subscribe((result: any) => {
-      this.ITR_JSON = result;
-      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-      this.utilsService.showSnackBar('Bonds and zero coupon bonds data added successfully');
-      console.log('Bonds=', result);
-      this.utilsService.smoothScrollToTop();
-    }, error => {
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      this.utilsService.showSnackBar('Failed to add bonds and zero coupon bonds data, please try again.');
-      this.utilsService.smoothScrollToTop();
-    });
-  }
-
   cancel() {
     this.dialogRef.close()
   }

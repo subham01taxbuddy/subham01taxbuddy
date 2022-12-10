@@ -65,7 +65,8 @@
         </div>
         <div class="row dialog-button">
             <div class="sub_btn top-space">
-                <button type="submit" class="tbd-btn" [disabled]="bondsForm.invalid" (click)="saveBondDetails()">Save</button>
+                <button type="submit" class="tbd-btn" [disabled]="bondsForm.invalid"
+                    (click)="saveBondDetails()">Save</button>
                 <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
             </div>
         </div>
@@ -92,7 +93,8 @@
                 <mat-form-field class="input-field-width">
                     <input matInput digitsOnly class="input-field" placeholder="cost of new asset"
                         formControlName="costOfNewAssets" required maxlength="14">
-                    <mat-error *ngIf="deductionForm.controls['costOfNewAssets'].hasError('required')">Please enter cost of
+                    <mat-error *ngIf="deductionForm.controls['costOfNewAssets'].hasError('required')">Please enter cost
+                        of
                         new assets</mat-error>
                 </mat-form-field>
             </div>
@@ -108,14 +110,10 @@
         </div>
         <div class="row dialog-button">
             <div class="sub_btn top-space">
-                <button type="submit" class="tbd-btn" [disabled]="deductionForm.invalid" (click)="saveDeductionDetails()">Save</button>
+                <button type="submit" class="tbd-btn" [disabled]="deductionForm.invalid"
+                    (click)="saveDeductionDetails()">Save</button>
                 <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
             </div>
         </div>
     </form>
 </div>
-
-    <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
-        &nbsp;&nbsp;Back</button>
-    <button class="tbd-btn" (click)="onContinue()">&nbsp;&nbsp;Continue </button>
-</div>  -->
